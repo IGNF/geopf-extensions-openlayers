@@ -1,0 +1,87 @@
+{{#extend "ol-sample-bundle-multikeys-layout"}}
+
+{{#content "head"}}
+        <title>Sample openlayers Filters Mapbox</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            body {
+                margin: unset;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du widget d'édition des filtres MapBox</h2>
+            <button id="displayFalse">Hidden</button>
+            <button id="displayTrue">Show</button>
+            <div id="filter"></div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+
+            // filter vide
+            var filter0 = new ol.style.editor.Filter({
+                target: document.getElementById("filter")
+            });
+            filter0.add();
+
+            // filter vide et target par defaut
+            var filter1 = new ol.style.editor.Filter();
+            filter1.add();
+
+            // filter
+            var filter2 = new ol.style.editor.Filter({
+                obj: {
+                    "filter": [
+                      "all",
+                      [
+                        ">",
+                        "PERSONS",
+                        2000000
+                      ],
+                      [
+                        "<=",
+                        "PERSONS",
+                        4000000
+                      ]
+                    ]
+                },
+            });
+            filter2.add();
+            // filter
+            var filter3 = new ol.style.editor.Filter({
+                obj: {
+                    "filter": [
+                            "in","symbo",
+                                "CLOTURE",
+                                "TRANCHEE",
+                                "LAYON",
+                                "LIM_ZONE_REGLEMENTEE",
+                                "LIM_ENCEINTE_MILITAIRE",
+                                "LIM_CHAMP_TIR"
+
+                    ]
+                },
+            });
+            filter3.add();
+
+            document.getElementById("displayTrue").addEventListener("click", function () {
+                filter0.display(true);
+                filter1.display(true);
+                filter2.display(true);
+                filter3.display(true);
+            });
+
+            document.getElementById("displayFalse").addEventListener("click", function () {
+                filter0.display(false);
+                filter1.display(false);
+                filter2.display(false);
+                filter3.display(false);
+            });
+
+            </script>
+{{/content}}
+{{/extend}}

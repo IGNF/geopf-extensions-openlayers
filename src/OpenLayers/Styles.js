@@ -1,0 +1,37 @@
+import "./CSS/GPgeneralWidget.css";
+import "./CSS/GPgeneralWidgetOpenLayers.css";
+import "./CSS/GPwaiting.css";
+
+// css widget : internal import into code source
+import "./CSS/Controls/Drawing/GPdrawing.css";
+import "./CSS/Controls/ElevationPath/GPelevationPath.css";
+import "./CSS/Controls/GetFeatureInfo/GPgetFeatureInfo.css";
+import "./CSS/Controls/Isochrone/GPisochron.css";
+import "./CSS/Controls/LayerSwitcher/GPlayerSwitcher.css";
+import "./CSS/Controls/LocationSelector/GPlocation.css";
+import "./CSS/Controls/Measures/GPmeasureArea.css";
+import "./CSS/Controls/Measures/GPmeasureAzimuth.css";
+import "./CSS/Controls/Measures/GPmeasureLength.css";
+import "./CSS/Controls/Measures/GPmeasureToolTip.css";
+import "./CSS/Controls/MousePosition/GPmousePosition.css";
+import "./CSS/Controls/ReverseGeocoding/GPreverseGeocoding.css";
+import "./CSS/Controls/Route/GProute.css";
+import "./CSS/Controls/SearchEngine/GPsearchEngine.css";
+
+import "./CSS/Controls/Attribution/GPattributionOpenLayers.css";
+import "./CSS/Controls/Drawing/GPdrawingOpenLayers.css";
+import "./CSS/Controls/Editor/GPeditorOpenLayers.css";
+import "./CSS/Controls/ElevationPath/GPelevationPathOpenLayers.css";
+import "./CSS/Controls/GetFeatureInfo/GPgetFeatureInfoOpenLayers.css";
+import "./CSS/Controls/Isochrone/GPisochronOpenLayers.css";
+import "./CSS/Controls/LayerImport/GPimportOpenLayers.css";
+import "./CSS/Controls/LayerSwitcher/GPlayerSwitcherOpenLayers.css";
+import "./CSS/Controls/LocationSelector/GPlocationOpenLayers.css";
+import "./CSS/Controls/Measures/GPmeasureAreaOpenLayers.css";
+import "./CSS/Controls/Measures/GPmeasureAzimuthOpenLayers.css";
+import "./CSS/Controls/Measures/GPmeasureLengthOpenLayers.css";
+import "./CSS/Controls/MousePosition/GPmousePositionOpenLayers.css";
+import "./CSS/Controls/ReverseGeocoding/GPreverseGeocodingOpenLayers.css";
+import "./CSS/Controls/Route/GProuteOpenLayers.css";
+import "./CSS/Controls/SearchEngine/GPsearchEngineOpenLayers.css";
+import "./CSS/Controls/ToolBoxMeasure/GPtoolBoxMeasureOpenLayers.css";

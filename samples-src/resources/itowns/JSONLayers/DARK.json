@@ -1,0 +1,10 @@
+{
+    "type": "color",
+    "protocol": "wmtsc",
+    "id": "DARK",
+    "customUrl": "https://a.basemaps.cartocdn.com/dark_all/%TILEMATRIX/%COL/%ROW.png",
+    "format": "image/png",
+    "options": {
+        "tileMatrixSet": "PM"
+    }
+}
