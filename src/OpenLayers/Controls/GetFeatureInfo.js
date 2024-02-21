@@ -1,6 +1,6 @@
 // import CSS
 import "../CSS/Controls/GetFeatureInfo/GPgetFeatureInfo.css";
-import "../CSS/Controls/GetFeatureInfo/GPgetFeatureInfoOpenLayers.css";
+// import "../CSS/Controls/GetFeatureInfo/GPgetFeatureInfoOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 // import local

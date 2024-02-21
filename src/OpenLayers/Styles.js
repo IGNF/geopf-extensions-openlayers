@@ -3,10 +3,13 @@ import "./CSS/GPgeneralWidgetOpenLayers.css";
 import "./CSS/GPwaiting.css";
 
 // css widget : internal import into code source
+import "./CSS/Controls/Attribution/GPattribution.css";
 import "./CSS/Controls/Drawing/GPdrawing.css";
+import "./CSS/Controls/Editor/GPeditor.css";
 import "./CSS/Controls/ElevationPath/GPelevationPath.css";
 import "./CSS/Controls/GetFeatureInfo/GPgetFeatureInfo.css";
-import "./CSS/Controls/Isochrone/GPisochron.css";
+import "./CSS/Controls/Isochron/GPisochron.css";
+import "./CSS/Controls/LayerImport/GPlayerImport.css";
 import "./CSS/Controls/LayerSwitcher/GPlayerSwitcher.css";
 import "./CSS/Controls/LocationSelector/GPlocation.css";
 import "./CSS/Controls/Measures/GPmeasureArea.css";
@@ -17,14 +20,15 @@ import "./CSS/Controls/MousePosition/GPmousePosition.css";
 import "./CSS/Controls/ReverseGeocoding/GPreverseGeocoding.css";
 import "./CSS/Controls/Route/GProute.css";
 import "./CSS/Controls/SearchEngine/GPsearchEngine.css";
+import "./CSS/Controls/ToolBoxMeasure/GPtoolBoxMeasure.css";
 
 import "./CSS/Controls/Attribution/GPattributionOpenLayers.css";
 import "./CSS/Controls/Drawing/GPdrawingOpenLayers.css";
 import "./CSS/Controls/Editor/GPeditorOpenLayers.css";
 import "./CSS/Controls/ElevationPath/GPelevationPathOpenLayers.css";
 import "./CSS/Controls/GetFeatureInfo/GPgetFeatureInfoOpenLayers.css";
-import "./CSS/Controls/Isochrone/GPisochronOpenLayers.css";
-import "./CSS/Controls/LayerImport/GPimportOpenLayers.css";
+import "./CSS/Controls/Isochron/GPisochronOpenLayers.css";
+import "./CSS/Controls/LayerImport/GPlayerImportOpenLayers.css";
 import "./CSS/Controls/LayerSwitcher/GPlayerSwitcherOpenLayers.css";
 import "./CSS/Controls/LocationSelector/GPlocationOpenLayers.css";
 import "./CSS/Controls/Measures/GPmeasureAreaOpenLayers.css";

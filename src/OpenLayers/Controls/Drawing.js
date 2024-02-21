@@ -1,6 +1,6 @@
 // import CSS
 import "../CSS/Controls/Drawing/GPdrawing.css";
-import "../CSS/Controls/Drawing/GPdrawingOpenLayers.css";
+// import "../CSS/Controls/Drawing/GPdrawingOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";

@@ -1,6 +1,6 @@
 // import CSS
 import "../../CSS/Controls/Measures/GPmeasureAzimuth.css";
-import "../../CSS/Controls/Measures/GPmeasureAzimuthOpenLayers.css";
+// import "../../CSS/Controls/Measures/GPmeasureAzimuthOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";

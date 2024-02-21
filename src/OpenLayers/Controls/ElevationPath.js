@@ -1,7 +1,7 @@
 /** globals AmCharts, d3 */
 // import CSS
 import "../CSS/Controls/ElevationPath/GPelevationPath.css";
-import "../CSS/Controls/ElevationPath/GPelevationPathOpenLayers.css";
+// import "../CSS/Controls/ElevationPath/GPelevationPathOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import {

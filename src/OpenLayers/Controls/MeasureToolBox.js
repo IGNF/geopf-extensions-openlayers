@@ -1,5 +1,6 @@
 // import CSS
-import "../CSS/Controls/ToolBoxMeasure/GPtoolBoxMeasureOpenLayers.css";
+import "../CSS/Controls/ToolBoxMeasure/GPtoolBoxMeasure.css";
+// import "../CSS/Controls/ToolBoxMeasure/GPtoolBoxMeasureOpenLayers.css";
 // import local
 import Logger from "../../Common/Utils/LoggerByDefault";
 import Utils from "../../Common/Utils";

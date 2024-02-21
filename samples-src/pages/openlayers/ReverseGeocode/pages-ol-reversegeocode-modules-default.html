@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Common{{ mode }}.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Portail{{ mode }}.css" />
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/ReverseGeocode{{ mode }}.css" />
@@ -18,6 +18,10 @@
                 width: 100%;
                 height: 500px;
             }
+            #control > div {
+              top: unset;
+              left: unset;
+            }
         </style>
 {{/content}}
 
@@ -26,17 +30,52 @@
             <!-- map -->
             <div id="map">
             </div>
+            <h2>Test des méthodes publiques</h2>
+            <div style="display: flex; flex-direction: column;">
+              <button id="collapse">setCollapsed()</button>
+              <button id="data">getData()</button>
+              <button id="add">setMap(map)</button>
+              <button id="remove">setMap(null)</button>
+              <button id="target-add">setTarget(target)</button>
+              <button id="target-remove">setTarget(null)</button>
+              <div id="control" style="position: relative; width: 100px; height: 100px;"></div>
+            </div>
 {{/content}}
 
 {{#content "js"}}
             <script type="text/javascript">
-
+              var map = null;
+              var reverse = null;
+              var collapsed = true;
+              document.getElementById("collapse").addEventListener("click", (e) => {
+                  collapsed = !collapsed;
+                  reverse.setCollapsed(collapsed);
+              });
+              document.getElementById("data").addEventListener("click", (e) => {
+                  console.log(reverse.getData());
+              });
+              document.getElementById("remove").addEventListener("click", (e) => {
+                reverse.setMap(null);
+              });
+              document.getElementById("add").addEventListener("click", (e) => {
+                reverse.setMap(map);
+              });
+              document.getElementById("target-add").addEventListener("click", (e) => {
+                reverse.setMap(null);
+                reverse.setTarget("control");
+                reverse.setMap(map);
+              });
+              document.getElementById("target-remove").addEventListener("click", (e) => {
+                reverse.setMap(null);
+                reverse.setTarget(null);
+                reverse.setMap(map);
+              });
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
 
                 // Création de la map
-                var map = new ol.Map({
+                map = new ol.Map({
                   target : "map",
                   layers : [
                       new ol.layer.Tile({
@@ -50,7 +89,10 @@
                   })
                 });
 
-                var reverse = new ol.control.ReverseGeocode({});
+                reverse = new ol.control.ReverseGeocode({
+                  "collapsed" : false,
+                  "draggable" : true
+                });
                 map.addControl(reverse);
 
                 var layerSwitcher = new ol.control.LayerSwitcher({});

@@ -1,8 +1,7 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/node_modules/@gouvfr/dsfr/dist/dsfr.css" />
-        <link rel="stylesheet" href="{{ baseurl }}/node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Dsfr{{ mode }}.css" />
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/ReverseGeocode{{ mode }}.css" />
@@ -51,7 +50,10 @@
                   })
                 });
 
-                var reverse = new ol.control.ReverseGeocode({});
+                var reverse = new ol.control.ReverseGeocode({
+                  "collapsed" : false,
+                  "draggable" : true
+                });
                 map.addControl(reverse);
 
                 var layerSwitcher = new ol.control.LayerSwitcher({});

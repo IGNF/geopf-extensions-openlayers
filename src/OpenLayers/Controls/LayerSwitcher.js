@@ -1,6 +1,6 @@
 // import CSS
 import "../CSS/Controls/LayerSwitcher/GPlayerSwitcher.css";
-import "../CSS/Controls/LayerSwitcher/GPlayerSwitcherOpenLayers.css";
+// import "../CSS/Controls/LayerSwitcher/GPlayerSwitcherOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";

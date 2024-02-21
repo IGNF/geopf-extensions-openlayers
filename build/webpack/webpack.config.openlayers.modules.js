@@ -65,18 +65,36 @@ module.exports = (env, argv) => {
                 "whatwg-fetch",
                 path.join(ROOT, "src", "OpenLayers", "index.js")
             ],
-            // CSS communes : themes portail / dsfr
-            "Common" : [
+            // CSS themes portail
+            "Portail" : [
+                path.join(ROOT, "src", "OpenLayers", "CSS", "GPwaiting.css"),
                 path.join(ROOT, "src", "OpenLayers", "CSS", "GPgeneralWidget.css"),
                 path.join(ROOT, "src", "OpenLayers", "CSS", "GPgeneralWidgetOpenLayers.css"),
-                path.join(ROOT, "src", "OpenLayers", "CSS", "GPwaiting.css")
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Drawing", "GPdrawingOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Attribution", "GPattributionOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Editor", "GPeditorOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/ElevationPath", "GPelevationPathOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Export", "GPexportOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/GetFeatureInfo", "GPgetFeatureInfoOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Isochron", "GPisochronOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/LayerImport", "GPlayerImportOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/LayerSwitcher", "GPlayerSwitcherOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/LocationSelector", "GPlocationOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Measures", "GPmeasureAreaOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Measures", "GPmeasureLengthOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Measures", "GPmeasureAzimuthOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/MousePosition", "GPmousePositionOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/ReverseGeocoding", "GPreverseGeocodingOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/Route", "GProuteOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/SearchEngine", "GPsearchEngineOpenLayers.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "Controls/ToolBoxMeasure", "GPtoolBoxMeasureOpenLayers.css")
             ],
-            // "Dsfr" : [
-            //     // FIXME ça ne compile pas à cause de @charset !?
-            //     path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
-            //     path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
-            //     path.join(ROOT, "src", "OpenLayers", "CSS", "GPdsfr.css")
-            // ],
+            // CSS themes dsfr
+            "Dsfr" : [
+                path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
+                path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
+                path.join(ROOT, "src", "OpenLayers", "CSS", "dsfr-plus.css") // surcharge dsfr
+            ],
             // Controles
             "Drawing" : path.join(ROOT, "src", "OpenLayers", "Controls", "Drawing.js"),
             "Editor" : path.join(ROOT, "src", "OpenLayers", "Controls", "Editor.js"),
@@ -204,7 +222,7 @@ module.exports = (env, argv) => {
             },
 
         },
-        stats : (devMode) ? "errors-warnings" : "none",
+        stats : (devMode) ? "errors-warnings" : "normal",
         optimization : {
             /** FIXME ça ne marche pas !? MINIFICATION */
             minimizer: [
@@ -292,9 +310,9 @@ module.exports = (env, argv) => {
                     test : /\.css$/,
                     include : [
                         path.join(ROOT, "src", "Common", "CSS"),
-                        path.join(ROOT, "src", "OpenLayers", "CSS")
+                        path.join(ROOT, "src", "OpenLayers", "CSS"),
+                        /node_modules\/@gouvfr\/dsfr\/dist/,
                     ],
-                    exclude : /node_modules/,
                     use : [
                         MiniCssExtractPlugin.loader,
                         "css-loader"
@@ -306,8 +324,7 @@ module.exports = (env, argv) => {
                     ]
                 },
                 {
-                    test : /\.(png|jpg|gif|svg)$/,
-                    exclude : /node_modules/,
+                    test : /\.(png|jpg|gif|svg|woff|woff2)$/,
                     type: 'asset/inline'
                 }
             ]

@@ -1,6 +1,6 @@
 // import CSS
 import "../CSS/Controls/Route/GProute.css";
-import "../CSS/Controls/Route/GProuteOpenLayers.css";
+// import "../CSS/Controls/Route/GProuteOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";

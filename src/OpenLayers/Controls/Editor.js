@@ -1,5 +1,6 @@
 // import CSS
-import "../CSS/Controls/Editor/GPeditorOpenLayers.css";
+import "../CSS/Controls/Editor/GPeditor.css";
+// import "../CSS/Controls/Editor/GPeditorOpenLayers.css";
 // import library
 import EventBus from "eventbusjs";
 // import local

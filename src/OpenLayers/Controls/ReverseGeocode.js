@@ -1,6 +1,6 @@
 // import CSS
 import "../CSS/Controls/ReverseGeocoding/GPreverseGeocoding.css";
-import "../CSS/Controls/ReverseGeocoding/GPreverseGeocodingOpenLayers.css";
+// import "../CSS/Controls/ReverseGeocoding/GPreverseGeocodingOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import Overlay from "ol/Overlay";
@@ -135,11 +135,9 @@ var ReverseGeocode = class ReverseGeocode extends Control {
             return;
         }
         if (collapsed) {
-            // document.getElementById("GPreverseGeocodingPanelClose-" + this._uid).click();
             this._panelCloseButton.click();
         } else {
-            // document.getElementById("GPshowReverseGeocoding-" + this._uid).click();
-            this._showReverseGeocodingInput.click();
+            this._showReverseGeocodingButton.click();
         }
         this.collapsed = collapsed;
     }
@@ -251,7 +249,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         // ################### Elements principaux du DOM ################### //
 
         // containers principaux
-        this._showReverseGeocodingInput = null;
+        this._showReverseGeocodingButton = null;
         // panel
         this._panelContainer = null;
         this._panelHeaderContainer = null;
@@ -285,6 +283,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         this._requestOptions = null;
         // geometrie de recherche du géocodage inverse qui sera envoyée dans la requête
         this._requestGeom = null;
+        this._requestPosition = null;
         // pour savoir si un calcul est en cours ou non
         this._waiting = false;
         // timer pour cacher la patience après un certain temps
@@ -476,18 +475,15 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         // create main container
         var container = this._createMainContainerElement();
 
-        // create show ReverseGeocode element
-        var inputShow = this._showReverseGeocodingInput = this._createShowReverseGeocodingElement();
-        container.appendChild(inputShow);
+        // create ReverseGeocode picto
+        var picto = this._showReverseGeocodingButton = this._createShowReverseGeocodingPictoElement();
+        container.appendChild(picto);
 
         // mode "collapsed"
         if (!this.collapsed) {
-            inputShow.checked = true;
+            picto.setAttribute("aria-pressed", true);
+            picto.click();
         }
-
-        // create ReverseGeocode picto
-        var picto = this._createShowReverseGeocodingPictoElement();
-        container.appendChild(picto);
 
         // panel
         var reverseGeocodingPanel = this._panelContainer = this._createReverseGeocodingPanelElement();
@@ -801,6 +797,8 @@ var ReverseGeocode = class ReverseGeocode extends Control {
                 logger.log("on drawstart", e);
                 // on efface les points qui ont pu être saisis précédemment (on vide la collection des features de la couche)
                 this._inputFeatures.clear();
+                // on récupère les coordonnées du premier point du tracé
+                this._onDrawStart(e, "polygon");
             }
         );
 
@@ -848,6 +846,9 @@ var ReverseGeocode = class ReverseGeocode extends Control {
             }
             if (type === "circle") {
                 coordinate = geometry.getCenter();
+            }
+            if (type === "polygon") {
+                coordinate = geometry.getFirstCoordinate();
             }
         }
         if (!coordinate) {
@@ -1105,11 +1106,12 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         });
 
         // 2. cache de la patience et du formulaire
-        this._formContainer.className = "GPreverseGeocodingComponentHidden gpf-form--hidden";
+        this._formContainer.className = "GPelementHidden gpf-hidden";
         this._hideWaitingContainer();
         // affichage de la div des résultats (et changement du titre)
         this._panelTitleContainer.innerHTML = "Résultats de la recherche";
-        this._returnPictoContainer.classList.remove("GPreverseGeocodingComponentHidden gpf-form--hidden");
+        this._returnPictoContainer.classList.remove("GPreturnPictoHidden");
+        this._returnPictoContainer.classList.remove("gpf-btn--hidden");
         this._resultsContainer.className = "GPpanel gpf-panel";
 
         // 3. ajout de la liste des résultats dans le container des resultats
@@ -1389,12 +1391,12 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
             // on surligne le résultat correspondant dans la liste des résultats
             if (f.getId() != null) {
-                var selectedResultDiv = document.getElementById("ReverseGeocodedLocation_" + f.getId() + "-" + this._uid);
+                var selectedResultDiv = document.getElementById("GPreverseGeocodedLocation_" + f.getId() + "-" + this._uid);
                 if (selectedResultDiv && selectedResultDiv.classList) {
-                    selectedResultDiv.classList.add("GPreverseGeocodedLocationHighlight");
+                    selectedResultDiv.classList.add("GPlocationHighlight");
                 }
             }
-            document.getElementById("ReverseGeocodedLocation_" + f.getId() + "-" + this._uid);
+            document.getElementById("GPreverseGeocodedLocation_" + f.getId() + "-" + this._uid);
         }
 
         // si on déselectionne un résultat (mouseout), on rétablit un style normal pour le marker
@@ -1404,9 +1406,9 @@ var ReverseGeocode = class ReverseGeocode extends Control {
             f.setStyle(this._resultsDefaultStyle);
 
             // on rétablit un style normal pour le résultat correspondant dans la liste des résultats
-            var deSelectedResultDiv = document.getElementById("ReverseGeocodedLocation_" + f.getId() + "-" + this._uid);
+            var deSelectedResultDiv = document.getElementById("GPreverseGeocodedLocation_" + f.getId() + "-" + this._uid);
             if (deSelectedResultDiv && deSelectedResultDiv.classList) {
-                deSelectedResultDiv.classList.remove("GPreverseGeocodedLocationHighlight");
+                deSelectedResultDiv.classList.remove("GPlocationHighlight");
             }
         }
     }
@@ -1479,7 +1481,8 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
-        this.collapsed = this._showReverseGeocodingInput.checked;
+        var opened = this._showReverseGeocodingButton.ariaPressed;
+        this.collapsed = !(opened === "true");
         // info : on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser ol.control.ReverseGeocode.on("change:collapsed", function ) pour s'abonner à cet évènement)
         this.dispatchEvent("change:collapsed");
@@ -1592,7 +1595,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
     }
 
     /**
-     * this method is called by event 'click' on 'ReverseGeocodedLocation_' div
+     * this method is called by event 'click' on 'GPreverseGeocodedLocation_' div
      * (cf. ReverseGeocodingDOM._createReverseGeocodingResultElement),
      * and zoom to location ?
      * TODO
@@ -1602,7 +1605,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
      */
     onReverseGeocodingResultClick (e) {
         // récupération de l'id du résultat survolé
-        var tagid = e.target.id; // ex ReverseGeocodedLocation_21
+        var tagid = e.target.id; // ex GPreverseGeocodedLocation_21
         var idx = tagid.substring(tagid.indexOf("_") + 1); // ex. 21
 
         var f = this._resultsFeaturesSource.getFeatureById(parseInt(idx, 10));
@@ -1614,7 +1617,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
     }
 
     /**
-     * this method is called by event 'mouseover' on 'ReverseGeocodedLocation_' div
+     * this method is called by event 'mouseover' on 'GPreverseGeocodedLocation_' div
      * (cf. ReverseGeocodingDOM._createReverseGeocodingResultElement),
      * and changes style of matching marker on map (selected)
      *
@@ -1623,12 +1626,12 @@ var ReverseGeocode = class ReverseGeocode extends Control {
      */
     onReverseGeocodingResultMouseOver (e) {
         // récupération de l'id du résultat survolé
-        var tagid = e.target.id; // ex ReverseGeocodedLocation_21
+        var tagid = e.target.id; // ex GPreverseGeocodedLocation_21
         var idx = tagid.substring(tagid.indexOf("_") + 1); // ex. 21
 
         // on passe le texte en gras
         if (e.target.classList) {
-            e.target.classList.add("GPreverseGeocodedLocationHighlight");
+            e.target.classList.add("GPlocationHighlight");
         }
 
         if (!this._resultsFeaturesSource) {
@@ -1642,7 +1645,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
     }
 
     /**
-     * this method is called by event 'mouseout' on 'ReverseGeocodedLocation_' div
+     * this method is called by event 'mouseout' on 'GPreverseGeocodedLocation_' div
      * (cf. ReverseGeocodingDOM._createReverseGeocodingResultElement),
      * and changes style of matching marker on map (default)
      *
@@ -1656,7 +1659,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
         // on repasse le texte en style normal
         if (e.target.classList) {
-            e.target.classList.remove("GPreverseGeocodedLocationHighlight");
+            e.target.classList.remove("GPlocationHighlight");
         }
 
         if (!this._resultsFeaturesSource) {
@@ -1721,6 +1724,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
         // on supprime les valeurs stockées
         this._requestGeom = null;
+        this._requestPosition = null;
     }
 
     /**
@@ -1729,7 +1733,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
      * @private
      */
     _displayWaitingContainer () {
-        this._waitingContainer.className = "GPreverseGeocodingCalcWaitingContainerVisible gpf-waiting--visible";
+        this._waitingContainer.className = "GPwaitingContainerVisible gpf-waiting--visible";
         this._waiting = true;
 
         // mise en place d'un timeout pour réinitialiser le panel (cacher la patience)
@@ -1757,7 +1761,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
      */
     _hideWaitingContainer () {
         if (this._waiting) {
-            this._waitingContainer.className = "GPreverseGeocodingCalcWaitingContainerHidden gpf-waiting--hidden";
+            this._waitingContainer.className = "GPwaitingContainerHidden gpf-waiting--hidden";
             this._waiting = false;
             clearTimeout(this._timer);
             this._timer = null;

@@ -1,6 +1,6 @@
 // import CSS
-import "../CSS/Controls/Isochrone/GPisochron.css";
-import "../CSS/Controls/Isochrone/GPisochronOpenLayers.css";
+import "../CSS/Controls/Isochron/GPisochron.css";
+// import "../CSS/Controls/Isochron/GPisochronOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";

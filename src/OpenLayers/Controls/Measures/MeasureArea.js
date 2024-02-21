@@ -1,6 +1,6 @@
 // import CSS
 import "../../CSS/Controls/Measures/GPmeasureArea.css";
-import "../../CSS/Controls/Measures/GPmeasureAreaOpenLayers.css";
+// import "../../CSS/Controls/Measures/GPmeasureAreaOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { getArea as olGetAreaSphere } from "ol/sphere";

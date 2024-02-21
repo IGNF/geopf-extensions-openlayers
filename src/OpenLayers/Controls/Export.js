@@ -1,5 +1,6 @@
 // import CSS
-import "../CSS/Controls/Export/GPexportOpenLayers.css";
+import "../CSS/Controls/Export/GPexport.css";
+// import "../CSS/Controls/Export/GPexportOpenLayers.css";
 
 // import OpenLayers
 import Control from "ol/control/Control";

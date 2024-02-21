@@ -1,6 +1,6 @@
 // import CSS
 import "../CSS/Controls/SearchEngine/GPsearchEngine.css";
-import "../CSS/Controls/SearchEngine/GPsearchEngineOpenLayers.css";
+// import "../CSS/Controls/SearchEngine/GPsearchEngineOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import Overlay from "ol/Overlay";

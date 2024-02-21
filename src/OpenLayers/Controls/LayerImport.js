@@ -1,5 +1,6 @@
 // import CSS
-import "../CSS/Controls/LayerImport/GPimportOpenLayers.css";
+import "../CSS/Controls/LayerImport/GPlayerImport.css";
+// import "../CSS/Controls/LayerImport/GPlayerImportOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";

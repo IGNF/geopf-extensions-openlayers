@@ -2,41 +2,40 @@
 
 [id^="GPreverseGeocoding-"] {
   top: 180px;
+  left: 10px;
 }
 
 /* Showing/hiding reverse geocoding panel */
 
 [id^="GPshowReverseGeocodingPicto-"] {
   display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: unset;
 }
 
-[id^="GPshowReverseGeocoding-"] + label {
-  display: block;
-}
-
-[id^="GPshowReverseGeocoding-"]:checked + label {
-  display: none;
-}
-
-[id^="GPshowReverseGeocoding-"] + label + div {
-  display: none;
-}
-
-[id^="GPshowReverseGeocoding-"]:checked + label + div {
-  display: block;
-}
-
-[id^="GPshowReverseGeocoding-"] + label + dialog {
+[id^="GPshowReverseGeocodingPicto-"][aria-pressed="false"] + dialog {
   display: none;
   visibility: hidden;
   opacity: 0%;
 }
 
-[id^="GPshowReverseGeocoding-"]:checked + label + dialog {
+[id^="GPshowReverseGeocodingPicto-"][aria-pressed="true"] + dialog {
   display: block;
   visibility: visible;
   opacity: 100%;
 }
+
+[id^="GPshowReverseGeocodingOpen-"] {
+  background-image: url("img/GPreverseGeocodingOpen.png");
+}
+
+.GPshowOpen {
+  background-image: url("img/GPreverseGeocodingOpen.png");
+  background-repeat: no-repeat;
+  background-position: 0 center;
+}
+
 /* General panels */
 
 div[id^=GPreverseGeocodingResultsClose] {
@@ -47,19 +46,11 @@ div[id^=GPreverseGeocodingResultsClose] {
   /*background-position: -26px 0;*/
 }
 
-.GPreverseGeocodingPanelCloseTextHidden {
-  display: none;
-}
-
 [id^="GPreverseGeocodingPanel-"] {
   width: 280px;
 }
 
-.GPreverseGeocodingComponentHidden {
-  display: none;
-}
-
-.GPreverseGeocodingReturnPicto {
+.GPreturnPicto {
   position: absolute;
   width: 26px;
   height: 26px;
@@ -69,10 +60,14 @@ div[id^=GPreverseGeocodingResultsClose] {
   cursor: pointer;
 }
 
+.GPreturnPictoHidden {
+  display: none;
+}
+
 /* Calc waiting */
 
-.GPreverseGeocodingCalcWaitingContainerVisible,
-.GPreverseGeocodingCalcWaitingContainerHidden {
+.GPwaitingContainerVisible,
+.GPwaitingContainerHidden {
   position: absolute;
   top: 32px;
   bottom: 0;
@@ -84,18 +79,18 @@ div[id^=GPreverseGeocodingResultsClose] {
   overflow: hidden;
 }
 
-.GPreverseGeocodingCalcWaitingContainerVisible {
+.GPwaitingContainerVisible {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
 }
 
-.GPreverseGeocodingCalcWaitingContainerHidden {
+.GPwaitingContainerHidden {
   display: none;
 }
 
-.GPreverseGeocodingCalcWaiting {
+.GPwaitingContainer {
   margin: auto;
 }
 
@@ -110,19 +105,19 @@ div[id^=GPreverseGeocodingResultsClose] {
   padding-top: 10px;
 }
 
-.GPreverseGeocodingCodeLabel,
-.GPreverseGeocodingFilterLabel {
+.GPlabel,
+.GPlabelFilter {
   max-width: 105px;
 }
 
-.GPreverseGeocodingCodeLabel,
-.GPreverseGeocodingCode {
+.GPlabel,
+.GPselect {
   margin-top: 5px;
   margin-bottom: 0;
 }
 
-.GPreverseGeocodingFilterLabel,
-.GPreverseGeocodingFilterInput {
+.GPlabelFilter,
+.GPlabelFilterInput {
   margin-bottom: 5px;
 }
 
@@ -130,37 +125,6 @@ input[id^="GPreverseGeocodingSubmit-"] {
   margin-top: 5px;
   margin-bottom: 15px;
   /* width: 100px; */
-}
-
-/* Calc waiting */
-
-/* TODO: waiting  */
-.GPreverseGeocodingCalcWaitingContainerVisible,
-.GPreverseGeocodingCalcWaitingContainerHidden {
-  position: absolute;
-  top: 32px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(255,255,255,0.9);
-  font-size: 1.5em;
-  font-weight: bold;
-  overflow: hidden;
-}
-
-.GPreverseGeocodingCalcWaitingContainerVisible {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-}
-
-.GPreverseGeocodingCalcWaitingContainerHidden {
-  display: none;
-}
-
-.GPreverseGeocodingCalcWaiting {
-  margin: auto;
 }
 
 /* Result panel */

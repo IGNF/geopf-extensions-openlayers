@@ -1,6 +1,6 @@
 // import CSS
 import "../CSS/Controls/MousePosition/GPmousePosition.css";
-import "../CSS/Controls/MousePosition/GPmousePositionOpenLayers.css";
+// import "../CSS/Controls/MousePosition/GPmousePositionOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import Overlay from "ol/Overlay";

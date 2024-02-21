@@ -27,18 +27,6 @@ var ReverseGeocodingDOM = {
     // ################################################################### //
 
     /**
-     * Hidden checkbox for minimizing/maximizing
-     *
-     * @returns {DOMElement} DOM element
-     */
-    _createShowReverseGeocodingElement : function () {
-        var input = document.createElement("input");
-        input.id = this._addUID("GPshowReverseGeocoding");
-        input.type = "checkbox";
-        return input;
-    },
-
-    /**
      * Show ReverseGeocoding
      *
      * @returns {DOMElement} DOM element
@@ -47,30 +35,29 @@ var ReverseGeocodingDOM = {
         // contexte d'execution
         var self = this;
 
-        var label = document.createElement("label");
-        label.id = this._addUID("GPshowReverseGeocodingPicto");
-        label.className = "GPshowAdvancedToolPicto gpf-picto";
-        label.htmlFor = this._addUID("GPshowReverseGeocoding");
-        label.title = "Ouvrir la recherche inverse";
-        label.setAttribute("tabindex", "0");
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowReverseGeocodingPicto");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto fr-btn";
+        button.title = "Ouvrir la recherche inverse";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
 
         // Close all results and panels when minimizing the widget
-        if (label.addEventListener) {
-            label.addEventListener("click", function () {
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
                 self.onShowReverseGeocodingClick();
             });
-        } else if (label.attachEvent) {
-            label.attachEvent("onclick", function () {
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
                 self.onShowReverseGeocodingClick();
             });
         }
 
-        var spanOpen = document.createElement("span");
-        spanOpen.id = this._addUID("GPshowReverseGeocodingOpen");
-        spanOpen.className = "GPshowAdvancedToolOpen gpf-picto--open";
-        label.appendChild(spanOpen);
-
-        return label;
+        return button;
     },
 
     /**
@@ -81,10 +68,10 @@ var ReverseGeocodingDOM = {
     _createReverseGeocodingWaitingElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPreverseGeocodingCalcWaitingContainer");
-        div.className = "GPreverseGeocodingCalcWaitingContainerHidden gpf-waiting--hidden";
+        div.className = "GPwaitingContainerHidden gpf-waiting--hidden";
 
         var p = document.createElement("p");
-        p.className = "GPreverseGeocodingCalcWaiting gpf-waiting";
+        p.className = "GPwaitingContainer gpf-waiting";
         p.innerHTML = "Recherche en cours...";
 
         div.appendChild(p);
@@ -100,7 +87,7 @@ var ReverseGeocodingDOM = {
     _createReverseGeocodingResultsPanelElement : function () {
         var resultsPanelDiv = document.createElement("div");
         resultsPanelDiv.id = this._addUID("GPreverseGeocodingResultsPanel");
-        resultsPanelDiv.className = "GPpanel GPreverseGeocodingComponentHidden gpf-panel gpf-panel--hidden";
+        resultsPanelDiv.className = "GPpanel GPelementHidden gpf-panel gpf-panel--hidden";
         return resultsPanelDiv;
     },
 
@@ -112,6 +99,7 @@ var ReverseGeocodingDOM = {
     _createReverseGeocodingResultsListElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPreverseGeocodingResultsList");
+        container.className = "gpf-panel__list";
         container.setAttribute("tabindex", "0");
         // Results are dynamically filled in Javascript by reverse geocoding service
         return container;
@@ -131,7 +119,7 @@ var ReverseGeocodingDOM = {
         var container = document.getElementById(this._addUID("GPreverseGeocodingResultsList"));
 
         var div = document.createElement("div");
-        div.id = this._addUID("ReverseGeocodedLocation_" + id);
+        div.id = this._addUID("GPreverseGeocodedLocation_" + id);
         div.setAttribute("tabindex", "0");
         div.className = "GPautoCompleteProposal gpf-panel__items";
         div.innerHTML = locationDescription;
@@ -191,7 +179,7 @@ var ReverseGeocodingDOM = {
 
     _createReverseGeocodingPanelDivElement : function () {
         var div = document.createElement("div");
-        div.className = "fr-modal__body";
+        div.className = "gpf-panel__body fr-modal__body";
         return div;
     },
 
@@ -220,25 +208,25 @@ var ReverseGeocodingDOM = {
         var buttonNew = document.createElement("button");
         buttonNew.id = this._addUID("GPreverseGeocodingReturnPicto");
         buttonNew.title = "Nouvelle recherche";
-        buttonNew.className = "GPreverseGeocodingReturnPicto gpf-btn--return fr-btn fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon";
-        buttonNew.classList.add("GPreverseGeocodingComponentHidden");
-        buttonNew.classList.add("gpf-hidden");
+        buttonNew.className = "GPreturnPicto gpf-btn gpf-icon-return fr-btn fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon";
+        buttonNew.classList.add("GPreturnPictoHidden");
+        buttonNew.classList.add("gpf-btn--hidden");
         if (buttonNew.addEventListener) {
             buttonNew.addEventListener("click", function (e) {
-                document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GProuteComponentHidden gpf-panel--hidden";
-                document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "fr-modal__content";
+                document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
+                document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "gpf-panel__content fr-modal__content";
                 document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Recherche inverse";
-                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPreverseGeocodingComponentHidden");
-                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-hidden");
+                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPreturnPictoHidden");
+                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-btn--hidden");
                 self.onGPreverseGeocodingReturnPictoClick(e);
             });
         } else if (buttonNew.attachEvent) {
             buttonNew.attachEvent("onclick", function (e) {
-                document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GProuteComponentHidden gpf-panel--hidden";
-                document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "fr-modal__content";
+                document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
+                document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "gpf-panel__content fr-modal__content";
                 document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Recherche inverse";
-                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPreverseGeocodingComponentHidden");
-                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-hidden");
+                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPelementHidden");
+                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-btn--hidden");
                 self.onGPreverseGeocodingReturnPictoClick(e);
             });
         }
@@ -294,7 +282,7 @@ var ReverseGeocodingDOM = {
         }
 
         var span = document.createElement("span");
-        span.className = "GPreverseGeocodingPanelCloseTextHidden gpf-hidden";
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
         span.innerText = "Fermer";
 
         divClose.appendChild(span);
@@ -314,7 +302,7 @@ var ReverseGeocodingDOM = {
 
         var form = document.createElement("form");
         form.id = this._addUID("GPreverseGeocodingForm");
-        form.className = "fr-modal__content";
+        form.className = "gpf-panel__content fr-modal__content";
 
         if (form.addEventListener) {
             form.addEventListener("submit", function (e) {
@@ -346,18 +334,18 @@ var ReverseGeocodingDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPflexInput gpf-flex";
+        div.className = "GPflexInput";
 
         var label = document.createElement("label");
         label.id = "label-recherche-par";
-        label.className = "GPreverseGeocodingCodeLabel gpf-label fr-label";
+        label.className = "GPlabel gpf-label fr-label";
         label.innerHTML = "Recherche par";
         label.title = "Recherche par";
         div.appendChild(label);
 
         var select = document.createElement("select");
         select.setAttribute("aria-labelledby", "label-recherche-par");
-        select.className = "GPreverseGeocodingCode gpf-select fr-select";
+        select.className = "GPselect gpf-select fr-select";
         // gestionnaire d'evenement : on stocke la valeur du type de geocodage,
         // utilisé dans la requête de géocodage inverse
         if (select.addEventListener) {
@@ -415,18 +403,18 @@ var ReverseGeocodingDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPflexInput gpf-flex";
+        div.className = "GPflexInput";
 
         var label = document.createElement("label");
         label.id = "label-delimitation";
-        label.className = "GPreverseGeocodingCodeLabel gpf-label fr-label";
+        label.className = "GPlabel gpf-label fr-label";
         label.innerHTML = "Délimitation";
         label.title = "Délimitation";
         div.appendChild(label);
 
         var select = document.createElement("select");
         select.setAttribute("aria-labelledby", "label-delimitation");
-        select.className ="GPreverseGeocodingCode gpf-select fr-select";
+        select.className ="GPselect gpf-select fr-select";
         // gestionnaire d'evenement : on stocke la valeur du type de délimitation,
         // et on modifie l'événement de pointage sur la carte en fonction
         if (select.addEventListener) {

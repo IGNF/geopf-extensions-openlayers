@@ -1,5 +1,6 @@
 // import CSS
-import "../CSS/Controls/Attribution/GPattributionOpenLayers.css";
+import "../CSS/Controls/Attribution/GPattribution.css";
+// import "../CSS/Controls/Attribution/GPattributionOpenLayers.css";
 // import OpenLayers
 import Attribution from "ol/control/Attribution";
 import { transformExtent as olTransformExtentProj } from "ol/proj";

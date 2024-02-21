@@ -1,6 +1,6 @@
 // import CSS
 import "../CSS/Controls/LocationSelector/GPlocation.css";
-import "../CSS/Controls/LocationSelector/GPlocationOpenLayers.css";
+// import "../CSS/Controls/LocationSelector/GPlocationOpenLayers.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import Overlay from "ol/Overlay";
