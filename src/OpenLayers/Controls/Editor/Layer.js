@@ -3,8 +3,8 @@ import EventEditor from "./Event";
 import Style from "./Style";
 import Legend from "./Legend";
 import Filter from "./Filter";
-import Utils from "../../../Common/Utils";
-import Logger from "../../../Common/Utils/LoggerByDefault";
+import Utils from "../../../Utils/Helper";
+import Logger from "../../../Utils/LoggerByDefault";
 
 var logger = Logger.getLogger("editor-layer");
 

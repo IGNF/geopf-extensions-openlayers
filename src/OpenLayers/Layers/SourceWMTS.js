@@ -4,10 +4,10 @@ import WMTSTileGrid from "ol/tilegrid/WMTS";
 // import local with ol dependencies
 import WMTSExtended from "../Sources/WMTS";
 // import local
-import Utils from "../../Common/Utils";
-import LayerUtils from "../../Common/Utils/LayerUtils";
-import Logger from "../../Common/Utils/LoggerByDefault";
-import Config from "../../Common/Utils/Config";
+import Utils from "../../Utils/Helper";
+import LayerUtils from "../../Utils/LayerUtils";
+import Logger from "../../Utils/LoggerByDefault";
+import Config from "../../Utils/Config";
 // package.json (extract version)
 import Pkg from "../../../package.json";
 

@@ -1,6 +1,7 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
+        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Portail{{ mode }}.css" />
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Editor{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/openlayers/modules/Editor{{ mode }}.js"></script>
 {{/content}}
@@ -69,7 +70,7 @@
             // liste de themes reussi avec imagette !
             var editor1 = new ol.style.Editor({
                 target: document.getElementById("editor"),
-                style: "{{ resources }}/data/mapbox/styles/osm.json",
+                style: "{{ resources }}/data/mapbox/styles/mapbox.json",
                 events : { // TODO...
                     "editor:layer:onclickvisibility" : function (e) {console.log(e);},
                     "editor:layer:onclickremove" : function (e) {console.log(e);},

@@ -10,10 +10,10 @@ import {
 } from "ol/style";
 // import local
 import Styling from "./Styling";
-import Color from "../../Common/Utils/ColorUtils";
-import Logger from "../../Common/Utils/LoggerByDefault";
-import Parser from "../../Common/Utils/Parser";
-import Utils from "../../Common/Utils";
+import Color from "../../Utils/ColorUtils";
+import Logger from "../../Utils/LoggerByDefault";
+import Parser from "../../Utils/Parser";
+import Utils from "../../Utils/Helper";
 
 var logger = Logger.getLogger("extended KML format");
 

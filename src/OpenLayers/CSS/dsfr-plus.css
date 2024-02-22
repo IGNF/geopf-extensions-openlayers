@@ -10,7 +10,9 @@
   background-color: unset;
 }
 
-.gpf-panel--hidden {}
+.gpf-panel--hidden {
+  display: none;
+}
 
 .gpf-panel__body {}
 .gpf-panel__header {}

@@ -79,23 +79,23 @@ import LayerWMTS from "./Layers/LayerWMTS";
 import LayerWMS from "./Layers/LayerWMS";
 import LayerMapBox from "./Layers/LayerMapBox";
 
-import LayerSwitcher from "./Controls/LayerSwitcher";
-import GetFeatureInfo from "./Controls/GetFeatureInfo";
-import SearchEngine from "./Controls/SearchEngine";
-import MousePosition from "./Controls/MousePosition";
-import Drawing from "./Controls/Drawing";
-import Route from "./Controls/Route";
-import Isocurve from "./Controls/Isocurve";
-import ReverseGeocode from "./Controls/ReverseGeocode";
-import LocationSelector from "./Controls/LocationSelector";
-import LayerImport from "./Controls/LayerImport";
-import GeoportalAttribution from "./Controls/GeoportalAttribution";
+import LayerSwitcher from "./Controls/LayerSwitcher/LayerSwitcher";
+import GetFeatureInfo from "./Controls/GetFeatureInfo/GetFeatureInfo";
+import SearchEngine from "./Controls/SearchEngine/SearchEngine";
+import MousePosition from "./Controls/MousePosition/MousePosition";
+import Drawing from "./Controls/Drawing/Drawing";
+import Route from "./Controls/Route/Route";
+import Isocurve from "./Controls/Isocurve/Isocurve";
+import ReverseGeocode from "./Controls/ReverseGeocode/ReverseGeocode";
+import LocationSelector from "./Controls/LocationSelector/LocationSelector";
+import LayerImport from "./Controls/LayerImport/LayerImport";
+import GeoportalAttribution from "./Controls/Attribution/GeoportalAttribution";
 import Markers from "./Controls/Utils/Markers";
-import ElevationPath from "./Controls/ElevationPath";
+import ElevationPath from "./Controls/ElevationPath/ElevationPath";
 import MeasureLength from "./Controls/Measures/MeasureLength";
 import MeasureArea from "./Controls/Measures/MeasureArea";
 import MeasureAzimuth from "./Controls/Measures/MeasureAzimuth";
-import ButtonExport from "./Controls/Export";
+import ButtonExport from "./Controls/Export/Export";
 
 import Proj4 from "proj4";
 
@@ -106,10 +106,10 @@ import Themes from "./Controls/Editor/Themes";
 import Legend from "./Controls/Editor/Legend";
 import Group from "./Controls/Editor/Group";
 import Search from "./Controls/Editor/Search";
-import Editor from "./Controls/Editor";
+import Editor from "./Controls/Editor/Editor";
 
 // Les autoload...
-import "../Common/Utils/AutoLoadConfig";
+import "../Utils/AutoLoadConfig";
 import "./CRS/AutoLoadCRS";
 
 // export des services
@@ -160,18 +160,18 @@ export const olExtVersion = Pkg.olExtVersion || Pkg.version;
 /** Publication date */
 export const olExtDate = Pkg.date;
 
-/** cf. Gp.olUtils */
-export { default as olUtils } from "../Common/Utils";
+/** cf. Gp.HelperUtils */
+export { default as HelperUtils } from "../Utils/Helper";
 /** cf. Gp.LayerUtils */
-export { default as LayerUtils } from "../Common/Utils/LayerUtils";
+export { default as LayerUtils } from "../Utils/LayerUtils";
 /** cf. Gp.ProxyUtils */
-export { default as ProxyUtils } from "../Common/Utils/ProxyUtils";
+export { default as ProxyUtils } from "../Utils/ProxyUtils";
 /** cf. Gp.ColorUtils */
-export { default as ColorUtils } from "../Common/Utils/ColorUtils";
+export { default as ColorUtils } from "../Utils/ColorUtils";
 /** cf. Gp.MathUtils */
-export { default as MathUtils } from "../Common/Utils/MathUtils";
+export { default as MathUtils } from "../Utils/MathUtils";
 /** cf. Gp.Logger */
-export { default as Logger } from "../Common/Utils/LoggerByDefault";
+export { default as Logger } from "../Utils/LoggerByDefault";
 
 function deepCopy (source, target) {
     // Implementing Tail Call Elimination

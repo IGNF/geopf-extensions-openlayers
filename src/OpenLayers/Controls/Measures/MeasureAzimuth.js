@@ -1,17 +1,17 @@
 // import CSS
-import "../../CSS/Controls/Measures/GPmeasureAzimuth.css";
-// import "../../CSS/Controls/Measures/GPmeasureAzimuthOpenLayers.css";
+import "../../CSS/Controls/Measures/GPFmeasureAzimuth.css";
+// import "../../CSS/Controls/Measures/GPFmeasureAzimuthStyle.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
 // import local
-import Logger from "../../../Common/Utils/LoggerByDefault";
-import ID from "../../../Common/Utils/SelectorID";
+import Logger from "../../../Utils/LoggerByDefault";
+import ID from "../../../Utils/SelectorID";
 // DOM
-import MeasureAzimuthDOM from "../../../Common/Controls/MeasureAzimuthDOM";
+import MeasureAzimuthDOM from "./MeasureAzimuthDOM";
 // import local with ol dependencies
-import MeasureToolBox from "../MeasureToolBox";
+import MeasureToolBox from "../ToolBoxMeasure/MeasureToolBox";
 import Measures from "./Measures";
 
 // Derived from OpenLayers measure example

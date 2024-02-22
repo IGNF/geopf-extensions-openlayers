@@ -1,18 +1,18 @@
 // import CSS
-import "../../CSS/Controls/Measures/GPmeasureArea.css";
-// import "../../CSS/Controls/Measures/GPmeasureAreaOpenLayers.css";
+import "../../CSS/Controls/Measures/GPFmeasureArea.css";
+// import "../../CSS/Controls/Measures/GPFmeasureAreaStyle.css";
 // import OpenLayers
 import Control from "ol/control/Control";
 import { getArea as olGetAreaSphere } from "ol/sphere";
 import { Polygon } from "ol/geom";
 // import local
-import Logger from "../../../Common/Utils/LoggerByDefault";
-import ID from "../../../Common/Utils/SelectorID";
+import Logger from "../../../Utils/LoggerByDefault";
+import ID from "../../../Utils/SelectorID";
 // DOM
-import MeasureAreaDOM from "../../../Common/Controls/MeasureAreaDOM";
+import MeasureAreaDOM from "./MeasureAreaDOM";
 // import local with ol dependencies
 import Measures from "./Measures";
-import MeasureToolBox from "../MeasureToolBox";
+import MeasureToolBox from "../ToolBoxMeasure/MeasureToolBox";
 
 // Derived from OpenLayers measure example
 // http://openlayers.org/en/latest/examples/measure.html

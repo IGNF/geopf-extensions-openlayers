@@ -6,8 +6,8 @@ import {
     Draw as DrawInteraction
 } from "ol/interaction";
 // import local
-import Logger from "../../../Common/Utils/LoggerByDefault";
-import Utils from "../../../Common/Utils";
+import Logger from "../../../Utils/LoggerByDefault";
+import Utils from "../../../Utils/Helper";
 
 var logger = Logger.getLogger("interactions");
 

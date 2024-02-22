@@ -1,7 +1,7 @@
 import EventBus from "eventbusjs";
 import EventEditor from "./Event";
-import Logger from "../../../Common/Utils/LoggerByDefault";
-import Color from "../../../Common/Utils/ColorUtils";
+import Logger from "../../../Utils/LoggerByDefault";
+import Color from "../../../Utils/ColorUtils";
 
 var logger = Logger.getLogger("editor-legend");
 

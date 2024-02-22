@@ -13,8 +13,8 @@ import {
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Logger from "../../../Common/Utils/LoggerByDefault";
-import ProxyUtils from "../../../Common/Utils/ProxyUtils";
+import Logger from "../../../Utils/LoggerByDefault";
+import ProxyUtils from "../../../Utils/ProxyUtils";
 // import $__xmldom from "xmldom";
 
 var logger = Logger.getLogger("GfiUtils");

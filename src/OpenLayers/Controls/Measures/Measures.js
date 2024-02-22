@@ -10,10 +10,10 @@ import {
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 // import local
-import Logger from "../../../Common/Utils/LoggerByDefault";
+import Logger from "../../../Utils/LoggerByDefault";
 import Interactions from "../Utils/Interactions";
 // import local with ol dependencies
-import LayerSwitcher from "../LayerSwitcher";
+import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 
 // Derived from OpenLayers measure example
 // http://openlayers.org/en/latest/examples/measure.html

@@ -1,0 +1,131 @@
+/* REVERSE GEOCODING */
+
+[id^="GPreverseGeocoding-"] {
+  top: 180px;
+  left: 10px;
+}
+
+/* Showing/hiding reverse geocoding panel */
+
+[id^="GPshowReverseGeocodingPicto-"] {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: unset;
+}
+
+[id^="GPshowReverseGeocodingPicto-"][aria-pressed="false"] + dialog {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+[id^="GPshowReverseGeocodingPicto-"][aria-pressed="true"] + dialog {
+  display: block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+[id^="GPshowReverseGeocodingPicto-"] {
+  background-image: url("img/GPreverseGeocodingOpen.png");
+  background-repeat: no-repeat;
+  background-position: 0 center;
+}
+
+/* General panels */
+
+[id^="GPreverseGeocodingPanel-"] {
+    position: absolute;
+    left: 8px;
+}
+
+[id^="GPreverseGeocodingPanel-"] {
+  width: 280px;
+}
+
+[id^="GPreverseGeocodingReturnPicto"] {
+  background-image: url("img/GPreverseGeocodingReturn.png");
+  background-repeat: no-repeat;
+  background-position: 0 center;
+}
+
+[id^="GPreverseGeocodingPanelClose-"] {
+  background-image: url("img/GPreverseGeocodingOpen.png");
+}
+
+[id^="GPreverseGeocodingResultsClose"] {
+  background-image: url("img/GPreverseGeocodingOpen.png");
+}
+
+div[id^=GPreverseGeocodingResultsClose] {
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 32px;
+  /*background-position: -26px 0;*/
+}
+
+/* Search panel */
+
+[id^="GPreverseGeocodingForm-"] {
+  position: relative;
+  max-height: 270px;
+  overflow-y: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+}
+
+
+input[id^="GPreverseGeocodingSubmit-"] {
+  margin-top: 5px;
+  margin-bottom: 15px;
+  /* width: 100px; */
+}
+
+/* Result panel */
+
+div[id^=GPreverseGeocodingResultsList-] {
+  position: relative;
+  max-height: 210px;
+  overflow-y: auto;
+}
+
+/* Calc waiting */
+
+/* INFO 
+la patience de calcul est rendu disponible pour le mode dsfr
+car ces classes sont modifiées dans le code JS */
+
+.GPwaitingContainerVisible,
+.GPwaitingContainerHidden {
+  position: absolute;
+  top: 32px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255,255,255,0.9);
+  font-size: 1.5em;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.GPwaitingContainerVisible {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+}
+
+.GPwaitingContainerHidden {
+  display: none;
+}
+
+.GPwaitingContainer {
+  margin: auto;
+}
+
+.GPwaitingContainerVisible,
+.GPwaitingContainerHidden {
+  border-radius: 4px;
+}
