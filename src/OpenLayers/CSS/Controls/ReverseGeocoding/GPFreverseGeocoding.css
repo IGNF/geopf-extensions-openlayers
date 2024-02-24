@@ -29,7 +29,7 @@
 [id^="GPshowReverseGeocodingPicto-"] {
   background-image: url("img/GPreverseGeocodingOpen.png");
   background-repeat: no-repeat;
-  background-position: 0 center;
+  background-position: 3px center;
 }
 
 /* General panels */
@@ -89,43 +89,4 @@ div[id^=GPreverseGeocodingResultsList-] {
   position: relative;
   max-height: 210px;
   overflow-y: auto;
-}
-
-/* Calc waiting */
-
-/* INFO 
-la patience de calcul est rendu disponible pour le mode dsfr
-car ces classes sont modifiées dans le code JS */
-
-.GPwaitingContainerVisible,
-.GPwaitingContainerHidden {
-  position: absolute;
-  top: 32px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(255,255,255,0.9);
-  font-size: 1.5em;
-  font-weight: bold;
-  overflow: hidden;
-}
-
-.GPwaitingContainerVisible {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-}
-
-.GPwaitingContainerHidden {
-  display: none;
-}
-
-.GPwaitingContainer {
-  margin: auto;
-}
-
-.GPwaitingContainerVisible,
-.GPwaitingContainerHidden {
-  border-radius: 4px;
 }

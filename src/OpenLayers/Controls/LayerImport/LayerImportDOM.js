@@ -32,7 +32,7 @@ var LayerImportDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPimport");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
@@ -40,17 +40,6 @@ var LayerImportDOM = {
     // ######################### show widget ############################# //
     // ################################################################### //
 
-    /**
-     * Hidden checkbox for minimizing/maximizing
-     *
-     * @returns {DOMElement} DOM element
-     */
-    _createShowImportElement : function () {
-        var input = document.createElement("input");
-        input.id = this._addUID("GPshowImport");
-        input.type = "checkbox";
-        return input;
-    },
 
     /**
      * Show Import
@@ -61,33 +50,33 @@ var LayerImportDOM = {
         // contexte d'execution
         var self = this;
 
-        var label = document.createElement("label");
-        label.id = this._addUID("GPshowImportPicto");
-        label.className = "GPshowAdvancedToolPicto";
-        label.htmlFor = this._addUID("GPshowImport");
-        label.title = "Ouvrir l'import de couches";
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowImportPicto");
+        button.className = "GPshowAdvancedToolPicto GPshowOpen gpf-btn fr-btn";
+        button.title = "Ouvrir l'import de couches";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
 
         // Close all results and panels when minimizing the widget
-        if (label.addEventListener) {
-            label.addEventListener("click", function () {
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
                 self._onShowImportClick();
             });
-        } else if (label.attachEvent) {
-            label.attachEvent("onclick", function () {
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
                 self._onShowImportClick();
             });
         }
 
-        var spanOpen = document.createElement("span");
-        spanOpen.id = this._addUID("GPshowImportOpen");
-        spanOpen.className = "GPshowAdvancedToolOpen";
-        label.appendChild(spanOpen);
-
-        return label;
+        return button;
     },
 
     // ################################################################### //
-    // ######################### Header panel ############################ //
+    // ################################ Panel ############################ //
     // ################################################################### //
 
     /**
@@ -96,10 +85,16 @@ var LayerImportDOM = {
      * @returns {DOMElement} DOM element
      */
     _createImportPanelElement : function () {
-        var div = document.createElement("div");
-        div.id = this._addUID("GPimportPanel");
-        div.className = "GPpanel";
+        var dialog = document.createElement("dialog");
+        dialog.id = this._addUID("GPimportPanel");
+        dialog.className = "GPpanel gpf-panel fr-modal";
 
+        return dialog;
+    },
+
+    _createImportPanelDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
         return div;
     },
 
@@ -110,15 +105,7 @@ var LayerImportDOM = {
      */
     _createImportPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "GPpanelHeader";
-
-        // panel title
-        var panelTitle = this._createImportPanelTitleElement();
-        container.appendChild(panelTitle);
-        // close picto
-        var closeDiv = this._createImportPanelCloseElement();
-        container.appendChild(closeDiv);
-
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
         return container;
     },
 
@@ -129,7 +116,8 @@ var LayerImportDOM = {
      */
     _createImportPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelTitle";
+        div.id = this._addUID("GPimportHeaderTitle");
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title";
         div.innerHTML = "Import de données";
         return div;
     },
@@ -143,9 +131,9 @@ var LayerImportDOM = {
         // contexte
         var self = this;
 
-        var divClose = document.createElement("div");
+        var divClose = document.createElement("button");
         divClose.id = this._addUID("GPimportPanelClose");
-        divClose.className = "GPpanelClose";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn--close fr-btn--close fr-btn";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -158,6 +146,12 @@ var LayerImportDOM = {
                 document.getElementById(self._addUID("GPshowImportPicto")).click();
             });
         }
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        divClose.appendChild(span);
 
         return divClose;
     },
@@ -178,7 +172,7 @@ var LayerImportDOM = {
 
         var form = document.createElement("form");
         form.id = this._addUID("GPimportForm");
-        form.className = "map-tool-box";
+        form.className = "gpf-panel__content fr-modal__content";
 
         // TODO ?
         if (form.addEventListener) {
@@ -211,14 +205,15 @@ var LayerImportDOM = {
         div.className = "GPimportInputLine";
 
         var label = document.createElement("label");
-        label.htmlFor = this._addUID("GPimportType");
-        label.className = "GPimportLabel";
+        label.id = this._addUID("GPimportType");
+        label.className = "GPimportLabel gpf-label fr-label";
         label.innerHTML = "Type de donnée";
         label.title = "Type de donnée";
         div.appendChild(label);
 
         var select = document.createElement("select");
-        select.className = "GPimportSelect";
+        select.setAttribute("aria-labelledby", this._addUID("GPimportType"));
+        select.className = "GPimportSelect gpf-select fr-select";
         // gestionnaire d'evenement : on stocke la valeur du type d'import
         if (select.addEventListener) {
             select.addEventListener("change", function (e) {
@@ -282,10 +277,10 @@ var LayerImportDOM = {
     _createImportWaitingElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportWaitingContainer");
-        div.className = "GPimportWaitingContainerHidden";
+        div.className = "GPimportWaitingContainerHidden gpf-waiting--hidden";
 
         var p = document.createElement("p");
-        p.className = "GPimportWaiting";
+        p.className = "GPimportWaiting gpf-waiting";
         p.innerHTML = "Recherche en cours...";
 
         div.appendChild(p);
@@ -324,7 +319,7 @@ var LayerImportDOM = {
         div.className = "GPimportInputLine";
 
         var label = document.createElement("label");
-        label.className = "GPimportLabel";
+        label.className = "GPimportLabel gpf-label fr-label";
         label.htmlFor = this._addUID("GPimportName");
         label.innerHTML = "Nom";
         label.title = "Nom";
@@ -333,7 +328,7 @@ var LayerImportDOM = {
         var input = document.createElement("input");
         input.type = "text";
         input.id = this._addUID("GPimportName");
-        input.className = "GPimportInput";
+        input.className = "GPimportInput gpf-input fr-input";
         div.appendChild(input);
 
         return div;
@@ -359,20 +354,20 @@ var LayerImportDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPimportChoiceAlt";
+        div.className = "GPimportChoiceAlt gpf-radio-group fr-radio-group";
 
         var input = document.createElement("input");
         input.type = "radio";
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
                 document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine";
-                document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportValueHidden";
+                document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportValueHidden gpf-hidden";
                 context._onStaticImportTypeChange(e);
             });
         } else if (input.appendChild) {
             input.appendChild("onchange", function () {
                 document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine";
-                document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportValueHidden";
+                document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportValueHidden gpf-hidden";
                 context._onStaticImportTypeChange();
             });
         }
@@ -383,7 +378,7 @@ var LayerImportDOM = {
         div.appendChild(input);
 
         var label = document.createElement("label");
-        label.className = "GPimportChoiceAltTxt";
+        label.className = "GPimportChoiceAltTxt gpf-label fr-label";
         label.htmlFor = this._addUID("GPimportChoiceAltLocal");
         label.innerHTML = "par fichier local";
         label.title = "par fichier local";
@@ -401,20 +396,20 @@ var LayerImportDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPimportChoiceAlt";
+        div.className = "GPimportChoiceAlt gpf-radio-group fr-radio-group";
 
         var input = document.createElement("input");
         input.type = "radio";
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
                 document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportInputLine";
-                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportValueHidden";
+                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportValueHidden gpf-hidden";
                 context._onStaticImportTypeChange(e);
             });
         } else if (input.appendChild) {
             input.appendChild("onchange", function () {
                 document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportInputLine";
-                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportValueHidden";
+                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportValueHidden gpf-hidden";
                 context._onStaticImportTypeChange();
             });
         }
@@ -425,7 +420,7 @@ var LayerImportDOM = {
         div.appendChild(input);
 
         var label = document.createElement("label");
-        label.className = "GPimportChoiceAltTxt";
+        label.className = "GPimportChoiceAltTxt gpf-label fr-label";
         label.htmlFor = this._addUID("GPimportChoiceAltUrl");
         label.innerHTML = "par URL";
         label.title = "par URL";
@@ -453,7 +448,7 @@ var LayerImportDOM = {
      */
     _createStaticLocalInputLabel : function () {
         var label = document.createElement("label");
-        label.className = "GPimportLabel";
+        label.className = "GPimportLabel gpf-label fr-label";
         label.htmlFor = this._addUID("GPimportFile");
         label.innerHTML = "Fichier local";
         label.title = "Fichier local";
@@ -469,7 +464,7 @@ var LayerImportDOM = {
         var input = document.createElement("input");
         input.type = "file";
         input.id = this._addUID("GPimportFile");
-        input.className = "GPimportInputFile";
+        input.className = "GPimportInputFile gpf-upload fr-upload";
         return input;
     },
 
@@ -481,7 +476,7 @@ var LayerImportDOM = {
     _createStaticUrlInputDiv : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportValueUrl");
-        div.className = "GPimportValueHidden";
+        div.className = "GPimportValueHidden gpf-hidden";
         return div;
     },
 
@@ -492,7 +487,7 @@ var LayerImportDOM = {
      */
     _createStaticUrlInputLabel : function () {
         var label = document.createElement("label");
-        label.className = "GPimportLabel";
+        label.className = "GPimportLabel gpf-label fr-label";
         label.htmlFor = this._addUID("GPimportUrl");
         label.innerHTML = "URL";
         label.title = "URL";
@@ -508,7 +503,7 @@ var LayerImportDOM = {
         var input = document.createElement("input");
         input.type = "text";
         input.id = this._addUID("GPimportUrl");
-        input.className = "GPimportInput";
+        input.className = "GPimportInput gpf-input fr-input";
         return input;
     },
 
@@ -551,7 +546,7 @@ var LayerImportDOM = {
      */
     _createServiceUrlInputLabel : function () {
         var label = document.createElement("label");
-        label.className = "GPimportLabel";
+        label.className = "GPimportLabel gpf-label fr-label";
         label.htmlFor = this._addUID("GPimportServiceUrl");
         label.innerHTML = "URL du service";
         label.title = "URL du service";
@@ -583,7 +578,7 @@ var LayerImportDOM = {
     _createImportSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPimportSubmit");
-        input.className = "GPinputSubmit tool-form-submit";
+        input.className = "GPinputSubmit gpf-btn gpf-btn--submit fr-btn";
         input.type = "submit";
         input.value = "Importer";
 
@@ -602,7 +597,7 @@ var LayerImportDOM = {
     _createImportGetCapPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportGetCapPanel");
-        div.className = "GPpanel";
+        div.className = "GPpanel gpf-panel";
         return div;
     },
 
@@ -616,11 +611,11 @@ var LayerImportDOM = {
         var context = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader";
+        container.className = "GPpanelHeader gpf-panel__header";
 
         // panel title
         var panelTitle = document.createElement("div");
-        panelTitle.className = "GPpanelTitle";
+        panelTitle.className = "GPpanelTitle gpf-panel__title";
         panelTitle.innerHTML = "Couches accessibles";
         panelTitle.title = "Couches accessibles";
         container.appendChild(panelTitle);
@@ -629,18 +624,18 @@ var LayerImportDOM = {
         var closeDiv = document.createElement("div");
         if (closeDiv.addEventListener) {
             closeDiv.addEventListener("click", function () {
+                document.getElementById(context._addUID("GPshowImportPicto")).click();
                 document.getElementById(context._addUID("GPimportGetCapPanel")).style.display = "none";
-                document.getElementById(context._addUID("GPimportPanel")).style.display = "";
                 context._onGetCapPanelClose();
             });
         } else if (closeDiv.attachEvent) {
             closeDiv.attachEvent("click", function () {
+                document.getElementById(context._addUID("GPshowImportPicto")).click();
                 document.getElementById(context._addUID("GPimportGetCapPanel")).style.display = "none";
-                document.getElementById(context._addUID("GPimportPanel")).style.display = "";
                 context._onGetCapPanelClose();
             });
         }
-        closeDiv.className = "GPpanelClose";
+        closeDiv.className = "GPpanelClose gpf-btn gpf-btn--close fr-btn";
         closeDiv.title = "Fermer le panneau";
         closeDiv.id = this._addUID("GPimportGetCapPanelClose");
         container.appendChild(closeDiv);
@@ -655,7 +650,7 @@ var LayerImportDOM = {
      */
     _createImportGetCapResultsContainer : function () {
         var container = document.createElement("div");
-        container.className = "GPimportGetCapRoot";
+        container.className = "GPimportGetCapRoot gpf-panel__list";
         container.id = this._addUID("GPimportGetCapResults");
 
         return container;
@@ -672,7 +667,7 @@ var LayerImportDOM = {
 
     _addImportGetCapResultRubrique : function (title, container) {
         var li = document.createElement("li");
-        li.className = "GPimportGetCapRubrique";
+        li.className = "GPimportGetCapRubrique gpf-panel__items";
 
         // input
         var input = document.createElement("input");
@@ -683,7 +678,7 @@ var LayerImportDOM = {
 
         // label for
         var label = document.createElement("label");
-        label.className = "GPimportGetCapRubriqueTitle";
+        label.className = "GPimportGetCapRubriqueTitle gpf-label fr-btn";
         label.htmlFor = input.id;
         label.innerHTML = title;
         label.title = title;
@@ -703,7 +698,7 @@ var LayerImportDOM = {
 
     _addImportGetCapResultLayer : function (description, id, container) {
         var li = document.createElement("li");
-        li.className = "GPimportGetCapProposal";
+        li.className = "GPimportGetCapProposal gpf-panel__items";
         li.innerHTML = description.content;
         li.title = description.title;
         li.id = "GPimportGetCapProposal_" + id;
@@ -735,7 +730,7 @@ var LayerImportDOM = {
     _createImportMapBoxPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportMapBoxPanel");
-        div.className = "GPpanel";
+        div.className = "GPpanel gpf-panel";
         return div;
     },
 
@@ -749,23 +744,21 @@ var LayerImportDOM = {
         var context = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader";
+        container.className = "GPpanelHeader gpf-panel__header";
 
         // return picto
         var returnDiv = document.createElement("div");
         returnDiv.id = this._addUID("GPimportMapBoxPanelReturnPicto");
         returnDiv.title = "Masquer le panneau";
-        returnDiv.className = "";
+        returnDiv.className = "gpf-btn gpf-btn-return fr-btn";
         if (returnDiv.addEventListener) {
             returnDiv.addEventListener("click", function (e) {
-                // document.getElementById(context._addUID("GPimportMapBoxPanel")).style.display = "none";
-                // document.getElementById(context._addUID("GPimportPanel")).style.display = "none";
+                document.getElementById(context._addUID("GPshowImportPicto")).click();
                 context._onMapBoxReturnPictoClick(e);
             });
         } else if (returnDiv.attachEvent) {
             returnDiv.attachEvent("onclick", function (e) {
-                // document.getElementById(context._addUID("GPimportMapBoxPanel")).style.display = "none";
-                // document.getElementById(context._addUID("GPimportPanel")).style.display = "none";
+                document.getElementById(context._addUID("GPshowImportPicto")).click();
                 context._onMapBoxReturnPictoClick(e);
             });
         }
@@ -773,7 +766,7 @@ var LayerImportDOM = {
 
         // panel title
         var panelTitle = document.createElement("div");
-        panelTitle.className = "GPpanelTitle";
+        panelTitle.className = "GPpanelTitle gpf-panel__title";
         panelTitle.innerHTML = "Edition des styles";
         panelTitle.title = "Edition des styles";
         container.appendChild(panelTitle);
@@ -782,18 +775,18 @@ var LayerImportDOM = {
         var closeDiv = document.createElement("div");
         if (closeDiv.addEventListener) {
             closeDiv.addEventListener("click", function () {
+                document.getElementById(context._addUID("GPshowImportPicto")).click();
                 document.getElementById(context._addUID("GPimportMapBoxPanel")).style.display = "none";
-                document.getElementById(context._addUID("GPimportPanel")).style.display = "";
                 context._onMapBoxPanelClose();
             });
         } else if (closeDiv.attachEvent) {
             closeDiv.attachEvent("click", function () {
+                document.getElementById(context._addUID("GPshowImportPicto")).click();
                 document.getElementById(context._addUID("GPimportMapBoxPanel")).style.display = "none";
-                document.getElementById(context._addUID("GPimportPanel")).style.display = "";
                 context._onMapBoxPanelClose();
             });
         }
-        closeDiv.className = "GPpanelClose";
+        closeDiv.className = "GPpanelClose gpf-btn gpf-btn--close fr-btn";
         closeDiv.title = "Fermer le panneau";
         closeDiv.id = this._addUID("GPimportMapBoxPanelClose");
         container.appendChild(closeDiv);

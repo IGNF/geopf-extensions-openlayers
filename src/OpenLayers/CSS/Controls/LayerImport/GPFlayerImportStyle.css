@@ -1,79 +1,10 @@
-/* Layer Import */
 
-div[id^="GPimport-"] {
-  top: 220px;
-  left: 10px;
+.GPshowOpen {
+  background-color: rgba(0,60,136,0.5);
 }
 
-/* Showing/hiding import panel */
-
-span[id^="GPshowImportOpen-"] {
-  background-image: url("img/GPimportOpen.png");
-}
-
-label[id^="GPshowImportPicto-"] {
-  display: inline-block;
-}
-
-input[id^="GPshowImport-"] + label {
-  display: block;
-}
-
-input[id^="GPshowImport-"]:checked + label {
-  display: none;
-}
-
-input[id^="GPshowImport-"] + label + div {
-  display: none;
-}
-
-input[id^="GPshowImport-"]:checked + label + div {
-  display: block;
-}
-
-/* General panels */
-
-div[id^="GPimportPanel-"],
-div[id^="GPimportGetCapPanel-"],
-div[id^="GPimportMapBoxPanel-"] {
-  left: 8px;
-}
-
-div[id^="GPimportPanel-"] {
-    position: absolute;
-    width: 280px;
-}
-
-div[id^="GPimportGetCapPanel-"],
-div[id^="GPimportMapBoxPanel-"] {
-    position: absolute;
-    width: 340px;
-}
-
-div[id^="GPimportPanelClose-"],
-div[id^="GPimportGetCapPanelClose-"],
-div[id^="GPimportMapBoxPanelClose-"] {
-  background-image: url("img/GPimportOpen.png");
-}
-
-div[id^="GPimportGetCapPanel-"],
-div[id^="GPimportMapBoxPanel-"] {
-  display: none;
-}
-
-div[id^=GPimportMapBoxPanelReturnPicto-] {
-  background-color: #366291;
-  background-image: url("img/GPimportMapBoxReturn.png");
-}
-
-div[id^="GPimportMapBoxPanelReturnPicto-"] {
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  border-radius: 3px;
-  opacity: 1;
-  background-position: 0 0;
-  cursor: pointer;
+.GPshowOpen:hover {
+  background-color: rgba(0,60,136,0.7);
 }
 
 /* Import waiting */
@@ -108,9 +39,7 @@ div[id^="GPimportMapBoxPanelReturnPicto-"] {
 
 /* Import form */
 
-form[id^="GPimportForm-"] {
-  padding: 15px;
-}
+
 
 .GPimportVisibleParams {
   display: block;
@@ -119,22 +48,6 @@ form[id^="GPimportForm-"] {
 .GPimportHiddenParams,
 .GPimportValueHidden {
   display: none;
-}
-
-div[id^="GPimportTypeLine-"] {
-  border-bottom: 1px solid #999;
-  padding-bottom: 15px;
-  margin-bottom: 15px;
-}
-
-div[id^="GPimportChoice-"] {
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
-  margin-top: 5px;
-  margin-bottom: 5px;
 }
 
 .GPimportChoiceAlt input[type="radio"] {
@@ -151,10 +64,6 @@ div[id^="GPimportChoice-"] {
 
 input[type="radio"]:checked + .GPimportChoiceAltTxt {
   color: #366291;
-}
-
-input[id^="GPimportSubmit-"] {
-  margin-top: 20px;
 }
 
 /* Line inputs */
@@ -216,34 +125,7 @@ input[id^="GPimportSubmit-"] {
   cursor: pointer;
 }
 
-/* Get cap results */
 
-div[id^="GPimportGetCapResults-"],
-div[id^="GPimportMapBoxResults-"] {
-  background-color: #FFF;
-  height: 140px;
-  overflow-y: auto;
-  resize: vertical;
-}
-
-input[id^="GPimportGetCapRubrique-"],
-input[id^="GPimportMapBoxSource-"] {
-  display: none;
-}
-input[id^="GPimportGetCapRubrique-"] ~ li,
-input[id^="GPimportMapBoxSource-"] ~ div {
- display: none;
-}
-input[id^="GPimportGetCapRubrique-"]:checked ~ li,
-input[id^="GPimportMapBoxSource-"]:checked ~ div {
- display: block;
-}
-input[id^="GPimportGetCapRubrique-"] ~ ul {
- display: block;
-}
-input[id^="GPimportGetCapRubrique-"]:checked ~ ul {
- display: none;
-}
 
 .GPimportGetCapProposal {
   width: 100%;

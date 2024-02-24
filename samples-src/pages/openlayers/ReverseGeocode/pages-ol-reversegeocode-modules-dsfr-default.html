@@ -2,8 +2,8 @@
 
 {{#content "vendor"}}
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Dsfr{{ mode }}.css" />
-        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.js"></script>
+        <!-- <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.js"></script> -->
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/ReverseGeocode{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/openlayers/modules/ReverseGeocode{{ mode }}.js"></script>
 {{/content}}
@@ -56,8 +56,8 @@
                 });
                 map.addControl(reverse);
 
-                var layerSwitcher = new ol.control.LayerSwitcher({});
-                map.addControl(layerSwitcher);
+                // var layerSwitcher = new ol.control.LayerSwitcher({});
+                // map.addControl(layerSwitcher);
              };
               Gp.Services.getConfig({
                 customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/essentielsConfig.json",

@@ -37,7 +37,7 @@ var ReverseGeocodeDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowReverseGeocodingPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn";
         button.title = "Ouvrir la recherche inverse";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

@@ -41,34 +41,34 @@
     qu'elles ne pertubent pas les classNames du dsfr sauf exception mais à commenter !
 -->
 <div 
-    id="GPreverseGeocoding-{{ ID }}" 
+    id="GPreverseGeocoding-{{ID}}" 
     class="GPwidget gpf-widget">
     <button
-        id="GPshowReverseGeocodingPicto-{{ ID }} --> gpf-reversegeocoding-" 
-        class="GPshowOpen GPshowAdvancedToolPicto fr-btn"
+        id="GPshowReverseGeocodingPicto-{{ID}}" 
+        class="GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-icon-reverse fr-btn"
         title="Ouvrir la recherche inverse" 
         tabindex="0" 
-        aria-pressed="false">
+        aria-pressed="true">
     </button>
     <dialog 
-        id="GPreverseGeocodingPanel-{{ ID }}" 
+        id="GPreverseGeocodingPanel-{{ID}}" 
         class="GPpanel gpf-panel fr-modal">
         <div 
             class="gpf-panel__body fr-modal__body">
             <div 
                 class="GPpanelHeader gpf-panel__header fr-modal__header">
                 <button
-                    id="GPreverseGeocodingReturnPicto-{{ ID }}" 
+                    id="GPreverseGeocodingReturnPicto-{{ID}}" 
                     title="Nouvelle recherche"
-                    class="GPreturnPicto gpf-btn gpf-icon-return fr-btn fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon GPelementHidden gpf-btn--hidden">
+                    class="GPreturnPicto gpf-btn gpf-icon-return fr-btn">
                 </button>
                 <div 
                     class="GPpanelTitle gpf-panel__title fr-modal__title"
-                    id="GPreverseGeocodingHeaderTitle-{{ ID }}">Recherche inverse
+                    id="GPreverseGeocodingHeaderTitle-{{ID}}">Résultats de la recherche
                 </div>
                 <button
-                    id="GPreverseGeocodingPanelClose-{{ ID }}"
-                    class="GPpanelClose gpf-btn--close fr-btn--close fr-btn" 
+                    id="GPreverseGeocodingPanelClose-{{ID}}"
+                    class="GPpanelClose gpf-btn gpf-icon-close gpf-btn--close fr-btn--close fr-btn" 
                     title="Fermer le panneau">
                     <span
                         class="GPelementHidden gpf-visible">Fermer
@@ -76,43 +76,44 @@
                 </button>
             </div>
             <form 
-                id="GPreverseGeocodingForm-{{ ID }}" 
-                class="gpf-panel__content fr-modal__content">
-                <div 
-                    class="GPflexInput">
+                id="GPreverseGeocodingForm-{{ID}}" 
+                class="GPelementHidden gpf-hidden">
+                <div class="GPflexInput">
                     <label 
-                        id="label-recherche-par"
-                        class="GPlabel gpf-label fr-label" title="Recherche par">Recherche par
+                        id="label-recherche-par" 
+                        class="GPlabel gpf-label fr-label"
+                        title="Recherche par">Recherche par
                     </label>
                     <select 
                         aria-labelledby="label-recherche-par"
                         class="GPselect gpf-select fr-select">
-                            <option value="StreetAddress">Adresses</option>
-                            <option value="PositionOfInterest">Lieux/toponymes</option>
-                            <option value="CadastralParcel">Parcelles cadastrales</option>
+                        <option value="StreetAddress">Adresses</option>
+                        <option value="PositionOfInterest">Lieux/toponymes</option>
+                        <option value="CadastralParcel">Parcelles cadastrales</option>
                     </select>
                 </div>
-                <div 
-                    class="GPflexInput">
+                <div class="GPflexInput">
                     <label 
-                        id="label-delimitation"
+                        id="label-delimitation" 
                         class="GPlabel gpf-label fr-label"
                         title="Délimitation">Délimitation
                     </label>
                     <select 
                         aria-labelledby="label-delimitation"
                         class="GPselect gpf-select fr-select">
-                            <option value="point">Pointer un lieu</option>
-                            <option value="circle">Dessiner un cercle</option>
-                            <option value="extent">Dessiner une emprise</option>
+                        <option value="point">Pointer un lieu</option>
+                        <option value="circle">Dessiner un cercle</option>
+                        <option value="extent">Dessiner une emprise</option>
                     </select>
                 </div>
                 <input 
-                    id="GPreverseGeocodingSubmit-{{ ID }}"
-                    class="GPinputSubmit gpf-btn--submit fr-btn" type="submit" value="Rechercher">
+                    id="GPreverseGeocodingSubmit-{{ID}}"
+                    class="GPinputSubmit gpf-btn gpf-btn--submit fr-btn" 
+                    type="submit" 
+                    value="Rechercher">
             </form>
             <div 
-                id="GPreverseGeocodingCalcWaitingContainer-{{ ID }}"
+                id="GPreverseGeocodingCalcWaitingContainer-{{ID}}"
                 class="GPwaitingContainerHidden gpf-waiting--hidden">
                 <p 
                     class="GPwaitingContainer gpf-waiting">
@@ -120,29 +121,19 @@
                 </p>
             </div>
             <div 
-                id="GPreverseGeocodingResultsPanel-1708448512685" 
+                id="GPreverseGeocodingResultsPanel-{{ID}}" 
                 class="GPpanel gpf-panel">
                 <div 
-                    id="GPreverseGeocodingResultsList-1708448512685" 
+                    id="GPreverseGeocodingResultsList-{{ID}}" 
                     class="gpf-panel__list" tabindex="0">
-                        <div 
-                            id="GPreverseGeocodedLocation_0-1708448512685" 
-                            tabindex="0" 
-                            class="GPautoCompleteProposal gpf-panel__items" 
-                            title="Bonneuil-sur-Marne">Bonneuil-sur-Marne
-                        </div>
-                        <div 
-                            id="GPreverseGeocodedLocation_1-1708448512685" 
-                            tabindex="0" 
-                            class="GPautoCompleteProposal gpf-panel__items" 
-                            title="Bonneuil-sur-Marne">Bonneuil-sur-Marne
-                        </div>
-                        <div 
-                            id="GPreverseGeocodedLocation_2-1708448512685" 
-                            tabindex="0" 
-                            class="GPautoCompleteProposal gpf-panel__items" 
-                            title="Bonneuil-sur-Marne">Bonneuil-sur-Marne
-                        </div>
+                    <div 
+                        id="GPreverseGeocodedLocation_0-{{ID}}" tabindex="0"
+                        class="GPautoCompleteProposal gpf-panel__items" title="Paris">Paris
+                    </div>
+                    <div 
+                        id="GPreverseGeocodedLocation_10-{{ID}}" tabindex="0"
+                        class="GPautoCompleteProposal gpf-panel__items" title="Paris">Paris
+                    </div>
                 </div>
             </div>
         </div>

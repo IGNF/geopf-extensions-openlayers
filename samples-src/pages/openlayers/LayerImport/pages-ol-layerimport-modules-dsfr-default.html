@@ -1,9 +1,9 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Portail{{ mode }}.css" />  
-        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Dsfr{{ mode }}.css" />  
+        <!-- <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.js"></script> -->
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerImport{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/openlayers/modules/LayerImport{{ mode }}.js"></script>
 {{/content}}
@@ -53,6 +53,7 @@
                 });
 
                 var layerImport = new ol.control.LayerImport({
+                    draggable: true,
                     apiKey : "{{ apikey }}",
                     webServicesOptions : {
                         proxyUrl : "{{ proxy }}?url=",
@@ -61,8 +62,8 @@
                 });
                 map.addControl(layerImport);
 
-                var layerSwitcher = new ol.control.LayerSwitcher({});
-                map.addControl(layerSwitcher);
+                // var layerSwitcher = new ol.control.LayerSwitcher({});
+                // map.addControl(layerSwitcher);
 
                 var popup = new ol.Overlay.Popup();
                 map.addOverlay(popup);

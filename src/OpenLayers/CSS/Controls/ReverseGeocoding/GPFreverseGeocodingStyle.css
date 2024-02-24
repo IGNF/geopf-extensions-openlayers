@@ -57,3 +57,42 @@
 .GPlabelFilterInput {
   margin-bottom: 5px;
 }
+
+/* Calc waiting */
+
+/* INFO 
+la patience de calcul est rendu disponible pour le mode dsfr
+car ces classes sont modifiées dans le code JS */
+
+.GPwaitingContainerVisible,
+.GPwaitingContainerHidden {
+  position: absolute;
+  top: 32px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255,255,255,0.9);
+  font-size: 1.5em;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.GPwaitingContainerVisible {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+}
+
+.GPwaitingContainerHidden {
+  display: none;
+}
+
+.GPwaitingContainer {
+  margin: auto;
+}
+
+.GPwaitingContainerVisible,
+.GPwaitingContainerHidden {
+  border-radius: 4px;
+}

@@ -1,4 +1,6 @@
-/* Toutes les surcharges du mode DSFR */
+/* 
+ * Liste des surcharges du mode DSFR 
+ */
 
 .gpf-widget {
   position: absolute;
@@ -6,7 +8,7 @@
 }
 
 .gpf-panel {
-  position: absolute;
+  position: relative;
   background-color: unset;
 }
 
@@ -14,7 +16,9 @@
   display: none;
 }
 
-.gpf-panel__body {}
+.gpf-panel__body {
+  overflow: unset;
+}
 .gpf-panel__header {}
 .gpf-panel__title {}
 .gpf-panel__content {}
@@ -38,24 +42,44 @@
   opacity: 100%;
 }
 
-.gpf-waiting {}
-.gpf-waiting--hidden {}
-.gpf-waiting--visible {}
+.gpf-waiting,
+.gpf-waiting--hidden {
+  position: absolute;
+  top: 80px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255,255,255,0.9);
+  font-size: 1.5em;
+  font-weight: bold;
+  overflow: hidden;
+}
+.gpf-waiting--hidden {
+  display: none;
+}
+.gpf-waiting--visible {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+}
 
 .gpf-btn  {}
 .gpf-icon-return {}
-
 .gpf-btn--hidden {}
 .gpf-btn--submit {}
 .gpf-btn--close {}
 
 .gpf-label {}
 .gpf-select {}
+.gpf-input {}
+.gpf-radio-group {}
+.gpf-upload {}
 
 .gpf-panel__list,
 .gpf-panel__advancedlist {
   z-index: 2;
-  display: none;
+  /* display: none; */
   position: absolute;
   max-height: 140px;
   background-color: #FFF;

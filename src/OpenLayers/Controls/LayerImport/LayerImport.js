@@ -265,6 +265,10 @@ var LayerImport = class LayerImport extends Control {
                     map.getTargetElement()
                 );
             }
+            // mode "collapsed"
+            if (!this.collapsed) {
+                this._shoImportButton.setAttribute("aria-pressed", true);
+            }
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
@@ -294,9 +298,9 @@ var LayerImport = class LayerImport extends Control {
             return;
         }
         if (collapsed) {
-            document.getElementById("GPimportPanelClose-" + this._uid).click();
+            this._panelCloseButton.click();
         } else {
-            document.getElementById("GPshowImport-" + this._uid).click();
+            this._showImportButton.click();
         }
         this.collapsed = collapsed;
     }
@@ -489,8 +493,9 @@ var LayerImport = class LayerImport extends Control {
         // ################### Elements principaux du DOM ################### //
 
         // containers principaux (FIXME : tous utiles ?)
-        this._showImportInput = null;
+        this._showImportButton = null;
         this._importPanel = null;
+        this._panelCloseButton = null;
         this._importPanelHeader = null;
         this._formContainer = null;
         this._staticLocalImportInput = null;
@@ -655,31 +660,29 @@ var LayerImport = class LayerImport extends Control {
         // create main container
         var container = this._createMainContainerElement();
 
-        // create show Import element
-        var inputShow = this._showImportInput = this._createShowImportElement();
-        container.appendChild(inputShow);
-
-        // mode "collapsed"
-        if (!this.collapsed) {
-            inputShow.checked = true;
-        }
-
         // create Import picto
-        var picto = this._createShowImportPictoElement();
+        var picto = this._showImportButton = this._createShowImportPictoElement();
         container.appendChild(picto);
-
+        
         // panel
         var importPanel = this._importPanel = this._createImportPanelElement();
-
+        var importPanelPanelDiv = this._createImportPanelDivElement();
+        importPanel.appendChild(importPanelPanelDiv);
+        
         // header
         var panelHeader = this._importPanelHeader = this._createImportPanelHeaderElement();
-        importPanel.appendChild(panelHeader);
+        
+        // panel title
+        var panelTitle = this._createImportPanelTitleElement();
+        panelHeader.appendChild(panelTitle);
+        // close picto
+        var panelClose = this._panelCloseButton = this._createImportPanelCloseElement();
+        panelHeader.appendChild(panelClose);
+        importPanelPanelDiv.appendChild(panelHeader);
 
         // form : initialisation du formulaire d'import des couches (types d'import et saisie de l'url / du fichier)
         var importForm = this._formContainer = this._initInputFormElement();
-        importPanel.appendChild(importForm);
-
-        container.appendChild(importPanel);
+        importPanelPanelDiv.appendChild(importForm);
 
         // results (dans le panel)
         var getCapPanel = this._getCapPanel = this._createImportGetCapPanelElement();
@@ -687,8 +690,7 @@ var LayerImport = class LayerImport extends Control {
         getCapPanel.appendChild(getCapPanelHeader);
         var importGetCapResultsList = this._getCapResultsListContainer = this._createImportGetCapResultsContainer();
         getCapPanel.appendChild(importGetCapResultsList);
-
-        container.appendChild(getCapPanel);
+        importPanelPanelDiv.appendChild(getCapPanel);
 
         // mapbox panel results
         var mapBoxPanel = this._mapBoxPanel = this._createImportMapBoxPanelElement();
@@ -696,16 +698,18 @@ var LayerImport = class LayerImport extends Control {
         mapBoxPanel.appendChild(mapBoxPanelHeader);
         var importMapBoxResultsList = this._mapBoxResultsListContainer = this._createImportMapBoxResultsContainer();
         mapBoxPanel.appendChild(importMapBoxResultsList);
-
+        
         // loading element mapbox
         var loading = this._loadingContainer = this._createLoadingElement();
         mapBoxPanel.appendChild(loading);
-
-        container.appendChild(mapBoxPanel);
+        
+        importPanelPanelDiv.appendChild(mapBoxPanel);
 
         // waiting
         var waiting = this._waitingContainer = this._createImportWaitingElement();
-        container.appendChild(waiting);
+        importPanelPanelDiv.appendChild(waiting);
+
+        container.appendChild(importPanel);
 
         return container;
     }
@@ -799,14 +803,18 @@ var LayerImport = class LayerImport extends Control {
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
+        // info : on génère nous même l'evenement OpenLayers de changement de propriété
+        // (utiliser ol.control.LayerImport.on("change:collapsed", function ) pour s'abonner à cet évènement)
+        var opened = this._showImportButton.ariaPressed;
+        this.collapsed = !(opened === "true");
+        this.dispatchEvent("change:collapsed");
         // on affiche les resultats d'une couche MapBox
         if (this._hasMapBoxResults) {
             this._mapBoxPanel.style.display = "block";
+        } else {
+            this._formContainer.style.display = "block";
+            this._importPanelHeader.style.display = "";
         }
-        // info : on génère nous même l'evenement OpenLayers de changement de propriété
-        // (utiliser ol.control.LayerImport.on("change:collapsed", function ) pour s'abonner à cet évènement)
-        this.collapsed = this._showImportInput.checked;
-        this.dispatchEvent("change:collapsed");
     }
 
     /**
@@ -877,7 +885,6 @@ var LayerImport = class LayerImport extends Control {
     _onMapBoxReturnPictoClick (e) {
         // on bascule sur l'icone d'ouverture du composant
         this._mapBoxPanel.style.display = "none";
-        this._showImportInput.checked = false;
         this._loadingContainer.className = "";
     }
 
@@ -1411,8 +1418,9 @@ var LayerImport = class LayerImport extends Control {
                                     }
                                 })
                                 .then(function () {
-                                    // on cache le panneau des imports
-                                    self._importPanel.style.display = "none";
+                                    // on cache le panneau principal des imports
+                                    self._formContainer.style.display = "none";
+                                    self._importPanelHeader.style.display = "none";
 
                                     // editeur de styles
                                     var editor = new Editor({
@@ -2925,7 +2933,7 @@ var LayerImport = class LayerImport extends Control {
      * @private
      */
     _displayWaitingContainer () {
-        this._waitingContainer.className = "GPimportWaitingContainerVisible";
+        this._waitingContainer.className = "GPimportWaitingContainerVisible gpf-waiting--visible";
         this._waiting = true;
 
         // mise en place d'un timeout pour réinitialiser le panel (cacher la patience)
@@ -2953,7 +2961,7 @@ var LayerImport = class LayerImport extends Control {
      */
     _hideWaitingContainer () {
         if (this._waiting) {
-            this._waitingContainer.className = "GPimportWaitingContainerHidden";
+            this._waitingContainer.className = "GPimportWaitingContainerHidden gpf-waiting--hidden";
             this._waiting = false;
             clearTimeout(this._timer);
             this._timer = null;
