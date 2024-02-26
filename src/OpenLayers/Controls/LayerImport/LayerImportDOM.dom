@@ -21,7 +21,7 @@
                 </div>
                 <button 
                     id="GPimportPanelClose-{{ID}}"
-                    class="GPpanelClose gpf-btn gpf-btn--close fr-btn--close fr-btn" 
+                    class="GPpanelClose gpf-btn gpf-btn-close fr-btn--close fr-btn" 
                     title="Fermer le panneau">
                     <span
                         class="GPelementHidden gpf-visible">Fermer
@@ -138,7 +138,7 @@
                 </div>
                 <input 
                     id="GPimportSubmit-{{ID}}" 
-                    class="GPinputSubmit gpf-btn gpf-btn--submit fr-btn"
+                    class="GPsubmit gpf-btn gpf-btn-submit fr-btn"
                     type="submit" 
                     value="Importer">
             </form>
@@ -152,7 +152,7 @@
                         title="Couches accessibles">Couches accessibles
                     </div>
                     <div 
-                        class="GPpanelClose gpf-btn gpf-btn--close fr-btn" 
+                        class="GPpanelClose gpf-btn gpf-btn-close fr-btn" 
                         title="Fermer le panneau"
                         id="GPimportGetCapPanelClose-{{ID}}">
                     </div>
@@ -177,7 +177,7 @@
                         title="Edition des styles">Edition des styles
                     </div>
                     <div 
-                        class="GPpanelClose gpf-btn gpf-btn--close fr-btn" 
+                        class="GPpanelClose gpf-btn gpf-btn-close fr-btn" 
                         title="Fermer le panneau"
                         id="GPimportMapBoxPanelClose-{{ID}}">
                     </div>

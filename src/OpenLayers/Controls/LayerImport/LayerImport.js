@@ -267,7 +267,7 @@ var LayerImport = class LayerImport extends Control {
             }
             // mode "collapsed"
             if (!this.collapsed) {
-                this._shoImportButton.setAttribute("aria-pressed", true);
+                this._showImportButton.setAttribute("aria-pressed", true);
             }
         }
 

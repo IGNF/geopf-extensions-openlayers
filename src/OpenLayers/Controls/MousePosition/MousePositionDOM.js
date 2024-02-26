@@ -607,7 +607,7 @@ var MousePositionDOM = {
 
         var selectSystem = document.createElement("select");
         selectSystem.id = this._addUID("GPmousePositionProjectionSystem");
-        selectSystem.className = "GPinputSelect GPmousePositionSettingsSelect";
+        selectSystem.className = "GPselect GPmousePositionSettingsSelect";
         selectSystem.addEventListener("change", function (e) {
             context.onMousePositionProjectionSystemChange(e);
         });
@@ -641,7 +641,7 @@ var MousePositionDOM = {
 
         var selectUnits = document.createElement("select");
         selectUnits.id = this._addUID("GPmousePositionProjectionUnits");
-        selectUnits.className = "GPinputSelect GPmousePositionSettingsSelect";
+        selectUnits.className = "GPselect GPmousePositionSettingsSelect";
         selectUnits.addEventListener("change", function (e) {
             context.onMousePositionProjectionUnitsChange(e);
         });

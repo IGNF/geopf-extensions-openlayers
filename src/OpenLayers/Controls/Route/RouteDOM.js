@@ -368,7 +368,7 @@ var RouteDOM = {
 
         var select = document.createElement("select");
         select.id = this._addUID("GProuteResultsComputationSelect");
-        select.className = "GPinputSelect";
+        select.className = "GPselect";
         // gestionnaire d'evenement :
         // on stocke la valeur du mode de calcul, et on relance le calcul d'itiniraire
         select.addEventListener("change", function (e) {
@@ -965,7 +965,7 @@ var RouteDOM = {
 
         var select = document.createElement("select");
         select.id = this._addUID("GProuteComputationSelect");
-        select.className = "GPinputSelect";
+        select.className = "GPselect";
         // gestionnaire d'evenement :
         // on stocke la valeur du mode de calcul,
         // utilisation pour la requête sur le service de calcul d'itiniraire
@@ -1179,7 +1179,7 @@ var RouteDOM = {
     _createRouteSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GProuteSubmit");
-        input.className = "GPinputSubmit";
+        input.className = "GPsubmit";
         input.type = "submit";
         input.value = "Calculer";
 

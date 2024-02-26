@@ -257,7 +257,7 @@ var ReverseGeocodeDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPreverseGeocodingPanelClose");
-        divClose.className = "GPpanelClose gpf-btn--close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-close fr-btn--close fr-btn";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -473,7 +473,7 @@ var ReverseGeocodeDOM = {
     _createReverseGeocodingSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPreverseGeocodingSubmit");
-        input.className = "GPinputSubmit gpf-btn--submit fr-btn";
+        input.className = "GPsubmit gpf-btn gpf-icon-submit fr-btn";
         input.type = "submit";
         input.value = "Rechercher";
 

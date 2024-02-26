@@ -19,6 +19,7 @@
 *.rar
 *.tar
 *.zip
+*.epgz
 
 # Logs and databases #
 ######################
@@ -62,3 +63,4 @@ package-lock.json
 TODO.md
 FIXME.md
 TARGET.md
+*.pdf

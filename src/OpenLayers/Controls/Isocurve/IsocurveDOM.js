@@ -596,7 +596,7 @@ var IsoDOM = {
 
         var select = document.createElement("select");
         select.id = this._addUID("GPisochronDirectionSelect");
-        select.className = "GPinputSelect";
+        select.className = "GPselect";
         // gestionnaire d'evenement :
         // on stocke la valeur du mode de calcul,
         // utilisation pour la requête sur le service de calcul d'iso
@@ -802,7 +802,7 @@ var IsoDOM = {
     _createIsoSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPisochronSubmit");
-        input.className = "GPinputSubmit";
+        input.className = "GPsubmit";
         input.type = "submit";
         input.value = "Calculer";
 

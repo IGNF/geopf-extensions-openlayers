@@ -206,7 +206,7 @@
 /* Particular inputs */
 /*********************/
 
-.GPinputSelect {
+.GPselect {
   display: block;
   height: 28px;
   line-height: 26px;
@@ -216,7 +216,7 @@
   cursor: pointer;
 }
 
-input.GPinputSubmit {
+input.GPsubmit {
   display: block;
   width: 80px;
   margin: auto;
@@ -235,7 +235,7 @@ input.GPinputSubmit {
   cursor: pointer;
 }
 
-input.GPinputSubmit:hover {
+input.GPsubmit:hover {
   opacity: 1;
 }
 

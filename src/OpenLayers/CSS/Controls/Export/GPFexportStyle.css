@@ -3,7 +3,7 @@ div[id^=GPexportContainer-] {
     padding: 5px;
 }
 
-div[id^=GPexportContainer-] > input.GPinputSubmit {
+div[id^=GPexportContainer-] > input.GPsubmit {
     color: white;
 }
 

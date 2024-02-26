@@ -537,7 +537,7 @@ var SearchEngineDOM = {
         var input = document.createElement("input");
         input.type = "submit";
         input.id = this._addUID("GPadvancedSearchSubmit");
-        input.className = "GPinputSubmit";
+        input.className = "GPsubmit";
         input.value = "Chercher";
 
         return input;

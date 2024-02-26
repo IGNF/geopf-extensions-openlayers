@@ -68,7 +68,7 @@
                 </div>
                 <button
                     id="GPreverseGeocodingPanelClose-{{ID}}"
-                    class="GPpanelClose gpf-btn gpf-icon-close gpf-btn--close fr-btn--close fr-btn" 
+                    class="GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn" 
                     title="Fermer le panneau">
                     <span
                         class="GPelementHidden gpf-visible">Fermer
@@ -108,7 +108,7 @@
                 </div>
                 <input 
                     id="GPreverseGeocodingSubmit-{{ID}}"
-                    class="GPinputSubmit gpf-btn gpf-btn--submit fr-btn" 
+                    class="GPsubmit gpf-btn gpf-icon-submit fr-btn" 
                     type="submit" 
                     value="Rechercher">
             </form>
