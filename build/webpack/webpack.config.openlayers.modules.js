@@ -56,8 +56,7 @@ module.exports = (env, argv) => {
     if (env.samples === "false") {
         samplesEnv = false;
     }
-
-    // return smp.wrap(
+ 
     return {
         entry : {
             // ALL
