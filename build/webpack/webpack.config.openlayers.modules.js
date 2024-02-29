@@ -254,7 +254,7 @@ module.exports = (env, argv) => {
                 {
                     test : /\.js$/,
                     include : [
-                        path.join(ROOT, "src", "Common"),
+                        path.join(ROOT, "src", "Utils"),
                         path.join(ROOT, "src", "OpenLayers")
                     ],
                     exclude : /node_modules/,
@@ -307,7 +307,6 @@ module.exports = (env, argv) => {
                 {
                     test : /\.css$/,
                     include : [
-                        path.join(ROOT, "src", "Common", "CSS"),
                         path.join(ROOT, "src", "OpenLayers", "CSS"),
                         /node_modules\/@gouvfr\/dsfr\/dist/,
                     ],

@@ -65,7 +65,6 @@ div[id^=GPlayerSwitcher-] input[type="checkbox"]:checked + div + label[id^=GPsho
 
 div[id^=GPlayersList] {
   position: relative;
-  width: 180px;
   border-bottom-right-radius: 0;
   opacity: 0;
   overflow: auto;
@@ -74,6 +73,7 @@ div[id^=GPlayersList] {
 
 div[id^=GPlayerSwitcher-] input[type="checkbox"]:checked + div[id^=GPlayersList] {
   max-height: 232px;
+  width: 180px;
   opacity: 1;
   transition: max-height 0.5s ease-in 0s, opacity 0.25s ease-in 0s;
 }

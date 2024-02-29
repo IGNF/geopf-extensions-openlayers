@@ -2,7 +2,8 @@
 import "../../CSS/Controls/Route/GPFroute.css";
 // import "../../CSS/Controls/Route/GPFrouteStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Overlay from "ol/Overlay";
 import VectorLayer from "ol/layer/Vector";
@@ -175,6 +176,11 @@ var Route = class Route extends Control {
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     };
 
     // ################################################################### //

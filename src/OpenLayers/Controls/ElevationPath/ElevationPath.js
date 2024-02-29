@@ -3,7 +3,8 @@
 import "../../CSS/Controls/ElevationPath/GPFelevationPath.css";
 // import "../../CSS/Controls/ElevationPath/GPFelevationPathStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import {
     Fill,
     Icon,
@@ -525,7 +526,7 @@ var ElevationPath = class ElevationPath extends Control {
             }
 
             // ajout du composant dans une toolbox
-            if (!this.options.target) {
+            if (!this.options.target && !this.options.position) {
                 MeasureToolBox.add(map, this);
             }
 
@@ -546,6 +547,11 @@ var ElevationPath = class ElevationPath extends Control {
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     };
 
     /**

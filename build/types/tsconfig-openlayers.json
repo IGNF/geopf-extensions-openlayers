@@ -1,6 +1,6 @@
 {
     // Change this to match your project
-    "include": ["../../src/OpenLayers/**/*.js", "../../src/Common/**/*.js"],
+    "include": ["../../src/OpenLayers/**/*.js", "../../src/Utils/**/*.js"],
     "compilerOptions": {
       "target": "ES5",
       "module": "es2015",

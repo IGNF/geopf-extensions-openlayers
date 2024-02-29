@@ -3,6 +3,8 @@
 {{#content "vendor"}}
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Portail{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/openlayers/modules/CRS{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/GeoportalMousePosition{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/openlayers/modules/GeoportalMousePosition{{ mode }}.js"></script>
 {{/content}}
@@ -30,12 +32,15 @@
 {{#content "js"}}
             <script type="text/javascript">
 
+              var map = null;
+              var mouse = null;
+              var layerSwitcher = null;
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
 
                 // Création de la map
-                var map = new ol.Map({
+                map = new ol.Map({
                   target : "map",
                   layers : [
                       new ol.layer.Tile({
@@ -49,15 +54,21 @@
                   })
                 });
 
-                var mouse = new ol.control.GeoportalMousePosition();
+                mouse = new ol.control.GeoportalMousePosition();
                 map.addControl(mouse);
+
+                layerSwitcher = new ol.control.LayerSwitcher();
+                map.addControl(layerSwitcher);
               };
               Gp.Services.getConfig({
                 customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/essentielsConfig.json",
                   callbackSuffix : "",
                   // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
                   timeOut : 20000,
-                  onSuccess : createMap
+                  onSuccess : createMap,
+                  onFailure : (e) => {
+                    console.error(e);
+                  }
               });
             </script>
 {{/content}}

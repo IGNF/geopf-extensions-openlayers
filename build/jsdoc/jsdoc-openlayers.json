@@ -6,7 +6,7 @@
     "source": {
         "include": [
             "./src/OpenLayers",
-            "./src/Common",
+            "./src/Utils",
             "./build/jsdoc/README-openlayers.md"
         ]
     },

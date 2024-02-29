@@ -2,7 +2,8 @@
 import "../../CSS/Controls/LayerImport/GPFlayerImport.css";
 // import "../../CSS/Controls/LayerImport/GPFlayerImportStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
 import Feature from "ol/Feature";
@@ -273,6 +274,11 @@ var LayerImport = class LayerImport extends Control {
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     }
 
     /**

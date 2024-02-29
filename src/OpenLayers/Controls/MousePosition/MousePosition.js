@@ -2,7 +2,8 @@
 import "../../CSS/Controls/MousePosition/GPFmousePosition.css";
 // import "../../CSS/Controls/MousePosition/GPFmousePositionStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import Overlay from "ol/Overlay";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import {
@@ -150,10 +151,10 @@ var MousePosition = class MousePosition extends Control {
         this._initialize(options);
 
         // init control DOM container
-        this._container = this._initContainer(options);
+        var container = this._initContainer(this.options);
 
         // ajout du container
-        (this.element) ? this.element.appendChild(this._container) : this.element = this._container;
+        (this.element) ? this.element.appendChild(container) : this.element = container;
 
         return this;
     };
@@ -228,6 +229,11 @@ var MousePosition = class MousePosition extends Control {
         // HACK: on arrête l'execution de la fonction...
         if (map === null) {
             return;
+        }
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
         }
 
         // mode "collapsed"
