@@ -57,7 +57,10 @@
                   callbackSuffix : "",
                   // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
                   timeOut : 20000,
-                  onSuccess : createMap
+                  onSuccess : createMap,
+                  onFailure : (e) => {
+                       console.error(e);
+                    }
               });
             </script>
 {{/content}}

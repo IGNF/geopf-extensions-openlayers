@@ -198,6 +198,8 @@ var MousePosition = class MousePosition extends Control {
                         (e) => this.onMapMove(e)
                     );
                 }
+
+                this._showMousePositionButton.setAttribute("aria-pressed", true);
             }
 
             // add overlay only if option editCoordinates is true
@@ -228,17 +230,6 @@ var MousePosition = class MousePosition extends Control {
         // HACK: on arrête l'execution de la fonction...
         if (map === null) {
             return;
-        }
-
-        // mode "collapsed"
-        if (!this.collapsed) {
-            var inputShow = document.getElementById("GPshowMousePosition-" + this._uid);
-            inputShow.checked = "checked";
-            this._setElevationPanel(this.options.displayAltitude);
-            this._setCoordinatesPanel(this.options.displayCoordinates);
-            if (!this.options.displayCoordinates) {
-                this._setSettingsPanel(false);
-            }
         }
     }
 
@@ -798,16 +789,26 @@ var MousePosition = class MousePosition extends Control {
         // creation du container principal
         var container = this._createMainContainerElement();
 
-        var inputShow = this._showMousePositionContainer = this._createShowMousePositionElement();
-        container.appendChild(inputShow);
-
-        var picto = this._createShowMousePositionPictoElement(this._isDesktop);
+        // create ReverseGeocode picto
+        var picto = this._showMousePositionButton = this._createShowMousePositionPictoElement();
         container.appendChild(picto);
 
-        var panel = this._panelMousePositionContainer = this._createMousePositionPanelElement();
+        // panel
+        var mousePositionPanel = this._panelContainer = this._createMousePositionPanelElement();
+        var mousePositionPanelDiv = this._createMousePositionPanelDivElement();
+        mousePositionPanel.appendChild(mousePositionPanelDiv);
 
-        var header = this._panelHeaderMousePositionContainer = this._createMousePositionPanelHeaderElement();
-        panel.appendChild(header);
+        // header
+        var panelHeader = this._panelHeaderContainer = this._createMousePositionPanelHeaderElement();
+
+        // panel title
+        var panelTitle = this._panelTitleContainer = this._createMousePositionPanelTitleElement();
+        panelHeader.appendChild(panelTitle);
+
+        // close picto
+        var closeDiv = this._panelCloseButton = this._createMousePositionPanelCloseElement();
+        panelHeader.appendChild(closeDiv);
+        mousePositionPanelDiv.appendChild(panelHeader);
 
         var basic = this._createMousePositionPanelBasicElement(
             this.options.displayAltitude,
@@ -815,11 +816,11 @@ var MousePosition = class MousePosition extends Control {
             this.options.editCoordinates,
             this._currentProjectionUnits
         );
-        panel.appendChild(basic);
+        mousePositionPanelDiv.appendChild(basic);
 
         var arraySettings = this._createShowMousePositionSettingsElement(this.options.displayCoordinates);
         for (var j = 0; j < arraySettings.length; j++) {
-            panel.appendChild(arraySettings[j]);
+            mousePositionPanelDiv.appendChild(arraySettings[j]);
         }
 
         var settings = this._createMousePositionSettingsElement();
@@ -827,9 +828,9 @@ var MousePosition = class MousePosition extends Control {
         var units = this._projectionUnitsContainer = this._createMousePositionSettingsUnitsElement(this._projectionUnits[this._currentProjectionType]);
         settings.appendChild(systems);
         settings.appendChild(units);
-        panel.appendChild(settings);
+        mousePositionPanelDiv.appendChild(settings);
 
-        container.appendChild(panel);
+        container.appendChild(mousePositionPanel);
 
         return container;
     }
@@ -1292,14 +1293,15 @@ var MousePosition = class MousePosition extends Control {
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
-        this.collapsed = this._showMousePositionContainer.checked;
+        var opened = this._showMousePositionButton.ariaPressed;
+        this.collapsed = !(opened === "true");
         // on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser mousePosition.on("change:collapsed", function(e) ) pour s'abonner à cet évènement)
         this.dispatchEvent("change:collapsed");
 
         // evenement declenché à l'ouverture/fermeture du panneau,
         // et en fonction du mode : desktop ou tactile !
-        if (this._showMousePositionContainer.checked) {
+        if (opened) {
             olObservableUnByKey(this.listenerKey);
         } else if (!this.editing) {
             if (this._isDesktop) {
