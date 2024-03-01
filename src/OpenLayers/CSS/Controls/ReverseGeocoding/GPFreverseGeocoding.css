@@ -35,11 +35,8 @@
 /* General panels */
 
 [id^="GPreverseGeocodingPanel-"] {
-    position: absolute;
-    left: 8px;
-}
-
-[id^="GPreverseGeocodingPanel-"] {
+  position: absolute;
+  left: 8px;
   width: 280px;
 }
 

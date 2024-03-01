@@ -18,7 +18,7 @@ var MousePositionDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPmousePosition");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
@@ -38,7 +38,7 @@ var MousePositionDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMousePositionPicto");
-        button.className = "GPshowAdvancedToolPicto";
+        button.className = "GPshowAdvancedToolPicto gpf-btn fr-btn GPshowOpen";
         button.title = "Afficher les coordonnées du curseur";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -92,7 +92,7 @@ var MousePositionDOM = {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPmousePositionPanel");
         dialog.className = "GPpanel gpf-panel fr-modal";
-        
+        this._panelMousePositionContainer = dialog;
         return dialog;
     },
 
@@ -519,34 +519,33 @@ var MousePositionDOM = {
     _createShowMousePositionSettingsElement : function (display) {
         var list = [];
 
-        var context = this;
+        // contexte d'execution
+        var self = this;
 
-        var input = document.createElement("input");
-        input.type = "checkbox";
-        input.id = this._addUID("GPshowMousePositionSettings");
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowMousePositionSettings");
 
-        var label = document.createElement("label");
-        label.id = this._addUID("GPshowMousePositionSettingsPicto");
-        label.htmlFor = this._addUID("GPshowMousePositionSettings");
-        label.title = "Réglages";
-        label.className = "GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto"; // FIXME classname and id ?
-        label.style.display = display ? "block" : "none";
-        if (label.addEventListener) {
-            label.addEventListener("click", function (e) {
-                if (typeof context.onShowMousePositionSettingsClick === "function") {
-                    context.onShowMousePositionSettingsClick(e);
-                }
-            }, false);
-        } else if (label.attachEvent) {
-            label.attachEvent("onclick", function (e) {
-                if (typeof context.onShowMousePositionSettingsClick === "function") {
-                    context.onShowMousePositionSettingsClick(e);
-                }
+        button.className = "GPshowAdvancedToolPicto gpf-btn fr-btn--sm fr-icon-arrow-down-fill";
+        button.title = "Réglages";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
+        
+        // Close all results and panels when minimizing the widget
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onShowMousePositionSettingsClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onShowMousePositionSettingsClick(e);
             });
         }
 
-        list.push(input);
-        list.push(label);
+        list.push(button);
 
         return list;
     },
@@ -571,58 +570,6 @@ var MousePositionDOM = {
         span.innerHTML = "Système de référence";
         container.appendChild(span);
 
-        // FIXME on decompose la fonction pour les besoins du controle,
-        // on ajoutera ces childs à la main...
-        // FIXME tableau statique !
-        // var systems = [
-        //     {
-        //         code : "GEOGRAPHIC",
-        //         label : "Géographique"
-        //     },
-        //     {
-        //         code : "MERCATOR",
-        //         label : "Mercator"
-        //     },
-        //     {
-        //         code : "LAMB93",
-        //         label : "Lambert 93"
-        //     },
-        //     {
-        //         code : "LAMB2E",
-        //         label : "Lambert II étendu"
-        //     }
-        // ];
-        //
-        // var selectSystem = this._createMousePositionSettingsSystemsElement(systems);
-        //
-        // container.appendChild(selectSystem);
-
-        // FIXME on decompose la fonction pour les besoins du controle,
-        // on ajoutera ces childs à la main...
-        // FIXME tableau statique !
-        // var units = [
-        //     {
-        //         code : "DEC",
-        //         label : "degrés décimaux",
-        //     },
-        //     {
-        //         code : "DMS",
-        //         label : "degrés sexagésimaux",
-        //     },
-        //     {
-        //         code : "RAD",
-        //         label : "radians",
-        //     },
-        //     {
-        //         code : "GON",
-        //         label : "grades"
-        //     }
-        // ];
-        //
-        // var selectUnits = this._createMousePositionSettingsUnitsElement(units);
-        //
-        // container.appendChild(selectUnits);
-
         return container;
     },
 
@@ -637,7 +584,7 @@ var MousePositionDOM = {
 
         var selectSystem = document.createElement("select");
         selectSystem.id = this._addUID("GPmousePositionProjectionSystem");
-        selectSystem.className = "GPselect GPmousePositionSettingsSelect";
+        selectSystem.className = "GPselect GPmousePositionSettingsSelect gpf-select fr-select";
         selectSystem.addEventListener("change", function (e) {
             context.onMousePositionProjectionSystemChange(e);
         });
@@ -671,7 +618,7 @@ var MousePositionDOM = {
 
         var selectUnits = document.createElement("select");
         selectUnits.id = this._addUID("GPmousePositionProjectionUnits");
-        selectUnits.className = "GPselect GPmousePositionSettingsSelect";
+        selectUnits.className = "GPselect GPmousePositionSettingsSelect gpf-select fr-select";
         selectUnits.addEventListener("change", function (e) {
             context.onMousePositionProjectionUnitsChange(e);
         });

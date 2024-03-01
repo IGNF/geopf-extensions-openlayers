@@ -1318,7 +1318,7 @@ var MousePosition = class MousePosition extends Control {
 
         // evenement declenché à l'ouverture/fermeture du panneau,
         // et en fonction du mode : desktop ou tactile !
-        if (opened) {
+        if (opened === "false") {
             olObservableUnByKey(this.listenerKey);
         } else if (!this.editing) {
             if (this._isDesktop) {
@@ -1357,7 +1357,10 @@ var MousePosition = class MousePosition extends Control {
             this._panelMousePositionContainer.style.transitionDelay = "0s";
             var height = -95;
             var top = this._panelMousePositionContainer.offsetTop;
-            if (!document.getElementById(e.target.htmlFor).checked) {
+
+            var opened = e.target.ariaPressed;
+
+            if (opened === "true") {
                 this._panelMousePositionContainer.style.top = top + height + "px";
             } else {
                 this._panelMousePositionContainer.style.top = top - height + "px";
