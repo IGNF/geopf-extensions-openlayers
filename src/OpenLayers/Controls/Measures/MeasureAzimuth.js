@@ -2,7 +2,8 @@
 import "../../CSS/Controls/Measures/GPFmeasureAzimuth.css";
 // import "../../CSS/Controls/Measures/GPFmeasureAzimuthStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
 // import local
@@ -121,7 +122,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
             //     self.onPointerMoveAzimutHandler(e);
             // });
 
-            if (!this.options.target) {
+            if (!this.options.target && !this.options.position) {
                 MeasureToolBox.add(map, this);
             }
         } else {
@@ -150,7 +151,12 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
-        Control.prototype.setMap.call(this, map);
+        super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     }
 
     /**
@@ -188,6 +194,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         // liste des options
         this.options = {};
         this.options.geodesic = (typeof options.geodesic !== "undefined") ? options.geodesic : false;
+        this.options.position = (typeof options.position !== "undefined") ? options.position : null;
         this.options.target = (typeof options.target !== "undefined") ? options.target : null;
         this.options.render = (typeof options.render !== "undefined") ? options.render : null;
         this.options.layerDescription = (typeof options.layerDescription !== "undefined") ? options.layerDescription : {

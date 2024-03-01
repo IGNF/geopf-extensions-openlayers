@@ -2,7 +2,8 @@
 import "../../CSS/Controls/Drawing/GPFdrawing.css";
 // import "../../CSS/Controls/Drawing/GPFdrawingStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
 import Overlay from "ol/Overlay";
@@ -305,6 +306,11 @@ var Drawing = class Drawing extends Control {
             return;
         }
 
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
+        
         // mode "draggable"
         if (this.draggable) {
             Draggable.dragElement(

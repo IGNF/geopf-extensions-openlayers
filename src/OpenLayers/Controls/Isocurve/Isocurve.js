@@ -2,7 +2,8 @@
 import "../../CSS/Controls/Isochron/GPFisochron.css";
 // import "../../CSS/Controls/Isochron/GPFisochronStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
@@ -166,6 +167,11 @@ var Isocurve = class Isocurve extends Control {
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     }
 
     // ################################################################### //

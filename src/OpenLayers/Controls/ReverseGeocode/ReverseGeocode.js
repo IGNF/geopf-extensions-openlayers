@@ -2,7 +2,8 @@
 import "../../CSS/Controls/ReverseGeocoding/GPFreverseGeocoding.css";
 // import "../../CSS/Controls/ReverseGeocoding/GPFreverseGeocodingStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import Overlay from "ol/Overlay";
 import Collection from "ol/Collection";
 import Feature from "ol/Feature";
@@ -186,6 +187,11 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     }
 
     /**

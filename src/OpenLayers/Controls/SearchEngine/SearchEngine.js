@@ -2,7 +2,8 @@
 import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 // import "../../CSS/Controls/SearchEngine/GPFsearchEngineStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import Overlay from "ol/Overlay";
 import { transform as olProjTransform } from "ol/proj";
 // import geoportal library access
@@ -131,6 +132,11 @@ var SearchEngine = class SearchEngine extends Control {
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     }
 
     /**

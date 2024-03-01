@@ -2,7 +2,8 @@
 import "../../CSS/Controls/Measures/GPFmeasureArea.css";
 // import "../../CSS/Controls/Measures/GPFmeasureAreaStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import { getArea as olGetAreaSphere } from "ol/sphere";
 import { Polygon } from "ol/geom";
 // import local
@@ -121,7 +122,7 @@ var MeasureArea = class MeasureArea extends Control {
             //     self.onPointerMoveHandler(e);
             // });
 
-            if (!this.options.target) {
+            if (!this.options.target && !this.options.position) {
                 MeasureToolBox.add(map, this);
             }
         } else {
@@ -151,6 +152,11 @@ var MeasureArea = class MeasureArea extends Control {
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     }
 
     // ################################################################### //
@@ -170,6 +176,7 @@ var MeasureArea = class MeasureArea extends Control {
         // liste des options
         this.options = {};
         this.options.geodesic = (typeof options.geodesic !== "undefined") ? options.geodesic : true;
+        this.options.position = (typeof options.position !== "undefined") ? options.position : null;
         this.options.target = (typeof options.target !== "undefined") ? options.target : null;
         this.options.render = (typeof options.render !== "undefined") ? options.render : null;
         this.options.layerDescription = (typeof options.layerDescription !== "undefined") ? options.layerDescription : {

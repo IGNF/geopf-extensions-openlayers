@@ -2,7 +2,8 @@
 import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css";
 // import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfoStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 // import local
 import SelectorID from "../../../Utils/SelectorID";
 import Logger from "../../../Utils/LoggerByDefault";
@@ -54,15 +55,15 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     constructor (options) {
         options = options || {};
 
-        // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
-
         var _options = options.options || {};
         var _layers = options.layers || [];
+
+        // call ol.control.Control constructor
+        super({
+            element : _options.element,
+            target : _options.target,
+            render : _options.render
+        });
 
         if (!(this instanceof GetFeatureInfo)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -101,6 +102,9 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     _initialize (options, layers) {
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
         this._uid = SelectorID.generate();
+
+        this.options = options;
+        this.options.layers = layers;
 
         // List of triggering events associated to a boolean indicating if the event is listened (there must be
         // almost one layer having this triggering event configured)
@@ -270,6 +274,11 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
 
         // call original setMap method
         super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     }
 
     // ################################################################### //

@@ -2,7 +2,8 @@
 import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcher.css";
 // import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcherStyle.css";
 // import OpenLayers
-import Control from "ol/control/Control";
+// import Control from "ol/control/Control";
+import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import { intersects as olIntersects } from "ol/extent";
 // import local
@@ -67,7 +68,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         // call ol.control.Control constructor
         super({
-            element : null,
+            element : _options.element,
             target : _options.target,
             render : _options.render
         });
@@ -164,7 +165,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
-        Control.prototype.setMap.call(this, map);
+        super.setMap(map);
+
+        // position
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
     }
 
     /**
@@ -429,6 +435,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     _initialize (options, layers) {
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
         this._uid = SelectorID.generate();
+
+        this.options = options;
+        this.options.layers = layers;
 
         // {Object} control layers list. Each key is a layer id, and its value is an object of layers options (layer, id, opacity, visibility, title, description...)
         this._layers = {};
