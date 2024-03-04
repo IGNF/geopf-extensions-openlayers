@@ -22,7 +22,7 @@ dialog[id^=GPmousePositionPanel-] {
     transition-delay: 0s;
 }
 
-div[id^=GPmousePositionPanelClose]  {
+button[id^=GPmousePositionPanelClose]  {
   background-image: url("img/GPmousePositionOpen.png");
 }
 
