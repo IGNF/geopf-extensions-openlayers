@@ -18,25 +18,13 @@ var MousePositionDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPmousePosition");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
     // ################################################################### //
     // ################### Methods of main container ##################### //
     // ################################################################### //
-
-    /**
-     * Hidden checkbox for minimizing/maximizing
-     *
-     * @returns {DOMElement} DOM element
-     */
-    _createShowMousePositionElement : function () {
-        var input = document.createElement("input");
-        input.id = this._addUID("GPshowMousePosition");
-        input.type = "checkbox";
-        return input;
-    },
 
     /**
      * Show mouse position control
@@ -48,48 +36,29 @@ var MousePositionDOM = {
         // contexte d'execution
         var self = this;
 
-        var label = document.createElement("label");
-        label.id = this._addUID("GPshowMousePositionPicto");
-        label.className = "GPshowAdvancedToolPicto";
-        label.htmlFor = this._addUID("GPshowMousePosition");
-        label.title = "Afficher les coordonnées du curseur";
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowMousePositionPicto");
+        button.className = "GPshowAdvancedToolPicto gpf-btn fr-btn GPshowOpen";
+        button.title = "Afficher les coordonnées du curseur";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
 
-        // FIXME detection disponible dans le JS !
-        // Detection : test for desktop or tactile
-        // var isDesktop = true;
-        // var userAgent = window.navigator.userAgent.toLowerCase();
-        // if (userAgent.indexOf("iphone") !== -1 ||
-        // userAgent.indexOf("ipod") !== -1 ||
-        // userAgent.indexOf("ipad") !== -1 ||
-        // userAgent.indexOf("android") !== -1 ||
-        // userAgent.indexOf("mobile") !== -1 ||
-        // userAgent.indexOf("blackberry") !== -1 ||
-        // userAgent.indexOf("tablet") !== -1 ||
-        // userAgent.indexOf("phone") !== -1 ||
-        // userAgent.indexOf("touch") !== -1 ) {
-        //     isDesktop = false;
-        // }
-        // if (userAgent.indexOf("msie") !== -1 ||
-        // userAgent.indexOf("trident") !== -1) {
-        //     isDesktop = true;
-        // }
+        // Close all results and panels when minimizing the widget
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onShowMousePositionClick();
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onShowMousePositionClick();
+            });
+        }
 
-        // Show map center localisation if panel opened and tactile support
-        label.addEventListener("click", function (e) {
-            var mapCenterClass = "";
-            if (!document.getElementById(self._addUID("GPshowMousePosition")).checked && !isDesktop) {
-                mapCenterClass = "GPmapCenterVisible";
-            }
-            document.getElementById("GPmapCenter").className = mapCenterClass;
-            self.onShowMousePositionClick(e);
-        });
-
-        var spanOpen = document.createElement("span");
-        spanOpen.id = this._addUID("GPshowMousePositionOpen");
-        spanOpen.className = "GPshowAdvancedToolOpen";
-        label.appendChild(spanOpen);
-
-        return label;
+        return button;
     },
 
     /**
@@ -97,6 +66,7 @@ var MousePositionDOM = {
      *
      * @returns {DOMElement} DOM element
      */
+    /*
     _createMousePositionPanelElement : function () {
         var panel = document.createElement("div");
         panel.id = this._addUID("GPmousePositionPanel");
@@ -110,6 +80,26 @@ var MousePositionDOM = {
         // div.appendChild(this._createMousePositionSettingsElement());
 
         return panel;
+    },
+    */
+
+    /**
+     * Create Container Panel
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createMousePositionPanelElement : function () {
+        var dialog = document.createElement("dialog");
+        dialog.id = this._addUID("GPmousePositionPanel");
+        dialog.className = "GPpanel gpf-panel fr-modal";
+        this._panelMousePositionContainer = dialog;
+        return dialog;
+    },
+
+    _createMousePositionPanelDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
+        return div;
     },
 
     /**
@@ -131,35 +121,75 @@ var MousePositionDOM = {
     /**
      * @returns {DOMElement} container
      */
+
+    /**
+     * Create Header Title Panel
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createMousePositionPanelTitleElement : function () {
+        var div = document.createElement("div");
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        div.id = this._addUID("GPmousePositionHeaderTitle");
+        div.innerHTML = "Coordonnées";
+        return div;
+    },
+
+    /**
+     * Create Header Panel
+     *
+     * @returns {DOMElement} DOM element
+     */
     _createMousePositionPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "GPpanelHeader";
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        // info: on sépare les appels pour la création du picto de retour,
+        // du titre et de la croix de fermeture pour les récupérer dans le composant
+        return container;
+    },
 
-        var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle";
-        divTitle.innerHTML = "Coordonnées";
-        container.appendChild(divTitle);
+    /**
+     * Create Header close div
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createMousePositionPanelCloseElement : function () {
+        // contexte
+        var self = this;
 
-        var divClose = document.createElement("div");
-        divClose.id = "GPmousePositionPanelClose";
-        divClose.className = "GPpanelClose";
+        var divClose = document.createElement("button");
+        divClose.id = this._addUID("GPmousePositionPanelClose");
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-close fr-btn--close fr-btn";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
-        var self = this;
         if (divClose.addEventListener) {
             divClose.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPshowMousePositionPicto")).click();
+            }, false);
+            divClose.addEventListener("keydown", function (event) {
+                if (event.keyCode === 13) {
+                    document.getElementById(self._addUID("GPshowMousePositionPicto")).click();
+                }
             }, false);
         } else if (divClose.attachEvent) {
             divClose.attachEvent("onclick", function () {
                 document.getElementById(self._addUID("GPshowMousePositionPicto")).click();
             });
+            divClose.attachEvent("onkeydown", function (event) {
+                if (event.keyCode === 13) {
+                    document.getElementById(self._addUID("GPshowMousePositionPicto")).click();
+                }
+            });
         }
 
-        container.appendChild(divClose);
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
 
-        return container;
+        divClose.appendChild(span);
+
+        return divClose;
     },
 
     /**
@@ -489,34 +519,33 @@ var MousePositionDOM = {
     _createShowMousePositionSettingsElement : function (display) {
         var list = [];
 
-        var context = this;
+        // contexte d'execution
+        var self = this;
 
-        var input = document.createElement("input");
-        input.type = "checkbox";
-        input.id = this._addUID("GPshowMousePositionSettings");
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowMousePositionSettings");
 
-        var label = document.createElement("label");
-        label.id = this._addUID("GPshowMousePositionSettingsPicto");
-        label.htmlFor = this._addUID("GPshowMousePositionSettings");
-        label.title = "Réglages";
-        label.className = "GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto"; // FIXME classname and id ?
-        label.style.display = display ? "block" : "none";
-        if (label.addEventListener) {
-            label.addEventListener("click", function (e) {
-                if (typeof context.onShowMousePositionSettingsClick === "function") {
-                    context.onShowMousePositionSettingsClick(e);
-                }
-            }, false);
-        } else if (label.attachEvent) {
-            label.attachEvent("onclick", function (e) {
-                if (typeof context.onShowMousePositionSettingsClick === "function") {
-                    context.onShowMousePositionSettingsClick(e);
-                }
+        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto gpf-btn fr-btn--sm fr-icon-arrow-down-fill";
+        button.title = "Réglages";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
+        
+        // Close all results and panels when minimizing the widget
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onShowMousePositionSettingsClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onShowMousePositionSettingsClick(e);
             });
         }
 
-        list.push(input);
-        list.push(label);
+        list.push(button);
 
         return list;
     },
@@ -541,58 +570,6 @@ var MousePositionDOM = {
         span.innerHTML = "Système de référence";
         container.appendChild(span);
 
-        // FIXME on decompose la fonction pour les besoins du controle,
-        // on ajoutera ces childs à la main...
-        // FIXME tableau statique !
-        // var systems = [
-        //     {
-        //         code : "GEOGRAPHIC",
-        //         label : "Géographique"
-        //     },
-        //     {
-        //         code : "MERCATOR",
-        //         label : "Mercator"
-        //     },
-        //     {
-        //         code : "LAMB93",
-        //         label : "Lambert 93"
-        //     },
-        //     {
-        //         code : "LAMB2E",
-        //         label : "Lambert II étendu"
-        //     }
-        // ];
-        //
-        // var selectSystem = this._createMousePositionSettingsSystemsElement(systems);
-        //
-        // container.appendChild(selectSystem);
-
-        // FIXME on decompose la fonction pour les besoins du controle,
-        // on ajoutera ces childs à la main...
-        // FIXME tableau statique !
-        // var units = [
-        //     {
-        //         code : "DEC",
-        //         label : "degrés décimaux",
-        //     },
-        //     {
-        //         code : "DMS",
-        //         label : "degrés sexagésimaux",
-        //     },
-        //     {
-        //         code : "RAD",
-        //         label : "radians",
-        //     },
-        //     {
-        //         code : "GON",
-        //         label : "grades"
-        //     }
-        // ];
-        //
-        // var selectUnits = this._createMousePositionSettingsUnitsElement(units);
-        //
-        // container.appendChild(selectUnits);
-
         return container;
     },
 
@@ -607,7 +584,7 @@ var MousePositionDOM = {
 
         var selectSystem = document.createElement("select");
         selectSystem.id = this._addUID("GPmousePositionProjectionSystem");
-        selectSystem.className = "GPselect GPmousePositionSettingsSelect";
+        selectSystem.className = "GPselect GPmousePositionSettingsSelect gpf-select fr-select";
         selectSystem.addEventListener("change", function (e) {
             context.onMousePositionProjectionSystemChange(e);
         });
@@ -641,7 +618,7 @@ var MousePositionDOM = {
 
         var selectUnits = document.createElement("select");
         selectUnits.id = this._addUID("GPmousePositionProjectionUnits");
-        selectUnits.className = "GPselect GPmousePositionSettingsSelect";
+        selectUnits.className = "GPselect GPmousePositionSettingsSelect gpf-select fr-select";
         selectUnits.addEventListener("change", function (e) {
             context.onMousePositionProjectionUnitsChange(e);
         });

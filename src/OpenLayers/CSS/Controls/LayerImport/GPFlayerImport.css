@@ -47,7 +47,9 @@ div[id^="GPimport-"] {
 [id^="GPimportPanel-"],
 [id^="GPimportGetCapPanel-"],
 [id^="GPimportMapBoxPanel-"] {
-    left: 8px;
+    left: 32px;
+    top: inherit;
+    height: inherit;
 }
 
 [id^="GPimportPanel-"] {

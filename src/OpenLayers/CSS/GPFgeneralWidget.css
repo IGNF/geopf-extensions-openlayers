@@ -344,6 +344,7 @@ input.GPsubmit:hover {
   transition: all 0.5s ease-out 0s;
 }
 
+button[aria-pressed="true"].GPshowMoreOptions,
 input[type="checkbox"]:checked + .GPshowMoreOptions {
   -webkit-transform: rotateX(180deg);
   transform: rotateX(180deg);

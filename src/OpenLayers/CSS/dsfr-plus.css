@@ -21,7 +21,9 @@
 }
 .gpf-panel__header {}
 .gpf-panel__title {}
-.gpf-panel__content {}
+.gpf-panel__content {
+  margin-bottom: unset
+}
 
 .gpf-panel--close,
 .gpf-panel--reduce,
@@ -109,6 +111,14 @@
   white-space: nowrap;
   text-overflow:ellipsis;
   cursor: pointer;
+}
+
+.gpf-panel::after {
+  height: unset;
+}
+
+.gpf-panel::before {
+  height: unset;
 }
 
 /***********/

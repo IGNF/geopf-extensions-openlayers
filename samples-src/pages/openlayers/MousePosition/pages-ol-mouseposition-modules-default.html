@@ -54,7 +54,10 @@
                   })
                 });
 
-                mouse = new ol.control.GeoportalMousePosition();
+                mouse = new ol.control.GeoportalMousePosition({
+                  draggable : true,
+                  position : "bottom-left"
+                });
                 map.addControl(mouse);
 
                 layerSwitcher = new ol.control.LayerSwitcher();

@@ -35,12 +35,11 @@
 /* General panels */
 
 [id^="GPreverseGeocodingPanel-"] {
-    position: absolute;
-    left: 8px;
-}
-
-[id^="GPreverseGeocodingPanel-"] {
+  position: absolute;
+  left: 32px;
   width: 280px;
+  height: inherit;
+  /* top: inherit; */
 }
 
 [id^="GPreverseGeocodingReturnPicto"] {

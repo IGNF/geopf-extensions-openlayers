@@ -121,7 +121,9 @@ var Draggable = {
 
                 // set the element's new position:
                 element.style.top = offsetY + "px";
+                element.style.bottom = "unset";
                 element.style.left = offsetX + "px";
+                element.style.right = "unset";
             }
         }
     }

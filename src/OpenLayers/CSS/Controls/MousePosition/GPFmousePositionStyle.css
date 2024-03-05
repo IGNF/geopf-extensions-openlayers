@@ -1,10 +1,3 @@
-/* MOUSE POSITION */
-
-div[id^=GPmousePosition-] {
-  bottom: 8px;
-  left: 10px;
-}
-
 /* Showing/hiding mouse position panel */
 
 span[id^=GPshowMousePositionOpen] {
@@ -13,19 +6,22 @@ span[id^=GPshowMousePositionOpen] {
 
 /* General panels */
 
-div[id^=GPmousePositionPanel-] {
+dialog[id^=GPmousePositionPanel-] {
+  bottom: 32px;
+}
+
+dialog[id^=GPmousePositionPanel-] {
     /* on desactive le mode draggable de la fenêtre : */
-    position: absolute;
-    left: 10px;
-    top: calc(-8px + -118px);
-    /* transition: top 0.5s ease-out 0s;
+    
+    /* top: calc(-8px + -118px);
+    transition: top 0.5s ease-out 0s;
     transition-property: top;
     transition-duration: 0.5s;
     transition-timing-function: ease-out;
     transition-delay: 0s; */
 }
 
-div[id^=GPmousePositionPanelClose]  {
+button[id^=GPmousePositionPanelClose]  {
   background-image: url("img/GPmousePositionOpen.png");
 }
 
@@ -37,4 +33,27 @@ div[id^=GPmousePositionPanelClose]  {
 
 #GPmapCenter {
   background-image: url("img/GPmapCenter.png");
+}
+
+.GPmousePositionLabel,
+.GPmousePositionCoords {
+  display: inline-block;
+  line-height: 20px;
+}
+
+.GPmousePositionLabel {
+  width: 100px;
+  font-weight: bold;
+}
+
+.GPmousePositionCoords {
+  width: 110px;
+}
+
+/* Showing settings */
+
+.GPshowMousePositionSettingsPicto {
+  bottom: 5px;
+  right: 0;
+  transition: all 0.5s ease-out 0s;
 }

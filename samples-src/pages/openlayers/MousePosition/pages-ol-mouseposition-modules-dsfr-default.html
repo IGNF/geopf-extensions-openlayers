@@ -2,14 +2,13 @@
 
 {{#content "vendor"}}
         <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/Dsfr{{ mode }}.css" />
-        <!-- <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/openlayers/modules/LayerSwitcher{{ mode }}.js"></script> -->
-        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/ReverseGeocode{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/openlayers/modules/ReverseGeocode{{ mode }}.js"></script>
+        <script src="{{ baseurl }}/dist/openlayers/modules/CRS{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/openlayers/modules/GeoportalMousePosition{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/openlayers/modules/GeoportalMousePosition{{ mode }}.js"></script>
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample openlayers ReverseGeocode</title>
+        <title>Sample openlayers MousePosition</title>
 {{/content}}
 
 {{#content "style"}}
@@ -22,7 +21,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du widget de geocodage inverse, avec les options par défaut</h2>
+            <h2>Ajout du Widget d'affichage des coordonnées de la Souris</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -31,12 +30,15 @@
 {{#content "js"}}
             <script type="text/javascript">
 
+              var map = null;
+              var mouse = null;
+              var layerSwitcher = null;
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
 
                 // Création de la map
-                var map = new ol.Map({
+                map = new ol.Map({
                   target : "map",
                   layers : [
                       new ol.layer.Tile({
@@ -50,25 +52,21 @@
                   })
                 });
 
-                var reverse = new ol.control.ReverseGeocode({
-                  "collapsed" : false,
-                  // "draggable" : true,
-                  "position" : "bottom-left"
+                mouse = new ol.control.GeoportalMousePosition({
+                  draggable : true,
+                  position : "bottom-left"
                 });
-                map.addControl(reverse);
+                map.addControl(mouse);
 
-                // var layerSwitcher = new ol.control.LayerSwitcher({});
-                // map.addControl(layerSwitcher);
-             };
+              };
               Gp.Services.getConfig({
                 customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/essentielsConfig.json",
-                callbackSuffix : "",
-                // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
-                timeOut : 20000,
-                onSuccess : createMap,
-                onFailure : (e) => {
-                  console.error(e);
-                }
+                  callbackSuffix : "",
+                  timeOut : 20000,
+                  onSuccess : createMap,
+                  onFailure : (e) => {
+                    console.error(e);
+                  }
               });
             </script>
 {{/content}}

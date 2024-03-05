@@ -1,32 +1,47 @@
+/****************/
 /* MOUSE POSITION */
+/****************/
 
-/* Showing/hiding mouse position panel */
+div[id^="GPmousePosition-"] {
+  bottom: 8px;
+  left: 10px;
+}
+/* Showing/hiding mousePosition panel */
 
-label[id^=GPshowMousePositionPicto] {
+[id^="GPshowMousePositionPicto-"] {
   display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: unset;
 }
 
-input[id^=GPshowMousePosition-] + label {
-  display: block;
-}
-
-input[id^=GPshowMousePosition-]:checked + label {
+[id^="GPshowMousePositionPicto-"][aria-pressed="false"] + dialog {
   display: none;
+  visibility: hidden;
+  opacity: 0%;
 }
 
-input[id^=GPshowMousePosition-] + label + div {
-  display: none;
-}
-
-input[id^=GPshowMousePosition-]:checked + label + div {
+[id^="GPshowMousePositionPicto-"][aria-pressed="true"] + dialog {
   display: block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+[id^="GPshowMousePositionPicto-"] {
+  background-image: url("img/GPmousePositionOpen.png");
+  background-repeat: no-repeat;
+  background-position: 3px center;
 }
 
 /* General panels */
 
-div[id^=GPmousePositionPanel-] {
-  width: 300px;
+[id^=GPmousePositionPanel-] {
   overflow: hidden;
+  left: 32px;
+  top: inherit;
+  position: absolute;
+  width: 280px;
+  height: inherit;
 }
 
 /* Basic infos */
@@ -36,33 +51,6 @@ div[id^=GPmousePositionBasicPanel] {
   position: relative;
 }
 
-.GPmousePositionLabel,
-.GPmousePositionCoords {
-  display: inline-block;
-  line-height: 20px;
-}
-
-.GPmousePositionLabel {
-  width: 80px;
-  font-weight: bold;
-}
-
-.GPmousePositionCoords {
-  width: 110px;
-}
-
-/* Showing settings */
-
-.GPshowMousePositionSettingsPicto {
-  bottom: 5px;
-  right: 0;
-  transition: all 0.5s ease-out 0s;
-}
-
-div[id^=GPmousePosition-] input[type="checkbox"]:checked + .GPshowMousePositionSettingsPicto {
-  bottom: 100px;
-}
-
 div[id^=GPmousePositionSettings-] {
   display: block;
   max-height: 0;
@@ -70,15 +58,19 @@ div[id^=GPmousePositionSettings-] {
   transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
 }
 
-div[id^=GPmousePosition-] input[type="checkbox"]:checked + label + div[id^=GPmousePositionSettings-] {
-  max-height: 95px;
+button[id^="GPshowMousePositionSettings"] {
+  border: unset;
+}
+
+div[id^=GPmousePosition-] button[id^="GPshowMousePositionSettings"][aria-pressed="true"] + div[id^=GPmousePositionSettings-] {
   opacity: 1;
+  padding-bottom: 20px;
+  max-height: fit-content;
 }
 
 /* Settings */
 
-div[id^=GPmousePositionSettings-] {
-  height: 95px;
+button[id^=GPmousePositionSettings-] {
   padding-left: 0 15px;
   overflow: hidden;
 }
@@ -94,6 +86,7 @@ div[id^=GPmousePositionSettings-] {
 .GPmousePositionSettingsSelect {
   width: 180px;
   margin-top: 5px;
+  margin-inline: auto;
 }
 
 /* General panels */
