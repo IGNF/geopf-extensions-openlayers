@@ -250,7 +250,7 @@ var LayerImport = class LayerImport extends Control {
                 Draggable.dragElement(
                     this._importPanel,
                     this._importPanelHeader,
-                    map.getTargetElement()
+                    this.options.position ? null : map.getTargetElement()
                 );
 
                 // panneau draggable pour les resultats ?

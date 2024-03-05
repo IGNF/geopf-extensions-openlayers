@@ -5,6 +5,7 @@ var logger = Logger.getLogger("draggable");
 /**
  * @module Draggable
  * @alias [private] Draggable
+ * @fixme conflit entre la position et le mode draggable
  * @description
  * ...
  *
@@ -95,8 +96,8 @@ var Draggable = {
                 e._pageX = e._pageX || e.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
                 e._pageY = e._pageY || e.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
 
-                var parentLeft = element.parentElement.offsetLeft;
-                var parentTop = element.parentElement.offsetTop;
+                var parentLeft = container ? container.offsetLeft : element.parentElement.offsetLeft;
+                var parentTop = container ? container.offsetTop : element.parentElement.parentElement.offsetTop; // hack pas jolie !
                 logger.trace("parent offset", parentLeft, parentTop);
 
                 // left/right constraint

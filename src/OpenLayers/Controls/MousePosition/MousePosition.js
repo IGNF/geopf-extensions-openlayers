@@ -180,7 +180,7 @@ var MousePosition = class MousePosition extends Control {
                 Draggable.dragElement(
                     this._panelMousePositionContainer,
                     this._panelHeaderMousePositionContainer,
-                    map.getTargetElement()
+                    this.options.position ? null : map.getTargetElement()
                 );
             }
 

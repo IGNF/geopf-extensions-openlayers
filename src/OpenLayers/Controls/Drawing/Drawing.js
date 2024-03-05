@@ -316,7 +316,7 @@ var Drawing = class Drawing extends Control {
             Draggable.dragElement(
                 this._drawingPanel,
                 this._drawingPanelHeader,
-                map.getTargetElement()
+                this.options.position ? null : map.getTargetElement()
             );
         }
 

@@ -160,7 +160,7 @@ var Isocurve = class Isocurve extends Control {
                 Draggable.dragElement(
                     this._IsoPanelContainer,
                     this._IsoPanelHeaderContainer,
-                    map.getTargetElement()
+                    this.options.position ? null : map.getTargetElement()
                 );
             }
         }

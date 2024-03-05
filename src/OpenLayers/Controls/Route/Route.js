@@ -169,7 +169,7 @@ var Route = class Route extends Control {
                 Draggable.dragElement(
                     this._panelRouteContainer,
                     this._panelHeaderRouteContainer,
-                    map.getTargetElement()
+                    this.options.position ? null : map.getTargetElement()
                 );
             }
         }

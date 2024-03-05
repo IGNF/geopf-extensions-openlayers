@@ -159,7 +159,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
                 Draggable.dragElement(
                     this._panelContainer,
                     this._panelHeaderContainer,
-                    map.getTargetElement()
+                    this.options.position ? null : map.getTargetElement()
                 );
             }
             // mode "collapsed"

@@ -30,13 +30,14 @@
 
 {{#content "js"}}
             <script type="text/javascript">
-
+              var map;
+              var iso;
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
 
                 // Création de la map
-                var map = new ol.Map({
+                map = new ol.Map({
                   target : "map",
                   layers : [
                       new ol.layer.Tile({
@@ -50,7 +51,9 @@
                   })
                 });
 
-                var iso = new ol.control.Isocurve({});
+                iso = new ol.control.Isocurve({
+                  draggable: true
+                });
                 map.addControl(iso);
 
                 var layerSwitcher = new ol.control.LayerSwitcher({});
