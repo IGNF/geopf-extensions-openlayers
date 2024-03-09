@@ -1,0 +1,115 @@
+widget :
+GPimport                    gpf-import-
+GPwidget
+
+button-open :
+GPshowImportPicto           gpf-import-
+GPshowOpen
+GPshowAdvancedToolPicto
+
+panel_main :
+GPimportPanel               gpf-import-
+GPpanel
+
+panel_main_header :
+GPpanelHeader
+
+panel_main_title :
+GPimportHeaderTitle         gpf-import-
+GPpanelTitle
+
+button-close :
+GPimportPanelClose          gpf-import-
+GPpanelClose
+
+panel_main_form :
+GPimportForm                gpf-import-
+
+panel_main_form_items :
+GPimportTypeLine            gpf-import-
+GPimportInputLine           /!\ renommer !
+GPimportTypeLabel           gpf-import-
+GPimportLabel               /!\ renommer !
+GPimportTypeSelect          gpf-import-
+GPimportSelect              /!\ renommer !
+
+GPimportStaticParams        gpf-import-
+GPimportVisibleParams       /!\ renommer !
+
+GPimportName                gpf-import-
+GPimportInput               /!\ renommer !
+
+GPimportChoice              gpf-import-
+GPimportChoiceAltTxt        /!\ renommer !
+GPimportChoiceAlt           /!\ renommer !
+GPimportChoiceAltLocal      gpf-import-
+GPimportChoiceAltUrl        gpf-import-
+
+GPimportValueLocal          gpf-import-
+GPimportFile                gpf-import-
+GPimportInputFile           /!\ renommer !
+
+GPimportValueUrl            gpf-import-
+GPimportValueHidden         /!\ renommer !
+GPimportUrl                 gpf-import-
+
+GPimportServiceParams       gpf-import-
+GPimportHiddenParams        /!\ renommer !
+GPimportServiceUrl          gpf-import-
+
+button-submit :
+GPimportSubmit                  gpf-import-
+GPsubmit
+
+waiting :
+GPimportWaitingContainer        gpf-import-
+GPimportWaitingContainerHidden  /!\ renommer !
+GPimportWaiting                 /!\ renommer !
+
+panel_result :
+GPimportGetCapPanel             gpf-import-
+GPpanel
+
+panel_result_header :
+GPpanelHeader
+
+panel_result_title :
+GPpanelTitle
+
+button-close :
+GPimportGetCapPanelClose        gpf-import-
+GPpanelClose
+
+panel_result_items :
+GPimportGetCapResults           gpf-import-
+GPimportGetCapRoot              gpf-import-
+
+panel_result :
+GPimportMapBoxPanel             gpf-import-
+GPpanel
+
+panel_result_header :
+GPpanelHeader
+
+button-icon-return :
+GPimportMapBoxPanelReturnPicto  gpf-import-
+
+panel_result_title :
+GPpanelTitle
+
+button-close :
+GPimportMapBoxPanelClose        gpf-import-
+GPpanelClose
+
+panel_result_items :
+GPimportMapBoxResults           gpf-import-
+GPimportMapBoxpRoot             gpf-import-
+
+
+
+
+
+
+
+
+

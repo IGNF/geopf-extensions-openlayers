@@ -1,0 +1,23 @@
+/* GET FEATURE INFO */
+
+div[id^=GPgetFeatureInfo-] {
+  top: 260px;
+  left: 10px;
+}
+
+button[id^="GPgetFeatureInfoPicto-"] {}
+  
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="false"] {
+  background-color: rgba(0,60,136,0.5);
+  background-position: 0px center;
+}
+  
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {
+  background-color: rgba(0,60,136,0.7);
+  background-position: -26px center;
+}
+  
+button[id^="GPgetFeatureInfoPicto-"] {
+    background-image: url("img/GPactivateGfi.png");
+    background-repeat: no-repeat;
+}

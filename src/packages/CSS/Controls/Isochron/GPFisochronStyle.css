@@ -1,0 +1,126 @@
+/* ISOCHRON */
+
+/* Isochron form */
+
+.GPisochronChoiceAlt input:checked + label + span {
+  color: #366291;
+}
+
+.GPisochronOriginPointerImg,
+.GPisochronChoiceAltImg,
+.GPisochronTransportImg {
+  background-image: url("img/GPisochronOptions.png");
+}
+
+.GPisoExclusionsOption {
+  background-image: url("img/GPisochronCheck.png");
+}
+
+.GPisochronFormMini {
+  max-height: 58px;
+  overflow: hidden;
+}
+
+.GPisochronFormMini div[id^="GPisochronReset-"],
+.GPisochronFormMini label[id^="GPshowIsoExclusionsPicto-"] {
+    display: none;
+}
+
+.GPisochronOriginVisible {
+  display: block;
+}
+
+.GPisochronOriginHidden {
+  display: none;
+}
+
+.GPisochronOriginPointerImg {
+  width: 28px;
+  background-color: #F2F2F2;
+  cursor: pointer;
+}
+
+.GPisochronChoiceAlt input {
+  display: none;
+}
+
+.GPisochronChoiceAltImg {
+  display: block;
+  width: 28px;
+  height: 28px;
+  margin: auto;
+  cursor: pointer;
+}
+
+.GPisochronChoiceAlt span {
+  cursor: pointer;
+  display:block;
+  color: #999;
+}
+
+.GPisochronValueHidden {
+  display: none;
+}
+
+.GPisochronModeLabel {
+  display: block;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.GPisochronTransportImg {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.GPisochronTransportImg:first-of-type {
+    margin-left: 18px;
+    margin-right: 10px;
+}
+
+.GPshowIsoExclusionsPicto {
+  top: 250px;
+  right: 0;
+  transition: all 0.5s ease-out 0s;
+}
+
+
+.GPisoExclusionsLabel {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+  line-height: 16px;
+}
+
+.GPisoExclusionsOptions {
+  display: -webkit-flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.GPisoExclusionsOption {
+  display: block;
+  height: 28px;
+  line-height: 26px;
+  color: #A77;
+  background-color: #FEE;
+  padding-left: 28px;
+  padding-right: 5px;
+  border: 1px solid #A77;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+input:checked + .GPisoExclusionsOption {
+  background-color: #EFE;
+  background-position: 0 -28px;
+  color: #797;
+  border: 1px solid #797;
+}

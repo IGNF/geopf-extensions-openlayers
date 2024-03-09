@@ -1,0 +1,62 @@
+div[id^=GPelevationPath-] {
+  bottom: 48px;
+  left: 10px;
+}
+
+/* Showing/hiding elevationPath panel */
+
+
+button[id^="GPshowElevationPathPicto-"] {}
+
+button[id^="GPshowElevationPathPicto-"][aria-pressed="false"] + dialog {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+button[id^="GPshowElevationPathPicto-"][aria-pressed="true"] + dialog {
+  display: block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+button[id^="GPshowElevationPathPicto-"] {
+  background-image: url("img/GPshowElevationPath.png");
+  background-repeat: no-repeat;
+  background-position: 1px center;
+}
+
+
+/* Panel */
+
+[id^=GPelevationPathPanelClose] {
+  background-image: url("img/GPshowElevationPath.png");
+}
+
+[id^=GPelevationPathPanelReduce] {
+  background-image: url("img/GPshowElevationPath.png");
+}
+
+[id^=GPelevationPathPanelInfo] {
+  background-image: url("img/GPshowElevationPath.png");
+}
+
+[id^=GPelevationPathPanel-] {
+  position : relative;
+  top : 6px;
+  left: 32px;
+  width: 280px;
+}
+
+/* ELEVATION PATH DISPLAY */
+
+[id^=GPelevationPathProfil] {
+  height: 150px;
+  width: inherit;
+}
+
+
+[id^=GPelevationPathPanelInfo] {
+  display: none; /* on n'affiche pas le bouton d'information par defaut */
+}
+

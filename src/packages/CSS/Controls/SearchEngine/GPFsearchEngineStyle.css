@@ -1,0 +1,18 @@
+/* SEARCH ENGINE */
+
+.GPadvancedSearchCodeLabel,
+.GPadvancedSearchFilterLabel {
+  max-width: 105px;
+}
+
+.GPadvancedSearchCodeLabel,
+.GPadvancedSearchCode,
+ div[id^=GPadvancedSearchFilters] {
+  margin-top: 15px;
+}
+
+.GPadvancedSearchFilterLabel,
+.GPadvancedSearchFilterInput {
+  margin-bottom: 5px;
+}
+

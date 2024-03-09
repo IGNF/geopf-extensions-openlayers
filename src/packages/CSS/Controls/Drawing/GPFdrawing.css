@@ -1,0 +1,48 @@
+/* MOUSE POSITION */
+
+div[id^=GPdrawing-] {
+  top: 48px;
+  right: 8px;
+}
+
+/* Showing/hiding drawing panel */
+
+button[id^="GPshowDrawingPicto-"] {}
+
+button[id^="GPshowDrawingPicto-"][aria-pressed="false"] + dialog {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+button[id^="GPshowDrawingPicto-"][aria-pressed="true"] + dialog {
+  display: block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+button[id^="GPshowDrawingPicto-"] {
+  background-image: url("img/GPdrawingOpen.png");
+  background-repeat: no-repeat;
+  background-position: 1px center;
+}
+
+/* General panels */
+
+[id^=GPdrawingPanel-] {
+  top: 0px;
+  left: -276px;
+  position: absolute;
+  width: 240px;
+  overflow: hidden;
+}
+
+[id^=GPdrawingPanelClose-] {
+  background-image: url("img/GPdrawingOpen.png");
+}
+
+/* Basic infos */
+
+div[id^=GPdrawingBasicPanel-] {
+  padding: 10px 15px;
+}

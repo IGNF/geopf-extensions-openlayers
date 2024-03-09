@@ -1,0 +1,144 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Portail{{ mode }}.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Drawing{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/Drawing{{ mode }}.js"></script>
+        <!-- <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerImport{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/LayerImport{{ mode }}.js"></script> -->
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Isocurve{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/Isocurve{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/ElevationPath{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/ElevationPath{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Route{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/Route{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Export{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/Export{{ mode }}.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+            div[id^=GPlayerSwitcher-] {
+              top: 80px;
+              right: 8px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du widget Export</h2>
+            <!-- map -->
+            <div id="map">
+              <div id="btnExportIso"></div>
+              <div id="btnExportRoute"></div>
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+              var map;
+              var exportRoute;
+              window.onload = function () {
+                // on cache l'image de chargement du Géoportail.
+                document.getElementById("map").style.backgroundImage = "none";
+
+                // Création de la map
+                map = new ol.Map({
+                  target : "map",
+                  layers : [
+                      new ol.layer.Tile({
+                          source: new ol.source.OSM(),
+                          opacity: 0.5
+                      })
+                  ],
+                  view : new ol.View({
+                    center : [288074.8449901076, 6247982.515792289],
+                    zoom : 18
+                  })
+                });
+
+                var layerSwitcher = new ol.control.LayerSwitcher({});
+                map.addControl(layerSwitcher);
+
+                // var importLayer = new ol.control.LayerImport();
+                // map.addControl(importLayer);
+
+                // drawing + export into widget
+                var drawing = new ol.control.Drawing({
+                  tools : {
+                    export : false
+                  }
+                });
+                map.addControl(drawing);
+                var exportDrawing = new ol.control.Export({
+                  control: drawing,
+                  format : "kml"
+                });
+                map.addControl(exportDrawing);
+                exportDrawing.on("export:compute", (e) => {
+                  console.log("Export Drawing", e);
+                });
+
+                // iso + export with config
+                var iso = new ol.control.Isocurve({draggable:true});
+                map.addControl(iso);
+                var exportIso = new ol.control.Export({
+                  control: iso,
+                  // target: document.getElementById("btnExportIso"),
+                  format: "kml",
+                  name: "export-iso",
+                  title : "Exporter",
+                  menu : true,
+                  // Desactive le download de l'export :
+                  // onExport : function (content) {
+                  //   console.log(content);
+                  // }
+                });
+                map.addControl(exportIso);
+                exportIso.on("export:compute", (e) => {
+                  console.log("Export Iso", e);
+                });
+
+                // route + export with setters
+                var route = new ol.control.Route();
+                map.addControl(route);
+                exportRoute = new ol.control.Export({});
+                exportRoute.setControl(route);
+                exportRoute.setTarget(document.getElementById("btnExportRoute"));
+                exportRoute.setFormat("gpx");
+                exportRoute.setName("export-route");
+                exportRoute.setTitle("Exporter Iti");
+                exportRoute.setMenu(true);
+                exportRoute.on("export:compute", (e) => {
+                  console.log("Export Route", e);
+                });
+                map.addControl(exportRoute);
+
+                // profil
+                var measureProfil = new ol.control.ElevationPath();
+                map.addControl(measureProfil);
+                var exportProfil = new ol.control.Export({
+                  control: measureProfil,
+                  name: "export-profil", 
+                  format : "geojson",
+                  menu: false
+                });
+                map.addControl(exportProfil);
+                exportProfil.on("export:compute", (e) => {
+                  console.log("Export Profil", e);
+                });
+              };
+
+            </script>
+{{/content}}
+{{/extend}}

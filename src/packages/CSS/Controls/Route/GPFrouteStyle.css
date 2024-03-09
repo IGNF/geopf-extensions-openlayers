@@ -1,0 +1,140 @@
+/* ROUTE */
+
+
+/* Route form */
+
+.GProuteComponentHidden {
+  display: none;
+}
+
+.GProuteOriginPointerImg,
+.GProuteStageRemove,
+div[id^=GProuteStageAdd],
+.GProuteTransportImg {
+  background-image: url("img/GProuteOptions.png");
+}
+
+.GProuteExclusionsOption {
+  background-image: url("img/GProuteCheck.png");
+}
+
+/* Result panel */
+
+.GProuteResultsDetailsInstructionHighlight {
+    background-color: rgba(255,200,0,0.25);
+    color: #222;
+}
+
+.GProuteResultStage {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+}
+
+
+.GProuteResultStageLabel,
+.GProuteResultStageValue,
+.GProuteResultsValueLabel {
+  display: inline-block;
+  line-height: 18px;
+}
+
+.GProuteResultStageLabel,
+.GProuteResultsValueLabel {
+  color: #666;
+}
+
+.GProuteResultStageLabel {
+  width: 60px;
+}
+
+.GProuteResultsValueLabel {
+  width: 65px;
+}
+
+.GProuteResultStageValue {
+  -webkit-flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Results popup */
+
+.gp-features-content-div {
+  /* min-width: 240px; */
+}
+
+/* Results details header */
+
+.GPfakeBorder {
+  display: inline-block;
+  height: 14px;
+  width: 60px;
+  border-bottom: 1px solid #999;
+}
+
+.GPfakeBorderLeft {
+  margin-left:15px;
+}
+
+input[id^=GProuteResultsShowDetails] + label,
+input[id^=GProuteResultsShowDetails] + label + label {
+  width: 130px;
+  line-height: 28px;
+  vertical-align: top;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s ease-out;
+}
+
+input[id^=GProuteResultsShowDetails] + label,
+input[id^=GProuteResultsShowDetails]:checked + label + label {
+  display: inline-block;
+}
+
+input[id^=GProuteResultsShowDetails]:checked + label,
+input[id^=GProuteResultsShowDetails] + label + label {
+  display: none;
+}
+
+input[id^=GProuteResultsShowDetails] + label + label + div + div[id^=GProuteResultsDetails] {
+  max-height: 0;
+  opacity: 0;
+}
+
+input[id^=GProuteResultsShowDetails]:checked + label + label + div + div[id^=GProuteResultsDetails] {
+  max-height: 200px;
+  opacity: 1;
+}
+
+div[id^=GProuteResultsDetails] {
+  overflow-y: auto;
+  transition: max-height 0.5s ease-in-out 0.25s, opacity 0.5s ease-in-out 0.25s;
+}
+
+.GProuteResultsDetailsNumber,
+.GProuteResultsDetailsInstruction {
+  display: inline-block;
+  margin-top: 4px;
+  line-height: 16px;
+  color: #666;
+}
+
+.GProuteResultsDetailsNumber {
+  font-weight: bold;
+  width: 22px;
+  text-align: right;
+  vertical-align: top;
+}
+
+.GProuteResultsDetailsInstruction {
+  width: calc(100% - 30px);
+  padding-left: 5px;
+}
+

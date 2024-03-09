@@ -1,0 +1,63 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+        <script src="{{ baseurl }}/dist/modules/GeoportalSourceWMTS{{ mode }}.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout d'une couche WMTS</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                var createMap = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    var gpLayer = new ol.layer.Tile({
+                        source : new ol.source.GeoportalWMTS({
+                            layer : "ORTHOIMAGERY.ORTHOPHOTOS.BDORTHO.L93"
+                        })
+                    });
+
+                    map = new ol.Map({
+                        layers : [gpLayer],
+                        target : 'map',
+                        view : new ol.View({
+                            projection : "EPSG:2154",
+                            center : [600000, 6750000],
+                            zoom : 6
+                        })
+                    });
+                };
+                Gp.Services.getConfig({
+                    customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/fullConfig.json",
+                    callbackSuffix : "",
+                    // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
+                    timeOut : 20000,
+                    onSuccess : createMap,
+                    onFailure : (e) => {
+                        console.error(e);
+                    }
+                });
+           </script>
+{{/content}}
+
+{{/extend}}

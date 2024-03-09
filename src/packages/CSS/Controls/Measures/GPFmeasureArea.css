@@ -1,0 +1,23 @@
+div[id^=GPmeasureArea-] {
+  top: 260px;
+  left: 74px;
+}
+
+/* Showing/hiding measureLength position panel */
+
+button[id^="GPshowMeasureAreaPicto-"] {}
+  
+button[id^="GPshowMeasureAreaPicto-"][aria-pressed="false"] {
+  background-color: rgba(0,60,136,0.5);
+}
+  
+button[id^="GPshowMeasureAreaPicto-"][aria-pressed="true"] {
+  background-color: rgba(0,60,136,0.7);
+}
+  
+button[id^="GPshowMeasureAreaPicto-"] {
+    background-image: url("img/GPmeasuresOpen.png");
+    background-repeat: no-repeat;
+    background-position: -78px center;
+}
+

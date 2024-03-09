@@ -1,0 +1,51 @@
+/* REVERSE GEOCODING */
+
+.GPelementHidden {
+  display: none;
+}
+
+/* Showing/hiding reverse geocoding panel */
+
+/* Results panel */
+
+.GPreturnPicto {
+  background-color: #366291;
+  border: none;
+}
+
+.GPlocationHighlight {
+    background-color: rgba(255,200,0,0.25);
+    color: #222;
+}
+
+.GPreturnPicto {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.GPreturnPictoHidden {
+  display: none;
+}
+
+/* Search panel */
+
+
+.GPlabel,
+.GPlabelFilter {
+  max-width: 105px;
+}
+
+.GPlabel,
+.GPselect {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.GPlabelFilter,
+.GPlabelFilterInput {
+  margin-bottom: 5px;
+}

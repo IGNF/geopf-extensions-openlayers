@@ -1,0 +1,117 @@
+
+/* General panels */
+
+.GPmousePositionEditTool {
+    background-image: url("img/GPmousePositionEditCoordinates.png");
+}
+
+/* Map center localisation */
+
+#GPmapCenter {
+  background-image: url("img/GPmapCenter.png");
+}
+
+.GPmousePositionLabel,
+.GPmousePositionCoords {
+  display: inline-block;
+  line-height: 20px;
+}
+
+.GPmousePositionLabel {
+  width: 100px;
+  font-weight: bold;
+}
+
+.GPmousePositionCoords {
+  width: 110px;
+}
+
+/* Showing settings */
+
+.GPshowMousePositionSettingsPicto {
+  bottom: 5px;
+  right: 0;
+  transition: all 0.5s ease-out 0s;
+}
+
+.GPmousePositionSettingsLabel {
+  display: block;
+  margin: auto;
+  text-align: center;
+  font-weight: bold;
+  line-height: 16px;
+}
+
+.GPmousePositionSettingsSelect {
+  width: 180px;
+  margin-top: 5px;
+  margin-inline: auto;
+}
+
+/* sexagesimal coordinates */
+
+.GPSexagesimal, .GPSexagesimalsec {
+  margin:0;
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 4px;
+}
+
+input:read-only.GPSexagesimal, input:read-only.GPSexagesimalsec {
+  text-align: right;
+}
+
+.GPSexagesimal {
+  width: 30px;
+}
+
+.GPSexagesimalsec {
+  width: 45px;
+}
+.GPmousePositionSexagesimalLabel {
+  font-size: 1.2em;
+  vertical-align: middle;
+  padding: 0;
+}
+
+/* direction N/S ou E/O */
+select.GPmousePositionDirection {
+  border: 1px solid #999;
+  margin-left: 2px;
+}
+
+select.GPmousePositionDirection:disabled{
+  border: none;
+  background: transparent;
+  color: black;
+  /*For FireFox*/
+ -webkit-appearance: none;
+ /*For Chrome*/
+ -moz-appearance: none;
+}
+
+/*For IE10+*/
+select.GPmousePositionDirection:disabled::-ms-expand {
+  display: none;
+}
+select.GPmousePositionDirection:disabled::-ms-value {
+  color: black;
+}
+
+.GPmousePositionUnits,
+.GPmousePositionAltitudeUnits {
+  margin-left: 5px;
+}
+
+/* EDIT COORDINATES TOOLS */
+.GPmousePositionPanelEditTools {
+  position: absolute;
+  top: 20px;
+  right: 5px;
+}
+
+.GPmousePositionEditTool {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  cursor: pointer;
+}

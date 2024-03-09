@@ -1,0 +1,22 @@
+div[id^=GPmeasureAzimuth-] {
+  top: 260px;
+  left: 10px;
+}
+
+/* Showing/hiding measureLength position panel */
+
+button[id^="GPshowMeasureAzimuthPicto-"] {}
+  
+button[id^="GPshowMeasureAzimuthPicto-"][aria-pressed="false"] {
+  background-color: rgba(0,60,136,0.5);
+}
+  
+button[id^="GPshowMeasureAzimuthPicto-"][aria-pressed="true"] {
+  background-color: rgba(0,60,136,0.7);
+}
+  
+button[id^="GPshowMeasureAzimuthPicto-"] {
+    background-image: url("img/GPmeasuresOpen.png");
+    background-repeat: no-repeat;
+    background-position: 0px center;
+}
