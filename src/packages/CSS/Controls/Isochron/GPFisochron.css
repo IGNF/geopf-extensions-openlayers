@@ -32,6 +32,7 @@ button[id^="GPshowIsochronPicto-"] {
 [id^=GPisochronPanel-] {
   width: 280px;
   position: absolute;
+  height: inherit;
   top: 0px;
   left: 34px;
   z-index:2;
@@ -47,14 +48,6 @@ form[id^=GPisochronForm] {
   padding: 15px;
 }
 
-/* Reset picto */
-div[id^=GPisochronReset] {
-  background-color: #366291;
-  background-image: url("img/GPisochronOptions.png");
-}
-
-
-
 
 input[id^="GPisochronOriginPointer"] + .GPisochronOriginPointerImg {
   background-position: -1px -1px;
@@ -62,10 +55,6 @@ input[id^="GPisochronOriginPointer"] + .GPisochronOriginPointerImg {
 
 input[id^="GPisochronOriginPointer"]:checked + .GPisochronOriginPointerImg {
   background-position: -29px -1px;
-}
-
-input[id^=GPisochronSubmit] {
-  margin-top: 5px;
 }
 
 /* Alternative choice */
@@ -85,7 +74,9 @@ div[id^=GPisochronChoice] {
   margin-bottom: 5px;
 }
 
-
+input[id^=GPisochronChoiceAltChron] {
+  background-image: url("img/GPisochronOptions.png");
+}
 
 input[id^=GPisochronChoiceAltChron] + .GPisochronChoiceAltImg {
   background-position: -56px 0;
@@ -102,8 +93,6 @@ input[id^=GPisochronChoiceAltDist] + .GPisochronChoiceAltImg {
 input[id^=GPisochronChoiceAltDist]:checked + .GPisochronChoiceAltImg {
   background-position: -140px 0;
 }
-
-
 
 div[id^=GPisochronValueChron],
 div[id^=GPisochronValueDist] {
@@ -125,24 +114,8 @@ div[id^=GPisochronModeChoice] {
   margin: 15px 0;
 }
 
-div[id^=GPisochronTransportChoice] input {
-  display: none;
-}
-
-input[id^=GPisochronTransportCar] + .GPisochronTransportImg {
-  background-position: -168px 0;
-}
-
-input[id^=GPisochronTransportCar]:checked + .GPisochronTransportImg {
-  background-position: -196px 0;
-}
-
-input[id^=GPisochronTransportPedestrian] + .GPisochronTransportImg {
-  background-position: -224px 0;
-}
-
-input[id^=GPisochronTransportPedestrian]:checked + .GPisochronTransportImg {
-  background-position: -252px 0;
+div[id^=GPisochronTransportChoice] > .GPisochronTransportChoice {
+  display: inline-flex;
 }
 
 select[id^=GPisochronDirectionSelect] {
@@ -151,24 +124,26 @@ select[id^=GPisochronDirectionSelect] {
 
 /* Showing/hiding exclusions */
 
-input[id^=GPshowIsoExclusions] {
-  display: none;
+button[id^="GPshowIsoExclusions"] {
+  position: absolute;
+  border: unset;
+  bottom: 0;
+  right: 0;
+  transition: all 0.5s ease-out 0s;
 }
 
-input[id^=GPshowIsoExclusions] + label + div[id^=GPisoExclusions] {
+button[id^=GPshowIsoExclusions][aria-pressed="false"] + div[id^=GPisoExclusions] {
   max-height: 0;
   opacity: 0;
   margin-bottom: 0;
 }
 
-input[id^=GPshowIsoExclusions]:checked + label + div[id^=GPisoExclusions] {
+button[id^=GPshowIsoExclusions][aria-pressed="true"] + div[id^=GPisoExclusions] {
   display: block;
-  max-height: 60px;
+  max-height: 76px;
   opacity: 1;
   margin-bottom: 15px;
 }
-
-/* Exclusions */
 
 div[id^=GPisoExclusions] {
   transition: max-height 0.5s ease-in-out 0.25s, opacity 0.5s ease-in-out 0.25s, margin 0.3s ease-in-out 0.25s;
@@ -176,18 +151,19 @@ div[id^=GPisoExclusions] {
 }
 
 /* Reset picto */
-div[id^=GPisochronReset] {
-  position: absolute;
-  margin-top: 5px;
-  width: 28px;
-  height: 28px;
-  border-radius: 3px;
-  opacity: 0.8;
-  background-position: -281px 0;
-  transition: opacity 0.2s ease-out;
-  cursor: pointer;
+
+button[id^=GPisochronReset] {
+  /* background-color: #366291; */
+  background-image: url("img/GPisochronOptions.png");
+  background-position: -281px center;
 }
 
-div[id^=GPisochronReset]:hover {
+button[id^=GPisochronReset] {
+  opacity: 0.8;
+  transition: opacity 0.2s ease-out;
+}
+
+button[id^=GPisochronReset]:hover {
   opacity: 1;
 }
+

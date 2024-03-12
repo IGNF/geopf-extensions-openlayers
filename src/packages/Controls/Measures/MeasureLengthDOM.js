@@ -18,7 +18,7 @@ var MeasureLengthDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPmeasureLength");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
@@ -38,7 +38,7 @@ var MeasureLengthDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMeasureLengthPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn";
         button.title = "Mesurer une distance";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

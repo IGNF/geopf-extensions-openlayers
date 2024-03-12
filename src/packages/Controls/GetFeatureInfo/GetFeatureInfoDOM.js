@@ -18,7 +18,7 @@ var GetFeatureInfoDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPgetFeatureInfo");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
@@ -35,7 +35,7 @@ var GetFeatureInfoDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPgetFeatureInfoPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn";
         button.title = "activer/desactiver l'interrogation des couches";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

@@ -3,18 +3,6 @@ div[id^=GPmeasureLength-] {
   left: 42px;
 }
 
-/* Showing/hiding drawing panel */
-
-button[id^="GPshowMeasureLengthPicto-"] {}
-  
-button[id^="GPshowMeasureLengthPicto-"][aria-pressed="false"] {
-  background-color: rgba(0,60,136,0.5);
-}
-  
-button[id^="GPshowMeasureLengthPicto-"][aria-pressed="true"] {
-    background-color: rgba(0,60,136,0.7);
-}
-  
 button[id^="GPshowMeasureLengthPicto-"] {
     background-image: url("img/GPmeasuresOpen.png");
     background-repeat: no-repeat;

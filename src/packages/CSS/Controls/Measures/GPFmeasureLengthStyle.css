@@ -1,3 +1,13 @@
 /* MEASURELENGTH POSITION */
 
+/* Showing/hiding drawing panel */
 
+button[id^="GPshowMeasureLengthPicto-"] {}
+  
+button[id^="GPshowMeasureLengthPicto-"][aria-pressed="false"] {
+  background-color: rgba(0,60,136,0.5);
+}
+  
+button[id^="GPshowMeasureLengthPicto-"][aria-pressed="true"] {
+    background-color: rgba(0,60,136,0.7);
+}

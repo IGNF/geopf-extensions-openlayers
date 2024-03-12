@@ -451,8 +451,8 @@ var Isocurve = class Isocurve extends Control {
         document.getElementById("GPlocationOrigin_1-" + this._uid).value = "";
         document.getElementById("GPlocationPoint_1-" + this._uid).style.cssText = "";
         document.getElementById("GPlocationOriginPointer_1-" + this._uid).checked = false;
-        document.getElementById("GPlocationOrigin_1-" + this._uid).className = "GPlocationOriginVisible";
-        document.getElementById("GPlocationOriginCoords_1-" + this._uid).className = "GPlocationOriginHidden";
+        document.getElementById("GPlocationOrigin_1-" + this._uid).className = "GPlocationOriginVisible gpf-visible";
+        document.getElementById("GPlocationOriginCoords_1-" + this._uid).className = "GPlocationOriginHidden gpf-hidden";
         this._currentIsoResults = null;
         this.setLayer();
     }
@@ -859,19 +859,22 @@ var Isocurve = class Isocurve extends Control {
 
         // form: menu des exclusions
         if (this.options.exclusions && (typeof this.options.exclusions === "object") && (Object.keys(this.options.exclusions).length !== 0)) {
-            form.appendChild(this._createShowIsoExclusionsElement());
             form.appendChild(this._createShowIsoExclusionsPictoElement());
             var exclusion = this._createIsoPanelFormExclusionsElement();
             exclusion.appendChild(this._createIsoPanelFormExclusionOptionsElement(this.options.exclusions));
             form.appendChild(exclusion);
         }
 
-        var divReset = this._createIsoFormResetElement();
-        form.appendChild(divReset);
+        // footer
+        var footer = this._createIsoPanelFooterElement();
+        form.appendChild(footer);
+
+        var buttonReset = this._createIsoFormResetElement();
+        footer.appendChild(buttonReset);
 
         // form: bouton du calcul
-        var submit = this._submitContainer = this._createIsoSubmitFormElement();
-        form.appendChild(submit);
+        var buttonSubmit = this._submitContainer = this._createIsoSubmitFormElement();
+        footer.appendChild(buttonSubmit);
 
         panelDiv.appendChild(form);
 
@@ -1152,9 +1155,9 @@ var Isocurve = class Isocurve extends Control {
             return;
         }
         if (value.toLowerCase() === "arrival") {
-            this._originPoint._inputLabelContainer.innerHTML = "Arrivée";
+            this._originPoint._buttonLabel.innerHTML = "Arrivée";
         } else {
-            this._originPoint._inputLabelContainer.innerHTML = "Départ";
+            this._originPoint._buttonLabel.innerHTML = "Départ";
         }
         this._currentDirection = value;
     }
@@ -1205,6 +1208,12 @@ var Isocurve = class Isocurve extends Control {
         // clear
         this._clear();
     }
+
+    /**
+     * ...
+     * @private
+     */
+    onShowIsoSettingsClick () {}
 
     // ################################################################### //
     // ######################## isocurve calculation ##################### //
@@ -1456,7 +1465,7 @@ var Isocurve = class Isocurve extends Control {
                 document.getElementById("GPisochronValueDist-" + this._uid).className = "GPflexInput";
             }
             if (document.getElementById("GPisochronValueChron-" + this._uid)) {
-                document.getElementById("GPisochronValueChron-" + this._uid).className = "GPisochronValueHidden";
+                document.getElementById("GPisochronValueChron-" + this._uid).className = "GPisochronValueHidden gpf-hidden";
             }
         } else {
             computationdiv = document.getElementById("GPisochronChoiceAltChron-" + this._uid);
@@ -1467,7 +1476,7 @@ var Isocurve = class Isocurve extends Control {
                 document.getElementById("GPisochronValueChron-" + this._uid).className = "GPflexInput";
             }
             if (document.getElementById("GPisochronValueDist-" + this._uid)) {
-                document.getElementById("GPisochronValueDist-" + this._uid).className = "GPisochronValueHidden";
+                document.getElementById("GPisochronValueDist-" + this._uid).className = "GPisochronValueHidden gpf-hidden";
             }
         }
 
@@ -1477,9 +1486,9 @@ var Isocurve = class Isocurve extends Control {
             directionSelect.value = this._currentDirection;
         }
         if (this._currentDirection === "arrival") {
-            this._originPoint._inputLabelContainer.innerHTML = "Arrivée";
+            this._originPoint._buttonLabel.innerHTML = "Arrivée";
         } else {
-            this._originPoint._inputLabelContainer.innerHTML = "Départ";
+            this._originPoint._buttonLabel.innerHTML = "Départ";
         }
 
         // 6. set exclusions to default

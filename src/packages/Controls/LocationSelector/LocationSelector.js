@@ -126,10 +126,10 @@ var LocationSelector = class LocationSelector extends Control {
         this._inputsContainer = null;
 
         /** container du label du point */
-        this._inputLabelContainer = null;
+        this._buttonLabel = null;
 
         /** container de la saisi de l'autocompletion */
-        this._inputAutoCompleteContainer = null;
+        this._inputAutoComplete = null;
 
         /** container du pointer de saisi sur la carte */
         this._inputShowPointerContainer = null;
@@ -238,7 +238,7 @@ var LocationSelector = class LocationSelector extends Control {
      */
     clear () {
         this.clearResults();
-        this._inputLabelContainer.click();
+        this._buttonLabel.click();
     }
 
     /**
@@ -272,9 +272,9 @@ var LocationSelector = class LocationSelector extends Control {
         var inputs = this._inputsContainer = this._createLocationPointElement(id, this.options.tag.display);
         container.appendChild(inputs);
 
-        var _inputLabel = this._inputLabelContainer = this._createLocationPointLabelElement(id, this.options.tag.label);
-        inputs.appendChild(_inputLabel);
-        var _inputAutoComplete = this._inputAutoCompleteContainer = this._createLocationAutoCompleteteInputElement(id);
+        var _buttonLabel = this._buttonLabel = this._createLocationPointLabelElement(id, this.options.tag.label);
+        inputs.appendChild(_buttonLabel);
+        var _inputAutoComplete = this._inputAutoComplete = this._createLocationAutoCompleteteInputElement(id);
         if (_inputAutoComplete.addEventListener) {
             _inputAutoComplete.addEventListener("click", () => this.onAutoCompleteInputClick());
         } else if (_inputAutoComplete.attachEvent) {
@@ -314,7 +314,7 @@ var LocationSelector = class LocationSelector extends Control {
      * @private
      */
     onAutoCompleteInputClick () {
-        if (this._inputAutoCompleteContainer && this._inputAutoCompleteContainer.value.length > 2) {
+        if (this._inputAutoComplete && this._inputAutoComplete.value.length > 2) {
             this._displaySuggestedLocation();
         }
     }
@@ -530,7 +530,7 @@ var LocationSelector = class LocationSelector extends Control {
      * @private
      */
     _setLabel (label) {
-        this._inputAutoCompleteContainer.value = label;
+        this._inputAutoComplete.value = label;
     }
 
     /**

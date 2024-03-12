@@ -10,6 +10,7 @@
 .gpf-panel {
   position: relative;
   background-color: unset;
+  width: fit-content;
 }
 
 .gpf-panel--hidden {
@@ -21,7 +22,13 @@
 }
 .gpf-panel__header {}
 .gpf-panel__title {}
+.gpf-panel__footer {
+  background-color: transparent;
+  padding: 0;
+  margin-top: 0;
+}
 .gpf-panel__content {
+  padding: unset;
   margin-bottom: unset
 }
 
@@ -31,6 +38,18 @@
   position: relative;
   cursor: pointer;
 }
+
+/********/
+/* flex */
+/********/
+
+.gpf-flex {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 
 .gpf-hidden {
   display: none;
@@ -44,8 +63,13 @@
   opacity: 100%;
 }
 
+/***********/
+/* waiting */
+/***********/
+
 .gpf-waiting {
   position: absolute;
+  height: inherit;
   top: 80px;
   bottom: 0;
   left: 0;
@@ -70,7 +94,8 @@
   margin: auto;
 }
 
-.gpf-btn  {}
+.gpf-btn  {
+}
 .gpf-btn--hidden {}
 .gpf-icon-return {}
 .gpf-icon-submit {}

@@ -7,10 +7,6 @@
 
 /* Map center localisation */
 
-#GPmapCenter {
-  background-image: url("img/GPmapCenter.png");
-}
-
 .GPmousePositionLabel,
 .GPmousePositionCoords {
   display: inline-block;

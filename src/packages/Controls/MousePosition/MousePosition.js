@@ -835,10 +835,8 @@ var MousePosition = class MousePosition extends Control {
         );
         mousePositionPanelDiv.appendChild(basic);
 
-        var arraySettings = this._createShowMousePositionSettingsElement(this.options.displayCoordinates);
-        for (var j = 0; j < arraySettings.length; j++) {
-            mousePositionPanelDiv.appendChild(arraySettings[j]);
-        }
+        var buttonSettings = this._createShowMousePositionSettingsElement(this.options.displayCoordinates);
+        mousePositionPanelDiv.appendChild(buttonSettings);
 
         var settings = this._createMousePositionSettingsElement();
         var systems = this._projectionSystemsContainer = this._createMousePositionSettingsSystemsElement(this._projectionSystems);

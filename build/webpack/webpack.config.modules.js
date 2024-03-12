@@ -11,6 +11,7 @@ var glob = require("glob");
 var ESLintWebpackPlugin = require('eslint-webpack-plugin');
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var BannerWebPackPlugin = webpack.BannerPlugin;
+var EnvWebPackPlugin = webpack.EnvironmentPlugin;
 var TerserJsWebPackPlugin = require("terser-webpack-plugin");
 var OptimizeCSSWebPackPlugin = require("css-minimizer-webpack-plugin");
 var JsDocWebPackPlugin = require("../scripts/webpackPlugins/jsdoc-plugin");
@@ -131,7 +132,7 @@ module.exports = (env, argv) => {
             filename : "[name]" + suffixOutput + ".js",
             libraryExport : 'default',
             libraryTarget : 'assign',
-            library : "[name]"
+            library : ["Gp", "[name]"] // FIXME comment peupler la variable globale 'Gp' ?
         },
         resolve : {},
         externals : [
@@ -269,10 +270,11 @@ module.exports = (env, argv) => {
                         {
                             loader : 'string-replace-loader',
                             options : {
-                                multiple : [
-                                    { search: '__DATE__', replace: `${pkg.date}` },
-                                    { search: '__PRODUCTION__', replace: `${!logMode}` }
-                                ]
+                                search: '__PRODUCTION__', 
+                                replace(match, p1, offset, string) {
+                                    console.log(`Replace "${match}" in file "${this.resource}".`)
+                                    return `${logMode}`
+                                }
                             }
                         }
                     ]
@@ -339,6 +341,9 @@ module.exports = (env, argv) => {
             /** CSS avec IMAGES en base64 */
             new MiniCssExtractPlugin({
                 filename : "[name]" + suffixOutput + ".css"
+            }),
+            new EnvWebPackPlugin({
+                VERBOSE : logMode
             })
         ]
         /** AJOUT DES LICENCES */

@@ -1,15 +1,21 @@
 /* Location */
 
-.GPlocationOriginPointerImg,
-.GPlocationStageRemove,
-div[id^=GPlocationStageAdd],
-.GPlocationTransportImg {
-  background-image: url("img/GPlocationOptions.png");
+.GPlocationStageFlexInput {
+  max-height: 28px;
+  opacity: 1;
 }
 
-/* All div elements whose class attribute value begins with "GPlocationPoint" */
-div[class*="GPlocationPoint"] {
-    position: relative;
+.GPlocationStageFlexInputHidden {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+label.GPlocationOriginPointerImg[id*="GPlocationOriginPointerImg"] {
+  width: 28px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-right: 1px solid #999;
 }
 
 .GPlocationStageFlexInput {

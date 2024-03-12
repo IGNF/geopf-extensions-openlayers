@@ -37,7 +37,7 @@ var ReverseGeocodeDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowReverseGeocodingPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-reverse fr-btn";
         button.title = "Ouvrir la recherche inverse";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -209,14 +209,14 @@ var ReverseGeocodeDOM = {
         buttonNew.id = this._addUID("GPreverseGeocodingReturnPicto");
         buttonNew.title = "Nouvelle recherche";
         buttonNew.className = "GPreturnPicto gpf-btn gpf-icon-return fr-btn"; //  fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon
-        buttonNew.classList.add("GPreturnPictoHidden");
+        buttonNew.classList.add("GPelementHidden");
         buttonNew.classList.add("gpf-btn--hidden");
         if (buttonNew.addEventListener) {
             buttonNew.addEventListener("click", function (e) {
                 document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
                 document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "gpf-panel__content fr-modal__content";
                 document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Recherche inverse";
-                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPreturnPictoHidden");
+                document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPelementHidden");
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-btn--hidden");
                 self.onGPreverseGeocodingReturnPictoClick(e);
             });
@@ -257,7 +257,7 @@ var ReverseGeocodeDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPreverseGeocodingPanelClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-btn-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox

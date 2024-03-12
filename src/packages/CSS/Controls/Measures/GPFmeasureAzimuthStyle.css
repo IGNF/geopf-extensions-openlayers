@@ -1,2 +1,13 @@
 /* MEASURELENGTH POSITION */
 
+/* Showing/hiding measureLength position panel */
+
+button[id^="GPshowMeasureAzimuthPicto-"] {}
+  
+button[id^="GPshowMeasureAzimuthPicto-"][aria-pressed="false"] {
+  background-color: rgba(0,60,136,0.5);
+}
+  
+button[id^="GPshowMeasureAzimuthPicto-"][aria-pressed="true"] {
+  background-color: rgba(0,60,136,0.7);
+}

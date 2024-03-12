@@ -18,7 +18,7 @@ var ElevationPathDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPelevationPath");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
@@ -38,7 +38,7 @@ var ElevationPathDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowElevationPathPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-icon-elevation fr-btn";
         button.title = "Calculer un profil";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -80,12 +80,18 @@ var ElevationPathDOM = {
     _createElevationPathPanelElement : function () {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPelevationPathPanel");
-        dialog.className = "GPpanel";
+        dialog.className = "GPpanel gpf-panel fr-modal";
 
         // dialog.appendChild(this._createElevationPathPanelHeaderElement());
         // dialog.appendChild(this._createElevationPathPanelProfilElement());
 
         return dialog;
+    },
+
+    _createElevationPathPanelDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
+        return div;
     },
 
     /**
@@ -97,11 +103,11 @@ var ElevationPathDOM = {
         var self = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader";
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
-        var divInfo = document.createElement("div");
+        var divInfo = document.createElement("button");
         divInfo.id = this._addUID("GPelevationPathPanelInfo");
-        divInfo.className = "GPpanelInfo";
+        divInfo.className = "GPpanelInfo gpf-btn gpf-btn-icon-info fr-btn";
         divInfo.title = "Informations";
         // add event on click
         if (divInfo.addEventListener) {
@@ -123,48 +129,52 @@ var ElevationPathDOM = {
         container.appendChild(divInfo);
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle";
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
         divTitle.innerHTML = "Profil Altimétrique";
         container.appendChild(divTitle);
 
-        var divReduce = document.createElement("div");
-        divReduce.id = this._addUID("GPelevationPathPanelReduce");
-        divReduce.className = "GPpanelReduce";
-        divReduce.title = "Masquer le panneau";
+        var buttonReduce = document.createElement("button");
+        buttonReduce.id = this._addUID("GPelevationPathPanelReduce");
+        buttonReduce.className = "GPpanelReduce gpf-btn gpf-btn-icon-reduce fr-btn";
+        buttonReduce.title = "Masquer le panneau";
 
-        if (divReduce.addEventListener) {
-            divReduce.addEventListener("click", function () {
+        if (buttonReduce.addEventListener) {
+            buttonReduce.addEventListener("click", function (e) {
                 if (typeof self.onReduceElevationPathPanelClick === "function") {
-                    document.getElementById(self._addUID("GPshowElevationPath")).checked = false;
                     self.onReduceElevationPathPanelClick();
                 }
             }, false);
-        } else if (divReduce.attachEvent) {
-            divReduce.attachEvent("onclick", function () {
+        } else if (buttonReduce.attachEvent) {
+            buttonReduce.attachEvent("onclick", function (e) {
                 if (typeof self.onReduceElevationPathPanelClick === "function") {
-                    document.getElementById(self._addUID("GPshowElevationPath")).checked = false;
                     self.onReduceElevationPathPanelClick();
                 }
             });
         }
-        container.appendChild(divReduce);
+        container.appendChild(buttonReduce);
 
-        var divClose = document.createElement("div");
-        divClose.id = this._addUID("GPelevationPathPanelClose");
-        divClose.className = "GPpanelClose";
-        divClose.title = "Fermer le panneau";
+        var buttonClose = document.createElement("button");
+        buttonClose.id = this._addUID("GPelevationPathPanelClose");
+        buttonClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
+        buttonClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
-        if (divClose.addEventListener) {
-            divClose.addEventListener("click", function () {
+        if (buttonClose.addEventListener) {
+            buttonClose.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPshowElevationPathPicto")).click();
             }, false);
-        } else if (divClose.attachEvent) {
-            divClose.attachEvent("onclick", function () {
+        } else if (buttonClose.attachEvent) {
+            buttonClose.attachEvent("onclick", function () {
                 document.getElementById(self._addUID("GPshowElevationPathPicto")).click();
             });
         }
-        container.appendChild(divClose);
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        buttonClose.appendChild(span);
+        container.appendChild(buttonClose);
 
         return container;
     },
@@ -209,7 +219,7 @@ var ElevationPathDOM = {
     _createElevationPathInformationsElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPelevationPathInformationsContainer");
-        div.className = "GPelevationPathInformationsContainerHidden";
+        div.className = "GPelementHidden gpf-hidden";
 
         var p = document.createElement("p");
         p.className = "GPelevationPathInformations";

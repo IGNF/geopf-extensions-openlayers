@@ -329,11 +329,11 @@ var Route = class Route extends Control {
                 document.getElementById("GPlocationPoint_" + id).style.cssText = "";
                 if (i > 0 && i < 6) {
                     // on masque les points intermediaires
-                    document.getElementById("GPlocationPoint_" + id).className = "GPflexInput GPlocationStageFlexInputHidden";
+                    document.getElementById("GPlocationPoint_" + id).className = "GPflexInput GPelementHidden gpf-flex gpf-hidden ";
                 }
                 document.getElementById("GPlocationOriginPointer_" + id).checked = false;
-                document.getElementById("GPlocationOrigin_" + id).className = "GPlocationOriginVisible";
-                document.getElementById("GPlocationOriginCoords_" + id).className = "GPlocationOriginHidden";
+                document.getElementById("GPlocationOrigin_" + id).className = "GPelementVisible gpf-visible";
+                document.getElementById("GPlocationOriginCoords_" + id).className = "GPelementHidden gpf-hidden";
             }
         }
         // ajout des nouvelles coordonnnées
@@ -383,7 +383,7 @@ var Route = class Route extends Control {
                 var input = document.getElementById("GPlocationOrigin_" + id + "-" + this._uid);
                 input.value = coordinate[1].toFixed(4) + " / " + coordinate[0].toFixed(4);
                 if (index > 0 && index < 6) {
-                    document.getElementById("GPlocationPoint_" + id + "-" + this._uid).className = "GPflexInput GPlocationStageFlexInput";
+                    document.getElementById("GPlocationPoint_" + id + "-" + this._uid).className = "GPflexInput GPlocationStageFlexInput gpf-flex";
                 }
             }
         }
@@ -451,7 +451,7 @@ var Route = class Route extends Control {
         }
 
         // affichage du panneau de details du controle !
-        this._formRouteContainer.className = "GProuteComponentHidden";
+        this._formRouteContainer.className = "GPelementHidden gpf-hidden gpf-panel__content fr-modal__content";
         this._hideWaitingContainer();
         this._resultsRouteContainer.className = "";
     }
@@ -474,8 +474,8 @@ var Route = class Route extends Control {
 
         this.setLayer();
 
-        this._formRouteContainer.className = "";
-        this._resultsRouteContainer.className = "GProuteComponentHidden";
+        this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
+        this._resultsRouteContainer.className = "GPelementHidden gpf-hidden";
     }
 
     // ################################################################### //
@@ -705,19 +705,21 @@ var Route = class Route extends Control {
         routeForm.appendChild(choice);
 
         // form: menu des exclusions
-        routeForm.appendChild(this._createShowRouteExclusionsElement());
         this._showRouteExclusionsElement = this._createShowRouteExclusionsPictoElement();
         routeForm.appendChild(this._showRouteExclusionsElement);
         var exclusion = this._createRoutePanelFormExclusionsElement();
         exclusion.appendChild(this._createRoutePanelFormExclusionOptionsElement(this.options.exclusions));
         routeForm.appendChild(exclusion);
 
-        var divReset = this._createRouteFormResetElement();
-        routeForm.appendChild(divReset);
+        var panelFooter = this._createRoutePanelFooterElement();
+        routeForm.appendChild(panelFooter);
+
+        var buttonReset = this._createRouteFormResetElement();
+        panelFooter.appendChild(buttonReset);
 
         // form: bouton du calcul
-        var submit = this._createRouteSubmitFormElement();
-        routeForm.appendChild(submit);
+        var buttonSubmit = this._createRouteSubmitFormElement();
+        panelFooter.appendChild(buttonSubmit);
 
         routePanelDiv.appendChild(routeForm);
 
@@ -944,9 +946,9 @@ var Route = class Route extends Control {
             return;
         }
 
-        if (formPoint._inputLabelContainer.addEventListener) {
+        if (formPoint._buttonLabel.addEventListener) {
             // display form on origin label click
-            formPoint._inputLabelContainer.addEventListener(
+            formPoint._buttonLabel.addEventListener(
                 "click",
                 (e) => this.onRouteOriginLabelClick(e)
             );
@@ -977,9 +979,9 @@ var Route = class Route extends Control {
                     }
                 );
             }
-        } else if (formPoint._inputLabelContainer.attachEvent) {
+        } else if (formPoint._buttonLabel.attachEvent) {
             // attachEvent: Internet explorer event listeners management
-            formPoint._inputLabelContainer.attachEvent(
+            formPoint._buttonLabel.attachEvent(
                 "onclick",
                 (e) => this.onRouteOriginLabelClick(e)
             );
@@ -1136,14 +1138,14 @@ var Route = class Route extends Control {
      * @private
      */
     onRouteOriginLabelClick () {
-        this._formRouteContainer.className = "";
+        this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
         // on désactive l'écouteur d'événements sur la carte (pour ne pas placer un marker au clic)
         // map.un(
         //     "click",
         //     () => {
         //         // on ne rétablit pas le mode "normal" si on est dans le panel des résultats (où className = "GProuteComponentHidden")
         //         if (this._formRouteContainer.className === "GProuteFormMini") {
-        //             this._formRouteContainer.className = "";
+        //             this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
         //         }
         //     }
         // );
@@ -1163,14 +1165,14 @@ var Route = class Route extends Control {
         var map = this.getMap();
         if (locationSelector._inputShowPointerContainer.checked) {
             // au click sur l'input pour pointer sur la carte: on minimise le formulaire
-            this._formRouteContainer.className = "GProuteFormMini";
+            this._formRouteContainer.className = "GProuteFormMini gpf-panel__content fr-modal__content";
             // et au clic sur la carte, on réaffichera le formulaire "normal"
             this.listenerKey = map.on(
                 "click",
                 () => {
                     // on ne rétablit pas le mode "normal" si on est dans le panel des résultats (où className = "GProuteComponentHidden")
-                    if (this._formRouteContainer.className === "GProuteFormMini") {
-                        this._formRouteContainer.className = "";
+                    if (this._formRouteContainer.className === "GProuteFormMini gpf-panel__content fr-modal__content") {
+                        this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
                     }
                     olObservableUnByKey(this.listenerKey);
                     /**
@@ -1196,7 +1198,7 @@ var Route = class Route extends Control {
             //     () => {
             //         // on ne rétablit pas le mode "normal" si on est dans le panel des résultats (où className = "GProuteComponentHidden")
             //         if (this._formRouteContainer.className === "GProuteFormMini") {
-            //             this._formRouteContainer.className = "";
+            //             this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
             //         }
             //     }
             // );
@@ -1544,7 +1546,7 @@ var Route = class Route extends Control {
         });
 
         // mise à jour du controle !
-        this._formRouteContainer.className = "GProuteComponentHidden";
+        this._formRouteContainer.className = "GPelementHidden gpf-hidden gpf-panel__content fr-modal__content";
         this._hideWaitingContainer();
         this._resultsRouteContainer.className = "";
     }

@@ -3,8 +3,16 @@
 
 /* Route form */
 
-.GProuteComponentHidden {
-  display: none;
+
+.GProuteStageFlexInput {
+  max-height: 28px;
+  opacity: 1;
+}
+
+.GProuteStageFlexInputHidden {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
 }
 
 .GProuteOriginPointerImg,
@@ -16,6 +24,45 @@ div[id^=GProuteStageAdd],
 
 .GProuteExclusionsOption {
   background-image: url("img/GProuteCheck.png");
+}
+
+.GProuteModeLabel {
+  display: block;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.GProuteTransportImg {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  content-visibility: hidden;
+}
+
+.GProuteTransportImg:first-of-type {
+    margin-left: 18px;
+    margin-right: 10px;
+}
+
+input[id^=GProuteTransportCar] + .GProuteTransportImg {
+  background-position: -112px 0;
+}
+
+input[id^=GProuteTransportCar]:checked + .GProuteTransportImg {
+  background-position: -140px 0;
+}
+
+input[id^=GProuteTransportPedestrian] + .GProuteTransportImg {
+  background-position: -168px 0;
+}
+
+input[id^=GProuteTransportPedestrian]:checked + .GProuteTransportImg {
+  background-position: -196px 0;
+}
+
+div[id^=GProuteTransportChoice] input {
+  display: none;
 }
 
 /* Result panel */
@@ -61,6 +108,52 @@ div[id^=GProuteStageAdd],
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* Exclusions */
+
+
+.GPshowRouteExclusionsPicto {
+  right: 0;
+  transition: all 0.3s ease-out 0s;
+}
+
+.GProuteExclusionsLabel {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+  line-height: 16px;
+}
+
+.GProuteExclusionsOptions {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.GProuteExclusionsOption {
+  display: block;
+  height: 28px;
+  line-height: 26px;
+  color: #A77;
+  background-color: #FEE;
+  padding-left: 28px;
+  padding-right: 5px;
+  border: 1px solid #A77;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+input:checked + .GProuteExclusionsOption {
+  background-color: #EFE;
+  background-position: 0 -28px;
+  color: #797;
+  border: 1px solid #797;
 }
 
 /* Results popup */

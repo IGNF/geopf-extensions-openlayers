@@ -846,22 +846,24 @@ var ElevationPath = class ElevationPath extends Control {
 
         // panneau
         var panel = this._panelContainer = this._createElevationPathPanelElement();
+        var panelDiv = this._createElevationPathPanelDivElement();
+        panel.appendChild(panelDiv);
 
         // header
         var header = this._createElevationPathPanelHeaderElement();
-        panel.appendChild(header);
+        panelDiv.appendChild(header);
 
         // profile
         var profile = this._profileContainer = this._createElevationPathPanelProfilElement();
-        panel.appendChild(profile);
+        panelDiv.appendChild(profile);
 
         // waiting
         var waiting = this._waitingContainer = this._createElevationPathWaitingElement();
-        panel.appendChild(waiting);
+        panelDiv.appendChild(waiting);
 
         // info
         var info = this._infoContainer = this._createElevationPathInformationsElement();
-        panel.appendChild(info);
+        panelDiv.appendChild(info);
 
         if (this.options.displayProfileOptions.target === null) {
             container.appendChild(panel);
@@ -1715,16 +1717,16 @@ var ElevationPath = class ElevationPath extends Control {
         var div = this._infoContainer;
 
         // show des informations !
-        if (div.className === "GPelevationPathInformationsContainerVisible") {
+        if (div.className === "GPelementVisible gpf-visible") {
             clearTimeout(this._timerHdlr);
-            div.className = "GPelevationPathInformationsContainerHidden";
+            div.className = "GPelementHidden gpf-hidden";
         } else {
             div.className = "GPelevationPathInformationsContainerVisible";
         }
 
         // hidden des informations !
         this._timerHdlr = setTimeout(function () {
-            div.className = "GPelevationPathInformationsContainerHidden";
+            div.className = "GPelementHidden gpf-hidden";
         }, 4000);
     }
 

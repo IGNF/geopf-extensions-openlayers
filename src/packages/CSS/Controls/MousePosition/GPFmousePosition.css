@@ -6,8 +6,8 @@ div[id^="GPmousePosition-"] {
   bottom: 8px;
   left: 10px;
 }
-/* Showing/hiding mousePosition panel */
 
+/* Showing/hiding mousePosition panel */
 
 button[id^="GPshowMousePositionPicto-"] {}
 
@@ -55,11 +55,15 @@ div[id^=GPmousePositionBasicPanel] {
   position: relative;
 }
 
+/* Settings */
+
 div[id^=GPmousePositionSettings-] {
   display: block;
   max-height: 0;
   opacity: 0;
-  transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
+  padding-left: 20px;
+  padding-right: 20px;
+  /* transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s; */
 }
 
 button[id^="GPshowMousePositionSettings"] {
@@ -69,10 +73,8 @@ button[id^="GPshowMousePositionSettings"] {
 div[id^=GPmousePosition-] button[id^="GPshowMousePositionSettings"][aria-pressed="true"] + div[id^=GPmousePositionSettings-] {
   opacity: 1;
   padding-bottom: 20px;
-  max-height: fit-content;
+  max-height: inherit;
 }
-
-/* Settings */
 
 button[id^=GPmousePositionSettings-] {
   padding-left: 0 15px;
@@ -113,6 +115,10 @@ img[id^=GPmousePositionMarker]:hover {
 }
 
 /* Map center localisation */
+
+#GPmapCenter {
+  background-image: url("img/GPmapCenter.png");
+}
 
 #GPmapCenter {
   display: none;

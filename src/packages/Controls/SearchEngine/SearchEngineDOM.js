@@ -21,7 +21,7 @@ var SearchEngineDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPsearchEngine");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
@@ -40,7 +40,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowSearchEnginePicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-search fr-btn";
         button.title = "Afficher/masquer la recherche par lieux";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -49,6 +49,9 @@ var SearchEngineDOM = {
         button.addEventListener("click", function (e) {
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
+            if (status) {
+                // somme stuff...
+            }
             document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
             document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
             var showAdvancedSearch = document.getElementById(self._addUID("GPshowAdvancedSearch"));
@@ -76,6 +79,7 @@ var SearchEngineDOM = {
 
         var form = document.createElement("form");
         form.id = this._addUID("GPsearchInput");
+        form.className = "gpf-panel__content fr-modal__content";
         // Open geocode results panel when submitting the input
         form.addEventListener("submit", function (e) {
             e.preventDefault();
@@ -92,6 +96,7 @@ var SearchEngineDOM = {
 
         var input = document.createElement("input");
         input.id = this._addUID("GPsearchInputText");
+        input.className = "GPsearchInputText gpf-input fr-input";
         input.type = "text";
         input.placeholder = placeholder;
         input.autocomplete = "off";
@@ -191,16 +196,17 @@ var SearchEngineDOM = {
 
         form.appendChild(input);
 
-        var div = document.createElement("div");
-        div.id = this._addUID("GPsearchInputReset");
+        var buttonReset = document.createElement("button");
+        buttonReset.id = this._addUID("GPsearchInputReset");
+        buttonReset.className = "GPshowOpen gpf-btn gpf-btn-icon-close fr-btn"; /* not use : fr-btn--close */
         // Reset input
-        div.addEventListener("click", function () {
+        buttonReset.addEventListener("click", function () {
             document.getElementById(self._addUID("GPsearchInputText")).value = "";
             document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
             document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
             self.onSearchResetClick();
         });
-        form.appendChild(div);
+        form.appendChild(buttonReset);
 
         return form;
     },
@@ -214,13 +220,20 @@ var SearchEngineDOM = {
         // contexte d'execution
         var self = this;
 
-        var div = document.createElement("div");
-        div.id = this._addUID("GPshowAdvancedSearch");
-        div.className = "GPshowAdvancedToolPicto";
-        div.title = "Ouvrir la recherche avancée";
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowAdvancedSearch");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn";
+        button.title = "Ouvrir la recherche avancée";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
 
         // Open advanced search
-        div.addEventListener("click", function () {
+        button.addEventListener("click", function (e) {
+            var status = (e.target.ariaPressed === "true");
+            e.target.setAttribute("aria-pressed", !status);
+            if (status) {
+                // somme stuff...
+            }
             var id = "#GPsearchInput-" + self._uid;
             document.querySelector(id + " input").disabled = true;
             document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
@@ -229,12 +242,7 @@ var SearchEngineDOM = {
             document.getElementById(self._addUID("GPadvancedSearchPanel")).style.display = "inline-block";
         });
 
-        var span = document.createElement("span");
-        span.id = this._addUID("GPshowAdvancedSearchOpen");
-        span.className = "GPshowAdvancedToolOpen";
-        div.appendChild(span);
-
-        return div;
+        return button;
     },
 
     /**

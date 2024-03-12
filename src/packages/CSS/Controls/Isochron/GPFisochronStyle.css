@@ -10,6 +10,7 @@
 .GPisochronChoiceAltImg,
 .GPisochronTransportImg {
   background-image: url("img/GPisochronOptions.png");
+  content-visibility: hidden;
 }
 
 .GPisoExclusionsOption {
@@ -21,7 +22,7 @@
   overflow: hidden;
 }
 
-.GPisochronFormMini div[id^="GPisochronReset-"],
+.GPisochronFormMini button[id^="GPisochronReset-"],
 .GPisochronFormMini label[id^="GPshowIsoExclusionsPicto-"] {
     display: none;
 }
@@ -66,6 +67,30 @@
   display: block;
   text-align: center;
   margin-bottom: 5px;
+}
+
+input[id^=GPisochronTransportCar] + .GPisochronTransportImg {
+  background-image: url("img/GPisochronOptions.png");
+  background-position: -168px 0;
+}
+
+input[id^=GPisochronTransportCar]:checked + .GPisochronTransportImg {
+  background-image: url("img/GPisochronOptions.png");
+  background-position: -196px 0;
+}
+
+input[id^=GPisochronTransportPedestrian] + .GPisochronTransportImg {
+  background-image: url("img/GPisochronOptions.png");
+  background-position: -224px 0;
+}
+
+input[id^=GPisochronTransportPedestrian]:checked + .GPisochronTransportImg {
+  background-image: url("img/GPisochronOptions.png");
+  background-position: -252px 0;
+}
+
+.GPisochronTransportChoice input {
+  display: none;
 }
 
 .GPisochronTransportImg {

@@ -1,3 +1,14 @@
 /* MEASURELENGTH POSITION */
 
 
+/* Showing/hiding measureLength position panel */
+
+button[id^="GPshowMeasureAreaPicto-"] {}
+  
+button[id^="GPshowMeasureAreaPicto-"][aria-pressed="false"] {
+  background-color: rgba(0,60,136,0.5);
+}
+  
+button[id^="GPshowMeasureAreaPicto-"][aria-pressed="true"] {
+  background-color: rgba(0,60,136,0.7);
+}

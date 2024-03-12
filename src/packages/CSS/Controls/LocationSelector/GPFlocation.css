@@ -1,52 +1,40 @@
 /* Location */
 
-/* Location form */
-
-.GPlocationStageFlexInput {
-  max-height: 28px;
-  opacity: 1;
+[id*="GPlocationOriginPointer"] {
+  background-image: url("img/GPlocationOptions.png");
+  background-repeat: no-repeat;
 }
 
-.GPlocationStageFlexInputHidden {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
+[id*="GPlocationOriginPointer"] + .GPlocationOriginPointerImg {
+  background-position: -1px center;
 }
 
-.GPlocationOriginVisible {
-  display: block;
+[id*="GPlocationOriginPointer"]:checked + .GPlocationOriginPointerImg {
+  background-position: -29px center;
 }
 
-.GPlocationOriginHidden {
-  display: none;
-}
-
-label.GPlocationOriginPointerImg[id*="GPlocationOriginPointerImg"] {
+[id^=GPlocationStageRemove],
+[id^=GPlocationStageAdd] {
   width: 28px;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  border-right: 1px solid #999;
-}
-
-input[id*="GPlocationOriginPointer"] + .GPlocationOriginPointerImg {
-  background-position: -1px -1px;
-}
-
-input[id*="GPlocationOriginPointer"]:checked + .GPlocationOriginPointerImg {
-  background-position: -29px -1px;
-}
-
-.GPlocationStageRemove,
-div[id^=GPlocationStageAdd] {
-  width: 28px;
+  height: 28px;
   border: none;
   cursor: pointer;
 }
 
-.GPlocationStageRemove {
-  background-position: -84px 0;
+[id^=GPlocationStageRemove] {
+  background-position: -84px center;
 }
 
-div[id^=GPlocationStageAdd] {
-  background-position: -56px 0;
+[id^=GPlocationStageAdd] {
+  background-position: -56px center;
+}
+
+[id^=GPlocationStageRemove],
+[id^=GPlocationStageAdd] {
+  background-image: url("img/GPlocationOptions.png");
+}
+
+/* All div elements whose class attribute value begins with "GPlocationPoint" */
+[class*="GPlocationPoint"] {
+  position: relative;
 }

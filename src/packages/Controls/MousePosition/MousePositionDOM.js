@@ -517,8 +517,6 @@ var MousePositionDOM = {
      * @returns {DOMElement[]} array containing input and label elements
      */
     _createShowMousePositionSettingsElement : function (display) {
-        var list = [];
-
         // contexte d'execution
         var self = this;
 
@@ -545,9 +543,7 @@ var MousePositionDOM = {
             });
         }
 
-        list.push(button);
-
-        return list;
+        return button;
     },
 
     /**

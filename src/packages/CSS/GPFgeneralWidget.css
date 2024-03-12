@@ -121,27 +121,41 @@
   color: #FFF;
 }
 
-.GPpanelClose, .GPpanelReduce, .GPpanelInfo {
+.GPpanelFooter {}
+
+.GPresetPicto,
+.GPreturnPicto,
+.GPpanelClose, 
+.GPpanelReduce, 
+.GPpanelInfo {
   position: absolute;
+  width: 26px;
+  height: 26px;
   cursor: pointer;
+  border: none;
+  background-color: #366291;
 }
 
 .GPpanelClose {
   top: 3px;
   right: 3px;
-  width: 26px;
-  height: 26px;
   background-position: -27px 0;
-  background-color: #366291;
-  border: none;
 }
 
 .GPpanelInfo {
   top: 3px;
   left: 3px;
-  width: 26px;
-  height: 26px;
-  background-position: -78px 0;
+}
+
+.GPpanelReduce {
+  top: 3px;
+  right: 32px;
+}
+
+.GPresetPicto,
+.GPreturnPicto {
+  border-radius: 3px;
+  opacity: 1;
 }
 
 /**********************************/
@@ -329,6 +343,16 @@ input.GPsubmit:hover {
 
 .GPlabel {
 
+}
+
+.GPelementInvisible,
+.GPelementHidden {
+  display: none;
+}
+
+.GPelementVisible,
+.GPelementShow {
+  display: block;
 }
 
 /********************************/

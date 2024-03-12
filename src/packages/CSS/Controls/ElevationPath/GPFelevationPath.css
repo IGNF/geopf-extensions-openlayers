@@ -31,14 +31,20 @@ button[id^="GPshowElevationPathPicto-"] {
 
 [id^=GPelevationPathPanelClose] {
   background-image: url("img/GPshowElevationPath.png");
+  background-repeat: no-repeat;
+  background-position: -27px center;
 }
 
 [id^=GPelevationPathPanelReduce] {
   background-image: url("img/GPshowElevationPath.png");
+  background-repeat: no-repeat;
+  background-position: -50px center;
 }
 
 [id^=GPelevationPathPanelInfo] {
   background-image: url("img/GPshowElevationPath.png");
+  background-repeat: no-repeat;
+  background-position: -75px center;
 }
 
 [id^=GPelevationPathPanel-] {
@@ -55,8 +61,21 @@ button[id^="GPshowElevationPathPicto-"] {
   width: inherit;
 }
 
-
-[id^=GPelevationPathPanelInfo] {
+button[id^=GPelevationPathPanelReduce] {
   display: none; /* on n'affiche pas le bouton d'information par defaut */
 }
 
+button[id^=GPelevationPathPanelInfo] {
+  display: none; /* on n'affiche pas le bouton d'information par defaut */
+}
+
+div[id^=GPelevationPathInformationsContainer] {
+  position: absolute;
+  top: 32px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  overflow: hidden;
+}
