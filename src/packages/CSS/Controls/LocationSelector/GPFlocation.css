@@ -1,0 +1,40 @@
+/* Location */
+
+[id*="GPlocationOriginPointer"] {
+  background-image: url("img/GPlocationOptions.png");
+  background-repeat: no-repeat;
+}
+
+[id*="GPlocationOriginPointer"] + .GPlocationOriginPointerImg {
+  background-position: -1px center;
+}
+
+[id*="GPlocationOriginPointer"]:checked + .GPlocationOriginPointerImg {
+  background-position: -29px center;
+}
+
+[id^=GPlocationStageRemove],
+[id^=GPlocationStageAdd] {
+  width: 28px;
+  height: 28px;
+  border: none;
+  cursor: pointer;
+}
+
+[id^=GPlocationStageRemove] {
+  background-position: -84px center;
+}
+
+[id^=GPlocationStageAdd] {
+  background-position: -56px center;
+}
+
+[id^=GPlocationStageRemove],
+[id^=GPlocationStageAdd] {
+  background-image: url("img/GPlocationOptions.png");
+}
+
+/* All div elements whose class attribute value begins with "GPlocationPoint" */
+[class*="GPlocationPoint"] {
+  position: relative;
+}

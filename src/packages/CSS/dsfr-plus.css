@@ -1,0 +1,200 @@
+/* 
+ * Liste des surcharges du mode DSFR 
+ */
+
+.gpf-widget {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.gpf-panel {
+  position: relative;
+  background-color: unset;
+  width: fit-content;
+}
+
+.gpf-panel--hidden {
+  display: none;
+}
+
+.gpf-panel__body {
+  overflow: unset;
+}
+.gpf-panel__header {}
+.gpf-panel__title {}
+.gpf-panel__footer {
+  background-color: transparent;
+  padding: 0;
+  margin-top: 0;
+}
+.gpf-panel__content {
+  padding: unset;
+  margin-bottom: unset
+}
+
+.gpf-panel--close,
+.gpf-panel--reduce,
+.gpf-panel--info {
+  position: relative;
+  cursor: pointer;
+}
+
+/********/
+/* flex */
+/********/
+
+.gpf-flex {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+
+.gpf-hidden {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+.gpf-visible {
+  display: block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+/***********/
+/* waiting */
+/***********/
+
+.gpf-waiting {
+  position: absolute;
+  height: inherit;
+  top: 80px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 4px;
+  background-color: rgba(255,255,255,0.9);
+  font-size: 1.5em;
+  font-weight: bold;
+  overflow: hidden;
+}
+.gpf-waiting--hidden {
+  display: none;
+}
+.gpf-waiting--visible {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+}
+
+.gpf-waiting_info {
+  margin: auto;
+}
+
+.gpf-btn  {
+}
+.gpf-btn--hidden {}
+.gpf-icon-return {}
+.gpf-icon-submit {}
+.gpf-icon-close {}
+
+.gpf-label {}
+.gpf-select {}
+.gpf-input {}
+.gpf-radio-group {}
+.gpf-upload {}
+
+.gpf-panel__list,
+.gpf-panel__advancedlist {
+  z-index: 2;
+  /* display: none; */
+  position: absolute;
+  max-height: 140px;
+  background-color: #FFF;
+  border: 1px solid #999;
+  overflow-y: hidden;
+}
+
+.gpf-panel__advancedlist {
+  width: calc(100% - 28px);
+  border-top: none;
+  font-size: 0.9em;
+}
+
+.gpf-panel__items:hover {
+  color: #000000;
+  background-color: #CEDBEF
+}
+
+.gpf-panel__items {
+  width: 100%;
+  height: 28px;
+  line-height: 16px;
+  padding: 6px 10px;
+  color: #5E5E5E;
+  font-size: 1.0em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+  cursor: pointer;
+}
+
+.gpf-panel::after {
+  height: unset;
+}
+
+.gpf-panel::before {
+  height: unset;
+}
+
+/***********/
+/* position*/
+/***********/
+:root {
+  --size-per-row: 50px;
+}
+.position-container-top-left,
+.position-container-top-right,
+.position-container-bottom-left,
+.position-container-bottom-right {
+  border-style: solid;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: var(--size-per-row);
+  min-height: var(--size-per-row);
+  padding: 5px;
+}
+
+.position-container-top-left,
+.position-container-top-right {
+  top: 0;
+}
+
+.position-container-top-left {
+  float: left;
+  left: 0;
+}
+.position-container-top-right {
+  float: right;
+  right: 0;
+}
+
+.position-container-bottom-left,
+.position-container-bottom-right {
+  bottom: 0px;
+}
+
+.position-container-bottom-right {
+  float: right;
+  right: 0px;
+}
+.position-container-bottom-left {
+  float: left;
+  left: 0px;
+}
