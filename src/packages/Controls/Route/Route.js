@@ -19,11 +19,11 @@ import { transformExtent as olTransformExtentProj } from "ol/proj";
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
-import Utils from "../../../Utils/Helper";
-import SelectorID from "../../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
+import SelectorID from "../../Utils/SelectorID";
 import Markers from "../Utils/Markers";
-import Draggable from "../../../Utils/Draggable";
+import Draggable from "../../Utils/Draggable";
 import Interactions from "../Utils/Interactions";
 // import local with ol dependencies
 import LocationSelector from "../LocationSelector/LocationSelector";

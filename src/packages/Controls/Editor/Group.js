@@ -1,6 +1,6 @@
 import EventBus from "eventbusjs";
 import EventEditor from "./Event";
-import Logger from "../../../Utils/LoggerByDefault";
+import Logger from "../../Utils/LoggerByDefault";
 
 var logger = Logger.getLogger("editor-group");
 

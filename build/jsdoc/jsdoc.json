@@ -6,7 +6,6 @@
     "source": {
         "include": [
             "./src/packages",
-            "./src/Utils",
             "./build/jsdoc/README.md"
         ]
     },

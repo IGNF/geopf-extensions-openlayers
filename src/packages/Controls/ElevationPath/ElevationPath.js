@@ -23,9 +23,9 @@ import VectorSource from "ol/source/Vector";
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Utils from "../../../Utils/Helper";
-import Logger from "../../../Utils/LoggerByDefault";
-import ID from "../../../Utils/SelectorID";
+import Utils from "../../Utils/Helper";
+import Logger from "../../Utils/LoggerByDefault";
+import ID from "../../Utils/SelectorID";
 import Markers from "../Utils/Markers";
 // import local with ol dependencies
 import Interactions from "../Utils/Interactions";

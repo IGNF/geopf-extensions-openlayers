@@ -5,8 +5,8 @@ import "../../CSS/Controls/Attribution/GPFattribution.css";
 import Attribution from "ol/control/Attribution";
 import { transformExtent as olTransformExtentProj } from "ol/proj";
 // import local
-import LayerUtils from "../../../Utils/LayerUtils";
-import Logger from "../../../Utils/LoggerByDefault";
+import LayerUtils from "../../Utils/LayerUtils";
+import Logger from "../../Utils/LoggerByDefault";
 
 var logger = Logger.getLogger("geoportalattribution");
 

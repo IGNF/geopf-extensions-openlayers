@@ -1,6 +1,6 @@
-import ID from "../../../Utils/SelectorID";
-import Logger from "../../../Utils/LoggerByDefault";
-import GeocodeUtils from "../../../Utils/GeocodeUtils";
+import ID from "../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
+import GeocodeUtils from "../../Utils/GeocodeUtils";
 
 var logger = Logger.getLogger("RouteDOM");
 

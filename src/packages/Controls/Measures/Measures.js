@@ -10,7 +10,7 @@ import {
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
+import Logger from "../../Utils/LoggerByDefault";
 import Interactions from "../Utils/Interactions";
 // import local with ol dependencies
 import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";

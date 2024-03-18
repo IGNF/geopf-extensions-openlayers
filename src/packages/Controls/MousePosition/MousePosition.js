@@ -14,17 +14,17 @@ import {
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
-import Utils from "../../../Utils/Helper";
+import Logger from "../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
 import Interactions from "../Utils/Interactions";
 import Markers from "../Utils/Markers";
-import SelectorID from "../../../Utils/SelectorID";
-import MathUtils from "../../../Utils/MathUtils";
-import Draggable from "../../../Utils/Draggable";
+import SelectorID from "../../Utils/SelectorID";
+import MathUtils from "../../Utils/MathUtils";
+import Draggable from "../../Utils/Draggable";
 // import defs proj4 manually (cf. line 125)
 //  import Proj4 from "proj4";
 //  import { register } from "ol/proj/proj4";
-//  import Register from "../../../Utils/Register";
+//  import Register from "../../Utils/Register";
 // import local with ol dependencies
 import CRS from "../../CRS/CRS";
 // import "../CRS/AutoLoadCRS";

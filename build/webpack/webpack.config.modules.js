@@ -63,7 +63,7 @@ module.exports = (env, argv) => {
             // ALL
             "GPFpluginOpenLayers" : [
                 "whatwg-fetch",
-                path.join(ROOT, "src", "packages", "index.js")
+                path.join(ROOT, "src", "index.js")
             ],
             // CSS themes portail
             "Portail" : [
@@ -256,7 +256,6 @@ module.exports = (env, argv) => {
                 {
                     test : /\.js$/,
                     include : [
-                        path.join(ROOT, "src", "Utils"),
                         path.join(ROOT, "src", "packages")
                     ],
                     exclude : /node_modules/,

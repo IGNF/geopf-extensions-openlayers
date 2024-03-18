@@ -1,5 +1,5 @@
-import Color from "../../Utils/ColorUtils";
-import Logger from "../../Utils/LoggerByDefault";
+import Color from "../Utils/ColorUtils";
+import Logger from "../Utils/LoggerByDefault";
 import Markers from "../Controls/Utils/Markers";
 // import ol
 import Feature from "ol/Feature";

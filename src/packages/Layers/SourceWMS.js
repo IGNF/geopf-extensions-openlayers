@@ -2,9 +2,9 @@ import Gp from "geoportal-access-lib";
 // import OpenLayers
 import TileWMSSource from "ol/source/TileWMS";
 // import local
-import Utils from "../../Utils/Helper";
-import Logger from "../../Utils/LoggerByDefault";
-import Config from "../../Utils/Config";
+import Utils from "../Utils/Helper";
+import Logger from "../Utils/LoggerByDefault";
+import Config from "../Utils/Config";
 // package.json (extract version)
 import Pkg from "../../../package.json";
 

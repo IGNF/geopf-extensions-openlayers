@@ -7,8 +7,8 @@ import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import { intersects as olIntersects } from "ol/extent";
 // import local
-import SelectorID from "../../../Utils/SelectorID";
-import Logger from "../../../Utils/LoggerByDefault";
+import SelectorID from "../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
 // DOM
 import LayerSwitcherDOM from "./LayerSwitcherDOM";
 

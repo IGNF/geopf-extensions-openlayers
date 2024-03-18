@@ -2,9 +2,9 @@
 import "../../CSS/Controls/ToolBoxMeasure/GPFtoolBoxMeasure.css";
 // import "../../CSS/Controls/ToolBoxMeasure/GPFtoolBoxMeasureStyle.css";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
-import Utils from "../../../Utils/Helper";
-import ID from "../../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
+import ID from "../../Utils/SelectorID";
 // DOM
 import MeasureToolBoxDOM from "./MeasureToolBoxDOM";
 

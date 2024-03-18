@@ -2,8 +2,8 @@
 import { get as olGetProj } from "ol/proj";
 import TileLayer from "ol/layer/Tile";
 // import local
-import Utils from "../../Utils/Helper";
-import Config from "../../Utils/Config";
+import Utils from "../Utils/Helper";
+import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMTS from "./SourceWMTS";
 

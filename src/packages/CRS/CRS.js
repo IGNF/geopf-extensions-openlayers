@@ -18,8 +18,8 @@ import {
 // import { clear as clearProj } from "ol/proj/transforms";
 import { applyTransform } from "ol/extent";
 // import local
-import Register from "../../Utils/Register";
-import Logger from "../../Utils/LoggerByDefault";
+import Register from "../Utils/Register";
+import Logger from "../Utils/LoggerByDefault";
 
 var logger = Logger.getLogger("CRS");
 

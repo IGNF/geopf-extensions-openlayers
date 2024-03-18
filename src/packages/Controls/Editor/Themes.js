@@ -1,8 +1,8 @@
 import EventBus from "eventbusjs";
 import EventEditor from "./Event";
-import Utils from "../../../Utils/Helper";
-import ID from "../../../Utils/SelectorID";
-import Logger from "../../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
+import ID from "../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
 
 var logger = Logger.getLogger("editor-themes");
 

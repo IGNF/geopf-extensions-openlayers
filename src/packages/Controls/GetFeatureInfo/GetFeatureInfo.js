@@ -5,8 +5,8 @@ import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css";
 // import Control from "ol/control/Control";
 import Control from "../Control";
 // import local
-import SelectorID from "../../../Utils/SelectorID";
-import Logger from "../../../Utils/LoggerByDefault";
+import SelectorID from "../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
 // import local with ol dependencies
 import GfiUtils from "../Utils/Gfi";
 // DOM

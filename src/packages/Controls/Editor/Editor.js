@@ -4,9 +4,9 @@ import "../../CSS/Controls/Editor/GPFeditor.css";
 // import library
 import EventBus from "eventbusjs";
 // import local
-import Utils from "../../../Utils/Helper";
-import ID from "../../../Utils/SelectorID";
-import Logger from "../../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
+import ID from "../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
 import Style from "./Style";
 import Themes from "./Themes";
 import Filter from "./Filter";

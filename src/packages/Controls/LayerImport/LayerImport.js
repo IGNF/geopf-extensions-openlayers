@@ -41,12 +41,12 @@ import Gp from "geoportal-access-lib";
 // import local
 import Editor from "../Editor/Editor";
 import Markers from "../Utils/Markers";
-import Draggable from "../../../Utils/Draggable";
+import Draggable from "../../Utils/Draggable";
 import Interactions from "../Utils/Interactions";
-import Utils from "../../../Utils/Helper";
-import Logger from "../../../Utils/LoggerByDefault";
-import SelectorID from "../../../Utils/SelectorID";
-import ProxyUtils from "../../../Utils/ProxyUtils";
+import Utils from "../../Utils/Helper";
+import Logger from "../../Utils/LoggerByDefault";
+import SelectorID from "../../Utils/SelectorID";
+import ProxyUtils from "../../Utils/ProxyUtils";
 // DOM
 import LayerImportDOM from "./LayerImportDOM";
 // import local with ol dependencies

@@ -6,8 +6,8 @@ import "../../CSS/Controls/Export/GPFexport.css";
 import Control from "ol/control/Control";
 
 // import local
-import ID from "../../../Utils/SelectorID";
-import Logger from "../../../Utils/LoggerByDefault";
+import ID from "../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
 
 // import local with ol dependencies
 import KMLExtended from "../../Formats/KML";

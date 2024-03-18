@@ -41,12 +41,12 @@ import {
     getDistance as olGetDistanceSphere
 } from "ol/sphere";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
+import Logger from "../../Utils/LoggerByDefault";
 import Interactions from "../Utils/Interactions";
 import MarkersOther from "../Utils/MarkersOther";
-import Draggable from "../../../Utils/Draggable";
-import SelectorID from "../../../Utils/SelectorID";
-import Color from "../../../Utils/ColorUtils";
+import Draggable from "../../Utils/Draggable";
+import SelectorID from "../../Utils/SelectorID";
+import Color from "../../Utils/ColorUtils";
 // DOM
 import DrawingDOM from "./DrawingDOM";
 // import local with ol dependencies

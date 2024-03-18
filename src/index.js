@@ -61,61 +61,61 @@
 *   - eventbus
 */
 
-import Pkg from "../../package.json";
+import Pkg from "../package.json";
 
 // CSS
-import "./Styles";
+import "./styles";
 
-import GfiUtils from "./Controls/Utils/Gfi";
+import GfiUtils from "./packages/Controls/Utils/Gfi";
 
-import KML from "./Formats/KML";
-import GPX from "./Formats/GPX";
-import GeoJSON from "./Formats/GeoJSON";
+import KML from "./packages/Formats/KML";
+import GPX from "./packages/Formats/GPX";
+import GeoJSON from "./packages/Formats/GeoJSON";
 
-import WMTS from "./Sources/WMTS";
-import SourceWMTS from "./Layers/SourceWMTS";
-import SourceWMS from "./Layers/SourceWMS";
-import LayerWMTS from "./Layers/LayerWMTS";
-import LayerWMS from "./Layers/LayerWMS";
-import LayerMapBox from "./Layers/LayerMapBox";
+import WMTS from "./packages/Sources/WMTS";
+import SourceWMTS from "./packages/Layers/SourceWMTS";
+import SourceWMS from "./packages/Layers/SourceWMS";
+import LayerWMTS from "./packages/Layers/LayerWMTS";
+import LayerWMS from "./packages/Layers/LayerWMS";
+import LayerMapBox from "./packages/Layers/LayerMapBox";
 
-import LayerSwitcher from "./Controls/LayerSwitcher/LayerSwitcher";
-import GetFeatureInfo from "./Controls/GetFeatureInfo/GetFeatureInfo";
-import SearchEngine from "./Controls/SearchEngine/SearchEngine";
-import MousePosition from "./Controls/MousePosition/MousePosition";
-import Drawing from "./Controls/Drawing/Drawing";
-import Route from "./Controls/Route/Route";
-import Isocurve from "./Controls/Isocurve/Isocurve";
-import ReverseGeocode from "./Controls/ReverseGeocode/ReverseGeocode";
-import LocationSelector from "./Controls/LocationSelector/LocationSelector";
-import LayerImport from "./Controls/LayerImport/LayerImport";
-import GeoportalAttribution from "./Controls/Attribution/GeoportalAttribution";
-import Markers from "./Controls/Utils/Markers";
-import ElevationPath from "./Controls/ElevationPath/ElevationPath";
-import MeasureLength from "./Controls/Measures/MeasureLength";
-import MeasureArea from "./Controls/Measures/MeasureArea";
-import MeasureAzimuth from "./Controls/Measures/MeasureAzimuth";
-import ButtonExport from "./Controls/Export/Export";
+import LayerSwitcher from "./packages/Controls/LayerSwitcher/LayerSwitcher";
+import GetFeatureInfo from "./packages/Controls/GetFeatureInfo/GetFeatureInfo";
+import SearchEngine from "./packages/Controls/SearchEngine/SearchEngine";
+import MousePosition from "./packages/Controls/MousePosition/MousePosition";
+import Drawing from "./packages/Controls/Drawing/Drawing";
+import Route from "./packages/Controls/Route/Route";
+import Isocurve from "./packages/Controls/Isocurve/Isocurve";
+import ReverseGeocode from "./packages/Controls/ReverseGeocode/ReverseGeocode";
+import LocationSelector from "./packages/Controls/LocationSelector/LocationSelector";
+import LayerImport from "./packages/Controls/LayerImport/LayerImport";
+import GeoportalAttribution from "./packages/Controls/Attribution/GeoportalAttribution";
+import Markers from "./packages/Controls/Utils/Markers";
+import ElevationPath from "./packages/Controls/ElevationPath/ElevationPath";
+import MeasureLength from "./packages/Controls/Measures/MeasureLength";
+import MeasureArea from "./packages/Controls/Measures/MeasureArea";
+import MeasureAzimuth from "./packages/Controls/Measures/MeasureAzimuth";
+import ButtonExport from "./packages/Controls/Export/Export";
 
 import Proj4 from "proj4";
 
-import Style from "./Controls/Editor/Style";
-import Filter from "./Controls/Editor/Filter";
-import Layer from "./Controls/Editor/Layer";
-import Themes from "./Controls/Editor/Themes";
-import Legend from "./Controls/Editor/Legend";
-import Group from "./Controls/Editor/Group";
-import Search from "./Controls/Editor/Search";
-import Editor from "./Controls/Editor/Editor";
+import Style from "./packages/Controls/Editor/Style";
+import Filter from "./packages/Controls/Editor/Filter";
+import Layer from "./packages/Controls/Editor/Layer";
+import Themes from "./packages/Controls/Editor/Themes";
+import Legend from "./packages/Controls/Editor/Legend";
+import Group from "./packages/Controls/Editor/Group";
+import Search from "./packages/Controls/Editor/Search";
+import Editor from "./packages/Controls/Editor/Editor";
 
 // Les autoload...
-import "../Utils/AutoLoadConfig";
-import "./CRS/AutoLoadCRS";
+import "./packages/Utils/AutoLoadConfig";
+import "./packages/CRS/AutoLoadCRS";
 
 // export des services
 import Gp from "geoportal-access-lib";
 
-import CRS from "./CRS/CRS";
+import CRS from "./packages/CRS/CRS";
 
 var Services = Gp.Services;
 var Error = Gp.Error;
@@ -161,17 +161,17 @@ export const olExtVersion = Pkg.olExtVersion || Pkg.version;
 export const olExtDate = Pkg.date;
 
 /** cf. Gp.HelperUtils */
-export { default as HelperUtils } from "../Utils/Helper";
+export { default as HelperUtils } from "./packages/Utils/Helper";
 /** cf. Gp.LayerUtils */
-export { default as LayerUtils } from "../Utils/LayerUtils";
+export { default as LayerUtils } from "./packages/Utils/LayerUtils";
 /** cf. Gp.ProxyUtils */
-export { default as ProxyUtils } from "../Utils/ProxyUtils";
+export { default as ProxyUtils } from "./packages/Utils/ProxyUtils";
 /** cf. Gp.ColorUtils */
-export { default as ColorUtils } from "../Utils/ColorUtils";
+export { default as ColorUtils } from "./packages/Utils/ColorUtils";
 /** cf. Gp.MathUtils */
-export { default as MathUtils } from "../Utils/MathUtils";
+export { default as MathUtils } from "./packages/Utils/MathUtils";
 /** cf. Gp.Logger */
-export { default as Logger } from "../Utils/LoggerByDefault";
+export { default as Logger } from "./packages/Utils/LoggerByDefault";
 
 function deepCopy (source, target) {
     // Implementing Tail Call Elimination

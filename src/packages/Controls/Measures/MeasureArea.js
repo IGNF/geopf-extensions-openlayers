@@ -7,8 +7,8 @@ import Control from "../Control";
 import { getArea as olGetAreaSphere } from "ol/sphere";
 import { Polygon } from "ol/geom";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
-import ID from "../../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
+import ID from "../../Utils/SelectorID";
 // DOM
 import MeasureAreaDOM from "./MeasureAreaDOM";
 // import local with ol dependencies

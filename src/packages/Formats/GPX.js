@@ -5,7 +5,7 @@ import MultiLineString from "ol/geom/MultiLineString";
 import LineString from "ol/geom/LineString";
 // import local
 import Styling from "./Styling";
-import Parser from "../../Utils/Parser";
+import Parser from "../Utils/Parser";
 
 /**
  * @classdesc

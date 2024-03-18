@@ -9,13 +9,13 @@ import { transform as olProjTransform } from "ol/proj";
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
-import Utils from "../../../Utils/Helper";
+import Logger from "../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
 import Markers from "../Utils/Markers";
 import Interactions from "../Utils/Interactions";
-import SelectorID from "../../../Utils/SelectorID";
-import SearchEngineUtils from "../../../Utils/SearchEngineUtils";
-import GeocodeUtils from "../../../Utils/GeocodeUtils";
+import SelectorID from "../../Utils/SelectorID";
+import SearchEngineUtils from "../../Utils/SearchEngineUtils";
+import GeocodeUtils from "../../Utils/GeocodeUtils";
 // DOM
 import SearchEngineDOM from "./SearchEngineDOM";
 

@@ -7,7 +7,7 @@ import {
 import { get as getTransform } from "ol/proj/transforms";
 import Projection from "ol/proj/Projection";
 
-import Logger from "../../Utils/LoggerByDefault";
+import Logger from "../Utils/LoggerByDefault";
 
 var logger = Logger.getLogger("CRS");
 

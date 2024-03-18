@@ -29,11 +29,11 @@ import VectorSource from "ol/source/Vector";
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Utils from "../../../Utils/Helper";
-import Logger from "../../../Utils/LoggerByDefault";
-import SelectorID from "../../../Utils/SelectorID";
+import Utils from "../../Utils/Helper";
+import Logger from "../../Utils/LoggerByDefault";
+import SelectorID from "../../Utils/SelectorID";
 import Markers from "../Utils/Markers";
-import Draggable from "../../../Utils/Draggable";
+import Draggable from "../../Utils/Draggable";
 import Interactions from "../Utils/Interactions";
 // import local with ol dependencies
 import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";

@@ -7,8 +7,8 @@ import { unByKey as observableUnByKey } from "ol/Observable";
 // import olms : module ES6
 import { applyStyle } from "ol-mapbox-style";
 // import local
-import Utils from "../../Utils/Helper";
-import Config from "../../Utils/Config";
+import Utils from "../Utils/Helper";
+import Config from "../Utils/Config";
 
 /**
  * @classdesc

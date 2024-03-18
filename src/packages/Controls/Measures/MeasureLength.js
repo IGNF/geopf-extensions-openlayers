@@ -7,8 +7,8 @@ import Control from "../Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
-import ID from "../../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
+import ID from "../../Utils/SelectorID";
 // DOM
 import MeasureLengthDOM from "./MeasureLengthDOM";
 // import local with ol dependencies

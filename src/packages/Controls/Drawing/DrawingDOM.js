@@ -1,4 +1,4 @@
-import Logger from "../../../Utils/LoggerByDefault";
+import Logger from "../../Utils/LoggerByDefault";
 
 var logger = Logger.getLogger("DrawingDOM");
 

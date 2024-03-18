@@ -9,7 +9,7 @@ import {
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Utils from "../../Utils/Helper";
+import Utils from "../Utils/Helper";
 
 /**
  * @classdesc

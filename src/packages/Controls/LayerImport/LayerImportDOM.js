@@ -1,4 +1,4 @@
-import SelectorID from "../../../Utils/SelectorID";
+import SelectorID from "../../Utils/SelectorID";
 
 var LayerImportDOM = {
 

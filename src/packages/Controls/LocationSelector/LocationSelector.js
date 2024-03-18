@@ -9,10 +9,10 @@ import { unByKey as olObservableUnByKey } from "ol/Observable";
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Logger from "../../../Utils/LoggerByDefault";
-import Utils from "../../../Utils/Helper";
-import GeocodeUtils from "../../../Utils/GeocodeUtils";
-import SelectorID from "../../../Utils/SelectorID";
+import Logger from "../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
+import GeocodeUtils from "../../Utils/GeocodeUtils";
+import SelectorID from "../../Utils/SelectorID";
 import Markers from "../Utils/Markers";
 // DOM
 import LocationSelectorDOM from "./LocationSelectorDOM";

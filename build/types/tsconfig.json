@@ -1,6 +1,6 @@
 {
     // Change this to match your project
-    "include": ["../../src/packages/**/*.js", "../../src/Utils/**/*.js"],
+    "include": ["../../src/packages/**/*.js"],
     "compilerOptions": {
       "target": "ES5",
       "module": "es2015",

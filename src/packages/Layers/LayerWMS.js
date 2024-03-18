@@ -5,8 +5,8 @@ import {
 } from "ol/proj";
 import TileLayer from "ol/layer/Tile";
 // import local
-import Utils from "../../Utils/Helper";
-import Config from "../../Utils/Config";
+import Utils from "../Utils/Helper";
+import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMS from "./SourceWMS";
 

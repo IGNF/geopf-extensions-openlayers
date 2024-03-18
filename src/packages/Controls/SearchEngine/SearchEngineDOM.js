@@ -1,5 +1,5 @@
-import ID from "../../../Utils/SelectorID";
-import GeocodeUtils from "../../../Utils/GeocodeUtils";
+import ID from "../../Utils/SelectorID";
+import GeocodeUtils from "../../Utils/GeocodeUtils";
 
 var SearchEngineDOM = {
 
