@@ -119,7 +119,7 @@ var RouteDOM = {
         div.innerHTML = "Calcul d'itinéraire";
         container.appendChild(div);
 
-        var divClose = document.createElement("div");
+        var divClose = document.createElement("button");
         divClose.id = this._addUID("GProutePanelClose");
         divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn";
         divClose.title = "Masquer le panneau";

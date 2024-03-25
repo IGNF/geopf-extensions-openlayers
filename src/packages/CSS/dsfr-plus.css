@@ -5,6 +5,8 @@
 .gpf-widget {
   position: absolute;
   pointer-events: auto;
+  display: flex;
+  padding: 2px;
 }
 
 .gpf-panel {
