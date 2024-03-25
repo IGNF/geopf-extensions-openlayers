@@ -1051,6 +1051,7 @@ var Isocurve = class Isocurve extends Control {
             smoothing : options.smoothing || true,
             timeOut : _timeout,
             protocol : _protocol,
+            resource : options.resource,
             // callback onSuccess
             onSuccess : function (results) {
                 logger.log(results);

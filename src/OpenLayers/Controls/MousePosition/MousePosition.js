@@ -1233,17 +1233,33 @@ var MousePosition = class MousePosition extends Control {
 
         // format de sortie si spécifié
         var _outputFormat = options.outputFormat || "json";
-
-        // ainsi que les coordonnées
+        
+        // ainsi que les coordonnées : si l'utilisateur explicite zonly false
         var _zonly = true;
+        // cela permet d'activer l'option measures côté service d'alti (surchargée si zonly = true)
+        var _zonly;
+        if (options.zonly === false) {
+            _zonly = options.zonly;
+        } else {
+            _zonly = true;
+        }
+
+        // récupération d'une réponse complète avec source et précision
+        var _measures = options.measures || false;
+
+
         var _positions = [{
             lon : coordinate[0],
             lat : coordinate[1]
         }];
 
+        // utilisation d'une ressource spécifique
+        var _resource = options.resource;
+
         // et les callbacks
         var _scope = this;
         var _rawResponse = options.rawResponse || false;
+        var _customOnSuccess = options.onSuccess || null;
         var _onSuccess = null;
         var _onFailure = null;
 
@@ -1252,12 +1268,18 @@ var MousePosition = class MousePosition extends Control {
             // callback onSuccess
             _onSuccess = function (results) {
                 if (results && Object.keys(results).length) {
+                    if (_customOnSuccess) {
+                        _customOnSuccess.call(this, results);
+                    }
                     callback.call(this, results.elevations[0].z);
                 }
             };
         } else {
             // callback onSuccess
             _onSuccess = function (results) {
+                if (_customOnSuccess) {
+                    _customOnSuccess.call(this, results);
+                }
                 logger.log("alti service raw response : ", results);
             };
         }
@@ -1293,6 +1315,8 @@ var MousePosition = class MousePosition extends Control {
             onSuccess : _onSuccess,
             onFailure : _onFailure,
             zonly : _zonly,
+            measures : _measures,
+            resource : _resource,
             positions : _positions
         });
     }

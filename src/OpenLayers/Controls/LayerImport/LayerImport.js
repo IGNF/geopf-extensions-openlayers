@@ -1297,9 +1297,9 @@ var LayerImport = class LayerImport extends Control {
                                         format : vectorFormat,
                                         tileGrid : olCreateXYZTileGrid({
                                             extent : _glSource.bounds, // [minx, miny, maxx, maxy]
-                                            maxZoom : _tileJSONDoc.maxzoom || _glSource.maxzoom || 22,
-                                            minZoom : _tileJSONDoc.minzoom || _glSource.minzoom || 0,
-                                            tileSize : _tileJSONDoc.tileSize || _glSource.tileSize || 256
+                                            maxZoom : _glSource.maxzoom || 22,
+                                            minZoom : _glSource.minzoom || 1,
+                                            tileSize : _glSource.tileSize || 256
                                         }),
                                         urls : tiles
                                     });
@@ -1976,7 +1976,7 @@ var LayerImport = class LayerImport extends Control {
         // Info : on ajoute des paramètres uniquement si l'utilisateur n'en a pas déjà saisi (on vérifie la position du caractère "?")
         var questionMarkIndex = url.indexOf("?");
         if (questionMarkIndex < 0) {
-            // dans le cas d'une url du type http://wxs.ign.fr/geoportail/wmts
+            // dans le cas d'une url du type https://data.geopf.fr/wmts
             url += "?SERVICE=" + this._currentImportType + "&REQUEST=GetCapabilities";
         } else if (questionMarkIndex === (url.length - 1)) {
             // dans le cas où l'url se termine par "?"
