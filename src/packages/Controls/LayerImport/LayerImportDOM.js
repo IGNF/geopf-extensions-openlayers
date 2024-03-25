@@ -596,7 +596,7 @@ var LayerImportDOM = {
     _createImportGetCapPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportGetCapPanel");
-        div.className = "GPpanel gpf-panel";
+        div.className = "GPpanel gpf-panel fr-modal";
         return div;
     },
 
@@ -729,7 +729,7 @@ var LayerImportDOM = {
     _createImportMapBoxPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportMapBoxPanel");
-        div.className = "GPpanel gpf-panel";
+        div.className = "GPpanel gpf-panel fr-modal";
         return div;
     },
 

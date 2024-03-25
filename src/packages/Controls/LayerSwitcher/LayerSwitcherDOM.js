@@ -62,7 +62,7 @@ var LayerSwitcherDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
@@ -89,10 +89,10 @@ var LayerSwitcherDOM = {
         // <div id="GPlayersList" class="GPpanel">
         //   (...)
         // </div>
-        var div = document.createElement("div");
-        div.id = this._addUID("GPlayersList");
-        div.className = "GPpanel";
-        return div;
+        var dialog = document.createElement("dialog");
+        dialog.id = this._addUID("GPlayersList");
+        dialog.className = "GPpanel gpf-panel fr-modal";
+        return dialog;
     },
 
     /**
@@ -103,48 +103,42 @@ var LayerSwitcherDOM = {
     _createMainPictoElement : function () {
         var self = this;
 
-        // exemple :
-        // <!-- Label for minimizing/maximizing -->
-        // <label id="GPshowLayersListPicto" class="GPshowAdvancedToolPicto" for="GPshowLayersList" title="Afficher/masquer le gestionnaire de couches">
-        //    <span id="GPshowLayersListOpen" class="GPshowAdvancedToolOpen"></span><span id="GPshowLayersListClose"></span>
-        // </label>
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowLayersListPicto");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-layerswitcher fr-btn";
+        button.htmlFor = this._addUID("GPshowLayersList");
+        button.title = "Afficher/masquer le gestionnaire de couches";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
 
-        var label = document.createElement("label");
-        label.id = this._addUID("GPshowLayersListPicto");
-        label.className = "GPshowAdvancedToolPicto";
-        label.htmlFor = this._addUID("GPshowLayersList");
-        label.title = "Afficher/masquer le gestionnaire de couches";
-
-        var spanOpen = document.createElement("span");
-        spanOpen.id = this._addUID("GPshowLayersListOpen");
-        spanOpen.className = "GPshowAdvancedToolOpen";
-        spanOpen.addEventListener("click", function () {
-            if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
-                var layers = document.getElementsByClassName("GPlayerInfoOpened");
-                for (var i = 0; i < layers.length; i++) {
-                    layers[i].className = "GPlayerInfo";
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                document.getElementById(self._addUID("GPshowLayersList")).checked = status;
+                if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
+                    var layers = document.getElementsByClassName("GPlayerInfoOpened");
+                    for (var i = 0; i < layers.length; i++) {
+                        layers[i].className = "GPlayerInfo";
+                    }
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
                 }
-                document.getElementById(self._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
-            }
-        });
-
-        label.appendChild(spanOpen);
-
-        var spanClose = document.createElement("span");
-        spanClose.addEventListener("click", function () {
-            if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
-                var layers = document.getElementsByClassName("GPlayerInfoOpened");
-                for (var i = 0; i < layers.length; i++) {
-                    layers[i].className = "GPlayerInfo";
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
+                    var layers = document.getElementsByClassName("GPlayerInfoOpened");
+                    for (var i = 0; i < layers.length; i++) {
+                        layers[i].className = "GPlayerInfo";
+                    }
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
                 }
-                document.getElementById(self._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
-            }
-        });
-        spanClose.id = self._addUID("GPshowLayersListClose");
+            });
+        }
 
-        label.appendChild(spanClose);
-
-        return label;
+        return button;
     },
 
     /**
@@ -157,7 +151,7 @@ var LayerSwitcherDOM = {
         // <div id="GPlayerInfoPanel" class="GPlayerInfoPanelClosed">...</div>
         var div = document.createElement("div");
         div.id = this._addUID("GPlayerInfoPanel");
-        div.className = "GPpanel GPlayerInfoPanelClosed";
+        div.className = "GPpanel GPlayerInfoPanelClosed gpf-panel fr-modal";
         return div;
     },
 
@@ -294,7 +288,7 @@ var LayerSwitcherDOM = {
         var label = document.createElement("label");
         label.htmlFor = id;
         label.id = this._addUID("GPvisibilityPicto_ID_" + obj.id);
-        label.className = "GPlayerVisibility";
+        label.className = "GPlayerVisibility gpf-label fr-label";
         label.title = "Afficher/masquer la couche";
 
         // add event for visibility change
@@ -339,7 +333,7 @@ var LayerSwitcherDOM = {
         label.id = this._addUID("GPshowAdvancedToolsPicto_ID_" + obj.id);
         label.htmlFor = this._addUID("GPshowAdvancedTools_ID_" + obj.id);
         label.title = "Plus d'outils";
-        label.className = "GPshowMoreOptions GPshowLayerAdvancedTools";
+        label.className = "GPshowMoreOptions GPshowLayerAdvancedTools gpf-label fr-label";
 
         var input = document.createElement("input");
         input.type = "checkbox";

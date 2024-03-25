@@ -1,7 +1,8 @@
 /* LAYER SWITCHER */
 
 div[id^=GPlayerSwitcher-] {
-  font-size: 11px;
+  top: 8px;
+  right: 8px;
 }
 
 div[id^=GPlayerSwitcher-] [draggable] {
@@ -16,68 +17,64 @@ div[id^=GPlayerSwitcher-] [draggable] {
 
 /* Manage opening of the components through hiden checkboxes */
 
-div[id^=GPlayerSwitcher-] input[type="checkbox"] + div,
-div[id^=GPlayerSwitcher-] input[type="checkbox"] + label + div {
+div[id^=GPlayerSwitcher-] input[type="checkbox"] + button + dialog {
   max-height: 0px;
 }
 
-div[id^=GPlayerSwitcher-] label {
-  display: block;
+input[id^=GPshowLayersList-] {
+  display: none;
 }
 
 /* Showing/hiding layers list */
 
-label[id^=GPshowLayersListPicto] {
-  position: relative;
+button[id^=GPshowLayersListPicto] {
   float: right;
+  /* transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s; */
+  background-position: -2px center;
+  background-repeat: no-repeat;
+  background-image: url("img/GPshowLayersList.png");
+}
+
+button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+
+button[id^="GPshowLayersListPicto-"][aria-pressed="true"] + dialog {
   display: block;
-  opacity: 1;
-  transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s;
-  cursor: pointer;
+  visibility: visible;
+  opacity: 100%;
 }
 
-span[id^=GPshowLayersListOpen],
-span[id^=GPshowLayersListClose] {
-  position: absolute;
-  display: block;
-  transition: border-radius 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
-}
-
-span[id^=GPshowLayersListOpen] {
-  background-position: 0 0;
-  opacity: 1;
-}
-
-span[id^=GPshowLayersListClose] {
-  opacity: 0;
-}
-
-div[id^=GPlayerSwitcher-] input[type="checkbox"]:checked + div + label[id^=GPshowLayersListPicto] {
-  border-top-left-radius: 0;
+button[id^=GPshowLayersListPicto][aria-pressed="true"] {
   border-top-right-radius: 0;
-}
-
-div[id^=GPlayerSwitcher-] input[type="checkbox"]:checked + div + label[id^=GPshowLayersListPicto] span[id^=GPshowLayersListClose] {
-  opacity: 1;
+  border-top-left-radius: 0;
+  background-position: -35px center;
+  /* transition: border-radius 0.5s ease-out 0s, opacity 0.5s ease-out 0s; */
 }
 
 /* Layers list */
 
-div[id^=GPlayersList] {
+dialog[id^=GPlayersList] {
   position: relative;
   border-bottom-right-radius: 0;
   opacity: 0;
   overflow: auto;
-  transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0.25s;
+  /* transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0.25s; */
 }
 
-div[id^=GPlayerSwitcher-] input[type="checkbox"]:checked + div[id^=GPlayersList] {
+button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
   max-height: 232px;
   width: 180px;
   opacity: 1;
-  transition: max-height 0.5s ease-in 0s, opacity 0.25s ease-in 0s;
 }
 
+button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersList] {
+  /* transition: max-height 0.5s ease-in 0s, opacity 0.25s ease-in 0s; */
+
+}
 /* Layer : general */
 
 .GPlayerSwitcher_layer {
@@ -88,7 +85,7 @@ div[id^=GPlayerSwitcher-] input[type="checkbox"]:checked + div[id^=GPlayersList]
   overflow: hidden;
 }
 
-div[id^=GPlayersList] .GPlayerSwitcher_layer:last-child {
+dialog[id^=GPlayersList] .GPlayerSwitcher_layer:last-child {
   border-bottom: none;
 }
 

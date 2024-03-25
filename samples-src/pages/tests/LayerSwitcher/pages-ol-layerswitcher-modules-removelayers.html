@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Portail{{ mode }}.css" />
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GeoportalSourceWMTS{{ mode }}.js"></script>        
 {{/content}}
 
 {{#content "head"}}
@@ -47,11 +48,11 @@
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
 
-                    // maps = new ol.layer.Tile({
-                    //     source : new ol.source.GeoportalWMTS({
-                    //         layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
-                    //     })
-                    // });
+                    maps = new ol.layer.Tile({
+                        source : new ol.source.GeoportalWMTS({
+                            layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+                        })
+                    });
 
                     osm = new ol.layer.Tile({
                         source: new ol.source.OSM(),
@@ -67,14 +68,14 @@
                             zoom : 6
                         }),
                         layers : [
-                            // new ol.layer.Tile({
-                            //     source : new ol.source.GeoportalWMTS({
-                            //         layer: "ORTHOIMAGERY.ORTHOPHOTOS"
-                            //     }),
-                            //     opacity : 0.8
-                            // }),
+                            new ol.layer.Tile({
+                                source : new ol.source.GeoportalWMTS({
+                                    layer: "ORTHOIMAGERY.ORTHOPHOTOS"
+                                }),
+                                opacity : 0.8
+                            }),
                             osm,
-                            // maps
+                            maps
                         ]
                     });
 
@@ -88,13 +89,13 @@
                                     description : "description..."
                                 }
                             },
-                            // {
-                            //     layer : maps,
-                            //     config : {
-                            //         title : "Carte",
-                            //         description : "description..."
-                            //     }
-                            // }
+                            {
+                                layer : maps,
+                                config : {
+                                    title : "Carte",
+                                    description : "description..."
+                                }
+                            }
                     ]
                     });
 
