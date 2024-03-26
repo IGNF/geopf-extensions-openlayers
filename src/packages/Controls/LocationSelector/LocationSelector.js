@@ -217,9 +217,9 @@ var LocationSelector = class LocationSelector extends Control {
      */
     setCoordinate (coordinate, crs) {
         var map = this.getMap();
-        var proj = map.getView().getProjection();
+        var proj = map.getView().getProjection().getCode();
         // on utilise la projection de la carte
-        if (crs === null) {
+        if (!crs) {
             crs = proj;
         }
 
@@ -335,6 +335,11 @@ var LocationSelector = class LocationSelector extends Control {
             return;
         }
 
+        // on recupere les options du service
+        var serviceOptions = this.options.autocompleteOptions || {};
+        var _customOnSuccess = serviceOptions.onSuccess || null;
+        var _customOnFailure = serviceOptions.onFailure || null;
+
         // on sauvegarde le localisant
         this._currentLocation = value;
 
@@ -359,6 +364,9 @@ var LocationSelector = class LocationSelector extends Control {
                 if (results) {
                     var locations = results.suggestedLocations;
                     context._fillAutoCompletedLocationListContainer(locations);
+                    if (_customOnSuccess) {
+                        _customOnSuccess.call(this, results);
+                    }
                 }
             },
             // callback onFailure
@@ -368,6 +376,9 @@ var LocationSelector = class LocationSelector extends Control {
                 // doit on nettoyer la liste des suggestions dernierement enregistrée :
                 context._clearSuggestedLocation();
                 logger.log(error.message);
+                if (_customOnFailure) {
+                    _customOnFailure.call(this, error);
+                }
             }
         });
 

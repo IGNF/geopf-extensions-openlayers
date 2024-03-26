@@ -512,7 +512,7 @@ var Drawing = class Drawing extends Control {
             if (!found) {
                 this.getMap().addLayer(vlayer);
             }
-            // style par defaut du geoportail !
+            // style par defaut !
             // application des styles ainsi que ceux par defaut de ol sur le layer
             vlayer.getSource().getFeatures().forEach((feature) => {
                 var style = feature.getStyle();
