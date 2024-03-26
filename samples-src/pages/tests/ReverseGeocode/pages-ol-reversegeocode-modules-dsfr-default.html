@@ -61,9 +61,9 @@
                 // map.addControl(layerSwitcher);
              };
               Gp.Services.getConfig({
-                customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/essentielsConfig.json",
+                customConfigFile : "{{ configurl }}",
                 callbackSuffix : "",
-                // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
+                // apiKey: "{{ apikey }}",
                 timeOut : 20000,
                 onSuccess : createMap,
                 onFailure : (e) => {

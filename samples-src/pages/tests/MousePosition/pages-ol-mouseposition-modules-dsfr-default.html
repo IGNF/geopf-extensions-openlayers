@@ -60,7 +60,7 @@
 
               };
               Gp.Services.getConfig({
-                customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/essentielsConfig.json",
+                customConfigFile : "{{ configurl }}",
                   callbackSuffix : "",
                   timeOut : 20000,
                   onSuccess : createMap,
