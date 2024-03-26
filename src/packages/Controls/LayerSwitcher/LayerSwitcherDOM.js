@@ -95,6 +95,12 @@ var LayerSwitcherDOM = {
         return dialog;
     },
 
+    _createMainLayersDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
+        return div;
+    },
+
     /**
      * Creation du container du picto du controle (DOM)
      *
@@ -254,13 +260,13 @@ var LayerSwitcherDOM = {
     _createBasicToolNameElement : function (obj) {
         // exemple :
         // <span id="GPname_ID_Layer1" class="GPlayerName" title="Quartiers prioritaires de la ville">Quartiers prioritaires de la ville</span>
-        var span = document.createElement("span");
-        span.id = this._addUID("GPname_ID_" + obj.id);
-        span.className = "GPlayerName";
-        span.title = obj.description || obj.title;
-        span.innerHTML = obj.title;
+        var label = document.createElement("label");
+        label.id = this._addUID("GPname_ID_" + obj.id);
+        label.className = "GPlayerName gpf-label fr-label";
+        label.title = obj.description || obj.title;
+        label.innerHTML = obj.title;
 
-        return span;
+        return label;
     },
 
     /**

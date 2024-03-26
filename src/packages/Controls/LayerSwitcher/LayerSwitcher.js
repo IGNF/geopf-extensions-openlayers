@@ -537,11 +537,14 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         container.appendChild(picto);
 
         // ajout dans le container principal de la liste des layers
-        var divL = this._layerListContainer = this._createMainLayersElement();
+        var divL = this._createMainLayersElement();
         container.appendChild(divL);
 
+        var div = this._layerListContainer = this._createMainLayersDivElement();
+        divL.appendChild(div);
+
         // creation du mode draggable
-        this._createDraggableElement(divL, this);
+        this._createDraggableElement(div, this);
 
         // ajout dans le container principal du panneau d'information
         var divI = this._createMainInfoElement();

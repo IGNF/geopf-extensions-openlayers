@@ -1,11 +1,16 @@
 /* SEARCH ENGINE */
 
 [id^="GPsearchEngine-"] {
-  display: flex;
   top: 8px;
   left: 46px;
 }
 
+[id^="GPsearchEngine-"] {
+  /* dsfr */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
 /* Showing/hiding search engine input */
 
 button[id^=GPshowSearchEnginePicto] {
@@ -54,7 +59,7 @@ button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchI
 }
 
 div[id^=GPautoCompleteList] {
-  display: none;
+  /* display: none; */
 }
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] + div[id^=GPautoCompleteList] {
@@ -83,19 +88,19 @@ button[id^=GPsearchInputReset] {
 
 /* General panels */
 
-div[id^=GPgeocodeResultsClose],
-div[id^=GPadvancedSearchClose] {
+button[id^=GPgeocodeResultsClose],
+button[id^=GPadvancedSearchClose] {
   top: 0;
   right: 0;
   width: 30px;
   height: 32px;
 }
 
-div[id^=GPgeocodeResultsClose] {
+button[id^=GPgeocodeResultsClose] {
   background-position: 0 0;
 }
 
-div[id^=GPadvancedSearchClose] {
+button[id^=GPadvancedSearchClose] {
   background-repeat: no-repeat;
 }
 
@@ -108,6 +113,18 @@ button[id^=GPshowAdvancedSearch] {
 
 /* Advanced search panel */
 
+button[id^=GPshowAdvancedSearch][aria-pressed="true"] + div[id^=GPadvancedSearchPanel] {
+  display: inline-block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+button[id^=GPshowAdvancedSearch][aria-pressed="false"] + div[id^=GPadvancedSearchPanel] {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
 div[id^=GPadvancedSearchPanel] {
   display: none;
   width: 280px;
@@ -116,7 +133,7 @@ div[id^=GPadvancedSearchPanel] {
 }
 
 form[id^=GPadvancedSearchForm] {
-  max-height: 220px;
+  max-height: 250px;
   overflow-y: auto;
   padding-left: 15px;
   padding-right: 15px;
@@ -133,14 +150,17 @@ input[id^=GPadvancedSearchSubmit] {
 div[id^=GPautoCompleteList],
 div[id^=GPgeocodeResultsList] {
   width: 280px;
+  position: absolute;
+  max-height: 140px;
+  background-color: #FFF
 }
 
 div[id^=GPautoCompleteList] {
   top: 35px;
+  
 }
 
 div[id^=GPgeocodeResultsList] {
-  display: none;
   position: absolute;
   top: 40px;
   border-radius: 4px;
@@ -164,11 +184,11 @@ div[id^=GPgeocodeResults-] {
 
 /* General panels */
 
-[id^="GPgeocodeResultsClose"] {
+button[id^="GPgeocodeResultsClose"] {
   background-image: url("img/GPsearchEngineClose.png");
 }
 
-[id^="GPadvancedSearchClose"] {
+button[id^="GPadvancedSearchClose"] {
   background-image: url("img/GPsearchEngineOpen.png");
   background-position: -50px 3px;
 }

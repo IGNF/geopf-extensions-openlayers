@@ -491,6 +491,7 @@ var SearchEngine = class SearchEngine extends Control {
             // INFO je decompose les appels car j'ai besoin de recuperer le container
             // des filtres
             var advancedPanel = this._createAdvancedSearchPanelElement();
+            var advancedPanelDiv = this._createAdvancedSearchPanelDivElement();
             var advancedHeader = this._createAdvancedSearchPanelHeaderElement();
             var advancedForm = this._createAdvancedSearchPanelFormElement(this._advancedSearchCodes);
             var advancedFormFilters = this._filterContainer = this._createAdvancedSearchFormFiltersElement();
@@ -498,8 +499,9 @@ var SearchEngine = class SearchEngine extends Control {
             var advancedFormInput = this._createAdvancedSearchFormInputElement();
             advancedForm.appendChild(advancedFormFilters);
             advancedForm.appendChild(advancedFormInput);
-            advancedPanel.appendChild(advancedHeader);
-            advancedPanel.appendChild(advancedForm);
+            advancedPanelDiv.appendChild(advancedHeader);
+            advancedPanelDiv.appendChild(advancedForm);
+            advancedPanel.appendChild(advancedPanelDiv);
             container.appendChild(advancedPanel);
         }
 
@@ -1654,7 +1656,8 @@ var SearchEngine = class SearchEngine extends Control {
      */
     _hideSuggestedLocation () {
         if (this._autocompleteContainer) {
-            this._autocompleteContainer.style.display = "none";
+            this._autocompleteContainer.classList.replace("GPelementVisible", "GPelementHidden");
+            this._autocompleteContainer.classList.replace("gpf-visible", "gpf-hidden");
         }
     }
 
@@ -1666,7 +1669,8 @@ var SearchEngine = class SearchEngine extends Control {
      */
     _displaySuggestedLocation () {
         if (this._autocompleteContainer) {
-            this._autocompleteContainer.style.display = "block";
+            this._autocompleteContainer.classList.replace("GPelementHidden", "GPelementVisible");
+            this._autocompleteContainer.classList.replace("gpf-hidden", "gpf-visible");
         }
     }
 

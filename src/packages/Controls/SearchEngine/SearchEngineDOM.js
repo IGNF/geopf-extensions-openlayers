@@ -52,8 +52,11 @@ var SearchEngineDOM = {
             if (status) {
                 // somme stuff...
             }
-            document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
-            document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+            
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
             var showAdvancedSearch = document.getElementById(self._addUID("GPshowAdvancedSearch"));
             if (showAdvancedSearch) {
                 showAdvancedSearch.style.display = null;
@@ -83,8 +86,14 @@ var SearchEngineDOM = {
         // Open geocode results panel when submitting the input
         form.addEventListener("submit", function (e) {
             e.preventDefault();
-            document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "block";
-            document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
+            if (document.getElementById(self._addUID("GPsearchInputText")).value === "") {
+                return false;
+            }
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementHidden", "GPelementVisible");
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-hidden", "gpf-visible");
+            
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             // cf. FIXME
             // document.querySelector("#GPsearchInput input").blur ();
 
@@ -106,11 +115,14 @@ var SearchEngineDOM = {
             if (charCode === 13 || charCode === 10 || charCode === 38 || charCode === 40) {
                 return;
             }
-            document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
             if (input.value.length > 2) {
-                document.getElementById(self._addUID("GPautoCompleteList")).style.display = "block";
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementHidden", "GPelementVisible");
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-hidden", "gpf-visible");
             } else {
-                document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             }
             // gestionnaire d'evenement :
             // on récupère la valeur de saisie pour requête sur le service d'autocompletion
@@ -118,7 +130,7 @@ var SearchEngineDOM = {
         });
 
         // FIXME ce code interfere avec le click sur la liste des suggested locations !
-        // input.addEventListener("blur", function(e) {
+        // input.addEventListener("blur", function (e) {
         //     document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
         // });
 
@@ -195,20 +207,32 @@ var SearchEngineDOM = {
         });
 
         form.appendChild(input);
+        // ajout du bouton reset
+        form.appendChild(this._createSearchResetElement());
+
+        return form;
+    },
+
+    _createSearchResetElement : function () {
+        // contexte d'execution
+        var self = this;
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPsearchInputReset");
         buttonReset.className = "GPshowOpen gpf-btn gpf-btn-icon-close fr-btn"; /* not use : fr-btn--close */
         // Reset input
-        buttonReset.addEventListener("click", function () {
+        buttonReset.addEventListener("click", function (e) {
+            // FIXME event déclenché sur la frappe "return" dans la zone de saisie !?
             document.getElementById(self._addUID("GPsearchInputText")).value = "";
-            document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
-            document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
+
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
             self.onSearchResetClick();
         });
-        form.appendChild(buttonReset);
 
-        return form;
+        return buttonReset;
     },
 
     /**
@@ -236,8 +260,13 @@ var SearchEngineDOM = {
             }
             var id = "#GPsearchInput-" + self._uid;
             document.querySelector(id + " input").disabled = true;
-            document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
-            document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+            
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
+
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
+
             document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "none";
             document.getElementById(self._addUID("GPadvancedSearchPanel")).style.display = "inline-block";
         });
@@ -257,14 +286,19 @@ var SearchEngineDOM = {
     _createAdvancedSearchPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPadvancedSearchPanel");
-        div.className = "GPpanel";
-        div.style.display = "none";
+        div.className = "GPpanel gpf-panel fr-modal";
 
         // FIXME on decompose la fonction pour les besoins du controle,
         // on ajoutera ces childs à la main...
         // div.appendChild(this._createAdvancedSearchPanelHeaderElement ());
         // div.appendChild(this._createAdvancedSearchPanelFormElement ());
 
+        return div;
+    },
+
+    _createAdvancedSearchPanelDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
         return div;
     },
 
@@ -279,8 +313,7 @@ var SearchEngineDOM = {
     _createGeocodeResultsElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPgeocodeResultsList");
-        div.className = "GPpanel";
-        div.style.display = "none";
+        div.className = "GPpanel GPelementHidden gpf-panel gpf-hidden fr-modal";
 
         div.appendChild(this._createGeocodeResultsHeaderElement());
 
@@ -302,8 +335,7 @@ var SearchEngineDOM = {
     _createAutoCompleteElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPautoCompleteList");
-        div.className = "GPautoCompleteList"; // GPpanel ?
-        div.style.display = "none";
+        div.className = "GPautoCompleteList GPelementHidden gpf-panel fr-modal gpf-hidden "; // GPpanel ?
 
         // FIXME on decompose la fonction pour les besoins du controle,
         // on ajoutera ces childs à la main...
@@ -327,16 +359,19 @@ var SearchEngineDOM = {
 
         var container = document.createElement("div");
         container.id = this._addUID("GPautocompleteResults");
+        container.className = "gpf-panel__list";
 
         if (container.addEventListener) {
             container.addEventListener("click", function (e) {
                 self.onAutoCompletedResultsItemClick(e);
-                document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             }, false);
         } else if (container.attachEvent) {
             container.attachEvent("onclick", function (e) {
                 self.onAutoCompletedResultsItemClick(e);
-                document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             });
         }
 
@@ -360,7 +395,7 @@ var SearchEngineDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("AutoCompletedLocation_" + id);
-        div.className = "GPautoCompleteProposal";
+        div.className = "GPautoCompleteProposal gpf-panel__items";
         div.innerHTML = GeocodeUtils.getSuggestedLocationFreeform(location);
         if (div.addEventListener) {
             div.addEventListener("click", function (e) {
@@ -387,35 +422,45 @@ var SearchEngineDOM = {
         var self = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader";
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle";
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
         divTitle.innerHTML = "Recherche avancée";
         container.appendChild(divTitle);
 
-        var divClose = document.createElement("div");
+        var divClose = document.createElement("button");
         divClose.id = this._addUID("GPadvancedSearchClose");
-        divClose.className = "GPpanelClose";
+        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn";
         divClose.title = "Fermer la recherche avancée";
 
         if (divClose.addEventListener) {
             divClose.addEventListener("click", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
-                document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+                document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
                 document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
+                document.getElementById(self._addUID("GPshowAdvancedSearch")).setAttribute("aria-pressed", false);
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).style.display = "none";
             }, false);
         } else if (divClose.attachEvent) {
             divClose.attachEvent("onclick", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
-                document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+                document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
                 document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
+                document.getElementById(self._addUID("GPshowAdvancedSearch")).setAttribute("aria-pressed", false);
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).style.display = "none";
             });
         }
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        divClose.appendChild(span);
 
         container.appendChild(divClose);
 
@@ -433,6 +478,7 @@ var SearchEngineDOM = {
 
         var form = document.createElement("form");
         form.id = this._addUID("GPadvancedSearchForm");
+        form.className = "gpf-panel__content fr-modal__content";
         form.addEventListener("submit", function (e) {
             e.preventDefault();
             // data
@@ -451,16 +497,17 @@ var SearchEngineDOM = {
             // gestionnaire d'evenement :
             // on récupère les valeurs de saisies pour requête sur le service de geocodage
             self.onGeocodingAdvancedSearchSubmit(e, data);
-            document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "block";
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementHidden", "GPelementVisible");
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-hidden", "gpf-visible");
 
             return false;
         });
 
         var div = document.createElement("div");
-        div.className = "GPflexInput";
+        div.className = "GPflexInput gpf-flex";
 
         var label = document.createElement("label");
-        label.className = "GPadvancedSearchCodeLabel";
+        label.className = "GPadvancedSearchCodeLabel gpf-label fr-label";
         label.innerHTML = "Recherche par";
         div.appendChild(label);
 
@@ -491,7 +538,7 @@ var SearchEngineDOM = {
 
         var select = document.createElement("select");
         select.id = this._addUID("GPadvancedSearchCode");
-        select.className = "GPadvancedSearchCode";
+        select.className = "GPadvancedSearchCode gpf-select fr-select";
         select.addEventListener("change", function (e) {
             // var idx   = e.target.selectedIndex;
             // var value = e.target.options[idx].value;
@@ -531,7 +578,7 @@ var SearchEngineDOM = {
         var input = document.createElement("input");
         input.type = "submit";
         input.id = this._addUID("GPadvancedSearchSubmit");
-        input.className = "GPsubmit";
+        input.className = "GPsubmit gpf-btn gpf-btn-submit fr-btn";
         input.value = "Chercher";
 
         return input;
@@ -594,10 +641,10 @@ var SearchEngineDOM = {
         var value = filterAttributes.value;
 
         var div = document.createElement("div");
-        div.className = "GPflexInput";
+        div.className = "GPflexInput gpf-flex";
 
         var label = document.createElement("label");
-        label.className = "GPadvancedSearchFilterLabel";
+        label.className = "GPadvancedSearchFilterLabel gpf-label fr-label";
         label.htmlFor = name;
         label.title = description || title;
         label.innerHTML = title;
@@ -605,7 +652,7 @@ var SearchEngineDOM = {
 
         var input = document.createElement("input");
         input.id = name;
-        input.className = "GPadvancedSearchFilterInput";
+        input.className = "GPadvancedSearchFilterInput gpf-input fr-input";
         input.type = "text";
         input.name = name;
         if (value) {
@@ -649,27 +696,36 @@ var SearchEngineDOM = {
         var self = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader";
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle";
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
         divTitle.innerHTML = "Résultats de la recherche";
         container.appendChild(divTitle);
 
-        var divClose = document.createElement("div");
+        var divClose = document.createElement("button");
         divClose.id = this._addUID("GPgeocodeResultsClose");
-        divClose.className = "GPpanelClose";
+        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn";
         divClose.title = "Fermer la fenêtre de résultats";
 
         if (divClose.addEventListener) {
             divClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+                document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
             }, false);
         } else if (divClose.attachEvent) {
             divClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+                document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
             });
         }
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        divClose.appendChild(span);
+
         container.appendChild(divClose);
 
         return container;
@@ -686,18 +742,22 @@ var SearchEngineDOM = {
 
         var container = document.createElement("div");
         container.id = this._addUID("GPgeocodeResults");
+        container.className = "gpf-panel__list";
+        container.setAttribute("tabindex", "0");
 
         if (container.addEventListener) {
             container.addEventListener("click", function (e) {
                 if (!e.ctrlKey) {
-                    document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+                    document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+                    document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
                 }
                 self.onGeocodedResultsItemClick(e);
             }, false);
         } else if (container.attachEvent) {
             container.attachEvent("onclick", function (e) {
                 if (!e.ctrlKey) {
-                    document.getElementById(self._addUID("GPgeocodeResultsList")).style.display = "none";
+                    document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+                    document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
                 }
                 self.onGeocodedResultsItemClick(e);
             });
@@ -723,7 +783,7 @@ var SearchEngineDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GeocodedLocation_" + id);
-        div.className = "GPautoCompleteProposal";
+        div.className = "GPautoCompleteProposal gpf-panel__items";
 
         if (typeof location === "string") {
             div.innerHTML = location;
