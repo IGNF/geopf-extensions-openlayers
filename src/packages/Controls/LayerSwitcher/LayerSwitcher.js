@@ -335,7 +335,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         logger.trace(layer);
 
         var layerID = layer.gpLayerId;
-        var layerList = document.getElementById(this._addUID("GPlayersList"));
+        var layerList = document.getElementById(this._addUID("GPlayersList")).firstChild;
         // close layer info element if open.
         var infodiv = document.getElementById(this._addUID("GPinfo_ID_" + layerID));
         if (infodiv && infodiv.className === "GPlayerInfoOpened") {

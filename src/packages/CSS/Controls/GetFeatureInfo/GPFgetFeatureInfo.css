@@ -5,17 +5,6 @@ div[id^=GPgetFeatureInfo-] {
   left: 10px;
 }
 
-button[id^="GPgetFeatureInfoPicto-"] {}
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="false"] {}
   
-button[id^="GPgetFeatureInfoPicto-"][aria-pressed="false"] {
-  background-position: 0px center;
-}
-  
-button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {
-  background-position: -26px center;
-}
-  
-button[id^="GPgetFeatureInfoPicto-"] {
-    background-image: url("img/GPactivateGfi.png");
-    background-repeat: no-repeat;
-}
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {}

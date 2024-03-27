@@ -31,7 +31,7 @@
 }
 .gpf-panel__content {
   padding: unset;
-  margin-bottom: unset
+  margin-bottom: unset;
 }
 
 .gpf-panel--close,
@@ -96,18 +96,33 @@
   margin: auto;
 }
 
+/***********/
+/* button  */
+/***********/
+
 .gpf-btn  {
 }
 .gpf-btn--hidden {}
 .gpf-icon-return {}
 .gpf-icon-submit {}
 .gpf-icon-close {}
+.gpf-icon-reverse {
+  
+}
+
+/*************/
+/* elements  */
+/*************/
 
 .gpf-label {}
 .gpf-select {}
 .gpf-input {}
 .gpf-radio-group {}
 .gpf-upload {}
+
+/*************/
+/* panel     */
+/*************/
 
 .gpf-panel__list,
 .gpf-panel__advancedlist {

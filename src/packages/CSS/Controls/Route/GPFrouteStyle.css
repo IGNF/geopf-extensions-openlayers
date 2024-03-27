@@ -1,5 +1,14 @@
 /* ROUTE */
 
+.GPshowRoutePicto {
+  background-image: url("img/GProuteOpen.png");
+  background-repeat: no-repeat;
+  background-position: 1px center;
+}
+
+.GProutePanelClose {
+  background-image: url("img/GProuteOpen.png");
+}
 
 /* Route form */
 
@@ -65,6 +74,9 @@ div[id^=GProuteTransportChoice] input {
   display: none;
 }
 
+select[id^=GProuteComputationSelect] {
+  width: 100px;
+}
 /* Result panel */
 
 .GProuteResultsDetailsInstructionHighlight {

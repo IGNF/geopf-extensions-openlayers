@@ -7,8 +7,6 @@ div[id^=GPisochron-] {
 
 /* Showing/hiding mouse position panel */
 
-button[id^="GPshowIsochronPicto-"] {}
-
 button[id^="GPshowIsochronPicto-"][aria-pressed="false"] + dialog {
   display: none;
   visibility: hidden;
@@ -21,12 +19,6 @@ button[id^="GPshowIsochronPicto-"][aria-pressed="true"] + dialog {
   opacity: 100%;
 }
 
-button[id^="GPshowIsochronPicto-"] {
-  background-image: url("img/GPisochronOpen.png");
-  background-repeat: no-repeat;
-  background-position: 1px center;
-}
-
 /* General panels */
 
 [id^=GPisochronPanel-] {
@@ -36,10 +28,6 @@ button[id^="GPshowIsochronPicto-"] {
   top: 0px;
   left: 34px;
   z-index:2;
-}
-
-div[id^=GPisochronPanelClose] {
-  background-image: url("img/GPisochronOpen.png");
 }
 
 /* Isochron form */
@@ -69,7 +57,6 @@ div[id^=GPisochronChoice] {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  margin: auto;
   margin-top: 15px;
   margin-bottom: 5px;
 }
@@ -102,6 +89,17 @@ div[id^=GPisochronValueDist] {
 
 /* Mode choice */
 
+.GPisochronFormMini {
+  max-height: 58px;
+  overflow: hidden;
+}
+
+.GPisochronFormMini .GPpanelFooter button[id^="GPisochronReset-"],
+.GPisochronFormMini .GPpanelFooter input[id^="GPisochronSubmit-"],
+.GPisochronFormMini button[id^="GPshowIsoExclusionsPicto-"] {
+    display: none;
+}
+
 div[id^=GPisochronModeChoice] {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -116,10 +114,6 @@ div[id^=GPisochronModeChoice] {
 
 div[id^=GPisochronTransportChoice] > .GPisochronTransportChoice {
   display: inline-flex;
-}
-
-select[id^=GPisochronDirectionSelect] {
-  width: 80px;
 }
 
 /* Showing/hiding exclusions */
@@ -153,17 +147,8 @@ div[id^=GPisoExclusions] {
 /* Reset picto */
 
 button[id^=GPisochronReset] {
-  /* background-color: #366291; */
-  background-image: url("img/GPisochronOptions.png");
-  background-position: -281px center;
+  
 }
 
-button[id^=GPisochronReset] {
-  opacity: 0.8;
-  transition: opacity 0.2s ease-out;
-}
 
-button[id^=GPisochronReset]:hover {
-  opacity: 1;
-}
 

@@ -921,18 +921,18 @@ var Isocurve = class Isocurve extends Control {
             var map = self.getMap();
             if (self._originPoint._inputShowPointerContainer.checked) {
                 // au click sur l'input pour pointer sur la carte: on minimise le formulaire
-                self._formContainer.className = "GPisochronFormMini";
+                self._formContainer.className = "GPisochronFormMini gpf-panel__content fr-modal__content";
                 // et au clic sur la carte, on réaffichera le formulaire "normal"
                 this.listenerKey = map.on(
                     "click",
                     () => {
-                        self._formContainer.className = "";
+                        self._formContainer.className = "gpf-panel__content fr-modal__content";
                         self.dispatchEvent("isocurve:drawend");
                     }
                 );
             } else {
                 // si on déselectionne le pointer, on rétablit le formulaire en mode normal
-                self._formContainer.className = "";
+                self._formContainer.className = "gpf-panel__content fr-modal__content";
                 // et on enlève l'écouteur d'évènement sur la carte
                 // map.un("click", () => { self._formContainer.className = ""; });
                 olObservableUnByKey(this.listenerKey);
@@ -947,12 +947,12 @@ var Isocurve = class Isocurve extends Control {
         // click sur le label
         document.getElementById("GPlocationOriginLabel_1-" + this._uid).onclick = function () {
             self._clearGeojsonLayer();
-            self._formContainer.className = "";
+            self._formContainer.className = "gpf-panel__content fr-modal__content";
             // on désactive l'écouteur d'événements sur la carte (pour ne pas placer un marker au clic)
             map.un(
                 "click",
                 () => {
-                    self._formContainer.className = "";
+                    self._formContainer.className = "gpf-panel__content fr-modal__content";
                 }
             );
             self.dispatchEvent("isocurve:drawend");
@@ -1463,10 +1463,10 @@ var Isocurve = class Isocurve extends Control {
                 computationdiv.checked = "true";
             }
             if (document.getElementById("GPisochronValueDist-" + this._uid)) {
-                document.getElementById("GPisochronValueDist-" + this._uid).className = "GPflexInput";
+                document.getElementById("GPisochronValueDist-" + this._uid).className = "GPflexInput gpf-flex";
             }
             if (document.getElementById("GPisochronValueChron-" + this._uid)) {
-                document.getElementById("GPisochronValueChron-" + this._uid).className = "GPisochronValueHidden gpf-hidden";
+                document.getElementById("GPisochronValueChron-" + this._uid).className = "GPelementHidden gpf-hidden";
             }
         } else {
             computationdiv = document.getElementById("GPisochronChoiceAltChron-" + this._uid);
@@ -1474,10 +1474,10 @@ var Isocurve = class Isocurve extends Control {
                 computationdiv.checked = "true";
             }
             if (document.getElementById("GPisochronValueChron-" + this._uid)) {
-                document.getElementById("GPisochronValueChron-" + this._uid).className = "GPflexInput";
+                document.getElementById("GPisochronValueChron-" + this._uid).className = "GPflexInput gpf-flex";
             }
             if (document.getElementById("GPisochronValueDist-" + this._uid)) {
-                document.getElementById("GPisochronValueDist-" + this._uid).className = "GPisochronValueHidden gpf-hidden";
+                document.getElementById("GPisochronValueDist-" + this._uid).className = "GPelementHidden gpf-hidden";
             }
         }
 

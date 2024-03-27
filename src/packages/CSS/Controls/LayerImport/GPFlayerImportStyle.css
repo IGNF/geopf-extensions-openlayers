@@ -1,15 +1,22 @@
 
 /* Import form */
 
-
-
-.GPimportVisibleParams {
-  display: block;
+.GPshowImportPicto {
+  background-image: url("img/GPimportOpen.png");
+  background-repeat: no-repeat;
+  background-position: 1px center;
 }
 
-.GPimportHiddenParams,
-.GPimportValueHidden {
-  display: none;
+.GPimportPanelClose,
+.GPimportGetCapPanelClose,
+.GPimportMapBoxPanelClose {
+    background-image: url("img/GPimportOpen.png");
+}
+
+.GPimportMapBoxPanelReturnPicto {
+  background-color: #366291;
+  background-image: url("img/GPimportMapBoxReturn.png");
+  /* background-position: 3px center; */
 }
 
 .GPimportChoiceAlt input[type="radio"] {

@@ -69,7 +69,6 @@ module.exports = (env, argv) => {
             "Portail" : [
                 path.join(ROOT, "src", "packages", "CSS", "GPFwaiting.css"),
                 path.join(ROOT, "src", "packages", "CSS", "GPFgeneralWidget.css"),
-                // path.join(ROOT, "src", "packages", "CSS", "___GPFgeneralWidget.css"), // nouvelle nomenclature !
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Drawing", "GPFdrawingStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Attribution", "GPFattributionStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Editor", "GPFeditorStyle.css"),
@@ -83,6 +82,7 @@ module.exports = (env, argv) => {
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureAreaStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureLengthStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureAzimuthStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureToolTip.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/MousePosition", "GPFmousePositionStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/ReverseGeocoding", "GPFreverseGeocodingStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Route", "GPFrouteStyle.css"),
@@ -93,7 +93,25 @@ module.exports = (env, argv) => {
             "Dsfr" : [
                 path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
                 path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
-                path.join(ROOT, "src", "packages", "CSS", "dsfr-plus.css") // surcharge dsfr
+                path.join(ROOT, "src", "packages", "CSS", "DSFRgeneralWidget.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Drawing", "DSFRdrawingStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Attribution", "DSFRattributionStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Editor", "DSFReditorStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/ElevationPath", "DSFRelevationPathStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Export", "DSFRexportStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/GetFeatureInfo", "DSFRgetFeatureInfoStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Isochron", "DSFRisochronStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/LayerImport", "DSFRlayerImportStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/LayerSwitcher", "DSFRlayerSwitcherStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/LocationSelector", "DSFRlocationStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAreaStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureLengthStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAzimuthStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/MousePosition", "DSFRmousePositionStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/ReverseGeocoding", "DSFRreverseGeocodingStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Route", "DSFRrouteStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/SearchEngine", "DSFRsearchEngineStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "DSFRtoolBoxMeasureStyle.css")
             ],
             // Controles
             "Drawing" : path.join(ROOT, "src", "packages", "Controls/Drawing", "Drawing.js"),

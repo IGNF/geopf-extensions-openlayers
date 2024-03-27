@@ -1,6 +1,37 @@
 /* ISOCHRON */
 
+.GPshowIsochronPicto {
+  background-image: url("img/GPisochronOpen.png");
+  background-repeat: no-repeat;
+  background-position: 1px center;
+}
+
+.GPisochronPanelClose {
+  background-image: url("img/GPisochronOpen.png");
+}
+
+/* Reset picto */
+
+button[id^=GPisochronReset] {
+  opacity: 0.8;
+  transition: opacity 0.2s ease-out;
+}
+
+button[id^=GPisochronReset]:hover {
+  opacity: 1;
+}
+
+.GPisochronReset {
+  background-color: #366291;
+  background-image: url("img/GPisochronOptions.png");
+  background-position: -281px center;
+}
+
 /* Isochron form */
+
+div[id^=GPisochronChoice] {
+  margin: auto;
+}
 
 .GPisochronChoiceAlt input:checked + label + span {
   color: #366291;
@@ -15,24 +46,6 @@
 
 .GPisoExclusionsOption {
   background-image: url("img/GPisochronCheck.png");
-}
-
-.GPisochronFormMini {
-  max-height: 58px;
-  overflow: hidden;
-}
-
-.GPisochronFormMini button[id^="GPisochronReset-"],
-.GPisochronFormMini label[id^="GPshowIsoExclusionsPicto-"] {
-    display: none;
-}
-
-.GPisochronOriginVisible {
-  display: block;
-}
-
-.GPisochronOriginHidden {
-  display: none;
 }
 
 .GPisochronOriginPointerImg {
@@ -57,10 +70,6 @@
   cursor: pointer;
   display:block;
   color: #999;
-}
-
-.GPisochronValueHidden {
-  display: none;
 }
 
 .GPisochronModeLabel {
@@ -103,6 +112,10 @@ input[id^=GPisochronTransportPedestrian]:checked + .GPisochronTransportImg {
 .GPisochronTransportImg:first-of-type {
     margin-left: 18px;
     margin-right: 10px;
+}
+
+select[id^=GPisochronDirectionSelect] {
+  width: 80px;
 }
 
 .GPshowIsoExclusionsPicto {

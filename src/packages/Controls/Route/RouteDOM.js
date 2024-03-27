@@ -44,7 +44,7 @@ var RouteDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowRoutePicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowRoutePicto gpf-btn gpf-btn-icon-route fr-btn";
         button.title = "Ouvrir le calcul d'itinéraire";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -121,7 +121,7 @@ var RouteDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GProutePanelClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose GProutePanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
         divClose.title = "Masquer le panneau";
 
         // Link panel close / visibility checkbox
@@ -894,7 +894,7 @@ var RouteDOM = {
             var transport = transports[i];
 
             var div = document.createElement("div");
-            div.className = "GProuteTransportChoice  gpf-flex gpf-radio-group";
+            div.className = "GProuteTransportChoice gpf-flex gpf-radio-group fr-radio-group";
 
             if (transport === "Voiture") {
                 var inputCar = document.createElement("input");

@@ -1116,8 +1116,8 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         // affichage de la div des résultats (et changement du titre)
         this._panelTitleContainer.innerHTML = "Résultats de la recherche";
         this._returnPictoContainer.classList.remove("GPelementHidden");
-        this._returnPictoContainer.classList.remove("gpf-btn--hidden");
-        this._resultsContainer.className = "GPpanel gpf-panel";
+        this._returnPictoContainer.classList.remove("gpf-hidden");
+        this._resultsContainer.className = "GPpanel gpf-panel gpf-panel-reverse";
 
         // 3. ajout de la liste des résultats dans le container des resultats
         this._fillGeocodedLocationListContainer(locations);

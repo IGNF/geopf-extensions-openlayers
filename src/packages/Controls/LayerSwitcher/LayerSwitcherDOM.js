@@ -201,7 +201,7 @@ var LayerSwitcherDOM = {
         // <!-- Every item is marked with layerID, which is defined at layer import -->
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher_ID_" + obj.id);
-        container.className = "GPlayerSwitcher_layer draggable-layer";
+        container.className = "GPlayerSwitcher_layer gpf-panel__content fr-modal__content draggable-layer";
 
         // ajout des outils basiques (visibility / layer name)
         container.appendChild(this._createBasicToolElement(obj));

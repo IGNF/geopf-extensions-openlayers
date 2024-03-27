@@ -345,6 +345,14 @@ input.GPsubmit:hover {
 
 }
 
+.GPinput {
+  
+}
+
+.GPform {
+  padding: 15px;
+}
+
 .GPelementInvisible,
 .GPelementHidden {
   display: none;

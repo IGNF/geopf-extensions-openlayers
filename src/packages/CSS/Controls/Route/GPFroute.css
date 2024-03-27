@@ -7,8 +7,6 @@ div[id^=GProute-] {
 
 /* Showing/hiding panel */
 
-button[id^="GPshowRoutePicto-"] {}
-
 button[id^="GPshowRoutePicto-"][aria-pressed="false"] + dialog {
   display: none;
   visibility: hidden;
@@ -21,12 +19,6 @@ button[id^="GPshowRoutePicto-"][aria-pressed="true"] + dialog {
   opacity: 100%;
 }
 
-button[id^="GPshowRoutePicto-"] {
-  background-image: url("img/GProuteOpen.png");
-  background-repeat: no-repeat;
-  background-position: 1px center;
-}
-
 /* General panels */
 
 [id^=GProutePanel-] {
@@ -35,10 +27,6 @@ button[id^="GPshowRoutePicto-"] {
   width: 320px;
   top: 0px;
   left: 34px;
-}
-
-[id^=GProutePanelClose] {
-  background-image: url("img/GProuteOpen.png");
 }
 
 /* Reset picto */
@@ -140,10 +128,6 @@ div[id^=GProuteModeChoice] {
 
 div[id^=GProuteTransportChoice] > .GProuteTransportChoice {
   display: inline-flex;
-}
-
-select[id^=GProuteComputationSelect] {
-  width: 100px;
 }
 
 /* Showing/hiding exclusions */

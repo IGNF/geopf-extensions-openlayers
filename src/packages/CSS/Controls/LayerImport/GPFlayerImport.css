@@ -11,8 +11,6 @@ div[id^="GPimport-"] {
 /* Showing/hiding import panel */
 /******************************/
 
-button[id^="GPshowImportPicto-"] {}
-  
 button[id^="GPshowImportPicto-"][aria-pressed="false"] + dialog {
     display: none;
     visibility: hidden;
@@ -24,20 +22,10 @@ button[id^="GPshowImportPicto-"][aria-pressed="true"] + dialog {
     visibility: visible;
     opacity: 100%;
 }
-  
-button[id^="GPshowImportPicto-"] {
-    background-image: url("img/GPimportOpen.png");
-    background-repeat: no-repeat;
-    background-position: 1px center;
-}
 
 /******************/
 /* General panels */
 /******************/
-
-[id^="GPimportPanelClose-"] {
-    background-image: url("img/GPimportOpen.png");
-}
 
 [id^="GPimportPanel-"],
 [id^="GPimportGetCapPanel-"],
@@ -58,21 +46,9 @@ button[id^="GPshowImportPicto-"] {
     width: 340px;
 }
 
-[id^="GPimportPanelClose-"],
-[id^="GPimportGetCapPanelClose-"],
-[id^="GPimportMapBoxPanelClose-"] {
-    background-image: url("img/GPimportOpen.png");
-}
-
 [id^="GPimportGetCapPanel-"],
 [id^="GPimportMapBoxPanel-"] {
     display: none;
-}
-
-[id^=GPimportMapBoxPanelReturnPicto-] {
-    background-color: #366291;
-    background-image: url("img/GPimportMapBoxReturn.png");
-    /* background-position: 3px center; */
 }
 
 [id^="GPimportMapBoxPanelReturnPicto-"] {
@@ -88,8 +64,7 @@ button[id^="GPshowImportPicto-"] {
 /***************/
 /* Import form */
 /***************/
-
-form[id^="GPimportForm-"] {
+form[id^=GPimportForm-] {
     padding: 15px;
 }
 

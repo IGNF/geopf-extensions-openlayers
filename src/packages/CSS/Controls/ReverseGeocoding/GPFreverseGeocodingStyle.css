@@ -1,28 +1,24 @@
 /* REVERSE GEOCODING */
 
+.GPshowReverseGeocodingPicto {
+  background-image: url("img/GPreverseGeocodingOpen.png");
+  background-repeat: no-repeat;
+  background-position: 1px center;
+}
+
+.GPreverseGeocodingPanelClose {
+  background-image: url("img/GPreverseGeocodingOpen.png");
+}
+
+.GPreverseGeocodingReturnPicto {
+  background-image: url("img/GPreverseGeocodingReturn.png");
+  background-repeat: no-repeat;
+  background-position: 0 center;
+}
+
 /* Results panel */
 
 .GPlocationHighlight {
     background-color: rgba(255,200,0,0.25);
     color: #222;
-}
-
-
-/* Search panel */
-
-
-.GPlabel,
-.GPlabelFilter {
-  max-width: 105px;
-}
-
-.GPlabel,
-.GPselect {
-  margin-top: 5px;
-  margin-bottom: 0;
-}
-
-.GPlabelFilter,
-.GPlabelFilterInput {
-  margin-bottom: 5px;
 }

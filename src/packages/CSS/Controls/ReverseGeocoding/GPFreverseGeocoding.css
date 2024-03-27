@@ -7,8 +7,6 @@ div[id^="GPreverseGeocoding-"] {
 
 /* Showing/hiding reverse geocoding panel */
 
-button[id^="GPshowReverseGeocodingPicto-"] {}
-
 button[id^="GPshowReverseGeocodingPicto-"][aria-pressed="false"] + dialog {
   display: none;
   visibility: hidden;
@@ -21,12 +19,6 @@ button[id^="GPshowReverseGeocodingPicto-"][aria-pressed="true"] + dialog {
   opacity: 100%;
 }
 
-button[id^="GPshowReverseGeocodingPicto-"] {
-  background-image: url("img/GPreverseGeocodingOpen.png");
-  background-repeat: no-repeat;
-  background-position: 1px center;
-}
-
 /* General panels */
 
 [id^="GPreverseGeocodingPanel-"] {
@@ -35,28 +27,6 @@ button[id^="GPshowReverseGeocodingPicto-"] {
   top: 0px;
   width: 280px;
   height: inherit;
-}
-
-[id^="GPreverseGeocodingReturnPicto"] {
-  background-image: url("img/GPreverseGeocodingReturn.png");
-  background-repeat: no-repeat;
-  background-position: 0 center;
-}
-
-[id^="GPreverseGeocodingPanelClose-"] {
-  background-image: url("img/GPreverseGeocodingOpen.png");
-}
-
-[id^="GPreverseGeocodingResultsClose"] {
-  background-image: url("img/GPreverseGeocodingOpen.png");
-}
-
-div[id^=GPreverseGeocodingResultsClose] {
-  top: 0;
-  right: 0;
-  width: 30px;
-  height: 32px;
-  /*background-position: -26px 0;*/
 }
 
 /* Search panel */
