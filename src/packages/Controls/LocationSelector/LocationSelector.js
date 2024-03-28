@@ -149,6 +149,7 @@ var LocationSelector = class LocationSelector extends Control {
 
         /** container des reponses de l'autocompletion */
         this._suggestedContainer = null;
+        this._suggestedList = null;
 
         /** listes des reponses de l'autocompletion */
         this._suggestedLocations = [];
@@ -298,8 +299,10 @@ var LocationSelector = class LocationSelector extends Control {
             inputs.appendChild(_inputRemoveStage);
         }
 
-        var results = this._suggestedContainer = this._createLocationAutoCompleteResultElement(id);
-        container.appendChild(results);
+        var resultsPanel = this._suggestedContainer = this._createLocationAutoCompleteElement(id);
+        var results = this._suggestedList = this._createLocationAutoCompleteResultElement(id);
+        resultsPanel.appendChild(results);
+        container.appendChild(resultsPanel);
 
         return container;
     }
@@ -674,9 +677,9 @@ var LocationSelector = class LocationSelector extends Control {
     _clearSuggestedLocation () {
         // suppression du dom
         this._suggestedLocations = [];
-        if (this._suggestedContainer) {
-            while (this._suggestedContainer.firstChild) {
-                this._suggestedContainer.removeChild(this._suggestedContainer.firstChild);
+        if (this._suggestedList) {
+            while (this._suggestedList.firstChild) {
+                this._suggestedList.removeChild(this._suggestedList.firstChild);
             }
         }
     }
@@ -689,7 +692,8 @@ var LocationSelector = class LocationSelector extends Control {
      */
     _hideSuggestedLocation () {
         if (this._suggestedContainer) {
-            this._suggestedContainer.style.display = "none";
+            this._suggestedContainer.classList.replace("GPelementVisible", "GPelementHidden");
+            this._suggestedContainer.classList.replace("gpf-visible", "gpf-hidden");
         }
     }
 
@@ -701,7 +705,8 @@ var LocationSelector = class LocationSelector extends Control {
      */
     _displaySuggestedLocation () {
         if (this._suggestedContainer) {
-            this._suggestedContainer.style.display = "block";
+            this._suggestedContainer.classList.replace("GPelementHidden", "GPelementVisible");
+            this._suggestedContainer.classList.replace("gpf-hidden", "gpf-visible");
         }
     }
 
@@ -780,7 +785,7 @@ var LocationSelector = class LocationSelector extends Control {
         }
 
         // on vide la liste avant de la construire
-        var element = this._suggestedContainer;
+        var element = this._suggestedList;
         if (element.childElementCount) {
             while (element.firstChild) {
                 element.removeChild(element.firstChild);

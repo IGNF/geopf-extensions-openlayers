@@ -5,14 +5,6 @@
   background-repeat: no-repeat;
 }
 
-[id*="GPlocationOriginPointer"] + .GPlocationOriginPointerImg {
-  background-position: -1px center;
-}
-
-[id*="GPlocationOriginPointer"]:checked + .GPlocationOriginPointerImg {
-  background-position: -29px center;
-}
-
 [id^=GPlocationStageRemove],
 [id^=GPlocationStageAdd] {
   width: 28px;
@@ -22,11 +14,11 @@
 }
 
 [id^=GPlocationStageRemove] {
-  background-position: -84px center;
+  
 }
 
 [id^=GPlocationStageAdd] {
-  background-position: -56px center;
+  
 }
 
 [id^=GPlocationStageRemove],
@@ -37,4 +29,20 @@
 /* All div elements whose class attribute value begins with "GPlocationPoint" */
 [class*="GPlocationPoint"] {
   position: relative;
+}
+
+div[id^=GPlocationAutoCompleteResult] {
+  top: 45px;
+  left: 0px;
+  max-height: 140px;
+  overflow-y: auto;
+  background-color: #FFF;
+  border: 1px solid #999;
+  border-top: none;
+}
+
+div[id^=GPlocationAutoCompleteList] {
+  position: absolute;
+  z-index: 2;
+  width: calc(100% - 56px);
 }

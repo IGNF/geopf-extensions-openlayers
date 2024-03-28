@@ -270,6 +270,7 @@
 }
 
 .GPflexInput > *:not(input) {
+  /* width: 28px; */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
