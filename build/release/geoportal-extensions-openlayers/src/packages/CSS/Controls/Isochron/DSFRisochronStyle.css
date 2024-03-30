@@ -1,0 +1,20 @@
+.gpf-btn-icon-isocurve {
+    background-image: url("img/GPisochronOpen.png");
+    background-repeat: no-repeat;
+    background-position: 3px center;
+}
+
+.gpf-btn-icon-close {}
+
+.gpf-flex-isocurve {
+    justify-content: unset;
+}
+
+.gpf-btn-icon-reset {
+    background-image: url("img/GPisochronOptions.png");
+    background-position: -281px center;
+}
+
+.GPisochronChoiceAlt.fr-radio-group input[type=radio] {
+    opacity: 1;
+}

@@ -1,8 +1,9 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GPFpluginOpenLayers{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/modules/GPFpluginOpenLayers{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/packages/Portail{{ mode }}.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/packages/Widgets{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/packages/Widgets{{ mode }}.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -83,7 +84,10 @@
                   callbackSuffix : "",
                   // apiKey: "{{ apikey }}",
                   timeOut : 20000,
-                  onSuccess : createMap
+                  onSuccess : createMap,
+                  onFailure : function (e) {
+                    console.error(e);
+                  }
               });
 
             </script>

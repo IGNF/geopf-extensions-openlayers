@@ -1,0 +1,154 @@
+/* ISOCHRON */
+
+div[id^=GPisochron-] {
+  top: 140px;
+  left: 10px;
+}
+
+/* Showing/hiding mouse position panel */
+
+button[id^="GPshowIsochronPicto-"][aria-pressed="false"] + dialog {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+button[id^="GPshowIsochronPicto-"][aria-pressed="true"] + dialog {
+  display: block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+/* General panels */
+
+[id^=GPisochronPanel-] {
+  width: 280px;
+  position: absolute;
+  height: inherit;
+  top: 0px;
+  left: 34px;
+  z-index:2;
+}
+
+/* Isochron form */
+
+form[id^=GPisochronForm] {
+  padding: 15px;
+}
+
+
+input[id^="GPisochronOriginPointer"] + .GPisochronOriginPointerImg {
+  background-position: -1px -1px;
+}
+
+input[id^="GPisochronOriginPointer"]:checked + .GPisochronOriginPointerImg {
+  background-position: -29px -1px;
+}
+
+/* Alternative choice */
+
+div[id^=GPisochronChoice] {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  width: 160px;
+  -webkit-justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+input[id^=GPisochronChoiceAltChron] {
+  background-image: url("img/GPisochronOptions.png");
+}
+
+input[id^=GPisochronChoiceAltChron] + .GPisochronChoiceAltImg {
+  background-position: -56px 0;
+}
+
+input[id^=GPisochronChoiceAltChron]:checked + .GPisochronChoiceAltImg {
+  background-position: -84px 0;
+}
+
+input[id^=GPisochronChoiceAltDist] + .GPisochronChoiceAltImg {
+  background-position: -112px 0;
+}
+
+input[id^=GPisochronChoiceAltDist]:checked + .GPisochronChoiceAltImg {
+  background-position: -140px 0;
+}
+
+div[id^=GPisochronValueChron],
+div[id^=GPisochronValueDist] {
+  width: 220px;
+  margin: auto;
+}
+
+/* Mode choice */
+
+.GPisochronFormMini {
+  max-height: 58px;
+  overflow: hidden;
+}
+
+.GPisochronFormMini .GPpanelFooter button[id^="GPisochronReset-"],
+.GPisochronFormMini .GPpanelFooter input[id^="GPisochronSubmit-"],
+.GPisochronFormMini button[id^="GPshowIsoExclusionsPicto-"] {
+    display: none;
+}
+
+div[id^=GPisochronModeChoice] {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -webkit-justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin: 15px 0;
+}
+
+div[id^=GPisochronTransportChoice] > .GPisochronTransportChoice {
+  display: inline-flex;
+}
+
+/* Showing/hiding exclusions */
+
+button[id^="GPshowIsoExclusions"] {
+  position: absolute;
+  border: unset;
+  bottom: 0;
+  right: 0;
+  transition: all 0.5s ease-out 0s;
+}
+
+button[id^=GPshowIsoExclusions][aria-pressed="false"] + div[id^=GPisoExclusions] {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+}
+
+button[id^=GPshowIsoExclusions][aria-pressed="true"] + div[id^=GPisoExclusions] {
+  display: block;
+  max-height: 76px;
+  opacity: 1;
+  margin-bottom: 15px;
+}
+
+div[id^=GPisoExclusions] {
+  transition: max-height 0.5s ease-in-out 0.25s, opacity 0.5s ease-in-out 0.25s, margin 0.3s ease-in-out 0.25s;
+  overflow: hidden;
+}
+
+/* Reset picto */
+
+button[id^=GPisochronReset] {
+  
+}
+
+
+

@@ -60,11 +60,6 @@ module.exports = (env, argv) => {
  
     return {
         entry : {
-            // ALL
-            "GPFpluginOpenLayers" : [
-                "whatwg-fetch",
-                path.join(ROOT, "src", "index.js")
-            ],
             // CSS themes portail
             "Portail" : [
                 path.join(ROOT, "src", "packages", "CSS", "GPFwaiting.css"),
@@ -113,7 +108,7 @@ module.exports = (env, argv) => {
                 path.join(ROOT, "src", "packages", "CSS", "Controls/SearchEngine", "DSFRsearchEngineStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "DSFRtoolBoxMeasureStyle.css")
             ],
-            // Controles
+            // Widgets
             "Drawing" : path.join(ROOT, "src", "packages", "Controls/Drawing", "Drawing.js"),
             "Editor" : path.join(ROOT, "src", "packages", "Controls/Editor", "Editor.js"),
             "ElevationPath" : path.join(ROOT, "src", "packages", "Controls/ElevationPath", "ElevationPath.js"),
@@ -150,7 +145,7 @@ module.exports = (env, argv) => {
             filename : "[name]" + suffixOutput + ".js",
             libraryExport : 'default',
             libraryTarget : 'assign',
-            library : ["Gp", "[name]"] // FIXME comment peupler la variable globale 'Gp' ?
+            library : "[name]" // FIXME comment peupler la variable globale 'Gp' ?
         },
         resolve : {},
         externals : [
@@ -365,35 +360,6 @@ module.exports = (env, argv) => {
         ]
         /** AJOUT DES LICENCES */
         .concat([
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-proj4js.tmpl"), "utf8"), {
-                    __VERSION__ : pkg.dependencies["proj4"],
-                }),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : fs.readFileSync(path.join(ROOT, "build/licences", "licence-es6promise.txt"), "utf8"),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-eventbusjs.tmpl"), "utf8"), {
-                    __VERSION__ : pkg.dependencies["eventbusjs"],
-                }),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-sortablejs.tmpl"), "utf8"), {
-                    __VERSION__ : pkg.dependencies["sortablejs"],
-                }),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-olms.tmpl"),"utf8"), {
-                    __VERSION__ : pkg.dependencies["ol-mapbox-style"],
-                }),
-                raw : true,
-                entryOnly : true
-            }),
             new BannerWebPackPlugin({
                 banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-ign.tmpl"), "utf8"), {
                     __BRIEF__ : pkg.name,

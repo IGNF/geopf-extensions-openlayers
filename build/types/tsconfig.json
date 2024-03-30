@@ -18,8 +18,8 @@
       // Types should go into this directory.
       // Removing this would place the .d.ts files
       // next to the .js files
-      "outDir": "../../dist/packages/src",
-      // "outFile": "../../dist/packages/index.d.ts",
+      "outDir": "../../dist/src/packages",
+      // "outFile": "../../dist/index.d.ts",
       // go to js file when using IDE functions like
       // "Go to Definition" in VSCode
       "declarationMap": true,

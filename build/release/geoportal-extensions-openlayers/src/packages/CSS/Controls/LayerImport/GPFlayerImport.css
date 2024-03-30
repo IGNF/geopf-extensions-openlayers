@@ -1,0 +1,125 @@
+/****************/
+/* Layer Import */
+/****************/
+
+div[id^="GPimport-"] {
+    top: 220px;
+    left: 10px;
+}
+
+/*******************************/
+/* Showing/hiding import panel */
+/******************************/
+
+button[id^="GPshowImportPicto-"][aria-pressed="false"] + dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
+}
+  
+button[id^="GPshowImportPicto-"][aria-pressed="true"] + dialog {
+    display: block;
+    visibility: visible;
+    opacity: 100%;
+}
+
+/******************/
+/* General panels */
+/******************/
+
+[id^="GPimportPanel-"],
+[id^="GPimportGetCapPanel-"],
+[id^="GPimportMapBoxPanel-"] {
+    left: 34px;
+    top: 0px;
+    height: inherit;
+}
+
+[id^="GPimportPanel-"] {
+    position: absolute;
+    width: 280px;
+}
+
+[id^="GPimportGetCapPanel-"],
+[id^="GPimportMapBoxPanel-"] {
+    position: absolute;
+    width: 340px;
+}
+
+[id^="GPimportGetCapPanel-"],
+[id^="GPimportMapBoxPanel-"] {
+    display: none;
+}
+
+[id^="GPimportMapBoxPanelReturnPicto-"] {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 3px;
+    opacity: 1;
+    background-position: 0 0;
+    cursor: pointer;
+}
+
+/***************/
+/* Import form */
+/***************/
+form[id^=GPimportForm-] {
+    padding: 15px;
+}
+
+div[id^="GPimportTypeLine-"] {
+    border-bottom: 1px solid #999;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+div[id^="GPimportChoice-"] {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+input[id^="GPimportSubmit-"] {
+    margin-top: 20px;
+}
+
+/*******************/
+/* Get cap results */
+/*******************/
+
+div[id^="GPimportGetCapResults-"],
+div[id^="GPimportMapBoxResults-"] {
+    background-color: #FFF;
+    height: 140px;
+    overflow-y: auto;
+    resize: vertical;
+}
+
+input[id^="GPimportGetCapRubrique-"],
+input[id^="GPimportMapBoxSource-"] {
+    display: none;
+}
+
+input[id^="GPimportGetCapRubrique-"]~li,
+input[id^="GPimportMapBoxSource-"]~div {
+    display: none;
+}
+
+input[id^="GPimportGetCapRubrique-"]:checked~li,
+input[id^="GPimportMapBoxSource-"]:checked~div {
+    display: block;
+}
+
+input[id^="GPimportGetCapRubrique-"]~ul {
+    display: block;
+}
+
+input[id^="GPimportGetCapRubrique-"]:checked~ul {
+    display: none;
+}
+

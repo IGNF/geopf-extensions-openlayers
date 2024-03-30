@@ -1,0 +1,10 @@
+div[id^=GPmeasureAzimuth-] {
+  top: 260px;
+  left: 10px;
+}
+  
+button[id^="GPshowMeasureAzimuthPicto-"] {
+    background-image: url("img/GPmeasuresOpen.png");
+    background-repeat: no-repeat;
+    background-position: 0px center;
+}

@@ -1,0 +1,10 @@
+/* GET FEATURE INFO */
+
+div[id^=GPgetFeatureInfo-] {
+  top: 260px;
+  left: 10px;
+}
+
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="false"] {}
+  
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {}

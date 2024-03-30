@@ -1,0 +1,27 @@
+.gpf-btn-icon-reverse {
+    background-image: url("img/GPreverseGeocodingOpen.png");
+    background-repeat: no-repeat;
+    background-position: 3px center;
+}
+
+.gpf-btn-icon-close {}
+
+.gpf-btn-icon-return {
+  /* INFO : utiliser l'icone DSFR "fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon" */
+  background-image: url("img/GPreverseGeocodingReturn.png");
+  background-repeat: no-repeat;
+  background-position: 0 center;
+}
+
+.gpf-flex-reverse {
+  /* INFO : surcharge de .gpf-flex par defaut */
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.gpf-panel-reverse {
+  /* INFO : surcharge de .gpf-panel par defaut */
+  width: 100%;
+}
