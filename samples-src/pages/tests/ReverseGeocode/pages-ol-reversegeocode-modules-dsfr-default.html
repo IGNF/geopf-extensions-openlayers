@@ -1,9 +1,9 @@
-{{#extend "ol-sample-modules-layout"}}
+{{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Dsfr{{ mode }}.css" />
-        <!-- <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script> -->
+        
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/ReverseGeocode{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/ReverseGeocode{{ mode }}.js"></script>
 {{/content}}
@@ -57,8 +57,8 @@
                 });
                 map.addControl(reverse);
 
-                // var layerSwitcher = new ol.control.LayerSwitcher({});
-                // map.addControl(layerSwitcher);
+                var layerSwitcher = new ol.control.LayerSwitcher({});
+                map.addControl(layerSwitcher);
              };
               Gp.Services.getConfig({
                 customConfigFile : "{{ configurl }}",

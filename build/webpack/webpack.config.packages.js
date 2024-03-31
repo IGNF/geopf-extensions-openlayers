@@ -87,8 +87,9 @@ module.exports = (env, argv) => {
             ],
             // CSS themes dsfr
             "Dsfr" : [
-                path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
-                path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
+                // INFO dépendances externes !
+                // path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
+                // path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
                 path.join(ROOT, "src", "packages", "CSS", "DSFRgeneralWidget.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Drawing", "DSFRdrawingStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Attribution", "DSFRattributionStyle.css"),

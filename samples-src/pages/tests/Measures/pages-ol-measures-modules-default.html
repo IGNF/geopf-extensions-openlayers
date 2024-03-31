@@ -1,9 +1,9 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Portail{{ mode }}.css" />
-        <!-- <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script> -->
+        
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/MeasureArea{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/MeasureArea{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/MeasureLength{{ mode }}.css" />
@@ -61,8 +61,8 @@
                 var measureAzimuth = new ol.control.MeasureAzimuth();
                 map.addControl(measureAzimuth);
 
-                // var layerSwitcher = new ol.control.LayerSwitcher({});
-                // map.addControl(layerSwitcher);
+                var layerSwitcher = new ol.control.LayerSwitcher({});
+                map.addControl(layerSwitcher);
              };
             </script>
 {{/content}}

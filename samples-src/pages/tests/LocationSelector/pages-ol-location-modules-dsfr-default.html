@@ -1,9 +1,9 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Dsfr{{ mode }}.css" />
-        <!-- <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script> -->
+        
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LocationSelector{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/LocationSelector{{ mode }}.js"></script>
 {{/content}}
@@ -63,8 +63,8 @@
                 });
                 map.addControl(info);
 
-                // var layerSwitcher = new ol.control.LayerSwitcher({});
-                // map.addControl(layerSwitcher);
+                var layerSwitcher = new ol.control.LayerSwitcher({});
+                map.addControl(layerSwitcher);
              };
             </script>
 {{/content}}

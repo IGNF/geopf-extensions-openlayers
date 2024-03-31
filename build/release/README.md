@@ -77,5 +77,6 @@
     2.2 bundle complet
 
     le bundle complet expose la variable **Gp**
-    
+
     > **FIXME** la taille des fichiers (ex. dsfr.css) !?
+    > **SOLUTION** le dsfr est une lib externe, les CSS ne sont pas ajoutées dans les livrables !

@@ -10,7 +10,7 @@
   },
   "scripts": {
     "setup": "npm install",
-    "clean": "echo \"Warning: target not yet implemented!\" && exit 0",
+    "clean": "npx rimraf  dist/ jsdoc/ samples/",
     "eslint": "eslint src/",
     "analyze": "npm run build:modules:src -- --env samples=no --env jsdoc=no --env linter=no --analyze",
     "test": "npm run test:serve",
