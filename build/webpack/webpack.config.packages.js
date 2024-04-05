@@ -60,7 +60,7 @@ module.exports = (env, argv) => {
  
     return {
         entry : {
-            "Widgets" : path.join(ROOT, "src", "packages", "index.js"),
+            "Widgets" : path.join(ROOT, "src", "packages", "bundle.js"),
             // CSS themes portail
             "Portail" : [
                 path.join(ROOT, "src", "packages", "CSS", "GPFwaiting.css"),
@@ -114,9 +114,7 @@ module.exports = (env, argv) => {
         output : {
             path : path.join(ROOT, "dist", "packages"),
             filename : "[name]" + suffixOutput + ".js",
-            // libraryExport : 'default',
-            // libraryTarget : 'assign',
-            library : "Gp" // FIXME comment peupler la variable globale 'Gp' ?
+            library : "Gp"
         },
         resolve : {},
         externals : [
@@ -297,9 +295,7 @@ module.exports = (env, argv) => {
         },
         plugins : [
             /** EXECUTION DU LINTER */
-            (linterEnv) ? new ESLintWebpackPlugin({
-
-            }) : "",
+            (linterEnv) ? new ESLintWebpackPlugin({}) : "",
             /** GENERATION DE LA JSDOC */
             (jsdocEnv) ? new JsDocWebPackPlugin({
                 conf : path.join(ROOT, "build/jsdoc/jsdoc.json")
@@ -308,6 +304,7 @@ module.exports = (env, argv) => {
             new MiniCssExtractPlugin({
                 filename : "[name]" + suffixOutput + ".css"
             }),
+            /** LOGGER */
             new EnvWebPackPlugin({
                 VERBOSE : logMode
             })

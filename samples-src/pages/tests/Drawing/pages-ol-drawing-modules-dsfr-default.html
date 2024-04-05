@@ -1,4 +1,10 @@
-{{#extend "ol-sample-bundle-multikeys-layout"}}
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+          
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Drawing{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/Drawing{{ mode }}.js"></script>
+{{/content}}
 
 {{#content "head"}}
         <title>Sample OpenLayers Drawing</title>
@@ -26,16 +32,19 @@
 {{#content "js"}}
             <script type="text/javascript">
                 var map;
-                window.onload = function() {
+                var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
 
                     //Création de la map
                     map = new ol.Map({
                         target : "map",
-                        layers : [new ol.layer.GeoportalWMTS({
-                            layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
-                        })],
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                opacity: 0.5
+                            })
+                        ],
                         view : new ol.View({
                             center : [288074.8449901076, 6247982.515792289],
                             zoom : 8
@@ -75,6 +84,16 @@
                     });
                     map.addControl(drawing);
                 };
+                Gp.Services.getConfig({
+                    customConfigFile : "{{ configurl }}",
+                    callbackSuffix : "",
+                    // apiKey: "{{ apikey }}",
+                    timeOut : 20000,
+                    onSuccess : createMap,
+                    onFailure : (e) => {
+                        console.error(e);
+                    }
+                });
            </script>
 {{/content}}
 

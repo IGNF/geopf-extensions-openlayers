@@ -62,28 +62,6 @@ var MousePositionDOM = {
     },
 
     /**
-     * mouse position panel
-     *
-     * @returns {DOMElement} DOM element
-     */
-    /*
-    _createMousePositionPanelElement : function () {
-        var panel = document.createElement("div");
-        panel.id = this._addUID("GPmousePositionPanel");
-        panel.className = "GPpanel";
-
-        // FIXME on decompose la fonction pour les besoins du controle,
-        // on ajoutera ces childs à la main...
-        // div.appendChild(this._createMousePositionPanelHeaderElement());
-        // div.appendChild(this._createMousePositionPanelBasicElement());
-        // div.appendChild(this._createShowMousePositionSettingsElement());
-        // div.appendChild(this._createMousePositionSettingsElement());
-
-        return panel;
-    },
-    */
-
-    /**
      * Create Container Panel
      *
      * @returns {DOMElement} DOM element
@@ -92,7 +70,6 @@ var MousePositionDOM = {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPmousePositionPanel");
         dialog.className = "GPpanel gpf-panel fr-modal";
-        this._panelMousePositionContainer = dialog;
         return dialog;
     },
 

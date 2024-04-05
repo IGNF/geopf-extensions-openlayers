@@ -2,7 +2,11 @@
 
 /* Showing/hiding drawing panel */
 
-button[id^="GPshowMeasureLengthPicto-"] {}
+button[id^="GPshowMeasureLengthPicto-"] {
+  background-image: url("img/GPmeasuresOpen.png");
+  background-repeat: no-repeat;
+  background-position: -26px center;
+}
   
 button[id^="GPshowMeasureLengthPicto-"][aria-pressed="false"] {
   background-color: rgba(0,60,136,0.5);

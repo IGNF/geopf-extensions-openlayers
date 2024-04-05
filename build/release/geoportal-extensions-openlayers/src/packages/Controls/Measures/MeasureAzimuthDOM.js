@@ -38,7 +38,7 @@ var MeasureAzimuthDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMeasureAzimuthPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-azimuth fr-btn";
         button.title = "Mesurer un azimut";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

@@ -828,9 +828,12 @@ var Drawing = class Drawing extends Control {
         var header = this._drawingPanelHeader = this._createDrawingPanelHeaderElement();
         panelDiv.appendChild(header);
 
+        var sections = this._createDrawingToolsDivSections();
+        panelDiv.appendChild(sections);
+
         var tools = this._createDrawingToolsSections();
         for (var i = 0; i < tools.length; i++) {
-            panelDiv.appendChild(tools[i]);
+            sections.appendChild(tools[i]);
         }
 
         container.appendChild(panel);

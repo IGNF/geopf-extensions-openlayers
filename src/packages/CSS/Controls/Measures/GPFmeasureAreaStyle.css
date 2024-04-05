@@ -3,7 +3,11 @@
 
 /* Showing/hiding measureLength position panel */
 
-button[id^="GPshowMeasureAreaPicto-"] {}
+button[id^="GPshowMeasureAreaPicto-"] {
+  background-image: url("img/GPmeasuresOpen.png");
+  background-repeat: no-repeat;
+  background-position: -78px center;
+}
   
 button[id^="GPshowMeasureAreaPicto-"][aria-pressed="false"] {
   background-color: rgba(0,60,136,0.5);

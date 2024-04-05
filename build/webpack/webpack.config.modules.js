@@ -344,9 +344,7 @@ module.exports = (env, argv) => {
         },
         plugins : [
             /** EXECUTION DU LINTER */
-            (linterEnv) ? new ESLintWebpackPlugin({
-
-            }) : "",
+            (linterEnv) ? new ESLintWebpackPlugin({}) : "",
             /** GENERATION DE LA JSDOC */
             (jsdocEnv) ? new JsDocWebPackPlugin({
                 conf : path.join(ROOT, "build/jsdoc/jsdoc.json")
@@ -355,6 +353,7 @@ module.exports = (env, argv) => {
             new MiniCssExtractPlugin({
                 filename : "[name]" + suffixOutput + ".css"
             }),
+            /** LOGGER */
             new EnvWebPackPlugin({
                 VERBOSE : logMode
             })

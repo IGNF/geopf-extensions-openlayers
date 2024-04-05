@@ -4,8 +4,6 @@ div[id^=GPmeasureArea-] {
 }
 
 button[id^="GPshowMeasureAreaPicto-"] {
-    background-image: url("img/GPmeasuresOpen.png");
-    background-repeat: no-repeat;
-    background-position: -78px center;
+    
 }
 

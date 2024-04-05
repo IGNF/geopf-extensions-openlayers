@@ -22,7 +22,7 @@ var DrawingDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPdrawing");
-        container.className = "GPwidget";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
@@ -40,7 +40,7 @@ var DrawingDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowDrawingPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowDrawingPicto gpf-btn gpf-btn-icon-drawing fr-btn";
         button.title = this.options.labels.control;
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -75,7 +75,7 @@ var DrawingDOM = {
     _createDrawingPanelElement : function () {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPdrawingPanel");
-        dialog.className = "GPpanel";
+        dialog.className = "GPpanel gpf-panel fr-modal";
 
         return dialog;
     },
@@ -86,6 +86,11 @@ var DrawingDOM = {
         return div;
     },
 
+    _createDrawingToolsDivSections : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__content fr-modal__content";
+        return div;
+    },
 
     // ################################################################### //
     // ####################### Panel container ########################### //
@@ -104,16 +109,16 @@ var DrawingDOM = {
          */
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader";
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle";
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
         divTitle.innerHTML = this.options.controlLabel || "Annoter la carte";
         container.appendChild(divTitle);
 
-        var divClose = document.createElement("div");
+        var divClose = document.createElement("button");
         divClose.id = this._addUID("GPdrawingPanelClose");
-        divClose.className = "GPpanelClose";
+        divClose.className = "GPpanelClose GPdrawingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -127,6 +132,12 @@ var DrawingDOM = {
                 document.getElementById(dtObj._addUID("GPshowDrawingPicto")).click();
             });
         }
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        divClose.appendChild(span);
 
         container.appendChild(divClose);
 

@@ -811,7 +811,7 @@ var MousePosition = class MousePosition extends Control {
         container.appendChild(picto);
 
         // panel
-        var mousePositionPanel = this._panelContainer = this._createMousePositionPanelElement();
+        var mousePositionPanel = this._panelMousePositionContainer = this._createMousePositionPanelElement();
         var mousePositionPanelDiv = this._createMousePositionPanelDivElement();
         mousePositionPanel.appendChild(mousePositionPanelDiv);
 
