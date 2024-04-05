@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Portail{{ mode }}.css" />
+        
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
         <script src="{{ baseurl }}/dist/modules/GeoportalSourceWMTS{{ mode }}.js"></script>
@@ -25,13 +25,15 @@
             <!-- map -->
             <div id="map">
             </div>
-            <button type="button" id="addMapsLayer">Ajouter une couche Map</button>
-            <br>
-            <button type="button" id="addOSMLayer">Ajouter une couche OSM</button>
-            <button type="button" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
-            <button type="button" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
-            <button type="button" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
-            <button type="button" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
+            <div style="display: flex;flex-direction: column;align-items: center;width: 150px;">
+                <button type="button" id="addMapsLayer">Ajouter une couche Map</button>
+                <button type="button" id="addOSMLayer">Ajouter une couche OSM</button>
+                <br>
+                <button type="button" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
+                <button type="button" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
+                <button type="button" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
+                <button type="button" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
+            </div>
 {{/content}}
 
 {{#content "js"}}
@@ -68,9 +70,9 @@
                 };
 
                 Gp.Services.getConfig({
-                    customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/essentielsConfig.json",
+                    customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/fullConfig.json",
                     callbackSuffix : "",
-                    // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
+                    // apiKey: "{{ apikey }}",
                     timeOut : 20000,
                     onSuccess : createMap
                 });

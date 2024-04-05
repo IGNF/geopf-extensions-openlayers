@@ -60,16 +60,10 @@ module.exports = (env, argv) => {
  
     return {
         entry : {
-            // ALL
-            "GPFpluginOpenLayers" : [
-                "whatwg-fetch",
-                path.join(ROOT, "src", "index.js")
-            ],
             // CSS themes portail
             "Portail" : [
                 path.join(ROOT, "src", "packages", "CSS", "GPFwaiting.css"),
                 path.join(ROOT, "src", "packages", "CSS", "GPFgeneralWidget.css"),
-                // path.join(ROOT, "src", "packages", "CSS", "___GPFgeneralWidget.css"), // nouvelle nomenclature !
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Drawing", "GPFdrawingStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Attribution", "GPFattributionStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Editor", "GPFeditorStyle.css"),
@@ -83,6 +77,7 @@ module.exports = (env, argv) => {
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureAreaStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureLengthStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureAzimuthStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureToolTip.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/MousePosition", "GPFmousePositionStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/ReverseGeocoding", "GPFreverseGeocodingStyle.css"),
                 path.join(ROOT, "src", "packages", "CSS", "Controls/Route", "GPFrouteStyle.css"),
@@ -91,11 +86,30 @@ module.exports = (env, argv) => {
             ],
             // CSS themes dsfr
             "Dsfr" : [
-                path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
-                path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
-                path.join(ROOT, "src", "packages", "CSS", "dsfr-plus.css") // surcharge dsfr
+                // INFO dépendances externes !
+                // path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
+                // path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
+                path.join(ROOT, "src", "packages", "CSS", "DSFRgeneralWidget.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Drawing", "DSFRdrawingStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Attribution", "DSFRattributionStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Editor", "DSFReditorStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/ElevationPath", "DSFRelevationPathStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Export", "DSFRexportStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/GetFeatureInfo", "DSFRgetFeatureInfoStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Isochron", "DSFRisochronStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/LayerImport", "DSFRlayerImportStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/LayerSwitcher", "DSFRlayerSwitcherStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/LocationSelector", "DSFRlocationStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAreaStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureLengthStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAzimuthStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/MousePosition", "DSFRmousePositionStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/ReverseGeocoding", "DSFRreverseGeocodingStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/Route", "DSFRrouteStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/SearchEngine", "DSFRsearchEngineStyle.css"),
+                path.join(ROOT, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "DSFRtoolBoxMeasureStyle.css")
             ],
-            // Controles
+            // Widgets
             "Drawing" : path.join(ROOT, "src", "packages", "Controls/Drawing", "Drawing.js"),
             "Editor" : path.join(ROOT, "src", "packages", "Controls/Editor", "Editor.js"),
             "ElevationPath" : path.join(ROOT, "src", "packages", "Controls/ElevationPath", "ElevationPath.js"),
@@ -132,7 +146,7 @@ module.exports = (env, argv) => {
             filename : "[name]" + suffixOutput + ".js",
             libraryExport : 'default',
             libraryTarget : 'assign',
-            library : ["Gp", "[name]"] // FIXME comment peupler la variable globale 'Gp' ?
+            library : "[name]" // FIXME comment peupler la variable globale 'Gp' ?
         },
         resolve : {},
         externals : [
@@ -330,9 +344,7 @@ module.exports = (env, argv) => {
         },
         plugins : [
             /** EXECUTION DU LINTER */
-            (linterEnv) ? new ESLintWebpackPlugin({
-
-            }) : "",
+            (linterEnv) ? new ESLintWebpackPlugin({}) : "",
             /** GENERATION DE LA JSDOC */
             (jsdocEnv) ? new JsDocWebPackPlugin({
                 conf : path.join(ROOT, "build/jsdoc/jsdoc.json")
@@ -341,41 +353,13 @@ module.exports = (env, argv) => {
             new MiniCssExtractPlugin({
                 filename : "[name]" + suffixOutput + ".css"
             }),
+            /** LOGGER */
             new EnvWebPackPlugin({
                 VERBOSE : logMode
             })
         ]
         /** AJOUT DES LICENCES */
         .concat([
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-proj4js.tmpl"), "utf8"), {
-                    __VERSION__ : pkg.dependencies["proj4"],
-                }),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : fs.readFileSync(path.join(ROOT, "build/licences", "licence-es6promise.txt"), "utf8"),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-eventbusjs.tmpl"), "utf8"), {
-                    __VERSION__ : pkg.dependencies["eventbusjs"],
-                }),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-sortablejs.tmpl"), "utf8"), {
-                    __VERSION__ : pkg.dependencies["sortablejs"],
-                }),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-olms.tmpl"),"utf8"), {
-                    __VERSION__ : pkg.dependencies["ol-mapbox-style"],
-                }),
-                raw : true,
-                entryOnly : true
-            }),
             new BannerWebPackPlugin({
                 banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-ign.tmpl"), "utf8"), {
                     __BRIEF__ : pkg.name,

@@ -1,0 +1,18 @@
+.gpf-btn-icon-pointer {
+    background-image: url("img/GPlocationOptions.png");
+    background-repeat: no-repeat;
+    background-position: 1px center;
+}
+
+.gpf-btn-icon-label {}
+.gpf-btn-icon-remove {
+    background-image: url("img/GPlocationOptions.png");
+    background-repeat: no-repeat;
+    background-position: -82px center;
+}
+
+.gpf-btn-icon-add {
+    background-image: url("img/GPlocationOptions.png");
+    background-repeat: no-repeat;
+    background-position: -54px center;
+}

@@ -1,9 +1,9 @@
-{{#extend "ol-sample-modules-layout"}}
+{{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Dsfr{{ mode }}.css" />
-        <!-- <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script> -->
+        
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
+        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Route{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/Route{{ mode }}.js"></script>
 {{/content}}
@@ -53,13 +53,13 @@
                 var route = new ol.control.Route({});
                 map.addControl(route);
 
-                // var layerSwitcher = new ol.control.LayerSwitcher({});
-                // map.addControl(layerSwitcher);
+                var layerSwitcher = new ol.control.LayerSwitcher({});
+                map.addControl(layerSwitcher);
              };
              Gp.Services.getConfig({
                  customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/fullConfig.json",
                  callbackSuffix : "",
-                 // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
+                 // apiKey: "{{ apikey }}",
                  timeOut : 20000,
                  onSuccess : createMap,
                   onFailure : (e) => {

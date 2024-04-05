@@ -1,7 +1,7 @@
-{{#extend "ol-sample-modules-layout"}}
+{{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Dsfr{{ mode }}.css" />
+        
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Isocurve{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/Isocurve{{ mode }}.js"></script>
 {{/content}}
@@ -55,9 +55,9 @@
                 map.addControl(iso);
              };
              Gp.Services.getConfig({
-                 customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/essentielsConfig.json",
+                 customConfigFile : "{{ configurl }}",
                  callbackSuffix : "",
-                 // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
+                 // apiKey: "{{ apikey }}",
                  timeOut : 20000,
                  onSuccess : createMap,
                  onFailure : (e) => {

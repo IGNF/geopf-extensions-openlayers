@@ -2,5 +2,6 @@
     "baseurl" : "../../..",
     "resources" : "../../resources",
     "apikey" : "essentiels,cartes,adresse,lambert93",
+    "configurl" : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/fullConfig.json",
     "proxy" : "https://localhost/proxy/proxy.php"
 }

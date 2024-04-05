@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Portail{{ mode }}.css" />
+        
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Route{{ mode }}.css" />
@@ -59,7 +59,7 @@
              Gp.Services.getConfig({
                  customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/fullConfig.json",
                  callbackSuffix : "",
-                 // apiKey: "jhyvi0fgmnuxvfv0zjzorvdn",
+                 // apiKey: "{{ apikey }}",
                  timeOut : 20000,
                  onSuccess : createMap,
                   onFailure : (e) => {
