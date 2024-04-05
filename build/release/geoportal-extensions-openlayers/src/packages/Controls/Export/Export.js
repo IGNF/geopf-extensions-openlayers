@@ -228,7 +228,7 @@ class ButtonExport extends Control {
         this.button = null;
         this.menu = null;
         this.icon = "\u2630 ";
-        this.menuClassHidden = "GPexportMenuHidden";
+        this.menuClassHidden = "GPelementHidden gpf-hidden";
 
         this.initOptions(options);
         this.initContainer();
@@ -327,7 +327,7 @@ class ButtonExport extends Control {
         var button = this.stringToHTML(`
             <input type="button"
                 id="${this._addUID("GPexportButton")}" 
-                class="GPsubmit"
+                class="GPsubmit gpf-btn gpf-btn-submit fr-btn"
                 value="${title}">
         `);
 

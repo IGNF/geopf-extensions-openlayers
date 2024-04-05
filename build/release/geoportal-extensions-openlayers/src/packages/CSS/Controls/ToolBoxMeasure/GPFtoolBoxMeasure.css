@@ -12,13 +12,6 @@ div[id^=GPtoolbox-measure-main] {
     z-index: 1;
 }
 
-button[id^=GPtoolbox-measure-button] {}
-
-button[id^=GPtoolbox-measure-button] {
-    background-repeat: no-repeat;
-    background-image: url("img/GPtoolBoxMeasureOpen.png");
-}
-
 div[id^=GPtoolbox-measure-widget] {
     left: auto;
     display: none;
