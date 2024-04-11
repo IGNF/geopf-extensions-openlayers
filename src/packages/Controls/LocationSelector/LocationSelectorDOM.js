@@ -23,7 +23,7 @@ var LocationSelectorDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.className = this._addUID("GPlocationPoint"); // ceci permet de gerer les groupes de points !
-        container.className += " GPwidget gpf-widget";
+        container.className += " GPwidget gpf-widget ";
         return container;
     },
 

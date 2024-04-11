@@ -248,7 +248,7 @@ var IsoDOM = {
         var self = this;
 
         var div = document.createElement("div");
-        div.className = "GPisochronChoiceAlt gpf-flex gpf-flex-isocurve gpf-radio-group fr-radio-group";
+        div.className = "GPisochronChoiceAlt gpf-flex gpf-flex-isocurve gpf-radio-group fr-radio-group fr-m-1w";
 
         var input = document.createElement("input");
         input.id = this._addUID("GPisochronChoiceAltChron");
@@ -536,7 +536,7 @@ var IsoDOM = {
             var transport = transports[i];
 
             var div = document.createElement("div");
-            div.className = "GPisochronTransportChoice gpf-flex gpf-radio-group fr-radio-group";
+            div.className = "GPisochronTransportChoice gpf-flex gpf-radio-group fr-radio-group fr-m-1w";
 
             if (transport === "Voiture") {
                 var inputCar = document.createElement("input");
@@ -621,6 +621,7 @@ var IsoDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronDirectionChoice");
+        div.className = "fr-m-1w"; 
 
         var label = document.createElement("label");
         label.className = "GPisochronModeLabel gpf-label fr-label";
@@ -711,7 +712,7 @@ var IsoDOM = {
         div.id = this._addUID("GPisoExclusions");
 
         var label = document.createElement("label");
-        label.className = "GPisoExclusionsLabel gpf-label fr-label";
+        label.className = "GPisoExclusionsLabel gpf-label fr-label fr-m-1w";
         label.innerHTML = "Passages autorisés";
         div.appendChild(label);
 
@@ -732,7 +733,7 @@ var IsoDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPisoExclusionsOptions gpf-flex";
+        div.className = "GPisoExclusionsOptions gpf-flex fr-m-1w";
 
         /* jshint -W083 */
         for (var value in exclusions) {

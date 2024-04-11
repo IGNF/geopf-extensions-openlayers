@@ -187,7 +187,7 @@ var RouteDOM = {
             var endID = ID.index(end);
 
             if ((document.getElementById(self._addUID("GPlocationOrigin_" + startID)).value === "" &&
-                    document.getElementById(self._addUID("GPlocationOriginCoords_" + startID)).value === "") ||
+                document.getElementById(self._addUID("GPlocationOriginCoords_" + startID)).value === "") ||
                 (document.getElementById(self._addUID("GPlocationOrigin_" + endID)).value === "" &&
                     document.getElementById(self._addUID("GPlocationOriginCoords_" + endID)).value === "")) {
                 return false;
@@ -894,7 +894,7 @@ var RouteDOM = {
             var transport = transports[i];
 
             var div = document.createElement("div");
-            div.className = "GProuteTransportChoice gpf-flex gpf-radio-group fr-radio-group";
+            div.className = "GProuteTransportChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
 
             if (transport === "Voiture") {
                 var inputCar = document.createElement("input");
@@ -1065,10 +1065,10 @@ var RouteDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GProuteExclusions");
 
-        var span = document.createElement("span");
-        span.className = "GProuteExclusionsLabel";
-        span.innerHTML = "Passages autorisés";
-        div.appendChild(span);
+        var label = document.createElement("label");
+        label.className = "GProuteExclusionsLabel fr-m-1w";
+        label.innerHTML = "Passages autorisés";
+        div.appendChild(label);
 
         // div.appendChild(this._createRoutePanelFormExclusionOptionsElement());
 
@@ -1088,7 +1088,7 @@ var RouteDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GProuteExclusionsOptions gpf-flex";
+        div.className = "GProuteExclusionsOptions gpf-flex fr-m-1w";
 
         /* jshint -W083 */
         for (var value in exclusions) {

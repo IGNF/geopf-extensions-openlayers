@@ -353,19 +353,19 @@ var LayerImportDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPimportChoiceAlt gpf-radio-group fr-radio-group";
+        div.className = "GPimportChoiceAlt gpf-radio-group fr-radio-group fr-m-1w";
 
         var input = document.createElement("input");
         input.type = "radio";
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
-                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine";
+                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-m-1w";
                 document.getElementById(context._addUID("GPimportValueUrl")).className = "GPelementHidden gpf-hidden";
                 context._onStaticImportTypeChange(e);
             });
         } else if (input.appendChild) {
             input.appendChild("onchange", function () {
-                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine";
+                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-m-1w";
                 document.getElementById(context._addUID("GPimportValueUrl")).className = "GPelementHidden gpf-hidden";
                 context._onStaticImportTypeChange();
             });
