@@ -1,3 +1,7 @@
+[id^=GPdrawingPanel-] {
+  width: 240px;
+}
+
 .GPshowDrawingPicto {
   background-image: url("img/GPdrawingOpen.png");
   background-repeat: no-repeat;
