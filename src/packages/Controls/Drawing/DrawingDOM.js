@@ -109,7 +109,7 @@ var DrawingDOM = {
          */
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header fr-m-1w";
 
         var divTitle = document.createElement("div");
         divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
@@ -272,15 +272,15 @@ var DrawingDOM = {
          * </div>
          */
         var container = document.createElement("div");
-        container.className = "drawing-tool-section";
+        container.className = "drawing-tool-section fr-m-1w";
 
         var p = document.createElement("p");
-        p.className = "drawing-tool-section-title";
+        p.className = "drawing-tool-section-title fr-m-1w";
         p.innerHTML = sectionLabel;
         container.appendChild(p);
 
         var ul = document.createElement("ul");
-        ul.className = "drawing-tools-flex-display";
+        ul.className = "drawing-tools-flex-display fr-m-1w";
         var context = this;
         // li click handler function
         function liClickHandler (e) {
@@ -294,7 +294,7 @@ var DrawingDOM = {
                 continue;
             }
             var li = document.createElement("li");
-            li.className = "drawing-tool";
+            li.className = "drawing-tool fr-m-1w";
             li.id = this._addUID("drawing-tool-" + this.dtOptions[type].id);
             li.title = this.dtOptions[type].label;
             li.addEventListener("click", liClickHandler);
@@ -319,11 +319,11 @@ var DrawingDOM = {
          * </div>
          */
         var container = document.createElement("div");
-        container.className = "drawing-tool-section drawing-tools-flex-display";
+        container.className = "drawing-tool-section drawing-tools-flex-display fr-m-1w";
 
         var button = document.createElement("button");
         button.title = buttonTitle;
-        button.className = "tool-form-submit drawing-button";
+        button.className = "tool-form-submit drawing-button fr-btn fr-btn--secondary fr-m-1w";
         button.id = this._addUID("drawing-export");
         button.type = "button";
         button.textContent = buttonLabel;
