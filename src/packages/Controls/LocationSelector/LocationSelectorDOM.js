@@ -59,7 +59,7 @@ var LocationSelectorDOM = {
         var buttonOrigin = document.createElement("button");
         buttonOrigin.id = this._addUID("GPlocationOriginLabel_" + id);
         buttonOrigin.innerHTML = text;
-        buttonOrigin.className = "GPlocationOriginLabel gpf-btn gpf-btn-icon-label fr-btn";
+        buttonOrigin.className = "GPlocationOriginLabel gpf-btn gpf-btn-icon-label fr-btn fr-btn--secondary";
         buttonOrigin.addEventListener("click", function (e) {
             var i = ID.index(this.id);
             var points = document.getElementsByClassName(self._addUID("GPlocationPoint"));
@@ -75,10 +75,10 @@ var LocationSelectorDOM = {
             document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementShow gpf-show  gpf-input fr-input";
             document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).className = "GPelementHidden gpf-hidden";
             if (document.getElementById(self._addUID("GPlocationStageRemove_" + i))) {
-                document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm";
+                document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary";
             }
             if (document.getElementById(self._addUID("GPlocationStageAdd"))) {
-                document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm";
+                document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary";
             }
             // document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).disabled = true;
             self.onLocationClearPointClick(e);
@@ -243,7 +243,7 @@ var LocationSelectorDOM = {
         var buttonOriginPointer = document.createElement("button");
         buttonOriginPointer.id = this._addUID("GPlocationOriginPointerImg_" + id);
         buttonOriginPointer.htmlFor = this._addUID("GPlocationOriginPointer_" + id);
-        buttonOriginPointer.className = "GPlocationOriginPointerImg gpf-btn gpf-btn-icon-pointer fr-btn";
+        buttonOriginPointer.className = "GPlocationOriginPointerImg gpf-btn gpf-btn-icon-pointer fr-btn fr-btn--secondary";
         buttonOriginPointer.title = "Pointer un lieu sur la carte";
         buttonOriginPointer.addEventListener("click", function (e) {
             e.preventDefault();
@@ -273,10 +273,10 @@ var LocationSelectorDOM = {
                     document.getElementById(self._addUID("GPlocationPoint_" + id)).style.cssText = "";
                 }
                 if (document.getElementById(self._addUID("GPlocationStageRemove_" + i))) {
-                    document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPlocationStageRemove  gpf-btn gpf-btn-icon-remove fr-btn--sm";
+                    document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPlocationStageRemove  gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary";
                 }
                 if (document.getElementById(self._addUID("GPlocationStageAdd"))) {
-                    document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm";
+                    document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary";
                 }
                 document.getElementById(self._addUID("GPlocationOriginPointer_" + i)).checked = false;
                 document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementShow gpf-show  gpf-input fr-input";
@@ -324,7 +324,7 @@ var LocationSelectorDOM = {
 
         var buttonRm = document.createElement("button");
         buttonRm.id = this._addUID("GPlocationStageRemove_" + id);
-        buttonRm.className = "GPlocationOpen GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm";
+        buttonRm.className = "GPlocationOpen GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary";
         buttonRm.title = "Supprimer l'étape";
         buttonRm.setAttribute("tabindex", "0");
         buttonRm.setAttribute("aria-pressed", false);
@@ -372,7 +372,7 @@ var LocationSelectorDOM = {
 
         var buttonAdd = document.createElement("button");
         buttonAdd.id = this._addUID("GPlocationStageAdd");
-        buttonAdd.className = "GPlocationOpen GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm";
+        buttonAdd.className = "GPlocationOpen GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary";
         buttonAdd.title = "Ajouter une étape";
         buttonAdd.setAttribute("tabindex", "0");
         buttonAdd.setAttribute("aria-pressed", false);
@@ -495,7 +495,7 @@ var LocationSelectorDOM = {
                     var id2 = ID.index(tag);
                     document.getElementById(this._addUID("GPlocationPoint_" + id2)).style.cssText = "";
                     if (document.getElementById(this._addUID("GPlocationStageRemove_" + id2))) {
-                        document.getElementById(this._addUID("GPlocationStageRemove_" + id2)).className = "GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm";
+                        document.getElementById(this._addUID("GPlocationStageRemove_" + id2)).className = "GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary";
                     }
                 }
                 document.getElementById(this._addUID("GPlocationOriginPointer_" + id1)).checked = false;

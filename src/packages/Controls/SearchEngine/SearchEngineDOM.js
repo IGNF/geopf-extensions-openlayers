@@ -219,7 +219,7 @@ var SearchEngineDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPsearchInputReset");
-        buttonReset.className = "GPshowOpen gpf-btn gpf-btn-icon-close fr-btn"; /* not use : fr-btn--close */
+        buttonReset.className = "GPshowOpen gpf-btn gpf-btn-icon-close fr-btn fr-btn--secondary"; /* not use : fr-btn--close */
         // Reset input
         buttonReset.addEventListener("click", function (e) {
             // FIXME event déclenché sur la frappe "return" dans la zone de saisie !?
@@ -246,7 +246,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowAdvancedSearch");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn fr-btn--secondary";
         button.title = "Ouvrir la recherche avancée";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -431,7 +431,7 @@ var SearchEngineDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPadvancedSearchClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer la recherche avancée";
 
         if (divClose.addEventListener) {
@@ -578,7 +578,7 @@ var SearchEngineDOM = {
         var input = document.createElement("input");
         input.type = "submit";
         input.id = this._addUID("GPadvancedSearchSubmit");
-        input.className = "GPsubmit gpf-btn gpf-btn-submit fr-btn";
+        input.className = "GPsubmit gpf-btn gpf-btn-submit fr-btn fr-btn--secondary";
         input.value = "Chercher";
 
         return input;
@@ -705,7 +705,7 @@ var SearchEngineDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPgeocodeResultsClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer la fenêtre de résultats";
 
         if (divClose.addEventListener) {

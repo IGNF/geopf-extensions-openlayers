@@ -135,7 +135,7 @@ var IsoDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPisochronPanelClose");
-        divClose.className = "GPpanelClose GPisochronPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose GPisochronPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -678,7 +678,7 @@ var IsoDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowIsoExclusionsPicto");
-        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto gpf-btn fr-btn--sm fr-icon-arrow-down-fill";
+        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
         button.title = "Exclusions";
         // button.style.top = "240px";
         button.setAttribute("tabindex", "0");
@@ -843,7 +843,7 @@ var IsoDOM = {
     _createIsoSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPisochronSubmit");
-        input.className = "GPsubmit gpf-btn fr-btn";
+        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary";
         input.type = "submit";
         input.value = "Calculer";
 
@@ -864,7 +864,7 @@ var IsoDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPisochronReset");
-        buttonReset.className = "GPresetPicto GPisochronReset gpf-btn gpf-btn-icon-reset fr-btn";
+        buttonReset.className = "GPresetPicto GPisochronReset gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary";
         buttonReset.title = "Réinitialiser les paramètres";
         buttonReset.setAttribute("tabindex", "0");
         buttonReset.setAttribute("aria-pressed", false);
