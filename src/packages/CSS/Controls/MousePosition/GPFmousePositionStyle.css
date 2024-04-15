@@ -1,5 +1,8 @@
 
 /* General panels */
+[id^=GPmousePositionPanel-] {
+  width: 280px;
+}
 
 .GPmousePositionEditTool {
     background-image: url("img/GPmousePositionEditCoordinates.png");

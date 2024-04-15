@@ -1,4 +1,7 @@
 /* ISOCHRON */
+[id^=GPisochronPanel-] {
+  width: 280px;
+}
 
 .GPshowIsochronPicto {
   background-image: url("img/GPisochronOpen.png");
@@ -41,7 +44,7 @@ div[id^=GPisochronChoice] {
 .GPisochronChoiceAltImg,
 .GPisochronTransportImg {
   background-image: url("img/GPisochronOptions.png");
-  content-visibility: hidden;
+  font-size: 0;
 }
 
 .GPisoExclusionsOption {

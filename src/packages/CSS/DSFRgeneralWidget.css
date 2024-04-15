@@ -22,8 +22,13 @@
 .gpf-panel__body {
   overflow: unset;
 }
+
 .gpf-panel__header {}
-.gpf-panel__title {}
+
+.gpf-panel__title {
+  text-align: center;
+}
+
 .gpf-panel__footer {
   background-color: transparent;
   padding: 0;

@@ -25,7 +25,6 @@ button[id^="GPshowReverseGeocodingPicto-"][aria-pressed="true"] + dialog {
   position: absolute;
   left: 34px;
   top: 0px;
-  width: 280px;
   height: inherit;
 }
 

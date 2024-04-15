@@ -133,7 +133,7 @@ var LayerImportDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPimportPanelClose");
-        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -621,7 +621,7 @@ var LayerImportDOM = {
 
         // close picto
         var closeDiv = document.createElement("button");
-        closeDiv.className = "GPpanelClose GPimportGetCapPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        closeDiv.className = "GPpanelClose GPimportGetCapPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
         closeDiv.title = "Fermer le panneau";
         closeDiv.id = this._addUID("GPimportGetCapPanelClose");
         if (closeDiv.addEventListener) {
@@ -772,7 +772,7 @@ var LayerImportDOM = {
 
         // close picto
         var closeDiv = document.createElement("button");
-        closeDiv.className = "GPpanelClose GPimportMapBoxPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        closeDiv.className = "GPpanelClose GPimportMapBoxPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
         closeDiv.title = "Fermer le panneau";
         closeDiv.id = this._addUID("GPimportMapBoxPanelClose");
         if (closeDiv.addEventListener) {

@@ -1,5 +1,13 @@
 
 /* Import form */
+[id^="GPimportPanel-"] {
+  width: 280px;
+}
+
+[id^="GPimportGetCapPanel-"],
+[id^="GPimportMapBoxPanel-"] {
+  width: 340px;
+}
 
 .GPshowImportPicto {
   background-image: url("img/GPimportOpen.png");

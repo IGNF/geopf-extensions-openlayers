@@ -22,7 +22,6 @@ button[id^="GPshowIsochronPicto-"][aria-pressed="true"] + dialog {
 /* General panels */
 
 [id^=GPisochronPanel-] {
-  width: 280px;
   position: absolute;
   height: inherit;
   top: 0px;

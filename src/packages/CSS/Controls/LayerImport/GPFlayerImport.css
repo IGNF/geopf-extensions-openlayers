@@ -37,13 +37,11 @@ button[id^="GPshowImportPicto-"][aria-pressed="true"] + dialog {
 
 [id^="GPimportPanel-"] {
     position: absolute;
-    width: 280px;
 }
 
 [id^="GPimportGetCapPanel-"],
 [id^="GPimportMapBoxPanel-"] {
     position: absolute;
-    width: 340px;
 }
 
 [id^="GPimportGetCapPanel-"],

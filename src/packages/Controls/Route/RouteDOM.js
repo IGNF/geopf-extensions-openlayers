@@ -115,13 +115,13 @@ var RouteDOM = {
         container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-m-1w";
         div.innerHTML = "Calcul d'itinéraire";
         container.appendChild(div);
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GProutePanelClose");
-        divClose.className = "GPpanelClose GProutePanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.className = "GPpanelClose GProutePanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
         divClose.title = "Masquer le panneau";
 
         // Link panel close / visibility checkbox
