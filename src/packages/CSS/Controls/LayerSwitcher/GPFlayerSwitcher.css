@@ -33,14 +33,6 @@ input[id^=GPshowLayersList-] {
 
 /* Showing/hiding layers list */
 
-button[id^=GPshowLayersListPicto] {
-  float: right;
-  /* transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s; */
-  background-position: -2px center;
-  background-repeat: no-repeat;
-  background-image: url("img/GPshowLayersList.png");
-}
-
 button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog {
   display: none;
   visibility: hidden;
@@ -69,12 +61,6 @@ dialog[id^=GPlayersList] {
   opacity: 0;
   overflow: auto;
   /* transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0.25s; */
-}
-
-button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
-  max-height: 232px;
-  width: 180px;
-  opacity: 1;
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersList] {

@@ -92,6 +92,20 @@ var LayerSwitcherDOM = {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPlayersList");
         dialog.className = "GPpanel gpf-panel fr-modal";
+        // Ajout de l'entête (dsfr uniquement)
+        var header = document.createElement("h1");
+        header.className = "frx-float__title";
+        var span = document.createElement("span");
+        span.className = "fr-icon-layers";
+        span.ariaHidden = true;
+        header.appendChild(span);
+        var headerText = document.createTextNode("Couches de données");
+        header.appendChild(headerText);
+        var button = document.createElement("button");
+        button.className = "fr-btn--close fr-btn";
+        header.appendChild(button);
+        dialog.appendChild(header);
+
         return dialog;
     },
 
@@ -111,7 +125,7 @@ var LayerSwitcherDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowLayersListPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-layerswitcher fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-layerswitcher fr-btn fr-icon-cartes-donnees frx-btn--toolbar frx-always-show";
         button.htmlFor = this._addUID("GPshowLayersList");
         button.title = "Afficher/masquer le gestionnaire de couches";
         button.setAttribute("tabindex", "0");

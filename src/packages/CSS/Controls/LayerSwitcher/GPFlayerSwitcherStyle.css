@@ -1,10 +1,26 @@
 /* LAYER SWITCHER OL3 */
 
-
+button[id^=GPshowLayersListPicto] {
+  float: right;
+  /* transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s; */
+  background-position: -2px center;
+  background-repeat: no-repeat;
+  background-image: url("img/GPshowLayersList.png");
+}
 
 
 
 /* Layers list */
+
+dialog[id^=GPlayersList-] > .frx-float__title {
+  display: none;
+}
+
+button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
+  max-height: 232px;
+  width: 180px;
+  opacity: 1;
+}
 
 
 /* Layer info panel */

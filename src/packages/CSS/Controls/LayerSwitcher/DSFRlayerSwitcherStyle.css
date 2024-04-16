@@ -1,0 +1,119 @@
+/** Button **/
+.frx-btn--toolbar {
+  background: #949494;
+}
+
+.fr-btn[class^="fr-icon-"]:not([class*="fr-btn--icon-"])::before, .fr-btn[class*=" fr-icon-"]:not([class*="fr-btn--icon-"])::before, .fr-btn[class^="fr-fi-"]:not([class*="fr-btn--icon-"])::before, .fr-btn[class*=" frf-fi-"]:not([class*="fr-btn--icon-"])::before {
+  --icon-size: 1.5rem;
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+[class^="fr-icon-"]::before, [class^="fr-icon-"]::after, [class*=" fr-icon-"]::before, [class*=" fr-icon-"]::after, [class^="fr-fi-"]::before, [class^="fr-fi-"]::after, [class*=" fr-fi-"]::before, [class*=" fr-fi-"]::after {
+  flex: 0 0 auto;
+  display: inline-block;
+  vertical-align: calc((0.75em - var(--icon-size)) * 0.5);
+  background-color: currentColor;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  --icon-size: 1.5rem;
+}
+
+.fr-icon-cartes-donnees::before, .fr-icon-cartes-donnees::after {
+  -webkit-mask-image: url(./img/cartes-donnees.svg);
+  mask-image: url(./img/cartes-donnees.svg);
+}
+
+.frx-toolbar-left .frx-btn--toolbar[aria-pressed="true"]::after, .frx-toolbar-right .frx-btn--toolbar[aria-pressed="true"]::after, .frx-btn--toolbar.frx-btn--toolbar-action[aria-pressed="true"]::after, .frx-btn--toolbar-subaction[aria-pressed="true"]::after {
+  content: " ";
+  display: block;
+  width: 2px;
+  height: 40px;
+  background-color: var(--hover-tint);
+  position: absolute;
+  top: 0;
+  left: -4px;
+  mask-image: none;
+}
+
+.frx-toolbar-right .frx-btn--toolbar[aria-pressed="true"]::after, .frx-btn--toolbar.frx-btn--toolbar-action[aria-pressed="true"]::after, .frx-btn--toolbar-subaction[aria-pressed="true"]::after {
+  left: auto;
+  right: -4px;
+}
+
+/** END Button **/
+
+/** Layer List **/
+dialog[id^=GPlayersList-].fr-modal {
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  z-index: 2;
+  width: 350px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0px 10px 18px -16px rgba(0, 0, 0, 0.39);
+  -webkit-box-shadow: 0px 10px 18px -16px rgba(0, 0, 0, 0.39);
+  -moz-box-shadow: 0px 10px 18px -16px rgba(0, 0, 0, 0.39);
+  top: 0px;
+  right: 54px;
+  left: auto;
+  position: absolute;
+}
+
+button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
+  height: fit-content;
+  max-height: 500px;
+  width: 350px;
+  opacity: 1;
+}
+
+/** Header **/
+
+.frx-float__title {
+  background: #E3E3FD;
+  color: #101092;
+  padding: 12px 15px;
+  position: relative;
+  font-size: 1rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+h1.frx-float__title {
+  padding-top: 0;
+  padding-bottom: 0
+}
+
+.frx-float__title [class^="fr-icon-"]::before {
+  --icon-size: 1.1rem;
+  margin-right: 4px;
+}
+
+.fr-icon-layers::before, .fr-icon-layers::after {
+  -webkit-mask-image: url(./img/layers.svg);
+  mask-image: url(./img/layers.svg);
+}
+
+.frx-data-layers .frx-float__title .fr-btn--close {
+  right: 10px;
+}
+
+.frx-float__title .fr-btn--close {
+  padding: 0.25rem 0.5rem;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+}
+
+.frx-float__title .fr-btn--close::after {
+  margin: 0;
+}
+
+/** END Header **/
+/** END Layer List **/
