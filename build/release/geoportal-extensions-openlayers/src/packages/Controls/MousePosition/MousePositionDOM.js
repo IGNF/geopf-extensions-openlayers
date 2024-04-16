@@ -136,7 +136,7 @@ var MousePositionDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPmousePositionPanelClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-btn-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -500,7 +500,7 @@ var MousePositionDOM = {
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMousePositionSettings");
 
-        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto gpf-btn fr-btn--sm fr-icon-arrow-down-fill";
+        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
         button.title = "Réglages";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

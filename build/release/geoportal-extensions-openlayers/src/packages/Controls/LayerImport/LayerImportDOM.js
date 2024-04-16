@@ -133,7 +133,7 @@ var LayerImportDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPimportPanelClose");
-        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -577,7 +577,7 @@ var LayerImportDOM = {
     _createImportSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPimportSubmit");
-        input.className = "GPsubmit gpf-btn fr-btn";
+        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary";
         input.type = "submit";
         input.value = "Importer";
 
@@ -621,7 +621,7 @@ var LayerImportDOM = {
 
         // close picto
         var closeDiv = document.createElement("button");
-        closeDiv.className = "GPpanelClose GPimportGetCapPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
+        closeDiv.className = "GPpanelClose GPimportGetCapPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         closeDiv.title = "Fermer le panneau";
         closeDiv.id = this._addUID("GPimportGetCapPanelClose");
         if (closeDiv.addEventListener) {
@@ -677,7 +677,7 @@ var LayerImportDOM = {
 
         // label for
         var label = document.createElement("label");
-        label.className = "GPimportGetCapRubriqueTitle gpf-label fr-btn";
+        label.className = "GPimportGetCapRubriqueTitle gpf-label fr-btn fr-btn--secondary";
         label.htmlFor = input.id;
         label.innerHTML = title;
         label.title = title;
@@ -749,7 +749,7 @@ var LayerImportDOM = {
         var returnDiv = document.createElement("button");
         returnDiv.id = this._addUID("GPimportMapBoxPanelReturnPicto");
         returnDiv.title = "Masquer le panneau";
-        returnDiv.className = "GPreturnPicto GPimportMapBoxPanelReturnPicto gpf-btn gpf-btn-icon-return fr-btn";
+        returnDiv.className = "GPreturnPicto GPimportMapBoxPanelReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary";
         if (returnDiv.addEventListener) {
             returnDiv.addEventListener("click", function (e) {
                 document.getElementById(context._addUID("GPshowImportPicto")).click();
@@ -772,7 +772,7 @@ var LayerImportDOM = {
 
         // close picto
         var closeDiv = document.createElement("button");
-        closeDiv.className = "GPpanelClose GPimportMapBoxPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
+        closeDiv.className = "GPpanelClose GPimportMapBoxPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         closeDiv.title = "Fermer le panneau";
         closeDiv.id = this._addUID("GPimportMapBoxPanelClose");
         if (closeDiv.addEventListener) {
