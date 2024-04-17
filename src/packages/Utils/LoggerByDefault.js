@@ -20,6 +20,13 @@ var LoggerByDefault = {
      * @returns {Object} logger
      */
     getLogger : function (name) {
+        // on définit process si non défini dans l'environnement
+        if (typeof process === "undefined") {
+            var process = {};
+            process.env = {
+                VERBOSE : false
+            };
+        }
         (process.env.VERBOSE) ? Log.enableAll() : Log.disableAll();
         var logname = name || "default";
         return Log.getLogger(logname);
