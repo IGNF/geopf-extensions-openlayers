@@ -1,4 +1,65 @@
 /* SEARCH ENGINE */
+
+.GPshowSearchEnginePicto {
+  background-image: url("img/GPsearchEngineOpen.png");
+  background-repeat: no-repeat;
+  background-position: 0 center;
+}
+
+.GPshowAdvancedSearch {
+  background-image: url("img/GPsearchEngineOpen.png");
+  background-position: -26px center;
+  background-repeat: no-repeat;
+  transition: border-radius 0.5s ease-out 0s;
+}
+
+.GPshowGeolocate {
+  background-image: url("img/GPsearchEngineOpen.png");
+  background-position: -102px center;
+  background-repeat: no-repeat;
+  transition: border-radius 0.5s ease-out 0s;
+}
+
+.GPshowSearchByCoordinate {
+  background-image: url("img/GPsearchEngineOpen.png");
+  background-position: -76px center;
+  background-repeat: no-repeat;
+  transition: border-radius 0.5s ease-out 0s;
+}
+
+.GPsearchInputReset {
+  background-image: url("img/GPsearchEngineClose.png");
+  background-position: 0 center;
+}
+
+button[id^=GPcoordinateSearchClose],
+button[id^=GPgeocodeResultsClose],
+button[id^=GPadvancedSearchClose] {
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 32px;
+}
+
+button[id^=GPcoordinateSearchClose],
+button[id^=GPgeocodeResultsClose] {
+  background-position: 0 0;
+}
+
+button[id^=GPadvancedSearchClose] {
+  background-repeat: no-repeat;
+}
+
+button[id^=GPcoordinateSearchClose],
+button[id^="GPgeocodeResultsClose"] {
+  background-image: url("img/GPsearchEngineClose.png");
+}
+
+button[id^="GPadvancedSearchClose"] {
+  background-image: url("img/GPsearchEngineOpen.png");
+  background-position: -50px 3px;
+}
+
 form[id^=GPsearchInput-] input {
   display: block;
   width: 100%;

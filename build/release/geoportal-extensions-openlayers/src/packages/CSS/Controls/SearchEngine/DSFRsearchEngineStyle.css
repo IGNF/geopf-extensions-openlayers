@@ -1,0 +1,40 @@
+.gpf-widget-padding {
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 5px;
+}
+.gpf-widget-color {
+    background-color: #ffffff;
+}
+
+.gpf-btn-icon-search {
+    background-image: url("img/GPsearchEngineOpen.png");
+    background-repeat: no-repeat;
+    background-position: 3px center;
+}
+/* hack pour forcer la couleur d'un element desactivé */
+.gpf-btn-icon-search:disabled {
+    background-color: #000091; 
+}
+.gpf-btn-icon-search-advanced {
+    background-image: url("img/GPsearchEngineOpen.png");
+    background-position: -24px center;
+    background-repeat: no-repeat;
+}
+.gpf-btn-icon-search-geolocate {
+    background-image: url("img/GPsearchEngineOpen.png");
+    background-position: -102px center;
+    background-repeat: no-repeat;
+}
+.gpf-btn-icon-search-coordinate {
+    background-image: url("img/GPsearchEngineOpen.png");
+    background-position: -76px center;
+    background-repeat: no-repeat;
+}
+
+.gpf-btn-icon-reset {
+  background-image: url("img/GPsearchEngineClose.png");
+  background-position: 0 center;
+}
+.gpf-btn-icon-close {}

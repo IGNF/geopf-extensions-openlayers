@@ -31,27 +31,26 @@ var SearchEngineDOM = {
 
     /**
      * Show search engine
-     *
+     * @param {Boolean} force - ...
      * @returns {DOMElement} DOM element
      */
-    _createShowSearchEnginePictoElement : function () {
+    _createShowSearchEnginePictoElement : function (force) {
         // contexte d'execution
         var self = this;
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowSearchEnginePicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-search fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn gpf-btn-icon-search fr-btn";
         button.title = "Afficher/masquer la recherche par lieux";
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", false);
+        button.setAttribute("aria-pressed", force);
+        button.disabled = force;
 
         // Close all results and panels when minimizing the widget
         button.addEventListener("click", function (e) {
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
-            if (status) {
-                // somme stuff...
-            }
+            if (status) {}
             
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
@@ -60,7 +59,16 @@ var SearchEngineDOM = {
             var showAdvancedSearch = document.getElementById(self._addUID("GPshowAdvancedSearch"));
             if (showAdvancedSearch) {
                 showAdvancedSearch.style.display = null;
-                document.getElementById(self._addUID("GPadvancedSearchPanel")).style.display = "none";
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+            }
+            var showGeolocate = document.getElementById(self._addUID("GPshowGeolocate"));
+            if (showGeolocate) {
+                showGeolocate.style.display = null;
+            }
+            var showCoordinate = document.getElementById(self._addUID("GPshowSearchByCoordinate"));
+            if (showCoordinate) {
+                showCoordinate.style.display = null;
             }
             var id = "#GPsearchInput-" + self._uid;
             document.querySelector(id + " input").disabled = false; // FIXME form[id^=GPsearchInput] = #GPsearchInput ?
@@ -207,8 +215,6 @@ var SearchEngineDOM = {
         });
 
         form.appendChild(input);
-        // ajout du bouton reset
-        form.appendChild(this._createSearchResetElement());
 
         return form;
     },
@@ -219,7 +225,7 @@ var SearchEngineDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPsearchInputReset");
-        buttonReset.className = "GPshowOpen gpf-btn gpf-btn-icon-close fr-btn fr-btn--secondary"; /* not use : fr-btn--close */
+        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset fr-btn"; /* not use : fr-btn--close fr-btn--secondary */
         // Reset input
         buttonReset.addEventListener("click", function (e) {
             // FIXME event déclenché sur la frappe "return" dans la zone de saisie !?
@@ -235,6 +241,13 @@ var SearchEngineDOM = {
         return buttonReset;
     },
 
+    
+    _createButtonsElement : function () {
+        var div = document.createElement("div");
+        div.className = "GPbuttonsContainer";
+        return div;
+    },
+
     /**
      * Show advanced search panel
      *
@@ -246,8 +259,54 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowAdvancedSearch");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn fr-btn fr-btn--secondary";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch gpf-btn gpf-btn-icon-search-advanced fr-btn"; /* not use : fr-btn--secondary */
         button.title = "Ouvrir la recherche avancée";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
+
+        // Open advanced search
+        button.addEventListener("click", function (e) {
+            var status = (e.target.ariaPressed === "true");
+            e.target.setAttribute("aria-pressed", !status);
+            
+            var id = "#GPsearchInput-" + self._uid;
+            if (status) {
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+                document.querySelector(id + " input").disabled = false;
+            } else {
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementHidden", "GPelementVisible");
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-hidden", "gpf-visible");
+                document.querySelector(id + " input").disabled = true;
+            }
+            
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
+
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
+
+            document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+            document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
+        });
+
+        return button;
+    },
+
+    /**
+     * Show geolocate button
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createShowGeolocateElement : function () {
+        // contexte d'execution
+        var self = this;
+
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowGeolocate");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGeolocate gpf-btn gpf-btn-icon-search-geolocate fr-btn";
+        button.title = "Activer la geolocalisation";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
 
@@ -258,21 +317,62 @@ var SearchEngineDOM = {
             if (status) {
                 // somme stuff...
             }
+            self.onShowSearchGeolocateClick();
+        });
+
+        return button;
+    },
+
+    /**
+     * Show search by coordinate button 
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createShowSearchByCoordinateElement : function () {
+        // contexte d'execution
+        var self = this;
+
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowSearchByCoordinate");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchByCoordinate gpf-btn gpf-btn-icon-search-coordinate fr-btn";
+        button.title = "Ouvrir la recherche par coordonnées";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
+
+        // Open advanced search
+        button.addEventListener("click", function (e) {
+            var status = (e.target.ariaPressed === "true");
+            e.target.setAttribute("aria-pressed", !status);
             var id = "#GPsearchInput-" + self._uid;
-            document.querySelector(id + " input").disabled = true;
-            
+            if (status) {
+                document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+                document.querySelector(id + " input").disabled = false;
+            } else {
+                document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementHidden", "GPelementVisible");
+                document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-hidden", "gpf-visible");
+                document.querySelector(id + " input").disabled = true;
+            }
+
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
 
             document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
             document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
 
-            document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "none";
-            document.getElementById(self._addUID("GPadvancedSearchPanel")).style.display = "inline-block";
+            document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+            document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+            document.getElementById(self._addUID("GPshowAdvancedSearch")).setAttribute("aria-pressed", false);
+
+            self.onShowSearchByCoordinateClick();
         });
 
         return button;
     },
+
+    // ################################################################### //
+    // ################### Methods of advanced search #################### //
+    // ################################################################### //
 
     /**
      * Advanced search panel
@@ -284,9 +384,9 @@ var SearchEngineDOM = {
      * @returns {DOMElement} DOM element
      */
     _createAdvancedSearchPanelElement : function () {
-        var div = document.createElement("div");
+        var div = document.createElement("dialog");
         div.id = this._addUID("GPadvancedSearchPanel");
-        div.className = "GPpanel gpf-panel fr-modal";
+        div.className = "GPpanel GPelementHidden gpf-panel gpf-hidden fr-modal";
 
         // FIXME on decompose la fonction pour les besoins du controle,
         // on ajoutera ces childs à la main...
@@ -311,7 +411,7 @@ var SearchEngineDOM = {
      * @returns {DOMElement} DOM element
      */
     _createGeocodeResultsElement : function () {
-        var div = document.createElement("div");
+        var div = document.createElement("dialog");
         div.id = this._addUID("GPgeocodeResultsList");
         div.className = "GPpanel GPelementHidden gpf-panel gpf-hidden fr-modal";
 
@@ -321,6 +421,12 @@ var SearchEngineDOM = {
         // on ajoutera ces childs à la main...
         // div.appendChild(this._createGeocodeResultsListElement ());
 
+        return div;
+    },
+
+    _createGeocodeResultsDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
         return div;
     },
 
@@ -341,6 +447,34 @@ var SearchEngineDOM = {
         // on ajoutera ces childs à la main...
         // div.appendChild(this._createAutoCompleteListElement ());
 
+        return div;
+    },
+
+    /**
+     * Coordinate search panel
+     *
+     * FIXME
+     * don't call this._createCoordinateSearchPanelHeaderElement
+     * don't call this._createCoordinateSearchPanelFormElement
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createCoordinateSearchPanelElement : function () {
+        var div = document.createElement("dialog");
+        div.id = this._addUID("GPcoordinateSearchPanel");
+        div.className = "GPpanel GPelementHidden gpf-panel gpf-hidden fr-modal";
+
+        // FIXME on decompose la fonction pour les besoins du controle,
+        // on ajoutera ces childs à la main...
+        // div.appendChild(this._createCoordinateSearchPanelHeaderElement ());
+        // div.appendChild(this._createCoordinateSearchPanelFormElement ());
+
+        return div;
+    },
+
+    _createCoordinateSearchPanelDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
         return div;
     },
 
@@ -431,7 +565,7 @@ var SearchEngineDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPadvancedSearchClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer la recherche avancée";
 
         if (divClose.addEventListener) {
@@ -440,9 +574,10 @@ var SearchEngineDOM = {
                 document.querySelector(id + " input").disabled = false;
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
-                document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
+                // document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
                 document.getElementById(self._addUID("GPshowAdvancedSearch")).setAttribute("aria-pressed", false);
-                document.getElementById(self._addUID("GPadvancedSearchPanel")).style.display = "none";
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
             }, false);
         } else if (divClose.attachEvent) {
             divClose.attachEvent("onclick", function () {
@@ -450,9 +585,10 @@ var SearchEngineDOM = {
                 document.querySelector(id + " input").disabled = false;
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
-                document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
+                // document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
                 document.getElementById(self._addUID("GPshowAdvancedSearch")).setAttribute("aria-pressed", false);
-                document.getElementById(self._addUID("GPadvancedSearchPanel")).style.display = "none";
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
             });
         }
 
@@ -578,7 +714,7 @@ var SearchEngineDOM = {
         var input = document.createElement("input");
         input.type = "submit";
         input.id = this._addUID("GPadvancedSearchSubmit");
-        input.className = "GPsubmit gpf-btn gpf-btn-submit fr-btn fr-btn--secondary";
+        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary";
         input.value = "Chercher";
 
         return input;
@@ -705,7 +841,7 @@ var SearchEngineDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPgeocodeResultsClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer la fenêtre de résultats";
 
         if (divClose.addEventListener) {
@@ -792,7 +928,129 @@ var SearchEngineDOM = {
         }
 
         container.appendChild(div);
-    }
+    },
+
+    // ################################################################### //
+    // ################## Coordinate search container #################### //
+    // ################################################################### //
+
+    _createCoordinateSearchPanelHeaderElement () {
+        // contexte d'execution
+        var self = this;
+
+        var container = document.createElement("div");
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+
+        var divTitle = document.createElement("div");
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        divTitle.innerHTML = "Recherche par coordonnées";
+        container.appendChild(divTitle);
+
+        var divClose = document.createElement("button");
+        divClose.id = this._addUID("GPcoordinateSearchClose");
+        divClose.className = "GPpanelClose GPcoordinateSearchClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.title = "Fermer la recherche par coordonnées";
+
+        if (divClose.addEventListener) {
+            divClose.addEventListener("click", function () {
+                var id = "#GPsearchInput-" + self._uid;
+                document.querySelector(id + " input").disabled = false;
+                document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
+                document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+            }, false);
+        } else if (divClose.attachEvent) {
+            divClose.attachEvent("onclick", function () {
+                var id = "#GPsearchInput-" + self._uid;
+                document.querySelector(id + " input").disabled = false;
+                document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
+                document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+            });
+        }
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        divClose.appendChild(span);
+
+        container.appendChild(divClose);
+
+        return container;
+    },
+    _createCoordinateSearchPanelFormElement () {
+        // contexte d'execution
+        var self = this;
+
+        var form = document.createElement("form");
+        form.id = this._addUID("GPCoordinateSearchForm");
+        form.className = "gpf-panel__content fr-modal__content";
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+           
+            return false;
+        });
+
+        var div = document.createElement("div");
+        div.className = "GPflexInput gpf-flex";
+
+        form.appendChild(div);
+
+        return form;
+    },
+    _createCoordinateSearchSubmitElement () {
+        var input = document.createElement("input");
+        input.type = "submit";
+        input.id = this._addUID("GPCoordinateSearchSubmit");
+        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary";
+        input.value = "Chercher";
+        return input;
+    },
+    _createCoordinateSearchSystemsElement (systems) {
+        // contexte d'execution
+        var context = this;
+
+        var selectSystem = document.createElement("select");
+        selectSystem.id = this._addUID("GPcoordinateSearchProjectionSystem");
+        selectSystem.className = "GPselect GPcoordinateSearchSelect gpf-select fr-select";
+        selectSystem.addEventListener("change", function (e) {
+            context.onCoordinateSearchProjectionSystemChange(e);
+        });
+
+        for (var i = 0; i < systems.length; i++) {
+            var obj = systems[i];
+            var option = document.createElement("option");
+            option.value = obj.code;
+            option.text = obj.label || i;
+            // option.label = obj.label;
+            selectSystem.appendChild(option);
+        }
+
+        return selectSystem;
+    },
+    _createCoordinateSearchUnitsElement (units) {
+        // contexte d'execution
+        var context = this;
+
+        var selectUnits = document.createElement("select");
+        selectUnits.id = this._addUID("GPcoordinateSearchProjectionUnits");
+        selectUnits.className = "GPselect GPcoordinateSearchSelect gpf-select fr-select";
+        selectUnits.addEventListener("change", function (e) {
+            context.onCoordinateSearchProjectionUnitsChange(e);
+        });
+
+        for (var j = 0; j < units.length; j++) {
+            var obj = units[j];
+            var option = document.createElement("option");
+            option.value = (obj.code) ? obj.code : j;
+            option.text = obj.label || j;
+            // option.label = obj.label;
+            selectUnits.appendChild(option);
+        }
+
+        return selectUnits;
+    },
 };
 
 export default SearchEngineDOM;

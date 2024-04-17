@@ -5,7 +5,11 @@ import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 // import Control from "ol/control/Control";
 import Control from "../Control";
 import Overlay from "ol/Overlay";
-import { transform as olProjTransform } from "ol/proj";
+import {
+    transform as olProjTransform,
+    get as olProjGet,
+    transformExtent as olProjTransformExtent
+} from "ol/proj";
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
@@ -16,6 +20,7 @@ import Interactions from "../Utils/Interactions";
 import SelectorID from "../../Utils/SelectorID";
 import SearchEngineUtils from "../../Utils/SearchEngineUtils";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
+import CRS from "../../CRS/CRS";
 // DOM
 import SearchEngineDOM from "./SearchEngineDOM";
 
@@ -30,51 +35,102 @@ var logger = Logger.getLogger("searchengine");
  * @type {ol.control.SearchEngine}
  * @alias ol.control.SearchEngine
  * @param {Object}  options - control options
- * @param {String}   [options.apiKey] - API key. The key "calcul" is used by default.
- * @param {Boolean}   [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+ * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
+ * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - collapse mode, true by default
+ * @param {Boolean} [options.opened = false] - force control to be never collapsed, false by default.
+ * @param {String}  [options.direction = "start"] - TODO : position of picto, by default : "start"
+ * @param {String}  [options.placeholder] - Placeholder in search bar. Default is "Rechercher un lieu, une adresse".
+ * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
+ * @param {String}  [options.markerStyle = "lightOrange"] - Marker style. Currently possible values are "lightOrange" (default value), "darkOrange", "red" and "turquoiseBlue".
+ * @param {Boolean} [options.displayButtonAdvancedSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
+ * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
+ * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
+ * @param {Boolean} [options.displayButtonClose = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
+ * @param {Object}  [options.coordinateSearch] - TODO : coordinates search options.
+ * @param {DOMElement} [options.coordinateSearch.target = null] - target location of results window. By default under the search bar.
+ * @param {Array}   [options.coordinateSearch.units] - list of coordinates units, to be displayed in control units list.
+ *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal) for geographical coordinates,
+ *      and "M" or "KM" for metric coordinates
+ * @param {Array}   [options.coordinateSearch.systems] - list of projection systems, default are Geographical ("EPSG:4326"), Web Mercator ("EPSG:3857") and Lambert 93 ("EPSG:2154").
+ *      Each array element (=system) is an object with following properties :
+ * @param {String}  [options.coordinateSearch.systems.crs] - Proj4 crs alias (from proj4 defs). e.g. : "EPSG:4326". Required
+ * @param {String}  [options.coordinateSearch.systems.label] - CRS label to be displayed in control. Default is crs code (e.g. "EPSG:4326")
+ * @param {String}  [options.coordinateSearch.systems.type] - CRS units type for coordinates conversion : "Geographical" or "Metric". Default: "Metric"
+ * @param {Object}  [options.advancedSearch] - advanced search options for geocoding (filters). Properties can be found among geocode options.filterOptions (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
+ * @param {DOMElement} [options.advancedSearch.target = null] - TODO : target location of results window. By default under the search bar.
+ * @param {Object}  [options.resources] - resources to be used by geocode and autocompletion services :
+ * @param {String}  [options.resources.geocode = "location"] - resources geocoding, by default : "location"
+ * @param {Array}   [options.resources.autocomplete] - resources autocompletion, by default : ["PositionOfInterest", "StreetAddress"]
+ * @param {Boolean} [options.resources.search = false] - TODO : false to disable search service, by default : "false"
+ * @param {Object}  [options.searchOptions = {}] - TODO : options of search service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~search Gp.Services.search})
+ * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
+ * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
+ * @param {Object}  [options.geocodeOptions.serviceOptions] - options of geocode service
+ * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})
+ * @param {Object}  [options.autocompleteOptions.serviceOptions] - options of autocomplete service
+ * @param {Boolean} [options.autocompleteOptions.triggerGeocode = false] - trigger a geocoding request if the autocompletion does not return any suggestions, false by default
+ * @param {Number}  [options.autocompleteOptions.triggerDelay = 1000] - waiting time before sending the geocoding request, 1000ms by default
+ * @param {Sting|Numeric|Function} [options.zoomTo] - zoom to results, by default, current zoom.
  *       Value possible : auto or zoom level.
  *       Possible to overload it with a function :
  *       zoomTo : function (info) {
  *           // do some stuff...
  *           return zoom;
  *       }
- * @param {String}  [options.placeholder] - Placeholder in search bar. Default is "Rechercher un lieu, une adresse".
- * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
- * @param {String}  [options.markerStyle = "lightOrange"] - Marker style. Currently possible values are "lightOrange" (default value), "darkOrange", "red" and "turquoiseBlue".
- * @param {Boolean} [options.displayAdvancedSearch = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
- * @param {Object}  [options.advancedSearch] - advanced search options for geocoding (filters). Properties can be found among geocode options.filterOptions (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
- * @param {Object}   [options.resources] - resources to be used by geocode and autocompletion services :
- * @param {String}   [options.resources.geocode] - resources geocoding, by default : "location"
- * @param {Array}   [options.resources.autocomplete] - resources autocompletion, by default : ["PositionOfInterest", "StreetAddress"]
- * @param {Boolean}  [options.displayAdvancedSearch = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
- * @param {Object}  [options.advancedSearch] - advanced search options for geocoding (filters). Properties can be found among geocode options.filterOptions (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
- * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
- * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete}
- * @param {Object}  [options.autocompleteOptions.serviceOptions] - options of autocomplete service
- * @param {Boolean} [options.autocompleteOptions.triggerGeocode = false] - trigger a geocoding request if the autocompletion does not return any suggestions, false by default
- * @param {Number}  [options.autocompleteOptions.triggerDelay = 1000] - waiting time before sending the geocoding request, 1000ms by default
- * @param {Sting|Numeric|Function} [options.zoomTo] - zoom to results, by default, current zoom.
  * @fires searchengine:autocomplete:click
  * @fires searchengine:geocode:click
+ * @fires searchengine:search:click
+ * @todo ajouter le menu de recherche par coordonnées
+ * @todo option : direction (start|end) de la position du picto (loupe)
+ * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
+ * @todo ajouter le service de recherche (cf. geoportal-access-lib) ex: https://data.geopf.fr/recherche/api/indexes/geoplateforme/suggest?text=ORTHO&fields=title
+ * @todo prévoir la reponse du service de recherche dans les resultats de l'autocompletion
+ * @todo event : searchengine:search:click
  * @example
  *  var SearchEngine = ol.control.SearchEngine({
  *      apiKey : "CLEAPI",
  *      collapsed : true,
+ *      opened : false,
+ *      displayButtonAdvancedSearch : true,
+ *      displayButtonGeolocate : true,
+ *      displayButtonCoordinateSearch : true,
  *      resources : {
  *          geocode : ["StreetAddress", "PositionOfInterest"],
- *          autocomplete : ["StreetAddress"]
+ *          autocomplete : ["StreetAddress"],
+ *          search : false
  *      },
  *      advancedSearch : {
+ *          target : document.getElementById("dialog"),
  *          PositionOfInterest : [{name : "municipality", title : "Ville"}],
  *          StreetAddress : [{...}]
  *      },
+ *      coordinateSearch : {
+ *          target : null
+ *          systems : [
+ *            {
+ *              "crs" : "EPSG:3857",
+ *              "label" : "Web Mercator",
+ *              "type" : "Metric"
+ *            },
+ *            {
+ *              "crs" : "EPSG:4326",
+ *              "label" : "Géographiques",
+ *              "type" : "Geographical"
+ *            }
+ *          ],
+ *          units : ["DEC", "DMS"]
+ *      },
  *      geocodeOptions : {},
- *      autocompleteOptions : {}
+ *      autocompleteOptions : {},
+ *      searchOptions : {}
  *  });
  *
  *  SearchEngine.on("searchengine:autocomplete:click", function (e) {
  *    console.warn("autocomplete", e.location);
+ *  });
+ *  SearchEngine.on("searchengine:search:click", function (e) {
+ *    console.warn("search", e.location);
  *  });
  *  SearchEngine.on("searchengine:geocode:click", function (e) {
  *    console.warn("geocode", e.location);
@@ -196,13 +252,22 @@ var SearchEngine = class SearchEngine extends Control {
         // define default options
         this.options = {
             collapsed : true,
+            opened : false,
             zoomTo : "",
             resources : {
                 geocode : "",
-                autocomplete : []
+                autocomplete : [],
+                search : false
             },
-            displayAdvancedSearch : true,
+            displayButtonClose : true,
+            displayButtonAdvancedSearch : false,
+            displayButtonGeolocate : false,
+            displayButtonCoordinateSearch : false,
             advancedSearch : {},
+            coordinateSearch : {},
+            searchOptions : {
+                serviceOptions : {}
+            },
             geocodeOptions : {
                 serviceOptions : {}
             },
@@ -219,7 +284,8 @@ var SearchEngine = class SearchEngine extends Control {
         // merge with user options
         Utils.mergeParams(this.options, options);
         if (this.options.resources.geocode === "") {
-            this.options.resources.geocode = "address,poi";        }
+            this.options.resources.geocode = "location";
+        }
         if (this.options.resources.autocomplete.length === 0) {
             this.options.resources.autocomplete = ["PositionOfInterest", "StreetAddress"];
         }
@@ -254,7 +320,7 @@ var SearchEngine = class SearchEngine extends Control {
         // ressource de geocodage selectionnée pour le geocodage avancé
         this._currentGeocodingCode = null;
 
-        // localisant */
+        // localisant
         this._currentGeocodingLocation = null;
 
         // liste des filtres du geocodage pour le geocodage avancé
@@ -264,6 +330,21 @@ var SearchEngine = class SearchEngine extends Control {
         // liste des ressources du geocodage pour le geocodage avancé
         this._advancedSearchCodes = [];
         this._initAdvancedSearchCodes();
+
+        // recherche par coordonnées : systemes de projections
+        this._coordinateSearchSystems = [];
+        if (this.options.displayButtonCoordinateSearch) {
+            this._initCoordinateSearchSystems();
+        }
+
+        // recherche par coordonnées : unités
+        this._coordinateSearchUnits = [];
+        if (this.options.displayButtonCoordinateSearch) {
+            this._initCoordinateSearchUnits();
+        }
+
+        this._currentCoordinateSearchType = this._coordinateSearchSystems[0].type;
+        this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code;
 
         // marker
         this._marker = null;
@@ -422,6 +503,128 @@ var SearchEngine = class SearchEngine extends Control {
     }
 
     /**
+     * this method is called by the constructor and initialize the projection
+     * systems.
+     * getting coordinates in the requested projection :
+     * see this.onCoordinateSearchSystemChange()
+     *
+     * @private
+     */
+    _initCoordinateSearchSystems () {
+        // on donne la possibilité à l'utilisateur de modifier
+        // la liste des systèmes à afficher
+        // Ex. this.options.coordinateSearch.systems
+
+        // chargement des projections par defaut
+        CRS.loadByName("EPSG:4326");
+        CRS.loadByName("EPSG:3857");
+        CRS.loadByName("EPSG:2154");
+
+        // systemes de projection disponible par defaut
+        var projectionSystemsByDefault = [{
+            label : "G\u00e9ographique",
+            crs : olProjGet("EPSG:4326").getCode(),
+            type : "Geographical"
+        }, {
+            label : "Web Mercator",
+            crs : olProjGet("EPSG:3857").getCode(),
+            type : "Metric"
+        }, {
+            label : "Lambert 93",
+            crs : olProjGet("EPSG:2154").getCode(),
+            type : "Metric",
+            geoBBox : {
+                left : -9.86,
+                bottom : 41.15,
+                right : 10.38,
+                top : 51.56
+            }
+        }];
+
+        var systems = this.options.coordinateSearch.systems;
+        if (systems) {
+            // on ajoute les definitions d'un systeme de reference fournies par l'utilisateur
+            for (var i = 0; i < systems.length; i++) {
+                var sys = systems[i];
+                this._setSystem(sys);
+            }
+        }
+
+        // on ajoute les systèmes de projections par défaut
+        if (this._coordinateSearchSystems.length === 0) {
+            for (var j = 0; j < projectionSystemsByDefault.length; j++) {
+                this._setSystem(projectionSystemsByDefault[j]);
+            }
+        }
+    }
+
+    /**
+     * this method is called by the constructor and initialize the units.
+     * getting coordinates in the requested units :
+     * see this.onCoordinateSearchUnitsChange()
+     *
+     * @private
+     */
+    _initCoordinateSearchUnits () {
+        // on donne la possibilité à l'utilisateur de modifier
+        // la liste des unités à afficher
+        // Ex.
+        // this.options.units : ["DEC", "DMS"]
+
+        // unités disponible par defaut
+        var projectionUnitsByDefault = {
+            Geographical : [{
+                code : "DEC",
+                label : "degrés décimaux",
+                format : this._displayDEC
+            }, {
+                code : "DMS",
+                label : "degrés sexagésimaux",
+                format : this._displayDMS
+            }],
+            Metric : [{
+                code : "M",
+                label : "mètres",
+                format : this._displayMeter
+            }, {
+                code : "KM",
+                label : "kilomètres",
+                format : this._displayKMeter
+            }]
+        };
+
+        var units = this.options.coordinateSearch.units;
+        if (units) {
+            for (var type in projectionUnitsByDefault) {
+                if (projectionUnitsByDefault.hasOwnProperty(type)) {
+                    var found = false;
+                    for (var j = 0; j < projectionUnitsByDefault[type].length; j++) {
+                        var obj = projectionUnitsByDefault[type][j];
+                        for (var i = 0; i < units.length; i++) {
+                            var unit = units[i];
+                            if (obj.code === unit) {
+                                found = true;
+                                if (!this._coordinateSearchUnits[type]) {
+                                    this._coordinateSearchUnits[type] = [];
+                                }
+                                this._coordinateSearchUnits[type].push(obj);
+                            }
+                        }
+                    }
+                    if (!found) {
+                        this._coordinateSearchUnits[type] = projectionUnitsByDefault[type];
+                    }
+                }
+            }
+        }
+
+        // au cas où...
+        if (typeof this._coordinateSearchUnits === "object" && Object.keys(this._coordinateSearchUnits).length === 0) {
+            this._coordinateSearchUnits = projectionUnitsByDefault;
+        }
+    }
+
+    /**
      * this method is called by this.initialize() and initialize popup div
      * (to display results information on marker click)
      *
@@ -467,10 +670,19 @@ var SearchEngine = class SearchEngine extends Control {
         var container = this._createMainContainerElement();
 
         // create search engine picto
-        var picto = this._showSearchEngineButton = this._createShowSearchEnginePictoElement();
+        var picto = this._showSearchEngineButton = this._createShowSearchEnginePictoElement(this.options.opened);
         container.appendChild(picto);
+        
+        // only dsfr : on applique un fond blanc sur une barre de recherche fixe
+        if (this.options.opened) {
+            container.classList.add("gpf-widget-color", "gpf-widget-padding");
+        }
 
         var search = this._inputSearchContainer = this._createSearchInputElement(this.options.placeholder);
+        if (this.options.displayButtonClose) {
+            search.appendChild(this._createSearchResetElement());
+        }
+
         var context = this;
         if (search.addEventListener) {
             search.addEventListener("click", function () {
@@ -483,9 +695,12 @@ var SearchEngine = class SearchEngine extends Control {
         }
         container.appendChild(search);
 
-        if (this.options.displayAdvancedSearch) {
+        var buttonsContainer = this._createButtonsElement();
+        container.appendChild(buttonsContainer);
+
+        if (this.options.displayButtonAdvancedSearch) {
             var advancedShow = this._createShowAdvancedSearchElement();
-            container.appendChild(advancedShow);
+            buttonsContainer.appendChild(advancedShow);
 
             // INFO je decompose les appels car j'ai besoin de recuperer le container
             // des filtres
@@ -504,6 +719,34 @@ var SearchEngine = class SearchEngine extends Control {
             container.appendChild(advancedPanel);
         }
 
+        if (this.options.displayButtonGeolocate) {
+            var geolocateShow = this._createShowGeolocateElement();
+            buttonsContainer.appendChild(geolocateShow);
+        }
+        
+        if (this.options.displayButtonCoordinateSearch) {
+            var searchByCoordinateShow = this._createShowSearchByCoordinateElement();
+            buttonsContainer.appendChild(searchByCoordinateShow);
+
+            var coordinatePanel = this._createCoordinateSearchPanelElement();
+            var coordinatePanelDiv = this._createCoordinateSearchPanelDivElement();
+            var coordinateHeader = this._createCoordinateSearchPanelHeaderElement();
+            var coordinateForm = this._createCoordinateSearchPanelFormElement();
+
+            var systems =  this._createCoordinateSearchSystemsElement(this._coordinateSearchSystems);
+            var units = this._createCoordinateSearchUnitsElement(this._coordinateSearchUnits[this._currentCoordinateSearchType]);
+            var submit = this._createCoordinateSearchSubmitElement();
+            coordinateForm.appendChild(systems);
+            coordinateForm.appendChild(units);
+            coordinateForm.appendChild(submit);
+
+            coordinatePanelDiv.appendChild(coordinateHeader);
+            coordinatePanelDiv.appendChild(coordinateForm);
+
+            coordinatePanel.appendChild(coordinatePanelDiv);
+            container.appendChild(coordinatePanel);
+        }
+
         // INFO je decompose les appels car j'ai besoin de recuperer le container
         // des resultats de l'autocompletion
         var autocomplete = this._autocompleteContainer = this._createAutoCompleteElement();
@@ -514,8 +757,10 @@ var SearchEngine = class SearchEngine extends Control {
         // INFO je decompose les appels car j'ai besoin de recuperer le container
         // des resultats du geocodage
         var geocode = this._createGeocodeResultsElement();
+        var geocodeDiv = this._createGeocodeResultsDivElement();
+        geocode.appendChild(geocodeDiv);
         var geocodeList = this._geocodedContainer = this._createGeocodeResultsListElement();
-        geocode.appendChild(geocodeList);
+        geocodeDiv.appendChild(geocodeList);
         container.appendChild(geocode);
 
         return container;
@@ -1000,6 +1245,53 @@ var SearchEngine = class SearchEngine extends Control {
         }
     }
 
+    /**
+     * Set additional projection system
+     *
+     * @param {Object} system - projection system
+     * @param {String} system.crs - Proj4 crs alias (from proj4 defs) e.g. "EPSG:4326"
+     * @param {String} [system.label] - CRS label to be displayed in control. Default is system.crs alias
+     * @param {String} [system.type] - CRS units type for coordinates conversion (one of control options.units). Default is "Metric"
+     */
+    _setSystem (system) {
+        if (typeof system !== "object") {
+            logger.log("[ERROR] MousePosition:addSystem - system parameter should be an object");
+            return;
+        }
+        if (!system.crs) {
+            logger.error("crs not defined !");
+            return;
+        }
+        if (!system.label) {
+            logger.warn("crs label not defined, use crs code by default.");
+            system.label = system.crs;
+        }
+        if (!system.type) {
+            logger.warn("type srs not defined, use 'Metric' by default.");
+            system.type = "Metric";
+        }
+
+        // chargement de la definition de la projection
+        // même si déjà chargé...
+        CRS.loadByName(system.crs);
+
+        if (!olProjGet(system.crs)) {
+            logger.error("crs '{}' not available into proj4 definitions !", system.crs);
+            return;
+        }
+
+        // add system to control systems
+        for (var j = 0; j < this._coordinateSearchSystems.length; j++) {
+            var obj = this._coordinateSearchSystems[j];
+            if (system.crs === obj.crs) {
+                // warn user
+                logger.info("crs '{}' already configured", obj.crs);
+            }
+        }
+        system.code = this._coordinateSearchSystems.length;
+        this._coordinateSearchSystems.push(system);
+    }
+
     // ################################################################### //
     // ###################### other handlers events ###################### //
     // ################################################################### //
@@ -1020,6 +1312,10 @@ var SearchEngine = class SearchEngine extends Control {
         // on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser ol.control.SearchEngine.on("change:collapsed", function ) pour s'abonner à cet évènement)
         this.dispatchEvent("change:collapsed");
+        // on nettoie si on ferme le composant
+        if (this.collapsed) {
+            this._clearResults();
+        }
     }
 
     /**
@@ -1030,6 +1326,43 @@ var SearchEngine = class SearchEngine extends Control {
      */
     onSearchResetClick () {
         this._clearResults();
+    }
+
+    /**
+     * this method is called by event 'click' on 'GPshowGeolocate' tag div
+     * (cf. this._createShowGeolocateElement)
+     *
+     * @private
+     */
+    onShowSearchGeolocateClick () {
+        if ("geolocation" in navigator) {
+            /* geolocation is available */
+            navigator.geolocation.getCurrentPosition((position) => {
+                var view = this.getMap().getView();
+                var viewProj = view.getProjection().getCode();
+                var coordinates = [position.coords.longitude, position.coords.latitude];
+                if (viewProj !== "EPSG:4326") {
+                    // on retransforme les coordonnées de la position dans la projection de la carte
+                    coordinates = olProjTransform(coordinates, "EPSG:4326", viewProj);
+                }
+                this._setPosition(coordinates, 10); // FIXME zoom fixe !
+                if (this._displayMarker) {
+                    this._setMarker(coordinates, "sans information");
+                }
+            });
+        } else {
+            /* geolocation IS NOT available */
+        }
+    }
+
+    /**
+     * this method is called by event 'click' on 'GPshowSearchByCoordinate' tag div
+     * (cf. this._createShowSearchByCoordinateElement)
+     *
+     * @private
+     */
+    onShowSearchByCoordinateClick () {
+        logger.warn("not yet implemented !");
     }
 
     // ################################################################### //
@@ -1370,7 +1703,7 @@ var SearchEngine = class SearchEngine extends Control {
             position = olProjTransform(position, "EPSG:4326", mapProj);
         }
         // on centre la vue et positionne le marker, à la position reprojetée dans la projection de la carte
-        var zoom = this._getZoom(info);
+        var zoom = this._getZoom(this.options.zoomTo);
         this._setPosition(position, zoom);
         if (this._displayMarker) {
             this._setMarker(position, info);
@@ -1607,6 +1940,36 @@ var SearchEngine = class SearchEngine extends Control {
     }
 
     // ################################################################### //
+    // ############### handlers events Coordinate Search ################# //
+    // ################################################################### //
+    
+    /**
+     * this method is called by event 'change' on ''
+     * tag select (cf. this.),
+     * and selects the system projection.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    onCoordinateSearchProjectionSystemChange (e) {
+        var idx = e.target.selectedIndex; // index
+        var value = e.target.options[idx].value; // crs
+    }
+    
+    /**
+     * this method is called by event 'change' on ''
+     * tag select (cf. this.),
+     * and selects the units projection.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    onCoordinateSearchProjectionUnitsChange (e) {
+        var idx = e.target.selectedIndex;
+        var value = e.target.options[idx].value;
+    }
+
+    // ################################################################### //
     // ############################## clean ############################## //
     // ################################################################### //
 
@@ -1648,8 +2011,7 @@ var SearchEngine = class SearchEngine extends Control {
     }
 
     /**
-     * this method is called by event 'click' on map
-     * and it hides suggested locations
+     * this method is called to hide suggested locations
      *
      * @private
      */
@@ -1661,8 +2023,7 @@ var SearchEngine = class SearchEngine extends Control {
     }
 
     /**
-     * this method is called by event 'click' on label input
-     * and it displays suggested location.
+     * this method is called to display suggested location.
      *
      * @private
      */

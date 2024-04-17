@@ -103,10 +103,10 @@
 .gpf-btn  {
 }
 .gpf-btn--hidden {}
-.gpf-icon-return {}
-.gpf-icon-submit {}
-.gpf-icon-close {}
-.gpf-icon-reverse {
+.gpf-btn-icon-return {}
+.gpf-btn-icon-submit {}
+.gpf-btn-icon-close {}
+.gpf-btn-icon-reverse {
   
 }
 
@@ -182,7 +182,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
   min-width: var(--size-per-row);
   min-height: var(--size-per-row);
   padding: 5px;

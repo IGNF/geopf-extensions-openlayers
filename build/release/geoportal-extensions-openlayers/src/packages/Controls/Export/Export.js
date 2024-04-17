@@ -327,7 +327,7 @@ class ButtonExport extends Control {
         var button = this.stringToHTML(`
             <input type="button"
                 id="${this._addUID("GPexportButton")}" 
-                class="GPsubmit gpf-btn gpf-btn-submit fr-btn"
+                class="GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn"
                 value="${title}">
         `);
 

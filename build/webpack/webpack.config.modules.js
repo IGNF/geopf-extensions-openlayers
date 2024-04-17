@@ -340,7 +340,8 @@ module.exports = (env, argv) => {
                     test : /\.(png|jpg|gif|svg|woff|woff2)$/,
                     type: 'asset/inline'
                 }
-            ]
+            ],
+            noParse: [require.resolve("typescript/lib/typescript.js")]
         },
         plugins : [
             /** EXECUTION DU LINTER */
