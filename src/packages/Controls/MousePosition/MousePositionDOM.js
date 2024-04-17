@@ -190,6 +190,7 @@ var MousePositionDOM = {
 
         var container = document.createElement("div");
         container.id = this._addUID("GPmousePositionBasicPanel");
+        container.classList.add("fr-mx-1w");
 
         // FIXME on devrait decomposer la fonction pour les besoins du controle,
         // on ajoutera ces childs à la main...
@@ -365,6 +366,7 @@ var MousePositionDOM = {
 
         // latitude
         var divLat = document.createElement("div");
+        divLat.classList.add("fr-mb-1w");
 
         var spanLat = document.createElement("span");
         spanLat.className = "GPmousePositionLabel";
@@ -389,6 +391,7 @@ var MousePositionDOM = {
 
         // longitude
         var divLon = document.createElement("div");
+        divLon.classList.add("fr-mb-1w");
 
         var spanLon = document.createElement("span");
         spanLon.className = "GPmousePositionLabel";
@@ -422,6 +425,7 @@ var MousePositionDOM = {
     _createMousePositionPanelBasicAltitudeElement : function (display) {
         var div = document.createElement("div");
         div.id = this._addUID("GPmousePositionAltitude");
+        div.classList.add("fr-mb-1w");
         div.style.display = display ? "block" : "none";
 
         var spanLabel = document.createElement("span");
@@ -537,6 +541,7 @@ var MousePositionDOM = {
         var container = document.createElement("div");
         container.id = this._addUID("GPmousePositionSettings");
         container.style.display = (display === undefined || display) ? "block" : "none";
+        container.classList.add("fr-m-1w");
 
         var span = document.createElement("span");
         span.className = "GPmousePositionSettingsLabel";
@@ -557,7 +562,7 @@ var MousePositionDOM = {
 
         var selectSystem = document.createElement("select");
         selectSystem.id = this._addUID("GPmousePositionProjectionSystem");
-        selectSystem.className = "GPselect GPmousePositionSettingsSelect gpf-select fr-select";
+        selectSystem.className = "GPselect GPmousePositionSettingsSelect gpf-select fr-select fr-my-1w";
         selectSystem.addEventListener("change", function (e) {
             context.onMousePositionProjectionSystemChange(e);
         });
