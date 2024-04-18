@@ -937,6 +937,7 @@ var SearchEngine = class SearchEngine extends Control {
         }
 
         this._displaySuggestedLocation();
+        this._createAutoCompletedLocationTitleElement();
         for (var i = 0; i < locations.length; i++) {
             // Proposals are dynamically filled in Javascript by autocomplete service
             this._createAutoCompletedLocationElement(locations[i], i);

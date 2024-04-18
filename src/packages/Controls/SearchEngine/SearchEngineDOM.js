@@ -513,6 +513,14 @@ var SearchEngineDOM = {
         return container;
     },
 
+    _createAutoCompletedLocationTitleElement () {
+        var container = document.getElementById(this._addUID("GPautocompleteResults"));
+        var label = document.createElement("label");
+        label.className = "GPlabel GPlabelLocationTitle gpf-label fr-label";
+        label.innerHTML = "LIEUX & ADRESSES";
+        container.appendChild(label);
+    },
+
     /**
      * Autocompletion result.
      * Proposals are dynamically filled in Javascript by autocomplete service
@@ -1100,10 +1108,12 @@ var SearchEngineDOM = {
         input.name = "coordinate-lng";
         switch (code) {
             case "DMS":
-                input.title += " géographique (en sexa)"; 
+                input.title += " géographiques (en sexa)";
+                input.className = "GPelementHidden gpf-hidden";
+                return this._setCoordinateSearchLngInputDMSElement();
                 break;
             case "DEC":
-                input.title += " géographique (en decimal)"; 
+                input.title += " géographiques (en decimal)"; 
                 input.type = "number";
                 input.min = "-180";
                 input.max = "180";
@@ -1120,6 +1130,24 @@ var SearchEngineDOM = {
                 break;
         }
         return input;
+    },
+    _setCoordinateSearchLngInputDMSElement () {
+        var div = document.createElement("div");
+        div.innerHTML = `
+        <div class="GPflexInput gpf-flex">
+            <input step="1" id="GPcoordinatSearchInputSexLonDeg" class="gpf-input fr-input" name="inputSexLonDeg" type="number" required="" min="0" max="180">
+            <label>°</label>
+            <input step="1" id="GPcoordinatSearchInputSexLonMin" class="gpf-input fr-input" name="inputSexLonMin" type="number" required="" min="0" max="59">
+            <label>'</label>
+            <input step="any" id="GPcoordinatSearchInputSexLonSec" class="gpf-input fr-input" name="inputSexLonSec" type="number" required="" min="0" max="59.9999">
+            <label>"</label>
+            <select id="GPcoordinatSearchInputSexLonToward" class="GPselect gpf-select fr-select" name="inputSexLonToward">
+                <option value="O">O</option>
+                <option value="E" selected="">E</option>
+            </select>
+        </div>
+        `;
+        return div;
     },
     /**
      * update Label
@@ -1156,21 +1184,48 @@ var SearchEngineDOM = {
         input.name = "coordinate-lat";
         switch (code) {
             case "DMS":
-                
+                input.title += " géographiques (en sexa)"; 
+                input.className = "GPelementHidden gpf-hidden";
+                return this._setCoordinateSearchLatInputDMSElement();
                 break;
             case "DEC":
+                input.title += " géographiques (en decimal)"; 
                 input.type = "number";
-                input.min = "-85";
-                input.max = "85";
+                input.min = "-180";
+                input.max = "180";
                 break;
-            
-            default:
+            case "M":
+                input.title += " cartésiennes (en mètre)"; 
                 input.type = "number";
+                break;
+            case "KM":
+                input.title += " cartésiennes (en kilomètre)"; 
+                input.type = "number";
+                break;
+            default:
                 break;
         }
         return input;
     },
-    
+    _setCoordinateSearchLatInputDMSElement () {
+        var div = document.createElement("div");
+        div.innerHTML = `
+        <div class="GPflexInput gpf-flex">
+            <input step="1" id="GPcoordinatSearchInputSexLatDeg" class="gpf-input fr-input" name="inputSexLatDeg" type="number" required="" min="0" max="85">
+            <label>°</label>
+            <input step="1" id="GPcoordinatSearchInputSexLatMin" class="gpf-input fr-input" name="inputSexLatMin" type="number" required="" min="0" max="59">
+            <label>'</label>
+            <input step="any" id="GPcoordinatSearchInputSexLatSec" class="gpf-input fr-input" name="inputSexLatSec" type="number" required="" min="0" max="59.9999">
+            <label>"</label>
+            <select id="GPcoordinatSearchInputSexLatToward" class="GPselect gpf-select fr-select" name="inputSexLatToward">
+                <option value="N">N</option>
+                <option value="S">S</option>
+            </select>
+        </div>
+        `;
+        return div;
+    },
+
     /**
      * submit
      * @returns {DOMElement} input
