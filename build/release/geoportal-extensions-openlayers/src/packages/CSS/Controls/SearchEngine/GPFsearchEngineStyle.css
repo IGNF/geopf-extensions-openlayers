@@ -82,17 +82,27 @@ form[id^=GPsearchInput-] input:disabled {
 .GPsearchInputText {
   height: 32px;
 }
+
+.GPcoordinateSearchLabel,
 .GPadvancedSearchCodeLabel,
 .GPadvancedSearchFilterLabel {
   max-width: 105px;
 }
 
+.GPcoordinateSearchSystemsSelect,
+.GPcoordinateSearchSystemsLabel,
 .GPadvancedSearchCodeLabel,
 .GPadvancedSearchCode,
  div[id^=GPadvancedSearchFilters] {
   margin-top: 15px;
 }
 
+.GPcoordinateSearchSystemsLabel,
+.GPcoordinateSearchSystemsSelect,
+.GPcoordinateSearchUnitsLabel,
+.GPcoordinateSearchUnitsSelect,
+.GPcoordinateSearchLabel,
+.GPcoordinateSearchInput,
 .GPadvancedSearchFilterLabel,
 .GPadvancedSearchFilterInput {
   margin-bottom: 5px;

@@ -363,8 +363,6 @@ var SearchEngineDOM = {
             document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
             document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
             document.getElementById(self._addUID("GPshowAdvancedSearch")).setAttribute("aria-pressed", false);
-
-            self.onShowSearchByCoordinateClick();
         });
 
         return button;
@@ -515,6 +513,14 @@ var SearchEngineDOM = {
         return container;
     },
 
+    _createAutoCompletedLocationTitleElement () {
+        var container = document.getElementById(this._addUID("GPautocompleteResults"));
+        var label = document.createElement("label");
+        label.className = "GPlabel GPlabelLocationTitle gpf-label fr-label";
+        label.innerHTML = "LIEUX & ADRESSES";
+        container.appendChild(label);
+    },
+
     /**
      * Autocompletion result.
      * Proposals are dynamically filled in Javascript by autocomplete service
@@ -640,7 +646,7 @@ var SearchEngineDOM = {
         });
 
         var div = document.createElement("div");
-        div.className = "GPflexInput gpf-flex";
+        div.className = "GPflexInput gpf-flex-column ";
 
         var label = document.createElement("label");
         label.className = "GPadvancedSearchCodeLabel gpf-label fr-label";
@@ -777,7 +783,7 @@ var SearchEngineDOM = {
         var value = filterAttributes.value;
 
         var div = document.createElement("div");
-        div.className = "GPflexInput gpf-flex";
+        div.className = "GPflexInput gpf-flex-column ";
 
         var label = document.createElement("label");
         label.className = "GPadvancedSearchFilterLabel gpf-label fr-label";
@@ -958,6 +964,7 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+                self.onCoordinateSearchClose();
             }, false);
         } else if (divClose.attachEvent) {
             divClose.attachEvent("onclick", function () {
@@ -966,6 +973,7 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
+                self.onCoordinateSearchClose();
             });
         }
 
@@ -984,38 +992,41 @@ var SearchEngineDOM = {
         var self = this;
 
         var form = document.createElement("form");
-        form.id = this._addUID("GPCoordinateSearchForm");
+        form.id = this._addUID("GPcoordinateSearchForm");
         form.className = "gpf-panel__content fr-modal__content";
         form.addEventListener("submit", function (e) {
             e.preventDefault();
-           
+            self.onShowSearchByCoordinateClick();
             return false;
         });
 
-        var div = document.createElement("div");
-        div.className = "GPflexInput gpf-flex";
-
-        form.appendChild(div);
-
         return form;
     },
-    _createCoordinateSearchSubmitElement () {
-        var input = document.createElement("input");
-        input.type = "submit";
-        input.id = this._addUID("GPCoordinateSearchSubmit");
-        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary";
-        input.value = "Chercher";
-        return input;
+
+    __createCoordinateSearchDivElement () {
+        var div = document.createElement("div");
+        div.className = "GPflexInput gpf-flex-column ";
+        return div;
     },
-    _createCoordinateSearchSystemsElement (systems) {
+
+    _createCoordinateSearchSystemsLabelElement () {
+        var label = document.createElement("label");
+        label.className = "GPcoordinateSearchSystemsLabel gpf-label fr-label";
+        label.innerHTML = "Système de référence";
+        return label;
+    },
+    _setCoordinateSearchSystemsSelectElement (systems) {
+        if (document.getElementById(this._addUID("GPcoordinateSearchSystem"))) {
+            document.getElementById(this._addUID("GPcoordinateSearchSystem")).remove();
+        }
         // contexte d'execution
         var context = this;
 
         var selectSystem = document.createElement("select");
-        selectSystem.id = this._addUID("GPcoordinateSearchProjectionSystem");
-        selectSystem.className = "GPselect GPcoordinateSearchSelect gpf-select fr-select";
+        selectSystem.id = this._addUID("GPcoordinateSearchSystem");
+        selectSystem.className = "GPselect GPcoordinateSearchSystemsSelect gpf-select fr-select";
         selectSystem.addEventListener("change", function (e) {
-            context.onCoordinateSearchProjectionSystemChange(e);
+            context.onCoordinateSearchSystemChange(e);
         });
 
         for (var i = 0; i < systems.length; i++) {
@@ -1029,15 +1040,25 @@ var SearchEngineDOM = {
 
         return selectSystem;
     },
-    _createCoordinateSearchUnitsElement (units) {
+
+    _createCoordinateSearchUnitsLabelElement () {
+        var label = document.createElement("label");
+        label.className = "GPcoordinateSearchUnitsLabel gpf-label fr-label";
+        label.innerHTML = "Unités";
+        return label;
+    },
+    _setCoordinateSearchUnitsSelectElement (units) {
+        if (document.getElementById(this._addUID("GPcoordinateSearchUnits"))) {
+            document.getElementById(this._addUID("GPcoordinateSearchUnits")).remove();
+        }
         // contexte d'execution
         var context = this;
 
         var selectUnits = document.createElement("select");
-        selectUnits.id = this._addUID("GPcoordinateSearchProjectionUnits");
-        selectUnits.className = "GPselect GPcoordinateSearchSelect gpf-select fr-select";
+        selectUnits.id = this._addUID("GPcoordinateSearchUnits");
+        selectUnits.className = "GPselect GPcoordinateSearchUnitsSelect gpf-select fr-select";
         selectUnits.addEventListener("change", function (e) {
-            context.onCoordinateSearchProjectionUnitsChange(e);
+            context.onCoordinateSearchUnitsChange(e);
         });
 
         for (var j = 0; j < units.length; j++) {
@@ -1050,6 +1071,172 @@ var SearchEngineDOM = {
         }
 
         return selectUnits;
+    },
+
+    /**
+     * update Label
+     * @param {String} type - Geographical or Metric
+     * @returns {DOMElement} label
+     */
+    _setCoordinateSearchLngLabelElement (type) {
+        // type geographical ou metric
+        if (document.getElementById(this._addUID("GPcoordinateSearchLngLabel"))) {
+            document.getElementById(this._addUID("GPcoordinateSearchLngLabel")).remove();
+        }
+        var labelLng = document.createElement("label");
+        labelLng.className = "GPcoordinateSearchLabel gpf-label fr-label";
+        labelLng.id = this._addUID("GPcoordinateSearchLngLabel");
+        labelLng.htmlFor = "coordinate-lng";
+        labelLng.innerHTML = (type === "Geographical") ? "Longitude :" : "Y :";
+        
+        return labelLng;
+    },
+    /**
+     * update Input coordinate
+     * @param {String} code - ex. DMS : degrés sexadecimaux
+     * @returns {DOMElement} input
+     */
+    _setCoordinateSearchLngInputElement (code) {
+        // code DMS ou other
+        if (document.getElementById(this._addUID("GPcoordinateSearchLngInput"))) {
+            document.getElementById(this._addUID("GPcoordinateSearchLngInput")).remove();
+        }
+        var input = document.createElement("input");
+        input.id = this._addUID("GPcoordinateSearchLngInput");
+        input.className = "GPcoordinateSearchInput gpf-input fr-input";
+        input.title = "Saisir des coordonnées";
+        input.name = "coordinate-lng";
+        switch (code) {
+            case "DMS":
+                input.title += " géographiques (en sexa)";
+                input.className = "GPelementHidden gpf-hidden";
+                return this._setCoordinateSearchLngInputDMSElement();
+                break;
+            case "DEC":
+                input.title += " géographiques (en decimal)"; 
+                input.type = "number";
+                input.min = "-180";
+                input.max = "180";
+                break;
+            case "M":
+                input.title += " cartésiennes (en mètre)"; 
+                input.type = "number";
+                break;
+            case "KM":
+                input.title += " cartésiennes (en kilomètre)"; 
+                input.type = "number";
+                break;
+            default:
+                break;
+        }
+        return input;
+    },
+    _setCoordinateSearchLngInputDMSElement () {
+        var div = document.createElement("div");
+        div.innerHTML = `
+        <div class="GPflexInput gpf-flex">
+            <input step="1" id="GPcoordinatSearchInputSexLonDeg" class="gpf-input fr-input" name="inputSexLonDeg" type="number" required="" min="0" max="180">
+            <label>°</label>
+            <input step="1" id="GPcoordinatSearchInputSexLonMin" class="gpf-input fr-input" name="inputSexLonMin" type="number" required="" min="0" max="59">
+            <label>'</label>
+            <input step="any" id="GPcoordinatSearchInputSexLonSec" class="gpf-input fr-input" name="inputSexLonSec" type="number" required="" min="0" max="59.9999">
+            <label>"</label>
+            <select id="GPcoordinatSearchInputSexLonToward" class="GPselect gpf-select fr-select" name="inputSexLonToward">
+                <option value="O">O</option>
+                <option value="E" selected="">E</option>
+            </select>
+        </div>
+        `;
+        return div;
+    },
+    /**
+     * update Label
+     * @param {String} type - Geographical or Metric
+     * @returns {DOMElement} label
+     */
+    _setCoordinateSearchLatLabelElement (type) {
+        // type geographical ou metric
+        if (document.getElementById(this._addUID("GPcoordinateSearchLatLabel"))) {
+            document.getElementById(this._addUID("GPcoordinateSearchLatLabel")).remove();
+        }
+        var labelLat = document.createElement("label");
+        labelLat.className = "GPcoordinateSearchLabel gpf-label fr-label";
+        labelLat.id = this._addUID("GPcoordinateSearchLatLabel");
+        labelLat.htmlFor = "coordinate-lat";
+        labelLat.innerHTML = (type === "Geographical") ? "Latitude :" : "X :";
+        
+        return labelLat;
+    },
+    /**
+     * update Input coordinate
+     * @param {String} code - ex. DMS : degrés sexadecimaux
+     * @returns {DOMElement} input
+     */
+    _setCoordinateSearchLatInputElement (code) {
+        // code DMS ou other
+        if (document.getElementById(this._addUID("GPcoordinateSearchLatInput"))) {
+            document.getElementById(this._addUID("GPcoordinateSearchLatInput")).remove();
+        }
+        var input = document.createElement("input");
+        input.id = this._addUID("GPcoordinateSearchLatInput");
+        input.className = "GPcoordinateSearchInput gpf-input fr-input";
+        input.title ="Saisir des coordonnées";
+        input.name = "coordinate-lat";
+        switch (code) {
+            case "DMS":
+                input.title += " géographiques (en sexa)"; 
+                input.className = "GPelementHidden gpf-hidden";
+                return this._setCoordinateSearchLatInputDMSElement();
+                break;
+            case "DEC":
+                input.title += " géographiques (en decimal)"; 
+                input.type = "number";
+                input.min = "-180";
+                input.max = "180";
+                break;
+            case "M":
+                input.title += " cartésiennes (en mètre)"; 
+                input.type = "number";
+                break;
+            case "KM":
+                input.title += " cartésiennes (en kilomètre)"; 
+                input.type = "number";
+                break;
+            default:
+                break;
+        }
+        return input;
+    },
+    _setCoordinateSearchLatInputDMSElement () {
+        var div = document.createElement("div");
+        div.innerHTML = `
+        <div class="GPflexInput gpf-flex">
+            <input step="1" id="GPcoordinatSearchInputSexLatDeg" class="gpf-input fr-input" name="inputSexLatDeg" type="number" required="" min="0" max="85">
+            <label>°</label>
+            <input step="1" id="GPcoordinatSearchInputSexLatMin" class="gpf-input fr-input" name="inputSexLatMin" type="number" required="" min="0" max="59">
+            <label>'</label>
+            <input step="any" id="GPcoordinatSearchInputSexLatSec" class="gpf-input fr-input" name="inputSexLatSec" type="number" required="" min="0" max="59.9999">
+            <label>"</label>
+            <select id="GPcoordinatSearchInputSexLatToward" class="GPselect gpf-select fr-select" name="inputSexLatToward">
+                <option value="N">N</option>
+                <option value="S">S</option>
+            </select>
+        </div>
+        `;
+        return div;
+    },
+
+    /**
+     * submit
+     * @returns {DOMElement} input
+     */
+    _createCoordinateSearchSubmitElement () {
+        var input = document.createElement("input");
+        input.type = "submit";
+        input.id = this._addUID("GPcoordinateSearchSubmit");
+        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary";
+        input.value = "Chercher";
+        return input;
     },
 };
 

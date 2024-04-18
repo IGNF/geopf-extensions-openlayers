@@ -18,6 +18,7 @@ import Utils from "../../Utils/Helper";
 import Markers from "../Utils/Markers";
 import Interactions from "../Utils/Interactions";
 import SelectorID from "../../Utils/SelectorID";
+import MathUtils from "../../Utils/MathUtils";
 import SearchEngineUtils from "../../Utils/SearchEngineUtils";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
 import CRS from "../../CRS/CRS";
@@ -47,7 +48,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonClose = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
- * @param {Object}  [options.coordinateSearch] - TODO : coordinates search options.
+ * @param {Object}  [options.coordinateSearch] - coordinates search options.
  * @param {DOMElement} [options.coordinateSearch.target = null] - target location of results window. By default under the search bar.
  * @param {Array}   [options.coordinateSearch.units] - list of coordinates units, to be displayed in control units list.
  *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal) for geographical coordinates,
@@ -56,7 +57,7 @@ var logger = Logger.getLogger("searchengine");
  *      Each array element (=system) is an object with following properties :
  * @param {String}  [options.coordinateSearch.systems.crs] - Proj4 crs alias (from proj4 defs). e.g. : "EPSG:4326". Required
  * @param {String}  [options.coordinateSearch.systems.label] - CRS label to be displayed in control. Default is crs code (e.g. "EPSG:4326")
- * @param {String}  [options.coordinateSearch.systems.type] - CRS units type for coordinates conversion : "Geographical" or "Metric". Default: "Metric"
+ * @param {String}  [options.coordinateSearch.systems.type] - CRS units type for coordinates conversion : "Geographical" or "Metric". Default: "Geographical"
  * @param {Object}  [options.advancedSearch] - advanced search options for geocoding (filters). Properties can be found among geocode options.filterOptions (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
  * @param {DOMElement} [options.advancedSearch.target = null] - TODO : target location of results window. By default under the search bar.
  * @param {Object}  [options.resources] - resources to be used by geocode and autocompletion services :
@@ -343,8 +344,12 @@ var SearchEngine = class SearchEngine extends Control {
             this._initCoordinateSearchUnits();
         }
 
-        this._currentCoordinateSearchType = this._coordinateSearchSystems[0].type;
-        this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code;
+        this._currentCoordinateSearchSystems = this._coordinateSearchSystems[0]; // epsg:4326
+        this._currentCoordinateSearchType = this._coordinateSearchSystems[0].type; // geographical ou metric
+        this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code; // decimal
+        
+        this._coordinateSearchLngInput = null;
+        this._coordinateSearchLatInput = null;
 
         // marker
         this._marker = null;
@@ -515,30 +520,19 @@ var SearchEngine = class SearchEngine extends Control {
         // la liste des systèmes à afficher
         // Ex. this.options.coordinateSearch.systems
 
-        // chargement des projections par defaut
-        CRS.loadByName("EPSG:4326");
-        CRS.loadByName("EPSG:3857");
-        CRS.loadByName("EPSG:2154");
-
         // systemes de projection disponible par defaut
         var projectionSystemsByDefault = [{
             label : "G\u00e9ographique",
-            crs : olProjGet("EPSG:4326").getCode(),
+            crs : "EPSG:4326",
             type : "Geographical"
         }, {
             label : "Web Mercator",
-            crs : olProjGet("EPSG:3857").getCode(),
+            crs : "EPSG:3857",
             type : "Metric"
         }, {
             label : "Lambert 93",
-            crs : olProjGet("EPSG:2154").getCode(),
-            type : "Metric",
-            geoBBox : {
-                left : -9.86,
-                bottom : 41.15,
-                right : 10.38,
-                top : 51.56
-            }
+            crs : "EPSG:2154",
+            type : "Metric"
         }];
 
         var systems = this.options.coordinateSearch.systems;
@@ -576,20 +570,20 @@ var SearchEngine = class SearchEngine extends Control {
             Geographical : [{
                 code : "DEC",
                 label : "degrés décimaux",
-                format : this._displayDEC
+                format : MathUtils.coordinateToDecimal
             }, {
                 code : "DMS",
                 label : "degrés sexagésimaux",
-                format : this._displayDMS
+                format : MathUtils.coordinateToDMS
             }],
             Metric : [{
                 code : "M",
                 label : "mètres",
-                format : this._displayMeter
+                format : MathUtils.coordinateToMeter
             }, {
                 code : "KM",
                 label : "kilomètres",
-                format : this._displayKMeter
+                format : MathUtils.coordinateToKMeter
             }]
         };
 
@@ -711,6 +705,7 @@ var SearchEngine = class SearchEngine extends Control {
             var advancedFormFilters = this._filterContainer = this._createAdvancedSearchFormFiltersElement();
             this._setFilter(this._advancedSearchCodes[0].id); // ex "PositionOfInterest"
             var advancedFormInput = this._createAdvancedSearchFormInputElement();
+
             advancedForm.appendChild(advancedFormFilters);
             advancedForm.appendChild(advancedFormInput);
             advancedPanelDiv.appendChild(advancedHeader);
@@ -733,11 +728,36 @@ var SearchEngine = class SearchEngine extends Control {
             var coordinateHeader = this._createCoordinateSearchPanelHeaderElement();
             var coordinateForm = this._createCoordinateSearchPanelFormElement();
 
-            var systems =  this._createCoordinateSearchSystemsElement(this._coordinateSearchSystems);
-            var units = this._createCoordinateSearchUnitsElement(this._coordinateSearchUnits[this._currentCoordinateSearchType]);
+            var div = null;
+            div = this._containerSystems = this.__createCoordinateSearchDivElement();
+            coordinateForm.appendChild(div);
+            var labelSystems = this._createCoordinateSearchSystemsLabelElement();
+            var systems =  this._setCoordinateSearchSystemsSelectElement(this._coordinateSearchSystems);
+            div.appendChild(labelSystems);
+            div.appendChild(systems);
+
+            div = this._containerUnits = this.__createCoordinateSearchDivElement();
+            coordinateForm.appendChild(div);
+            var labelUnits = this._createCoordinateSearchUnitsLabelElement();
+            var units = this._setCoordinateSearchUnitsSelectElement(this._coordinateSearchUnits[this._currentCoordinateSearchType]);
+            div.appendChild(labelUnits);
+            div.appendChild(units);
+            
+            div = this._containerCoordinateLng = this.__createCoordinateSearchDivElement();
+            coordinateForm.appendChild(div);
+            var coordinateLng = this._setCoordinateSearchLngLabelElement(this._currentCoordinateSearchType);
+            var coordinateInputLng = this._coordinateSearchLngInput = this._setCoordinateSearchLngInputElement(this._currentCoordinateSearchUnits);
+            div.appendChild(coordinateLng);
+            div.appendChild(coordinateInputLng);
+
+            div = this._containerCoordinateLat = this.__createCoordinateSearchDivElement();
+            coordinateForm.appendChild(div);
+            var coordinateLat = this._setCoordinateSearchLatLabelElement(this._currentCoordinateSearchType);
+            var coordinateInputLat = this._coordinateSearchLatInput = this._setCoordinateSearchLatInputElement(this._currentCoordinateSearchUnits);
+            div.appendChild(coordinateLat);
+            div.appendChild(coordinateInputLat);
+            
             var submit = this._createCoordinateSearchSubmitElement();
-            coordinateForm.appendChild(systems);
-            coordinateForm.appendChild(units);
             coordinateForm.appendChild(submit);
 
             coordinatePanelDiv.appendChild(coordinateHeader);
@@ -917,6 +937,7 @@ var SearchEngine = class SearchEngine extends Control {
         }
 
         this._displaySuggestedLocation();
+        this._createAutoCompletedLocationTitleElement();
         for (var i = 0; i < locations.length; i++) {
             // Proposals are dynamically filled in Javascript by autocomplete service
             this._createAutoCompletedLocationElement(locations[i], i);
@@ -1345,6 +1366,10 @@ var SearchEngine = class SearchEngine extends Control {
                     // on retransforme les coordonnées de la position dans la projection de la carte
                     coordinates = olProjTransform(coordinates, "EPSG:4326", viewProj);
                 }
+                if (isNaN(coordinates[0]) || isNaN(coordinates[1])) {
+                    this._setMarker();
+                    return;
+                }
                 this._setPosition(coordinates, 10); // FIXME zoom fixe !
                 if (this._displayMarker) {
                     this._setMarker(coordinates, "sans information");
@@ -1362,7 +1387,27 @@ var SearchEngine = class SearchEngine extends Control {
      * @private
      */
     onShowSearchByCoordinateClick () {
-        logger.warn("not yet implemented !");
+        var lng = this._coordinateSearchLngInput.value;
+        var lat = this._coordinateSearchLatInput.value;
+        if (!lng || !lat) {
+            return;
+        }
+
+        var coordinates = [lng, lat];
+
+        var view = this.getMap().getView();
+        var viewProj = view.getProjection().getCode();
+        if (viewProj !== "EPSG:4326") {
+            coordinates = olProjTransform(coordinates, "EPSG:4326", viewProj);
+        }
+        if (isNaN(coordinates[0]) || isNaN(coordinates[1])) {
+            this._setMarker();
+            return;
+        }
+        this._setPosition(coordinates, 10); // FIXME zoom fixe !
+        if (this._displayMarker) {
+            this._setMarker(coordinates, "sans information");
+        }
     }
 
     // ################################################################### //
@@ -1951,9 +1996,40 @@ var SearchEngine = class SearchEngine extends Control {
      * @param {Object} e - HTMLElement
      * @private
      */
-    onCoordinateSearchProjectionSystemChange (e) {
+    onCoordinateSearchSystemChange (e) {
         var idx = e.target.selectedIndex; // index
         var value = e.target.options[idx].value; // crs
+
+        // on nettoie les coordonnées saisies
+        this._coordinateSearchLngInput.value = "";
+        this._coordinateSearchLatInput.value = "";
+
+        // INFO
+        // si on change de type de systeme, on doit aussi changer le type d'unités !
+        var type = null;
+        for (var i = 0; i < this._coordinateSearchSystems.length; ++i) {
+            if (this._coordinateSearchSystems[i].code === Number(value)) {
+                type = this._coordinateSearchSystems[i].type;
+                break;
+            }
+        }
+
+        if (!type) {
+            logger.log("system not found in projection systems container");
+            return;
+        }
+
+        // on enregistre le systeme courant
+        this._currentCoordinateSearchSystems = this._coordinateSearchSystems[Number(value)];
+
+        if (type !== this._currentCoordinateSearchType) {
+            // on met à jour les unités du menu deroulant : Geographique ou Métrique
+            this._currentCoordinateSearchType = type;
+            this._currentCoordinateSearchUnits =  this._coordinateSearchUnits[type][0].code;
+            this._containerUnits.appendChild(this._setCoordinateSearchUnitsSelectElement(this._coordinateSearchUnits[type]));
+            // et on modifie la zone de saisie des coordonnées (label + input)
+            this._updateCoordinateSearchElements();
+        }
     }
     
     /**
@@ -1964,9 +2040,41 @@ var SearchEngine = class SearchEngine extends Control {
      * @param {Object} e - HTMLElement
      * @private
      */
-    onCoordinateSearchProjectionUnitsChange (e) {
+    onCoordinateSearchUnitsChange (e) {
         var idx = e.target.selectedIndex;
         var value = e.target.options[idx].value;
+
+        // on nettoie les coordonnées saisies
+        this._coordinateSearchLngInput.value = "";
+        this._coordinateSearchLatInput.value = "";
+
+        // et on modifie la zone de saisie des coordonnées (label + input)
+        this._currentCoordinateSearchUnits = value;
+        this._updateCoordinateSearchElements();
+    }
+
+    /**
+     * this method is called by event 'click' on ''
+     * tag select (cf. this.),
+     * and clear app.
+     *
+     * @private
+     */
+    onCoordinateSearchClose () {
+        this._setMarker();
+        this._coordinateSearchLngInput.value = "";
+        this._coordinateSearchLatInput.value = "";
+    }
+    
+    _updateCoordinateSearchElements () {
+        var lbl = this._setCoordinateSearchLngLabelElement(this._currentCoordinateSearchType);
+        var input = this._coordinateSearchLngInput = this._setCoordinateSearchLngInputElement(this._currentCoordinateSearchUnits);
+        this._containerCoordinateLng.appendChild(lbl);
+        this._containerCoordinateLng.appendChild(input);
+        lbl = this._setCoordinateSearchLatLabelElement(this._currentCoordinateSearchType);
+        input = this._coordinateSearchLatInput = this._setCoordinateSearchLatInputElement(this._currentCoordinateSearchUnits);
+        this._containerCoordinateLat.appendChild(lbl);
+        this._containerCoordinateLat.appendChild(input);
     }
 
     // ################################################################### //

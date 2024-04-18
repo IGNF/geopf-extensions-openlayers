@@ -20,7 +20,7 @@ export default SearchEngine;
  * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonClose = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
- * @param {Object}  [options.coordinateSearch] - TODO : coordinates search options.
+ * @param {Object}  [options.coordinateSearch] - coordinates search options.
  * @param {DOMElement} [options.coordinateSearch.target = null] - target location of results window. By default under the search bar.
  * @param {Array}   [options.coordinateSearch.units] - list of coordinates units, to be displayed in control units list.
  *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal) for geographical coordinates,
@@ -29,7 +29,7 @@ export default SearchEngine;
  *      Each array element (=system) is an object with following properties :
  * @param {String}  [options.coordinateSearch.systems.crs] - Proj4 crs alias (from proj4 defs). e.g. : "EPSG:4326". Required
  * @param {String}  [options.coordinateSearch.systems.label] - CRS label to be displayed in control. Default is crs code (e.g. "EPSG:4326")
- * @param {String}  [options.coordinateSearch.systems.type] - CRS units type for coordinates conversion : "Geographical" or "Metric". Default: "Metric"
+ * @param {String}  [options.coordinateSearch.systems.type] - CRS units type for coordinates conversion : "Geographical" or "Metric". Default: "Geographical"
  * @param {Object}  [options.advancedSearch] - advanced search options for geocoding (filters). Properties can be found among geocode options.filterOptions (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
  * @param {DOMElement} [options.advancedSearch.target = null] - TODO : target location of results window. By default under the search bar.
  * @param {Object}  [options.resources] - resources to be used by geocode and autocompletion services :

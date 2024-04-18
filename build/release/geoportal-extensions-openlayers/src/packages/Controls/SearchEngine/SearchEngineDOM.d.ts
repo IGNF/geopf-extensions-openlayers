@@ -17,6 +17,7 @@ declare namespace SearchEngineDOM {
     function _createCoordinateSearchPanelElement(): DOMElement;
     function _createCoordinateSearchPanelDivElement(): HTMLDivElement;
     function _createAutoCompleteListElement(): DOMElement;
+    function _createAutoCompletedLocationTitleElement(): void;
     function _createAutoCompletedLocationElement(location: Object, id: number): void;
     function _createAdvancedSearchPanelHeaderElement(): DOMElement;
     function _createAdvancedSearchPanelFormElement(advancedSearchCodes: Object[]): DOMElement;
@@ -36,8 +37,41 @@ declare namespace SearchEngineDOM {
     function _createGeocodedLocationElement(location: Object, id: number): void;
     function _createCoordinateSearchPanelHeaderElement(): HTMLDivElement;
     function _createCoordinateSearchPanelFormElement(): HTMLFormElement;
-    function _createCoordinateSearchSubmitElement(): HTMLInputElement;
-    function _createCoordinateSearchSystemsElement(systems: any): HTMLSelectElement;
-    function _createCoordinateSearchUnitsElement(units: any): HTMLSelectElement;
+    function __createCoordinateSearchDivElement(): HTMLDivElement;
+    function _createCoordinateSearchSystemsLabelElement(): HTMLLabelElement;
+    function _setCoordinateSearchSystemsSelectElement(systems: any): HTMLSelectElement;
+    function _createCoordinateSearchUnitsLabelElement(): HTMLLabelElement;
+    function _setCoordinateSearchUnitsSelectElement(units: any): HTMLSelectElement;
+    /**
+     * update Label
+     * @param {String} type - Geographical or Metric
+     * @returns {DOMElement} label
+     */
+    function _setCoordinateSearchLngLabelElement(type: string): DOMElement;
+    /**
+     * update Input coordinate
+     * @param {String} code - ex. DMS : degrés sexadecimaux
+     * @returns {DOMElement} input
+     */
+    function _setCoordinateSearchLngInputElement(code: string): DOMElement;
+    function _setCoordinateSearchLngInputDMSElement(): HTMLDivElement;
+    /**
+     * update Label
+     * @param {String} type - Geographical or Metric
+     * @returns {DOMElement} label
+     */
+    function _setCoordinateSearchLatLabelElement(type: string): DOMElement;
+    /**
+     * update Input coordinate
+     * @param {String} code - ex. DMS : degrés sexadecimaux
+     * @returns {DOMElement} input
+     */
+    function _setCoordinateSearchLatInputElement(code: string): DOMElement;
+    function _setCoordinateSearchLatInputDMSElement(): HTMLDivElement;
+    /**
+     * submit
+     * @returns {DOMElement} input
+     */
+    function _createCoordinateSearchSubmitElement(): DOMElement;
 }
 //# sourceMappingURL=SearchEngineDOM.d.ts.map
