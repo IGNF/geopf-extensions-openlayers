@@ -7,6 +7,7 @@
 * @example
 * modulo();
 * decimalToDMS();
+* coordinateTo();
 * toInteger();
 * isInteger();
 * toFloat();
@@ -14,6 +15,7 @@
 var MathUtils = {
     /**
      * Reste de la division euclidienne
+     * 
      * @function modulo
      * @param {Number} a - divisor
      * @param {Number} b - quotient
@@ -62,6 +64,104 @@ var MathUtils = {
             s : sec,
             direction : direction
         };
+    },
+
+    /**
+     * ol coordinate to decimal
+     * 
+     * @function coordinateToDecimal
+     * @param {*} olCoordinate - see ol/coordinate.js
+     * @returns {Object} - {lat, lng, unit:°}
+     */
+    coordinateToDecimal (olCoordinate) {
+        var coordinate = {};
+        coordinate.lat = olCoordinate[1].toFixed(6);
+        coordinate.lng = olCoordinate[0].toFixed(6);
+        coordinate.unit = "°";
+        return coordinate;
+    },
+
+    /**
+     * ol coordinate to dms
+     * 
+     * @function coordinateToDMS
+     * @param {*} olCoordinate - see ol/coordinate.js
+     * @returns {Object} - {lat, lng, unit:dms}
+     */
+    coordinateToDMS (olCoordinate) {
+        return {
+            lng : MathUtils.decimalToDMS(olCoordinate[0], "EO", 2),
+            lat : MathUtils.decimalToDMS(olCoordinate[1], "NS", 2),
+            unit : "DMS"
+        };
+    },
+
+    /**
+     * ol coordinate to rad
+     * 
+     * @function coordinateToRad
+     * @param {*} olCoordinate - see ol/coordinate.js
+     * @returns {Object} - {lat, lng, unit:rad}
+     */
+    coordinateToRad (olCoordinate) {
+        var coordinate = {};
+        var d = 0.01745329251994329577;
+        coordinate.lng = olCoordinate[0] * d;
+        coordinate.lng = coordinate.lng.toFixed(8);
+        coordinate.lat = olCoordinate[1] * d;
+        coordinate.lat = coordinate.lat.toFixed(8);
+        coordinate.unit = "rad";
+        return coordinate;
+    },
+
+    /**
+     * ol coordinate to gon
+     * 
+     * @function coordinateToGon
+     * @param {*} olCoordinate - see ol/coordinate.js
+     * @returns {Object} - {lat, lng, unit:gon}
+     */
+    coordinateToGon (olCoordinate) {
+        var coordinate = {};
+        var d = 1.11111111111111111111;
+        coordinate.lng = olCoordinate[0] * d;
+        coordinate.lng = coordinate.lng.toFixed(8);
+        coordinate.lat = olCoordinate[1] * d;
+        coordinate.lat = coordinate.lat.toFixed(8);
+        coordinate.unit = "gon";
+        return coordinate;
+    },
+
+    /**
+     * ol coordinate to meter
+     * 
+     * @function coordinateToMeter
+     * @param {*} olCoordinate - see ol/coordinate.js
+     * @returns {Object} - {x, y, unit:m}
+     */
+    coordinateToMeter (olCoordinate) {
+        // on recoit toujours des coordonnées metriques
+        var coordinate = {};
+        coordinate.x = olCoordinate[0].toFixed(2);
+        coordinate.y = olCoordinate[1].toFixed(2);
+        coordinate.unit = "m";
+        return coordinate;
+    },
+
+    /**
+     * ol coordinate to kilometer
+     * 
+     * @function coordinateToKMeter
+     * @param {*} olCoordinate - see ol/coordinate.js
+     * @returns {Object} - {x, lyng, unit:km}
+     */
+    coordinateToKMeter (olCoordinate) {
+        // on recoit toujours des coordonnées metriques
+        var coordinate = {};
+        coordinate.x = (olCoordinate[0] / 1000).toFixed(2);
+        coordinate.y = (olCoordinate[1] / 1000).toFixed(2);
+        coordinate.unit = "km";
+        return coordinate;
     },
 
     /**

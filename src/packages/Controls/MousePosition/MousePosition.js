@@ -713,28 +713,28 @@ var MousePosition = class MousePosition extends Control {
             Geographical : [{
                 code : "DEC",
                 label : "degrés décimaux",
-                format : this._displayDEC
+                format : MathUtils.coordinateToDecimal
             }, {
                 code : "DMS",
                 label : "degrés sexagésimaux",
-                format : this._displayDMS
+                format : MathUtils.coordinateToDMS
             }, {
                 code : "RAD",
                 label : "radians",
-                format : this._displayRAD
+                format : MathUtils.coordinateToRad
             }, {
                 code : "GON",
                 label : "grades",
-                format : this._displayGON
+                format : MathUtils.coordinateToGon
             }],
             Metric : [{
                 code : "M",
                 label : "mètres",
-                format : this._displayMeter
+                format : MathUtils.coordinateToMeter
             }, {
                 code : "KM",
                 label : "kilomètres",
-                format : this._displayKMeter
+                format : MathUtils.coordinateToKMeter
             }]
         };
 
@@ -946,107 +946,6 @@ var MousePosition = class MousePosition extends Control {
         // et comme on a changé de type de systeme,
         // il faut changer aussi d'unité !
         this._currentProjectionUnits = projectionUnits;
-    }
-
-    // ################################################################### //
-    // ######################## method units format ###################### //
-    // ################################################################### //
-
-    /**
-     * degreedecimal
-     *
-     * @param {Array} olCoordinate - ol.Coordinate object [lon, lat]
-     * @return {Object} coordinate - coordinate object : {lat : 48, lng : 2} par exemple
-     * @private
-     */
-    _displayDEC (olCoordinate) {
-        var coordinate = {};
-        coordinate.lat = olCoordinate[1].toFixed(6);
-        coordinate.lng = olCoordinate[0].toFixed(6);
-        coordinate.unit = "°";
-        return coordinate;
-    }
-
-    /**
-     * degreedecimal2sexagecimal
-     *
-     * @param {Array} olCoordinate - ol.Coordinate object [lon, lat]
-     * @return {Object} coordinate - coordinate object : {lng : "2° 00′ 00″ E", lat : "48° 00′ 00″ N"} par exemple
-     * @private
-     */
-    _displayDMS (olCoordinate) {
-        return {
-            lng : MathUtils.decimalToDMS(olCoordinate[0], "EO", 2),
-            lat : MathUtils.decimalToDMS(olCoordinate[1], "NS", 2),
-            unit : "DMS"
-        };
-    }
-
-    /**
-     * degreedecimal2radian
-     *
-     * @param {Array} olCoordinate - ol.Coordinate object [lon, lat]
-     * @return {Object} coordinate - coordinate object : {lng : "0.02837864", lat : "0.84300269"} par exemple
-     * @private
-     */
-    _displayRAD (olCoordinate) {
-        var coordinate = {};
-        var d = 0.01745329251994329577;
-        coordinate.lng = olCoordinate[0] * d;
-        coordinate.lng = coordinate.lng.toFixed(8);
-        coordinate.lat = olCoordinate[1] * d;
-        coordinate.lat = coordinate.lat.toFixed(8);
-        coordinate.unit = "rad";
-        return coordinate;
-    }
-
-    /**
-     * degreedecimal2grade
-     *
-     * @param {Array} olCoordinate - ol.Coordinate object [lon, lat]
-     * @return {Object} coordinate - coordinate object : {lng : "4.09545898", lat : "53.68751528"} par exemple
-     * @private
-     */
-    _displayGON (olCoordinate) {
-        var coordinate = {};
-        var d = 1.11111111111111111111;
-        coordinate.lng = olCoordinate[0] * d;
-        coordinate.lng = coordinate.lng.toFixed(8);
-        coordinate.lat = olCoordinate[1] * d;
-        coordinate.lat = coordinate.lat.toFixed(8);
-        coordinate.unit = "gon";
-        return coordinate;
-    }
-
-    /**
-     * meter
-     *
-     * @param {Array} olCoordinate - ol.Coordinate object [lon, lat]
-     * @return {Object} coordinate - coordinate object : {x : "148593.58", y : "6176560.95"} par exemple
-     * @private
-     */
-    _displayMeter (olCoordinate) {
-        // on recoit toujours des coordonnées metriques
-        var coordinate = {};
-        coordinate.x = olCoordinate[0].toFixed(2);
-        coordinate.y = olCoordinate[1].toFixed(2);
-        coordinate.unit = "m";
-        return coordinate;
-    }
-
-    /**
-     * kilometer
-     *
-     * @param {Array} olCoordinate - ol.Coordinate object [lon, lat]
-     * @return {Object} coordinate - coordinate object : {x : "214.96", y : "6250.09"} par exemple
-     * @private
-     */
-    _displayKMeter (olCoordinate) {
-        var coordinate = {};
-        coordinate.x = (olCoordinate[0] / 1000).toFixed(2);
-        coordinate.y = (olCoordinate[1] / 1000).toFixed(2);
-        coordinate.unit = "km";
-        return coordinate;
     }
 
     // ################################################################### //

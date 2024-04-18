@@ -52,6 +52,15 @@
   justify-content: space-evenly;
 }
 
+.gpf-flex-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.gpf-flex-padding {
+  padding: 5px;
+}
 
 .gpf-hidden {
   display: none;
