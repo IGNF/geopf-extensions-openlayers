@@ -14,7 +14,3 @@
     background-image: url("img/GPisochronOptions.png");
     background-position: -281px center;
 }
-
-.GPisochronChoiceAlt.fr-radio-group input[type=radio] {
-    opacity: 1;
-}

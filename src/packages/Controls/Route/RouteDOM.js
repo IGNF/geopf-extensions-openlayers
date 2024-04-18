@@ -1088,7 +1088,7 @@ var RouteDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GProuteExclusionsOptions gpf-flex fr-m-1w";
+        div.className = "GProuteExclusionsOptions gpf-flex fr-checkbox-group fr-m-1w";
 
         /* jshint -W083 */
         for (var value in exclusions) {

@@ -230,6 +230,7 @@ var IsoDOM = {
     _createIsoPanelFormTypeChoiceElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronChoice");
+        div.className = "fr-mt-4w";
 
         // div.appendChild(this._createIsoPanelFormTypeChoiceChronElement());
         // div.appendChild(this._createIsoPanelFormTypeChoiceDistElement());
@@ -248,7 +249,7 @@ var IsoDOM = {
         var self = this;
 
         var div = document.createElement("div");
-        div.className = "GPisochronChoiceAlt gpf-flex gpf-flex-isocurve gpf-radio-group fr-radio-group fr-m-1w";
+        div.className = "GPisochronChoiceAlt gpf-flex gpf-flex-isocurve gpf-radio-group fr-radio-group";
 
         var input = document.createElement("input");
         input.id = this._addUID("GPisochronChoiceAltChron");
@@ -276,6 +277,7 @@ var IsoDOM = {
         label.className = "GPisochronChoiceAltImg gpf-label fr-label";
         label.htmlFor = this._addUID("GPisochronChoiceAltChron");
         label.innerHTML = "isochrone";
+        label.title = "isochrone";
         div.appendChild(label);
 
         var span = document.createElement("span");
@@ -335,6 +337,8 @@ var IsoDOM = {
         label.className = "GPisochronChoiceAltImg gpf-label fr-label";
         label.htmlFor = this._addUID("GPisochronChoiceAltDist");
         label.innerHTML = "isodistance";
+        label.title = "isodistance";
+
         div.appendChild(label);
 
         var span = document.createElement("span");
@@ -505,6 +509,7 @@ var IsoDOM = {
     _createIsoPanelFormModeChoiceElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronModeChoice");
+        div.className = "fr-my-4w";
 
         // div.appendChild(this._createIsoPanelFormModeChoiceTransportElement());
         // div.appendChild(this._createIsoPanelFormModeChoiceDirectionElement());
@@ -621,7 +626,6 @@ var IsoDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronDirectionChoice");
-        div.className = "fr-m-1w"; 
 
         var label = document.createElement("label");
         label.className = "GPisochronModeLabel gpf-label fr-label";
@@ -712,7 +716,7 @@ var IsoDOM = {
         div.id = this._addUID("GPisoExclusions");
 
         var label = document.createElement("label");
-        label.className = "GPisoExclusionsLabel gpf-label fr-label fr-m-1w";
+        label.className = "GPisoExclusionsLabel gpf-label fr-label";
         label.innerHTML = "Passages autorisés";
         div.appendChild(label);
 
@@ -733,7 +737,7 @@ var IsoDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPisoExclusionsOptions gpf-flex fr-m-1w";
+        div.className = "GPisoExclusionsOptions gpf-flex fr-checkbox-group fr-m-1w";
 
         /* jshint -W083 */
         for (var value in exclusions) {
