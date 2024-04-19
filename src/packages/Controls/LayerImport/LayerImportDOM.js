@@ -117,7 +117,7 @@ var LayerImportDOM = {
     _createImportPanelTitleElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportHeaderTitle");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-m-1w";
         div.innerHTML = "Import de données";
         return div;
     },
@@ -219,11 +219,11 @@ var LayerImportDOM = {
             select.addEventListener("change", function (e) {
                 if (this.value === "KML" || this.value === "GPX" || this.value === "GeoJSON" || this.value === "MAPBOX") {
                     // static import
-                    document.getElementById(context._addUID("GPimportStaticParams")).className = "GPelementVisible gpf-visible";
+                    document.getElementById(context._addUID("GPimportStaticParams")).className = "GPelementVisible gpf-visible fr-my-4w";
                     document.getElementById(context._addUID("GPimportServiceParams")).className = "GPelementHidden gpf-hidden";
                 } else if (this.value === "WMS" || this.value === "WMTS" || this.value === "WFS") {
                     // service import
-                    document.getElementById(context._addUID("GPimportServiceParams")).className = "GPelementVisible gpf-visible";
+                    document.getElementById(context._addUID("GPimportServiceParams")).className = "GPelementVisible gpf-visible fr-my-4w";
                     document.getElementById(context._addUID("GPimportStaticParams")).className = "GPelementHidden gpf-hidden";
                 }
                 context._onImportTypeChange(e);
@@ -232,11 +232,11 @@ var LayerImportDOM = {
             select.attachEvent("onchange", function () {
                 if (this.value === "KML" || this.value === "GPX" || this.value === "GeoJSON" || this.value === "MAPBOX") {
                     // static import
-                    document.getElementById(context._addUID("GPimportStaticParams")).className = "GPelementVisible gpf-visible";
+                    document.getElementById(context._addUID("GPimportStaticParams")).className = "GPelementVisible gpf-visible fr-my-4w";
                     document.getElementById(context._addUID("GPimportServiceParams")).className = "GPelementHidden gpf-hidden";
                 } else if (this.value === "WMS" || this.value === "WMTS" || this.value === "WFS") {
                     // service import
-                    document.getElementById(context._addUID("GPimportServiceParams")).className = "GPelementVisible gpf-visible";
+                    document.getElementById(context._addUID("GPimportServiceParams")).className = "GPelementVisible gpf-visible fr-my-4w";
                     document.getElementById(context._addUID("GPimportStaticParams")).className = "GPelementHidden gpf-hidden";
                 }
                 context._onImportTypeChange();
@@ -300,7 +300,7 @@ var LayerImportDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportStaticParams");
         if (currentType === "KML" || currentType === "GPX" || currentType === "GeoJSON" || currentType === "MAPBOX") {
-            div.className = "GPelementVisible gpf-visible";
+            div.className = "GPelementVisible gpf-visible fr-my-4w";
         } else {
             div.className = "GPelementHidden gpf-hidden";
         }
@@ -315,7 +315,7 @@ var LayerImportDOM = {
      */
     _createStaticNameLabel : function () {
         var div = document.createElement("div");
-        div.className = "GPimportInputLine";
+        div.className = "GPimportInputLine fr-mb-1w";
 
         var label = document.createElement("label");
         label.className = "GPlabel gpf-label fr-label";
@@ -341,6 +341,7 @@ var LayerImportDOM = {
     _createStaticModeChoiceDiv : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportChoice");
+        div.className = "fr-my-1w";
         return div;
     },
 
@@ -353,19 +354,19 @@ var LayerImportDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPimportChoiceAlt gpf-radio-group fr-radio-group fr-m-1w";
+        div.className = "GPimportChoiceAlt gpf-radio-group fr-radio-group";
 
         var input = document.createElement("input");
         input.type = "radio";
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
-                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-m-1w";
+                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-mb-1w";
                 document.getElementById(context._addUID("GPimportValueUrl")).className = "GPelementHidden gpf-hidden";
                 context._onStaticImportTypeChange(e);
             });
         } else if (input.appendChild) {
             input.appendChild("onchange", function () {
-                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-m-1w";
+                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-mb-1w";
                 document.getElementById(context._addUID("GPimportValueUrl")).className = "GPelementHidden gpf-hidden";
                 context._onStaticImportTypeChange();
             });
@@ -447,7 +448,7 @@ var LayerImportDOM = {
      */
     _createStaticLocalInputLabel : function () {
         var label = document.createElement("label");
-        label.className = "GPlabel gpf-label fr-label";
+        label.className = "GPlabel gpf-label fr-label fr-mb-1w";
         label.htmlFor = this._addUID("GPimportFile");
         label.innerHTML = "Fichier local";
         label.title = "Fichier local";

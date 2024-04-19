@@ -9,6 +9,17 @@
   width: 340px;
 }
 
+div[id^="GPimportTypeLine-"] {
+  border-bottom: 1px solid #999;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+div[id^="GPimportChoice-"] {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 .GPshowImportPicto {
   background-image: url("img/GPimportOpen.png");
   background-repeat: no-repeat;

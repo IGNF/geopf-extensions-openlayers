@@ -66,20 +66,12 @@ form[id^=GPimportForm-] {
     padding: 15px;
 }
 
-div[id^="GPimportTypeLine-"] {
-    border-bottom: 1px solid #999;
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-}
-
 div[id^="GPimportChoice-"] {
     display: -ms-flexbox;
     display: -webkit-box;
     display: flex;
     -ms-flex-pack: distribute;
     justify-content: space-around;
-    margin-top: 5px;
-    margin-bottom: 5px;
 }
 
 input[id^="GPimportSubmit-"] {
