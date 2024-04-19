@@ -183,6 +183,10 @@ div[id^=GPgeocodeResults-] {
 
 /* Autocomplete list / geocode results */
 
+.GPlabelTitle {
+  font-weight: bold;
+}
+
 [id^="GPautoCompleteList"],
 dialog[id^="GPgeocodeResultsList"] {
   margin-left: 33px;

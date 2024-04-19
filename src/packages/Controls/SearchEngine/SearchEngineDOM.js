@@ -495,28 +495,32 @@ var SearchEngineDOM = {
 
         if (container.addEventListener) {
             container.addEventListener("click", function (e) {
-                self.onAutoCompletedResultsItemClick(e);
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             }, false);
         } else if (container.attachEvent) {
             container.attachEvent("onclick", function (e) {
-                self.onAutoCompletedResultsItemClick(e);
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             });
         }
 
-        // Proposals are dynamically filled in Javascript by autocomplete service
+        // Proposals are dynamically filled in Javascript by autocomplete or search service
         // <div class="GPautoCompleteProposal">...</div>
 
         return container;
     },
 
+    _createAutoCompletedLocationContainer () {
+        var container = document.createElement("div");
+        container.id = this._addUID("GPautocompleteResultsLocation");
+        container.className = "";
+        return container;
+    },
     _createAutoCompletedLocationTitleElement () {
-        var container = document.getElementById(this._addUID("GPautocompleteResults"));
+        var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
         var label = document.createElement("label");
-        label.className = "GPlabel GPlabelLocationTitle gpf-label fr-label";
+        label.className = "GPlabel GPlabelTitle gpf-label fr-label";
         label.innerHTML = "LIEUX & ADRESSES";
         container.appendChild(label);
     },
@@ -531,7 +535,10 @@ var SearchEngineDOM = {
      * @param {Number} id - ID
      */
     _createAutoCompletedLocationElement : function (location, id) {
-        var container = document.getElementById(this._addUID("GPautocompleteResults"));
+        // contexte d'execution
+        var self = this;
+
+        var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
 
         var div = document.createElement("div");
         div.id = this._addUID("AutoCompletedLocation_" + id);
@@ -539,11 +546,57 @@ var SearchEngineDOM = {
         div.innerHTML = GeocodeUtils.getSuggestedLocationFreeform(location);
         if (div.addEventListener) {
             div.addEventListener("click", function (e) {
-                container.click(e);
+                self.onAutoCompletedResultsItemClick(e);
             }, false);
         } else if (div.attachEvent) {
             div.attachEvent("onclick", function (e) {
-                container.click(e);
+                self.onAutoCompletedResultsItemClick(e);
+            });
+        }
+
+        container.appendChild(div);
+    },
+
+    _createSearchedSuggestContainer () {
+        var container = document.createElement("div");
+        container.id = this._addUID("GPautocompleteResultsSuggest");
+        container.className = "";
+        return container;
+    },
+    _createSearchedSuggestTitleElement () {
+        var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
+        var label = document.createElement("label");
+        label.className = "GPlabel GPlabelTitle gpf-label fr-label";
+        label.innerHTML = "CARTES & DONNÉES";
+        container.appendChild(label);
+    },
+
+    /**
+     * Autocompletion result of search service.
+     * Proposals are dynamically filled in Javascript by autocomplete service
+     *
+     *
+     * @param {Object} suggest - suggested results
+     * @param {Number} id - ID
+     */
+    _createSearchedSuggestElement : function (suggest, id) {
+        // contexte d'execution
+        var self = this;
+
+        var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
+
+        var div = document.createElement("div");
+        div.id = this._addUID("AutoCompletedSuggest_" + id);
+        div.className = "GPautoCompleteProposal gpf-panel__items";
+        div.innerHTML = suggest.name + "(" + suggest.service + ")";
+        div.title = suggest.title;
+        if (div.addEventListener) {
+            div.addEventListener("click", function (e) {
+                self.onSearchedResultsItemClick(e);
+            }, false);
+        } else if (div.attachEvent) {
+            div.attachEvent("onclick", function (e) {
+                self.onSearchedResultsItemClick(e);
             });
         }
 

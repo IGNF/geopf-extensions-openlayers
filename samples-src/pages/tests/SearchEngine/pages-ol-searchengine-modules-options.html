@@ -113,7 +113,7 @@
                           ]
                         },
                         resources : {
-                          geocode : ["CadastralParcel", "StreetAddress", "PositionOfInterest"], // ou "location"
+                          geocode : ["CadastralParcel", "StreetAddress", "PositionOfInterest"], // ou "location" ?
                           autocomplete : ["PositionOfInterest", "StreetAddress"],
                           search : true
                         },
@@ -144,6 +144,9 @@
                     });
 
                     map.addControl(search);
+                    search.on("searchengine:search:click", function (e) {
+                      console.warn("search", e.suggest, e.error);
+                    });
                 };
 
                  Gp.Services.getConfig({
