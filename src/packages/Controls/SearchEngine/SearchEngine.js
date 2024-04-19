@@ -91,7 +91,7 @@ var logger = Logger.getLogger("searchengine");
  * @todo option : direction (start|end) de la position du picto (loupe)
  * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
  * @todo finir le mode sexa decimal des coordonnées
- * @todo finir l'accessibilité du mode sex decimal
+ * @todo finir l'accessibilité du mode sexa decimal
  * @todo optimiser la taille des fenêtres en dsfr
  * @example
  *  var SearchEngine = ol.control.SearchEngine({

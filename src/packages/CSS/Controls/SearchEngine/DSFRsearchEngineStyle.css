@@ -37,3 +37,33 @@
   background-position: -29px center;
 }
 .gpf-btn-icon-close {}
+
+/* Autocomplete list / geocode results */
+
+div[id^=GPautoCompleteList],
+dialog[id^=GPgeocodeResultsList] {
+  width: 300px;
+  position: absolute;
+  max-height: 240px;
+  background-color: #FFF
+}
+
+div[id^=GPautoCompleteList] {
+  top: 55px;
+  
+}
+
+dialog[id^=GPgeocodeResultsList] {
+  position: absolute;
+  top: 55px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+div[id^=GPgeocodeResults-] {
+  width: 100%;
+  position: relative;
+  background-color: #FFF;
+  max-height: 240px;
+  overflow-y: auto;
+}
