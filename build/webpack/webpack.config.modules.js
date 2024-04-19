@@ -57,7 +57,7 @@ module.exports = (env, argv) => {
     if (env.samples === "no") {
         samplesEnv = false;
     }
- 
+
     return {
         entry : {
             // CSS themes portail
@@ -283,7 +283,7 @@ module.exports = (env, argv) => {
                         {
                             loader : 'string-replace-loader',
                             options : {
-                                search: '__PRODUCTION__', 
+                                search: '__PRODUCTION__',
                                 replace(match, p1, offset, string) {
                                     console.log(`Replace "${match}" in file "${this.resource}".`)
                                     return `${logMode}`
@@ -431,7 +431,7 @@ module.exports = (env, argv) => {
             new CopyWebpackPlugin({
                 patterns: [
                     {
-                        from : path.join(ROOT, "samples-src", "resources", "**/*"),
+                        from : path.join(ROOT, "samples-src", "resources"),
                         to : path.join(ROOT, "samples", "resources"),
                         context : path.join(ROOT, "samples-src", "resources"),
                         force: true
