@@ -38,7 +38,7 @@ var ElevationPathDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowElevationPathPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-icon-elevation fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon gpf-icon-elevation fr-btn";
         button.title = "Calculer un profil";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

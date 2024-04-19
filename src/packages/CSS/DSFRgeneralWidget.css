@@ -7,6 +7,7 @@
   pointer-events: auto;
   display: flex;
   padding: 2px;
+  width: 44px;
 }
 
 .gpf-panel {
@@ -113,6 +114,10 @@
 .gpf-icon-close {}
 .gpf-icon-reverse {
   
+}
+
+.gpf-btn-icon {
+  width:inherit
 }
 
 /*************/

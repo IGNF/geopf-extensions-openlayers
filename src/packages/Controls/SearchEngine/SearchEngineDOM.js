@@ -40,7 +40,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowSearchEnginePicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-search fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon gpf-btn-icon-search fr-btn";
         button.title = "Afficher/masquer la recherche par lieux";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
