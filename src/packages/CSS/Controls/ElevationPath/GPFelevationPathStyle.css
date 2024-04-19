@@ -126,6 +126,9 @@ div.tooltip-d3 {
     pointer-events: none;
 }
 
+[id^=GPelevationPathPanel-] {
+  width: 280px;
+}
 /*
 @media (min-width:720px) and (min-height:720px) {
 
