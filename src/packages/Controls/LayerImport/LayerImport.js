@@ -8,7 +8,7 @@ import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
 import Feature from "ol/Feature";
 import WMTSTileGrid from "ol/tilegrid/WMTS";
-import { createXYZ as olCreateXYZTileGrid } from "ol/tilegrid"; // FIXME olCreateXYZTileGrid !?
+// import { createXYZ as olCreateXYZTileGrid } from "ol/tilegrid"; // FIXME olCreateXYZTileGrid !?
 import {
     transform as olTransformProj,
     get as olGetProj,
@@ -1298,12 +1298,12 @@ var LayerImport = class LayerImport extends Control {
                                     vectorSource = new VectorTileSource({
                                         attributions : vectorTileJson.getAttributions() || _tileJSONDoc.attribution,
                                         format : vectorFormat,
-                                        tileGrid : olCreateXYZTileGrid({
-                                            extent : _glSource.bounds, // [minx, miny, maxx, maxy]
-                                            maxZoom : _glSource.maxzoom || 22,
-                                            minZoom : _glSource.minzoom || 1,
-                                            tileSize : _glSource.tileSize || 256
-                                        }),
+                                        // tileGrid : olCreateXYZTileGrid({
+                                        //     extent : _glSource.bounds, // [minx, miny, maxx, maxy]
+                                        //     maxZoom : _glSource.maxzoom || 22,
+                                        //     minZoom : _glSource.minzoom || 1,
+                                        //     tileSize : _glSource.tileSize || 256
+                                        // }),
                                         urls : tiles
                                     });
                                     vectorSource._title = _title;

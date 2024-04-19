@@ -118,7 +118,7 @@ var DrawingDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPdrawingPanelClose");
-        divClose.className = "GPpanelClose GPdrawingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose GPdrawingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
