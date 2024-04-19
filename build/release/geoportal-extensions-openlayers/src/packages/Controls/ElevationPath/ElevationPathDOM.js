@@ -107,7 +107,7 @@ var ElevationPathDOM = {
 
         var divInfo = document.createElement("button");
         divInfo.id = this._addUID("GPelevationPathPanelInfo");
-        divInfo.className = "GPpanelInfo gpf-btn gpf-btn-icon-info fr-btn";
+        divInfo.className = "GPpanelInfo gpf-btn gpf-btn-icon-info fr-btn fr-btn--secondary";
         divInfo.title = "Informations";
         // add event on click
         if (divInfo.addEventListener) {
@@ -135,7 +135,7 @@ var ElevationPathDOM = {
 
         var buttonReduce = document.createElement("button");
         buttonReduce.id = this._addUID("GPelevationPathPanelReduce");
-        buttonReduce.className = "GPpanelReduce gpf-btn gpf-btn-icon-reduce fr-btn";
+        buttonReduce.className = "GPpanelReduce gpf-btn gpf-btn-icon-reduce fr-btn fr-btn--secondary";
         buttonReduce.title = "Masquer le panneau";
 
         if (buttonReduce.addEventListener) {
@@ -155,7 +155,7 @@ var ElevationPathDOM = {
 
         var buttonClose = document.createElement("button");
         buttonClose.id = this._addUID("GPelevationPathPanelClose");
-        buttonClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
+        buttonClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         buttonClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox

@@ -208,7 +208,7 @@ var ReverseGeocodeDOM = {
         var buttonNew = document.createElement("button");
         buttonNew.id = this._addUID("GPreverseGeocodingReturnPicto");
         buttonNew.title = "Nouvelle recherche";
-        buttonNew.className = "GPreturnPicto GPreverseGeocodingReturnPicto gpf-btn gpf-btn-icon-return fr-btn";
+        buttonNew.className = "GPreturnPicto GPreverseGeocodingReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary";
         buttonNew.classList.add("GPelementHidden");
         buttonNew.classList.add("gpf-hidden");
         if (buttonNew.addEventListener) {
@@ -257,7 +257,7 @@ var ReverseGeocodeDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPreverseGeocodingPanelClose");
-        divClose.className = "GPpanelClose GPreverseGeocodingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn";
+        divClose.className = "GPpanelClose GPreverseGeocodingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -473,7 +473,7 @@ var ReverseGeocodeDOM = {
     _createReverseGeocodingSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPreverseGeocodingSubmit");
-        input.className = "GPsubmit gpf-btn fr-btn";
+        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary";
         input.type = "submit";
         input.value = "Rechercher";
 
