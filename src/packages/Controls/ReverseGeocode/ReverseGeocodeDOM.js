@@ -240,7 +240,7 @@ var ReverseGeocodeDOM = {
      */
     _createReverseGeocodingPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-m-1w";
         div.id = this._addUID("GPreverseGeocodingHeaderTitle");
         div.innerHTML = "Recherche inverse";
         return div;
@@ -334,7 +334,7 @@ var ReverseGeocodeDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPflexInput gpf-flex gpf-flex-reverse";
+        div.className = "GPflexInput gpf-flex gpf-flex-reverse fr-mb-1w";
 
         var label = document.createElement("label");
         label.id = "label-recherche-par";
@@ -403,7 +403,7 @@ var ReverseGeocodeDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPflexInput gpf-flex gpf-flex-reverse";
+        div.className = "GPflexInput gpf-flex gpf-flex-reverse fr-mb-2w";
 
         var label = document.createElement("label");
         label.id = "label-delimitation";
