@@ -125,7 +125,9 @@
 
 .gpf-label {}
 .gpf-select {}
-.gpf-input {}
+.gpf-input {
+  padding-left: 5px;
+}
 .gpf-radio-group {}
 .gpf-upload {}
 

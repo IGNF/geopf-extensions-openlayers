@@ -1,3 +1,8 @@
+/**
+ * Gestion du service de recherche de couches
+ * @see https://geoservices.ign.fr/documentation/services/services-geoplateforme/service-geoplateforme-de-recherche
+ */
+
 /** resultats du service */
 let m_suggestions = [];
 

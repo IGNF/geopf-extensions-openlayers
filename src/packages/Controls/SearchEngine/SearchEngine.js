@@ -360,17 +360,17 @@ var SearchEngine = class SearchEngine extends Control {
         this._coordinateSearchSystems = [];
         if (this.options.displayButtonCoordinateSearch) {
             this._initCoordinateSearchSystems();
+            this._currentCoordinateSearchSystems = this._coordinateSearchSystems[0]; // epsg:4326
+            this._currentCoordinateSearchType = this._coordinateSearchSystems[0].type; // geographical ou metric
         }
 
         // recherche par coordonnées : unités
         this._coordinateSearchUnits = [];
         if (this.options.displayButtonCoordinateSearch) {
             this._initCoordinateSearchUnits();
+            this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code; // decimal
         }
 
-        this._currentCoordinateSearchSystems = this._coordinateSearchSystems[0]; // epsg:4326
-        this._currentCoordinateSearchType = this._coordinateSearchSystems[0].type; // geographical ou metric
-        this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code; // decimal
         
         this._coordinateSearchLngInput = null;
         this._coordinateSearchLatInput = null;

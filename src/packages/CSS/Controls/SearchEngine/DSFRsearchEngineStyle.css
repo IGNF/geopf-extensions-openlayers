@@ -1,8 +1,7 @@
 .gpf-widget-padding {
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 5px;
+    padding-left: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 .gpf-widget-color {
     background-color: #ffffff;
@@ -19,22 +18,22 @@
 }
 .gpf-btn-icon-search-advanced {
     background-image: url("img/GPsearchEngineOpen.png");
-    background-position: -24px center;
+    background-position: -126px center;
     background-repeat: no-repeat;
 }
 .gpf-btn-icon-search-geolocate {
     background-image: url("img/GPsearchEngineOpen.png");
-    background-position: -102px center;
+    background-position: -178px center;
     background-repeat: no-repeat;
 }
 .gpf-btn-icon-search-coordinate {
     background-image: url("img/GPsearchEngineOpen.png");
-    background-position: -76px center;
+    background-position: -152px center;
     background-repeat: no-repeat;
 }
 
 .gpf-btn-icon-reset {
   background-image: url("img/GPsearchEngineClose.png");
-  background-position: 0 center;
+  background-position: -29px center;
 }
 .gpf-btn-icon-close {}

@@ -225,7 +225,8 @@ var SearchEngineDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPsearchInputReset");
-        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset fr-btn"; /* not use : fr-btn--close fr-btn--secondary */
+        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary"; /* not use : fr-btn--close */
+        buttonReset.setAttribute("aria-label", "Supprimer la recherche");
         // Reset input
         buttonReset.addEventListener("click", function (e) {
             // FIXME event déclenché sur la frappe "return" dans la zone de saisie !?
@@ -259,7 +260,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowAdvancedSearch");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch gpf-btn gpf-btn-icon-search-advanced fr-btn"; /* not use : fr-btn--secondary */
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch gpf-btn gpf-btn-icon-search-advanced fr-btn fr-btn--secondary fr-m-1w";
         button.title = "Ouvrir la recherche avancée";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -305,7 +306,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowGeolocate");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGeolocate gpf-btn gpf-btn-icon-search-geolocate fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGeolocate gpf-btn gpf-btn-icon-search-geolocate fr-btn fr-btn--secondary fr-m-1w";
         button.title = "Activer la geolocalisation";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -334,7 +335,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowSearchByCoordinate");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchByCoordinate gpf-btn gpf-btn-icon-search-coordinate fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchByCoordinate gpf-btn gpf-btn-icon-search-coordinate fr-btn fr-btn--secondary fr-m-1w";
         button.title = "Ouvrir la recherche par coordonnées";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -733,6 +734,7 @@ var SearchEngineDOM = {
 
         var select = document.createElement("select");
         select.id = this._addUID("GPadvancedSearchCode");
+        select.title = "Choisir un type de recherche";
         select.className = "GPadvancedSearchCode gpf-select fr-select";
         select.addEventListener("change", function (e) {
             // var idx   = e.target.selectedIndex;
@@ -1077,6 +1079,7 @@ var SearchEngineDOM = {
 
         var selectSystem = document.createElement("select");
         selectSystem.id = this._addUID("GPcoordinateSearchSystem");
+        selectSystem.title = "Choisir un système de réference";
         selectSystem.className = "GPselect GPcoordinateSearchSystemsSelect gpf-select fr-select";
         selectSystem.addEventListener("change", function (e) {
             context.onCoordinateSearchSystemChange(e);
@@ -1109,6 +1112,7 @@ var SearchEngineDOM = {
 
         var selectUnits = document.createElement("select");
         selectUnits.id = this._addUID("GPcoordinateSearchUnits");
+        selectUnits.title = "Choisir un type d'unité";
         selectUnits.className = "GPselect GPcoordinateSearchUnitsSelect gpf-select fr-select";
         selectUnits.addEventListener("change", function (e) {
             context.onCoordinateSearchUnitsChange(e);
