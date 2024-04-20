@@ -7,6 +7,13 @@
     background-color: #ffffff;
 }
 
+select[name^="inputSex"].gpf-select {
+  padding: unset;
+}
+input[name^="inputSex"].gpf-input {
+  padding: unset;
+}
+
 .gpf-btn-icon-search {
     background-image: url("img/dsfr/search-line.svg");
     background-repeat: no-repeat;
