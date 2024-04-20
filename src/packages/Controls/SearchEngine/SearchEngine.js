@@ -90,9 +90,6 @@ var logger = Logger.getLogger("searchengine");
  * @fires searchengine:search:click
  * @todo option : direction (start|end) de la position du picto (loupe)
  * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
- * @todo finir le mode sexa decimal des coordonnées
- * @todo finir l'accessibilité du mode sexa decimal
- * @todo optimiser la taille des fenêtres en dsfr
  * @example
  *  var SearchEngine = ol.control.SearchEngine({
  *      apiKey : "CLEAPI",
@@ -1440,8 +1437,18 @@ var SearchEngine = class SearchEngine extends Control {
      * @private
      */
     onShowSearchByCoordinateClick () {
-        var lng = this._coordinateSearchLngInput.value;
-        var lat = this._coordinateSearchLatInput.value;
+        var lng = null;
+        var lat = null;
+        if (this._coordinateSearchLngInput && this._coordinateSearchLngInput.nodeName === "DIV" &&
+            this._coordinateSearchLatInput && this._coordinateSearchLatInput.nodeName === "DIV"
+        ) {
+            lng = this._getCoordinateSearchDMS(this._coordinateSearchLngInput);
+            lat = this._getCoordinateSearchDMS(this._coordinateSearchLatInput);
+        } else {
+            lng = this._coordinateSearchLngInput.value;
+            lat = this._coordinateSearchLatInput.value;
+        }
+
         if (!lng || !lat) {
             return;
         }
@@ -1463,6 +1470,21 @@ var SearchEngine = class SearchEngine extends Control {
         }
     }
 
+    _getCoordinateSearchDMS (dom) {
+        if (dom && dom.nodeName === "DIV") {
+            var nodes = dom.querySelectorAll("[name]");
+            if (nodes) {
+                var degrees = MathUtils.toInteger(nodes[0].value);
+                var minutes = MathUtils.toInteger(nodes[1].value);
+                var seconds = MathUtils.toInteger(nodes[2].value);
+                var hemispheres = nodes[3].options[nodes[3].selectedIndex].text;
+                if (!degrees || !minutes || !seconds || !hemispheres) {
+                    return;
+                }
+                return MathUtils.dmsToDecimal(degrees, minutes, seconds, hemispheres);
+            }
+        }
+    }
     // ################################################################### //
     // ################## handlers events AutoComplete ################### //
     // ################################################################### //

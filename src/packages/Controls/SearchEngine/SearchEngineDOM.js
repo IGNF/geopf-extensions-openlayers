@@ -1163,6 +1163,7 @@ var SearchEngineDOM = {
         input.className = "GPcoordinateSearchInput gpf-input fr-input";
         input.title = "Saisir des coordonnées";
         input.name = "coordinate-lng";
+        input.required = "";
         switch (code) {
             case "DMS":
                 input.title += " géographiques (en sexa)";
@@ -1192,13 +1193,41 @@ var SearchEngineDOM = {
         var div = document.createElement("div");
         div.innerHTML = `
         <div class="GPflexInput gpf-flex">
-            <input step="1" id="GPcoordinatSearchInputSexLonDeg" class="gpf-input fr-input" name="inputSexLonDeg" type="number" required="" min="0" max="180">
+            <input step="1" 
+                id="GPcoordinatSearchInputSexLonDeg" 
+                class="gpf-input fr-input" 
+                name="inputSexLonDeg" 
+                title="Saisir une valeur de degré entre 0° et 180°"
+                type="number" 
+                required="" 
+                min="0" 
+                max="180">
             <label>°</label>
-            <input step="1" id="GPcoordinatSearchInputSexLonMin" class="gpf-input fr-input" name="inputSexLonMin" type="number" required="" min="0" max="59">
+            <input step="1" 
+                id="GPcoordinatSearchInputSexLonMin" 
+                class="gpf-input fr-input" 
+                name="inputSexLonMin" 
+                title="Saisir une valeur de minute entre 0' et 59'"
+                type="number" 
+                required="" 
+                min="0" 
+                max="59">
             <label>'</label>
-            <input step="any" id="GPcoordinatSearchInputSexLonSec" class="gpf-input fr-input" name="inputSexLonSec" type="number" required="" min="0" max="59.9999">
+            <input step="any" 
+                id="GPcoordinatSearchInputSexLonSec" 
+                class="gpf-input fr-input" 
+                name="inputSexLonSec" 
+                title="Saisir une valeur de seconde entre 0'' et 59''"
+                type="number" 
+                required="" 
+                min="0" 
+                max="59.9999">
             <label>"</label>
-            <select id="GPcoordinatSearchInputSexLonToward" class="GPselect gpf-select fr-select" name="inputSexLonToward">
+            <select 
+                id="GPcoordinatSearchInputSexLonToward" 
+                class="GPselect gpf-select fr-select" 
+                title="Saisir une direction pour Est et 0uest"
+                name="inputSexLonToward">
                 <option value="O">O</option>
                 <option value="E" selected="">E</option>
             </select>
@@ -1239,6 +1268,7 @@ var SearchEngineDOM = {
         input.className = "GPcoordinateSearchInput gpf-input fr-input";
         input.title ="Saisir des coordonnées";
         input.name = "coordinate-lat";
+        input.required = "";
         switch (code) {
             case "DMS":
                 input.title += " géographiques (en sexa)"; 
@@ -1268,13 +1298,41 @@ var SearchEngineDOM = {
         var div = document.createElement("div");
         div.innerHTML = `
         <div class="GPflexInput gpf-flex">
-            <input step="1" id="GPcoordinatSearchInputSexLatDeg" class="gpf-input fr-input" name="inputSexLatDeg" type="number" required="" min="0" max="85">
+            <input step="1" 
+                id="GPcoordinatSearchInputSexLatDeg" 
+                class="gpf-input fr-input" 
+                name="inputSexLatDeg" 
+                title="Saisir une valeur de degré entre 0° et 85°"
+                type="number" 
+                required="" 
+                min="0" 
+                max="85">
             <label>°</label>
-            <input step="1" id="GPcoordinatSearchInputSexLatMin" class="gpf-input fr-input" name="inputSexLatMin" type="number" required="" min="0" max="59">
+            <input step="1" 
+                id="GPcoordinatSearchInputSexLatMin" 
+                class="gpf-input fr-input" 
+                name="inputSexLatMin" 
+                title="Saisir une valeur de minute entre 0' et 59'"
+                type="number" 
+                required="" 
+                min="0" 
+                max="59">
             <label>'</label>
-            <input step="any" id="GPcoordinatSearchInputSexLatSec" class="gpf-input fr-input" name="inputSexLatSec" type="number" required="" min="0" max="59.9999">
+            <input step="any" 
+                id="GPcoordinatSearchInputSexLatSec" 
+                class="gpf-input fr-input" 
+                name="inputSexLatSec" 
+                title="Saisir une valeur de seconde entre 0' et 59'"
+                type="number" 
+                required="" 
+                min="0" 
+                max="59.9999">
             <label>"</label>
-            <select id="GPcoordinatSearchInputSexLatToward" class="GPselect gpf-select fr-select" name="inputSexLatToward">
+            <select 
+                id="GPcoordinatSearchInputSexLatToward" 
+                class="GPselect gpf-select fr-select"
+                title="Saisir une direction pour Nord et Sud"
+                name="inputSexLatToward">
                 <option value="N">N</option>
                 <option value="S">S</option>
             </select>
