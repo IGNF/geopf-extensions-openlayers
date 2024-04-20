@@ -7,10 +7,17 @@
     background-color: #ffffff;
 }
 
+select[name^="inputSex"].gpf-select {
+  padding: unset;
+}
+input[name^="inputSex"].gpf-input {
+  padding: unset;
+}
+
 .gpf-btn-icon-search {
-    background-image: url("img/GPsearchEngineOpen.png");
+    background-image: url("img/dsfr/search-line.svg");
     background-repeat: no-repeat;
-    background-position: 3px center;
+    background-position: center center;
 }
 /* hack pour forcer la couleur d'un element desactivé */
 .gpf-btn-icon-search:disabled {
@@ -22,13 +29,13 @@
     background-repeat: no-repeat;
 }
 .gpf-btn-icon-search-geolocate {
-    background-image: url("img/GPsearchEngineOpen.png");
-    background-position: -178px center;
+    background-image: url("img/dsfr/localiser.svg");
+    background-position: center center;
     background-repeat: no-repeat;
 }
 .gpf-btn-icon-search-coordinate {
-    background-image: url("img/GPsearchEngineOpen.png");
-    background-position: -152px center;
+    background-image: url("img/dsfr/coordonnees.svg");
+    background-position: center center;
     background-repeat: no-repeat;
 }
 

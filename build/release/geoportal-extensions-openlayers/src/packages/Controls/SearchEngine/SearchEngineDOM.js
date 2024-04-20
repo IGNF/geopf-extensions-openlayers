@@ -1158,6 +1158,9 @@ var SearchEngineDOM = {
         if (document.getElementById(this._addUID("GPcoordinateSearchLngInput"))) {
             document.getElementById(this._addUID("GPcoordinateSearchLngInput")).remove();
         }
+        if (document.getElementById(this._addUID("GPcoordinateSearchLngDMS"))) {
+            document.getElementById(this._addUID("GPcoordinateSearchLngDMS")).remove();
+        }
         var input = document.createElement("input");
         input.id = this._addUID("GPcoordinateSearchLngInput");
         input.className = "GPcoordinateSearchInput gpf-input fr-input";
@@ -1168,7 +1171,7 @@ var SearchEngineDOM = {
             case "DMS":
                 input.title += " géographiques (en sexa)";
                 input.className = "GPelementHidden gpf-hidden";
-                return this._setCoordinateSearchLngInputDMSElement();
+                return this._setCoordinateSearchLngDMSElement();
                 break;
             case "DEC":
                 input.title += " géographiques (en decimal)"; 
@@ -1189,8 +1192,9 @@ var SearchEngineDOM = {
         }
         return input;
     },
-    _setCoordinateSearchLngInputDMSElement () {
+    _setCoordinateSearchLngDMSElement () {
         var div = document.createElement("div");
+        div.id = this._addUID("GPcoordinateSearchLngDMS");
         div.innerHTML = `
         <div class="GPflexInput gpf-flex">
             <input step="1" 
@@ -1263,6 +1267,9 @@ var SearchEngineDOM = {
         if (document.getElementById(this._addUID("GPcoordinateSearchLatInput"))) {
             document.getElementById(this._addUID("GPcoordinateSearchLatInput")).remove();
         }
+        if (document.getElementById(this._addUID("GPcoordinateSearchLatDMS"))) {
+            document.getElementById(this._addUID("GPcoordinateSearchLatDMS")).remove();
+        }
         var input = document.createElement("input");
         input.id = this._addUID("GPcoordinateSearchLatInput");
         input.className = "GPcoordinateSearchInput gpf-input fr-input";
@@ -1273,7 +1280,7 @@ var SearchEngineDOM = {
             case "DMS":
                 input.title += " géographiques (en sexa)"; 
                 input.className = "GPelementHidden gpf-hidden";
-                return this._setCoordinateSearchLatInputDMSElement();
+                return this._setCoordinateSearchLatDMSElement();
                 break;
             case "DEC":
                 input.title += " géographiques (en decimal)"; 
@@ -1294,8 +1301,9 @@ var SearchEngineDOM = {
         }
         return input;
     },
-    _setCoordinateSearchLatInputDMSElement () {
+    _setCoordinateSearchLatDMSElement () {
         var div = document.createElement("div");
+        div.id = this._addUID("GPcoordinateSearchLatDMS");
         div.innerHTML = `
         <div class="GPflexInput gpf-flex">
             <input step="1" 

@@ -58,7 +58,7 @@ declare namespace SearchEngineDOM {
      * @returns {DOMElement} input
      */
     function _setCoordinateSearchLngInputElement(code: string): DOMElement;
-    function _setCoordinateSearchLngInputDMSElement(): HTMLDivElement;
+    function _setCoordinateSearchLngDMSElement(): HTMLDivElement;
     /**
      * update Label
      * @param {String} type - Geographical or Metric
@@ -71,7 +71,7 @@ declare namespace SearchEngineDOM {
      * @returns {DOMElement} input
      */
     function _setCoordinateSearchLatInputElement(code: string): DOMElement;
-    function _setCoordinateSearchLatInputDMSElement(): HTMLDivElement;
+    function _setCoordinateSearchLatDMSElement(): HTMLDivElement;
     /**
      * submit
      * @returns {DOMElement} input
