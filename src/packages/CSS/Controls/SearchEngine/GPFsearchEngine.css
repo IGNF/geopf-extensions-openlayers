@@ -80,8 +80,6 @@ button[id^=GPsearchInputReset] {
   height: 32px;
   border: unset;
   cursor: pointer;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
 }
 
 /* General panels */

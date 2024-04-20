@@ -32,6 +32,11 @@
   background-position: 0 center;
 }
 
+button[id^=GPsearchInputReset] {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
 button[id^=GPcoordinateSearchClose],
 button[id^=GPgeocodeResultsClose],
 button[id^=GPadvancedSearchClose] {
