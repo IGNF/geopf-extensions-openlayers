@@ -51,7 +51,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonClose = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
  * @param {Object}  [options.coordinateSearch] - coordinates search options.
- * @param {DOMElement} [options.coordinateSearch.target = null] - target location of results window. By default under the search bar.
+ * @param {DOMElement} [options.coordinateSearch.target = null] - TODO : target location of results window. By default under the search bar.
  * @param {Array}   [options.coordinateSearch.units] - list of coordinates units, to be displayed in control units list.
  *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal) for geographical coordinates,
  *      and "M" or "KM" for metric coordinates

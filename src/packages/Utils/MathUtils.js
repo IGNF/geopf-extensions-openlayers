@@ -69,6 +69,7 @@ var MathUtils = {
     /**
      * Transform decimal degrees form degrees, minutes, seconds
      * 
+     * @function dmsToDecimal
      * @param {*} degrees - degrees
      * @param {*} minutes - minutes
      * @param {*} seconds - seconds
