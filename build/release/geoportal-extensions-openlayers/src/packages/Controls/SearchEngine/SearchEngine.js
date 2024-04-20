@@ -22,6 +22,8 @@ import MathUtils from "../../Utils/MathUtils";
 import SearchEngineUtils from "../../Utils/SearchEngineUtils";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
 import CRS from "../../CRS/CRS";
+// Service
+import Search from "../../Services/Search";
 // DOM
 import SearchEngineDOM from "./SearchEngineDOM";
 
@@ -49,7 +51,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonClose = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
  * @param {Object}  [options.coordinateSearch] - coordinates search options.
- * @param {DOMElement} [options.coordinateSearch.target = null] - target location of results window. By default under the search bar.
+ * @param {DOMElement} [options.coordinateSearch.target = null] - TODO : target location of results window. By default under the search bar.
  * @param {Array}   [options.coordinateSearch.units] - list of coordinates units, to be displayed in control units list.
  *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal) for geographical coordinates,
  *      and "M" or "KM" for metric coordinates
@@ -63,9 +65,13 @@ var logger = Logger.getLogger("searchengine");
  * @param {Object}  [options.resources] - resources to be used by geocode and autocompletion services :
  * @param {String}  [options.resources.geocode = "location"] - resources geocoding, by default : "location"
  * @param {Array}   [options.resources.autocomplete] - resources autocompletion, by default : ["PositionOfInterest", "StreetAddress"]
- * @param {Boolean} [options.resources.search = false] - TODO : false to disable search service, by default : "false"
- * @param {Object}  [options.searchOptions = {}] - TODO : options of search service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~search Gp.Services.search})
+ * @param {Boolean} [options.resources.search = false] - false to disable search service, by default : "false"
+ * @param {Object}  [options.searchOptions = {}] - options of search service
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
+ * @param {Sring}  [options.searchOptions.serviceOptions.url] - url of service 
+ * @param {String}  [options.searchOptions.serviceOptions.index] - index of search, "standard" by default
+ * @param {String}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
+ * @param {Number}  [options.searchOptions.serviceOptions.size] - number of results in the response. 10 by default
  * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
  * @param {Object}  [options.geocodeOptions.serviceOptions] - options of geocode service
  * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})
@@ -82,12 +88,8 @@ var logger = Logger.getLogger("searchengine");
  * @fires searchengine:autocomplete:click
  * @fires searchengine:geocode:click
  * @fires searchengine:search:click
- * @todo ajouter le menu de recherche par coordonnées
  * @todo option : direction (start|end) de la position du picto (loupe)
  * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
- * @todo ajouter le service de recherche (cf. geoportal-access-lib) ex: https://data.geopf.fr/recherche/api/indexes/geoplateforme/suggest?text=ORTHO&fields=title
- * @todo prévoir la reponse du service de recherche dans les resultats de l'autocompletion
- * @todo event : searchengine:search:click
  * @example
  *  var SearchEngine = ol.control.SearchEngine({
  *      apiKey : "CLEAPI",
@@ -131,7 +133,7 @@ var logger = Logger.getLogger("searchengine");
  *    console.warn("autocomplete", e.location);
  *  });
  *  SearchEngine.on("searchengine:search:click", function (e) {
- *    console.warn("search", e.location);
+ *    console.warn("search", e.suggest);
  *  });
  *  SearchEngine.on("searchengine:geocode:click", function (e) {
  *    console.warn("geocode", e.location);
@@ -285,10 +287,30 @@ var SearchEngine = class SearchEngine extends Control {
         // merge with user options
         Utils.mergeParams(this.options, options);
         if (this.options.resources.geocode === "") {
-            this.options.resources.geocode = "location";
+            this.options.resources.geocode = "poi,address";
         }
         if (this.options.resources.autocomplete.length === 0) {
             this.options.resources.autocomplete = ["PositionOfInterest", "StreetAddress"];
+        }
+        if (this.options.resources.search) {
+            // configuration avec gestion des options surchargées du service
+            if (this.options.searchOptions.serviceOptions.url) {
+                Search.setUrl(this.options.searchOptions.serviceOptions.url);
+            }
+            if (this.options.searchOptions.serviceOptions.fields) {
+                Search.setFields(this.options.searchOptions.serviceOptions.fields);
+            }
+            if (this.options.searchOptions.serviceOptions.index) {
+                Search.setIndex(this.options.searchOptions.serviceOptions.index);
+            }
+            if (this.options.searchOptions.serviceOptions.size) {
+                Search.setsize(this.options.searchOptions.serviceOptions.size);
+            }
+            // abonnement au service
+            Search.target.addEventListener("suggest", (e) => {
+                logger.debug(e);
+                this._fillSearchedSuggestListContainer(e.detail);
+            });
         }
 
         /** {Boolean} specify if searchEngine control is collapsed (true) or not (false) */
@@ -302,9 +324,10 @@ var SearchEngine = class SearchEngine extends Control {
         // container de l'input de recherche
         this._inputSearchContainer = null;
 
-        // container des reponses de l'autocompletion
+        // container des reponses de l'autocompletion / du service de recherche
         this._autocompleteContainer = null;
-        this._suggestedContainer = null;
+        this._containerResultsLocation = null;
+        this._containerResultsSuggest = null;
 
         // listes des reponses de l'autocompletion
         this._suggestedLocations = [];
@@ -336,17 +359,17 @@ var SearchEngine = class SearchEngine extends Control {
         this._coordinateSearchSystems = [];
         if (this.options.displayButtonCoordinateSearch) {
             this._initCoordinateSearchSystems();
+            this._currentCoordinateSearchSystems = this._coordinateSearchSystems[0]; // epsg:4326
+            this._currentCoordinateSearchType = this._coordinateSearchSystems[0].type; // geographical ou metric
         }
 
         // recherche par coordonnées : unités
         this._coordinateSearchUnits = [];
         if (this.options.displayButtonCoordinateSearch) {
             this._initCoordinateSearchUnits();
+            this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code; // decimal
         }
 
-        this._currentCoordinateSearchSystems = this._coordinateSearchSystems[0]; // epsg:4326
-        this._currentCoordinateSearchType = this._coordinateSearchSystems[0].type; // geographical ou metric
-        this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code; // decimal
         
         this._coordinateSearchLngInput = null;
         this._coordinateSearchLatInput = null;
@@ -770,7 +793,11 @@ var SearchEngine = class SearchEngine extends Control {
         // INFO je decompose les appels car j'ai besoin de recuperer le container
         // des resultats de l'autocompletion
         var autocomplete = this._autocompleteContainer = this._createAutoCompleteElement();
-        var autocompleteList = this._suggestedContainer = this._createAutoCompleteListElement();
+        var autocompleteList = this._createAutoCompleteListElement();
+        var containerResultsLocation = this._containerResultsLocation = this._createAutoCompletedLocationContainer();
+        var containerResultsSuggest = this._containerResultsSuggest = this._createSearchedSuggestContainer();
+        autocompleteList.appendChild(containerResultsLocation);
+        autocompleteList.appendChild(containerResultsSuggest);
         autocomplete.appendChild(autocompleteList);
         container.appendChild(autocomplete);
 
@@ -929,7 +956,7 @@ var SearchEngine = class SearchEngine extends Control {
         }
 
         // on vide la liste avant de la construire
-        var element = this._suggestedContainer;
+        var element = this._containerResultsLocation;
         if (element.childElementCount) {
             while (element.firstChild) {
                 element.removeChild(element.firstChild);
@@ -941,6 +968,29 @@ var SearchEngine = class SearchEngine extends Control {
         for (var i = 0; i < locations.length; i++) {
             // Proposals are dynamically filled in Javascript by autocomplete service
             this._createAutoCompletedLocationElement(locations[i], i);
+        }
+    }
+
+    /**
+     * this method is called by this.() (case of success)
+     * and fills the container of the suggest list.
+     * it creates a HTML Element per suggest
+     *
+     * @param {Array} suggests - Array of suggested corresponding to search results list
+     * @private
+     */
+    _fillSearchedSuggestListContainer (suggests) {
+        // on vide la liste avant de la construire
+        var element = this._containerResultsSuggest;
+        if (element.childElementCount) {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        }
+        this._createSearchedSuggestTitleElement();
+        for (let i = 0; i < suggests.length; i++) {
+            const suggest = suggests[i];
+            this._createSearchedSuggestElement(suggest, i);
         }
     }
 
@@ -1387,8 +1437,18 @@ var SearchEngine = class SearchEngine extends Control {
      * @private
      */
     onShowSearchByCoordinateClick () {
-        var lng = this._coordinateSearchLngInput.value;
-        var lat = this._coordinateSearchLatInput.value;
+        var lng = null;
+        var lat = null;
+        if (this._coordinateSearchLngInput && this._coordinateSearchLngInput.nodeName === "DIV" &&
+            this._coordinateSearchLatInput && this._coordinateSearchLatInput.nodeName === "DIV"
+        ) {
+            lng = this._getCoordinateSearchDMS(this._coordinateSearchLngInput);
+            lat = this._getCoordinateSearchDMS(this._coordinateSearchLatInput);
+        } else {
+            lng = this._coordinateSearchLngInput.value;
+            lat = this._coordinateSearchLatInput.value;
+        }
+
         if (!lng || !lat) {
             return;
         }
@@ -1410,6 +1470,21 @@ var SearchEngine = class SearchEngine extends Control {
         }
     }
 
+    _getCoordinateSearchDMS (dom) {
+        if (dom && dom.nodeName === "DIV") {
+            var nodes = dom.querySelectorAll("[name]");
+            if (nodes) {
+                var degrees = MathUtils.toInteger(nodes[0].value);
+                var minutes = MathUtils.toInteger(nodes[1].value);
+                var seconds = MathUtils.toInteger(nodes[2].value);
+                var hemispheres = nodes[3].options[nodes[3].selectedIndex].text;
+                if (!degrees || !minutes || !seconds || !hemispheres) {
+                    return;
+                }
+                return MathUtils.dmsToDecimal(degrees, minutes, seconds, hemispheres);
+            }
+        }
+    }
     // ################################################################### //
     // ################## handlers events AutoComplete ################### //
     // ################################################################### //
@@ -1505,7 +1580,7 @@ var SearchEngine = class SearchEngine extends Control {
                     }
                     context._triggerHandler = setTimeout(
                         function () {
-                            logger.warn("Launch a geocode request (code postal) !");
+                            logger.warn("Launch a geocode request !");
                             context._requestGeocoding({
                                 location : value,
                                 // callback onSuccess
@@ -1538,6 +1613,15 @@ var SearchEngine = class SearchEngine extends Control {
                 }
             }
         });
+
+        // INFORMATION
+        // on effectue une requête au service de recherche.
+        // les resultats sont ajoutées à la suite de l'autocompletion,
+        // et un abonnement est mis en place pour les récuperer.
+        if (this.options.resources.search) {
+            // appel du service (cf. abonnement : Search.target.addEventListener("suggest"))
+            Search.suggest(value);
+        }
 
         var map = this.getMap();
         map.on(
@@ -1666,6 +1750,42 @@ var SearchEngine = class SearchEngine extends Control {
         this.dispatchEvent({
             type : "searchengine:autocomplete:click",
             location : this._locationsToBeDisplayed[idx]
+        });
+    }
+
+    /**
+     * this method is called by event 'click' on '' tag div
+     * (cf. this.), and it selects the suggest.
+     * this suggest call an event to added layer on the map.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    onSearchedResultsItemClick (e) {
+        var idx = SelectorID.index(e.target.id);
+
+        var message = null;
+        var suggest = Search.getSuggestions()[idx];
+        if (!suggest) {
+            message = "No suggestions found !";
+        }
+        /**
+         * event triggered when an element of the results is clicked for search service
+         *
+         * @event searchengine:search:click
+         * @property {Object} type - event
+         * @property {Object} suggest - suggest
+         * @property {Object} error - error
+         * @property {Object} target - instance SearchEngine
+         * @example
+         * SearchEngine.on("searchengine:search:click", function (e) {
+         *   console.log(e.suggest);
+         * })
+         */
+        this.dispatchEvent({
+            type : "searchengine:search:click",
+            suggest : suggest,
+            error : new Error(message)
         });
     }
 
@@ -2111,9 +2231,17 @@ var SearchEngine = class SearchEngine extends Control {
      */
     _clearSuggestedLocation () {
         this._suggestedLocations = [];
-        if (this._suggestedContainer) {
-            while (this._suggestedContainer.firstChild) {
-                this._suggestedContainer.removeChild(this._suggestedContainer.firstChild);
+        if (this._containerResultsLocation) {
+            while (this._containerResultsLocation.firstChild) {
+                this._containerResultsLocation.removeChild(this._containerResultsLocation.firstChild);
+            }
+        }
+        if (this.options.resources.search) {
+            Search.clear();
+            if (this._containerResultsSuggest) {
+                while (this._containerResultsSuggest.firstChild) {
+                    this._containerResultsSuggest.removeChild(this._containerResultsSuggest.firstChild);
+                }
             }
         }
     }

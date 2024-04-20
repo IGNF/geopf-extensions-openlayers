@@ -1,17 +1,28 @@
+/**
+ * Gestion du service de recherche de couches
+ * @see https://geoservices.ign.fr/documentation/services/services-geoplateforme/service-geoplateforme-de-recherche
+ */
+
 /** resultats du service */
-let suggestions = [];
+let m_suggestions = [];
 
 /** gestion annulation du fetch */
 let controller = new AbortController();
 
 /** index de recherche */
-let index = "geoplateforme";
+let m_index = "geoplateforme";
 
 /** liste des champs de recherche */
-let fields = "title,layer_name";
+let m_fields = "title,layer_name";
 
 /** nombre de suggestions */
-let size = "100";
+let m_size = "100";
+
+/** liste des filtres sur les services */
+let m_services = ["WMTS", "WMS"];
+
+/** url du service */
+let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
 
 /**
  * Interface pour les evenements
@@ -34,17 +45,17 @@ const suggest = async (text) => {
 
     controller = new AbortController();
 
-    let url = new URL(`https://data.geopf.fr/recherche/api/indexes/${index}/suggest`);
+    let url = new URL(m_url);
     let params = {
         text : text,
-        fields : fields,
-        size : size
+        fields : m_fields,
+        size : m_size
     };
 
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
     var response = await fetch(url, {
-        signal : controller.signal
+        // signal : controller.signal
     });
 
     var results = await response.json();
@@ -85,47 +96,75 @@ const suggest = async (text) => {
         return;
     }
 
-    for (let index = 0; index < results.length; index++) {
-        const result = results[index];
-        if (result.source.open) {
-            suggestions.push({
+    for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        if (result.source.open && m_services.includes(result.source.type)) {
+            var o = {
                 name : result.source.layer_name,
                 title : result.source.title,
                 description : result.source.description,
                 service : result.source.type
-            });
+            };
+            m_suggestions.push(o);
         }
     }
 
     target.dispatchEvent(
         new CustomEvent("suggest", {
             bubbles : true,
-            detail : suggestions
+            detail : getSuggestions()
         })
     );
 
-    return suggestions;
+    return getSuggestions();
+};
+
+const unique = () => {
+    return m_suggestions.filter((value, index, self) =>
+        index === self.findIndex((t) => (
+            t.service === value.service &&
+            t.name === value.name &&
+            t.title === value.title &&
+            t.description === value.description
+        ))
+    );
 };
 
 const clear = () => {
     controller.abort();
-    suggestions = [];
+    m_suggestions = [];
 };
 
-const getSuggestions = (i) => {
-    return (typeof i !== "undefined") ? suggestions[i] : suggestions;
+// getter
+const getSuggestions = () => {
+    return unique();
 };
-const getName = () => {
-    return suggestions.name;
+const getNames = () => {
+    return unique().map((o) => { return o.name; });
 };
-const getService = () => {
-    return suggestions.service;
+
+// setter
+const setIndex = (value) => {
+    m_index = value;
+};
+const setFields = (value) => {
+    m_fields = value;
+};
+const setsize = (value) => {
+    m_size = value;
+};
+const setUrl = (value) => {
+    m_url = value;
 };
 
 export default {
     target,
     suggest,
+    clear,
     getSuggestions,
-    getName,
-    getService
+    getNames,
+    setIndex,
+    setFields,
+    setsize,
+    setUrl
 };

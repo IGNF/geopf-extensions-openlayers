@@ -225,7 +225,8 @@ var SearchEngineDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPsearchInputReset");
-        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset fr-btn"; /* not use : fr-btn--close fr-btn--secondary */
+        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary"; /* not use : fr-btn--close */
+        buttonReset.setAttribute("aria-label", "Supprimer la recherche");
         // Reset input
         buttonReset.addEventListener("click", function (e) {
             // FIXME event déclenché sur la frappe "return" dans la zone de saisie !?
@@ -259,7 +260,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowAdvancedSearch");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch gpf-btn gpf-btn-icon-search-advanced fr-btn"; /* not use : fr-btn--secondary */
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch gpf-btn gpf-btn-icon-search-advanced fr-btn fr-btn--secondary fr-m-1w";
         button.title = "Ouvrir la recherche avancée";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -305,7 +306,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowGeolocate");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGeolocate gpf-btn gpf-btn-icon-search-geolocate fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGeolocate gpf-btn gpf-btn-icon-search-geolocate fr-btn fr-btn--secondary fr-m-1w";
         button.title = "Activer la geolocalisation";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -334,7 +335,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowSearchByCoordinate");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchByCoordinate gpf-btn gpf-btn-icon-search-coordinate fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchByCoordinate gpf-btn gpf-btn-icon-search-coordinate fr-btn fr-btn--secondary fr-m-1w";
         button.title = "Ouvrir la recherche par coordonnées";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -495,28 +496,32 @@ var SearchEngineDOM = {
 
         if (container.addEventListener) {
             container.addEventListener("click", function (e) {
-                self.onAutoCompletedResultsItemClick(e);
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             }, false);
         } else if (container.attachEvent) {
             container.attachEvent("onclick", function (e) {
-                self.onAutoCompletedResultsItemClick(e);
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             });
         }
 
-        // Proposals are dynamically filled in Javascript by autocomplete service
+        // Proposals are dynamically filled in Javascript by autocomplete or search service
         // <div class="GPautoCompleteProposal">...</div>
 
         return container;
     },
 
+    _createAutoCompletedLocationContainer () {
+        var container = document.createElement("div");
+        container.id = this._addUID("GPautocompleteResultsLocation");
+        container.className = "";
+        return container;
+    },
     _createAutoCompletedLocationTitleElement () {
-        var container = document.getElementById(this._addUID("GPautocompleteResults"));
+        var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
         var label = document.createElement("label");
-        label.className = "GPlabel GPlabelLocationTitle gpf-label fr-label";
+        label.className = "GPlabel GPlabelTitle gpf-label fr-label";
         label.innerHTML = "LIEUX & ADRESSES";
         container.appendChild(label);
     },
@@ -531,7 +536,10 @@ var SearchEngineDOM = {
      * @param {Number} id - ID
      */
     _createAutoCompletedLocationElement : function (location, id) {
-        var container = document.getElementById(this._addUID("GPautocompleteResults"));
+        // contexte d'execution
+        var self = this;
+
+        var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
 
         var div = document.createElement("div");
         div.id = this._addUID("AutoCompletedLocation_" + id);
@@ -539,11 +547,57 @@ var SearchEngineDOM = {
         div.innerHTML = GeocodeUtils.getSuggestedLocationFreeform(location);
         if (div.addEventListener) {
             div.addEventListener("click", function (e) {
-                container.click(e);
+                self.onAutoCompletedResultsItemClick(e);
             }, false);
         } else if (div.attachEvent) {
             div.attachEvent("onclick", function (e) {
-                container.click(e);
+                self.onAutoCompletedResultsItemClick(e);
+            });
+        }
+
+        container.appendChild(div);
+    },
+
+    _createSearchedSuggestContainer () {
+        var container = document.createElement("div");
+        container.id = this._addUID("GPautocompleteResultsSuggest");
+        container.className = "";
+        return container;
+    },
+    _createSearchedSuggestTitleElement () {
+        var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
+        var label = document.createElement("label");
+        label.className = "GPlabel GPlabelTitle gpf-label fr-label";
+        label.innerHTML = "CARTES & DONNÉES";
+        container.appendChild(label);
+    },
+
+    /**
+     * Autocompletion result of search service.
+     * Proposals are dynamically filled in Javascript by autocomplete service
+     *
+     *
+     * @param {Object} suggest - suggested results
+     * @param {Number} id - ID
+     */
+    _createSearchedSuggestElement : function (suggest, id) {
+        // contexte d'execution
+        var self = this;
+
+        var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
+
+        var div = document.createElement("div");
+        div.id = this._addUID("AutoCompletedSuggest_" + id);
+        div.className = "GPautoCompleteProposal gpf-panel__items";
+        div.innerHTML = suggest.name + "(" + suggest.service + ")";
+        div.title = suggest.title;
+        if (div.addEventListener) {
+            div.addEventListener("click", function (e) {
+                self.onSearchedResultsItemClick(e);
+            }, false);
+        } else if (div.attachEvent) {
+            div.attachEvent("onclick", function (e) {
+                self.onSearchedResultsItemClick(e);
             });
         }
 
@@ -680,6 +734,7 @@ var SearchEngineDOM = {
 
         var select = document.createElement("select");
         select.id = this._addUID("GPadvancedSearchCode");
+        select.title = "Choisir un type de recherche";
         select.className = "GPadvancedSearchCode gpf-select fr-select";
         select.addEventListener("change", function (e) {
             // var idx   = e.target.selectedIndex;
@@ -1024,6 +1079,7 @@ var SearchEngineDOM = {
 
         var selectSystem = document.createElement("select");
         selectSystem.id = this._addUID("GPcoordinateSearchSystem");
+        selectSystem.title = "Choisir un système de réference";
         selectSystem.className = "GPselect GPcoordinateSearchSystemsSelect gpf-select fr-select";
         selectSystem.addEventListener("change", function (e) {
             context.onCoordinateSearchSystemChange(e);
@@ -1056,6 +1112,7 @@ var SearchEngineDOM = {
 
         var selectUnits = document.createElement("select");
         selectUnits.id = this._addUID("GPcoordinateSearchUnits");
+        selectUnits.title = "Choisir un type d'unité";
         selectUnits.className = "GPselect GPcoordinateSearchUnitsSelect gpf-select fr-select";
         selectUnits.addEventListener("change", function (e) {
             context.onCoordinateSearchUnitsChange(e);
@@ -1106,6 +1163,7 @@ var SearchEngineDOM = {
         input.className = "GPcoordinateSearchInput gpf-input fr-input";
         input.title = "Saisir des coordonnées";
         input.name = "coordinate-lng";
+        input.required = "";
         switch (code) {
             case "DMS":
                 input.title += " géographiques (en sexa)";
@@ -1135,13 +1193,41 @@ var SearchEngineDOM = {
         var div = document.createElement("div");
         div.innerHTML = `
         <div class="GPflexInput gpf-flex">
-            <input step="1" id="GPcoordinatSearchInputSexLonDeg" class="gpf-input fr-input" name="inputSexLonDeg" type="number" required="" min="0" max="180">
+            <input step="1" 
+                id="GPcoordinatSearchInputSexLonDeg" 
+                class="gpf-input fr-input" 
+                name="inputSexLonDeg" 
+                title="Saisir une valeur de degré entre 0° et 180°"
+                type="number" 
+                required="" 
+                min="0" 
+                max="180">
             <label>°</label>
-            <input step="1" id="GPcoordinatSearchInputSexLonMin" class="gpf-input fr-input" name="inputSexLonMin" type="number" required="" min="0" max="59">
+            <input step="1" 
+                id="GPcoordinatSearchInputSexLonMin" 
+                class="gpf-input fr-input" 
+                name="inputSexLonMin" 
+                title="Saisir une valeur de minute entre 0' et 59'"
+                type="number" 
+                required="" 
+                min="0" 
+                max="59">
             <label>'</label>
-            <input step="any" id="GPcoordinatSearchInputSexLonSec" class="gpf-input fr-input" name="inputSexLonSec" type="number" required="" min="0" max="59.9999">
+            <input step="any" 
+                id="GPcoordinatSearchInputSexLonSec" 
+                class="gpf-input fr-input" 
+                name="inputSexLonSec" 
+                title="Saisir une valeur de seconde entre 0'' et 59''"
+                type="number" 
+                required="" 
+                min="0" 
+                max="59.9999">
             <label>"</label>
-            <select id="GPcoordinatSearchInputSexLonToward" class="GPselect gpf-select fr-select" name="inputSexLonToward">
+            <select 
+                id="GPcoordinatSearchInputSexLonToward" 
+                class="GPselect gpf-select fr-select" 
+                title="Saisir une direction pour Est et 0uest"
+                name="inputSexLonToward">
                 <option value="O">O</option>
                 <option value="E" selected="">E</option>
             </select>
@@ -1182,6 +1268,7 @@ var SearchEngineDOM = {
         input.className = "GPcoordinateSearchInput gpf-input fr-input";
         input.title ="Saisir des coordonnées";
         input.name = "coordinate-lat";
+        input.required = "";
         switch (code) {
             case "DMS":
                 input.title += " géographiques (en sexa)"; 
@@ -1211,13 +1298,41 @@ var SearchEngineDOM = {
         var div = document.createElement("div");
         div.innerHTML = `
         <div class="GPflexInput gpf-flex">
-            <input step="1" id="GPcoordinatSearchInputSexLatDeg" class="gpf-input fr-input" name="inputSexLatDeg" type="number" required="" min="0" max="85">
+            <input step="1" 
+                id="GPcoordinatSearchInputSexLatDeg" 
+                class="gpf-input fr-input" 
+                name="inputSexLatDeg" 
+                title="Saisir une valeur de degré entre 0° et 85°"
+                type="number" 
+                required="" 
+                min="0" 
+                max="85">
             <label>°</label>
-            <input step="1" id="GPcoordinatSearchInputSexLatMin" class="gpf-input fr-input" name="inputSexLatMin" type="number" required="" min="0" max="59">
+            <input step="1" 
+                id="GPcoordinatSearchInputSexLatMin" 
+                class="gpf-input fr-input" 
+                name="inputSexLatMin" 
+                title="Saisir une valeur de minute entre 0' et 59'"
+                type="number" 
+                required="" 
+                min="0" 
+                max="59">
             <label>'</label>
-            <input step="any" id="GPcoordinatSearchInputSexLatSec" class="gpf-input fr-input" name="inputSexLatSec" type="number" required="" min="0" max="59.9999">
+            <input step="any" 
+                id="GPcoordinatSearchInputSexLatSec" 
+                class="gpf-input fr-input" 
+                name="inputSexLatSec" 
+                title="Saisir une valeur de seconde entre 0' et 59'"
+                type="number" 
+                required="" 
+                min="0" 
+                max="59.9999">
             <label>"</label>
-            <select id="GPcoordinatSearchInputSexLatToward" class="GPselect gpf-select fr-select" name="inputSexLatToward">
+            <select 
+                id="GPcoordinatSearchInputSexLatToward" 
+                class="GPselect gpf-select fr-select"
+                title="Saisir une direction pour Nord et Sud"
+                name="inputSexLatToward">
                 <option value="N">N</option>
                 <option value="S">S</option>
             </select>

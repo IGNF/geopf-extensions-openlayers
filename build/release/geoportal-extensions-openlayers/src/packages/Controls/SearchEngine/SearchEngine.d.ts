@@ -21,7 +21,7 @@ export default SearchEngine;
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonClose = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
  * @param {Object}  [options.coordinateSearch] - coordinates search options.
- * @param {DOMElement} [options.coordinateSearch.target = null] - target location of results window. By default under the search bar.
+ * @param {DOMElement} [options.coordinateSearch.target = null] - TODO : target location of results window. By default under the search bar.
  * @param {Array}   [options.coordinateSearch.units] - list of coordinates units, to be displayed in control units list.
  *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal) for geographical coordinates,
  *      and "M" or "KM" for metric coordinates
@@ -35,9 +35,13 @@ export default SearchEngine;
  * @param {Object}  [options.resources] - resources to be used by geocode and autocompletion services :
  * @param {String}  [options.resources.geocode = "location"] - resources geocoding, by default : "location"
  * @param {Array}   [options.resources.autocomplete] - resources autocompletion, by default : ["PositionOfInterest", "StreetAddress"]
- * @param {Boolean} [options.resources.search = false] - TODO : false to disable search service, by default : "false"
- * @param {Object}  [options.searchOptions = {}] - TODO : options of search service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~search Gp.Services.search})
+ * @param {Boolean} [options.resources.search = false] - false to disable search service, by default : "false"
+ * @param {Object}  [options.searchOptions = {}] - options of search service
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
+ * @param {Sring}  [options.searchOptions.serviceOptions.url] - url of service
+ * @param {String}  [options.searchOptions.serviceOptions.index] - index of search, "standard" by default
+ * @param {String}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
+ * @param {Number}  [options.searchOptions.serviceOptions.size] - number of results in the response. 10 by default
  * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
  * @param {Object}  [options.geocodeOptions.serviceOptions] - options of geocode service
  * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})
@@ -54,12 +58,8 @@ export default SearchEngine;
  * @fires searchengine:autocomplete:click
  * @fires searchengine:geocode:click
  * @fires searchengine:search:click
- * @todo ajouter le menu de recherche par coordonnées
  * @todo option : direction (start|end) de la position du picto (loupe)
  * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
- * @todo ajouter le service de recherche (cf. geoportal-access-lib) ex: https://data.geopf.fr/recherche/api/indexes/geoplateforme/suggest?text=ORTHO&fields=title
- * @todo prévoir la reponse du service de recherche dans les resultats de l'autocompletion
- * @todo event : searchengine:search:click
  * @example
  *  var SearchEngine = ol.control.SearchEngine({
  *      apiKey : "CLEAPI",
@@ -103,7 +103,7 @@ export default SearchEngine;
  *    console.warn("autocomplete", e.location);
  *  });
  *  SearchEngine.on("searchengine:search:click", function (e) {
- *    console.warn("search", e.location);
+ *    console.warn("search", e.suggest);
  *  });
  *  SearchEngine.on("searchengine:geocode:click", function (e) {
  *    console.warn("geocode", e.location);

@@ -67,6 +67,24 @@ var MathUtils = {
     },
 
     /**
+     * Transform decimal degrees form degrees, minutes, seconds
+     * 
+     * @function dmsToDecimal
+     * @param {*} degrees - degrees
+     * @param {*} minutes - minutes
+     * @param {*} seconds - seconds
+     * @param {*} hemispheres - "NS" ou "EO"
+     * @returns {Number} decimal coordinate
+     */
+    dmsToDecimal (degrees, minutes, seconds, hemispheres) {
+        var dd = degrees + minutes/60 + seconds/(60*60);
+    
+        if (hemispheres == "S" || hemispheres == "O") {
+            dd = dd * -1;
+        }
+        return dd;
+    },
+    /**
      * ol coordinate to decimal
      * 
      * @function coordinateToDecimal

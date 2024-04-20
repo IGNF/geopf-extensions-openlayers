@@ -9,7 +9,7 @@
   /* dsfr */
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
 }
 /* Showing/hiding search engine input */
 
@@ -80,8 +80,6 @@ button[id^=GPsearchInputReset] {
   height: 32px;
   border: unset;
   cursor: pointer;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
 }
 
 /* General panels */
@@ -134,35 +132,7 @@ input[id^=GPadvancedSearchSubmit] {
   margin-bottom: 15px;
 }
 
-/* Autocomplete list / geocode results */
 
-div[id^=GPautoCompleteList],
-dialog[id^=GPgeocodeResultsList] {
-  width: 280px;
-  position: absolute;
-  max-height: 140px;
-  background-color: #FFF
-}
-
-div[id^=GPautoCompleteList] {
-  top: 35px;
-  
-}
-
-dialog[id^=GPgeocodeResultsList] {
-  position: absolute;
-  top: 35px;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-div[id^=GPgeocodeResults-] {
-  width: 100%;
-  position: relative;
-  background-color: #FFF;
-  max-height: 140px;
-  overflow-y: auto;
-}
 
 /* Simple search input */
 
@@ -182,6 +152,10 @@ div[id^=GPgeocodeResults-] {
 
 
 /* Autocomplete list / geocode results */
+
+.GPlabelTitle {
+  font-weight: bold;
+}
 
 [id^="GPautoCompleteList"],
 dialog[id^="GPgeocodeResultsList"] {

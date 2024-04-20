@@ -17,8 +17,12 @@ declare namespace SearchEngineDOM {
     function _createCoordinateSearchPanelElement(): DOMElement;
     function _createCoordinateSearchPanelDivElement(): HTMLDivElement;
     function _createAutoCompleteListElement(): DOMElement;
+    function _createAutoCompletedLocationContainer(): HTMLDivElement;
     function _createAutoCompletedLocationTitleElement(): void;
     function _createAutoCompletedLocationElement(location: Object, id: number): void;
+    function _createSearchedSuggestContainer(): HTMLDivElement;
+    function _createSearchedSuggestTitleElement(): void;
+    function _createSearchedSuggestElement(suggest: Object, id: number): void;
     function _createAdvancedSearchPanelHeaderElement(): DOMElement;
     function _createAdvancedSearchPanelFormElement(advancedSearchCodes: Object[]): DOMElement;
     function _createAdvancedSearchFormCodeElement(codes: Object[]): DOMElement;

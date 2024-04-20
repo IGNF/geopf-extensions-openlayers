@@ -3,6 +3,17 @@ declare namespace MathUtils {
     function modulo(a: number, b: number): number;
     function decimalToDMS(degrees: number, hemispheres: any[], numDigits: number): Object;
     /**
+     * Transform decimal degrees form degrees, minutes, seconds
+     *
+     * @function dmsToDecimal
+     * @param {*} degrees - degrees
+     * @param {*} minutes - minutes
+     * @param {*} seconds - seconds
+     * @param {*} hemispheres - "NS" ou "EO"
+     * @returns {Number} decimal coordinate
+     */
+    function dmsToDecimal(degrees: any, minutes: any, seconds: any, hemispheres: any): number;
+    /**
      * ol coordinate to decimal
      *
      * @function coordinateToDecimal
