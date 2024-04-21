@@ -15,13 +15,16 @@ let m_index = "geoplateforme";
 /** liste des champs de recherche */
 let m_fields = "title,layer_name";
 
-/** nombre de suggestions */
+/** nombre de suggestions du service */
 let m_size = "100";
 
 /** liste des filtres sur les services */
 let m_services = ["WMTS", "WMS"];
 
-/** url du service */
+/** affiche ou non les données publiées */
+let m_publish = true;
+
+/** url du service (template avec ${m_index}) */
 let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
 
 /**
@@ -55,6 +58,7 @@ const suggest = async (text) => {
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
     var response = await fetch(url, {
+        // FIXME
         // signal : controller.signal
     });
 
@@ -98,7 +102,9 @@ const suggest = async (text) => {
 
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
-        if (result.source.open && m_services.includes(result.source.type)) {
+        var services = (m_services.length === 0 || m_services.includes(result.source.type));
+        var publish = (m_publish === result.source.open);
+        if (publish && services) {
             var o = {
                 name : result.source.layer_name,
                 title : result.source.title,
@@ -135,7 +141,7 @@ const clear = () => {
     m_suggestions = [];
 };
 
-// getter
+// getter (reponse)
 const getSuggestions = () => {
     return unique();
 };
@@ -143,18 +149,24 @@ const getNames = () => {
     return unique().map((o) => { return o.name; });
 };
 
-// setter
+// setter (conf)
 const setIndex = (value) => {
     m_index = value;
 };
 const setFields = (value) => {
     m_fields = value;
 };
-const setsize = (value) => {
+const setSize = (value) => {
     m_size = value;
 };
 const setUrl = (value) => {
-    m_url = value;
+    m_url = eval("`" + value + "`"); // insecure !
+};
+const setFiltersByService = (value) => {
+    m_services = value === "" ? [] : value.split(",");
+};
+const setFiltersByPublish = (value) => {
+    m_publish = (value === true || value === 1);
 };
 
 export default {
@@ -165,6 +177,8 @@ export default {
     getNames,
     setIndex,
     setFields,
-    setsize,
-    setUrl
+    setSize,
+    setUrl,
+    setFiltersByService,
+    setFiltersByPublish
 };

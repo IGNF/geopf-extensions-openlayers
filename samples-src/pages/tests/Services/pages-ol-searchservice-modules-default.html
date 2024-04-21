@@ -1,0 +1,164 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Search Service</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            button#load {
+                margin: 10px;
+            }
+            button#run {
+            }
+            div.service {
+                display: flex;
+                flex-direction: column;
+            }
+            div.conf {
+                display: flex;
+                flex-direction: column;
+                padding: 10px;
+                border: 1px solid gray;
+            }
+            div.run {
+                display: flex;
+                flex-direction: row;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            input.input {
+                width: 200px;
+                margin-left: 20px;
+            }
+            div.results {
+                border: 1px solid gray;
+            }
+            span.patience {
+                background-image: url("{{resources}}/geoportail-waiting.gif");
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: 25px;
+                height: 25px;
+                border: 1px solid gray;
+            }
+            #results-textarea {
+                max-height: 200px;
+                width: 100%;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du service de recherche</h2>
+            <!-- map -->
+            <div class="service">
+                <span>Configuration :</span>
+                <div class="conf">
+                    <label for="conf-url">url (template)</label>
+                    <input id="conf-url" 
+                        class="input" 
+                        type="text" 
+                        value="https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest"
+                        style="width: auto;"/>
+                    <label for="conf-index">index de recherche</label>
+                    <input id="conf-index" 
+                        class="input" 
+                        type="text" 
+                        value="geoplateforme"/>
+                    <label for="conf-fields">champs de recherche</label>
+                    <input id="conf-fields" 
+                        class="input" 
+                        type="text" 
+                        value="title,layer_name"/>
+                    <label for="conf-services">filtres sur les services</label>
+                    <input id="conf-services" 
+                        class="input" 
+                        type="text" 
+                        value="WMTS,WMS"/>
+                    <label for="conf-publish">données publiées</label>
+                    <input id="conf-publish" 
+                        class="input" 
+                        type="number" 
+                        min="0" 
+                        max="1" 
+                        value="1"/>
+                    <label for="conf-size">taille de la reponse</label>
+                    <input id="conf-size" 
+                        class="input" 
+                        type="number" 
+                        value="100"/>
+                    <button id="load">Load</button>
+                </div>
+                <div class="run">
+                    <input id="text" type="text" />
+                    <button id="run">Run</button>
+                    <span id="patience" class=""></span>
+                </div>
+                <span>Résultats :</span>
+                <div class="results">
+                    <p>
+                        <label for="results-input">Nombre de résultats :</label>
+                        <input id="results-input" type="number" disabled value="0" style="width: 50px;"/>
+                    </p>
+                    <p>
+                        <label for="results-names">Liste des couches :</label>
+                        <select name="names" id="results-names"></select>
+                    </p>
+                    <textarea id="results-textarea" name="textarea" rows="5" cols="30"></textarea>
+                </div>
+
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="module">
+                import Search from "{{basurl}}/src/packages/Services/Search.js";
+                Search.target.addEventListener("suggest", (e) => {
+                    console.log(e);
+                    document.getElementById("patience").classList.remove("patience");
+                    document.getElementById("results-input").value = 0;
+                    document.getElementById("results-textarea").value = "";
+                    let select = document.getElementById("results-names");
+                    while (select.firstChild) {
+                        select.removeChild(select.firstChild);
+                    }
+                    if (e.detail.length) {
+                        Search.getNames().map( (name, i) => {
+                            let opt = document.createElement("option");
+                            opt.value = i; // the index
+                            opt.innerHTML = name;
+                            select.append(opt);
+                        });
+                        document.getElementById("results-input").value = e.detail.length;
+                        for (let index = 0; index < e.detail.length; index++) {
+                            const element = e.detail[index];
+                            document.getElementById("results-textarea").value += JSON.stringify(element, null, 2);
+                            document.getElementById("results-textarea").value += "\n";
+                        }
+                    }
+                });
+
+                document.getElementById("load").addEventListener("click", (e) => {
+                    Search.setIndex(document.getElementById("conf-index").value);
+                    Search.setUrl(document.getElementById("conf-url").value);
+                    Search.setSize(document.getElementById("conf-size").value);
+                    Search.setFiltersByService(document.getElementById("conf-services").value);
+                    Search.setFiltersByPublish(parseInt(document.getElementById("conf-publish").value));
+                    Search.setFields(document.getElementById("conf-fields").value);
+                });
+
+                document.getElementById("run").addEventListener("click", (e) => {
+                    document.getElementById("patience").classList.add("patience");
+                    var value = document.getElementById("text").value;
+                    Search.suggest(value);
+                });
+                
+           </script>
+{{/content}}
+
+{{/extend}}
