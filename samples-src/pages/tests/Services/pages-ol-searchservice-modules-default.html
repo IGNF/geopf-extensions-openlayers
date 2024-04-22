@@ -80,18 +80,11 @@
                         class="input" 
                         type="text" 
                         value="WMTS,WMS"/>
-                    <label for="conf-publish">données publiées</label>
-                    <input id="conf-publish" 
-                        class="input" 
-                        type="number" 
-                        min="0" 
-                        max="1" 
-                        value="1"/>
                     <label for="conf-size">taille de la reponse</label>
                     <input id="conf-size" 
                         class="input" 
                         type="number" 
-                        value="100"/>
+                        value="1000"/>
                     <button id="load">Load</button>
                 </div>
                 <div class="run">
@@ -148,7 +141,6 @@
                     Search.setUrl(document.getElementById("conf-url").value);
                     Search.setSize(document.getElementById("conf-size").value);
                     Search.setFiltersByService(document.getElementById("conf-services").value);
-                    Search.setFiltersByPublish(parseInt(document.getElementById("conf-publish").value));
                     Search.setFields(document.getElementById("conf-fields").value);
                 });
 

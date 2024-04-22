@@ -6,8 +6,9 @@ declare namespace _default {
     export { getNames };
     export { setIndex };
     export { setFields };
-    export { setsize };
+    export { setSize };
     export { setUrl };
+    export { setFiltersByService };
 }
 export default _default;
 /**
@@ -29,6 +30,7 @@ declare function getSuggestions(): any[];
 declare function getNames(): any[];
 declare function setIndex(value: any): void;
 declare function setFields(value: any): void;
-declare function setsize(value: any): void;
+declare function setSize(value: any): void;
 declare function setUrl(value: any): void;
+declare function setFiltersByService(value: any): void;
 //# sourceMappingURL=Search.d.ts.map

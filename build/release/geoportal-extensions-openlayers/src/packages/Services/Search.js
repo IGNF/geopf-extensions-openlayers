@@ -15,13 +15,13 @@ let m_index = "geoplateforme";
 /** liste des champs de recherche */
 let m_fields = "title,layer_name";
 
-/** nombre de suggestions */
-let m_size = "100";
+/** nombre de suggestions du service */
+let m_size = "1000";
 
 /** liste des filtres sur les services */
 let m_services = ["WMTS", "WMS"];
 
-/** url du service */
+/** url du service (template avec ${m_index}) */
 let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
 
 /**
@@ -55,6 +55,7 @@ const suggest = async (text) => {
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
     var response = await fetch(url, {
+        // FIXME
         // signal : controller.signal
     });
 
@@ -98,12 +99,14 @@ const suggest = async (text) => {
 
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
-        if (result.source.open && m_services.includes(result.source.type)) {
+        var services = (m_services.length === 0 || m_services.includes(result.source.type));
+        if (services) {
             var o = {
                 name : result.source.layer_name,
                 title : result.source.title,
                 description : result.source.description,
-                service : result.source.type
+                service : result.source.type,
+                url : result.source.url
             };
             m_suggestions.push(o);
         }
@@ -135,7 +138,7 @@ const clear = () => {
     m_suggestions = [];
 };
 
-// getter
+// getter (reponse)
 const getSuggestions = () => {
     return unique();
 };
@@ -143,18 +146,21 @@ const getNames = () => {
     return unique().map((o) => { return o.name; });
 };
 
-// setter
+// setter (conf)
 const setIndex = (value) => {
     m_index = value;
 };
 const setFields = (value) => {
     m_fields = value;
 };
-const setsize = (value) => {
+const setSize = (value) => {
     m_size = value;
 };
 const setUrl = (value) => {
-    m_url = value;
+    m_url = eval("`" + value + "`"); // insecure !
+};
+const setFiltersByService = (value) => {
+    m_services = value === "" ? [] : value.split(",");
 };
 
 export default {
@@ -165,6 +171,7 @@ export default {
     getNames,
     setIndex,
     setFields,
-    setsize,
-    setUrl
+    setSize,
+    setUrl,
+    setFiltersByService
 };

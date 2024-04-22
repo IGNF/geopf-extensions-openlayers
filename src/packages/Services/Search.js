@@ -16,13 +16,10 @@ let m_index = "geoplateforme";
 let m_fields = "title,layer_name";
 
 /** nombre de suggestions du service */
-let m_size = "100";
+let m_size = "1000";
 
 /** liste des filtres sur les services */
 let m_services = ["WMTS", "WMS"];
-
-/** affiche ou non les données publiées */
-let m_publish = true;
 
 /** url du service (template avec ${m_index}) */
 let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
@@ -103,13 +100,13 @@ const suggest = async (text) => {
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
         var services = (m_services.length === 0 || m_services.includes(result.source.type));
-        var publish = (m_publish === result.source.open);
-        if (publish && services) {
+        if (services) {
             var o = {
                 name : result.source.layer_name,
                 title : result.source.title,
                 description : result.source.description,
-                service : result.source.type
+                service : result.source.type,
+                url : result.source.url
             };
             m_suggestions.push(o);
         }
@@ -165,9 +162,6 @@ const setUrl = (value) => {
 const setFiltersByService = (value) => {
     m_services = value === "" ? [] : value.split(",");
 };
-const setFiltersByPublish = (value) => {
-    m_publish = (value === true || value === 1);
-};
 
 export default {
     target,
@@ -179,6 +173,5 @@ export default {
     setFields,
     setSize,
     setUrl,
-    setFiltersByService,
-    setFiltersByPublish
+    setFiltersByService
 };
