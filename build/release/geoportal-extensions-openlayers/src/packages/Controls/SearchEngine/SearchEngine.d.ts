@@ -41,8 +41,9 @@ export default SearchEngine;
  * @param {Sring}  [options.searchOptions.serviceOptions.url] - url of service
  * @param {String}  [options.searchOptions.serviceOptions.index] - index of search, "standard" by default
  * @param {String}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
- * @param {Number}  [options.searchOptions.serviceOptions.size] - number of results in the response. 1000 by default
+ * @param {Number}  [options.searchOptions.serviceOptions.size] - number of response in the service. 1000 by default
  * @param {String}  [options.searchOptions.serviceOptions.services] - list of search services, each field is separated by a comma. "WMTS,WMS" by default
+ * @param {Number}  [options.searchOptions.serviceOptions.maximumResponses] - number of results in the response. 10 by default
  * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
  * @param {Object}  [options.geocodeOptions.serviceOptions] - options of geocode service
  * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})

@@ -80,11 +80,16 @@
                         class="input" 
                         type="text" 
                         value="WMTS,WMS"/>
-                    <label for="conf-size">taille de la reponse</label>
+                    <label for="conf-size">nombre de reponses demandées au service</label>
                     <input id="conf-size" 
                         class="input" 
                         type="number" 
                         value="1000"/>
+                    <label for="conf-max">nombre de reponses souhaitées</label>
+                    <input id="conf-max" 
+                        class="input" 
+                        type="number" 
+                        value="10"/>
                     <button id="load">Load</button>
                 </div>
                 <div class="run">
@@ -142,6 +147,7 @@
                     Search.setSize(document.getElementById("conf-size").value);
                     Search.setFiltersByService(document.getElementById("conf-services").value);
                     Search.setFields(document.getElementById("conf-fields").value);
+                    Search.setMaximumResponses(document.getElementById("conf-max").value);
                 });
 
                 document.getElementById("run").addEventListener("click", (e) => {

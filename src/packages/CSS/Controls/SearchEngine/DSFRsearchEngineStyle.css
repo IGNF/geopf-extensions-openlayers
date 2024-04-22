@@ -7,6 +7,10 @@
     background-color: #ffffff;
 }
 
+.gpf-panel__items {
+  height: unset;
+}
+
 select[name^="inputSex"].gpf-select {
   padding: unset;
 }
@@ -51,7 +55,7 @@ div[id^=GPautoCompleteList],
 dialog[id^=GPgeocodeResultsList] {
   width: 300px;
   position: absolute;
-  height: 240px;
+  height: fit-content;
   background-color: #FFF
 }
 

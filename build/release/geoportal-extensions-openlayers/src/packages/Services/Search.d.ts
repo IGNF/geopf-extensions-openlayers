@@ -8,6 +8,7 @@ declare namespace _default {
     export { setFields };
     export { setSize };
     export { setUrl };
+    export { setMaximumResponses };
     export { setFiltersByService };
 }
 export default _default;
@@ -32,5 +33,6 @@ declare function setIndex(value: any): void;
 declare function setFields(value: any): void;
 declare function setSize(value: any): void;
 declare function setUrl(value: any): void;
+declare function setMaximumResponses(value: any): void;
 declare function setFiltersByService(value: any): void;
 //# sourceMappingURL=Search.d.ts.map

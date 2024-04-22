@@ -18,6 +18,9 @@ let m_fields = "title,layer_name";
 /** nombre de suggestions du service */
 let m_size = "1000";
 
+/** nombre maximum de réponses */
+let m_maximumResponses = 10;
+
 /** liste des filtres sur les services */
 let m_services = ["WMTS", "WMS"];
 
@@ -101,6 +104,9 @@ const suggest = async (text) => {
         const result = results[i];
         var services = (m_services.length === 0 || m_services.includes(result.source.type));
         if (services) {
+            if (unique().length >= m_maximumResponses) {
+                break;
+            }
             var o = {
                 name : result.source.layer_name,
                 title : result.source.title,
@@ -154,10 +160,13 @@ const setFields = (value) => {
     m_fields = value;
 };
 const setSize = (value) => {
-    m_size = value;
+    m_size = parseInt(value);
 };
 const setUrl = (value) => {
     m_url = eval("`" + value + "`"); // insecure !
+};
+const setMaximumResponses = (value) => {
+    m_maximumResponses = parseInt(value);
 };
 const setFiltersByService = (value) => {
     m_services = value === "" ? [] : value.split(",");
@@ -173,5 +182,6 @@ export default {
     setFields,
     setSize,
     setUrl,
+    setMaximumResponses,
     setFiltersByService
 };

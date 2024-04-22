@@ -157,14 +157,20 @@ input[id^=GPadvancedSearchSubmit] {
   font-weight: bold;
 }
 
-[id^="GPautoCompleteList"],
-dialog[id^="GPgeocodeResultsList"] {
-  margin-left: 33px;
+[id^="GPautocompleteResults"] {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   box-shadow: 0 0 6px #000;
 }
 
+[id^="GPautoCompleteList"],
+dialog[id^="GPgeocodeResultsList"] {
+  margin-left: 33px;
+}
+
 [id^="GPautoCompleteList"] {
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 dialog[id^="GPgeocodeResultsList"] {
@@ -172,4 +178,9 @@ dialog[id^="GPgeocodeResultsList"] {
   border-radius: 4px;
   height: inherit;
   bottom: unset; /* fix dsfr */
+}
+
+[id^="GPautocompleteResultsSuggest"],
+[id^="GPautocompleteResultsLocation"] {
+  width: inherit;
 }

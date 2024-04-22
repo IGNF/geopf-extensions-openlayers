@@ -158,8 +158,8 @@ var SearchEngineDOM = {
                 return;
             }
 
-            var curr = container.getElementsByClassName("GPautoCompleteProposal current");
-            var list = container.getElementsByClassName("GPautoCompleteProposal");
+            var curr = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items current");
+            var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items");
 
             // si aucune suggestion, on ne va pas plus loin !
             var length = list.length;
@@ -172,7 +172,7 @@ var SearchEngineDOM = {
             // si aucun item courant, on prend le 1er !
             if (!curr.length) {
                 current = list[0];
-                current.className = "GPautoCompleteProposal current";
+                current.className = "GPautoCompleteProposal gpf-panel__items current";
                 current.style.color = "#000000";
                 current.style["background-color"] = "#CEDBEF";
                 return;
@@ -193,14 +193,14 @@ var SearchEngineDOM = {
 
             switch (charCode) {
                 case 38: // arrow up
-                    current.className = "GPautoCompleteProposal";
-                    prev.className = "GPautoCompleteProposal current";
+                    current.className = "GPautoCompleteProposal gpf-panel__items";
+                    prev.className = "GPautoCompleteProposal gpf-panel__items current";
                     prev.style.color = "#000000";
                     prev.style["background-color"] = "#CEDBEF";
                     break;
                 case 40: // arrow down
-                    current.className = "GPautoCompleteProposal";
-                    next.className = "GPautoCompleteProposal current";
+                    current.className = "GPautoCompleteProposal gpf-panel__items";
+                    next.className = "GPautoCompleteProposal gpf-panel__items current";
                     next.style.color = "#000000";
                     next.style["background-color"] = "#CEDBEF";
                     break;
@@ -212,6 +212,7 @@ var SearchEngineDOM = {
             }
 
             current.focus();
+            current.scrollIntoView();
         });
 
         form.appendChild(input);
@@ -513,14 +514,16 @@ var SearchEngineDOM = {
     },
 
     _createAutoCompletedLocationContainer () {
-        var container = document.createElement("div");
+        var container = document.createElement("select");
         container.id = this._addUID("GPautocompleteResultsLocation");
-        container.className = "";
+        container.className = "GPelementHidden gpf-hidden gpf-select";
+        container.size = 6;
+        container.autofocus = true;
         return container;
     },
     _createAutoCompletedLocationTitleElement () {
         var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
-        var label = document.createElement("label");
+        var label = document.createElement("option");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
         label.innerHTML = "LIEUX & ADRESSES";
         container.appendChild(label);
@@ -541,10 +544,12 @@ var SearchEngineDOM = {
 
         var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
 
-        var div = document.createElement("div");
+        var div = document.createElement("option");
         div.id = this._addUID("AutoCompletedLocation_" + id);
         div.className = "GPautoCompleteProposal gpf-panel__items";
-        div.innerHTML = GeocodeUtils.getSuggestedLocationFreeform(location);
+        var value = GeocodeUtils.getSuggestedLocationFreeform(location);
+        div.innerHTML = value;
+        div.title = value;
         if (div.addEventListener) {
             div.addEventListener("click", function (e) {
                 self.onAutoCompletedResultsItemClick(e);
@@ -559,14 +564,16 @@ var SearchEngineDOM = {
     },
 
     _createSearchedSuggestContainer () {
-        var container = document.createElement("div");
+        var container = document.createElement("select");
         container.id = this._addUID("GPautocompleteResultsSuggest");
-        container.className = "";
+        container.className = "GPelementHidden gpf-hidden gpf-select";
+        container.size = 6;
+        container.autofocus = true;
         return container;
     },
     _createSearchedSuggestTitleElement () {
         var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
-        var label = document.createElement("label");
+        var label = document.createElement("option");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
         label.innerHTML = "CARTES & DONNÉES";
         container.appendChild(label);
@@ -586,11 +593,11 @@ var SearchEngineDOM = {
 
         var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
 
-        var div = document.createElement("div");
+        var div = document.createElement("option");
         div.id = this._addUID("AutoCompletedSuggest_" + id);
         div.className = "GPautoCompleteProposal gpf-panel__items";
         div.innerHTML = suggest.name + "(" + suggest.service + ")";
-        div.title = suggest.title;
+        div.title = suggest.title + "(" + suggest.service + ")";
         if (div.addEventListener) {
             div.addEventListener("click", function (e) {
                 self.onSearchedResultsItemClick(e);
