@@ -51,7 +51,7 @@ div[id^=GPautoCompleteList],
 dialog[id^=GPgeocodeResultsList] {
   width: 300px;
   position: absolute;
-  max-height: 240px;
+  height: 240px;
   background-color: #FFF
 }
 

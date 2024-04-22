@@ -492,7 +492,7 @@ var SearchEngineDOM = {
 
         var container = document.createElement("div");
         container.id = this._addUID("GPautocompleteResults");
-        container.className = "gpf-panel__list";
+        container.className = "";
 
         if (container.addEventListener) {
             container.addEventListener("click", function (e) {
