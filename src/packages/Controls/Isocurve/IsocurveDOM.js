@@ -38,7 +38,7 @@ var IsoDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowIsochronPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowIsochronPicto gpf-btn- gpf-btn-icon gpf-btn-icon-isocurve fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowIsochronPicto gpf-btn gpf-btn-icon gpf-btn-icon-isocurve fr-btn";
         button.title = "Calculer une isochrone";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

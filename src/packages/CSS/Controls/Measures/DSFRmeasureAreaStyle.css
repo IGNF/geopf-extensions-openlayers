@@ -1,5 +1,6 @@
 .gpf-btn-icon-area {
-    background-image: url("img/GPmeasuresOpen.png");
+    background-image: url("img/mesurer-surface.svg");
     background-repeat: no-repeat;
-    background-position: -76px center;
+    background-size: auto auto;
+    background-position: center center;
 }

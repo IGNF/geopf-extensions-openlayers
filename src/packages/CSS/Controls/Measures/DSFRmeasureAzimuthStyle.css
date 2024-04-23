@@ -1,5 +1,6 @@
 .gpf-btn-icon-azimuth {
-    background-image: url("img/GPmeasuresOpen.png");
+    background-image: url("img/modifier-geometrie-old.svg");
     background-repeat: no-repeat;
-    background-position: 3px center;
+    background-size: auto auto;
+    background-position: center center;
 }
