@@ -1,0 +1,191 @@
+/**
+ * Gestion du service de recherche de couches
+ * @see https://geoservices.ign.fr/documentation/services/services-geoplateforme/service-geoplateforme-de-recherche
+ */
+
+/** resultats du service */
+let m_suggestions = [];
+
+/** gestion annulation du fetch */
+let controller = new AbortController();
+
+/** index de recherche */
+let m_index = "geoplateforme";
+
+/** liste des champs de recherche */
+let m_fields = "title,layer_name";
+
+/** nombre de suggestions du service */
+let m_size = "1000";
+
+/** nombre maximum de réponses */
+let m_maximumResponses = 10;
+
+/** liste des filtres sur les services */
+let m_services = ["WMTS", "WMS"];
+
+/** url du service (template avec ${m_index}) */
+let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
+
+/**
+ * Interface pour les evenements
+ * @example
+ * target.dispatchEvent(new CustomEvent("myEvent", { detail : {} }));
+ * target.addEventListener("myEvent", handler);
+ */
+const target = new EventTarget();
+
+/**
+ * Appel du service de recherche
+ * @param {*} text - recherche
+ * @returns {Object} json
+ * @fire suggest
+ */
+const suggest = async (text) => {
+    // ex. request
+    // https://data.geopf.fr/recherche/api/indexes/geoplateforme/suggest?text=ORTHO&fields=title
+    clear();
+
+    controller = new AbortController();
+
+    let url = new URL(m_url);
+    let params = {
+        text : text,
+        fields : m_fields,
+        size : m_size
+    };
+
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+    var response = await fetch(url, {
+        // FIXME
+        // signal : controller.signal
+    });
+
+    var results = await response.json();
+
+    if (response.status !== 200) {
+        throw new Error(response.message);
+    }
+
+    // ex. response
+    // [
+    //   {
+    //     "index": "geoplateforme",
+    //     "score": 3.4832718,
+    //     "source": {
+    //       "id": "fc2af911-d9c2-4fc8-aee7-46034eebf821",
+    //       "offering_id": "faa4c69c-d03b-4502-af87-7f3667411321",
+    //       "index_name": "geoplateforme",
+    //       "layer_name": "nl_bdtopo_allauch",
+    //       "title": "NL - BD Topo : Allauch",
+    //       "description": "Extrait de BD TOPo sur Allauch",
+    //       "type": "WMS",
+    //       "url": "https://data.geopf.fr/wms-v?service=WMS&version=1.3.0&request=GetMap&layers=nl_bdtopo_allauch&bbox={xmin},{ymin},{xmax},{ymax}&styles={styles}&width={width}&height={height}&srs={srs}&format={format}",
+    //       "open": true,
+    //       "publication_date": "2023-11-27",
+    //       "keywords": [
+    //         "BDTOPO",
+    //         "Recette"
+    //       ],
+    //       "extent": {},
+    //       "metadata_urls": [],
+    //       "srs": [
+    //         "EPSG:2154"
+    //       ]
+    //     }
+    //   }
+    // ]
+    if (!results || results.length === 0) {
+        return;
+    }
+
+    for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        var services = (m_services.length === 0 || m_services.includes(result.source.type));
+        if (services) {
+            if (unique().length >= m_maximumResponses) {
+                break;
+            }
+            var o = {
+                name : result.source.layer_name,
+                title : result.source.title,
+                description : result.source.description,
+                service : result.source.type,
+                url : result.source.url
+            };
+            m_suggestions.push(o);
+        }
+    }
+
+    target.dispatchEvent(
+        new CustomEvent("suggest", {
+            bubbles : true,
+            detail : getSuggestions()
+        })
+    );
+
+    return getSuggestions();
+};
+
+const unique = () => {
+    return m_suggestions.filter((value, index, self) =>
+        index === self.findIndex((t) => (
+            t.service === value.service &&
+            t.name === value.name &&
+            t.title === value.title &&
+            t.description === value.description
+        ))
+    );
+};
+
+const clear = () => {
+    controller.abort();
+    m_suggestions = [];
+};
+
+// getter (reponse)
+const getSuggestions = () => {
+    return unique();
+};
+const getNames = () => {
+    return unique().map((o) => { return o.name; });
+};
+const getTitles = () => {
+    return unique().map((o) => { return o.title; });
+};
+
+// setter (conf)
+const setIndex = (value) => {
+    m_index = value;
+};
+const setFields = (value) => {
+    m_fields = value;
+};
+const setSize = (value) => {
+    m_size = parseInt(value);
+};
+const setUrl = (value) => {
+    m_url = eval("`" + value + "`"); // insecure !
+};
+const setMaximumResponses = (value) => {
+    m_maximumResponses = parseInt(value);
+};
+const setFiltersByService = (value) => {
+    m_services = value === "" ? [] : value.split(",");
+};
+
+export default {
+    target,
+    suggest,
+    clear,
+    getSuggestions,
+    getNames,
+    getTitles,
+    setIndex,
+    setFields,
+    setSize,
+    setUrl,
+    setMaximumResponses,
+    setFiltersByService
+};
