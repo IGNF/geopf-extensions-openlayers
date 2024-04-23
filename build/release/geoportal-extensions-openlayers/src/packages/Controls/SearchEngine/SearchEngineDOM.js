@@ -596,8 +596,9 @@ var SearchEngineDOM = {
         var div = document.createElement("option");
         div.id = this._addUID("AutoCompletedSuggest_" + id);
         div.className = "GPautoCompleteProposal gpf-panel__items";
-        div.innerHTML = suggest.name + "(" + suggest.service + ")";
-        div.title = suggest.title + "(" + suggest.service + ")";
+        div.innerHTML = suggest.title + " (" + suggest.service + ")";
+        div.dataset.layer = suggest.name;
+        div.title = suggest.description;
         if (div.addEventListener) {
             div.addEventListener("click", function (e) {
                 self.onSearchedResultsItemClick(e);

@@ -151,6 +151,9 @@ const getSuggestions = () => {
 const getNames = () => {
     return unique().map((o) => { return o.name; });
 };
+const getTitles = () => {
+    return unique().map((o) => { return o.title; });
+};
 
 // setter (conf)
 const setIndex = (value) => {
@@ -178,6 +181,7 @@ export default {
     clear,
     getSuggestions,
     getNames,
+    getTitles,
     setIndex,
     setFields,
     setSize,

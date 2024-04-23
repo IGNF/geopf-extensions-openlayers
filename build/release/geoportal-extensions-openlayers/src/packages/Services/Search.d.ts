@@ -4,6 +4,7 @@ declare namespace _default {
     export { clear };
     export { getSuggestions };
     export { getNames };
+    export { getTitles };
     export { setIndex };
     export { setFields };
     export { setSize };
@@ -29,6 +30,7 @@ declare function suggest(text: any): Object;
 declare function clear(): void;
 declare function getSuggestions(): any[];
 declare function getNames(): any[];
+declare function getTitles(): any[];
 declare function setIndex(value: any): void;
 declare function setFields(value: any): void;
 declare function setSize(value: any): void;
