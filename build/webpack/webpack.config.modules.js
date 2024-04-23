@@ -127,17 +127,21 @@ module.exports = (env, argv) => {
             "MeasureArea" : path.join(ROOT, "src", "packages", "Controls", "Measures", "MeasureArea.js"),
             "MeasureAzimuth" : path.join(ROOT, "src", "packages", "Controls", "Measures", "MeasureAzimuth.js"),
             "MeasureLength" : path.join(ROOT, "src", "packages", "Controls", "Measures", "MeasureLength.js"),
-            // Formats
-            "GeoJSONExtended" : path.join(ROOT, "src", "packages", "Formats", "GeoJSON.js"),
-            "KMLExtended" : path.join(ROOT, "src", "packages", "Formats", "KML.js"),
-            "GPXExtended" : path.join(ROOT, "src", "packages", "Formats", "GPX.js"),
+            // Formats étendus
+            "Formats" : [
+                path.join(ROOT, "src", "packages", "Formats", "GeoJSON.js"),
+                path.join(ROOT, "src", "packages", "Formats", "KML.js"),
+                path.join(ROOT, "src", "packages", "Formats", "GPX.js")
+            ],
             // Couches
-            "WMTSExtended" : path.join(ROOT, "src", "packages", "Sources", "WMTS.js"),
-            "GeoportalLayerWMS" : path.join(ROOT, "src", "packages", "Layers", "LayerWMS.js"),
-            "GeoportalLayerWMTS" : path.join(ROOT, "src", "packages", "Layers", "LayerWMTS.js"),
-            "GeoportalSourceWMS" : path.join(ROOT, "src", "packages", "Layers", "SourceWMS.js"),
-            "GeoportalSourceWMTS" : path.join(ROOT, "src", "packages", "Layers", "SourceWMTS.js"),
-            "GeoportalMapBox" : path.join(ROOT, "src", "packages", "Layers", "LayerMapBox.js"),
+            "Layers" : [
+                path.join(ROOT, "src", "packages", "Sources", "WMTS.js"),
+                path.join(ROOT, "src", "packages", "Layers", "LayerWMS.js"),
+                path.join(ROOT, "src", "packages", "Layers", "LayerWMTS.js"),
+                path.join(ROOT, "src", "packages", "Layers", "SourceWMS.js"),
+                 path.join(ROOT, "src", "packages", "Layers", "SourceWMTS.js"),
+                path.join(ROOT, "src", "packages", "Layers", "LayerMapBox.js"),
+            ],
             // Projections
             "CRS" : path.join(ROOT, "src", "packages", "CRS", "AutoLoadCRS.js"),
         },
@@ -340,7 +344,8 @@ module.exports = (env, argv) => {
                     test : /\.(png|jpg|gif|svg|woff|woff2)$/,
                     type: 'asset/inline'
                 }
-            ]
+            ],
+            noParse: [require.resolve("typescript/lib/typescript.js")]
         },
         plugins : [
             /** EXECUTION DU LINTER */

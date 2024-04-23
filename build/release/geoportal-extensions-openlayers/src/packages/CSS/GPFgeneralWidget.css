@@ -372,11 +372,11 @@ input.GPsubmit:hover {
 .GPadvancedAutoCompleteList {
   z-index: 2;
   /* display: none; */
-  position: absolute;
+  /* position: absolute;
   max-height: 140px;
   background-color: #FFF;
   border: 1px solid #999;
-  overflow-y: hidden;
+  overflow-y: hidden; */
 }
 
 .GPadvancedAutoCompleteList {
