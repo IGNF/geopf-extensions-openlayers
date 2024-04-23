@@ -27,7 +27,6 @@ button[id^="GPshowDrawingPicto-"][aria-pressed="true"] + dialog {
   top: 0px;
   left: -276px;
   position: absolute;
-  width: 240px;
   height: inherit;
   overflow: hidden;
   bottom: unset; /* fix dsfr */

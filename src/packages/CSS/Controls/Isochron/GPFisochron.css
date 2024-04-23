@@ -22,7 +22,6 @@ button[id^="GPshowIsochronPicto-"][aria-pressed="true"] + dialog {
 /* General panels */
 
 [id^=GPisochronPanel-] {
-  width: 280px;
   position: absolute;
   height: inherit;
   top: 0px;
@@ -52,19 +51,13 @@ div[id^=GPisochronChoice] {
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
-  width: 160px;
   -webkit-justify-content: space-between;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  margin-top: 15px;
-  margin-bottom: 5px;
 }
 
-input[id^=GPisochronChoiceAltChron] {
-  background-image: url("img/GPisochronOptions.png");
-}
-
+/*
 input[id^=GPisochronChoiceAltChron] + .GPisochronChoiceAltImg {
   background-position: -56px 0;
 }
@@ -79,7 +72,7 @@ input[id^=GPisochronChoiceAltDist] + .GPisochronChoiceAltImg {
 
 input[id^=GPisochronChoiceAltDist]:checked + .GPisochronChoiceAltImg {
   background-position: -140px 0;
-}
+}*/
 
 div[id^=GPisochronValueChron],
 div[id^=GPisochronValueDist] {

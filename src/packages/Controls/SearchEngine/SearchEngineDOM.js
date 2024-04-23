@@ -633,7 +633,7 @@ var SearchEngineDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPadvancedSearchClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
         divClose.title = "Fermer la recherche avancée";
 
         if (divClose.addEventListener) {
@@ -910,7 +910,7 @@ var SearchEngineDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPgeocodeResultsClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
         divClose.title = "Fermer la fenêtre de résultats";
 
         if (divClose.addEventListener) {
