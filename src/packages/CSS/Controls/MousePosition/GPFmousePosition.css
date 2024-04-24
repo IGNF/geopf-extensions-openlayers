@@ -23,12 +23,6 @@ button[id^="GPshowMousePositionPicto-"][aria-pressed="true"] + dialog {
   opacity: 100%;
 }
 
-button[id^="GPshowMousePositionPicto-"] {
-  background-image: url("img/GPmousePositionOpen.png");
-  background-repeat: no-repeat;
-  background-position: 1px center;
-}
-
 /* General panels */
 
 dialog[id^=GPmousePositionPanel-] {

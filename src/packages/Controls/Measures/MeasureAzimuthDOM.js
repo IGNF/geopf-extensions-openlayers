@@ -18,7 +18,7 @@ var MeasureAzimuthDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPmeasureAzimuth");
-        container.className = "GPwidget gpf-widget";
+        container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 

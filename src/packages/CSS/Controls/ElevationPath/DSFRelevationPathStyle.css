@@ -1,3 +1,10 @@
+.gpf-btn-icon-elevation {
+    background-image: url("img/altipath.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+  }
+
 #profileElevationByDefaultSvg {
     height: 80%;
 }

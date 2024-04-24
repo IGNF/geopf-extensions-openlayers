@@ -18,7 +18,7 @@ var MousePositionDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPmousePosition");
-        container.className = "GPwidget gpf-widget";
+        container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -38,7 +38,7 @@ var MousePositionDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMousePositionPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon gpf-btn-icon-position fr-btn";
         button.title = "Afficher les coordonnées du curseur";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
