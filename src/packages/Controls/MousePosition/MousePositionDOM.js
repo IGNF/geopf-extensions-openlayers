@@ -136,7 +136,7 @@ var MousePositionDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPmousePositionPanelClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-btn-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close  fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox

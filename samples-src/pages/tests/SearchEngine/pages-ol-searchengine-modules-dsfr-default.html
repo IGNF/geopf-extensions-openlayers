@@ -51,7 +51,13 @@
 
 					// 2. Appel du SearchEngine
                     var search = new ol.control.SearchEngine({
-                        apiKey: "{{ apikey }}"
+                        displayButtonAdvancedSearch : true,
+                        displayButtonGeolocate : true,
+                        displayButtonCoordinateSearch : true,
+                        opened : true,
+                        resources : {
+                          search : true
+                        },
                     });
 
 					// 3. Ajout du SearchEngine à la carte

@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        
+        <script src="{{ baseurl }}/dist/modules/CRS{{ mode }}.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/SearchEngine{{ mode }}.css" />
         <script src="{{ baseurl }}/dist/modules/SearchEngine{{ mode }}.js"></script>
 {{/content}}
@@ -33,7 +33,6 @@
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
 
-					// 1. Création de la map
                     map = new ol.Map({
                         target : "map",
                         view : new ol.View({
@@ -41,24 +40,44 @@
                             zoom : 6
                         }),
                         layers : [
-                            new ol.layer.Tile({
-                                source : new ol.source.GeoportalWMTS({
-                                    layer: "ORTHOIMAGERY.ORTHOPHOTOS"
-                                }),
-                                opacity : 0.8
-                            }),
-                            new ol.layer.Tile({
-                                source : new ol.source.GeoportalWMTS({
-                                    layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
-                                })
+                        new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
                             })
                         ]
                     });
 
-					// 2. Appel du SearchEngine
                     var search = new ol.control.SearchEngine({
-                        collapsed : false,
-                        displayAdvancedSearch : true,
+                        collapsed : true,
+                        opened : true,
+                        displayButtonAdvancedSearch : true,
+                        displayButtonGeolocate : true,
+                        displayButtonCoordinateSearch : true,
+                        displayButtonClose : true,
+                        coordinateSearch : {
+                          target : null,
+                          systems : [
+                            {
+                              label : "G\u00e9ographique",
+                              crs : "EPSG:4326",
+                              type : "Geographical"
+                            }, {
+                              label : "Web Mercator",
+                              crs : "EPSG:3857",
+                              type : "Metric"
+                            }, {
+                              label : "Lambert 93",
+                              crs : "EPSG:2154",
+                              type : "Metric"
+                            }, {
+                              label : "Lambert II \u00e9tendu",
+                              crs : "EPSG:27572",
+                              type : "Metric"
+                            }
+                          ],
+                          units : ["DEC", "DMS"]
+                        },
                         advancedSearch : {
                           PositionOfInterest : [
                             {name : "nature", title : "Nature"},
@@ -94,8 +113,9 @@
                           ]
                         },
                         resources : {
-                          geocode : ["CadastralParcel", "StreetAddress", "PositionOfInterest"],
-                          autocomplete : ["PositionOfInterest", "StreetAddress"]
+                          geocode : ["CadastralParcel", "StreetAddress", "PositionOfInterest"], // ou "location" ?
+                          autocomplete : ["PositionOfInterest", "StreetAddress"],
+                          search : true
                         },
                         geocodeOptions : {
                           filterOptions : {
@@ -107,9 +127,14 @@
                           // rawResponse : true
                         },
                         autocompleteOptions : {
+                          triggerGeocode : true,
+                          triggerDelay : 1000,
                           filterOptions : {
                             type : ["StreetAddress", "PositionOfInterest"],
                           }
+                        },
+                        searchOptions : {
+                          serviceOptions : {}
                         },
                         // valeur possible : "" ou null, "auto", 18, function (i) { return 1; }
                         zoomTo : "auto",
@@ -118,14 +143,15 @@
                         markerStyle : "turquoiseBlue"
                     });
 
-					// 3. Ajout du SearchEngine à la carte
                     map.addControl(search);
+                    search.on("searchengine:search:click", function (e) {
+                      console.warn("search", e.suggest, e.error);
+                    });
                 };
 
                  Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",
                      callbackSuffix : "",
-                    //  apiKey: "{{ apikey }}",
                      timeOut : 20000,
                      onSuccess : createMap,
                      onFailure : (e) => {

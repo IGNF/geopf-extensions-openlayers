@@ -1194,7 +1194,7 @@ var RouteDOM = {
     _createRouteSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GProuteSubmit");
-        input.className = "GPsubmit gpf-btn gpf-btn-submit fr-btn fr-btn--secondary";
+        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary";
         input.type = "submit";
         input.value = "Calculer";
 
@@ -1216,7 +1216,7 @@ var RouteDOM = {
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GProuteReset");
         buttonReset.title = "Réinitialiser les paramètres";
-        buttonReset.className = "GPresetPicto gpf-btn gpf-icon-return fr-btn fr-btn--secondary";
+        buttonReset.className = "GPresetPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary";
         buttonReset.title = "Réinitialiser les paramètres";
         buttonReset.setAttribute("tabindex", "0");
         buttonReset.setAttribute("aria-pressed", false);
