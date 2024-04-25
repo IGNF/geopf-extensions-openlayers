@@ -1,4 +1,7 @@
 /* ISOCHRON */
+[id^=GPisochronPanel-] {
+  width: 280px;
+}
 
 .GPshowIsochronPicto {
   background-image: url("img/GPisochronOpen.png");
@@ -31,17 +34,40 @@ button[id^=GPisochronReset]:hover {
 
 div[id^=GPisochronChoice] {
   margin: auto;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  width: 160px;
 }
 
 .GPisochronChoiceAlt input:checked + label + span {
   color: #366291;
 }
 
+input[id^=GPisochronChoiceAltChron] + .GPisochronChoiceAltImg {
+  background-position: -56px 0;
+}
+
+input[id^=GPisochronChoiceAltChron]:checked + .GPisochronChoiceAltImg {
+  background-position: -84px 0;
+}
+
+input[id^=GPisochronChoiceAltDist] + .GPisochronChoiceAltImg {
+  background-position: -112px 0;
+}
+
+input[id^=GPisochronChoiceAltDist]:checked + .GPisochronChoiceAltImg {
+  background-position: -140px 0;
+}
+
+input[id^=GPisochronChoiceAltChron] {
+  background-image: url("img/GPisochronOptions.png");
+}
+
 .GPisochronOriginPointerImg,
 .GPisochronChoiceAltImg,
 .GPisochronTransportImg {
   background-image: url("img/GPisochronOptions.png");
-  content-visibility: hidden;
+  font-size: 0;
 }
 
 .GPisoExclusionsOption {

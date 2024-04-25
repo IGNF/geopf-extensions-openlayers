@@ -24,7 +24,6 @@ button[id^="GPshowRoutePicto-"][aria-pressed="true"] + dialog {
 [id^=GProutePanel-] {
   position: absolute;
   height: inherit;
-  width: 320px;
   top: 0px;
   left: 34px;
 }
