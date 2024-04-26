@@ -207,6 +207,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* crée un décalage sur le searchEngine */
   /* align-items: center; */
   min-width: var(--size-per-row);
   min-height: var(--size-per-row);
