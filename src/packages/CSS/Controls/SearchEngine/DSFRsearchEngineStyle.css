@@ -18,6 +18,12 @@ input[name^="inputSex"].gpf-input {
   padding: unset;
 }
 
+button[id^=GPsearchInputReset] {
+  width: 40px;
+  height: 40px;
+}
+
+
 .gpf-btn-icon-search {
     background-image: url("img/dsfr/search-line.svg");
     background-repeat: no-repeat;
@@ -47,7 +53,7 @@ input[name^="inputSex"].gpf-input {
 
 .gpf-btn-icon-reset {
   background-image: url("img/GPsearchEngineClose.png");
-  background-position: -29px center;
+  background-position: -25px center;
 }
 .gpf-btn-icon-close {}
 
