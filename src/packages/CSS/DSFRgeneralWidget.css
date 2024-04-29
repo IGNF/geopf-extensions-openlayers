@@ -5,8 +5,12 @@
 .gpf-widget {
   position: absolute;
   pointer-events: auto;
-  display: flex;
+  /* display: flex;*/
   padding: 2px;
+}
+
+.gpf-widget-button {
+  width: 40px;
 }
 
 .gpf-panel {
@@ -124,6 +128,19 @@
   
 }
 
+.gpf-btn-icon {
+  width:inherit
+}
+
+.gpf-btn-icon-reset {
+  background-image: url("img/GPclose.png");
+}
+
+.gpf-btn-icon-info {
+  width: 40px;
+  height: 40px;
+}
+
 /*************/
 /* elements  */
 /*************/
@@ -199,6 +216,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* crée un décalage sur le searchEngine */
   /* align-items: center; */
   min-width: var(--size-per-row);
   min-height: var(--size-per-row);

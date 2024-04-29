@@ -18,7 +18,7 @@ var IsoDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPisochron");
-        container.className = "GPwidget gpf-widget";
+        container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -38,7 +38,7 @@ var IsoDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowIsochronPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowIsochronPicto gpf-btn gpf-btn-icon-isocurve fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowIsochronPicto gpf-btn gpf-btn-icon gpf-btn-icon-isocurve fr-btn";
         button.title = "Calculer une isochrone";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -868,7 +868,7 @@ var IsoDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPisochronReset");
-        buttonReset.className = "GPresetPicto GPisochronReset gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary";
+        buttonReset.className = "GPresetPicto GPisochronReset gpf-btn gpf-btn-icon-reset gpf-btn-icon-isocurve-reset fr-btn fr-btn--secondary";
         buttonReset.title = "Réinitialiser les paramètres";
         buttonReset.setAttribute("tabindex", "0");
         buttonReset.setAttribute("aria-pressed", false);

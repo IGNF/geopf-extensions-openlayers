@@ -18,7 +18,7 @@ var ElevationPathDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPelevationPath");
-        container.className = "GPwidget gpf-widget";
+        container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -38,7 +38,7 @@ var ElevationPathDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowElevationPathPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-icon-elevation fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon gpf-btn-icon-elevation fr-btn";
         button.title = "Calculer un profil";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

@@ -18,10 +18,18 @@ input[name^="inputSex"].gpf-input {
   padding: unset;
 }
 
+button[id^=GPsearchInputReset] {
+  width: 40px;
+  height: 40px;
+}
+
+
 .gpf-btn-icon-search {
     background-image: url("img/dsfr/search-line.svg");
     background-repeat: no-repeat;
     background-position: center center;
+    /* cas particulier ou on n'utilise pas la class gpf-icon-button pour la largeur à cause du DOM du control*/
+    width: 40px;
 }
 /* hack pour forcer la couleur d'un element desactivé */
 .gpf-btn-icon-search:disabled {
@@ -43,9 +51,8 @@ input[name^="inputSex"].gpf-input {
     background-repeat: no-repeat;
 }
 
-.gpf-btn-icon-reset {
-  background-image: url("img/GPsearchEngineClose.png");
-  background-position: -29px center;
+.gpf-btn-icon-search-reset {
+  background-position: -25px center;
 }
 .gpf-btn-icon-close {}
 

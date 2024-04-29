@@ -5,7 +5,7 @@
 button[id^="GPshowMeasureAzimuthPicto-"] {
   background-image: url("img/GPmeasuresOpen.png");
   background-repeat: no-repeat;
-  background-position: 1px center;
+  background-position: 2px center;
 }
   
 button[id^="GPshowMeasureAzimuthPicto-"][aria-pressed="false"] {

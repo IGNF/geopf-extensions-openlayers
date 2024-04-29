@@ -35,6 +35,8 @@
 button[id^=GPsearchInputReset] {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+  width: 32px;
+  height: 32px;
 }
 
 button[id^=GPcoordinateSearchClose],

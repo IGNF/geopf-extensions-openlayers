@@ -1,11 +1,11 @@
 /* GET FEATURE INFO */
 
 .GPgetFeatureInfoPicto {
-    background-position: 0px center;
+    background-position: 1px center;
     background-image: url("img/GPactivateGfi.png");
     background-repeat: no-repeat;
 }
 
 button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {
-    background-position: -26px center;
+    background-position: -25px center;
 }
