@@ -868,7 +868,7 @@ var IsoDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPisochronReset");
-        buttonReset.className = "GPresetPicto GPisochronReset gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary";
+        buttonReset.className = "GPresetPicto GPisochronReset gpf-btn gpf-btn-icon-reset gpf-btn-icon-isocurve-reset fr-btn fr-btn--secondary";
         buttonReset.title = "Réinitialiser les paramètres";
         buttonReset.setAttribute("tabindex", "0");
         buttonReset.setAttribute("aria-pressed", false);

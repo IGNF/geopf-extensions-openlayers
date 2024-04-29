@@ -11,7 +11,6 @@
     justify-content: unset;
 }
 
-.gpf-btn-icon-reset {
-    background-image: url("img/GPisochronOptions.png");
-    background-position: -281px center;
+.gpf-btn-icon-isocurve-reset {
+    background-position: -29px center;
 }

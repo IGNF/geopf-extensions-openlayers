@@ -51,8 +51,7 @@ button[id^=GPsearchInputReset] {
     background-repeat: no-repeat;
 }
 
-.gpf-btn-icon-reset {
-  background-image: url("img/GPsearchEngineClose.png");
+.gpf-btn-icon-search-reset {
   background-position: -25px center;
 }
 .gpf-btn-icon-close {}

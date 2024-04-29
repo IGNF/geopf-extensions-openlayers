@@ -132,6 +132,10 @@
   width:inherit
 }
 
+.gpf-btn-icon-reset {
+  background-image: url("img/GPclose.png");
+}
+
 /*************/
 /* elements  */
 /*************/
