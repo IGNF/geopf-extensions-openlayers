@@ -1,7 +1,8 @@
 .gpf-btn-icon-drawing {
-  background-image: url("img/GPdrawingOpen.png");
+  background-image: url("img/modifier.svg");
   background-repeat: no-repeat;
-  background-position: 3px center;
+  background-size: auto auto;
+  background-position: center center;
 }
 
 .gpf-btn-icon-close {}

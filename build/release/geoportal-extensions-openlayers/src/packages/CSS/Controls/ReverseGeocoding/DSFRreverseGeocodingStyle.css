@@ -1,7 +1,8 @@
 .gpf-btn-icon-reverse {
-    background-image: url("img/GPreverseGeocodingOpen.png");
+    background-image: url("img/reversegeocode.svg");
     background-repeat: no-repeat;
-    background-position: 3px center;
+    background-size: auto auto;
+    background-position: center center;
 }
 
 .gpf-btn-icon-close {}

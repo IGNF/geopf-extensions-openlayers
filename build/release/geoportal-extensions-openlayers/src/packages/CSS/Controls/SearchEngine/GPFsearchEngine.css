@@ -76,8 +76,6 @@ button[id^=GPsearchInputReset] {
   position: absolute;
   top: 0px;
   right: 0px;
-  width: 32px;
-  height: 32px;
   border: unset;
   cursor: pointer;
 }

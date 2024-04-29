@@ -18,7 +18,7 @@ var MeasureAreaDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPmeasureArea");
-        container.className = "GPwidget gpf-widget";
+        container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -38,7 +38,7 @@ var MeasureAreaDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMeasureAreaPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-area fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon gpf-btn-icon-area fr-btn";
         button.title = "Mesurer une surface";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

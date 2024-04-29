@@ -18,7 +18,7 @@ var MeasureAzimuthDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPmeasureAzimuth");
-        container.className = "GPwidget gpf-widget";
+        container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -38,7 +38,7 @@ var MeasureAzimuthDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMeasureAzimuthPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-azimuth fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon gpf-btn-icon-azimuth fr-btn";
         button.title = "Mesurer un azimut";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

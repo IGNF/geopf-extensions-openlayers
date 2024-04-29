@@ -129,6 +129,18 @@ div.tooltip-d3 {
 [id^=GPelevationPathPanel-] {
   width: 280px;
 }
+
+[id^=GPelevationPathPanelInfo] {
+  background-image: url("img/GPshowElevationPath.png");
+  background-repeat: no-repeat;
+  background-position: -75px center;
+}
+
+button[id^="GPshowElevationPathPicto-"] {
+  background-image: url("img/GPshowElevationPath.png");
+  background-repeat: no-repeat;
+  background-position: 1px center;
+}
 /*
 @media (min-width:720px) and (min-height:720px) {
 

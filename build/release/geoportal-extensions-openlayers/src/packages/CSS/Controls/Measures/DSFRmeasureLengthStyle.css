@@ -1,5 +1,6 @@
 .gpf-btn-icon-length {
-    background-image: url("img/GPmeasuresOpen.png");
+    background-image: url('./img/mesurer-distance.svg');
     background-repeat: no-repeat;
-    background-position: -23px center;
+    background-size: auto auto;
+    background-position: center center;
 }

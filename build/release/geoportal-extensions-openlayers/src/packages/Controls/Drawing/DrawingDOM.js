@@ -22,7 +22,7 @@ var DrawingDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPdrawing");
-        container.className = "GPwidget gpf-widget";
+        container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -40,7 +40,7 @@ var DrawingDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowDrawingPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowDrawingPicto gpf-btn gpf-btn-icon-drawing fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowDrawingPicto gpf-btn gpf-btn-icon gpf-btn-icon-drawing fr-btn";
         button.title = this.options.labels.control;
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

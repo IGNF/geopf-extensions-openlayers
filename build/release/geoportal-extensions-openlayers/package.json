@@ -1,8 +1,8 @@
 {
   "name": "geoportal-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.13",
-  "date": "25/04/2024",
+  "version": "1.0.0-beta.14",
+  "date": "29/04/2024",
   "main": "src/index.js",
   "type": "module",
   "directories": {},

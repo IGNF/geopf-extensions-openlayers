@@ -32,7 +32,7 @@ var LayerImportDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPimport");
-        container.className = "GPwidget gpf-widget";
+        container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -52,7 +52,7 @@ var LayerImportDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowImportPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowImportPicto gpf-btn gpf-btn-icon-import fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowImportPicto gpf-btn gpf-btn-icon gpf-btn-icon-import fr-btn";
         button.title = "Ouvrir l'import de couches";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

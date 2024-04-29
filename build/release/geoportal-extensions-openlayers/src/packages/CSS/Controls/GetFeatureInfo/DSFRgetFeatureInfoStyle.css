@@ -1,11 +1,15 @@
 /* GET FEATURE INFO */
 
 .gpf-btn-icon-getfeatureinfo {
-    background-position: 3px center;
-    background-image: url("img/GPactivateGfi.png");
+    background-image: url("img/GFI.svg");
     background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
 }
 
 button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {
-    background-position: -23px center;
+    background-image: url("img/NoGFI.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
 }

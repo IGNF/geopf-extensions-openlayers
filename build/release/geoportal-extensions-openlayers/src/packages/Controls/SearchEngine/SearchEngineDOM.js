@@ -226,7 +226,7 @@ var SearchEngineDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPsearchInputReset");
-        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary"; /* not use : fr-btn--close */
+        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset gpf-btn-icon-search-reset fr-btn fr-btn--secondary"; /* not use : fr-btn--close */
         buttonReset.setAttribute("aria-label", "Supprimer la recherche");
         // Reset input
         buttonReset.addEventListener("click", function (e) {
