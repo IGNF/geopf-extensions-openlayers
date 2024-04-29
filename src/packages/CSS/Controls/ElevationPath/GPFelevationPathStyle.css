@@ -130,6 +130,12 @@ div.tooltip-d3 {
   width: 280px;
 }
 
+[id^=GPelevationPathPanelInfo] {
+  background-image: url("img/GPshowElevationPath.png");
+  background-repeat: no-repeat;
+  background-position: -75px center;
+}
+
 button[id^="GPshowElevationPathPicto-"] {
   background-image: url("img/GPshowElevationPath.png");
   background-repeat: no-repeat;

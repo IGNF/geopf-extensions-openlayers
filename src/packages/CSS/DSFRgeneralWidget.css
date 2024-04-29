@@ -5,12 +5,12 @@
 .gpf-widget {
   position: absolute;
   pointer-events: auto;
-  display: flex;
+  /* display: flex;*/
   padding: 2px;
 }
 
 .gpf-widget-button {
-  width: 44px;
+  width: 40px;
 }
 
 .gpf-panel {
@@ -134,6 +134,11 @@
 
 .gpf-btn-icon-reset {
   background-image: url("img/GPclose.png");
+}
+
+.gpf-btn-icon-info {
+  width: 40px;
+  height: 40px;
 }
 
 /*************/

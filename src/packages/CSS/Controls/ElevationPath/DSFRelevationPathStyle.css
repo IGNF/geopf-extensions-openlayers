@@ -8,3 +8,9 @@
 #profileElevationByDefaultSvg {
     height: 80%;
 }
+
+[id^=GPelevationPathPanelInfo] {
+  background-image: url("../../img/GPinfo_secondary.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+}

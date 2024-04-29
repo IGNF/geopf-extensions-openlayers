@@ -1,6 +1,4 @@
 div[id^=GPelevationPath-] {
-  bottom: 48px;
-  left: 10px;
   height: 36px;
 }
 
@@ -33,12 +31,6 @@ button[id^="GPshowElevationPathPicto-"][aria-pressed="true"] + dialog {
   background-image: url("img/GPshowElevationPath.png");
   background-repeat: no-repeat;
   background-position: -50px center;
-}
-
-[id^=GPelevationPathPanelInfo] {
-  background-image: url("img/GPshowElevationPath.png");
-  background-repeat: no-repeat;
-  background-position: -75px center;
 }
 
 [id^=GPelevationPathPanel-] {
