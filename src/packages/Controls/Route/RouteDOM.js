@@ -1035,7 +1035,7 @@ var RouteDOM = {
         button.title = "Exclusions";
         // button.style.top = "185px";
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", false);
+        button.setAttribute("aria-pressed", true);
 
         // gestionnaire d'evenement :
         // on ouvre le menu des options des exclusions
