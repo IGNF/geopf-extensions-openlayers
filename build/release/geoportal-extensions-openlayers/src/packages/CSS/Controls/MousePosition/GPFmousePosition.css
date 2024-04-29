@@ -44,7 +44,6 @@ button[id^=GPmousePositionPanelClose]  {
   left: 34px;
   top: inherit;
   position: absolute;
-  width: 280px;
   height: inherit;
 }
 

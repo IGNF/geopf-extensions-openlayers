@@ -1,4 +1,7 @@
 /* REVERSE GEOCODING */
+[id^="GPreverseGeocodingPanel-"] {
+  width: 280px;
+}
 
 .GPshowReverseGeocodingPicto {
   background-image: url("img/GPreverseGeocodingOpen.png");

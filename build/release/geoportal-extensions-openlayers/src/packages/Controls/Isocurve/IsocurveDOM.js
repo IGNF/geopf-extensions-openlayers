@@ -106,7 +106,7 @@ var IsoDOM = {
         container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-m-1w";
         div.innerHTML = "Calcul d'isochrone";
         container.appendChild(div);
 
@@ -135,7 +135,7 @@ var IsoDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPisochronPanelClose");
-        divClose.className = "GPpanelClose GPisochronPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.className = "GPpanelClose GPisochronPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -230,6 +230,7 @@ var IsoDOM = {
     _createIsoPanelFormTypeChoiceElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronChoice");
+        div.className = "fr-mt-4w";
 
         // div.appendChild(this._createIsoPanelFormTypeChoiceChronElement());
         // div.appendChild(this._createIsoPanelFormTypeChoiceDistElement());
@@ -257,13 +258,13 @@ var IsoDOM = {
         input.checked = !!(checked);
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
-                document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex";
+                document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex fr-mt-1w";
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "GPelementHidden gpf-hidden";
                 self.onIsoTypeChoiceChange(e);
             }, false);
         } else if (input.attachEvent) {
             input.attachEvent("onchange", function () {
-                document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex";
+                document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex fr-mt-1w";
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "GPelementHidden gpf-hidden";
                 self.onIsoTypeChoiceChange();
             });
@@ -276,6 +277,7 @@ var IsoDOM = {
         label.className = "GPisochronChoiceAltImg gpf-label fr-label";
         label.htmlFor = this._addUID("GPisochronChoiceAltChron");
         label.innerHTML = "isochrone";
+        label.title = "isochrone";
         div.appendChild(label);
 
         var span = document.createElement("span");
@@ -316,13 +318,13 @@ var IsoDOM = {
         input.checked = !!(checked);
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
-                document.getElementById(self._addUID("GPisochronValueDist")).className = "GPflexInput gpf-flex";
+                document.getElementById(self._addUID("GPisochronValueDist")).className = "GPflexInput gpf-flex fr-mt-1w";
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPelementHidden gpf-hidden";
                 self.onIsoTypeChoiceChange(e);
             }, false);
         } else if (input.attachEvent) {
             input.attachEvent("onchange", function () {
-                document.getElementById(self._addUID("GPisochronValueDist")).className = "GPflexInput gpf-flex";
+                document.getElementById(self._addUID("GPisochronValueDist")).className = "GPflexInput gpf-flex fr-mt-1w";
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPelementHidden gpf-hidden";
                 self.onIsoTypeChoiceChange();
             });
@@ -335,6 +337,8 @@ var IsoDOM = {
         label.className = "GPisochronChoiceAltImg gpf-label fr-label";
         label.htmlFor = this._addUID("GPisochronChoiceAltDist");
         label.innerHTML = "isodistance";
+        label.title = "isodistance";
+
         div.appendChild(label);
 
         var span = document.createElement("span");
@@ -371,7 +375,7 @@ var IsoDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronValueChron");
-        div.className = (checked) ? "GPflexInput gpf-flex" : "GPelementHidden gpf-hidden";
+        div.className = (checked) ? "GPflexInput gpf-flex fr-mt-1w" : "GPelementHidden gpf-hidden";
 
         var label = document.createElement("label");
         label.id = this._addUID("GPisochronValueChronLabel");
@@ -450,18 +454,18 @@ var IsoDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronValueDist");
-        div.className = (checked) ? "GPflexInput gpf-flex" : "GPelementHidden gpf-hidden";
+        div.className = (checked) ? "GPflexInput gpf-flex fr-mt-1w" : "GPelementHidden gpf-hidden";
 
         var label = document.createElement("label");
         label.id = this._addUID("GPisochronValueDistLabel");
-        label.className = "gpf-label fr-label";
+        label.className = "gpf-label fr-label fr-mr-1w";
         label.htmlFor = this._addUID("GPisochronValueDistInput");
         label.innerHTML = "Distance";
         div.appendChild(label);
 
         var input1 = document.createElement("input");
         input1.id = this._addUID("GPisochronValueDistInput");
-        input1.className = "gpf-input fr-input";
+        input1.className = "gpf-input fr-input fr-ml-1w";
         input1.min = "0";
         input1.step = "any";
         input1.value = "0";
@@ -505,6 +509,7 @@ var IsoDOM = {
     _createIsoPanelFormModeChoiceElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronModeChoice");
+        div.className = "fr-my-4w";
 
         // div.appendChild(this._createIsoPanelFormModeChoiceTransportElement());
         // div.appendChild(this._createIsoPanelFormModeChoiceDirectionElement());
@@ -536,7 +541,7 @@ var IsoDOM = {
             var transport = transports[i];
 
             var div = document.createElement("div");
-            div.className = "GPisochronTransportChoice gpf-flex gpf-radio-group fr-radio-group";
+            div.className = "GPisochronTransportChoice gpf-flex gpf-radio-group fr-radio-group fr-m-1w";
 
             if (transport === "Voiture") {
                 var inputCar = document.createElement("input");
@@ -732,7 +737,7 @@ var IsoDOM = {
         var context = this;
 
         var div = document.createElement("div");
-        div.className = "GPisoExclusionsOptions gpf-flex";
+        div.className = "GPisoExclusionsOptions gpf-flex fr-checkbox-group fr-m-1w";
 
         /* jshint -W083 */
         for (var value in exclusions) {

@@ -1,4 +1,7 @@
 /* ROUTE */
+[id^=GProutePanel-] {
+  width: 320px;
+}
 
 .GPshowRoutePicto {
   background-image: url("img/GProuteOpen.png");
@@ -29,6 +32,7 @@
 div[id^=GProuteStageAdd],
 .GProuteTransportImg {
   background-image: url("img/GProuteOptions.png");
+  font-size: 0;
 }
 
 .GProuteExclusionsOption {
