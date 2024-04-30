@@ -682,7 +682,7 @@ var IsoDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowIsoExclusionsPicto");
-        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
+        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
         button.title = "Exclusions";
         // button.style.top = "240px";
         button.setAttribute("tabindex", "0");

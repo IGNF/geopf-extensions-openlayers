@@ -93,10 +93,6 @@ div[id^=GPisochronValueDist] {
     display: none;
 }
 
-button[id^="GPshowIsoExclusionsPicto-"] {
-  visibility: hidden;
-}
-
 div[id^=GPisochronModeChoice] {
   display: -webkit-flex;
   display: -ms-flexbox;

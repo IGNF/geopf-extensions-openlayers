@@ -61,7 +61,6 @@ div[id^=GPmousePositionSettings-] {
 
 button[id^="GPshowMousePositionSettings"] {
   border: unset;
-  display: none;
 }
 
 div[id^=GPmousePosition-] button[id^="GPshowMousePositionSettings"][aria-pressed="true"] + div[id^=GPmousePositionSettings-] {

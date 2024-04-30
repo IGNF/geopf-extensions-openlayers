@@ -100,10 +100,6 @@ div[id^=GProuteStageAdd] {
   display: none;
 }
 
-button[id^=GPshowRouteExclusionsPicto] {
-  visibility: hidden
-}
-
 .GProuteStageRemove {
   background-position: -84px 0;
 }
