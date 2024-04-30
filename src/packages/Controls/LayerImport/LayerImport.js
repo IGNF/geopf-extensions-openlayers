@@ -146,10 +146,12 @@ var LayerImport = class LayerImport extends Control {
     /**
      * See {@link ol.control.LayerImport}
      * @module LayerImport
-     * @alias module:~Controls/LayerImport
+     * @alias module:~controls/LayerImport
      * @param {*} options - options
      * @example
-     * import LayerImport from "src/OpenLayers/Controls/LayerImport"
+     * import LayerImport from "gpf-ext-ol/controls/LayerImport"
+     * ou 
+     * import { LayerImport } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

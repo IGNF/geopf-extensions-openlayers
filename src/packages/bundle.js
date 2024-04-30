@@ -17,9 +17,9 @@
 * > Logger: (...)
 *
 * > olExtended: (...)
-* > olUtils: (...)
-* > olExtDate: "YYYY-MM-DD"
-* > olExtVersion: "X.X.X"
+*
+* > date: "YYYY-MM-DD"
+* > version: "X.X.X"
 *
 * > Error: (...)
 * > Helper: (...)
@@ -111,6 +111,8 @@ import ProxyUtils from "./Utils/ProxyUtils";
 import ColorUtils  from "./Utils/ColorUtils";
 import MathUtils from "./Utils/MathUtils";
 import Logger from "./Utils/LoggerByDefault";
+import Parser from "./Utils/Parser";
+import Register from "./Utils/Register";
 
 // Les autoload...
 import "./Utils/AutoLoadConfig";
@@ -164,13 +166,23 @@ export const version = Pkg.version;
 /** Publication date */
 export const date = Pkg.date;
 
-export { 
+export {
+    /** @see Gp.HelperUtils */
     HelperUtils,
+    /** @see Gp.LayerUtils */
     LayerUtils,
+    /** @see Gp.ProxyUtils */
     ProxyUtils,
+    /** @see Gp.ColorUtils */
     ColorUtils,
+    /** @see Gp.MathUtils */
     MathUtils,
-    Logger
+    /** @see Gp.Logger */
+    Logger,
+    /** @see Gp.Parser */
+    Parser,
+    /** @see Gp.Register */
+    Register
 };
 
 function deepCopy (source, target) {
@@ -245,9 +257,36 @@ Ol.control.ElevationPath = ElevationPath;
 Ol.control.LocationSelector = LocationSelector;
 Ol.control.Export = ButtonExport;
 
-// Expose extensions openlayers extended
 export {
-    /** Expose extensions openlayers extended */
+    /** 
+     * Expose extensions openlayers extended 
+     * @see ol.control.LayerSwitcher
+     * @see ol.control.GeoportalAttribution
+     * @see ol.control.GetFeatureInfo
+     * @see ol.control.SearchEngine
+     * @see ol.control.Route
+     * @see ol.control.Isocurve
+     * @see ol.control.GeoportalMousePosition
+     * @see ol.control.Drawing
+     * @see ol.control.ReverseGeocode
+     * @see ol.control.MeasureLength
+     * @see ol.control.MeasureArea
+     * @see ol.control.MeasureAzimuth
+     * @see ol.control.DefaultMarkers
+     * @see ol.control.ElevationPath
+     * @see ol.control.LocationSelector
+     * @see ol.control.Export
+     * @see ol.layer.GeoportalWMTS
+     * @see ol.layer.GeoportalWMS
+     * @see ol.layer.GeoportalMapBox
+     * @see ol.source.GeoportalWMTS
+     * @see ol.source.GeoportalWMS
+     * @see ol.format.KMLExtended
+     * @see ol.format.GPXExtended
+     * @see ol.format.GeoJSONExtended
+     * @see ol.style.Editor 
+     * @see ol.includeProjections
+     */
     Ol as olExtended
 };
 

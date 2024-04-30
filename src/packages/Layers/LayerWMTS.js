@@ -31,10 +31,12 @@ var LayerWMTS = class LayerWMTS extends TileLayer {
     /**
      * See {@link ol.layer.GeoportalWMTS}
      * @module LayerWMTS
-     * @alias module:~Layers/GeoportalWMTS
+     * @alias module:~layers/GeoportalWMTS
      * @param {*} options - options
      * @example
-     * import LayerWMTS from "src/packages/Layers/LayerWMTS"
+     * import LayerWMTS from "gpf-ext-ol/layers/LayerWMTS
+     * ou 
+     * import { LayerWMTS } from "gpf-ext-ol"
      */
     constructor (options) {
         // if (!(this instanceof LayerWMTS)) {

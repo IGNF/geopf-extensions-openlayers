@@ -4,8 +4,9 @@ var logger = Logger.getLogger("draggable");
 
 /**
  * @module Draggable
- * @alias [private] Draggable
+ * @alias module:~utils/Draggable
  * @fixme conflit entre la position et le mode draggable
+ * @private
  * @description
  * ...
  *

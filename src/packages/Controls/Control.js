@@ -27,6 +27,7 @@ const ANCHORS = [
 
 /**
  * Position
+ * @private
  * @todo revoir les css des widgets car les panneaux sont en position:absolute
  */
 class PositionFactory {

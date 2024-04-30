@@ -115,10 +115,12 @@ var ElevationPath = class ElevationPath extends Control {
     /**
      * See {@link ol.control.ElevationPath}
      * @module ElevationPath
-     * @alias module:~Controls/ElevationPath
+     * @alias module:~controls/ElevationPath
      * @param {*} options - options
      * @example
-     * import ElevationPath from "src/OpenLayers/Controls/ElevationPath"
+     * import ElevationPath from "gpf-ext-ol/controls/ElevationPath"
+     * ou 
+     * import { ElevationPath } from "gpf-ext-ol"
      */
     constructor (options) {
         logger.trace("ElevationPath()");

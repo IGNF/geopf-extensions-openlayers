@@ -1,6 +1,7 @@
 /**
  * @module Config
- * @alias [private] Config
+ * @alias module:~utils/Config
+ * @private
  * @description
  * ...
  *

@@ -251,6 +251,7 @@ Feature.prototype.setPropertyMarker = function () {
 /**
  * @module Styling
  * @alias Gp.Styling
+ * @private
  * @todo ...
  * @description
  * A simple specification for styling GeoJSON / GPX / KML data.

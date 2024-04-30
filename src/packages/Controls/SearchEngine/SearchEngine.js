@@ -146,10 +146,12 @@ var SearchEngine = class SearchEngine extends Control {
     /**
      * See {@link ol.control.SearchEngine}
      * @module SearchEngine
-     * @alias module:~Controls/SearchEngine
+     * @alias module:~controls/SearchEngine
      * @param {*} options - options
      * @example
-     * import SearchEngine from "src/OpenLayers/Controls/SearchEngine"
+     * import SearchEngine from "gpf-ext-ol/controls/SearchEngine"
+     * ou 
+     * import { SearchEngine } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

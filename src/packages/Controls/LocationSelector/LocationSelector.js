@@ -23,6 +23,9 @@ var logger = Logger.getLogger("locationselector");
  * @classdesc
  *
  * LocationSelector component. Enables to select a location, using autocompletion or picking location on the map
+ * @constructor
+ * @extends {ol.control.Control}
+ * @alias ol.control.LocationSelector
  * @type {ol.control.LocationSelector}
  * @param {Object} [options] - component options
  * @param {String} [options.apiKey] - API key for autocomplete service call. The key "calcul" is used by default.
@@ -60,10 +63,12 @@ var LocationSelector = class LocationSelector extends Control {
     /**
      * See {@link ol.control.LocationSelector}
      * @module LocationSelector
-     * @alias module:~Controls/LocationSelector
+     * @alias module:~controls/LocationSelector
      * @param {*} options - options
      * @example
-     * import LocationSelector from "src/OpenLayers/Controls/LocationSelector"
+     * import LocationSelector from "gpf-ext-ol/controls/LocationSelector"
+     * ou 
+     * import { LocationSelector } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

@@ -1,13 +1,17 @@
 /**
 * @module LayerUtils
-* @alias Gp.LayerUtils
+* @alias module:~utils/LayerUtils
 * @description
 * ...
 *
 * @example
-* getZoomLevelFromScaleDenominator();
-* getAttributions();
-* intersects();
+* import LayerUtils from "gpf-ext-ol/utils/LayerUtils"
+* ou 
+* import {LayerUtils} from "gpf-ext-ol
+
+* LayerUtils.getZoomLevelFromScaleDenominator();
+* LayerUtils.getAttributions();
+* LayerUtils.intersects();
 */
 var LayerUtils = {
 

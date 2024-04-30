@@ -1,13 +1,17 @@
 /**
 * @module Helper
-* @alias Gp.HelperUtils
+* @alias module:~utils/HelperUtils
 * @description
 * ...
 *
 * @example
-* detectSupport();
-* assign();
-* mergeParams();
+* import HelperUtils from "gpf-ext-ol/utils/HelperUtils"
+* ou 
+* import {HelperUtils} from "gpf-ext-ol
+* 
+* HelperUtils.detectSupport();
+* HelperUtils.assign();
+* HelperUtils.mergeParams();
 */
 var Helper = {
 

@@ -1,6 +1,7 @@
 /**
  * @module SelectorID
- * @alias [private] SelectorID
+ * @alias module:~utils/SelectorID
+ * @private
  * @description
  * formalisme d'un tag ID :
  * -> NAME(_ORDER)-1460636385836

@@ -123,10 +123,12 @@ var MousePosition = class MousePosition extends Control {
     /**
      * See {@link ol.control.GeoportalMousePosition}
      * @module MousePosition
-     * @alias module:~Controls/MousePosition
+     * @alias module:~controls/MousePosition
      * @param {*} options - options
      * @example
-     * import GeoportalMousePosition from "src/OpenLayers/Controls/MousePosition"
+     * import GeoportalMousePosition from "gpf-ext-ol/controls/MousePosition"
+     * ou 
+     * import { GeoportalMousePosition } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

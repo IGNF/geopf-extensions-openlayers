@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <script src="{{ baseurl }}/dist/modules/Layers{{ mode }}.js"></script>
+        <script src="{{ baseurl }}/dist/modules/Layers.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -54,7 +54,7 @@
 
                 };
                 Gp.Services.getConfig({
-                    customConfigFile : "https://github.com/IGNF/geoportal-configuration/blob/main/dist/lambert93Config.json",
+                    customConfigFile : "https://github.com/IGNF/geoportal-configuration/blob/new-url/dist/lambert93Config.json",
                     callbackSuffix : "",
                     // apiKey: "{{ apikey }}",
                     timeOut : 20000,

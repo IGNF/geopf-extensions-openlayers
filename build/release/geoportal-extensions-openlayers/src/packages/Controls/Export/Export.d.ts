@@ -67,10 +67,12 @@ declare class ButtonExport {
     /**
      * See {@link ol.control.Export}
      * @module ButtonExport
-     * @alias module:~Controls/ButtonExport
+     * @alias module:~controls/ButtonExport
      * @param {Object} [options] - options
      * @example
-     * import ButtonExport from "src/OpenLayers/Controls/Export"
+     * import ButtonExport from "gpf-ext-ol/controls/ButtonExport"
+     * ou
+     * import { ButtonExport } from "gpf-ext-ol"
      */
     constructor(options?: Object | undefined);
     /**

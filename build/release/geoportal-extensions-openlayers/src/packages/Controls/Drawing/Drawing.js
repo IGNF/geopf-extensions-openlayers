@@ -169,10 +169,12 @@ var Drawing = class Drawing extends Control {
     /**
      * See {@link ol.control.Drawing}
      * @module Drawing
-     * @alias module:~Controls/Drawing
+     * @alias module:~controls/Drawing
      * @param {*} options - options
      * @example
-     * import Drawing from "src/packages/Controls/Drawing"
+     * import Drawing from "gpf-ext-ol/controls/Drawing"
+     * ou 
+     * import { Drawing } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

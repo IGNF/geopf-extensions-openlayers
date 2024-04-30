@@ -47,10 +47,12 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     /**
      * See {@link ol.control.GetFeatureInfo}
      * @module GetFeatureInfo
-     * @alias module:~Controls/GetFeatureInfo
+     * @alias module:~controls/GetFeatureInfo
      * @param {*} options - options
      * @example
-     * import GetFeatureInfo from "src/OpenLayers/Controls/GetFeatureInfo"
+     * import GetFeatureInfo from "gpf-ext-ol/controls/GetFeatureInfo"
+     * ou 
+     * import { GetFeatureInfo } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

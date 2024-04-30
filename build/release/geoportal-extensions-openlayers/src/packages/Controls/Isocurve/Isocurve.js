@@ -100,10 +100,12 @@ var Isocurve = class Isocurve extends Control {
     /**
      * See {@link ol.control.Isocurve}
      * @module Isocurve
-     * @alias module:~Controls/Isocurve
+     * @alias module:~controls/Isocurve
      * @param {*} options - options
      * @example
-     * import Isocurve from "src/OpenLayers/Controls/Isocurve"
+     * import Isocurve from from "gpf-ext-ol/controls/Isocurve"
+     * ou 
+     * import { Isocurve } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

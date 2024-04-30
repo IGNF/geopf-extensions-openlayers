@@ -1,0 +1,25 @@
+# todo
+
+> construction du package des bundles
+
+## revoir les config webpack
+
+https://webpack.js.org/configuration/extending-configurations/
+
+## bundles par modules
+
+> n'expose pas la variable **Gp**
+
+BUG: rendre externals les dependances
+
+## bundle complet
+
+> expose la variable **Gp*
+
+## CSS par thèmes
+
+BUG: gestion des thèmes
+
+```sh
+./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=Drawing --mode=development
+```

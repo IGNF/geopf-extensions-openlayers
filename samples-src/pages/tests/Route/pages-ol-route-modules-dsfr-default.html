@@ -2,10 +2,10 @@
 
 {{#content "vendor"}}
         
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/modules/LayerSwitcher{{ mode }}.js"></script>
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Route{{ mode }}.css" />
-        <script src="{{ baseurl }}/dist/modules/Route{{ mode }}.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/LayerSwitcher.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/Route.css" />
+        <script src="{{ baseurl }}/dist/modules/Route.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -57,7 +57,7 @@
                 map.addControl(layerSwitcher);
              };
              Gp.Services.getConfig({
-                 customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/dist/fullConfig.json",
+                 customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/fullConfig.json",
                  callbackSuffix : "",
                  // apiKey: "{{ apikey }}",
                  timeOut : 20000,

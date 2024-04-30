@@ -1,11 +1,4 @@
 /* globals AmCharts, d3 */
-
-/**
- * @module ProfileElevationPathDOM
- * @alias [private] ProfileElevationPathDOM
- * @description
- * create DOM element
- */
 var ProfileElevationPathDOM = {
 
     /**

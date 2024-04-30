@@ -49,10 +49,12 @@ var KML = class KML extends olKML {
     /**
      * See {@link ol.format.KMLExtended}
      * @module KMLExtended
-     * @alias module:~Formats/KMLExtended
+     * @alias module:~formats/KMLExtended
      * @param {*} options - options
      * @example
-     * import KMLExtended from "src/packages/Formats/KML"
+     * import KMLExtended from "gpf-ext-ol/formats/KMLExtended"
+     * ou 
+     * import { KMLExtended } from "gpf-ext-ol"
      */
     constructor (options) {
         super(options);

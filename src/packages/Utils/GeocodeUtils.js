@@ -1,3 +1,14 @@
+/**
+ * @module GeocodeUtils
+ * @alias module:~utils/GeocodeUtils
+ * @private
+ * @description
+ * ...
+ *
+ * @example
+ * getGeocodedLocationFreeform();
+ * getSuggestedLocationFreeform();
+ */
 var GeocodeUtils = {
     /**
      * Return the freeform of a structured geocoded item

@@ -108,10 +108,12 @@ var Route = class Route extends Control {
     /**
      * See {@link ol.control.Route}
      * @module Route
-     * @alias module:~Controls/Route
+     * @alias module:~controls/Route
      * @param {*} options - options
      * @example
-     * import Route from "src/OpenLayers/Controls/Route"
+     * import Route from "gpf-ext-ol/controls/Route"
+     * ou 
+     * import { Route } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

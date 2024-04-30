@@ -20,100 +20,67 @@ var HandlebarsLayoutPlugin = require("handlebars-layouts");
 var CopyWebpackPlugin = require("copy-webpack-plugin");
 
 // -- variables
-var ROOT = path.join(__dirname, "../..");
-var pkg = require(path.join(ROOT, "package.json"));
+var rootdir = path.join(__dirname, "../..");
+var pkg = require(path.join(rootdir, "package.json"));
 
 module.exports = (env, argv) => {
-    var debug = false;
-    // par defaut
-    var devMode = false;
-    var logMode = false;
-    var suffixOutput = "";
-    if (argv.mode === "production") {
-        suffixOutput = "";
-        logMode = false;
-        devMode = false;
-    }
-    if (argv.mode === "development") {
-        suffixOutput = "-map";
-        logMode = true;
-        devMode = true;
-    }
-    if (argv.mode === "none") {
-        suffixOutput = "-src";
-        logMode = true;
-        devMode = false;
-    }
-    // env
-    var jsdocEnv = true;
-    if (env.jsdoc === "no") {
-        jsdocEnv = false;
-    }
-    var linterEnv = true;
-    if (env.linter === "no") {
-        linterEnv = false;
-    }
-    var samplesEnv = true;
-    if (env.samples === "no") {
-        samplesEnv = false;
-    }
-
+    var verbose = !(argv.mode === "production");
     return {
         entry : {
-            "Widgets" : path.join(ROOT, "src", "packages", "bundle.js"),
+            "Widgets" : path.join(rootdir, "src", "packages", "bundle.js"),
             // CSS themes portail
             "Portail" : [
-                path.join(ROOT, "src", "packages", "CSS", "GPFwaiting.css"),
-                path.join(ROOT, "src", "packages", "CSS", "GPFgeneralWidget.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Drawing", "GPFdrawingStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Attribution", "GPFattributionStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Editor", "GPFeditorStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/ElevationPath", "GPFelevationPathStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Export", "GPFexportStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/GetFeatureInfo", "GPFgetFeatureInfoStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Isochron", "GPFisochronStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/LayerImport", "GPFlayerImportStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/LayerSwitcher", "GPFlayerSwitcherStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/LocationSelector", "GPFlocationStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureAreaStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureLengthStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureAzimuthStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureToolTip.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/MousePosition", "GPFmousePositionStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/ReverseGeocoding", "GPFreverseGeocodingStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Route", "GPFrouteStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/SearchEngine", "GPFsearchEngineStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "GPFtoolBoxMeasureStyle.css")
+                path.join(rootdir, "src", "packages", "CSS", "GPFwaiting.css"),
+                path.join(rootdir, "src", "packages", "CSS", "GPFgeneralWidget.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Drawing", "GPFdrawingStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Attribution", "GPFattributionStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Editor", "GPFeditorStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/ElevationPath", "GPFelevationPathStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Export", "GPFexportStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/GetFeatureInfo", "GPFgetFeatureInfoStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Isochron", "GPFisochronStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/LayerImport", "GPFlayerImportStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/LayerSwitcher", "GPFlayerSwitcherStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/LocationSelector", "GPFlocationStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureAreaStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureLengthStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureAzimuthStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "GPFmeasureToolTip.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/MousePosition", "GPFmousePositionStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/ReverseGeocoding", "GPFreverseGeocodingStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Route", "GPFrouteStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/SearchEngine", "GPFsearchEngineStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "GPFtoolBoxMeasureStyle.css")
             ],
             // CSS themes dsfr
             "Dsfr" : [
                 // INFO dépendances externes !
-                // path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
-                // path.join(ROOT, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
-                path.join(ROOT, "src", "packages", "CSS", "DSFRgeneralWidget.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Drawing", "DSFRdrawingStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Attribution", "DSFRattributionStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Editor", "DSFReditorStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/ElevationPath", "DSFRelevationPathStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Export", "DSFRexportStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/GetFeatureInfo", "DSFRgetFeatureInfoStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Isochron", "DSFRisochronStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/LayerImport", "DSFRlayerImportStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/LayerSwitcher", "DSFRlayerSwitcherStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/LocationSelector", "DSFRlocationStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAreaStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureLengthStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAzimuthStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/MousePosition", "DSFRmousePositionStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/ReverseGeocoding", "DSFRreverseGeocodingStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/Route", "DSFRrouteStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/SearchEngine", "DSFRsearchEngineStyle.css"),
-                path.join(ROOT, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "DSFRtoolBoxMeasureStyle.css")
+                // path.join(rootdir, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
+                // path.join(rootdir, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
+                path.join(rootdir, "src", "packages", "CSS", "DSFRgeneralWidget.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Drawing", "DSFRdrawingStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Attribution", "DSFRattributionStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Editor", "DSFReditorStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/ElevationPath", "DSFRelevationPathStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Export", "DSFRexportStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/GetFeatureInfo", "DSFRgetFeatureInfoStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Isochron", "DSFRisochronStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/LayerImport", "DSFRlayerImportStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/LayerSwitcher", "DSFRlayerSwitcherStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/LocationSelector", "DSFRlocationStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAreaStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureLengthStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAzimuthStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/MousePosition", "DSFRmousePositionStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/ReverseGeocoding", "DSFRreverseGeocodingStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Route", "DSFRrouteStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/SearchEngine", "DSFRsearchEngineStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "DSFRtoolBoxMeasureStyle.css")
             ],
         },
         output : {
-            path : path.join(ROOT, "dist", "packages"),
-            filename : "[name]" + suffixOutput + ".js",
+            path : path.join(rootdir, "dist", "packages"),
+            filename : "[name].js",
             library : "Gp"
         },
         resolve : {},
@@ -127,46 +94,15 @@ module.exports = (env, argv) => {
                         "ol/events",
                         "ol/events.js",
                         "ol/render/Feature",
-                        "ol/render/Feature.js",
-                        // "ol/obj",
-                        // "ol/css",
-                        // "ol/dom",
-                        // "ol/transform",
-                        // "ol/asserts",
-                        // "ol/AssertionError",
-                        // "ol/util",
-                        // "ol/render/canvas/LabelCache", <!-- depreciate -->
-                        // "ol/structs/LRUCache",
-                        // "ol/events/Event",
-                        // "ol/events/Target",
-                        // "ol/Disposable",
-                        // "ol/functions",
-                        // "ol/proj/transforms"
+                        "ol/render/Feature.js"
                     ].includes(request)) {
-                        if (debug) {
-                            console.log("#### MODULE ES6 ONLY : " + request + " (" + context + ")");
-                        }
                         return callback();
                     }
-                    if (debug) {
-                        console.log("#### OL : " + request + " (" + context + ")");
-                    }
                     const replacedWith = request.replace(/\.js$/g, '').replace(/\//g, '.');
-                    if (debug) {
-                        console.log(">>> : ", replacedWith);
-                    }
                     return callback(null, replacedWith);
-                }
-                if (debug) {
-                    console.log("#### OTHER : " + request + " (" + context + ")");
                 }
                 callback();
             },
-            /**
-            * FIXME
-            * configuration uniquement valable en mode umd !?
-            * mais à tester lors de l'import dans le SDK...
-            */
             {
                 ol : {
                     commonjs : "ol",
@@ -186,42 +122,29 @@ module.exports = (env, argv) => {
                 }
             }
         ],
-        devtool : (devMode) ? "eval-source-map" : false,
-        stats : (devMode) ? "errors-warnings" : "normal",
+        devtool : "source-map",
+        stats : "normal",
         optimization : {
-            /** FIXME ça ne marche pas !? MINIFICATION */
+            /**  MINIFICATION */
             minimizer: [
                 new TerserJsWebPackPlugin({
                     extractComments: false,
                     terserOptions: {
                         output: {
-                            // FIXME avec les banner !
                             comments: false,
-                            // drop_console: true
                         },
                         mangle: true
                     }
                 }),
                 new OptimizeCSSWebPackPlugin({})
-            ],
-            /** EXTRACT CSS INTO SINGLE FILE */
-            // splitChunks : {
-            //     cacheGroups : {
-            //         styles : {
-            //             name : "GpPluginOpenLayers",
-            //             test : /\.css$/,
-            //             chunks : "all",
-            //             enforce : true
-            //         }
-            //     }
-            // }
+            ]
         },
         module : {
             rules : [
                 {
                     test : /\.js$/,
                     include : [
-                        path.join(ROOT, "src", "packages")
+                        path.join(rootdir, "src", "packages")
                     ],
                     exclude : /node_modules/,
                     use : [
@@ -244,7 +167,6 @@ module.exports = (env, argv) => {
                     ]
                 },
                 {
-                    /** FIXME ça marche ? proj4 est exposé en global : proj4 ! */
                     test : require.resolve("proj4"),
                     use : [{
                         loader : "expose-loader",
@@ -254,7 +176,6 @@ module.exports = (env, argv) => {
                     }]
                 },
                 {
-                    /**  FIXME ça marche ? eventbusjs est exposé en global : eventbus ! */
                     test : require.resolve("eventbusjs"),
                     use : [{
                         loader : "expose-loader",
@@ -264,7 +185,6 @@ module.exports = (env, argv) => {
                     }]
                 },
                 {
-                    /** FIXME ça marche ? ol-mapbox-style est exposé en global : olms ! */
                     test : /node_modules\/ol-mapbox-style\/dist\/olms\.js$/,
                     use : [{
                         loader : "exports-loader",
@@ -274,17 +194,12 @@ module.exports = (env, argv) => {
                 {
                     test : /\.css$/,
                     include : [
-                        path.join(ROOT, "src", "packages", "CSS"),
+                        path.join(rootdir, "src", "packages", "CSS"),
                         /node_modules\/@gouvfr\/dsfr\/dist/,
                     ],
                     use : [
                         MiniCssExtractPlugin.loader,
                         "css-loader"
-                        // https://github.com/webpack-contrib/sass-loader/
-                        // {
-                        //     loader: "sass-loader",
-                        //     options: { sassOptions: { outputStyle: "expanded" }}
-                        // }
                     ]
                 },
                 {
@@ -295,53 +210,51 @@ module.exports = (env, argv) => {
         },
         plugins : [
             /** EXECUTION DU LINTER */
-            (linterEnv) ? new ESLintWebpackPlugin({}) : "",
+            new ESLintWebpackPlugin({
+
+            }),
             /** GENERATION DE LA JSDOC */
-            (jsdocEnv) ? new JsDocWebPackPlugin({
-                conf : path.join(ROOT, "build/jsdoc/jsdoc.json")
-            }) : "",
+            new JsDocWebPackPlugin({
+                conf : path.join(rootdir, "build/jsdoc/jsdoc.json")
+            }),
             /** CSS avec IMAGES en base64 */
             new MiniCssExtractPlugin({
-                filename : "[name]" + suffixOutput + ".css"
+                filename : "[name].css"
             }),
             /** LOGGER */
             new EnvWebPackPlugin({
-                VERBOSE : logMode
+                VERBOSE : verbose
             })
         ]
         /** AJOUT DES LICENCES */
         .concat([
             new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-proj4js.tmpl"), "utf8"), {
+                banner : header(fs.readFileSync(path.join(rootdir, "build/licences", "licence-proj4js.tmpl"), "utf8"), {
                     __VERSION__ : pkg.dependencies["proj4"],
                 }),
                 raw : true
             }),
             new BannerWebPackPlugin({
-                banner : fs.readFileSync(path.join(ROOT, "build/licences", "licence-es6promise.txt"), "utf8"),
-                raw : true
-            }),
-            new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-eventbusjs.tmpl"), "utf8"), {
+                banner : header(fs.readFileSync(path.join(rootdir, "build/licences", "licence-eventbusjs.tmpl"), "utf8"), {
                     __VERSION__ : pkg.dependencies["eventbusjs"],
                 }),
                 raw : true
             }),
             new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-sortablejs.tmpl"), "utf8"), {
+                banner : header(fs.readFileSync(path.join(rootdir, "build/licences", "licence-sortablejs.tmpl"), "utf8"), {
                     __VERSION__ : pkg.dependencies["sortablejs"],
                 }),
                 raw : true
             }),
             new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-olms.tmpl"),"utf8"), {
+                banner : header(fs.readFileSync(path.join(rootdir, "build/licences", "licence-olms.tmpl"),"utf8"), {
                     __VERSION__ : pkg.dependencies["ol-mapbox-style"],
                 }),
                 raw : true,
                 entryOnly : true
             }),
             new BannerWebPackPlugin({
-                banner : header(fs.readFileSync(path.join(ROOT, "build/licences", "licence-ign.tmpl"), "utf8"), {
+                banner : header(fs.readFileSync(path.join(rootdir, "build/licences", "licence-ign.tmpl"), "utf8"), {
                     __BRIEF__ : pkg.name,
                     __VERSION__ : pkg.version,
                     __DATE__ : pkg.date
@@ -351,31 +264,30 @@ module.exports = (env, argv) => {
             })
         ])
         /** HANDLEBARS TEMPLATES */
-        .concat((samplesEnv) ? [
+        .concat([
             /** TEMPLATES SAMPLES */
             new HandlebarsPlugin(
                 {
                     entry : {
-                        path : path.join(ROOT, "samples-src", "pages", "tests"),
+                        path : path.join(rootdir, "samples-src", "pages", "tests"),
                         pattern : "**/*-packages-*.html"
                     },
                     output : {
-                        path : path.join(ROOT, "samples", "tests"),
+                        path : path.join(rootdir, "samples", "tests"),
                         flatten : false,
-                        filename : "[name]" + suffixOutput + ".html"
+                        filename : "[name].html"
                     },
                     helpers : [
                         HandlebarsLayoutPlugin
                     ],
                     partials : [
-                        path.join(ROOT, "samples-src", "templates", "packages", "*.hbs"),
-                        path.join(ROOT, "samples-src", "templates", "partials", "*.hbs"),
-                        path.join(ROOT, "samples-src", "templates", "partials", "packages", "*.hbs")
+                        path.join(rootdir, "samples-src", "templates", "packages", "*.hbs"),
+                        path.join(rootdir, "samples-src", "templates", "partials", "*.hbs"),
+                        path.join(rootdir, "samples-src", "templates", "partials", "packages", "*.hbs")
                     ],
                     context : [
-                        path.join(ROOT, "samples-src", "config.json"),
+                        path.join(rootdir, "samples-src", "config.json"),
                         {
-                            mode : suffixOutput,
                             version : pkg.dependencies["ol"] === 'latest' ? pkg.dependencies["ol"] : 'v' + pkg.dependencies["ol"].match(/(\d+\.\d+\.\d+)/)[0]
                         }
                     ]
@@ -384,21 +296,21 @@ module.exports = (env, argv) => {
             /** TEMPLATES INDEX */
             new HandlebarsPlugin(
                 {
-                    entry : path.join(ROOT, "samples-src", "pages", "index.html"),
+                    entry : path.join(rootdir, "samples-src", "pages", "index.html"),
                     output : {
-                        path : path.join(ROOT, "samples"),
-                        filename : "[name]" + "-packages" + suffixOutput + ".html"
+                        path : path.join(rootdir, "samples"),
+                        filename : "[name]" + "-packages.html"
                     },
                     context : {
                         samples : () => {
-                            var root = path.join(ROOT, "samples-src", "pages", "tests");
+                            var root = path.join(rootdir, "samples-src", "pages", "tests");
                             var list = glob.sync(path.join(root, "**", "*-packages-*.html"));
                             list = list.map(function (filePath) {
                                 var relativePath = path.relative(root, filePath);
                                 var label = relativePath.replace("/", " -- ");
                                 var pathObj = path.parse(relativePath);
                                 return {
-                                    filePath : path.join("tests", pathObj.dir, pathObj.name.concat(suffixOutput).concat(pathObj.ext)),
+                                    filePath : path.join("tests", pathObj.dir, pathObj.name.concat(pathObj.ext)),
                                     label : label
                                 };
                             });
@@ -411,13 +323,13 @@ module.exports = (env, argv) => {
             new CopyWebpackPlugin({
                 patterns: [
                     {
-                        from : path.join(ROOT, "samples-src", "resources"),
-                        to : path.join(ROOT, "samples", "resources"),
-                        context : path.join(ROOT, "samples-src", "resources"),
+                        from : path.join(rootdir, "samples-src", "resources"),
+                        to : path.join(rootdir, "samples", "resources"),
+                        context : path.join(rootdir, "samples-src", "resources"),
                         force: true
                     }
                 ]
-            }),
-        ] : [])
+            })
+        ])
     }
 };

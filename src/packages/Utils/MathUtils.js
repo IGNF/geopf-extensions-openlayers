@@ -1,6 +1,6 @@
 /**
 * @module MathUtils
-* @alias Gp.MathUtils
+* @alias module:~utils/MathUtils
 * @description
 * ...
 *

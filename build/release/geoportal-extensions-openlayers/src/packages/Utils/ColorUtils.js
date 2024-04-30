@@ -1,16 +1,22 @@
 /**
  * @module ColorUtils
- * @alias Gp.ColorUtils
+ * @alias module:~utils/ColorUtils
  * @description
  * ...
  *
  * @example
- * arrayTorgba();
- * arrayToHex();
- * rgbaToHex();
- * hexToRgba();
- * isHex();
- * isRGB();
+ * import ColorUtils from "gpf-ext-ol/utils/ColorUtils"
+ * ou 
+ * import {ColorUtils} from "gpf-ext-ol
+ * 
+ * ColorUtils.hex();
+ * ColorUtils.num();
+ * ColorUtils.arrayTorgba();
+ * ColorUtils.arrayToHex();
+ * ColorUtils.rgbaToHex();
+ * ColorUtils.hexToRgba();
+ * ColorUtils.isHex();
+ * ColorUtils.isRGB();
  */
 var ColorUtils = {
 

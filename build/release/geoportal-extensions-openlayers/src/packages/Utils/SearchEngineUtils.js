@@ -1,6 +1,7 @@
 /**
  * @module SearchEngineUtils
- * @alias [private] SearchEngineUtils
+ * @alias module:~utils/SearchEngineUtils
+ * @private
  * @description
  * ...
  *

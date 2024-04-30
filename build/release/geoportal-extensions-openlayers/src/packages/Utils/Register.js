@@ -1,6 +1,6 @@
 /**
  * @module Register
- * @alias [private] Register
+ * @alias module:~utils/Register
  * @description
  * Register definition for IGNF, and EPSG CRS.
  *

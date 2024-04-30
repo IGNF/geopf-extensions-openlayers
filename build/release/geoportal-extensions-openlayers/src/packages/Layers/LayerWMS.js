@@ -34,10 +34,12 @@ var LayerWMS = class LayerWMS extends TileLayer {
     /**
      * See {@link ol.layer.GeoportalWMS}
      * @module LayerWMS
-     * @alias module:~Layers/GeoportalWMS
+     * @alias module:~layers/GeoportalWMS
      * @param {*} options - options
      * @example
-     * import LayerWMS from "src/OpenLayers/Layers/LayerWMS"
+     * import LayerWMS from "gpf-ext-ol/layers/LayerWMS"
+     * ou 
+     * import { LayerWMS } from "gpf-ext-ol"
      */
     constructor (options) {
         // if (!(this instanceof LayerWMS)) {
