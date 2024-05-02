@@ -12,5 +12,195 @@
  * @version 3.0.0
  * @date 01/02/2024
  *
- */[id^=GPsearchEngine-]{align-items:center;display:flex;flex-direction:row;left:46px;top:8px}button[id^=GPshowSearchEnginePicto]{display:inline-block;transition:border-radius 0s ease-out 0s;transition-delay:.5s}button[id^=GPshowSearchEnginePicto][aria-pressed=true]{transition:border-radius .5s ease-out 0s}button[id^=GPshowSearchEnginePicto-][aria-pressed=true]{border-bottom-right-radius:0;border-top-right-radius:0;transition-delay:0s}button[id^=GPshowSearchEnginePicto-][aria-pressed=false]+form[id^=GPsearchInput-]{border:none;max-width:0;transition:max-width .5s ease-out 0s}button[id^=GPshowSearchEnginePicto-][aria-pressed=true]+form[id^=GPsearchInput-]{max-width:280px}button[id^=GPshowSearchEnginePicto-][aria-pressed=false]+form[id^=GPsearchInput-]~div button[id^=GPshowAdvancedSearch],button[id^=GPshowSearchEnginePicto-][aria-pressed=false]+form[id^=GPsearchInput-]~div button[id^=GPshowGeolocate],button[id^=GPshowSearchEnginePicto-][aria-pressed=false]+form[id^=GPsearchInput-]~div button[id^=GPshowSearchByCoordinate]{display:none}button[id^=GPshowSearchEnginePicto-][aria-pressed=true]+form[id^=GPsearchInput-]~div button[id^=GPshowAdvancedSearch],button[id^=GPshowSearchEnginePicto-][aria-pressed=true]+form[id^=GPsearchInput-]~div button[id^=GPshowGeolocate],button[id^=GPshowSearchEnginePicto-][aria-pressed=true]+form[id^=GPsearchInput-]~div button[id^=GPshowSearchByCoordinate]{display:inline-block}[id^=GPshowSearchEngine-]+button+form[id^=GPsearchInput-]{max-width:0}form[id^=GPsearchInput-]{display:inline-block;overflow:hidden;position:relative;width:280px}button[id^=GPsearchInputReset]{border:unset;cursor:pointer;position:absolute;right:0;top:0}button[id^=GPshowAdvancedSearch]{transition:border-radius 0s ease-out 0s;transition-delay:.5s}dialog[id^=GPadvancedSearchPanel],dialog[id^=GPcoordinateSearchPanel]{bottom:unset;height:inherit;margin-left:33px;overflow:hidden;position:absolute;top:35px;vertical-align:top;width:310px}form[id^=GPadvancedSearchForm],form[id^=GPcoordinateSearchForm]{max-height:250px;overflow-y:auto;padding-left:15px;padding-right:15px}input[id^=GPadvancedSearchSubmit],input[id^=GPcoordinateSearchSubmit]{margin-bottom:15px;margin-top:10px}.GPbuttonsContainer{padding-left:5px;padding-right:5px}.GPlabelTitle{font-weight:700}[id^=GPautocompleteResults]{box-shadow:0 0 6px #000;display:flex;flex-direction:column;width:100%}[id^=GPautoCompleteList],dialog[id^=GPgeocodeResultsList]{margin-left:33px}dialog[id^=GPgeocodeResultsList]{border-radius:4px;bottom:unset;height:inherit;top:35px}[id^=GPautocompleteResultsLocation],[id^=GPautocompleteResultsSuggest]{width:inherit}
+ */
+
+/*!**************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/packages/CSS/Controls/SearchEngine/GPFsearchEngine.css ***!
+  \**************************************************************************************************************/
+/* SEARCH ENGINE */
+
+[id^="GPsearchEngine-"] {
+  top: 8px;
+  left: 46px;
+}
+
+[id^="GPsearchEngine-"] {
+  /* dsfr */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+/* Showing/hiding search engine input */
+
+button[id^=GPshowSearchEnginePicto] {
+  display: inline-block;
+  transition: border-radius 0s ease-out 0s;
+  transition-delay: 0.5s;
+}
+
+button[id^=GPshowSearchEnginePicto][aria-pressed="true"] {
+  transition: border-radius 0.5s ease-out 0s;
+}
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  transition-delay: 0s;
+}
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
+  max-width: 0px;
+  border: none;
+  transition: max-width 0.5s ease-out 0s;
+}
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] {
+  max-width: 280px;
+}
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowAdvancedSearch],
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowGeolocate],
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowSearchByCoordinate] {
+  display: none;
+}
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowAdvancedSearch],
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowGeolocate],
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowSearchByCoordinate] {
+  display: inline-block;
+}
+
+[id^=GPshowSearchEngine-] + button + form[id^=GPsearchInput-] {
+  max-width: 0px;
+}
+
+/* div[id^=GPautoCompleteList] {
+  display: none;
+} */
+
+/* button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] + div[id^=GPautoCompleteList] {
+  display: block;
+} */
+
+/* Simple search input */
+
+form[id^=GPsearchInput-] {
+  display: inline-block;
+  position: relative;
+  /* left: -3px; */
+  width: 280px;
+  overflow: hidden;
+}
+
+button[id^=GPsearchInputReset] {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border: unset;
+  cursor: pointer;
+}
+
+/* General panels */
+
+
+/* Advanced search picto */
+
+button[id^=GPshowAdvancedSearch] {
+  transition: border-radius 0s ease-out 0s;
+  transition-delay: 0.5s;
+}
+
+/* Advanced search panel */
+
+/* button[id^=GPshowAdvancedSearch][aria-pressed="true"] + div[id^=GPadvancedSearchPanel] {
+  display: inline-block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+button[id^=GPshowAdvancedSearch][aria-pressed="false"] + div[id^=GPadvancedSearchPanel] {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+} */
+
+dialog[id^=GPcoordinateSearchPanel], 
+dialog[id^=GPadvancedSearchPanel] {
+  position: absolute;
+  top: 35px;
+  margin-left: 33px;;
+  width: 310px;
+  height: inherit;
+  vertical-align: top;
+  overflow: hidden;
+  bottom: unset; /* fix dsfr */
+}
+
+form[id^=GPcoordinateSearchForm],
+form[id^=GPadvancedSearchForm] {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+input[id^=GPcoordinateSearchSubmit],
+input[id^=GPadvancedSearchSubmit] {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+
+
+/* Simple search input */
+
+[id^="GPsearchInput"] {}
+
+/* General panels */
+
+
+
+/* Advanced search picto */
+
+.GPbuttonsContainer {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+
+
+/* Autocomplete list / geocode results */
+
+.GPlabelTitle {
+  font-weight: bold;
+}
+
+[id^="GPautocompleteResults"] {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-shadow: 0 0 6px #000;
+}
+
+[id^="GPautoCompleteList"],
+dialog[id^="GPgeocodeResultsList"] {
+  margin-left: 33px;
+}
+
+[id^="GPautoCompleteList"] {
+  /* overflow-y: auto; */
+}
+
+dialog[id^="GPgeocodeResultsList"] {
+  top: 35px;
+  border-radius: 4px;
+  height: inherit;
+  bottom: unset; /* fix dsfr */
+}
+
+[id^="GPautocompleteResultsSuggest"],
+[id^="GPautocompleteResultsLocation"] {
+  width: inherit;
+}
+
+
 /*# sourceMappingURL=SearchEngine.css.map*/

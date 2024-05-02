@@ -12,5 +12,21 @@
  * @version 3.0.0
  * @date 01/02/2024
  *
- */div[id^=GPgetFeatureInfo-]{left:10px;top:260px}
+ */
+
+/*!******************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/packages/CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css ***!
+  \******************************************************************************************************************/
+/* GET FEATURE INFO */
+
+div[id^=GPgetFeatureInfo-] {
+  top: 260px;
+  left: 10px;
+}
+
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="false"] {}
+  
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {}
+
+
 /*# sourceMappingURL=GetFeatureInfo.css.map*/
