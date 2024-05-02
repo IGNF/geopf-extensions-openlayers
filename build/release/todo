@@ -43,7 +43,3 @@ utilisation standard :
         GetFeatureInfo
     } from "geoportal-extensions-openlayers";
 ```
-
-## duplication de code
-
-les dependances sont à exclure : **externals**

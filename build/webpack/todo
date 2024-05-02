@@ -6,6 +6,8 @@
 
 https://webpack.js.org/configuration/extending-configurations/
 
+comment lancer les exemples uniquement en mode devserver mais pa pour un simple build ?
+
 ## bundles par modules
 
 > n'expose pas la variable **Gp**
@@ -15,6 +17,8 @@ BUG: rendre externals les dependances
 ## bundle complet
 
 > expose la variable **Gp*
+
+BUG : proj4 !?
 
 ## CSS par thèmes
 
