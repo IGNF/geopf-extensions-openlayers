@@ -1031,11 +1031,11 @@ var RouteDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowRouteExclusionsPicto");
-        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
+        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
         button.title = "Exclusions";
         // button.style.top = "185px";
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", false);
+        button.setAttribute("aria-pressed", true);
 
         // gestionnaire d'evenement :
         // on ouvre le menu des options des exclusions

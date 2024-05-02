@@ -4,6 +4,9 @@
         <script src="{{ baseurl }}/dist/modules/CRS.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/SearchEngine.css" />
         <script src="{{ baseurl }}/dist/modules/SearchEngine.js"></script>
+        <script src="{{ baseurl }}/dist/modules/Layers.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/LayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/LayerSwitcher.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -20,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du moteur de recherche avec les options par défaut</h2>
+            <h2>Ajout du moteur de recherche avec les options</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -47,6 +50,9 @@
                             })
                         ]
                     });
+
+                    var layerSwitcher = new ol.control.LayerSwitcher({});
+                    map.addControl(layerSwitcher);
 
                     var search = new ol.control.SearchEngine({
                         collapsed : true,
@@ -134,7 +140,11 @@
                           }
                         },
                         searchOptions : {
-                          serviceOptions : {}
+                          filterServices : "WMTS,TMS",
+                          filterVectortiles : "PLAN.IGN,PCI",
+                          updateVectortiles : true,
+                          serviceOptions : {
+                          }
                         },
                         // valeur possible : "" ou null, "auto", 18, function (i) { return 1; }
                         zoomTo : "auto",
@@ -146,6 +156,25 @@
                     map.addControl(search);
                     search.on("searchengine:search:click", function (e) {
                       console.warn("search", e.suggest, e.error);
+                      var service = e.suggest.service;
+                      var name = e.suggest.name;
+                      var layer = null;
+                      switch (service) {
+                        case "WMTS":
+                          layer = new ol.layer.GeoportalWMTS({
+                            layer : name
+                          });
+                          break;
+                        case "TMS":
+                          layer = new ol.layer.GeoportalMapBox({
+                            layer : name
+                          });
+                        default:
+                          break;
+                      }
+                      if (layer) {
+                        map.addLayer(layer);
+                      }
                     });
                 };
 

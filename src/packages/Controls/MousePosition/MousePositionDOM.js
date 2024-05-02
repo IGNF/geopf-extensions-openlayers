@@ -504,10 +504,10 @@ var MousePositionDOM = {
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMousePositionSettings");
 
-        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
+        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
         button.title = "Réglages";
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", false);
+        button.setAttribute("aria-pressed", true);
         
         // Close all results and panels when minimizing the widget
         if (button.addEventListener) {
