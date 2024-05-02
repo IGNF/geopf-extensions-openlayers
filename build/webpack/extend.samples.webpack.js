@@ -9,6 +9,7 @@ var rootdir = path.join(__dirname, "../..");
 var pkg = require(path.join(rootdir, "package.json"));
 
 module.exports = (env, argv) => {
+    var type = env["type"]; // modules ou packages
     return {
         /** HANDLEBARS TEMPLATES */
         plugins : [
@@ -17,7 +18,7 @@ module.exports = (env, argv) => {
                 {
                     entry : {
                         path : path.join(rootdir, "samples-src", "pages", "tests"),
-                        pattern : "**/*-modules-*.html"
+                        pattern : "**/*-" + type + "-*.html"
                     },
                     output : {
                         path : path.join(rootdir, "samples", "tests"),
@@ -46,12 +47,12 @@ module.exports = (env, argv) => {
                     entry : path.join(rootdir, "samples-src", "pages", "index.html"),
                     output : {
                         path : path.join(rootdir, "samples"),
-                        filename : "[name]-modules.html"
+                        filename : "[name]-"+ type + ".html"
                     },
                     context : {
                         samples : () => {
                             var root = path.join(rootdir, "samples-src", "pages", "tests");
-                            var list = glob.sync(path.join(root, "**", "*-modules-*.html"));
+                            var list = glob.sync(path.join(root, "**", "*-" + type + "-*.html"));
                             list = list.map(function (filePath) {
                                 var relativePath = path.relative(root, filePath);
                                 var label = relativePath.replace("/", " -- ");

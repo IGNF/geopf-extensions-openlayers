@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 /* global module, __dirname */
 
 // -- modules
@@ -14,22 +13,37 @@ var BannerWebPackPlugin = webpack.BannerPlugin;
 var EnvWebPackPlugin = webpack.EnvironmentPlugin;
 var TerserJsWebPackPlugin = require("terser-webpack-plugin");
 var OptimizeCSSWebPackPlugin = require("css-minimizer-webpack-plugin");
+var JsDocWebPackPlugin = require("../scripts/webpackPlugins/jsdoc-plugin");
 
 // -- variables
 var rootdir = path.join(__dirname, "../..");
 var pkg = require(path.join(rootdir, "package.json"));
 
 module.exports = (env, argv) => {
-    var verbose = !(argv.mode === "production");
+    // env transmis pour la config des samples
+    env["type"] = "bundle";
+
+    var isDevelopment = (argv.mode === "development");
     return {
-        output : {
-            path : path.join(rootdir, "dist", "modules"),
-            filename : "[name].js",
-            libraryExport : "default",
-            libraryTarget : "assign",
-            library : "[name]"
+        extends : isDevelopment ? [
+            path.resolve(__dirname, "./extend.themes.webpack.js"),
+            path.resolve(__dirname, "./extend.samples.webpack.js"),
+            path.resolve(__dirname, "./extend.banners.webpack.js")
+        ] : [
+            path.resolve(__dirname, "./extend.themes.webpack.js"),
+            path.resolve(__dirname, "./extend.banners.webpack.js")
+        ],
+        entry : {
+            "Widgets" : path.join(rootdir, "src", "packages", "bundle.js")
         },
-        resolve : {},
+        output : {
+            path : path.join(rootdir, "dist", "bundle"),
+            filename : "[name].js",
+            library : "Gp"
+        },
+        resolve : {
+            alias : {}
+        },
         externals : [
             function ({ context, request }, callback) {
                 if (/^ol\/.+$/.test(request)) {
@@ -40,7 +54,7 @@ module.exports = (env, argv) => {
                         "ol/events",
                         "ol/events.js",
                         "ol/render/Feature",
-                        "ol/render/Feature.js",
+                        "ol/render/Feature.js"
                     ].includes(request)) {
                         return callback();
                     }
@@ -71,7 +85,7 @@ module.exports = (env, argv) => {
         devtool : "source-map",
         stats : "normal",
         optimization : {
-            /** MINIFICATION */
+            /**  MINIFICATION */
             minimizer : [
                 new TerserJsWebPackPlugin({
                     extractComments : false,
@@ -102,6 +116,33 @@ module.exports = (env, argv) => {
                         }
                     ]
                 },
+                // {
+                //     test : require.resolve("proj4"),
+                //     use : [{
+                //         loader : "expose-loader",
+                //         options : {
+                //             exposes : "proj4"
+                //         }
+                //     }]
+                // },
+                // {
+                //     test : require.resolve("eventbusjs"),
+                //     use : [{
+                //         loader : "expose-loader",
+                //         options : {
+                //             exposes : "eventbus"
+                //         }
+                //     }]
+                // },
+                // {
+                //     test : require.resolve("ol-mapbox-style"),
+                //     use : [{
+                //         loader : "expose-loader",
+                //         options : {
+                //             exposes : "olms"
+                //         }
+                //     }]
+                // },
                 {
                     test : /\.css$/,
                     include : [
@@ -117,13 +158,16 @@ module.exports = (env, argv) => {
                     test : /\.(png|jpg|gif|svg|woff|woff2)$/,
                     type : "asset/inline"
                 }
-            ],
-            noParse : [require.resolve("typescript/lib/typescript.js")]
+            ]
         },
         plugins : [
             /** EXECUTION DU LINTER */
             new ESLintWebpackPlugin({
-                
+
+            }),
+            /** GENERATION DE LA JSDOC */
+            new JsDocWebPackPlugin({
+                conf : path.join(rootdir, "build/jsdoc/jsdoc.json")
             }),
             /** CSS avec IMAGES en base64 */
             new MiniCssExtractPlugin({
@@ -131,7 +175,7 @@ module.exports = (env, argv) => {
             }),
             /** LOGGER */
             new EnvWebPackPlugin({
-                VERBOSE : verbose
+                VERBOSE : isDevelopment
             }),
             /** AJOUT DES LICENCES */
             new BannerWebPackPlugin({

@@ -3,6 +3,7 @@
  * @see https://geoservices.ign.fr/documentation/services/services-geoplateforme/service-geoplateforme-de-recherche
  */
 
+
 /** resultats du service */
 let m_suggestions = [];
 
@@ -22,7 +23,18 @@ let m_size = "1000";
 let m_maximumResponses = 10;
 
 /** liste des filtres sur les services */
-let m_services = ["WMTS", "WMS"];
+let m_filterByService = ["WMTS", "TMS"];
+
+/** filtres les services uniquement en TMS */
+let m_filterByTMS = [
+    "ADMIN_EXPRESS",
+    "ISOHYPSE",
+    "PLAN.IGN",
+    "OCSGE_2016",
+    "OCSGE_2019",
+    "PCI",
+    "BDTOPO"
+];
 
 /** url du service (template avec ${m_index}) */
 let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
@@ -102,18 +114,28 @@ const suggest = async (text) => {
 
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
-        var services = (m_services.length === 0 || m_services.includes(result.source.type));
+        var services = (m_filterByService.length === 0 || m_filterByService.includes(result.source.type));
         if (services) {
             if (unique().length >= m_maximumResponses) {
                 break;
             }
+            // FIXME champs possibles mais pas toujours remplis : srs[], attributions{}, extent{}, metada_url[]
             var o = {
+                originators : result.source.attributions,
+                srs : result.source.srs,
+                metadata : result.source.metadata_url,
                 name : result.source.layer_name,
                 title : result.source.title,
                 description : result.source.description,
                 service : result.source.type,
                 url : result.source.url
             };
+            if (m_filterByTMS.length) {
+                if ((o.service === "WMTS" && m_filterByTMS.includes(o.name)) ||
+                    (o.service === "TMS" && !m_filterByTMS.includes(o.name))) {
+                    continue;
+                }
+            }
             m_suggestions.push(o);
         }
     }
@@ -171,8 +193,46 @@ const setUrl = (value) => {
 const setMaximumResponses = (value) => {
     m_maximumResponses = parseInt(value);
 };
+/**
+ * Filtre sur la liste des services à selectionner
+ * @param {Array} value - liste de service
+ */
 const setFiltersByService = (value) => {
-    m_services = value === "" ? [] : value.split(",");
+    m_filterByService = value === "" ? [] : value.split(",");
+};
+/**
+ * Filtre sur les "purs" couches vecteurs tuilés
+ * @param {Array} value - liste des couches
+ */
+const setFiltersByTMS = (value) => {
+    m_filterByTMS = value === "" ? [] : value.split(",");
+};
+/**
+ * Mise à jour de la liste des "purs" couches vecteurs tuilés
+ * @param {String} value - url
+ */
+const updateFilterByTMS = async (value) => {
+    var url = value;
+    if (!url) {
+        url = "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/vectorTileConfig/fullVectorTileConfig.json";
+    }
+    const response = await fetch(url);
+    const results = await response.json();
+
+    if (response.status !== 200) {
+        throw new Error(response.message);
+    }
+
+    if (!results) {
+        throw new Error("Liste vide !");
+    }
+
+    var lstName = Object.keys(results.layers).map((k) => { return k.split("$")[0]; });
+    if (lstName) {
+        setFiltersByTMS(lstName.toString());
+    }
+
+    return m_filterByTMS;
 };
 
 export default {
@@ -187,5 +247,7 @@ export default {
     setSize,
     setUrl,
     setMaximumResponses,
-    setFiltersByService
+    setFiltersByService,
+    setFiltersByTMS,
+    updateFilterByTMS
 };

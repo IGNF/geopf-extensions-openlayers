@@ -1,12 +1,12 @@
-{{#extend "ol-sample-modules-dsfr-layout"}}
+{{#extend "ol-sample-bundle-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/packages/Widgets.css" />
-        <script src="{{ baseurl }}/dist/packages/Widgets.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/bundle/Widgets.css" />
+        <script src="{{ baseurl }}/dist/bundle/Widgets.js"></script>
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample openlayers dsfr</title>
+        <title>Sample openlayers</title>
 {{/content}}
 
 {{#content "style"}}
@@ -46,32 +46,62 @@
                   })
                 });
 
-                var drawing = new ol.control.Drawing();
+                var drawing = new ol.control.Drawing({
+                  position : "bottom-left"
+                });
                 map.addControl(drawing);
-                var iso = new ol.control.Isocurve();
+                var iso = new ol.control.Isocurve({
+                  position : "bottom-left"
+                });
                 map.addControl(iso);
-                var layerImport = new ol.control.LayerImport();
+                var layerImport = new ol.control.LayerImport({
+                  position : "bottom-left"
+                });
                 map.addControl(layerImport);
-                var layerSwitcher = new ol.control.LayerSwitcher();
+                var layerSwitcher = new ol.control.LayerSwitcher({
+                  options :{
+                    position : "bottom-right"
+                  }
+                });
                 map.addControl(layerSwitcher);
-                var mp = new ol.control.GeoportalMousePosition();
+                var mp = new ol.control.GeoportalMousePosition({
+                  position : "bottom-right"
+                });
                 map.addControl(mp);
-                var route = new ol.control.Route();
+                var route = new ol.control.Route({
+                  position : "bottom-right"
+                });
                 map.addControl(route);
-                var reverse = new ol.control.ReverseGeocode({});
+                var reverse = new ol.control.ReverseGeocode({
+                  position : "top-right"
+                });
                 map.addControl(reverse);
-                var search = new ol.control.SearchEngine({});
+                var search = new ol.control.SearchEngine({
+                  position : "top-right"
+                });
                 map.addControl(search);
-                var feature =  new ol.control.GetFeatureInfo({});
+                var feature =  new ol.control.GetFeatureInfo({
+                  options :{
+                    position : "top-right"
+                  }
+                });
                 map.addControl(feature);
 
-                var measureLength = new ol.control.MeasureLength();
+                var measureLength = new ol.control.MeasureLength({
+                  position : "top-left"
+                });
                 map.addControl(measureLength);
-                var measureArea = new ol.control.MeasureArea();
+                var measureArea = new ol.control.MeasureArea({
+                  position : "top-left"
+                });
                 map.addControl(measureArea);
-                var measureAzimuth = new ol.control.MeasureAzimuth();
+                var measureAzimuth = new ol.control.MeasureAzimuth({
+                  position : "top-left"
+                });
                 map.addControl(measureAzimuth);
-                var measureProfil = new ol.control.ElevationPath();
+                var measureProfil = new ol.control.ElevationPath({
+                  position : "top-left"
+                });
                 map.addControl(measureProfil);
 
                 var attributions = new ol.control.GeoportalAttribution();
@@ -83,7 +113,10 @@
                   callbackSuffix : "",
                   // apiKey: "{{ apikey }}",
                   timeOut : 20000,
-                  onSuccess : createMap
+                  onSuccess : createMap,
+                  onFailure : function (e) {
+                    console.error(e);
+                  }
               });
 
             </script>

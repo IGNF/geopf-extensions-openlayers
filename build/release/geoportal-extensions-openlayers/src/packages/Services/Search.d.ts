@@ -11,6 +11,8 @@ declare namespace _default {
     export { setUrl };
     export { setMaximumResponses };
     export { setFiltersByService };
+    export { setFiltersByTMS };
+    export { updateFilterByTMS };
 }
 export default _default;
 /**
@@ -36,5 +38,19 @@ declare function setFields(value: any): void;
 declare function setSize(value: any): void;
 declare function setUrl(value: any): void;
 declare function setMaximumResponses(value: any): void;
-declare function setFiltersByService(value: any): void;
+/**
+ * Filtre sur la liste des services à selectionner
+ * @param {Array} value - liste de service
+ */
+declare function setFiltersByService(value: any[]): void;
+/**
+ * Filtre sur les "purs" couches vecteurs tuilés
+ * @param {Array} value - liste des couches
+ */
+declare function setFiltersByTMS(value: any[]): void;
+/**
+ * Mise à jour de la liste des "purs" couches vecteurs tuilés
+ * @param {String} value - url
+ */
+declare function updateFilterByTMS(value: string): Promise<string[]>;
 //# sourceMappingURL=Search.d.ts.map

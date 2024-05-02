@@ -31,12 +31,11 @@
 * **Note :**
 *
 * function to add projections in 'proj4',
-* they are exposed in the global variable 'proj4' and 'ol':
+* they are exposed in the global variable 'ol':
 * > Gp.olExtended.includeProjections()
 *
 * You can test it :
 * - ol.proj.proj4("EPSG:43260")
-* - proj4("EPSG:4326")
 *
 * Projections include by default into proj4 and ol :
 * > WGS84
@@ -56,7 +55,6 @@
 * > ["IGNF:WGS84G"]
 *
 * The following variables are aslo global :
-*   - proj4,
 *   - ol,
 *   - eventbus
 */
@@ -290,9 +288,8 @@ export {
     Ol as olExtended
 };
 
-// "proj4" is exposed into window (for a build bundle) with webpack.
-//      console > proj4("EPSG:2154")
-// And, it's useful to expose it too into OpenLayers :
+// "proj4" is not exposed into window  with webpack !
+// But, it's useful to expose it into OpenLayers :
 //      console > ol.proj.get("EPSG:2154")
 if (window.ol && window.ol.proj && window.ol.proj.proj4) {
     try {

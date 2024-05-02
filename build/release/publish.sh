@@ -1,4 +1,6 @@
 
+#!/bin/bash
+
 PUBLISH_DIR=build/release/geoportal-extensions-openlayers
 
 # sources et definitions
@@ -15,19 +17,17 @@ rsync -va doc/ ${PUBLISH_DIR}/doc/
 # ressources annexes
 cp LICENCE.md README.md ${PUBLISH_DIR}/ 
 
-# jsdoc
-# FIXME on ne livre pas la jsdoc (trop lourde)
-# npm run generate-jsdoc 
-# npx rimraf ${PUBLISH_DIR}/jsdoc/ 
-# cp -r jsdoc/ ${PUBLISH_DIR}/ 
-
 # themes : 
 # FIXME utiliser la commande : npm run generate-themes
-npm run build:packages 
+# au lieu de reconstruire avec npm run build:bundle 
 npx rimraf ${PUBLISH_DIR}/css/ 
 mkdir ${PUBLISH_DIR}/css/ 
-cp dist/packages/Dsfr.css dist/packages/Portail.css ${PUBLISH_DIR}/css 
+cp dist/bundle/Dsfr.css dist/bundle/Portail.css ${PUBLISH_DIR}/css 
+
+# save
+npx rimraf dist/package && rsync -va ${PUBLISH_DIR}/* dist/package --exclude='*.tgz'
 
 # package
 cd ${PUBLISH_DIR} && npm pack
-cd .
+
+exit 0
