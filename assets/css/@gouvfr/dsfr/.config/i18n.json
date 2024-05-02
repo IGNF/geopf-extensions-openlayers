@@ -1,0 +1,987 @@
+{
+    "global": {
+        "fr": {
+            "error": {
+                "short": "Erreur"
+            },
+            "disabled": {
+                "default": "Désactivé"
+            },
+            "required": {
+                "default": "Obligatoire"
+            },
+            "site": {
+                "name": "[Nom du site]"
+            },
+            "social": {
+                "facebook": {
+                    "default": "Facebook",
+                    "url": "https://facebook.com/"
+                },
+                "twitter": {
+                    "default": "Twitter",
+                    "url": "https://twitter.com/"
+                },
+                "linkedin": {
+                    "default": "Linkedin",
+                    "url": "https://linkedin.com/"
+                }
+            },
+            "or": "ou",
+            "marianne": "Marianne",
+            "blank": "nouvelle fenêtre",
+            "readme": {
+                "dependencies": {
+                    "title": "Dépendances"
+                },
+                "use": {
+                    "title": "Utilisation",
+                    "description": "Afin d’utiliser le composant `${id}`, il est nécessaire d’ajouter les fichiers de styles et de scripts présents dans le dossier dist dans l'ordre suivant :\\n"
+                },
+                "doc": {
+                    "title": "Documentation",
+                    "item": "Consulter [la documentation](${url}) sur le module ${title}"
+                }
+            },
+            "subdir": {
+                "title": "Autres exemples"
+            }
+        }
+    },
+    "core": {
+        "fr": {
+            "subdir": {
+                "title": "Pages d'exemples",
+                "artwork": "Pictogramme",
+                "collapse": "Panneau dépliant",
+                "display": "Affichage",
+                "favicon": "Icône de favori",
+                "grid": "Grille",
+                "icon": "Icônes",
+                "media": "Médias",
+                "reset": "Réinitialisation",
+                "spacing": "Espacements",
+                "typography": "Typographie",
+                "utility": "Utilitaires",
+                "print": "Impression",
+                "link": "Liens natifs",
+                "link-raw": "Liens bruts",
+                "link-reset": "Liens réinitialisés"
+            }
+        }
+    },
+    "analytics": {
+        "fr": {
+            "title": "Analytics",
+            "description": null,
+            "doc": null,
+            "subdir": {
+                "title": "Pages",
+                "attribute": "Attributs",
+                "component": "Composants",
+                "agnostic": "sans framework",
+                "alert": "Alerte (alert)",
+                "alert-close": "Alerte avec bouton de fermeture",
+                "alert-dynamic": "Alerte ajoutée dynamiquement",
+                "accordion": "Accordéon (accordion)",
+                "accordion-nested": "Accordéon imbriqué",
+                "angular": "Angular (angular)",
+                "badge": "Badge (badge)",
+                "breadcrumb": "Fil d’ariane (breadcrumb)",
+                "breadcrumb-button": "Fil d’ariane avec boutons",
+                "button": "Bouton (button)",
+                "button-a-internal": "Bouton interne avec etiquette a",
+                "button-a-external": "Bouton externe avec etiquette a",
+                "button-a-download": "Bouton de téléchargement avec etiquette a",
+                "callout": "Mise en avant (callout)",
+                "card": "Carte (card)",
+                "card-button": "Carte avec boutons",
+                "card-link": "Carte avec liens",
+                "card-tag": "Carte avec tags",
+                "connect": "Bouton France Connect (connect)",
+                "connect-a": "Bouton France Connect avec etiquette a",
+                "content": "Contenu média (content)",
+                "content-svg": "Contenu média SVG",
+                "content-video": "Contenu média vidéo",
+                "consent": "Gestionnaire de consentement (consent)",
+                "consent-placeholder": "Gestionnaire de consentement bloc désactivé (placeholder)",
+                "checkbox": "Case à cocher (checkbox)",
+                "checkbox-checked": "Case à cocher cochée",
+                "download": "Téléchargement de fichier (download)",
+                "footer": "Pied de page (footer)",
+                "follow": "Lettre d'information et Réseaux Sociaux (follow)",
+                "follow-form": "Lettre d'information avec formulaire et Réseaux Sociaux",
+                "header": "En-tête (header)",
+                "highlight": "Mise en exergue (highlight)",
+                "input": "Champ de saisie (input)",
+                "input-button": "Combo champ de saisie avec bouton d'envoi",
+                "link": "Lien (link)",
+                "link-external": "Lien externe",
+                "link-download": "Lien de téléchargement",
+                "modal": "Modale (modal)",
+                "navigation": "Navigation principale (navigation)",
+                "notice": "Bandeau d'information (notice)",
+                "page": "Pages",
+                "pagination": "Pagination (pagination)",
+                "quote": "Citation (quote)",
+                "radio": "Bouton radio (radio)",
+                "radio-rich": "Bouton radio riche",
+                "react": "React (react)",
+                "search": "Barre de recherche (search)",
+                "select": "Liste déroulante (select)",
+                "share": "Boutons de partage (share)",
+                "sidemenu": "Menu latéral (sidemenu)",
+                "spa": "Single-page application",
+                "stepper": "Indicateur d'étapes (stepper)",
+                "summary": "Sommaire (summary)",
+                "tab": "Onglets (tab)",
+                "tag": "Tag (tag)",
+                "tag-dismissible": "Tag supprimable",
+                "tag-pressable": "Tag pressable",
+                "tag-pressable-checked": "Tag pressable coché",
+                "tag-clickable": "Tag cliquable",
+                "table": "Tableau (table)",
+                "tile": "Tuile (tile)",
+                "toggle": "Interrupteur (toggle)",
+                "toggle-checked": "Interrupteur coché",
+                "tooltip": "Information contextuelle (tooltip)",
+                "tooltip-btn": "Infobulle",
+                "transcription": "Transcription (transcription)",
+                "translate": "Sélecteur de langue (translate)",
+                "upload": "Ajout de fichier (upload)",
+                "vue": "Vue (vue)"
+            }
+        }
+    },
+    "address": {
+        "fr": {
+            "title": "Bloc fonctionnel d'adresse postale'",
+            "description": "La demande d’adresse postale permet d’aider un utilisateur à saisir son adresse.",
+            "doc": null,
+            "label": {
+                "address": "Adresse",
+                "complement": "Complément d’adresse",
+                "optional": "(optionnel)",
+                "locality": "Lieu-dit, commune déléguée ou boîte postale",
+                "postal": "Code postal",
+                "city": "Ville ou commune",
+                "number": "Numéro",
+                "street": "Voie",
+                "block": "Immeuble",
+                "building": "Bâtiment",
+                "stare": "Escalier",
+                "apartment": "Numéro d'appartement",
+                "cedex": "Cedex",
+                "name": "Dénomination",
+                "country": "Pays"
+            },
+            "hint": {
+                "address": "Indication : numéro et voie",
+                "complement": "Indication : bâtiment, immeuble, escalier et numéro d’appartement",
+                "city": "Exemple : Montpellier",
+                "postal": "Format attendu : 5 chiffres"
+            },
+            "legend": {
+                "address": "Adresse postale",
+                "complement": "Complément d'adresse postale"
+            },
+            "sample": {
+                "national": "Demande d’une adresse postale nationale",
+                "complement": "Complément d'adresse",
+                "international": "Demande d’une adresse postale internationale"
+            }
+        }
+    },
+    "civility": {
+        "fr": {
+            "title": "Civilité",
+            "description": null,
+            "option": {
+                "sex": {
+                    "female": "Feminin",
+                    "male": "Masculin"
+                },
+                "family": {
+                    "concubinage": "Concubinage",
+                    "divorced": "Divorcé",
+                    "maried": "Marié",
+                    "pacsed": "Pacsé",
+                    "single": "Célibataire",
+                    "widow": "Veuf"
+                },
+                "honorific": {
+                    "doctor": "Docteur",
+                    "inspector": "Inspecteur",
+                    "principal": "Principal",
+                    "professor": "Professeur",
+                    "provisor": "Proviseur",
+                    "rector": "Recteur"
+                }
+            },
+            "legend": {
+                "honorific": "Titre d’appel",
+                "family": "Situation familiale",
+                "sex": "Sexe"
+            },
+            "sample": {
+                "honorific": "Demande du titre d’appel",
+                "family": "Demande de situation familiale",
+                "sex": "Demande du sexe"
+            },
+            "section": {
+                "preference": "Au delà de 5 choix ou lorsque l’espace n’est pas suffisant, il est préférable d’utiliser une liste déroulante.",
+                "recommandation": "Les boutons radios sont recommandés lorsque l’utilisateur doit choisir un élément parmi 2 à 5 choix possibles."
+            }
+        }
+    },
+    "date": {
+        "fr": {
+            "title": "Bloc fonctionnel de date unique",
+            "description": null,
+            "error": {
+                "day": "Le jour est invalide",
+                "global": "La date est postérieure à aujourd’hui",
+                "month": "Le mois est invalide",
+                "year": "L’année est invalide"
+            },
+            "hint": {
+                "birthdate": "Indication : texte de description additionnel",
+                "day": "Exemple : 14",
+                "month": "Exemple : 12",
+                "year": "Exemple : 1984"
+            },
+            "legend": {
+                "birthdate": "Date de naissance"
+            },
+            "option": {
+                "day": "Jour",
+                "month": "Mois",
+                "year": "Année"
+            },
+            "sample": {
+                "default": "Défaut",
+                "single-error": "Erreur unitaire",
+                "global-error": "Erreur globale"
+            }
+        }
+    },
+    "nationality": {
+        "fr": {
+            "id": "name",
+            "title": "Bloc fonctionnel de nationalité",
+            "description": "La demande de nationalité permet d’aider un utilisateur à saisir sa nationalité.",
+            "doc": null,
+            "label": {
+                "nationality": "Nationalité"
+            },
+            "legend": {
+                "nationality": "Nationalité"
+            },
+            "sample": {
+                "default": "Demande de nationalité"
+            }
+        }
+    },
+    "name": {
+        "fr": {
+            "id": "name",
+            "title": "Bloc fonctionnel de nom et prénom",
+            "description": "La demande de nom et prénom permet d’aider un utilisateur à saisir son nom et son prénom.",
+            "doc": null,
+            "hint": {
+                "married": "Indication : ancien nom…",
+                "birth": "Indication : nom de famille non rectifié après décision du tribunal."
+            },
+            "label": {
+                "add-firstname": "Ajouter un prénom",
+                "remove-firstname": "Supprimer le prénom",
+                "country": "Pays",
+                "family": "Nom",
+                "given": "Prénom",
+                "usual": "Nom d'usage",
+                "birth": "Nom de naissance",
+                "no-firstname": "Je n'ai pas de prénom"
+            },
+            "option": {
+                "placeholder": "Sélectionner une option"
+            },
+            "country": {
+                "japan": "Japon",
+                "france": "France",
+                "england": "Angleterre"
+            },
+            "sample": {
+                "default": "Défaut",
+                "button": "bouton",
+                "firstname-disabled": "prénom désactivé",
+                "married": "nom d'usage",
+                "with": "Avec"
+            },
+            "section": {
+                "default": "Demande d’un nom et d’un prénom en France",
+                "international": "Demande d’un nom et d’un prénom à l’international"
+            }
+        }
+    },
+    "company": {
+        "fr": {
+            "title": "Bloc fonctionnel de société",
+            "description": "La demande de renseignement sur la société permet d’aider un utilisateur à saisir les renseignements concernant sa société.",
+            "doc": null,
+            "label": {
+                "siret": "Numéro de SIRET",
+                "type": "Type de société",
+                "position": "Fonction dans la société"
+            },
+            "structure": {
+                "EI": "Entrepreneur individuel (EI)",
+                "EURL": "Entreprise unipersonnelle à responsabilité limitée (EURL)",
+                "SARL": "Société à responsabilité limitée (SARL)",
+                "SASU": "Société par actions simplifiée unipersonnelle (SASU)",
+                "SAS": "Société par actions simplifiée (SAS)",
+                "SA": "Société anonyme (SA)",
+                "SNC": "Société en nom collectif (SNC)",
+                "SCS": "Société en commandite simple (SCS)",
+                "SCA": "Société en commandite par actions (SCA)"
+            },
+            "fieldset": {
+                "siret": "SIRET de l'entreprise",
+                "address": "Adresse du siège social",
+                "structure": "Type de société",
+                "name": "Nom du représentant moral",
+                "representative": "Représentant moral de l'entreprise"
+            },
+            "directory": {
+                "label": "Annuaire des entreprises",
+                "href": "https://annuaire-entreprises.data.gouv.fr/"
+            },
+            "sample": {
+                "siret": "Demande d'un numéro de SIRET",
+                "address": "Demande d’une adresse de siège social",
+                "structure": "Demande d’un type de société",
+                "representative": "Demande d’un représentant moral"
+            }
+        }
+    },
+    "accordion": {
+        "fr": {
+            "title": "Accordéon",
+            "description": "L'accordéon permet aux utilisateurs d'afficher et de masquer des sections de contenu présentés dans une page.",
+            "doc": "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/accordeon",
+            "subdir": {
+                "title": "Mises en situation",
+                "imbrication": "Imbrication d'accordéons"
+            }
+        }
+    },
+    "upload": {
+        "fr": {
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            },
+            "label": {
+                "default": "Ajouter un fichier",
+                "multiple": "Ajouter des fichiers"
+            },
+            "hint": {
+                "default": "Indication : taille maximale : 500 Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles. Lorem ipsum dolor sit amet, consectetur adipiscing."
+            },
+            "error": {
+                "default": "Format de fichier non supporté"
+            },
+            "sample": {
+                "default": "Bouton upload 1 seul fichier",
+                "error": "Bouton upload avec erreur",
+                "multiple": "Bouton upload fichiers multiples",
+                "disabled": "Bouton upload désactivé"
+            }
+        }
+    },
+    "connect": {
+        "de": {
+            "default": {
+                "login": "Einloggen mit"
+            }
+        },
+        "en": {
+            "default": {
+                "login": "Sign in with"
+            }
+        },
+        "es": {
+            "default": {
+                "login": "Iniciar sesion con"
+            }
+        },
+        "fr": {
+            "title": "Bouton FranceConnect",
+            "description": "Le bouton FranceConnect est un bouton spécifique permettant d'interagir avec l'API FranceConnect.<br>https://franceconnect.gouv.fr/",
+            "doc": "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/bouton-franceconnect",
+            "default": {
+                "login": "S’identifier avec",
+                "brand": "FranceConnect",
+                "link": "Qu’est-ce que FranceConnect ?",
+                "href": "https://franceconnect.gouv.fr/"
+            },
+            "plus": {
+                "brand": "FranceConnect",
+                "link": "Qu’est-ce que FranceConnect+ ?",
+                "href": "https://franceconnect.gouv.fr/france-connect-plus"
+            },
+            "agent": {
+                "brand": "AgentConnect"
+            }
+        }
+    },
+    "radio": {
+        "fr": {
+            "title": "Bouton radio",
+            "description": null,
+            "option": {
+                "no-answer": "Sans réponse"
+            },
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            }
+        }
+    },
+    "card": {
+        "fr": {
+            "title": "Carte",
+            "description": "La carte donne des aperçus cliquables d’une page de contenu à l’utilisateur. Elle fait généralement partie d'une collection ou liste d’aperçus de contenu similaires. La carte n’est jamais présentée de manière isolée.",
+            "doc": "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/carte",
+            "subdir": {
+                "title": "Carte de téléchargement de fichier",
+                "description": "Ce composant permet aux utilisateurs de télécharger un fichier.",
+                "download": "Carte de téléchargement",
+                "deprecated": "Version dépréciée"
+            }
+        }
+    },
+    "checkbox": {
+        "fr": {
+            "title": "Case à cocher",
+            "description": "La case à cocher permet à l’utilisateur de sélectionner une ou plusieurs options dans une liste. Elle est utilisée pour effectuer des sélections multiples (de 0 à N éléments), ou bien pour permettre un choix binaire, lorsque l’utilisateur peut sélectionner ou désélectionner une seule option.",
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            }
+        }
+    },
+    "content": {
+        "fr": {
+            "title": "Contenu média",
+            "description": "Les médias désignent vos contenus photos et vidéos. Lorsqu’ils sont intégré à une page de contenu, il est recommandé de suivre les règles décrites dans la documentation.",
+            "doc": "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/contenu-medias",
+            "sample": {
+                "img": {
+                    "caption": "© DILA 2020",
+                    "link": "vie-publique.fr",
+                    "alternative": "Planche 1 de la BD Simone Veil : la loi sur l’avortement. Épisode 2",
+                    "transcription": {
+                        "title": "Simone Veil : la loi sur l’avortement",
+                        "content": "<p class=\"fr-mb-4v\">Épisode 2 : une loi qui oppose<br><br>Synopsis : Dans un café, Louise discute avec sa mère de l’opposition virulente qu’a soulevée le projet de loi sur l’avortement défendu par Simone Veil lors des trois jours de débat à l’Assemblée nationale. Trois jours pendant lesquels les langues se sont déliées, pour le meilleur comme pour le pire.</p><ul><li>Case 1</li></ul><p><em>Intérieur jour salon. Un père et ses quatre enfants sont assis, blottis les uns contre les autres, devant un poste de TV et regardent le discours de Simone Veil retransmis en direct.</em><br><em>26 novembre 1974.</em><br>SIMONE VEIL :<br>Aucune femme ne recourt de gaieté de cœur à l’avortement. Il suffit d’écouter les femmes.</p><ul><li>Case 2</li></ul><p><em>Intérieur jour salon. Plan rapproché de la petite fille (la mère de Louise) serré contre son père, son ours en peluche dans les bras.</em><br>SIMONE VEIL :<br>C’est toujours un drame cela restera toujours un drame.</p><ul><li>Case 3</li></ul><p><em>Intérieur jour café, Louise et sa mère, plan rapproché de celle-ci.</em><br>MÈRE :<br>Je ne me rappelle pas grand-chose de ce discours retransmis en direct, mais je me souviens très bien que nous étions tous les quatre avec mon père et mes frères et sœurs devant la télé.<br>Mon père a fondu en larmes juste après.</p><ul><li>Case 4</li></ul><p><em>Intérieur jour café, Louise et sa mère.</em><br>MÈRE :<br>Il faut se rappeler les réactions suite à ce discours ! Simone Veil a souvent évoqué le « climat de passions » qui régnait. Pendant les trois jours de débats qui ont suivi, tout a été dit, même le pire.</p><ul><li>Case 5</li></ul><p><em>Intérieur nuit Assemblée nationale. Plan rapproché sur Jean Foyer à la tribune.<br>Encart texte</em><br>26 novembre 1974. Les débats commencent à l’Assemblée nationale. Jean Foyer, député de la majorité de droite, est le premier opposant au projet à monter à la tribune.</p><p>JEAN FOYER :<br>Déjà des capitaux sont impatients de s’investir dans l’industrie de la mort, et le temps n’est pas loin où nous connaîtrons en France « ces avortoirs », ces abattoirs, où s’entassent des cadavres de petits hommes et que certains de mes collègues ont eu l’occasion de visiter à l’étranger.</p><ul><li>Case 6</li></ul><p><em>Intérieur nuit Assemblée. Lucien Neuwirth à la tribune.<br>Encart texte</em><br>Lucien Neuwirth, député de la majorité qui avait défendu en 1967 le projet de loi sur la contraception, s’exprime.</p><p>LUCIEN NEUWIRTH :<br>… or chacun le sait, l’avortement n’est pas autre chose que l’issue extrême, l’alternative détestable d’une grossesse non désirée.<br>Il convient donc de s’attaquer à l’effet et non à la cause.</p>"
+                    }
+                }
+            }
+        }
+    },
+    "segmented": {
+        "fr": {
+            "title": "Contrôle segmenté",
+            "description": "Le composant \"contrôle segmenté\" incite l'utilisateur à choisir entre plusieurs options d'affichage disponibles (vues), mutuellement exclusives avec une valeur sélectionnée par défaut.",
+            "fieldset": {
+                "legend": "Légende"
+            },
+            "sample": {
+                "default": "Contrôle segmenté simple",
+                "sm": "Contrôle segmenté taille SM",
+                "disabled": "Contrôle segmenté désactivé",
+                "icon": "Contrôle segmenté avec icônes",
+                "no-legend": "Contrôle segmenté sans légende",
+                "legend-inline": "Contrôle segmenté avec légende en ligne",
+                "hint-text": "Contrôle segmenté avec texte d'aide",
+                "max": "Contrôle segmenté cas maximum (non recommandé)"
+            }
+        }
+    },
+    "range": {
+        "fr": {
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            },
+            "label": {
+                "default": "Label"
+            },
+            "hint": {
+                "default": "Texte de description additionnel, valeur de 0 à 100."
+            },
+            "error": {
+                "default": "Valeur sélectionnée impossible"
+            },
+            "valid": {
+                "default": "Message de succès"
+            },
+            "sample": {
+                "default": "Curseur simple",
+                "sm": "Curseur simple taille SM",
+                "no-indicators": "Curseur simple sans les indicateurs min/max",
+                "step": "Curseur avec étapes",
+                "step-sm": "Curseur avec étapes taille SM",
+                "double": "Curseur double avec valeurs min et max",
+                "double-sm": "Curseur double taille SM",
+                "double-step": "Curseur double avec étapes",
+                "double-step-sm": "Curseur double avec étapes taille SM",
+                "disabled": "Curseur désactivé",
+                "prefix-suffix": "Curseur avec préfixe et suffixe",
+                "error": "Curseur avec erreur"
+            }
+        }
+    },
+    "breadcrumb": {
+        "fr": {
+            "title": "Fil d'Ariane",
+            "description": "Le fil d’Ariane est un système de navigation secondaire qui permet à l’utilisateur de se situer sur le site qu’il consulte.",
+            "doc": "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/fil-d-ariane",
+            "subdir": {
+                "title": "Mises en situation",
+                "alternative": "Alternatives"
+            }
+        }
+    },
+    "form": {
+        "fr": {
+            "fieldset": {
+                "legend": {
+                    "default": "Légende pour l’ensemble des éléments"
+                }
+            },
+            "label": {
+                "default": "Libellé",
+                "short": "libl",
+                "long": "Libellé de l'élément"
+            },
+            "hint": {
+                "default": "Texte de description additionnel",
+                "mandatory": "Sauf mention contraire, tous les champs sont obligatoires."
+            },
+            "message": {
+                "error": {
+                    "default": "Texte d’erreur obligatoire"
+                },
+                "valid": {
+                    "default": "Texte de validation"
+                }
+            },
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            }
+        }
+    },
+    "tooltip": {
+        "fr": {
+            "sample": {
+                "default": "Information contextuelle",
+                "hover": "Ouverture du tooltip au survol",
+                "tooltip": "Infobulle",
+                "click": "L'ajout de la classe '<code>fr-btn--tooltip</code>' déclenche l'ouverture du tooltip au click.",
+                "grid": {
+                    "left": "Information contextuelle dans une grille à gauche",
+                    "right": "Information contextuelle dans une grille à droite"
+                },
+                "text": "Information contextuelle dans un texte",
+                "list": "Information contextuelle dans une liste",
+                "table": "Infobulle dans un tableau",
+                "example": "Exemple"
+            }
+        }
+    },
+    "toggle": {
+        "fr": {
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            }
+        }
+    },
+    "link": {
+        "fr": {
+            "title": "Case à cocher",
+            "description": "La case à cocher permet à l’utilisateur de sélectionner une ou plusieurs options dans une liste. Elle est utilisée pour effectuer des sélections multiples (de 0 à N éléments), ou bien pour permettre un choix binaire, lorsque l’utilisateur peut sélectionner ou désélectionner une seule option.",
+            "subdir": {
+                "title": "Autres versions",
+                "download": "lien de téléchargement",
+                "back-to-top": "lien de retour en haut de page"
+            }
+        }
+    },
+    "select": {
+        "fr": {
+            "title": "Liste déroulante",
+            "description": null,
+            "option": {
+                "placeholder": "Sélectionner une option",
+                "no-answer": "Sans réponse"
+            },
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            }
+        }
+    },
+    "password": {
+        "fr": {
+            "title": "Mot de passe",
+            "description": "La demande de mot de passe permet d’aider un utilisateur à créer ou saisir un mot de passe.",
+            "doc": null,
+            "sample": {
+                "register": "Inscription",
+                "login": "Connexion",
+                "validate": "Validation erreur/succès",
+                "hint": "Description additionelle"
+            },
+            "show": {
+                "default": "Afficher",
+                "long": "Afficher le mot de passe"
+            },
+            "password": {
+                "default": "Mot de passe"
+            },
+            "format": {
+                "label": "Votre mot de passe doit contenir :",
+                "digit": "1 chiffre minimum",
+                "special": "1 caractère spécial minimum",
+                "characters": "12 caractères minimum",
+                "valid": "validé",
+                "error": "en erreur"
+            },
+            "link": {
+                "label": "Mot de passe oublié ?",
+                "href": "url de la page de récupération"
+            }
+        }
+    },
+    "translate": {
+        "fr": {
+            "title": "Sélecteur de langue",
+            "description": "Le sélecteur de langue permet à l’utilisateur de choisir la langue dans laquelle est affichée le contenu du site, si celui-ci est disponible en plusieurs langues.",
+            "doc": "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/selecteur-de-langue",
+            "button": {
+                "title": "Sélectionner une langue"
+            },
+            "sample": {
+                "default": "Sélecteur de langue",
+                "no-outline": "Sélecteur de langue sans bordure",
+                "column": "Sélecteur de langue sur plusieurs colones"
+            }
+        }
+    },
+    "download": {
+        "fr": {
+            "title": "Téléchargement de fichier",
+            "description": "Ce composant est déprécié. La fonctionnalité \"téléchargement de fichier\" est maintenant disponible directement sur le composant carte et le composant lien.",
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            }
+        }
+    },
+    "transcription": {
+        "fr": {
+            "title": "Transcription",
+            "description": null,
+            "doc": "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/transcription",
+            "collapse": {
+                "title": "Transcription"
+            },
+            "modal": {
+                "title": "Titre de la transcription"
+            },
+            "button": {
+                "close": "Fermer",
+                "fullscreen": "Agrandir",
+                "fullscreenAriaLabel": "Agrandir la transcription"
+            },
+            "link": {
+                "download": "Télécharger"
+            },
+            "sample": {
+                "default": "Transcription avec zone d’action"
+            }
+        }
+    },
+    "tile": {
+        "fr": {
+            "title": "Tuile",
+            "description": "La tuile est un raccourci ou point d’entrée qui redirige les utilisateurs vers des pages de contenu. Elle fait généralement partie d'une collection ou liste de tuiles similaires. La tuile n’est jamais présentée de manière isolée.",
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée",
+                "download": "Tuile de téléchargement"
+            }
+        }
+    },
+    "input-email": {
+        "fr": {
+            "title": "Bloc fonctionnel d'adresse électronique",
+            "description": "La demande d’une adresse électronique permet d’aider un utilisateur à saisir une adresse électronique. Précisez à l’utilisateur le format de saisie attendu.",
+            "doc": null,
+            "sample": {
+                "default": "Demande d'une adresse électronique",
+                "indication": "Demande et indication de traitement d’une adresse électronique"
+            },
+            "label": "Adresse électronique",
+            "hint": {
+                "format": "Format attendu : nom@domaine.fr",
+                "indication": "Indication : cette adresse est utilisée uniquement pour la connexion au service."
+            },
+            "error": "Le format de l’adresse electronique saisie n’est pas valide. Le format attendu est : nom@exemple.org"
+        }
+    },
+    "input-tel": {
+        "fr": {
+            "title": "Bloc fonctionnel de numéro de téléphone",
+            "description": "La demande de numéro de téléphone permet d’aider un utilisateur à saisir son numéro de téléphone. Précisez à l’utilisateur le format de saisie attendu.",
+            "doc": null,
+            "sample": {
+                "default": "Demande d'un numéro de téléphone"
+            },
+            "label": "Numéro de téléphone",
+            "hint": {
+                "format": "Format attendu : (+33) 1 22 33 44 55"
+            },
+            "error": "Le format de numéro de téléphone saisie n’est pas valide. Le format attendu est : (+33) 2 43 55 55 55"
+        }
+    },
+    "input-base": {
+        "fr": {
+            "title": "Champ de saisie",
+            "description": "Les champ permettent à un utilisateur d'entrer du contenu et données.",
+            "doc": "https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/champ-de-saisie",
+            "sample": {
+                "text": "Champ de type \"text\"",
+                "number": "Champ de type \"number\"",
+                "search": "Champ de type \"search\"",
+                "date": "Champ de type \"date\"",
+                "textarea": "Champ de type \"textarea\"",
+                "password": "Champ de type \"password\"",
+                "button": "Combo champ + bouton d'envoi",
+                "action": "Combo champ + bouton d'action",
+                "placeholder": "Champ avec placeholder",
+                "value": "Champ avec valeur initiale",
+                "disabled": "Champ désactivé",
+                "hint": "Champ avec texte additionnel",
+                "icon": "Champ avec icône personalisée",
+                "valid": "Champ valide avec texte de succès",
+                "error": "Champ en erreur avec texte d'erreur"
+            },
+            "remove-field": "Supprimer le champ",
+            "subdir": {
+                "title": "Autres versions",
+                "deprecated": "version dépréciée"
+            }
+        }
+    },
+    "response": {
+        "fr": {
+            "title": "Codes de Statut HTML",
+            "description": "Modèles de pages correspondant aux réponses de statut HTML",
+            "button": {
+                "home": "Page d'accueil",
+                "contact": "Contactez-nous"
+            },
+            "contact": {
+                "link": "lien vers un formulaire de contact"
+            }
+        }
+    },
+    "unexpected": {
+        "fr": {
+            "title": "Page d'erreur",
+            "description": null,
+            "button": {
+                "contact": "Contactez-nous"
+            },
+            "page": {
+                "description": "Essayez de rafraîchir la page ou bien ressayez plus tard.",
+                "lead": "Désolé, le service rencontre un problème, nous travaillons pour le résoudre le plus rapidement possible.",
+                "subtitle": "Erreur 500",
+                "title": "Erreur inattendue"
+            },
+            "subdir": {
+                "title": "Page Erreur 500",
+                "default": "Page Erreur 500, simple",
+                "contact": "Page Erreur 500, avec contact"
+            }
+        }
+    },
+    "not-found": {
+        "fr": {
+            "title": "Page d'erreur",
+            "description": null,
+            "button": {
+                "home": "Page d'accueil",
+                "contact": "Contactez-nous"
+            },
+            "page": {
+                "title": "Page non trouvée",
+                "subtitle": "Erreur 404",
+                "lead": "La page que vous cherchez est introuvable. Excusez-nous pour la gène occasionnée.",
+                "description": {
+                    "default": "Si vous avez tapé l'adresse web dans le navigateur, vérifiez qu'elle  est correcte. La page n’est peut-être plus disponible.<br>Dans ce cas, pour continuer votre visite vous pouvez consulter notre page d’accueil.",
+                    "search": "Si vous avez tapé l'adresse web dans le navigateur, vérifiez qu'elle  est correcte. La page n’est peut-être plus disponible.<br>Dans ce cas, pour continuer votre visite vous pouvez consulter notre page d’accueil, ou effectuer une recherche avec notre moteur de recherche en haut de page.",
+                    "contact": "Si vous avez tapé l'adresse web dans le navigateur, vérifiez qu'elle  est correcte. La page n’est peut-être plus disponible.<br>Dans ce cas, pour continuer votre visite vous pouvez consulter notre page d’accueil.<br>Sinon contactez-nous pour que l’on puisse vous rediriger vers la bonne information.",
+                    "full": "Si vous avez tapé l'adresse web dans le navigateur, vérifiez qu'elle  est correcte. La page n’est peut-être plus disponible.<br>Dans ce cas, pour continuer votre visite vous pouvez consulter notre page d’accueil, ou effectuer une recherche avec notre moteur de recherche en haut de page.<br>Sinon contactez-nous pour que l’on puisse vous rediriger vers la bonne information."
+                }
+            },
+            "subdir": {
+                "title": "Page Erreur 404",
+                "complete": "Page Erreur 404, complète",
+                "default": "Page Erreur 404, simple",
+                "contact": "Page Erreur 404, avec contact",
+                "search": "Page Erreur 404, avec recherche"
+            }
+        }
+    },
+    "unavailable": {
+        "fr": {
+            "title": "Erreur serveur",
+            "description": null,
+            "doc": null,
+            "page": {
+                "title": "Service indisponible",
+                "infos": "Le service ${site-name} rencontre un problème, nous travaillons pour le résoudre le plus rapidement possible.",
+                "retry": "Merci de réessayer plus tard ou de vous rendre sur nos réseaux sociaux, vous serez bientôt en mesure de réutiliser le service."
+            },
+            "info": {
+                "title": "à noter",
+                "description": "Ce modèle de page est disponible uniquement en version standalone.<br>Pour la tester, veuillez éxécuter la commande <br><i>yarn standalone -p unavailable</i>"
+            }
+        }
+    },
+    "login": {
+        "fr": {
+            "title": "Page de connexion",
+            "description": "Modèles de pages de connexion",
+            "doc": null,
+            "heading": "Connexion à [Nom de service-site]",
+            "connect": {
+                "title": "Se connecter avec FranceConnect"
+            },
+            "login": {
+                "legend": "Se connecter avec son compte",
+                "desc": "Description — Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "credentials": "identifiants",
+                "password": "Mot de passe",
+                "username": {
+                    "default": "Identifiant",
+                    "hint": "Format attendu : nom@domaine.fr"
+                },
+                "remember": "Se souvenir de moi",
+                "error": "Identifiant/mot de passe incorrect",
+                "button": "Se connecter"
+            },
+            "create": {
+                "title": "Vous n’avez pas de compte ?",
+                "button": "Créer un compte"
+            },
+            "recover": {
+                "heading": {
+                    "title": "Récupération de mot de passe sur [Nom du service-site]",
+                    "desc": "Chapô — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
+                },
+                "legend": "Récupérer le mot de passe de votre compte",
+                "desc": "Description — Veuillez saisir l’adresse électronique associée à votre compte. Nous vous enverrons plus d’informations sur pour réinitialiser votre mot de passe",
+                "username": {
+                    "default": "Identifiant",
+                    "hint": "Format attendu : nom@domaine.fr"
+                },
+                "button": "Valider",
+                "confirmation": {
+                    "alert": {
+                        "default": "Votre demande de récupération de mot de passe a été transmise. Vous recevrez un courriel dans quelques instants.",
+                        "hint": "Détail — Si vous n’avez pas reçu de courriel (n’hésitez pas à vérifier dans les indérisables), vous pouvez re saisir votre adresse électronique."
+                    }
+                }
+            },
+            "subdir": {
+                "title": "Pages de connexion",
+                "1-default": "Page de connexion",
+                "2-error": "Page de connexion avec erreur",
+                "3-recover": "Pages de Récupération - Mot de passe oublié",
+                "3a-form": "Récupération de mot de passe",
+                "3b-confirmation": "Confirmation de récupération de mot de passe"
+            }
+        }
+    },
+    "register": {
+        "fr": {
+            "title": "Création de compte",
+            "description": "Modèles de pages de création de compte",
+            "doc": null,
+            "heading": {
+                "title": "Création de compte sur [Nom de service-site]",
+                "desc": "Chapô — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
+            },
+            "steps": {
+                "login": "Choisir un identifiant",
+                "identity": "Renseigner une identité",
+                "address": "Saisir des coordonnées"
+            },
+            "connect": {
+                "title": "Se créer un compte avec FranceConnect",
+                "desc": "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion aux services en ligne."
+            },
+            "login": {
+                "legend": "Se créer un compte en choisissant un identifiant",
+                "desc": "Description — Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "username": {
+                    "default": "Identifiant",
+                    "hint": "Format attendu : nom@domaine.fr"
+                },
+                "password": "Mot de passe",
+                "optin": "Mention CNIL — Lorem ipsum dolor sit amet, consectetur adipicing est",
+                "button": "Valider"
+            },
+            "identity": {
+                "legend": "Identité personnelle"
+            },
+            "address": {
+                "legend": "Coordonnées personnelles"
+            },
+            "confirmation": {
+                "create": {
+                    "alert": {
+                        "default": "Votre compte a bien été créé. Vous recevrez un courriel dans quelques instants contenant un lien de confirmation.",
+                        "hint": "Détail — Si vous n’avez pas reçu de courriel (n’hésitez pas à vérifier dans les indérisables), vous pouvez re saisir votre adresse électronique."
+                    }
+                },
+                "activate": {
+                    "alert": {
+                        "default": "Votre compte a bien été activé. Vous pouvez dès maintenant commencer à l’utiliser.",
+                        "hint": "Détail — Si vous n’avez pas reçu de courriel (n’hésitez pas à vérifier dans les indérisables), vous pouvez re saisir votre adresse électronique."
+                    }
+                }
+            },
+            "button": {
+                "valid": "Valider",
+                "previous": "Précédent"
+            },
+            "subdir": {
+                "title": "Pages de création de compte",
+                "1-single": "Page de création de compte",
+                "2-steps": "Page de création de compte en plusieurs étapes",
+                "2a-login": "Étape 1 - Formulaires de création de compte - identifiant",
+                "2b-identity": "Étape 2 - Formulaires de création de compte - identité",
+                "2c-address": "Étape 3 - Formulaires de création de compte - coordonnées",
+                "3-confirmation": "Page de confirmation",
+                "3a-create": "Confirmation de création de compte",
+                "3b-activate": "Confirmation d'activation de compte"
+            }
+        }
+    }
+}

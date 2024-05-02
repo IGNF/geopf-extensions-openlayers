@@ -1,0 +1,14 @@
+.gpf-btn-icon-import {
+    background-image: url("img/layerimport.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-btn-icon-return {
+    background-color: #366291;
+    background-image: url("img/GPimportMapBoxReturn.png");
+    background-position: 3px center;
+}
+
+.gpf-btn-icon-close {}

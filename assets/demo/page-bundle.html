@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Toggle switch thematic-->
+        <script src="/geoportal-extensions-openlayers/assets/js/toggle.js"></script>
+        <link rel="stylesheet" href="/geoportal-extensions-openlayers/assets/css/toggle.css" />
+
+        <script src="https://ignf.github.io/geoportal-access-lib/latest/dist/GpServices.js"></script>
+
+        <!-- Library OpenLayers -->
+        <link rel="stylesheet" href="/geoportal-extensions-openlayers/assets/lib/ol@8.2.0/ol.css" />
+        <script src="/geoportal-extensions-openlayers/assets/lib/ol@8.2.0/ol.js"></script>
+
+        <!-- Plugins IGN with a thematic by default -->
+        <script src="/geoportal-extensions-openlayers/dist/packages/Widgets.js"></script>
+        <link rel="alternate stylesheet" id="dsfr" href="/geoportal-extensions-openlayers/assets/css/@gouvfr/dsfr/dist/dsfr.css" />
+        <link rel="alternate stylesheet" id="dsfr" href="/geoportal-extensions-openlayers/assets/css/@gouvfr/dsfr/dist/utility/icons/icons.css" />
+        <link rel="alternate stylesheet" id="dsfr" href="/geoportal-extensions-openlayers/dist/packages/Dsfr.css" />
+        <link rel="stylesheet" id="portail" href="/geoportal-extensions-openlayers/dist/packages/Portail.css" />
+
+        <title>Extensions avec le bundle complet</title>
+        <style>
+            html, body {
+              height: 100%;
+              margin: 0;
+            }
+            div#map {
+                width: 100%;
+                height: calc(100vh - 60px);
+            }
+          </style>
+
+    </head>
+    <body>
+            <div id="toggle">
+              <label>Choisir le theme : </label>
+              <label id="switch" class="switch">
+                <input type="checkbox" onchange="toggleTheme()" id="slider">
+                <span class="slider round"></span>
+              </label>
+              <label for="slider" class="labelSlider" id="labelSlider">Classique</label>
+            </div>
+
+            <!-- map -->
+            <div id="map">
+            </div>
+
+            <script type="text/javascript">
+
+              var createMap = function () {
+                // on cache l'image de chargement du Géoportail.
+                document.getElementById("map").style.backgroundImage = "none";
+
+                // Création de la map
+                var map = new ol.Map({
+                  target : "map",
+                  layers : [
+                    new ol.layer.GeoportalWMTS({
+                      layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+                    })
+                  ],
+                  view : new ol.View({
+                    center : [288074.8449901076, 6247982.515792289],
+                    zoom : 18
+                  })
+                });
+
+                var drawing = new ol.control.Drawing();
+                map.addControl(drawing);
+                var iso = new ol.control.Isocurve();
+                map.addControl(iso);
+                var layerImport = new ol.control.LayerImport();
+                map.addControl(layerImport);
+                var layerSwitcher = new ol.control.LayerSwitcher();
+                map.addControl(layerSwitcher);
+                var mp = new ol.control.GeoportalMousePosition();
+                map.addControl(mp);
+                var route = new ol.control.Route();
+                map.addControl(route);
+                var reverse = new ol.control.ReverseGeocode({});
+                map.addControl(reverse);
+                var search = new ol.control.SearchEngine({});
+                map.addControl(search);
+                var feature =  new ol.control.GetFeatureInfo({});
+                map.addControl(feature);
+
+                var measureLength = new ol.control.MeasureLength();
+                map.addControl(measureLength);
+                var measureArea = new ol.control.MeasureArea();
+                map.addControl(measureArea);
+                var measureAzimuth = new ol.control.MeasureAzimuth();
+                map.addControl(measureAzimuth);
+                var measureProfil = new ol.control.ElevationPath();
+                map.addControl(measureProfil);
+
+                var attributions = new ol.control.GeoportalAttribution();
+                map.addControl(attributions);
+              };
+
+              Gp.Services.getConfig({
+                serverUrl: "/geoportal-extensions-openlayers/assets/data/config.json",
+                callbackSuffix: "",
+                timeOut: 20000,
+                onSuccess: createMap
+            });
+            </script>
+    </body>
+</html>
