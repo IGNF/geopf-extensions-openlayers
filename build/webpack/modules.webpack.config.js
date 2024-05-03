@@ -25,10 +25,10 @@ module.exports = (env, argv) => {
     var isDevelopment = (argv.mode === "development");
     return {
         extends : isDevelopment ? [
-            path.resolve(__dirname, "./themes.webpack.extend.js"),
-            path.resolve(__dirname, "./samples.webpack.extend.js")
+            path.resolve(__dirname, "./extend.themes.webpack.js"),
+            path.resolve(__dirname, "./extend.samples.webpack.js")
         ] : [
-            path.resolve(__dirname, "./themes.webpack.extend.js")
+            path.resolve(__dirname, "./extend.themes.webpack.js")
         ],
         entry : {
             // Widgets

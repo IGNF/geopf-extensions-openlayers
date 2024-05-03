@@ -1,4 +1,4 @@
-# todo
+# Information
 
 > construction du package des sources
 

@@ -16,13 +16,13 @@ Les **externals** sont ajoutés pour gèrer les dependances des autres modules
 Ex. de commande :
 
 ```sh
-./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=Drawing --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=GeoportalAttribution --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=Drawing --mode=development
-./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=Isocurve --mode=development
+./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=Editor --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=ElevationPath --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=Export --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=GetFeatureInfo --mode=development
+./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=Isocurve --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=LayerImport --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=LayerSwitcher --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=LocationSelector --mode=development
@@ -33,7 +33,7 @@ Ex. de commande :
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=MeasureArea --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=MeasureLength --mode=development
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=MeasureAzimuth --mode=development
-./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=Editor --mode=development
+
 ./node_modules/.bin/webpack --config build/webpack/formats.webpack.config.js --mode=development
 ./node_modules/.bin/webpack --config build/webpack/layers.webpack.config.js --mode=development
 ./node_modules/.bin/webpack --config build/webpack/crs.webpack.config.js --mode=development
@@ -42,7 +42,13 @@ Ex. de commande :
 ou
 
 ```sh
-./node_modules/.bin/webpack --config build/webpack/modules.webpack.config.js
+./node_modules/.bin/webpack --config build/webpack/modules.webpack.config.js --mode=development
+```
+
+ou 
+
+```sh
+./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=GeoportalAttribution,Drawing,Editor,ElevationPath,Export,GetFeatureInfo,Isocurve,LayerImport,LayerSwitcher,LocationSelector,MousePosition,ReverseGeocode,Route,SearchEngine,MeasureArea,MeasureLength,MeasureAzimuth --mode=development
 ```
 
 ## bundle complet
