@@ -693,11 +693,12 @@ var SearchEngine = class SearchEngine extends Control {
     _initContainer () {
         // create main container
         var container = this._createMainContainerElement();
-
+        
+        var searchDiv = this._createSearchDivElement();
         // create search engine picto
         var picto = this._showSearchEngineButton = this._createShowSearchEnginePictoElement(this.options.opened);
-        container.appendChild(picto);
-        
+        searchDiv.appendChild(picto);
+
         // only dsfr : on applique un fond blanc sur une barre de recherche fixe
         if (this.options.opened) {
             container.classList.add("gpf-widget-color", "gpf-widget-padding");
@@ -718,8 +719,9 @@ var SearchEngine = class SearchEngine extends Control {
                 context.onAutoCompleteInputClick();
             });
         }
-        container.appendChild(search);
+        searchDiv.appendChild(search);
 
+        container.appendChild(searchDiv);
         var buttonsContainer = this._createButtonsElement();
         container.appendChild(buttonsContainer);
 
