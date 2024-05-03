@@ -2,7 +2,7 @@
 
 # Extension Géoplateforme pour OpenLayers
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/IGNF/geoportal-extensions-openlayers?filename=build%2Frelease%2Fgeoportal-extensions-openlayers%2Fpackage.json)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/IGNF/geoportal-extensions-openlayers?filename=package.json)
 
 <!-- toc -->
 
@@ -124,7 +124,7 @@ L'utilisation de l'extension Géoplateforme pour OpenLayers se fait via les éta
 
 * [Configuration de l'accès à la Géoplateforme](#config)
 
-Une documentation technique (**jsdoc**), une **demo** et un **generateur de carte** sont disponibles [ici](https://ignf.github.io/geoportal-extensions/).
+Une documentation technique (**jsdoc**), une **demo** et un **generateur de carte** sont disponibles [ici](https://ignf.github.io/geoportal-extensions-openlayers/).
 
 <a id="download"/>
 
@@ -134,16 +134,8 @@ Vous pouvez récupérer l'extension Géoplateforme pour OpenLayers soit par [té
 
 L'extension Géoplateforme pour OpenLayers comprend l'arborescence de fichiers suivante :
 
-```
-    <Extension Géoplateforme pour OpenLayers>/
-        GpPluginOpenLayers.js
-            (version minifiée du code javascript pour une utilisation en production)
-        GpPluginOpenLayers.css
-            (version minifiée des css pour une utilisation en production)
-        GpPluginOpenLayers-src.js
-            (version non minifiée du code javascript pour une utilisation en développement)
-        GpPluginOpenLayers-src.css
-            (version non minifiée des css pour une utilisation en développement)
+```text
+    todo : liste des bundles !
 ```
 
 Les scripts d'OpenLayers s'obtiennent sur [la page de téléchargement d'OpenLayers](https://openlayers.org/download/).
@@ -154,7 +146,10 @@ Les scripts d'OpenLayers s'obtiennent sur [la page de téléchargement d'OpenLay
 
 #### Téléchargement direct
 
-Vous pouvez télécharger la dernière version de l'extension Géoplateforme pour OpenLayers directement sur [la page des releases des extensions Géoplateforme](https://github.com/IGNF/geoportal-extensions/releases).
+> **TODO**
+> bundle ou bundles par modules + thèmes
+
+Vous pouvez télécharger la dernière version de l'extension Géoplateforme pour OpenLayers directement sur [la page des releases des extensions Géoplateforme](https://github.com/IGNF/geoportal-extensions-openlayers/releases).
 
 L'archive téléchargée (.zip) comprend l'arborescence décrite ci-dessus.
 
@@ -164,26 +159,24 @@ L'archive téléchargée (.zip) comprend l'arborescence décrite ci-dessus.
 
 #### Récupération avec NPM
 
+> **TODO**
+> sources ou modules ES6 uniquement
+
 L'extension Géoplateforme pour OpenLayers est aussi disponible dans les dépôts [NPM](https://www.npmjs.com/package/geoportal-extensions-openlayers).
 
 Prérequis : [NodeJS](https://nodejs.org/en/) et [npm](https://www.npmjs.com/) installés.
 
-```
+```sh
 npm i geoportal-extensions-openlayers
 ```
-
-L'arborescence décrite ci-dessus sera alors accessible dans le répertoire `node_modules/geoportal-extensions-openlayers/dist/` de votre projet.
-
 
 #### Accès direct
 
 Vous pouvez aussi choisir d'utiliser des fichiers hébergés en ligne, pour y accéder directement, lors de vos tests par exemple. Cependant, pour une utilisation en production, nous vous conseillons de télécharger ces fichiers et de les héberger vous-même, sur le même serveur qui héberge votre application.
 Par exemple sur Github Pages :
-```
-http://ignf.github.io/geoportal-extensions/openlayers-latest/dist/GpPluginOpenLayers.js
-http://ignf.github.io/geoportal-extensions/openlayers-latest/dist/GpPluginOpenLayers.css
-http://ignf.github.io/geoportal-extensions/openlayers-latest/dist/GpPluginOpenLayers-src.js
-http://ignf.github.io/geoportal-extensions/openlayers-latest/dist/GpPluginOpenLayers-src.css
+
+```text
+todo : liste des bundles !
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -202,8 +195,8 @@ Intégrez l'extension géoplateforme pour OpenLayers dans votre page web classiq
 <script src="chemin/vers/ol/ol.js"></script>
 
 <!-- Extension Géoplateforme pour OpenLayers -->
-<script src="chemin/vers/GpPluginOpenLayers.js"></script>
-<link rel="stylesheet" href="chemin/vers/GpPluginOpenLayers.css" />
+<script src="chemin/vers/bundle.js"></script>
+<link rel="stylesheet" href="chemin/vers/bundle.css" />
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -211,6 +204,9 @@ Intégrez l'extension géoplateforme pour OpenLayers dans votre page web classiq
 <a id="config"/>
 
 ### Configuration de l'accès à la Géoplateforme
+
+> **TODO**
+> valider le mécanisme des clefs !
 
 L'extension Géoplateforme pour OpenLayers exploite les services web exposés par la Géoplateforme. Ceux-ci sont en libre accès.
 
@@ -223,13 +219,13 @@ Vous pouvez configurer les extensions des manières suivantes :
 **Méthode 1** : Au chargement de l'extension en utilisant l'attribut "data-key" de la balise **script** de chargement de l'extension :
 
 ``` html
-<script data-key="THEME" src="chemin/vers/GpPluginOpenLayers.js"></script>
+<script data-key="THEME" src="chemin/vers/bundle.js"></script>
 ```
 
 Thèmes multiples : Si vous devez utiliser plusieurs thématiques, il est possible de mettre une liste de thèmes dans l'attribut data-key :
 
 ``` html
-<script data-key="THEME-1,THEME-2,THEME-3" src="chemin/vers/GpPluginOpenLayers.js"></script>
+<script data-key="THEME-1,THEME-2,THEME-3" src="chemin/vers/bundle.js"></script>
 ```
 
 Votre utilisation des fonctionnalités de l'extension Géoplateforme sera alors simplement conditionnée par la réception de l'événement onload de la page web, comme sur l'exemple suivant :
@@ -241,8 +237,8 @@ Votre utilisation des fonctionnalités de l'extension Géoplateforme sera alors 
         <link rel="stylesheet" href="ol.css" />
         <script src="ol.js"></script>
         <!-- Extension Géoplateforme pour OpenLayers -->
-        <link rel="stylesheet" href="GpPluginOpenLayers.css" />
-        <script src="GpPluginOpenLayers.js" data-key="THEME"></script>
+        <link rel="stylesheet" href="bundle.css" />
+        <script src="bundle.js" data-key="THEME"></script>
     </head>
     <body>
         <script>
@@ -263,8 +259,8 @@ Votre utilisation des fonctionnalités de l'extension Géoplateforme sera alors 
         <link rel="stylesheet" href="ol.css" />
         <script src="ol.js"></script>
         <!-- Extension Géoplateforme pour OpenLayers -->
-        <link rel="stylesheet" href="GpPluginOpenLayers.css" />
-        <script src="GpPluginOpenLayers.js"></script>
+        <link rel="stylesheet" href="bundle.css" />
+        <script src="bundle.js"></script>
     </head>
     <body>
         <script>
@@ -283,7 +279,6 @@ Votre utilisation des fonctionnalités de l'extension Géoplateforme sera alors 
 
 Thèmes multiples : Si vous devez utiliser plusieurs thématiques, il est possible de mettre une liste de clés dans l'attribut apiKey de la fonction getConfig :
 
-
 ``` html
 <html>
     <head>
@@ -291,8 +286,8 @@ Thèmes multiples : Si vous devez utiliser plusieurs thématiques, il est possib
         <link rel="stylesheet" href="ol.css" />
         <script src="ol.js"></script>
         <!-- Extension Géoplateforme pour OpenLayers -->
-        <link rel="stylesheet" href="GpPluginOpenLayers.css" />
-        <script src="GpPluginOpenLayers.js"></script>
+        <link rel="stylesheet" href="bundle.css" />
+        <script src="bundle.js"></script>
     </head>
     <body>
         <script>
@@ -320,7 +315,7 @@ Enregistrez ce fichier sur votre plateforme et paramétrez l'extension Géoplate
 **Méthode 1** : Utilisez l'attribut "data-url" de la balise **script** chargeant l'extension pour pointer vers votre fichier :
 
 ``` html
-<script data-url="chemin/vers/customConfig.json" src="chemin/vers/GpPluginItowns.js"></script>
+<script data-url="chemin/vers/customConfig.json" src="chemin/vers/bundle.js"></script>
 ```
 
 Votre utilisation des fonctionnalités de l'extension Géoplateforme sera alors simplement conditionnée par la réception de l'événement onload de la page web, comme sur l'exemple suivant :
@@ -330,7 +325,7 @@ Votre utilisation des fonctionnalités de l'extension Géoplateforme sera alors 
     <head>
         <!-- Library OpenLayers -->
         ...
-        <script data-url="chemin/vers/customConfig.json" src="chemin/vers/GpPluginOpenLayers.js"></script>
+        <script data-url="chemin/vers/customConfig.json" src="chemin/vers/bundle.js"></script>
     </head>
     <body>
         <script>
@@ -367,42 +362,22 @@ Votre utilisation des fonctionnalités de l'extension Géoplateforme sera alors 
 
 ### Appel de l'extension dans un module ES6
 
+> **TODO**
+> decrire les imports !
+
 Le module de l'extension expose de multiples exports nommés (dont le module openlayers étendu).
 L'utilisateur a le choix entre plusieurs méthodes d'import.
 
 **Méthode 1** : import des exports nommés du module
 
 ``` javascript
-import {Services, olExtended as Ol} from 'geoportal-extensions-openlayers';
-
-// votre utilisation de l'extension
-var map = new Ol.Map(...)
-Services.getConfig(...)
 ```
 
 **Méthode 2** : import d'un objet d’espace de noms pour le module
 
-***Variante 1*** : le module openlayers étendu est récupéré depuis l'espace de noms
-
 ``` javascript
-import * as Gp from 'geoportal-extensions-openlayers';
-
-// votre utilisation de l'extension
-const Ol = Gp.olExtended;
-var map = new Ol.Map(...)
-Gp.Services.getConfig(...)
 ```
 
-***Variante 2*** : le module openlayers est importé indépendamment de l'extension
-
-``` javascript
-import Ol from 'openlayers';
-import * as Gp from 'geoportal-extensions-openlayers';
-
-// votre utilisation de l'extension
-var map = new Ol.Map(...)
-Gp.Services.getConfig(...)
-```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -410,17 +385,11 @@ Gp.Services.getConfig(...)
 
 ### Versions de OpenLayers supportées
 
-Les **versions 3.1.z et supérieures de l'extension Géoplateforme pour OpenLayers** peuvent s'utiliser avec la **version 6.3.1** d'OpenLayers.
+Les **releases de l'extension Géoplateforme pour OpenLayers** peuvent s'utiliser avec la **version 8.2.0** d'OpenLayers.
 
-Les **versions 3.0.z de l'extension Géoplateforme pour OpenLayers** peuvent s'utiliser avec les **versions 5.0.3 et supérieures** d'OpenLayers.
-
-La compatibilité avec les **versions 4.0.z** n'est assurée que par les **versions 2.1.2 et antérieures de l'extension Géoplateforme pour OpenLayers**.
-
-Le support des versions d'OpenLayers antérieures à la version 3.14 n'a pas été complètement testé.
-
+Le support des versions d'OpenLayers supérieur à la version 8.2.0 n'a pas été complètement testé.
 
 ### Navigateurs supportés
-
 
 Navigateur | version
 -----------|--------
@@ -428,7 +397,6 @@ Chrome     | Versions récentes (21+)
 Firefox    | Versions récentes (28+)
 Edge       | 12+
 Safari     | Versions récentes (6.1+)
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -498,7 +466,7 @@ L'extension Géoplateforme pour OpenLayers propose deux manières d'accéder aux
 
 #### Utilisation d'un layer WMTS Géoplateforme
 
-L'affichage se fait par la création d'une nouvelle instance de la classe [ol.layer.GeoportalWMTS](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.layer.GeoportalWMTS.html), de la manière suivante :
+L'affichage se fait par la création d'une nouvelle instance de la classe [ol.layer.GeoportalWMTS](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.layer.GeoportalWMTS.html), de la manière suivante :
 
 ``` javascript
 new ol.layer.GeoportalWMTS(options);
@@ -562,7 +530,7 @@ NB : D'autres systèmes de coordonnées peuvent être définis et utilisés : [p
 
 #### Utilisation d'une source WMTS Géoplateforme
 
-Cette méthode permet plus de paramétrages : on crée une nouvelle instance de la classe [ol.source.GeoportalWMTS](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.source.GeoportalWMTS.html), de la manière suivante :
+Cette méthode permet plus de paramétrages : on crée une nouvelle instance de la classe [ol.source.GeoportalWMTS](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.source.GeoportalWMTS.html), de la manière suivante :
 
 ``` javascript
 var gpsource = new ol.source.GeoportalWMTS(options);
@@ -650,7 +618,7 @@ L'extension Géoplateforme pour OpenLayers propose deux manières d'accéder aux
 
 #### Utilisation d'un layer WMS Géoplateforme
 
-L'affichage se fait par la création d'une nouvelle instance de la classe [ol.layer.GeoportalWMS](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.layer.GeoportalWMS.html), de la manière suivante :
+L'affichage se fait par la création d'une nouvelle instance de la classe [ol.layer.GeoportalWMS](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.layer.GeoportalWMS.html), de la manière suivante :
 
 ``` javascript
 new ol.layer.GeoportalWMTS(options);
@@ -686,7 +654,7 @@ var map = new ol.Map({
 
 #### Utilisation d'une source WMS Géoplateforme
 
-Cette méthode permet plus de paramétrages : on crée une nouvelle instance de la classe [ol.source.GeoportalWMS](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.source.GeoportalWMS.html), de la manière suivante :
+Cette méthode permet plus de paramétrages : on crée une nouvelle instance de la classe [ol.source.GeoportalWMS](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.source.GeoportalWMS.html), de la manière suivante :
 
 ``` javascript
 var gpsource = new ol.source.GeoportalWMS(options);
@@ -730,7 +698,7 @@ var map = new ol.Map({
 
 ### Affichage d'une couche Vecteur Tuilé Géoplateforme
 
-L'affichage se fait par la création d'une nouvelle instance de la classe [ol.layer.GeoportalMapBox](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.layer.GeoportalMapBox.html), de la manière suivante :
+L'affichage se fait par la création d'une nouvelle instance de la classe [ol.layer.GeoportalMapBox](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.layer.GeoportalMapBox.html), de la manière suivante :
 
 ``` javascript
 new ol.layer.GeoportalMapBox(options);
@@ -783,7 +751,7 @@ var LayerMapBox = new ol.layer.GeoportalMapBox({
 
 Ce widget permet à l'utilisateur de gérer l'empilement des couches composant la carte ol.Map et, pour chacune d'elles, d'agir sur la visibilité, l'opacité et d'afficher des informations qui lui sont associées (titre, description, métadonnées, légende).
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.LayerSwitcher ](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.LayerSwitcher.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.LayerSwitcher ](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.LayerSwitcher.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var layerSwitcher = new ol.control.LayerSwitcher(opts) ;
@@ -853,7 +821,7 @@ La barre de recherche permet de positionner la carte à partir de la saisie d'un
 
 La saisie de localisants peut s'accompagner d'un mode d'autocomplétion s'appuyant sur le service d'autocomplétion de la Géoplateforme.
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la calsse [ol.control.SearchEngine](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.SearchEngine.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la calsse [ol.control.SearchEngine](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.SearchEngine.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var search = new ol.control.SearchEngine(opts) ;
@@ -899,7 +867,7 @@ map.addControl(searchControl);
 
 Le widget de calcul d'itinéraires permet d'intéragir avec une carte OpenLayers pour effectuer des calculs d'itinéraires utilisant le service dédié de la Géoplateforme.
 
-Son utilisation se fait par la création d'un nouveau contrôle instance de la classe [ol.control.Route](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.Route.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle instance de la classe [ol.control.Route](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.Route.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var route = new ol.control.Route(opts) ;
@@ -945,7 +913,7 @@ map.addControl(routeControl);
 
 Ce widget permet d'intéragir avec une carte OpenLayers pour effectuer des calculs d'isochrones / isodistances utilisant le service dédié de la Géoplateforme.
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.Isocurve()](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.Isocurve.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.Isocurve()](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.Isocurve.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var iso = new ol.control.Isocurve(opts);
@@ -992,7 +960,7 @@ map.addControl(isoControl);
 Ce widget permet d'afficher les coordonnées d'un point choisi par l'internaute sur une carte OpenLayers dans un ou plusieurs systèmes de coordonnées. Ces coordonnées peuvent comprendre l'altitude obtenue à l'aide du service d'altimétrie de la Géoplateforme.
 Un mode "édition" permet de localiser des coordonnées sur la carte en éditant les coordonnées affichées dans le widget.
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.GeoportalMousePosition](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.GeoportalMousePosition.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.GeoportalMousePosition](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.GeoportalMousePosition.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var mp = new ol.control.GeoportalMousePosition(opts);
@@ -1044,7 +1012,7 @@ Ce widget a pour but d'afficher les attributions associées aux couches visibles
 
 Les couches Géoplateforme (de type [WMS](#WMS) ou [WMTS](#WMTS)) possèdent nativement cette propriété. Pour les autres, le paramétrage dynamique des originators se fait par l'adjonction à l'objet source de la couche de la propriété "\_originators", tableau de [Gp.Services.Config.Originator](http://ignf.github.io/geoportal-access-lib/latest/jsdoc/Gp.Services.Config.Originator.html).
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.GeoportalAttribution](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.GeoportalAttribution.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.GeoportalAttribution](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.GeoportalAttribution.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var att = new ol.control.GeoportalAttribution(opts);
@@ -1090,7 +1058,7 @@ map.addControl(attControl);
 
 Ce widget permet d'obtenir un ensemble de localisants Géographiques (adresses, toponymes ou parcelles cadastrales) en un point ou une zone (cercle ou emprise rectangulaire) saisie interactivement par l'internaute sur une carte OpenLayers.
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.ReverseGeocode](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.ReverseGeocode.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.ReverseGeocode](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.ReverseGeocode.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var reverse = new ol.control.ReverseGeocode(opts);
@@ -1136,7 +1104,7 @@ map.addControl(rvControl);
 
 Ce widget propose un ensemble d'outils de croquis permettant de dessiner sur une carte OpenLayers : poser des markers, dessiner des lignes, polygones ou faire des écritures dans des styles choisis par l'internaute.
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.Drawing](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.Drawing.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.Drawing](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.Drawing.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var drawing = new ol.control.Drawing(opts);
@@ -1182,7 +1150,7 @@ map.addControl(drawControl);
 
 Ce widget permet à un internaute d'importer ses propres données géographiques dans des formats standards en superposition des données d'une carte OpenLayers.
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.LayerImport](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.LayerImport.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.LayerImport](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.LayerImport.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 
 ``` javascript
@@ -1229,7 +1197,7 @@ map.addControl(lyrImport);
 
 Ce widget permet d'afficher le profil altimétrique d'un traçé saisi par l'internaute sur une carte OpenLayers. Le profil est calculé à l'aide du service d'altimétrie de la Géoplateforme.
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.ElevationPath](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.ElevationPath.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.ElevationPath](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.ElevationPath.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 
 ``` javascript
@@ -1276,7 +1244,7 @@ map.addControl(ep);
 
 Trois widgets sont proposés permettant à un internaute d'effectuer des mesures sur une carte OpenLayers : mesures de distance, de surface et d'azimuth.
 
-Leur utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.MeasureLength](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.MeasureLength.html), pour les distances ; [ol.control.MeasureArea](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.MeasureArea.html), pour les surfaces ou [ol.control.MeasureAzimuth](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.MeasureAzimuth.html) pour les mesures d'azimuth que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Leur utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.MeasureLength](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.MeasureLength.html), pour les distances ; [ol.control.MeasureArea](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.MeasureArea.html), pour les surfaces ou [ol.control.MeasureAzimuth](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.MeasureAzimuth.html) pour les mesures d'azimuth que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 
 ``` javascript
@@ -1326,7 +1294,7 @@ Dans le cas des couches vecteur, ces informations correspondent aux informations
 Dans le cas des couches raster (WMS et WMTS), c'est le contenu de la réponse d'une requête GetFeatureInfo sur la première couche qui est affiché.
 Lorsque le contrôle est activé pour plusieurs couches, les informations affichées seront celles de la première couche visible rencontrée dans la carte (en partant du haut de la pile des couches).
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.GetFeatureInfo](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.GetFeatureInfo.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.GetFeatureInfo](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.GetFeatureInfo.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var getFeatureInfo = new ol.control.GetFeatureInfo(opts);
@@ -1392,7 +1360,7 @@ Avec la possibilité de choisir le format de sortie :
 - GPX
 - GEOJSON (défaut)
 
-Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.Export](http://ignf.github.io/geoportal-extensions/ol-latest/jsdoc/ol.control.Export.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
+Son utilisation se fait par la création d'un nouveau contrôle, instance de la classe [ol.control.Export](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/ol.control.Export.html), que l'on peut ensuite ajouter à la carte comme [les autres contrôles OpenLayers](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl), de la manière suivante :
 
 ``` javascript
 var export = new ol.control.Export(opts);
