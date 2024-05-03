@@ -358,11 +358,15 @@ input.GPsubmit:hover {
 .GPelementInvisible,
 .GPelementHidden {
   display: none;
+  visibility: hidden;
+  opacity: 0%;
 }
 
 .GPelementVisible,
 .GPelementShow {
   display: block;
+  visibility: visible;
+  opacity: 100%;
 }
 
 /********************************/
