@@ -136,6 +136,11 @@ input[id^=GPadvancedSearchSubmit] {
 
 [id^="GPsearchInput"] {}
 
+
+[id^="GPshowSearchDiv"]{
+  display: flex;
+}
+
 /* General panels */
 
 
@@ -181,4 +186,12 @@ dialog[id^="GPgeocodeResultsList"] {
 [id^="GPautocompleteResultsSuggest"],
 [id^="GPautocompleteResultsLocation"] {
   width: inherit;
+}
+
+@media (max-width: 576px) {
+
+  form[id^=GPsearchInput-] {
+    width: unset;
+  }
+
 }
