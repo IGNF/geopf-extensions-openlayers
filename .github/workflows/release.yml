@@ -95,47 +95,46 @@ jobs:
 
   # not yet implemented !
   release:
-    if: false # always skip job !
+    if: false 
+    runs-on: ubuntu-latest
+    steps:
+      - name: ras
+        run: |
+          echo "not yet implemented !"
 
   # not yet implemented !
   publish:
-    if: false # always skip job !
+    if: false 
+    runs-on: ubuntu-latest
+    steps:
+      - name: ras
+        run: |
+          echo "not yet implemented !"
 
   # not yet implemented !
   changelog:
-    if: false # always skip job !
+    if: false 
+    runs-on: ubuntu-latest
+    steps:
+      - name: ras
+        run: |
+          echo "not yet implemented !"
 
   # not yet implemented !
   samples:
-    if: false # always skip job !
+    if: false 
+    runs-on: ubuntu-latest
+    steps:
+      - name: ras
+        run: |
+          echo "not yet implemented !"
 
   # not yet implemented !
   rollback:
-    if: false # always skip job !
-    # if: failure()
-    # if: github.event_name == 'push' && contains(github.ref, '/tags/') # Only for tags !
-    needs: [release, publish, changelog]
+    if: false 
     runs-on: ubuntu-latest
     steps:
-      - name: Get the tagname
-        id: get_tagname
-        run: echo ::set-output name=TAGNAME::$(echo ${GITHUB_REF##*/})
-
-      - name: Rollback jsdoc (gh-pages)
+      - name: ras
         run: |
           echo "not yet implemented !"
 
-      - name: Rollback changelog (develop)
-        run: |
-          echo "not yet implemented !"
-
-      - name: Rollback Release
-        if: job.create_release.steps.create_release.outputs.id != ''
-        uses: author/action-rollback@stable
-        with:
-          # Using a known release ID
-          id: ${{ job.create_release.steps.create_release.id }}
-          # Using a tag name
-          tag: ${{ steps.get_tagname.outputs.TAGNAME }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
