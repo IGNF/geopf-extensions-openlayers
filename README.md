@@ -1,4 +1,11 @@
+
 # Extensions Geoplateforme
+
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/IGNF/geoportal-extensions-openlayers/build.yml)
+
+![NPM Version](https://img.shields.io/npm/v/geoportal-extensions-openlayers)
+
+---
 
 <https://ignf.github.io/geoportal-extensions-openlayers/>
 
@@ -10,15 +17,15 @@
 
 * bundles par modules
 
-[http://ignf.github.io/geoportal-extensions-openlayers/dist/modules](http://ignf.github.io/geoportal-extensions-openlayers/dist/modules/)
+[https://github.com/IGNF/geoportal-extensions-openlayers/tree/gh-pages/dist/modules](https://github.com/IGNF/geoportal-extensions-openlayers/tree/gh-pages/dist/modules)
 
 * bundle complet
 
-[http://ignf.github.io/geoportal-extensions-openlayers/dist/packages](http://ignf.github.io/geoportal-extensions-openlayers/dist/bundle/)
+[https://github.com/IGNF/geoportal-extensions-openlayers/tree/gh-pages/dist/bundle](https://github.com/IGNF/geoportal-extensions-openlayers/tree/gh-pages/dist/bundle)
 
 * source ES Module
 
-[http://ignf.github.io/geoportal-extensions-openlayers/package](http://ignf.github.io/geoportal-extensions-openlayers/package/)
+[https://github.com/IGNF/geoportal-extensions-openlayers/tree/gh-pages/dist/package](https://github.com/IGNF/geoportal-extensions-openlayers/tree/gh-pages/dist/package)
 
 **note:**
 > cf. le lien vers package [NPM](https://www.npmjs.com/package/geoportal-extensions-openlayers)
