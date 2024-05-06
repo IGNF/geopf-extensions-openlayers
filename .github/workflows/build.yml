@@ -56,13 +56,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: .
+          path: dist
       
       - name: Download JSDoc artifacts
         uses: actions/download-artifact@v4
         with:
           name: jsdoc
-          path: .
+          path: jsdoc
       
       - name: Build 404
         run: |
