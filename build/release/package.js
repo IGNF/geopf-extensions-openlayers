@@ -74,7 +74,7 @@ async function main () {
         }
     }
     fse.copySync(path.join("dist", "bundle", "Dsfr.css"), path.join(builddir, "css", "Dsfr.css"));
-    fse.copySync(path.join("dist", "bundle", "Portail.css"), path.join(builddir, "css", "Portail.css"));
+    fse.copySync(path.join("dist", "bundle", "Classic.css"), path.join(builddir, "css", "Classic.css"));
     console.log("✔ correctly copy css files !");
     
     // creation du package tgz
