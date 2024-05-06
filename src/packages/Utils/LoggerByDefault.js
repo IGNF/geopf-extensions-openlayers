@@ -2,14 +2,18 @@ import * as Log from "loglevel";
 
 /**
  * @module LoggerByDefault
- * @alias [private] LoggerByDefault
+ * @alias module:~utils/Logger
  * @description
  * ...
  *
  * @example
- * getLogger();
- * disableAll();
- * enableAll();
+ * import Logger from "gpf-ext-ol/utils/LoggerByDefault"
+ * ou 
+ * import {Logger} from "gpf-ext-ol
+ * 
+ * Logger.getLogger();
+ * Logger.disableAll();
+ * Logger.enableAll();
  */
 var LoggerByDefault = {
     /**

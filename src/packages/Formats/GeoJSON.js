@@ -26,10 +26,12 @@ var GeoJSON = class GeoJSON extends olGeoJSON {
     /**
      * See {@link ol.format.GeoJSONExtended}
      * @module GeoJSONExtended
-     * @alias module:~Formats/GeoJSONExtended
+     * @alias module:~formats/GeoJSONExtended
      * @param {*} options - options
      * @example
-     * import GeoJSONExtended from "src/OpenLayers/Formats/GeoJSON"
+     * import GeoJSONExtended from "gpf-ext-ol/formats/GeoJSONExtended"
+     * ou 
+     * import { GeoJSONExtended } from "gpf-ext-ol"
      */
     constructor (options) {
         super(options);

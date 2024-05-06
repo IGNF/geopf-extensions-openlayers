@@ -2,7 +2,7 @@ import Logger from "./LoggerByDefault";
 
 /**
 * @module ProxyUtils
-* @alias Gp.ProxyUtils
+* @alias module:~utils/ProxyUtils
 * @description
 * ...
 *

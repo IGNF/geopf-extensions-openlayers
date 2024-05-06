@@ -4,7 +4,7 @@ var logger = Logger.getLogger("parser");
 
 /**
 * @module Parser
-* @alias Gp.Parser
+* @alias module:~utils/Parser
 * @description
 * ...
 *

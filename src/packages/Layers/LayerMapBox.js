@@ -43,11 +43,13 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
     /**
      * See {@link ol.layer.GeoportalMapBox}
      * @module LayerMapBox
-     * @alias module:~Layers/GeoportalMapBox
+     * @alias module:~layers/GeoportalMapBox
      * @param {*} options - options
      * @param {*} [settings] - other settings
      * @example
-     * import LayerMapBox from "src/packages/Layers/LayerMapBox"
+     * import LayerMapBox from "gpf-ext-ol/layers/LayerMapBox"
+     * ou 
+     * import { LayerMapBox } from "gpf-ext-ol"
      */
     constructor (options, settings) {
         // if (!(this instanceof LayerMapBox)) {

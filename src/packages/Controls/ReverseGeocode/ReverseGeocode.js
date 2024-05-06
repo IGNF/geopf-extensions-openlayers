@@ -78,10 +78,12 @@ var ReverseGeocode = class ReverseGeocode extends Control {
     /**
      * See {@link ol.control.ReverseGeocode}
      * @module ReverseGeocode
-     * @alias module:~Controls/ReverseGeocode
+     * @alias module:~controls/ReverseGeocode
      * @param {*} options - options
      * @example
-     * import ReverseGeocode from "src/OpenLayers/Controls/ReverseGeocode"
+     * import ReverseGeocode from "gpf-ext-ol/controls/ReverseGeocode"
+     * ou 
+     * import { ReverseGeocode } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

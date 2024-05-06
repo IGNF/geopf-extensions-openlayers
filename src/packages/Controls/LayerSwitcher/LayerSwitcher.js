@@ -56,10 +56,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     /**
      * See {@link ol.control.LayerSwitcher}
      * @module LayerSwitcher
-     * @alias module:~Controls/LayerSwitcher
+     * @alias module:~controls/LayerSwitcher
      * @param {*} options - options
      * @example
-     * import LayerSwitcher from "src/OpenLayers/Controls/LayerSwitcher"
+     * import LayerSwitcher from "gpf-ext-ol/controls/LayerSwitcher"
+     * ou 
+     * import { LayerSwitcher } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};

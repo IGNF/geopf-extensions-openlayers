@@ -1,0 +1,141 @@
+name: Creation des releases
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build bundle
+        run: npm run build
+
+      - name: Build package
+        run: npm run publish
+
+      - name: Create Zip Modules
+        run: |
+          zip --junk-paths modules dist/modules/*
+      
+      - name: Create Zip Bundle
+        run: |
+          zip --junk-paths bundle dist/bundle/*
+
+      - name: Upload JSDoc artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: jsdoc
+          path: jsdoc
+
+      - name: Upload Binary artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Upload Bundle artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle
+          path: bundle.zip
+
+      - name: Upload Modules artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: modules
+          path: modules.zip
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: IGNF/geoportal-extensions-openlayers
+          ref: gh-pages
+      
+      - name: Download Binary artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: .
+      
+      - name: Download JSDoc artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: jsdoc
+          path: .
+      
+      - name: Build 404
+        run: |
+          cp index.html 404.html
+  
+      - name: Publish
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -A
+          git commit -m "build project gh-pages"
+          git push
+
+  # not yet implemented !
+  release:
+    if: false # always skip job !
+
+  # not yet implemented !
+  publish:
+    if: false # always skip job !
+
+  # not yet implemented !
+  changelog:
+    if: false # always skip job !
+
+  # not yet implemented !
+  samples:
+    if: false # always skip job !
+
+  # not yet implemented !
+  rollback:
+    if: false # always skip job !
+    # if: failure()
+    # if: github.event_name == 'push' && contains(github.ref, '/tags/') # Only for tags !
+    needs: [release, publish, changelog]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the tagname
+        id: get_tagname
+        run: echo ::set-output name=TAGNAME::$(echo ${GITHUB_REF##*/})
+
+      - name: Rollback jsdoc (gh-pages)
+        run: |
+          echo "not yet implemented !"
+
+      - name: Rollback changelog (develop)
+        run: |
+          echo "not yet implemented !"
+
+      - name: Rollback Release
+        if: job.create_release.steps.create_release.outputs.id != ''
+        uses: author/action-rollback@stable
+        with:
+          # Using a known release ID
+          id: ${{ job.create_release.steps.create_release.id }}
+          # Using a tag name
+          tag: ${{ steps.get_tagname.outputs.TAGNAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

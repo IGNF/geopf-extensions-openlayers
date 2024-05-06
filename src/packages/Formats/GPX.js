@@ -31,10 +31,12 @@ var GPX = class GPX extends olGPX {
     /**
      * See {@link ol.format.GPXExtended}
      * @module GPXExtended
-     * @alias module:~Formats/GPXExtended
+     * @alias module:~formats/GPXExtended
      * @param {*} options - options
      * @example
-     * import GPXExtended from "src/packages/Formats/GPX"
+     * import GPXExtended from from "gpf-ext-ol/formats/GPXExtended"
+     * ou 
+     * import { GPXExtended } from "gpf-ext-ol"
      */
     constructor (options) {
         super(options);

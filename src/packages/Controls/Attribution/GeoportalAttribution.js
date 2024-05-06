@@ -33,10 +33,12 @@ var GeoportalAttribution = class GeoportalAttribution extends Attribution {
     /**
      * See {@link ol.control.GeoportalAttribution}
      * @module GeoportalAttribution
-     * @alias module:~Controls/GeoportalAttribution
+     * @alias module:~controls/GeoportalAttribution
      * @param {*} options - options
      * @example
-     * import GeoportalAttribution from "src/OpenLayers/Controls/GeoportalAttribution"
+     * import GeoportalAttribution from "gpf-ext-ol/controls/GeoportalAttribution"
+     * ou 
+     * import { GeoportalAttribution } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};
