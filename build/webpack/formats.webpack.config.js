@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
             path.resolve(__dirname, "./extend.base.webpack.js")
         ],
         entry : {
-            "Formats" : [
+            "GpfExtOl-Formats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),
                 path.join(rootdir, "src", "packages", "Formats", "KML.js"),
                 path.join(rootdir, "src", "packages", "Formats", "GPX.js")

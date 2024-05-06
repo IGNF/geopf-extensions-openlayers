@@ -11,7 +11,7 @@
     },
     "templates": {
         "cleverLinks"           : false,
-        "applicationName"       : "Geoportal Extension for OpenLayers<br/>API Reference (draft)",
+        "applicationName"       : "Geoportal Extension for OpenLayers<br/>API Reference",
         "monospaceLinks"        : false,
         "dateFormat"            : "ddd MMM Do YYYY",
         "outputSourceFiles"     : true,

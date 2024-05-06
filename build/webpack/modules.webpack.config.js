@@ -32,31 +32,31 @@ module.exports = (env, argv) => {
         ],
         entry : {
             // Widgets
-            "Drawing" : path.join(rootdir, "src", "packages", "Controls/Drawing", "Drawing.js"),
-            "Editor" : path.join(rootdir, "src", "packages", "Controls/Editor", "Editor.js"),
-            "ElevationPath" : path.join(rootdir, "src", "packages", "Controls/ElevationPath", "ElevationPath.js"),
-            "GetFeatureInfo" : path.join(rootdir, "src", "packages", "Controls/GetFeatureInfo", "GetFeatureInfo.js"),
-            "Isocurve" : path.join(rootdir, "src", "packages", "Controls/Isocurve", "Isocurve.js"),
-            "LayerImport" : path.join(rootdir, "src", "packages", "Controls/LayerImport", "LayerImport.js"),
-            "LayerSwitcher" : path.join(rootdir, "src", "packages", "Controls/LayerSwitcher", "LayerSwitcher.js"),
-            "LocationSelector" : path.join(rootdir, "src", "packages", "Controls/LocationSelector", "LocationSelector.js"),
-            "GeoportalMousePosition" : path.join(rootdir, "src", "packages", "Controls/MousePosition", "MousePosition.js"),
-            "GeoportalAttribution" : path.join(rootdir, "src", "packages", "Controls/Attribution", "GeoportalAttribution.js"),
-            "ReverseGeocode" : path.join(rootdir, "src", "packages", "Controls/ReverseGeocode", "ReverseGeocode.js"),
-            "Route" : path.join(rootdir, "src", "packages", "Controls/Route", "Route.js"),
-            "SearchEngine" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "SearchEngine.js"),
-            "Export" : path.join(rootdir, "src", "packages", "Controls/Export", "Export.js"),
-            "MeasureArea" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureArea.js"),
-            "MeasureAzimuth" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureAzimuth.js"),
-            "MeasureLength" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureLength.js"),
+            "GpfExtOlDrawing" : path.join(rootdir, "src", "packages", "Controls/Drawing", "Drawing.js"),
+            "GpfExtOlEditor" : path.join(rootdir, "src", "packages", "Controls/Editor", "Editor.js"),
+            "GpfExtOlElevationPath" : path.join(rootdir, "src", "packages", "Controls/ElevationPath", "ElevationPath.js"),
+            "GpfExtOlGetFeatureInfo" : path.join(rootdir, "src", "packages", "Controls/GetFeatureInfo", "GetFeatureInfo.js"),
+            "GpfExtOlIsocurve" : path.join(rootdir, "src", "packages", "Controls/Isocurve", "Isocurve.js"),
+            "GpfExtOlLayerImport" : path.join(rootdir, "src", "packages", "Controls/LayerImport", "LayerImport.js"),
+            "GpfExtOlLayerSwitcher" : path.join(rootdir, "src", "packages", "Controls/LayerSwitcher", "LayerSwitcher.js"),
+            "GpfExtOlLocationSelector" : path.join(rootdir, "src", "packages", "Controls/LocationSelector", "LocationSelector.js"),
+            "GpfExtOlGeoportalMousePosition" : path.join(rootdir, "src", "packages", "Controls/MousePosition", "MousePosition.js"),
+            "GpfExtOlGeoportalAttribution" : path.join(rootdir, "src", "packages", "Controls/Attribution", "GeoportalAttribution.js"),
+            "GpfExtOlReverseGeocode" : path.join(rootdir, "src", "packages", "Controls/ReverseGeocode", "ReverseGeocode.js"),
+            "GpfExtOlRoute" : path.join(rootdir, "src", "packages", "Controls/Route", "Route.js"),
+            "GpfExtOlSearchEngine" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "SearchEngine.js"),
+            "GpfExtOlExport" : path.join(rootdir, "src", "packages", "Controls/Export", "Export.js"),
+            "GpfExtOlMeasureArea" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureArea.js"),
+            "GpfExtOlMeasureAzimuth" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureAzimuth.js"),
+            "GpfExtOlMeasureLength" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureLength.js"),
             // Formats étendus
-            "Formats" : [
+            "GpfExtOlFormats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),
                 path.join(rootdir, "src", "packages", "Formats", "KML.js"),
                 path.join(rootdir, "src", "packages", "Formats", "GPX.js")
             ],
             // Couches
-            "Layers" : [
+            "GpfExtOlLayers" : [
                 path.join(rootdir, "src", "packages", "Sources", "WMTS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "LayerWMS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "LayerWMTS.js"),
@@ -65,7 +65,7 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "Layers", "LayerMapBox.js"),
             ],
             // Projections
-            "CRS" : path.join(rootdir, "src", "packages", "CRS", "AutoLoadCRS.js"),
+            "GpfExtOlCRS" : path.join(rootdir, "src", "packages", "CRS", "AutoLoadCRS.js"),
         },
         output : {
             path : path.join(rootdir, "dist", "modules"),
@@ -125,7 +125,7 @@ module.exports = (env, argv) => {
             devMiddleware : {
                 index : true,
                 mimeTypes : { phtml : "text/html" },
-                publicPath : "/dist/packages/modules/",
+                publicPath : "/dist/modules/",
                 serverSideRender : true,
                 writeToDisk : true,
             },

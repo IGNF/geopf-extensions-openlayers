@@ -34,7 +34,7 @@ module.exports = (env, argv) => {
             path.resolve(__dirname, "./extend.banners.webpack.js")
         ],
         entry : {
-            "Widgets" : path.join(rootdir, "src", "packages", "bundle.js")
+            "GpfExtOL" : path.join(rootdir, "src", "packages", "bundle.js")
         },
         output : {
             path : path.join(rootdir, "dist", "bundle"),
@@ -84,6 +84,23 @@ module.exports = (env, argv) => {
         ],
         devtool : "source-map",
         stats : "normal",
+        devServer : {
+            https : true,
+            watchFiles : {
+                paths : ["src/**/*"],
+                options : {
+                    usePolling : true,
+                },
+            },
+            devMiddleware : {
+                index : true,
+                mimeTypes : { phtml : "text/html" },
+                publicPath : "/dist/packages/",
+                serverSideRender : true,
+                writeToDisk : true,
+            },
+
+        },
         optimization : {
             /**  MINIFICATION */
             minimizer : [

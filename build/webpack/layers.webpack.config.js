@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
             path.resolve(__dirname, "./extend.base.webpack.js")
         ],
         entry : {
-            "Layers" : [
+            "GpfExtOl-Layers" : [
                 path.join(rootdir, "src", "packages", "Sources", "WMTS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "LayerWMS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "LayerWMTS.js"),

@@ -139,75 +139,75 @@ Les extensions Géoplateforme pour OpenLayers peuvent être récupérées sous 2
 ```text
     .
     ├── Dsfr.css
-    ├── Portail.css
-    ├── Widgets.css
-    ├── Widgets.js
-    └── Widgets.js.map
+    ├── Classic.css
+    ├── GpfExtOL.css
+    ├── GpfExtOL.js
+    └── GpfExtOL.js.map
 ```
 
 * ou une extension par fichier JS avec la CSS associée :
 
 ```text
     .
-    ├── CRS.js
-    ├── CRS.js.map
-    ├── Drawing.css
-    ├── Drawing.js
-    ├── Drawing.js.map
+    ├── GpfExtOl-CRS.js
+    ├── GpfExtOl-CRS.js.map
+    ├── GpfExtOl-Drawing.css
+    ├── GpfExtOl-Drawing.js
+    ├── GpfExtOl-Drawing.js.map
     ├── Dsfr.css
-    ├── Editor.css
-    ├── Editor.js
-    ├── Editor.js.map
-    ├── ElevationPath.css
-    ├── ElevationPath.js
-    ├── ElevationPath.js.map
-    ├── Export.css
-    ├── Export.js
-    ├── Export.js.map
-    ├── Formats.js
-    ├── Formats.js.map
-    ├── GeoportalAttribution.css
-    ├── GeoportalAttribution.js
-    ├── GeoportalAttribution.js.map
-    ├── GeoportalMousePosition.css
-    ├── GeoportalMousePosition.js
-    ├── GeoportalMousePosition.js.map
-    ├── GetFeatureInfo.css
-    ├── GetFeatureInfo.js
-    ├── GetFeatureInfo.js.map
-    ├── Isocurve.css
-    ├── Isocurve.js
-    ├── Isocurve.js.map
-    ├── LayerImport.css
-    ├── LayerImport.js
-    ├── LayerImport.js.map
-    ├── Layers.js
-    ├── Layers.js.map
-    ├── LayerSwitcher.css
-    ├── LayerSwitcher.js
-    ├── LayerSwitcher.js.map
-    ├── LocationSelector.css
-    ├── LocationSelector.js
-    ├── LocationSelector.js.map
-    ├── MeasureArea.css
-    ├── MeasureArea.js
-    ├── MeasureArea.js.map
-    ├── MeasureAzimuth.css
-    ├── MeasureAzimuth.js
-    ├── MeasureAzimuth.js.map
-    ├── MeasureLength.css
-    ├── MeasureLength.js
-    ├── MeasureLength.js.map
-    ├── Portail.css
-    ├── ReverseGeocode.css
-    ├── ReverseGeocode.js
-    ├── ReverseGeocode.js.map
-    ├── Route.css
-    ├── Route.js
-    ├── Route.js.map
-    ├── SearchEngine.css
-    ├── SearchEngine.js
-    └── SearchEngine.js.map
+    ├── GpfExtOl-Editor.css
+    ├── GpfExtOl-Editor.js
+    ├── GpfExtOl-Editor.js.map
+    ├── GpfExtOl-ElevationPath.css
+    ├── GpfExtOl-ElevationPath.js
+    ├── GpfExtOl-ElevationPath.js.map
+    ├── GpfExtOl-Export.css
+    ├── GpfExtOl-Export.js
+    ├── GpfExtOl-Export.js.map
+    ├── GpfExtOl-Formats.js
+    ├── GpfExtOl-Formats.js.map
+    ├── GpfExtOl-GeoportalAttribution.css
+    ├── GpfExtOl-GeoportalAttribution.js
+    ├── GpfExtOl-GeoportalAttribution.js.map
+    ├── GpfExtOl-GeoportalMousePosition.css
+    ├── GpfExtOl-GeoportalMousePosition.js
+    ├── GpfExtOl-GeoportalMousePosition.js.map
+    ├── GpfExtOl-GetFeatureInfo.css
+    ├── GpfExtOl-GetFeatureInfo.js
+    ├── GpfExtOl-GetFeatureInfo.js.map
+    ├── GpfExtOl-Isocurve.css
+    ├── GpfExtOl-Isocurve.js
+    ├── GpfExtOl-Isocurve.js.map
+    ├── GpfExtOl-LayerImport.css
+    ├── GpfExtOl-LayerImport.js
+    ├── GpfExtOl-LayerImport.js.map
+    ├── GpfExtOl-Layers.js
+    ├── GpfExtOl-Layers.js.map
+    ├── GpfExtOl-LayerSwitcher.css
+    ├── GpfExtOl-LayerSwitcher.js
+    ├── GpfExtOl-LayerSwitcher.js.map
+    ├── GpfExtOl-LocationSelector.css
+    ├── GpfExtOl-LocationSelector.js
+    ├── GpfExtOl-LocationSelector.js.map
+    ├── GpfExtOl-MeasureArea.css
+    ├── GpfExtOl-MeasureArea.js
+    ├── GpfExtOl-MeasureArea.js.map
+    ├── GpfExtOl-MeasureAzimuth.css
+    ├── GpfExtOl-MeasureAzimuth.js
+    ├── GpfExtOl-MeasureAzimuth.js.map
+    ├── GpfExtOl-MeasureLength.css
+    ├── GpfExtOl-MeasureLength.js
+    ├── GpfExtOl-MeasureLength.js.map
+    ├── Classic.css
+    ├── GpfExtOl-ReverseGeocode.css
+    ├── GpfExtOl-ReverseGeocode.js
+    ├── GpfExtOl-ReverseGeocode.js.map
+    ├── GpfExtOl-Route.css
+    ├── GpfExtOl-Route.js
+    ├── GpfExtOl-Route.js.map
+    ├── GpfExtOl-SearchEngine.css
+    ├── GpfExtOl-SearchEngine.js
+    └── GpfExtOl-SearchEngine.js.map
 
 ```
 

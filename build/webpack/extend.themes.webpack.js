@@ -5,7 +5,7 @@ module.exports = (env, argv) => {
     return {
         entry : {
             // CSS themes portail
-            "Portail" : [
+            "Classic" : [
                 path.join(rootdir, "src", "packages", "CSS", "GPFwaiting.css"),
                 path.join(rootdir, "src", "packages", "CSS", "GPFgeneralWidget.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Drawing", "GPFdrawingStyle.css"),

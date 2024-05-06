@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
             path.resolve(__dirname, "./extend.base.webpack.js")
         ],
         entry : {
-            "CRS" : path.join(rootdir, "src", "packages", "CRS", "AutoLoadCRS.js")
+            "GpfExtOl-CRS" : path.join(rootdir, "src", "packages", "CRS", "AutoLoadCRS.js")
         },
         externalsType : "var",
     };

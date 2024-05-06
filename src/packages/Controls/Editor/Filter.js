@@ -250,3 +250,11 @@ class Filter {
 };
 
 export default Filter;
+
+// Expose Editor as ol.editor.View (for a build bundle)
+if (window.ol && window.ol.style) {
+    if (!window.ol.style.editor) {
+        window.ol.style.editor = {};
+    } 
+    window.ol.style.editor.Filter = Filter;
+}

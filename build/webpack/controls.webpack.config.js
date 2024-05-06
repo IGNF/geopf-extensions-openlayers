@@ -86,7 +86,7 @@ module.exports = (env, argv) => {
                 break;
         }
     
-        entries[key] = path.join(rootdir, "src", "packages", "Controls", moduledir, name + ".js");
+        entries["GpfExtOl" + key] = path.join(rootdir, "src", "packages", "Controls", moduledir, name + ".js");
         console.log("####", key, entries[key]);
     }
 
