@@ -14,11 +14,11 @@
 
 * bundle complet
 
-[http://ignf.github.io/geoportal-extensions-openlayers/dist/packages](http://ignf.github.io/geoportal-extensions-openlayers/dist/packages/)
+[http://ignf.github.io/geoportal-extensions-openlayers/dist/packages](http://ignf.github.io/geoportal-extensions-openlayers/dist/bundle/)
 
 * source ES Module
 
-[http://ignf.github.io/geoportal-extensions-openlayers/src](http://ignf.github.io/geoportal-extensions-openlayers/src/)
+[http://ignf.github.io/geoportal-extensions-openlayers/package](http://ignf.github.io/geoportal-extensions-openlayers/package/)
 
 **note:**
 > cf. le lien vers package [NPM](https://www.npmjs.com/package/geoportal-extensions-openlayers)

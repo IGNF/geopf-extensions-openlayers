@@ -29,7 +29,7 @@
 
     
     <script>
-    var config = {"monospaceLinks":false,"cleverLinks":false,"applicationName":"Geoportal Extension for OpenLayers<br/>API Reference (draft)","dateFormat":"ddd MMM Do YYYY","outputSourceFiles":true,"outputSourcePath":true,"systemName":"Geoportal Extension for OpenLayers","footer":"","copyright":"Geoportail - Copyright (c) IGN, released under the CECILL-B license","navType":"inline","theme":"darkly","linenums":true,"collapseSymbols":true,"inverseNav":true,"highlightTutorialCode":false,"syntaxTheme":"default","default":{}};
+    var config = {"monospaceLinks":false,"cleverLinks":false,"applicationName":"Geoportal Extension for OpenLayers<br/>API Reference","dateFormat":"ddd MMM Do YYYY","outputSourceFiles":true,"outputSourcePath":true,"systemName":"Geoportal Extension for OpenLayers","footer":"","copyright":"Geoportail - Copyright (c) IGN, released under the CECILL-B license","navType":"inline","theme":"darkly","linenums":true,"collapseSymbols":true,"inverseNav":true,"highlightTutorialCode":false,"syntaxTheme":"default","default":{}};
     </script>
     
 
@@ -42,7 +42,7 @@
     <header>
     <div class="header-content">
         <p class="logoIGN"><a href="./index.html"><img src="./images/logoIGN.png"/></a></p>
-        <h1>Geoportal Extension for OpenLayers<br/>API Reference (draft)</h1>
+        <h1>Geoportal Extension for OpenLayers<br/>API Reference</h1>
     </div>
     </header>
 
@@ -53,9 +53,9 @@
 
 <aside class="menu-left">
     <label class="closeLeftMenu" for="showLeftMenu" title="Fermer le menu latéral"></label>
-    <div class="header-menu">Geoportal Extension for OpenLayers<br/>API Reference (draft)</div>
+    <div class="header-menu">Geoportal Extension for OpenLayers<br/>API Reference</div>
 <!--
-    <h3 class="applicationName"><a href="index.html">Geoportal Extension for OpenLayers<br/>API Reference (draft)</a></h3>
+    <h3 class="applicationName"><a href="index.html">Geoportal Extension for OpenLayers<br/>API Reference</a></h3>
 -->
     <div class="search">
         <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
@@ -4473,7 +4473,7 @@
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 144
+            Controls/SearchEngine/SearchEngine.js, line 146
         </div>
         
     </div>
@@ -5561,12 +5561,118 @@ Each array element (=system) is an object with following properties :</p>
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
 	</thead>
 	
 	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">filterServices</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>filter on a list of search services, each field is separated by a comma. &quot;WMTS,TMS&quot; by default</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">filterVectortiles</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>filter on list of search layers only on service TMS, each field is separated by a comma. &quot;PLAN.IGN, ...&quot; by default</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">updateVectortiles</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>updating the list of search layers only on service TMS</p></td>
+        </tr>
+	
 	
 	
         <tr>
@@ -5583,6 +5689,10 @@ Each array element (=system) is an object with following properties :</p>
             
             </td>
             
+            
+                <td class="default">
+                
+                </td>
             
             
             <td class="description last">
@@ -5731,36 +5841,6 @@ Each array element (=system) is an object with following properties :</p>
                     
                 
                 <p>number of response in the service. 1000 by default</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name">services</td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>list of search services, each field is separated by a comma. &quot;WMTS,WMS&quot; by default</p></td>
         </tr>
 	
 	
@@ -6317,7 +6397,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 1344
+            Controls/SearchEngine/SearchEngine.js, line 1358
         </div>
         
     </div>
@@ -6545,7 +6625,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 215
+            Controls/SearchEngine/SearchEngine.js, line 217
         </div>
         
     </div>
@@ -6626,7 +6706,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 242
+            Controls/SearchEngine/SearchEngine.js, line 244
         </div>
         
     </div>
@@ -6707,7 +6787,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 224
+            Controls/SearchEngine/SearchEngine.js, line 226
         </div>
         
     </div>
@@ -6824,7 +6904,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 191
+            Controls/SearchEngine/SearchEngine.js, line 193
         </div>
         
     </div>
@@ -6952,7 +7032,7 @@ return zoom;<br>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu May 02 2024 14:58:55 GMT+0200 (heure d’été d’Europe centrale)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon May 06 2024 18:30:51 GMT+0200 (heure d’été d’Europe centrale)
     </footer>
 
 

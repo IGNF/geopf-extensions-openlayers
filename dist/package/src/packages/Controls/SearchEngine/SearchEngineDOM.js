@@ -28,6 +28,16 @@ var SearchEngineDOM = {
     // ################################################################### //
     // ################### Methods of main container ##################### //
     // ################################################################### //
+    
+    /**
+     * SElement with picto and search input
+     * @returns {DOMElement} DOM element
+     */
+    _createSearchDivElement : function () {
+        var searchDiv = document.createElement("div");
+        searchDiv.id = this._addUID("GPshowSearchDiv");
+        return searchDiv;
+    },
 
     /**
      * Show search engine
