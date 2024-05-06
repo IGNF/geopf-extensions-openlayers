@@ -1,0 +1,231 @@
+/* ROUTE */
+
+div[id^=GProute-] {
+  top: 100px;
+  left: 10px;
+}
+
+/* Showing/hiding panel */
+
+button[id^="GPshowRoutePicto-"][aria-pressed="false"] + dialog {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+button[id^="GPshowRoutePicto-"][aria-pressed="true"] + dialog {
+  display: block;
+  visibility: visible;
+  opacity: 100%;
+}
+
+/* General panels */
+
+[id^=GProutePanel-] {
+  position: absolute;
+  height: inherit;
+  top: 0px;
+  left: 34px;
+}
+
+/* Reset picto */
+
+button[id^=GProuteReset] {
+  /* background-color: #366291; */
+  background-image: url("img/GProuteOptions.png");
+  background-position: -224px center;
+}
+
+button[id^=GProuteReset] {
+  opacity: 0.8;
+  transition: opacity 0.2s ease-out;
+}
+
+button[id^=GProuteReset]:hover {
+  opacity: 1;
+}
+
+/* Route form */
+
+form[id^=GProuteForm] {
+  padding: 15px;
+}
+
+
+form[id^=GProuteForm] > .GPlocationStageFlexInput {
+  margin-top: 5px;
+}
+
+form[id^=GProuteForm] > .GPlocationStageFlexInputHidden {
+  margin-top: 0;
+}
+
+form[id^=GProuteForm].GProuteFormMini .GPlocationStageFlexInput:first-child {
+  margin-top: 5px;
+}
+
+label.GProuteOriginPointerImg[id*="GProuteOriginPointerImg"] {
+  width: 28px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-right: 1px solid #999;
+}
+
+input[id*="GProuteOriginPointer"] + .GProuteOriginPointerImg {
+  background-position: -1px -1px;
+}
+
+input[id*="GProuteOriginPointer"]:checked + .GProuteOriginPointerImg {
+  background-position: -29px -1px;
+}
+
+.GProuteStageRemove,
+div[id^=GProuteStageAdd] {
+  width: 28px;
+  border: none;
+  cursor: pointer;
+}
+
+.GProuteFormMini {
+  max-height: 58px;
+  overflow: hidden;
+  -webkit-transform: translateY(-5px);
+  transform: translateY(-5px);
+}
+
+.GProuteFormMini button[id^=GPshowRouteExclusionsPicto],
+.GProuteFormMini .GProuteStageRemove,
+.GProuteFormMini div[id^=GProuteStageAdd],
+.GProuteFormMini .GPpanelFooter {
+  display: none;
+}
+
+.GProuteStageRemove {
+  background-position: -84px 0;
+}
+
+div[id^=GProuteStageAdd] {
+  background-position: -56px 0;
+}
+
+[class*="GPlocationPoint"] {
+  position: relative;
+}
+
+/* Mode choice */
+
+div[id^=GProuteModeChoice] {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  margin: 15px 0;
+}
+
+div[id^=GProuteTransportChoice] > .GProuteTransportChoice {
+  display: inline-flex;
+}
+
+/* Showing/hiding exclusions */
+
+button[id^="GPshowRouteExclusions"] {
+  position: absolute;
+  border: unset;
+  bottom: 0;
+  right: 0;
+  transition: all 0.5s ease-out 0s;
+}
+
+button[id^=GPshowRouteExclusions][aria-pressed="false"]  + div[id^=GProuteExclusions] {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+}
+
+button[id^=GPshowRouteExclusions][aria-pressed="true"] + div[id^=GProuteExclusions] {
+  display: block;
+  max-height: 76px;
+  opacity: 1;
+  margin-bottom: 15px;
+}
+
+div[id^=GProuteExclusions] {
+  transition: max-height 0.5s ease-in-out 0.25s, opacity 0.5s ease-in-out 0.25s, margin 0.3s ease-in-out 0.25s;
+  overflow: hidden;
+}
+
+/* Result panel */
+
+div[id^=GProuteResultsPanel] {
+  padding: 15px;
+}
+
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime]  {
+  color: #366291;
+}
+
+div[id^=GProuteResultsNew] {
+  background-color: #366291;
+  background-image: url("img/GProuteOptions.png");
+}
+
+input[id^=GProuteResultsShowDetails] + label:hover,
+input[id^=GProuteResultsShowDetails] + label + label:hover {
+  color: #366291;
+}
+
+div[id^=GProuteResultsStages] {
+  margin-bottom: 15px;
+}
+
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime] {
+  display: inline-block;
+  line-height: 18px;
+}
+
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime] {
+  width: 80px;
+  font-weight: bold;
+}
+
+div[id^=GProuteResults-] {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -webkit-justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 10px;
+}
+
+select[id^=GProuteResultsComputationSelect] {
+  width: 100px;
+}
+
+div[id^=GProuteResultsNew] {
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  opacity: 0.8;
+  background-position: -224px 0;
+  transition: opacity 0.2s ease-out;
+  cursor: pointer;
+}
+
+div[id^=GProuteResultsNew]:hover {
+  opacity: 1;
+}
+
+

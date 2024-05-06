@@ -1,0 +1,17 @@
+/* MEASURELENGTH POSITION */
+
+/* Showing/hiding drawing panel */
+
+button[id^="GPshowMeasureLengthPicto-"] {
+  background-image: url("img/GPmeasuresOpen.png");
+  background-repeat: no-repeat;
+  background-position: -24px center;
+}
+  
+button[id^="GPshowMeasureLengthPicto-"][aria-pressed="false"] {
+  background-color: rgba(0,60,136,0.5);
+}
+  
+button[id^="GPshowMeasureLengthPicto-"][aria-pressed="true"] {
+    background-color: rgba(0,60,136,0.7);
+}
