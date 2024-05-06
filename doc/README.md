@@ -130,13 +130,91 @@ Une documentation technique (**jsdoc**), une **demo** et un **generateur de cart
 
 ### Téléchargement
 
-Vous pouvez récupérer l'extension Géoplateforme pour OpenLayers soit par [téléchargement direct](#download-direct), soit en utilisant le [gestionnaire de dépendances javascript NPM](#download-npm).
+Vous pouvez récupérer les extensions Géoplateforme pour OpenLayers soit par [téléchargement direct](#download-direct), soit en utilisant le [gestionnaire de dépendances javascript NPM](#download-npm).
 
-L'extension Géoplateforme pour OpenLayers comprend l'arborescence de fichiers suivante :
+Les extensions Géoplateforme pour OpenLayers peuvent être récupérées sous 2 formats :
+
+* toutes les extensions dans un seul fichier :
 
 ```text
-    todo : liste des bundles !
+    .
+    ├── Dsfr.css
+    ├── Portail.css
+    ├── Widgets.css
+    ├── Widgets.js
+    └── Widgets.js.map
 ```
+
+* ou une extension par fichier JS avec la CSS associée :
+
+```text
+    .
+    ├── CRS.js
+    ├── CRS.js.map
+    ├── Drawing.css
+    ├── Drawing.js
+    ├── Drawing.js.map
+    ├── Dsfr.css
+    ├── Editor.css
+    ├── Editor.js
+    ├── Editor.js.map
+    ├── ElevationPath.css
+    ├── ElevationPath.js
+    ├── ElevationPath.js.map
+    ├── Export.css
+    ├── Export.js
+    ├── Export.js.map
+    ├── Formats.js
+    ├── Formats.js.map
+    ├── GeoportalAttribution.css
+    ├── GeoportalAttribution.js
+    ├── GeoportalAttribution.js.map
+    ├── GeoportalMousePosition.css
+    ├── GeoportalMousePosition.js
+    ├── GeoportalMousePosition.js.map
+    ├── GetFeatureInfo.css
+    ├── GetFeatureInfo.js
+    ├── GetFeatureInfo.js.map
+    ├── Isocurve.css
+    ├── Isocurve.js
+    ├── Isocurve.js.map
+    ├── LayerImport.css
+    ├── LayerImport.js
+    ├── LayerImport.js.map
+    ├── Layers.js
+    ├── Layers.js.map
+    ├── LayerSwitcher.css
+    ├── LayerSwitcher.js
+    ├── LayerSwitcher.js.map
+    ├── LocationSelector.css
+    ├── LocationSelector.js
+    ├── LocationSelector.js.map
+    ├── MeasureArea.css
+    ├── MeasureArea.js
+    ├── MeasureArea.js.map
+    ├── MeasureAzimuth.css
+    ├── MeasureAzimuth.js
+    ├── MeasureAzimuth.js.map
+    ├── MeasureLength.css
+    ├── MeasureLength.js
+    ├── MeasureLength.js.map
+    ├── Portail.css
+    ├── ReverseGeocode.css
+    ├── ReverseGeocode.js
+    ├── ReverseGeocode.js.map
+    ├── Route.css
+    ├── Route.js
+    ├── Route.js.map
+    ├── SearchEngine.css
+    ├── SearchEngine.js
+    └── SearchEngine.js.map
+
+```
+
+Il existe 2 thèmes pour les extensions :
+
+* DSFR
+* Classic
 
 Les scripts d'OpenLayers s'obtiennent sur [la page de téléchargement d'OpenLayers](https://openlayers.org/download/).
 

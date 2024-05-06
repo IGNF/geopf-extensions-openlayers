@@ -45,7 +45,7 @@ ou
 ./node_modules/.bin/webpack --config build/webpack/modules.webpack.config.js --mode=development
 ```
 
-ou 
+ou
 
 ```sh
 ./node_modules/.bin/webpack --config build/webpack/controls.webpack.config.js --env entry=GeoportalAttribution,Drawing,Editor,ElevationPath,Export,GetFeatureInfo,Isocurve,LayerImport,LayerSwitcher,LocationSelector,MousePosition,ReverseGeocode,Route,SearchEngine,MeasureArea,MeasureLength,MeasureAzimuth --mode=development

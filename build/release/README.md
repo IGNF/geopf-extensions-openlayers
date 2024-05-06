@@ -43,3 +43,8 @@ utilisation standard :
         GetFeatureInfo
     } from "geoportal-extensions-openlayers";
 ```
+
+## creation du changelog
+
+> workflow de creation / mise à jour du changelog lors d'une publication d'une release
+

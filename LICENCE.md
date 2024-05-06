@@ -5,19 +5,17 @@ This software is released under the licence CeCILL-B (Free BSD compatible)
 
 You may obtain a copy of the License at :
 
-http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt (english)
+<http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt> (english)
 
-http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.txt (french)
+<http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.txt> (french)
 
-see http://www.cecill.info/
+see <http://www.cecill.info/>
 
 Copyright (c) 2016 IGN
 
-
-## Third party code :
+## Third party code
 
 The Geoplatform Extensions include the following third party code :
-
 
 ### Geoplatform resources access library
 
@@ -25,21 +23,20 @@ This software is released under the licence CeCILL-B (Free BSD compatible)
 
 You may obtain a copy of the License at :
 
-http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt (english)
+<http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt> (english)
 
-http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.txt (french)
+<http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.txt> (french)
 
-see http://www.cecill.info/
+see <http://www.cecill.info/>
 
 Copyright (c) 2016 IGN
-
 
 ### Sortable - is a JavaScript library for reorderable drag-and-drop lists on modern browsers and touch devices
 
 Released under MIT LICENCE
 
 Copyright 2013-2016 Lebedev Konstantin <ibnRubaXa@gmail.com>
-https://github.com/SortableJS/Sortable/
+<https://github.com/SortableJS/Sortable/>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -60,8 +57,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE._
 
-
-### Proj4js -- Javascript reprojection library.
+### Proj4js -- Javascript reprojection library
 
 Authors:
 
@@ -92,7 +88,7 @@ Copyright (c) 2014, Mike Adair, Richard Greenwood, Didier Richard, Stephen Irons
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE._
 
-### ol-mapbox-style -- Create OpenLayers maps from Mapbox Style objects.
+### ol-mapbox-style -- Create OpenLayers maps from Mapbox Style objects
 
 Copyright 2016-present Boundless Spatial
 

@@ -1,22 +1,26 @@
-# Extension Geoplateforme OpenLayers, version __VERSION__
+# Extension Geoplateforme OpenLayers, 🔖 version __VERSION__
 
 **__DATE__**
 > Release Extension Geoplateforme openlayers
 
-## Summary
+## 🎉 Summary
 
-## Changelog
+## 💥 Breaking changes
 
-* [Added]
+## 📖 Changelog
 
-* [Changed]
+* ✨ [Added]
 
-* [Deprecated]
+* 🔨 [Changed]
 
-* [Removed]
+* 🔥 [Deprecated]
 
-* [Fixed]
+* 🔥 [Removed]
 
-* [Security]
+* 🐛 [Fixed]
+
+* 🔒 [Security]
+
+## 🚀 Unreleased
 
 ---
