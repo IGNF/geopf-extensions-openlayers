@@ -1,7 +1,7 @@
 
 # Extensions Geoplateforme
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/IGNF/geoportal-extensions-openlayers/build.yml)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflows/status/IGNF/geoportal-extensions-openlayers/build.yml)
 
 ![NPM Version](https://img.shields.io/npm/v/geoportal-extensions-openlayers)
 
