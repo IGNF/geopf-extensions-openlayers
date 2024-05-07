@@ -1,9 +1,9 @@
 
 # Extensions Geoplateforme
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflows/status/IGNF/geoportal-extensions-openlayers/build.yml)
-
+[![Build](https://github.com/IGNF/geoportal-extensions-openlayers/actions/workflows/build.yml/badge.svg)](https://github.com/IGNF/geoportal-extensions-openlayers/actions/workflows/build.yml)
 ![NPM Version](https://img.shields.io/npm/v/geoportal-extensions-openlayers)
+[![CeCILL License](https://img.shields.io/badge/licence-CeCILL--B-blue.svg)](https://raw.githubusercontent.com/IGNF/geoportal-extensions-openlayers/main/LICENCE.md)
 
 ---
 
