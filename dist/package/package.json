@@ -1,8 +1,8 @@
 {
   "name": "geoportal-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.17",
-  "date": "08/05/2024",
+  "version": "1.0.0-beta.16",
+  "date": "06/05/2024",
   "module": "src/index.js",
   "directories": {},
   "engines": {
@@ -35,7 +35,6 @@
     "proj4": "2.10.0",
     "sortablejs": "1.15.2",
     "typescript": "^5.3.3",
-    "whatwg-fetch": "3.6.20",
-    "xmldom": "^0.6.0"
+    "whatwg-fetch": "3.6.20"
   }
 }
