@@ -2,6 +2,8 @@
 const fse = require("fs-extra");
 const path = require("path");
 const child_process = require("child_process");
+const fg = require("fast-glob");
+const base64Img = require("base64-img");
 
 async function main () {
     // creation du répertoire de build
@@ -23,7 +25,37 @@ async function main () {
     
     fse.copySync("src", path.join(builddir, "src"), { filter : copyFilter });
     console.log("✔ correctly copy src dir !");
-    
+
+    // encodage base64 des images contenues dans les css
+    const entries = fg.globSync(path.join(builddir, "src", "**/*.{css,scss}"));
+    for (let index = 0; index < entries.length; index++) {
+        const entry = entries[index];
+        
+        let result = "";
+        const lines = fse.readFileSync(path.resolve(entry), "utf8").split("\n");
+        lines.forEach(line => {
+            let start = line.indexOf("url");
+            if (start >= 0) {
+                start = line.indexOf("(", start);
+                let end = line.indexOf(")");
+                let url = line.substring(start + 1, end);
+                if (url.startsWith("\"") || url.startsWith("'")) {
+                    // quotes are optional in CSS - let's get rid of them if they're there
+                    url = url.substring(1, url.length - 1);
+                }
+                if (!url.startsWith("data:")) {
+                    url = path.normalize(url);
+                    url = path.join(path.dirname(entry), url);
+                    const data = base64Img.base64Sync(url);
+                    line = line.substring(0, start) + "('" + data + "'" + line.substring(end);
+                }
+            }
+            result += line + "\n";
+        });
+        fse.writeFileSync(entry, result);
+    }
+    console.log("✔ correctly encode css dir !");
+
     // generation des definitions
     var typescmd = "npm run generate-types";
     try {
@@ -33,7 +65,7 @@ async function main () {
         console.error(e);
         process.exit(1);
     }
-    
+
     fse.copySync(path.join("dist", "src"), path.join(builddir, "src"), { filter : copyFilter });
     console.log("✔ correctly copy types dir !");
     
@@ -75,6 +107,8 @@ async function main () {
     }
     fse.copySync(path.join("dist", "bundle", "Dsfr.css"), path.join(builddir, "css", "Dsfr.css"));
     fse.copySync(path.join("dist", "bundle", "Classic.css"), path.join(builddir, "css", "Classic.css"));
+    fse.copySync(path.join("dist", "bundle", "Dsfr.css.map"), path.join(builddir, "css", "Dsfr.css.map"));
+    fse.copySync(path.join("dist", "bundle", "Classic.css.map"), path.join(builddir, "css", "Classic.css.map"));
     console.log("✔ correctly copy css files !");
     
     // creation du package tgz
@@ -86,6 +120,12 @@ async function main () {
         console.error(e);
         process.exit(1);
     }
+
+    // creation lien symbolic
+    var srcPath = path.join(builddir, "geoportal-extensions-openlayers-" + pkg.version + ".tgz");
+    var destPath = path.join(builddir, "geoportal-extensions-openlayers.tgz");
+    fse.ensureSymlinkSync(srcPath, destPath);
+    console.log("✔ correctly link package tgz !");
 }
 
 main().catch((e) => {
