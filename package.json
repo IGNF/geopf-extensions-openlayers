@@ -14,8 +14,8 @@
     "eslint": "eslint src/",
     "test": "npm run test:serve",
     "test:serve": "echo \"Warning: target not yet implemented!\" && exit 0",
-    "sample:bundle": "webpack serve --config build/webpack/bundle.webpack.config --static-directory ./ --mode development --open samples/index-bundle.html",
-    "sample:modules": "webpack serve --config build/webpack/modules.webpack.config --static-directory ./ --mode development --open samples/index-modules.html",
+    "sample:bundle": "webpack serve --config build/webpack/bundle.webpack.config --mode development",
+    "sample:modules": "webpack serve --config build/webpack/modules.webpack.config--mode development",
     "generate-types": "npx tsc -p tsconfig.json",
     "generate-jsdoc": "jsdoc -c build/jsdoc/jsdoc.json",
     "generate-themes": "echo \"Warning: target not yet implemented!\" && exit 0",
@@ -85,7 +85,7 @@
     "webpack": "^5.90.1",
     "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1",
+    "webpack-dev-server": "^5.0.0",
     "webpack-node-externals": "^3.0.0"
   }
 }
