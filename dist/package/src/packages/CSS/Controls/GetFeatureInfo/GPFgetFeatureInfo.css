@@ -8,3 +8,4 @@ div[id^=GPgetFeatureInfo-] {
 button[id^="GPgetFeatureInfoPicto-"][aria-pressed="false"] {}
   
 button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {}
+
