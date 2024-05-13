@@ -63,15 +63,13 @@ async function main () {
     fse.mkdirSync(path.join(builddir, "css"), { recursive : true });
     console.log("✔ correctly mkdir css dir !");
     
-    if (!fse.pathExistsSync(path.join("dist", "bundle"))) {
-        var bundlecmd = "npm run build:bundle";
-        try {
-            child_process.execSync(`${bundlecmd}`);
-            console.log("✔ correctly generate bundle dir !");
-        } catch (e) {
-            console.error(e);
-            process.exit(1);
-        }
+    var bundlecmd = "npm run build:bundle";
+    try {
+        child_process.execSync(`${bundlecmd}`);
+        console.log("✔ correctly generate bundle dir !");
+    } catch (e) {
+        console.error(e);
+        process.exit(1);
     }
     fse.copySync(path.join("dist", "bundle", "Dsfr.css"), path.join(builddir, "css", "Dsfr.css"));
     fse.copySync(path.join("dist", "bundle", "Classic.css"), path.join(builddir, "css", "Classic.css"));
