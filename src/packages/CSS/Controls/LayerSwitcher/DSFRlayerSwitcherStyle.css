@@ -1,0 +1,14 @@
+div[id^=GPlayerSwitcher-] {
+    height: 44px;
+}
+
+button[id^=GPshowLayersListPicto] {
+    width: 40px;
+}
+
+.gpf-btn-icon-layerswitcher {
+    background-image: url("img/layerswitcher.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}

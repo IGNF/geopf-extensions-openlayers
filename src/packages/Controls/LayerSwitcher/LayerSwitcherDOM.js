@@ -62,7 +62,7 @@ var LayerSwitcherDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher");
-        container.className = "GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPwidget gpf-widget"; // gpf-widget-button
         return container;
     },
 
@@ -111,7 +111,7 @@ var LayerSwitcherDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowLayersListPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn-icon-layerswitcher fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn";
         button.htmlFor = this._addUID("GPshowLayersList");
         button.title = "Afficher/masquer le gestionnaire de couches";
         button.setAttribute("tabindex", "0");
@@ -127,7 +127,7 @@ var LayerSwitcherDOM = {
                     for (var i = 0; i < layers.length; i++) {
                         layers[i].className = "GPlayerInfo";
                     }
-                    document.getElementById(self._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
                 }
             });
         } else if (button.attachEvent) {
@@ -139,7 +139,7 @@ var LayerSwitcherDOM = {
                     for (var i = 0; i < layers.length; i++) {
                         layers[i].className = "GPlayerInfo";
                     }
-                    document.getElementById(self._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
                 }
             });
         }
@@ -591,7 +591,7 @@ var LayerSwitcherDOM = {
         var self = this;
         /** Call event function on close click */
         var onCloseClick = function () {
-            document.getElementById(self._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
+            document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
             var layers = document.getElementsByClassName("GPlayerInfoOpened");
             for (var i = 0; i < layers.length; i++) {
                 layers[i].className = "GPlayerInfo";

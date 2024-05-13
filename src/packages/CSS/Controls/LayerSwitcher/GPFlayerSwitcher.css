@@ -5,12 +5,6 @@ div[id^=GPlayerSwitcher-] {
   right: 8px;
 }
 
-div[id^=GPlayerSwitcher-] {
-  /* dsfr */
-  flex-direction: row-reverse;
-  align-items: flex-start;
-}
-
 div[id^=GPlayerSwitcher-] [draggable] {
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -33,14 +27,6 @@ input[id^=GPshowLayersList-] {
 
 /* Showing/hiding layers list */
 
-button[id^=GPshowLayersListPicto] {
-  float: right;
-  /* transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s; */
-  background-position: -2px center;
-  background-repeat: no-repeat;
-  background-image: url("img/GPshowLayersList.png");
-}
-
 button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog {
   display: none;
   visibility: hidden;
@@ -54,17 +40,24 @@ button[id^="GPshowLayersListPicto-"][aria-pressed="true"] + dialog {
   opacity: 100%;
 }
 
-button[id^=GPshowLayersListPicto][aria-pressed="true"] {
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
-  background-position: -35px center;
-  /* transition: border-radius 0.5s ease-out 0s, opacity 0.5s ease-out 0s; */
+/* Layers list */
+/* positionnement actif */
+.position > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayersList] {
+  position: absolute;
+}
+.position > div[id^=GPlayerSwitcher-] > button[id^=GPshowLayersListPicto-] {
+  float: unset;
 }
 
-/* Layers list */
+/* positionnement inactif */
+dialog[id^=GPlayersList] {
+ position: relative;
+}
+button[id^=GPshowLayersListPicto-] {
+  float: right;
+}
 
 dialog[id^=GPlayersList] {
-  position: relative;
   border-bottom-right-radius: 0;
   opacity: 0;
   overflow: auto;
@@ -72,6 +65,7 @@ dialog[id^=GPlayersList] {
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
+  height: initial;
   max-height: 232px;
   width: 180px;
   opacity: 1;

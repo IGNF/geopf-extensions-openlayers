@@ -39,7 +39,6 @@
 {{#content "js"}}
             <script type="text/javascript">
                 var map;
-                var layerSwitcher;
                 var addMapsLayer, addOSMLayer;
                 var osm, maps;
 
@@ -63,10 +62,48 @@
                     });
 
 					// Appel du LayerSwitcher
-                    layerSwitcher = new ol.control.LayerSwitcher({});
+                    var layerSwitcher0 = new ol.control.LayerSwitcher({
+                        options : {
+                            position : "bottom-right",
+                            collapsed : false
+                        }
+                    });
 
 					// Ajout du LayerSwitcher à la carte
-                    map.addControl(layerSwitcher);
+                    map.addControl(layerSwitcher0);
+
+                    // Appel du LayerSwitcher
+                    var layerSwitcher1 = new ol.control.LayerSwitcher({
+                        options : {
+                            position : "bottom-left",
+                            collapsed : false
+                        }
+                    });
+
+					// Ajout du LayerSwitcher à la carte
+                    map.addControl(layerSwitcher1);
+
+                    // Appel du LayerSwitcher
+                    var layerSwitcher2 = new ol.control.LayerSwitcher({
+                        options : {
+                            position : "top-left",
+                            collapsed : false
+                        }
+                    });
+
+					// Ajout du LayerSwitcher à la carte
+                    map.addControl(layerSwitcher2);
+
+                    // Appel du LayerSwitcher
+                    var layerSwitcher3 = new ol.control.LayerSwitcher({
+                        options : {
+                            // position : "top-right",
+                            collapsed : false
+                        }
+                    });
+
+					// Ajout du LayerSwitcher à la carte
+                    map.addControl(layerSwitcher3);
                 };
 
                 Gp.Services.getConfig({

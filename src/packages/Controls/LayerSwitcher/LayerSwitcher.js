@@ -113,6 +113,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             // on ajoute les couches
             this._addMapLayers(map);
 
+            // mode "collapsed"
+            if (!this.collapsed) {
+                this._showLayerSwitcherButton.setAttribute("aria-pressed", true);
+            }
+
             // At every map movement, layer switcher may be updated,
             // according to layers on map, and their range.
             this._listeners.onMoveListener = map.on(
@@ -313,7 +318,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             }
             // close layer info element if open, to update information.
             if (infodiv && infodiv.className === "GPlayerInfoOpened") {
-                document.getElementById(this._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
+                document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
                 infodiv.className = "GPlayerInfo";
             }
         }
@@ -341,7 +346,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         // close layer info element if open.
         var infodiv = document.getElementById(this._addUID("GPinfo_ID_" + layerID));
         if (infodiv && infodiv.className === "GPlayerInfoOpened") {
-            document.getElementById(this._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
+            document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
             infodiv.className = "GPlayerInfo";
         }
         // remove layer div
@@ -383,7 +388,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             for (var i = 0; i < layers.length; i++) {
                 layers[i].className = "GPlayerInfo";
             }
-            document.getElementById(this._addUID("GPlayerInfoPanel")).className = "GPlayerInfoPanelClosed";
+            document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
         }
         document.getElementById(this._addUID("GPshowLayersList")).checked = !collapsed;
     }
@@ -535,7 +540,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         );
 
         // ajout dans le container principal du picto du controle
-        var picto = this._createMainPictoElement();
+        var picto = this._showLayerSwitcherButton = this._createMainPictoElement();
         container.appendChild(picto);
 
         // ajout dans le container principal de la liste des layers
@@ -863,7 +868,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
             panel = document.getElementById(this._addUID("GPlayerInfoPanel"));
             if (panel.classList !== undefined) {
-                panel.classList.remove("GPpanel");
+                // panel.classList.remove("GPpanel");
                 panel.classList.remove("GPlayerInfoPanelOpened");
                 panel.classList.add("GPlayerInfoPanelClosed");
             }
@@ -886,7 +891,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         panel = document.getElementById(this._addUID("GPlayerInfoPanel"));
         if (panel.classList !== undefined) {
-            panel.classList.add("GPpanel");
+            // panel.classList.add("GPpanel");
             panel.classList.remove("GPlayerInfoPanelClosed");
             panel.classList.add("GPlayerInfoPanelOpened");
         }

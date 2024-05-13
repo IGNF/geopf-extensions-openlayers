@@ -1,11 +1,24 @@
-/* LAYER SWITCHER OL3 */
+/* LAYER SWITCHER */
 
+div[id^=GPlayerSwitcher-] {
+  height: 32px;
+}
 
+button[id^=GPshowLayersListPicto] {
+  /* transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s; */
+  background-position: -2px center;
+  background-repeat: no-repeat;
+  background-image: url("img/GPshowLayersList.png");
+}
 
-
+button[id^=GPshowLayersListPicto][aria-pressed="true"] {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  background-position: -35px center;
+  /* transition: border-radius 0.5s ease-out 0s, opacity 0.5s ease-out 0s; */
+}
 
 /* Layers list */
-
 
 /* Layer info panel */
 

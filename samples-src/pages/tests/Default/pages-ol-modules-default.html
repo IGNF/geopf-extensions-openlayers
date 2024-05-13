@@ -101,20 +101,20 @@
                   position : "bottom-right"
                 });
                 map.addControl(route);
-                var reverse = new ol.control.ReverseGeocode({
-                  position : "top-right"
-                });
-                map.addControl(reverse);
-                var search = new ol.control.SearchEngine({
-                  position : "top-right"
-                });
-                map.addControl(search);
                 var feature =  new ol.control.GetFeatureInfo({
                   options :{
                     position : "top-right"
                   }
                 });
                 map.addControl(feature);
+                var reverse = new ol.control.ReverseGeocode({
+                  position : "top-right"
+                });
+                map.addControl(reverse);
+                var search = new ol.control.SearchEngine({
+                  position : "top-left"
+                });
+                map.addControl(search);
 
                 var measureLength = new ol.control.MeasureLength({
                   position : "top-left"
