@@ -93,7 +93,8 @@ module.exports = (env, argv) => {
             watchFiles : {
                 paths : ["src/**/*"],
                 options : {
-                    usePolling : true,
+                    usePolling : false,
+                    ignored : ["demos/**", "node_modules/**"]
                 },
             },
             devMiddleware : {
