@@ -115,11 +115,16 @@ module.exports = (env, argv) => {
         ],
         devtool : "source-map",
         devServer : {
-            https : true,
+            server : "https",
+            open : ["samples/index-modules.html"],
+            static : {
+                directory : path.join(rootdir)
+            },
             watchFiles : {
                 paths : ["src/**/*"],
                 options : {
-                    usePolling : true,
+                    usePolling : false,
+                    ignored : ["demos/**", "node_modules/**"]
                 },
             },
             devMiddleware : {
