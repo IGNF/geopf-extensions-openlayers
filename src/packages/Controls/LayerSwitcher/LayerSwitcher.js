@@ -746,8 +746,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var divId = e.target.id; // ex GPvisibilityPicto_ID_26
         var layerID = SelectorID.index(divId); // ex. 26
         var layer = this._layers[layerID].layer;
-
-        layer.setVisible(e.target.checked);
+        layer.setVisible((e.target.ariaPressed === "true"));
     }
 
     /**
@@ -759,9 +758,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     _updateLayerVisibility (e) {
         var visible = e.target.getVisible();
         var id = e.target.gpLayerId;
-        var layerVisibilityInput = document.getElementById(this._addUID("GPvisibility_ID_" + id));
-        if (layerVisibilityInput) {
-            layerVisibilityInput.checked = visible;
+        var layerVisibility = document.getElementById(this._addUID("GPvisibilityPicto_ID_" + id));
+        if (layerVisibility) {
+            layerVisibility.ariaPressed = visible;
         }
     }
 

@@ -75,7 +75,19 @@ module.exports = (env, argv) => {
                         to : path.join(rootdir, "samples", "resources"),
                         context : path.join(rootdir, "samples-src", "resources"),
                         force : true
-                    }
+                    },
+                    {
+                        from : path.join(rootdir, "node_modules", "geoportal-access-lib"),
+                        to : path.join(rootdir, "samples", "resources", "vendor", "modules", "geoportal-access-lib"),
+                        context : path.join(rootdir, "node_modules", "geoportal-access-lib"),
+                        force : true
+                    },
+                    {
+                        from : path.join(rootdir, "node_modules", "@gouvfr"),
+                        to : path.join(rootdir, "samples", "resources", "vendor", "modules", "@gouvfr"),
+                        context : path.join(rootdir, "node_modules", "@gouvfr"),
+                        force : true
+                    },
                 ]
             }),
         ]

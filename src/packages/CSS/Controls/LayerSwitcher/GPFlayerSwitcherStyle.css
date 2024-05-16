@@ -70,37 +70,6 @@ div[id^=GPlayerInfoTitle] {
 }
 
 
-
-.GPlayerName {
-  left: 28px;
-  width: calc(100% - 56px);
-  line-height: 28px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding-left: 4px;
-  cursor: move;
-}
-
-.outOfRange .GPlayerName {
-  color: #AAA;
-}
-
-/* Showing layer advanced tools */
-
-
-.GPlayerAdvancedTools {
-  display: block;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
-}
-
-div[id^=GPlayerSwitcher-] input[type="checkbox"]:checked + label + .GPlayerAdvancedTools {
-  max-height: 28px;
-  opacity: 1;
-}
-
 /* Layer advanced tools */
 
 
@@ -144,12 +113,18 @@ div[id^=GPlayerInfoClose] {
   background-image: url("img/GPlayerInfo.png");
 }
 
-.GPlayerVisibility {
+button[id^=GPremove_ID_],
+button[id^=GPvisibilityPicto_ID_] {
+  border: none;
+  background-color: transparent;
+}
+
+button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
   left: 0;
   background-position: -28px 0;
 }
 
-input[type="checkbox"]:checked + .GPlayerVisibility {
+button[id^=GPvisibilityPicto_ID_][aria-pressed="true"] {
   background-position: 0 0;
 }
 

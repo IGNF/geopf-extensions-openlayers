@@ -7,8 +7,69 @@ button[id^=GPshowLayersListPicto] {
 }
 
 .gpf-btn-icon-layerswitcher {
-    background-image: url("img/layerswitcher.svg");
+    background-image: url("img/dsfr/layerswitcher.svg");
     background-repeat: no-repeat;
     background-size: auto auto;
     background-position: center center;
+}
+
+.gpf-btn-icon-ls-visibility {
+  background-image: url("img/dsfr/visible-open.svg");
+  background-repeat: no-repeat;
+  background-size: auto auto;
+  background-position: center center;
+  box-shadow: none;
+}
+
+button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
+    background-image: url("img/dsfr/visible-close.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+.gpf-btn-icon-ls-remove {
+    background-image: url("img/dsfr/remove.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+.gpf-btn-icon-ls-collapse {
+    background-image: url("img/dsfr/collapse.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
+    background-image: url("img/dsfr/collapse.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+button[id^=GPshowAdvancedTools_ID_] {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+div[id^=GPbasicTools_ID_] {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+}
+
+div[id^=GPadvancedTools_ID_] {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }

@@ -205,14 +205,11 @@ var LayerSwitcherDOM = {
 
         // ajout des outils basiques (visibility / layer name)
         container.appendChild(this._createBasicToolElement(obj));
+        
+        // ajout bouton des outils avancés
+        container.appendChild(this._createAdvancedToolShowElement(obj));
 
         // liste des outils avancés (layer info / opacity slider / opacity value / removal)
-        var array = this._createAdvancedToolShowElement(obj);
-        for (var i = 0; i < array.length; i++) {
-            container.appendChild(array[i]);
-        }
-
-        // ajout des outils avancés
         container.appendChild(this._createAdvancedToolElement(obj));
 
         return container;
@@ -241,11 +238,7 @@ var LayerSwitcherDOM = {
         div.className = "GPlayerBasicTools";
 
         div.appendChild(this._createBasicToolNameElement(obj));
-
-        var array = this._createBasicToolVisibilityElement(obj);
-        for (var i = 0; i < array.length; i++) {
-            div.appendChild(array[i]);
-        }
+        div.appendChild(this._createBasicToolVisibilityElement(obj));
 
         return div;
     },
@@ -277,49 +270,31 @@ var LayerSwitcherDOM = {
      * @returns {DOMElement[]} array containing input and label elements
      */
     _createBasicToolVisibilityElement : function (obj) {
-        // exemple :
-        // <input type="checkbox" id="GPvisibility_ID_Layer1" checked="">
-        // <label for="GPvisibility_ID_Layer1" id="GPvisibilityPicto_ID_Layer1" class="GPlayerVisibility" title="Afficher/masquer la couche"></label>
+        var visible = (typeof obj.visibility !== "undefined") ? obj.visibility : true;
 
-        var list = [];
-
-        var checked = (typeof obj.visibility !== "undefined") ? obj.visibility : true;
-        var id = this._addUID("GPvisibility_ID_" + obj.id);
-
-        var input = document.createElement("input");
-        input.id = id;
-        input.type = "checkbox";
-        input.checked = checked;
-
-        var label = document.createElement("label");
-        label.htmlFor = id;
-        label.id = this._addUID("GPvisibilityPicto_ID_" + obj.id);
-        label.className = "GPlayerVisibility gpf-label fr-label";
-        label.title = "Afficher/masquer la couche";
-
-        // add event for visibility change
+        var button = document.createElement("button");
+        button.id = this._addUID("GPvisibilityPicto_ID_" + obj.id);
+        button.className = "GPlayerVisibility gpf-btn gpf-btn-icon gpf-btn-icon-ls-visibility fr-btn fr-btn--tertiary";
+        button.title = "Afficher/masquer la couche";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", visible);
+        
         var context = this;
-        if (input.addEventListener) {
-            input.addEventListener(
-                "click",
-                function (e) {
-                    context._onVisibilityLayerClick(e);
-                }
-            );
-        } else if (input.attachEvent) {
-            // internet explorer
-            input.attachEvent(
-                "onclick",
-                function (e) {
-                    context._onVisibilityLayerClick(e);
-                }
-            );
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                context._onVisibilityLayerClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                context._onVisibilityLayerClick(e);
+            });
         }
 
-        list.push(input);
-        list.push(label);
-
-        return list;
+        return button;
     },
 
     /**
@@ -330,25 +305,28 @@ var LayerSwitcherDOM = {
      * @returns {DOMElement[]} array containing input and label elements
      */
     _createAdvancedToolShowElement : function (obj) {
-        // <input type="checkbox" id="GPshowAdvancedTools_ID_Layer1">
-        // <label for="GPshowAdvancedTools_ID_Layer1" id="GPshowAdvancedToolsPicto_ID_Layer1" class="GPshowMoreOptions GPshowLayerAdvancedTools" title="Plus d'outils"></label>
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowAdvancedTools_ID_" + obj.id);
 
-        var list = [];
+        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowLayerAdvancedTools gpf-btn gpf-btn-icon gpf-btn-icon-ls-collapse fr-btn--sm fr-btn--tertiary";
+        button.title = "Plus d'outils";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
 
-        var label = document.createElement("label");
-        label.id = this._addUID("GPshowAdvancedToolsPicto_ID_" + obj.id);
-        label.htmlFor = this._addUID("GPshowAdvancedTools_ID_" + obj.id);
-        label.title = "Plus d'outils";
-        label.className = "GPshowMoreOptions GPshowLayerAdvancedTools gpf-label fr-label";
+        var context = this;
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+            });
+        }
 
-        var input = document.createElement("input");
-        input.type = "checkbox";
-        input.id = this._addUID("GPshowAdvancedTools_ID_" + obj.id);
-
-        list.push(input);
-        list.push(label);
-
-        return list;
+        return button;
     },
 
     /**
@@ -394,34 +372,30 @@ var LayerSwitcherDOM = {
      * @returns {DOMElement} container
      */
     _createAdvancedToolDeleteElement : function (obj) {
-        // exemple :
-        // <div id="GPremove_ID_Layer1" class="GPlayerRemove" title="Supprimer la couche" onclick="GPdropLayer(this);"></div>
-
-        var div = document.createElement("div");
-        div.id = this._addUID("GPremove_ID_" + obj.id);
-        div.className = "GPlayerRemove";
-        div.title = "Supprimer la couche";
-        div.layerId = obj.id;
-
+        var button = document.createElement("button");
+        button.id = this._addUID("GPremove_ID_" + obj.id);
+        button.className = "GPlayerRemove gpf-btn gpf-btn-icon gpf-btn-icon-ls-remove fr-btn fr-btn--tertiary";
+        button.title = "Supprimer la couche";
+        button.layerId = obj.id;
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", true);
+        
         var context = this;
-        if (div.addEventListener) {
-            div.addEventListener(
-                "click",
-                function (e) {
-                    context._onDropLayerClick(e);
-                }
-            );
-        } else if (div.attachEvent) {
-            // internet explorer
-            div.attachEvent(
-                "onclick",
-                function (e) {
-                    context._onDropLayerClick(e);
-                }
-            );
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                context._onDropLayerClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                context._onDropLayerClick(e);
+            });
         }
 
-        return div;
+        return button;
     },
 
     /**
