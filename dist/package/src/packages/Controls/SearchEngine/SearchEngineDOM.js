@@ -28,7 +28,7 @@ var SearchEngineDOM = {
     // ################################################################### //
     // ################### Methods of main container ##################### //
     // ################################################################### //
-    
+
     /**
      * SElement with picto and search input
      * @returns {DOMElement} DOM element
@@ -61,7 +61,7 @@ var SearchEngineDOM = {
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
             if (status) {}
-            
+
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
@@ -109,7 +109,7 @@ var SearchEngineDOM = {
             }
             document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementHidden", "GPelementVisible");
             document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-hidden", "gpf-visible");
-            
+
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             // cf. FIXME
@@ -207,12 +207,14 @@ var SearchEngineDOM = {
                     prev.className = "GPautoCompleteProposal gpf-panel__items current";
                     prev.style.color = "#000000";
                     prev.style["background-color"] = "#CEDBEF";
+                    current.scrollIntoView();
                     break;
                 case 40: // arrow down
                     current.className = "GPautoCompleteProposal gpf-panel__items";
                     next.className = "GPautoCompleteProposal gpf-panel__items current";
                     next.style.color = "#000000";
                     next.style["background-color"] = "#CEDBEF";
+                    current.scrollIntoView();
                     break;
                 case 13: // enter
                     // cf. FIXME
@@ -222,7 +224,6 @@ var SearchEngineDOM = {
             }
 
             current.focus();
-            current.scrollIntoView();
         });
 
         form.appendChild(input);
@@ -253,7 +254,7 @@ var SearchEngineDOM = {
         return buttonReset;
     },
 
-    
+
     _createButtonsElement : function () {
         var div = document.createElement("div");
         div.className = "GPbuttonsContainer";
@@ -280,7 +281,7 @@ var SearchEngineDOM = {
         button.addEventListener("click", function (e) {
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
-            
+
             var id = "#GPsearchInput-" + self._uid;
             if (status) {
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
@@ -291,7 +292,7 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-hidden", "gpf-visible");
                 document.querySelector(id + " input").disabled = true;
             }
-            
+
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
 
@@ -336,7 +337,7 @@ var SearchEngineDOM = {
     },
 
     /**
-     * Show search by coordinate button 
+     * Show search by coordinate button
      *
      * @returns {DOMElement} DOM element
      */
@@ -1163,7 +1164,7 @@ var SearchEngineDOM = {
         labelLng.id = this._addUID("GPcoordinateSearchLngLabel");
         labelLng.htmlFor = "coordinate-lng";
         labelLng.innerHTML = (type === "Geographical") ? "Longitude :" : "Y :";
-        
+
         return labelLng;
     },
     /**
@@ -1192,17 +1193,17 @@ var SearchEngineDOM = {
                 return this._setCoordinateSearchLngDMSElement();
                 break;
             case "DEC":
-                input.title += " géographiques (en decimal)"; 
+                input.title += " géographiques (en decimal)";
                 input.type = "number";
                 input.min = "-180";
                 input.max = "180";
                 break;
             case "M":
-                input.title += " cartésiennes (en mètre)"; 
+                input.title += " cartésiennes (en mètre)";
                 input.type = "number";
                 break;
             case "KM":
-                input.title += " cartésiennes (en kilomètre)"; 
+                input.title += " cartésiennes (en kilomètre)";
                 input.type = "number";
                 break;
             default:
@@ -1215,39 +1216,39 @@ var SearchEngineDOM = {
         div.id = this._addUID("GPcoordinateSearchLngDMS");
         div.innerHTML = `
         <div class="GPflexInput gpf-flex">
-            <input step="1" 
-                id="GPcoordinatSearchInputSexLonDeg" 
-                class="gpf-input fr-input" 
-                name="inputSexLonDeg" 
+            <input step="1"
+                id="GPcoordinatSearchInputSexLonDeg"
+                class="gpf-input fr-input"
+                name="inputSexLonDeg"
                 title="Saisir une valeur de degré entre 0° et 180°"
-                type="number" 
-                required="" 
-                min="0" 
+                type="number"
+                required=""
+                min="0"
                 max="180">
             <label>°</label>
-            <input step="1" 
-                id="GPcoordinatSearchInputSexLonMin" 
-                class="gpf-input fr-input" 
-                name="inputSexLonMin" 
+            <input step="1"
+                id="GPcoordinatSearchInputSexLonMin"
+                class="gpf-input fr-input"
+                name="inputSexLonMin"
                 title="Saisir une valeur de minute entre 0' et 59'"
-                type="number" 
-                required="" 
-                min="0" 
+                type="number"
+                required=""
+                min="0"
                 max="59">
             <label>'</label>
-            <input step="any" 
-                id="GPcoordinatSearchInputSexLonSec" 
-                class="gpf-input fr-input" 
-                name="inputSexLonSec" 
+            <input step="any"
+                id="GPcoordinatSearchInputSexLonSec"
+                class="gpf-input fr-input"
+                name="inputSexLonSec"
                 title="Saisir une valeur de seconde entre 0'' et 59''"
-                type="number" 
-                required="" 
-                min="0" 
+                type="number"
+                required=""
+                min="0"
                 max="59.9999">
             <label>"</label>
-            <select 
-                id="GPcoordinatSearchInputSexLonToward" 
-                class="GPselect gpf-select fr-select" 
+            <select
+                id="GPcoordinatSearchInputSexLonToward"
+                class="GPselect gpf-select fr-select"
                 title="Saisir une direction pour Est et 0uest"
                 name="inputSexLonToward">
                 <option value="O">O</option>
@@ -1272,7 +1273,7 @@ var SearchEngineDOM = {
         labelLat.id = this._addUID("GPcoordinateSearchLatLabel");
         labelLat.htmlFor = "coordinate-lat";
         labelLat.innerHTML = (type === "Geographical") ? "Latitude :" : "X :";
-        
+
         return labelLat;
     },
     /**
@@ -1296,22 +1297,22 @@ var SearchEngineDOM = {
         input.required = "";
         switch (code) {
             case "DMS":
-                input.title += " géographiques (en sexa)"; 
+                input.title += " géographiques (en sexa)";
                 input.className = "GPelementHidden gpf-hidden";
                 return this._setCoordinateSearchLatDMSElement();
                 break;
             case "DEC":
-                input.title += " géographiques (en decimal)"; 
+                input.title += " géographiques (en decimal)";
                 input.type = "number";
                 input.min = "-180";
                 input.max = "180";
                 break;
             case "M":
-                input.title += " cartésiennes (en mètre)"; 
+                input.title += " cartésiennes (en mètre)";
                 input.type = "number";
                 break;
             case "KM":
-                input.title += " cartésiennes (en kilomètre)"; 
+                input.title += " cartésiennes (en kilomètre)";
                 input.type = "number";
                 break;
             default:
@@ -1324,38 +1325,38 @@ var SearchEngineDOM = {
         div.id = this._addUID("GPcoordinateSearchLatDMS");
         div.innerHTML = `
         <div class="GPflexInput gpf-flex">
-            <input step="1" 
-                id="GPcoordinatSearchInputSexLatDeg" 
-                class="gpf-input fr-input" 
-                name="inputSexLatDeg" 
+            <input step="1"
+                id="GPcoordinatSearchInputSexLatDeg"
+                class="gpf-input fr-input"
+                name="inputSexLatDeg"
                 title="Saisir une valeur de degré entre 0° et 85°"
-                type="number" 
-                required="" 
-                min="0" 
+                type="number"
+                required=""
+                min="0"
                 max="85">
             <label>°</label>
-            <input step="1" 
-                id="GPcoordinatSearchInputSexLatMin" 
-                class="gpf-input fr-input" 
-                name="inputSexLatMin" 
+            <input step="1"
+                id="GPcoordinatSearchInputSexLatMin"
+                class="gpf-input fr-input"
+                name="inputSexLatMin"
                 title="Saisir une valeur de minute entre 0' et 59'"
-                type="number" 
-                required="" 
-                min="0" 
+                type="number"
+                required=""
+                min="0"
                 max="59">
             <label>'</label>
-            <input step="any" 
-                id="GPcoordinatSearchInputSexLatSec" 
-                class="gpf-input fr-input" 
-                name="inputSexLatSec" 
+            <input step="any"
+                id="GPcoordinatSearchInputSexLatSec"
+                class="gpf-input fr-input"
+                name="inputSexLatSec"
                 title="Saisir une valeur de seconde entre 0' et 59'"
-                type="number" 
-                required="" 
-                min="0" 
+                type="number"
+                required=""
+                min="0"
                 max="59.9999">
             <label>"</label>
-            <select 
-                id="GPcoordinatSearchInputSexLatToward" 
+            <select
+                id="GPcoordinatSearchInputSexLatToward"
                 class="GPselect gpf-select fr-select"
                 title="Saisir une direction pour Nord et Sud"
                 name="inputSexLatToward">
