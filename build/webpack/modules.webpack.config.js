@@ -116,9 +116,9 @@ module.exports = (env, argv) => {
         devtool : "source-map",
         devServer : {
             server : "https",
-            open : ["index-modules.html"],
+            open : ["samples/index-modules.html"],
             static : {
-                directory : path.join(rootdir, "samples"),
+                directory : path.join(rootdir),
                 watch : {
                     usePolling : false,
                     ignored : [

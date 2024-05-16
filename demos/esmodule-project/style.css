@@ -1,0 +1,28 @@
+@import "node_modules/ol/ol.css";
+@import "node_modules/geoportal-extensions-openlayers/css/Classic.css";
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+header {
+  display: flex;
+  place-items: center;
+  justify-content: center;
+}
+
+.logo {
+  margin: 0 2rem 0 0;
+}
+
+header .wrapper {
+  display: flex;
+  place-items: flex-start;
+  flex-wrap: wrap;
+}
+
+#map {
+  position: absolute;
+  height: 500px;
+  width: 100%;
+}

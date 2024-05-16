@@ -86,9 +86,9 @@ module.exports = (env, argv) => {
         stats : "normal",
         devServer : {
             server : "https",
-            open : ["index-bundle.html"],
+            open : ["samples/index-bundle.html"],
             static : {
-                directory : path.join(rootdir, "samples"),
+                directory : path.join(rootdir),
                 watch : {
                     usePolling : false,
                     ignored : [

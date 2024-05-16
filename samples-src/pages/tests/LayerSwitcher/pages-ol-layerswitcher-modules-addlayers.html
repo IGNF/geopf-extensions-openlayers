@@ -57,6 +57,9 @@
                             new ol.layer.Tile({
                                 source : new ol.source.OSM(),
                                 opacity : 0.8
+                            }),
+                            new ol.layer.GeoportalWMTS({
+                                layer : "ORTHOIMAGERY.ORTHOPHOTOS"
                             })
                         ]
                     });
