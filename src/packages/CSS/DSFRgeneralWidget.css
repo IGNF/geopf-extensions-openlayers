@@ -16,7 +16,7 @@
 .gpf-panel {
   position: relative;
   background-color: unset;
-  width: fit-content;
+  width: max-content;
 }
 
 .gpf-panel--hidden {
@@ -123,9 +123,16 @@
 .gpf-btn--hidden {}
 .gpf-btn-icon-return {}
 .gpf-btn-icon-submit {}
-.gpf-btn-icon-close {}
 .gpf-btn-icon-reverse {
   
+}
+
+/* positionnement absolu en haut à droite du bouton "fermer" */
+.gpf-btn-icon-close {
+  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .gpf-btn-icon {
