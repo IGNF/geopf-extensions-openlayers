@@ -112,13 +112,13 @@ var DrawingDOM = {
         container.className = "GPpanelHeader gpf-panel__header fr-modal__header fr-m-1w";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-m-1w";
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         divTitle.innerHTML = this.options.controlLabel || "Annoter la carte";
         container.appendChild(divTitle);
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPdrawingPanelClose");
-        divClose.className = "GPpanelClose GPdrawingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        divClose.className = "GPpanelClose GPdrawingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox

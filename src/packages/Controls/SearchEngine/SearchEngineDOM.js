@@ -638,13 +638,13 @@ var SearchEngineDOM = {
         container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         divTitle.innerHTML = "Recherche avancée";
         container.appendChild(divTitle);
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPadvancedSearchClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         divClose.title = "Fermer la recherche avancée";
 
         if (divClose.addEventListener) {
@@ -915,13 +915,13 @@ var SearchEngineDOM = {
         container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         divTitle.innerHTML = "Résultats de la recherche";
         container.appendChild(divTitle);
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPgeocodeResultsClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         divClose.title = "Fermer la fenêtre de résultats";
 
         if (divClose.addEventListener) {
@@ -1022,13 +1022,13 @@ var SearchEngineDOM = {
         container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         divTitle.innerHTML = "Recherche par coordonnées";
         container.appendChild(divTitle);
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPcoordinateSearchClose");
-        divClose.className = "GPpanelClose GPcoordinateSearchClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary";
+        divClose.className = "GPpanelClose GPcoordinateSearchClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
         divClose.title = "Fermer la recherche par coordonnées";
 
         if (divClose.addEventListener) {
