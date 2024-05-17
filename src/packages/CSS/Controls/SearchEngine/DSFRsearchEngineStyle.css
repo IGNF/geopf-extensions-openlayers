@@ -23,6 +23,9 @@ button[id^=GPsearchInputReset] {
   height: 40px;
 }
 
+div.GPbuttonsContainer > button {
+  width: 40px;
+}
 
 .gpf-btn-icon-search {
     background-image: url("img/dsfr/search-line.svg");
@@ -36,9 +39,9 @@ button[id^=GPsearchInputReset] {
     background-color: #000091; 
 }
 .gpf-btn-icon-search-advanced {
-    background-image: url("img/GPsearchEngineOpen.png");
-    background-position: -126px center;
-    background-repeat: no-repeat;
+  background-image: url("img/dsfr/recherche-avancee.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 .gpf-btn-icon-search-geolocate {
     background-image: url("img/dsfr/localiser.svg");
@@ -54,7 +57,6 @@ button[id^=GPsearchInputReset] {
 .gpf-btn-icon-search-reset {
   background-position: -25px center;
 }
-.gpf-btn-icon-close {}
 
 /* Autocomplete list / geocode results */
 

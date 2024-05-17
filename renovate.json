@@ -3,5 +3,10 @@
   "extends": [
     "config:recommended"
   ],
-  "ignorePaths": ["build/jsdoc/jaguarjs-jsdoc/package.json"]
+  "ignorePaths": [
+    "build/jsdoc/jaguarjs-jsdoc/package.json",
+    "demos/angular-project/package.json",
+    "demos/react-project/package.json",
+    "demos/vue-project/package.json"
+  ]
 }

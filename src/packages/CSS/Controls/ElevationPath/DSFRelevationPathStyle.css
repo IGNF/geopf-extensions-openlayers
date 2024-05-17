@@ -13,4 +13,9 @@
   background-image: url("../../img/GPinfo_secondary.svg");
   background-repeat: no-repeat;
   background-position: center center;
+  position: absolute;
+  float: left;
+  top: 0;
+  left: 0;
 }
+

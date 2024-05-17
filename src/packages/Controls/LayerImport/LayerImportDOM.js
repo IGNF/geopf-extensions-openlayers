@@ -117,7 +117,7 @@ var LayerImportDOM = {
     _createImportPanelTitleElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportHeaderTitle");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-m-1w";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         div.innerHTML = "Import de données";
         return div;
     },
@@ -133,7 +133,7 @@ var LayerImportDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPimportPanelClose");
-        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -622,7 +622,7 @@ var LayerImportDOM = {
 
         // close picto
         var closeDiv = document.createElement("button");
-        closeDiv.className = "GPpanelClose GPimportGetCapPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        closeDiv.className = "GPpanelClose GPimportGetCapPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         closeDiv.title = "Fermer le panneau";
         closeDiv.id = this._addUID("GPimportGetCapPanelClose");
         if (closeDiv.addEventListener) {
@@ -773,7 +773,7 @@ var LayerImportDOM = {
 
         // close picto
         var closeDiv = document.createElement("button");
-        closeDiv.className = "GPpanelClose GPimportMapBoxPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        closeDiv.className = "GPpanelClose GPimportMapBoxPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         closeDiv.title = "Fermer le panneau";
         closeDiv.id = this._addUID("GPimportMapBoxPanelClose");
         if (closeDiv.addEventListener) {
