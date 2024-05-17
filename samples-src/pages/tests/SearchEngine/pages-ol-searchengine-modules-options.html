@@ -140,6 +140,7 @@
                           }
                         },
                         searchOptions : {
+                          addToMap : true,
                           filterServices : "WMTS,TMS",
                           filterVectortiles : "PLAN.IGN,PCI",
                           updateVectortiles : true,
@@ -156,25 +157,25 @@
                     map.addControl(search);
                     search.on("searchengine:search:click", function (e) {
                       console.warn("search", e.suggest, e.error);
-                      var service = e.suggest.service;
-                      var name = e.suggest.name;
-                      var layer = null;
-                      switch (service) {
-                        case "WMTS":
-                          layer = new ol.layer.GeoportalWMTS({
-                            layer : name
-                          });
-                          break;
-                        case "TMS":
-                          layer = new ol.layer.GeoportalMapBox({
-                            layer : name
-                          });
-                        default:
-                          break;
-                      }
-                      if (layer) {
-                        map.addLayer(layer);
-                      }
+                    //   var service = e.suggest.service;
+                    //   var name = e.suggest.name;
+                    //   var layer = null;
+                    //   switch (service) {
+                    //     case "WMTS":
+                    //       layer = new ol.layer.GeoportalWMTS({
+                    //         layer : name
+                    //       });
+                    //       break;
+                    //     case "TMS":
+                    //       layer = new ol.layer.GeoportalMapBox({
+                    //         layer : name
+                    //       });
+                    //     default:
+                    //       break;
+                    //   }
+                    //   if (layer) {
+                    //     map.addLayer(layer);
+                    //   }
                     });
                 };
 

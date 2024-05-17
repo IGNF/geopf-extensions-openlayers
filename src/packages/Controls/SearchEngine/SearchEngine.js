@@ -22,6 +22,10 @@ import MathUtils from "../../Utils/MathUtils";
 import SearchEngineUtils from "../../Utils/SearchEngineUtils";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
 import CRS from "../../CRS/CRS";
+// import local des layers
+import GeoportalWMS from "../../Layers/LayerWMS";
+import GeoportalWMTS from "../../Layers/LayerWMTS";
+import GeoportalMapBox from "../../Layers/LayerMapBox";
 // Service
 import Search from "../../Services/Search";
 // DOM
@@ -67,6 +71,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {Array}   [options.resources.autocomplete] - resources autocompletion, by default : ["PositionOfInterest", "StreetAddress"]
  * @param {Boolean} [options.resources.search = false] - false to disable search service, by default : "false"
  * @param {Object}  [options.searchOptions = {}] - options of search service
+ * @param {Boolean} [options.searchOptions.addToMap = false] - add layer automatically to map, defaults to false.
  * @param {String}  [options.searchOptions.filterServices] - filter on a list of search services, each field is separated by a comma. "WMTS,TMS" by default
  * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
@@ -263,6 +268,7 @@ var SearchEngine = class SearchEngine extends Control {
             collapsed : true,
             opened : false,
             zoomTo : "",
+
             resources : {
                 geocode : "",
                 autocomplete : [],
@@ -275,6 +281,7 @@ var SearchEngine = class SearchEngine extends Control {
             advancedSearch : {},
             coordinateSearch : {},
             searchOptions : {
+                addToMap : false,
                 serviceOptions : {}
             },
             geocodeOptions : {
@@ -1818,6 +1825,35 @@ var SearchEngine = class SearchEngine extends Control {
             suggest : suggest,
             error : new Error(message)
         });
+
+        // Ajout de la couche sur la carte si l'option le permet
+        if (this.options.searchOptions.addToMap) {
+            var service = suggest.service;
+            var name = suggest.name;
+            var layer = null;
+            switch (service) {
+                case "WMS":
+                    layer = new GeoportalWMS({
+                        layer : name
+                    });
+                    break;
+                case "WMTS":
+                    layer = new GeoportalWMTS({
+                        layer : name
+                    });
+                    break;
+                case "TMS":
+                    layer = new GeoportalMapBox({
+                        layer : name
+                    });
+                default:
+                    break;
+            }
+            if (layer) {
+                var map = this.getMap();
+                map.addLayer(layer);
+            }
+        }
     }
 
     // ################################################################### //
