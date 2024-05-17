@@ -37,6 +37,7 @@ export default SearchEngine;
  * @param {Array}   [options.resources.autocomplete] - resources autocompletion, by default : ["PositionOfInterest", "StreetAddress"]
  * @param {Boolean} [options.resources.search = false] - false to disable search service, by default : "false"
  * @param {Object}  [options.searchOptions = {}] - options of search service
+ * @param {Boolean} [options.searchOptions.addToMap = true] - add layer automatically to map, defaults to true.
  * @param {String}  [options.searchOptions.filterServices] - filter on a list of search services, each field is separated by a comma. "WMTS,TMS" by default
  * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
