@@ -240,7 +240,7 @@ var ReverseGeocodeDOM = {
      */
     _createReverseGeocodingPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-m-1w";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         div.id = this._addUID("GPreverseGeocodingHeaderTitle");
         div.innerHTML = "Recherche inverse";
         return div;
@@ -257,7 +257,7 @@ var ReverseGeocodeDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPreverseGeocodingPanelClose");
-        divClose.className = "GPpanelClose GPreverseGeocodingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        divClose.className = "GPpanelClose GPreverseGeocodingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox

@@ -106,7 +106,7 @@ var IsoDOM = {
         container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-m-1w";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         div.innerHTML = "Calcul d'isochrone";
         container.appendChild(div);
 
@@ -135,7 +135,7 @@ var IsoDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPisochronPanelClose");
-        divClose.className = "GPpanelClose GPisochronPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--secondary fr-m-1w";
+        divClose.className = "GPpanelClose GPisochronPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
