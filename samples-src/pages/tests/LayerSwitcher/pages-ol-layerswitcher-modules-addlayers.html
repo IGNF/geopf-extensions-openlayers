@@ -39,6 +39,7 @@
 {{#content "js"}}
             <script type="text/javascript">
                 var map;
+                var layerSwitcher;
                 var addMapsLayer, addOSMLayer;
                 var osm, maps;
 
@@ -66,7 +67,7 @@
 
 
 					// Appel du LayerSwitcher
-                    var layerSwitcher0 = new ol.control.LayerSwitcher({
+                    layerSwitcher = new ol.control.LayerSwitcher({
                         options : {
                             position : "bottom-right",
                             collapsed : false
@@ -74,7 +75,7 @@
                     });
 
 					// Ajout du LayerSwitcher à la carte
-                    map.addControl(layerSwitcher0);
+                    map.addControl(layerSwitcher);
 
                     // Appel du LayerSwitcher
                     var layerSwitcher1 = new ol.control.LayerSwitcher({

@@ -313,16 +313,26 @@ var LayerSwitcherDOM = {
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
 
-        var context = this;
+        var self = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
+                var element = document.getElementById(self._addUID("GPadvancedTools_ID_" + obj.id));
+                if (status) {
+                    element.classList.replace("GPelementVisible", "GPelementHidden");
+                    element.classList.replace("gpf-visible", "gpf-hidden");
+                } else {
+                    element.classList.replace("GPelementHidden", "GPelementVisible");
+                    element.classList.replace("gpf-hidden", "gpf-visible");
+                }
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
+                element.classList.replace("GPelementVisible", "GPelementHidden");
+                element.classList.replace("gpf-visible", "gpf-hidden");
             });
         }
 
@@ -346,7 +356,7 @@ var LayerSwitcherDOM = {
 
         var container = document.createElement("div");
         container.id = this._addUID("GPadvancedTools_ID_" + obj.id);
-        container.className = "GPlayerAdvancedTools";
+        container.className = "GPelementHidden GPlayerAdvancedTools gpf-hidden";
 
         container.appendChild(this._createAdvancedToolDeleteElement(obj));
 
@@ -458,7 +468,7 @@ var LayerSwitcherDOM = {
         // curseur pour changer l'opacité
         var divO = document.createElement("div");
         divO.id = this._addUID("GPopacity_ID_" + obj.id);
-        divO.className = "GPlayerOpacity";
+        divO.className = "GPlayerOpacity fr-range fr-range--sm";
         divO.title = "Opacité";
 
         var opacity = (typeof obj.opacity !== "undefined") ? obj.opacity : 1;
@@ -515,6 +525,7 @@ var LayerSwitcherDOM = {
 
         var span = document.createElement("span");
         span.id = this._addUID("GPopacityValue_ID_" + obj.id);
+        span.className = "fr-range__output gpf-visible";
         span.innerHTML = opacity + "%";
 
         divC.appendChild(span);
