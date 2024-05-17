@@ -5,8 +5,6 @@
     background-position: center center;
 }
 
-.gpf-btn-icon-close {}
-
 .gpf-btn-icon-return {
   /* INFO : utiliser l'icone DSFR "fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon" */
   background-image: url("img/GPreverseGeocodingReturn.png");
