@@ -67,7 +67,6 @@ dialog[id^=GPlayersList] {
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
   height: initial;
   max-height: 232px;
-  width: 180px;
   opacity: 1;
 }
 

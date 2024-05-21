@@ -4,6 +4,10 @@ div[id^=GPlayerSwitcher-] {
   height: 32px;
 }
 
+button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
+  width: 190px;
+}
+
 button[id^=GPshowLayersListPicto] {
   /* transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s; */
   background-position: -2px center;
@@ -20,6 +24,18 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] {
 
 /* Layers list */
 
+button[id^=GPlayersPanelClose] {
+  background-position: -2px center;
+  background-repeat: no-repeat;
+  background-image: url("img/GPlayerClose.png");
+}
+
+.GPpanelIcon {
+  background-image: url("img/layers.svg");
+  background-repeat: no-repeat;
+  background-size: auto auto;
+  background-position: center center;
+}
 /* Layer info panel */
 
 div[id^=GPlayerInfoPanel] {

@@ -6,6 +6,10 @@ button[id^=GPshowLayersListPicto] {
     width: 40px;
 }
 
+button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
+    width: 235px;
+}
+
 .gpf-btn-icon-layerswitcher {
     background-image: url("img/dsfr/layerswitcher.svg");
     background-repeat: no-repeat;
@@ -72,4 +76,31 @@ div[id^=GPadvancedTools_ID_] {
     align-items: center;
     flex-direction: row;
     flex-wrap: nowrap;
+}
+
+.gpf-btn-icon-layers {
+    z-index: 2;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    background-image: url("img/dsfr/layers.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+.gpf-panel__title {
+    color: #101092;
+    padding: 12px 15px;
+    position: relative;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    right: -16px;
+}
+.gpf-panel__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    background: #E3E3FD;
 }

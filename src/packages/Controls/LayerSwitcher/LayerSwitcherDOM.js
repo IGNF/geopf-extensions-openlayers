@@ -165,6 +165,48 @@ var LayerSwitcherDOM = {
     // ######################### Layer container ######################### //
     // ################################################################### //
 
+    _createLayersPanelHeaderElement : function () {
+        var container = document.createElement("div");
+        // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header";
+        return container;
+    },
+    _createLayersPanelIconElement : function () {
+        var label = document.createElement("label");
+        label.className = "GPpanelIcon gpf-btn-icon-layers";
+        label.title = "Couches de données";
+        return label;
+    },
+    _createLayersPanelTitleElement : function () {
+        var div = document.createElement("div");
+        div.className = "GPpanelTitle gpf-panel__title";
+        div.id = this._addUID("GPlayersHeaderTitle");
+        div.innerHTML = "Couches de données";
+        return div;
+    },
+    _createLayersPanelCloseElement : function () {
+        // contexte
+        var self = this;
+
+        var btnClose = document.createElement("button");
+        btnClose.id = this._addUID("GPlayersPanelClose");
+        btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.title = "Fermer le panneau";
+
+        // Link panel close / visibility checkbox
+        if (btnClose.addEventListener) {
+            btnClose.addEventListener("click", function () {
+                document.getElementById(self._addUID("GPshowLayersListPicto")).click();
+            }, false);
+        } else if (btnClose.attachEvent) {
+            btnClose.attachEvent("onclick", function () {
+                document.getElementById(self._addUID("GPshowLayersListPicto")).click();
+            });
+        }
+
+        return btnClose;
+    },
+
     /**
      * Creation du container du layer (DOM)
      *

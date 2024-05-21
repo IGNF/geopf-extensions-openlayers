@@ -35,6 +35,10 @@ var logger = Logger.getLogger("layerswitcher");
  * @param {Array} [options.layers.config.metadata] - array of layer metadata. Each array element is an object, with property url (String, mandatory) : link to a metadata
  * @param {Object} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
+ * @param {Boolean} [options.options.panel] - Specify if widget has to have a panel header. Default is false.
+ * @fires layerswitcher:add
+ * @fires layerswitcher:remove
+ * @fires layerswitcher:change:(opacity|visibility)
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -47,9 +51,24 @@ var logger = Logger.getLogger("layerswitcher");
  *      }
  *  ],
  *  {
- *      collapsed : true
+ *      collapsed : true,
+ *      panel : false,
+ *      position : "top-left"
  *  }
  * ));
+ * 
+ * LayerSwitcher.on("layerswitcher:add", function (e) {
+ *    console.warn("layer", e.layer);
+ * });
+ * LayerSwitcher.on("layerswitcher:remove", function (e) {
+ *    console.warn("layer", e.layer);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
+ *    console.warn("layer", e.layer, e.opacity);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
+ *    console.warn("layer", e.layer, e.visibility);
+ * });
  */
 var LayerSwitcher = class LayerSwitcher extends Control {
 
@@ -190,6 +209,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * @param {Object} [config.legends] - layer legends (default is an empty array)
      * @param {Object} [config.metadata] - layer metadata (default is an empty array)
      * @param {Object} [config.quicklookUrl] - layer quicklookUrl (default is null)
+     * @fires layerswitcher:add
      * @example
      *   layerSwitcher.addLayer(
      *       gpParcels,
@@ -268,7 +288,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 this._layersOrder.unshift(layerOptions);
                 this._lastZIndex++;
                 layer.setZIndex(this._lastZIndex);
-                this._layerListContainer.insertBefore(layerDiv, this._layerListContainer.firstChild);
+                this._layerListContainer.insertBefore(layerDiv, (this.options.panel) ? this._layerListContainer.childNodes[1] : layerDiv, this._layerListContainer.firstChild);
             }
 
             // 3. Add listeners for opacity and visibility changes
@@ -322,12 +342,29 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 infodiv.className = "GPlayerInfo";
             }
         }
+        /**
+         * event triggered when a layer is added
+         *
+         * @event layerswitcher:add
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:add", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:add",
+            layer : this._layers[id]
+        });
     };
 
     /**
      * Remove a layer from control
      *
      * @param {ol.layer.Layer} layer - layer.
+     * @fires layerswitcher:remove
      * @deprecated on the future version ...
      */
     removeLayer (layer) {
@@ -364,6 +401,24 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         for (var i = 0; i < layerOrderTemp.length; i++) {
             layerOrderTemp[i].layer.setZIndex(this._lastZIndex - i);
         }
+
+        /**
+         * event triggered when a layer is removed
+         *
+         * @event layerswitcher:add
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:remove", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:remove",
+            layer : this._layers[layerID]
+        });
+
         // on retire la couche de la liste des layers
         delete this._layers[layerID];
     }
@@ -550,6 +605,22 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var div = this._layerListContainer = this._createMainLayersDivElement();
         divL.appendChild(div);
 
+        // header ?
+        if (this.options.panel) {
+            // header
+            var panelHeader = this._createLayersPanelHeaderElement();
+            div.appendChild(panelHeader);
+            // icon
+            var panelIcon = this._createLayersPanelIconElement();
+            panelHeader.appendChild(panelIcon);
+            // title
+            var panelTitle = this._createLayersPanelTitleElement();
+            panelHeader.appendChild(panelTitle);
+            // close picto
+            var panelClose = this._createLayersPanelCloseElement();
+            panelHeader.appendChild(panelClose);
+        }
+
         // creation du mode draggable
         this._createDraggableElement(div, this);
 
@@ -573,7 +644,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         // idée : le layerSwitcher doit représenter l'ensemble des couches de la carte.
         map.getLayers().forEach((layer) => {
             // ajout des couches de la carte à la liste
-            var id;
+            var id = null;
             // si elles ont déjà un identifiant (gpLayerId), on le récupère, sinon on en crée un nouveau, en incrémentant this_layerId.
             if (!layer.hasOwnProperty("gpLayerId")) {
                 id = this._layerId;
@@ -713,6 +784,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * Update picto opacity value on layer opacity change
      *
      * @param {Object} e - event
+     * @fires layerswitcher:change:opacity
      * @private
      */
     _updateLayerOpacity (e) {
@@ -734,6 +806,25 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         if (layerOpacitySpan) {
             layerOpacitySpan.innerHTML = Math.round(opacity * 100) + "%";
         }
+
+        /**
+         * event triggered when an opacity layer is changed
+         *
+         * @event layerswitcher:change:opacity
+         * @property {Object} type - event
+         * @property {Object} opacity - opacity
+         * @property {Object} layer - layer
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:change", function (e) {
+         *   console.log(e.opacity);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:change:opacity",
+            opacity : opacity,
+            layer : this._layers[id]
+        });
     }
 
     /**
@@ -753,6 +844,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * Change picto visibility on layer visibility change
      *
      * @param {Object} e - event
+     * @fires layerswitcher:change:visibility
      * @private
      */
     _updateLayerVisibility (e) {
@@ -762,11 +854,30 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         if (layerVisibility) {
             layerVisibility.ariaPressed = visible;
         }
+
+        /**
+         * event triggered when an visibility layer is changed
+         *
+         * @event layerswitcher:change:visibility
+         * @property {Object} type - event
+         * @property {Object} visibility - visibility
+         * @property {Object} layer - layer
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
+         *   console.log(e.visibility);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:change:visibility",
+            visibility : visible,
+            layer : this._layers[id]
+        });
     }
 
     /**
      * Change layers order in layerswitcher (control container) on a layer index change (on map) or when a layer is added to a specific zindex
-     *
+     * @todo fires layerswitcher:change:zindex
      * @private
      */
     _updateLayersOrder () {
@@ -937,7 +1048,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
     /**
      * change layers order (on map) on drag and drop (on control container)
-     *
+     * 
      * @private
      */
     _onDragAndDropLayerClick () {
