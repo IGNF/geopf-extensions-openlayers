@@ -964,8 +964,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         if (this._layerListContainer) {
             // on vide le container précédent
-            while (this._layerListContainer.firstChild) {
-                this._layerListContainer.removeChild(this._layerListContainer.firstChild);
+            for (let index = 0; index < this._layerListContainer.childNodes.length; index++) {
+                const element = this._layerListContainer.childNodes[index];
+                if (element.id === "") {
+                    continue;
+                }
+                element.remove();
             }
             // et on rajoute les div correspondantes aux différentes couches, dans l'ordre décroissant des zindex
             for (var j = 0; j < this._layersOrder.length; j++) {
