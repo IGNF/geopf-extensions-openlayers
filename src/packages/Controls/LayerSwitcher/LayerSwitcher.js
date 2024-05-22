@@ -290,7 +290,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 this._layersOrder.unshift(layerOptions);
                 this._lastZIndex++;
                 layer.setZIndex(this._lastZIndex);
-                this._layerListContainer.insertBefore(layerDiv, (this.options.panel) ? this._layerListContainer.childNodes[1] : layerDiv, this._layerListContainer.firstChild);
+                this._layerListContainer.insertBefore(layerDiv, 
+                    (this.options.panel) ? 
+                        this._layerListContainer.childNodes[1] : this._layerListContainer.firstChild);
             }
 
             // 3. Add listeners for opacity and visibility changes

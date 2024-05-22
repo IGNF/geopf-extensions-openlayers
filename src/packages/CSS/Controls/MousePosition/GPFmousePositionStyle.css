@@ -14,6 +14,10 @@ button[id^="GPshowMousePositionPicto-"] {
     background-image: url("img/GPmousePositionEditCoordinates.png");
 }
 
+button[id^=GPmousePositionPanelClose]  {
+  background-image: url("img/GPmousePositionOpen.png");
+}
+
 /* Map center localisation */
 
 .GPmousePositionLabel,

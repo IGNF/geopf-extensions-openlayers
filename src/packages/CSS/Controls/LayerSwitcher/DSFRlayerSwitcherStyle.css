@@ -99,7 +99,7 @@ div[id^=GPadvancedTools_ID_] {
     background-size: auto auto;
     background-position: center center;
 }
-.gpf-panel__title {
+.gpf-panel__title_ls {
     color: #101092;
     padding: 12px 15px;
     position: relative;
@@ -108,7 +108,7 @@ div[id^=GPadvancedTools_ID_] {
     margin: 0;
     right: -16px;
 }
-.gpf-panel__header {
+.gpf-panel__header_ls {
     display: flex;
     flex-direction: row;
     align-items: center;

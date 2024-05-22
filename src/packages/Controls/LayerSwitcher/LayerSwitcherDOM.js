@@ -177,7 +177,7 @@ var LayerSwitcherDOM = {
         var container = document.createElement("div");
         // FIXME on n'utilise pas le dsfr !
         // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
-        container.className = "GPpanelHeader gpf-panel__header";
+        container.className = "GPpanelHeader gpf-panel__header_ls";
         return container;
     },
     _createLayersPanelIconElement : function () {
@@ -188,7 +188,7 @@ var LayerSwitcherDOM = {
     },
     _createLayersPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title";
+        div.className = "GPpanelTitle gpf-panel__title_ls";
         div.id = this._addUID("GPlayersHeaderTitle");
         div.innerHTML = "Couches de données";
         return div;
@@ -641,7 +641,7 @@ var LayerSwitcherDOM = {
         var header = document.createElement("div");
         // FIXME on n'utilise pas le dsfr !
         // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
-        header.className = "gpf-panel__header";
+        header.className = "gpf-panel__header_ls";
         container.appendChild(header);
 
         var label = document.createElement("label");
@@ -652,7 +652,7 @@ var LayerSwitcherDOM = {
         var title = document.createElement("div");
         title.id = this._addUID("GPlayerInfoTitle");
         title.innerHTML = obj.title;
-        title.className = "gpf-panel__title";
+        title.className = "gpf-panel__title_ls";
         header.appendChild(title);
 
         var btnClose = document.createElement("button");

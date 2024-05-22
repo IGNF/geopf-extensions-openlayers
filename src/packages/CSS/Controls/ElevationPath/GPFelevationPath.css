@@ -21,12 +21,6 @@ button[id^="GPshowElevationPathPicto-"][aria-pressed="true"] + dialog {
 
 /* Panel */
 
-[id^=GPelevationPathPanelClose] {
-  background-image: url("img/GPshowElevationPath.png");
-  background-repeat: no-repeat;
-  background-position: -27px center;
-}
-
 [id^=GPelevationPathPanelReduce] {
   background-image: url("img/GPshowElevationPath.png");
   background-repeat: no-repeat;
