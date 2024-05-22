@@ -23,7 +23,12 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] {
 }
 
 /* Layers list */
-
+button[id^=GPlayerInfoClose] {
+  background-position: -2px center;
+  background-repeat: no-repeat;
+  background-image: url("img/GPlayerInfoClose.png");
+  background-color: unset;
+}
 button[id^=GPlayersPanelClose] {
   background-position: -2px center;
   background-repeat: no-repeat;
@@ -129,6 +134,7 @@ div[id^=GPlayerInfoClose] {
   background-image: url("img/GPlayerInfo.png");
 }
 
+button[id^=GPinfo_ID_],
 button[id^=GPremove_ID_],
 button[id^=GPvisibilityPicto_ID_] {
   border: none;
@@ -291,14 +297,14 @@ div[id^=GPlayerInfoPanel] {
   display: none;
 }
 
-div[id^=GPlayerInfoContent] {
+/* div[id^=GPlayerInfoContent] {
   position: relative;
   width: 280px;
   max-height: 200px;
   overflow-y: auto;
   padding-left: 10px;
   padding-right: 10px;
-}
+} */
 
 div[id^=GPlayerInfoTitle] {
   width: calc(100% - 52px);

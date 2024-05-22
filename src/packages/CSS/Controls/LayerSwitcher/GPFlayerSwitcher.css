@@ -72,8 +72,22 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
 
 button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersList] {
   /* transition: max-height 0.5s ease-in 0s, opacity 0.25s ease-in 0s; */
-
 }
+
+.GPlayerCounter {
+    position: absolute;
+    background: #fff;
+    color: #000;
+    padding: 2px 0px 1px;
+    border-radius: 100px;
+    min-width: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1;
+    top: -6px;
+    left: -8px;
+}
+
 /* Layer : general */
 
 .GPlayerSwitcher_layer {
@@ -116,5 +130,14 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
 
 .outOfRange .GPlayerName {
   color: #AAA;
+}
+
+div[id^=GPlayerInfoContent] {
+  position: relative;
+  width: 280px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 

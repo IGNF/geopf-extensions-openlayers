@@ -22,7 +22,7 @@ var LayerSwitcherDOM = {
                 // Call event function on drag and drop
                 onEnd : function (e) {
                     // FIXME pas terrrible, mais il faut bien passer ce contexte...
-                    context._onDragAndDropLayerClick(e);
+                    context._onEndDragAndDropLayerClick(e);
                 }
             });
         } else {
@@ -34,7 +34,7 @@ var LayerSwitcherDOM = {
                 // Call event function on drag and drop
                 onEnd : function (e) {
                     // FIXME pas terrrible, mais il faut bien passer ce contexte...
-                    context._onDragAndDropLayerClick(e);
+                    context._onEndDragAndDropLayerClick(e);
                 }
             });
         }
@@ -123,10 +123,7 @@ var LayerSwitcherDOM = {
                 e.target.setAttribute("aria-pressed", !status);
                 document.getElementById(self._addUID("GPshowLayersList")).checked = status;
                 if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
-                    var layers = document.getElementsByClassName("GPlayerInfoOpened");
-                    for (var i = 0; i < layers.length; i++) {
-                        layers[i].className = "GPlayerInfo";
-                    }
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened");
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
                 }
             });
@@ -135,16 +132,21 @@ var LayerSwitcherDOM = {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
-                    var layers = document.getElementsByClassName("GPlayerInfoOpened");
-                    for (var i = 0; i < layers.length; i++) {
-                        layers[i].className = "GPlayerInfo";
-                    }
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened");
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
                 }
             });
         }
 
         return button;
+    },
+
+    _createMainCounterLayersElement : function () {
+        var span = document.createElement("span");
+        span.id = this._addUID("GPlayerCounter");
+        span.className = "GPlayerCounter";
+        span.innerHTML = "0";
+        return span;
     },
 
     /**
@@ -155,9 +157,15 @@ var LayerSwitcherDOM = {
     _createMainInfoElement : function () {
         // gestion du panneau d"information dans le container principal
         // <div id="GPlayerInfoPanel" class="GPlayerInfoPanelClosed">...</div>
+        var divP = document.createElement("div");
+        divP.id = this._addUID("GPlayerInfoPanel");
+        divP.className = "GPpanel GPlayerInfoPanelClosed gpf-panel fr-modal";
+        return divP;
+    },
+
+    _createMainInfoDivElement : function () {
         var div = document.createElement("div");
-        div.id = this._addUID("GPlayerInfoPanel");
-        div.className = "GPpanel GPlayerInfoPanelClosed gpf-panel fr-modal";
+        div.className = "gpf-panel__body fr-modal__body";
         return div;
     },
 
@@ -167,13 +175,14 @@ var LayerSwitcherDOM = {
 
     _createLayersPanelHeaderElement : function () {
         var container = document.createElement("div");
+        // FIXME on n'utilise pas le dsfr !
         // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
         container.className = "GPpanelHeader gpf-panel__header";
         return container;
     },
     _createLayersPanelIconElement : function () {
         var label = document.createElement("label");
-        label.className = "GPpanelIcon gpf-btn-icon-layers";
+        label.className = "GPpanelIcon gpf-btn-header gpf-btn-icon-layers";
         label.title = "Couches de données";
         return label;
     },
@@ -281,8 +290,36 @@ var LayerSwitcherDOM = {
 
         div.appendChild(this._createBasicToolNameElement(obj));
         div.appendChild(this._createBasicToolVisibilityElement(obj));
+        div.appendChild(this._createBasicToolDragNDropElement(obj));
 
         return div;
+    },
+
+    _createBasicToolDragNDropElement : function (obj) {
+        // INFO inactif en mode classique !
+        var button = document.createElement("button");
+        button.id = this._addUID("GPdragndropPicto_ID_" + obj.id);
+        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon gpf-btn-icon-ls-dragndrop fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        button.title = "Deplacer la couche";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", true);
+
+        var self = this;
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self._onStartDragAndDropLayerClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self._onStartDragAndDropLayerClick(e);
+            });
+        }
+
+        return button;
     },
 
     /**
@@ -461,31 +498,37 @@ var LayerSwitcherDOM = {
         // exemple :
         // <div id="GPinfo_ID_Layer1" class="GPlayerInfo" title="Informations/légende" onclick="GPopenLayerInfo(this);"></div>
 
-        var div = document.createElement("div");
-        div.id = this._addUID("GPinfo_ID_" + obj.id);
-        div.className = "GPlayerInfo";
-        div.title = "Informations/légende";
-        div.layerId = obj.id;
+        var btnInfo = document.createElement("button");
+        btnInfo.id = this._addUID("GPinfo_ID_" + obj.id);
+        btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary";
+        btnInfo.title = "Informations/légende";
+        btnInfo.layerId = obj.id;
+        btnInfo.setAttribute("tabindex", "0");
+        btnInfo.setAttribute("aria-pressed", true);
         // add event on click
         var context = this;
-        if (div.addEventListener) {
-            div.addEventListener(
+        if (btnInfo.addEventListener) {
+            btnInfo.addEventListener(
                 "click",
                 function (e) {
+                    var status = (e.target.ariaPressed === "true");
+                    e.target.setAttribute("aria-pressed", !status);
                     context._onOpenLayerInfoClick(e);
                 }
             );
-        } else if (div.attachEvent) {
+        } else if (btnInfo.attachEvent) {
             // internet explorer
-            div.attachEvent(
+            btnInfo.attachEvent(
                 "onclick",
                 function (e) {
+                    var status = (e.target.ariaPressed === "true");
+                    e.target.setAttribute("aria-pressed", !status);
                     context._onOpenLayerInfoClick(e);
                 }
             );
         }
 
-        return div;
+        return btnInfo;
     },
 
     /**
@@ -594,12 +637,50 @@ var LayerSwitcherDOM = {
      */
     _createContainerLayerInfoElement : function (obj) {
         var container = document.createElement("div");
-        container.id = this._addUID("GPlayerInfoContent");
+
+        var header = document.createElement("div");
+        // FIXME on n'utilise pas le dsfr !
+        // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        header.className = "gpf-panel__header";
+        container.appendChild(header);
+
+        var label = document.createElement("label");
+        label.className = "GPlayerInfo gpf-btn-header gpf-btn-icon-ls-info";
+        label.title = "Informations";
+        header.appendChild(label);
 
         var title = document.createElement("div");
         title.id = this._addUID("GPlayerInfoTitle");
         title.innerHTML = obj.title;
-        container.appendChild(title);
+        title.className = "gpf-panel__title";
+        header.appendChild(title);
+
+        var btnClose = document.createElement("button");
+        btnClose.id = this._addUID("GPlayerInfoClose");
+        btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.title = "Fermer la fenêtre";
+
+        var self = this;
+        /** Call event function on close click */
+        var onCloseClick = function () {
+            document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+            document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
+            document.getElementById(obj.id).classList.add("GPlayerInfoClosed");
+            document.getElementById(obj.id).classList.remove("GPlayerInfoOpened");
+        };
+        if (btnClose.addEventListener) {
+            btnClose.addEventListener("click", onCloseClick);
+        } else if (btnClose.attachEvent) {
+            // internet explorer
+            btnClose.attachEvent("onclick", onCloseClick);
+        }
+        header.appendChild(btnClose);
+        container.appendChild(header);
+
+        var content = document.createElement("div");
+        content.id = this._addUID("GPlayerInfoContent");
+        content.className = "gpf-panel__content fr-modal__content";
+        container.appendChild(content);
 
         if (obj.quicklookUrl) {
             var quick = document.createElement("div");
@@ -608,34 +689,13 @@ var LayerSwitcherDOM = {
             var refquick = document.createElement("a");
             refquick.href = obj.quicklookUrl;
             refquick.appendChild(quick);
-            container.appendChild(refquick);
+            content.appendChild(refquick);
         }
-
-        var close = document.createElement("div");
-        close.id = this._addUID("GPlayerInfoClose");
-        close.title = "Fermer la fenêtre";
-
-        var self = this;
-        /** Call event function on close click */
-        var onCloseClick = function () {
-            document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
-            var layers = document.getElementsByClassName("GPlayerInfoOpened");
-            for (var i = 0; i < layers.length; i++) {
-                layers[i].className = "GPlayerInfo";
-            }
-        };
-        if (close.addEventListener) {
-            close.addEventListener("click", onCloseClick);
-        } else if (close.attachEvent) {
-            // internet explorer
-            close.attachEvent("onclick", onCloseClick);
-        }
-        container.appendChild(close);
 
         var desc = document.createElement("div");
         desc.id = this._addUID("GPlayerInfoDescription");
         desc.innerHTML = obj.description;
-        container.appendChild(desc);
+        content.appendChild(desc);
 
         if (obj.metadata) {
             var mtd = document.createElement("div");
@@ -660,7 +720,7 @@ var LayerSwitcherDOM = {
             }
 
             if (obj.metadata.length !== 0) {
-                container.appendChild(mtd);
+                content.appendChild(mtd);
             }
         }
 
@@ -711,7 +771,7 @@ var LayerSwitcherDOM = {
             }
 
             if (Object.keys(legends).length !== 0) {
-                container.appendChild(lgd);
+                content.appendChild(lgd);
             }
         }
 

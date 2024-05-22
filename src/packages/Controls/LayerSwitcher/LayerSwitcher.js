@@ -35,7 +35,8 @@ var logger = Logger.getLogger("layerswitcher");
  * @param {Array} [options.layers.config.metadata] - array of layer metadata. Each array element is an object, with property url (String, mandatory) : link to a metadata
  * @param {Object} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
- * @param {Boolean} [options.options.panel] - Specify if widget has to have a panel header. Default is false.
+ * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
+ * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:change:(opacity|visibility)
@@ -53,6 +54,7 @@ var logger = Logger.getLogger("layerswitcher");
  *  {
  *      collapsed : true,
  *      panel : false,
+ *      counter : false,
  *      position : "top-left"
  *  }
  * ));
@@ -338,10 +340,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             }
             // close layer info element if open, to update information.
             if (infodiv && infodiv.className === "GPlayerInfoOpened") {
-                document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
-                infodiv.className = "GPlayerInfo";
+                document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+                // infodiv.className = "GPlayerInfo";
             }
         }
+        // on met à jour le compteur
+        this._updateLayerCounter();
         /**
          * event triggered when a layer is added
          *
@@ -383,8 +387,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         // close layer info element if open.
         var infodiv = document.getElementById(this._addUID("GPinfo_ID_" + layerID));
         if (infodiv && infodiv.className === "GPlayerInfoOpened") {
-            document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
-            infodiv.className = "GPlayerInfo";
+            document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+            // infodiv.className = "GPlayerInfo";
         }
         // remove layer div
         var layerDiv = document.getElementById(this._addUID("GPlayerSwitcher_ID_" + layerID));
@@ -421,6 +425,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         // on retire la couche de la liste des layers
         delete this._layers[layerID];
+
+        // on met à jour le compteur
+        this._updateLayerCounter();
     }
 
     /**
@@ -439,11 +446,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         }
         // on simule l'ouverture du panneau après un click
         if (!isCollapsed) {
-            var layers = document.getElementsByClassName("GPlayerInfoOpened");
-            for (var i = 0; i < layers.length; i++) {
-                layers[i].className = "GPlayerInfo";
-            }
-            document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
+            // var layers = document.getElementsByClassName("GPlayerInfoOpened");
+            // for (var i = 0; i < layers.length; i++) {
+            //     layers[i].className = "GPlayerInfo";
+            // }
+            document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
         }
         document.getElementById(this._addUID("GPshowLayersList")).checked = !collapsed;
     }
@@ -598,6 +605,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var picto = this._showLayerSwitcherButton = this._createMainPictoElement();
         container.appendChild(picto);
 
+        // ajout du compteur de couches
+        if (this.options.counter) {
+            var counter = this._layerSwitcherCounter =  this._createMainCounterLayersElement();
+            picto.appendChild(counter);
+        }
+
         // ajout dans le container principal de la liste des layers
         var divL = this._createMainLayersElement();
         container.appendChild(divL);
@@ -626,6 +639,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         // ajout dans le container principal du panneau d'information
         var divI = this._createMainInfoElement();
+        var divD = this._createMainInfoDivElement();
+        divI.appendChild(divD);
         container.appendChild(divI);
 
         return container;
@@ -679,6 +694,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 this._layers[id].visibility = layer.getVisible();
                 this._layers[id].inRange = this.isInRange(layer, map);
             }
+            // on met à jour le compteur
+            this._updateLayerCounter();
 
             // Ajout de listeners sur les changements d'opacité, visibilité
             this._listeners.updateLayerOpacity = layer.on(
@@ -761,6 +778,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     // ################################################################### //
     // ######################### DOM events ############################## //
     // ################################################################### //
+
+    _updateLayerCounter () {
+        if (this._layerSwitcherCounter) {
+            this._layerSwitcherCounter.innerHTML = Object.keys(this._layers).length;
+        }
+    }
 
     /**
      * Change layer opacity on layer opacity picto click
@@ -961,58 +984,48 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * @private
      */
     _onOpenLayerInfoClick (e) {
-        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
-        var layerID = SelectorID.index(divId); // ex. 26
+        var id = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(id); // ex. 26
         var layerOptions = this._layers[layerID];
 
         var panel;
         var info;
 
         // Close layer info panel
-        divId = document.getElementById(e.target.id);
-        if (divId.className === "GPlayerInfoOpened") {
-            if (divId.classList !== undefined) {
-                divId.classList.remove("GPlayerInfoOpened");
-                divId.classList.add("GPlayerInfo");
-            }
+        var divId = document.getElementById(e.target.id);
+        if (divId.classList.contains("GPlayerInfoOpened")) {
+            divId.classList.remove("GPlayerInfoOpened");
+            divId.classList.add("GPlayerInfoClosed");
 
             panel = document.getElementById(this._addUID("GPlayerInfoPanel"));
-            if (panel.classList !== undefined) {
-                // panel.classList.remove("GPpanel");
-                panel.classList.remove("GPlayerInfoPanelOpened");
-                panel.classList.add("GPlayerInfoPanelClosed");
-            }
+            panel.classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
+            panel.classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
 
             info = document.getElementById(this._addUID("GPlayerInfoContent"));
-            panel.removeChild(info);
+            if (info) {
+                info.parentNode.remove();
+            }
             return;
         }
 
-        var layers = document.getElementsByClassName("GPlayerInfoOpened");
-        for (var i = 0; i < layers.length; i++) {
-            layers[i].className = "GPlayerInfo";
-        }
-
         // Open layer info panel
-        if (divId.classList !== undefined) {
-            divId.classList.remove("GPlayerInfo");
+        if (divId.classList.contains("GPlayerInfoClosed")) {
+            divId.classList.remove("GPlayerInfoClosed");
             divId.classList.add("GPlayerInfoOpened");
         }
 
         panel = document.getElementById(this._addUID("GPlayerInfoPanel"));
-        if (panel.classList !== undefined) {
-            // panel.classList.add("GPpanel");
-            panel.classList.remove("GPlayerInfoPanelClosed");
-            panel.classList.add("GPlayerInfoPanelOpened");
-        }
+        panel.classList.remove("GPlayerInfoPanelClosed", "gpf-hidden");
+        panel.classList.add("GPlayerInfoPanelOpened", "gpf-visible");
 
         info = document.getElementById(this._addUID("GPlayerInfoContent"));
         if (info) {
-            panel.removeChild(info);
+            info.parentNode.remove();
         }
 
         // on récupère les infos associées au layer pour mettre dynamiquement le contenu du panel d'informations
         var obj = {
+            id : id,
             title : layerOptions.title,
             description : layerOptions.description,
             quicklookUrl : layerOptions.quicklookUrl,
@@ -1027,7 +1040,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             obj._maxScaleDenominator = Math.round(maxResolution / 0.00028);
         }
         var infoLayer = this._createContainerLayerInfoElement(obj);
-        panel.appendChild(infoLayer);
+        panel.firstChild.appendChild(infoLayer);
     }
 
     /**
@@ -1051,7 +1064,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * 
      * @private
      */
-    _onDragAndDropLayerClick () {
+    _onEndDragAndDropLayerClick () {
         // INFO : e.oldIndex et e.newIndex marchent en mode AMD mais pas Bundle.
         var map = this.getMap();
 
@@ -1087,6 +1100,16 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         // mise à jour de la visu
         map.updateSize();
+    }
+
+    /**
+     * change layers order (on map) on drag and drop (on control container)
+     * 
+     * @param {Event} e - DragNDrop Event
+     * @private
+     */
+    _onStartDragAndDropLayerClick (e) {
+        logger.debug(e);
     }
 
     /**
