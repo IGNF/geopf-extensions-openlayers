@@ -60,6 +60,7 @@ div[id^=GPlayerInfoTitle] {
   height: 28px;
 }
 
+.GPlayerExtent,
 .GPlayerVisibility,
 .GPlayerInfo,
 .GPlayerInfoOpened,
@@ -69,6 +70,7 @@ div[id^=GPlayerInfoTitle] {
   cursor: pointer;
 }
 
+.GPlayerExtent,
 .GPlayerVisibility,
 .GPlayerName,
 .GPlayerInfo,
@@ -93,7 +95,7 @@ div[id^=GPlayerInfoTitle] {
 
 /* Layer advanced tools */
 
-
+.GPlayerExtent
 .GPlayerVisibility,
 .GPshowLayerAdvancedTools,
 .GPlayerInfo,
@@ -180,6 +182,11 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="true"] {
   font-size: 10px;
   font-style: italic;
   cursor: default;
+}
+
+.GPlayerRemove {
+  right: 0;
+  background-position: -140px 0;
 }
 
 .GPlayerRemove {

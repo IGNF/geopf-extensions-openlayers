@@ -450,6 +450,7 @@ var LayerSwitcherDOM = {
             }
         }
 
+        container.appendChild(this._createAdvancedToolExtentElement(obj));
         return container;
     },
 
@@ -619,6 +620,33 @@ var LayerSwitcherDOM = {
         list.push(divC);
 
         return list;
+    },
+
+    _createAdvancedToolExtentElement : function (obj) {
+        var button = document.createElement("button");
+        button.id = this._addUID("GPextent_ID_" + obj.id);
+        button.className = "GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary";
+        button.title = "Zoomer dans l'étendue";
+        button.layerId = obj.id;
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", true);
+        
+        var context = this;
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                context._onZoomToExtentClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                context._onZoomToExtentClick(e);
+            });
+        }
+
+        return button;
     },
 
     // ################################################################### //

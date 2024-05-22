@@ -1118,6 +1118,10 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         logger.debug(e);
     }
 
+    _onZoomToExtentClick (e) {
+        logger.debug(e);
+    }
+
     /**
      * check layers range on map movement
      *
