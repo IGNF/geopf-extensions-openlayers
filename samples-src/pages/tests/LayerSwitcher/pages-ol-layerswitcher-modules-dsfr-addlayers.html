@@ -39,6 +39,7 @@
 {{#content "js"}}
             <script type="text/javascript">
                 var map;
+                var layerSwitcher;
                 var addMapsLayer, addOSMLayer;
                 var osm, maps, ortho;
 
@@ -68,7 +69,7 @@
                     });
 
 					// Appel du LayerSwitcher
-                    var layerSwitcher0 = new ol.control.LayerSwitcher({
+                    layerSwitcher = new ol.control.LayerSwitcher({
                         options : {
                             position : "bottom-right",
                             collapsed : false,
@@ -76,45 +77,59 @@
                             counter : true
                         }
                     });
-                    layerSwitcher0.on("layerswitcher:extent", function (e) {
+
+                    // Evenement
+                    layerSwitcher.on("layerswitcher:add", function (e) {
+                        console.warn("layer", e, e.layer);
+                    });
+                    layerSwitcher.on("layerswitcher:remove", function (e) {
+                        console.warn("layer", e, e.layer);
+                    });
+                    layerSwitcher.on("layerswitcher:change:opacity", function (e) {
+                        console.warn("layer", e, e.layer, e.opacity);
+                    });
+                    layerSwitcher.on("layerswitcher:change:visibility", function (e) {
+                        console.warn("layer", e, e.layer, e.visibility);
+                    });
+                    layerSwitcher.on("layerswitcher:extent", function (e) {
                         console.warn("layer", e);
                     });
 
 					// Ajout du LayerSwitcher à la carte
-                    map.addControl(layerSwitcher0);
+                    map.addControl(layerSwitcher);
 
-                    // Appel du LayerSwitcher
-                    var layerSwitcher1 = new ol.control.LayerSwitcher({
-                        options : {
-                            position : "bottom-left",
-                            collapsed : false
-                        }
-                    });
+                    // // Appel du LayerSwitcher
+                    // var layerSwitcher1 = new ol.control.LayerSwitcher({
+                    //     options : {
+                    //         position : "bottom-left",
+                    //         collapsed : false
+                    //     }
+                    // });
 
-					// Ajout du LayerSwitcher à la carte
-                    map.addControl(layerSwitcher1);
+					// // Ajout du LayerSwitcher à la carte
+                    // map.addControl(layerSwitcher1);
 
-                    // Appel du LayerSwitcher
-                    var layerSwitcher2 = new ol.control.LayerSwitcher({
-                        options : {
-                            position : "top-left",
-                            collapsed : false
-                        }
-                    });
+                    // // Appel du LayerSwitcher
+                    // var layerSwitcher2 = new ol.control.LayerSwitcher({
+                    //     options : {
+                    //         position : "top-left",
+                    //         collapsed : false
+                    //     }
+                    // });
 
-					// Ajout du LayerSwitcher à la carte
-                    map.addControl(layerSwitcher2);
+					// // Ajout du LayerSwitcher à la carte
+                    // map.addControl(layerSwitcher2);
 
-                    // Appel du LayerSwitcher
-                    var layerSwitcher3 = new ol.control.LayerSwitcher({
-                        options : {
-                            // position : "top-right",
-                            collapsed : false
-                        }
-                    });
+                    // // Appel du LayerSwitcher
+                    // var layerSwitcher3 = new ol.control.LayerSwitcher({
+                    //     options : {
+                    //         // position : "top-right",
+                    //         collapsed : false
+                    //     }
+                    // });
 
-					// Ajout du LayerSwitcher à la carte
-                    map.addControl(layerSwitcher3);
+					// // Ajout du LayerSwitcher à la carte
+                    // map.addControl(layerSwitcher3);
                 };
 
                 Gp.Services.getConfig({
