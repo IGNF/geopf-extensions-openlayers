@@ -235,6 +235,8 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
         // création d'une ol.layer.VectorTile avec les options récupérées ci-dessus.
         super(layerVectorTileOptions);
 
+        this.name = options.layer;
+        this.service = "TMS";
         this.protocol = protocol;
         this.sourceId = options.source;
         this.styleUrl = styleUrl;

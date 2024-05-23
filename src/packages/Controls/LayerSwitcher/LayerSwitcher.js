@@ -6,9 +6,13 @@ import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcher.css";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import { intersects as olIntersects } from "ol/extent";
+import {
+    transformExtent as olTransformExtentProj
+} from "ol/proj";
 // import local
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
+import Config from "../../Utils/Config";
 // DOM
 import LayerSwitcherDOM from "./LayerSwitcherDOM";
 
@@ -39,7 +43,11 @@ var logger = Logger.getLogger("layerswitcher");
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
- * @fires layerswitcher:change:(opacity|visibility)
+ * @fires layerswitcher:extent
+ * @fires layerswitcher:change:opacity
+ * @fires layerswitcher:change:visibility
+ * @fires layerswitcher:start:dragndrop (todo)
+ * @fires layerswitcher:end:dragndrop (todo)
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -261,6 +269,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             var layerOptions = {
                 layer : layer,
                 id : id,
+                name : null,
+                service : null,
                 opacity : opacity != null ? opacity : 1,
                 visibility : visibility != null ? visibility : true,
                 inRange : isInRange != null ? isInRange : true,
@@ -551,6 +561,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 var layerOptions = {
                     layer : layer, // la couche ol.layer concernée
                     id : id,
+                    name : null,
+                    service : null,
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
                     title : conf.title != null ? conf.title : conf.id ? conf.id : id,
@@ -680,6 +692,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 var layerOptions = {
                     layer : layer,
                     id : id,
+                    name : null,
+                    service : null,
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
                     inRange : isInRange != null ? isInRange : true,
@@ -781,6 +795,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     // ######################### DOM events ############################## //
     // ################################################################### //
 
+    /**
+     * update layer counter
+     */
     _updateLayerCounter () {
         if (this._layerSwitcherCounter) {
             this._layerSwitcherCounter.innerHTML = Object.keys(this._layers).length;
@@ -1118,8 +1135,95 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         logger.debug(e);
     }
 
+    /**
+     * zoom to extent
+     * @fixme dot it for other user data
+     * @param {PointerEvent} e - Event
+     */
     _onZoomToExtentClick (e) {
         logger.debug(e);
+
+        // FIXME 
+        // le zoom to extent fonctionne par defaut pour les couches raster TMS/WMS/WMTS issues du catalogue
+        // mais doit aussi le faire pour les données utilisateurs du type : 
+        // * vecteurs (imports)
+        // * raster par moissonnage (imports) 
+
+        var domIDShort = e.target.id; // ex GPvisibilityPicto_ID_26
+        var domIDLong = SelectorID.index(domIDShort); // ex. 26
+        var data = this._layers[domIDLong];
+
+        var extent = null;
+        var error = null;
+        try {
+            // Check if configuration is loaded
+            if (!Config.isConfigLoaded()) {
+                throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
+            }
+
+            if (!data.layer.hasOwnProperty("gpLayerId")) {
+                throw "WARN : User data not yet implemented !";
+            }
+
+            var layerName = data.layer.name || data.layer.getSource().name;
+            var layerService = data.layer.service || data.layer.getSource().service;
+            var layerId = Config.configuration.getLayerId(layerName, layerService);
+            if (!layerId) {
+                throw "ERROR : Layer ID not found into the catalogue !?";
+            }
+
+            var globalConstraints = Config.configuration.getGlobalConstraints(layerId);
+            if (globalConstraints) {
+                var map = this.getMap();
+                if (!map || !map.getView()) {
+                    return;
+                }
+                var view = map.getView();
+                var crsTarget = view.getProjection();
+    
+                // récupération de l'étendue (en EPSG:4326 par défaut), 
+                // et reprojection dans la projection de la couche
+                var bbox = [
+                    globalConstraints.extent.left,
+                    globalConstraints.extent.bottom,
+                    globalConstraints.extent.right,
+                    globalConstraints.extent.top
+                ];
+                var crsSource = globalConstraints.crs;
+                // projection par defaut
+                if (!crsSource) {
+                    crsSource = "EPSG:4326";
+                }
+                
+                extent = olTransformExtentProj(bbox, crsSource, crsTarget);
+                if (extent) {
+                    view.fit(extent);
+                }
+            }
+        } catch (e) {
+            error = e;
+        }
+
+        /**
+         * event triggered when an zoom extent is done
+         *
+         * @event layerswitcher:zoom
+         * @property {Object} type - event
+         * @property {Object} extent - extent (map projection)
+         * @property {Object} layer - layer
+         * @property {String} error - error
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:extent", function (e) {
+         *   console.log(e.extent);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:extent",
+            extent : extent,
+            layer : data,
+            error : error
+        });
     }
 
     /**

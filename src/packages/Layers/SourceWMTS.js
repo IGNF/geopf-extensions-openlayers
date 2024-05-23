@@ -125,6 +125,9 @@ var SourceWMTS = class SourceWMTS extends WMTSExtended {
         this._description = options.description || wmtsParams.description;
         this._title = options.title || wmtsParams.title;
         this._quicklookUrl = options.quicklookUrl || wmtsParams.quicklookUrl;
+
+        this.name = options.layer;
+        this.service = "WMTS";
         
         return this;
     }

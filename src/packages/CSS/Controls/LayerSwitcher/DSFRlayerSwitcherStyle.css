@@ -132,3 +132,8 @@ div[id^=GPadvancedTools_ID_] {
     background-position: center center;
     box-shadow: none;
 }
+
+div[id^=GPlayerInfoPanel] {
+    position: absolute;
+    height: initial;
+}

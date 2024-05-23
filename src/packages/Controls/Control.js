@@ -118,33 +118,33 @@ class PositionFactory {
         if (panels.length === 0) {
             return;
         }
-        panels.forEach((e) => {
-            clear(e);
+        panels.forEach((panel) => {
+            clear(panel);
+            
+            // on modifie le positionnement du menu (dialog ou div : panel) 
+            // en fonction du bouton
+            // ex. bouton : bottom-left, menu : bottom:0px; left:50px
+            switch (pos.toLowerCase()) {
+                case "top-left":
+                    panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
+                    panel.style.left = sizeW(pos) + "px";
+                    break;
+                case "bottom-left":
+                    panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
+                    panel.style.left = sizeW(pos) + "px";
+                    break;
+                case "top-right":
+                    panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
+                    panel.style.right = sizeW(pos) + "px";
+                    break;
+                case "bottom-right":
+                    panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
+                    panel.style.right = sizeW(pos) + "px";
+                    break;
+                default:
+                    break;
+            }
         });
-        var panel = panels[0];
-        // on modifie le positionnement du menu (dialog ou div : panel) 
-        // en fonction du bouton
-        // ex. bouton : bottom-left, menu : bottom:0px; left:50px
-        switch (pos.toLowerCase()) {
-            case "top-left":
-                panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
-                panel.style.left = sizeW(pos) + "px";
-                break;
-            case "bottom-left":
-                panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
-                panel.style.left = sizeW(pos) + "px";
-                break;
-            case "top-right":
-                panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
-                panel.style.right = sizeW(pos) + "px";
-                break;
-            case "bottom-right":
-                panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
-                panel.style.right = sizeW(pos) + "px";
-                break;
-            default:
-                break;
-        }
     }
 
     /**

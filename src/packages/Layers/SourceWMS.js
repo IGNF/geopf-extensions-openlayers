@@ -124,6 +124,9 @@ var SourceWMS = class SourceWMS extends TileWMSSource {
         this._description = options.description || wmsParams.description;
         this._quicklookUrl = options.quicklookUrl || wmsParams.quicklookUrl;
 
+        this.name = options.layer;
+        this.service = "WMS";
+
         return this;
     }
 

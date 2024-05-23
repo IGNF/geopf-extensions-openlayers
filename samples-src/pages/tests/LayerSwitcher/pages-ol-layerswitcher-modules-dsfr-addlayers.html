@@ -76,6 +76,9 @@
                             counter : true
                         }
                     });
+                    layerSwitcher0.on("layerswitcher:extent", function (e) {
+                        console.warn("layer", e);
+                    });
 
 					// Ajout du LayerSwitcher à la carte
                     map.addControl(layerSwitcher0);

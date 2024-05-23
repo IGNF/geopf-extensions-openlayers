@@ -136,6 +136,9 @@ var LayerWMS = class LayerWMS extends TileLayer {
         // création d'une ol.layer.Tile avec les options récupérées ci-dessus.
         super(layerTileOptions);
 
+        this.name = options.layer;
+        this.service = "WMS";
+        
         return this;
     }
 

@@ -123,8 +123,8 @@ var LayerSwitcherDOM = {
                 e.target.setAttribute("aria-pressed", !status);
                 document.getElementById(self._addUID("GPshowLayersList")).checked = status;
                 if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
-                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened");
-                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
                 }
             });
         } else if (button.attachEvent) {
@@ -132,8 +132,8 @@ var LayerSwitcherDOM = {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
-                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened");
-                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed");
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
+                    document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
                 }
             });
         }
@@ -623,9 +623,10 @@ var LayerSwitcherDOM = {
     },
 
     _createAdvancedToolExtentElement : function (obj) {
+        // FIXME inactif en mode classique !
         var button = document.createElement("button");
         button.id = this._addUID("GPextent_ID_" + obj.id);
-        button.className = "GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary";
+        button.className = "GPelementHidden GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary";
         button.title = "Zoomer dans l'étendue";
         button.layerId = obj.id;
         button.setAttribute("tabindex", "0");

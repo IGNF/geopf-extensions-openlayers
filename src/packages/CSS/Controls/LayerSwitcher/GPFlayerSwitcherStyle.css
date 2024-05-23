@@ -95,7 +95,7 @@ div[id^=GPlayerInfoTitle] {
 
 /* Layer advanced tools */
 
-.GPlayerExtent
+.GPlayerExtent,
 .GPlayerVisibility,
 .GPshowLayerAdvancedTools,
 .GPlayerInfo,
@@ -182,11 +182,6 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="true"] {
   font-size: 10px;
   font-style: italic;
   cursor: default;
-}
-
-.GPlayerRemove {
-  right: 0;
-  background-position: -140px 0;
 }
 
 .GPlayerRemove {
