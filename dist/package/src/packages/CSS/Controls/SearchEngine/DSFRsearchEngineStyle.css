@@ -58,6 +58,13 @@ div.GPbuttonsContainer > button {
   background-position: -25px center;
 }
 
+dialog[id^=GPcoordinateSearchPanel], 
+dialog[id^="GPadvancedSearchPanel"] {
+  position: absolute;
+  top: 66px;
+  width: inherit;
+}
+
 /* Autocomplete list / geocode results */
 
 div[id^=GPautoCompleteList],
@@ -86,4 +93,18 @@ div[id^=GPgeocodeResults-] {
   background-color: #FFF;
   max-height: 240px;
   overflow-y: auto;
+}
+
+/* Mode Mobile */
+@media (max-width: 576px) {
+  div[id^="GPsearchEngine-"] {
+    flex-direction: column;
+  }
+
+  dialog[id^=GPcoordinateSearchPanel], 
+  dialog[id^="GPadvancedSearchPanel"] {
+    position: relative;
+    top: unset;
+    margin-left: unset;
+  }
 }
