@@ -269,8 +269,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             var layerOptions = {
                 layer : layer,
                 id : id,
-                name : null,
-                service : null,
+                name : layer.name, // only geoportal layers
+                service : layer.service, // only geoportal layers
                 opacity : opacity != null ? opacity : 1,
                 visibility : visibility != null ? visibility : true,
                 inRange : isInRange != null ? isInRange : true,
@@ -561,8 +561,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 var layerOptions = {
                     layer : layer, // la couche ol.layer concernée
                     id : id,
-                    name : null,
-                    service : null,
+                    name : layer.name, // only geoportal layers
+                    service : layer.service, // only geoportal layers
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
                     title : conf.title != null ? conf.title : conf.id ? conf.id : id,
@@ -692,8 +692,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 var layerOptions = {
                     layer : layer,
                     id : id,
-                    name : null,
-                    service : null,
+                    name : layer.name, // only geoportal layers
+                    service : layer.service, // only geoportal layers
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
                     inRange : isInRange != null ? isInRange : true,
