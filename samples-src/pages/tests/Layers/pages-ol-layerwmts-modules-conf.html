@@ -1,0 +1,651 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout d'une couche WMTS</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    var conf = {
+                        name: "ORTHOIMAGERY.ORTHOPHOTOS",
+                        title: "Photographies aériennes",
+                        description: "Photographies aériennes",
+                        globalConstraint: {
+                            maxScaleDenominator: 559082264.0287179,
+                            minScaleDenominator: 266.5911979812229,
+                            bbox: {
+                                left: -180,
+                                right: 180,
+                                top: 89,
+                                bottom: -89
+                            }
+                        },
+                        serviceParams: {
+                            id: "OGC:WMTS",
+                            version: "1.0.0",
+                            serverUrl: {
+                                full: "https://data.geopf.fr/wmts"
+                            }
+                        },
+                        defaultProjection: "EPSG:3857",
+                        wmtsOptions: {
+                            tileMatrixSetLink: "PM",
+                            tileMatrixSetLimits: {
+                                0: {
+                                    minTileRow: "0",
+                                    maxTileRow: "1",
+                                    minTileCol: "0",
+                                    maxTileCol: "0"
+                                },
+                                1: {
+                                    minTileRow: "0",
+                                    maxTileRow: "2",
+                                    minTileCol: "0",
+                                    maxTileCol: "1"
+                                },
+                                2: {
+                                    minTileRow: "0",
+                                    maxTileRow: "4",
+                                    minTileCol: "0",
+                                    maxTileCol: "4"
+                                },
+                                3: {
+                                    minTileRow: "0",
+                                    maxTileRow: "8",
+                                    minTileCol: "0",
+                                    maxTileCol: "8"
+                                },
+                                4: {
+                                    minTileRow: "0",
+                                    maxTileRow: "16",
+                                    minTileCol: "0",
+                                    maxTileCol: "15"
+                                },
+                                5: {
+                                    minTileRow: "0",
+                                    maxTileRow: "32",
+                                    minTileCol: "0",
+                                    maxTileCol: "31"
+                                },
+                                6: {
+                                    minTileRow: "0",
+                                    maxTileRow: "64",
+                                    minTileCol: "0",
+                                    maxTileCol: "63"
+                                },
+                                7: {
+                                    minTileRow: "0",
+                                    maxTileRow: "128",
+                                    minTileCol: "0",
+                                    maxTileCol: "127"
+                                },
+                                8: {
+                                    minTileRow: "0",
+                                    maxTileRow: "256",
+                                    minTileCol: "0",
+                                    maxTileCol: "255"
+                                },
+                                9: {
+                                    minTileRow: "0",
+                                    maxTileRow: "512",
+                                    minTileCol: "0",
+                                    maxTileCol: "511"
+                                },
+                                10: {
+                                    minTileRow: "0",
+                                    maxTileRow: "1024",
+                                    minTileCol: "0",
+                                    maxTileCol: "1023"
+                                },
+                                11: {
+                                    minTileRow: "0",
+                                    maxTileRow: "2048",
+                                    minTileCol: "0",
+                                    maxTileCol: "2047"
+                                },
+                                12: {
+                                    minTileRow: "0",
+                                    maxTileRow: "4096",
+                                    minTileCol: "0",
+                                    maxTileCol: "4095"
+                                },
+                                13: {
+                                    minTileRow: "0",
+                                    maxTileRow: "8192",
+                                    minTileCol: "0",
+                                    maxTileCol: "8191"
+                                },
+                                14: {
+                                    minTileRow: "0",
+                                    maxTileRow: "16384",
+                                    minTileCol: "0",
+                                    maxTileCol: "16383"
+                                },
+                                15: {
+                                    minTileRow: "0",
+                                    maxTileRow: "32768",
+                                    minTileCol: "0",
+                                    maxTileCol: "32767"
+                                },
+                                16: {
+                                    minTileRow: "0",
+                                    maxTileRow: "65536",
+                                    minTileCol: "0",
+                                    maxTileCol: "65535"
+                                },
+                                17: {
+                                    minTileRow: "0",
+                                    maxTileRow: "131072",
+                                    minTileCol: "0",
+                                    maxTileCol: "131071"
+                                },
+                                18: {
+                                    minTileRow: "0",
+                                    maxTileRow: "262144",
+                                    minTileCol: "0",
+                                    maxTileCol: "262143"
+                                },
+                                19: {
+                                    minTileRow: "0",
+                                    maxTileRow: "524288",
+                                    minTileCol: "0",
+                                    maxTileCol: "524287"
+                                },
+                                20: {
+                                    minTileRow: "0",
+                                    maxTileRow: "1048576",
+                                    minTileCol: "0",
+                                    maxTileCol: "1048575"
+                                },
+                                21: {
+                                    minTileRow: "0",
+                                    maxTileRow: "2097152",
+                                    minTileCol: "0",
+                                    maxTileCol: "2097151"
+                                }
+                            }
+                        },
+                        styles: [{
+                            name: "normal",
+                            title: "Légende générique",
+                            current: true,
+                            url: null
+                        }],
+                        legends: [{
+                            format: "image/jpeg",
+                            url: "https://data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+                            minScaleDenominator: "200"
+                        }],
+                        formats: [{
+                            name: "image/jpeg",
+                            current: true
+                        }],
+                        params: {
+                            "url": "https://data.geopf.fr/wmts",
+                            "styles": "normal",
+                            "version": "1.0.0",
+                            "format": "image/jpeg",
+                            "projection": "EPSG:3857",
+                            "minScale": 266.5911979812229,
+                            "maxScale": 559082264.0287179,
+                            "extent": {
+                                "left": -178.187,
+                                "right": 55.8561,
+                                "top": 51.091,
+                                "bottom": -21.4013
+                            },
+                            "legends": [
+                                {
+                                    "format": "image/jpeg",
+                                    "url": "https://data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+                                    "minScaleDenominator": "200"
+                                }
+                            ],
+                            "title": "Photographies aériennes 2000-2005",
+                            "description": "Prises de vues aériennes des territoires pour les années 2000 à 2005",
+                            "tileMatrixSetLimits": {
+                                "6": {
+                                    "minTileRow": "21",
+                                    "maxTileRow": "35",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "41"
+                                },
+                                "7": {
+                                    "minTileRow": "42",
+                                    "maxTileRow": "71",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "83"
+                                },
+                                "8": {
+                                    "minTileRow": "85",
+                                    "maxTileRow": "143",
+                                    "minTileCol": "1",
+                                    "maxTileCol": "167"
+                                },
+                                "9": {
+                                    "minTileRow": "171",
+                                    "maxTileRow": "287",
+                                    "minTileCol": "2",
+                                    "maxTileCol": "335"
+                                },
+                                "10": {
+                                    "minTileRow": "342",
+                                    "maxTileRow": "574",
+                                    "minTileCol": "5",
+                                    "maxTileCol": "670"
+                                },
+                                "11": {
+                                    "minTileRow": "684",
+                                    "maxTileRow": "1148",
+                                    "minTileCol": "10",
+                                    "maxTileCol": "1341"
+                                },
+                                "12": {
+                                    "minTileRow": "1369",
+                                    "maxTileRow": "2297",
+                                    "minTileCol": "20",
+                                    "maxTileCol": "2683"
+                                },
+                                "13": {
+                                    "minTileRow": "2739",
+                                    "maxTileRow": "4594",
+                                    "minTileCol": "41",
+                                    "maxTileCol": "5367"
+                                },
+                                "14": {
+                                    "minTileRow": "5478",
+                                    "maxTileRow": "9189",
+                                    "minTileCol": "82",
+                                    "maxTileCol": "10734"
+                                },
+                                "15": {
+                                    "minTileRow": "10956",
+                                    "maxTileRow": "18378",
+                                    "minTileCol": "165",
+                                    "maxTileCol": "21468"
+                                },
+                                "16": {
+                                    "minTileRow": "21913",
+                                    "maxTileRow": "36757",
+                                    "minTileCol": "330",
+                                    "maxTileCol": "42936"
+                                },
+                                "17": {
+                                    "minTileRow": "43827",
+                                    "maxTileRow": "73515",
+                                    "minTileCol": "660",
+                                    "maxTileCol": "85872"
+                                },
+                                "18": {
+                                    "minTileRow": "87654",
+                                    "maxTileRow": "147031",
+                                    "minTileCol": "1320",
+                                    "maxTileCol": "171745"
+                                }
+                            },
+                            "TMSLink": "PM",
+                            "matrixIds": [
+                                "0",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "9",
+                                "10",
+                                "11",
+                                "12",
+                                "13",
+                                "14",
+                                "15",
+                                "16",
+                                "17",
+                                "18",
+                                "19",
+                                "20",
+                                "21"
+                            ],
+                            "tileMatrices": {
+                                "0": {
+                                    "matrixId": "0",
+                                    "matrixHeight": 1,
+                                    "matrixWidth": 1,
+                                    "scaleDenominator": 559082264.0287179,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "1": {
+                                    "matrixId": "1",
+                                    "matrixHeight": 2,
+                                    "matrixWidth": 2,
+                                    "scaleDenominator": 279541132.01435894,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "2": {
+                                    "matrixId": "2",
+                                    "matrixHeight": 4,
+                                    "matrixWidth": 4,
+                                    "scaleDenominator": 139770566.0071793,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "3": {
+                                    "matrixId": "3",
+                                    "matrixHeight": 8,
+                                    "matrixWidth": 8,
+                                    "scaleDenominator": 69885283.00358965,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "4": {
+                                    "matrixId": "4",
+                                    "matrixHeight": 16,
+                                    "matrixWidth": 16,
+                                    "scaleDenominator": 34942641.50179486,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "5": {
+                                    "matrixId": "5",
+                                    "matrixHeight": 32,
+                                    "matrixWidth": 32,
+                                    "scaleDenominator": 17471320.75089743,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "6": {
+                                    "matrixId": "6",
+                                    "matrixHeight": 64,
+                                    "matrixWidth": 64,
+                                    "scaleDenominator": 8735660.375448715,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "7": {
+                                    "matrixId": "7",
+                                    "matrixHeight": 128,
+                                    "matrixWidth": 128,
+                                    "scaleDenominator": 4367830.1877243575,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "8": {
+                                    "matrixId": "8",
+                                    "matrixHeight": 256,
+                                    "matrixWidth": 256,
+                                    "scaleDenominator": 2183915.0938621787,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "9": {
+                                    "matrixId": "9",
+                                    "matrixHeight": 512,
+                                    "matrixWidth": 512,
+                                    "scaleDenominator": 1091957.5469310894,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "10": {
+                                    "matrixId": "10",
+                                    "matrixHeight": 1024,
+                                    "matrixWidth": 1024,
+                                    "scaleDenominator": 545978.7734655464,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "11": {
+                                    "matrixId": "11",
+                                    "matrixHeight": 2048,
+                                    "matrixWidth": 2048,
+                                    "scaleDenominator": 272989.38673277217,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "12": {
+                                    "matrixId": "12",
+                                    "matrixHeight": 4096,
+                                    "matrixWidth": 4096,
+                                    "scaleDenominator": 136494.69336638608,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "13": {
+                                    "matrixId": "13",
+                                    "matrixHeight": 8192,
+                                    "matrixWidth": 8192,
+                                    "scaleDenominator": 68247.34668319322,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "14": {
+                                    "matrixId": "14",
+                                    "matrixHeight": 16384,
+                                    "matrixWidth": 16384,
+                                    "scaleDenominator": 34123.673341596535,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "15": {
+                                    "matrixId": "15",
+                                    "matrixHeight": 32768,
+                                    "matrixWidth": 32768,
+                                    "scaleDenominator": 17061.83667079829,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "16": {
+                                    "matrixId": "16",
+                                    "matrixHeight": 65536,
+                                    "matrixWidth": 65536,
+                                    "scaleDenominator": 8530.918335399145,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "17": {
+                                    "matrixId": "17",
+                                    "matrixHeight": 131072,
+                                    "matrixWidth": 131072,
+                                    "scaleDenominator": 4265.459167699572,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "18": {
+                                    "matrixId": "18",
+                                    "matrixHeight": 262144,
+                                    "matrixWidth": 262144,
+                                    "scaleDenominator": 2132.7295838497826,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "19": {
+                                    "matrixId": "19",
+                                    "matrixHeight": 524288,
+                                    "matrixWidth": 524288,
+                                    "scaleDenominator": 1066.364791924893,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "20": {
+                                    "matrixId": "20",
+                                    "matrixHeight": 1048576,
+                                    "matrixWidth": 1048576,
+                                    "scaleDenominator": 533.1823959624465,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                },
+                                "21": {
+                                    "matrixId": "21",
+                                    "matrixHeight": 2097152,
+                                    "matrixWidth": 2097152,
+                                    "scaleDenominator": 266.5911979812229,
+                                    "tileHeight": 256,
+                                    "tileWidth": 256,
+                                    "topLeftCorner": {
+                                        "x": -20037508.3427892,
+                                        "y": 20037508.3427892
+                                    }
+                                }
+                            },
+                            "nativeResolutions": [
+                                "156543.0339280410",
+                                "78271.51696402048",
+                                "39135.75848201023",
+                                "19567.87924100512",
+                                "9783.939620502561",
+                                "4891.969810251280",
+                                "2445.984905125640",
+                                "1222.992452562820",
+                                "611.4962262814100",
+                                "305.7481131407048",
+                                "152.8740565703525",
+                                "76.43702828517624",
+                                "38.21851414258813",
+                                "19.10925707129406",
+                                "9.554628535647032",
+                                "4.777314267823516",
+                                "2.388657133911758",
+                                "1.194328566955879",
+                                "0.5971642834779395",
+                                "0.2985821417389697",
+                                "0.1492910708694849",
+                                "0.0746455354347424"
+                            ]
+                        }
+                    };
+                    
+                    var map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.GeoportalWMTS({
+                                layer : "ORTHOIMAGERY.ORTHOPHOTOS",
+                                configuration : conf
+                            })
+                        ]
+                    });
+
+                    // Appel du LayerSwitcher
+                    var layerSwitcher = new ol.control.LayerSwitcher();
+
+					// Ajout du LayerSwitcher à la carte
+                    map.addControl(layerSwitcher);
+           </script>
+{{/content}}
+
+{{/extend}}

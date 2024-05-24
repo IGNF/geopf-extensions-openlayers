@@ -1,12 +1,46 @@
-/* LAYER SWITCHER OL3 */
+/* LAYER SWITCHER */
 
+div[id^=GPlayerSwitcher-] {
+  height: 32px;
+}
 
+button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
+  width: 190px;
+}
 
+button[id^=GPshowLayersListPicto] {
+  /* transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s; */
+  background-position: -2px center;
+  background-repeat: no-repeat;
+  background-image: url("img/GPshowLayersList.png");
+}
 
+button[id^=GPshowLayersListPicto][aria-pressed="true"] {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  background-position: -35px center;
+  /* transition: border-radius 0.5s ease-out 0s, opacity 0.5s ease-out 0s; */
+}
 
 /* Layers list */
+button[id^=GPlayerInfoClose] {
+  background-position: -2px center;
+  background-repeat: no-repeat;
+  background-image: url("img/GPlayerInfoClose.png");
+  background-color: unset;
+}
+button[id^=GPlayersPanelClose] {
+  background-position: -2px center;
+  background-repeat: no-repeat;
+  background-image: url("img/GPlayerClose.png");
+}
 
-
+.GPpanelIcon {
+  background-image: url("img/layers.svg");
+  background-repeat: no-repeat;
+  background-size: auto auto;
+  background-position: center center;
+}
 /* Layer info panel */
 
 div[id^=GPlayerInfoPanel] {
@@ -26,6 +60,7 @@ div[id^=GPlayerInfoTitle] {
   height: 28px;
 }
 
+.GPlayerExtent,
 .GPlayerVisibility,
 .GPlayerInfo,
 .GPlayerInfoOpened,
@@ -35,6 +70,7 @@ div[id^=GPlayerInfoTitle] {
   cursor: pointer;
 }
 
+.GPlayerExtent,
 .GPlayerVisibility,
 .GPlayerName,
 .GPlayerInfo,
@@ -57,40 +93,9 @@ div[id^=GPlayerInfoTitle] {
 }
 
 
-
-.GPlayerName {
-  left: 28px;
-  width: calc(100% - 56px);
-  line-height: 28px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding-left: 4px;
-  cursor: move;
-}
-
-.outOfRange .GPlayerName {
-  color: #AAA;
-}
-
-/* Showing layer advanced tools */
-
-
-.GPlayerAdvancedTools {
-  display: block;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
-}
-
-div[id^=GPlayerSwitcher-] input[type="checkbox"]:checked + label + .GPlayerAdvancedTools {
-  max-height: 28px;
-  opacity: 1;
-}
-
 /* Layer advanced tools */
 
-
+.GPlayerExtent,
 .GPlayerVisibility,
 .GPshowLayerAdvancedTools,
 .GPlayerInfo,
@@ -131,12 +136,19 @@ div[id^=GPlayerInfoClose] {
   background-image: url("img/GPlayerInfo.png");
 }
 
-.GPlayerVisibility {
+button[id^=GPinfo_ID_],
+button[id^=GPremove_ID_],
+button[id^=GPvisibilityPicto_ID_] {
+  border: none;
+  background-color: transparent;
+}
+
+button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
   left: 0;
   background-position: -28px 0;
 }
 
-input[type="checkbox"]:checked + .GPlayerVisibility {
+button[id^=GPvisibilityPicto_ID_][aria-pressed="true"] {
   background-position: 0 0;
 }
 
@@ -287,14 +299,14 @@ div[id^=GPlayerInfoPanel] {
   display: none;
 }
 
-div[id^=GPlayerInfoContent] {
+/* div[id^=GPlayerInfoContent] {
   position: relative;
   width: 280px;
   max-height: 200px;
   overflow-y: auto;
   padding-left: 10px;
   padding-right: 10px;
-}
+} */
 
 div[id^=GPlayerInfoTitle] {
   width: calc(100% - 52px);

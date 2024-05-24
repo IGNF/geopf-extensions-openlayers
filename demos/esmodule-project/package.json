@@ -1,0 +1,16 @@
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.11"
+  },
+  "dependencies": {
+    "geoportal-extensions-openlayers": "../../dist/package/geoportal-extensions-openlayers.tgz",
+    "ol": "latest"
+  }
+}

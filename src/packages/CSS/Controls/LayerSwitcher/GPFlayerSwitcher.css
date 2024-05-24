@@ -5,12 +5,6 @@ div[id^=GPlayerSwitcher-] {
   right: 8px;
 }
 
-div[id^=GPlayerSwitcher-] {
-  /* dsfr */
-  flex-direction: row-reverse;
-  align-items: flex-start;
-}
-
 div[id^=GPlayerSwitcher-] [draggable] {
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -33,14 +27,6 @@ input[id^=GPshowLayersList-] {
 
 /* Showing/hiding layers list */
 
-button[id^=GPshowLayersListPicto] {
-  float: right;
-  /* transition: opacity 0.5s ease-out 0s, box-shadow  0.5s ease-out 0s, border  0.5s ease-out 0s, border-radius  0.5s ease-out 0s; */
-  background-position: -2px center;
-  background-repeat: no-repeat;
-  background-image: url("img/GPshowLayersList.png");
-}
-
 button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog {
   display: none;
   visibility: hidden;
@@ -54,17 +40,24 @@ button[id^="GPshowLayersListPicto-"][aria-pressed="true"] + dialog {
   opacity: 100%;
 }
 
-button[id^=GPshowLayersListPicto][aria-pressed="true"] {
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
-  background-position: -35px center;
-  /* transition: border-radius 0.5s ease-out 0s, opacity 0.5s ease-out 0s; */
+/* Layers list */
+/* positionnement actif */
+.position > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayersList] {
+  position: absolute;
+}
+.position > div[id^=GPlayerSwitcher-] > button[id^=GPshowLayersListPicto-] {
+  float: unset;
 }
 
-/* Layers list */
+/* positionnement inactif */
+dialog[id^=GPlayersList] {
+ position: relative;
+}
+button[id^=GPshowLayersListPicto-] {
+  float: right;
+}
 
 dialog[id^=GPlayersList] {
-  position: relative;
   border-bottom-right-radius: 0;
   opacity: 0;
   overflow: auto;
@@ -72,15 +65,29 @@ dialog[id^=GPlayersList] {
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
+  height: initial;
   max-height: 232px;
-  width: 180px;
   opacity: 1;
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersList] {
   /* transition: max-height 0.5s ease-in 0s, opacity 0.25s ease-in 0s; */
-
 }
+
+.GPlayerCounter {
+    position: absolute;
+    background: #fff;
+    color: #000;
+    padding: 2px 0px 1px;
+    border-radius: 100px;
+    min-width: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1;
+    top: -6px;
+    left: -8px;
+}
+
 /* Layer : general */
 
 .GPlayerSwitcher_layer {
@@ -93,5 +100,44 @@ button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersLis
 
 dialog[id^=GPlayersList] .GPlayerSwitcher_layer:last-child {
   border-bottom: none;
+}
+
+/* Showing layer advanced tools */
+
+
+.GPlayerAdvancedTools {
+  display: block;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
+}
+
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
+  max-height: 28px;
+  opacity: 1;
+}
+
+.GPlayerName {
+  left: 28px;
+  width: calc(100% - 56px);
+  line-height: 28px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-left: 4px;
+  cursor: move;
+}
+
+.outOfRange .GPlayerName {
+  color: #AAA;
+}
+
+div[id^=GPlayerInfoContent] {
+  position: relative;
+  width: 280px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 

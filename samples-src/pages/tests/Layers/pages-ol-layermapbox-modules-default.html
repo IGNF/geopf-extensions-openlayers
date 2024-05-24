@@ -1,6 +1,8 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
@@ -44,6 +46,12 @@
                             })
                         ]
                     });
+                    
+                    // Appel du LayerSwitcher
+                    var layerSwitcher = new ol.control.LayerSwitcher();
+
+					// Ajout du LayerSwitcher à la carte
+                    map.addControl(layerSwitcher);
                 };
                 Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",

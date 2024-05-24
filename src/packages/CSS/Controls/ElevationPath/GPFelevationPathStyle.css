@@ -2,6 +2,13 @@
   padding: unset;
 }
 
+
+[id^=GPelevationPathPanelClose] {
+  background-image: url("img/GPshowElevationPath.png");
+  background-repeat: no-repeat;
+  background-position: -27px center;
+}
+
 /* CSS : Raw */
 
 #profileElevationRaw {

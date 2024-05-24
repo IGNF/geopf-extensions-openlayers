@@ -118,14 +118,19 @@ module.exports = (env, argv) => {
             server : "https",
             open : ["samples/index-modules.html"],
             static : {
-                directory : path.join(rootdir)
+                directory : path.join(rootdir),
+                watch : {
+                    usePolling : false,
+                    ignored : [
+                        path.join(rootdir, "samples-src/**/*"), 
+                        path.join(rootdir, "demos/**/*"),
+                        path.join(rootdir, "node_modules/**/*"), 
+                        path.join(rootdir, "samples/resources/vendor/modules/**/*")
+                    ]
+                }
             },
             watchFiles : {
-                paths : ["src/**/*"],
-                options : {
-                    usePolling : false,
-                    ignored : ["demos/**", "node_modules/**"]
-                },
+                paths : ["src/**/*"]
             },
             devMiddleware : {
                 index : true,

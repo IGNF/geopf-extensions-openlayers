@@ -1,0 +1,139 @@
+div[id^=GPlayerSwitcher-] {
+    height: 44px;
+}
+
+button[id^=GPshowLayersListPicto] {
+    width: 40px;
+}
+
+button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
+    width: 350px;
+}
+
+.gpf-btn-icon-layerswitcher {
+    background-image: url("img/dsfr/layerswitcher.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-btn-icon-ls-visibility {
+  background-image: url("img/dsfr/visible-open.svg");
+  background-repeat: no-repeat;
+  background-size: auto auto;
+  background-position: center center;
+  box-shadow: none;
+}
+
+button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
+    background-image: url("img/dsfr/visible-close-blanc.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+.gpf-btn-icon-ls-remove {
+    background-image: url("img/dsfr/remove.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+.gpf-btn-icon-ls-collapse {
+    background-image: url("img/dsfr/collapse.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+.gpf-btn-icon-ls-dragndrop {
+    background-image: url("img/dsfr/dragndrop-blanc.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
+    background-image: url("img/dsfr/collapse.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+button[id^=GPshowAdvancedTools_ID_] {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+div[id^=GPbasicTools_ID_] {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+}
+
+div[id^=GPadvancedTools_ID_] {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.gpf-btn-header {
+    z-index: 2;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+}
+
+.gpf-btn-icon-layers {
+    background-image: url("img/dsfr/layers.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+.gpf-panel__title_ls {
+    color: #101092;
+    padding: 12px 15px;
+    position: relative;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    right: -16px;
+}
+.gpf-panel__header_ls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    background: #E3E3FD;
+}
+
+.gpf-btn-icon-ls-info {
+    background-image: url("img/dsfr/info.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+.gpf-btn-icon-ls-extent {
+    background-image: url("img/dsfr/extent.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+div[id^=GPlayerInfoPanel] {
+    position: absolute;
+    height: initial;
+}

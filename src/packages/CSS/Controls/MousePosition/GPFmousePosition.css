@@ -29,10 +29,6 @@ dialog[id^=GPmousePositionPanel-] {
   bottom: 0px;
 }
 
-button[id^=GPmousePositionPanelClose]  {
-  background-image: url("img/GPmousePositionOpen.png");
-}
-
 [id^=GPmousePositionPanel-] {
   overflow: hidden;
   left: 34px;

@@ -13,6 +13,7 @@ import {
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
+import Config from "../../Utils/Config";
 import Logger from "../../Utils/LoggerByDefault";
 import Utils from "../../Utils/Helper";
 import Markers from "../Utils/Markers";
@@ -1802,11 +1803,49 @@ var SearchEngine = class SearchEngine extends Control {
     onSearchedResultsItemClick (e) {
         var idx = SelectorID.index(e.target.id);
 
-        var message = null;
-        var suggest = Search.getSuggestions()[idx];
-        if (!suggest) {
-            message = "No suggestions found !";
+        var error = null;
+        try {
+            var suggest = Search.getSuggestions()[idx];
+            if (!suggest) {
+                throw "No suggestions found !";
+            }
+    
+            // Ajout de la couche sur la carte si l'option le permet
+            if (this.options.searchOptions.addToMap) {
+                // Check if configuration is loaded
+                if (!Config.isConfigLoaded()) {
+                    throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
+                }
+                var service = suggest.service;
+                var name = suggest.name;
+                var layer = null;
+                switch (service) {
+                    case "WMS":
+                        layer = new GeoportalWMS({
+                            layer : name
+                        });
+                        break;
+                    case "WMTS":
+                        layer = new GeoportalWMTS({
+                            layer : name
+                        });
+                        break;
+                    case "TMS":
+                        layer = new GeoportalMapBox({
+                            layer : name
+                        });
+                    default:
+                        break;
+                }
+                if (layer) {
+                    var map = this.getMap();
+                    map.addLayer(layer);
+                }
+            }
+        } catch (e) {
+            error = e;
         }
+
         /**
          * event triggered when an element of the results is clicked for search service
          *
@@ -1823,37 +1862,8 @@ var SearchEngine = class SearchEngine extends Control {
         this.dispatchEvent({
             type : "searchengine:search:click",
             suggest : suggest,
-            error : new Error(message)
+            error : error
         });
-
-        // Ajout de la couche sur la carte si l'option le permet
-        if (this.options.searchOptions.addToMap) {
-            var service = suggest.service;
-            var name = suggest.name;
-            var layer = null;
-            switch (service) {
-                case "WMS":
-                    layer = new GeoportalWMS({
-                        layer : name
-                    });
-                    break;
-                case "WMTS":
-                    layer = new GeoportalWMTS({
-                        layer : name
-                    });
-                    break;
-                case "TMS":
-                    layer = new GeoportalMapBox({
-                        layer : name
-                    });
-                default:
-                    break;
-            }
-            if (layer) {
-                var map = this.getMap();
-                map.addLayer(layer);
-            }
-        }
     }
 
     // ################################################################### //
