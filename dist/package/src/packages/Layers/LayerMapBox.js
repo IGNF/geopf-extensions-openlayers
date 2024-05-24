@@ -11,35 +11,123 @@ import Utils from "../Utils/Helper";
 import Config from "../Utils/Config";
 
 /**
- * @classdesc
- * Geoportal Layer Mapbox creation
- *
- * @constructor
- * @extends {ol.layer.VectorTile}
- * @alias ol.layer.GeoportalMapBox
- * @type {ol.layer.GeoportalMapBox}
- * @param {Object} options            - options for function call.
- * @param {String} options.layer      - Layer name (e.g. "PLAN.IGN")
- * @param {String} [options.style]    - Style name (e.g. "classique")
- * @param {String} [options.source]   - Source name (e.g. "plan_ign")
- * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
- * @param {Object} [settings] - other options for ol.layer.VectorTile function (see {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_VectorTile-VectorTileLayer.html ol.layer.VectorTile})
- * @example
- * var LayerMapBox = new ol.layer.GeoportalMapBox({
- *      layer  : "PLAN.IGN",
- *      [style  : "classique",]
- *      [source : "plan_ign",]
- *      [ssl: true]
- * }, {
- *      opacity
- *      visible
- *      extent
- *      declutter
- *      ...
- * });
- */
+* @classdesc
+* Geoportal Layer Mapbox creation
+*
+* @constructor
+* @extends {ol.layer.VectorTile}
+* @alias ol.layer.GeoportalMapBox
+* @type {ol.layer.GeoportalMapBox}
+* @param {Object} options            - options for function call.
+* @param {String} options.layer      - Layer name (e.g. "PLAN.IGN")
+* @param {Object} [options.configuration] - configuration (cf. example) 
+* @param {String} [options.style]    - Style name (e.g. "classique")
+* @param {String} [options.source]   - Source name (e.g. "plan_ign")
+* @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
+* @param {Object} [settings] - other options for ol.layer.VectorTile function (see {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_VectorTile-VectorTileLayer.html ol.layer.VectorTile})
+* @example
+* var LayerMapBox = new ol.layer.GeoportalMapBox({
+*      layer  : "PLAN.IGN",
+*      [style  : "classique",]
+*      [source : "plan_ign",]
+*      [ssl: true]
+* }, {
+*      opacity
+*      visible
+*      extent
+*      declutter
+*      ...
+* });
+* 
+* // Ex. configuration object for TMS Layer
+* "PLAN.IGN$GEOPORTAIL:GPP:TMS": {
+*   "hidden": true,
+*   "queryable": false,
+*   "serviceParams": {
+*     "id": "GPP:TMS",
+*     "version": "1.0.0",
+*     "serverUrl": {
+*       "cartes": "https://wxs.ign.fr/cartes/geoportail/tms/1.0.0/"
+*     }
+*   },
+*   "name": "PLAN.IGN",
+*   "title": "Plan IGN",
+*   "description": "BDUni tuilée",
+*   "formats": [
+*     {
+*       "current": true,
+*       "name": "application/x-protobuf"
+*     }
+*   ],
+*   "styles": [
+*     {
+*       "name": "standard",
+*       "title": "Style standard",
+*       "current": true,
+*       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/standard.json"
+*     },
+*     {
+*       "name": "classique",
+*       "title": "Style classique",
+*       "current": true,
+*       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/classique.json"
+*     },
+*     {
+*       "name": "transparent",
+*       "title": "Style transparent",
+*       "current": true,
+*       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/transparent.json"
+*     },
+*     {
+*       "name": "accentue",
+*       "title": "Style accentue",
+*       "current": true,
+*       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/accentue.json"
+*     },
+*     {
+*       "name": "attenue",
+*       "title": "Style attenue",
+*       "current": true,
+*       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/attenue.json"
+*     },
+*     {
+*       "name": "gris",
+*       "title": "Style en noir et blanc",
+*       "current": false,
+*       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/gris.json"
+*     },
+*     {
+*       "name": "epure",
+*       "title": "Style epure",
+*       "current": true,
+*       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/epure.json"
+*     },
+*     {
+*       "name": "sans_toponymes",
+*       "title": "Style sans toponymes",
+*       "current": false,
+*       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/sans_toponymes.json"
+*     }
+*   ],
+*   "globalConstraint": {
+*     "crs": null,
+*     "bbox": {
+*       "left": -724011.531917197,
+*       "right": 1095801.237496279,
+*       "top": 6672646.821182753,
+*       "bottom": 5009377.0856973175
+*     },
+*     "minScaleDenominator": null,
+*     "maxScaleDenominator": null
+*   },
+*   "quicklookUrl": "https://wxs.ign.fr/static/pictures/ign_carte2.jpg",
+*   "layerId": "PLAN.IGN$GEOPORTAIL:GPP:TMS",
+*   "defaultProjection": "EPSG:3857"
+* }
+*
+*/
 var LayerMapBox = class LayerMapBox extends VectorTileLayer {
-
+    
     /**
      * See {@link ol.layer.GeoportalMapBox}
      * @module LayerMapBox
@@ -50,133 +138,54 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
      * import LayerMapBox from "gpf-ext-ol/layers/LayerMapBox"
      * ou 
      * import { LayerMapBox } from "gpf-ext-ol"
-     */
+    */
     constructor (options, settings) {
         // if (!(this instanceof LayerMapBox)) {
         //     throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         // }
-
+        
         if (!options.layer) {
             throw new Error("ERROR PARAM_MISSING : layer");
         }
-
+        
         if (typeof options.layer !== "string") {
             throw new Error("ERROR WRONG TYPE : layer");
         }
-
+        
         // par defaut
         if (typeof options.ssl === "undefined") {
             options.ssl = true;
         }
-
+        
         // si ssl = false on fait du http
         // par défaut, ssl = true, on fait du https
         var protocol = options.ssl === false ? "http://" : "https://";
-
+        
         // WARNING :
-        // on fait le choix de ne pas utiliser la clef apiKey pour checker les droits sur la ressource
+        // on fait le choix de ne pas utiliser la clef apiKey pour checker 
+        // les droits sur la ressource
         // car le service n'est pas securisé...
+        
+        // configuration de la ressource
+        var layerCfg = options.configuration;
 
-        // Check if configuration is loaded
-        if (!Config.isConfigLoaded()) {
-            throw new Error("ERROR : contract key configuration has to be loaded to load Geoportal layers.");
-        }
-
-        /**
-         * Ex. configuration object for TMS Layer
-         * (only for jsdoc)
-         * @example
-         * "PLAN.IGN$GEOPORTAIL:GPP:TMS": {
-         *   "hidden": true,
-         *   "queryable": false,
-         *   "serviceParams": {
-         *     "id": "GPP:TMS",
-         *     "version": "1.0.0",
-         *     "serverUrl": {
-         *       "cartes": "https://wxs.ign.fr/cartes/geoportail/tms/1.0.0/"
-         *     }
-         *   },
-         *   "name": "PLAN.IGN",
-         *   "title": "Plan IGN",
-         *   "description": "BDUni tuilée",
-         *   "formats": [
-         *     {
-         *       "current": true,
-         *       "name": "application/x-protobuf"
-         *     }
-         *   ],
-         *   "styles": [
-         *     {
-         *       "name": "standard",
-         *       "title": "Style standard",
-         *       "current": true,
-         *       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/standard.json"
-         *     },
-         *     {
-         *       "name": "classique",
-         *       "title": "Style classique",
-         *       "current": true,
-         *       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/classique.json"
-         *     },
-         *     {
-         *       "name": "transparent",
-         *       "title": "Style transparent",
-         *       "current": true,
-         *       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/transparent.json"
-         *     },
-         *     {
-         *       "name": "accentue",
-         *       "title": "Style accentue",
-         *       "current": true,
-         *       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/accentue.json"
-         *     },
-         *     {
-         *       "name": "attenue",
-         *       "title": "Style attenue",
-         *       "current": true,
-         *       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/attenue.json"
-         *     },
-         *     {
-         *       "name": "gris",
-         *       "title": "Style en noir et blanc",
-         *       "current": false,
-         *       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/gris.json"
-         *     },
-         *     {
-         *       "name": "epure",
-         *       "title": "Style epure",
-         *       "current": true,
-         *       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/epure.json"
-         *     },
-         *     {
-         *       "name": "sans_toponymes",
-         *       "title": "Style sans toponymes",
-         *       "current": false,
-         *       "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/sans_toponymes.json"
-         *     }
-         *   ],
-         *   "globalConstraint": {
-         *     "crs": null,
-         *     "bbox": {
-         *       "left": -724011.531917197,
-         *       "right": 1095801.237496279,
-         *       "top": 6672646.821182753,
-         *       "bottom": 5009377.0856973175
-         *     },
-         *     "minScaleDenominator": null,
-         *     "maxScaleDenominator": null
-         *   },
-         *   "quicklookUrl": "https://wxs.ign.fr/static/pictures/ign_carte2.jpg",
-         *   "layerId": "PLAN.IGN$GEOPORTAIL:GPP:TMS",
-         *   "defaultProjection": "EPSG:3857"
-         * }
-         */
-        // récupération des ressources utiles depuis la configuration
-        var layerId = options.layer + "$GEOPORTAIL:GPP:TMS";
-
-        var layerCfg = Config.configuration.getLayerConf(layerId);
+        // 2 solutions pour la récupération des ressources utiles 
+        // * soit depuis la configuration en option
+        // * soit via la variable globale Gp.Config chargée
         if (!layerCfg) {
-            throw new Error("ERROR : Layer ID not found into the catalogue !?");
+            // Check if configuration is loaded
+            if (!Config.isConfigLoaded()) {
+                throw new Error("ERROR : contract key configuration has to be loaded to load Geoportal layers.");
+            }
+
+            // id de la ressource
+            var layerId = options.layer + "$GEOPORTAIL:GPP:TMS";
+            
+            // récupération des ressources utiles depuis la configuration
+            layerCfg = Config.configuration.getLayerConf(layerId);
+            if (!layerCfg) {
+                throw new Error("ERROR : Layer ID not found into the catalogue !?");
+            }
         }
 
         var styleUrl = null;
@@ -199,52 +208,54 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
                 }
             }
         }
-
+        
         if (!styleUrl) {
             throw new Error("ERROR : Style URL not found !?");
         }
-
+        
         styleUrl.replace(/(http|https):\/\//, protocol);
-
+        
         // création de la source
         var source = new VectorTileSource({
             state : "loading", // statut
             format : new MVT()
         });
-
+        
         source._originators = layerCfg.originators;
         source._legends = layerCfg.legends;
         source._metadata = layerCfg.metadata;
         source._description = layerCfg.description;
         source._title = layerCfg.title + " (" + styleTitle + ")";
         source._quicklookUrl = layerCfg.quicklookUrl;
-
+        
         // options definies sur ol.layer.VectorTile
         var layerVectorTileOptions = {
             source : source
         };
-
+        
         // récupération des autres paramètres passés par l'utilisateur
         Utils.mergeParams(layerVectorTileOptions, settings);
-
+        
         // on surcharge les originators (non récupérés depuis configuration de la couche)
         if (options.olParams && !layerCfg.originators) {
             source._originators = options.olParams.attributions;
         }
-
+        
         // création d'une ol.layer.VectorTile avec les options récupérées ci-dessus.
         super(layerVectorTileOptions);
-
+        
+        this.name = options.layer;
+        this.service = "TMS";
         this.protocol = protocol;
         this.sourceId = options.source;
         this.styleUrl = styleUrl;
-
+        
         // récuperation du style
         this.setStyleMapBox();
-
+        
         return this;
     }
-
+    
     /**
      * Get Style MapBox
      * @private
@@ -253,19 +264,17 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
         var self = this;
         fetch(this.styleUrl, {
             credentials : "same-origin"
-        })
-            .then(function (response) {
-                if (response.ok) {
-                    response.json().then(function (style) {
-                        self.onStyleMapBoxLoad(style);
-                    });
-                }
-            })
-            .catch(function (e) {
-                self.onStyleMapBoxError(e);
-            });
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (style) {
+                    self.onStyleMapBoxLoad(style);
+                });
+            }
+        }).catch(function (e) {
+            self.onStyleMapBoxError(e);
+        });
     };
-
+    
     /**
      * Add Style
      * @param {*} style - json style
@@ -275,7 +284,7 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
         if (!this.sourceId) {
             this.sourceId = Object.keys(style.sources)[0];
         }
-
+        
         var styleSource = style.sources[this.sourceId];
         if (!styleSource) {
             this.onStyleMapBoxError({
@@ -283,23 +292,23 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
             });
             return;
         }
-
+        
         if (styleSource.type !== "vector") {
             this.onStyleMapBoxError({
                 message : "ERROR : Source TYPE not permitted !"
             });
             return;
         }
-
+        
         var source = this.getSource();
-
+        
         // WARNING :
         // la clef renseignée dans les urls n'est pas forcement la bonne
         // car la substitution avec la clef utilisateur n'est pas faite par le service...
         if (styleSource.url) {
             // protocole : http ou https
             styleSource.url.replace(/(http|https):\/\//, this.protocol);
-
+            
             var vectorTileJson = new TileJSONSource({
                 url : styleSource.url
             });
@@ -321,7 +330,7 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
                 }
             });
         }
-
+        
         if (styleSource.tiles) {
             // protocole : http ou https
             for (var j = 0; j < styleSource.tiles.length; j++) {
@@ -329,17 +338,15 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
             }
             source.setUrls(styleSource.tiles);
         }
-
-        applyStyle(this, style, this.sourceId)
-            .then(() => {
-                source.setState("ready");
-                this.set("mapbox-styles", style);
-            })
-            .catch((error) => {
-                this.onStyleMapBoxError(error);
-            });
+        
+        applyStyle(this, style, this.sourceId).then(() => {
+            source.setState("ready");
+            this.set("mapbox-styles", style);
+        }).catch((error) => {
+            this.onStyleMapBoxError(error);
+        });
     };
-
+    
     /**
      * Error
      * @param {*} error - message
@@ -350,7 +357,7 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
         // eslint-disable-next-line no-console
         console.error(error.message);
     };
-
+    
 };
 
 export default LayerMapBox;

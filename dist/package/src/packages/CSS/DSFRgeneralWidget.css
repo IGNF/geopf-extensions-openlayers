@@ -226,9 +226,9 @@
   justify-content: center;
   /* crée un décalage sur le searchEngine */
   /* align-items: center; */
-  min-width: var(--size-per-row);
+  width: var(--size-per-row);
   min-height: var(--size-per-row);
-  padding: 5px;
+  /* padding: 5px; */
 }
 
 .position-container-top-left,

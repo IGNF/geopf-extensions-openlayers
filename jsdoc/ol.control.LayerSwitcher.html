@@ -629,9 +629,33 @@
 -->
 
             
+            <div class="l2 itemMembers"> Events </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:add"> <a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:add"> <a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:visibility"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:zoom"> <a href="module-LayerSwitcher.html#~event:layerswitcher:zoom">layerswitcher:zoom</a> </div>
+            
 
 <!--
             <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:opacity"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:visibility"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:zoom"><a href="module-LayerSwitcher.html#~event:layerswitcher:zoom">layerswitcher:zoom</a></li>
             
             </ul>
 -->
@@ -2631,6 +2655,10 @@
             
             <div class="l2 itemMembers"> Methods </div>
             
+                <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#_onZoomToExtentClick"> <a href="ol.control.LayerSwitcher.html#_onZoomToExtentClick">_onZoomToExtentClick</a> </div>
+            
+                <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#_updateLayerCounter"> <a href="ol.control.LayerSwitcher.html#_updateLayerCounter">_updateLayerCounter</a> </div>
+            
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#addLayer"> <a href="ol.control.LayerSwitcher.html#addLayer">addLayer</a> </div>
             
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#getCollapsed"> <a href="ol.control.LayerSwitcher.html#getCollapsed">getCollapsed</a> </div>
@@ -2654,6 +2682,10 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="_onZoomToExtentClick"><a href="ol.control.LayerSwitcher.html#_onZoomToExtentClick">_onZoomToExtentClick</a></li>
+            
+                <li data-name="_updateLayerCounter"><a href="ol.control.LayerSwitcher.html#_updateLayerCounter">_updateLayerCounter</a></li>
             
                 <li data-name="addLayer"><a href="ol.control.LayerSwitcher.html#addLayer">addLayer</a></li>
             
@@ -4473,7 +4505,7 @@
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 54
+            Controls/LayerSwitcher/LayerSwitcher.js, line 83
         </div>
         
     </div>
@@ -4919,6 +4951,78 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name">panel</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Specify if widget has to have a panel header. Default is false.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">counter</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Specify if widget has to have a counter. Default is false.</p></td>
+        </tr>
+	
+	
 	</tbody>
 </table>
 
@@ -4965,6 +5069,23 @@
 
     
     
+    <h5>Fires:</h5>
+    <ul>
+        <li>layerswitcher:add</li>
+    
+        <li>layerswitcher:remove</li>
+    
+        <li>layerswitcher:extent</li>
+    
+        <li>layerswitcher:change:opacity</li>
+    
+        <li>layerswitcher:change:visibility</li>
+    
+        <li>layerswitcher:start:dragndrop (todo)</li>
+    
+        <li>layerswitcher:end:dragndrop (todo)</li>
+    </ul>
+    
 
     
 
@@ -4990,9 +5111,25 @@
      }
  ],
  {
-     collapsed : true
+     collapsed : true,
+     panel : false,
+     counter : false,
+     position : "top-left"
  }
-));</code></pre>
+));
+
+LayerSwitcher.on("layerswitcher:add", function (e) {
+   console.warn("layer", e.layer);
+});
+LayerSwitcher.on("layerswitcher:remove", function (e) {
+   console.warn("layer", e.layer);
+});
+LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
+   console.warn("layer", e.layer, e.opacity);
+});
+LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
+   console.warn("layer", e.layer, e.visibility);
+});</code></pre>
     
 
     
@@ -5075,6 +5212,194 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="_onZoomToExtentClick">
+            
+            _onZoomToExtentClick<span class="signature">(e)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1143
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>zoom to extent</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">e</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PointerEvent</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>Event</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_updateLayerCounter">
+            
+            _updateLayerCounter<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/LayerSwitcher/LayerSwitcher.js, line 801
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>update layer counter</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="addLayer">
             
             addLayer<span class="signature">(layer, <span class="optional">config</span>)</span>
@@ -5082,7 +5407,7 @@
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 198
+            Controls/LayerSwitcher/LayerSwitcher.js, line 233
         </div>
         
     </div>
@@ -5384,6 +5709,11 @@
 
     
     
+    <h5>Fires:</h5>
+    <ul>
+        <li>layerswitcher:add</li>
+    </ul>
+    
 
     
 
@@ -5422,7 +5752,7 @@
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 395
+            Controls/LayerSwitcher/LayerSwitcher.js, line 474
         </div>
         
     </div>
@@ -5503,7 +5833,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1017
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1269
         </div>
         
     </div>
@@ -5631,7 +5961,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1063
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1315
         </div>
         
     </div>
@@ -5758,7 +6088,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1037
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1289
         </div>
         
     </div>
@@ -5908,7 +6238,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 328
+            Controls/LayerSwitcher/LayerSwitcher.js, line 386
         </div>
         
     </div>
@@ -6004,6 +6334,11 @@ container Id ; null if layer not found.</li>
 
     
     
+    <h5>Fires:</h5>
+    <ul>
+        <li>layerswitcher:remove</li>
+    </ul>
+    
 
     
 
@@ -6027,7 +6362,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 371
+            Controls/LayerSwitcher/LayerSwitcher.js, line 450
         </div>
         
     </div>
@@ -6144,7 +6479,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 109
+            Controls/LayerSwitcher/LayerSwitcher.js, line 138
         </div>
         
     </div>
@@ -6261,7 +6596,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 405
+            Controls/LayerSwitcher/LayerSwitcher.js, line 484
         </div>
         
     </div>
@@ -6412,7 +6747,7 @@ container Id ; null if layer not found.</li>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri May 24 2024 16:12:55 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri May 24 2024 21:34:19 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

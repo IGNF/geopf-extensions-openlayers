@@ -20,6 +20,15 @@ export default LayerSwitcher;
  * @param {Array} [options.layers.config.metadata] - array of layer metadata. Each array element is an object, with property url (String, mandatory) : link to a metadata
  * @param {Object} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
+ * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
+ * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
+ * @fires layerswitcher:add
+ * @fires layerswitcher:remove
+ * @fires layerswitcher:extent
+ * @fires layerswitcher:change:opacity
+ * @fires layerswitcher:change:visibility
+ * @fires layerswitcher:start:dragndrop (todo)
+ * @fires layerswitcher:end:dragndrop (todo)
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -32,9 +41,25 @@ export default LayerSwitcher;
  *      }
  *  ],
  *  {
- *      collapsed : true
+ *      collapsed : true,
+ *      panel : false,
+ *      counter : false,
+ *      position : "top-left"
  *  }
  * ));
+ *
+ * LayerSwitcher.on("layerswitcher:add", function (e) {
+ *    console.warn("layer", e.layer);
+ * });
+ * LayerSwitcher.on("layerswitcher:remove", function (e) {
+ *    console.warn("layer", e.layer);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
+ *    console.warn("layer", e.layer, e.opacity);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
+ *    console.warn("layer", e.layer, e.visibility);
+ * });
  */
 declare var LayerSwitcher: ol.control.LayerSwitcher;
 //# sourceMappingURL=LayerSwitcher.d.ts.map

@@ -9,6 +9,7 @@ export default SourceWMTS;
  * @extends {WMTSExtended}
  * @param {Object} options            - options for function call.
  * @param {String} options.layer      - Layer name (e.g. "ORTHOIMAGERY.ORTHOPHOTOS")
+ * @param {Object} [options.configuration] - configuration (cf. example)
  * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
  * @param {String} [options.apiKey]   - Access key to Geoportal platform
  * @param {Array} [options.legends]   - Legends objects associated to the layer

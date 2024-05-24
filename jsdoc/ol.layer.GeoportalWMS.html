@@ -629,9 +629,33 @@
 -->
 
             
+            <div class="l2 itemMembers"> Events </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:add"> <a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:add"> <a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:visibility"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:zoom"> <a href="module-LayerSwitcher.html#~event:layerswitcher:zoom">layerswitcher:zoom</a> </div>
+            
 
 <!--
             <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:opacity"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:visibility"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:zoom"><a href="module-LayerSwitcher.html#~event:layerswitcher:zoom">layerswitcher:zoom</a></li>
             
             </ul>
 -->
@@ -2631,6 +2655,10 @@
             
             <div class="l2 itemMembers"> Methods </div>
             
+                <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#_onZoomToExtentClick"> <a href="ol.control.LayerSwitcher.html#_onZoomToExtentClick">_onZoomToExtentClick</a> </div>
+            
+                <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#_updateLayerCounter"> <a href="ol.control.LayerSwitcher.html#_updateLayerCounter">_updateLayerCounter</a> </div>
+            
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#addLayer"> <a href="ol.control.LayerSwitcher.html#addLayer">addLayer</a> </div>
             
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#getCollapsed"> <a href="ol.control.LayerSwitcher.html#getCollapsed">getCollapsed</a> </div>
@@ -2654,6 +2682,10 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="_onZoomToExtentClick"><a href="ol.control.LayerSwitcher.html#_onZoomToExtentClick">_onZoomToExtentClick</a></li>
+            
+                <li data-name="_updateLayerCounter"><a href="ol.control.LayerSwitcher.html#_updateLayerCounter">_updateLayerCounter</a></li>
             
                 <li data-name="addLayer"><a href="ol.control.LayerSwitcher.html#addLayer">addLayer</a></li>
             
@@ -4468,12 +4500,12 @@
     <div class="nameContainer">
         <h4 class="name" id="GeoportalWMS">
             
-            new GeoportalWMS<span class="signature">(GeoportalWMSoptions)</span>
+            new GeoportalWMS<span class="signature">(options)</span>
         </h4>
     
         
         <div class="tag-source">
-            Layers/LayerWMS.js, line 32
+            Layers/LayerWMS.js, line 33
         </div>
         
     </div>
@@ -4511,7 +4543,7 @@
 	
         <tr>
             
-                <td class="name">GeoportalWMSoptions</td>
+                <td class="name">options</td>
             
             
             <td class="type">
@@ -4527,19 +4559,30 @@
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
+                <p>options for function call.</p>
                 
-                <p>options for function call.</p></td>
-        </tr>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
 	
+	<tbody>
 	
 	
         <tr>
             
-                <td class="name">options.layer</td>
+                <td class="name">layer</td>
             
             
             <td class="type">
@@ -4567,7 +4610,37 @@
 	
         <tr>
             
-                <td class="name">options.ssl</td>
+                <td class="name">configuration</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>configuration (cf. example)</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">ssl</td>
             
             
             <td class="type">
@@ -4597,7 +4670,7 @@
 	
         <tr>
             
-                <td class="name">options.apiKey</td>
+                <td class="name">apiKey</td>
             
             
             <td class="type">
@@ -4627,7 +4700,7 @@
 	
         <tr>
             
-                <td class="name">options.olParams</td>
+                <td class="name">olParams</td>
             
             
             <td class="type">
@@ -4697,6 +4770,13 @@
                     
                 
                 <p>other options for ol.source.TileWMS function (see <a href="http://openlayers.org/en/latest/apidoc/ol.source.TileWMS.html">ol.source.TileWMS</a>)</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+            </td>
         </tr>
 	
 	
@@ -4803,7 +4883,7 @@
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri May 24 2024 16:12:56 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri May 24 2024 21:34:19 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

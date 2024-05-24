@@ -629,9 +629,33 @@
 -->
 
             
+            <div class="l2 itemMembers"> Events </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:add"> <a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:add"> <a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:visibility"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:zoom"> <a href="module-LayerSwitcher.html#~event:layerswitcher:zoom">layerswitcher:zoom</a> </div>
+            
 
 <!--
             <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:opacity"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:visibility"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:zoom"><a href="module-LayerSwitcher.html#~event:layerswitcher:zoom">layerswitcher:zoom</a></li>
             
             </ul>
 -->
@@ -2631,6 +2655,10 @@
             
             <div class="l2 itemMembers"> Methods </div>
             
+                <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#_onZoomToExtentClick"> <a href="ol.control.LayerSwitcher.html#_onZoomToExtentClick">_onZoomToExtentClick</a> </div>
+            
+                <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#_updateLayerCounter"> <a href="ol.control.LayerSwitcher.html#_updateLayerCounter">_updateLayerCounter</a> </div>
+            
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#addLayer"> <a href="ol.control.LayerSwitcher.html#addLayer">addLayer</a> </div>
             
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#getCollapsed"> <a href="ol.control.LayerSwitcher.html#getCollapsed">getCollapsed</a> </div>
@@ -2654,6 +2682,10 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="_onZoomToExtentClick"><a href="ol.control.LayerSwitcher.html#_onZoomToExtentClick">_onZoomToExtentClick</a></li>
+            
+                <li data-name="_updateLayerCounter"><a href="ol.control.LayerSwitcher.html#_updateLayerCounter">_updateLayerCounter</a></li>
             
                 <li data-name="addLayer"><a href="ol.control.LayerSwitcher.html#addLayer">addLayer</a></li>
             
@@ -4473,7 +4505,7 @@
     
         
         <div class="tag-source">
-            Layers/LayerMapBox.js, line 41
+            Layers/LayerMapBox.js, line 129
         </div>
         
     </div>
@@ -4577,6 +4609,36 @@
                     
                 
                 <p>Layer name (e.g. &quot;PLAN.IGN&quot;)</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">configuration</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>configuration (cf. example)</p></td>
         </tr>
 	
 	
@@ -4764,7 +4826,93 @@
      extent
      declutter
      ...
-});</code></pre>
+});
+
+// Ex. configuration object for TMS Layer
+"PLAN.IGN$GEOPORTAIL:GPP:TMS": {
+  "hidden": true,
+  "queryable": false,
+  "serviceParams": {
+    "id": "GPP:TMS",
+    "version": "1.0.0",
+    "serverUrl": {
+      "cartes": "https://wxs.ign.fr/cartes/geoportail/tms/1.0.0/"
+    }
+  },
+  "name": "PLAN.IGN",
+  "title": "Plan IGN",
+  "description": "BDUni tuilée",
+  "formats": [
+    {
+      "current": true,
+      "name": "application/x-protobuf"
+    }
+  ],
+  "styles": [
+    {
+      "name": "standard",
+      "title": "Style standard",
+      "current": true,
+      "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/standard.json"
+    },
+    {
+      "name": "classique",
+      "title": "Style classique",
+      "current": true,
+      "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/classique.json"
+    },
+    {
+      "name": "transparent",
+      "title": "Style transparent",
+      "current": true,
+      "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/transparent.json"
+    },
+    {
+      "name": "accentue",
+      "title": "Style accentue",
+      "current": true,
+      "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/accentue.json"
+    },
+    {
+      "name": "attenue",
+      "title": "Style attenue",
+      "current": true,
+      "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/attenue.json"
+    },
+    {
+      "name": "gris",
+      "title": "Style en noir et blanc",
+      "current": false,
+      "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/gris.json"
+    },
+    {
+      "name": "epure",
+      "title": "Style epure",
+      "current": true,
+      "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/epure.json"
+    },
+    {
+      "name": "sans_toponymes",
+      "title": "Style sans toponymes",
+      "current": false,
+      "url": "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/sans_toponymes.json"
+    }
+  ],
+  "globalConstraint": {
+    "crs": null,
+    "bbox": {
+      "left": -724011.531917197,
+      "right": 1095801.237496279,
+      "top": 6672646.821182753,
+      "bottom": 5009377.0856973175
+    },
+    "minScaleDenominator": null,
+    "maxScaleDenominator": null
+  },
+  "quicklookUrl": "https://wxs.ign.fr/static/pictures/ign_carte2.jpg",
+  "layerId": "PLAN.IGN$GEOPORTAIL:GPP:TMS",
+  "defaultProjection": "EPSG:3857"
+}</code></pre>
     
 
     
@@ -4805,7 +4953,7 @@
     
         
         <div class="tag-source">
-            Layers/LayerMapBox.js, line 347
+            Layers/LayerMapBox.js, line 354
         </div>
         
     </div>
@@ -4922,7 +5070,7 @@
     
         
         <div class="tag-source">
-            Layers/LayerMapBox.js, line 273
+            Layers/LayerMapBox.js, line 282
         </div>
         
     </div>
@@ -5050,7 +5198,7 @@
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri May 24 2024 16:12:55 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri May 24 2024 21:34:19 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 
