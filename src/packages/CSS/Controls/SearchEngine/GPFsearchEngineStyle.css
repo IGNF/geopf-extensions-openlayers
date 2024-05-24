@@ -90,6 +90,14 @@ form[id^=GPsearchInput-] input:disabled {
   height: 32px;
 }
 
+dialog[id^=GPcoordinateSearchPanel], 
+dialog[id^=GPadvancedSearchPanel] {
+  width: 310px;
+  position: absolute;
+  top: 35px;
+  margin-left: 33px;
+}
+
 /* Autocomplete list / geocode results */
 
 div[id^=GPautoCompleteList],

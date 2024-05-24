@@ -106,10 +106,6 @@ button[id^=GPshowAdvancedSearch][aria-pressed="false"] + div[id^=GPadvancedSearc
 
 dialog[id^=GPcoordinateSearchPanel], 
 dialog[id^=GPadvancedSearchPanel] {
-  position: absolute;
-  top: 35px;
-  margin-left: 33px;;
-  width: 310px;
   height: inherit;
   vertical-align: top;
   overflow: hidden;
