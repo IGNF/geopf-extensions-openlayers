@@ -1028,7 +1028,7 @@ var SearchEngineDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPcoordinateSearchClose");
-        divClose.className = "GPpanelClose GPcoordinateSearchClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
+        divClose.className = "GPpanelClose GPcoordinateSearchClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         divClose.title = "Fermer la recherche par coordonnées";
 
         if (divClose.addEventListener) {
