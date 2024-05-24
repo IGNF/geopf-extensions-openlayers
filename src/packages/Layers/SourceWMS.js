@@ -20,6 +20,7 @@ var logger = Logger.getLogger("sourcewms");
  * @extends {ol.source.TileWMS}
  * @param {Object} options            - options for function call.
  * @param {String} options.layer      - Layer name (e.g. "ORTHOIMAGERY.ORTHOPHOTOS")
+ * @param {Object} [options.configuration] - configuration (cf. example) 
  * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
  * @param {String} [options.apiKey]   - Access key to Geoportal platform
  * @param {Array} [options.legends]   - Legends objects associated to the layer
@@ -53,22 +54,33 @@ var SourceWMS = class SourceWMS extends TileWMSSource {
             options.ssl = true;
         }
 
-        // Check if configuration is loaded
-        if (!Config.isConfigLoaded()) {
-            throw new Error("ERROR : contract key configuration has to be loaded to load Geoportal layers.");
+        // configuration de la ressource
+        var layerCfg = options.configuration;
+        var wmsParams = (layerCfg) ? layerCfg.params : null;
+        var apiKey = options.apiKey;
+
+        // 2 solutions pour la récupération des ressources utiles 
+        // * soit depuis la configuration en option
+        // * soit via la variable globale Gp.Config
+        if (!layerCfg) {
+            // Check if configuration is loaded
+            if (!Config.isConfigLoaded()) {
+                throw new Error("ERROR : contract key configuration has to be loaded to load Geoportal layers.");
+            }
+
+            var layerId = Config.configuration.getLayerId(options.layer, "WMS");
+            if (!layerId) {
+                throw new Error(`ERROR : WMS Layer ID ${options.layer} cannot be found in Geoportal Configuration. Make sure that this resource is included in your contract key.`);
+            }
+
+            layerCfg = Config.configuration.getLayerConf(layerId);
+            if (!layerCfg) {
+                throw new Error("ERROR : WMS Layer configuration cannot be found in Geoportal.");
+            }
+
+            apiKey = Config.configuration.getLayerKey(layerId)[0];
+            wmsParams = Config.configuration.getLayerParams(options.layer, "WMS");
         }
-
-        var layerId = Config.configuration.getLayerId(options.layer, "WMS");
-
-        if (!layerId) {
-            throw new Error(`ERROR : WMS Layer ID ${options.layer} cannot be found in Geoportal Configuration. Make sure that this resource is included in your contract key.`);
-        }
-
-        if (!Config.configuration.getLayerConf(layerId)) {
-            throw new Error("ERROR : WMS Layer configuration cannot be found in Geoportal....");
-        }
-
-        var wmsParams = Config.configuration.getLayerParams(options.layer, "WMS");
 
         // si ssl = false on fait du http
         // par défaut, ssl = true, on fait du https
@@ -81,7 +93,11 @@ var SourceWMS = class SourceWMS extends TileWMSSource {
             // si l'url est privée
             // Ajout de la clef d'API fournie par l'utilisateur en prioritée
             // ou récupérée depuis la configuration
-            urlParams["apikey"] = options.apiKey || Config.configuration.getLayerKey(layerId)[0];
+            var key = options.apiKey || apiKey;
+            if (!key) {
+                throw new Error("ERROR : WMS Layer apiKey cannot be found in Geoportal Configuration.");
+            }
+            urlParams["apikey"] = key;
         }
 
         var wmsSourceOptions = {

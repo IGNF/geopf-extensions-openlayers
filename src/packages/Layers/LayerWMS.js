@@ -18,8 +18,9 @@ import SourceWMS from "./SourceWMS";
  * @extends {ol.layer.Tile}
  * @alias ol.layer.GeoportalWMS
  * @type {ol.layer.GeoportalWMS}
- * @param {Object} GeoportalWMSoptions            - options for function call.
+ * @param {Object} options            - options for function call.
  * @param {String} options.layer      - Layer name (e.g. "ORTHOIMAGERY.ORTHOPHOTOS")
+ * @param {Object} [options.configuration] - configuration (cf. example) 
  * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
  * @param {String} [options.apiKey]   - Access key to Geoportal platform
  * @param {Object} [options.olParams] - other options for ol.layer.Tile function (see {@link http://openlayers.org/en/latest/apidoc/ol.layer.Tile.html ol.layer.Tile})
@@ -59,9 +60,23 @@ var LayerWMS = class LayerWMS extends TileLayer {
             options.ssl = true;
         }
 
-        // Check if configuration is loaded
-        if (!Config.isConfigLoaded()) {
-            throw new Error("ERROR : contract key configuration has to be loaded to load Geoportal layers.");
+        // configuration de la ressource
+        var layerCfg = options.configuration;
+
+        // 2 solutions pour la récupération des ressources utiles 
+        // * soit depuis la configuration en option
+        // * soit via la variable globale Gp.Config chargée
+        if (!layerCfg) {
+            // Check if configuration is loaded
+            if (!Config.isConfigLoaded()) {
+                throw new Error("ERROR : contract key configuration has to be loaded to load Geoportal layers.");
+            }
+            // récupération des autres paramètres nécessaires à la création de la layer
+            var layerId = Config.configuration.getLayerId(options.layer, "WMS");
+            layerCfg = Config.configuration.getLayerConf(layerId);
+            if (!layerCfg) {
+                throw new Error("ERROR : Layer ID not found into the catalogue !?");
+            }
         }
 
         // création de la source WMS
@@ -71,6 +86,7 @@ var LayerWMS = class LayerWMS extends TileLayer {
         }
         var wmsSource = new SourceWMS({
             layer : options.layer,
+            configuration : options.configuration,
             ssl : options.ssl,
             apiKey : options.apiKey,
             olParams : olSourceParams
@@ -83,10 +99,6 @@ var LayerWMS = class LayerWMS extends TileLayer {
         // si le param LAYERS n'a pas été renseigné lors de la création de la source,
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
         if (wmsSource.getParams().LAYERS !== undefined) {
-            // récupération des autres paramètres nécessaires à la création de la layer
-            var layerId = Config.configuration.getLayerId(options.layer, "WMS");
-            var globalConstraints = Config.configuration.getGlobalConstraints(layerId);
-
             /* INFO : on ne récupère l'emprise de la couche que lorsque que l'utilisateur spécifie la projection.
                Si aucune projection n'est spécifiée, il faudrait spécifier l'emprise dans la projection de la carte (car OpenLayers reprojette),
                mais on ne peut pas la récupérer à ce niveau. On ne spécifie donc aucune emprise.
@@ -95,10 +107,10 @@ var LayerWMS = class LayerWMS extends TileLayer {
             if (olSourceParams && olSourceParams.projection) {
                 // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj spécifiée
                 var geobbox = [
-                    globalConstraints.extent.left,
-                    globalConstraints.extent.bottom,
-                    globalConstraints.extent.right,
-                    globalConstraints.extent.top
+                    layerCfg.globalConstraints.extent.left,
+                    layerCfg.globalConstraints.extent.bottom,
+                    layerCfg.globalConstraints.extent.right,
+                    layerCfg.globalConstraints.extent.top
                 ];
                 layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
 
@@ -117,15 +129,15 @@ var LayerWMS = class LayerWMS extends TileLayer {
                          * on les arrondit respectivement à l'unité inférieure et supérieure
                          * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
                         // info : 1 pixel = 0.00028 m
-                        layerTileOptions.minResolution = (globalConstraints.minScale - 1) * 0.00028;
-                        layerTileOptions.maxResolution = (globalConstraints.maxScale + 1) * 0.00028;
+                        layerTileOptions.minResolution = (layerCfg.globalConstraints.minScale - 1) * 0.00028;
+                        layerTileOptions.maxResolution = (layerCfg.globalConstraints.maxScale + 1) * 0.00028;
                     } else if (p.getUnits() === "degrees") {
                         /* fixme : fix temporaire pour gérer les min/max scaledenominator qui sont arrondis dans la configuration !
                          * on les arrondit respectivement à l'unité inférieure et supérieure
                          * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
                         // info : 6378137 * 2 * pi / 360 = rayon de la terre (ellipsoide WGS84)
-                        layerTileOptions.minResolution = (globalConstraints.minScale - 1) * 0.00028 * 180 / (Math.PI * 6378137);
-                        layerTileOptions.maxResolution = (globalConstraints.maxScale + 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                        layerTileOptions.minResolution = (layerCfg.globalConstraints.minScale - 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                        layerTileOptions.maxResolution = (layerCfg.globalConstraints.maxScale + 1) * 0.00028 * 180 / (Math.PI * 6378137);
                     }
                 }
             }
