@@ -60,6 +60,7 @@ var LocationSelectorDOM = {
         buttonOrigin.id = this._addUID("GPlocationOriginLabel_" + id);
         buttonOrigin.innerHTML = text;
         buttonOrigin.className = "GPlocationOriginLabel gpf-btn gpf-btn-icon-label fr-btn fr-btn--secondary";
+        buttonOrigin.setAttribute("type", "button");
         buttonOrigin.addEventListener("click", function (e) {
             var i = ID.index(this.id);
             var points = document.getElementsByClassName(self._addUID("GPlocationPoint"));
@@ -245,6 +246,7 @@ var LocationSelectorDOM = {
         buttonOriginPointer.htmlFor = this._addUID("GPlocationOriginPointer_" + id);
         buttonOriginPointer.className = "GPlocationOriginPointerImg gpf-btn gpf-btn-icon-pointer fr-btn fr-btn--secondary";
         buttonOriginPointer.title = "Pointer un lieu sur la carte";
+        buttonOriginPointer.setAttribute("type", "button");
         buttonOriginPointer.addEventListener("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -328,6 +330,7 @@ var LocationSelectorDOM = {
         buttonRm.title = "Supprimer l'étape";
         buttonRm.setAttribute("tabindex", "0");
         buttonRm.setAttribute("aria-pressed", false);
+        buttonRm.setAttribute("type", "button");
         buttonRm.addEventListener("click", function (e) {
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
@@ -376,6 +379,7 @@ var LocationSelectorDOM = {
         buttonAdd.title = "Ajouter une étape";
         buttonAdd.setAttribute("tabindex", "0");
         buttonAdd.setAttribute("aria-pressed", false);
+        buttonAdd.setAttribute("type", "button");
         buttonAdd.addEventListener("click", function (e) {
             var lastStage = 1;
             var nbStages = 0;
