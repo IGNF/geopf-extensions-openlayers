@@ -271,7 +271,7 @@ var SearchEngine = class SearchEngine extends Control {
             zoomTo : "",
 
             resources : {
-                geocode : "",
+                geocode : [],
                 autocomplete : [],
                 search : false
             },
@@ -301,7 +301,7 @@ var SearchEngine = class SearchEngine extends Control {
         // merge with user options
         Utils.mergeParams(this.options, options);
         if (this.options.resources.geocode === "") {
-            this.options.resources.geocode = "poi,address";
+            this.options.resources.geocode = ["PositionOfInterest", "StreetAddress"];
         }
         if (this.options.resources.autocomplete.length === 0) {
             this.options.resources.autocomplete = ["PositionOfInterest", "StreetAddress"];
