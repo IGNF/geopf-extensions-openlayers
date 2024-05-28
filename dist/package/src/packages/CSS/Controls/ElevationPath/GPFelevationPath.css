@@ -28,7 +28,7 @@ button[id^="GPshowElevationPathPicto-"][aria-pressed="true"] + dialog {
 }
 
 [id^=GPelevationPathPanel-] {
-  position : relative;
+  position : absolute;
   top : 6px;
   left: 32px;
 }
