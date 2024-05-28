@@ -4,3 +4,10 @@
     background-size: auto auto;
     background-position: center center;
 }
+
+div[id^=GPmousePositionAltitude-],
+div[id^=GPmousePositionCoordinate-] > div {
+  display: flex;
+  justify-content: space-between;
+}
+
