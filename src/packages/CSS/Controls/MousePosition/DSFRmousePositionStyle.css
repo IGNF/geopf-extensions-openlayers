@@ -4,3 +4,8 @@
     background-size: auto auto;
     background-position: center center;
 }
+
+div[id^=GPmousePositionBasicPanel-] .fr-mb-1w {
+  display: flex;
+  justify-content: space-between;
+}

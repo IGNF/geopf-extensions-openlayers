@@ -69,13 +69,7 @@ input:read-only.GPSexagesimal, input:read-only.GPSexagesimalsec {
   text-align: right;
 }
 
-.GPSexagesimal {
-  width: 30px;
-}
 
-.GPSexagesimalsec {
-  width: 45px;
-}
 .GPmousePositionSexagesimalLabel {
   font-size: 1.2em;
   vertical-align: middle;
