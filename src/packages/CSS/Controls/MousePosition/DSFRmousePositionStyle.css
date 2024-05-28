@@ -5,7 +5,8 @@
     background-position: center center;
 }
 
-div[id^=GPmousePositionBasicPanel-] .fr-mb-1w {
+div[id^=GPmousePositionAltitude-],
+div[id^=GPmousePositionCoordinate-] > div {
   display: flex;
   justify-content: space-between;
 }
