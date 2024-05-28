@@ -87,7 +87,6 @@ div[id^=GProuteStageAdd] {
 }
 
 .GProuteFormMini {
-  max-height: 58px;
   overflow: hidden;
   -webkit-transform: translateY(-5px);
   transform: translateY(-5px);
