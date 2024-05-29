@@ -2023,6 +2023,9 @@ var SearchEngine = class SearchEngine extends Control {
         for (var i = 0; i < data.length; i++) {
             var filter = data[i];
             if (filter.value) {
+                if (filter.key === "section") {
+                    filter.value = filter.value.toUpperCase();
+                }
                 _filterOptions[filter.key] = filter.value;
             }
         }
