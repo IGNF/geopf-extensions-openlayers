@@ -144,5 +144,5 @@ div[id^=GPlayerInfoContent] {
   flex: 1 1 auto;
   position: relative;/* need this to position inner content */
   overflow-y: auto;
-  max-height: 10em !important;
+  max-height: 10em;
 }
