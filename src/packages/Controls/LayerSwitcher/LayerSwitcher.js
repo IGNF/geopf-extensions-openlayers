@@ -636,7 +636,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         if (this.options.panel) {
             // header
             var panelHeader = this._createLayersPanelHeaderElement();
-            div.appendChild(panelHeader);
+            divL.insertBefore(panelHeader, div);
             // icon
             var panelIcon = this._createLayersPanelIconElement();
             panelHeader.appendChild(panelIcon);

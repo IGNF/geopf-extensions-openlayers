@@ -110,11 +110,13 @@ div[id^=GPadvancedTools_ID_] {
     right: -16px;
 }
 .gpf-panel__header_ls {
+    flex: 0 0 auto;
     display: flex;
     flex-direction: row;
     align-items: center;
     align-content: center;
     background: #E3E3FD;
+    justify-content: space-between;
 }
 
 .gpf-btn-icon-ls-info {

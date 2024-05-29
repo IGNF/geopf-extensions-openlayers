@@ -52,6 +52,8 @@ button[id^="GPshowLayersListPicto-"][aria-pressed="true"] + dialog {
 /* positionnement inactif */
 dialog[id^=GPlayersList] {
  position: relative;
+ display: flex;
+ flex-direction: column;
 }
 button[id^=GPshowLayersListPicto-] {
   float: right;
@@ -60,7 +62,6 @@ button[id^=GPshowLayersListPicto-] {
 dialog[id^=GPlayersList] {
   border-bottom-right-radius: 0;
   opacity: 0;
-  overflow: auto;
   /* transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0.25s; */
 }
 
@@ -95,7 +96,6 @@ button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersLis
   top: 0;
   background-color: #FFF;
   border-bottom: 1px dotted #CCC;
-  overflow: hidden;
 }
 
 dialog[id^=GPlayersList] .GPlayerSwitcher_layer:last-child {
@@ -140,4 +140,9 @@ div[id^=GPlayerInfoContent] {
   padding-left: 10px;
   padding-right: 10px;
 }
-
+.GPlayerPanelBody {
+  flex: 1 1 auto;
+  position: relative;/* need this to position inner content */
+  overflow-y: auto;
+  max-height: 10em !important;
+}
