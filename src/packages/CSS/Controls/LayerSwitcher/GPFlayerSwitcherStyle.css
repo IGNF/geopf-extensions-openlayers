@@ -5,7 +5,7 @@ div[id^=GPlayerSwitcher-] {
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
-  width: 190px;
+  width: 215px;
 }
 
 button[id^=GPshowLayersListPicto] {
