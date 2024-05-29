@@ -93,6 +93,14 @@ span[id^=GPmousePositionAlt-] {
     text-align: right;
 }
 
+.GPSexagesimal {
+  width: 30px;
+}
+
+.GPSexagesimalsec {
+  width: 45px;
+}
+
 span[id^=GPmousePositionCloseEdit] {
     background-position: -18px 0;
     margin-left: 5px;
