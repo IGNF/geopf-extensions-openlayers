@@ -132,6 +132,7 @@ class PositionFactory {
                 case "bottom-left":
                     panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
                     panel.style.left = sizeW(pos) + "px";
+                    panel.style["max-height"] = "232px";
                     break;
                 case "top-right":
                     panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
@@ -140,6 +141,7 @@ class PositionFactory {
                 case "bottom-right":
                     panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
                     panel.style.right = sizeW(pos) + "px";
+                    panel.style["max-height"] = "232px";
                     break;
                 default:
                     break;
