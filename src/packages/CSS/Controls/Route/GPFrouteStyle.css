@@ -35,6 +35,10 @@ div[id^=GProuteStageAdd],
   font-size: 0;
 }
 
+.GProuteFormMini {
+  max-height: 58px;
+}
+
 .GProuteExclusionsOption {
   background-image: url("img/GProuteCheck.png");
 }

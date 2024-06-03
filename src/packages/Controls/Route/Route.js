@@ -112,7 +112,7 @@ var Route = class Route extends Control {
      * @param {*} options - options
      * @example
      * import Route from "gpf-ext-ol/controls/Route"
-     * ou 
+     * ou
      * import { Route } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -1181,10 +1181,12 @@ var Route = class Route extends Control {
         if (locationSelector._inputShowPointerContainer.checked) {
             // au click sur l'input pour pointer sur la carte: on minimise le formulaire
             this._formRouteContainer.className = "GProuteFormMini gpf-panel__content fr-modal__content";
+            e.target.parentElement.parentElement.classList.add("selected");
             // et au clic sur la carte, on réaffichera le formulaire "normal"
             this.listenerKey = map.on(
                 "click",
                 () => {
+                    e.target.parentElement.parentElement.classList.remove("selected");
                     // on ne rétablit pas le mode "normal" si on est dans le panel des résultats (où className = "GProuteComponentHidden")
                     if (this._formRouteContainer.className === "GProuteFormMini gpf-panel__content fr-modal__content") {
                         this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
