@@ -97,7 +97,7 @@ var LayerSwitcherDOM = {
 
     _createMainLayersDivElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__body fr-modal__body";
+        div.className = "GPpanelBody gpf-panel__body_ls fr-modal__body";
         return div;
     },
 

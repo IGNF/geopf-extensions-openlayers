@@ -23,6 +23,11 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] {
 }
 
 /* Layers list */
+.GPpanelBody {
+  overflow: auto;
+  max-height: inherit;
+}
+
 button[id^=GPlayerInfoClose] {
   background-position: -2px center;
   background-repeat: no-repeat;

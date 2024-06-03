@@ -60,7 +60,7 @@ button[id^=GPshowLayersListPicto-] {
 dialog[id^=GPlayersList] {
   border-bottom-right-radius: 0;
   opacity: 0;
-  overflow: auto;
+  /* overflow: auto; */
   /* transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0.25s; */
 }
 

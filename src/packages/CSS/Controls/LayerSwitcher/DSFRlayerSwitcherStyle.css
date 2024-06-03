@@ -105,6 +105,12 @@ div[id^=GPadvancedTools_ID_] {
     background-size: auto auto;
     background-position: center center;
 }
+
+.gpf-panel__body_ls {
+    overflow: auto;
+    max-height: inherit;
+}
+
 .gpf-panel__title_ls {
     color: #101092;
     padding: 12px 15px;
