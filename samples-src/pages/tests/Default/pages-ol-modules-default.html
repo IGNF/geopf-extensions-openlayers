@@ -32,6 +32,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlElevationPath.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalAttribution.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalAttribution.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalZoom.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalZoom.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -75,42 +77,55 @@
                   })
                 });
 
+                var zoom = new ol.control.GeoportalZoom({
+                  position : "top-right"
+                });
+
+                map.addControl(zoom);
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });
                 map.addControl(drawing);
+
                 var iso = new ol.control.Isocurve({
                   position : "bottom-left"
                 });
                 map.addControl(iso);
+
                 var layerImport = new ol.control.LayerImport({
                   position : "bottom-left"
                 });
                 map.addControl(layerImport);
+
                 var layerSwitcher = new ol.control.LayerSwitcher({
                   options :{
                     position : "bottom-right"
                   }
                 });
                 map.addControl(layerSwitcher);
+
                 var mp = new ol.control.GeoportalMousePosition({
                   position : "bottom-right"
                 });
                 map.addControl(mp);
+
                 var route = new ol.control.Route({
                   position : "bottom-right"
                 });
                 map.addControl(route);
+
                 var feature =  new ol.control.GetFeatureInfo({
                   options :{
                     position : "top-right"
                   }
                 });
                 map.addControl(feature);
+
                 var reverse = new ol.control.ReverseGeocode({
                   position : "top-right"
                 });
                 map.addControl(reverse);
+
                 var search = new ol.control.SearchEngine({
                   position : "top-left"
                 });
@@ -120,14 +135,17 @@
                   position : "top-left"
                 });
                 map.addControl(measureLength);
+
                 var measureArea = new ol.control.MeasureArea({
                   position : "top-left"
                 });
                 map.addControl(measureArea);
+
                 var measureAzimuth = new ol.control.MeasureAzimuth({
                   position : "top-left"
                 });
                 map.addControl(measureAzimuth);
+
                 var measureProfil = new ol.control.ElevationPath({
                   position : "top-left"
                 });

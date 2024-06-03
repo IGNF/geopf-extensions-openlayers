@@ -1,0 +1,13 @@
+.GPzoomIn {
+    background-image: url("img/zoom-in.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.GPzoomOut {
+    background-image: url("img/zoom-out.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}

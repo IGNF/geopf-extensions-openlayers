@@ -1,0 +1,12 @@
+.gpf-btn-icon-zoom-in {
+    background-image: url("img/dsfr/zoom-in.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+.gpf-btn-icon-zoom-out {
+    background-image: url("img/dsfr/zoom-out.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
