@@ -57,6 +57,10 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
     box-shadow: none;
 }
 
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
+    height: 56px;
+    max-height: 56px;
+}
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
     background-image: url("img/dsfr/collapse.svg");
     background-repeat: no-repeat;
@@ -85,6 +89,7 @@ div[id^=GPadvancedTools_ID_] {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-around;
+    height: inherit;
 }
 
 .gpf-btn-header {

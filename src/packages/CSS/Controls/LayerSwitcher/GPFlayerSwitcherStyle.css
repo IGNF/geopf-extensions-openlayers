@@ -152,6 +152,10 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="true"] {
   background-position: 0 0;
 }
 
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
+  max-height: 28px;
+}
+
 .GPshowLayerAdvancedTools {
   top: 0;
   right: 0;

@@ -114,7 +114,6 @@ dialog[id^=GPlayersList] .GPlayerSwitcher_layer:last-child {
 }
 
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
-  max-height: 28px;
   opacity: 1;
 }
 
