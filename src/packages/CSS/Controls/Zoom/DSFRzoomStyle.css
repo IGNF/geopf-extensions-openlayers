@@ -4,6 +4,8 @@
     background-size: auto auto;
     background-position: center center;
     box-shadow: none;
+    height: inherit;
+    width: inherit;
 }
 .gpf-btn-icon-zoom-out {
     background-image: url("img/dsfr/zoom-out.svg");
@@ -11,4 +13,6 @@
     background-size: auto auto;
     background-position: center center;
     box-shadow: none;
+    height: inherit;
+    width: inherit;
 }

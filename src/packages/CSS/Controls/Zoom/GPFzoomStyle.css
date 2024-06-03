@@ -2,12 +2,16 @@
     background-image: url("img/zoom-in.svg");
     background-repeat: no-repeat;
     background-size: auto auto;
-    background-position: center center;
+    background-position: 4px center;
+    height: 40px;
+    width: 40px;
 }
 
 .GPzoomOut {
     background-image: url("img/zoom-out.svg");
     background-repeat: no-repeat;
     background-size: auto auto;
-    background-position: center center;
+    background-position: 4px center;
+    height: 40px;
+    width: 40px;
 }
