@@ -384,3 +384,18 @@ div[id^=GPlayerInfoMetadata] {
   color: inherit;
 }
 
+
+.GPlayerName {
+  left: 28px;
+  width: calc(100% - 56px);
+  line-height: 28px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-left: 4px;
+  cursor: move;
+}
+
+.outOfRange .GPlayerName {
+  color: #AAA;
+}

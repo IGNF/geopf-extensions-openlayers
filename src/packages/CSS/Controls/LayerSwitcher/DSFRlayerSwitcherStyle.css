@@ -137,3 +137,17 @@ div[id^=GPlayerInfoPanel] {
     position: absolute;
     height: initial;
 }
+
+.gpf-label-name {
+    width: calc(100% - 96px);
+    line-height: 28px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 4px;
+    cursor: move;
+}
+
+.gpf-range__output {
+    width: 35px;
+}
