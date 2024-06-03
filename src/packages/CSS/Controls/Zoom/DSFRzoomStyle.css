@@ -3,10 +3,12 @@
     background-repeat: no-repeat;
     background-size: auto auto;
     background-position: center center;
+    box-shadow: none;
 }
 .gpf-btn-icon-zoom-out {
     background-image: url("img/dsfr/zoom-out.svg");
     background-repeat: no-repeat;
     background-size: auto auto;
     background-position: center center;
+    box-shadow: none;
 }
