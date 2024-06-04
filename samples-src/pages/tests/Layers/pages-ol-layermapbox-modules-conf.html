@@ -3,6 +3,8 @@
 {{#content "vendor"}}
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
@@ -127,7 +129,16 @@
                                 layer  : "PLAN.IGN",
                                 style  : "gris",
                                 configuration : conf
-                            })
+                            },{
+                                declutter : true
+                            }),
+                            new ol.layer.GeoportalMapBox({
+                                layer  : "PLAN.IGN",
+                                style  : "attenue",
+                                configuration : conf
+                            },{
+                                declutter : false
+                            }),
                         ]
                     });
 
@@ -136,6 +147,12 @@
 
 					// Ajout du LayerSwitcher à la carte
                     map.addControl(layerSwitcher);
+
+                    var layerImport = new ol.control.LayerImport({
+                        draggable : true,
+                        position : "bottom-left"
+                    });
+                    map.addControl(layerImport);
            </script>
 {{/content}}
 
