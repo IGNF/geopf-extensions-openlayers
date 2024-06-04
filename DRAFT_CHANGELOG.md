@@ -1,7 +1,9 @@
 # Extension Geoplateforme OpenLayers, 🔖 version __VERSION__
 
-**__DATE__**
+__DATE__
 > Release Extension Geoplateforme openlayers
+
+🚀 __Unreleased__
 
 ## 🎉 Summary
 
@@ -31,6 +33,7 @@
 
 * 🐛 [Fixed]
 
+  * LayerSwitcher : divers correctifs dsfr (#64)
   * SearchEngine : Correction sur la recherche avancée de la parcelle Cadastrale (#61)
   * Route : Problème de css DSFR en mode saisie du point d'arriver ou de départ (#60)
   * MousePosition : Affichage des coordonnées en sexagésimaux en DSFR (#57)
@@ -43,7 +46,5 @@
   * update dependency geoportal-access-lib to v3.4.2
   * update dependency webpack-dev-server to v5
   * update dependency proj4 to v2.11.0
-
-## 🚀 Unreleased
 
 ---
