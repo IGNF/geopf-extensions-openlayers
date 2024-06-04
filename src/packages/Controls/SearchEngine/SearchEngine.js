@@ -77,7 +77,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
- * @param {Sring}   [options.searchOptions.serviceOptions.url] - url of service 
+ * @param {Sring}   [options.searchOptions.serviceOptions.url] - url of service
  * @param {String}  [options.searchOptions.serviceOptions.index] - index of search, "standard" by default
  * @param {String}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
  * @param {Number}  [options.searchOptions.serviceOptions.size] - number of response in the service. 1000 by default
@@ -158,7 +158,7 @@ var SearchEngine = class SearchEngine extends Control {
      * @param {*} options - options
      * @example
      * import SearchEngine from "gpf-ext-ol/controls/SearchEngine"
-     * ou 
+     * ou
      * import { SearchEngine } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -283,13 +283,17 @@ var SearchEngine = class SearchEngine extends Control {
             coordinateSearch : {},
             searchOptions : {
                 addToMap : true,
-                serviceOptions : {}
+                serviceOptions : {
+                    maximumResponses : 5,
+                }
             },
             geocodeOptions : {
                 serviceOptions : {}
             },
             autocompleteOptions : {
-                serviceOptions : {},
+                serviceOptions : {
+                    maximumResponses : 5,
+                },
                 triggerGeocode : false,
                 triggerDelay : 1000
             },
@@ -400,7 +404,7 @@ var SearchEngine = class SearchEngine extends Control {
             this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code; // decimal
         }
 
-        
+
         this._coordinateSearchLngInput = null;
         this._coordinateSearchLatInput = null;
 
@@ -715,7 +719,7 @@ var SearchEngine = class SearchEngine extends Control {
     _initContainer () {
         // create main container
         var container = this._createMainContainerElement();
-        
+
         var searchDiv = this._createSearchDivElement();
         // create search engine picto
         var picto = this._showSearchEngineButton = this._createShowSearchEnginePictoElement(this.options.opened);
@@ -773,7 +777,7 @@ var SearchEngine = class SearchEngine extends Control {
             var geolocateShow = this._createShowGeolocateElement();
             buttonsContainer.appendChild(geolocateShow);
         }
-        
+
         if (this.options.displayButtonCoordinateSearch) {
             var searchByCoordinateShow = this._createShowSearchByCoordinateElement();
             buttonsContainer.appendChild(searchByCoordinateShow);
@@ -797,7 +801,7 @@ var SearchEngine = class SearchEngine extends Control {
             var units = this._setCoordinateSearchUnitsSelectElement(this._coordinateSearchUnits[this._currentCoordinateSearchType]);
             div.appendChild(labelUnits);
             div.appendChild(units);
-            
+
             div = this._containerCoordinateLng = this.__createCoordinateSearchDivElement();
             coordinateForm.appendChild(div);
             var coordinateLng = this._setCoordinateSearchLngLabelElement(this._currentCoordinateSearchType);
@@ -811,7 +815,7 @@ var SearchEngine = class SearchEngine extends Control {
             var coordinateInputLat = this._coordinateSearchLatInput = this._setCoordinateSearchLatInputElement(this._currentCoordinateSearchUnits);
             div.appendChild(coordinateLat);
             div.appendChild(coordinateInputLat);
-            
+
             var submit = this._createCoordinateSearchSubmitElement();
             coordinateForm.appendChild(submit);
 
@@ -1809,7 +1813,7 @@ var SearchEngine = class SearchEngine extends Control {
             if (!suggest) {
                 throw "No suggestions found !";
             }
-    
+
             // Ajout de la couche sur la carte si l'option le permet
             if (this.options.searchOptions.addToMap) {
                 // Check if configuration is loaded
@@ -2187,7 +2191,7 @@ var SearchEngine = class SearchEngine extends Control {
     // ################################################################### //
     // ############### handlers events Coordinate Search ################# //
     // ################################################################### //
-    
+
     /**
      * this method is called by event 'change' on ''
      * tag select (cf. this.),
@@ -2231,7 +2235,7 @@ var SearchEngine = class SearchEngine extends Control {
             this._updateCoordinateSearchElements();
         }
     }
-    
+
     /**
      * this method is called by event 'change' on ''
      * tag select (cf. this.),
@@ -2265,7 +2269,7 @@ var SearchEngine = class SearchEngine extends Control {
         this._coordinateSearchLngInput.value = "";
         this._coordinateSearchLatInput.value = "";
     }
-    
+
     _updateCoordinateSearchElements () {
         var lbl = this._setCoordinateSearchLngLabelElement(this._currentCoordinateSearchType);
         var input = this._coordinateSearchLngInput = this._setCoordinateSearchLngInputElement(this._currentCoordinateSearchUnits);
