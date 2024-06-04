@@ -1,6 +1,9 @@
 /* 
  * Liste des surcharges du mode DSFR 
  */
+:root {
+  --size-per-row: 44px;
+}
 
 .gpf-widget {
   position: absolute;
@@ -39,6 +42,7 @@
   padding: 0;
   margin-top: 0;
 }
+
 .gpf-panel__content {
   padding: unset;
   margin-bottom: unset;
@@ -96,14 +100,16 @@
   left: 0;
   right: 0;
   border-radius: 4px;
-  background-color: rgba(255,255,255,0.9);
+  background-color: rgba(255, 255, 255, 0.9);
   font-size: 1.5em;
   font-weight: bold;
   overflow: hidden;
 }
+
 .gpf-waiting--hidden {
   display: none;
 }
+
 .gpf-waiting--visible {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -119,14 +125,15 @@
 /* button  */
 /***********/
 
-.gpf-btn  {
-}
+.gpf-btn {}
+
 .gpf-btn--hidden {}
+
 .gpf-btn-icon-return {}
+
 .gpf-btn-icon-submit {}
-.gpf-btn-icon-reverse {
-  
-}
+
+.gpf-btn-icon-reverse {}
 
 /* positionnement absolu en haut à droite du bouton "fermer" */
 .gpf-btn-icon-close {
@@ -137,7 +144,7 @@
 }
 
 .gpf-btn-icon {
-  width:inherit
+  width: inherit
 }
 
 .gpf-btn-icon-reset {
@@ -154,11 +161,15 @@
 /*************/
 
 .gpf-label {}
+
 .gpf-select {}
+
 .gpf-input {
   padding-left: 5px;
 }
+
 .gpf-radio-group {}
+
 .gpf-upload {}
 
 /*************/
@@ -197,7 +208,7 @@
   font-size: 1.0em;
   overflow: hidden;
   white-space: nowrap;
-  text-overflow:ellipsis;
+  text-overflow: ellipsis;
   cursor: pointer;
 }
 
@@ -215,6 +226,7 @@
 :root {
   --size-per-row: 50px;
 }
+
 .position-container-top-left,
 .position-container-top-right,
 .position-container-bottom-left,
@@ -240,6 +252,7 @@
   float: left;
   left: 0;
 }
+
 .position-container-top-right {
   float: right;
   right: 0;
@@ -254,6 +267,7 @@
   float: right;
   right: 0px;
 }
+
 .position-container-bottom-left {
   float: left;
   left: 0px;
@@ -264,7 +278,7 @@
 /**********************/
 
 .gp-feature-info-div {
-  bottom: 17px ;
+  bottom: 17px;
   position: relative;
   max-width: calc(100vw - 80px);
   padding: 10px;
