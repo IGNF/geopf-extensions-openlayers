@@ -39,6 +39,7 @@
   
 * 🔒 [Security]
 
+  * replace dependency xmldom with @xmldom/xmldom
   * update dependency ol-mapbox-style to v12.3.3
   * update dependency @mapbox/mapbox-gl-style-spec to v14.4.0
   * update dependency css-loader to v7

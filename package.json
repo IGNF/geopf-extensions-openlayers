@@ -52,7 +52,7 @@
     "sortablejs": "1.15.2",
     "typescript": "^5.3.3",
     "whatwg-fetch": "3.6.20",
-    "xmldom": "^0.6.0"
+    "@xmldom/xmldom": "^0.8.10"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
