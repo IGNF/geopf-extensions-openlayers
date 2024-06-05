@@ -23,6 +23,7 @@
 
 * 🔨 [Changed]
 
+  * SearchEngine : Modification de l'option `opened:false` en `collapsible:true`
   * CI : Build des binaires et des sources du projet (#13)
 
 * 🔥 [Deprecated]
