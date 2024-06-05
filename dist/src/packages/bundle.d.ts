@@ -66,6 +66,7 @@ declare namespace Ol {
         export { ElevationPath };
         export { LocationSelector };
         export { ButtonExport as Export };
+        export { GeoportalZoom };
     }
 }
 import GfiUtils from "./Controls/Utils/Gfi";
@@ -103,5 +104,6 @@ import Markers from "./Controls/Utils/Markers";
 import ElevationPath from "./Controls/ElevationPath/ElevationPath";
 import LocationSelector from "./Controls/LocationSelector/LocationSelector";
 import ButtonExport from "./Controls/Export/Export";
+import GeoportalZoom from "./Controls/Zoom/GeoportalZoom";
 export { HelperUtils, LayerUtils, ProxyUtils, ColorUtils, MathUtils, Logger, Parser, Register, Ol as olExtended };
 //# sourceMappingURL=bundle.d.ts.map

@@ -1,0 +1,16 @@
+/*!
+ * @brief geoportal-extensions-openlayers
+ *
+ * This software is released under the licence CeCILL-B (Free BSD compatible)
+ * @see http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
+ * @see http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.txt
+ * @see http://www.cecill.info/
+ *
+ * @copyright copyright (c) IGN 
+ * @license CeCILL-B
+ * @author IGN
+ * @version 1.0.0-beta.63
+ * @date 03/06/2024
+ *
+ */[id^=GPzoom-]{left:.5em;top:.5em}#GPzoomIn,#GPzoomOut{border:unset}
+/*# sourceMappingURL=GpfExtOlGeoportalZoom.css.map*/

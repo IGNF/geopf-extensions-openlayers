@@ -1,0 +1,9 @@
+[id^=GPzoom-] {
+    top: 0.5em;
+    left: 0.5em;
+}
+
+#GPzoomIn,
+#GPzoomOut {
+    border: unset;
+}
