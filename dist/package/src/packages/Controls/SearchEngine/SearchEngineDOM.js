@@ -536,7 +536,7 @@ var SearchEngineDOM = {
         var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
         var label = document.createElement("option");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
-        label.innerHTML = "LIEUX & ADRESSES";
+        label.innerHTML = "Lieux & Adresses";
         container.appendChild(label);
     },
 

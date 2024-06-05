@@ -39,7 +39,7 @@
 /* position */
 /************/
 :root {
-  --size-per-row: 44px;
+  --size-per-row: 32px;
 }
 #position-container-top-left,
 #position-container-top-right,

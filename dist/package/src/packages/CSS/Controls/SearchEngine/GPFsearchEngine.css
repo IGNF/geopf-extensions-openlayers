@@ -161,7 +161,7 @@ input[id^=GPadvancedSearchSubmit] {
   font-weight: bold;
 }
 
-[id^="GPautocompleteResults"] {
+[id^="GPautocompleteResults-"] {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -187,6 +187,7 @@ dialog[id^="GPgeocodeResultsList"] {
 [id^="GPautocompleteResultsSuggest"],
 [id^="GPautocompleteResultsLocation"] {
   width: inherit;
+  padding: 0;
 }
 
 /* Mode Mobile */
