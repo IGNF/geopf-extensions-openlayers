@@ -117,7 +117,7 @@ var SourceWMTS = class SourceWMTS extends WMTSExtended {
             tileGrid : new WMTSTileGrid({
                 resolutions : wmtsParams.nativeResolutions,
                 matrixIds : wmtsParams.matrixIds,
-                origin : [wmtsParams.tileMatrices[0].topLeftCorner.x, wmtsParams.tileMatrices[0].topLeftCorner.y]
+                origin : [Object.values(wmtsParams.tileMatrices)[0].topLeftCorner.x, Object.values(wmtsParams.tileMatrices)[0].topLeftCorner.y]
             })
         };
 

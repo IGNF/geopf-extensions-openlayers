@@ -19,12 +19,14 @@ __DATE__
 
 * ✨ [Added]
 
+  * Zoom: Nouveau widget GeoportalZoom (#63)
   * SearchEngine : Ajout d'une couche sur la carte sur une sélection du service de recherche (#46)
   * SearchEngine : Ajout d'un filtre d'affichage pour les couches uniquement en TMS/WMTS (#14)
   * CI : Demo sur les frameworks vue, react et angular afin de valider les extensions (#16)
 
 * 🔨 [Changed]
 
+  * SearchEngine : Modification de l'option `opened:false` en `collapsible:true`
   * CI : Build des binaires et des sources du projet (#13)
 
 * 🔥 [Deprecated]
@@ -40,7 +42,9 @@ __DATE__
   * ElevationPath : Positionnement du profil sur la carte (#55)
   
 * 🔒 [Security]
-  
+
+  * replace dependency xmldom with @xmldom/xmldom
+  * update dependency ol-mapbox-style to v12.3.3
   * update dependency @mapbox/mapbox-gl-style-spec to v14.4.0
   * update dependency css-loader to v7
   * update dependency geoportal-access-lib to v3.4.2

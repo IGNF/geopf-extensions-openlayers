@@ -7,8 +7,21 @@
     background-color: #ffffff;
 }
 
+.gpf-panel__items,
+.GPlabelTitle {
+  color: var(--text-action-high-blue-france);
+  border-bottom: 1px solid var(--grey-900-175);
+  padding: 12px;
+}
+
+
 .gpf-panel__items {
   height: unset;
+}
+
+.GPlabelTitle {
+  background-color: var(--background-open-blue-france);
+  font-size: 1.0em;
 }
 
 select[name^="inputSex"].gpf-select {
@@ -36,7 +49,7 @@ div.GPbuttonsContainer > button {
 }
 /* hack pour forcer la couleur d'un element desactivé */
 .gpf-btn-icon-search:disabled {
-    background-color: #000091; 
+    background-color: #000091;
 }
 .gpf-btn-icon-search-advanced {
   background-image: url("img/dsfr/recherche-avancee.svg");
@@ -58,7 +71,7 @@ div.GPbuttonsContainer > button {
   background-position: -25px center;
 }
 
-dialog[id^=GPcoordinateSearchPanel], 
+dialog[id^=GPcoordinateSearchPanel],
 dialog[id^="GPadvancedSearchPanel"] {
   position: absolute;
   top: 66px;
@@ -76,8 +89,8 @@ dialog[id^=GPgeocodeResultsList] {
 }
 
 div[id^=GPautoCompleteList] {
-  top: 55px;
-  
+  top: 42px;
+  margin-left: 42px;
 }
 
 dialog[id^=GPgeocodeResultsList] {
@@ -101,7 +114,7 @@ div[id^=GPgeocodeResults-] {
     flex-direction: column;
   }
 
-  dialog[id^=GPcoordinateSearchPanel], 
+  dialog[id^=GPcoordinateSearchPanel],
   dialog[id^="GPadvancedSearchPanel"] {
     position: relative;
     top: unset;

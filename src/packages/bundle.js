@@ -91,6 +91,7 @@ import MeasureLength from "./Controls/Measures/MeasureLength";
 import MeasureArea from "./Controls/Measures/MeasureArea";
 import MeasureAzimuth from "./Controls/Measures/MeasureAzimuth";
 import ButtonExport from "./Controls/Export/Export";
+import GeoportalZoom from "./Controls/Zoom/GeoportalZoom";
 
 import Proj4 from "proj4";
 
@@ -254,6 +255,7 @@ Ol.control.DefaultMarkers = Markers;
 Ol.control.ElevationPath = ElevationPath;
 Ol.control.LocationSelector = LocationSelector;
 Ol.control.Export = ButtonExport;
+Ol.control.GeoportalZoom = GeoportalZoom;
 
 export {
     /** 

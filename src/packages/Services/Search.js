@@ -20,7 +20,7 @@ let m_fields = "title,layer_name";
 let m_size = "1000";
 
 /** nombre maximum de réponses */
-let m_maximumResponses = 10;
+let m_maximumResponses = 5;
 
 /** liste des filtres sur les services */
 let m_filterByService = ["WMTS", "TMS"];

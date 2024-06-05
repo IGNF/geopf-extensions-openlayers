@@ -33,6 +33,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlElevationPath.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalAttribution.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalAttribution.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalZoom.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalZoom.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -76,6 +78,11 @@
                   })
                 });
 
+                var zoom = new ol.control.GeoportalZoom({
+                  position : "top-right"
+                });
+                map.addControl(zoom);
+                
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });
