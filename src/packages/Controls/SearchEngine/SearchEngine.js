@@ -13,6 +13,7 @@ import {
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
+import Config from "../../Utils/Config";
 import Logger from "../../Utils/LoggerByDefault";
 import Utils from "../../Utils/Helper";
 import Markers from "../Utils/Markers";
@@ -45,7 +46,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - collapse mode, true by default
- * @param {Boolean} [options.opened = false] - force control to be never collapsed, false by default.
+ * @param {Boolean} [options.collapsible = true] - force control to be collapsed or not, true by default.
  * @param {String}  [options.direction = "start"] - TODO : position of picto, by default : "start"
  * @param {String}  [options.placeholder] - Placeholder in search bar. Default is "Rechercher un lieu, une adresse".
  * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
@@ -103,7 +104,7 @@ var logger = Logger.getLogger("searchengine");
  *  var SearchEngine = ol.control.SearchEngine({
  *      apiKey : "CLEAPI",
  *      collapsed : true,
- *      opened : false,
+ *      collapsible : true,
  *      displayButtonAdvancedSearch : true,
  *      displayButtonGeolocate : true,
  *      displayButtonCoordinateSearch : true,
@@ -233,6 +234,11 @@ var SearchEngine = class SearchEngine extends Control {
             logger.log("[ERROR] SearchEngine:setCollapsed - missing collapsed parameter");
             return;
         }
+
+        if (!this.options.collapsible) {
+            return; // on interdit le mode pliable !
+        }
+
         if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
             return;
         }
@@ -266,11 +272,11 @@ var SearchEngine = class SearchEngine extends Control {
         // define default options
         this.options = {
             collapsed : true,
-            opened : false,
+            collapsible : true,
             zoomTo : "",
 
             resources : {
-                geocode : "",
+                geocode : [],
                 autocomplete : [],
                 search : false
             },
@@ -300,7 +306,7 @@ var SearchEngine = class SearchEngine extends Control {
         // merge with user options
         Utils.mergeParams(this.options, options);
         if (this.options.resources.geocode === "") {
-            this.options.resources.geocode = "poi,address";
+            this.options.resources.geocode = ["PositionOfInterest", "StreetAddress"];
         }
         if (this.options.resources.autocomplete.length === 0) {
             this.options.resources.autocomplete = ["PositionOfInterest", "StreetAddress"];
@@ -342,6 +348,9 @@ var SearchEngine = class SearchEngine extends Control {
             });
         }
 
+        if (!this.options.collapsible) {
+            this.options.collapsed = false; // on interdit le mode pliable !
+        }
         /** {Boolean} specify if searchEngine control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
@@ -717,11 +726,11 @@ var SearchEngine = class SearchEngine extends Control {
         
         var searchDiv = this._createSearchDivElement();
         // create search engine picto
-        var picto = this._showSearchEngineButton = this._createShowSearchEnginePictoElement(this.options.opened);
+        var picto = this._showSearchEngineButton = this._createShowSearchEnginePictoElement(this.options.collapsible);
         searchDiv.appendChild(picto);
 
         // only dsfr : on applique un fond blanc sur une barre de recherche fixe
-        if (this.options.opened) {
+        if (!this.options.collapsible) {
             container.classList.add("gpf-widget-color", "gpf-widget-padding");
         }
 
@@ -1802,11 +1811,49 @@ var SearchEngine = class SearchEngine extends Control {
     onSearchedResultsItemClick (e) {
         var idx = SelectorID.index(e.target.id);
 
-        var message = null;
-        var suggest = Search.getSuggestions()[idx];
-        if (!suggest) {
-            message = "No suggestions found !";
+        var error = null;
+        try {
+            var suggest = Search.getSuggestions()[idx];
+            if (!suggest) {
+                throw "No suggestions found !";
+            }
+    
+            // Ajout de la couche sur la carte si l'option le permet
+            if (this.options.searchOptions.addToMap) {
+                // Check if configuration is loaded
+                if (!Config.isConfigLoaded()) {
+                    throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
+                }
+                var service = suggest.service;
+                var name = suggest.name;
+                var layer = null;
+                switch (service) {
+                    case "WMS":
+                        layer = new GeoportalWMS({
+                            layer : name
+                        });
+                        break;
+                    case "WMTS":
+                        layer = new GeoportalWMTS({
+                            layer : name
+                        });
+                        break;
+                    case "TMS":
+                        layer = new GeoportalMapBox({
+                            layer : name
+                        });
+                    default:
+                        break;
+                }
+                if (layer) {
+                    var map = this.getMap();
+                    map.addLayer(layer);
+                }
+            }
+        } catch (e) {
+            error = e;
         }
+
         /**
          * event triggered when an element of the results is clicked for search service
          *
@@ -1823,37 +1870,8 @@ var SearchEngine = class SearchEngine extends Control {
         this.dispatchEvent({
             type : "searchengine:search:click",
             suggest : suggest,
-            error : new Error(message)
+            error : error
         });
-
-        // Ajout de la couche sur la carte si l'option le permet
-        if (this.options.searchOptions.addToMap) {
-            var service = suggest.service;
-            var name = suggest.name;
-            var layer = null;
-            switch (service) {
-                case "WMS":
-                    layer = new GeoportalWMS({
-                        layer : name
-                    });
-                    break;
-                case "WMTS":
-                    layer = new GeoportalWMTS({
-                        layer : name
-                    });
-                    break;
-                case "TMS":
-                    layer = new GeoportalMapBox({
-                        layer : name
-                    });
-                default:
-                    break;
-            }
-            if (layer) {
-                var map = this.getMap();
-                map.addLayer(layer);
-            }
-        }
     }
 
     // ################################################################### //
@@ -2013,6 +2031,9 @@ var SearchEngine = class SearchEngine extends Control {
         for (var i = 0; i < data.length; i++) {
             var filter = data[i];
             if (filter.value) {
+                if (filter.key === "section") {
+                    filter.value = filter.value.toUpperCase();
+                }
                 _filterOptions[filter.key] = filter.value;
             }
         }

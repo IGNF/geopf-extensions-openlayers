@@ -1,5 +1,5 @@
 div[id^=GPelevationPath-] {
-  height: 36px;
+  /* height: 36px; */
 }
 
 /* Showing/hiding elevationPath panel */
@@ -21,12 +21,6 @@ button[id^="GPshowElevationPathPicto-"][aria-pressed="true"] + dialog {
 
 /* Panel */
 
-[id^=GPelevationPathPanelClose] {
-  background-image: url("img/GPshowElevationPath.png");
-  background-repeat: no-repeat;
-  background-position: -27px center;
-}
-
 [id^=GPelevationPathPanelReduce] {
   background-image: url("img/GPshowElevationPath.png");
   background-repeat: no-repeat;
@@ -34,7 +28,7 @@ button[id^="GPshowElevationPathPicto-"][aria-pressed="true"] + dialog {
 }
 
 [id^=GPelevationPathPanel-] {
-  position : relative;
+  position : absolute;
   top : 6px;
   left: 32px;
 }

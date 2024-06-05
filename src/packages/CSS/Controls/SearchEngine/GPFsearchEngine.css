@@ -11,6 +11,11 @@
   flex-direction: row;
   align-items: center;
 }
+
+#position-container-top-right > [id^="GPsearchEngine-"]{
+  flex-direction: column;
+  align-items: end;
+}
 /* Showing/hiding search engine input */
 
 button[id^=GPshowSearchEnginePicto] {
@@ -32,7 +37,6 @@ button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] {
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
   max-width: 0px;
   border: none;
-  transition: max-width 0.5s ease-out 0s;
 }
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] {
@@ -70,6 +74,7 @@ form[id^=GPsearchInput-] {
   /* left: -3px; */
   width: 280px;
   overflow: hidden;
+  transition: max-width 0.5s ease-out 0s;
 }
 
 button[id^=GPsearchInputReset] {
@@ -104,12 +109,8 @@ button[id^=GPshowAdvancedSearch][aria-pressed="false"] + div[id^=GPadvancedSearc
   opacity: 0%;
 } */
 
-dialog[id^=GPcoordinateSearchPanel], 
+dialog[id^=GPcoordinateSearchPanel],
 dialog[id^=GPadvancedSearchPanel] {
-  position: absolute;
-  top: 35px;
-  margin-left: 33px;;
-  width: 310px;
   height: inherit;
   vertical-align: top;
   overflow: hidden;

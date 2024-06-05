@@ -41,11 +41,19 @@
                 var map;
                 var layerSwitcher;
                 var addMapsLayer, addOSMLayer;
-                var osm, maps;
+                var osm, maps, ortho;
 
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
+
+                    osm = new ol.layer.Tile({
+                        source : new ol.source.OSM(),
+                        opacity : 0.8
+                    });
+                    ortho = new ol.layer.GeoportalWMTS({
+                        layer : "ORTHOIMAGERY.ORTHOPHOTOS"
+                    });
 
 					// Création de la map
                     map = new ol.Map({
@@ -55,18 +63,73 @@
                             zoom : 6
                         }),
                         layers : [
-                            new ol.layer.Tile({
-                                source : new ol.source.OSM(),
-                                opacity : 0.8
-                            })
+                            osm,
+                            ortho
                         ]
                     });
 
 					// Appel du LayerSwitcher
-                    layerSwitcher = new ol.control.LayerSwitcher({});
+                    layerSwitcher = new ol.control.LayerSwitcher({
+                        options : {
+                            position : "bottom-right",
+                            collapsed : false,
+                            panel : true,
+                            counter : true
+                        }
+                    });
+
+                    // Evenement
+                    layerSwitcher.on("layerswitcher:add", function (e) {
+                        console.warn("layer", e, e.layer);
+                    });
+                    layerSwitcher.on("layerswitcher:remove", function (e) {
+                        console.warn("layer", e, e.layer);
+                    });
+                    layerSwitcher.on("layerswitcher:change:opacity", function (e) {
+                        console.warn("layer", e, e.layer, e.opacity);
+                    });
+                    layerSwitcher.on("layerswitcher:change:visibility", function (e) {
+                        console.warn("layer", e, e.layer, e.visibility);
+                    });
+                    layerSwitcher.on("layerswitcher:extent", function (e) {
+                        console.warn("layer", e);
+                    });
 
 					// Ajout du LayerSwitcher à la carte
                     map.addControl(layerSwitcher);
+
+                    // // Appel du LayerSwitcher
+                    // var layerSwitcher1 = new ol.control.LayerSwitcher({
+                    //     options : {
+                    //         position : "bottom-left",
+                    //         collapsed : false
+                    //     }
+                    // });
+
+					// // Ajout du LayerSwitcher à la carte
+                    // map.addControl(layerSwitcher1);
+
+                    // // Appel du LayerSwitcher
+                    // var layerSwitcher2 = new ol.control.LayerSwitcher({
+                    //     options : {
+                    //         position : "top-left",
+                    //         collapsed : false
+                    //     }
+                    // });
+
+					// // Ajout du LayerSwitcher à la carte
+                    // map.addControl(layerSwitcher2);
+
+                    // // Appel du LayerSwitcher
+                    // var layerSwitcher3 = new ol.control.LayerSwitcher({
+                    //     options : {
+                    //         // position : "top-right",
+                    //         collapsed : false
+                    //     }
+                    // });
+
+					// // Ajout du LayerSwitcher à la carte
+                    // map.addControl(layerSwitcher3);
                 };
 
                 Gp.Services.getConfig({

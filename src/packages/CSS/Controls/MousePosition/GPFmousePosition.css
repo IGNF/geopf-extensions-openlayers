@@ -29,10 +29,6 @@ dialog[id^=GPmousePositionPanel-] {
   bottom: 0px;
 }
 
-button[id^=GPmousePositionPanelClose]  {
-  background-image: url("img/GPmousePositionOpen.png");
-}
-
 [id^=GPmousePositionPanel-] {
   overflow: hidden;
   left: 34px;
@@ -95,6 +91,14 @@ span[id^=GPmousePositionAlt-] {
     width: 120px;
     line-height: 20px;
     text-align: right;
+}
+
+.GPSexagesimal {
+  width: 30px;
+}
+
+.GPSexagesimalsec {
+  width: 45px;
 }
 
 span[id^=GPmousePositionCloseEdit] {

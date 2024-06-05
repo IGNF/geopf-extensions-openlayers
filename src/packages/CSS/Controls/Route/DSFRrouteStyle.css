@@ -4,3 +4,11 @@
   background-size: auto auto;
   background-position: center center;
 }
+
+.GProuteFormMini {
+  max-height: 78px;
+}
+
+.GProuteFormMini .GPelementShow {
+  color: #333;
+}

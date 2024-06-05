@@ -503,7 +503,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         // return picto (hidden at start)
         var returnPicto = this._returnPictoContainer = this._createReverseGeocodingPanelReturnPictoElement();
         panelHeader.appendChild(returnPicto);
-        // pane title
+        // title
         var panelTitle = this._panelTitleContainer = this._createReverseGeocodingPanelTitleElement();
         panelHeader.appendChild(panelTitle);
         // close picto

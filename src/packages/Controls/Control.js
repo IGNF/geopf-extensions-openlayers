@@ -28,7 +28,6 @@ const ANCHORS = [
 /**
  * Position
  * @private
- * @todo revoir les css des widgets car les panneaux sont en position:absolute
  */
 class PositionFactory {
 
@@ -74,7 +73,7 @@ class PositionFactory {
         // ex. { position:relative; height:50px; width:100%; }
         var div = document.createElement("div");
         div.id = "position-container-" + name;
-        div.className = "position-container-" + name ;
+        div.className = "position position-container-" + name ;
         
         var container = this.caller.getMap().getOverlayContainerStopEvent();
         container.appendChild(div);
@@ -83,9 +82,13 @@ class PositionFactory {
     /**
      * ...
      * @param {*} pos - ...
-     * @todo
+     * @todo fonctionnement à tester !
      */
     #setAnchor (pos) {
+        const position = (pos) => {
+            var element = document.getElementById("position-container-" + pos);
+            return element.children.length;
+        };
         const sizeW = (pos) => {
             var element = document.getElementById("position-container-" + pos);
             var width = element.offsetWidth;
@@ -115,33 +118,33 @@ class PositionFactory {
         if (panels.length === 0) {
             return;
         }
-        panels.forEach((e) => {
-            clear(e);
+        panels.forEach((panel) => {
+            clear(panel);
+            
+            // on modifie le positionnement du menu (dialog ou div : panel) 
+            // en fonction du bouton
+            // ex. bouton : bottom-left, menu : bottom:0px; left:50px
+            switch (pos.toLowerCase()) {
+                case "top-left":
+                    panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
+                    panel.style.left = sizeW(pos) + "px";
+                    break;
+                case "bottom-left":
+                    panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
+                    panel.style.left = sizeW(pos) + "px";
+                    break;
+                case "top-right":
+                    panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
+                    panel.style.right = sizeW(pos) + "px";
+                    break;
+                case "bottom-right":
+                    panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
+                    panel.style.right = sizeW(pos) + "px";
+                    break;
+                default:
+                    break;
+            }
         });
-        var panel = panels[0];
-        // on modifie le positionnement du menu (dialog ou div : panel) 
-        // en fonction du bouton
-        // ex. bouton : bottom-left, menu : bottom:0px; left:50px
-        switch (pos.toLowerCase()) {
-            case "top-left":
-                panel.style.top = "0px";
-                panel.style.left = sizeW(pos) + "px"; // container 50px + padding de 5px
-                break;
-            case "bottom-left":
-                panel.style.bottom = "0px";
-                panel.style.left = sizeW(pos) + "px";
-                break;
-            case "top-right":
-                panel.style.top = "0px";
-                panel.style.right = sizeW(pos) + "px";
-                break;
-            case "bottom-right":
-                panel.style.bottom = "0px";
-                panel.style.right = sizeW(pos) + "px";
-                break;
-            default:
-                break;
-        }
     }
 
     /**
@@ -156,7 +159,11 @@ class PositionFactory {
         // positionnement de l'element
         this.#setAnchor(pos);
 
-        document.getElementById("position-container-" + pos).appendChild(this.caller.element);
+        if (pos.includes("bottom")) {
+            document.getElementById("position-container-" + pos).prepend(this.caller.element);
+        } else {
+            document.getElementById("position-container-" + pos).appendChild(this.caller.element);
+        }
     }
 
 };
