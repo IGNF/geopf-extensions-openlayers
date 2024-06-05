@@ -45,13 +45,13 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
             const btn = buttons[index];
             if (btn.classList.contains("ol-zoom-in")) {
                 btn.classList.remove("ol-zoom-in");
-                btn.classList.add("GPzoomIn", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--tertiary");
+                btn.classList.add("GPzoomIn", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--primary");
                 btn.id = "GPzoomIn";
                 btn.innerHTML = "";
             }
             if (btn.classList.contains("ol-zoom-out")) {
                 btn.classList.remove("ol-zoom-out");
-                btn.classList.add("GPzoomOut", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--tertiary");
+                btn.classList.add("GPzoomOut", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--primary");
                 btn.id = "GPzoomOut";
                 btn.innerHTML = "";
             }
