@@ -41,10 +41,10 @@ var SearchEngineDOM = {
 
     /**
      * Show search engine
-     * @param {Boolean} force - ...
+     * @param {Boolean} collapsible - ...
      * @returns {DOMElement} DOM element
      */
-    _createShowSearchEnginePictoElement : function (force) {
+    _createShowSearchEnginePictoElement : function (collapsible) {
         // contexte d'execution
         var self = this;
 
@@ -53,8 +53,8 @@ var SearchEngineDOM = {
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn gpf-btn-icon-search fr-btn";
         button.title = "Afficher/masquer la recherche par lieux";
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", force);
-        button.disabled = force;
+        button.setAttribute("aria-pressed", !collapsible);
+        button.disabled = !collapsible;
 
         // Close all results and panels when minimizing the widget
         button.addEventListener("click", function (e) {
