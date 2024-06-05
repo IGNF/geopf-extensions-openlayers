@@ -3,7 +3,7 @@ declare namespace SearchEngineDOM {
     function _addUID(id: string): string;
     function _createMainContainerElement(): DOMElement;
     function _createSearchDivElement(): DOMElement;
-    function _createShowSearchEnginePictoElement(force: boolean): DOMElement;
+    function _createShowSearchEnginePictoElement(collapsible: boolean): DOMElement;
     function _createSearchInputElement(placeholder: string): DOMElement;
     function _createSearchResetElement(): HTMLButtonElement;
     function _createButtonsElement(): HTMLDivElement;

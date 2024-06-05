@@ -11,7 +11,7 @@ export default SearchEngine;
  * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - collapse mode, true by default
- * @param {Boolean} [options.opened = false] - force control to be never collapsed, false by default.
+ * @param {Boolean} [options.collapsible = true] - force control to be collapsed or not, true by default.
  * @param {String}  [options.direction = "start"] - TODO : position of picto, by default : "start"
  * @param {String}  [options.placeholder] - Placeholder in search bar. Default is "Rechercher un lieu, une adresse".
  * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
@@ -69,7 +69,7 @@ export default SearchEngine;
  *  var SearchEngine = ol.control.SearchEngine({
  *      apiKey : "CLEAPI",
  *      collapsed : true,
- *      opened : false,
+ *      collapsible : true,
  *      displayButtonAdvancedSearch : true,
  *      displayButtonGeolocate : true,
  *      displayButtonCoordinateSearch : true,
