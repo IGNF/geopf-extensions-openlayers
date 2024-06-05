@@ -17,6 +17,7 @@
 
 * ✨ [Added]
 
+  * Zoom: Nouveau widget GeoportalZoom (#63)
   * SearchEngine : Ajout d'une couche sur la carte sur une sélection du service de recherche (#46)
   * SearchEngine : Ajout d'un filtre d'affichage pour les couches uniquement en TMS/WMTS (#14)
   * CI : Demo sur les frameworks vue, react et angular afin de valider les extensions (#16)

@@ -82,6 +82,10 @@ module.exports = (env, argv) => {
             case "Editor":
                 // ras
                 break;
+            case "GeoportalZoom":
+                moduledir = "Zoom"; 
+                // ras
+                break;
             default:
                 break;
         }

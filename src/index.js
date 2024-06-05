@@ -36,6 +36,7 @@ export { default as MeasureLength } from "./packages/Controls/Measures/MeasureLe
 export { default as MeasureArea } from "./packages/Controls/Measures/MeasureArea";
 export { default as MeasureAzimuth } from "./packages/Controls/Measures/MeasureAzimuth";
 export { default as ButtonExport } from "./packages/Controls/Export/Export";
+export { default as GeoportalZoom } from "./packages/Controls/Zoom/GeoportalZoom";
 
 // proj4
 export { default as Proj4 } from "proj4";
