@@ -13,6 +13,7 @@ import {
   Route,
   LayerImport,
   GeoportalAttribution,
+  GeoportalZoom,
   ElevationPath,
   MeasureArea,
   MeasureAzimuth,
@@ -49,6 +50,11 @@ onMounted(() => {
   });
   map.addControl(drawing);
 
+  var zoom = new GeoportalZoom({
+    position: "bottom-left"
+  });
+  map.addControl(zoom);
+  
   var iso = new Isocurve({
     position: "bottom-left"
   });

@@ -46,10 +46,16 @@
                   })
                 });
 
+                var zoom = new ol.control.GeoportalZoom({
+                  position : "bottom-left"
+                });
+                map.addControl(zoom);
+
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });
                 map.addControl(drawing);
+                
                 var iso = new ol.control.Isocurve({
                   position : "bottom-left"
                 });
