@@ -91,7 +91,7 @@ module.exports = (env, argv) => {
         }
     
         entries["GpfExtOl" + key] = path.join(rootdir, "src", "packages", "Controls", moduledir, name + ".js");
-        console.log("####", key, entries[key]);
+        console.log("####", key, entries["GpfExtOl" + key], externals);
     }
 
     return {

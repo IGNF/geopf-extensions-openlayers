@@ -52,6 +52,7 @@ button[id^="GPshowLayersListPicto-"][aria-pressed="true"] + dialog {
 /* positionnement inactif */
 dialog[id^=GPlayersList] {
  position: relative;
+ float: left;
 }
 button[id^=GPshowLayersListPicto-] {
   float: right;
@@ -66,7 +67,7 @@ dialog[id^=GPlayersList] {
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
   height: initial;
-  max-height: 232px;
+  max-height: inherit;
   opacity: 1;
 }
 

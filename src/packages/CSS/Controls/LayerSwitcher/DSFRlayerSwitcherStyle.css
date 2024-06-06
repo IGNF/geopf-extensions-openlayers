@@ -108,7 +108,7 @@ div[id^=GPadvancedTools_ID_] {
 
 .gpf-panel__body_ls {
     overflow: auto;
-    max-height: inherit;
+    max-height: 300px;
 }
 
 .gpf-panel__title_ls {
@@ -126,6 +126,7 @@ div[id^=GPadvancedTools_ID_] {
     align-items: center;
     align-content: center;
     background: #E3E3FD;
+    height: 48px;
 }
 
 .gpf-btn-icon-ls-info {
