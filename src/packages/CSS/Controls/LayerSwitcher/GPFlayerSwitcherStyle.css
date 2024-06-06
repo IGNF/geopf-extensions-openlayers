@@ -23,6 +23,11 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] {
 }
 
 /* Layers list */
+.GPpanelBody {
+  overflow: auto;
+  max-height: 200px;
+}
+
 button[id^=GPlayerInfoClose] {
   background-position: -2px center;
   background-repeat: no-repeat;
@@ -150,6 +155,10 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
 
 button[id^=GPvisibilityPicto_ID_][aria-pressed="true"] {
   background-position: 0 0;
+}
+
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
+  max-height: 28px;
 }
 
 .GPshowLayerAdvancedTools {
@@ -384,3 +393,18 @@ div[id^=GPlayerInfoMetadata] {
   color: inherit;
 }
 
+
+.GPlayerName {
+  left: 28px;
+  width: calc(100% - 56px);
+  line-height: 28px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-left: 4px;
+  cursor: move;
+}
+
+.outOfRange .GPlayerName {
+  color: #AAA;
+}

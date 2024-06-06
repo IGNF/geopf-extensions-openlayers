@@ -97,7 +97,7 @@ var LayerSwitcherDOM = {
 
     _createMainLayersDivElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__body fr-modal__body";
+        div.className = "GPpanelBody gpf-panel__body_ls fr-modal__body";
         return div;
     },
 
@@ -334,7 +334,7 @@ var LayerSwitcherDOM = {
         // <span id="GPname_ID_Layer1" class="GPlayerName" title="Quartiers prioritaires de la ville">Quartiers prioritaires de la ville</span>
         var label = document.createElement("label");
         label.id = this._addUID("GPname_ID_" + obj.id);
-        label.className = "GPlayerName gpf-label fr-label";
+        label.className = "GPlayerName gpf-label gpf-label-name fr-label";
         label.title = obj.description || obj.title;
         label.innerHTML = obj.title;
 
@@ -438,11 +438,8 @@ var LayerSwitcherDOM = {
         container.className = "GPelementHidden GPlayerAdvancedTools gpf-hidden";
 
         container.appendChild(this._createAdvancedToolDeleteElement(obj));
-
-        // si on n'a de l'informations à afficher, on met en place ce composant
-        if (obj.title && obj.description) {
-            container.appendChild(this._createAdvancedToolInformationElement(obj));
-        }
+        container.appendChild(this._createAdvancedToolInformationElement(obj));
+        
         if (obj.type !== "feature") {
             var array = this._createAdvancedToolOpacityElement(obj);
             for (var i = 0; i < array.length; i++) {
@@ -502,6 +499,14 @@ var LayerSwitcherDOM = {
         var btnInfo = document.createElement("button");
         btnInfo.id = this._addUID("GPinfo_ID_" + obj.id);
         btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary";
+        // hack pour garder un emplacement vide
+        if (obj.title && obj.description) {
+            btnInfo.style.opacity = "100";
+            btnInfo.style.visibility = "visible";
+        } else {
+            btnInfo.style.opacity = "0";
+            btnInfo.style.visibility = "hidden";
+        }
         btnInfo.title = "Informations/légende";
         btnInfo.layerId = obj.id;
         btnInfo.setAttribute("tabindex", "0");
@@ -611,7 +616,7 @@ var LayerSwitcherDOM = {
 
         var span = document.createElement("span");
         span.id = this._addUID("GPopacityValue_ID_" + obj.id);
-        span.className = "fr-range__output gpf-visible";
+        span.className = "gpf-range__output fr-range__output gpf-visible";
         span.innerHTML = opacity + "%";
 
         divC.appendChild(span);

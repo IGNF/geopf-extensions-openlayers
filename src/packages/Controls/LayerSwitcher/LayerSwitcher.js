@@ -300,9 +300,10 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 this._layersOrder.unshift(layerOptions);
                 this._lastZIndex++;
                 layer.setZIndex(this._lastZIndex);
-                this._layerListContainer.insertBefore(layerDiv, 
-                    (this.options.panel) ? 
-                        this._layerListContainer.childNodes[1] : this._layerListContainer.firstChild);
+                this._layerListContainer.insertBefore(layerDiv, this._layerListContainer.firstChild);
+                // this._layerListContainer.insertBefore(layerDiv, 
+                //     (this.options.panel) ? 
+                //         this._layerListContainer.childNodes[1] : this._layerListContainer.firstChild);
             }
 
             // 3. Add listeners for opacity and visibility changes
@@ -395,7 +396,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         logger.trace(layer);
 
         var layerID = layer.gpLayerId;
-        var layerList = document.getElementById(this._addUID("GPlayersList")).firstChild;
+        // var layerList = document.getElementById(this._addUID("GPlayersList")).firstChild;
         // close layer info element if open.
         var infodiv = document.getElementById(this._addUID("GPinfo_ID_" + layerID));
         if (infodiv && infodiv.className === "GPlayerInfoOpened") {
@@ -405,7 +406,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         // remove layer div
         var layerDiv = document.getElementById(this._addUID("GPlayerSwitcher_ID_" + layerID));
         if (layerDiv) {
-            layerList.removeChild(layerDiv);
+            this._layerListContainer.removeChild(layerDiv);
         }
 
         var layerIndex = Math.abs(layer.getZIndex() - this._lastZIndex);
@@ -629,14 +630,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var divL = this._createMainLayersElement();
         container.appendChild(divL);
 
-        var div = this._layerListContainer = this._createMainLayersDivElement();
-        divL.appendChild(div);
-
         // header ?
         if (this.options.panel) {
             // header
             var panelHeader = this._createLayersPanelHeaderElement();
-            div.appendChild(panelHeader);
+            divL.appendChild(panelHeader);
             // icon
             var panelIcon = this._createLayersPanelIconElement();
             panelHeader.appendChild(panelIcon);
@@ -647,6 +645,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             var panelClose = this._createLayersPanelCloseElement();
             panelHeader.appendChild(panelClose);
         }
+
+        var div = this._layerListContainer = this._createMainLayersDivElement();
+        divL.appendChild(div);
 
         // creation du mode draggable
         this._createDraggableElement(div, this);

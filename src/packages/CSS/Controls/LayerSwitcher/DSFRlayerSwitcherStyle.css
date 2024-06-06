@@ -57,6 +57,10 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
     box-shadow: none;
 }
 
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
+    height: 56px;
+    max-height: 56px;
+}
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
     background-image: url("img/dsfr/collapse.svg");
     background-repeat: no-repeat;
@@ -85,6 +89,7 @@ div[id^=GPadvancedTools_ID_] {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-around;
+    height: inherit;
 }
 
 .gpf-btn-header {
@@ -100,6 +105,12 @@ div[id^=GPadvancedTools_ID_] {
     background-size: auto auto;
     background-position: center center;
 }
+
+.gpf-panel__body_ls {
+    overflow: auto;
+    max-height: 300px !important;
+}
+
 .gpf-panel__title_ls {
     color: #101092;
     padding: 12px 15px;
@@ -115,6 +126,7 @@ div[id^=GPadvancedTools_ID_] {
     align-items: center;
     align-content: center;
     background: #E3E3FD;
+    height: 48px;
 }
 
 .gpf-btn-icon-ls-info {
@@ -136,4 +148,18 @@ div[id^=GPadvancedTools_ID_] {
 div[id^=GPlayerInfoPanel] {
     position: absolute;
     height: initial;
+}
+
+.gpf-label-name {
+    width: calc(100% - 96px);
+    line-height: 28px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 4px;
+    cursor: move;
+}
+
+.gpf-range__output {
+    width: 35px;
 }
