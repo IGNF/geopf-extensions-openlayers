@@ -12,6 +12,7 @@ import {
     Route,
     LayerImport,
     GeoportalAttribution,
+    GeoportalZoom,
     ElevationPath,
     MeasureArea,
     MeasureAzimuth,
@@ -51,6 +52,11 @@ var cfg = new Gp.Services.Config({
                 zoom : 8,
             })
         });
+
+        var zoom = new GeoportalZoom({
+            position : "bottom-left"
+        });
+        map.addControl(zoom);
 
         var drawing = new Drawing({
             position : "bottom-right"
