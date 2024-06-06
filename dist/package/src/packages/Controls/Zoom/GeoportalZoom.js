@@ -65,12 +65,16 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
 
     setMap (map) {
         if (map) {
-            map.getControls().forEach((control) => {
+            var controls = map.getControls();
+            controls.removeAt(0); // Zoom par defaut
+            controls.forEach((control) => {
                 if (control instanceof Zoom) {
                     if (control._uid) {
                         return;
                     }
-                    // on supprime le controle zoom par defaut
+                    // INFO
+                    // si le controle zoom par defaut est encore présent,
+                    // on le supprime !
                     control.setMap(null);
                 }
             });
