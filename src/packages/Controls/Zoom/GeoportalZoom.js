@@ -13,25 +13,30 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
     constructor (options) {
         options = options || {};
 
-        if (options.position) {
-            options.target = "position-container-" + options.position;
-            // Creation manuelle du container de position
-            if (!document.getElementById(options.target)) {
-                var div = document.createElement("div");
-                div.id = options.target;
-                div.classList.add("position");
-                div.classList.add(options.target);
-                var container = document.getElementsByClassName("ol-overlaycontainer-stopevent")[0];
-                container.appendChild(div);
-            }
-        }
-
         super(options);
 
-        this.#initialize(options);
+        this.container = null;
+        this.options = options;
     }
 
-    #initialize (options) {
+    _createContainerPosition (map) {
+        this.container = map.getOverlayContainerStopEvent();
+        this.options.target = this.container;
+        if (this.options.position) {
+            var id = "position-container-" + this.options.position;
+            if (!document.getElementById(id)) {
+                // Creation manuelle du container de position
+                var div = document.createElement("div");
+                div.id = id;
+                div.classList.add("position");
+                div.classList.add(id);
+                this.container.appendChild(div);
+            }
+            this.options.target = this.container.children[id];
+        }
+    }
+
+    _initContainer () {
         // UID interne pour chaque controle
         this._uid = SelectorID.generate();
 
@@ -58,27 +63,28 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         }
 
         // Surcharge CSS de positionnement par defaut
-        if (options.position) {
+        if (this.options.position) {
             this.element.style.position = "unset";
         }
     }
 
     setMap (map) {
         if (map) {
+            this._createContainerPosition(map);
+            this._initContainer();
+            // INFO
+            // on ne supprime pas le zoom par defaut,
+            // on le desactive simplement pour éviter des effets de bords 
+            // (ex. evenement de suppression d'un element de la collection)
             var controls = map.getControls();
-            controls.removeAt(0); // Zoom par defaut
-            controls.forEach((control) => {
-                if (control instanceof Zoom) {
-                    if (control._uid) {
-                        return;
-                    }
-                    // INFO
-                    // si le controle zoom par defaut est encore présent,
-                    // on le supprime !
-                    control.setMap(null);
+            controls.forEach(ctrl => {
+                if (ctrl.element.classList.contains("ol-zoom")) {
+                    ctrl.element.classList.add("ol-hidden");
+                    ctrl.element.style.display = "none";
                 }
             });
         }
+        this.setTarget(this.options.target);
         super.setMap(map);
     }
 
