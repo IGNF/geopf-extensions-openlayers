@@ -38,6 +38,8 @@ class PositionFactory {
     constructor (caller) {
         this.caller = caller;
 
+        this.container = null;
+
         this.#createContainer("top-left");
         this.#createContainer("top-right");
         this.#createContainer("bottom-left");
@@ -52,7 +54,7 @@ class PositionFactory {
      * @returns {Boolean} ...
      */
     #existContainer (name) {
-        var div = document.getElementById("position-container-" + name);
+        var div = this.container.children["position-container-" + name];
         if (div) {
             return true;
         }
@@ -65,6 +67,8 @@ class PositionFactory {
      * @private
      */
     #createContainer (name) {
+        this.container = this.caller.getMap().getOverlayContainerStopEvent();
+        
         if (this.#existContainer(name)) {
             return;
         }
@@ -75,8 +79,7 @@ class PositionFactory {
         div.id = "position-container-" + name;
         div.className = "position position-container-" + name ;
         
-        var container = this.caller.getMap().getOverlayContainerStopEvent();
-        container.appendChild(div);
+        this.container.appendChild(div);
     }
 
     /**
@@ -85,17 +88,18 @@ class PositionFactory {
      * @todo fonctionnement à tester !
      */
     #setAnchor (pos) {
+        var self = this;
         const position = (pos) => {
-            var element = document.getElementById("position-container-" + pos);
+            var element = self.container.children["position-container-" + pos];
             return element.children.length;
         };
         const sizeW = (pos) => {
-            var element = document.getElementById("position-container-" + pos);
+            var element = self.container.children["position-container-" + pos];
             var width = element.offsetWidth;
             return width;
         };
         const sizeH = (pos) => {
-            var element = document.getElementById("position-container-" + pos);
+            var element = self.container.children["position-container-" + pos];
             var height = element.offsetHeight;
             return height;
         };
@@ -160,9 +164,9 @@ class PositionFactory {
         this.#setAnchor(pos);
 
         if (pos.includes("bottom")) {
-            document.getElementById("position-container-" + pos).prepend(this.caller.element);
+            this.container.children["position-container-" + pos].prepend(this.caller.element);
         } else {
-            document.getElementById("position-container-" + pos).appendChild(this.caller.element);
+            this.container.children["position-container-" + pos].appendChild(this.caller.element);
         }
     }
 
