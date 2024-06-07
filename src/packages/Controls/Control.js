@@ -7,8 +7,10 @@ var ControlExtended = class ControlExtended extends Control {
     }
 
     setPosition (pos) {
-        var instance = new PositionFactory(this);
-        instance.set(pos);
+        if (this.getMap()) {
+            var instance = new PositionFactory(this);
+            instance.set(pos);
+        }
     }
 
 };
@@ -37,6 +39,7 @@ class PositionFactory {
      */
     constructor (caller) {
         this.caller = caller;
+        this.container = null;
 
         this.container = null;
 
