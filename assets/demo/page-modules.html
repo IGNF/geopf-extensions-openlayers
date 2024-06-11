@@ -52,6 +52,8 @@
         <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlElevationPath.js"></script>
         <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalAttribution.css">
         <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalAttribution.js"></script>
+        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalZoom.css">
+        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalZoom.js"></script>
 
         <title>Extensions avec le bundle complet</title>
         <style>
@@ -121,6 +123,10 @@
                   })
                 });
 
+                var zoom = new ol.control.GeoportalZoom({
+                  position : "top-left"
+                });
+                map.addControl(zoom);
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });

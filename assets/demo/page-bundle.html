@@ -91,6 +91,10 @@
                   })
                 });
 
+                var zoom = new ol.control.GeoportalZoom({
+                  position : "top-left"
+                });
+                map.addControl(zoom);
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });
