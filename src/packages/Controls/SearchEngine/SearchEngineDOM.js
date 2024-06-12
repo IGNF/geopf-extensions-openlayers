@@ -1,5 +1,6 @@
 import ID from "../../Utils/SelectorID";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
+import checkDsfr from "../Utils/CheckDsfr";
 
 var SearchEngineDOM = {
 
@@ -58,6 +59,31 @@ var SearchEngineDOM = {
 
         // Close all results and panels when minimizing the widget
         button.addEventListener("click", function (e) {
+            if (checkDsfr()) {
+                var container = document.getElementById(self._addUID("GPautocompleteResults"));
+                var curr = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items current");
+                var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items");
+
+                // si aucune suggestion, on ne va pas plus loin !
+                var length = list.length;
+                if (!length) {
+                    return;
+                }
+
+                var current = null;
+
+                // si aucun item courant, on prend le 1er !
+                if (!curr.length) {
+                    current = list[0];
+                    current.className = "GPautoCompleteProposal gpf-panel__items current";
+                    current.style.color = "#000000";
+                    current.style["background-color"] = "#CEDBEF";
+                } else {
+                    current = curr[0];
+                }
+                current.click();
+                return;
+            }
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
             if (status) {}
@@ -160,7 +186,9 @@ var SearchEngineDOM = {
             // seulement d'une selection de suggestion...
 
             var charCode = e.which || e.keyCode;
-
+            if (charCode === 13) {
+                e.preventDefault();
+            }
             var container = document.getElementById(self._addUID("GPautocompleteResults"));
 
             // si aucun container !?
@@ -185,7 +213,9 @@ var SearchEngineDOM = {
                 current.className = "GPautoCompleteProposal gpf-panel__items current";
                 current.style.color = "#000000";
                 current.style["background-color"] = "#CEDBEF";
-                return;
+                if (charCode !== 13) {
+                    return;
+                }
             } else {
                 current = curr[0];
             }
