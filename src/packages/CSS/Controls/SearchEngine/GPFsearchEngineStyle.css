@@ -109,6 +109,10 @@ dialog[id^=GPadvancedSearchPanel] {
 
 /* Autocomplete list / geocode results */
 
+[id^="GPautocompleteResults-"] {
+  box-shadow: 0 0 6px #000;
+}
+
 div[id^=GPautoCompleteList],
 dialog[id^=GPgeocodeResultsList] {
   width: 280px;
