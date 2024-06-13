@@ -1,5 +1,6 @@
 import ID from "../../Utils/SelectorID";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
+import checkDsfr from "../Utils/CheckDsfr";
 
 var SearchEngineDOM = {
 
@@ -47,17 +48,51 @@ var SearchEngineDOM = {
     _createShowSearchEnginePictoElement : function (collapsible) {
         // contexte d'execution
         var self = this;
+        if (checkDsfr()) {
+            // Jamais collapsible en DSFR
+            collapsible = true;
+        }
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowSearchEnginePicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn gpf-btn-icon-search fr-btn";
         button.title = "Afficher/masquer la recherche par lieux";
+        if (checkDsfr()) {
+            // Pas la même du bouton fonction en DSFR
+            button.title = "Rechercher";
+        }
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", !collapsible);
         button.disabled = !collapsible;
 
         // Close all results and panels when minimizing the widget
         button.addEventListener("click", function (e) {
+            if (checkDsfr()) {
+                // En DSFR, le bouton fait la même chose que la touche Entrée
+                var container = document.getElementById(self._addUID("GPautocompleteResults"));
+                var curr = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items current");
+                var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items");
+
+                // si aucune suggestion, on ne va pas plus loin !
+                var length = list.length;
+                if (!length) {
+                    return;
+                }
+
+                var current = null;
+
+                // si aucun item courant, on prend le 1er !
+                if (!curr.length) {
+                    current = list[0];
+                    current.className = "GPautoCompleteProposal gpf-panel__items current";
+                    current.style.color = "#000000";
+                    current.style["background-color"] = "#CEDBEF";
+                } else {
+                    current = curr[0];
+                }
+                current.click();
+                return;
+            }
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
             if (status) {}
@@ -160,7 +195,9 @@ var SearchEngineDOM = {
             // seulement d'une selection de suggestion...
 
             var charCode = e.which || e.keyCode;
-
+            if (charCode === 13) {
+                e.preventDefault();
+            }
             var container = document.getElementById(self._addUID("GPautocompleteResults"));
 
             // si aucun container !?
@@ -185,7 +222,9 @@ var SearchEngineDOM = {
                 current.className = "GPautoCompleteProposal gpf-panel__items current";
                 current.style.color = "#000000";
                 current.style["background-color"] = "#CEDBEF";
-                return;
+                if (charCode !== 13) {
+                    return;
+                }
             } else {
                 current = curr[0];
             }
@@ -536,7 +575,7 @@ var SearchEngineDOM = {
         var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
         var label = document.createElement("option");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
-        label.innerHTML = "Lieux & Adresses";
+        label.innerHTML = "Lieux et adresses";
         container.appendChild(label);
     },
 
@@ -586,7 +625,7 @@ var SearchEngineDOM = {
         var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
         var label = document.createElement("option");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
-        label.innerHTML = "CARTES & DONNÉES";
+        label.innerHTML = "Cartes et données";
         container.appendChild(label);
     },
 
