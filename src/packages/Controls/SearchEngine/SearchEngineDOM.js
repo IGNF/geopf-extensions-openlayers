@@ -53,6 +53,9 @@ var SearchEngineDOM = {
         button.id = this._addUID("GPshowSearchEnginePicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn gpf-btn-icon-search fr-btn";
         button.title = "Afficher/masquer la recherche par lieux";
+        if (checkDsfr()) {
+            button.title = "Rechercher";
+        }
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", !collapsible);
         button.disabled = !collapsible;
