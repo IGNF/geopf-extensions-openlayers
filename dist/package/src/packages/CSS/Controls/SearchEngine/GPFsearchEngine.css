@@ -29,14 +29,8 @@ button[id^=GPshowSearchEnginePicto][aria-pressed="true"] {
 }
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] {
-  border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   transition-delay: 0s;
-}
-
-button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
-  max-width: 0px;
-  border: none;
 }
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] {
@@ -165,7 +159,6 @@ input[id^=GPadvancedSearchSubmit] {
   display: flex;
   flex-direction: column;
   width: 100%;
-  box-shadow: 0 0 6px #000;
 }
 
 [id^="GPautoCompleteList"],

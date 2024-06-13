@@ -32,6 +32,15 @@
   background-position: 0 center;
 }
 
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
+  max-width: 0px;
+  border: none;
+}
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] {
+  border-top-right-radius: 0;
+}
+
 button[id^=GPsearchInputReset] {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -90,7 +99,7 @@ form[id^=GPsearchInput-] input:disabled {
   height: 32px;
 }
 
-dialog[id^=GPcoordinateSearchPanel], 
+dialog[id^=GPcoordinateSearchPanel],
 dialog[id^=GPadvancedSearchPanel] {
   width: 310px;
   position: absolute;
@@ -99,6 +108,10 @@ dialog[id^=GPadvancedSearchPanel] {
 }
 
 /* Autocomplete list / geocode results */
+
+[id^="GPautocompleteResults-"] {
+  box-shadow: 0 0 6px #000;
+}
 
 div[id^=GPautoCompleteList],
 dialog[id^=GPgeocodeResultsList] {

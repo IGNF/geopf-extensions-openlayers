@@ -36,6 +36,10 @@ button[id^=GPsearchInputReset] {
   height: 40px;
 }
 
+[id^="GPshowSearchDiv"]{
+  flex-direction: row-reverse;
+}
+
 div.GPbuttonsContainer > button {
   width: 40px;
 }
@@ -47,6 +51,15 @@ div.GPbuttonsContainer > button {
     /* cas particulier ou on n'utilise pas la class gpf-icon-button pour la largeur à cause du DOM du control*/
     width: 40px;
 }
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
+  max-width: 280px;
+  border: none;
+}
+button[id^="GPshowSearchEnginePicto-"] {
+  border-radius: 0 0.25rem 0 0;
+}
+
 /* hack pour forcer la couleur d'un element desactivé */
 .gpf-btn-icon-search:disabled {
     background-color: #000091;
@@ -80,9 +93,14 @@ dialog[id^="GPadvancedSearchPanel"] {
 
 /* Autocomplete list / geocode results */
 
+[id^="GPautocompleteResults-"] {
+  border: 1px solid #000091;
+  border-top: unset;
+}
+
 div[id^=GPautoCompleteList],
 dialog[id^=GPgeocodeResultsList] {
-  width: 300px;
+  width: 320px;
   position: absolute;
   height: fit-content;
   background-color: #FFF
@@ -90,7 +108,12 @@ dialog[id^=GPgeocodeResultsList] {
 
 div[id^=GPautoCompleteList] {
   top: 42px;
-  margin-left: 42px;
+  margin-left: 2px;
+}
+
+.gpf-widget-padding > div[id^=GPautoCompleteList] {
+  top: 53px;
+  margin-left: 15px;
 }
 
 dialog[id^=GPgeocodeResultsList] {
