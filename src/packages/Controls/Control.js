@@ -120,14 +120,20 @@ class PositionFactory {
 
         // on recherche les panneaux (panel) :
         // * panel de formulaire
-        // * panel de resultats
+        // * panel de resultats (?)
         var panels = Array.from(this.caller.element.getElementsByClassName("GPpanel"));
         if (panels.length === 0) {
             return;
         }
         panels.forEach((panel) => {
+            // INFO
+            // on va eviter de modifier les panneaux de resultats
+            // car leurs positions sont souvent relative aux panneaux
+            // des formulaires
+            if (panel.nodeName.toLowerCase() !== "dialog") {
+                return;
+            }
             clear(panel);
-            
             // on modifie le positionnement du menu (dialog ou div : panel) 
             // en fonction du bouton
             // ex. bouton : bottom-left, menu : bottom:0px; left:50px

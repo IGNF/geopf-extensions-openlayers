@@ -89,25 +89,20 @@ module.exports = (env, argv) => {
             open : ["samples/index-bundle.html"],
             static : {
                 directory : path.join(rootdir),
-                watch : {
-                    usePolling : false,
-                    ignored : [
-                        path.join(rootdir, "samples-src/**/*"), 
-                        path.join(rootdir, "demos/**/*"),
-                        path.join(rootdir, "node_modules/**/*"), 
-                        path.join(rootdir, "samples/resources/vendor/modules/**/*")
-                    ]
-                }
+                watch : false
             },
             watchFiles : {
-                paths : ["src/**/*"]
+                paths : [
+                    "src/**/*",
+                    "samples-src/**/*"
+                ]
             },
             devMiddleware : {
                 index : true,
                 mimeTypes : { phtml : "text/html" },
                 publicPath : "/dist/packages/",
                 serverSideRender : true,
-                writeToDisk : true,
+                writeToDisk : false,
             },
 
         },
