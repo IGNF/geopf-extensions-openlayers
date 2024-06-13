@@ -8,8 +8,33 @@ import Zoom from "ol/control/Zoom";
 
 var logger = Logger.getLogger("zoom");
 
+/**
+ * @classdesc
+ * OpenLayers Control to manage zoom
+ *
+ * @constructor
+ * @extends {ol.control.Zoom}
+ * @alias ol.control.GeoportalZoom
+ * @type {ol.control.GeoportalZoom}
+ * @param {Object} options - ol.control.Zoom options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html ol.Control.Zoom})
+ * @example
+ * var zoom = new ol.control.GeoportalZoom({
+ *   position: "top-left"
+ * });
+ * map.addControl(zoom);
+ */
 var GeoportalZoom = class GeoportalZoom extends Zoom {
 
+    /**
+     * See {@link ol.control.GeoportalZoom}
+     * @module GeoportalZoom
+     * @alias module:~controls/GeoportalZoom
+     * @param {*} options - options
+     * @example
+     * import GeoportalZoom from "gpf-ext-ol/controls/GeoportalZoom"
+     * ou 
+     * import { GeoportalZoom } from "gpf-ext-ol"
+     */
     constructor (options) {
         options = options || {};
 
@@ -68,6 +93,11 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         }
     }
 
+    /**
+     * Overload setMap function
+     *
+     * @param {ol.Map} map - Map.
+     */
     setMap (map) {
         if (map) {
             this._createContainerPosition(map);

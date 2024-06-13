@@ -1,12 +1,18 @@
 export default GeoportalZoom;
-declare var GeoportalZoom: {
-    new (options: any): {
-        container: any;
-        options: any;
-        _createContainerPosition(map: any): void;
-        _initContainer(): void;
-        _uid: number | undefined;
-        setMap(map: any): void;
-    };
-};
+/**
+ * @classdesc
+ * OpenLayers Control to manage zoom
+ *
+ * @constructor
+ * @extends {ol.control.Zoom}
+ * @alias ol.control.GeoportalZoom
+ * @type {ol.control.GeoportalZoom}
+ * @param {Object} options - ol.control.Zoom options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html ol.Control.Zoom})
+ * @example
+ * var zoom = new ol.control.GeoportalZoom({
+ *   position: "top-left"
+ * });
+ * map.addControl(zoom);
+ */
+declare var GeoportalZoom: ol.control.GeoportalZoom;
 //# sourceMappingURL=GeoportalZoom.d.ts.map

@@ -58,7 +58,8 @@ var GeoportalAttribution = class GeoportalAttribution extends Attribution {
     }
 
     /**
-     * Overload setMap function, that enables to catch map events, such as movend events.
+     * Overload setMap function, that enables to catch map events,
+     * such as movend events.
      *
      * @param {ol.Map} map - Map.
      */
