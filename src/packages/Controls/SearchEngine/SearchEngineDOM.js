@@ -48,12 +48,17 @@ var SearchEngineDOM = {
     _createShowSearchEnginePictoElement : function (collapsible) {
         // contexte d'execution
         var self = this;
+        if (checkDsfr()) {
+            // Jamais collapsible en DSFR
+            collapsible = true;
+        }
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowSearchEnginePicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn gpf-btn-icon-search fr-btn";
         button.title = "Afficher/masquer la recherche par lieux";
         if (checkDsfr()) {
+            // Pas la même du bouton fonction en DSFR
             button.title = "Rechercher";
         }
         button.setAttribute("tabindex", "0");
@@ -63,6 +68,7 @@ var SearchEngineDOM = {
         // Close all results and panels when minimizing the widget
         button.addEventListener("click", function (e) {
             if (checkDsfr()) {
+                // En DSFR, le bouton fait la même chose que la touche Entrée
                 var container = document.getElementById(self._addUID("GPautocompleteResults"));
                 var curr = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items current");
                 var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items");
@@ -569,7 +575,7 @@ var SearchEngineDOM = {
         var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
         var label = document.createElement("option");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
-        label.innerHTML = "Lieux & Adresses";
+        label.innerHTML = "Lieux et adresses";
         container.appendChild(label);
     },
 
@@ -619,7 +625,7 @@ var SearchEngineDOM = {
         var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
         var label = document.createElement("option");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
-        label.innerHTML = "CARTES & DONNÉES";
+        label.innerHTML = "Cartes et données";
         container.appendChild(label);
     },
 
