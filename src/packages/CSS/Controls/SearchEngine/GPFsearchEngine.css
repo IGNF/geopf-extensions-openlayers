@@ -181,6 +181,7 @@ dialog[id^="GPgeocodeResultsList"] {
 [id^="GPautocompleteResultsLocation"] {
   width: inherit;
   padding: 0;
+  overflow-y: auto;
 }
 
 /* Mode Mobile */
