@@ -8,12 +8,12 @@
 .gpf-widget {
   position: absolute;
   pointer-events: auto;
-  /* display: flex;*/
+  display: flex;
   padding: 2px;
 }
 
 .gpf-widget-button {
-  width: 40px;
+  width: 44px;
 }
 
 .gpf-panel {
