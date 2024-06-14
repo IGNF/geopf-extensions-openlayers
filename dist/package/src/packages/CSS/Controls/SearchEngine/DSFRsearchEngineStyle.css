@@ -133,7 +133,7 @@ div[id^=GPgeocodeResults-] {
 
 /* Mode Mobile */
 @media (max-width: 576px) {
-  div[id^="GPsearchEngine-"] {
+  div[id^="GPsearchEngine-"].gpf-widget-padding {
     flex-direction: column;
   }
 
@@ -142,6 +142,11 @@ div[id^=GPgeocodeResults-] {
     position: relative;
     top: unset;
     margin-left: unset;
+  }
+
+  .gpf-widget-padding > div[id^=GPautoCompleteList] {
+    top: 45px;
+    margin-left: 15px;
   }
 }
 
