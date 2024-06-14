@@ -8,8 +8,6 @@
 [id^="GPsearchEngine-"] {
   /* dsfr */
   display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 
 #position-container-top-right > [id^="GPsearchEngine-"]{
@@ -138,6 +136,11 @@ input[id^=GPadvancedSearchSubmit] {
 
 /* General panels */
 
+.GPsearchFirstLineWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
 
 /* Advanced search picto */

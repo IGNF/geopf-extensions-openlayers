@@ -1,5 +1,10 @@
 /* SEARCH ENGINE */
 
+[id^="GPsearchEngine-"] {
+  flex-direction: row;
+  align-items: center;
+}
+
 .GPshowSearchEnginePicto {
   background-image: url("img/GPsearchEngineOpen.png");
   background-repeat: no-repeat;
