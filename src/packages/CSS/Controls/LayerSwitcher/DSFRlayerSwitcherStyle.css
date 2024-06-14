@@ -10,6 +10,10 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
     width: 350px;
 }
 
+.GPlayerSwitcher_layer {
+  background-color: var(--background-overlap-grey);
+}
+
 .gpf-btn-icon-layerswitcher {
     background-image: url("img/dsfr/layerswitcher.svg");
     background-repeat: no-repeat;
