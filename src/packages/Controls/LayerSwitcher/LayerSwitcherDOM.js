@@ -1,4 +1,5 @@
 import Sortable from "sortablejs";
+import checkDsfr from "../Utils/CheckDsfr";
 
 var LayerSwitcherDOM = {
 
@@ -12,9 +13,13 @@ var LayerSwitcherDOM = {
         // FIXME retirer cette détection user-agent pour solution propre
         // option forcefallback pour réparer sortable sous Chrome 97
         // option forcefallback casse le layerswitcher du portail sous firefox
+        let handleClass = ".GPlayerName";
+        if (checkDsfr()) {
+            handleClass = ".GPlayerDragNDrop";
+        }
         if (navigator.userAgent.match(/chrome|chromium|crios/i)) {
             Sortable.create(elementDraggable, {
-                handle : ".GPlayerName",
+                handle : handleClass,
                 draggable : ".draggable-layer",
                 ghostClass : "GPghostLayer",
                 animation : 200,
@@ -27,7 +32,7 @@ var LayerSwitcherDOM = {
             });
         } else {
             Sortable.create(elementDraggable, {
-                handle : ".GPlayerName",
+                handle : handleClass,
                 draggable : ".draggable-layer",
                 ghostClass : "GPghostLayer",
                 animation : 200,
@@ -256,7 +261,7 @@ var LayerSwitcherDOM = {
 
         // ajout des outils basiques (visibility / layer name)
         container.appendChild(this._createBasicToolElement(obj));
-        
+
         // ajout bouton des outils avancés
         container.appendChild(this._createAdvancedToolShowElement(obj));
 
@@ -297,7 +302,7 @@ var LayerSwitcherDOM = {
 
     _createBasicToolDragNDropElement : function (obj) {
         // INFO inactif en mode classique !
-        var button = document.createElement("button");
+        var button = document.createElement("div");
         button.id = this._addUID("GPdragndropPicto_ID_" + obj.id);
         button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon gpf-btn-icon-ls-dragndrop fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         button.title = "Deplacer la couche";
@@ -357,7 +362,7 @@ var LayerSwitcherDOM = {
         button.title = "Afficher/masquer la couche";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", visible);
-        
+
         var context = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
@@ -439,7 +444,7 @@ var LayerSwitcherDOM = {
 
         container.appendChild(this._createAdvancedToolDeleteElement(obj));
         container.appendChild(this._createAdvancedToolInformationElement(obj));
-        
+
         if (obj.type !== "feature") {
             var array = this._createAdvancedToolOpacityElement(obj);
             for (var i = 0; i < array.length; i++) {
@@ -466,7 +471,7 @@ var LayerSwitcherDOM = {
         button.layerId = obj.id;
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
-        
+
         var context = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
@@ -636,7 +641,7 @@ var LayerSwitcherDOM = {
         button.layerId = obj.id;
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
-        
+
         var context = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {

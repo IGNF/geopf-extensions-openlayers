@@ -157,6 +157,9 @@ div[id^=GPlayerInfoPanel] {
     white-space: nowrap;
     text-overflow: ellipsis;
     padding-left: 4px;
+}
+
+.GPlayerDragNDrop {
     cursor: move;
 }
 
