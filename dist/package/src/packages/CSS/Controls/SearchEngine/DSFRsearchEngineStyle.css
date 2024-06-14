@@ -4,7 +4,7 @@
     padding-bottom: 5px;
 }
 .gpf-widget-color {
-    background-color: #ffffff;
+    background-color: var(--grey-1000-50);
 }
 
 .gpf-panel__items,
