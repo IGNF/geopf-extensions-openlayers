@@ -7,6 +7,9 @@ declare namespace SearchEngineDOM {
     function _createSearchInputElement(placeholder: string): DOMElement;
     function _createSearchResetElement(): HTMLButtonElement;
     function _createButtonsElement(): HTMLDivElement;
+    function _createFirstLineWrapper(): HTMLDivElement;
+    function _createRadioContainer(): HTMLDivElement;
+    function _createRadioElements(): HTMLDivElement[];
     function _createShowAdvancedSearchElement(): DOMElement;
     function _createShowGeolocateElement(): DOMElement;
     function _createShowSearchByCoordinateElement(): DOMElement;
