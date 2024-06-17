@@ -27,7 +27,8 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Route", "GPFrouteStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/SearchEngine", "GPFsearchEngineStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "GPFtoolBoxMeasureStyle.css"),
-                path.join(rootdir, "src", "packages", "CSS", "Controls/Zoom", "GPFzoomStyle.css")
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Zoom", "GPFzoomStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/FullScreen", "GPFfullScreenStyle.css")
             ],
             // CSS themes dsfr
             "Dsfr" : [
@@ -53,7 +54,8 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Route", "DSFRrouteStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/SearchEngine", "DSFRsearchEngineStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ToolBoxMeasure", "DSFRtoolBoxMeasureStyle.css"),
-                path.join(rootdir, "src", "packages", "CSS", "Controls/Zoom", "DSFRzoomStyle.css")
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Zoom", "DSFRzoomStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/FullScreen", "DSFRfullScreenStyle.css")
             ],
         }
     };

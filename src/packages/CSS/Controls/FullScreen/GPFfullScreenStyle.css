@@ -1,0 +1,10 @@
+.ol-custom-full-screen button {
+    background-image: url("img/full-screen-buttons.png");
+    background-repeat: no-repeat;
+}
+.ol-custom-full-screen button.GPfullScreenPicto[aria-pressed="false"] {
+    background-position: 0 0;
+}
+.ol-custom-full-screen button.GPfullScreenPicto[aria-pressed="true"] {
+    background-position: 0 -30px;
+}

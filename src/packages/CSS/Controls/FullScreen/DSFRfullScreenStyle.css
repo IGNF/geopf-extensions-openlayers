@@ -1,0 +1,17 @@
+/* surcharge en mode dsfr */
+.ol-custom-full-screen button {
+    height: 40px;
+    width: 40px;
+    background-color: #000091;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.ol-custom-full-screen button.ol-custom-full-screen-false {
+    background-image: url("img/dsfr/fullscreen.svg");
+}
+.ol-custom-full-screen button.ol-custom-full-screen-true {
+    background-image: url("img/dsfr/fullscreen-off.svg");
+}
+.ol-custom-full-screen button:hover {
+    background-color: #1212ff;
+}
