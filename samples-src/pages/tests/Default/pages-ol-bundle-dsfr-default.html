@@ -55,7 +55,7 @@
                   position : "bottom-left"
                 });
                 map.addControl(drawing);
-                
+
                 var iso = new ol.control.Isocurve({
                   position : "bottom-left"
                 });
@@ -83,7 +83,8 @@
                 });
                 map.addControl(reverse);
                 var search = new ol.control.SearchEngine({
-                  position : "top-left"
+                  position : "top-left",
+                  splitResults : false,
                 });
                 map.addControl(search);
                 var feature =  new ol.control.GetFeatureInfo({

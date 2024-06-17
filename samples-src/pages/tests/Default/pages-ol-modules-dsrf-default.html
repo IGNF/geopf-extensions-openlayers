@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        
+
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCRS.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
@@ -82,7 +82,7 @@
                   position : "top-right"
                 });
                 map.addControl(zoom);
-                
+
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });
@@ -120,7 +120,8 @@
                 });
                 map.addControl(reverse);
                 var search = new ol.control.SearchEngine({
-                  position : "top-left"
+                  position : "top-left",
+                  splitResults : false,
                 });
                 map.addControl(search);
 
