@@ -38,6 +38,14 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
     constructor (options) {
         options = options || {};
 
+        // FIXME comment traite t on les options sur les classes 
+        // du contrôle natif ?
+        // * className, 
+        // * zoomInClassName, zoomOutClassName,
+        // * zoomInLabel, zoomOutLabel, 
+        // * zoomInTipLabel, zoomOutTipLabel
+        var className = "ol-custom-zoom";
+        options.className = className;
         super(options);
 
         this.container = null;
@@ -68,22 +76,27 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         // Ajout / Suppression des attributs du DOM
         this.element.id = "GPzoom-" +  this._uid;
         this.element.classList.add("GPwidget", "gpf-widget", "gpf-widget-button");
+        this.element.classList.add(this.options.className);
         this.element.classList.remove("ol-zoom", "ol-unselectable", "ol-control");
 
         var buttons = this.element.childNodes;
         for (let index = 0; index < buttons.length; index++) {
             const btn = buttons[index];
-            if (btn.classList.contains("ol-zoom-in")) {
-                btn.classList.remove("ol-zoom-in");
+            if (btn.classList.contains(this.options.className + "-in")) {
+                // btn.classList.remove("ol-custom-zoom-in");
                 btn.classList.add("GPzoomIn", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--primary");
                 btn.id = "GPzoomIn";
                 btn.innerHTML = "";
+                btn.setAttribute("tabindex", "0");
+                btn.setAttribute("aria-pressed", false);
             }
-            if (btn.classList.contains("ol-zoom-out")) {
-                btn.classList.remove("ol-zoom-out");
+            if (btn.classList.contains(this.options.className + "-out")) {
+                // btn.classList.remove("ol-custom-zoom-out");
                 btn.classList.add("GPzoomOut", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--primary");
                 btn.id = "GPzoomOut";
                 btn.innerHTML = "";
+                btn.setAttribute("tabindex", "0");
+                btn.setAttribute("aria-pressed", false);
             }
         }
 

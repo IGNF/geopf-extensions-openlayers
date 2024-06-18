@@ -7,3 +7,8 @@
 #GPzoomOut {
     border: unset;
 }
+
+.ol-custom-zoom {}
+
+.ol-custom-zoom-in,
+.ol-custom-zoom-out {}
