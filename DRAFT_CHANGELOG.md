@@ -19,6 +19,7 @@ __DATE__
 
 * ✨ [Added]
 
+  * FullScreen: Nouveau widget GeoportalFullScreen (#79)
   * Zoom: Nouveau widget GeoportalZoom (#63)
   * SearchEngine : Ajout d'une couche sur la carte sur une sélection du service de recherche (#46)
   * SearchEngine : Ajout d'un filtre d'affichage pour les couches uniquement en TMS/WMTS (#14)

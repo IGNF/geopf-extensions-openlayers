@@ -34,6 +34,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalAttribution.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalZoom.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalZoom.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalFullScreen.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalFullScreen.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -80,8 +82,13 @@
                 var zoom = new ol.control.GeoportalZoom({
                   position : "top-right"
                 });
-
                 map.addControl(zoom);
+
+                var fullscreen = new ol.control.GeoportalFullScreen({
+                  position : "top-right"
+                });
+                map.addControl(fullscreen);
+
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });
