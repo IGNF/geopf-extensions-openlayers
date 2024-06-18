@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        
+
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCRS.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
@@ -85,10 +85,10 @@
                 });
                 map.addControl(zoom);
 
-                var fuulscreen = new ol.control.GeoportalFullScreen({
+                var fullscreen = new ol.control.GeoportalFullScreen({
                   position : "top-right"
                 });
-                map.addControl(fuulscreen);
+                map.addControl(fullscreen);
                 
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
@@ -127,7 +127,8 @@
                 });
                 map.addControl(reverse);
                 var search = new ol.control.SearchEngine({
-                  position : "top-left"
+                  position : "top-left",
+                  splitResults : false,
                 });
                 map.addControl(search);
 

@@ -300,6 +300,104 @@ var SearchEngineDOM = {
         return div;
     },
 
+    _createFirstLineWrapper : function () {
+        var div = document.createElement("div");
+        div.className = "GPsearchFirstLineWrapper";
+        return div;
+    },
+
+    _createRadioContainer : function () {
+        var div = document.createElement("div");
+        div.className = "GPsearchRadioContainer";
+        return div;
+    },
+
+    _createRadioElements : function () {
+        var div = document.createElement("div");
+        div.className = "GPsearchRadioElements";
+        var choiceLocations = document.createElement("div");
+        choiceLocations.className = "GPsearchSplitChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        var inputLocations = document.createElement("input");
+        inputLocations.id = this._addUID("GPsearchSplitLocations");
+        inputLocations.type = "radio";
+        inputLocations.name = "GPsearchSplit";
+        inputLocations.value = "address";
+        inputLocations.checked = true;
+
+        choiceLocations.appendChild(inputLocations);
+
+        var labelLocations = document.createElement("label");
+        labelLocations.className = "gpf-label fr-label";
+        labelLocations.htmlFor = this._addUID("GPsearchSplitLocations");
+        labelLocations.title = "Adresses";
+        labelLocations.innerHTML = "Adresses";
+        choiceLocations.appendChild(labelLocations);
+        if (inputLocations.addEventListener) {
+            inputLocations.addEventListener("change", function () {
+                if (inputLocations.checked) {
+                    document.querySelector("[id^='GPautocompleteResultsSuggest']").classList.add("gpf-hidden", "GPelementHidden");
+                    document.querySelector("[id^='GPautocompleteResultsLocation']").classList.remove("gpf-hidden", "GPelementHidden");
+                } else {
+                    document.querySelector("[id^='GPautocompleteResultsSuggest']").classList.remove("gpf-hidden", "GPelementHidden");
+                    document.querySelector("[id^='GPautocompleteResultsLocation']").classList.add("gpf-hidden", "GPelementHidden");
+                }
+            });
+        } else if (inputLocations.attachEvent) {
+            inputLocations.attachEvent("onchange", function () {
+                if (inputLocations.checked) {
+                    document.querySelector("[id^='GPautocompleteResultsSuggest']").classList.add("gpf-hidden", "GPelementHidden");
+                    document.querySelector("[id^='GPautocompleteResultsLocation']").classList.remove("gpf-hidden", "GPelementHidden");
+                } else {
+                    document.querySelector("[id^='GPautocompleteResultsSuggest']").classList.remove("gpf-hidden", "GPelementHidden");
+                    document.querySelector("[id^='GPautocompleteResultsLocation']").classList.add("gpf-hidden", "GPelementHidden");
+                }
+            });
+        }
+
+        var choiceData = document.createElement("div");
+        choiceData.className = "GPsearchSplitChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        var inputData = document.createElement("input");
+        inputData.id = this._addUID("GPsearchSplitData");
+        inputData.type = "radio";
+        inputData.name = "GPsearchSplit";
+        inputData.value = "data";
+
+        choiceData.appendChild(inputData);
+
+        var labelData = document.createElement("label");
+        labelData.className = "gpf-label fr-label";
+        labelData.htmlFor = this._addUID("GPsearchSplitData");
+        labelData.title = "Cartes et données";
+        labelData.innerHTML = "Cartes et données";
+        choiceData.appendChild(labelData);
+        if (inputData.addEventListener) {
+            inputData.addEventListener("change", function () {
+                if (inputData.checked) {
+                    document.querySelector("[id^='GPautocompleteResultsSuggest']").classList.remove("gpf-hidden", "GPelementHidden");
+                    document.querySelector("[id^='GPautocompleteResultsLocation']").classList.add("gpf-hidden", "GPelementHidden");
+                } else {
+                    document.querySelector("[id^='GPautocompleteResultsSuggest']").classList.add("gpf-hidden", "GPelementHidden");
+                    document.querySelector("[id^='GPautocompleteResultsLocation']").classList.remove("gpf-hidden", "GPelementHidden");
+                }
+            });
+        } else if (inputData.attachEvent) {
+            inputData.attachEvent("onchange", function () {
+                if (inputData.checked) {
+                    document.querySelector("[id^='GPautocompleteResultsSuggest']").classList.remove("gpf-hidden", "GPelementHidden");
+                    document.querySelector("[id^='GPautocompleteResultsLocation']").classList.remove("gpf-hidden", "GPelementHidden");
+                } else {
+                    document.querySelector("[id^='GPautocompleteResultsSuggest']").classList.remove("gpf-hidden", "GPelementHidden");
+                    document.querySelector("[id^='GPautocompleteResultsLocation']").classList.add("gpf-hidden", "GPelementHidden");
+                }
+            });
+        }
+
+        div.appendChild(choiceLocations);
+        div.appendChild(choiceData);
+
+        return [div, inputLocations, inputData];
+    },
+
     /**
      * Show advanced search panel
      *
@@ -309,15 +407,15 @@ var SearchEngineDOM = {
         // contexte d'execution
         var self = this;
 
-        var button = document.createElement("button");
-        button.id = this._addUID("GPshowAdvancedSearch");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch gpf-btn gpf-btn-icon-search-advanced fr-btn fr-btn--secondary fr-m-1w";
-        button.title = "Ouvrir la recherche avancée";
-        button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", false);
+        var span = document.createElement("span");
+        span.id = this._addUID("GPshowAdvancedSearch");
+        span.className = "GPshowOpen  GPshowAdvancedSearch fr-m-1w";
+        span.innerText = "Recherche avancée";
+        span.setAttribute("tabindex", "0");
+        span.setAttribute("aria-pressed", false);
 
         // Open advanced search
-        button.addEventListener("click", function (e) {
+        span.addEventListener("click", function (e) {
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
 
@@ -343,7 +441,7 @@ var SearchEngineDOM = {
             document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
         });
 
-        return button;
+        return span;
     },
 
     /**
@@ -419,6 +517,8 @@ var SearchEngineDOM = {
 
         return button;
     },
+
+
 
     // ################################################################### //
     // ################### Methods of advanced search #################### //

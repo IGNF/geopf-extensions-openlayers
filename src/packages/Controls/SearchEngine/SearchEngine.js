@@ -31,6 +31,7 @@ import GeoportalMapBox from "../../Layers/LayerMapBox";
 import Search from "../../Services/Search";
 // DOM
 import SearchEngineDOM from "./SearchEngineDOM";
+import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("searchengine");
 
@@ -304,7 +305,8 @@ var SearchEngine = class SearchEngine extends Control {
             },
             displayMarker : true,
             markerStyle : "lightOrange",
-            placeholder : "Rechercher un lieu, une adresse"
+            placeholder : "Rechercher un lieu, une adresse",
+            splitResults : true,
         };
 
         // merge with user options
@@ -370,6 +372,9 @@ var SearchEngine = class SearchEngine extends Control {
         this._autocompleteContainer = null;
         this._containerResultsLocation = null;
         this._containerResultsSuggest = null;
+        // Radio buttons correspondants
+        this._radioButtonLocation = null;
+        this._radioButtonSuggest = null;
 
         // listes des reponses de l'autocompletion
         this._suggestedLocations = [];
@@ -755,13 +760,24 @@ var SearchEngine = class SearchEngine extends Control {
         }
         searchDiv.appendChild(search);
 
-        container.appendChild(searchDiv);
         var buttonsContainer = this._createButtonsElement();
-        container.appendChild(buttonsContainer);
+        var firstLineWrapper = this._createFirstLineWrapper();
+        firstLineWrapper.appendChild(searchDiv);
+        firstLineWrapper.appendChild(buttonsContainer);
+        container.appendChild(firstLineWrapper);
+
+        var radioContainer = this._createRadioContainer();
+        container.appendChild(radioContainer);
+
+        if (checkDsfr() && this.options.splitResults) {
+            var radioElements;
+            [radioElements, this._radioButtonLocation, this._radioButtonSuggest] = this._createRadioElements();
+            radioContainer.appendChild(radioElements);
+        }
 
         if (this.options.displayButtonAdvancedSearch) {
             var advancedShow = this._createShowAdvancedSearchElement();
-            buttonsContainer.appendChild(advancedShow);
+            radioContainer.appendChild(advancedShow);
 
             // INFO je decompose les appels car j'ai besoin de recuperer le container
             // des filtres
@@ -1008,9 +1024,13 @@ var SearchEngine = class SearchEngine extends Control {
         }
         element.classList.add("GPelementHidden", "gpf-hidden");
         if (locations.length) {
-            element.classList.remove("GPelementHidden", "gpf-hidden");
+            if (!this._radioButtonLocation || (this._radioButtonLocation && this._radioButtonLocation.checked)) {
+                element.classList.remove("GPelementHidden", "gpf-hidden");
+            }
             this._displaySuggestedLocation();
-            this._createAutoCompletedLocationTitleElement();
+            if (!checkDsfr() || !this.options.splitResults) {
+                this._createAutoCompletedLocationTitleElement();
+            }
             for (var i = 0; i < locations.length; i++) {
                 // Proposals are dynamically filled in Javascript by autocomplete service
                 this._createAutoCompletedLocationElement(locations[i], i);
@@ -1036,8 +1056,12 @@ var SearchEngine = class SearchEngine extends Control {
         }
         element.classList.add("GPelementHidden", "gpf-hidden");
         if (suggests.length) {
-            element.classList.remove("GPelementHidden", "gpf-hidden");
-            this._createSearchedSuggestTitleElement();
+            if (!this._radioButtonSuggest || (this._radioButtonSuggest && this._radioButtonSuggest.checked)) {
+                element.classList.remove("GPelementHidden", "gpf-hidden");
+            }
+            if (!checkDsfr() || !this.options.splitResults) {
+                this._createSearchedSuggestTitleElement();
+            }
             for (let i = 0; i < suggests.length; i++) {
                 const suggest = suggests[i];
                 this._createSearchedSuggestElement(suggest, i);
