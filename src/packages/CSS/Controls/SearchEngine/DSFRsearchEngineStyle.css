@@ -15,8 +15,8 @@
 }
 
 
-.gpf-panel__items {
-  height: unset;
+.gpf-panel__items.GPautoCompleteProposal {
+  height: 45px;
 }
 
 .GPlabelTitle {
@@ -183,6 +183,12 @@ div[id^=GPgeocodeResults-] {
 
   .gpf-widget-padding > .GPsearchFirstLineWrapper {
     flex-direction: column;
+    height: fit-content;
+  }
+
+  .GPsearchRadioContainer {
+    flex-direction: column;
+    align-items: center;
   }
 
   dialog[id^=GPcoordinateSearchPanel],
@@ -190,10 +196,5 @@ div[id^=GPgeocodeResults-] {
     position: relative;
     top: unset;
     margin-left: unset;
-  }
-
-  .gpf-widget-padding > div[id^=GPautoCompleteList] {
-    top: 45px;
-    margin-left: 15px;
   }
 }
