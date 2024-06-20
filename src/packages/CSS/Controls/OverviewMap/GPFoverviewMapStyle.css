@@ -1,0 +1,6 @@
+.GPshowOverviewMap {
+    background-image: url("img/overviewmap.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: 2px center;
+}

@@ -19,6 +19,7 @@ __DATE__
 
 * ✨ [Added]
 
+  * OverviewMap: Nouveau widget GeoportalOverviewMap (#81)
   * FullScreen: Nouveau widget GeoportalFullScreen (#79)
   * Zoom: Nouveau widget GeoportalZoom (#63)
   * SearchEngine : Ajout d'une couche sur la carte sur une sélection du service de recherche (#46)

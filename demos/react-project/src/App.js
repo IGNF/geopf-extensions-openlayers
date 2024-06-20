@@ -16,6 +16,7 @@ import {
   LayerImport,
   GeoportalAttribution,
   GeoportalZoom,
+  GeoportalOverviewMap,
   ElevationPath,
   MeasureArea,
   MeasureAzimuth,
@@ -55,13 +56,18 @@ export default class App extends React.Component {
 
     CRS.load();
 
+    var overmap = new GeoportalOverviewMap({
+      position : "bottom-left"
+    });
+    this.map.addControl(overmap);
+
     var zoom = new GeoportalZoom({
       position: "bottom-left"
     });
     this.map.addControl(zoom);
 
     var drawing = new Drawing({
-      position: "bottom-left"
+      position: "top-left"
     });
     this.map.addControl(drawing);
   
