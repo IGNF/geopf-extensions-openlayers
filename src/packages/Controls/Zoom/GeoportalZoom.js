@@ -17,6 +17,8 @@ var logger = Logger.getLogger("zoom");
  * @alias ol.control.GeoportalZoom
  * @type {ol.control.GeoportalZoom}
  * @param {Object} options - ol.control.Zoom options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html ol.Control.Zoom})
+ * @fire zoom:in
+ * @fire zoom:out
  * @example
  * var zoom = new ol.control.GeoportalZoom({
  *   position: "top-left"
@@ -79,6 +81,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         this.element.classList.add(this.options.className);
         this.element.classList.remove("ol-zoom", "ol-unselectable", "ol-control");
 
+        var self = this;
         var buttons = this.element.childNodes;
         for (let index = 0; index < buttons.length; index++) {
             const btn = buttons[index];
@@ -87,16 +90,38 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
                 btn.classList.add("GPzoomIn", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--primary");
                 btn.id = "GPzoomIn";
                 btn.innerHTML = "";
-                btn.setAttribute("tabindex", "0");
-                btn.setAttribute("aria-pressed", false);
+                if (btn.addEventListener) {
+                    btn.addEventListener("click", function () {
+                        /**
+                        * event triggered on zoom in
+                        * @event zoom:in
+                        */
+                        self.dispatchEvent("zoom:in");
+                    });
+                } else if (btn.attachEvent) {
+                    btn.attachEvent("onclick", function () {
+                        self.dispatchEvent("zoom:in");
+                    });
+                }
             }
             if (btn.classList.contains(this.options.className + "-out")) {
                 // btn.classList.remove("ol-custom-zoom-out");
                 btn.classList.add("GPzoomOut", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--primary");
                 btn.id = "GPzoomOut";
                 btn.innerHTML = "";
-                btn.setAttribute("tabindex", "0");
-                btn.setAttribute("aria-pressed", false);
+                if (btn.addEventListener) {
+                    btn.addEventListener("click", function () {
+                        /**
+                        * event triggered on zoom out
+                        * @event zoom:out
+                        */
+                        self.dispatchEvent("zoom:out");
+                    });
+                } else if (btn.attachEvent) {
+                    btn.attachEvent("onclick", function () {
+                        self.dispatchEvent("zoom:out");
+                    });
+                }
             }
         }
 

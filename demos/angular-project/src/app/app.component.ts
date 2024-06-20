@@ -13,6 +13,7 @@ import {
   LayerImport,
   GeoportalAttribution,
   GeoportalZoom,
+  GeoportalOverviewMap,
   ElevationPath,
   MeasureArea,
   MeasureAzimuth,
@@ -58,8 +59,13 @@ export class AppComponent implements OnInit {
     });
     this.map.addControl(zoom);
 
-    var drawing = new Drawing({
+    var overmap = new GeoportalOverviewMap({
       position: "bottom-left"
+    });
+    this.map.addControl(overmap);
+
+    var drawing = new Drawing({
+      position: "top-left"
     });
     this.map.addControl(drawing);
 

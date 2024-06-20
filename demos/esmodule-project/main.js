@@ -13,6 +13,7 @@ import {
     LayerImport,
     GeoportalAttribution,
     GeoportalZoom,
+    GeoportalOverviewMap,
     ElevationPath,
     MeasureArea,
     MeasureAzimuth,
@@ -52,14 +53,20 @@ var cfg = new Gp.Services.Config({
                 zoom : 8,
             })
         });
+        
+        var overmap = new GeoportalOverviewMap({
+            position : "bottom-left"
+        });
+        map.addControl(overmap);
 
         var zoom = new GeoportalZoom({
             position : "bottom-left"
         });
         map.addControl(zoom);
 
+
         var drawing = new Drawing({
-            position : "bottom-right"
+            position : "top-left"
         });
         map.addControl(drawing);
 
@@ -127,7 +134,9 @@ var cfg = new Gp.Services.Config({
         });
         map.addControl(measureProfil);
 
-        var attributions = new GeoportalAttribution();
+        var attributions = new GeoportalAttribution({
+            position : "bottom-right"
+        });
         map.addControl(attributions);
     },
     onFailure : (e) => {

@@ -93,6 +93,7 @@ import MeasureAzimuth from "./Controls/Measures/MeasureAzimuth";
 import ButtonExport from "./Controls/Export/Export";
 import GeoportalZoom from "./Controls/Zoom/GeoportalZoom";
 import GeoportalFullScreen from "./Controls/FullScreen/GeoportalFullScreen";
+import GeoportalOverviewMap from "./Controls/OverviewMap/GeoportalOverviewMap";
 
 import Proj4 from "proj4";
 
@@ -258,6 +259,7 @@ Ol.control.LocationSelector = LocationSelector;
 Ol.control.Export = ButtonExport;
 Ol.control.GeoportalZoom = GeoportalZoom;
 Ol.control.GeoportalFullScreen = GeoportalFullScreen;
+Ol.control.GeoportalOverviewMap = GeoportalOverviewMap;
 
 export {
     /** 
@@ -269,6 +271,9 @@ export {
      * @see ol.control.Route
      * @see ol.control.Isocurve
      * @see ol.control.GeoportalMousePosition
+     * @see ol.control.GeoportalFullScreen
+     * @see ol.control.GeoportalZoom
+     * @see ol.control.GeoportalOverviewMap
      * @see ol.control.Drawing
      * @see ol.control.ReverseGeocode
      * @see ol.control.MeasureLength
