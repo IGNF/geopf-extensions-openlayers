@@ -96,12 +96,12 @@
                 });
                 map.addControl(zoom);
 
-                var overmap = new GeoportalOverviewMap({
+                var overmap = new ol.control.GeoportalOverviewMap({
                     position : "bottom-left"
                 });
                 map.addControl(overmap);
 
-                var fullscreen = new GeoportalFullScreen({
+                var fullscreen = new ol.control.GeoportalFullScreen({
                     position : "bottom-left"
                 });
                 map.addControl(fullscreen);
