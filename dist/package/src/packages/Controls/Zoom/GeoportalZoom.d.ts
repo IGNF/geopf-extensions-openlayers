@@ -8,6 +8,8 @@ export default GeoportalZoom;
  * @alias ol.control.GeoportalZoom
  * @type {ol.control.GeoportalZoom}
  * @param {Object} options - ol.control.Zoom options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html ol.Control.Zoom})
+ * @fire zoom:in
+ * @fire zoom:out
  * @example
  * var zoom = new ol.control.GeoportalZoom({
  *   position: "top-left"

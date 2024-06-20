@@ -1,0 +1,26 @@
+div[id^="GPoverviewMap-"] {
+    left: 0.5em;
+    bottom: 10.5em;
+}
+
+button[id^="GPshowOverviewMap-"] {}
+
+.ol-overviewmap.ol-collapsed .ol-overviewmap-map {
+    border: none;
+    height: 100px;
+    width: 100px;
+}
+
+.ol-overviewmap .ol-overviewmap-box {
+    border: 2px solid red;
+}
+
+.ol-overviewmap:not(.ol-collapsed) button {
+    position: relative;
+}
+/* 
+.ol-overviewmap .ol-overviewmap-map {
+    position: relative;
+    left: 50px;
+} 
+*/

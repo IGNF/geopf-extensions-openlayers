@@ -471,6 +471,64 @@
 -->
     
 <!--
+        <li class="item" data-alias= "module:~controls/GeoportalOverviewMap" data-name="GeoportalOverviewMap">
+-->
+        <li class="l1 item" data-alias= "module:~controls/GeoportalOverviewMap" data-name="GeoportalOverviewMap">
+                <a href="module-GeoportalOverviewMap.html">module:~controls/GeoportalOverviewMap</a>
+                
+<!--
+            <span class="title">
+                <a href="module-GeoportalOverviewMap.html">module:~controls/GeoportalOverviewMap</a>
+                
+            </span>
+-->
+
+            
+
+
+<!--
+            <ul class="members itemMembers">
+            
+            </ul>
+-->
+
+            
+
+
+<!--
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+-->
+            
+
+<!--
+            <ul class="methods itemMembers">
+            
+            </ul>
+-->
+
+            
+            <div class="l2 itemMembers"> Events </div>
+            
+                <div class="l3 itemMembers" data-name="module:GeoportalOverviewMap~overviewmap:toggle"> <a href="module-GeoportalOverviewMap.html#~event:overviewmap:toggle">overviewmap:toggle</a> </div>
+            
+
+<!--
+            <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li data-name="module:GeoportalOverviewMap~overviewmap:toggle"><a href="module-GeoportalOverviewMap.html#~event:overviewmap:toggle">overviewmap:toggle</a></li>
+            
+            </ul>
+-->
+       </li>
+<!--
+        </li>
+-->
+    
+<!--
         <li class="item" data-alias= "module:~controls/GeoportalZoom" data-name="GeoportalZoom">
 -->
         <li class="l1 item" data-alias= "module:~controls/GeoportalZoom" data-name="GeoportalZoom">
@@ -509,9 +567,21 @@
 -->
 
             
+            <div class="l2 itemMembers"> Events </div>
+            
+                <div class="l3 itemMembers" data-name="module:GeoportalZoom~zoom:in"> <a href="module-GeoportalZoom.html#~event:zoom:in">zoom:in</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:GeoportalZoom~zoom:out"> <a href="module-GeoportalZoom.html#~event:zoom:out">zoom:out</a> </div>
+            
 
 <!--
             <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li data-name="module:GeoportalZoom~zoom:in"><a href="module-GeoportalZoom.html#~event:zoom:in">zoom:in</a></li>
+            
+                <li data-name="module:GeoportalZoom~zoom:out"><a href="module-GeoportalZoom.html#~event:zoom:out">zoom:out</a></li>
             
             </ul>
 -->
@@ -2450,6 +2520,64 @@
                 <li data-name="setMap"><a href="ol.control.GeoportalMousePosition.html#setMap">setMap</a></li>
             
                 <li data-name="setUnits"><a href="ol.control.GeoportalMousePosition.html#setUnits">setUnits</a></li>
+            
+            </ul>
+-->
+
+            
+
+<!--
+            <ul class="events itemMembers">
+            
+            </ul>
+-->
+       </li>
+<!--
+        </li>
+-->
+    
+<!--
+        <li class="item" data-alias= "ol.control.GeoportalOverviewMap" data-name="GeoportalOverviewMap">
+-->
+        <li class="l1 item" data-alias= "ol.control.GeoportalOverviewMap" data-name="GeoportalOverviewMap">
+                <a href="ol.control.GeoportalOverviewMap.html">ol.control.GeoportalOverviewMap</a>
+                
+<!--
+            <span class="title">
+                <a href="ol.control.GeoportalOverviewMap.html">ol.control.GeoportalOverviewMap</a>
+                
+            </span>
+-->
+
+            
+
+
+<!--
+            <ul class="members itemMembers">
+            
+            </ul>
+-->
+
+            
+
+
+<!--
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+-->
+            
+            <div class="l2 itemMembers"> Methods </div>
+            
+                <div class="l3 itemMembers" data-name="ol.control.GeoportalOverviewMap#setMap"> <a href="ol.control.GeoportalOverviewMap.html#setMap">setMap</a> </div>
+            
+
+<!--
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="setMap"><a href="ol.control.GeoportalOverviewMap.html#setMap">setMap</a></li>
             
             </ul>
 -->
@@ -4721,7 +4849,7 @@
     
         
         <div class="tag-source">
-            Layers/LayerWMTS.js, line 76
+            Layers/LayerWMTS.js, line 237
         </div>
         
     </div>
@@ -5055,48 +5183,209 @@
 
 // Ex. configuration object for WMTS Layer
 {
-   name: "ORTHOIMAGERY.ORTHOPHOTOS",
-   title: "Photographies aériennes",
-   description: "Photographies aériennes",
-   globalConstraint: {
-       maxScaleDenominator: 559082264.0287179,
-       minScaleDenominator: 266.5911979812229,
-       bbox: {
-           left: -180,
-           right: 180,
-           top: 89,
-           bottom: -89
-       }
-   },
-   serviceParams: {
-       id: "OGC:WMTS",
-       version: "1.0.0",
-       serverUrl: {
-           full: "https://data.geopf.fr/wmts"
-       }
-   },
-   defaultProjection: "EPSG:3857",
-   wmtsOptions: {
-       tileMatrixSetLink: "PM",
-       tileMatrixSetLimits: {
-           (...)    
-       }
-   },
-   styles: [{
-       name: "normal",
-       title: "Légende générique",
-       current: true,
-       url: null
-   }],
-   legends: [{
-       format: "image/jpeg",
-       url: "https://data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
-       minScaleDenominator: "200"
-   }],
-   formats: [{
-       name: "image/jpeg",
-       current: true
-   }]
+"name" : "GEOGRAPHICALGRIDSYSTEMS.MAPS.OVERVIEW",
+"globalConstraint" : {
+    "maxScaleDenominator" : 279541132.01435894,
+    "minScaleDenominator" : 2183915.0938621787,
+    "bbox" : {
+        "left" : -179.5,
+        "right" : 179.5,
+        "top" : 75,
+        "bottom" : -75
+    }
+},
+"params" : {
+    "url" : "https:*data.geopf.fr/wmts",
+    "styles" : "normal",
+    "version" : "1.0.0",
+    "format" : "image/jpeg",
+    "projection" : "EPSG:3857",
+    "minScale" : 2183915.0938621787,
+    "maxScale" : 279541132.01435894,
+    "extent" : {
+        "left" : -179.5,
+        "right" : 179.5,
+        "top" : 75,
+        "bottom" : -75
+    },
+    "legends" : [
+        {
+            "format" : "image/jpeg",
+            "url" : "https:*data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+            "minScaleDenominator" : "200"
+        }
+    ],
+    "title" : "Carte Mondiale pour la mini-vue",
+    "description" : "Carte Mondiale pour la mini-vue",
+    "tileMatrixSetLimits" : {
+        "1" : {
+            "minTileRow" : "0",
+            "maxTileRow" : "1",
+            "minTileCol" : "0",
+            "maxTileCol" : "1"
+        },
+        "2" : {
+            "minTileRow" : "0",
+            "maxTileRow" : "3",
+            "minTileCol" : "0",
+            "maxTileCol" : "3"
+        },
+        "3" : {
+            "minTileRow" : "1",
+            "maxTileRow" : "6",
+            "minTileCol" : "0",
+            "maxTileCol" : "7"
+        },
+        "4" : {
+            "minTileRow" : "2",
+            "maxTileRow" : "13",
+            "minTileCol" : "0",
+            "maxTileCol" : "15"
+        },
+        "5" : {
+            "minTileRow" : "5",
+            "maxTileRow" : "26",
+            "minTileCol" : "0",
+            "maxTileCol" : "31"
+        },
+        "6" : {
+            "minTileRow" : "11",
+            "maxTileRow" : "52",
+            "minTileCol" : "0",
+            "maxTileCol" : "63"
+        },
+        "7" : {
+            "minTileRow" : "22",
+            "maxTileRow" : "105",
+            "minTileCol" : "0",
+            "maxTileCol" : "127"
+        },
+        "8" : {
+            "minTileRow" : "45",
+            "maxTileRow" : "210",
+            "minTileCol" : "0",
+            "maxTileCol" : "255"
+        }
+    },
+    "TMSLink" : "PM_1_8",
+    "matrixIds" : [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+    ],
+    "tileMatrices" : {
+        "1" : {
+            "matrixId" : "1",
+            "matrixHeight" : 2,
+            "matrixWidth" : 2,
+            "scaleDenominator" : 279541132.01435894,
+            "tileHeight" : 256,
+            "tileWidth" : 256,
+            "topLeftCorner" : {
+                "x" : -20037508.3427892,
+                "y" : 20037508.3427892
+            }
+        },
+        "2" : {
+            "matrixId" : "2",
+            "matrixHeight" : 4,
+            "matrixWidth" : 4,
+            "scaleDenominator" : 139770566.0071793,
+            "tileHeight" : 256,
+            "tileWidth" : 256,
+            "topLeftCorner" : {
+                "x" : -20037508.3427892,
+                "y" : 20037508.3427892
+            }
+        },
+        "3" : {
+            "matrixId" : "3",
+            "matrixHeight" : 8,
+            "matrixWidth" : 8,
+            "scaleDenominator" : 69885283.00358965,
+            "tileHeight" : 256,
+            "tileWidth" : 256,
+            "topLeftCorner" : {
+                "x" : -20037508.3427892,
+                "y" : 20037508.3427892
+            }
+        },
+        "4" : {
+            "matrixId" : "4",
+            "matrixHeight" : 16,
+            "matrixWidth" : 16,
+            "scaleDenominator" : 34942641.50179486,
+            "tileHeight" : 256,
+            "tileWidth" : 256,
+            "topLeftCorner" : {
+                "x" : -20037508.3427892,
+                "y" : 20037508.3427892
+            }
+        },
+        "5" : {
+            "matrixId" : "5",
+            "matrixHeight" : 32,
+            "matrixWidth" : 32,
+            "scaleDenominator" : 17471320.75089743,
+            "tileHeight" : 256,
+            "tileWidth" : 256,
+            "topLeftCorner" : {
+                "x" : -20037508.3427892,
+                "y" : 20037508.3427892
+            }
+        },
+        "6" : {
+            "matrixId" : "6",
+            "matrixHeight" : 64,
+            "matrixWidth" : 64,
+            "scaleDenominator" : 8735660.375448715,
+            "tileHeight" : 256,
+            "tileWidth" : 256,
+            "topLeftCorner" : {
+                "x" : -20037508.3427892,
+                "y" : 20037508.3427892
+            }
+        },
+        "7" : {
+            "matrixId" : "7",
+            "matrixHeight" : 128,
+            "matrixWidth" : 128,
+            "scaleDenominator" : 4367830.1877243575,
+            "tileHeight" : 256,
+            "tileWidth" : 256,
+            "topLeftCorner" : {
+                "x" : -20037508.3427892,
+                "y" : 20037508.3427892
+            }
+        },
+        "8" : {
+            "matrixId" : "8",
+            "matrixHeight" : 256,
+            "matrixWidth" : 256,
+            "scaleDenominator" : 2183915.0938621787,
+            "tileHeight" : 256,
+            "tileWidth" : 256,
+            "topLeftCorner" : {
+                "x" : -20037508.3427892,
+                "y" : 20037508.3427892
+            }
+        }
+    },
+    "nativeResolutions" : [
+        "78271.51696402048",
+        "39135.75848201023",
+        "19567.87924100512",
+        "9783.939620502561",
+        "4891.969810251280",
+        "2445.984905125640",
+        "1222.992452562820",
+        "611.4962262814100"
+    ]
 }</code></pre>
     
 
@@ -5145,7 +5434,7 @@
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Jun 18 2024 10:15:16 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Jun 20 2024 10:06:44 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

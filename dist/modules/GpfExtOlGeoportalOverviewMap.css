@@ -1,0 +1,16 @@
+/*!
+ * @brief geoportal-extensions-openlayers
+ *
+ * This software is released under the licence CeCILL-B (Free BSD compatible)
+ * @see http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
+ * @see http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.txt
+ * @see http://www.cecill.info/
+ *
+ * @copyright copyright (c) IGN 
+ * @license CeCILL-B
+ * @author IGN
+ * @version 1.0.0-beta.81
+ * @date 20/06/2024
+ *
+ */div[id^=GPoverviewMap-]{bottom:10.5em;left:.5em}.ol-overviewmap.ol-collapsed .ol-overviewmap-map{border:none;height:100px;width:100px}.ol-overviewmap .ol-overviewmap-box{border:2px solid red}.ol-overviewmap:not(.ol-collapsed) button{position:relative}
+/*# sourceMappingURL=GpfExtOlGeoportalOverviewMap.css.map*/
