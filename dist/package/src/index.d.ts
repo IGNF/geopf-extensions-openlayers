@@ -26,6 +26,7 @@ export { default as MeasureArea } from "./packages/Controls/Measures/MeasureArea
 export { default as MeasureAzimuth } from "./packages/Controls/Measures/MeasureAzimuth";
 export { default as ButtonExport } from "./packages/Controls/Export/Export";
 export { default as GeoportalZoom } from "./packages/Controls/Zoom/GeoportalZoom";
+export { default as GeoportalFullScreen } from "./packages/Controls/FullScreen/GeoportalFullScreen";
 export { default as GeoportalOverviewMap } from "./packages/Controls/OverviewMap/GeoportalOverviewMap";
 export { default as EditorStyle } from "./packages/Controls/Editor/Style";
 export { default as EditorFilter } from "./packages/Controls/Editor/Filter";
