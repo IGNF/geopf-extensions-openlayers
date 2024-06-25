@@ -32,7 +32,7 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
      * @param {*} options - options
      * @example
      * import GeoportalFullScreen from "gpf-ext-ol/controls/GeoportalFullScreen"
-     * ou 
+     * ou
      * import { GeoportalFullScreen } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -45,7 +45,7 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         options.activeClassName = options.activeClassName || className + "-true";
         options.inactiveClassName =  options.inactiveClassName || className + "-false";
         options.tipLabel = options.tipLabel || "Basculer en mode plein écran";
-        
+
         super(options);
 
         this.container = null;
@@ -78,9 +78,9 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         this.element.classList.add("GPwidget", "gpf-widget", "gpf-widget-button");
         this.element.classList.add(this.options.className);
         this.element.classList.remove("ol-full-screen", "ol-unselectable", "ol-control");
-        
+
         var button = this.element.childNodes[0];
-        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPfullScreenPicto");
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPfullScreenPicto", "fr-btn");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         if (button.addEventListener) {
@@ -112,7 +112,7 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
             this._initContainer();
             // INFO
             // on ne supprime pas le zoom par defaut,
-            // on le desactive simplement pour éviter des effets de bords 
+            // on le desactive simplement pour éviter des effets de bords
             // (ex. evenement de suppression d'un element de la collection)
             var controls = map.getControls();
             controls.forEach(ctrl => {

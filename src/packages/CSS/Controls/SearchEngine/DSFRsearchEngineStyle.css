@@ -198,3 +198,12 @@ div[id^=GPgeocodeResults-] {
     margin-left: unset;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  .GPshowGeolocate {
+    background-image: url("img/dsfr/localiser-dark.svg");
+  }
+  .gpf-btn-icon-search-coordinate {
+    background-image: url("img/dsfr/coordonnees-dark.svg");
+  }
+}
