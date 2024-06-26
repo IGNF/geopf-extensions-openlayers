@@ -61,8 +61,8 @@ declare namespace MathUtils {
      * @returns {Object} - {x, lyng, unit:km}
      */
     function coordinateToKMeter(olCoordinate: any): Object;
-    function toInteger(s: string, base: Numeric): any;
+    function toInteger(s: string, base: Numeric): null | Numeric;
     function isInteger(s: string): boolean;
-    function toFloat(s: string): any;
+    function toFloat(s: string): null | Numeric;
 }
 //# sourceMappingURL=MathUtils.d.ts.map

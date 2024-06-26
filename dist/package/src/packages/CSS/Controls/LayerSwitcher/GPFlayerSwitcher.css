@@ -95,7 +95,6 @@ button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersLis
 .GPlayerSwitcher_layer {
   position: relative;
   top: 0;
-  background-color: #FFF;
   border-bottom: 1px dotted #CCC;
   overflow: hidden;
 }

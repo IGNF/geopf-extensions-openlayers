@@ -6,10 +6,10 @@ declare namespace Gfi {
         autoPanAnimation?: Object | undefined;
         autoPanMargin?: number | undefined;
     }): boolean;
-    function features2html(map: ol.Map, features: ol.Features[]): HTMLElement;
+    function features2html(map: ol.Map, features: Array<ol.Features>): HTMLElement;
     function layerGetFeatureAtCoordinates(map: ol.Map, olLayer: ol.layer.Layer, olCoordinate: ol.Coordinate): boolean;
-    function displayVectorFeatureInfo(map: ol.Map, olCoordinate: ol.Coordinate, olLayers: ol.layer.Layer[], autoPanOptions: Object): boolean;
-    function displayFeatureInfo(map: ol.Map, olCoordinate: ol.Coordinate, gfiLayers: Object[], proxyOptions?: {
+    function displayVectorFeatureInfo(map: ol.Map, olCoordinate: ol.Coordinate, olLayers: Array<ol.layer.Layer>, autoPanOptions: Object): boolean;
+    function displayFeatureInfo(map: ol.Map, olCoordinate: ol.Coordinate, gfiLayers: Array<Object>, proxyOptions?: {
         proxyUrl?: string | undefined;
         noProxyDomains?: string[] | undefined;
     } | undefined, autoPanOptions?: {

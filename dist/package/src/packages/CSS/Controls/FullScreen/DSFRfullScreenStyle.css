@@ -2,7 +2,6 @@
 .ol-custom-full-screen button {
     height: 40px;
     width: 40px;
-    background-color: #000091;
     background-position: center center;
     background-repeat: no-repeat;
 }
@@ -12,6 +11,4 @@
 .ol-custom-full-screen button.ol-custom-full-screen-true {
     background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMi4yNDI3IDExLjNMMTUuNTQyNyA4TDE2LjQ4NTMgOC45NDI2N0wxMy4xODUzIDEyLjI0MjdMMTYuNDg1MyAxNS41NDI3TDE1LjU0MjcgMTYuNDg1M0wxMi4yNDI3IDEzLjE4NTNMOC45NDI2NyAxNi40ODUzTDggMTUuNTQyN0wxMS4zIDEyLjI0MjdMOCA4Ljk0MjY3TDguOTQyNjcgOEwxMi4yNDI3IDExLjNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K');
 }
-.ol-custom-full-screen button:hover {
-    background-color: #1212ff;
-}
+
