@@ -1,5 +1,9 @@
 /* LAYER SWITCHER */
 
+.GPlayerSwitcher_layer {
+  background-color: #FFF;
+}
+
 div[id^=GPlayerSwitcher-] {
   height: 32px;
 }
