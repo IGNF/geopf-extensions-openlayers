@@ -42,6 +42,7 @@ var IsoDOM = {
         button.title = "Calculer une isochrone";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
 
         // gestionnaire d'evenement :
         // on ouvre le menu de saisie du calcul d'isochrone
@@ -391,6 +392,7 @@ var IsoDOM = {
         input1.step = "1";
         input1.value = "0";
         input1.type = "number";
+        input1.title = "Temps";
         if (input1.addEventListener) {
             input1.addEventListener("change", function (e) {
                 if (typeof context.onIsoValueChronTimeMinuteChange === "function") {
@@ -419,6 +421,7 @@ var IsoDOM = {
         input2.step = "1";
         input2.value = "0";
         input2.type = "number";
+        input2.title = "Heures";
         if (input2.addEventListener) {
             input2.addEventListener("change", function (e) {
                 if (typeof context.onIsoValueChronTimeMinuteChange === "function") {
@@ -470,6 +473,7 @@ var IsoDOM = {
         input1.step = "any";
         input1.value = "0";
         input1.type = "number";
+        input1.title = "Distance";
         if (input1.addEventListener) {
             input1.addEventListener("change", function (e) {
                 if (typeof context.onIsoValueDistChange === "function") {
@@ -635,6 +639,7 @@ var IsoDOM = {
         var select = document.createElement("select");
         select.id = this._addUID("GPisochronDirectionSelect");
         select.className = "GPselect gpf-select fr-select";
+        select.title = "Sens de parcours";
         // gestionnaire d'evenement :
         // on stocke la valeur du mode de calcul,
         // utilisation pour la requête sur le service de calcul d'iso
@@ -748,6 +753,7 @@ var IsoDOM = {
                         var inputToll = document.createElement("input");
                         inputToll.id = this._addUID("GPisoExclusionsToll");
                         inputToll.type = "checkbox";
+                        inputToll.name = "Péages";
                         inputToll.checked = !status;
                         // gestionnaire d'evenement :
                         // on stocke l'exclusion,
@@ -776,6 +782,7 @@ var IsoDOM = {
                         var inputTunnel = document.createElement("input");
                         inputTunnel.id = this._addUID("GPisoExclusionsTunnel");
                         inputTunnel.type = "checkbox";
+                        inputTunnel.name = "Tunnel";
                         inputTunnel.checked = !status;
                         // gestionnaire d'evenement :
                         // on stocke l'exclusion,
@@ -804,6 +811,7 @@ var IsoDOM = {
                         var inputBridge = document.createElement("input");
                         inputBridge.id = this._addUID("GPisoExclusionsBridge");
                         inputBridge.type = "checkbox";
+                        inputBridge.name = "Ponts";
                         inputBridge.checked = !status;
                         // gestionnaire d'evenement :
                         // on stocke l'exclusion,

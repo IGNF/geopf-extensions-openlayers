@@ -52,6 +52,7 @@ var MeasureToolBoxDOM = {
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowToolBoxPicto gpf-btn gpf-btn-icon-toolbox fr-btn";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
 
         var self = this;
         button.addEventListener("click", function (e) {

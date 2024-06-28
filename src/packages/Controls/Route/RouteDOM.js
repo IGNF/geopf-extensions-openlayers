@@ -48,6 +48,7 @@ var RouteDOM = {
         button.title = "Ouvrir le calcul d'itinéraire";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
 
         // gestionnaire d'evenement :
         // on ouvre le menu de saisie du calcul d'itiniraire

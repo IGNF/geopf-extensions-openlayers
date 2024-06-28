@@ -39,6 +39,7 @@ var GetFeatureInfoDOM = {
         button.title = "activer/desactiver l'interrogation des couches";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
  
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {

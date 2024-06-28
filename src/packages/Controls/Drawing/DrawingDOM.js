@@ -44,6 +44,7 @@ var DrawingDOM = {
         button.title = this.options.labels.control;
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
 
 
         // gestionnaire d'evenement :
@@ -325,7 +326,7 @@ var DrawingDOM = {
         button.title = buttonTitle;
         button.className = "tool-form-submit drawing-button fr-btn fr-btn--secondary fr-m-1w";
         button.id = this._addUID("drawing-export");
-        button.type = "button";
+        button.setAttribute("type", "button");
         button.textContent = buttonLabel;
         var context = this;
         /** export function */

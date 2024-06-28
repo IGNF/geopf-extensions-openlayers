@@ -56,6 +56,7 @@ var LayerImportDOM = {
         button.title = "Ouvrir l'import de couches";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
 
         // Close all results and panels when minimizing the widget
         if (button.addEventListener) {
