@@ -505,10 +505,7 @@ var LayerSwitcherDOM = {
         btnInfo.id = this._addUID("GPinfo_ID_" + obj.id);
         btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary";
         // hack pour garder un emplacement vide
-        if (obj.title && obj.description) {
-            btnInfo.style.opacity = "100";
-            btnInfo.style.visibility = "visible";
-        } else {
+        if (!obj.title || !obj.description) {
             btnInfo.style.opacity = "0";
             btnInfo.style.visibility = "hidden";
         }
