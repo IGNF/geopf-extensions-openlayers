@@ -831,6 +831,9 @@ var MousePositionDOM = {
                 elLat.title = "Latitude";
                 elLon.title = "Longitude";
 
+                elLat.type = "number";
+                elLon.type = "number";
+
                 // les unites
                 var unit = (coordinate.unit === undefined) ? "" : coordinate.unit;
                 var elements = document.getElementsByClassName("GPmousePositionUnits");

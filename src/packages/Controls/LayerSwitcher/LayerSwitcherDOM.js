@@ -363,6 +363,7 @@ var LayerSwitcherDOM = {
         button.title = "Afficher/masquer la couche";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", visible);
+        button.setAttribute("type","button");
 
         var context = this;
         if (button.addEventListener) {
@@ -397,6 +398,7 @@ var LayerSwitcherDOM = {
         button.title = "Plus d'outils";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type","button");
 
         var self = this;
         if (button.addEventListener) {
@@ -472,6 +474,7 @@ var LayerSwitcherDOM = {
         button.layerId = obj.id;
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
+        button.setAttribute("type", "button");
 
         var context = this;
         if (button.addEventListener) {
@@ -517,6 +520,8 @@ var LayerSwitcherDOM = {
         btnInfo.layerId = obj.id;
         btnInfo.setAttribute("tabindex", "0");
         btnInfo.setAttribute("aria-pressed", true);
+        btnInfo.setAttribute("type", "button");
+
         // add event on click
         var context = this;
         if (btnInfo.addEventListener) {
@@ -642,6 +647,7 @@ var LayerSwitcherDOM = {
         button.layerId = obj.id;
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
+        button.setAttribute("type", "button");
 
         var context = this;
         if (button.addEventListener) {
