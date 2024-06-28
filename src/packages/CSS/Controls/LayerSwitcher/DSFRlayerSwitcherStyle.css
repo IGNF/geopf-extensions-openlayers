@@ -65,6 +65,12 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
     height: 56px;
     max-height: 56px;
 }
+
+/* Surchargé en inline avec "hidden" pour les couches n'ayant pas de description ou de titre */
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools > .GPlayerInfo {
+    visibility: visible;
+}
+
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
     background-image: url("img/dsfr/collapse.svg");
     background-repeat: no-repeat;
@@ -72,6 +78,11 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
     background-position: center center;
     box-shadow: none;
 }
+
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="false "] + .GPlayerAdvancedTools > .GPlayerInfo {
+    visibility: hidden;
+}
+
 button[id^=GPshowAdvancedTools_ID_] {
     position: absolute;
     top: 0;
