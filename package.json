@@ -46,7 +46,7 @@
     "eventbusjs": "0.2.0",
     "geoportal-access-lib": "3.4.2",
     "loglevel": "^1.9.1",
-    "ol": "8.2.0",
+    "ol": "9.2.4",
     "ol-mapbox-style": "12.3.4",
     "proj4": "2.11.0",
     "sortablejs": "1.15.2",
