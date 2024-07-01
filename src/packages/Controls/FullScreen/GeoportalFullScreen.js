@@ -83,6 +83,7 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPfullScreenPicto", "fr-btn");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
