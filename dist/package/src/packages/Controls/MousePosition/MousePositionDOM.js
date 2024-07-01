@@ -42,6 +42,7 @@ var MousePositionDOM = {
         button.title = "Afficher les coordonnées du curseur";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
 
         // Close all results and panels when minimizing the widget
         if (button.addEventListener) {
@@ -573,6 +574,8 @@ var MousePositionDOM = {
             }
         });
 
+        selectSystem.title = "Type de système";
+
         for (var i = 0; i < systems.length; i++) {
             var obj = systems[i];
             var option = document.createElement("option");
@@ -600,6 +603,8 @@ var MousePositionDOM = {
         selectUnits.addEventListener("change", function (e) {
             context.onMousePositionProjectionUnitsChange(e);
         });
+
+        selectUnits.title = "Unités du système";
 
         for (var j = 0; j < units.length; j++) {
             var obj = units[j];
@@ -822,6 +827,12 @@ var MousePositionDOM = {
 
                 elLat.value = coordinate.x || coordinate.lat || coordinate.e || "0";
                 elLon.value = coordinate.y || coordinate.lng || coordinate.lon || coordinate.n || "0";
+                
+                elLat.title = "Latitude";
+                elLon.title = "Longitude";
+
+                elLat.type = "number";
+                elLon.type = "number";
 
                 // les unites
                 var unit = (coordinate.unit === undefined) ? "" : coordinate.unit;

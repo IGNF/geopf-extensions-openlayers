@@ -48,6 +48,7 @@ var RouteDOM = {
         button.title = "Ouvrir le calcul d'itinéraire";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
 
         // gestionnaire d'evenement :
         // on ouvre le menu de saisie du calcul d'itiniraire
@@ -1100,6 +1101,7 @@ var RouteDOM = {
                         inputToll.id = this._addUID("GProuteExclusionsToll");
                         inputToll.type = "checkbox";
                         inputToll.value = "Toll";
+                        inputToll.name = "Peage";
                         inputToll.checked = !status;
                         // gestionnaire d'evenement :
                         // on stocke l'exclusion,
@@ -1127,6 +1129,7 @@ var RouteDOM = {
                         inputTunnel.id = this._addUID("GProuteExclusionsTunnel");
                         inputTunnel.type = "checkbox";
                         inputTunnel.value = "Tunnel";
+                        inputTunnel.name = "Tunnel";
                         inputTunnel.checked = !status;
                         // gestionnaire d'evenement :
                         // on stocke l'exclusion,
@@ -1154,6 +1157,7 @@ var RouteDOM = {
                         inputBridge.id = this._addUID("GProuteExclusionsBridge");
                         inputBridge.type = "checkbox";
                         inputBridge.value = "Bridge";
+                        inputBridge.name = "Ponts";
                         inputBridge.checked = !status;
                         // gestionnaire d'evenement :
                         // on stocke l'exclusion,

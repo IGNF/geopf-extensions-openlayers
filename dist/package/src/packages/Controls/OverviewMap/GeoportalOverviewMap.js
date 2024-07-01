@@ -302,6 +302,7 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowOverviewMap", "gpf-btn-icon-overviewmap", "fr-btn", "fr-btn--primary");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
         var self = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {

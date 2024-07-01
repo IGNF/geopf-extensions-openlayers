@@ -64,6 +64,7 @@ var SearchEngineDOM = {
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", !collapsible);
         button.disabled = !collapsible;
+        button.setAttribute("type", "button");
 
         // Close all results and panels when minimizing the widget
         button.addEventListener("click", function (e) {

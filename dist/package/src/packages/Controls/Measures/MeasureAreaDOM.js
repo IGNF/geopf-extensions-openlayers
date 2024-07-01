@@ -42,7 +42,7 @@ var MeasureAreaDOM = {
         button.title = "Mesurer une surface";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
-
+        button.setAttribute("type", "button");
 
         // gestionnaire d'evenement :
         // on ouvre le menu de saisie...

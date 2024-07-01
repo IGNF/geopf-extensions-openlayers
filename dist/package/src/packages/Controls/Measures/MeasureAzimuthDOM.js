@@ -42,6 +42,7 @@ var MeasureAzimuthDOM = {
         button.title = "Mesurer un azimut";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
+        button.setAttribute("type", "button");
 
 
         // gestionnaire d'evenement :
