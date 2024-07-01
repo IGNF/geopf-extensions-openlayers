@@ -766,8 +766,10 @@ var SearchEngine = class SearchEngine extends Control {
         firstLineWrapper.appendChild(buttonsContainer);
         container.appendChild(firstLineWrapper);
 
-        var radioContainer = this._createRadioContainer();
-        container.appendChild(radioContainer);
+        if (checkDsfr() && this.options.splitResults || this.options.displayButtonAdvancedSearch) {
+            var radioContainer = this._createRadioContainer();
+            container.appendChild(radioContainer);
+        }
 
         if (checkDsfr() && this.options.splitResults) {
             var radioElements;
