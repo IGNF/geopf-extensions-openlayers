@@ -5,8 +5,9 @@
     background-position: center center;
 }
 
-.gpf-btn-icon-return {
-    background-color: #366291;
-    background-image: url("img/GPimportMapBoxReturn.png");
-    background-position: 3px center;
+.gpf-btn-icon-return::after {
+    -webkit-mask:
+        url("img/GPimportMapBoxReturn.png") center no-repeat;
+    mask:
+        url("img/GPimportMapBoxReturn.png") center no-repeat;
 }

@@ -108,7 +108,7 @@ var ElevationPathDOM = {
 
         var divInfo = document.createElement("button");
         divInfo.id = this._addUID("GPelevationPathPanelInfo");
-        divInfo.className = "GPpanelInfo gpf-btn gpf-btn-icon-info fr-btn fr-btn--secondary fr-m-1w";
+        divInfo.className = "GPpanelInfo gpf-btn gpf-btn-icon-info fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
         divInfo.title = "Informations";
         // add event on click
         if (divInfo.addEventListener) {
@@ -136,7 +136,7 @@ var ElevationPathDOM = {
 
         var buttonReduce = document.createElement("button");
         buttonReduce.id = this._addUID("GPelevationPathPanelReduce");
-        buttonReduce.className = "GPpanelReduce gpf-btn gpf-btn-icon-reduce fr-btn fr-btn--secondary";
+        buttonReduce.className = "GPpanelReduce gpf-btn gpf-btn-icon-reduce fr-btn fr-btn--secondary gpf-btn--secondary";
         buttonReduce.title = "Masquer le panneau";
 
         if (buttonReduce.addEventListener) {

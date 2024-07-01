@@ -505,11 +505,11 @@ var MousePositionDOM = {
         var button = document.createElement("button");
         button.id = this._addUID("GPshowMousePositionSettings");
 
-        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
+        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowMousePositionSettingsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill";
         button.title = "Réglages";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
-        
+
         // Close all results and panels when minimizing the widget
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
@@ -827,7 +827,7 @@ var MousePositionDOM = {
 
                 elLat.value = coordinate.x || coordinate.lat || coordinate.e || "0";
                 elLon.value = coordinate.y || coordinate.lng || coordinate.lon || coordinate.n || "0";
-                
+
                 elLat.title = "Latitude";
                 elLon.title = "Longitude";
 

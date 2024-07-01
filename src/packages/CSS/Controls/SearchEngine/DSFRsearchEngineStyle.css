@@ -107,20 +107,24 @@ button[id^="GPshowSearchEnginePicto-"] {
 .gpf-btn-icon-search:disabled {
     background-color: #000091;
 }
-.gpf-btn-icon-search-advanced {
-  background-image: url("img/dsfr/recherche-avancee.svg");
-  background-position: center center;
-  background-repeat: no-repeat;
+.gpf-btn-icon-search-advanced::after {
+  -webkit-mask:
+    url("img/dsfr/recherche-avancee.svg") center no-repeat;
+  mask:
+    url("img/dsfr/recherche-avancee.svg") center no-repeat;
 }
-.gpf-btn-icon-search-geolocate {
-    background-image: url("img/dsfr/localiser.svg");
-    background-position: center center;
-    background-repeat: no-repeat;
+
+.gpf-btn-icon-search-geolocate::after {
+  -webkit-mask:
+    url("img/dsfr/localiser.svg") center no-repeat;
+  mask:
+    url("img/dsfr/localiser.svg") center no-repeat;
 }
-.gpf-btn-icon-search-coordinate {
-    background-image: url("img/dsfr/coordonnees.svg");
-    background-position: center center;
-    background-repeat: no-repeat;
+.gpf-btn-icon-search-coordinate::after {
+  -webkit-mask:
+    url("img/dsfr/coordonnees.svg") center no-repeat;
+  mask:
+    url("img/dsfr/coordonnees.svg") center no-repeat;
 }
 
 .gpf-btn-icon-search-reset {
@@ -200,11 +204,3 @@ div[id^=GPgeocodeResults-] {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .GPshowGeolocate {
-    background-image: url("img/dsfr/localiser-dark.svg");
-  }
-  .gpf-btn-icon-search-coordinate {
-    background-image: url("img/dsfr/coordonnees-dark.svg");
-  }
-}

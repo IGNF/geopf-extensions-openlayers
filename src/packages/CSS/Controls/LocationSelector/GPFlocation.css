@@ -1,10 +1,5 @@
 /* Location */
 
-[id*="GPlocationOriginPointer"] {
-  background-image: url("img/GPlocationOptions.png");
-  background-repeat: no-repeat;
-}
-
 [id^=GPlocationStageRemove],
 [id^=GPlocationStageAdd] {
   width: 28px;
@@ -14,17 +9,14 @@
 }
 
 [id^=GPlocationStageRemove] {
-  
+
 }
 
 [id^=GPlocationStageAdd] {
-  
+
 }
 
-[id^=GPlocationStageRemove],
-[id^=GPlocationStageAdd] {
-  background-image: url("img/GPlocationOptions.png");
-}
+
 
 /* All div elements whose class attribute value begins with "GPlocationPoint" */
 [class*="GPlocationPoint"] {

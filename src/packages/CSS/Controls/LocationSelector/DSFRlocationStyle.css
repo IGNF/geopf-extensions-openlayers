@@ -1,18 +1,21 @@
-.gpf-btn-icon-pointer {
-    background-image: url("img/GPlocationOptions.png");
-    background-repeat: no-repeat;
-    background-position: 1px center;
+.gpf-btn-icon-pointer::after {
+    -webkit-mask:
+        url("img/GPlocationOptions.png") 1px center no-repeat;
+    mask:
+        url("img/GPlocationOptions.png") 1px center no-repeat;
 }
 
 .gpf-btn-icon-label {}
-.gpf-btn-icon-remove {
-    background-image: url("img/GPlocationOptions.png");
-    background-repeat: no-repeat;
-    background-position: -82px center;
+.gpf-btn-icon-remove::after {
+    -webkit-mask:
+        url("img/GPlocationOptions.png") -82px center no-repeat;
+    mask:
+        url("img/GPlocationOptions.png") -82px center no-repeat;
 }
 
-.gpf-btn-icon-add {
-    background-image: url("img/GPlocationOptions.png");
-    background-repeat: no-repeat;
-    background-position: -54px center;
+.gpf-btn-icon-add::after {
+    -webkit-mask:
+        url("img/GPlocationOptions.png") -54px center no-repeat;
+    mask:
+        url("img/GPlocationOptions.png") -54px center no-repeat;
 }

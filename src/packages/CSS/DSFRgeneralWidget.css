@@ -1,5 +1,5 @@
-/* 
- * Liste des surcharges du mode DSFR 
+/*
+ * Liste des surcharges du mode DSFR
  */
 :root {
   --size-per-row: 44px;
@@ -127,6 +127,27 @@
 
 .gpf-btn {}
 
+.gpf-btn--tertiary,
+.gpf-btn--secondary {
+  position: relative;
+}
+
+.gpf-btn--tertiary::after,
+.gpf-btn--secondary::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: var(--text-action-high-blue-france);
+  -webkit-mask: linear-gradient(#000, #0000);
+  mask: linear-gradient(#0000, #0000);
+}
+
+
 .gpf-btn--hidden {}
 
 .gpf-btn-icon-return {}
@@ -144,11 +165,25 @@
 }
 
 .gpf-btn-icon {
-  width: inherit
+  width: inherit;
 }
 
 .gpf-btn-icon-reset {
-  background-image: url("img/GPclose.png");
+  -webkit-mask:
+    linear-gradient(#fff 0 0) top /100% 1px,
+    linear-gradient(#fff 0 0) bottom/100% 1px,
+    linear-gradient(#fff 0 0) left /1px 100%,
+    linear-gradient(#fff 0 0) right /1px 100%,
+    url("img/GPclose.png") center;
+  mask:
+    linear-gradient(#fff 0 0) top /100% 1px,
+    linear-gradient(#fff 0 0) bottom/100% 1px,
+    linear-gradient(#fff 0 0) left /1px 100%,
+    linear-gradient(#fff 0 0) right /1px 100%,
+    url("img/GPclose.png") -25px center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: var(--text-action-high-blue-france);
 }
 
 .gpf-btn-icon-info {
