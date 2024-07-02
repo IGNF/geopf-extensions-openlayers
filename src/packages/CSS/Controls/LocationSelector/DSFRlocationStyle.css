@@ -1,21 +1,15 @@
 .gpf-btn-icon-pointer::after {
-    -webkit-mask:
-        url("img/GPlocationOptions.png") 1px center no-repeat;
-    mask:
-        url("img/GPlocationOptions.png") 1px center no-repeat;
+    -webkit-mask: url("img/GPlocationOptions.png") 1px center no-repeat;
+    mask: url("img/GPlocationOptions.png") 1px center no-repeat;
 }
 
 .gpf-btn-icon-label {}
 .gpf-btn-icon-remove::after {
-    -webkit-mask:
-        url("img/GPlocationOptions.png") -82px center no-repeat;
-    mask:
-        url("img/GPlocationOptions.png") -82px center no-repeat;
+    -webkit-mask: url("img/GPlocationOptions.png") -82px center no-repeat;
+    mask: url("img/GPlocationOptions.png") -82px center no-repeat;
 }
 
 .gpf-btn-icon-add::after {
-    -webkit-mask:
-        url("img/GPlocationOptions.png") -54px center no-repeat;
-    mask:
-        url("img/GPlocationOptions.png") -54px center no-repeat;
+    -webkit-mask: url("img/GPlocationOptions.png") -54px center no-repeat;
+    mask: url("img/GPlocationOptions.png") -54px center no-repeat;
 }

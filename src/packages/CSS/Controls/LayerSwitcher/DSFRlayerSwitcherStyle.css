@@ -26,10 +26,8 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
 }
 
 .gpf-btn-icon-ls-visibility::after {
-    -webkit-mask:
-        url("img/dsfr/visible-open.svg") center no-repeat;
-    mask:
-        url("img/dsfr/visible-open.svg") center no-repeat;
+    -webkit-mask: url("img/dsfr/visible-open.svg") center no-repeat;
+    mask: url("img/dsfr/visible-open.svg") center no-repeat;
 }
 
 button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
@@ -45,10 +43,8 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
 }
 
 .gpf-btn-icon-ls-remove::after {
-    -webkit-mask:
-        url("img/dsfr/remove.svg") center no-repeat;
-    mask:
-        url("img/dsfr/remove.svg") center no-repeat;
+    -webkit-mask: url("img/dsfr/remove.svg") center no-repeat;
+    mask: url("img/dsfr/remove.svg") center no-repeat;
 }
 
 
@@ -57,10 +53,8 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
 }
 
 .gpf-btn-icon-ls-collapse::after {
-    -webkit-mask:
-        url("img/dsfr/collapse.svg") center no-repeat;
-    mask:
-        url("img/dsfr/collapse.svg") center no-repeat;
+    -webkit-mask: url("img/dsfr/collapse.svg") center no-repeat;
+    mask: url("img/dsfr/collapse.svg") center no-repeat;
 }
 
 .gpf-btn-icon-ls-dragndrop {
@@ -163,10 +157,8 @@ div[id^=GPadvancedTools_ID_] {
 }
 
 .gpf-btn-icon-ls-info::after {
-    -webkit-mask:
-        url("img/dsfr/info.svg") center no-repeat;
-    mask:
-        url("img/dsfr/info.svg") center no-repeat;
+    -webkit-mask: url("img/dsfr/info.svg") center no-repeat;
+    mask: url("img/dsfr/info.svg") center no-repeat;
 }
 
 .gpf-btn-icon-ls-extent {
@@ -174,10 +166,8 @@ div[id^=GPadvancedTools_ID_] {
 }
 
 .gpf-btn-icon-ls-extent::after {
-    -webkit-mask:
-        url("img/dsfr/extent.svg") center no-repeat;
-    mask:
-        url("img/dsfr/extent.svg") center no-repeat;
+    -webkit-mask: url("img/dsfr/extent.svg") center no-repeat;
+    mask: url("img/dsfr/extent.svg") center no-repeat;
 }
 
 div[id^=GPlayerInfoPanel] {

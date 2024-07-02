@@ -108,23 +108,17 @@ button[id^="GPshowSearchEnginePicto-"] {
     background-color: #000091;
 }
 .gpf-btn-icon-search-advanced::after {
-  -webkit-mask:
-    url("img/dsfr/recherche-avancee.svg") center no-repeat;
-  mask:
-    url("img/dsfr/recherche-avancee.svg") center no-repeat;
+  -webkit-mask: url("img/dsfr/recherche-avancee.svg") center no-repeat;
+  mask: url("img/dsfr/recherche-avancee.svg") center no-repeat;
 }
 
 .gpf-btn-icon-search-geolocate::after {
-  -webkit-mask:
-    url("img/dsfr/localiser.svg") center no-repeat;
-  mask:
-    url("img/dsfr/localiser.svg") center no-repeat;
+  -webkit-mask: url("img/dsfr/localiser.svg") center no-repeat;
+  mask: url("img/dsfr/localiser.svg") center no-repeat;
 }
 .gpf-btn-icon-search-coordinate::after {
-  -webkit-mask:
-    url("img/dsfr/coordonnees.svg") center no-repeat;
-  mask:
-    url("img/dsfr/coordonnees.svg") center no-repeat;
+  -webkit-mask: url("img/dsfr/coordonnees.svg") center no-repeat;
+  mask: url("img/dsfr/coordonnees.svg") center no-repeat;
 }
 
 .gpf-btn-icon-search-reset {
