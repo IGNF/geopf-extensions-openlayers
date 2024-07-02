@@ -10,12 +10,13 @@
 }
 
 [id^=GPelevationPathPanelInfo] {
-  background-image: url("../../img/GPinfo_secondary.svg");
-  background-repeat: no-repeat;
-  background-position: center center;
   position: absolute;
   float: left;
   top: 0;
   left: 0;
 }
 
+[id^=GPelevationPathPanelInfo]::after {
+  -webkit-mask: url("../../img/GPinfo_secondary.svg") center no-repeat;
+  mask: url("../../img/GPinfo_secondary.svg") center no-repeat;
+}

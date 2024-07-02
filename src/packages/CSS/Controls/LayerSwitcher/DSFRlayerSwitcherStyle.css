@@ -22,11 +22,12 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
 }
 
 .gpf-btn-icon-ls-visibility {
-  background-image: url("img/dsfr/visible-open.svg");
-  background-repeat: no-repeat;
-  background-size: auto auto;
-  background-position: center center;
   box-shadow: none;
+}
+
+.gpf-btn-icon-ls-visibility::after {
+    -webkit-mask: url("img/dsfr/visible-open.svg") center no-repeat;
+    mask: url("img/dsfr/visible-open.svg") center no-repeat;
 }
 
 button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
@@ -38,19 +39,22 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
 }
 
 .gpf-btn-icon-ls-remove {
-    background-image: url("img/dsfr/remove.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
 }
 
+.gpf-btn-icon-ls-remove::after {
+    -webkit-mask: url("img/dsfr/remove.svg") center no-repeat;
+    mask: url("img/dsfr/remove.svg") center no-repeat;
+}
+
+
 .gpf-btn-icon-ls-collapse {
-    background-image: url("img/dsfr/collapse.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
+}
+
+.gpf-btn-icon-ls-collapse::after {
+    -webkit-mask: url("img/dsfr/collapse.svg") center no-repeat;
+    mask: url("img/dsfr/collapse.svg") center no-repeat;
 }
 
 .gpf-btn-icon-ls-dragndrop {
@@ -152,12 +156,18 @@ div[id^=GPadvancedTools_ID_] {
     box-shadow: none;
 }
 
+.gpf-btn-icon-ls-info::after {
+    -webkit-mask: url("img/dsfr/info.svg") center no-repeat;
+    mask: url("img/dsfr/info.svg") center no-repeat;
+}
+
 .gpf-btn-icon-ls-extent {
-    background-image: url("img/dsfr/extent.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
+}
+
+.gpf-btn-icon-ls-extent::after {
+    -webkit-mask: url("img/dsfr/extent.svg") center no-repeat;
+    mask: url("img/dsfr/extent.svg") center no-repeat;
 }
 
 div[id^=GPlayerInfoPanel] {

@@ -1,4 +1,13 @@
 /* Location */
+[id*="GPlocationOriginPointer"] {
+  background-image: url("img/GPlocationOptions.png");
+  background-repeat: no-repeat;
+}
+
+[id^=GPlocationStageRemove],
+[id^=GPlocationStageAdd] {
+  background-image: url("img/GPlocationOptions.png");
+}
 
 .GPlocationOpen {
   background-color: unset;
@@ -36,5 +45,5 @@ button.GPlocationOriginPointerImg[id*="GPlocationOriginPointerImg"] {
 }
 
 div[id^=GPlocationAutoCompleteList] {
-  
+
 }

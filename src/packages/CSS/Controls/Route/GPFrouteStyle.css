@@ -176,6 +176,14 @@ input:checked + .GProuteExclusionsOption {
   border: 1px solid #797;
 }
 
+/* Reset picto */
+
+button[id^=GProuteReset] {
+  /* background-color: #366291; */
+  background-image: url("img/GProuteOptions.png");
+  background-position: -224px center;
+}
+
 /* Results popup */
 
 .gp-features-content-div {

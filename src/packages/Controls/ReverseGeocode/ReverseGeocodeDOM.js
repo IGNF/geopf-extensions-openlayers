@@ -174,7 +174,7 @@ var ReverseGeocodeDOM = {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPreverseGeocodingPanel");
         dialog.className = "GPpanel gpf-panel fr-modal";
-        
+
         return dialog;
     },
 
@@ -209,7 +209,7 @@ var ReverseGeocodeDOM = {
         var buttonNew = document.createElement("button");
         buttonNew.id = this._addUID("GPreverseGeocodingReturnPicto");
         buttonNew.title = "Nouvelle recherche";
-        buttonNew.className = "GPreturnPicto GPreverseGeocodingReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary";
+        buttonNew.className = "GPreturnPicto GPreverseGeocodingReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary gpf-btn--secondary";
         buttonNew.classList.add("GPelementHidden");
         buttonNew.classList.add("gpf-hidden");
         if (buttonNew.addEventListener) {
@@ -474,7 +474,7 @@ var ReverseGeocodeDOM = {
     _createReverseGeocodingSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPreverseGeocodingSubmit");
-        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary";
+        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary gpf-btn--secondary";
         input.type = "submit";
         input.value = "Rechercher";
 

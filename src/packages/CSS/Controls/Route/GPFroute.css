@@ -31,12 +31,6 @@ button[id^="GPshowRoutePicto-"][aria-pressed="true"] + dialog {
 /* Reset picto */
 
 button[id^=GProuteReset] {
-  /* background-color: #366291; */
-  background-image: url("img/GProuteOptions.png");
-  background-position: -224px center;
-}
-
-button[id^=GProuteReset] {
   opacity: 0.8;
   transition: opacity 0.2s ease-out;
 }

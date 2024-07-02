@@ -1032,7 +1032,7 @@ var RouteDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowRouteExclusionsPicto");
-        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-down-fill";
+        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill";
         button.title = "Exclusions";
         // button.style.top = "185px";
         button.setAttribute("tabindex", "0");
@@ -1198,7 +1198,7 @@ var RouteDOM = {
     _createRouteSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GProuteSubmit");
-        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary";
+        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary gpf-btn--secondary";
         input.type = "submit";
         input.value = "Calculer";
 
@@ -1220,7 +1220,7 @@ var RouteDOM = {
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GProuteReset");
         buttonReset.title = "Réinitialiser les paramètres";
-        buttonReset.className = "GPresetPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary";
+        buttonReset.className = "GPresetPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary gpf-btn--secondary";
         buttonReset.title = "Réinitialiser les paramètres";
         buttonReset.setAttribute("tabindex", "0");
         buttonReset.setAttribute("aria-pressed", false);
