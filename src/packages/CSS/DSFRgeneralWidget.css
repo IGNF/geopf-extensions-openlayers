@@ -143,7 +143,7 @@
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   background-color: var(--text-action-high-blue-france);
-  -webkit-mask: linear-gradient(#000, #0000);
+  -webkit-mask: linear-gradient(#0000, #0000);
   mask: linear-gradient(#0000, #0000);
 }
 
