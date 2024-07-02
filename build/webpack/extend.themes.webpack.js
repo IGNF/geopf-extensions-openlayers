@@ -47,6 +47,7 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/LayerImport", "DSFRlayerImportStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/LayerSwitcher", "DSFRlayerSwitcherStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/LocationSelector", "DSFRlocationStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureToolTipStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAreaStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureLengthStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Measures", "DSFRmeasureAzimuthStyle.css"),
