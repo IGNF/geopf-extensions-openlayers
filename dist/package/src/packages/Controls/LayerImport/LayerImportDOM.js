@@ -579,7 +579,7 @@ var LayerImportDOM = {
     _createImportSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPimportSubmit");
-        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary";
+        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary gpf-btn--secondary";
         input.type = "submit";
         input.value = "Importer";
 
@@ -751,7 +751,7 @@ var LayerImportDOM = {
         var returnDiv = document.createElement("button");
         returnDiv.id = this._addUID("GPimportMapBoxPanelReturnPicto");
         returnDiv.title = "Masquer le panneau";
-        returnDiv.className = "GPreturnPicto GPimportMapBoxPanelReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary";
+        returnDiv.className = "GPreturnPicto GPimportMapBoxPanelReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary gpf-btn--secondary";
         if (returnDiv.addEventListener) {
             returnDiv.addEventListener("click", function (e) {
                 document.getElementById(context._addUID("GPshowImportPicto")).click();

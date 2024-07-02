@@ -359,7 +359,7 @@ var LayerSwitcherDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPvisibilityPicto_ID_" + obj.id);
-        button.className = "GPlayerVisibility gpf-btn gpf-btn-icon gpf-btn-icon-ls-visibility fr-btn fr-btn--tertiary";
+        button.className = "GPlayerVisibility gpf-btn gpf-btn-icon gpf-btn-icon-ls-visibility fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Afficher/masquer la couche";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", visible);
@@ -394,7 +394,7 @@ var LayerSwitcherDOM = {
         var button = document.createElement("button");
         button.id = this._addUID("GPshowAdvancedTools_ID_" + obj.id);
 
-        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowLayerAdvancedTools gpf-btn gpf-btn-icon gpf-btn-icon-ls-collapse fr-btn--sm fr-btn--tertiary";
+        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowLayerAdvancedTools gpf-btn gpf-btn-icon gpf-btn-icon-ls-collapse fr-btn--sm fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Plus d'outils";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -469,7 +469,7 @@ var LayerSwitcherDOM = {
     _createAdvancedToolDeleteElement : function (obj) {
         var button = document.createElement("button");
         button.id = this._addUID("GPremove_ID_" + obj.id);
-        button.className = "GPlayerRemove gpf-btn gpf-btn-icon gpf-btn-icon-ls-remove fr-btn fr-btn--tertiary";
+        button.className = "GPlayerRemove gpf-btn gpf-btn-icon gpf-btn-icon-ls-remove fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Supprimer la couche";
         button.layerId = obj.id;
         button.setAttribute("tabindex", "0");
@@ -507,7 +507,7 @@ var LayerSwitcherDOM = {
 
         var btnInfo = document.createElement("button");
         btnInfo.id = this._addUID("GPinfo_ID_" + obj.id);
-        btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary";
+        btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary gpf-btn--tertiary";
         // hack pour garder un emplacement vide
         if (!obj.title || !obj.description) {
             btnInfo.style.opacity = "0";
@@ -639,7 +639,7 @@ var LayerSwitcherDOM = {
         // FIXME inactif en mode classique !
         var button = document.createElement("button");
         button.id = this._addUID("GPextent_ID_" + obj.id);
-        button.className = "GPelementHidden GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary";
+        button.className = "GPelementHidden GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Zoomer dans l'étendue";
         button.layerId = obj.id;
         button.setAttribute("tabindex", "0");

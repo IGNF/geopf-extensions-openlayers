@@ -1,0 +1,9 @@
+/* MEASURE TOOL */
+
+.GPmeasureTooltip {
+  background-color: var(--background-contrast-grey);
+  padding: 0.2rem 0.4rem;
+  opacity: 0.8;
+}
+
+

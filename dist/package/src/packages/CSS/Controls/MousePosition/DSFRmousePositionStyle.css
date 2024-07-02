@@ -5,6 +5,10 @@
     background-position: center center;
 }
 
+div[id^=GPmousePositionCoordinate-] input {
+  color: inherit;
+}
+
 div[id^=GPmousePositionAltitude-],
 div[id^=GPmousePositionCoordinate-] > div {
   display: flex;

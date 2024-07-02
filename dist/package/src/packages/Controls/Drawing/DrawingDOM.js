@@ -324,7 +324,7 @@ var DrawingDOM = {
 
         var button = document.createElement("button");
         button.title = buttonTitle;
-        button.className = "tool-form-submit drawing-button fr-btn fr-btn--secondary fr-m-1w";
+        button.className = "tool-form-submit drawing-button fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
         button.id = this._addUID("drawing-export");
         button.setAttribute("type", "button");
         button.textContent = buttonLabel;

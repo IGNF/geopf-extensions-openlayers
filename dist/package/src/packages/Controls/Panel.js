@@ -1,10 +1,10 @@
 /**
  * Panneau generique pour les widgets
- * 
+ *
  * @example
  * import PanelDOM from "./Panel.js";
  * var panel = new PanelDOM(uid);
- * 
+ *
  * panel.add("drawing", "Annoter la carte", cb);
  * panel
  *   .add("elevationpath", "Profil Altimétrique", cb)
@@ -20,7 +20,7 @@
  *   .add("reverseGeocoding", "Recherche inverse", cb)
  *   .insertBtn("reduce", cb, { class : "hidden" });
  * panel.add("route", "Calcul d'itinéraire", cb);
- * 
+ *
  * @mixin
  */
 class PanelDOM {
@@ -49,11 +49,11 @@ class PanelDOM {
         this.name = name;
         this.container = this.#createPanelElement();
         var div = this.#createPanelDivElement();
-        
+
         this.header = this.#createPanelHeaderElement();
         this.headerTitle = this.#createPanelTitleElement(title);
         this.headerClose = this.#createPanelCloseElement(cb);
-        
+
         header.appendChild(headerClose);
         header.appendChild(headerTitle);
         div.appendChild(header);
@@ -76,7 +76,7 @@ class PanelDOM {
         this.header.insertBefore(this.#createPanelButtonElement(name, cb, options), this.headerTitle);
         return this.container;
     }
-    
+
     /**
      * ...
      * @returns {DOMElement} -
@@ -149,7 +149,7 @@ class PanelDOM {
         button.id = id + "-" + this.uid;
         button.title = options.title || "Nouvelle recherche";
         button.className = "fr-btn fr-btn--secondary";
-        button.classList.add("gpf-btn", "gpf-btn-icon-" +  name);
+        button.classList.add("gpf-btn", "gpf-btn--secondary", "gpf-btn-icon-" +  name);
         button.classList.add(id);
         button.classList.add(className);
         if (options.class && options.class === "hidden") {
@@ -167,7 +167,7 @@ class PanelDOM {
         } else if (name === "info") {
             this.headerBtnInfo = button;
         }
-        
+
         return button;
     }
     #createPanelIconElement () {

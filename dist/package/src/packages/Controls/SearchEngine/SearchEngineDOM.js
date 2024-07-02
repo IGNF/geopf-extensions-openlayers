@@ -277,7 +277,7 @@ var SearchEngineDOM = {
 
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GPsearchInputReset");
-        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset gpf-btn-icon-search-reset fr-btn fr-btn--secondary"; /* not use : fr-btn--close */
+        buttonReset.className = "GPshowOpen GPsearchInputReset gpf-btn gpf-btn-icon-reset gpf-btn-icon-search-reset fr-btn fr-btn--secondary gpf-btn--secondary"; /* not use : fr-btn--close */
         buttonReset.setAttribute("aria-label", "Supprimer la recherche");
         // Reset input
         buttonReset.addEventListener("click", function (e) {
@@ -456,7 +456,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowGeolocate");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGeolocate gpf-btn gpf-btn-icon-search-geolocate fr-btn fr-btn--secondary fr-m-1w";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGeolocate gpf-btn gpf-btn-icon-search-geolocate fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
         button.title = "Activer la geolocalisation";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -485,7 +485,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowSearchByCoordinate");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchByCoordinate gpf-btn gpf-btn-icon-search-coordinate fr-btn fr-btn--secondary fr-m-1w";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchByCoordinate gpf-btn gpf-btn-icon-search-coordinate fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
         button.title = "Ouvrir la recherche par coordonnées";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -934,7 +934,7 @@ var SearchEngineDOM = {
         var input = document.createElement("input");
         input.type = "submit";
         input.id = this._addUID("GPadvancedSearchSubmit");
-        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary";
+        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary gpf-btn--secondary";
         input.value = "Chercher";
 
         return input;
@@ -1516,7 +1516,7 @@ var SearchEngineDOM = {
         var input = document.createElement("input");
         input.type = "submit";
         input.id = this._addUID("GPcoordinateSearchSubmit");
-        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary";
+        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary gpf-btn--secondary";
         input.value = "Chercher";
         return input;
     },
