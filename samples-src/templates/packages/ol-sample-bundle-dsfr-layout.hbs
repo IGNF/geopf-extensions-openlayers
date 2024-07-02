@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-fr-theme="system">
+<html lang="fr" data-fr-theme="light">
     <head>
         {{#extend "partials-common-head"}}
         {{/extend}}
@@ -16,6 +16,8 @@
     </head>
     <body>
         <h1>Extension Géoportail pour OpenLayers</h1>
+
+        <button onclick="document.documentElement.dataset.frTheme = document.documentElement.dataset.frTheme == 'dark' ? 'light' : 'dark'">Toggle Darkmode / Lightmode</button>
 
         {{#block "body"}}
         {{/block}}
