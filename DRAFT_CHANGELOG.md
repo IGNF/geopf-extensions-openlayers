@@ -1,9 +1,7 @@
 # Extension Geoplateforme OpenLayers, 🔖 version __VERSION__
 
 __DATE__
-> Release Extension Geoplateforme openlayers
-
-🚀 __Unreleased__
+> 🚀 Release Extension Geoplateforme openlayers
 
 ## 🎉 Summary
 
