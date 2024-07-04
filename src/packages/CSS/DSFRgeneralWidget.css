@@ -127,6 +127,20 @@
 
 .gpf-btn {}
 
+.gpf-btn-icon[aria-pressed="true"] {
+  background-color: var(--hover-tint);
+  position: relative;
+}
+
+.gpf-btn-icon[aria-pressed="true"]::before {
+  background-color: var(--hover-tint);
+  content: "";
+  width: 3px;
+  height: 100%;
+  left: calc(100% + 2px);
+  position: absolute;
+}
+
 .gpf-btn--tertiary,
 .gpf-btn--secondary {
   position: relative;
@@ -273,7 +287,8 @@
   justify-content: center;
   /* crée un décalage sur le searchEngine */
   /* align-items: center; */
-  width: var(--size-per-row);
+  /* + 5px pour l'indicateur "bouton actif" */
+  width: calc(var(--size-per-row) + 5px);
   min-height: var(--size-per-row);
   /* padding: 5px; */
 }
