@@ -215,13 +215,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Binaries artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
           
       - name: Download ChangeLog artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: changelog
           path: ./dist/package/CHANGELOG.md
@@ -254,7 +254,7 @@ jobs:
           token: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
       
       - name: Download ChangeLog artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: changelog
       
