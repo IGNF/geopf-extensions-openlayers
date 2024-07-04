@@ -188,7 +188,7 @@
     linear-gradient(#fff 0 0) bottom/100% 1px,
     linear-gradient(#fff 0 0) left /1px 100%,
     linear-gradient(#fff 0 0) right /1px 100%,
-    url("img/GPclose.png") center;
+    url("img/GPclose.png") -25px center;
   mask:
     linear-gradient(#fff 0 0) top /100% 1px,
     linear-gradient(#fff 0 0) bottom/100% 1px,
