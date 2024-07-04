@@ -127,12 +127,12 @@
 
 .gpf-btn {}
 
-.gpf-btn-icon[aria-pressed="true"] {
+.gpf-btn-icon:not([class*=--secondary]):not([class*=--tertiary])[aria-pressed="true"] {
   background-color: var(--hover-tint);
   position: relative;
 }
 
-.gpf-btn-icon[aria-pressed="true"]::before {
+.gpf-btn-icon:not([class*=--secondary]):not([class*=--tertiary])[aria-pressed="true"]::before {
   background-color: var(--hover-tint);
   content: "";
   width: 3px;
