@@ -127,12 +127,12 @@
 
 .gpf-btn {}
 
-.gpf-btn-icon[aria-pressed="true"] {
+.gpf-btn-icon:not([class*=--secondary]):not([class*=--tertiary])[aria-pressed="true"] {
   background-color: var(--hover-tint);
   position: relative;
 }
 
-.gpf-btn-icon[aria-pressed="true"]::before {
+.gpf-btn-icon:not([class*=--secondary]):not([class*=--tertiary])[aria-pressed="true"]::before {
   background-color: var(--hover-tint);
   content: "";
   width: 3px;
@@ -188,7 +188,7 @@
     linear-gradient(#fff 0 0) bottom/100% 1px,
     linear-gradient(#fff 0 0) left /1px 100%,
     linear-gradient(#fff 0 0) right /1px 100%,
-    url("img/GPclose.png") center;
+    url("img/GPclose.png") -25px center;
   mask:
     linear-gradient(#fff 0 0) top /100% 1px,
     linear-gradient(#fff 0 0) bottom/100% 1px,
