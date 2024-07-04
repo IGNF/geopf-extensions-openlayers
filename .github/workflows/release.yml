@@ -1,12 +1,27 @@
-name: Creation des releases
+name: Creation de la release
 
 on:
   push:
     tags:
       - '*'
 
+env:
+  MODULE_NAME: modules
+  BUNDLE_NAME: bundle
+  PACKAGE_NAME: package
+  
 jobs:
 
+  # - checkout master ou main
+  # - build des binaires
+  # - build package des sources
+  # - build jsdoc
+  # - zip & upload artifacts :
+  #   - jsdoc
+  #   - dist
+  #   - package.zip
+  #   - modules.zip
+  #   - bundle.zip
   build:
     runs-on: ubuntu-latest
     steps:
@@ -21,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build bundle
+      - name: Build bundles & modules
         run: npm run build
 
       - name: Build package
@@ -29,11 +44,15 @@ jobs:
 
       - name: Create Zip Modules
         run: |
-          zip --junk-paths modules dist/modules/*
+          zip --junk-paths ${{env.MODULE_NAME}} dist/${{env.MODULE_NAME}}/*
       
       - name: Create Zip Bundle
         run: |
-          zip --junk-paths bundle dist/bundle/*
+          zip --junk-paths ${{env.BUNDLE_NAME}} dist/${{env.BUNDLE_NAME}}/*
+
+      - name: Create Zip Package
+        run: |
+          zip --junk-paths ${{env.PACKAGE_NAME}} dist/${{env.PACKAGE_NAME}}/*
 
       - name: Upload JSDoc artifacts
         uses: actions/upload-artifact@v4
@@ -41,24 +60,33 @@ jobs:
           name: jsdoc
           path: jsdoc
 
-      - name: Upload Binary artifacts
+      - name: Upload Binaries artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
 
+      - name: Upload Package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: ${{env.PACKAGE_NAME}}.zip
+        
       - name: Upload Bundle artifacts
         uses: actions/upload-artifact@v4
         with:
           name: bundle
-          path: bundle.zip
+          path: ${{env.BUNDLE_NAME}}.zip
 
       - name: Upload Modules artifacts
         uses: actions/upload-artifact@v4
         with:
           name: modules
-          path: modules.zip
+          path: ${{env.MODULE_NAME}}.zip
 
+  # - checkout gh-pages
+  # - download des artifacts : build & jsdoc
+  # - commit & push
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -66,10 +94,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          repository: IGNF/geoportal-extensions-openlayers
+          repository: ${GITHUB_REPOSITORY}
           ref: gh-pages
       
-      - name: Download Binary artifacts
+      - name: Download Binaries artifacts
         uses: actions/download-artifact@v4
         with:
           name: dist
@@ -93,34 +121,168 @@ jobs:
           git commit -m "build project gh-pages"
           git push
 
-  # not yet implemented !
-  release:
-    if: false 
+  # not yet actived !
+  # - checkout master or main
+  # - get date from package.json
+  # - get version from package.json
+  # - create changelog, then upload artifact changelog (also use by publish npm)
+  # - create release github
+  # - download binaries (from build)
+  # - upload artifacts for release github assets :
+  #   - bundle.zip
+  #   - modules.zip
+  #   - package.zip
+  release: # Only for tags !
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: ras
-        run: |
-          echo "not yet implemented !"
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  # not yet implemented !
-  publish:
-    if: false 
+      - name: Package info
+        id: package
+        uses: idev-coder/github-actions-package@v1.0.0
+      
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      
+      - name: Create ChangeLog
+        run: |
+          sed -i 's/__VERSION__/${{ steps.package.outputs.version }}/g' DRAFT_CHANGELOG.md
+          sed -i 's/__DATE__/${{ steps.date.outputs.date }}/g' DRAFT_CHANGELOG.md
+
+      - name: Upload ChangeLog artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: DRAFT_CHANGELOG.md
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            tag_name: ${{ github.ref }}
+            release_name: Release ${{ github.ref }}
+            body_path: DRAFT_CHANGELOG.md
+            draft: false
+            prerelease: false
+        
+      - name: Upload Release Asset Bundles
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{env.BUNDLE_NAME}}.zip
+          asset_name: bundle-${{ steps.package.outputs.version }}.zip
+          asset_content_type: application/zip
+      
+      - name: Upload Release Asset Modules
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{env.MODULE_NAME}}.zip
+          asset_name: modules-${{ steps.package.outputs.version }}.zip
+          asset_content_type: application/zip
+      
+      - name: Upload Release Asset Package
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{env.PACKAGE_NAME}}.zip
+          asset_name: package-${{ steps.package.outputs.version }}.zip
+          asset_content_type: application/zip
+
+  # not yet actived !
+  # - checkout master or main
+  # - download changelog (from release)
+  # - download package (from build)
+  # - then simply publish repo
+  publish: # Only for tags !
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    needs: release
     runs-on: ubuntu-latest
     steps:
-      - name: ras
-        run: |
-          echo "not yet implemented !"
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  # not yet implemented !
-  changelog:
-    if: false 
+      - name: Download Binaries artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+          
+      - name: Download ChangeLog artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: changelog
+          path: ./dist/package/CHANGELOG.md
+  
+      - name: Publish on npm
+        run: |
+          cd ./dist/package
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
+
+  # not yet actived !
+  # - checkout master or main
+  # - download changelog (from release)
+  # - archive changelog
+  # - update toc
+  # - reset draft changelog
+  # - commit & push
+  #   warning: ceci va relancer un job de build et deploy !
+  changelog: # Only for tags !
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    needs: [release, publish]
     runs-on: ubuntu-latest
     steps:
-      - name: ras
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: main
+          token: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
+      
+      - name: Download ChangeLog artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: changelog
+      
+      - name: Install Libs
         run: |
-          echo "not yet implemented !"
+          npm install markdown-toc
+      
+      - name: Archive changelog
+        run: |
+          cat DRAFT_CHANGELOG.md >> CHANGELOG.md
+          ./node_modules/.bin/markdown-toc -i CHANGELOG.md
+      
+      - name: Reset draft changelog
+        run: |
+          cp .github/CHANGELOG_TEMPLATE.md DRAFT_CHANGELOG.md
+          
+      - name: Commit and push
+        run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add -A
+            git commit -m "update CHANGELOG"
+            git push --force
 
   # not yet implemented !
+  # - checkout master or main
+  # - simply update package.json with new version
+  # - commit & push
   samples:
     if: false 
     runs-on: ubuntu-latest
