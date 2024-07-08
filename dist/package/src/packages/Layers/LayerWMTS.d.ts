@@ -18,6 +18,12 @@ export default LayerWMTS;
 * var layerWMTS = new ol.layer.GeoportalWMTS({
 *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
 * });
+* layerWMTS.getLegends();
+* layerWMTS.getMetadata();
+* layerWMTS.getTitle();
+* layerWMTS.getDescription();
+* layerWMTS.getQuicklookUrl();
+* layerWMTS.getOriginators();
 *
 * // Ex. configuration object for WMTS Layer
 * {

@@ -18,6 +18,13 @@ export default LayerWMS;
  * var layerWMS = new ol.layer.GeoportalWMS({
  *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
  * });
+ *
+ * layerWMS.getLegends();
+ * layerWMS.getMetadata();
+ * layerWMS.getTitle();
+ * layerWMS.getDescription();
+ * layerWMS.getQuicklookUrl();
+ * layerWMS.getOriginators();
  */
 declare var LayerWMS: ol.layer.GeoportalWMS;
 //# sourceMappingURL=LayerWMS.d.ts.map
