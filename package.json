@@ -1,8 +1,8 @@
 {
   "name": "geoportal-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.91",
-  "date": "20/06/2024",
+  "version": "1.0.0-beta.101",
+  "date": "08/07/2024",
   "module": "src/index.js",
   "directories": {},
   "engines": {
@@ -42,7 +42,7 @@
   "homepage": "https://github.com/IGNF/geoportal-extensions-openlayers#readme",
   "dependencies": {
     "@gouvfr/dsfr": "^1.11.0",
-    "@mapbox/mapbox-gl-style-spec": "14.4.0",
+    "@mapbox/mapbox-gl-style-spec": "14.5.1",
     "eventbusjs": "0.2.0",
     "geoportal-access-lib": "3.4.2",
     "loglevel": "^1.9.1",

@@ -30,12 +30,9 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
     mask: url("img/dsfr/visible-open.svg") center no-repeat;
 }
 
-button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
-    background-image: url("img/dsfr/visible-close-blanc.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
-    box-shadow: none;
+button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
+    -webkit-mask: url("img/dsfr/visible-close-blanc.svg") center no-repeat;
+    mask: url("img/dsfr/visible-close-blanc.svg") center no-repeat;
 }
 
 .gpf-btn-icon-ls-remove {

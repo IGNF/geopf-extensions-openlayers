@@ -29,6 +29,13 @@ import SourceWMS from "./SourceWMS";
  * var layerWMS = new ol.layer.GeoportalWMS({
  *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
  * });
+ * 
+ * layerWMS.getLegends();
+ * layerWMS.getMetadata();
+ * layerWMS.getTitle();
+ * layerWMS.getDescription();
+ * layerWMS.getQuicklookUrl();
+ * layerWMS.getOriginators();
  */
 var LayerWMS = class LayerWMS extends TileLayer {
 
@@ -152,6 +159,54 @@ var LayerWMS = class LayerWMS extends TileLayer {
         this.service = "WMS";
         
         return this;
+    }
+
+    /**
+     * Get legends
+     * @returns  {Array} - legends
+     */
+    getLegends () {
+        return this.getSource()._legends;
+    }
+
+    /**
+     * Get metadata
+     * @returns  {Array} - metadata
+     */
+    getMetadata () {
+        return this.getSource()._metadata;
+    }
+
+    /**
+     * Get description
+     * @returns {String} - description
+     */
+    getDescription () {
+        return this.getSource()._description;
+    }
+
+    /**
+     * Get title
+     * @returns {String} - title
+     */
+    getTitle () {
+        return this.getSource()._title;
+    }
+
+    /**
+     * Get quicklook url
+     * @returns {String} - quicklook
+     */
+    getQuicklookUrl () {
+        return this.getSource()._quicklookUrl;
+    }
+
+    /**
+     * Get originators
+     * @returns {Array} - originators
+     */
+    getOriginators () {
+        return this.getSource()._originators;
     }
 
 };

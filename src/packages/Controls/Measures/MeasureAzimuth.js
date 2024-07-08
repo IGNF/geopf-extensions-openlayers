@@ -132,7 +132,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         this.tools[className].push({
             instance : (map) ? this : null,
             active : false,
-            map : (map) ? map.getTargetElement().id : null
+            map : (map) ? map.getTarget() : null
         });
 
         // contexte d'execution
