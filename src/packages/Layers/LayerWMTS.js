@@ -26,6 +26,12 @@ import SourceWMTS from "./SourceWMTS";
 * var layerWMTS = new ol.layer.GeoportalWMTS({
 *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
 * });
+* layerWMTS.getLegends();
+* layerWMTS.getMetadata();
+* layerWMTS.getTitle();
+* layerWMTS.getDescription();
+* layerWMTS.getQuicklookUrl();
+* layerWMTS.getOriginators();
 * 
 * // Ex. configuration object for WMTS Layer
 * {
@@ -354,6 +360,53 @@ var LayerWMTS = class LayerWMTS extends TileLayer {
         return this;
     }
     
+    /**
+     * Get legends
+     * @returns  {Array} - legends
+     */
+    getLegends () {
+        return this.getSource()._legends;
+    }
+
+    /**
+     * Get metadata
+     * @returns  {Array} - metadata
+     */
+    getMetadata () {
+        return this.getSource()._metadata;
+    }
+
+    /**
+     * Get description
+     * @returns {String} - description
+     */
+    getDescription () {
+        return this.getSource()._description;
+    }
+
+    /**
+     * Get title
+     * @returns {String} - title
+     */
+    getTitle () {
+        return this.getSource()._title;
+    }
+
+    /**
+     * Get quicklook url
+     * @returns {String} - quicklook
+     */
+    getQuicklookUrl () {
+        return this.getSource()._quicklookUrl;
+    }
+
+    /**
+     * Get originators
+     * @returns {Array} - originators
+     */
+    getOriginators () {
+        return this.getSource()._originators;
+    }
     
 };
 
