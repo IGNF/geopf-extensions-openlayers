@@ -1325,6 +1325,8 @@ var SearchEngineDOM = {
         input.className = "GPcoordinateSearchInput gpf-input fr-input";
         input.title = "Saisir des coordonnées";
         input.name = "coordinate-lng";
+        input.type = "number";
+        input.step = "any";
         input.required = "";
         switch (code) {
             case "DMS":
@@ -1334,17 +1336,14 @@ var SearchEngineDOM = {
                 break;
             case "DEC":
                 input.title += " géographiques (en decimal)";
-                input.type = "number";
                 input.min = "-180";
                 input.max = "180";
                 break;
             case "M":
                 input.title += " cartésiennes (en mètre)";
-                input.type = "number";
                 break;
             case "KM":
                 input.title += " cartésiennes (en kilomètre)";
-                input.type = "number";
                 break;
             default:
                 break;
@@ -1434,6 +1433,8 @@ var SearchEngineDOM = {
         input.className = "GPcoordinateSearchInput gpf-input fr-input";
         input.title ="Saisir des coordonnées";
         input.name = "coordinate-lat";
+        input.type = "number";
+        input.step = "any";
         input.required = "";
         switch (code) {
             case "DMS":
@@ -1443,17 +1444,14 @@ var SearchEngineDOM = {
                 break;
             case "DEC":
                 input.title += " géographiques (en decimal)";
-                input.type = "number";
                 input.min = "-180";
                 input.max = "180";
                 break;
             case "M":
                 input.title += " cartésiennes (en mètre)";
-                input.type = "number";
                 break;
             case "KM":
                 input.title += " cartésiennes (en kilomètre)";
-                input.type = "number";
                 break;
             default:
                 break;
