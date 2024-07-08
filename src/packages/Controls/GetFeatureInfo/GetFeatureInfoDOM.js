@@ -28,9 +28,10 @@ var GetFeatureInfoDOM = {
 
     /**
      * Creation du container du picto du controle (DOM)
+     * @param {Boolean} active - active
      * @returns {DOMElement} DOM element
      */
-    _createMainPictoElement : function () {
+    _createMainPictoElement : function (active) {
         var self = this;
 
         var button = document.createElement("button");
@@ -38,7 +39,7 @@ var GetFeatureInfoDOM = {
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPgetFeatureInfoPicto gpf-btn gpf-btn-icon gpf-btn-icon-getfeatureinfo fr-btn";
         button.title = "activer/desactiver l'interrogation des couches";
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", false);
+        button.setAttribute("aria-pressed", active);
         button.setAttribute("type", "button");
  
         if (button.addEventListener) {

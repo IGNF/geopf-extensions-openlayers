@@ -243,7 +243,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
                 // ajout des couches vecteur deja dans la carte
                 var updated = false;
                 map.getLayers().forEach((olLayer) => {
-                    var layerFormat = GfiUtils.getLayerFormat(olLayer);
+                    // var layerFormat = GfiUtils.getLayerFormat(olLayer);
                     if (!this._hasLayer(olLayer)) {
                         this._layers.push({
                             obj : olLayer
@@ -651,7 +651,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         var container = this._createMainContainerElement();
 
         // ajout dans le container principal du picto du controle
-        var picto = this._createMainPictoElement();
+        var picto = this._createMainPictoElement(this.isActive());
         container.appendChild(picto);
 
         if (typeof options.hidden !== "undefined") {
