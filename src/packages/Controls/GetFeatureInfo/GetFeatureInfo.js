@@ -244,7 +244,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
                 var updated = false;
                 map.getLayers().forEach((olLayer) => {
                     var layerFormat = GfiUtils.getLayerFormat(olLayer);
-                    if (!this._hasLayer(olLayer) && layerFormat === "vector") {
+                    if (!this._hasLayer(olLayer)) {
                         this._layers.push({
                             obj : olLayer
                         });
@@ -259,12 +259,9 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
                 map.getLayers().on(
                     "add",
                     (evt) => {
-                        var layerFormat = GfiUtils.getLayerFormat(evt.element);
-                        if (layerFormat === "vector") {
-                            this._layers.push({
-                                obj : evt.element
-                            });
-                        }
+                        this._layers.push({
+                            obj : evt.element
+                        });
                         this._updateEvents(map);
                     }
                 );
