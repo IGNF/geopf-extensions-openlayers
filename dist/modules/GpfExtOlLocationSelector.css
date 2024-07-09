@@ -9,7 +9,7 @@
  * @copyright copyright (c) IGN 
  * @license CeCILL-B
  * @author IGN
- * @version 1.0.0-beta.102
+ * @version 1.0.0-beta.104
  * @date 08/07/2024
  *
  */[id^=GPlocationStageAdd],[id^=GPlocationStageRemove]{border:none;cursor:pointer;height:28px;width:28px}[class*=GPlocationPoint]{position:relative}div[id^=GPlocationAutoCompleteResult]{background-color:#fff;border:1px solid #999;border-top:none;left:0;max-height:140px;overflow-y:auto;top:45px}div[id^=GPlocationAutoCompleteList]{position:absolute;width:calc(100% - 56px);z-index:2}
