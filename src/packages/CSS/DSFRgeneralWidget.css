@@ -440,3 +440,14 @@
   padding-bottom: 10px;
   border-bottom: 1px dotted #666;
 }
+
+.ol-disabled {
+  --idle: transparent;
+  --hover: var(--background-disabled-grey-hover);
+  --active: var(--background-disabled-grey-active);
+  background-color: var(--background-disabled-grey);
+  color: var(--text-disabled-grey);
+  cursor: not-allowed;
+  /* instead of display: none */
+  display: block;
+}
