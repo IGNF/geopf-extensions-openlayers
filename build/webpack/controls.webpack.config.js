@@ -79,6 +79,9 @@ module.exports = (env, argv) => {
                 // ras
                 moduledir = "Measures";
                 break;
+            case "Legends":
+                // ras
+                break;
             case "Editor":
                 // ras
                 break;
