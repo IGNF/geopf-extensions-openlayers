@@ -280,7 +280,6 @@
 .position-container-top-right,
 .position-container-bottom-left,
 .position-container-bottom-right {
-  border-style: solid;
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -288,39 +287,39 @@
   /* crée un décalage sur le searchEngine */
   /* align-items: center; */
   /* + 5px pour l'indicateur "bouton actif" */
-  width: calc(var(--size-per-row) + 5px);
+  width: calc(var(--size-per-row) + 4px);
   min-height: var(--size-per-row);
   /* padding: 5px; */
 }
 
 .position-container-top-left,
 .position-container-top-right {
-  top: 0;
+  top: 4px;
 }
 
 .position-container-top-left {
   float: left;
-  left: 0;
+  left: 8px;
 }
 
 .position-container-top-right {
   float: right;
-  right: 0;
+  right: 4px;
 }
 
 .position-container-bottom-left,
 .position-container-bottom-right {
-  bottom: 0px;
+  bottom: 4px;
 }
 
 .position-container-bottom-right {
   float: right;
-  right: 0px;
+  right: 4px;
 }
 
 .position-container-bottom-left {
   float: left;
-  left: 0px;
+  left: 8px;
 }
 
 /**********************/
