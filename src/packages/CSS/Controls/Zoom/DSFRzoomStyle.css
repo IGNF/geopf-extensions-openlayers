@@ -7,6 +7,7 @@
     height: inherit;
     width: inherit;
 }
+
 .gpf-btn-icon-zoom-out {
     background-image: url("img/dsfr/zoom-out.svg");
     background-repeat: no-repeat;
@@ -17,13 +18,13 @@
     width: inherit;
 }
 
-#GPzoomIn { 
+#GPzoomIn {
     margin-bottom: 4px;
     box-shadow: 0px 12px var(--background-action-high-blue-france);
 }
 
-@-moz-document url-prefix() { 
-    #GPzoomIn { 
+@supports(-moz-appearance:none) {
+    #GPzoomIn {
         box-shadow: 0px 4px var(--background-action-high-blue-france);
     }
 }
