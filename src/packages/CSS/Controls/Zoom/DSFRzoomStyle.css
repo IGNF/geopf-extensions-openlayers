@@ -16,3 +16,14 @@
     height: inherit;
     width: inherit;
 }
+
+#GPzoomIn { 
+    margin-bottom: 4px;
+    box-shadow: 0px 12px var(--background-action-high-blue-france);
+}
+
+@-moz-document url-prefix() { 
+    #GPzoomIn { 
+        box-shadow: 0px 4px var(--background-action-high-blue-france);
+    }
+}
