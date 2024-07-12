@@ -22,6 +22,13 @@
                 background-position:center center;
                 background-repeat:no-repeat;
             }
+            .wrapper {
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start;
+                align-content: flex-start;
+                justify-content: flex-start;
+            }
         </style>
 {{/content}}
 
@@ -30,11 +37,19 @@
             <!-- map -->
             <div id="map">
             </div>
+            <div class="wrapper">
+                <div style="display: flex;flex-direction: column;align-items: center;width: 150px;">
+                    <button type="button" id="addMapsLayer">Ajouter des couches WMS</button>
+                    <button type="button" id="removeMapsLayer">Supprimer les couches WMS</button>
+                </div>
+            </div>
 {{/content}}
 
 {{#content "js"}}
     <script>
         var map;
+        var gpImageGraph;
+        var gpMapGraph;
         var createMap = function () {
             document.getElementById('map').style.backgroundImage = 'none';
 
@@ -52,16 +67,6 @@
                 layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
             });
             map.addLayer(gpMaps);
-
-            // var gpImageGraph = new ol.layer.GeoportalWMTS({
-            //     layer: "ORTHOIMAGERY.ORTHOPHOTOS.GRAPHE-MOSAIQUAGE"
-            // });
-            // map.addLayer(gpImageGraph);
-
-            // var gpMapGraph = new ol.layer.GeoportalWMTS({
-            //     layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN25.GRAPHE-MOSAIQUAGE"
-            // });
-            // map.addLayer(gpMapGraph);
 
             var gpDrone = new ol.layer.Tile({
                 source : new ol.source.GeoportalWMTS({
@@ -111,6 +116,23 @@
                 console.error(e);
             }
         });
+        var addMapsLayer = function() {
+            gpImageGraph = new ol.layer.GeoportalWMS({
+                layer: "ORTHOIMAGERY.ORTHOPHOTOS.GRAPHE-MOSAIQUAGE"
+            });
+            map.addLayer(gpImageGraph);
+
+            gpMapGraph = new ol.layer.GeoportalWMS({
+                layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN25.GRAPHE-MOSAIQUAGE"
+            });
+            map.addLayer(gpMapGraph);
+        };
+        var removeMapsLayer = function() {
+            map.removeLayer(gpImageGraph);
+            map.removeLayer(gpMapGraph);
+        };
+        document.getElementById("addMapsLayer").onclick = addMapsLayer;
+        document.getElementById("removeMapsLayer").onclick = removeMapsLayer;
     </script>
 {{/content}}
 {{/extend}}

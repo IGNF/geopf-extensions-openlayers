@@ -45,7 +45,7 @@ class Legends extends Control {
      */
     constructor (options) {
         options = options || {};
-
+        
         // call ol.control.Control constructor
         super({
             element : options.element,
@@ -95,19 +95,23 @@ class Legends extends Control {
             // ajout des legendes déjà sur la carte
             var self = this;
             map.getLayers().forEach((layer) => {
-                self.legends.push({
-                    obj : layer,
-                    dom : self._createLegendEntry(self.getMetaInformations(layer))
-                });
+                var entry = self._createLegendEntry(self.getMetaInformations(layer));
+                if (entry) {
+                    self.panelLegendsEntriesContainer.prepend(entry);
+                    self.legends.push({
+                        obj : layer,
+                        dom : entry
+                    });
+                }
             });
 
             // ajout des evenements sur la carte
             // pour les futurs ajouts de couche
-            this.addEvents(map);
+            this.addEventsListeners(map);
         } else {
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
-            this.removeEvents();
+            this.removeEventsListeners();
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
@@ -118,14 +122,26 @@ class Legends extends Control {
             this.setPosition(this.options.position);
         }
     }
+
     // ################################################################### //
     // ################### getters / setters ############################# //
     // ################################################################### //
 
     /**
      * Get all meta informations of a IGN's layer
+     * 
      * @param {*} layer - layer
-     * @returns 
+     * @returns {*} informations
+     * @private
+     * @example
+     * getLegends() : 
+     * "legends" : [
+     *         {
+     *             "format" : "image/jpeg",
+     *             "url" : "https:*data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+     *             "minScaleDenominator" : "200"
+     *         }
+     *     ],
      */
     getMetaInformations (layer) {
         // INFO
@@ -143,6 +159,7 @@ class Legends extends Control {
         }
         return;
     }
+
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
@@ -206,8 +223,12 @@ class Legends extends Control {
 
         // panel
         var legendsPanel = this.panelLegendsContainer = this._createLegendsPanelElement();
-        var legendsPanelDiv = this.panelLegendsEntriesContainer = this._createLegendsPanelDivElement();
+        var legendsPanelDiv = this._createLegendsPanelDivElement();
         legendsPanel.appendChild(legendsPanelDiv);
+
+        var legendsEntriesDiv = this.panelLegendsEntriesContainer = this._createLegendElement();
+        legendsPanel.appendChild(legendsEntriesDiv);
+
 
         // header
         var legendsPanelHeader = this.panelLegendsHeaderContainer = this._createLegendsPanelHeaderElement();
@@ -230,8 +251,10 @@ class Legends extends Control {
      * Add events listeners on map (called by setMap)
      * 
      * @param {*} map - map
+     * @private
+     * @todo listener on change:position
      */
-    addEvents (map) {
+    addEventsListeners (map) {
         var self = this;
         this.eventsListeners["layer:add"] = function (e) {
             logger.trace(e);
@@ -280,34 +303,91 @@ class Legends extends Control {
                 return;
             }
         };
-        this.eventsListeners["layer:modify"] = function (e) {
+        this.eventsListeners["layer:change:position"] = function (e) {
             logger.trace(e);
             // TODO
             // à la modification de l'ordre de la couche, on modifie l'entrée 
             // * du DOM
             // * de la liste des entrées
         };
+        this.eventsListeners["view:change:resolution"] = function (e) {
+            logger.trace(e);
+            // à la modification de l'echelle de la carte, on modifie les entrées 
+            // * du DOM si necessaire
+            // * de la liste des entrées si necessaire
+            var map = self.getMap();
+            for (let j = 0; j < self.legends.length; j++) {
+                const legend = self.legends[j];
+                
+                var infos = self.getMetaInformations(legend.obj);
+                if (!infos) {
+                    continue;
+                }
+                // conversion resolution vers échelle
+                var resolution = map.getView().getResolution() || map.getView().getResolutionForZoom(map.getZoom());
+                var scaleDenominator = resolution*3570;
+                
+                // recherche de la legende en fonction de l'échelle
+                var cloneInfoLegends = infos.legends.slice(); //clone
+                var bestInfoLegend = cloneInfoLegends[0];
+                for (let i = 0; i < cloneInfoLegends.length; ++i) {
+                    const InfoLegend = cloneInfoLegends[i];
+                    
+                    if (!InfoLegend.minScaleDenominator) {
+                        InfoLegend.minScaleDenominator = 0;
+                    }
+    
+                    if ( ( scaleDenominator > bestInfoLegend.minScaleDenominator && InfoLegend.minScaleDenominator > bestInfoLegend.minScaleDenominator && InfoLegend.minScaleDenominator < scaleDenominator ) ||
+                         ( scaleDenominator < bestInfoLegend.minScaleDenominator && InfoLegend.minScaleDenominator < bestInfoLegend.minScaleDenominator ) ) {
+                        bestInfoLegend = InfoLegend;
+                    }
+                }
+                // si pas de changement, on ne met pas à jour de DOM
+                if (infos.legends[0] === bestInfoLegend) {
+                    continue;
+                }
+                infos.legends = [];
+                infos.legends.push(bestInfoLegend);
+    
+                // mise à jour du DOM
+                var newEntry = self._createLegendEntry(infos);
+                var oldEntry = legend.dom;
+                oldEntry.replaceWith(newEntry);
+
+                // mise à jour de l'entrée
+                legend.dom = newEntry;
+            }
+        };
+
         map.getLayers().on("add", this.eventsListeners["layer:add"]);
         map.getLayers().on("remove", this.eventsListeners["layer:remove"]);
-        map.getLayers().on("change:zIndex", this.eventsListeners["layer:modify"]);
+        map.getLayers().on("change:zIndex", this.eventsListeners["layer:change:position"]);
+        map.getView().on("change:resolution", this.eventsListeners["view:change:resolution"]);
     }
 
     /**
      * Remove events listeners on map (called by setMap)
+     * @private
      */
-    removeEvents () {
+    removeEventsListeners () {
         var map = this.getMap();
         map.getLayers().un("add", this.eventsListeners["layer:add"]);
         map.getLayers().un("remove", this.eventsListeners["layer:remove"]);
-        map.getLayers().un("change:zIndex", this.eventsListeners["layer:modify"]);
+        map.getLayers().un("change:zIndex", this.eventsListeners["layer:change:position"]);
+        map.getView().un("change:resolution", this.eventsListeners["view:change:resolution"]);
         delete this.eventsListeners["layer:add"];
         delete this.eventsListeners["layer:remove"];
-        delete this.eventsListeners["layer:modify"];
+        delete this.eventsListeners["layer:change:position"];
+        delete this.eventsListeners["view:change:resolution"];
     }
 
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
+    /**
+     * ...
+     * @param {*} e - ...
+     */
     onShowLegendsClick (e) {
         logger.trace(e);
     }

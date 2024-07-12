@@ -130,23 +130,71 @@ var LegendsDOM = {
         return btnClose;
     },
 
-
     // ################################################################### //
     // ####################### Methods dynamics ########################## //
     // ################################################################### //
+    
+    _createLegendElement : function () {
+        var div = document.createElement("div");
+        div.className = "legends-entries";
+        return div;
+    },
 
     _createLegendEntry : function (o) {
-        console.log(o);
-        // <div id="${ID}" class="legend-entry">
-        //     <input type="checkbox" 
-        //         id="legend-entry-${ID}-show">
-        //     <label 
-        //         for="legend-entry-${ID}-show" 
-        //         class="legend-entry-title">${TITLE}</label>
-        //     <p class="legend-entry-container">
-        //         <img src="${URL}" alt="${DESCRIPTION}">
-        //     </p>
-        // </div>
+        // Liste des informations :
+        // id  
+        // title  
+        // legends
+        // metadatas
+        // desc
+        // url
+        // partners
+
+        const stringToHTML = (str) => {
+            var support = function () {
+                if (!window.DOMParser) {
+                    return false;
+                }
+                var parser = new DOMParser();
+                try {
+                    parser.parseFromString("x", "text/html");
+                } catch (err) {
+                    return false;
+                }
+                return true;
+            };
+    
+            // If DOMParser is supported, use it
+            if (support()) {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(str, "text/html");
+                return doc.body;
+            }
+    
+            // Otherwise, fallback to old-school method
+            var dom = document.createElement("div");
+            dom.innerHTML = str;
+            return dom;
+        };
+        
+        if (o) {
+            if (o.legends && o.legends.length) {
+                var url = o.legends[0].url; // 1ere valeur par defaut
+                var entry = stringToHTML(`
+                    <div id="${o.id}" class="legend-entry">
+                        <input type="checkbox" 
+                            id="legend-entry-${o.id}-show">
+                        <label 
+                            for="legend-entry-${o.id}-show" 
+                            class="legend-entry-title">${o.title}</label>
+                        <p class="legend-entry-container">
+                            <img src="${url}" alt="${o.desc}">
+                        </p>
+                    </div>
+                `);
+                return entry.firstChild;
+            }
+        }
     }
 
 };
