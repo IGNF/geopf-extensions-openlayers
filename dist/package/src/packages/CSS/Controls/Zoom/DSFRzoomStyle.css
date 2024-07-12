@@ -7,6 +7,7 @@
     height: inherit;
     width: inherit;
 }
+
 .gpf-btn-icon-zoom-out {
     background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcgMTJIMTciIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMC43NSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIi8+Cjwvc3ZnPgo=');
     background-repeat: no-repeat;
@@ -15,4 +16,15 @@
     box-shadow: none;
     height: inherit;
     width: inherit;
+}
+
+#GPzoomIn {
+    margin-bottom: 4px;
+    box-shadow: 0px 12px var(--background-action-high-blue-france);
+}
+
+@supports(-moz-appearance:none) {
+    #GPzoomIn {
+        box-shadow: 0px 4px var(--background-action-high-blue-france);
+    }
 }
