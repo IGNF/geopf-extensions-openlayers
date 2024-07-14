@@ -93,25 +93,31 @@ class Legends extends Control {
                 this.buttonLegendsShow.setAttribute("aria-pressed", true);
             }
             // ajout des legendes déjà sur la carte
-            var self = this;
-            map.getLayers().forEach((layer) => {
-                var entry = self._createLegendEntry(self.getMetaInformations(layer));
-                if (entry) {
-                    self.panelLegendsEntriesContainer.prepend(entry);
-                    self.legends.push({
-                        obj : layer,
-                        dom : entry
-                    });
-                }
-            });
+            if (this.auto) {
+                var self = this;
+                map.getLayers().forEach((layer) => {
+                    var entry = self._createLegendEntry(self.getMetaInformations(layer));
+                    if (entry) {
+                        self.panelLegendsEntriesContainer.prepend(entry);
+                        self.legends.push({
+                            obj : layer,
+                            dom : entry
+                        });
+                    }
+                });
+            }
 
             // ajout des evenements sur la carte
             // pour les futurs ajouts de couche
-            this.addEventsListeners(map);
+            if (this.auto) {
+                this.addEventsListeners(map);
+            }
         } else {
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
-            this.removeEventsListeners();
+            if (this.auto) {
+                this.removeEventsListeners();
+            }
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
@@ -132,7 +138,7 @@ class Legends extends Control {
      * 
      * @param {*} layer - layer
      * @returns {*} informations
-     * @private
+     * @public
      * @example
      * getLegends() : 
      * "legends" : [
@@ -160,6 +166,87 @@ class Legends extends Control {
         return;
     }
 
+    /**
+     * Add legends from layers 
+     * @param {*} layers  - ...
+     * @public
+     */
+    adds (layers) {
+        if (layers) {
+            for (let index = 0; index < layers.length; index++) {
+                if (!this.add(layer)) {
+                    continue;
+                }
+            }
+        }
+    }
+
+    /**
+     * Add a legend from a layer
+     * @param {*} layer  - ...
+     * @returns {Boolean} - true|false
+     * @public
+     */
+    add (layer) {
+        if (layer) {
+            var entry = this._createLegendEntry(this.getMetaInformations(layer));
+            if (entry) {
+                if (this.exist(entry)) {
+                    return false;
+                }
+                this.panelLegendsEntriesContainer.prepend(entry);
+                this.legends.push({
+                    obj : layer,
+                    dom : entry
+                });
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Remove a legend from a layer
+     * @param {*} layer - ...
+     * @returns  {Boolean} - true|false
+     * @public
+     */
+    remove (layer) {
+        var found = false;
+        if (layer) {
+            for (let i = 0; i < this.legends.length; i++) {
+                const legend = this.legends[i];
+                if (layer === legend.obj) {
+                    if (legend.dom) {
+                        this.legends[i].dom.remove();
+                    }
+                    this.legends.splice(i, 1);
+                    found = true;
+                    break;
+                }
+            }
+        }
+        return found;
+    }
+
+    /**
+     * Has already a DOM legend
+     * @param {*} dom  - ...
+     * @returns {Boolean} - true|false
+     * @public
+     */
+    exist (dom) {
+        var found = false;
+        for (let i = 0; i < this.legends.length; i++) {
+            const legend = this.legends[i];
+            if (legend.dom.id === dom.id) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
+
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
@@ -177,9 +264,8 @@ class Legends extends Control {
         this.options = {
             collapsed : true,
             draggable : false,
-            info : true,
             auto : true,
-            layers : []
+            panel : false
         };
 
         // merge with user options
@@ -190,6 +276,9 @@ class Legends extends Control {
 
         /** {Boolean} specify if control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
+
+        /** {Boolean} specify if control add layers auto */
+        this.auto = this.options.auto;
 
         this.buttonLegendsShow = null;
         this.panelLegendsContainer = null;
@@ -230,15 +319,20 @@ class Legends extends Control {
         legendsPanel.appendChild(legendsEntriesDiv);
 
 
-        // header
-        var legendsPanelHeader = this.panelLegendsHeaderContainer = this._createLegendsPanelHeaderElement();
-        // title
-        var legendsPanelTitle = this._createLegendsPanelTitleElement();
-        legendsPanelHeader.appendChild(legendsPanelTitle);
-        // close picto
-        var legendsCloseBtn = this.buttonLegendsClose = this._createLegendsPanelCloseElement();
-        legendsPanelHeader.appendChild(legendsCloseBtn);
-        legendsPanelDiv.appendChild(legendsPanelHeader);
+        // header ?
+        if (this.options.panel) {
+            var legendsPanelHeader = this.panelLegendsHeaderContainer = this._createLegendsPanelHeaderElement();
+            // icone
+            var legendsPanelIcon = this._createLegendsPanelIconElement();
+            legendsPanelHeader.appendChild(legendsPanelIcon);
+            // title
+            var legendsPanelTitle = this._createLegendsPanelTitleElement();
+            legendsPanelHeader.appendChild(legendsPanelTitle);
+            // close picto
+            var legendsCloseBtn = this.buttonLegendsClose = this._createLegendsPanelCloseElement();
+            legendsPanelHeader.appendChild(legendsCloseBtn);
+            legendsPanelDiv.appendChild(legendsPanelHeader);
+        }
 
         container.appendChild(legendsPanel);
 
@@ -265,19 +359,10 @@ class Legends extends Control {
             // un test est à realiser pour savoir si cette couche possède
             // des meta informations, sinon, on placera une legende par defaut :
             // > pas de légende disponible (au format texte)
-
-            var entry = self._createLegendEntry(self.getMetaInformations(e.element));
-            if (!entry) {
+            if (!self.add(e.element)) {
                 logger.error("...");
                 return;
             }
-            // on ajoute l'entrée dans le DOM toujours "au dessus"
-            self.panelLegendsEntriesContainer.prepend(entry);
-
-            self.legends.push({
-                obj : e.element,
-                dom : entry
-            });
         };
         this.eventsListeners["layer:remove"] = function (e) {
             logger.trace(e);
@@ -285,20 +370,7 @@ class Legends extends Control {
             // à la suppression de la couche, on supprime l'entrée 
             // * du DOM
             // * de la liste des entrées
-
-            var found = false;
-            for (var i = 0; i < self.legends.length; ++i) {
-                if (self.legends[i].obj === e.element) {
-                    if (self.legends[i].dom) {
-                        self.legends[i].dom.remove();
-                    }
-                    self.legends.splice(i, 1);
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
+            if (!self.remove(e.element)) {
                 logger.error("...");
                 return;
             }

@@ -80,7 +80,7 @@ var LegendsDOM = {
 
     _createLegendsPanelDivElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__body fr-modal__body";
+        div.className = "gpf-panel__legends";
         return div;
     },
 
@@ -91,19 +91,18 @@ var LegendsDOM = {
      */
     _createLegendsPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "gpf-panel__header_legends";
         return container;
     },
     _createLegendsPanelIconElement : function () {
         var label = document.createElement("label");
-        label.className = "GPpanelIcon gpf-btn-header gpf-btn-icon-legends";
+        label.className = "gpf-btn-header-legends gpf-btn-icon-header-legends";
         label.title = "Légendes";
         return label;
     },
     _createLegendsPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title_legends";
-        div.id = this._addUID("GPlegendsHeaderTitle");
+        div.className = "gpf-panel__title_legends";
         div.innerHTML = "Légendes";
         return div;
     },
@@ -112,18 +111,17 @@ var LegendsDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.id = this._addUID("GPlegendsPanelClose");
-        btnClose.className = "GPpanelClose GPlegendsPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
             btnClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowLegendsListPicto")).click();
+                document.getElementById(self._addUID("GPshowLegendsPicto")).click();
             }, false);
         } else if (btnClose.attachEvent) {
             btnClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowLegendsListPicto")).click();
+                document.getElementById(self._addUID("GPshowLegendsPicto")).click();
             });
         }
 
@@ -136,7 +134,7 @@ var LegendsDOM = {
     
     _createLegendElement : function () {
         var div = document.createElement("div");
-        div.className = "legends-entries";
+        div.className = "legends-entries gpf-panel__body fr-modal__body";
         return div;
     },
 
@@ -181,17 +179,33 @@ var LegendsDOM = {
             if (o.legends && o.legends.length) {
                 var url = o.legends[0].url; // 1ere valeur par defaut
                 var entry = stringToHTML(`
-                    <div id="${o.id}" class="legend-entry">
-                        <input type="checkbox" 
-                            id="legend-entry-${o.id}-show">
-                        <label 
-                            for="legend-entry-${o.id}-show" 
-                            class="legend-entry-title">${o.title}</label>
-                        <p class="legend-entry-container">
+                    <div 
+                        id="${o.id}" 
+                        class="legend-entry-container gpf-panel__content fr-modal__content">
+                        <label class="legend-entry-title gpf-label-legends-name fr-label">${o.title}</label>
+                        <button
+                            id="GPcollapseLegend_ID_${o.id}"
+                            class="legend-entry-show gpf-btn gpf-btn-icon gpf-btn-icon-legends-collapse fr-btn fr-btn--tertiary gpf-btn--tertiary"
+                            type="button"
+                            title=""
+                            tabindex="0"
+                            aria-pressed="false"></button>
+                        <div id="GPlegend_ID_${o.id}" class="legend-entry-image gpf-hidden">
                             <img src="${url}" alt="${o.desc}">
-                        </p>
+                        </div>
                     </div>
                 `);
+                // add event click button
+                var button = entry.firstChild.querySelector("button");
+                if (button) {
+                    button.addEventListener("click", (e) => {
+                        var status = (e.target.ariaPressed === "true");
+                        e.target.setAttribute("aria-pressed", !status);
+                        var element = document.getElementById("GPlegend_ID_" + o.id);
+                        (status) ?
+                            element.classList.replace("gpf-visible", "gpf-hidden") : element.classList.replace("gpf-hidden", "gpf-visible");
+                    });
+                }
                 return entry.firstChild;
             }
         }

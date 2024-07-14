@@ -1,0 +1,102 @@
+.gpf-btn-icon-legends {
+    background-image: url("img/dsfr/legends.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-btn-header-legends {
+    z-index: 2;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+}
+
+.gpf-btn-icon-header-legends {
+    background-image: url("img/dsfr/header-legends.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-panel__body_legends {
+    overflow: auto;
+    max-height: 300px !important;
+}
+
+.gpf-panel__title_legends {
+    color: #101092;
+    padding: 12px 15px;
+    position: relative;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    right: -16px;
+}
+.gpf-panel__header_legends {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    background: #E3E3FD;
+    height: 48px;
+}
+
+button[id^=GPcollapseLegend_ID_][aria-pressed="false"] {
+    background-image: url("img/dsfr/collapse.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    box-shadow: none;
+}
+
+button[id^=GPcollapseLegend_ID_] {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.gpf-btn-icon-legends-collapse {
+    box-shadow: none;
+}
+
+.gpf-btn-icon-legends-collapse::after {
+    -webkit-mask: url("img/dsfr/collapse.svg") center no-repeat;
+    mask: url("img/dsfr/collapse.svg") center no-repeat;
+}
+
+.legend-entry-container {
+    position: relative;
+    top: 0;
+    border-bottom: 1px dotted #CCC;
+    overflow: hidden;
+}
+
+.legend-entry-container {
+    background-color: var(--background-overlap-grey);
+}
+
+.gpf-label-legends-name {
+    width: calc(100% - 40px);
+    line-height: 56px;
+    overflow: hidden;
+    white-space:  nowrap;
+    text-overflow: ellipsis;
+    padding-left: 4px;
+}
+
+button[id^=GPcollapseLegend_ID_][aria-pressed="true"] + .legend-entry-image {
+    opacity: 1;
+}
+
+button[id^=GPcollapseLegend_ID_][aria-pressed="true"] + .legend-entry-image {
+    max-height: 100px;
+    overflow: auto;
+}
+
+.legend-entry-image {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
+}

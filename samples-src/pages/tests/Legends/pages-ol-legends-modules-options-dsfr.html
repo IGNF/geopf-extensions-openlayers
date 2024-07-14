@@ -48,6 +48,7 @@
 {{#content "js"}}
     <script>
         var map;
+        var legends;
         var gpImageGraph;
         var gpMapGraph;
         var createMap = function () {
@@ -92,15 +93,19 @@
             // Ajout du contrôle de gestion  des couches
             var layerSwitcher = new ol.control.LayerSwitcher({
                 options : {
-                    collapsed: false
+                    collapsed: false,
+                    position: "bottom-right",
+                    panel: true,
+                    counter: true
                 }
             });
             map.addControl(layerSwitcher);
 
             // Ajout du contrôle de gestion  des legendes
-            var legends = new ol.control.Legends({
+            legends = new ol.control.Legends({
                 collapsed: true,
                 position: "bottom-left",
+                panel: true,
                 auto: true,
                 info: true
             });
