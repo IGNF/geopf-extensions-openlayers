@@ -17,6 +17,7 @@ __DATE__
 
 * ✨ [Added]
 
+  * Legends: Nouveau widget Legends (#103)
   * OverviewMap: Nouveau widget GeoportalOverviewMap (#81)
   * FullScreen: Nouveau widget GeoportalFullScreen (#79)
   * Zoom: Nouveau widget GeoportalZoom (#63)
