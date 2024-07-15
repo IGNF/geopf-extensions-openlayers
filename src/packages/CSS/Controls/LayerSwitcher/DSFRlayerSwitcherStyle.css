@@ -2,6 +2,26 @@ div[id^=GPlayerSwitcher-] {
     height: 44px;
 }
 
+/* FIX GRID POSITION OF LS BUTTON */
+.GplayerSwitcher-counterRemoved {
+    margin-bottom: 6px;
+}
+
+.GplayerSwitcher-counterAdded {
+    margin-bottom: 6px;
+}
+
+@supports(-moz-appearance:none) {
+    .GplayerSwitcher-counterRemoved {
+        margin-bottom: unset;
+    }
+
+    .GplayerSwitcher-counterAdded {
+        margin-bottom: 8px;
+        margin-top: -8px;
+    }
+}
+
 button[id^=GPshowLayersListPicto] {
     width: 40px;
 }
