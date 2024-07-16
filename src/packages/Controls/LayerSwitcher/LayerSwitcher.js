@@ -621,7 +621,10 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         container.appendChild(picto);
 
         // ajout du compteur de couches
+        container.classList.add("GplayerSwitcher-counterRemoved");
         if (this.options.counter) {
+            container.classList.remove("GplayerSwitcher-counterRemoved");
+            container.classList.add("GplayerSwitcher-counterAdded");
             var counter = this._layerSwitcherCounter =  this._createMainCounterLayersElement();
             picto.appendChild(counter);
         }
