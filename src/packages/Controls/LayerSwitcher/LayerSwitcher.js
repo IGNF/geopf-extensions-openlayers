@@ -196,7 +196,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             // we put all the layers at Zindex = 0, without changing the visual order
             // in order that the next added layers are not hidden by layers with Zindex > 0
             for (var i = this._layersOrder.length - 1; i >= 0; i--) {
-                this._layersOrder[i].layer.setZIndex(0);
+                // this._layersOrder[i].layer.setZIndex(0);
             }
         }
 
@@ -761,7 +761,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         for (var j = 0; j < this._layersOrder.length; j++) {
             var layerOptions = this._layersOrder[j];
             var layerDiv = this._createLayerDiv(layerOptions);
-            this._layerListContainer.appendChild(layerDiv);
+            if (!this._layerListContainer.querySelector("#" + layerDiv.id)) {
+                this._layerListContainer.appendChild(layerDiv);
+            }
             // on stocke la div dans les options de la couche, pour une éventuelle réorganisation (setZIndex par ex)
             this._layers[layerOptions.id].div = layerDiv;
         }
