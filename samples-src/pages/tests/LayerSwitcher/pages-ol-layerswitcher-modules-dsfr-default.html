@@ -47,7 +47,11 @@
                         ]
                     });
 
-                    var layerSwitcher = new ol.control.LayerSwitcher({});
+                    var layerSwitcher = new ol.control.LayerSwitcher({
+                        options :{
+                            position: 'top-right'
+                        }
+                    });
                     map.addControl(layerSwitcher);
                 };
                 Gp.Services.getConfig({

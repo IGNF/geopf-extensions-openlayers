@@ -96,14 +96,7 @@ class Legends extends Control {
             if (this.auto) {
                 var self = this;
                 map.getLayers().forEach((layer) => {
-                    var entry = self._createLegendEntry(self.getMetaInformations(layer));
-                    if (entry) {
-                        self.panelLegendsEntriesContainer.prepend(entry);
-                        self.legends.push({
-                            obj : layer,
-                            dom : entry
-                        });
-                    }
+                    self.add(layer);
                 });
             }
 
@@ -152,7 +145,7 @@ class Legends extends Control {
     getMetaInformations (layer) {
         // INFO
         // condition pour être une couche issue du catalogue IGN
-        if (layer.hasOwnProperty("name") && layer.hasOwnProperty("gpLayerId")) {
+        if (layer.hasOwnProperty("name")) {
             return {
                 id : layer.name,
                 title : layer.getTitle(),
@@ -216,7 +209,9 @@ class Legends extends Control {
         if (layer) {
             for (let i = 0; i < this.legends.length; i++) {
                 const legend = this.legends[i];
-                if (layer === legend.obj) {
+                if (layer.name === legend.obj.name &&
+                    layer.service === legend.obj.service
+                ) {
                     if (legend.dom) {
                         this.legends[i].dom.remove();
                     }
@@ -360,7 +355,7 @@ class Legends extends Control {
             // des meta informations, sinon, on placera une legende par defaut :
             // > pas de légende disponible (au format texte)
             if (!self.add(e.element)) {
-                logger.error("...");
+                logger.error("Layer already added...");
                 return;
             }
         };
@@ -371,7 +366,7 @@ class Legends extends Control {
             // * du DOM
             // * de la liste des entrées
             if (!self.remove(e.element)) {
-                logger.error("...");
+                logger.error("Layer already removed...");
                 return;
             }
         };
