@@ -52,6 +52,7 @@ module.exports = (env, argv) => {
             "GpfExtOlGeoportalZoom" : path.join(rootdir, "src", "packages", "Controls/Zoom", "GeoportalZoom.js"),
             "GpfExtOlGeoportalFullScreen" : path.join(rootdir, "src", "packages", "Controls/FullScreen", "GeoportalFullScreen.js"),
             "GpfExtOlGeoportalOverviewMap" : path.join(rootdir, "src", "packages", "Controls/OverviewMap", "GeoportalOverviewMap.js"),
+            "GpfExtOlLegends" : path.join(rootdir, "src", "packages", "Controls/Legends", "Legends.js"),
             // Formats étendus
             "GpfExtOlFormats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),

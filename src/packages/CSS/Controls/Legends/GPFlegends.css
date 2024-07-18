@@ -1,0 +1,26 @@
+div[id^=GPlegends-] {
+    top: 58px;
+    right: 8px;
+}
+
+.position > div[id^=GPlegends-] > dialog[id^=GPlegendsPanel] {
+    position: absolute;
+}
+
+/* Showing/hiding */
+
+button[id^=GPshowLegendsPicto][aria-pressed="false"] + dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
+}
+
+button[id^="GPshowLegendsPicto-"][aria-pressed="true"] + dialog {
+    display: block;
+    visibility: visible;
+    opacity: 100%;
+    width: 350px;
+    height: initial;
+    max-height: inherit;
+}
+

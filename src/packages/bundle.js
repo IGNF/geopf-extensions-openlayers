@@ -94,6 +94,7 @@ import ButtonExport from "./Controls/Export/Export";
 import GeoportalZoom from "./Controls/Zoom/GeoportalZoom";
 import GeoportalFullScreen from "./Controls/FullScreen/GeoportalFullScreen";
 import GeoportalOverviewMap from "./Controls/OverviewMap/GeoportalOverviewMap";
+import Legends from "./Controls/Legends/Legends";
 
 import Proj4 from "proj4";
 
@@ -260,6 +261,7 @@ Ol.control.Export = ButtonExport;
 Ol.control.GeoportalZoom = GeoportalZoom;
 Ol.control.GeoportalFullScreen = GeoportalFullScreen;
 Ol.control.GeoportalOverviewMap = GeoportalOverviewMap;
+Ol.control.Legends = Legends;
 
 export {
     /** 
@@ -283,6 +285,7 @@ export {
      * @see ol.control.ElevationPath
      * @see ol.control.LocationSelector
      * @see ol.control.Export
+     * @see ol.control.Legends
      * @see ol.layer.GeoportalWMTS
      * @see ol.layer.GeoportalWMS
      * @see ol.layer.GeoportalMapBox
