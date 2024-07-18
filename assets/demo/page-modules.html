@@ -58,7 +58,9 @@
         <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalFullScreen.js"></script>
         <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalOverviewMap.css">
         <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
-
+        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLegends.css">
+        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLegends.js"></script>
+        
         <title>Extensions avec le bundle complet</title>
         <style>
             html, body {
@@ -163,6 +165,11 @@
                   }
                 });
                 map.addControl(layerSwitcher);
+
+                var legends = new ol.control.Legends({
+                  position : "bottom-right"
+                });
+                map.addControl(legends);
 
                 var mp = new ol.control.GeoportalMousePosition({
                   position : "bottom-right"
