@@ -1,0 +1,16 @@
+/*!
+ * @brief geoportal-extensions-openlayers
+ *
+ * This software is released under the licence CeCILL-B (Free BSD compatible)
+ * @see http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
+ * @see http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.txt
+ * @see http://www.cecill.info/
+ *
+ * @copyright copyright (c) IGN 
+ * @license CeCILL-B
+ * @author IGN
+ * @version 1.0.0-beta.103
+ * @date 14/07/2024
+ *
+ */div[id^=GPlegends-]{right:8px;top:58px}.position>div[id^=GPlegends-]>dialog[id^=GPlegendsPanel]{position:absolute}button[id^=GPshowLegendsPicto][aria-pressed=false]+dialog{display:none;opacity:0;visibility:hidden}button[id^=GPshowLegendsPicto-][aria-pressed=true]+dialog{display:block;height:auto;max-height:inherit;opacity:100%;visibility:visible;width:350px}
+/*# sourceMappingURL=GpfExtOlLegends.css.map*/
