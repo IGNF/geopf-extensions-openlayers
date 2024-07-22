@@ -103,10 +103,6 @@ button[id^="GPshowSearchEnginePicto-"] {
   border-radius: 0 0.25rem 0 0;
 }
 
-/* hack pour forcer la couleur d'un element desactivé */
-.gpf-btn-icon-search:disabled {
-    background-color: #000091;
-}
 .gpf-btn-icon-search-advanced::after {
   -webkit-mask: url("img/dsfr/recherche-avancee.svg") center no-repeat;
   mask: url("img/dsfr/recherche-avancee.svg") center no-repeat;
