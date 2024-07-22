@@ -118,6 +118,9 @@ var SearchEngineDOM = {
             }
             var id = "#GPsearchInput-" + self._uid;
             document.querySelector(id + " input").disabled = false; // FIXME form[id^=GPsearchInput] = #GPsearchInput ?
+            if (checkDsfr()) {
+                document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+            }
             self.onShowSearchEngineClick();
         });
 
@@ -425,10 +428,18 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
                 document.querySelector(id + " input").disabled = false;
+                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
             } else {
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementHidden", "GPelementVisible");
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-hidden", "gpf-visible");
                 document.querySelector(id + " input").disabled = true;
+                document.querySelector(id + " .GPsearchInputReset").disabled = true;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = true;
+                }
             }
 
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
@@ -499,10 +510,18 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
                 document.querySelector(id + " input").disabled = false;
+                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
             } else {
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementHidden", "GPelementVisible");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-hidden", "gpf-visible");
                 document.querySelector(id + " input").disabled = true;
+                document.querySelector(id + " .GPsearchInputReset").disabled = true;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = true;
+                }
             }
 
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
@@ -791,6 +810,10 @@ var SearchEngineDOM = {
             divClose.addEventListener("click", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
+                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
                 // document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
@@ -802,6 +825,10 @@ var SearchEngineDOM = {
             divClose.attachEvent("onclick", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
+                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
                 // document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
@@ -1175,6 +1202,10 @@ var SearchEngineDOM = {
             divClose.addEventListener("click", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
+                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
                 document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
@@ -1184,6 +1215,10 @@ var SearchEngineDOM = {
             divClose.attachEvent("onclick", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
+                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
                 document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
