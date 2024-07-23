@@ -428,7 +428,10 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
                 document.querySelector(id + " input").disabled = false;
-                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
                 if (checkDsfr()) {
                     document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
                 }
@@ -436,7 +439,10 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementHidden", "GPelementVisible");
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-hidden", "gpf-visible");
                 document.querySelector(id + " input").disabled = true;
-                document.querySelector(id + " .GPsearchInputReset").disabled = true;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = true;
+                }
                 if (checkDsfr()) {
                     document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = true;
                 }
@@ -810,7 +816,10 @@ var SearchEngineDOM = {
             divClose.addEventListener("click", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
-                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
                 if (checkDsfr()) {
                     document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
                 }
@@ -825,7 +834,10 @@ var SearchEngineDOM = {
             divClose.attachEvent("onclick", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
-                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
                 if (checkDsfr()) {
                     document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
                 }
@@ -1202,7 +1214,10 @@ var SearchEngineDOM = {
             divClose.addEventListener("click", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
-                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
                 if (checkDsfr()) {
                     document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
                 }
@@ -1215,7 +1230,10 @@ var SearchEngineDOM = {
             divClose.attachEvent("onclick", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
-                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
                 if (checkDsfr()) {
                     document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
                 }
