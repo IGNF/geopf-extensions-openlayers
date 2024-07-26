@@ -879,7 +879,7 @@ var SearchEngineDOM = {
             var data = [];
             // liste des attributs de la ressource de geocodage
             var id = "#GPadvancedSearchFilters-" + self._uid;
-            var matchesFilters = document.querySelectorAll(id + " > div > div > input");
+            var matchesFilters = document.querySelectorAll(id + " > div > div > input,select#category");            
             for (var i = 0; i < matchesFilters.length; i++) {
                 var element = matchesFilters[i];
                 data.push({
@@ -1045,28 +1045,47 @@ var SearchEngineDOM = {
         label.innerHTML = title;
         div.appendChild(label);
 
-        var input = document.createElement("input");
-        input.id = name;
-        input.className = "GPadvancedSearchFilterInput gpf-input fr-input";
-        input.type = "text";
-        input.name = name;
-        if (value) {
-            if (Array.isArray(value)) {
-                var listId = name + "_list";
-                input.setAttribute("list", listId);
-                var dl = document.createElement("datalist");
-                dl.id = listId;
-                for (var i = 0; i < value.length; ++i) {
-                    var option = document.createElement("option");
-                    option.value = value[i];
-                    dl.appendChild(option);
+        if (name === "category") {
+            var select = document.createElement("select");
+            select.id = name;
+            select.name = name;
+            select.title = title;
+            select.className = "GPadvancedSearchFilterInput gpf-select fr-select";
+            if (value) {
+                if (Array.isArray(value)) {
+                    for (var i = 0; i < value.length; i++) {
+                        var option = document.createElement("option");
+                        option.value = value[i];
+                        option.text = value[i];
+                        select.appendChild(option);
+                    }
                 }
-                div.appendChild(dl);
-            } else {
-                input.value = value;
             }
+            div.appendChild(select);
+        } else {
+            var input = document.createElement("input");
+            input.id = name;
+            input.className = "GPadvancedSearchFilterInput gpf-input fr-input";
+            input.type = "text";
+            input.name = name;
+            if (value) {
+                if (Array.isArray(value)) {
+                    var listId = name + "_list";
+                    input.setAttribute("list", listId);
+                    var dl = document.createElement("datalist");
+                    dl.id = listId;
+                    for (var i = 0; i < value.length; ++i) {
+                        var option = document.createElement("option");
+                        option.value = value[i];
+                        dl.appendChild(option);
+                    }
+                    div.appendChild(dl);
+                } else {
+                    input.value = value;
+                }
+            }
+            div.appendChild(input);
         }
-        div.appendChild(input);
 
         container = document.getElementById(this._addUID(code));
 
