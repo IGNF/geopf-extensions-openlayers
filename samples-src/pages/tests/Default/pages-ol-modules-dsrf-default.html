@@ -39,6 +39,10 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalFullScreen.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLegends.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGlobal.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGlobal.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -102,38 +106,47 @@
                   position : "bottom-left"
                 });
                 map.addControl(drawing);
+
                 var iso = new ol.control.Isocurve({
                   position : "bottom-left"
                 });
                 map.addControl(iso);
+
                 var layerImport = new ol.control.LayerImport({
                   position : "bottom-left"
                 });
                 map.addControl(layerImport);
+
                 var layerSwitcher = new ol.control.LayerSwitcher({
-                  options :{
+                  options : {
+                    panel: true,
                     position : "bottom-right"
                   }
                 });
                 map.addControl(layerSwitcher);
+
                 var mp = new ol.control.GeoportalMousePosition({
                   position : "bottom-right"
                 });
                 map.addControl(mp);
+
                 var route = new ol.control.Route({
                   position : "bottom-right"
                 });
                 map.addControl(route);
+
                 var feature =  new ol.control.GetFeatureInfo({
                   options :{
                     position : "top-right"
                   }
                 });
                 map.addControl(feature);
+
                 var reverse = new ol.control.ReverseGeocode({
                   position : "top-right"
                 });
                 map.addControl(reverse);
+
                 var search = new ol.control.SearchEngine({
                   position : "top-left",
                   splitResults : false,
@@ -144,14 +157,17 @@
                   position : "top-left"
                 });
                 map.addControl(measureLength);
+
                 var measureArea = new ol.control.MeasureArea({
                   position : "top-left"
                 });
                 map.addControl(measureArea);
+
                 var measureAzimuth = new ol.control.MeasureAzimuth({
                   position : "top-left"
                 });
                 map.addControl(measureAzimuth);
+
                 var measureProfil = new ol.control.ElevationPath({
                   position : "top-left"
                 });
@@ -159,6 +175,21 @@
 
                 var attributions = new ol.control.GeoportalAttribution();
                 map.addControl(attributions);
+
+                var legends = new ol.control.Legends({
+                    position: "bottom-left",
+                    panel: true,
+                    auto: true
+                });
+                map.addControl(legends);
+
+                var global = new ol.control.Global({
+                    position: "bottom-left",
+                    direction: "vertical",
+                    panel: true,
+                    auto: true
+                });
+                map.addControl(global);
               };
 
               Gp.Services.getConfig({
