@@ -879,7 +879,8 @@ var SearchEngineDOM = {
             var data = [];
             // liste des attributs de la ressource de geocodage
             var id = "#GPadvancedSearchFilters-" + self._uid;
-            var matchesFilters = document.querySelectorAll(id + " > div > div > input,select#category");            for (var i = 0; i < matchesFilters.length; i++) {
+            var matchesFilters = document.querySelectorAll(id + " > div > div > input,select#category");            
+            for (var i = 0; i < matchesFilters.length; i++) {
                 var element = matchesFilters[i];
                 data.push({
                     key : element.name,
