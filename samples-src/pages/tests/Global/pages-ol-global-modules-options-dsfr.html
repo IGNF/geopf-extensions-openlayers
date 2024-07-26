@@ -1,0 +1,131 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+                 
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGlobal.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGlobal.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers GetFeatureInfo</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 80vh;
+                background-image:url("{{ resources }}/geoportail-waiting.gif");
+                background-position:center center;
+                background-repeat:no-repeat;
+            }
+            .wrapper {
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start;
+                align-content: flex-start;
+                justify-content: flex-start;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du widget Global, avec les options par défaut</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+    <script>
+        var map;
+        var global;
+        var createMap = function () {
+            document.getElementById('map').style.backgroundImage = 'none';
+
+            // Création de la map
+            map = new ol.Map({
+                target : "map",
+                view : new ol.View({
+                    center : [288074.8449901076, 6247982.515792289],
+                    zoom : 6
+                })
+            });
+
+            // Ajout de plusieurs couches différentes.
+            var gpMaps = new ol.layer.GeoportalWMTS({
+                layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+            });
+            map.addLayer(gpMaps);
+
+            var osm = new ol.layer.Tile({
+                source: new ol.source.OSM(),
+                opacity: 0.7
+            });
+            map.addLayer(osm);
+
+            // Ajout du contrôle de gestion  des couches
+            var layerSwitcher = new ol.control.LayerSwitcher({
+                layers : [
+                {
+                    layer : osm,
+                    config : {
+                        title : "OSM"
+                    }
+                }
+                ],
+                options : {
+                    collapsed: false,
+                    position: "bottom-right",
+                    panel: true,
+                    counter: true
+                }
+            });
+            map.addControl(layerSwitcher);
+
+            // Ajout du contrôle de gestion  des legendes
+            global = new ol.control.Global({
+                collapsed: false,
+                draggable: true,
+                position: "bottom-left",
+                direction: "vertical",
+                panel: true,
+                auto: true
+            });
+            
+            // ajout en debut de la liste
+            global.setTerritory({
+                "id": "PAR",
+                "title": "Paris",
+                "description": "", 
+                "bbox": [2.21, 48.80, 2.43, 48.92],
+                "thumbnail": "{{ resources }}/data/PAR.png"
+            });
+
+            map.addControl(global);
+            
+            // ajout à la fin de la liste
+            global.setTerritory({
+                "id": "UNK",
+                "title": "territoire inconnu",
+                "description": "", 
+                "bbox": [],
+                "thumbnail": "" // image par defaut !
+            });
+        };
+        Gp.Services.getConfig({
+            customConfigFile : "{{ configurl }}",
+            callbackSuffix : "",
+            // apiKey: "{{ apikey }}",
+            timeOut : 20000,
+            onSuccess : createMap,
+            onFailure : (e) => {
+                console.error(e);
+            }
+        });
+    </script>
+{{/content}}
+{{/extend}}

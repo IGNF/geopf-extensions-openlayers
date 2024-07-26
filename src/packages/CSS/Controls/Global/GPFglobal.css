@@ -1,0 +1,25 @@
+div[id^=GPglobal-] {
+    top: 0px;
+    right: 0px;
+}
+
+/* Showing/hiding */
+
+button[id^=GPshowGlobalPicto][aria-pressed="false"] + dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
+}
+
+button[id^="GPshowGlobalPicto-"][aria-pressed="true"] + dialog {
+    display: block;
+    visibility: visible;
+    opacity: 100%;
+    max-width: 460px;
+    height: initial;
+    max-height: inherit;
+}
+
+dialog[id^="GPglobalPanel-"] {
+    position: absolute;
+}

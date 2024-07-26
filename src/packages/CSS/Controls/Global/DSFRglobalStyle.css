@@ -1,0 +1,60 @@
+.gpf-btn-icon-global {
+    background-image: url("img/dsfr/territories.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-btn-header-global {
+    z-index: 2;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+}
+
+.gpf-btn-icon-header-global {
+    background-image: url("img/dsfr/header-territories.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-panel__body_global {
+    overflow: auto;
+    max-height: 300px !important;
+}
+
+.gpf-panel__title_global {
+    color: #101092;
+    padding: 12px 15px;
+    position: relative;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    right: -16px;
+}
+.gpf-panel__header_global {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    background: #E3E3FD;
+    height: 48px;
+}
+
+dialog.horizontal {
+    width: 175px;
+}
+
+.global-entries.horizontal {
+
+}
+
+dialog.vertical {
+
+}
+
+.global-entries.vertical {
+    display: flex;
+    flex-direction: row;
+}
