@@ -113,16 +113,19 @@ class PositionFactory {
             var element = self.container.children["position-container-" + pos];
             var height = element.offsetHeight;
             if (update) {
+                if (pos.includes("top")) {
+                    height = 0;
+                }
                 // on recalcule la position en hauteur
                 for (let index = 0; index < element.children.length; index++) {
                     const id = element.children[index].id;
                     if (id === self.caller.element.id) {
-                        height -= self.caller.element.offsetHeight;
+                        height = (pos.includes("bottom")) ? height - self.caller.element.offsetHeight : height * (-1);
                         break;
                     }
                     height -= element.children[index].offsetHeight;
                 }
-            }
+            } 
             return height;
         };
         const clear = (element) => {
