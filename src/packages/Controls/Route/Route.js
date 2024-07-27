@@ -1245,6 +1245,11 @@ var Route = class Route extends Control {
         // on génère nous même l'evenement OpenLayers de changement de pté
         // (utiliser ol.control.Route.on("change:collapsed", function ) pour s'abonner à cet évènement)
         this.dispatchEvent("change:collapsed");
+
+        // on recalcule la position
+        if (this.options.position && !this.collapsed) {
+            this.updatePosition(this.options.position);
+        }
     }
 
     /**

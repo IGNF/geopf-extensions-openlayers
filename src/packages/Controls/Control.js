@@ -13,6 +13,13 @@ var ControlExtended = class ControlExtended extends Control {
         }
     }
 
+    updatePosition (pos) {
+        if (this.getMap()) {
+            var instance = new PositionFactory(this);
+            instance.update(pos);
+        }
+    }
+
 };
 
 export default ControlExtended;
@@ -88,9 +95,10 @@ class PositionFactory {
     /**
      * ...
      * @param {*} pos - ...
+     * @param {*} update - ...
      * @todo fonctionnement à tester !
      */
-    #setAnchor (pos) {
+    #setAnchor (pos, update) {
         var self = this;
         const position = (pos) => {
             var element = self.container.children["position-container-" + pos];
@@ -104,6 +112,17 @@ class PositionFactory {
         const sizeH = (pos) => {
             var element = self.container.children["position-container-" + pos];
             var height = element.offsetHeight;
+            if (update) {
+                // on recalcule la position en hauteur
+                for (let index = 0; index < element.children.length; index++) {
+                    const id = element.children[index].id;
+                    if (id === self.caller.element.id) {
+                        height -= self.caller.element.offsetHeight;
+                        break;
+                    }
+                    height -= element.children[index].offsetHeight;
+                }
+            }
             return height;
         };
         const clear = (element) => {
@@ -170,13 +189,27 @@ class PositionFactory {
             return;
         }
         // positionnement de l'element
-        this.#setAnchor(pos);
+        this.#setAnchor(pos, false);
 
         if (pos.includes("bottom")) {
             this.container.children["position-container-" + pos].prepend(this.caller.element);
         } else {
             this.container.children["position-container-" + pos].appendChild(this.caller.element);
         }
+    }
+
+    /**
+     * ...
+     * @param {*} pos - ...
+     * @public 
+     */
+    update (pos) {
+        if (!ANCHORS.includes(pos.toLowerCase())) {
+            return;
+        }
+        // positionnement de l'element 
+        // mais, il faut prendre en compte la position !
+        this.#setAnchor(pos, true);
     }
 
 };
