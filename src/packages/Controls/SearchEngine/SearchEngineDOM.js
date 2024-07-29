@@ -118,6 +118,9 @@ var SearchEngineDOM = {
             }
             var id = "#GPsearchInput-" + self._uid;
             document.querySelector(id + " input").disabled = false; // FIXME form[id^=GPsearchInput] = #GPsearchInput ?
+            if (checkDsfr()) {
+                document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+            }
             self.onShowSearchEngineClick();
         });
 
@@ -425,10 +428,24 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
                 document.querySelector(id + " input").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
             } else {
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("GPelementHidden", "GPelementVisible");
                 document.getElementById(self._addUID("GPadvancedSearchPanel")).classList.replace("gpf-hidden", "gpf-visible");
                 document.querySelector(id + " input").disabled = true;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = true;
+                }
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = true;
+                }
             }
 
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
@@ -499,10 +516,18 @@ var SearchEngineDOM = {
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
                 document.querySelector(id + " input").disabled = false;
+                document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
             } else {
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementHidden", "GPelementVisible");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-hidden", "gpf-visible");
                 document.querySelector(id + " input").disabled = true;
+                document.querySelector(id + " .GPsearchInputReset").disabled = true;
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = true;
+                }
             }
 
             document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
@@ -791,6 +816,13 @@ var SearchEngineDOM = {
             divClose.addEventListener("click", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
                 // document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
@@ -802,6 +834,13 @@ var SearchEngineDOM = {
             divClose.attachEvent("onclick", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
                 // document.getElementById(self._addUID("GPshowAdvancedSearch")).style.display = "inline-block";
@@ -840,7 +879,7 @@ var SearchEngineDOM = {
             var data = [];
             // liste des attributs de la ressource de geocodage
             var id = "#GPadvancedSearchFilters-" + self._uid;
-            var matchesFilters = document.querySelectorAll(id + " > div > div > input");
+            var matchesFilters = document.querySelectorAll(id + " > div > div > input,select#category");            
             for (var i = 0; i < matchesFilters.length; i++) {
                 var element = matchesFilters[i];
                 data.push({
@@ -1006,28 +1045,47 @@ var SearchEngineDOM = {
         label.innerHTML = title;
         div.appendChild(label);
 
-        var input = document.createElement("input");
-        input.id = name;
-        input.className = "GPadvancedSearchFilterInput gpf-input fr-input";
-        input.type = "text";
-        input.name = name;
-        if (value) {
-            if (Array.isArray(value)) {
-                var listId = name + "_list";
-                input.setAttribute("list", listId);
-                var dl = document.createElement("datalist");
-                dl.id = listId;
-                for (var i = 0; i < value.length; ++i) {
-                    var option = document.createElement("option");
-                    option.value = value[i];
-                    dl.appendChild(option);
+        if (name === "category") {
+            var select = document.createElement("select");
+            select.id = name;
+            select.name = name;
+            select.title = title;
+            select.className = "GPadvancedSearchFilterInput gpf-select fr-select";
+            if (value) {
+                if (Array.isArray(value)) {
+                    for (var i = 0; i < value.length; i++) {
+                        var option = document.createElement("option");
+                        option.value = value[i];
+                        option.text = value[i];
+                        select.appendChild(option);
+                    }
                 }
-                div.appendChild(dl);
-            } else {
-                input.value = value;
             }
+            div.appendChild(select);
+        } else {
+            var input = document.createElement("input");
+            input.id = name;
+            input.className = "GPadvancedSearchFilterInput gpf-input fr-input";
+            input.type = "text";
+            input.name = name;
+            if (value) {
+                if (Array.isArray(value)) {
+                    var listId = name + "_list";
+                    input.setAttribute("list", listId);
+                    var dl = document.createElement("datalist");
+                    dl.id = listId;
+                    for (var i = 0; i < value.length; ++i) {
+                        var option = document.createElement("option");
+                        option.value = value[i];
+                        dl.appendChild(option);
+                    }
+                    div.appendChild(dl);
+                } else {
+                    input.value = value;
+                }
+            }
+            div.appendChild(input);
         }
-        div.appendChild(input);
 
         container = document.getElementById(this._addUID(code));
 
@@ -1175,6 +1233,13 @@ var SearchEngineDOM = {
             divClose.addEventListener("click", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
                 document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
@@ -1184,6 +1249,13 @@ var SearchEngineDOM = {
             divClose.attachEvent("onclick", function () {
                 var id = "#GPsearchInput-" + self._uid;
                 document.querySelector(id + " input").disabled = false;
+                // only if displayButtonClose option is set to true
+                if (document.querySelector(id + " .GPsearchInputReset")) {
+                    document.querySelector(id + " .GPsearchInputReset").disabled = false;
+                }
+                if (checkDsfr()) {
+                    document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
+                }
                 document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");

@@ -6,6 +6,7 @@ import "../../CSS/Controls/Measures/GPFmeasureAzimuth.css";
 import Control from "../Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
+import { unByKey as olObservableUnByKey } from "ol/Observable";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
 import ID from "../../Utils/SelectorID";
@@ -132,7 +133,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         this.tools[className].push({
             instance : (map) ? this : null,
             active : false,
-            map : (map) ? map.getTarget() : null
+            map : (map) ? map.getTargetElement() : null
         });
 
         // contexte d'execution
@@ -239,6 +240,11 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
 
         map.on("singleclick", (e) => this.onPointerMoveAzimutHandler(e));
         map.on("pointermove", (e) => this.onPointerMoveAzimutHandler(e));
+        this.eventLayerRemove = map.getLayers().on("remove", (e) => {
+            if (e.element === this.measureVector) { // FIXME object comparison
+                this.clean();
+            }
+        });
     }
 
     /**
@@ -253,6 +259,9 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
 
         map.un("singleclick", (e) => this.onPointerMoveAzimutHandler(e));
         map.un("pointermove", (e) => this.onPointerMoveAzimutHandler(e));
+        if (this.eventLayerRemove) {
+            olObservableUnByKey(this.eventLayerRemove);
+        }
     }
 
     /**

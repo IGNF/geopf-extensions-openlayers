@@ -116,6 +116,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             throw new Error("ERROR WRONG_TYPE : options should be an object");
         }
 
+        /**
+         * Nom de la classe
+         * @private
+         */
+        this.CLASSNAME = "LayerSwitcher";
+
         this._initialize(_options, _layers);
 
         this.container = this._initContainer(_options);
@@ -800,6 +806,23 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     // ################################################################### //
     // ######################### DOM events ############################## //
     // ################################################################### //
+
+    /**
+     * ...
+     *
+     * @method onShowLayerSwitcherClick
+     * @private
+     */
+    onShowLayerSwitcherClick () {
+        var opened = this._showLayerSwitcherButton.ariaPressed;
+        this.collapsed = !(opened === "true");// on génère nous même l'evenement OpenLayers de changement de propriété
+        // (utiliser mousePosition.on("change:collapsed", function(e) ) pour s'abonner à cet évènement)
+        this.dispatchEvent("change:collapsed");
+        // on recalcule la position
+        if (this.options.position && !this.collapsed) {
+            this.updatePosition(this.options.position);
+        }
+    }
 
     /**
      * update layer counter

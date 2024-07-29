@@ -161,6 +161,11 @@
   mask: linear-gradient(#0000, #0000);
 }
 
+.gpf-btn--tertiary:disabled:after,
+.gpf-btn--secondary:disabled::after {
+  background-color: var(--text-disabled-grey);
+}
+
 
 .gpf-btn--hidden {}
 
@@ -182,7 +187,7 @@
   width: inherit;
 }
 
-.gpf-btn-icon-reset {
+.gpf-btn-icon-reset::after {
   -webkit-mask:
     linear-gradient(#fff 0 0) top /100% 1px,
     linear-gradient(#fff 0 0) bottom/100% 1px,

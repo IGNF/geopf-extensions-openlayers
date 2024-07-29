@@ -117,6 +117,12 @@ var Measures = {
     measureVector : null,
 
     /**
+     * Event on removing map layer
+     * @type {ol.CollectionEventType}
+     */
+    eventLayerRemove : null,
+
+    /**
      * Currently drawn feature.
      * @type {ol.Feature}
      */
@@ -227,7 +233,7 @@ var Measures = {
                 var measures = this.tools[className];
                 for (var i = 0; i < measures.length; i++) {
                     var o = measures[i];
-                    if (o && o.active && className !== mySelf && o.map === currentMapId) {
+                    if (o && o.active && className !== mySelf && o.map.id === currentMapId) {
                         o.active = false;
                         if (o.instance !== null) { // au cas où le controle a été supprimé !
                             o.instance.clean();
@@ -248,7 +254,7 @@ var Measures = {
             this.initMeasureInteraction();
             this.addMeasureInteraction(type);
             for (var j = 0; j < this.tools[mySelf].length; j++) {
-                if (this.tools[mySelf][j].map === currentMapId) {
+                if (this.tools[mySelf][j].map.id === currentMapId) {
                     this.tools[mySelf][j].active = true;
                 }
             }
@@ -257,7 +263,7 @@ var Measures = {
             this.clearMeasureToolTip();
             this.removeMeasureEvents();
             for (var k = 0; k < this.tools[mySelf].length; k++) {
-                if (this.tools[mySelf][k].map === currentMapId) {
+                if (this.tools[mySelf][k].map.id === currentMapId) {
                     this.tools[mySelf][k].active = false;
                 }
             }
@@ -515,7 +521,7 @@ var Measures = {
         // Si un layer switcher est présent dans la carte, on lui affecte des informations pour cette couche
         map.getControls().forEach(
             (control) => {
-                if (control instanceof LayerSwitcher) {
+                if (control.CLASSNAME === "LayerSwitcher") {
                     // un layer switcher est présent dans la carte
                     var layerId = this.measureVector.gpLayerId;
                     // on n'ajoute des informations que s'il n'y en a pas déjà (si le titre est le numéro par défaut)
