@@ -6,6 +6,7 @@ import "../../CSS/Controls/Measures/GPFmeasureArea.css";
 import Control from "../Control";
 import { getArea as olGetAreaSphere } from "ol/sphere";
 import { Polygon } from "ol/geom";
+import { unByKey as olObservableUnByKey } from "ol/Observable";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
 import ID from "../../Utils/SelectorID";
@@ -221,6 +222,11 @@ var MeasureArea = class MeasureArea extends Control {
 
         map.on("singleclick", (e) => this.onPointerMoveHandler(e));
         map.on("pointermove", (e) => this.onPointerMoveHandler(e));
+        this.eventLayerRemove = map.getLayers().on("remove", (e) => {
+            if (e.element === this.measureVector) { // FIXME object comparison
+                this.clean();
+            }
+        });
     }
 
     /**
@@ -235,6 +241,9 @@ var MeasureArea = class MeasureArea extends Control {
 
         map.un("singleclick", (e) => this.onPointerMoveHandler(e));
         map.un("pointermove", (e) => this.onPointerMoveHandler(e));
+        if (this.eventLayerRemove) {
+            olObservableUnByKey(this.eventLayerRemove);
+        }
     }
 
     /**

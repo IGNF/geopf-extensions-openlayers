@@ -1239,6 +1239,11 @@ var MousePosition = class MousePosition extends Control {
         // (utiliser mousePosition.on("change:collapsed", function(e) ) pour s'abonner à cet évènement)
         this.dispatchEvent("change:collapsed");
 
+        // on recalcule la position
+        if (this.options.position && !this.collapsed) {
+            this.updatePosition(this.options.position);
+        }
+
         // evenement declenché à l'ouverture/fermeture du panneau,
         // et en fonction du mode : desktop ou tactile !
         if (opened === "false") {
