@@ -117,6 +117,12 @@ var Measures = {
     measureVector : null,
 
     /**
+     * Event on removing map layer
+     * @type {ol.CollectionEventType}
+     */
+    eventLayerRemove : null,
+
+    /**
      * Currently drawn feature.
      * @type {ol.Feature}
      */
@@ -515,7 +521,7 @@ var Measures = {
         // Si un layer switcher est présent dans la carte, on lui affecte des informations pour cette couche
         map.getControls().forEach(
             (control) => {
-                if (control instanceof LayerSwitcher) {
+                if (control.CLASSNAME === "LayerSwitcher") {
                     // un layer switcher est présent dans la carte
                     var layerId = this.measureVector.gpLayerId;
                     // on n'ajoute des informations que s'il n'y en a pas déjà (si le titre est le numéro par défaut)

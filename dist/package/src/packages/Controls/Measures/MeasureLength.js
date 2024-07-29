@@ -6,6 +6,7 @@ import "../../CSS/Controls/Measures/GPFmeasureLength.css";
 import Control from "../Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
+import { unByKey as olObservableUnByKey } from "ol/Observable";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
 import ID from "../../Utils/SelectorID";
@@ -215,6 +216,11 @@ var MeasureLength = class MeasureLength extends Control {
 
         map.on("singleclick", (e) => this.onPointerMoveHandler(e));
         map.on("pointermove", (e) => this.onPointerMoveHandler(e));
+        this.eventLayerRemove = map.getLayers().on("remove", (e) => {
+            if (e.element === this.measureVector) { // FIXME object comparison
+                this.clean();
+            }
+        });
     }
 
     /**
@@ -229,6 +235,9 @@ var MeasureLength = class MeasureLength extends Control {
 
         map.un("singleclick", (e) => this.onPointerMoveHandle(e));
         map.un("pointermove", (e) => this.onPointerMoveHandler(e));
+        if (this.eventLayerRemove) {
+            olObservableUnByKey(this.eventLayerRemove);
+        }
     }
 
     /**
