@@ -171,7 +171,7 @@ var GlobalDOM = {
             var thumbnail = o.thumbnail || "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iNTgxLjAwMDAwMHB0IiBoZWlnaHQ9IjM1Ni4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDU4MS4wMDAwMDAgMzU2LjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgoKPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsMzU2LjAwMDAwMCkgc2NhbGUoMC4xMDAwMDAsLTAuMTAwMDAwKSIKZmlsbD0iI2I0YjNiMyIgc3Ryb2tlPSJub25lIj4KPHBhdGggZD0iTTAgMTc4MCBsMCAtMTc4MCAyOTA1IDAgMjkwNSAwIDAgMTc4MCAwIDE3ODAgLTI5MDUgMCAtMjkwNSAwIDAKLTE3ODB6Ii8+CjwvZz4KPC9zdmc+Cg==";
             // tile dsfr
             var entry = stringToHTML(`
-            <div class="fr-tile fr-tile--sm">
+            <div class="gpf-tile fr-tile fr-tile--sm">
                 <div class="fr-tile__body">
                     <div class="fr-tile__content">
                         <p class="fr-tile__title">

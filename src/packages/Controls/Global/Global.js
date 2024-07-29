@@ -135,6 +135,14 @@ class Global extends Control {
      * @param {Object} territory  - territory
      * @returns {Boolean} - true|false
      * @public
+     * @example
+     * global.setTerritory ({ 
+     *  id: "MTQ", 
+     *  title: "Martinique", 
+     *  description: "", 
+     *  bbox: [minx, miny, maxx, maxy], 
+     *  thumbnail: "data:image/png;base64,..."
+     * });
      */
     setTerritory (territory) {
         // Test if a territory already exist
@@ -159,6 +167,8 @@ class Global extends Control {
      * @param {String} territory - territory id (FRA, MTQ, ...)
      * @returns {Boolean} - true|false
      * @public
+     * @example
+     * global.removeTerritory("MTQ"); // id du territoire
      */
     removeTerritory (territory) {
         var found = false;
@@ -204,9 +214,11 @@ class Global extends Control {
         this.options = {
             collapsed : true,
             draggable : false,
-            panel : true,
-            auto : false,
-            direction : "vertical",
+            panel : true, // titre
+            auto : false, // chargement auto des territoires par defaut
+            direction : "vertical", // horizontal
+            reduce : false, // TODO tuiles reduites par defaut, ouverte avec une vignette en rollover
+            tiles : 3, // nombre de tuiles affichables, 0 = tous !
             territories : [] // TODO à spécifier...
         };
 
@@ -256,13 +268,18 @@ class Global extends Control {
 
         // panel
         var globalPanel = this.panelGlobalContainer = this._createGlobalPanelElement();
-        globalPanel.classList.add(this.options.direction);
+        globalPanel.classList.add("tiles-" + this.options.direction);
+        globalPanel.classList.add("tiles-" + this.options.tiles);
         var globalPanelDiv = this._createGlobalPanelDivElement();
         globalPanel.appendChild(globalPanelDiv);
 
         // container for the custom code
         var globalEntriesDiv = this.panelGlobalEntriesContainer = this._createTerritoriesElement();
-        globalEntriesDiv.classList.add(this.options.direction);
+        globalEntriesDiv.classList.add("tiles-" + this.options.direction);
+        globalEntriesDiv.classList.add("tiles-" + this.options.tiles);
+        if (this.options.reduce) {
+            globalEntriesDiv.classList.add("tiles-reduce");
+        }
         globalPanel.appendChild(globalEntriesDiv);
 
 

@@ -42,19 +42,42 @@
     height: 48px;
 }
 
-dialog.horizontal {
+/* surchage tile */
+.gpf-tile {
+    width: 150px;
+}
+
+/* direction */
+dialog.tiles-vertical {
     width: 175px;
 }
-
-.global-entries.horizontal {
+.global-entries.tiles-vertical {
+    max-height: 425px !important;
+}
+dialog.tiles-horizontal {
 
 }
-
-dialog.vertical {
-
-}
-
-.global-entries.vertical {
+.global-entries.tiles-horizontal {
     display: flex;
     flex-direction: row;
+}
+
+/* nombre de tuiles */
+dialog.tiles-0 {}
+dialog.tiles-1 {
+    max-width: 150px;
+}
+dialog.tiles-2 {
+    max-width: 300px;
+}
+dialog.tiles-3 {
+    max-width: 450px;
+}
+dialog.tiles-4 {
+    max-width: 600px;
+}
+
+/* reduce */
+.tiles-reduce div.fr-tile div.fr-tile__header {
+  display: none;
 }
