@@ -816,6 +816,10 @@ var LayerImport = class LayerImport extends Control {
         var opened = this._showImportButton.ariaPressed;
         this.collapsed = !(opened === "true");
         this.dispatchEvent("change:collapsed");
+        // on recalcule la position
+        if (this.options.position && !this.collapsed) {
+            this.updatePosition(this.options.position);
+        }
         // on affiche les resultats d'une couche MapBox
         if (this._hasMapBoxResults) {
             this._mapBoxPanel.style.display = "block";
