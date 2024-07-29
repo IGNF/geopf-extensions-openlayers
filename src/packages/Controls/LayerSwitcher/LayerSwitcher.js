@@ -116,6 +116,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             throw new Error("ERROR WRONG_TYPE : options should be an object");
         }
 
+        /**
+         * Nom de la classe
+         * @private
+         */
+        this.CLASSNAME = "LayerSwitcher";
+
         this._initialize(_options, _layers);
 
         this.container = this._initContainer(_options);
