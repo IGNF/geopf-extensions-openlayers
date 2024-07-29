@@ -457,6 +457,13 @@ class Legends extends Control {
      */
     onShowLegendsClick (e) {
         logger.trace(e);
+        var opened = this.buttonLegendsShow.ariaPressed;
+        this.collapsed = !(opened === "true");
+        this.dispatchEvent("change:collapsed");
+        // on recalcule la position
+        if (this.options.position && !this.collapsed) {
+            this.updatePosition(this.options.position);
+        }
     }
 
 };

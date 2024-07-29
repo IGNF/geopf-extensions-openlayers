@@ -1460,6 +1460,12 @@ var SearchEngine = class SearchEngine extends Control {
         // on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser ol.control.SearchEngine.on("change:collapsed", function ) pour s'abonner à cet évènement)
         this.dispatchEvent("change:collapsed");
+
+        // on recalcule la position
+        if (this.options.position && !this.collapsed) {
+            this.updatePosition(this.options.position);
+        }
+        
         // on nettoie si on ferme le composant
         if (this.collapsed) {
             this._clearResults();

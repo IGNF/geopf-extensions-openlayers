@@ -1497,6 +1497,11 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         // (utiliser ol.control.ReverseGeocode.on("change:collapsed", function ) pour s'abonner à cet évènement)
         this.dispatchEvent("change:collapsed");
 
+        // on recalcule la position
+        if (this.options.position && !this.collapsed) {
+            this.updatePosition(this.options.position);
+        }
+        
         if (!this._waiting && !this._reverseGeocodingLocations.length) {
             // Cas 1 : input panel (ni en attente, ni sur le panel des résultats)
             if (this.collapsed) {

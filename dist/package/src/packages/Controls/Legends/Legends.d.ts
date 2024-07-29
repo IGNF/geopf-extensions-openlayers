@@ -2,6 +2,7 @@ export default Legends;
 declare const Legends_base: {
     new (options: any): {
         setPosition(pos: any): void;
+        updatePosition(pos: any): void;
     };
 };
 /**
