@@ -4,7 +4,7 @@
     padding-bottom: 5px;
 }
 .gpf-widget-color {
-    background-color: var(--grey-1000-50);
+    background-color: var(--background-default-grey);
 }
 
 .gpf-panel__items,
@@ -68,7 +68,7 @@ div.GPbuttonsContainer > button {
 .GPsearchRadioContainer {
   display: flex;
   flex-direction: row;
-  background-color: var(--grey-1000-50);
+  background-color: var(--background-default-grey);
   white-space: nowrap;
 }
 
@@ -139,7 +139,7 @@ dialog[id^=GPgeocodeResultsList] {
   width: 320px;
   position: absolute;
   height: fit-content;
-  background-color: #FFF
+  background-color: var(--background-default-grey);
 }
 
 div[id^=GPautoCompleteList] {
