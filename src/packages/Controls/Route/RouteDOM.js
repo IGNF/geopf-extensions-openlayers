@@ -626,7 +626,7 @@ var RouteDOM = {
         inputOrigin.id = "GProuteOrigin" + n;
         inputOrigin.className = "GPelementVisible gpf-visible";
         inputOrigin.type = "text";
-        inputOrigin.placeholder = "Saisir une adresse";
+        inputOrigin.placeholder = "Saisir une adresse, un lieu...";
         inputOrigin.addEventListener("keyup", function (e) {
             var charCode = e.which || e.keyCode;
             if (charCode === 13 || charCode === 10) {

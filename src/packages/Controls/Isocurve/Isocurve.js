@@ -104,7 +104,7 @@ var Isocurve = class Isocurve extends Control {
      * @param {*} options - options
      * @example
      * import Isocurve from from "gpf-ext-ol/controls/Isocurve"
-     * ou 
+     * ou
      * import { Isocurve } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -830,6 +830,7 @@ var Isocurve = class Isocurve extends Control {
         var form = this._formContainer = this._createIsoPanelFormElement();
 
         // form: input de saisie de la localisation (fonction de Isocurve, voir ci-dessous)
+        form.appendChild(this._createIsoPanelFormPointLabel());
         var point = this._createIsoPanelFormPointElement(map);
         form.appendChild(point);
 
@@ -849,7 +850,9 @@ var Isocurve = class Isocurve extends Control {
         form.appendChild(typeChoice);
 
         // form: menu du choix des valeurs
+        form.appendChild(this._createIsoPanelFormLabelIsochronElement(isoChronChecked));
         form.appendChild(this._createIsoPanelFormValueIsochronElement(isoChronChecked));
+        form.appendChild(this._createIsoPanelFormLabelIsodistanceElement(isoDistChecked));
         form.appendChild(this._createIsoPanelFormValueIsodistanceElement(isoDistChecked));
 
         // form: menu du choix du transport et du sens du parcours
@@ -909,7 +912,6 @@ var Isocurve = class Isocurve extends Control {
                 id : 1,
                 groupId : this._uid,
                 markerOpts : this.options.markerOpts,
-                label : "Départ",
                 display : true
             },
             autocompleteOptions : this.options.autocompleteOptions || null
@@ -1162,9 +1164,9 @@ var Isocurve = class Isocurve extends Control {
             return;
         }
         if (value.toLowerCase() === "arrival") {
-            this._originPoint._buttonLabel.innerHTML = "Arrivée";
+            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Arrivée";
         } else {
-            this._originPoint._buttonLabel.innerHTML = "Départ";
+            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Départ";
         }
         this._currentDirection = value;
     }
@@ -1492,10 +1494,10 @@ var Isocurve = class Isocurve extends Control {
         if (directionSelect) {
             directionSelect.value = this._currentDirection;
         }
-        if (this._currentDirection === "arrival") {
-            this._originPoint._buttonLabel.innerHTML = "Arrivée";
+        if (value.toLowerCase() === "arrival") {
+            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Arrivée";
         } else {
-            this._originPoint._buttonLabel.innerHTML = "Départ";
+            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Départ";
         }
 
         // 6. set exclusions to default

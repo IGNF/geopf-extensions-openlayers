@@ -28,6 +28,7 @@
 
 .gpf-panel__body {
   overflow: unset;
+  position: relative;
 }
 
 .gpf-panel__header {}
@@ -141,13 +142,12 @@
   position: absolute;
 }
 
-.gpf-btn--tertiary,
-.gpf-btn--secondary {
+.gpf-btn {
   position: relative;
 }
 
-.gpf-btn--tertiary::after,
-.gpf-btn--secondary::after {
+.gpf-btn::after,
+.gpf-btn::after {
   content: "";
   position: absolute;
   width: 100%;
@@ -156,9 +156,14 @@
   top: 0;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  background-color: var(--text-action-high-blue-france);
+  background-color: var(--text-inverted-blue-france);
   -webkit-mask: linear-gradient(#0000, #0000);
   mask: linear-gradient(#0000, #0000);
+}
+
+.gpf-btn--tertiary::after,
+.gpf-btn--secondary::after {
+  background-color: var(--text-action-high-blue-france);
 }
 
 .gpf-btn--tertiary:disabled:after,

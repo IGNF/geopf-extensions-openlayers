@@ -51,10 +51,6 @@ div[id^=GPisochronChoice] {
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
-  -webkit-justify-content: space-between;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
 }
 
 /*
@@ -102,7 +98,6 @@ div[id^=GPisochronModeChoice] {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  margin: 15px 0;
 }
 
 div[id^=GPisochronTransportChoice] > .GPisochronTransportChoice {
@@ -140,7 +135,7 @@ div[id^=GPisoExclusions] {
 /* Reset picto */
 
 button[id^=GPisochronReset] {
-  
+
 }
 
 
