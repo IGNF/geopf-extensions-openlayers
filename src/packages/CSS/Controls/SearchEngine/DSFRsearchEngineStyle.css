@@ -75,6 +75,7 @@ div.GPbuttonsContainer > button {
   transition: max-height 0.3s;
 }
 
+[id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
 [id^="GPsearchEngine-"]:focus-within > .GPsearchRadioContainer,
 [id^="GPsearchEngine-"]:hover > .GPsearchRadioContainer {
   max-height: 3rem;
