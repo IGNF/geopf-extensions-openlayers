@@ -187,7 +187,7 @@ div[id^=GPadvancedTools_ID_] {
     mask: url("img/dsfr/extent.svg") center no-repeat;
 }
 
-div[id^=GPlayerInfoPanel] {
+[id^=GPlayerInfoPanel] {
     position: absolute;
     height: initial;
 }
