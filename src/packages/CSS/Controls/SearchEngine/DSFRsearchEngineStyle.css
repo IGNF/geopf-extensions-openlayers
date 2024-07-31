@@ -131,7 +131,7 @@ dialog[id^="GPadvancedSearchPanel"] {
 /* Autocomplete list / geocode results */
 
 [id^="GPautocompleteResults-"] {
-  border: 1px solid #000091;
+  border: 1px solid var(--background-open-blue-france);
 }
 
 div[id^=GPautoCompleteList],
@@ -163,7 +163,7 @@ dialog[id^=GPgeocodeResultsList] {
 div[id^=GPgeocodeResults-] {
   width: 100%;
   position: relative;
-  background-color: #FFF;
+  background-color: var(--background-default-grey);;
   max-height: 240px;
   overflow-y: auto;
 }
