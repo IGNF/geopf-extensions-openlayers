@@ -28,4 +28,4 @@ Ces extensions proposent des classes et widgets utilisables en complément de la
 
 ## <img src="doc/openlayers.svg" height="15px" /> OPENLAYERS
 
-Voir le détail des [fonctionnalités proposées par l'extension Géoplateforme pour OpenLayers](doc/README.md)
+Voir le détail des [fonctionnalités proposées par l'extension Géoplateforme pour OpenLayers](doc/DOCUMENTATION.md)

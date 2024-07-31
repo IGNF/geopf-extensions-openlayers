@@ -69,13 +69,9 @@ async function main () {
     fse.copySync(path.join("dist", "src"), path.join(builddir, "src"), { filter : copyFilter });
     console.log("✔ correctly copy types dir !");
     
-    // copie de la doc
-    fse.mkdirSync(path.join(builddir, "doc"), { recursive : true });
-    fse.copySync("doc", path.join(builddir, "doc"));
-    console.log("✔ correctly copy doc dir !");
-    
     // copie des ressources annexes
-    fse.copySync("README.md", path.join(builddir, "README.md"));
+    fse.copySync("doc/README.md", path.join(builddir, "README.md"));
+    fse.copySync("doc/DOCUMENTATION.md", path.join(builddir, "DOCUMENTATION.md"));
     fse.copySync("LICENCE.md", path.join(builddir, "LICENCE.md"));
     console.log("✔ correctly copy resources files !");
     
