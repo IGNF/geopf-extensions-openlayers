@@ -116,6 +116,7 @@
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
+  z-index: 4000;
 }
 
 .gpf-waiting_info {
