@@ -13,6 +13,7 @@ declare namespace _default {
     export { setFiltersByService };
     export { setFiltersByTMS };
     export { updateFilterByTMS };
+    export { setFiltersByProjection };
 }
 export default _default;
 /**
@@ -53,4 +54,9 @@ declare function setFiltersByTMS(value: any[]): void;
  * @param {String} value - url
  */
 declare function updateFilterByTMS(value: string): Promise<string[]>;
+/**
+ * Filtre sur les couches à exclure
+ * @param {Array} value - liste des projections
+ */
+declare function setFiltersByProjection(value: any[]): void;
 //# sourceMappingURL=Search.d.ts.map
