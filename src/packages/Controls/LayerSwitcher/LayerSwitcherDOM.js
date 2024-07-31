@@ -165,7 +165,7 @@ var LayerSwitcherDOM = {
     _createMainInfoElement : function () {
         // gestion du panneau d"information dans le container principal
         // <div id="GPlayerInfoPanel" class="GPlayerInfoPanelClosed">...</div>
-        var divP = document.createElement("div");
+        var divP = document.createElement("dialog");
         divP.id = this._addUID("GPlayerInfoPanel");
         divP.className = "GPpanel GPlayerInfoPanelClosed gpf-panel fr-modal";
         return divP;

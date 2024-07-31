@@ -85,6 +85,11 @@
                         rows="2"
                         cols="1">ADMIN_EXPRESS,PLAN.IGN,PCI,BDTOPO
                     </textarea>
+                    <label for="conf-proj">filtres sur les projections</label>
+                    <input id="conf-proj" 
+                        class="input" 
+                        type="text" 
+                        value="EPSG:4326"/>
                     <label for="conf-vector-update">mise à jour des couches vecteurs tuilés</label>
                     <input id="conf-vector-update" 
                         class="input" 
@@ -161,6 +166,7 @@
                     Search.setFields(document.getElementById("conf-fields").value);
                     Search.setMaximumResponses(document.getElementById("conf-max").value);
                     Search.setFiltersByTMS(document.getElementById("conf-vector").value);
+                    Search.setFiltersByProjection(document.getElementById("conf-proj").value);
                 });
 
                 document.getElementById("update").addEventListener("click", (e) => {
