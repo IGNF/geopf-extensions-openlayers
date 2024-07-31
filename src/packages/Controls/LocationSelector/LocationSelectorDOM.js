@@ -102,7 +102,7 @@ var LocationSelectorDOM = {
         inputOrigin.id = this._addUID("GPlocationOrigin_" + id);
         inputOrigin.className = "GPelementShow gpf-show gpf-input fr-input";
         inputOrigin.type = "text";
-        inputOrigin.placeholder = "Saisir une adresse";
+        inputOrigin.placeholder = "Saisir une adresse, un lieu...";
         inputOrigin.autocomplete = "off";
         inputOrigin.addEventListener("keyup", function (e) {
             var charCode = e.which || e.keyCode;
@@ -244,7 +244,7 @@ var LocationSelectorDOM = {
         var buttonOriginPointer = document.createElement("button");
         buttonOriginPointer.id = this._addUID("GPlocationOriginPointerImg_" + id);
         buttonOriginPointer.htmlFor = this._addUID("GPlocationOriginPointer_" + id);
-        buttonOriginPointer.className = "GPlocationOriginPointerImg gpf-btn gpf-btn-icon-pointer fr-btn fr-btn--secondary gpf-btn--secondary";
+        buttonOriginPointer.className = "GPlocationOriginPointerImg gpf-btn gpf-btn-icon-pointer fr-btn";
         buttonOriginPointer.title = "Pointer un lieu sur la carte";
         buttonOriginPointer.setAttribute("type", "button");
         buttonOriginPointer.addEventListener("click", function (e) {

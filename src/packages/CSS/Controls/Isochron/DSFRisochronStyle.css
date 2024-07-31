@@ -12,3 +12,47 @@
 .gpf-btn-icon-isocurve-reset {
     background-position: -29px center;
 }
+
+[id^=GPisochronPanel-] p.gpf-label  {
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+[id^="GPisochronPanel-"] p.gpf-label:first-child {
+  margin-top: 0;
+}
+
+.GPlocationOriginLabel {
+  display: none;
+}
+
+div[id^="GPisochronChoice"] {
+  justify-content: left;
+  gap: 1em;
+}
+
+.GPflexInput > input[id^="GPisochronValueChronInput2"] {
+  margin-top: 0;
+}
+
+div[id^="GPisochronModeChoice"] {
+  flex-direction: column;
+  margin: 1rem 0;
+}
+
+.GPisoExclusionsOptions {
+  gap: 1rem;
+}
+
+[id^=GPisochronForm-] > .GPpanelFooter {
+  position: unset;
+}
+
+[id^=GPisochronReset-] {
+  min-width: 2.5rem;
+}
+
+
+[id^=GPisochronSubmit-] {
+  width: 80%;
+}

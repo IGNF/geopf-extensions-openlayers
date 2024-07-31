@@ -10,5 +10,5 @@
 }
 
 .GProuteFormMini .GPelementShow {
-  color: #333;
+  color: var(--grey-200-850);
 }
