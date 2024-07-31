@@ -1494,7 +1494,7 @@ var Isocurve = class Isocurve extends Control {
         if (directionSelect) {
             directionSelect.value = this._currentDirection;
         }
-        if (value.toLowerCase() === "arrival") {
+        if (directionSelect.value.toLowerCase() === "arrival") {
             document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Arrivée";
         } else {
             document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Départ";
