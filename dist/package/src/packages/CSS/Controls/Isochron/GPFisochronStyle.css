@@ -37,6 +37,10 @@ div[id^=GPisochronChoice] {
   margin-top: 15px;
   margin-bottom: 5px;
   width: 160px;
+  -webkit-justify-content: space-between;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 .GPisochronChoiceAlt input:checked + label + span {
@@ -102,6 +106,10 @@ input[id^=GPisochronChoiceAltChron] {
   display: block;
   text-align: center;
   margin-bottom: 5px;
+}
+
+div[id^=GPisochronModeChoice] {
+  margin: 15px 0;
 }
 
 input[id^=GPisochronTransportCar] + .GPisochronTransportImg {

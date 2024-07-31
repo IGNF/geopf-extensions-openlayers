@@ -9,10 +9,13 @@ declare namespace IsoDOM {
     function _createIsoPanelFormElement(): DOMElement;
     function _createIsoWaitingElement(): DOMElement;
     function _createIsoPanelFooterElement(): DOMElement;
+    function _createIsoPanelFormPointLabel(): DOMElement;
     function _createIsoPanelFormTypeChoiceElement(): DOMElement;
     function _createIsoPanelFormTypeChoiceChronElement(checked: boolean): DOMElement;
     function _createIsoPanelFormTypeChoiceDistElement(checked: boolean): DOMElement;
+    function _createIsoPanelFormLabelIsochronElement(checked: boolean): DOMElement;
     function _createIsoPanelFormValueIsochronElement(checked: boolean): DOMElement;
+    function _createIsoPanelFormLabelIsodistanceElement(checked: boolean): DOMElement;
     function _createIsoPanelFormValueIsodistanceElement(checked: boolean): DOMElement;
     function _createIsoPanelFormModeChoiceElement(): DOMElement;
     function _createIsoPanelFormModeChoiceTransportElement(transports: any[]): DOMElement;
