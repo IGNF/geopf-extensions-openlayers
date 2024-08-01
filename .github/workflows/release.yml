@@ -84,10 +84,14 @@ jobs:
           name: modules
           path: ${{env.MODULE_NAME}}.zip
 
+  # not actived !
   # - checkout gh-pages
   # - download des artifacts : build & jsdoc
   # - commit & push
+  # info : on ne realise pas le "deploy" à ce niveau,
+  #        le commit du "changelog" sur main déclenche le deploy du build.yaml
   deploy:
+    if: false
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -121,7 +125,6 @@ jobs:
           git commit -m "build project gh-pages"
           git push
 
-  # not yet actived !
   # - checkout master or main
   # - get date from package.json
   # - get version from package.json
@@ -133,7 +136,7 @@ jobs:
   #   - modules.zip
   #   - package.zip
   release: # Only for tags !
-    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -201,13 +204,12 @@ jobs:
           asset_name: package-${{ steps.package.outputs.version }}.zip
           asset_content_type: application/zip
 
-  # not yet actived !
   # - checkout master or main
   # - download changelog (from release)
   # - download package (from build)
   # - then simply publish repo
   publish: # Only for tags !
-    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -233,16 +235,15 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
 
-  # not yet actived !
   # - checkout master or main
   # - download changelog (from release)
   # - archive changelog
   # - update toc
   # - reset draft changelog
   # - commit & push
-  #   warning: ceci va relancer un job de build et deploy !
+  #   warning: ceci va relancer un job de build et deploy du build.yaml !
   changelog: # Only for tags !
-    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: [release, publish]
     runs-on: ubuntu-latest
     steps:
