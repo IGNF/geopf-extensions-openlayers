@@ -25,6 +25,9 @@ let m_maximumResponses = 5;
 /** liste des filtres sur les services */
 let m_filterByService = ["WMTS", "TMS"];
 
+/** liste des couches à exclure avec ces projections */
+let m_filterByProjection = [];
+
 /** filtres les services uniquement en TMS */
 let m_filterByTMS = [
     "ADMIN_EXPRESS",
@@ -119,7 +122,8 @@ const suggest = async (text) => {
             if (unique().length >= m_maximumResponses) {
                 break;
             }
-            // FIXME champs possibles mais pas toujours remplis : srs[], attributions{}, extent{}, metada_url[]
+            // FIXME champs possibles mais pas toujours remplis : 
+            // srs[], attributions{}, extent{}, metada_url[]
             var o = {
                 originators : result.source.attributions,
                 srs : result.source.srs,
@@ -133,6 +137,12 @@ const suggest = async (text) => {
             if (m_filterByTMS.length) {
                 if ((o.service === "WMTS" && m_filterByTMS.includes(o.name)) ||
                     (o.service === "TMS" && !m_filterByTMS.includes(o.name))) {
+                    continue;
+                }
+            }
+            if (m_filterByProjection.length) {
+                // FIXME Array !?
+                if (m_filterByProjection.includes(o.srs[0])) {
                     continue;
                 }
             }
@@ -201,6 +211,13 @@ const setFiltersByService = (value) => {
     m_filterByService = value === "" ? [] : value.split(",");
 };
 /**
+ * Filtre sur les couches à exclure
+ * @param {Array} value - liste des projections 
+ */
+const setFiltersByProjection = (value) => {
+    m_filterByProjection = value === "" ? [] : value.split(",");
+};
+/**
  * Filtre sur les "purs" couches vecteurs tuilés
  * @param {Array} value - liste des couches
  */
@@ -249,5 +266,6 @@ export default {
     setMaximumResponses,
     setFiltersByService,
     setFiltersByTMS,
-    updateFilterByTMS
+    updateFilterByTMS,
+    setFiltersByProjection
 };

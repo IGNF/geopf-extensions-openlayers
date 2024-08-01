@@ -1,14 +1,11 @@
-{{#extend "ol-sample-modules-dsfr-layout"}}
+{{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample openlayers LayerSwitcher</title>
+        <title>Sample openlayers</title>
 {{/content}}
 
 {{#content "style"}}
@@ -21,7 +18,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de couches avec les options par défaut</h2>
+            <h2>Ajout d'une couche WMS L93 sur une carte en webmercator (OK)</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -30,7 +27,7 @@
 {{#content "js"}}
             <script type="text/javascript">
                 var map;
-                var createMap = function () {
+                var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
 
@@ -42,28 +39,27 @@
                         }),
                         layers : [
                             new ol.layer.Tile({
-                                source: new ol.source.OSM(),
-                                opacity: 0.5
+                                source : new ol.source.OSM(),
+                                opacity : 0.8
                             }),
-                            new ol.layer.GeoportalWMTS({
-                                layer : "ORTHOIMAGERY.ORTHOPHOTOS"
+                            new ol.layer.GeoportalWMS({
+                                layer : "PCRS.LAMB93",
+                                olParams : {
+                                    opacity: 0.5
+                                }
                             })
                         ]
                     });
-
-                    var layerSwitcher = new ol.control.LayerSwitcher({
-                        options :{
-                            position: 'top-right'
-                        }
-                    });
-                    map.addControl(layerSwitcher);
                 };
                 Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",
                     callbackSuffix : "",
                     // apiKey: "{{ apikey }}",
                     timeOut : 20000,
-                    onSuccess : createMap
+                    onSuccess : createMap,
+                    onFailure : (e) => {
+                        console.error(e);
+                    }
                 });
            </script>
 {{/content}}

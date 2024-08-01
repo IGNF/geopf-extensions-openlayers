@@ -4,7 +4,7 @@
     padding-bottom: 5px;
 }
 .gpf-widget-color {
-    background-color: var(--grey-1000-50);
+    background-color: var(--background-default-grey);
 }
 
 .gpf-panel__items,
@@ -68,7 +68,7 @@ div.GPbuttonsContainer > button {
 .GPsearchRadioContainer {
   display: flex;
   flex-direction: row;
-  background-color: var(--grey-1000-50);
+  background-color: var(--background-default-grey);
   white-space: nowrap;
   max-height: 0;
   overflow: clip;
@@ -143,7 +143,7 @@ dialog[id^="GPadvancedSearchPanel"] {
 /* Autocomplete list / geocode results */
 
 [id^="GPautocompleteResults-"] {
-  border: 1px solid #000091;
+  border: 1px solid var(--background-open-blue-france);
 }
 
 div[id^=GPautoCompleteList],
@@ -151,7 +151,7 @@ dialog[id^=GPgeocodeResultsList] {
   width: 320px;
   position: absolute;
   height: fit-content;
-  background-color: #FFF
+  background-color: var(--background-default-grey);
 }
 
 div[id^=GPautoCompleteList] {
@@ -175,7 +175,7 @@ dialog[id^=GPgeocodeResultsList] {
 div[id^=GPgeocodeResults-] {
   width: 100%;
   position: relative;
-  background-color: #FFF;
+  background-color: var(--background-default-grey);;
   max-height: 240px;
   overflow-y: auto;
 }
