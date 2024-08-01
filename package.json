@@ -1,7 +1,7 @@
 {
-  "name": "geoportal-extensions-openlayers",
+  "name": "geopf-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.133",
+  "version": "1.0.0-beta.0-133",
   "date": "01/08/2024",
   "module": "src/index.js",
   "directories": {},
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/IGNF/geoportal-extensions-openlayers.git"
+    "url": "https://github.com/IGNF/geopf-extensions-openlayers.git"
   },
   "author": "IGNF",
   "keywords": [
@@ -37,9 +37,9 @@
   ],
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/IGNF/geoportal-extensions-openlayers/issues"
+    "url": "https://github.com/IGNF/geopf-extensions-openlayers/issues"
   },
-  "homepage": "https://github.com/IGNF/geoportal-extensions-openlayers#readme",
+  "homepage": "https://github.com/IGNF/geopf-extensions-openlayers#readme",
   "dependencies": {
     "@gouvfr/dsfr": "^1.11.0",
     "@mapbox/mapbox-gl-style-spec": "14.5.2",
