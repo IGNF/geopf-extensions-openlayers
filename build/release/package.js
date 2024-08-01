@@ -73,6 +73,7 @@ async function main () {
     fse.copySync("doc/README.md", path.join(builddir, "README.md"));
     fse.copySync("doc/DOCUMENTATION.md", path.join(builddir, "DOCUMENTATION.md"));
     fse.copySync("LICENCE.md", path.join(builddir, "LICENCE.md"));
+    fse.copySync("DEPENDENCIES.md", path.join(builddir, "DEPENDENCIES.md"));
     console.log("✔ correctly copy resources files !");
     
     // creation du package.json
