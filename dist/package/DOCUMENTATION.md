@@ -124,7 +124,7 @@ L'utilisation de l'extension Géoplateforme pour OpenLayers se fait via les éta
 
 * [Configuration de l'accès à la Géoplateforme](#config)
 
-Une documentation technique (**jsdoc**), une **demo** et un **generateur de carte** sont disponibles [ici](https://ignf.github.io/geopf-extensions-openlayers/).
+Une documentation technique (**jsdoc**), une **demo** et un **generateur de carte** sont disponibles [ici](https://ignf.github.io/geoportal-extensions-openlayers/).
 
 <a id="download"/>
 
