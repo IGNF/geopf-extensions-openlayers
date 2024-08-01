@@ -147,7 +147,7 @@ dialog[id^=GPgeocodeResultsList] {
   width: 280px;
   position: absolute;
   max-height: 140px;
-  background-color: #FFF
+  background-color: var(--background-default-grey);
 }
 
 div[id^=GPautoCompleteList] {
