@@ -570,6 +570,9 @@ var LayerSwitcherDOM = {
         var divO = document.createElement("div");
         divO.id = this._addUID("GPopacity_ID_" + obj.id);
         divO.className = "GPlayerOpacity fr-range fr-range--sm";
+        // For DSFR
+        divO.dataset.frJsRange = "true";
+        divO.style.setProperty("--progress-right", "100%");
         divO.title = "Opacité";
 
         var opacity = (typeof obj.opacity !== "undefined") ? obj.opacity : 1;
