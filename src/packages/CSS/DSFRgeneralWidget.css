@@ -143,12 +143,13 @@
   position: absolute;
 }
 
-.gpf-btn {
+.gpf-btn--secondary,
+.gpf-btn--tertiary {
   position: relative;
 }
 
-.gpf-btn::after,
-.gpf-btn::after {
+.gpf-btn--tertiary::after,
+.gpf-btn--secondary::after {
   content: "";
   position: absolute;
   width: 100%;
@@ -157,14 +158,9 @@
   top: 0;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  background-color: var(--text-inverted-blue-france);
+  background-color: var(--text-action-high-blue-france);
   -webkit-mask: linear-gradient(#0000, #0000);
   mask: linear-gradient(#0000, #0000);
-}
-
-.gpf-btn--tertiary::after,
-.gpf-btn--secondary::after {
-  background-color: var(--text-action-high-blue-france);
 }
 
 .gpf-btn--tertiary:disabled:after,
