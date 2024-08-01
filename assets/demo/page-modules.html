@@ -4,62 +4,62 @@
         <meta charset="UTF-8">
         <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/assets/css/style.css" />
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/assets/css/style.css" />
 
         <!-- Toggle switch thematic-->
-        <script src="/geoportal-extensions-openlayers/assets/js/toggle.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/assets/css/toggle.css" />
+        <script src="/geopf-extensions-openlayers/assets/js/toggle.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/assets/css/toggle.css" />
 
         <script src="https://ignf.github.io/geoportal-access-lib/latest/dist/GpServices.js"></script>
 
         <!-- Library OpenLayers -->
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/assets/lib/ol@8.2.0/ol.css" />
-        <script src="/geoportal-extensions-openlayers/assets/lib/ol@8.2.0/ol.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/assets/lib/ol@8.2.0/ol.css" />
+        <script src="/geopf-extensions-openlayers/assets/lib/ol@8.2.0/ol.js"></script>
 
         <!-- Plugins IGN with a thematic by default -->
-        <link rel="alternate stylesheet" id="dsfr-1" href="/geoportal-extensions-openlayers/assets/css/@gouvfr/dsfr/dist/dsfr.css" />
-        <link rel="alternate stylesheet" id="dsfr-2" href="/geoportal-extensions-openlayers/assets/css/@gouvfr/dsfr/dist/utility/icons/icons.css" />
-        <link rel="alternate stylesheet" id="dsfr-3" href="/geoportal-extensions-openlayers/dist/bundle/Dsfr.css" />
-        <link rel="stylesheet" id="portail" href="/geoportal-extensions-openlayers/dist/bundle/Classic.css" />
+        <link rel="alternate stylesheet" id="dsfr-1" href="/geopf-extensions-openlayers/assets/css/@gouvfr/dsfr/dist/dsfr.css" />
+        <link rel="alternate stylesheet" id="dsfr-2" href="/geopf-extensions-openlayers/assets/css/@gouvfr/dsfr/dist/utility/icons/icons.css" />
+        <link rel="alternate stylesheet" id="dsfr-3" href="/geopf-extensions-openlayers/dist/bundle/Dsfr.css" />
+        <link rel="stylesheet" id="portail" href="/geopf-extensions-openlayers/dist/bundle/Classic.css" />
 
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlCRS.js"></script>
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLayers.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLayerSwitcher.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLayerSwitcher.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlDrawing.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlDrawing.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlIsocurve.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlIsocurve.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLayerImport.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLayerImport.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalMousePosition.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalMousePosition.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlRoute.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlRoute.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlReverseGeocode.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlReverseGeocode.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlSearchEngine.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlSearchEngine.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGetFeatureInfo.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlMeasureLength.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlMeasureLength.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlMeasureArea.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlMeasureArea.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlMeasureAzimuth.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlMeasureAzimuth.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlElevationPath.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlElevationPath.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalAttribution.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalAttribution.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalZoom.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalZoom.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalFullScreen.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalFullScreen.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalOverviewMap.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
-        <link rel="stylesheet" href="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLegends.css">
-        <script src="/geoportal-extensions-openlayers/dist/modules/GpfExtOlLegends.js"></script>
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlCRS.js"></script>
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlLayers.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlLayerSwitcher.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlDrawing.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlDrawing.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlIsocurve.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlIsocurve.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlLayerImport.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlLayerImport.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalMousePosition.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalMousePosition.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlRoute.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlRoute.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlReverseGeocode.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlReverseGeocode.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlSearchEngine.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlSearchEngine.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlGetFeatureInfo.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlMeasureLength.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlMeasureLength.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlMeasureArea.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlMeasureArea.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlMeasureAzimuth.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlMeasureAzimuth.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlElevationPath.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlElevationPath.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalAttribution.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalAttribution.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalZoom.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalZoom.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalFullScreen.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalFullScreen.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalOverviewMap.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlLegends.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlLegends.js"></script>
         
         <title>Extensions avec le bundle complet</title>
         <style>
@@ -77,10 +77,10 @@
     <body>
       <header>
         <div class="header-content">
-            <a class="ribbon-github" href="https://github.com/IGNF/geoportal-extensions-openlayers">Fork me on GitHub</a>
+            <a class="ribbon-github" href="https://github.com/IGNF/geopf-extensions-openlayers">Fork me on GitHub</a>
             <p class="logoIGN">
                 <a href="https://www.ign.fr">
-                    <img src="/geoportal-extensions-openlayers/assets/img/logoIGN.png" alt="IGN" width="94" height="100">
+                    <img src="/geopf-extensions-openlayers/assets/img/logoIGN.png" alt="IGN" width="94" height="100">
                 </a>
             </p>
             <h1>Extensions Geoplateforme</h1>
@@ -103,8 +103,8 @@
       <footer>
         <div class="header-content">
             <p>
-                <img class="logo" src="/geoportal-extensions-openlayers/assets/img/logoIGNsmall.png" alt="IGN" title="IGN" width="51" height="25">
-                <img class="baseline" src="/geoportal-extensions-openlayers/assets/img/baselineIGN.png" alt="L'information grandeur nature" title="L'information grandeur nature" width="256" height="21">
+                <img class="logo" src="/geopf-extensions-openlayers/assets/img/logoIGNsmall.png" alt="IGN" title="IGN" width="51" height="25">
+                <img class="baseline" src="/geopf-extensions-openlayers/assets/img/baselineIGN.png" alt="L'information grandeur nature" title="L'information grandeur nature" width="256" height="21">
             </p>
         </div>
       </footer>
@@ -223,7 +223,7 @@
               };
 
               Gp.Services.getConfig({
-                serverUrl: "/geoportal-extensions-openlayers/assets/data/config.json",
+                serverUrl: "/geopf-extensions-openlayers/assets/data/config.json",
                 callbackSuffix: "",
                 timeOut: 20000,
                 onSuccess: createMap
