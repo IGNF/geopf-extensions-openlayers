@@ -70,11 +70,21 @@ div.GPbuttonsContainer > button {
   flex-direction: row;
   background-color: var(--background-default-grey);
   white-space: nowrap;
+  max-height: 0;
+  overflow: clip;
+  transition: max-height 0.3s;
+}
+
+[id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
+[id^="GPsearchEngine-"]:focus-within > .GPsearchRadioContainer,
+[id^="GPsearchEngine-"]:hover > .GPsearchRadioContainer {
+  max-height: 3rem;
 }
 
 .GPsearchRadioElements {
   display: flex;
   flex-direction: row;
+  margin: 0.5rem;
 }
 
 .GPsearchSplitChoice {
@@ -85,6 +95,8 @@ div.GPbuttonsContainer > button {
   color: var(--text-action-high-blue-france);
   text-decoration: underline;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .gpf-btn-icon-search {
