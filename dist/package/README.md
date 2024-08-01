@@ -5,36 +5,53 @@ Ce projet a pour but de fournir des extensions facilitant l'accès aux ressource
 
 ## Execution locale
 
-Cloner le projet
+* Cloner le projet
 
-```bash
-  git clone https://github.com/IGNF/geoportal-extensions-openlayers.git
-```
+    ```bash
+    git clone https://github.com/IGNF/geoportal-extensions-openlayers.git
+    ```
 
-Accéder au répertoire du projet
+* Accéder au répertoire du projet
 
-```bash
-  cd geoportal-extensions-openlayers
-```
+    ```bash
+    cd geoportal-extensions-openlayers
+    ```
 
-Installer les dependances
+* Installer les dependances
 
-```bash
-  npm install
-```
+    ```bash
+    npm install
+    ```
 
-Démarrer le serveur des exemples
+* Démarrer le serveur des exemples
 
-```bash
-  npm run samples:modules
-  npm run samples:bundle
-```
+    ```bash
+    npm run samples:modules
+    npm run samples:bundle
+    ```
 
-Ouvrir le navigateur
+    Ouvrir le navigateur :
+    `https://localhost:8080/samples/index-modules.html`
 
-```bash
-  https://localhost:8080/samples/index-modules.html
-```
+* Construire le package
+
+    ```bash
+    npm run publish
+    ```
+
+    Le package est disponible :
+    `dist/package/`
+
+* Construire les binaires (bundle)
+
+    ```bash
+    npm run build
+    npm run build:modules
+    npm run build:bundle
+    ```
+
+    Les binaires sont disponibles :
+    `dist/bundle/` et `dist/modules/`
 
 ## Demo
 
@@ -43,38 +60,44 @@ https://ignf.github.io/geoportal-extensions-openlayers/
 Utilisation des widgets sur l'application web cartographique :
 https://ignf.github.io/cartes.gouv.fr-entree-carto/
 
-## Documentation
+> Le projet contient un répertoire `demos` où on y utilise les extensions dans différents Frameworks (vuejs, react ou angular).
 
-[Documentation technique](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/) 
+## Documentations
+
+[Documentation technique](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/)
 
 [Documentation génerale](DOCUMENTATION.md)
 
 ## Widgets
 
-- Drawing,
-- Isocurve,
-- Route,
-- LayerImport,
-- GeoportalAttribution,
-- SearchEngine,
-- GetFeatureInfo,
-- GeoportalZoom,
-- GeoportalOverviewMap,
-- ElevationPath,
-- MeasureArea,
-- MeasureAzimuth,
-- MeasureLength,
-- LayerSwitcher,
-- Legends,
-- GeoportalMousePosition,
-- ReverseGeocode,
-- CRS,
-- GeoportalLayerMapBox,
-- GeoportalLayerWMTS,
-- GeoportalLayerWMS,
-- ...
+* Drawing,
+* Isocurve,
+* Route,
+* LayerImport,
+* GeoportalAttribution,
+* SearchEngine,
+* GetFeatureInfo,
+* GeoportalZoom,
+* GeoportalOverviewMap,
+* ElevationPath,
+* MeasureArea,
+* MeasureAzimuth,
+* MeasureLength,
+* LayerSwitcher,
+* Legends,
+* GeoportalMousePosition,
+* ReverseGeocode,
+* CRS,
+* GeoportalLayerMapBox,
+* GeoportalLayerWMTS,
+* GeoportalLayerWMS,
+* ...
+
+> Pour obtenir la liste exhaustive des widgets, se référer à la [Documentation technique](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/)
 
 ## Usage/Examples
+
+Exemple d'utilisation du package des sources (ES module) :
 
 ```javascript
 import {
@@ -206,6 +229,8 @@ import {
     map.addControl(attributions);
 ```
 
+> Pour obtenir des détails sur les options des differents widgets, se référer à la [Documentation technique](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/)
+
 La bibliothèque d’accès aux services Géoplateforme est une bibliothèque de fonctions javascript permettant d'accéder aux ressources délivrées par les services web de la Géoplateforme.
 
 Elle permet plus particulièrement d'obtenir les ressources disponibles pour une thématique Géoplateforme et d'avoir les paramètres permettant leur utilisation :
@@ -225,7 +250,9 @@ var cfg = new Gp.Services.Config({
 cfg.call();
 ```
 
-## Contributing
+> Pour une utilisation avec les binaires (bundles), se référer à la [Documentation génerale](DOCUMENTATION.md)
+
+## Contributions
 
 Les contributions sont toujours les bienvenues !
 
@@ -233,17 +260,17 @@ Les contributions sont toujours les bienvenues !
 
 Voici quelques projets connexes
 
-- https://github.com/IGNF/cartes.gouv.fr-entree-carto
-- https://github.com/IGNF/geoportal-access-lib
-- https://github.com/IGNF/geoportal-configuration
-- https://github.com/IGNF/geoportal-extensions
-- ...
+* https://github.com/IGNF/cartes.gouv.fr-entree-carto
+* https://github.com/IGNF/geoportal-access-lib
+* https://github.com/IGNF/geoportal-configuration
+* https://github.com/IGNF/geoportal-extensions
+* ...
 
 ## Support
 
-Pour obtenir de l'aide, envoyez un e-mail ou rejoignez notre canal sur *developpez.com* ou creez un ticket sur le projet.
+Pour obtenir de l'aide, envoyez un e-mail à *sav@ign.fr* ou rejoignez notre canal sur *developpez.com* ou creez un ticket sur le projet.
 
-## License
+## Licence
 
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
