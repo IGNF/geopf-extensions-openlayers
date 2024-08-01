@@ -28,8 +28,8 @@ div[id^=GPlocationAutoCompleteResult] {
   left: 0px;
   max-height: 140px;
   overflow-y: auto;
-  background-color: #FFF;
-  border: 1px solid #999;
+  background-color: var(--background-default-grey);;
+  border: 1px solid var(--grey-900-175);
   border-top: none;
 }
 
@@ -38,3 +38,4 @@ div[id^=GPlocationAutoCompleteList] {
   z-index: 2;
   width: calc(100% - 56px);
 }
+
