@@ -1,5 +1,5 @@
 @import "node_modules/ol/ol.css";
-@import "node_modules/geoportal-extensions-openlayers/css/Classic.css";
+@import "node_modules/geopf-extensions-openlayers/css/Classic.css";
 
 html, body {
   margin: 0;

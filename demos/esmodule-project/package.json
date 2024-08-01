@@ -10,7 +10,7 @@
     "vite": "^5.2.11"
   },
   "dependencies": {
-    "geoportal-extensions-openlayers": "../../dist/package/geoportal-extensions-openlayers.tgz",
+    "geopf-extensions-openlayers": "../../dist/package/geopf-extensions-openlayers.tgz",
     "ol": "latest"
   }
 }

@@ -8,13 +8,13 @@ Ce projet a pour but de fournir des extensions facilitant l'accès aux ressource
 * Cloner le projet
 
     ```bash
-    git clone https://github.com/IGNF/geoportal-extensions-openlayers.git
+    git clone https://github.com/IGNF/geopf-extensions-openlayers.git
     ```
 
 * Accéder au répertoire du projet
 
     ```bash
-    cd geoportal-extensions-openlayers
+    cd geopf-extensions-openlayers
     ```
 
 * Installer les dependances
@@ -55,7 +55,7 @@ Ce projet a pour but de fournir des extensions facilitant l'accès aux ressource
 
 ## Demo
 
-https://ignf.github.io/geoportal-extensions-openlayers/
+https://ignf.github.io/geopf-extensions-openlayers/
 
 Utilisation des widgets sur l'application web cartographique :
 https://ignf.github.io/cartes.gouv.fr-entree-carto/
@@ -64,7 +64,7 @@ https://ignf.github.io/cartes.gouv.fr-entree-carto/
 
 ## Documentations
 
-[Documentation technique](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/)
+[Documentation technique](https://ignf.github.io/geopf-extensions-openlayers/jsdoc/)
 
 [Documentation génerale](DOCUMENTATION.md)
 
@@ -93,7 +93,7 @@ https://ignf.github.io/cartes.gouv.fr-entree-carto/
 * GeoportalLayerWMS,
 * ...
 
-> Pour obtenir la liste exhaustive des widgets, se référer à la [Documentation technique](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/)
+> Pour obtenir la liste exhaustive des widgets, se référer à la [Documentation technique](https://ignf.github.io/geopf-extensions-openlayers/jsdoc/)
 
 ## Usage/Examples
 
@@ -121,7 +121,7 @@ import {
     CRS,
     LayerMapBox as GeoportalLayerMapBox,
     LayerWMTS as GeoportalLayerWMTS
-} from "geoportal-extensions-openlayers";
+} from "geopf-extensions-openlayers";
 
  const map = new Map({
         target : "map",
@@ -229,7 +229,7 @@ import {
     map.addControl(attributions);
 ```
 
-> Pour obtenir des détails sur les options des differents widgets, se référer à la [Documentation technique](https://ignf.github.io/geoportal-extensions-openlayers/jsdoc/)
+> Pour obtenir des détails sur les options des differents widgets, se référer à la [Documentation technique](https://ignf.github.io/geopf-extensions-openlayers/jsdoc/)
 
 La bibliothèque d’accès aux services Géoplateforme est une bibliothèque de fonctions javascript permettant d'accéder aux ressources délivrées par les services web de la Géoplateforme.
 
@@ -274,7 +274,7 @@ Pour obtenir de l'aide, envoyez un e-mail à *sav@ign.fr* ou rejoignez notre can
 
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
-[AGPL-3.0](https://github.com/IGNF/geoportal-extensions-openlayers?tab=License-1-ov-file)
+[AGPL-3.0](https://github.com/IGNF/geopf-extensions-openlayers?tab=License-1-ov-file)
 
 ## Appendix
 

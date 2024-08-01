@@ -56,7 +56,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          repository: IGNF/geoportal-extensions-openlayers
+          repository: IGNF/geopf-extensions-openlayers
           ref: gh-pages
       
       - name: Download Binary artifacts

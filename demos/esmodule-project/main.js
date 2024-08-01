@@ -26,7 +26,7 @@ import {
     CRS,
     LayerMapBox as GeoportalLayerMapBox,
     LayerWMTS as GeoportalLayerWMTS
-} from "geoportal-extensions-openlayers";
+} from "geopf-extensions-openlayers";
 
 import Gp from "geoportal-access-lib";
 

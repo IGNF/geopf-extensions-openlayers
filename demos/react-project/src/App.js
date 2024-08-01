@@ -8,7 +8,7 @@ import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import 'ol/ol.css';
-import "geoportal-extensions-openlayers/css/Classic.css";
+import "geopf-extensions-openlayers/css/Classic.css";
 import {
   Drawing,
   Isocurve,
@@ -27,7 +27,7 @@ import {
   SearchEngine,
   GetFeatureInfo,
   CRS
-} from "geoportal-extensions-openlayers";
+} from "geopf-extensions-openlayers";
 
 export default class App extends React.Component {
   constructor(props) {

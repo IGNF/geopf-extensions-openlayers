@@ -117,8 +117,8 @@ async function main () {
     }
 
     // creation lien symbolic
-    var srcPath = path.join(builddir, "geoportal-extensions-openlayers-" + pkg.version + ".tgz");
-    var destPath = path.join(builddir, "geoportal-extensions-openlayers.tgz");
+    var srcPath = path.join(builddir, "geopf-extensions-openlayers-" + pkg.version + ".tgz");
+    var destPath = path.join(builddir, "geopf-extensions-openlayers.tgz");
     fse.ensureSymlinkSync(srcPath, destPath);
     console.log("✔ correctly link package tgz !");
 }

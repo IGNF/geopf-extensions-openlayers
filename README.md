@@ -3,8 +3,8 @@
 ![image](doc/capture-carte.png)
 
 ---
-[![Build](https://github.com/IGNF/geoportal-extensions-openlayers/actions/workflows/build.yml/badge.svg)](https://github.com/IGNF/geoportal-extensions-openlayers/actions/workflows/build.yml)
-[![CeCILL License](https://img.shields.io/badge/licence-CeCILL--B-blue.svg)](https://raw.githubusercontent.com/IGNF/geoportal-extensions-openlayers/main/LICENCE.md)
+[![Build](https://github.com/IGNF/geopf-extensions-openlayers/actions/workflows/build.yml/badge.svg)](https://github.com/IGNF/geopf-extensions-openlayers/actions/workflows/build.yml)
+[![CeCILL License](https://img.shields.io/badge/licence-CeCILL--B-blue.svg)](https://raw.githubusercontent.com/IGNF/geopf-extensions-openlayers/main/LICENCE.md)
 
 ---
 

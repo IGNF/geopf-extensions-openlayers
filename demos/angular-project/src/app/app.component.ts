@@ -24,7 +24,7 @@ import {
   SearchEngine,
   GetFeatureInfo,
   CRS
-} from "../../node_modules/geoportal-extensions-openlayers/src/index";
+} from "../../node_modules/geopf-extensions-openlayers/src/index";
 
 @Component({
   selector: 'app-root',

@@ -25,7 +25,7 @@ import {
   SearchEngine,
   GetFeatureInfo,
   CRS
-} from "geoportal-extensions-openlayers";
+} from "geopf-extensions-openlayers";
 
 import Gp from "geoportal-access-lib";
 
