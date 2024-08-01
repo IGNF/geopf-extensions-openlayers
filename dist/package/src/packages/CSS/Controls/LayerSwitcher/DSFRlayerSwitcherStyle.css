@@ -208,3 +208,9 @@ div[id^=GPadvancedTools_ID_] {
 .gpf-range__output {
     width: 35px;
 }
+
+.GPlayerOpacity.fr-range--sm[data-fr-js-range]::after,
+.GPlayerOpacity.fr-range--sm[data-fr-js-range]::before {
+  top: 25%;
+}
+
