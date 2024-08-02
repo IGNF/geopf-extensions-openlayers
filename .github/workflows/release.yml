@@ -40,7 +40,7 @@ jobs:
         run: npm run build
 
       - name: Build package
-        run: npm run publish
+        run: npm run publish -- --version=${{ github.ref_name }}
 
       - name: Create Zip Modules
         run: |
@@ -153,7 +153,8 @@ jobs:
       
       - name: Create ChangeLog
         run: |
-          sed -i 's/__VERSION__/${{ steps.package.outputs.version }}/g' DRAFT_CHANGELOG.md
+          echo "version package internal : ${{ steps.package.outputs.version }}"
+          sed -i 's/__VERSION__/${{ github.ref_name }}/g' DRAFT_CHANGELOG.md
           sed -i 's/__DATE__/${{ steps.date.outputs.date }}/g' DRAFT_CHANGELOG.md
 
       - name: Upload ChangeLog artifacts
