@@ -75,9 +75,9 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
 }
 
 .gpf-btn-icon-ls-dragndrop {
-    background-image: url("img/dsfr/dragndrop-blanc.svg");
+    background-image: url("img/dsfr/dragndrop.svg");
     background-repeat: no-repeat;
-    background-size: auto auto;
+    background-size: 24px;
     background-position: center center;
     box-shadow: none;
 }
