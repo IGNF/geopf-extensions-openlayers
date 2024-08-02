@@ -42,17 +42,9 @@
     height: 48px;
 }
 
-button[id^=GPcollapseLegend_ID_][aria-pressed="false"] {
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguOTk5OTMgOS43ODA5NUwxMi4yOTk4IDYuNDgxMTRMMTMuMjQyNiA3LjQyMzk1TDguOTk5OTMgMTEuNjY2Nkw0Ljc1NzMyIDcuNDIzOTVMNS43MDAxMyA2LjQ4MTE0TDguOTk5OTMgOS43ODA5NVoiIGZpbGw9IiMwMDAwOTEiLz4KPC9zdmc+Cg==');
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
-    box-shadow: none;
-}
-
 button[id^=GPcollapseLegend_ID_] {
     position: absolute;
-    top: 0;
+    top: 8px;
     right: 0;
 }
 
@@ -63,12 +55,18 @@ button[id^=GPcollapseLegend_ID_] {
 .gpf-btn-icon-legends-collapse::after {
     -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguOTk5OTMgOS43ODA5NUwxMi4yOTk4IDYuNDgxMTRMMTMuMjQyNiA3LjQyMzk1TDguOTk5OTMgMTEuNjY2Nkw0Ljc1NzMyIDcuNDIzOTVMNS43MDAxMyA2LjQ4MTE0TDguOTk5OTMgOS43ODA5NVoiIGZpbGw9IiMwMDAwOTEiLz4KPC9zdmc+Cg==') center no-repeat;
     mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguOTk5OTMgOS43ODA5NUwxMi4yOTk4IDYuNDgxMTRMMTMuMjQyNiA3LjQyMzk1TDguOTk5OTMgMTEuNjY2Nkw0Ljc1NzMyIDcuNDIzOTVMNS43MDAxMyA2LjQ4MTE0TDguOTk5OTMgOS43ODA5NVoiIGZpbGw9IiMwMDAwOTEiLz4KPC9zdmc+Cg==') center no-repeat;
+    transition: transform 0.2s ease-out 0s;
+}
+
+.gpf-btn-icon-legends-collapse[aria-pressed="true"]::after {
+    box-shadow: none;
+    transform: rotate(180deg);
 }
 
 .legend-entry-container {
     position: relative;
     top: 0;
-    border-bottom: 1px dotted #CCC;
+    border-bottom: 1px solid var(--border-default-grey);
     overflow: hidden;
 }
 
@@ -90,8 +88,10 @@ button[id^=GPcollapseLegend_ID_][aria-pressed="true"] + .legend-entry-image {
 }
 
 button[id^=GPcollapseLegend_ID_][aria-pressed="true"] + .legend-entry-image {
-    max-height: 100px;
+    max-height: 150px;
     overflow: auto;
+    border-top: 1px solid var(--border-default-grey);
+    padding: 10px 0;
 }
 
 .legend-entry-image {
@@ -100,3 +100,8 @@ button[id^=GPcollapseLegend_ID_][aria-pressed="true"] + .legend-entry-image {
     opacity: 0;
     transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
 }
+
+.legends-entries {
+  padding: 0 16px;
+}
+

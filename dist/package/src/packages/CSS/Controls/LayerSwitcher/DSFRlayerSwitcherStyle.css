@@ -32,6 +32,7 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
 
 .GPlayerSwitcher_layer {
   background-color: var(--background-overlap-grey);
+  padding-right: 40px;
 }
 
 .gpf-btn-icon-layerswitcher {
@@ -72,6 +73,12 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
 .gpf-btn-icon-ls-collapse::after {
     -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguOTk5OTMgOS43ODA5NUwxMi4yOTk4IDYuNDgxMTRMMTMuMjQyNiA3LjQyMzk1TDguOTk5OTMgMTEuNjY2Nkw0Ljc1NzMyIDcuNDIzOTVMNS43MDAxMyA2LjQ4MTE0TDguOTk5OTMgOS43ODA5NVoiIGZpbGw9IiMwMDAwOTEiLz4KPC9zdmc+Cg==') center no-repeat;
     mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguOTk5OTMgOS43ODA5NUwxMi4yOTk4IDYuNDgxMTRMMTMuMjQyNiA3LjQyMzk1TDguOTk5OTMgMTEuNjY2Nkw0Ljc1NzMyIDcuNDIzOTVMNS43MDAxMyA2LjQ4MTE0TDguOTk5OTMgOS43ODA5NVoiIGZpbGw9IiMwMDAwOTEiLz4KPC9zdmc+Cg==') center no-repeat;
+    transition: transform 0.2s ease-out 0s;
+}
+
+.gpf-btn-icon-ls-collapse[aria-pressed="true"]::after {
+  box-shadow: none;
+  transform: rotate(180deg);
 }
 
 .gpf-btn-icon-ls-dragndrop {
@@ -93,10 +100,6 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
 }
 
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTguOTk5OTMgOS43ODA5NUwxMi4yOTk4IDYuNDgxMTRMMTMuMjQyNiA3LjQyMzk1TDguOTk5OTMgMTEuNjY2Nkw0Ljc1NzMyIDcuNDIzOTVMNS43MDAxMyA2LjQ4MTE0TDguOTk5OTMgOS43ODA5NVoiIGZpbGw9IiMwMDAwOTEiLz4KPC9zdmc+Cg==');
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
 }
 
@@ -106,8 +109,8 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="false "] + .GPlayerAdvancedToo
 
 button[id^=GPshowAdvancedTools_ID_] {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 12px;
+    right: 16px;
 }
 
 div[id^=GPbasicTools_ID_] {
