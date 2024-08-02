@@ -1,11 +1,37 @@
 /* eslint-disable no-console */
 const fse = require("fs-extra");
 const path = require("path");
+var yargs = require('yargs');
 const child_process = require("child_process");
 const fg = require("fast-glob");
 const base64Img = require("base64-img");
 
 async function main () {
+    const argv = yargs
+    .usage("Usage: $0 [options]")
+    .version(false)
+    .option("version", {
+        alias: "v",
+        description: "",
+        type: "string",
+        nargs: 1,
+        demandOption: false,
+    })
+    .option("date", {
+        alias: "d",
+        description: "",
+        type: "string",
+        nargs: 1
+    })
+    .help()
+    .alias("help", "h")
+    .epilog("Pour plus d'informations, CONSULTER LE FICHIER 'README.md' !")
+    .argv;
+
+    // console.log("options", argv);
+    var version = argv.version;
+    var date = argv.date;
+
     // creation du répertoire de build
     const builddir = "dist/package";
     fse.removeSync(path.join(builddir));
@@ -80,6 +106,12 @@ async function main () {
     const pkg = fse.readJsonSync("./package.json");
     delete pkg.scripts;
     delete pkg.devDependencies;
+    if (version) {
+        pkg.version = version;
+    }
+    if (date) {
+        pkg.date = date;
+    }
     fse.writeJsonSync(path.join(builddir, "package.json"), pkg, { spaces : 2 });
     console.log("✔ correctly create package.json !");
     
