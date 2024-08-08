@@ -141,16 +141,6 @@ input[id^=GPadvancedSearchSubmit] {
   align-items: center;
 }
 
-
-/* Advanced search picto */
-
-.GPbuttonsContainer {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-
-
 /* Autocomplete list / geocode results */
 
 .GPlabelTitle {

@@ -29,6 +29,11 @@
   border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
+.GPbuttonsContainer {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
 .GPsearchRadioContainer:hover {
   background-color: rgba(0,60,136,0.7);
 }
