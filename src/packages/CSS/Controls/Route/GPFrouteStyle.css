@@ -82,6 +82,10 @@ div[id^=GProuteTransportChoice] input {
   display: none;
 }
 
+div[id^=GProuteTransportChoice] .gpf-radio-btn-group {
+  justify-content: center;
+}
+
 select[id^=GProuteComputationSelect] {
   width: 100px;
 }
@@ -182,6 +186,8 @@ button[id^=GProuteReset] {
   /* background-color: #366291; */
   background-image: url("img/GProuteOptions.png");
   background-position: -224px center;
+  opacity: 0.8;
+  transition: opacity 0.2s ease-out;
 }
 
 /* Results popup */
@@ -191,6 +197,50 @@ button[id^=GProuteReset] {
 }
 
 /* Results details header */
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime]  {
+  color: #366291;
+}
+
+input[id^=GProuteResultsShowDetails] + label:hover,
+input[id^=GProuteResultsShowDetails] + label + label:hover {
+  color: #366291;
+}
+
+div[id^=GProuteResultsStages] {
+  margin-bottom: 15px;
+}
+
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime] {
+  display: inline-block;
+  line-height: 18px;
+}
+
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime] {
+  width: 80px;
+  font-weight: bold;
+}
+
+div[id^=GProuteResultsNew] {
+  background-color: #366291;
+  background-image: url("img/GProuteOptions.png");
+}
+
+select[id^=GProuteResultsComputationSelect] {
+  width: 100px;
+}
+
+div[id^=GProuteResultsNew] {
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  opacity: 0.8;
+  background-position: -224px 0;
+  transition: opacity 0.2s ease-out;
+  cursor: pointer;
+}
 
 .GPfakeBorder {
   display: inline-block;
@@ -224,12 +274,12 @@ input[id^=GProuteResultsShowDetails] + label + label {
   display: none;
 }
 
-input[id^=GProuteResultsShowDetails] + label + label + div + div[id^=GProuteResultsDetails] {
+div:has(input[id^=GProuteResultsShowDetails]) + div[id^=GProuteResultsDetails] {
   max-height: 0;
   opacity: 0;
 }
 
-input[id^=GProuteResultsShowDetails]:checked + label + label + div + div[id^=GProuteResultsDetails] {
+div:has(input[id^=GProuteResultsShowDetails]:checked) + div[id^=GProuteResultsDetails] {
   max-height: 200px;
   opacity: 1;
 }

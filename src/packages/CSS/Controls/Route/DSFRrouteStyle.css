@@ -12,3 +12,73 @@
 .GProuteFormMini .GPelementShow {
   color: var(--grey-200-850);
 }
+
+[id^="GProuteForm-"] .GPlocationOriginLabel {
+  display: unset;
+}
+
+[id^="GProuteForm-"] > .GPpanelFooter {
+  position: unset;
+}
+
+[id^="GProuteSubmit-"] {
+  width: 80%;
+}
+
+[id^="GProuteForm-"] > [class^="GPlocationPoint-"] {
+  margin-top: 1rem;
+}
+
+[id^="GProuteForm-"].GProuteFormMini > [class^="GPlocationPoint-"] {
+  margin-top: 0;
+}
+
+[id^="GProuteForm-"] > [class^="GPlocationPoint-"] ~ [class^="GPlocationPoint-"] {
+  margin-top: 0;
+}
+
+/* Reset picto */
+button[id^=GProuteReset-], div[id^=GProuteResultsNew-] {
+  min-width: 2.5em;
+}
+
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime]  {
+  color: var(--text-action-high-blue-france);
+  font-weight: bold;
+}
+
+.GProuteResultsShowDetailsDiv {
+  justify-content: left;
+}
+
+div:has(input[id^=GProuteResultsShowDetails]) + div[id^=GProuteResultsDetails-] {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+div:has(input[id^=GProuteResultsShowDetails]:checked) + div[id^=GProuteResultsDetails-] {
+  max-height: 200px;
+  opacity: 1;
+  overflow-y: scroll;
+}
+
+div[id^=GProuteResultsDetails-] {
+  max-width: 350px;
+  transition: max-height 0.5s ease-in-out 0.25s, opacity 0.5s ease-in-out 0.25s;
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 0.5rem 5px;
+}
+
+.GProuteResultsDetailsNumber,
+.GProuteResultsDetailsInstruction {
+  display: inline-block;
+}
+
+.GProuteResultsDetailsNumber {
+  font-weight: bold;
+  text-align: right;
+  vertical-align: top;
+}
