@@ -28,13 +28,6 @@ button[id^="GPshowRoutePicto-"][aria-pressed="true"] + dialog {
   left: 34px;
 }
 
-/* Reset picto */
-
-button[id^=GProuteReset] {
-  opacity: 0.8;
-  transition: opacity 0.2s ease-out;
-}
-
 button[id^=GProuteReset]:hover {
   opacity: 1;
 }
@@ -159,37 +152,6 @@ div[id^=GProuteResultsPanel] {
   padding: 15px;
 }
 
-div[id^=GProuteResultsValueDist],
-div[id^=GProuteResultsValueTime]  {
-  color: #366291;
-}
-
-div[id^=GProuteResultsNew] {
-  background-color: #366291;
-  background-image: url("img/GProuteOptions.png");
-}
-
-input[id^=GProuteResultsShowDetails] + label:hover,
-input[id^=GProuteResultsShowDetails] + label + label:hover {
-  color: #366291;
-}
-
-div[id^=GProuteResultsStages] {
-  margin-bottom: 15px;
-}
-
-div[id^=GProuteResultsValueDist],
-div[id^=GProuteResultsValueTime] {
-  display: inline-block;
-  line-height: 18px;
-}
-
-div[id^=GProuteResultsValueDist],
-div[id^=GProuteResultsValueTime] {
-  width: 80px;
-  font-weight: bold;
-}
-
 div[id^=GProuteResults-] {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -204,20 +166,6 @@ div[id^=GProuteResults-] {
       -ms-flex-align: center;
           align-items: center;
   margin-bottom: 10px;
-}
-
-select[id^=GProuteResultsComputationSelect] {
-  width: 100px;
-}
-
-div[id^=GProuteResultsNew] {
-  width: 28px;
-  height: 28px;
-  border-radius: 3px;
-  opacity: 0.8;
-  background-position: -224px 0;
-  transition: opacity 0.2s ease-out;
-  cursor: pointer;
 }
 
 div[id^=GProuteResultsNew]:hover {

@@ -694,17 +694,16 @@ var Route = class Route extends Control {
         // form
         var routeForm = this._formRouteContainer = this._createRoutePanelFormElement();
 
+        // form: menu des modes
+        routeForm.appendChild(this._createRoutePanelFormModeChoiceTransportElement(this.options.graphs));
+
         // form: menu des points
         var points = this._createRoutePanelFormPointsElement(map);
         for (var i = 0; i < points.length; i++) {
             routeForm.appendChild(points[i]);
         }
 
-        // form: menu des modes
-        var choice = this._createRoutePanelFormModeChoiceElement();
-        choice.appendChild(this._createRoutePanelFormModeChoiceTransportElement(this.options.graphs));
-        choice.appendChild(this._createRoutePanelFormModeChoiceComputeElement());
-        routeForm.appendChild(choice);
+        routeForm.appendChild(this._createRoutePanelFormModeChoiceComputeElement());
 
         // form: menu des exclusions
         this._showRouteExclusionsElement = this._createShowRouteExclusionsPictoElement();
@@ -1261,8 +1260,7 @@ var Route = class Route extends Control {
      * @private
      */
     onRouteModeComputationChange (e) {
-        var idx = e.target.selectedIndex;
-        var value = e.target.options[idx].value;
+        var value = e.target.value;
 
         if (!value) {
             return;

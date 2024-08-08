@@ -127,8 +127,8 @@
 .GPpanelIcon,
 .GPresetPicto,
 .GPreturnPicto,
-.GPpanelClose, 
-.GPpanelReduce, 
+.GPpanelClose,
+.GPpanelReduce,
 .GPpanelInfo {
   position: absolute;
   width: 26px;
@@ -173,7 +173,7 @@
   padding: 2px;
   background-color: rgba(255, 255, 255, 0.4);
   border-radius: 4px;
-  border: 2px solid rgba(255, 255, 255, 0.4) ; 
+  border: 2px solid rgba(255, 255, 255, 0.4) ;
 }
 
 .GPshowAdvancedToolPicto:hover {
@@ -349,7 +349,7 @@ input.GPsubmit:hover {
 }
 
 .GPinput {
-  
+
 }
 
 .GPform {
@@ -550,4 +550,9 @@ input[type="checkbox"]:checked + .GPshowMoreOptions {
 .gp-att-others-div:not(:last-child) {
   padding-bottom: 10px;
   border-bottom: 1px dotted #666;
+}
+
+.gpf-radio-btn-group {
+  display: flex;
+  gap: 1em;
 }

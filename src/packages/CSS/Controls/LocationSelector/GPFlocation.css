@@ -1,13 +1,5 @@
 /* Location */
 
-[id^=GPlocationStageRemove],
-[id^=GPlocationStageAdd] {
-  width: 28px;
-  height: 28px;
-  border: none;
-  cursor: pointer;
-}
-
 [id^=GPlocationStageRemove] {
 
 }

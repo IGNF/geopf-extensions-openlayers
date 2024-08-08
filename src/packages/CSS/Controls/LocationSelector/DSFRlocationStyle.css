@@ -17,13 +17,57 @@
   position: relative;
 }
 
+.gpf-btn-icon-remove {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
 .gpf-btn-icon-label {}
 .gpf-btn-icon-remove::after {
-    -webkit-mask: url("img/GPlocationOptions.png") -82px center no-repeat;
-    mask: url("img/GPlocationOptions.png") -82px center no-repeat;
+    -webkit-mask: url("img/dsfr/close-line.svg") center no-repeat;
+    mask: url("img/dsfr/close-line.svg") center no-repeat;
 }
 
 .gpf-btn-icon-add::after {
-    -webkit-mask: url("img/GPlocationOptions.png") -54px center no-repeat;
-    mask: url("img/GPlocationOptions.png") -54px center no-repeat;
+    -webkit-mask: url("img/GPlocationOptions.png") -51px center no-repeat;
+    mask: url("img/GPlocationOptions.png") -51px center no-repeat;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.GPlocationOriginLabel {
+  display: none;
+  pointer-events: none;
+}
+
+[class^="GPlocationPoint-"]:has(.GPflexInput.GPelementHidden) {
+  padding: 0;
+}
+[id^="GPlocationPoint_"] {
+  justify-content: left;
+}
+
+.GPlocationStageFlexInput {
+  flex-wrap: wrap;
+}
+
+.GPlocationStageAdd {
+  flex-basis: 45%;
+  width: 0px;
+  min-height: 40px;
+  padding: 0.25rem 0.75rem 0.25rem 2.5rem;
+  text-align: left;
+}
+
+.GPlocationOriginLabel {
+  flex-basis: fit-content;
+}
+
+.GPlocationOriginPointerImg {
+  flex-basis: 2.5em;
+}
+
+.GPlocationStageFlexInput input {
+  flex-basis: 33%;
+  flex-grow: 1;
 }
