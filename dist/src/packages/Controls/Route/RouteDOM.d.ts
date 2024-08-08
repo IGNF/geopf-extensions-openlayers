@@ -22,7 +22,6 @@ declare namespace RouteDOM {
     function _createRoutePanelFormAddStageElement(): DOMElement;
     function _createRoutePanelFormAutoCompleteListElement(n: Integer): DOMElement;
     function _createRouteAutoCompletedLocationElement(location: Object, n: number, id: number): void;
-    function _createRoutePanelFormModeChoiceElement(): DOMElement;
     function _createRoutePanelFormModeChoiceTransportElement(transports: string[]): DOMElement;
     function _createRoutePanelFormModeChoiceComputeElement(): DOMElement;
     function _createShowRouteExclusionsPictoElement(): DOMElement;

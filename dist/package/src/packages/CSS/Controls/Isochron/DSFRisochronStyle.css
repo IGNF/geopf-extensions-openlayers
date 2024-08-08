@@ -22,10 +22,6 @@
   margin-top: 0;
 }
 
-.GPlocationOriginLabel {
-  display: none;
-}
-
 div[id^="GPisochronChoice"] {
   justify-content: left;
   gap: 1em;

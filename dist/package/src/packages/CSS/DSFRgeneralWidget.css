@@ -42,6 +42,7 @@
   background-color: transparent;
   padding: 0;
   margin-top: 0;
+  justify-content: center;
 }
 
 .gpf-panel__content {
@@ -225,6 +226,11 @@
 }
 
 .gpf-radio-group {}
+
+.gpf-radio-btn-group {
+  display: flex;
+  gap: 1em;
+}
 
 .gpf-upload {}
 
