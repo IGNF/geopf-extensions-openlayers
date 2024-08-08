@@ -413,7 +413,7 @@ var SearchEngineDOM = {
 
         var span = document.createElement("span");
         span.id = this._addUID("GPshowAdvancedSearch");
-        span.className = "GPshowOpen  GPshowAdvancedSearch fr-m-1w";
+        span.className = "GPshowOpen  GPshowAdvancedSearch";
         span.innerText = "Recherche avancée";
         span.setAttribute("tabindex", "0");
         span.setAttribute("aria-pressed", false);

@@ -47,6 +47,7 @@ button[id^=GPsearchInputReset] {
 
 [id^="GPsearchEngine-"].gpf-widget-padding {
   align-items: center;
+  padding-right: 15px;
 }
 
 div.GPbuttonsContainer > button {
@@ -63,6 +64,7 @@ div.GPbuttonsContainer > button {
 
 .GPbuttonsContainer {
   height: 56px;
+  padding-left: 10px;
 }
 
 .GPsearchRadioContainer {
@@ -84,7 +86,6 @@ div.GPbuttonsContainer > button {
 .GPsearchRadioElements {
   display: flex;
   flex-direction: row;
-  margin: 0.5rem;
 }
 
 .GPsearchSplitChoice {
