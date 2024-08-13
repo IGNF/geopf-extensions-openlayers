@@ -813,6 +813,9 @@ var Isocurve = class Isocurve extends Control {
     _initContainer (map) {
         // get main container
         var container = this._container;
+        if (container.childElementCount > 0) {
+            return container;
+        }
 
         var picto = this._pictoIsoButton = this._createShowIsoPictoElement();
         container.appendChild(picto);
