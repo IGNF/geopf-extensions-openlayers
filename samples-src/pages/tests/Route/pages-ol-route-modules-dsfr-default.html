@@ -50,7 +50,9 @@
                   })
                 });
 
-                var route = new ol.control.Route({});
+                var route = new ol.control.Route({
+                  position: "bottom-left"
+                });
                 map.addControl(route);
 
                 var layerSwitcher = new ol.control.LayerSwitcher({});
