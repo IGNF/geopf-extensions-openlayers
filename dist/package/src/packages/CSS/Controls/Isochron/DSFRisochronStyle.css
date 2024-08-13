@@ -40,6 +40,12 @@ div[id^="GPisochronModeChoice"] {
   gap: 1rem;
 }
 
+/* FIXME A remplacer avec gestion des collisions */
+[id^=GPisochronForm-] {
+  max-height: 400px;
+  overflow: scroll;
+}
+
 [id^=GPisochronForm-] > .GPpanelFooter {
   position: unset;
 }

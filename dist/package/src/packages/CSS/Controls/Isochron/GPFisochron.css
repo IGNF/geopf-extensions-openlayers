@@ -35,7 +35,6 @@ form[id^=GPisochronForm] {
   padding: 15px;
 }
 
-
 input[id^="GPisochronOriginPointer"] + .GPisochronOriginPointerImg {
   background-position: -1px -1px;
 }
