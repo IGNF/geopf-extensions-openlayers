@@ -679,6 +679,9 @@ var Route = class Route extends Control {
     _initContainer (map) {
         // get main container
         var container = this._container;
+        if (container.childElementCount > 0) {
+            return container;
+        }
 
         var picto = this._showRouteButton = this._createShowRoutePictoElement();
         container.appendChild(picto);
