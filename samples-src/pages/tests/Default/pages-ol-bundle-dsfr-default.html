@@ -46,6 +46,11 @@
                   })
                 });
 
+                var catalog = new ol.control.Catalog({
+                  position : "top-left"
+                });
+                map.addControl(catalog);
+                
                 var zoom = new ol.control.GeoportalZoom({
                   position : "bottom-left"
                 });
