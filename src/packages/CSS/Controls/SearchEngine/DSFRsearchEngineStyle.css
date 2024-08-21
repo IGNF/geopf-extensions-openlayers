@@ -75,6 +75,7 @@ div.GPbuttonsContainer > button {
   max-height: 0;
   overflow: clip;
   transition: max-height 0.3s;
+  gap: 1rem;
 }
 
 [id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
@@ -86,10 +87,7 @@ div.GPbuttonsContainer > button {
 .GPsearchRadioElements {
   display: flex;
   flex-direction: row;
-}
-
-.GPsearchSplitChoice {
-  margin-right: 1rem;
+  gap: 1rem;
 }
 
 .GPshowAdvancedSearch {
@@ -184,7 +182,6 @@ div[id^=GPgeocodeResults-] {
   width: 100%;
   position: relative;
   background-color: var(--background-default-grey);
-  ;
   max-height: 240px;
   overflow-y: auto;
 }
@@ -212,5 +209,20 @@ div[id^=GPgeocodeResults-] {
     position: relative;
     top: unset;
     margin-left: unset;
+  }
+
+  .GPsearchRadioContainer {
+    gap: 0;
+    margin: 0 8px;
+  }
+
+  form[id^=GPsearchInput-] {
+    margin-left: 0;
+  }
+
+  [id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
+  [id^="GPsearchEngine-"]:focus-within > .GPsearchRadioContainer,
+  [id^="GPsearchEngine-"]:hover > .GPsearchRadioContainer {
+    max-height: 4rem;
   }
 }
