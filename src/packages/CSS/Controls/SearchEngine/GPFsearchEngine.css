@@ -31,9 +31,6 @@ button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] {
   transition-delay: 0s;
 }
 
-button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] {
-  max-width: 280px;
-}
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowAdvancedSearch],
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowGeolocate],
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] ~ div button[id^=GPshowSearchByCoordinate] {
@@ -63,8 +60,6 @@ button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchI
 form[id^=GPsearchInput-] {
   display: inline-block;
   position: relative;
-  /* left: -3px; */
-  width: 280px;
   overflow: hidden;
   transition: max-width 0.5s ease-out 0s;
 }
