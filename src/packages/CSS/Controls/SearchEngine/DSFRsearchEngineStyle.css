@@ -50,7 +50,7 @@ button[id^=GPsearchInputReset] {
   align-items: center;
 }
 
-div.GPbuttonsContainer>button {
+div.GPbuttonsContainer > button {
   width: 40px;
 }
 
@@ -58,7 +58,7 @@ div.GPbuttonsContainer>button {
   height: 40px;
 }
 
-.gpf-widget-padding>.GPsearchFirstLineWrapper {
+.gpf-widget-padding > .GPsearchFirstLineWrapper {
   margin: 0.5rem 0;
 }
 
@@ -77,9 +77,9 @@ div.GPbuttonsContainer>button {
   transition: max-height 0.3s;
 }
 
-[id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"])>.GPsearchRadioContainer,
-[id^="GPsearchEngine-"]:focus-within>.GPsearchRadioContainer,
-[id^="GPsearchEngine-"]:hover>.GPsearchRadioContainer {
+[id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
+[id^="GPsearchEngine-"]:focus-within > .GPsearchRadioContainer,
+[id^="GPsearchEngine-"]:hover > .GPsearchRadioContainer {
   max-height: 3rem;
 }
 
@@ -113,7 +113,7 @@ form[id^=GPsearchInput-] {
   width: 300px;
 }
 
-button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"]+form[id^=GPsearchInput-] {
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
   max-width: 300px;
   border: none;
 }
@@ -167,7 +167,7 @@ div[id^=GPautoCompleteList] {
   margin-left: 2px;
 }
 
-.gpf-widget-padding>div[id^=GPautoCompleteList] {
+.gpf-widget-padding > div[id^=GPautoCompleteList] {
   top: 100%;
   width: 100%;
   margin: 0;
@@ -197,7 +197,7 @@ div[id^=GPgeocodeResults-] {
 /* Mode Mobile */
 @media (max-width: 576px) {
 
-  .gpf-widget-padding>.GPsearchFirstLineWrapper {
+  .gpf-widget-padding > .GPsearchFirstLineWrapper {
     flex-direction: column;
     height: fit-content;
   }
