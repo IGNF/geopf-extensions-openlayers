@@ -84,14 +84,12 @@ jobs:
           name: modules
           path: ${{env.MODULE_NAME}}.zip
 
-  # not actived !
   # - checkout gh-pages
   # - download des artifacts : build & jsdoc
   # - commit & push
   # info : on ne realise pas le "deploy" à ce niveau,
   #        le commit du "changelog" sur main déclenche le deploy du build.yaml
   deploy:
-    if: false
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -242,7 +240,8 @@ jobs:
   # - update toc
   # - reset draft changelog
   # - commit & push
-  #   warning: ceci va relancer un job de build et deploy du build.yaml !
+  #   warning: ceci risque de relancer un job de build et deploy du build.yaml !
+  #   on positionne une condition sur le message du commit afin d'éviter de reexecuter les jobs
   changelog: # Only for tags !
     if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: [release, publish]
@@ -278,7 +277,7 @@ jobs:
             git config user.name github-actions
             git config user.email github-actions@github.com
             git add -A
-            git commit -m "update CHANGELOG"
+            git commit -m "[github-actions] update CHANGELOG"
             git push --force
 
   # not yet implemented !
