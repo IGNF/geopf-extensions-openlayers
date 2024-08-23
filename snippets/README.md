@@ -1,6 +1,6 @@
-# snippet / widgets
+# widgets
 
-> Exemples de templates pour creer des widgets
+> Exemples de snippets et templates pour creer des widgets
 
 Plusieurs type de widgets :
 

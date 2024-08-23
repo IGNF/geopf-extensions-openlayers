@@ -53,7 +53,14 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        collapsed : false
+                        layerLabel : "name",
+                        layerFilter : [],
+                        search : { 
+                            active : true, 
+                            criteria : [
+                                "name"
+                            ]
+                        },
                     });
                     map.addControl(catalog);
                 };

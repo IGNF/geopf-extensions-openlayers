@@ -53,7 +53,39 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        collapsed : false
+                        categories : [
+                            {
+                                title : "Fonds de carte",
+                                filter : {
+                                    field : "base",
+                                    value : "true"
+                                }
+                            },
+                            {
+                                title : "Données",
+                                items : [
+                                    {
+                                        title : "Thème",
+                                        default : true,
+                                        filter : {
+                                            field : "thematic",
+                                            value : "*"
+                                        }
+                                    },
+                                    {
+                                        title : "Producteur",
+                                        filter : {
+                                            field : "producer",
+                                            value : "*"
+                                        }
+                                    },
+                                    {
+                                        title : "Autres",
+                                        filter : null
+                                    }
+                                ]
+                            }
+                        ]
                     });
                     map.addControl(catalog);
                 };

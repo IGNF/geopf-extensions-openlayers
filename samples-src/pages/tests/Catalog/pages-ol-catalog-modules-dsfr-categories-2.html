@@ -53,7 +53,39 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        collapsed : false
+                        categories : [
+                            {
+                                title : "Données",
+                                items : [
+                                    {
+                                        title : "WMTS",
+                                        default : true,
+                                        filter : {
+                                            field : "serviceParams.id",
+                                            value : "OGC:WMTS"
+                                        }
+                                    },
+                                    {
+                                        title : "WMS",
+                                        filter : {
+                                            field : "serviceParams.id",
+                                            value : "OGC:WMS"
+                                        }
+                                    },
+                                    {
+                                        title : "TMS",
+                                        filter : {
+                                            field : "serviceParams.id",
+                                            value : "GPP:TMS"
+                                        }
+                                    },
+                                    {
+                                        title : "Tout",
+                                        filter : null
+                                    }
+                                ]
+                            }
+                        ],
                     });
                     map.addControl(catalog);
                 };

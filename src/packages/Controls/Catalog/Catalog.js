@@ -136,7 +136,35 @@ class Catalog extends Control {
         this.options = {
             collapsed : true,
             draggable : false,
-            auto : true
+            auto : true,
+            titlePrimary : "",
+            titleSecondary : "Gérer vos couches de données",
+            layerLabel : "title",
+            layerFilter : [],
+            search : { 
+                active : true, 
+                criteria : [
+                    "name",
+                    "title",
+                    "description"
+                ]
+            },
+            addToMap : true,
+            categories : [
+                {
+                    title : "Données",
+                    filter : null
+                }
+            ],
+            configuration : {
+                mode : "internal",
+                type : "json",
+                urls : [
+                    "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+                    "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
+                ]
+            },
+
         };
 
         // merge with user options
@@ -156,7 +184,7 @@ class Catalog extends Control {
         this.panelCatalogHeaderContainer = null; // usefull for the dragNdrop
         this.buttonCatalogClose = null;
 
-        this.panelCatalogEntriesContainer = null;
+        this.contentCatalogContainer = null;
 
         /** {Array} specify some events listeners */
         this.eventsListeners = [];
@@ -180,10 +208,6 @@ class Catalog extends Control {
         var widgetPanelDiv = this._createCatalogPanelDivElement();
         widgetPanel.appendChild(widgetPanelDiv);
 
-        // container for the custom code
-        var form = this.formCatalogContainer = this._createCatalogPanelFormElement();
-        widgetPanel.appendChild(form);
-
         // header
         var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createCatalogPanelHeaderElement();
         // title
@@ -193,6 +217,11 @@ class Catalog extends Control {
         var widgetCloseBtn = this.buttonCatalogClose = this._createCatalogPanelCloseElement();
         widgetPanelHeader.appendChild(widgetCloseBtn);
         widgetPanelDiv.appendChild(widgetPanelHeader);
+
+        // container for the custom code
+        var widgetContent = this.contentCatalogContainer = this._createCatalogPanelContentElement();
+        widgetContent.innerHTML = this._createCatalogContentEntries(); // TEST !
+        widgetPanelDiv.appendChild(widgetContent);
 
         container.appendChild(widgetPanel);
 

@@ -31,6 +31,14 @@
 
 {{#content "js"}}
             <script type="text/javascript">
+                async function getData () {
+                    var response = await fetch("{{ resources }}/data/configuration/sample.json", {});
+                    var data = await response.json();
+                    if (response.status !== 200) {
+                        throw new Error("Erreur de récupération du JSON !");
+                    }
+                }
+                var data = getData();
                 var map;
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
@@ -53,7 +61,11 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        collapsed : false
+                        configuration : {
+                            mode : "external",
+                            type : "json",
+                            data : data
+                        }
                     });
                     map.addControl(catalog);
                 };

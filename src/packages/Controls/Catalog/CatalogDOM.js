@@ -1,4 +1,4 @@
-var title = "Catalogue de données";
+var title = "";
 
 var CatalogDOM = {
 
@@ -85,6 +85,12 @@ var CatalogDOM = {
         return div;
     },
 
+    _createCatalogPanelContentElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__content fr-modal__content";
+        return div;
+    },
+
     /**
      * Create Header Panel
      *
@@ -131,31 +137,93 @@ var CatalogDOM = {
     },
 
     // ################################################################### //
-    // ####################### Methods for form ########################## //
+    // ####################### Methods for panel ######################### //
     // ################################################################### //
     
-    /**
-     * Create Form
-     * see evenement !
-     *
-     * @returns {DOMElement} DOM element
-     */
-    _createCatalogPanelFormElement : function () {
-        // contexte d'execution
-        var self = this;
-
-        var form = document.createElement("form");
-        form.id = this._addUID("GPcatalogForm");
-        form.className = "GPform gpf-panel__content fr-modal__content";
-
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            // some stuff
-            return false;
-        });
-
-        return form;
-    },
+    _createCatalogContentEntries : function () {
+        return `<div class="catalog-container-content" style="padding:10px">
+         <!-- titre -->
+         <div class="catalog-container-title">
+            <div class="fr-title">
+                <h5 style="margin:unset">Gérer vos couches de données</h5>
+            </div>
+         </div>
+         <!-- barre de recherche -->
+         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
+         <div class="catalog-container-search" style="padding-top:10px;padding-bottom:20px">
+            <div class="fr-search-bar" id="header-search" role="search">
+                <label class="fr-label" for="search-input">
+                    Recherche
+                </label>
+                <input class="fr-input" placeholder="Rechercher" type="search" id="search-input" name="search-input">
+                <button class="fr-btn" title="Rechercher">
+                    Rechercher
+                </button>
+            </div>
+         </div>
+         <!-- onglets -->
+         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/onglet -->
+         <div class="catalog-container-tabs">
+            <div class="fr-tabs">
+                    <ul class="fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
+                        <li role="presentation">
+                            <button id="tabpanel-404" class="fr-tabs__tab" tabindex="-1" role="tab" aria-selected="false" aria-controls="tabpanel-404-panel">Label Tab 1</button>
+                        </li>
+                        <li role="presentation">
+                            <button id="tabpanel-406" class="fr-tabs__tab" tabindex="0" role="tab" aria-selected="true" aria-controls="tabpanel-406-panel">Label Tab 2</button>
+                        </li>
+                    </ul>
+                    <div id="tabpanel-404-panel" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tabpanel-404" tabindex="0">
+                        <!-- données de test -->
+                        <p>
+                            <div class="tabcontent">Test 1</div>
+                        </p>
+                    </div>
+                    <div id="tabpanel-406-panel" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-406" tabindex="0">
+                        <!-- données de test -->
+                        <p>
+                            <div class="tabcontent">
+                                <fieldset class="fr-fieldset" id="checkboxes" aria-labelledby="checkboxes-legend checkboxes-messages">
+                                    <div class="fr-fieldset__element">
+                                        <div class="fr-checkbox-group">
+                                            <input name="checkboxes-1" id="checkboxes-1" type="checkbox" aria-describedby="checkboxes-1-messages">
+                                            <label class="fr-label" for="checkboxes-1">
+                                                Libellé case à cocher
+                                            </label>
+                                            <div class="fr-messages-group" id="checkboxes-1-messages" aria-live="assertive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fr-fieldset__element">
+                                        <div class="fr-checkbox-group">
+                                            <input checked name="checkboxes-2" id="checkboxes-2" type="checkbox" aria-describedby="checkboxes-2-messages">
+                                            <label class="fr-label" for="checkboxes-2">
+                                                Libellé case à cocher
+                                            </label>
+                                            <div class="fr-messages-group" id="checkboxes-2-messages" aria-live="assertive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fr-fieldset__element">
+                                        <div class="fr-checkbox-group">
+                                            <input name="checkboxes-3" id="checkboxes-3" type="checkbox" aria-describedby="checkboxes-3-messages">
+                                            <label class="fr-label" for="checkboxes-3">
+                                                Libellé case à cocher
+                                            </label>
+                                            <div class="fr-messages-group" id="checkboxes-3-messages" aria-live="assertive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fr-messages-group" id="checkboxes-messages" aria-live="assertive">
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </p>
+                    </div>
+            </div>
+         </div>
+        </div>`;
+    }
 
 };
 

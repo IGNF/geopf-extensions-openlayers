@@ -1,0 +1,593 @@
+{
+    "generalOptions": {
+      "apiKeys": {
+        "cartes": [
+          "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMTS",
+          "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMS",
+          "PLAN.IGN$GEOPORTAIL:GPP:TMS"
+        ]
+      }
+    },
+    "layers": {
+      "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMTS": {
+        "name": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+        "title": "Plan IGN v2",
+        "description": "Cartographie multi-échelles sur le territoire national, issue des bases de données vecteur de l’IGN, mis à jour régulièrement et réalisée selon un processus entièrement automatisé.",
+        "globalConstraint": {
+          "maxScaleDenominator": 559082264.0287179,
+          "minScaleDenominator": 1066.364791924893,
+          "bbox": {
+            "left": -175.0,
+            "right": 175.0,
+            "top": 85.0,
+            "bottom": -85.0
+          }
+        },
+        "serviceParams": {
+          "id": "OGC:WMTS",
+          "version": "1.0.0",
+          "serverUrl": {
+            "cartes": "https://data.geopf.fr/wmts"
+          }
+        },
+        "defaultProjection": "EPSG:3857",
+        "wmtsOptions": {
+          "tileMatrixSetLink": "PM_0_19",
+          "tileMatrixSetLimits": {
+            "0": {
+              "minTileRow": "0",
+              "maxTileRow": "0",
+              "minTileCol": "0",
+              "maxTileCol": "0"
+            },
+            "1": {
+              "minTileRow": "0",
+              "maxTileRow": "1",
+              "minTileCol": "0",
+              "maxTileCol": "1"
+            },
+            "2": {
+              "minTileRow": "0",
+              "maxTileRow": "3",
+              "minTileCol": "0",
+              "maxTileCol": "3"
+            },
+            "3": {
+              "minTileRow": "0",
+              "maxTileRow": "7",
+              "minTileCol": "0",
+              "maxTileCol": "7"
+            },
+            "4": {
+              "minTileRow": "0",
+              "maxTileRow": "15",
+              "minTileCol": "0",
+              "maxTileCol": "15"
+            },
+            "5": {
+              "minTileRow": "0",
+              "maxTileRow": "31",
+              "minTileCol": "0",
+              "maxTileCol": "31"
+            },
+            "6": {
+              "minTileRow": "0",
+              "maxTileRow": "63",
+              "minTileCol": "0",
+              "maxTileCol": "63"
+            },
+            "7": {
+              "minTileRow": "0",
+              "maxTileRow": "127",
+              "minTileCol": "1",
+              "maxTileCol": "126"
+            },
+            "8": {
+              "minTileRow": "0",
+              "maxTileRow": "255",
+              "minTileCol": "3",
+              "maxTileCol": "252"
+            },
+            "9": {
+              "minTileRow": "0",
+              "maxTileRow": "511",
+              "minTileCol": "7",
+              "maxTileCol": "504"
+            },
+            "10": {
+              "minTileRow": "1",
+              "maxTileRow": "1022",
+              "minTileCol": "14",
+              "maxTileCol": "1009"
+            },
+            "11": {
+              "minTileRow": "3",
+              "maxTileRow": "2044",
+              "minTileCol": "28",
+              "maxTileCol": "2019"
+            },
+            "12": {
+              "minTileRow": "6",
+              "maxTileRow": "4089",
+              "minTileCol": "56",
+              "maxTileCol": "4039"
+            },
+            "13": {
+              "minTileRow": "13",
+              "maxTileRow": "8178",
+              "minTileCol": "113",
+              "maxTileCol": "8078"
+            },
+            "14": {
+              "minTileRow": "26",
+              "maxTileRow": "16357",
+              "minTileCol": "227",
+              "maxTileCol": "16156"
+            },
+            "15": {
+              "minTileRow": "53",
+              "maxTileRow": "32714",
+              "minTileCol": "455",
+              "maxTileCol": "32312"
+            },
+            "16": {
+              "minTileRow": "107",
+              "maxTileRow": "65428",
+              "minTileCol": "910",
+              "maxTileCol": "64625"
+            },
+            "17": {
+              "minTileRow": "214",
+              "maxTileRow": "130857",
+              "minTileCol": "1820",
+              "maxTileCol": "129251"
+            },
+            "18": {
+              "minTileRow": "429",
+              "maxTileRow": "261714",
+              "minTileCol": "3640",
+              "maxTileCol": "258503"
+            },
+            "19": {
+              "minTileRow": "858",
+              "maxTileRow": "523429",
+              "minTileCol": "7281",
+              "maxTileCol": "517006"
+            }
+          }
+        },
+        "styles": [
+          {
+            "name": "normal",
+            "title": "Légende générique",
+            "current": true,
+            "url": null
+          }
+        ],
+        "legends": [
+          {
+            "format": "image/jpeg",
+            "url": "https://data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+            "minScaleDenominator": "200"
+          }
+        ],
+        "formats": [
+          {
+            "name": "image/png",
+            "current": true
+          }
+        ]
+      },
+      "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMS": {
+        "name": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+        "title": "Plan IGN v2",
+        "description": "Cartographie multi-échelles sur le territoire national, issue des bases de données vecteur de l’IGN, mis à jour régulièrement et réalisée selon un processus entièrement automatisé.",
+        "globalConstraint": {
+          "minScaleDenominator": 1066.364791925,
+          "maxScaleDenominator": 559082264.0287179,
+          "bbox": {
+            "left": -175.0,
+            "right": 175.0,
+            "top": 85.0,
+            "bottom": -85.0
+          }
+        },
+        "serviceParams": {
+          "id": "OGC:WMS",
+          "version": "1.3.0",
+          "serverUrl": {
+            "cartes": "https://data.geopf.fr/wms-r/wms"
+          }
+        },
+        "defaultProjection": "EPSG:3857",
+        "queryable": false,
+        "metadata": [],
+        "styles": [
+          {
+            "name": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+            "title": "Données GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+          }
+        ],
+        "legends": [
+          {
+            "format": "image/png",
+            "url": "https://data.geopf.fr/annexes/ressources/legendes/GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2-legend.png"
+          }
+        ],
+        "formats": [
+          {
+            "name": "image/jpeg",
+            "current": true
+          },
+          {
+            "name": "image/png",
+            "current": false
+          },
+          {
+            "name": "image/tiff",
+            "current": false
+          },
+          {
+            "name": "image/geotiff",
+            "current": false
+          },
+          {
+            "name": "image/x-bil;bits=32",
+            "current": false
+          }
+        ]
+      },
+      "PLAN.IGN$GEOPORTAIL:GPP:TMS": {
+        "hidden": true,
+        "queryable": false,
+        "serviceParams": {
+          "id": "GPP:TMS",
+          "version": "1.0.0",
+          "serverUrl": {
+            "cartes": "https://data.geopf.fr/tms/1.0.0/"
+          }
+        },
+        "name": "PLAN.IGN",
+        "title": "Plan IGN",
+        "description": "BDUni tuilée",
+        "formats": [
+          {
+            "current": true,
+            "name": "application/x-protobuf"
+          }
+        ],
+        "styles": [
+          {
+            "name": "standard",
+            "title": "Style standard",
+            "current": true,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/standard.json"
+          },
+          {
+            "name": "classique",
+            "title": "Style classique",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/classique.json"
+          },
+          {
+            "name": "transparent",
+            "title": "Style transparent",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/transparent.json"
+          },
+          {
+            "name": "accentue",
+            "title": "Style accentue",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/accentue.json"
+          },
+          {
+            "name": "attenue",
+            "title": "Style attenue",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/attenue.json"
+          },
+          {
+            "name": "gris",
+            "title": "Style en noir et blanc",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json"
+          },
+          {
+            "name": "epure",
+            "title": "Style epure",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/epure.json"
+          },
+          {
+            "name": "sans_toponymes",
+            "title": "Style sans toponymes",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/sans_toponymes.json"
+          }
+        ],
+        "globalConstraint": {
+          "crs": "EPSG:3857",
+          "bbox": {
+            "left": -724011.531917197,
+            "right": 1095801.237496279,
+            "top": 6672646.821182753,
+            "bottom": 5009377.0856973175
+          },
+          "minScaleDenominator": null,
+          "maxScaleDenominator": null
+        },
+        "layerId": "PLAN.IGN$GEOPORTAIL:GPP:TMS",
+        "defaultProjection": "EPSG:3857"
+      }
+    },
+    "tileMatrixSets": {
+      "PM_0_19": {
+        "projection": "EPSG:3857",
+        "nativeResolutions": [
+          "156543.0339280410",
+          "78271.51696402048",
+          "39135.75848201023",
+          "19567.87924100512",
+          "9783.939620502561",
+          "4891.969810251280",
+          "2445.984905125640",
+          "1222.992452562820",
+          "611.4962262814100",
+          "305.7481131407048",
+          "152.8740565703525",
+          "76.43702828517624",
+          "38.21851414258813",
+          "19.10925707129406",
+          "9.554628535647032",
+          "4.777314267823516",
+          "2.388657133911758",
+          "1.194328566955879",
+          "0.5971642834779395",
+          "0.2985821417389697"
+        ],
+        "tileMatrices": {
+          "0": {
+            "matrixId": "0",
+            "matrixHeight": 1,
+            "matrixWidth": 1,
+            "scaleDenominator": 559082264.0287179,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "1": {
+            "matrixId": "1",
+            "matrixHeight": 2,
+            "matrixWidth": 2,
+            "scaleDenominator": 279541132.01435894,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "2": {
+            "matrixId": "2",
+            "matrixHeight": 4,
+            "matrixWidth": 4,
+            "scaleDenominator": 139770566.0071793,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "3": {
+            "matrixId": "3",
+            "matrixHeight": 8,
+            "matrixWidth": 8,
+            "scaleDenominator": 69885283.00358965,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "4": {
+            "matrixId": "4",
+            "matrixHeight": 16,
+            "matrixWidth": 16,
+            "scaleDenominator": 34942641.50179486,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "5": {
+            "matrixId": "5",
+            "matrixHeight": 32,
+            "matrixWidth": 32,
+            "scaleDenominator": 17471320.75089743,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "6": {
+            "matrixId": "6",
+            "matrixHeight": 64,
+            "matrixWidth": 64,
+            "scaleDenominator": 8735660.375448715,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "7": {
+            "matrixId": "7",
+            "matrixHeight": 128,
+            "matrixWidth": 128,
+            "scaleDenominator": 4367830.1877243575,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "8": {
+            "matrixId": "8",
+            "matrixHeight": 256,
+            "matrixWidth": 256,
+            "scaleDenominator": 2183915.0938621787,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "9": {
+            "matrixId": "9",
+            "matrixHeight": 512,
+            "matrixWidth": 512,
+            "scaleDenominator": 1091957.5469310894,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "10": {
+            "matrixId": "10",
+            "matrixHeight": 1024,
+            "matrixWidth": 1024,
+            "scaleDenominator": 545978.7734655464,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "11": {
+            "matrixId": "11",
+            "matrixHeight": 2048,
+            "matrixWidth": 2048,
+            "scaleDenominator": 272989.38673277217,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "12": {
+            "matrixId": "12",
+            "matrixHeight": 4096,
+            "matrixWidth": 4096,
+            "scaleDenominator": 136494.69336638608,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "13": {
+            "matrixId": "13",
+            "matrixHeight": 8192,
+            "matrixWidth": 8192,
+            "scaleDenominator": 68247.34668319322,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "14": {
+            "matrixId": "14",
+            "matrixHeight": 16384,
+            "matrixWidth": 16384,
+            "scaleDenominator": 34123.673341596535,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "15": {
+            "matrixId": "15",
+            "matrixHeight": 32768,
+            "matrixWidth": 32768,
+            "scaleDenominator": 17061.83667079829,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "16": {
+            "matrixId": "16",
+            "matrixHeight": 65536,
+            "matrixWidth": 65536,
+            "scaleDenominator": 8530.918335399145,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "17": {
+            "matrixId": "17",
+            "matrixHeight": 131072,
+            "matrixWidth": 131072,
+            "scaleDenominator": 4265.459167699572,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "18": {
+            "matrixId": "18",
+            "matrixHeight": 262144,
+            "matrixWidth": 262144,
+            "scaleDenominator": 2132.7295838497826,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          },
+          "19": {
+            "matrixId": "19",
+            "matrixHeight": 524288,
+            "matrixWidth": 524288,
+            "scaleDenominator": 1066.364791924893,
+            "tileHeight": 256,
+            "tileWidth": 256,
+            "topLeftCorner": {
+              "x": -20037508.3427892,
+              "y": 20037508.3427892
+            }
+          }
+        }
+      }
+    }
+}
