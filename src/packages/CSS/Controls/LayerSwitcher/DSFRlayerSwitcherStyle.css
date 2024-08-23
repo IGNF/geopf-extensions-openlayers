@@ -82,11 +82,12 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
 }
 
 .gpf-btn-icon-ls-dragndrop {
-    background-image: url("img/dsfr/dragndrop.svg");
-    background-repeat: no-repeat;
-    background-size: 24px;
-    background-position: center center;
     box-shadow: none;
+}
+
+.gpf-btn-icon-ls-dragndrop::after {
+    -webkit-mask: url("img/dsfr/dragndrop.svg") center no-repeat;
+    mask: url("img/dsfr/dragndrop.svg") center no-repeat;
 }
 
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
