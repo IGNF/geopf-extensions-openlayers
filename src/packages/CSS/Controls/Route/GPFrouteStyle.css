@@ -14,7 +14,9 @@
 }
 
 /* Route form */
-
+form[id^=GProuteForm] {
+  padding: 15px;
+}
 
 .GProuteStageFlexInput {
   max-height: 28px;

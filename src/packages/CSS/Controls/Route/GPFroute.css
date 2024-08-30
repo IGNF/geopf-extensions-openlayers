@@ -33,11 +33,6 @@ button[id^=GProuteReset]:hover {
 }
 
 /* Route form */
-
-form[id^=GProuteForm] {
-  padding: 15px;
-}
-
 form[id^=GProuteForm] > .GPlocationStageFlexInput {
   margin-top: 5px;
 }
