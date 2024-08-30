@@ -31,6 +31,10 @@
 
 {{#content "js"}}
             <script type="text/javascript">
+                if (window.Gp) {
+                    // activation des loggers
+                    Gp.Logger.enableAll();
+                }
                 var map;
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
@@ -56,6 +60,7 @@
                         categories : [
                             {
                                 title : "Fonds de carte",
+                                id : "base",
                                 filter : {
                                     field : "base",
                                     value : "true"
@@ -63,6 +68,7 @@
                             },
                             {
                                 title : "Données",
+                                id : "data",
                                 items : [
                                     {
                                         title : "Thème",

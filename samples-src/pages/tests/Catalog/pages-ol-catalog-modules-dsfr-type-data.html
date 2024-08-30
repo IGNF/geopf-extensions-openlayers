@@ -31,6 +31,10 @@
 
 {{#content "js"}}
             <script type="text/javascript">
+                if (window.Gp) {
+                    // activation des loggers
+                    Gp.Logger.enableAll();
+                }
                 async function getData () {
                     var response = await fetch("{{ resources }}/data/configuration/sample.json", {});
                     var data = await response.json();
@@ -62,7 +66,6 @@
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
                         configuration : {
-                            mode : "external",
                             type : "json",
                             data : data
                         }

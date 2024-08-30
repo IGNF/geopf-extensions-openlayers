@@ -31,6 +31,10 @@
 
 {{#content "js"}}
             <script type="text/javascript">
+                if (window.Gp) {
+                    // activation des loggers
+                    Gp.Logger.enableAll();
+                }
                 var map;
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
@@ -54,16 +58,20 @@
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
                         configuration : {
-                            mode : "internal",
                             type : "json",
                             urls : [
-                                "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+                                // INFO facultatif si la config est déjà chargée
+                                // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
                                 "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
                             ]
                         }
                     });
+                    catalog.on("catalog:loaded", (e) => {
+                        console.log(e);
+                    });
                     map.addControl(catalog);
                 };
+                // INFO facultatif
                 Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",
                     callbackSuffix : "",
