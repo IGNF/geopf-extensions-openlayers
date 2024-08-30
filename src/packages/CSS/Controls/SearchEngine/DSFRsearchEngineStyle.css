@@ -1,10 +1,10 @@
 .gpf-widget-padding {
-    padding-left: 15px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
+
 .gpf-widget-color {
-    background-color: var(--background-default-grey);
+  background-color: var(--background-default-grey);
 }
 
 .gpf-panel__items,
@@ -28,6 +28,7 @@
 select[name^="inputSex"].gpf-select {
   padding: unset;
 }
+
 input[name^="inputSex"].gpf-input {
   padding: unset;
 }
@@ -37,7 +38,7 @@ button[id^=GPsearchInputReset] {
   height: 40px;
 }
 
-[id^="GPshowSearchDiv"]{
+[id^="GPshowSearchDiv"] {
   flex-direction: row-reverse;
 }
 
@@ -47,7 +48,6 @@ button[id^=GPsearchInputReset] {
 
 [id^="GPsearchEngine-"].gpf-widget-padding {
   align-items: center;
-  padding-right: 15px;
 }
 
 div.GPbuttonsContainer > button {
@@ -75,6 +75,7 @@ div.GPbuttonsContainer > button {
   max-height: 0;
   overflow: clip;
   transition: max-height 0.3s;
+  gap: 1rem;
 }
 
 [id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
@@ -86,10 +87,7 @@ div.GPbuttonsContainer > button {
 .GPsearchRadioElements {
   display: flex;
   flex-direction: row;
-}
-
-.GPsearchSplitChoice {
-  margin-right: 1rem;
+  gap: 1rem;
 }
 
 .GPshowAdvancedSearch {
@@ -101,17 +99,23 @@ div.GPbuttonsContainer > button {
 }
 
 .gpf-btn-icon-search {
-    background-image: url("img/dsfr/search-line.svg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    /* cas particulier ou on n'utilise pas la class gpf-icon-button pour la largeur à cause du DOM du control*/
-    width: 40px;
+  background-image: url("img/dsfr/search-line.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  /* cas particulier ou on n'utilise pas la class gpf-icon-button pour la largeur à cause du DOM du control*/
+  width: 40px;
+}
+
+form[id^=GPsearchInput-] {
+  margin-left: 8px;
+  width: 300px;
 }
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
-  max-width: 280px;
+  max-width: 300px;
   border: none;
 }
+
 button[id^="GPshowSearchEnginePicto-"] {
   border-radius: 0 0.25rem 0 0;
 }
@@ -125,6 +129,7 @@ button[id^="GPshowSearchEnginePicto-"] {
   -webkit-mask: url("img/dsfr/localiser.svg") center no-repeat;
   mask: url("img/dsfr/localiser.svg") center no-repeat;
 }
+
 .gpf-btn-icon-search-coordinate::after {
   -webkit-mask: url("img/dsfr/coordonnees.svg") center no-repeat;
   mask: url("img/dsfr/coordonnees.svg") center no-repeat;
@@ -176,7 +181,7 @@ dialog[id^=GPgeocodeResultsList] {
 div[id^=GPgeocodeResults-] {
   width: 100%;
   position: relative;
-  background-color: var(--background-default-grey);;
+  background-color: var(--background-default-grey);
   max-height: 240px;
   overflow-y: auto;
 }
@@ -205,5 +210,19 @@ div[id^=GPgeocodeResults-] {
     top: unset;
     margin-left: unset;
   }
-}
 
+  .GPsearchRadioContainer {
+    gap: 0;
+    margin: 0 8px;
+  }
+
+  form[id^=GPsearchInput-] {
+    margin-left: 0;
+  }
+
+  [id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
+  [id^="GPsearchEngine-"]:focus-within > .GPsearchRadioContainer,
+  [id^="GPsearchEngine-"]:hover > .GPsearchRadioContainer {
+    max-height: 4rem;
+  }
+}

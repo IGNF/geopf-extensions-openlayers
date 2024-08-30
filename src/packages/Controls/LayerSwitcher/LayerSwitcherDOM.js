@@ -307,7 +307,7 @@ var LayerSwitcherDOM = {
         // INFO inactif en mode classique !
         var button = document.createElement("div");
         button.id = this._addUID("GPdragndropPicto_ID_" + obj.id);
-        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon gpf-btn-icon-ls-dragndrop fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon gpf-btn-icon-ls-dragndrop gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         button.title = "Deplacer la couche";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);

@@ -110,6 +110,10 @@ button[id^="GPadvancedSearchClose"] {
   background-position: -50px 3px;
 }
 
+form[id^=GPsearchInput-] {
+  width: 280px;
+}
+
 form[id^=GPsearchInput-] input {
   display: block;
   width: 100%;
@@ -127,6 +131,10 @@ form[id^=GPsearchInput-] input {
 form[id^=GPsearchInput-] input:disabled {
   background-color: #DDD;
   color: #999;
+}
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] {
+  max-width: 280px;
 }
 
 .GPsearchInputText {
