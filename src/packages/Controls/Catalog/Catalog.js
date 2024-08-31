@@ -33,9 +33,55 @@ var logger = Logger.getLogger("widget");
  * @fires catalog:loaded
  * @fires catalog:layer:add
  * @fires catalog:layer:remove
+ * @see schema : https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json
+ * @see jsdoc : https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc
  * @example
- * var widget = new ol.control.Catalog();
+ * var widget = new ol.control.Catalog({
+ *           collapsed : true,
+ *           draggable : false,
+ *           titlePrimary : "",
+ *           titleSecondary : "Gérer vos couches de données",
+ *           layerLabel : "title",
+ *           layerFilter : [],
+ *           search : {
+ *               active : true, 
+ *               criteria : [
+ *                   "name",
+ *                   "title",
+ *                   "description"
+ *               ]
+ *           },
+ *           addToMap : true,
+ *           categories : [
+ *               {
+ *                   title : "Données",
+ *                   id : "data",
+ *                   default : true,
+ *                   filter : null
+ *                   // sous categories
+ *                   // items : [
+ *                   //     {
+ *                   //         title : "",
+ *                   //         default : true,
+ *                   //         filter : {
+ *                   //             field : "",
+ *                   //             value : ""
+ *                   //         }
+ *                   //     }
+ *                   // ]
+ *               }
+ *           ],
+ *           configuration : {
+ *               type : "json", // type:"service"
+ *               urls : [ // data:{}
+ *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+ *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
+ *               ]
+ *           }
+ * });
  * widget.on("catalog:loaded", (e) => { console.log(e.data); });
+ * widget.on("catalog:layer:add", (e) => { console.log(e); });
+ * widget.on("catalog:layer:remove", (e) => { console.log(e); });
  * map.addControl(widget);
  */
 class Catalog extends Control {
@@ -49,6 +95,54 @@ class Catalog extends Control {
      * import Catalog from "gpf-ext-ol/controls/Catalog"
      * ou 
      * import { Catalog } from "gpf-ext-ol"
+     * 
+     * var widget = new Catalog({
+     *           collapsed : true,
+     *           draggable : false,
+     *           titlePrimary : "",
+     *           titleSecondary : "Gérer vos couches de données",
+     *           layerLabel : "title",
+     *           layerFilter : [],
+     *           search : {
+     *               active : true, 
+     *               criteria : [
+     *                   "name",
+     *                   "title",
+     *                   "description"
+     *               ]
+     *           },
+     *           addToMap : true,
+     *           categories : [
+     *               {
+     *                   title : "Données",
+     *                   id : "data",
+     *                   default : true,
+     *                   filter : null
+     *                   // sous categories
+     *                   // items : [
+     *                   //     {
+     *                   //         title : "",
+     *                   //         default : true,
+     *                   //         filter : {
+     *                   //             field : "",
+     *                   //             value : ""
+     *                   //         }
+     *                   //     }
+     *                   // ]
+     *               }
+     *           ],
+     *           configuration : {
+     *               type : "json", // type:"service"
+     *               urls : [ // data:{}
+     *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+     *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
+     *               ]
+     *           }
+     * });
+     * widget.on("catalog:loaded", (e) => { console.log(e.data); });
+     * widget.on("catalog:layer:add", (e) => { console.log(e); });
+     * widget.on("catalog:layer:remove", (e) => { console.log(e); });
+     * map.addControl(widget);
      */
     constructor (options) {
         options = options || {};
@@ -130,18 +224,9 @@ class Catalog extends Control {
                 this.buttonCatalogShow.setAttribute("aria-pressed", true);
             }
 
-            // some stuff
-
-            // ajout des evenements sur la carte
-            if (this.auto) {
-                this.addEventsListeners(map);
-            }
+            // TODO some stuff
         } else {
-            // suppression des evenements sur la carte
-            // pour les futurs suppressions de couche
-            if (this.auto) {
-                this.removeEventsListeners();
-            }
+            // TODO some stuff
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
@@ -175,7 +260,6 @@ class Catalog extends Control {
         this.options = {
             collapsed : true,
             draggable : false,
-            auto : true,
             titlePrimary : "",
             titleSecondary : "Gérer vos couches de données",
             layerLabel : "title",
@@ -220,14 +304,17 @@ class Catalog extends Control {
         // merge with user options
         Utils.assign(this.options, options);
 
-        /** {Boolean} specify if control is collapsed (true) or not (false) */
+        /** 
+         * specify if control is collapsed (true) or not (false) 
+         * @type {Boolean} 
+         */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if control is draggable (true) or not (false) */
+        /** 
+         * specify if control is draggable (true) or not (false) 
+         * @type {Boolean} 
+         */
         this.draggable = this.options.draggable;
-
-        /** {Boolean} specify if control add some stuff auto */
-        this.auto = this.options.auto;
 
         // DOM
         this.buttonCatalogShow = null;
@@ -237,25 +324,29 @@ class Catalog extends Control {
         this.contentCatalogContainer = null;
 
         /** 
-         * {Array} specify all list of layers by categories ;
-         * @example
-         * [
-         *   {
-         *     category : "data",
-         *     layers : {...}
-         *   }
-         * ]
+         * specify all list of layers (configuration service)
+         * @type {Object}
+         * @see [schema](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json)
+         * @see [jsdoc](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc)
          */
-        this.dataList = [];
+        this.layersList = [];
 
-        /** {String} specify the current category selected */
+        /** 
+         * specify the current category selected 
+         * @type {String} 
+         */
         this.categoryId = "";
 
-        /** {Object} list of layers added on map by key pair : name/service */
-        this.layersList = {};
-
-        /** {Array} specify some events listeners */
-        this.eventsListeners = [];
+        /** 
+         * list of layers added on map by key pair : name/service 
+         * @type {Object} 
+         * @example
+         * {
+         *    "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2:WMTS" : ol/layer/Tile,
+         *    "PLAN.IGN$GEOPORTAIL:TMS" : ol/layer/VectorTile
+         * }
+         */
+        this.layersListOnMap = {};
     }
 
     /**
@@ -316,8 +407,14 @@ class Catalog extends Control {
         const createCatalogContentEntries = (layers) => {
             var container = self.contentCatalogContainer;
     
+            // on applique un filtre sur la liste des couches
+            var layersFiltered = getLayersByFilter(self.options.layerFilter, layers);
+
             // TODO gestion des sous categories
             var categories = self.options.categories.map((cat) => {
+                // INFO
+                // on reecrit correctement les categories
+                // ex. properties mal renseignées tels que id ou default 
                 return {
                     title : cat.title,
                     id : cat.id || Array.from(cat.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
@@ -345,38 +442,48 @@ class Catalog extends Control {
             var contents = container.querySelectorAll(".tabcontent");
             for (let i = 0; i < contents.length; i++) {
                 const content = contents[i];
-                var layersFiltered = getLayersbyFilter(categories[i], layers);
-                content.appendChild(self._createCatalogContentCategoryTabContent(categories[i].id, layersFiltered));
+                var layersCategorised = getLayersByCategory(categories[i], layersFiltered);
+                content.appendChild(self._createCatalogContentCategoryTabContent(categories[i].id, layersCategorised));
             }
         };
         
-        // traitement du contenu d'une categorie en fonction du filtre
-        const getLayersbyFilter = (category, layers) => {
+        // traitement du contenu (liste de couches) d'une categorie 
+        // en fonction d'un filtre
+        const getLayersByCategory = (category, layers) => {
             // INFO
-            // comment gerer les listes de layers filtrées ?
+            // comment gerer les listes de layers filtrées pour chaque categorie ?
             // on doit les stocker si l'on souhaite faire des requêtes 
             // avec l'outil de recherche par la suite
-            var layersFiltered = layers;
+            var layersCategorised = layers;
             var filter = category.filter;
             if (filter) {
-                layersFiltered = {};
+                layersCategorised = {};
                 for (const key in layers) {
                     if (Object.prototype.hasOwnProperty.call(layers, key)) {
                         const layer = layers[key];
                         if (layer[filter.field]) { // FIXME on accepte uniquement un seul champ !
                             if (filter.value === "*" || layer[filter.field].toString() === filter.value) {
-                                layersFiltered[key] = layer;
+                                layersCategorised[key] = layer;
+                                // on ajoute l'appartenance de la couche à une categorie
+                                this.layersList[key].categories.push(category.id);
                             }
                         }
                     }
                 }
             }
-            // save
-            this.dataList.push({
-                category : category.id,
-                layers : layersFiltered
-            });
-            return layersFiltered;
+            
+            return layersCategorised;
+        };
+
+        // TODO 
+        // filtre sur la liste de couches à prendre en compte
+        const getLayersByFilter = (filter, layers) => {
+            // INFO
+            // definir les filtres possibles :
+            // - sur un champ spécifique : ex field:"service" 
+            // - sur des valeurs : ex. value:"[WMS,TMS,WMTS]" ou "*"
+            // - ... 
+            return layers;
         };
 
         if (this.options.configuration.data) {
@@ -386,16 +493,22 @@ class Catalog extends Control {
             }
 
             // INFO
-            // on en profite pour ajouter une property : service 
-            // car elle est très utile pour identifier la couche
+            // on en profite pour ajouter des properties : 
+            // - service : utile pour identifier la couche
             // de manière unique : name + service
+            // - categories : utile pour definir l'appartenance d'une couche 
+            // à une ou plusieurs categories
             for (const key in data.layers) {
                 if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
                     const layer = data.layers[key];
                     var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                     layer.service = service; // new proprerty !
+                    layer.categories = []; // new property ! vide pour le moment
                 }
             }
+
+            // sauvegarde de la liste des couches
+            this.layersList = data.layers;
 
             createCatalogContentEntries(data.layers);
             return new Promise((resolve, reject) => {
@@ -447,16 +560,22 @@ class Catalog extends Control {
                 }
 
                 // INFO
-                // on en profite pour ajouter une property : service 
-                // car elle est très utile pour identifier la couche
+                // on en profite pour ajouter des properties : 
+                // - service : utile pour identifier la couche
                 // de manière unique : name + service
+                // - categories : utile pour definir l'appartenance d'une couche 
+                // à une ou plusieurs categories
                 for (const key in data.layers) {
                     if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
                         const layer = data.layers[key];
                         var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                         layer.service = service; // new proprerty !
+                        layer.categories = []; // new property ! vide pour le moment
                     }
                 }
+
+                // sauvegarde de la liste des couches
+                this.layersList = data.layers;
 
                 createCatalogContentEntries(data.layers);
                 return await new Promise((resolve, reject) => {
@@ -470,31 +589,6 @@ class Catalog extends Control {
         }
     }
 
-    /**
-     * Add events listeners on map (called by setMap)
-     * 
-     * @param {*} map - map
-     * @private
-     */
-    addEventsListeners (map) {
-        var self = this;
-        this.eventsListeners["custom:action"] = function (e) {
-            logger.trace(e);
-        };
-        // the event custom:action is associate with an openlayers event 
-        map.getLayers().on("some:event", this.eventsListeners["custom:action"]);
-    }
-
-    /**
-     * Remove events listeners on map (called by setMap)
-     * @private
-     */
-    removeEventsListeners () {
-        var map = this.getMap();
-        map.getLayers().un("some:event", this.eventsListeners["custom:action"]);
-        delete this.eventsListeners["custom:action"];
-    }
-
     // ################################################################### //
     // ######################## methods on map ########################### //
     // ################################################################### //
@@ -504,6 +598,7 @@ class Catalog extends Control {
      * 
      * @param {*} name - layer name
      * @param {*} service - layer service
+     * @private
      */
     addLayer (name, service) {
         var layer = null;
@@ -530,7 +625,7 @@ class Catalog extends Control {
             var map = this.getMap();
             map.addLayer(layer);
             // sauvegarde
-            this.layersList[name + ":" + service] = layer;
+            this.layersListOnMap[name + ":" + service] = layer;
         }
     }
 
@@ -539,16 +634,42 @@ class Catalog extends Control {
      * 
      * @param {*} name - layer name
      * @param {*} service - layer service
+     * @private
      */
     removeLayer (name, service) {
-        var layer = this.layersList[name + ":" + service];
+        var layer = this.layersListOnMap[name + ":" + service];
         if (layer) {
             var map = this.getMap();
             map.removeLayer(layer);
             // sauvegarde
-            delete this.layersList[name + ":" + service];
+            delete this.layersListOnMap[name + ":" + service];
         }
     }
+
+    // ################################################################### //
+    // ######################## methods search ########################### //
+    // ################################################################### //
+    
+    /**
+     * Reset filtered layers
+     * @fixme specifier le comportement souhaité !?
+     * @private
+     */
+    resetFilteredLayersListByCategory () {
+        // INFO
+        // l'outil de recherche filtre les couches via un critère de recherche.
+        // l'affichage des couches filtrées est realisé en cachant 
+        // les couches non conforme au critère.
+        // le parametre pour masquer les couches : hidden
+        // quand on change d'onglet, on reinitialise les couches masquées
+        for (const key in this.layersList) {
+            if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
+                const layer = this.layersList[key];
+                layer.hidden = false;
+            }
+        }
+    }
+
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
@@ -556,6 +677,7 @@ class Catalog extends Control {
     /**
      * ...
      * @param {*} e - ...
+     * @private
      */
     onShowCatalogClick (e) {
         logger.trace(e);
@@ -564,6 +686,7 @@ class Catalog extends Control {
     /**
      * ...
      * @param {*} e - ...
+     * @private
      */
     onCloseCatalogClick (e) {
         logger.trace(e);
@@ -572,9 +695,13 @@ class Catalog extends Control {
     /**
      * ...
      * @param {*} e - ...
+     * @private
      */
     onSelectCatalogTabClick (e) {
         logger.trace(e);
+        // le changement de categorie reinitialise la precedente 
+        // liste de couches filtrée par l'outil de recherche
+        this.resetFilteredLayersListByCategory();
         // sauvegarde de la categorie courrante pour la gestion de la recherche
         // de couches dans la liste associée à la categorie
         var id = e.target.id;
@@ -585,6 +712,7 @@ class Catalog extends Control {
     /**
      * ...
      * @param {*} e - ...
+     * @private
      */
     onSelectCatalogEntryClick (e) {
         logger.trace(e);
@@ -646,6 +774,30 @@ class Catalog extends Control {
                 layer : layer
             });
         }
+    }
+
+    /**
+     * 
+     * @param {*} e - ...
+     * @private
+     */
+    onSearchCatalogButtonClick (e) {
+        // FIXME
+        // à quoi sert ce bouton ?
+    }
+
+    /**
+     * 
+     * @param {*} e - ... 
+     * @private
+     */
+    onSearchCatalogInputChange (e) {
+        // INFO
+        // la saisie du critère de recherche doit filtrer la liste des couches affichée 
+        // dans l'onglet courant.
+        // on masque les entrées non conforme 
+        // - en ajoutant la classe 'gpf-hidden' dans le DOM
+        // - en sauvegardant l'état avec la property 'hidden:true'
     }
 
 };

@@ -181,7 +181,7 @@ var CatalogDOM = {
         return container.firstChild;
     },
     _createCatalogContentSearchElement : function (search) {
-        var container = stringToHTML(`
+        var strContainer = `
         <!-- barre de recherche -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
         <div class="catalog-container-search" style="padding-top:10px;padding-bottom:20px">
@@ -190,13 +190,34 @@ var CatalogDOM = {
                     Recherche
                 </label>
                 <input class="fr-input" placeholder="Rechercher" type="search" id="search-input" name="search-input">
-                <button class="fr-btn" title="Rechercher">
+                <button id="search-button" class="fr-btn" title="Rechercher">
                     Rechercher
                 </button>
             </div>
         </div>
-        `);
-        return container.firstChild;
+        `;
+        var container = stringToHTML(strContainer);
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+
+        // event listener sur le DOM
+        var button = shadow.getElementById("search-button");
+        if (button) {
+            button.addEventListener("click", (e) => {
+                this.onSearchCatalogButtonClick(e);
+            });
+        }
+
+        var input = shadow.getElementById("search-input");
+        if (input) {
+            input.addEventListener("change", (e) => {
+                this.onSearchCatalogInputChange(e);
+            });
+        }
+
+        return shadow;
     },
     _createCatalogContentCategoriesTabs : function (categories) {
         // TODO gestion des sous categories
@@ -289,6 +310,7 @@ var CatalogDOM = {
                         const panel = panels[j];
                         panel.setAttribute("tabindex", -1);
                         panel.classList.remove("fr-tabs__panel--selected");
+                        panel.classList.add("gpf-hidden");
                     }
                     // recup id du panneau avec aria-controls
                     //   ajouter class fr-tabs__panel--selected
@@ -296,6 +318,7 @@ var CatalogDOM = {
                     var panel = document.getElementById(e.target.getAttribute("aria-controls"));
                     panel.setAttribute("tabindex", 0);
                     panel.classList.add("fr-tabs__panel--selected");
+                    panel.classList.remove("gpf-hidden");
                     // appel
                     this.onSelectCatalogTabClick(e);
                 });
