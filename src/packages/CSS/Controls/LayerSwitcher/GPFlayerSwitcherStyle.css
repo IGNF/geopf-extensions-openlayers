@@ -412,3 +412,7 @@ div[id^=GPlayerInfoMetadata] {
 .outOfRange .GPlayerName {
   color: #AAA;
 }
+
+div[id^=GPlayerInfoContent] {
+  width: 280px;
+}

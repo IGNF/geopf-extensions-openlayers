@@ -217,3 +217,8 @@ div[id^=GPadvancedTools_ID_] {
 .GPlayerOpacity.fr-range--sm[data-fr-js-range]::before {
   top: 25%;
 }
+
+div[id^=GPlayerInfoContent] {
+    width: 350px;
+}
+
