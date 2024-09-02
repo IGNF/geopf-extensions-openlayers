@@ -29,6 +29,14 @@ form[id^=GProuteForm] {
   overflow: hidden;
 }
 
+.GProutePointLabelP {
+  margin: 2px 0 5px 0;
+}
+
+.GProuteComputationLabel {
+  margin-bottom: 5px;
+}
+
 .GProuteOriginPointerImg,
 .GProuteStageRemove,
 div[id^=GProuteStageAdd],
@@ -147,7 +155,8 @@ select[id^=GProuteComputationSelect] {
 .GProuteExclusionsLabel {
   display: block;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  margin-top: 8px;
   font-weight: bold;
   line-height: 16px;
 }
@@ -225,11 +234,6 @@ div[id^=GProuteResultsValueTime] {
   font-weight: bold;
 }
 
-div[id^=GProuteResultsNew] {
-  background-color: #366291;
-  background-image: url("img/GProuteOptions.png");
-}
-
 select[id^=GProuteResultsComputationSelect] {
   width: 100px;
 }
@@ -242,6 +246,9 @@ div[id^=GProuteResultsNew] {
   background-position: -224px 0;
   transition: opacity 0.2s ease-out;
   cursor: pointer;
+  background-color: #366291;
+  background-image: url("img/GProuteOptions.png");
+  position: initial;
 }
 
 .GPfakeBorder {
@@ -311,3 +318,7 @@ div[id^=GProuteResultsDetails] {
   padding-left: 5px;
 }
 
+input[id^=GProuteSubmit-] {
+  width: fit-content;
+  padding: 0 10px;
+}
