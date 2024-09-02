@@ -27,23 +27,21 @@ div[id^="GPisochronChoice"] {
   gap: 1em;
 }
 
+div[id^=GPisochronTransportChoice] > div {
+  margin-top: 0.5rem;
+}
+
+div[id^=GPisochronValueChron],
+div[id^=GPisochronValueDist] {
+  width: 281px;
+}
+
 .GPflexInput > input[id^="GPisochronValueChronInput2"] {
   margin-top: 0;
 }
 
-div[id^="GPisochronModeChoice"] {
-  flex-direction: column;
-  margin: 1rem 0;
-}
-
 .GPisoExclusionsOptions {
   gap: 1rem;
-}
-
-/* FIXME A remplacer avec gestion des collisions */
-[id^=GPisochronForm-] {
-  max-height: 400px;
-  overflow: scroll;
 }
 
 [id^=GPisochronForm-] > .GPpanelFooter {

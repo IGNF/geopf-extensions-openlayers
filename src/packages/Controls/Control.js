@@ -78,7 +78,7 @@ class PositionFactory {
      */
     #createContainer (name) {
         this.container = this.caller.getMap().getOverlayContainerStopEvent();
-        
+
         if (this.#existContainer(name)) {
             return;
         }
@@ -88,7 +88,7 @@ class PositionFactory {
         var div = document.createElement("div");
         div.id = "position-container-" + name;
         div.className = "position position-container-" + name ;
-        
+
         this.container.appendChild(div);
     }
 
@@ -125,7 +125,7 @@ class PositionFactory {
                     }
                     height -= element.children[index].offsetHeight;
                 }
-            } 
+            }
             return height;
         };
         const clear = (element) => {
@@ -135,7 +135,7 @@ class PositionFactory {
             element.style.right = "unset";
         };
 
-        // on supprime le style de positionnement (top, left...) 
+        // on supprime le style de positionnement (top, left...)
         // car on souhaite une nouvelle position
         clear(this.caller.element);
         this.caller.element.style.position = "unset"; // div.GPwidget
@@ -147,6 +147,7 @@ class PositionFactory {
         if (panels.length === 0) {
             return;
         }
+        var offset = 0;
         panels.forEach((panel) => {
             // INFO
             // on va eviter de modifier les panneaux de resultats
@@ -156,29 +157,30 @@ class PositionFactory {
                 return;
             }
             clear(panel);
-            // on modifie le positionnement du menu (dialog ou div : panel) 
+            // on modifie le positionnement du menu (dialog ou div : panel)
             // en fonction du bouton
             // ex. bouton : bottom-left, menu : bottom:0px; left:50px
             switch (pos.toLowerCase()) {
                 case "top-left":
                     panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
-                    panel.style.left = sizeW(pos) + "px";
+                    panel.style.left = sizeW(pos) + offset + "px";
                     break;
                 case "bottom-left":
                     panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
-                    panel.style.left = sizeW(pos) + "px";
+                    panel.style.left = sizeW(pos) + offset + "px";
                     break;
                 case "top-right":
                     panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
-                    panel.style.right = sizeW(pos) + "px";
+                    panel.style.right = sizeW(pos) + offset + "px";
                     break;
                 case "bottom-right":
                     panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
-                    panel.style.right = sizeW(pos) + "px";
+                    panel.style.right = sizeW(pos) + offset + "px";
                     break;
                 default:
                     break;
             }
+            offset += panel.offsetWidth;
         });
     }
 
@@ -204,13 +206,13 @@ class PositionFactory {
     /**
      * ...
      * @param {*} pos - ...
-     * @public 
+     * @public
      */
     update (pos) {
         if (!ANCHORS.includes(pos.toLowerCase())) {
             return;
         }
-        // positionnement de l'element 
+        // positionnement de l'element
         // mais, il faut prendre en compte la position !
         this.#setAnchor(pos, true);
     }
