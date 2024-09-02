@@ -172,11 +172,10 @@ select[id^=GPisochronDirectionSelect] {
 }
 
 .GPshowIsoExclusionsPicto {
-  top: 250px;
+  top: unset;
   right: 0;
   transition: all 0.5s ease-out 0s;
 }
-
 
 .GPisoExclusionsLabel {
   display: block;

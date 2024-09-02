@@ -105,9 +105,14 @@ div[id^=GPisochronTransportChoice] > div {
 button[id^="GPshowIsoExclusions"] {
   position: absolute;
   border: unset;
-  bottom: 0;
+  bottom: unset;
   right: 0;
   transition: all 0.5s ease-out 0s;
+  transform: translateY(-100%);
+}
+
+button[id^="GPshowIsoExclusions"][aria-pressed="true"] {
+  transform: translateY(-100%) rotateX(180deg);
 }
 
 button[id^=GPshowIsoExclusions][aria-pressed="false"] + div[id^=GPisoExclusions] {

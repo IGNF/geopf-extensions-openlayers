@@ -1,3 +1,5 @@
+import checkDsfr from "../Utils/CheckDsfr";
+
 var IsoDOM = {
 
     /**
@@ -715,7 +717,11 @@ var IsoDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowIsoExclusionsPicto");
-        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill";
+        var hidden = "";
+        if (checkDsfr()) {
+            hidden = "GPelementHidden gpf-hidden";
+        }
+        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill`;
         button.title = "Exclusions";
         // button.style.top = "240px";
         button.setAttribute("tabindex", "0");

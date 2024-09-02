@@ -1085,7 +1085,11 @@ var RouteDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowRouteExclusionsPicto");
-        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill";
+        var hidden = "";
+        if (checkDsfr()) {
+            hidden = "GPelementHidden gpf-hidden";
+        }
+        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill`;
         button.title = "Exclusions";
         // button.style.top = "185px";
         button.setAttribute("tabindex", "0");

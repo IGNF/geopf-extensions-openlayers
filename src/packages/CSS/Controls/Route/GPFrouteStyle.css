@@ -148,8 +148,10 @@ select[id^=GProuteComputationSelect] {
 
 
 .GPshowRouteExclusionsPicto {
+  top: unset;
   right: 0;
   transition: all 0.3s ease-out 0s;
+  transform: translateY(-100%);
 }
 
 .GProuteExclusionsLabel {
