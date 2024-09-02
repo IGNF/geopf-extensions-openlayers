@@ -17,7 +17,6 @@ declare namespace IsoDOM {
     function _createIsoPanelFormValueIsochronElement(checked: boolean): DOMElement;
     function _createIsoPanelFormLabelIsodistanceElement(checked: boolean): DOMElement;
     function _createIsoPanelFormValueIsodistanceElement(checked: boolean): DOMElement;
-    function _createIsoPanelFormModeChoiceElement(): DOMElement;
     function _createIsoPanelFormModeChoiceTransportElement(transports: any[]): DOMElement;
     function _createIsoPanelFormModeChoiceDirectionElement(directions: any[]): DOMElement;
     function _createShowIsoExclusionsPictoElement(): DOMElement;

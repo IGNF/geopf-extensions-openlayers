@@ -33,11 +33,6 @@ button[id^=GProuteReset]:hover {
 }
 
 /* Route form */
-
-form[id^=GProuteForm] {
-  padding: 15px;
-}
-
 form[id^=GProuteForm] > .GPlocationStageFlexInput {
   margin-top: 5px;
 }
@@ -122,9 +117,13 @@ div[id^=GProuteTransportChoice] > .GProuteTransportChoice {
 button[id^="GPshowRouteExclusions"] {
   position: absolute;
   border: unset;
-  bottom: 0;
+  bottom: unset;
   right: 0;
   transition: all 0.5s ease-out 0s;
+}
+
+button[id^="GPshowRouteExclusions"][aria-pressed="true"] {
+  transform: translateY(-100%) rotateX(180deg);
 }
 
 button[id^=GPshowRouteExclusions][aria-pressed="false"]  + div[id^=GProuteExclusions] {

@@ -13,14 +13,13 @@
   color: var(--grey-200-850);
 }
 
-/* FIXME A remplacer avec gestion des collisions */
-[id^=GProuteForm-] {
-  max-height: 400px;
-  overflow: scroll;
+.GProuteModeLabel {
+  margin-bottom: 0.5rem;
 }
 
-[id^="GProuteForm-"] .GPlocationOriginLabel {
-  display: unset;
+[id^=GProuteForm-] p.gpf-label {
+  margin-top: 0;
+  margin-bottom: 0.2rem;
 }
 
 [id^="GProuteForm-"] > .GPpanelFooter {
@@ -32,15 +31,19 @@
 }
 
 [id^="GProuteForm-"] > [class^="GPlocationPoint-"] {
+  margin-top: 0;
+}
+
+[id^="GProuteForm-"] > p.gpf-label {
   margin-top: 1rem;
 }
 
-[id^="GProuteForm-"].GProuteFormMini > [class^="GPlocationPoint-"] {
+[id^="GProuteForm-"].GProuteFormMini > p.gpf-label {
   margin-top: 0;
 }
 
-[id^="GProuteForm-"] > [class^="GPlocationPoint-"] ~ [class^="GPlocationPoint-"] {
-  margin-top: 0;
+[id^="GProuteForm-"] > p.gpf-label ~ p.gpf-label {
+  margin-top: 0.5rem;
 }
 
 /* Reset picto */
@@ -87,5 +90,10 @@ div[id^=GProuteResultsDetails-] {
   font-weight: bold;
   text-align: right;
   vertical-align: top;
+}
+
+.GProuteExclusionsOptions {
+  gap: 0.5rem;
+  color: var(--text-label-grey);
 }
 
