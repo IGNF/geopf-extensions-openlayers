@@ -15,6 +15,11 @@
 .gpf-btn-icon-pointer {
   min-width: 2.5rem;
   position: relative;
+  border-top-right-radius: 4px;
+}
+
+.GPlocationStageFlexInput:has(.GPlocationStageRemove) > .gpf-btn-icon-pointer {
+  border-top-right-radius: 0px;
 }
 
 .gpf-btn-icon-remove {
@@ -40,19 +45,21 @@
   pointer-events: none;
 }
 
-[class^="GPlocationPoint-"]:has(.GPflexInput.GPelementHidden) {
+[class^="GPlocationPoint-"] {
   padding: 0;
 }
+
 [id^="GPlocationPoint_"] {
   justify-content: left;
 }
 
 .GPlocationStageFlexInput {
   flex-wrap: wrap;
+  width: 281px;
 }
 
 .GPlocationStageAdd {
-  flex-basis: 45%;
+  flex-basis: 65%;
   width: 0px;
   min-height: 40px;
   padding: 0.25rem 0.75rem 0.25rem 2.5rem;

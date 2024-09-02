@@ -32,6 +32,7 @@ import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 import GeoJSONExtended from "../../Formats/GeoJSON";
 // DOM
 import RouteDOM from "./RouteDOM";
+import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("route");
 
@@ -498,7 +499,7 @@ var Route = class Route extends Control {
             collapsed : true,
             draggable : false,
             export : false,
-            graphs : ["Voiture", "Pieton"],
+            graphs : ["Pieton", "Voiture"],
             exclusions : {
                 toll : false,
                 tunnel : false,
@@ -718,8 +719,10 @@ var Route = class Route extends Control {
         var panelFooter = this._createRoutePanelFooterElement();
         routeForm.appendChild(panelFooter);
 
-        var buttonReset = this._createRouteFormResetElement();
-        panelFooter.appendChild(buttonReset);
+        if (!checkDsfr()) {
+            var buttonReset = this._createRouteFormResetElement();
+            panelFooter.appendChild(buttonReset);
+        }
 
         // form: bouton du calcul
         var buttonSubmit = this._createRouteSubmitFormElement();
@@ -756,12 +759,12 @@ var Route = class Route extends Control {
      */
     _initTransport () {
         // Mode de transport selectionné
-        this._currentTransport = "Voiture"; // par defaut
+        this._currentTransport = "Pieton"; // par defaut
 
         // par defaut
         var transport = this.options.graphs;
         if (!transport || transport.length === 0) {
-            this.options.graphs = ["Voiture", "Pieton"];
+            this.options.graphs = ["Pieton", "Voiture"];
         }
 
         // option
@@ -886,7 +889,6 @@ var Route = class Route extends Control {
                 id : count,
                 groupId : this._uid,
                 markerOpts : this.options.markersOpts["departure"],
-                label : "Départ",
                 display : true
             },
             autocompleteOptions : this.options.autocompleteOptions || null
@@ -895,6 +897,7 @@ var Route = class Route extends Control {
         // on ajoute des écouteurs d'évènements (en plus de ceux de LocationSelector),
         // pour prendre en compte les CSS spécifiques de GProuteForm
         this._addFormPointsEventListeners(start);
+        points.push(this._createRoutePanelFormPointLabel("Départ"));
         points.push(start._container);
         this._currentPoints.push(start);
 
@@ -905,7 +908,6 @@ var Route = class Route extends Control {
                 tag : {
                     id : count,
                     groupId : this._uid,
-                    label : "Etape",
                     markerOpts : this.options.markersOpts["stages"],
                     display : false,
                     removeOption : true
@@ -914,6 +916,7 @@ var Route = class Route extends Control {
             });
             step.setMap(map);
             this._addFormPointsEventListeners(step);
+            points.push(this._createRoutePanelFormPointLabel("Étape", false));
             points.push(step._container);
             this._currentPoints.push(step);
         }
@@ -925,7 +928,6 @@ var Route = class Route extends Control {
                 id : count,
                 groupId : this._uid,
                 markerOpts : this.options.markersOpts["arrival"],
-                label : "Arrivée",
                 display : true,
                 addOption : true
             },
@@ -933,6 +935,7 @@ var Route = class Route extends Control {
         });
         end.setMap(map);
         this._addFormPointsEventListeners(end);
+        points.push(this._createRoutePanelFormPointLabel("Arrivée"));
         points.push(end._container);
         this._currentPoints.push(end);
 
