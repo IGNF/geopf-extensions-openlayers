@@ -180,7 +180,7 @@ var CatalogDOM = {
         `);
         return container.firstChild;
     },
-    _createCatalogContentSearchElement : function (search) {
+    _createCatalogContentSearchElement : function () {
         var strContainer = `
         <!-- barre de recherche -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
@@ -212,7 +212,7 @@ var CatalogDOM = {
 
         var input = shadow.getElementById("search-input");
         if (input) {
-            input.addEventListener("change", (e) => {
+            input.addEventListener("search", (e) => {
                 this.onSearchCatalogInputChange(e);
             });
         }
@@ -220,7 +220,6 @@ var CatalogDOM = {
         return shadow;
     },
     _createCatalogContentCategoriesTabs : function (categories) {
-        // TODO gestion des sous categories
         var strTabButtons = "";
         var tmplTabButton = (i, id, title, selected) => {
             var value = "false";
@@ -327,16 +326,17 @@ var CatalogDOM = {
         return shadow;
     },
     _createCatalogContentCategoryTabContent : function (category, layers) {
+        // FIXME on n'utilise pas le champ description car il peut contenir du HTML...
         var strElements = "";
         var tmplElement = (i, id, title, service, category) => {
             // le listener sur l'input permet de récuperer à partir de l'ID 
             // la paire name/service pour identifier la couche: 
             // > "checkboxes-${category}-${i}_${id}-${service}".split('_')[1]
             return `
-            <div class="fr-fieldset__element">
+            <div class="fr-fieldset__element" id="fieldset-${category}_${id}-${service}">
                 <div class="fr-checkbox-group">
                     <input name="checkboxes-${category}" id="checkboxes-${category}-${i}_${id}-${service}" type="checkbox" aria-describedby="checkboxes-messages-${category}-${i}_${id}-${service}">
-                    <label class="fr-label" for="checkboxes-${category}-${i}_${id}-${service}" title=${title}>
+                    <label class="fr-label" for="checkboxes-${category}-${i}_${id}-${service}" title="${title}">
                         ${title} (${service})
                     </label>
                     <div class="fr-messages-group" id="checkboxes-messages-${category}-${i}_${id}-${service}" aria-live="assertive"></div>

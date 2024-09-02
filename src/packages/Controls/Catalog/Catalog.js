@@ -83,6 +83,12 @@ var logger = Logger.getLogger("widget");
  * widget.on("catalog:layer:add", (e) => { console.log(e); });
  * widget.on("catalog:layer:remove", (e) => { console.log(e); });
  * map.addControl(widget);
+ * 
+ * @todo filtrage des couches
+ * @todo gestion des sous categories
+ * @todo la patience
+ * @todo type:service
+ * @todo validation du schema
  */
 class Catalog extends Control {
 
@@ -224,9 +230,9 @@ class Catalog extends Control {
                 this.buttonCatalogShow.setAttribute("aria-pressed", true);
             }
 
-            // TODO some stuff
+            // some stuff
         } else {
-            // TODO some stuff
+            // some stuff
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
@@ -263,8 +269,8 @@ class Catalog extends Control {
             titlePrimary : "",
             titleSecondary : "Gérer vos couches de données",
             layerLabel : "title",
-            layerFilter : [], // TODO
-            search : { // TODO
+            layerFilter : [], // TODO filtre
+            search : { // TODO recherche
                 active : true, 
                 criteria : [
                     "name",
@@ -337,6 +343,24 @@ class Catalog extends Control {
          */
         this.categoryId = "";
 
+        /**
+         * specify all categories
+         * @type {Array}
+         * @todo gestion des sous categories
+         */
+        this.categories = this.options.categories.map((cat) => {
+            // INFO
+            // on reecrit correctement les categories
+            // ex. properties mal renseignées tels que id ou default 
+            return {
+                title : cat.title,
+                id : cat.id || Array.from(cat.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
+                default : cat.hasOwnProperty("default") ? cat.default : false,
+                filter : cat.filter || null,
+                items : cat.items || null
+            };
+        });
+
         /** 
          * list of layers added on map by key pair : name/service 
          * @type {Object} 
@@ -381,7 +405,7 @@ class Catalog extends Control {
         // container for the custom dynamic code (cf. initLayersList())
         var widgetContentElementDiv = this.contentCatalogContainer = this._createCatalogContentDivElement();
         widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
-        widgetContentElementDiv.appendChild(this._createCatalogContentSearchElement(this.options.search));
+        widgetContentElementDiv.appendChild(this._createCatalogContentSearchElement());
         widgetContentDiv.appendChild(widgetContentElementDiv);
         widgetPanelDiv.appendChild(widgetContentDiv);
         
@@ -396,9 +420,6 @@ class Catalog extends Control {
      * 
      * @returns {Promise} - promise
      * @private
-     * @todo gestion des sous categories
-     * @todo validation du schema
-     * @todo data de type:service
      */
     async initLayersList () {
         var data = null; // reponse brute du service
@@ -410,29 +431,17 @@ class Catalog extends Control {
             // on applique un filtre sur la liste des couches
             var layersFiltered = getLayersByFilter(self.options.layerFilter, layers);
 
-            // TODO gestion des sous categories
-            var categories = self.options.categories.map((cat) => {
-                // INFO
-                // on reecrit correctement les categories
-                // ex. properties mal renseignées tels que id ou default 
-                return {
-                    title : cat.title,
-                    id : cat.id || Array.from(cat.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
-                    default : cat.hasOwnProperty("default") ? cat.default : false,
-                    filter : cat.filter || null
-                };
-            });
             // INFO
             // par défaut, la categorie affichée sera la 1ere 
             // sauf si on a specifié une categorie avec l'attribut 'default:true'
-            var index = categories.findIndex((category) => category.default);
+            var index = this.categories.findIndex((category) => category.default);
             if (index === -1) {
                 index = 0;
-                categories[index].default = true;
+                this.categories[index].default = true;
             }
-            self.categoryId = categories[index].id;
+            self.categoryId = this.categories[index].id;
 
-            var widgetContentEntryTabs = self._createCatalogContentCategoriesTabs(categories);
+            var widgetContentEntryTabs = self._createCatalogContentCategoriesTabs(this.categories);
             container.appendChild(widgetContentEntryTabs);
             
             // INFO
@@ -442,8 +451,8 @@ class Catalog extends Control {
             var contents = container.querySelectorAll(".tabcontent");
             for (let i = 0; i < contents.length; i++) {
                 const content = contents[i];
-                var layersCategorised = getLayersByCategory(categories[i], layersFiltered);
-                content.appendChild(self._createCatalogContentCategoryTabContent(categories[i].id, layersCategorised));
+                var layersCategorised = getLayersByCategory(this.categories[i], layersFiltered);
+                content.appendChild(self._createCatalogContentCategoryTabContent(this.categories[i].id, layersCategorised));
             }
         };
         
@@ -461,7 +470,7 @@ class Catalog extends Control {
                 for (const key in layers) {
                     if (Object.prototype.hasOwnProperty.call(layers, key)) {
                         const layer = layers[key];
-                        if (layer[filter.field]) { // FIXME on accepte uniquement un seul champ !
+                        if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
                             if (filter.value === "*" || layer[filter.field].toString() === filter.value) {
                                 layersCategorised[key] = layer;
                                 // on ajoute l'appartenance de la couche à une categorie
@@ -475,8 +484,7 @@ class Catalog extends Control {
             return layersCategorised;
         };
 
-        // TODO 
-        // filtre sur la liste de couches à prendre en compte
+        // TODO filtre sur la liste de couches à prendre en compte
         const getLayersByFilter = (filter, layers) => {
             // INFO
             // definir les filtres possibles :
@@ -488,6 +496,9 @@ class Catalog extends Control {
 
         if (this.options.configuration.data) {
             data = this.options.configuration.data || {};
+
+            // TODO gestion du type service
+
             if (Config.isConfigLoaded()) {
                 Utils.mergeParams(data, Config.configuration);
             }
@@ -555,6 +566,8 @@ class Catalog extends Control {
                     Utils.mergeParams(data, value);
                 }
 
+                // TODO gestion du type service
+            
                 if (Config.isConfigLoaded()) {
                     Utils.mergeParams(data, Config.configuration);
                 }
@@ -652,20 +665,66 @@ class Catalog extends Control {
     
     /**
      * Reset filtered layers
-     * @fixme specifier le comportement souhaité !?
      * @private
      */
-    resetFilteredLayersListByCategory () {
+    resetFilteredLayersList () {
         // INFO
         // l'outil de recherche filtre les couches via un critère de recherche.
         // l'affichage des couches filtrées est realisé en cachant 
         // les couches non conforme au critère.
         // le parametre pour masquer les couches : hidden
-        // quand on change d'onglet, on reinitialise les couches masquées
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
                 layer.hidden = false;
+                this.updateFilteredLayersListDOM(layer.name, layer.service, layer.hidden);
+            }
+        }
+    }
+
+    /**
+     * Set filtered layers
+     * 
+     * @param {*} value - value
+     * @private
+     */
+    setFilteredLayersList (value) {
+        var criteria = this.options.search.criteria;
+        for (const key in this.layersList) {
+            if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
+                const layer = this.layersList[key];
+                var words = "";
+                for (let i = 0; i < criteria.length; i++) {
+                    const c = criteria[i];
+                    words += layer[c].toLowerCase();
+                }
+                layer.hidden = !words.includes(value.toLowerCase());
+                this.updateFilteredLayersListDOM(layer.name, layer.service, layer.hidden);
+            }
+        }
+    }
+
+    /**
+     * Update DOM layer visibility
+     * 
+     * @param {*} id - ...
+     * @param {*} service  - ...
+     * @param {*} hidden  - ...
+     */
+    updateFilteredLayersListDOM (id, service, hidden) {
+        var categories = this.categories.map((cat) => {
+            return cat.id;
+        });
+
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            var container = document.getElementById(`fieldset-${category}_${id}-${service}`);
+            if (container) {
+                if (hidden) {
+                    container.classList.add("gpf-hidden");
+                } else {
+                    container.classList.remove("gpf-hidden");
+                }
             }
         }
     }
@@ -699,9 +758,6 @@ class Catalog extends Control {
      */
     onSelectCatalogTabClick (e) {
         logger.trace(e);
-        // le changement de categorie reinitialise la precedente 
-        // liste de couches filtrée par l'outil de recherche
-        this.resetFilteredLayersListByCategory();
         // sauvegarde de la categorie courrante pour la gestion de la recherche
         // de couches dans la liste associée à la categorie
         var id = e.target.id;
@@ -782,8 +838,14 @@ class Catalog extends Control {
      * @private
      */
     onSearchCatalogButtonClick (e) {
-        // FIXME
-        // à quoi sert ce bouton ?
+        // INFO
+        // la saisie du critère de recherche doit filtrer la liste des couches affichée 
+        // dans l'onglet courant.
+        // on masque les entrées non conforme 
+        // - en ajoutant la classe 'gpf-hidden' dans le DOM
+        // - en sauvegardant l'état avec la property 'hidden:true'
+        var value = document.getElementById("search-input").value;
+        this.setFilteredLayersList(value);
     }
 
     /**
@@ -792,12 +854,7 @@ class Catalog extends Control {
      * @private
      */
     onSearchCatalogInputChange (e) {
-        // INFO
-        // la saisie du critère de recherche doit filtrer la liste des couches affichée 
-        // dans l'onglet courant.
-        // on masque les entrées non conforme 
-        // - en ajoutant la classe 'gpf-hidden' dans le DOM
-        // - en sauvegardant l'état avec la property 'hidden:true'
+        this.resetFilteredLayersList();
     }
 
 };
