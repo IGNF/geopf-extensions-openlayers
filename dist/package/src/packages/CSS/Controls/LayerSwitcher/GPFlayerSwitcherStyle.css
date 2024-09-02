@@ -413,3 +413,6 @@ div[id^=GPlayerInfoMetadata] {
   color: #AAA;
 }
 
+div[id^=GPlayerInfoContent] {
+  width: 280px;
+}
