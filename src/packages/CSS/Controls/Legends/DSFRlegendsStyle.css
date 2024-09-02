@@ -88,7 +88,7 @@ button[id^=GPcollapseLegend_ID_][aria-pressed="true"] + .legend-entry-image {
 }
 
 button[id^=GPcollapseLegend_ID_][aria-pressed="true"] + .legend-entry-image {
-    max-height: 150px;
+    max-height: 300px;
     overflow: auto;
     border-top: 1px solid var(--border-default-grey);
     padding: 10px 0;
