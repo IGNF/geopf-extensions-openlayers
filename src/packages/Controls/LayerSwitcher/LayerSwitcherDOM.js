@@ -808,6 +808,7 @@ var LayerSwitcherDOM = {
                         maxScale = legends[scale].maxScaleDenominator || maxScale;
 
                         var reflgd = document.createElement("a");
+                        reflgd.className = "fr-link";
                         reflgd.href = urllgd;
                         reflgd.innerHTML = "Du 1/" + scale + " au 1/" + maxScale;
                         lgdlink.appendChild(reflgd);
