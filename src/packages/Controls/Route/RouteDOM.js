@@ -161,6 +161,22 @@ var RouteDOM = {
     },
 
     /**
+     * Create Point label
+     *
+     * @param {String} innerHTML text to display
+     * @param {Boolean} display should the label be dsiplayed?
+     * @returns {DOMElement} DOM element
+     */
+    _createRoutePanelFormPointLabel : function (innerHTML, display = true) {
+        var p = document.createElement("p");
+        p.innerHTML = innerHTML;
+        var classesToAdd = !display ? " GPelementHidden gpf-hidden" : "";
+        p.className = "GProutePointLabelP gpf-label fr-label" + classesToAdd;
+
+        return p;
+    },
+
+    /**
      * Create Form
      * see evenement !
      *
@@ -1069,7 +1085,11 @@ var RouteDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowRouteExclusionsPicto");
-        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill";
+        var hidden = "";
+        if (checkDsfr()) {
+            hidden = "GPelementHidden gpf-hidden";
+        }
+        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill`;
         button.title = "Exclusions";
         // button.style.top = "185px";
         button.setAttribute("tabindex", "0");
@@ -1105,7 +1125,7 @@ var RouteDOM = {
         div.className = "fr-mt-2w";
 
         var label = document.createElement("label");
-        label.className = "GProuteExclusionsLabel fr-m-1w";
+        label.className = "GProuteExclusionsLabel fr-label";
         label.innerHTML = "Passages autorisés";
         div.appendChild(label);
 
@@ -1238,7 +1258,7 @@ var RouteDOM = {
         input.id = this._addUID("GProuteSubmit");
         input.className = "GPsubmit gpf-btn gpf-btn-icon-submit fr-btn";
         input.type = "submit";
-        input.value = "Calculer";
+        input.value = "Calculer l'itinéraire";
 
         return input;
     },
