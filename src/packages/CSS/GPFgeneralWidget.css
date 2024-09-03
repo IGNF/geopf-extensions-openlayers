@@ -556,3 +556,7 @@ input[type="checkbox"]:checked + .GPshowMoreOptions {
   display: flex;
   gap: 1em;
 }
+
+.gpf-btn-icon {
+  caret-color: transparent;
+}
