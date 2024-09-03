@@ -558,6 +558,5 @@ input[type="checkbox"]:checked + .GPshowMoreOptions {
 }
 
 .gpf-btn-icon {
-  width: inherit;
   caret-color: transparent;
 }
