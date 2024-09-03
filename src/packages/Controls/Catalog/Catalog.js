@@ -44,7 +44,7 @@ var logger = Logger.getLogger("widget");
  *           layerLabel : "title",
  *           layerFilter : [],
  *           search : {
- *               active : true, 
+ *               display : true, 
  *               criteria : [
  *                   "name",
  *                   "title",
@@ -86,7 +86,6 @@ var logger = Logger.getLogger("widget");
  * 
  * @todo filtrage des couches
  * @todo gestion des sous categories
- * @todo la patience
  * @todo type:service
  * @todo validation du schema
  */
@@ -110,7 +109,7 @@ class Catalog extends Control {
      *           layerLabel : "title",
      *           layerFilter : [],
      *           search : {
-     *               active : true, 
+     *               display : true, 
      *               criteria : [
      *                   "name",
      *                   "title",
@@ -177,10 +176,11 @@ class Catalog extends Control {
         // le DOM est mis en place sans la liste des couches du catalogue
         // car l'opération peut être async si un download est demandé.
         // une patience permet d'attendre que la liste soit récupérée.
+        this.showWaiting();
         this.initLayersList()
             .then((data) => {
-                // TODO gestion de la patience
                 logger.trace(this, data);
+                this.hideWaiting();
                 /**
                  * event triggered when data is loaded
                  *
@@ -199,6 +199,7 @@ class Catalog extends Control {
                 });
             })
             .catch((e) => {
+                this.hideWaiting();
                 // TODO gestion des erreurs
                 logger.error(e);
             });
@@ -270,8 +271,8 @@ class Catalog extends Control {
             titleSecondary : "Gérer vos couches de données",
             layerLabel : "title",
             layerFilter : [], // TODO filtre
-            search : { // TODO recherche
-                active : true, 
+            search : {
+                display : true, 
                 criteria : [
                     "name",
                     "title",
@@ -285,11 +286,12 @@ class Catalog extends Control {
                     id : "data",
                     default : true,
                     filter : null
-                    // TODO sous categories
+                    // TODO sous categories avec ou sans section
                     // items : [
                     //     {
                     //         title : "",
                     //         default : true,
+                    //         section : true,
                     //         filter : {
                     //             field : "",
                     //             value : ""
@@ -328,6 +330,7 @@ class Catalog extends Control {
         this.panelCatalogHeaderContainer = null; // usefull for the dragNdrop
         this.buttonCatalogClose = null;
         this.contentCatalogContainer = null;
+        this.waitingContainer = null;
 
         /** 
          * specify all list of layers (configuration service)
@@ -336,12 +339,6 @@ class Catalog extends Control {
          * @see [jsdoc](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc)
          */
         this.layersList = [];
-
-        /** 
-         * specify the current category selected 
-         * @type {String} 
-         */
-        this.categoryId = "";
 
         /**
          * specify all categories
@@ -352,14 +349,42 @@ class Catalog extends Control {
             // INFO
             // on reecrit correctement les categories
             // ex. properties mal renseignées tels que id ou default 
+            var items = cat.items;
+            if (cat.items) {
+                items = cat.items.map((i) => {
+                    return {
+                        title : i.title,
+                        id : i.id || Array.from(i.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
+                        section : i.hasOwnProperty("section") ? i.section : false,
+                        default : i.hasOwnProperty("default") ? i.default : false,
+                        filter : i.filter || null,
+                    };
+                });
+            }
             return {
                 title : cat.title,
                 id : cat.id || Array.from(cat.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
                 default : cat.hasOwnProperty("default") ? cat.default : false,
                 filter : cat.filter || null,
-                items : cat.items || null
+                items : items || null
             };
         });
+
+        /** 
+         * specify the current category selected 
+         * @type {String} 
+         */
+        this.categoryId = (() => {
+            // INFO
+            // par défaut, la categorie affichée sera la 1ere 
+            // sauf si on a specifié une categorie avec l'attribut 'default:true'
+            var index = this.categories.findIndex((category) => category.default);
+            if (index === -1) {
+                index = 0;
+                this.categories[index].default = true;
+            }
+            return this.categories[index].id;
+        })();
 
         /** 
          * list of layers added on map by key pair : name/service 
@@ -402,10 +427,17 @@ class Catalog extends Control {
         widgetPanelDiv.appendChild(widgetPanelHeader);
 
         var widgetContentDiv = this._createCatalogPanelContentDivElement();
+
         // container for the custom dynamic code (cf. initLayersList())
         var widgetContentElementDiv = this.contentCatalogContainer = this._createCatalogContentDivElement();
         widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
-        widgetContentElementDiv.appendChild(this._createCatalogContentSearchElement());
+        if (this.options.search.display) {
+            widgetContentElementDiv.appendChild(this._createCatalogContentSearchElement());
+        }
+        // waiting
+        var waiting = this.waitingContainer = this._createCatalogWaitingElement();
+        widgetContentElementDiv.appendChild(waiting);
+
         widgetContentDiv.appendChild(widgetContentElementDiv);
         widgetPanelDiv.appendChild(widgetContentDiv);
         
@@ -427,23 +459,21 @@ class Catalog extends Control {
         var self = this;
         const createCatalogContentEntries = (layers) => {
             var container = self.contentCatalogContainer;
-    
-            // on applique un filtre sur la liste des couches
-            var layersFiltered = getLayersByFilter(self.options.layerFilter, layers);
-
-            // INFO
-            // par défaut, la categorie affichée sera la 1ere 
-            // sauf si on a specifié une categorie avec l'attribut 'default:true'
-            var index = this.categories.findIndex((category) => category.default);
-            if (index === -1) {
-                index = 0;
-                this.categories[index].default = true;
-            }
-            self.categoryId = this.categories[index].id;
 
             var widgetContentEntryTabs = self._createCatalogContentCategoriesTabs(this.categories);
             container.appendChild(widgetContentEntryTabs);
             
+            var categories = []; // remise à plat des catégories / sous-categories
+            self.categories.forEach((category) => {
+                if (category.items) {
+                    for (let i = 0; i < category.items.length; i++) {
+                        const element = category.items[i];
+                        categories.push(element);
+                    }
+                } else {
+                    categories.push(category);
+                }
+            });
             // INFO
             // les containers de contenu sont definis à partir 
             // de l'ordre des catégories / sous-categories
@@ -451,8 +481,8 @@ class Catalog extends Control {
             var contents = container.querySelectorAll(".tabcontent");
             for (let i = 0; i < contents.length; i++) {
                 const content = contents[i];
-                var layersCategorised = getLayersByCategory(this.categories[i], layersFiltered);
-                content.appendChild(self._createCatalogContentCategoryTabContent(this.categories[i].id, layersCategorised));
+                var layersCategorised = getLayersByCategory(categories[i], layers);
+                content.appendChild(self._createCatalogContentCategoryTabContent(categories[i].id, layersCategorised));
             }
         };
         
@@ -518,10 +548,13 @@ class Catalog extends Control {
                 }
             }
 
-            // sauvegarde de la liste des couches
-            this.layersList = data.layers;
+            // on applique un filtre sur la liste des couches
+            var layers = getLayersByFilter(this.options.layerFilter, data.layers);
 
-            createCatalogContentEntries(data.layers);
+            // sauvegarde de la liste des couches
+            this.layersList = layers;
+
+            createCatalogContentEntries(layers);
             return new Promise((resolve, reject) => {
                 resolve(data);
             });
@@ -587,10 +620,13 @@ class Catalog extends Control {
                     }
                 }
 
-                // sauvegarde de la liste des couches
-                this.layersList = data.layers;
+                // on applique un filtre sur la liste des couches
+                var layers = getLayersByFilter(this.options.layerFilter, data.layers);
 
-                createCatalogContentEntries(data.layers);
+                // sauvegarde de la liste des couches
+                this.layersList = layers;
+
+                createCatalogContentEntries(layers);
                 return await new Promise((resolve, reject) => {
                     resolve(data);
                 });
@@ -660,6 +696,19 @@ class Catalog extends Control {
     }
 
     // ################################################################### //
+    // ######################## methods waiting ########################## //
+    // ################################################################### //
+
+    hideWaiting () {
+        // /* GPwaitingContainer */
+        // /* gpf-waiting */
+        this.waitingContainer.className = "GPwaitingContainerHidden  gpf-waiting--hidden";
+    }
+
+    showWaiting () {
+        this.waitingContainer.className = "GPwaitingContainerVisible gpf-waiting--visible";
+    }
+    // ################################################################### //
     // ######################## methods search ########################### //
     // ################################################################### //
     
@@ -712,8 +761,16 @@ class Catalog extends Control {
      * @param {*} hidden  - ...
      */
     updateFilteredLayersListDOM (id, service, hidden) {
-        var categories = this.categories.map((cat) => {
-            return cat.id;
+        var categories = []; // remise à plat des catégories / sous-categories
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categories.push(element.id);
+                }
+            } else {
+                categories.push(category.id);
+            }
         });
 
         for (let i = 0; i < categories.length; i++) {

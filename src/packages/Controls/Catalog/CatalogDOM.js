@@ -219,6 +219,26 @@ var CatalogDOM = {
 
         return shadow;
     },
+    /**
+     * Create Waiting Panel
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createCatalogWaitingElement : function () {
+        var div = document.createElement("div");
+        div.id = this._addUID("GPcatalogCalcWaitingContainer");
+        // /* GPwaitingContainer */
+        // /* gpf-waiting */
+        div.className = "GPwaitingContainerHidden gpf-waiting--hidden";
+
+        var p = document.createElement("p");
+        p.className = "GPwaitingContainerInfo gpf-waiting_info";
+        p.innerHTML = "Recherche en cours...";
+
+        div.appendChild(p);
+
+        return div;
+    },
     _createCatalogContentCategoriesTabs : function (categories) {
         var strTabButtons = "";
         var tmplTabButton = (i, id, title, selected) => {
@@ -238,30 +258,63 @@ var CatalogDOM = {
             `;            
         };
 
-        var strTabPanels = "";
-        var tmplTabPanel = (i, id, selected) => {
+        var strSubSections = "";
+        var tmplSubSection = (subsection) => {
+            var checked = subsection.default;
+            return `
+            <div class="fr-fieldset__element fr-fieldset__element--inline">
+                <div class="fr-radio-group fr-radio-group--sm">
+                    <input type="radio" id="radio-inline_${subsection.id}" name="radio-inline" checked=${checked} aria-controls="tabcontent-${subsection.id}">
+                    <label class="fr-label" for="radio-inline_${subsection.id}">
+                        ${subsection.title}
+                    </label>
+                </div>
+            </div>
+            `;
+        };
+        var tmplSubSections = (id, subsections) => {
+            // chaque sous categories à son propre container de couches
+            // et son bouton radio de groupe
+            var strTabContents = "";
+            for (let j = 0; j < subsections.length; j++) {
+                const subsection = subsections[j];
+                strSubSections += tmplSubSection(subsection);
+                strTabContents += `<div class="tabcontent" role="tabpanel-subsection" id="tabcontent-${subsection.id}"></div>`;
+            }
+            return `
+            <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend radio-inline-messages">
+                ${strSubSections}
+                <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive"></div>
+            </fieldset>
+            ${strTabContents}
+            `;
+        };
+
+        var strTabPanelContents = "";
+        var tmplTabPanelContent = (i, id, selected, subsections) => {
             var className = "fr-tabs__panel";
             var tabindex = -1;
             if (selected) {
                 className = "fr-tabs__panel fr-tabs__panel--selected";
                 tabindex = 0;
             }
+            var strTabContent = "<div class=\"tabcontent\"></div>";
+            if (subsections) {
+                strTabContent = tmplSubSections(id, subsections);
+            }
             // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) : 
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
             return `
             <div id="tabpanel-${i}-panel_${id}" class="${className}" role="tabpanel" aria-labelledby="tabbutton-${i}_${id}" tabindex="${tabindex}" style="max-height: 250px;overflow-y: auto;">
-                <p>
-                    <div class="tabcontent"></div>
-                </p>
+                ${strTabContent}
             </div>
             `;
         };
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
-            // par defaut, le 1er onglet est sélectionné
             strTabButtons += tmplTabButton(i, category.id, category.title, category.default);
-            strTabPanels += tmplTabPanel(i, category.id, category.default);
+            strTabPanelContents += tmplTabPanelContent(i, category.id, category.default, category.items);
         }
 
         var strContainer = `
@@ -272,7 +325,7 @@ var CatalogDOM = {
                 <ul class="fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
                     ${strTabButtons}
                 </ul>
-                ${strTabPanels}
+                ${strTabPanelContents}
             </div>
         </div>
         `;
@@ -283,7 +336,21 @@ var CatalogDOM = {
         shadow.innerHTML = strContainer.trim();
 
         // event listener sur le DOM
-        var panels = shadow.querySelectorAll("[role=\"tabpanel\"]");
+        var panelSubSections = shadow.querySelectorAll("[role=\"tabpanel-subsection\"]");
+        var radios = shadow.querySelectorAll("[name=\"radio-inline\"]");
+        if (radios) {
+            radios.forEach((radio) => {
+                radio.addEventListener("change", (e) => {
+                    for (let j = 0; j < panelSubSections.length; j++) {
+                        const panel = panelSubSections[j];
+                        panel.classList.add("gpf-hidden");
+                    }
+                    var panel = document.getElementById(e.target.getAttribute("aria-controls"));
+                    panel.classList.remove("gpf-hidden");
+                });
+            });
+        }
+        var panelContents = shadow.querySelectorAll("[role=\"tabpanel\"]");
         var buttons = shadow.querySelectorAll("[role=\"tabbutton\"]");
         if (buttons) {
             buttons.forEach((btn) => {
@@ -305,8 +372,8 @@ var CatalogDOM = {
                     // modifier les autres panneaux :
                     //   supp class fr-tabs__panel--selected
                     //   modif tabindex=-1
-                    for (let j = 0; j < panels.length; j++) {
-                        const panel = panels[j];
+                    for (let j = 0; j < panelContents.length; j++) {
+                        const panel = panelContents[j];
                         panel.setAttribute("tabindex", -1);
                         panel.classList.remove("fr-tabs__panel--selected");
                         panel.classList.add("gpf-hidden");
@@ -323,6 +390,7 @@ var CatalogDOM = {
                 });
             });
         }
+
         return shadow;
     },
     _createCatalogContentCategoryTabContent : function (category, layers) {
