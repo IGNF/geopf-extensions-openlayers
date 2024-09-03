@@ -34,7 +34,7 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
      * @param {*} options - options
      * @example
      * import GeoportalOverviewMap from "gpf-ext-ol/controls/GeoportalOverviewMap"
-     * ou 
+     * ou
      * import { GeoportalOverviewMap } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -299,7 +299,7 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         // button
         var button = elements[1];
         button.id = "GPshowOverviewMap-" +  this._uid;
-        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowOverviewMap", "gpf-btn-icon-overviewmap", "fr-btn", "fr-btn--primary");
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowOverviewMap", "gpf-btn-icon gpf-btn-icon-overviewmap", "fr-btn", "fr-btn--primary");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -327,7 +327,7 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
                 });
             });
         }
-        
+
         // Surcharge CSS de positionnement par defaut
         if (this.options.position) {
             this.element.style.position = "unset";
