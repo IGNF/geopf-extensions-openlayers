@@ -198,6 +198,7 @@
 
 .gpf-btn-icon {
   width: inherit;
+  caret-color: transparent;
 }
 
 .gpf-btn-icon-reset::after {
