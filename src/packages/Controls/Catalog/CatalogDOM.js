@@ -189,7 +189,7 @@ var CatalogDOM = {
                 <label class="fr-label" for="search-input">
                     Recherche
                 </label>
-                <input class="fr-input" placeholder="Rechercher" type="search" id="search-input" name="search-input">
+                <input class="fr-input" placeholder="Rechercher" type="search" id="search-input" name="search-input" incremental>
                 <button id="search-button" class="fr-btn" title="Rechercher">
                     Rechercher
                 </button>
@@ -205,15 +205,15 @@ var CatalogDOM = {
         // event listener sur le DOM
         var button = shadow.getElementById("search-button");
         if (button) {
-            button.addEventListener("click", (e) => {
-                this.onSearchCatalogButtonClick(e);
+            button.addEventListener("click", () => {
+                this.onSearchCatalogButtonClick();
             });
         }
 
         var input = shadow.getElementById("search-input");
         if (input) {
-            input.addEventListener("search", (e) => {
-                this.onSearchCatalogInputChange(e);
+            input.addEventListener("search", () => {
+                this.onSearchCatalogInputChange();
             });
         }
 

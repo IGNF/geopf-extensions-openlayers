@@ -966,10 +966,9 @@ class Catalog extends Control {
 
     /**
      * 
-     * @param {*} e - ...
      * @private
      */
-    onSearchCatalogButtonClick (e) {
+    onSearchCatalogButtonClick () {
         // INFO
         // la saisie du critère de recherche doit filtrer la liste des couches affichée 
         // dans l'onglet courant.
@@ -982,11 +981,10 @@ class Catalog extends Control {
 
     /**
      * 
-     * @param {*} e - ... 
      * @private
      */
-    onSearchCatalogInputChange (e) {
-        this.resetFilteredLayersList();
+    onSearchCatalogInputChange () {
+        this.onSearchCatalogButtonClick();
     }
 
 };
