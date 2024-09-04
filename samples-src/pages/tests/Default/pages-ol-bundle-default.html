@@ -127,6 +127,17 @@
                   position : "bottom-left"
                 });
                 map.addControl(zoom);
+
+                var fullscreen = new ol.control.GeoportalFullScreen({
+                  position : "top-right"
+                });
+                map.addControl(fullscreen);
+
+                var overview = new ol.control.GeoportalOverviewMap({
+                  position : "bottom-left",
+                  collapsed: false
+                });
+                map.addControl(overview);
               };
 
               Gp.Services.getConfig({
