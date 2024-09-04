@@ -425,11 +425,12 @@ var CatalogDOM = {
         // TODO
         // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
         var tmplSection = (id, categoryId, title, count, data) => {
+            // FIXME la maquette ne possède pas de compteur de couches
             return `
             <!-- section -->
             <section class="fr-accordion" style="width:100%;">
                 <h3 class="fr-accordion__title">
-                    <button class="fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">${title} (${count})</button>
+                    <button class="fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">${title}</button>
                 </h3>
                 <div class="fr-collapse" id="accordion-${id}">
                     ${data}
