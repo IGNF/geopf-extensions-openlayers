@@ -258,32 +258,38 @@ var CatalogDOM = {
             `;            
         };
 
-        var strSubSections = "";
-        var tmplSubSection = (subsection) => {
-            var checked = subsection.default;
+        var strSectionRadios = "";
+        var tmplSectionRadio = (section) => {
+            var checked = (section.default) ? "checked" : "";
             return `
+            <!-- sous categorie -->
             <div class="fr-fieldset__element fr-fieldset__element--inline">
                 <div class="fr-radio-group fr-radio-group--sm">
-                    <input type="radio" id="radio-inline_${subsection.id}" name="radio-inline" checked=${checked} aria-controls="tabcontent-${subsection.id}">
-                    <label class="fr-label" for="radio-inline_${subsection.id}">
-                        ${subsection.title}
+                    <input type="radio" id="radio-inline_${section.id}" name="radio-inline" ${checked} aria-controls="tabcontent-${section.id}">
+                    <label class="fr-label" for="radio-inline_${section.id}">
+                        ${section.title}
                     </label>
                 </div>
             </div>
             `;
         };
-        var tmplSubSections = (id, subsections) => {
+        var tmplSectionRadios = (id, sections) => {
             // chaque sous categories à son propre container de couches
             // et son bouton radio de groupe
             var strTabContents = "";
-            for (let j = 0; j < subsections.length; j++) {
-                const subsection = subsections[j];
-                strSubSections += tmplSubSection(subsection);
-                strTabContents += `<div class="tabcontent" role="tabpanel-subsection" id="tabcontent-${subsection.id}"></div>`;
+            for (let j = 0; j < sections.length; j++) {
+                const section = sections[j];
+                strSectionRadios += tmplSectionRadio(section);
+                var hidden = "";
+                if (!section.default) {
+                    hidden = "gpf-hidden";
+                }
+                strTabContents += `<div class="tabcontent ${hidden}" role="tabpanel-section" id="tabcontent-${section.id}"></div>`;
             }
             return `
+            <!-- sous categories -->
             <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend radio-inline-messages">
-                ${strSubSections}
+                ${strSectionRadios}
                 <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive"></div>
             </fieldset>
             ${strTabContents}
@@ -291,7 +297,7 @@ var CatalogDOM = {
         };
 
         var strTabPanelContents = "";
-        var tmplTabPanelContent = (i, id, selected, subsections) => {
+        var tmplTabPanelContent = (i, id, selected, sections) => {
             var className = "fr-tabs__panel";
             var tabindex = -1;
             if (selected) {
@@ -299,12 +305,13 @@ var CatalogDOM = {
                 tabindex = 0;
             }
             var strTabContent = "<div class=\"tabcontent\"></div>";
-            if (subsections) {
-                strTabContent = tmplSubSections(id, subsections);
+            if (sections) {
+                strTabContent = tmplSectionRadios(id, sections);
             }
             // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) : 
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
             return `
+            <!-- panneaux -->
             <div id="tabpanel-${i}-panel_${id}" class="${className}" role="tabpanel" aria-labelledby="tabbutton-${i}_${id}" tabindex="${tabindex}" style="max-height: 250px;overflow-y: auto;">
                 ${strTabContent}
             </div>
@@ -319,7 +326,6 @@ var CatalogDOM = {
 
         var strContainer = `
         <!-- onglets -->
-         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/onglet -->
         <div class="catalog-container-tabs">
             <div class="fr-tabs">
                 <ul class="fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
@@ -336,14 +342,14 @@ var CatalogDOM = {
         shadow.innerHTML = strContainer.trim();
 
         // event listener sur le DOM
-        var panelSubSections = shadow.querySelectorAll("[role=\"tabpanel-subsection\"]");
+        var panelSections = shadow.querySelectorAll("[role=\"tabpanel-section\"]");
         var radios = shadow.querySelectorAll("[name=\"radio-inline\"]");
         if (radios) {
             radios.forEach((radio) => {
                 radio.addEventListener("change", (e) => {
-                    for (let j = 0; j < panelSubSections.length; j++) {
-                        const panel = panelSubSections[j];
-                        panel.classList.add("gpf-hidden");
+                    for (let j = 0; j < panelSections.length; j++) {
+                        const section = panelSections[j];
+                        section.classList.add("gpf-hidden");
                     }
                     var panel = document.getElementById(e.target.getAttribute("aria-controls"));
                     panel.classList.remove("gpf-hidden");
@@ -393,36 +399,91 @@ var CatalogDOM = {
 
         return shadow;
     },
-    _createCatalogContentCategoryTabContent : function (category, layers) {
-        // FIXME on n'utilise pas le champ description car il peut contenir du HTML...
+    _createCatalogContentCategoryTabContent : function (category, layersFiltered) {
+        var layers = Object.values(layersFiltered); // object -> array
+        
         var strElements = "";
-        var tmplElement = (i, id, title, service, category) => {
+        var tmplElement = (i, name, title, service, categoryId) => {
+            // FIXME doit on l'utiliser le champ description en HTML ?
+
             // le listener sur l'input permet de récuperer à partir de l'ID 
             // la paire name/service pour identifier la couche: 
-            // > "checkboxes-${category}-${i}_${id}-${service}".split('_')[1]
+            // > "checkboxes-${categoryId}-${i}_${name}-${service}".split('_')[1]
             return `
-            <div class="fr-fieldset__element" id="fieldset-${category}_${id}-${service}">
+            <div class="fr-fieldset__element" id="fieldset-${categoryId}_${name}-${service}">
                 <div class="fr-checkbox-group">
-                    <input name="checkboxes-${category}" id="checkboxes-${category}-${i}_${id}-${service}" type="checkbox" aria-describedby="checkboxes-messages-${category}-${i}_${id}-${service}">
-                    <label class="fr-label" for="checkboxes-${category}-${i}_${id}-${service}" title="${title}">
+                    <input name="checkboxes-${categoryId}" id="checkboxes-${categoryId}-${i}_${name}-${service}" type="checkbox" aria-describedby="checkboxes-messages-${categoryId}-${i}_${name}-${service}">
+                    <label class="fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="${title}">
                         ${title} (${service})
                     </label>
-                    <div class="fr-messages-group" id="checkboxes-messages-${category}-${i}_${id}-${service}" aria-live="assertive"></div>
+                    <div class="fr-messages-group" id="checkboxes-messages-${categoryId}-${i}_${name}-${service}" aria-live="assertive"></div>
                 </div>
             </div>
             `;
         };
-            
+        
+        // TODO
+        // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
+        var tmplSection = (id, categoryId, title, count, data) => {
+            return `
+            <!-- section -->
+            <section class="fr-accordion" style="width:100%;">
+                <h3 class="fr-accordion__title">
+                    <button class="fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">${title} (${count})</button>
+                </h3>
+                <div class="fr-collapse" id="accordion-${id}">
+                    ${data}
+                </div>
+            </section>
+            `;
+        };
+
         // INFO 
         // les couches par catégorie sont filtrées au préalable
-        var i = 0;
-        for (const layer in layers) {
-            strElements += tmplElement(i, layers[layer].name, layers[layer].title, layers[layer].service, category);
-            i++;
+        // on ajoute la repartition par section des couches !
+        var isSection = category.section;
+        if (isSection) {
+            // on procède à un tri
+            // ex. tri sur le champ 'thematic'
+            layers = layers.sort((a, b) => {
+                return a[category.filter.field].localeCompare(b[category.filter.field]);
+            });
         }
 
+        var sections = {};
+        for (let i = 0; i < layers.length; i++) {
+            const layer = layers[i];
+            // INFO
+            // a t on des sections ?
+            // - oui, si elle correspond au filtre, on ajoute la couche dans la section 
+            //   sinon, on ecarte cette couche ou on la met dans la section "Autres"
+            // - non, on ajoute directement la couche
+            if (isSection) {
+                var title = layer[category.filter.field];
+                if (title) {
+                    if (!sections.hasOwnProperty(title)) {
+                        sections[title] = "";
+                    }
+                    sections[title] += tmplElement(i, layer.name, layer.title, layer.service, category.id);
+                }
+            } else {
+                strElements += tmplElement(i, layer.name, layer.title, layer.service, category.id);
+            }
+        }
+
+        if (isSection) {
+            for (const title in sections) {
+                if (Object.prototype.hasOwnProperty.call(sections, title)) {
+                    const data = sections[title];
+                    var count = [...data.matchAll(/fr-fieldset__element/g)].length;
+                    var id = Math.abs(Array.from(title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
+                    strElements += tmplSection(id, category.id, title, count, data);
+                }
+            }
+        }
         var strContainer = `
-            <fieldset class="fr-fieldset" id="checkboxes-${category}" aria-labelledby="checkboxes-legend checkboxes-messages">
+            <!-- liste de couches -->
+            <fieldset class="fr-fieldset" id="checkboxes-${category.id}" aria-labelledby="checkboxes-legend checkboxes-messages">
                 ${strElements}
             </fieldset>
         `;
@@ -433,8 +494,8 @@ var CatalogDOM = {
         shadow.innerHTML = strContainer.trim();
 
         // event listener sur le DOM
-        var name = `checkboxes-${category}`;
-        var inputs = shadow.querySelectorAll("[name=" + "\"" + name + "\"]");
+        var inputName = `checkboxes-${category.id}`;
+        var inputs = shadow.querySelectorAll("[name=" + "\"" + inputName + "\"]");
         if (inputs) {
             inputs.forEach((input) => {
                 input.addEventListener("click", (e) => {
@@ -444,7 +505,22 @@ var CatalogDOM = {
                     this.onSelectCatalogEntryClick(e);
                 });
             });
-        } 
+        }
+        var buttonName = `button-collapse-${category.id}`;
+        var buttons = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
+        if (buttons) {
+            buttons.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (e.target.ariaExpanded === "true") {
+                        collapse.classList.add("fr-collapse--expanded");
+                    } else {
+                        collapse.classList.remove("fr-collapse--expanded");
+                    }
+                });
+            });
+        }
         return shadow;
     }
 

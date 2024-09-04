@@ -85,7 +85,7 @@ var logger = Logger.getLogger("widget");
  * map.addControl(widget);
  * 
  * @todo filtrage des couches
- * @todo gestion des sous categories
+ * @todo gestion des sous categories avec sections
  * @todo type:service
  * @todo validation du schema
  */
@@ -354,7 +354,7 @@ class Catalog extends Control {
                 items = cat.items.map((i) => {
                     return {
                         title : i.title,
-                        id : i.id || Array.from(i.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
+                        id : i.id || Math.abs(Array.from(i.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0)),
                         section : i.hasOwnProperty("section") ? i.section : false,
                         default : i.hasOwnProperty("default") ? i.default : false,
                         filter : i.filter || null,
@@ -363,7 +363,7 @@ class Catalog extends Control {
             }
             return {
                 title : cat.title,
-                id : cat.id || Array.from(cat.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0),
+                id : cat.id || Math.abs(Array.from(cat.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0)),
                 default : cat.hasOwnProperty("default") ? cat.default : false,
                 filter : cat.filter || null,
                 items : items || null
@@ -482,7 +482,7 @@ class Catalog extends Control {
             for (let i = 0; i < contents.length; i++) {
                 const content = contents[i];
                 var layersCategorised = getLayersByCategory(categories[i], layers);
-                content.appendChild(self._createCatalogContentCategoryTabContent(categories[i].id, layersCategorised));
+                content.appendChild(self._createCatalogContentCategoryTabContent(categories[i], layersCategorised));
             }
         };
         
