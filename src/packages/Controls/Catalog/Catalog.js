@@ -85,7 +85,6 @@ var logger = Logger.getLogger("widget");
  * map.addControl(widget);
  * 
  * @todo filtrage des couches
- * @todo gestion des sous categories avec sections
  * @todo type:service
  * @todo validation du schema
  */
@@ -231,9 +230,16 @@ class Catalog extends Control {
                 this.buttonCatalogShow.setAttribute("aria-pressed", true);
             }
 
-            // some stuff
+            // ajout des evenements sur la carte
+            if (this.auto) {
+                this.addEventsListeners(map);
+            }
         } else {
-            // some stuff
+            // suppression des evenements sur la carte
+            // pour les futurs suppressions de couche
+            if (this.auto) {
+                this.removeEventsListeners();
+            }
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
@@ -267,6 +273,7 @@ class Catalog extends Control {
         this.options = {
             collapsed : true,
             draggable : false,
+            auto : true,
             titlePrimary : "",
             titleSecondary : "Gérer vos couches de données",
             layerLabel : "title",
@@ -286,7 +293,8 @@ class Catalog extends Control {
                     id : "data",
                     default : true,
                     filter : null
-                    // TODO sous categories avec ou sans section
+                    // INFO 
+                    // > sous categories avec ou sans section
                     // items : [
                     //     {
                     //         title : "",
@@ -323,6 +331,18 @@ class Catalog extends Control {
          * @type {Boolean} 
          */
         this.draggable = this.options.draggable;
+
+        /** 
+         * specify if control add some stuff auto 
+         * @type {Boolean} 
+         */
+        this.auto = this.options.auto;
+
+        /**
+         * specify some events listeners 
+         * @type {Array} 
+         */
+        this.eventsListeners = [];
 
         // DOM
         this.buttonCatalogShow = null;
@@ -643,6 +663,61 @@ class Catalog extends Control {
     // ################################################################### //
 
     /**
+     * Add events listeners on map (called by setMap)
+     * 
+     * @param {*} map - map
+     * @private
+     */
+    addEventsListeners (map) {
+        var self = this;
+        this.eventsListeners["map:add"] = function (e) {
+            logger.trace(e);
+            var name = e.element.name;
+            var service = e.element.service;
+            // sauvegarde
+            self.layersListOnMap[name + ":" + service] = e.element;
+            // cocher la case dans le catalogue
+            var inputs = document.querySelectorAll(`input[data-layer="${name}:${service}"]`);
+            if (inputs) {
+                inputs.forEach((input) => {
+                    input.checked = true;
+                });
+            }
+        };
+        // the event custom:action is associate with an openlayers event 
+        map.getLayers().on("add", this.eventsListeners["map:add"]);
+
+        this.eventsListeners["map:remove"] = function (e) {
+            logger.trace(e);
+            var name = e.element.name;
+            var service = e.element.service;
+            // sauvegarde
+            delete self.layersListOnMap[name + ":" + service];
+            // decocher la case dans le catalogue
+            var inputs = document.querySelectorAll(`input[data-layer="${name}:${service}"]`);
+            if (inputs) {
+                inputs.forEach((input) => {
+                    input.checked = false;
+                });
+            }
+        };
+        // the event custom:action is associate with an openlayers event 
+        map.getLayers().on("remove", this.eventsListeners["map:remove"]);
+    }
+
+    /**
+     * Remove events listeners on map (called by setMap)
+     * @private
+     */
+    removeEventsListeners () {
+        var map = this.getMap();
+        map.getLayers().un("add", this.eventsListeners["map:add"]);
+        delete this.eventsListeners["map:add"];
+        map.getLayers().un("remove", this.eventsListeners["map:remove"]);
+        delete this.eventsListeners["map:remove"];
+    }
+
+    /**
      * Add layer on map
      * 
      * @param {*} name - layer name
@@ -881,7 +956,7 @@ class Catalog extends Control {
              * })
              */
             this.dispatchEvent({
-                type : "catalog:layer:add",
+                type : "catalog:layer:remove",
                 name : name,
                 service : service,
                 layer : layer

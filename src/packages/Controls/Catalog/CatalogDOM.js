@@ -412,7 +412,12 @@ var CatalogDOM = {
             return `
             <div class="fr-fieldset__element" id="fieldset-${categoryId}_${name}-${service}">
                 <div class="fr-checkbox-group">
-                    <input name="checkboxes-${categoryId}" id="checkboxes-${categoryId}-${i}_${name}-${service}" type="checkbox" aria-describedby="checkboxes-messages-${categoryId}-${i}_${name}-${service}">
+                    <input 
+                        name="checkboxes-${categoryId}" 
+                        id="checkboxes-${categoryId}-${i}_${name}-${service}" 
+                        type="checkbox" 
+                        data-layer="${name}:${service}"
+                        aria-describedby="checkboxes-messages-${categoryId}-${i}_${name}-${service}">
                     <label class="fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="${title}">
                         ${title} (${service})
                     </label>
@@ -422,7 +427,6 @@ var CatalogDOM = {
             `;
         };
         
-        // TODO
         // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
         var tmplSection = (id, categoryId, title, count, data) => {
             // FIXME la maquette ne possède pas de compteur de couches
