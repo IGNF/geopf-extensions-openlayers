@@ -29,3 +29,7 @@ dialog[id^="GPcatalogPanel-"] {
 form[id^=GPcatalogForm] {
     padding: 15px;
 }
+
+.catalog-container-tabs .fr-accordion .fr-collapse--expanded {
+    padding-bottom: 0;
+}
