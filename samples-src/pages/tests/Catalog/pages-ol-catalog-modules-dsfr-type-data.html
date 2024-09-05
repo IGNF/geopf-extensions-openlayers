@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-          
+
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
 {{/content}}
@@ -41,6 +41,7 @@
                     if (response.status !== 200) {
                         throw new Error("Erreur de récupération du JSON !");
                     }
+                    return data;
                 }
                 var data = getData();
                 var map;
@@ -62,18 +63,19 @@
                             zoom : 8
                         })
                     });
-
-                    var catalog = new ol.control.Catalog({
-                        position: "top-left",
-                        configuration : {
-                            type : "json",
-                            data : data
-                        }
-                    });
-                    map.addControl(catalog);
+                    data.then( data => {
+                        var catalog = new ol.control.Catalog({
+                            position: "top-left",
+                            configuration : {
+                                type : "json",
+                                data : data
+                            }
+                        });
+                        map.addControl(catalog);
+                    })
                 };
                 Gp.Services.getConfig({
-                    customConfigFile : "{{ configurl }}",
+                    customConfigFile : "{{ resources }}/data/configuration/sample.json",
                     callbackSuffix : "",
                     // apiKey: "{{ apikey }}",
                     timeOut : 20000,
