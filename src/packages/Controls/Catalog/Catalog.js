@@ -521,7 +521,8 @@ class Catalog extends Control {
                     if (Object.prototype.hasOwnProperty.call(layers, key)) {
                         const layer = layers[key];
                         if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
-                            if (filter.value === "*" || layer[filter.field].toString() === filter.value) {
+                            var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
+                            if (condition) {
                                 layersCategorised[key] = layer;
                                 // on ajoute l'appartenance de la couche à une categorie
                                 this.layersList[key].categories.push(category.id);
