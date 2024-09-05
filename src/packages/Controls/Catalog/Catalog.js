@@ -28,6 +28,8 @@ var logger = Logger.getLogger("widget");
  *
  * @constructor
  * @alias ol.control.Catalog
+ * @type {ol.control.Catalog}
+ * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  * 
  * @fires catalog:loaded
@@ -363,7 +365,6 @@ class Catalog extends Control {
         /**
          * specify all categories
          * @type {Array}
-         * @todo gestion des sous categories
          */
         this.categories = this.options.categories.map((cat) => {
             // INFO
@@ -835,6 +836,7 @@ class Catalog extends Control {
      * @param {*} id - ...
      * @param {*} service  - ...
      * @param {*} hidden  - ...
+     * @private
      */
     updateFilteredLayersListDOM (id, service, hidden) {
         var categories = []; // remise à plat des catégories / sous-categories
