@@ -60,6 +60,8 @@
         <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
         <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlLegends.css">
         <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlLegends.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/dist/modules/GpfExtOlCatalog.css">
+        <script src="/geopf-extensions-openlayers/dist/modules/GpfExtOlCatalog.js"></script>
         
         <title>Extensions avec le bundle complet</title>
         <style>
@@ -143,6 +145,41 @@
                     position : "bottom-left"
                 });
                 map.addControl(fullscreen);
+
+                var catalog = new ol.control.Catalog({
+                    position: "top-left",
+                    categories : [
+                            {
+                                title : "Fonds de carte",
+                                id : "base",
+                                filter : {
+                                    field : "base",
+                                    value : "true"
+                                }
+                            },
+                            {
+                                title : "Données",
+                                id : "data",
+                                items : [
+                                    {
+                                        title : "Thème",
+                                        default : true,
+                                        section : true,
+                                        filter : {
+                                            field : "thematic",
+                                            value : "*"
+                                        }
+                                    },
+                                    {
+                                        title : "Autres",
+                                        section : false,
+                                        filter : null
+                                    }
+                                ]
+                            }
+                    ]
+                });
+                map.addControl(catalog);
 
                 var drawing = new ol.control.Drawing({
                   position : "top-left"
