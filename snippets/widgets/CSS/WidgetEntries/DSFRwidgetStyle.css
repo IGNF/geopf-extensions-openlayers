@@ -1,0 +1,43 @@
+.gpf-btn-icon-widget {
+    background-image: url("img/dsfr/widget.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-btn-header-widget {
+    z-index: 2;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+}
+
+.gpf-btn-icon-header-widget {
+    background-image: url("img/dsfr/header-widget.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-panel__body_widget {
+    overflow: auto;
+    max-height: 300px !important;
+}
+
+.gpf-panel__title_widget {
+    color: #101092;
+    padding: 12px 15px;
+    position: relative;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    right: -16px;
+}
+.gpf-panel__header_widget {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    background: #E3E3FD;
+    height: 48px;
+}

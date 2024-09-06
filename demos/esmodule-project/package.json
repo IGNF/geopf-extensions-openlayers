@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "geopf-extensions-openlayers": "../../dist/package/geopf-extensions-openlayers.tgz",
-    "ol": "latest"
+    "ol": "latest",
+    "@gouvfr/dsfr": "^1.11.0"
   }
 }

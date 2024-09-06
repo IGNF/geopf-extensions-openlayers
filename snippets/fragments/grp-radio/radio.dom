@@ -1,0 +1,33 @@
+<div class="widget-container-content" style="padding:10px">
+    <fieldset class="fr-fieldset" id="radio-inline" aria-labelledby="radio-inline-legend radio-inline-messages">
+        <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-inline-legend">
+            Légende pour l’ensemble des éléments
+        </legend>
+        <div class="fr-fieldset__element fr-fieldset__element--inline">
+            <div class="fr-radio-group">
+                <input type="radio" id="radio-inline-1" name="radio-inline">
+                <label class="fr-label" for="radio-inline-1">
+                    Libellé bouton radio
+                </label>
+            </div>
+        </div>
+        <div class="fr-fieldset__element fr-fieldset__element--inline">
+            <div class="fr-radio-group">
+                <input type="radio" id="radio-inline-2" name="radio-inline">
+                <label class="fr-label" for="radio-inline-2">
+                    Libellé bouton radio
+                </label>
+            </div>
+        </div>
+        <div class="fr-fieldset__element fr-fieldset__element--inline">
+            <div class="fr-radio-group">
+                <input type="radio" id="radio-inline-3" name="radio-inline">
+                <label class="fr-label" for="radio-inline-3">
+                    Libellé bouton radio
+                </label>
+            </div>
+        </div>
+        <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive">
+        </div>
+    </fieldset>
+</div>

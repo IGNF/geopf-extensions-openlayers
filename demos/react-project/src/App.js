@@ -1,48 +1,51 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import View from 'ol/View';
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
+
 import 'ol/ol.css';
-import "geopf-extensions-openlayers/css/Classic.css";
+import "@gouvfr/dsfr/dist/dsfr.css";
+import "@gouvfr/dsfr/dist/utility/icons/icons.css";
+import "geopf-extensions-openlayers/css/Dsfr.css";
 import {
+  Catalog,
+  CRS,
   Drawing,
-  Isocurve,
-  Route,
-  LayerImport,
-  GeoportalAttribution,
-  GeoportalZoom,
-  GeoportalOverviewMap,
   ElevationPath,
+  GetFeatureInfo,
+  GeoportalAttribution,
+  GeoportalFullScreen,
+  GeoportalOverviewMap,
+  GeoportalZoom,
+  Isocurve,
   MeasureArea,
   MeasureAzimuth,
   MeasureLength,
-  LayerSwitcher,
   MousePosition as GeoportalMousePosition,
+  LayerImport,
+  LayerSwitcher,
+  Legends,
   ReverseGeocode,
-  SearchEngine,
-  GetFeatureInfo,
-  CRS
+  Route,
+  SearchEngine
 } from "geopf-extensions-openlayers";
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        map: null,
-        center: [0, 0],
-        zoom: 0,
-    };
-  }
+import Gp from "geoportal-access-lib";
 
-  componentDidMount() {
-    
-    this.map = new Map({
-      target: "map-container",
+function App() {
+  const [map, setMap] = useState();
+  const mapElement = useRef();
+  const mapRef = useRef();
+  mapRef.current = map;
+
+  const createMap = () => {
+    var map = new Map({
+      target: mapElement.current,
       layers: [
           new TileLayer({
               source: new OSM(),
@@ -53,99 +56,165 @@ export default class App extends React.Component {
         zoom: 8,
       }),
     })
-
+  
     CRS.load();
-
+  
+    var fullscreen = new GeoportalFullScreen({
+      position : "top-right"
+    });
+    map.addControl(fullscreen);
+  
+    var legends = new Legends({
+          collapsed: true,
+          position: "bottom-left",
+          panel: true,
+          auto: true,
+          info: true
+    });
+    map.addControl(legends);
+  
+    var catalog = new Catalog({
+          position: "top-left",
+          categories : [
+              {
+                  title : "Données",
+                  id : "data",
+                  items : [
+                      {
+                          title : "WMTS",
+                          default : true,
+                          filter : {
+                              field : "service",
+                              value : "WMTS"
+                          }
+                      },
+                      {
+                          title : "WMS",
+                          filter : {
+                              field : "service",
+                              value : "WMS"
+                          }
+                      },
+                      {
+                          title : "TMS",
+                          filter : {
+                              field : "service",
+                              value : "TMS"
+                          }
+                      },
+                      {
+                          title : "Tout",
+                          filter : null
+                      }
+                  ]
+              }
+          ],
+    });
+    map.addControl(catalog);
+  
     var overmap = new GeoportalOverviewMap({
       position : "bottom-left"
     });
-    this.map.addControl(overmap);
-
+    map.addControl(overmap);
+  
     var zoom = new GeoportalZoom({
       position: "bottom-left"
     });
-    this.map.addControl(zoom);
-
+    map.addControl(zoom);
+  
     var drawing = new Drawing({
       position: "top-left"
     });
-    this.map.addControl(drawing);
+    map.addControl(drawing);
   
     var iso = new Isocurve({
       position: "bottom-left"
     });
-    this.map.addControl(iso);
+    map.addControl(iso);
   
     var layerImport = new LayerImport({
       position: "bottom-left"
     });
-    this.map.addControl(layerImport);
+    map.addControl(layerImport);
   
     var layerSwitcher = new LayerSwitcher({
       options: {
         position: "top-right"
       }
     });
-    this.map.addControl(layerSwitcher);
+    map.addControl(layerSwitcher);
   
     var mp = new GeoportalMousePosition({
       position: "top-right"
     });
-    this.map.addControl(mp);
+    map.addControl(mp);
   
     var route = new Route({
       position: "top-right"
     });
-    this.map.addControl(route);
+    map.addControl(route);
   
     var reverse = new ReverseGeocode({
       position: "top-right"
     });
-    this.map.addControl(reverse);
+    map.addControl(reverse);
   
     var search = new SearchEngine({
       position: "top-right"
     });
-    this.map.addControl(search);
+    map.addControl(search);
   
     var feature = new GetFeatureInfo({
       options: {
         position: "top-right"
       }
     });
-    this.map.addControl(feature);
+    map.addControl(feature);
   
     var measureLength = new MeasureLength({
       position: "bottom-left"
     });
-    this.map.addControl(measureLength);
+    map.addControl(measureLength);
   
     var measureArea = new MeasureArea({
       position: "bottom-left"
     });
-    this.map.addControl(measureArea);
+    map.addControl(measureArea);
+
     var measureAzimuth = new MeasureAzimuth({
       position: "bottom-left"
     });
-    this.map.addControl(measureAzimuth);
+    map.addControl(measureAzimuth);
   
     var measureProfil = new ElevationPath({
       position: "bottom-left"
     });
-    this.map.addControl(measureProfil);
+    map.addControl(measureProfil);
   
     var attributions = new GeoportalAttribution();
-    this.map.addControl(attributions);
+    map.addControl(attributions);
+  
+    setMap(map);
+  };
 
-    this.setState(this.map);
-  }
+  const getMap = async () => {
+    var cfg = new Gp.Services.Config({
+      customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/fullConfig.json",
+      onSuccess : () => {
+        createMap();
+      },
+      onFailure : (e) => {
+        console.error(e);
+      }
+    });
+    await cfg.call();
+  };
 
-  componentWillUnmount () {
-    this.map.setTarget(undefined);
-  }
+  useEffect(() => {
+    getMap();
+  }, []); 
 
-  render() {
-    return (
+  return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
@@ -162,10 +231,10 @@ export default class App extends React.Component {
           </a>
         </header>
         <main>
-          <div style={{height:'100vh',width:'100%'}} id="map-container" className="map-container" />
+          <div style={{height:'100vh',width:'100%'}} ref={mapElement} id="map-container" className="map-container" />
         </main>
       </div>
-    );
-  }
-
+  );
 }
+
+export default App;

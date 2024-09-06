@@ -1,0 +1,35 @@
+div[id^=GPcatalog-] {
+    top: 0px;
+    right: 0px;
+}
+
+/* Showing/hiding */
+
+button[id^=GPshowCatalogPicto][aria-pressed="false"] + dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
+}
+
+button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
+    display: block;
+    visibility: visible;
+    opacity: 100%;
+    width: 370px;
+    height: initial;
+    max-height: inherit;
+}
+
+dialog[id^="GPcatalogPanel-"] {
+    position: absolute;
+    left: 34px;
+    top: 0px;
+    height: inherit;
+}
+form[id^=GPcatalogForm] {
+    padding: 15px;
+}
+
+.catalog-container-tabs .fr-accordion .fr-collapse--expanded {
+    padding-bottom: 0;
+}

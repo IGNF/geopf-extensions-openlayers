@@ -7,23 +7,26 @@ import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 
 import {
+  Catalog,
+  CRS,
   Drawing,
-  Isocurve,
-  Route,
-  LayerImport,
-  GeoportalAttribution,
-  GeoportalZoom,
-  GeoportalOverviewMap,
   ElevationPath,
+  GetFeatureInfo,
+  GeoportalAttribution,
+  GeoportalFullScreen,
+  GeoportalOverviewMap,
+  GeoportalZoom,
+  Isocurve,
   MeasureArea,
   MeasureAzimuth,
   MeasureLength,
-  LayerSwitcher,
   MousePosition as GeoportalMousePosition,
+  LayerImport,
+  LayerSwitcher,
+  Legends,
   ReverseGeocode,
-  SearchEngine,
-  GetFeatureInfo,
-  CRS
+  Route,
+  SearchEngine
 } from "../../node_modules/geopf-extensions-openlayers/src/index";
 
 @Component({
@@ -63,6 +66,59 @@ export class AppComponent implements OnInit {
       position: "bottom-left"
     });
     this.map.addControl(overmap);
+
+    var fullscreen = new GeoportalFullScreen({
+      position : "top-right"
+    });
+    this.map.addControl(fullscreen);
+
+    // var legends = new Legends({
+    //       collapsed: true,
+    //       position: "bottom-right",
+    //       panel: true,
+    //       auto: true,
+    //       info: true
+    // });
+    // this.map.addControl(legends);
+
+    // var catalog = new Catalog({
+    //       position: "top-left",
+    //       categories : [
+    //           {
+    //               title : "Données",
+    //               id : "data",
+    //               items : [
+    //                   {
+    //                       title : "WMTS",
+    //                       default : true,
+    //                       filter : {
+    //                           field : "service",
+    //                           value : "WMTS"
+    //                       }
+    //                   },
+    //                   {
+    //                       title : "WMS",
+    //                       filter : {
+    //                           field : "service",
+    //                           value : "WMS"
+    //                       }
+    //                   },
+    //                   {
+    //                       title : "TMS",
+    //                       filter : {
+    //                           field : "service",
+    //                           value : "TMS"
+    //                       }
+    //                   },
+    //                   {
+    //                       title : "Tout",
+    //                       filter : null
+    //                   }
+    //               ]
+    //           }
+    //       ],
+    // });
+    // this.map.addControl(catalog);
 
     var drawing = new Drawing({
       position: "top-left"
