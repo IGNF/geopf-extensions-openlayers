@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        
+
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
@@ -53,7 +53,8 @@
 
                     var layerSwitcher = new ol.control.LayerSwitcher({
                         options :{
-                            position: 'top-right'
+                            position: 'top-right',
+                            panel: true,
                         }
                     });
                     map.addControl(layerSwitcher);
