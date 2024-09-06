@@ -119,7 +119,7 @@ var ElevationPath = class ElevationPath extends Control {
      * @param {*} options - options
      * @example
      * import ElevationPath from "gpf-ext-ol/controls/ElevationPath"
-     * ou 
+     * ou
      * import { ElevationPath } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -856,7 +856,8 @@ var ElevationPath = class ElevationPath extends Control {
         panelDiv.appendChild(header);
 
         // profile
-        var profile = this._profileContainer = this._createElevationPathPanelProfilElement();
+        var profile = this._createElevationPathPanelProfilElement();
+        this._profileContainer = profile.firstChild;
         panelDiv.appendChild(profile);
 
         // waiting
@@ -1594,23 +1595,23 @@ var ElevationPath = class ElevationPath extends Control {
 
         // creation des infomations
         if (totalDistance) {
-            this._addElevationPathInformationsItem("Distance totale : " + Math.round(this._data.distance).toLocaleString() + " m");
+            this._addElevationPathInformationsItem("Distance totale : ", Math.round(this._data.distance).toLocaleString() + " m");
         }
 
         if (ascendingElevation) {
-            this._addElevationPathInformationsItem("Dénivelé positif : " + this._data.ascendingElevation.toLocaleString() + " m");
+            this._addElevationPathInformationsItem("Dénivelé positif : ", this._data.ascendingElevation.toLocaleString() + " m");
         }
 
         if (descendingElevation) {
-            this._addElevationPathInformationsItem("Dénivelé négatif : " + this._data.descendingElevation.toLocaleString() + " m");
+            this._addElevationPathInformationsItem("Dénivelé négatif : ", this._data.descendingElevation.toLocaleString() + " m");
         }
 
         if (meanSlope) {
-            this._addElevationPathInformationsItem("Pente moyenne : " + this._data.meanSlope.toLocaleString() + " %");
+            this._addElevationPathInformationsItem("Pente moyenne : ", this._data.meanSlope.toLocaleString() + " %");
         }
 
         if (greaterSlope) {
-            this._addElevationPathInformationsItem("Plus forte pente : " + this._data.greaterSlope.toLocaleString() + " %");
+            this._addElevationPathInformationsItem("Plus forte pente : ", this._data.greaterSlope.toLocaleString() + " %");
         }
     }
 

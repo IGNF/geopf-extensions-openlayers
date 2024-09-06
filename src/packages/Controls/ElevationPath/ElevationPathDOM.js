@@ -1,3 +1,5 @@
+import checkDsfr from "../Utils/CheckDsfr";
+
 var ElevationPathDOM = {
 
     /**
@@ -106,28 +108,30 @@ var ElevationPathDOM = {
         var container = document.createElement("div");
         container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
 
-        var divInfo = document.createElement("button");
-        divInfo.id = this._addUID("GPelevationPathPanelInfo");
-        divInfo.className = "GPpanelInfo gpf-btn gpf-btn-icon-info fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
-        divInfo.title = "Informations";
-        // add event on click
-        if (divInfo.addEventListener) {
-            divInfo.addEventListener(
-                "click",
-                function () {
-                    self.onOpenElevationPathInfoClick();
-                }
-            );
-        } else if (divInfo.attachEvent) {
-            // internet explorer
-            divInfo.attachEvent(
-                "onclick",
-                function () {
-                    self.onOpenElevationPathInfoClick();
-                }
-            );
+        if (!checkDsfr()) {
+            var divInfo = document.createElement("button");
+            divInfo.id = this._addUID("GPelevationPathPanelInfo");
+            divInfo.className = "GPpanelInfo gpf-btn gpf-btn-icon-info fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
+            divInfo.title = "Informations";
+            // add event on click
+            if (divInfo.addEventListener) {
+                divInfo.addEventListener(
+                    "click",
+                    function () {
+                        self.onOpenElevationPathInfoClick();
+                    }
+                );
+            } else if (divInfo.attachEvent) {
+                // internet explorer
+                divInfo.attachEvent(
+                    "onclick",
+                    function () {
+                        self.onOpenElevationPathInfoClick();
+                    }
+                );
+            }
+            container.appendChild(divInfo);
         }
-        container.appendChild(divInfo);
 
         var divTitle = document.createElement("div");
         divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
@@ -187,10 +191,13 @@ var ElevationPathDOM = {
      * @returns {DOMElement} DOM element
      */
     _createElevationPathPanelProfilElement : function () {
+        var wrapper = document.createElement("div");
+        wrapper.className = "GPelevationPathProfilWrapper";
         var div = document.createElement("div");
         div.id = "GPelevationPathProfil";
+        wrapper.appendChild(div);
 
-        return div;
+        return wrapper;
     },
 
     /**
@@ -220,7 +227,9 @@ var ElevationPathDOM = {
     _createElevationPathInformationsElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPelevationPathInformationsContainer");
-        div.className = "GPelementHidden gpf-hidden";
+        if (!checkDsfr()) {
+            div.className = "GPelementHidden gpf-hidden";
+        }
 
         var p = document.createElement("p");
         p.className = "GPelevationPathInformations";
@@ -233,16 +242,22 @@ var ElevationPathDOM = {
     /**
      * Add a information into Panel
      *
+     * @param {String} name - name of item
      * @param {String} value - value of item
      * @returns {DOMElement} DOM element
      */
-    _addElevationPathInformationsItem : function (value) {
+    _addElevationPathInformationsItem : function (name, value) {
         var div = document.getElementById(this._addUID("GPelevationPathInformationsContainer"));
 
         if (div) {
             var p = document.createElement("p");
             p.className = "GPelevationPathInformations";
-            p.innerHTML = value;
+            var nameEl = document.createElement("span");
+            nameEl.innerText = name;
+            var valueEl = document.createElement("span");
+            valueEl.innerText = value;
+            p.appendChild(nameEl);
+            p.appendChild(valueEl);
             div.appendChild(p);
         }
 

@@ -5,10 +5,6 @@
     background-position: center center;
   }
 
-#profileElevationByDefaultSvg {
-    height: 80%;
-}
-
 [id^=GPelevationPathPanelInfo] {
   position: absolute;
   float: left;
@@ -19,4 +15,36 @@
 [id^=GPelevationPathPanelInfo]::after {
   -webkit-mask: url("../../img/GPinfo_secondary.svg") center no-repeat;
   mask: url("../../img/GPinfo_secondary.svg") center no-repeat;
+}
+
+[id^=GPelevationPathProfil] > #profileElevationByDefault > svg {
+  transform: translateY(1rem);
+}
+
+[id^=GPelevationPathProfil] {
+  height: 150px;
+  width: 300px;
+}
+
+.GPelevationPathProfilWrapper  {
+  padding: 0 2rem;
+}
+
+div[id^=GPelevationPathInformationsContainer] {
+  display: grid;
+  width: calc(300px + 4rem);
+  padding: 0 2rem 1rem 2rem;
+  grid-template-columns: 50% 50%;
+}
+
+.GPelevationPathInformations {
+  font-size: 13px;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.25rem;
+}
+
+.GPelevationPathInformations > span {
+  white-space: nowrap;
 }
