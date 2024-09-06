@@ -35,11 +35,6 @@ button[id^="GPshowElevationPathPicto-"][aria-pressed="true"] + dialog {
 
 /* ELEVATION PATH DISPLAY */
 
-[id^=GPelevationPathProfil] {
-  height: 150px;
-  width: inherit;
-}
-
 button[id^=GPelevationPathPanelReduce] {
   display: none; /* on n'affiche pas le bouton d'information par defaut */
 }
@@ -48,14 +43,16 @@ button[id^=GPelevationPathPanelInfo] {
   display: none; /* on n'affiche pas le bouton d'information par defaut */
 }
 
-div[id^=GPelevationPathInformationsContainer] {
-  position: absolute;
-  top: 32px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 4px;
-  overflow: hidden;
+.tooltipInit {
+  opacity: 0;
 }
 
+.tooltipFadeIn {
+  transition: opacity 300ms ease 0ms, transform 50ms ease 0s, top 50ms ease 0s, left 50ms ease 0s;
+  opacity: 1;
+}
+
+.tooltipFadeOut {
+  transition: opacity 500ms ease 0ms;
+  opacity: 0;
+}

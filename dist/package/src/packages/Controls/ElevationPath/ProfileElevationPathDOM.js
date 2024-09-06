@@ -1,3 +1,5 @@
+import checkDsfr from "../Utils/CheckDsfr";
+
 /* globals AmCharts, d3 */
 var ProfileElevationPathDOM = {
 
@@ -128,6 +130,20 @@ var ProfileElevationPathDOM = {
             return;
         }
 
+        const style = {
+            fontFamily : "Arial",
+            strokeColor : "#0B6BA7",
+            fillColor : "#00B798",
+            focusLineColor : "#F90",
+        };
+
+        if (checkDsfr()) {
+            style.fontFamily = "Marianne";
+            style.strokeColor = "#2F4077";
+            style.fillColor = "#2F4077";
+            style.focusLineColor = "#639f6a";
+        };
+
         // on nettoie toujours...
         while (container.firstChild) {
             container.removeChild(container.firstChild);
@@ -166,7 +182,7 @@ var ProfileElevationPathDOM = {
         // const widgetWidth = container.clientWidth - margin.left - margin.right;
 
         const zLabelWidth = 17;
-        const zGradWidth = this._getTextWidth(Math.round(maxZ).toLocaleString() + ",88", container, "400 10 Verdana");
+        const zGradWidth = this._getTextWidth(Math.round(maxZ).toLocaleString() + ",88", container, `400 10 ${style.fontFamily}`);
         const xLabelHeight = 17;
         const xGradHeight = 15;
 
@@ -179,7 +195,7 @@ var ProfileElevationPathDOM = {
 
         const elevationSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         elevationSvg.id = "profileElevationByDefaultSvg";
-        elevationSvg.setAttribute("style", "display: block; margin: auto; overflow: visible; position: absolute; left: 10px;");
+        elevationSvg.setAttribute("style", "display: block; margin: auto; overflow: visible;");
         elevationSvg.setAttribute("viewBox", `0 0 ${clientWidth} ${clientHeight}`);
         elevationSvg.setAttribute("width", "100%");
         elevationSvg.setAttribute("height", "100%");
@@ -246,7 +262,7 @@ var ProfileElevationPathDOM = {
         for (let i = 0; i <= numZguides; i++) {
             gradZtext = document.createElementNS("http://www.w3.org/2000/svg", "text");
             gradZtext.setAttribute("class", "profile-z-graduation");
-            gradZtext.setAttribute("font-family", "Verdana");
+            gradZtext.setAttribute("font-family", style.fontFamily);
             gradZtext.setAttribute("font-size", "10px");
             gradZtext.setAttribute("fill", "#5E5E5E");
             // Cas où gradZ < 1 : nombres flottants capricieux...
@@ -290,7 +306,7 @@ var ProfileElevationPathDOM = {
 
         var axisZLegend = document.createElementNS("http://www.w3.org/2000/svg", "text");
         axisZLegend.setAttribute("class", "profile-z-legend");
-        axisZLegend.setAttribute("font-family", "Verdana");
+        axisZLegend.setAttribute("font-family", style.fontFamily);
         axisZLegend.setAttribute("font-size", "11px");
         axisZLegend.setAttribute("fill", "#5E5E5E");
         axisZLegend.textContent = "Altitude (m)";
@@ -346,7 +362,7 @@ var ProfileElevationPathDOM = {
         for (let i = 0; i <= numXguides + 1; i++) {
             gradXtext = document.createElementNS("http://www.w3.org/2000/svg", "text");
             gradXtext.setAttribute("class", "profile-x-graduation");
-            gradXtext.setAttribute("font-family", "Verdana");
+            gradXtext.setAttribute("font-family", style.fontFamily);
             gradXtext.setAttribute("font-size", "10px");
             gradXtext.setAttribute("fill", "#5E5E5E");
 
@@ -397,7 +413,7 @@ var ProfileElevationPathDOM = {
 
         var axisXLegend = document.createElementNS("http://www.w3.org/2000/svg", "text");
         axisXLegend.setAttribute("class", "profile-x-legend");
-        axisXLegend.setAttribute("font-family", "Verdana");
+        axisXLegend.setAttribute("font-family", style.fontFamily);
         axisXLegend.setAttribute("font-size", "11px");
         axisXLegend.setAttribute("fill", "#5E5E5E");
         axisXLegend.textContent = `Distance (${distUnit})`;
@@ -430,7 +446,7 @@ var ProfileElevationPathDOM = {
         pathPath.setAttribute("cs", "100,100");
         pathPath.setAttribute("stroke-width", "1");
         pathPath.setAttribute("stroke-opacity", "1");
-        pathPath.setAttribute("stroke", "#0B6BA7");
+        pathPath.setAttribute("stroke", style.strokeColor);
         pathPath.setAttribute("fill", "none");
         pathPath.setAttribute("d", pathD);
 
@@ -443,8 +459,8 @@ var ProfileElevationPathDOM = {
         pathFill.setAttribute("stroke-width", "1");
         pathFill.setAttribute("stroke-opacity", "0");
         pathFill.setAttribute("stroke", "#000000");
-        pathFill.setAttribute("fill", "#00B798");
-        pathFill.setAttribute("fill-opacity", "0.4");
+        pathFill.setAttribute("fill", style.fillColor);
+        pathFill.setAttribute("fill-opacity", "0.2");
         pathFill.setAttribute("d", pathD);
 
         elevationPathG.appendChild(pathPath);
@@ -470,7 +486,7 @@ var ProfileElevationPathDOM = {
         focusLineX.setAttribute("id", "focusLineX");
         focusLineX.setAttribute("class", "focusLine-default");
         focusLineX.setAttribute("fill", "none");
-        focusLineX.setAttribute("stroke", "#F90");
+        focusLineX.setAttribute("stroke", style.focusLineColor);
         focusLineX.setAttribute("stroke-width", "0.5px");
         focusLineX.setAttribute("visibility", "hidden");
 
@@ -478,7 +494,7 @@ var ProfileElevationPathDOM = {
         focusLineY.setAttribute("id", "focusLineY");
         focusLineY.setAttribute("class", "focusLine-default");
         focusLineY.setAttribute("fill", "none");
-        focusLineY.setAttribute("stroke", "#F90");
+        focusLineY.setAttribute("stroke", style.focusLineColor);
         focusLineY.setAttribute("stroke-width", "0.5px");
         focusLineY.setAttribute("visibility", "hidden");
 
@@ -486,7 +502,7 @@ var ProfileElevationPathDOM = {
         focusCircle.setAttribute("id", "focusCircle");
         focusCircle.setAttribute("r", 4);
         focusCircle.setAttribute("class", "circle-default focusCircle-default");
-        focusCircle.setAttribute("fill", "#F90");
+        focusCircle.setAttribute("fill", style.focusLineColor);
         focusCircle.setAttribute("visibility", "hidden");
 
         dynamicsG.appendChild(focusCircle);
@@ -499,7 +515,7 @@ var ProfileElevationPathDOM = {
         const slopeSpan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
         const coordsSpan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
 
-        tooltipDiv.setAttribute("style", "text-align:center; max-width:220px; font-size:10px; color:#000000; font-family:Verdana; z-index:50;");
+        tooltipDiv.setAttribute("style", `text-align:center; max-width:220px; font-size:10px; color:#000000; font-family:${style.fontFamily}; z-index:50;`);
         tooltipDiv.style.pointerEvents = "none";
         tooltipDiv.style.position = "fixed";
         // tooltipDiv.classList.add("tooltipInit");
@@ -564,15 +580,12 @@ var ProfileElevationPathDOM = {
             className.__createProfileMarker(self, _points[0]);
 
             // tooltips
-            // tooltipDiv.classList.remove("tooltipInit");
-            // tooltipG.classList.remove("tooltipInit");
-            // tooltipDiv.classList.remove("tooltipFadeOut");
-            // tooltipG.classList.remove("tooltipFadeOut");
-            // tooltipDiv.classList.add("tooltipFadeIn");
-            // tooltipG.classList.add("tooltipFadeIn");
-            // IE... deprecated
-            tooltipDiv.setAttribute("class", "tooltipFadeIn");
-            tooltipG.setAttribute("class", "tooltipFadeIn");
+            tooltipDiv.classList.remove("tooltipInit");
+            tooltipG.classList.remove("tooltipInit");
+            tooltipDiv.classList.remove("tooltipFadeOut");
+            tooltipG.classList.remove("tooltipFadeOut");
+            tooltipDiv.classList.add("tooltipFadeIn");
+            tooltipG.classList.add("tooltipFadeIn");
         }
 
         function onMouseOut () {
@@ -581,13 +594,10 @@ var ProfileElevationPathDOM = {
             focusCircle.setAttribute("visibility", "hidden");
             className.__removeProfileMarker(self);
             // tooltips
-            // tooltipDiv.classList.remove("tooltipFadeIn");
-            // tooltipG.classList.remove("tooltipFadeIn");
-            // tooltipDiv.classList.add("tooltipFadeOut");
-            // tooltipG.classList.add("tooltipFadeOut");
-            // IE... deprecated
-            tooltipDiv.setAttribute("class", "tooltipFadeOut");
-            tooltipG.setAttribute("class", "tooltipFadeOut");
+            tooltipDiv.classList.remove("tooltipFadeIn");
+            tooltipG.classList.remove("tooltipFadeIn");
+            tooltipDiv.classList.add("tooltipFadeOut");
+            tooltipG.classList.add("tooltipFadeOut");
         }
 
         function onMouseMove (e) {

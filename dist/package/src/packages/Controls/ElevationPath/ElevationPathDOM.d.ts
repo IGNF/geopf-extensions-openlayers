@@ -9,6 +9,6 @@ declare namespace ElevationPathDOM {
     function _createElevationPathPanelProfilElement(): DOMElement;
     function _createElevationPathWaitingElement(): DOMElement;
     function _createElevationPathInformationsElement(): DOMElement;
-    function _addElevationPathInformationsItem(value: string): DOMElement;
+    function _addElevationPathInformationsItem(name: string, value: string): DOMElement;
 }
 //# sourceMappingURL=ElevationPathDOM.d.ts.map
