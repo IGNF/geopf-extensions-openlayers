@@ -1,5 +1,7 @@
 @import "node_modules/ol/ol.css";
-@import "node_modules/geopf-extensions-openlayers/css/Classic.css";
+@import "node_modules/@gouvfr/dsfr/dist/dsfr.css";
+@import "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css";
+@import "node_modules/geopf-extensions-openlayers/css/Dsfr.css";
 
 html, body {
   margin: 0;

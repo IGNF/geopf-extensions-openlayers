@@ -11,7 +11,8 @@
   "private": true,
   "dependencies": {
     "geopf-extensions-openlayers": "../../dist/package/geopf-extensions-openlayers.tgz",
-    "ol": "^9.1.0"
+    "ol": "^9.1.0",
+    "@gouvfr/dsfr": "^1.11.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.6",

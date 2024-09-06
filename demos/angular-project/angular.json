@@ -27,7 +27,9 @@
             "styles": [
               "src/styles.css",
               "node_modules/ol/ol.css",
-              "node_modules/geopf-extensions-openlayers/css/Classic.css",
+              "node_modules/@gouvfr/dsfr/dist/dsfr.css",
+              "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css",
+              "node_modules/geopf-extensions-openlayers/css/Dsfr.css",
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/LayerImport/GPFlayerImport.css",
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/ToolBoxMeasure/GPFtoolBoxMeasure.css",
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/Route/GPFroute.css",

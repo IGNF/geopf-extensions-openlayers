@@ -90,7 +90,7 @@ var logger = Logger.getLogger("widget");
  * @todo type:service
  * @todo validation du schema
  */
-class Catalog extends Control {
+var Catalog = class Catalog extends Control {
 
     /**
      * See {@link ol.control.Catalog}
