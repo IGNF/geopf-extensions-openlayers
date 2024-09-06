@@ -29,6 +29,7 @@ export { default as GeoportalZoom } from "./packages/Controls/Zoom/GeoportalZoom
 export { default as GeoportalFullScreen } from "./packages/Controls/FullScreen/GeoportalFullScreen";
 export { default as GeoportalOverviewMap } from "./packages/Controls/OverviewMap/GeoportalOverviewMap";
 export { default as Legends } from "./packages/Controls/Legends/Legends";
+export { default as Catalog } from "./packages/Controls/Catalog/Catalog";
 export { default as EditorStyle } from "./packages/Controls/Editor/Style";
 export { default as EditorFilter } from "./packages/Controls/Editor/Filter";
 export { default as EditorLayer } from "./packages/Controls/Editor/Layer";

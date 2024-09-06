@@ -70,6 +70,7 @@ declare namespace Ol {
         export { GeoportalFullScreen };
         export { GeoportalOverviewMap };
         export { Legends };
+        export { Catalog };
     }
 }
 import GfiUtils from "./Controls/Utils/Gfi";
@@ -111,5 +112,6 @@ import GeoportalZoom from "./Controls/Zoom/GeoportalZoom";
 import GeoportalFullScreen from "./Controls/FullScreen/GeoportalFullScreen";
 import GeoportalOverviewMap from "./Controls/OverviewMap/GeoportalOverviewMap";
 import Legends from "./Controls/Legends/Legends";
+import Catalog from "./Controls/Catalog/Catalog";
 export { HelperUtils, LayerUtils, ProxyUtils, ColorUtils, MathUtils, Logger, Parser, Register, Ol as olExtended };
 //# sourceMappingURL=bundle.d.ts.map

@@ -22,6 +22,8 @@ var logger = Logger.getLogger("legends");
  *
  * @constructor
  * @alias ol.control.Legends
+ * @type {ol.control.Legends}
+ * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  * 
  * @fires legends:add
@@ -31,7 +33,7 @@ var logger = Logger.getLogger("legends");
  * var legends = new ol.control.Legends();
  * map.addControl(legends);
  */
-class Legends extends Control {
+var Legends = class Legends extends Control {
 
     /**
      * See {@link ol.control.Legends}

@@ -476,3 +476,12 @@
   display: block;
 }
 
+/* surcharge DSFR pour coller aux règles et au rendu de https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon/ */
+/* FIXME: pourquoi on a besoin de faire ça ?? normalement ces règles devraient être importées avec le reste... */
+.fr-collapse {
+  --collapse-max-height: none;
+}
+
+.fr-collapse:not(.fr-collapse--expanded):not(.fr-collapsing) {
+  --collapse-max-height: 0;
+}

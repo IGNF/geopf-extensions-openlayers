@@ -64,3 +64,8 @@ var LoggerByDefault = {
 };
 
 export default LoggerByDefault;
+
+// Expose Export as ol.control.Catalog (for a build bundle)
+if (window.Gp) {
+    window.Gp.Logger = LoggerByDefault;
+}
