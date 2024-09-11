@@ -1,10 +1,32 @@
-/* GET FEATURE INFO */
-
 div[id^=GPgetFeatureInfo-] {
-  top: 260px;
-  left: 10px;
+    top: 260px;
+    left: 10px;
+  }
+
+/* Showing/hiding */
+
+button[id^=GPshowGetFeatureInfoPicto][aria-pressed="false"] + dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
 }
 
-button[id^="GPgetFeatureInfoPicto-"][aria-pressed="false"] {}
-  
-button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {}
+button[id^="GPshowGetFeatureInfoPicto-"][aria-pressed="true"] + dialog {
+    display: block;
+    visibility: visible;
+    opacity: 100%;
+    width: 350px;
+    height: initial;
+    max-height: inherit;
+}
+
+dialog[id^="GPcatalogPanel-"] {
+    position: absolute;
+    left: 34px;
+    top: 0px;
+    height: inherit;
+}
+
+form[id^=GPgetFeatureInfoForm] {
+    padding: 15px;
+}
