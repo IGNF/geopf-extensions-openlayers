@@ -3,12 +3,17 @@ import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css";
 
 // import OpenLayers
 import Control from "../Control";
-
+import VectorTileSource from "ol/source/VectorTile";
+import VectorSource from "ol/source/Vector";
+import TileWMSSource from "ol/source/TileWMS";
+import WMTSSource from "ol/source/WMTS";
+import ImageWMSSource from "ol/source/ImageWMS";
 // import local
 import Utils from "../../Utils/Helper";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
+import AsyncData from "../Utils/AsyncData";
 
 // DOM
 import GetFeatureInfoDOM from "./GetFeatureInfoDOM";
@@ -43,7 +48,6 @@ class GetFeatureInfo extends Control {
      */
     constructor (options) {
         options = options || {};
-        var layers = options.layers || [];
         // call ol.control.Control constructor
         super({
             element : options.element,
@@ -56,7 +60,7 @@ class GetFeatureInfo extends Control {
         }
 
         // initialisation du composant
-        this.initialize(options, layers);
+        this.initialize(options);
 
         // GetFeatureInfo main DOM container
         this.container = this.initContainer();
@@ -127,10 +131,9 @@ class GetFeatureInfo extends Control {
      * Initialize GetFeatureInfo control (called by GetFeatureInfo constructor)
      *
      * @param {Object} options - constructor options
-     * @param {Object} layers - layers
      * @private
      */
-    initialize (options, layers) {
+    initialize (options) {
         this.uid = SelectorID.generate();
 
         // set default options
@@ -154,15 +157,21 @@ class GetFeatureInfo extends Control {
 
         this.buttonGetFeatureInfoShow = null;
         this.panelGetFeatureInfoContainer = null;
+        this.getFeatureInfoPanelDiv = null;
         this.panelGetFeatureInfoHeaderContainer = null; // usefull for the dragNdrop
         this.buttonGetFeatureInfoClose = null;
-        this.formGetFeatureInfoContainer = null;
+        this.getFeatureInfoAccordionGroup = null;
 
         this.panelGetFeatureInfoEntriesContainer = null;
 
         /** {Array} specify some events listeners */
         this.eventsListeners = [];
-        this.setLayers(layers);
+
+        /** GFI settings */
+        this.pixel = [];
+        this.coordinates = [];
+        this.layers = [];
+        this.res = null;
     }
 
     /**
@@ -180,12 +189,8 @@ class GetFeatureInfo extends Control {
 
         // panel
         var getFeatureInfoPanel = this.panelGetFeatureInfoContainer = this._createGetFeatureInfoPanelElement();
-        var getFeatureInfoPanelDiv = this._createGetFeatureInfoPanelDivElement();
+        var getFeatureInfoPanelDiv = this.getFeatureInfoPanelDiv = this._createGetFeatureInfoPanelDivElement();
         getFeatureInfoPanel.appendChild(getFeatureInfoPanelDiv);
-
-        // container for the custom code
-        var form = this.formGetFeatureInfoContainer = this._createGetFeatureInfoPanelFormElement();
-        getFeatureInfoPanel.appendChild(form);
 
         // header
         var getFeatureInfoPanelHeader = this.panelGetFeatureInfoHeaderContainer = this._createGetFeatureInfoPanelHeaderElement();
@@ -201,43 +206,15 @@ class GetFeatureInfo extends Control {
         
         getFeatureInfoPanelDiv.appendChild(getFeatureInfoPanelHeader);
 
+        // container for the custom code
+        var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
+        getFeatureInfoPanelDiv.appendChild(accordionGroup);
+
         container.appendChild(getFeatureInfoPanel);
 
         logger.log(container);
 
         return container;
-    }
-
-    /**
-     * Sets the layers list the control is attached to.
-     * @param {Array.<Object>} layers - list of layers which can be requested through the control.
-     *
-     * @private
-     */
-    setLayers (layers) {
-        if (!layers || !Array.isArray(layers)) {
-            logger.log("[ERROR] GetFeatureInfo:setLayers - layers parameter should be a array");
-            return;
-        }
-        this.layers = [];
-
-        for (var i = 0; i < layers.length; ++i) {
-            var ind = this.layers.push({}) - 1;
-
-            if (layers[i].event) {
-                // if (!this._isValidEvent(layers[i].event)) {
-                logger.log("[ERROR] GetFeatureInfo:setLayers - layer event '" + this.layers[i].event + "' is not allowed.");
-                // } else {
-                this.layers[ind].event = layers[i].event;
-                // }
-            }
-
-            if (layers[i].infoFormat) {
-                this.layers[ind].infoFormat = layers[i].infoFormat;
-            }
-
-            this.layers[ind].obj = layers[i].obj;
-        }
     }
 
     /**
@@ -249,9 +226,8 @@ class GetFeatureInfo extends Control {
     addEventsListeners (map) {
         var self = this;
         this.eventsListeners["singleclick"] = function (e) {
-            console.log(e);
-            console.log(this.layers);
             logger.trace(e);
+            self.onMapClick(e);
         };
         // the event custom:action is associate with an openlayers event 
         map.on("singleclick", this.eventsListeners["singleclick"]);
@@ -265,6 +241,336 @@ class GetFeatureInfo extends Control {
         var map = this.getMap();
         map.getLayers().un("singleclick", this.eventsListeners["singleclick"]);
         delete this.eventsListeners["singleclick"];
+    }
+
+    /**
+     * event handler
+     * @param {Event} e évènement de click
+     * @private
+     */ 
+    onMapClick (e) {
+        console.log(e);
+        this.getFeatureInfoAccordionGroup.remove();
+        var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
+        this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
+        console.log(this.getFeatureInfoAccordionGroup);
+        this.map = e.map;
+        this.pixel = e.pixel;
+        this.coordinates = e.coordinate;
+        this.layers = e.map.getLayers().getArray().reverse().filter((l) => {
+            // On ne passe au GFI que les layers visibles
+            if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
+                return l;
+            }
+        });
+        this.res = e.map.getView().getResolution();
+        this.displayGetFeatureInfo();
+    }
+
+    /**
+     * Main render function
+     * @param { ol.Layer } layer layer openlayer
+     * @return { Object } gfiLayer 
+     * { 
+     *      format : "wmts",
+     *      layer: layer,
+     *      url :  url          pour wmts et wms
+     * }
+     * @private
+     */
+    getGetFeatureInfoLayer (layer) {
+        var gfiLayer =  {};
+        let format = this.getLayerFormat(layer);
+        if (format === "vector") {
+            gfiLayer = {
+                format : format,
+                layer : layer,
+            };
+        }
+        if (format === "wmts") {
+            let url = layer.getSource().getFeatureInfoUrl(
+                this.coordinates,
+                this.res,
+                this.map.getView().getProjection(), 
+                {
+                    INFOFORMAT : "text/html",
+                    STYLES : ""
+                }
+            );
+            gfiLayer = {
+                format : format,
+                layer : layer,
+                url : url,
+            };
+        }
+        if (format === "wms") {
+            let url = layer.getSource().getFeatureInfoUrl(
+                this.coordinates,
+                this.res,
+                this.map.getView().getProjection(), 
+                {
+                    INFO_FORMAT : "text/html",
+                    STYLES : ""
+                }
+            );
+            gfiLayer = {
+                format : format,
+                layer : layer,
+                url : url,
+            };
+        }
+        return gfiLayer;
+    }
+
+    /**
+     * Main render function
+     * @param { ol.Layer } layer layer openlayer
+     * @return { Array } Array of ol features 
+     * @private
+     */
+    getFeaturesAtClick (layer) {
+        var features = [];
+        map.forEachFeatureAtPixel(this.pixel, function (feature, olLayer) {
+            if (layer == olLayer) {
+                features.push(feature);
+            }
+        });
+        return features;
+    }
+
+    /**
+     * Main render function
+     * @param { Object } gfiLayer layer openlayer
+     * @return { Object } gfi result 
+     * { 
+     *      layername : "layername",
+     *      content: "html"
+     * }
+     * @private
+     */
+    async getGetFeatureInfoContent (gfiLayer) {
+        console.log(gfiLayer);
+        var content = null;
+        if (gfiLayer.format === "vector") {
+            var features = this.getFeaturesAtClick(gfiLayer.layer);
+            console.log(features);
+            if (features) {
+                content = this.features2html(features);
+            }
+            return new Promise(content);
+        }
+        else {
+            return fetch(gfiLayer.url)
+                .then((res) => res.text())
+                .then((text) => {
+                    var exception = false;
+
+                    // a t on une exception ?
+                    // <?xml version="1.0" encoding="UTF-8"?>
+                    // <ServiceExceptionReport version="1.3.0" xmlns="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/ogc https://wxs.ign.fr/geoportail/v/schemas/wms/1.3.0/exceptions_1_3_0.xsd">
+                    //   <ServiceException>
+                    //     java.lang.OutOfMemoryError: Java heap space
+                    //     Java heap space
+                    //   </ServiceException>
+                    // </ServiceExceptionReport>
+                    if (text.trim().length === 0 ||
+                        text.indexOf("ServiceExceptionReport") !== -1 ||
+                        text.indexOf("java.lang.NullPointerException") !== -1 ||
+                        text.indexOf("java.lang.OutOfMemoryError") !== -1 ||
+                        text.indexOf("not queryable") !== -1) {
+                        // rien à afficher
+                        exception = true;
+                    }
+                    if (!exception)  {
+                        // TODO text est avec template html et body
+                        return text;
+                    }
+                    else {
+                        return null;
+                    }
+                })
+                .catch((error) => {
+                    logger.log(error);
+                    return error;
+                });
+        }
+    }
+
+    /**
+     * Main render function
+     * @private
+     */ 
+    displayGetFeatureInfo () {
+        console.log("RENDU DU GFI");
+        var gfiLayers = this.layers.map((l) => {
+            return this.getGetFeatureInfoLayer(l);
+        });
+        console.log(gfiLayers);
+        var gfiContent = gfiLayers.map((gfiLayer) => {
+            var layername = gfiLayer.layer.getSource().name ? gfiLayer.layer.getSource().name : gfiLayer.layer.getSource().url_;
+            var content = null;
+            var accordeon = this._createGetFeatureInfoLayerAccordion(layername, content);
+            this.getFeatureInfoAccordionGroup.append(accordeon);
+            return new AsyncData({
+                ...gfiLayer, 
+                ...{
+                    layername : layername,
+                    content : content,
+                    contentDiv : accordeon
+                }
+            });
+        });
+        console.log(gfiContent);
+        gfiContent.forEach((data) => {
+            data.subscribe((key, value) => {
+                console.log(`Updated UI for ${key}: ${value}`);
+            });
+        });
+
+        gfiContent.forEach((asyncD) => {
+            // console.log(this.getGetFeatureInfoContent(asyncD.data));
+            this.getGetFeatureInfoContent(asyncD.data)
+                .then((res) => {
+                    console.log(res);
+                    asyncD.set("content", res);
+                });
+        });
+
+        // https://frontendmasters.com/blog/vanilla-javascript-reactivity/#reactive-individual-properties-object-defineproperty
+    }
+
+    /**
+     * Return layer format
+     *
+     * @param {ol.layer.Layer} l - layer openlayers
+     *
+     * @return {String} format - layer format can be wms, wmts, vector or unknown
+     *
+     */
+    getLayerFormat (l) {
+        // la fonction 'getType' existe uniquement en mode source es6.
+        // le bundle ol ne fournit pas cette fonction !?
+        var type = (typeof l.getType === "function") ? l.getType() : null;
+        var source = l.getSource();
+        if (type) {
+            if (type === "VECTOR" || type === "VECTOR_TILE") {
+                return "vector";
+            }
+            if (type === "TILE") {
+                if (source.tileGrid) {
+                    return "wmts";
+                } else {
+                    return "wms";
+                }
+            }
+            if (type === "IMAGE") {
+                return "wms";
+            }
+        } else {
+            if (source instanceof TileWMSSource || source instanceof ImageWMSSource) {
+                return "wms";
+            }
+            if (source instanceof WMTSSource) {
+                return "wmts";
+            }
+            if (source instanceof VectorSource || source instanceof VectorTileSource) {
+                return "vector";
+            }
+        }
+        return "unknown";
+    }
+    
+    /**
+     * Gets HTML content from features array
+     *
+     * @param {Array.<ol.Features>} features - openlayers features Array
+     * @returns {HTMLElement} HTML content.
+     */
+    features2html (features) {
+        var content = document.createElement("div");
+        features.forEach(function (f) {
+            var props = f.getProperties();
+            // si la properties 'render' est presente,
+            // on ajoute directement le rendu HTML dans la balise principale
+            if (props.hasOwnProperty("render")) {
+                // content.innerHTML = props["render"].trim();
+                // content.appendChild(props["render"]);
+                content.insertAdjacentHTML("beforeend", props["render"]);
+            } else {
+                if (props.hasOwnProperty("name")) {
+                    var nameDiv = document.createElement("div");
+                    nameDiv.className = "gp-att-name-div";
+                    // nameDiv.appendChild(document.createTextNode(props["name"])) ;
+                    nameDiv.insertAdjacentHTML("afterbegin", props["name"]);
+                    content.appendChild(nameDiv);
+                }
+                if (props.hasOwnProperty("description")) {
+                    var descDiv = document.createElement("div");
+                    descDiv.className = "gp-att-description-div";
+                    // descDiv.appendChild(document.createTextNode(props["description"])) ;
+                    descDiv.insertAdjacentHTML("afterbegin", props["description"]);
+                    content.appendChild(descDiv);
+                }
+                var p = null;
+                var others = false;
+                var oDiv = null;
+                var ul = null;
+                var li = null;
+                // Liste des properties à retirer de la visualisation :
+                var listForbidden = [
+                    // styles
+                    "fill",
+                    "fill-opacity",
+                    "stroke",
+                    "stroke-opacity",
+                    "stroke-width",
+                    "marker-symbol",
+                    "marker-color",
+                    "marker-size",
+                    "geometry", // geometrie
+                    "value",
+                    "name", // déjà traité
+                    "description", // déjà traité
+                    "styleUrl",
+                    "extensionsNode_", // extensions GPX
+                    "icon" // ajouté par la 3D en cas de switch
+                ];
+                for (p in props) {
+                    if (props[p] === undefined) {
+                        continue;
+                    }
+                    if (listForbidden.indexOf(p) !== -1) {
+                        continue;
+                    }
+                    if (!others) {
+                        oDiv = document.createElement("div");
+                        oDiv.className = "gp-att-others-div";
+                        ul = document.createElement("ul");
+                        others = true;
+                    }
+                    li = document.createElement("li");
+                    var span = document.createElement("span");
+                    span.className = "gp-attname-others-span";
+                    span.appendChild(document.createTextNode(p + " : "));
+                    li.appendChild(span);
+                    li.appendChild(document.createTextNode(props[p]));
+                    ul.appendChild(li);
+                }
+                if (ul) {
+                    oDiv.appendChild(ul);
+                    content.appendChild(oDiv);
+                }
+            }
+        });
+
+        // pas de contenu !
+        if (!content.hasChildNodes()) {
+            content = "";
+        }
+        else {
+            content = content.innerHTML;
+        }
+        return content;
     }
 
     // ################################################################### //

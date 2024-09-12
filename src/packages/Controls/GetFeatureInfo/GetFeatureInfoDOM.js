@@ -1,5 +1,32 @@
 var title = "GetFeatureInfo";
 
+const stringToHTML = (str) => {
+    var support = function () {
+        if (!window.DOMParser) {
+            return false;
+        }
+        var parser = new DOMParser();
+        try {
+            parser.parseFromString("x", "text/html");
+        } catch (err) {
+            return false;
+        }
+        return true;
+    };
+
+    // If DOMParser is supported, use it
+    if (support()) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(str, "text/html");
+        return doc.body;
+    }
+
+    // Otherwise, fallback to old-school method
+    var dom = document.createElement("div");
+    dom.innerHTML = str;
+    return dom;
+};
+
 var GetFeatureInfoDOM = {
 
     /**
@@ -81,7 +108,7 @@ var GetFeatureInfoDOM = {
 
     _createGetFeatureInfoPanelDivElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__body fr-modal__body";
+        div.className = "GPpanelBody gpf-panel__body fr-modal__body";
         return div;
     },
 
@@ -130,31 +157,72 @@ var GetFeatureInfoDOM = {
         return btnClose;
     },
 
+    /**
+     * Create loader
+     * @returns {DOMElement} DOM element
+     */
+    _createGetFeatureInfoWaitingDiv : function () {
+        var htmlTemplate = stringToHTML(`
+        <div><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div>
+        `);
+        console.log(htmlTemplate.firstChild);
+
+        return htmlTemplate.firstChild;
+    },
+
     // ################################################################### //
-    // ####################### Methods for form ####################### //
+    // ####################### Methods for Layer GFI ####################### //
     // ################################################################### //
     
     /**
-     * Create Form
-     * see evenement !
-     *
+     * Create group d'accodeon
      * @returns {DOMElement} DOM element
      */
-    _createGetFeatureInfoPanelFormElement : function () {
+    _createGetFeatureInfoAccordionGroup : function () {
         // contexte d'execution
         var self = this;
 
-        var form = document.createElement("form");
-        form.id = this._addUID("GPgetFeatureInfoForm");
-        form.className = "GPform gpf-panel__content fr-modal__content";
+        var div = document.createElement("div");
+        div.id = this._addUID("GPgetFeatureInfoAccordionGroup");
+        div.className = "GPgetFeatureInfoAccordionGroup fr-accordions-group";
+ 
+        return div;
+    },
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            self.onGetFeatureInfoComputationSubmit(e);
-            return false;
+    /**
+     * Create accordeon
+     * see evenement !
+     * @param { String } layername nom du layer
+     * @param { String } content contenu du gfi
+     * @returns {DOMElement} DOM element
+     */
+    _createGetFeatureInfoLayerAccordion : function (layername, content) {
+        var dsfrTemplate = stringToHTML(`
+            <section class="fr-accordion">
+                <h3 class="fr-accordion__title">
+                    <button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-${layername}">
+                        ${layername}
+                    </button>
+                </h3>
+                <div class="fr-collapse" id="accordion-${layername}">
+                    ${content}
+                </div>
+            </section>
+        `);
+        console.log(dsfrTemplate.firstChild);
+        var accordeon = dsfrTemplate.firstChild;
+        var button = accordeon.querySelector("button, button.fr-accordion__btn");
+        console.log(button);
+        button.addEventListener("click", (e) => {
+            e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+            var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+            if (e.target.ariaExpanded === "true") {
+                collapse.classList.add("fr-collapse--expanded");
+            } else {
+                collapse.classList.remove("fr-collapse--expanded");
+            }
         });
-
-        return form;
+        return accordeon;
     },
 
 };
