@@ -249,11 +249,9 @@ class GetFeatureInfo extends Control {
      * @private
      */ 
     onMapClick (e) {
-        console.log(e);
         this.getFeatureInfoAccordionGroup.remove();
         var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
         this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
-        console.log(this.getFeatureInfoAccordionGroup);
         this.map = e.map;
         this.pixel = e.pixel;
         this.coordinates = e.coordinate;
@@ -349,41 +347,37 @@ class GetFeatureInfo extends Control {
      * @private
      */
     async getGetFeatureInfoContent (gfiLayer) {
-        console.log(gfiLayer);
         var content = null;
         if (gfiLayer.format === "vector") {
             var features = this.getFeaturesAtClick(gfiLayer.layer);
-            console.log(features);
             if (features) {
                 content = this.features2html(features);
             }
-            return new Promise(content);
+            return content;
         }
         else {
             return fetch(gfiLayer.url)
                 .then((res) => res.text())
                 .then((text) => {
                     var exception = false;
-
-                    // a t on une exception ?
-                    // <?xml version="1.0" encoding="UTF-8"?>
-                    // <ServiceExceptionReport version="1.3.0" xmlns="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/ogc https://wxs.ign.fr/geoportail/v/schemas/wms/1.3.0/exceptions_1_3_0.xsd">
-                    //   <ServiceException>
-                    //     java.lang.OutOfMemoryError: Java heap space
-                    //     Java heap space
-                    //   </ServiceException>
-                    // </ServiceExceptionReport>
                     if (text.trim().length === 0 ||
                         text.indexOf("ServiceExceptionReport") !== -1 ||
                         text.indexOf("java.lang.NullPointerException") !== -1 ||
                         text.indexOf("java.lang.OutOfMemoryError") !== -1 ||
-                        text.indexOf("not queryable") !== -1) {
+                        text.indexOf("not queryable") !== -1 ||
+                        text.indexOf("non interrogeable") !== -1) {
                         // rien à afficher
                         exception = true;
                     }
                     if (!exception)  {
-                        // TODO text est avec template html et body
-                        return text;
+                        var dom = this.stringToHTML(text);
+                        if (dom && dom.innerHTML && dom.innerHTML.trim().length > 0) {
+                            return text;
+                        }
+                        // HTML est vide
+                        else {
+                            return null;
+                        }
                     }
                     else {
                         return null;
@@ -401,15 +395,15 @@ class GetFeatureInfo extends Control {
      * @private
      */ 
     displayGetFeatureInfo () {
-        console.log("RENDU DU GFI");
         var gfiLayers = this.layers.map((l) => {
             return this.getGetFeatureInfoLayer(l);
         });
-        console.log(gfiLayers);
+        // Structuration de l'objet pour afficher les GFI par layer
         var gfiContent = gfiLayers.map((gfiLayer) => {
             var layername = gfiLayer.layer.getSource().name ? gfiLayer.layer.getSource().name : gfiLayer.layer.getSource().url_;
             var content = null;
-            var accordeon = this._createGetFeatureInfoLayerAccordion(layername, content);
+            var waitingDiv = this._createGetFeatureInfoWaitingDiv();
+            var accordeon = this._createGetFeatureInfoLayerAccordion(layername, waitingDiv);
             this.getFeatureInfoAccordionGroup.append(accordeon);
             return new AsyncData({
                 ...gfiLayer, 
@@ -420,23 +414,25 @@ class GetFeatureInfo extends Control {
                 }
             });
         });
-        console.log(gfiContent);
+        // Abonnement aux modifications de la valeur du contenu GFI.
         gfiContent.forEach((data) => {
             data.subscribe((key, value) => {
-                console.log(`Updated UI for ${key}: ${value}`);
+                if (data.get("content")) {
+                    data.get("contentDiv").querySelector("div.fr-collapse").innerHTML = data.get("content");
+                }
+                else {
+                    data.get("contentDiv").remove();
+                }
             });
         });
 
+        // Lancement des requêtes GFI
         gfiContent.forEach((asyncD) => {
-            // console.log(this.getGetFeatureInfoContent(asyncD.data));
             this.getGetFeatureInfoContent(asyncD.data)
                 .then((res) => {
-                    console.log(res);
                     asyncD.set("content", res);
                 });
         });
-
-        // https://frontendmasters.com/blog/vanilla-javascript-reactivity/#reactive-individual-properties-object-defineproperty
     }
 
     /**

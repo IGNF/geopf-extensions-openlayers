@@ -20,10 +20,10 @@ button[id^="GPshowGetFeatureInfoPicto-"][aria-pressed="true"] + dialog {
     max-height: inherit;
 }
 
-dialog[id^="GPcatalogPanel-"] {
+dialog[id^="GPgetFeatureInfoPanel-"] {
     position: absolute;
-    left: 34px;
-    top: 0px;
+    left: 47px;
+    top: 2px;
     height: inherit;
 }
 

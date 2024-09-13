@@ -25,4 +25,8 @@ export default class AsyncData {
         await Promise.allSettled(updates);
     }
 
+    get (key) {
+        return this.data[key];
+    }
+
 }

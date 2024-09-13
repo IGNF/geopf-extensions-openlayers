@@ -1,32 +1,5 @@
 var title = "GetFeatureInfo";
 
-const stringToHTML = (str) => {
-    var support = function () {
-        if (!window.DOMParser) {
-            return false;
-        }
-        var parser = new DOMParser();
-        try {
-            parser.parseFromString("x", "text/html");
-        } catch (err) {
-            return false;
-        }
-        return true;
-    };
-
-    // If DOMParser is supported, use it
-    if (support()) {
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(str, "text/html");
-        return doc.body;
-    }
-
-    // Otherwise, fallback to old-school method
-    var dom = document.createElement("div");
-    dom.innerHTML = str;
-    return dom;
-};
-
 var GetFeatureInfoDOM = {
 
     /**
@@ -37,6 +10,38 @@ var GetFeatureInfoDOM = {
     _addUID : function (id) {
         var uid = (this.uid) ? id + "-" + this.uid : id;
         return uid;
+    },
+
+    /**
+    * String to html
+    * @param {String} str -string to convert
+    * @returns {DOMElement} return dom element
+    */
+    stringToHTML : function (str) {
+        var support = function () {
+            if (!window.DOMParser) {
+                return false;
+            }
+            var parser = new DOMParser();
+            try {
+                parser.parseFromString("x", "text/html");
+            } catch (err) {
+                return false;
+            }
+            return true;
+        };
+    
+        // If DOMParser is supported, use it
+        if (support()) {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(str, "text/html");
+            return doc.body;
+        }
+    
+        // Otherwise, fallback to old-school method
+        var dom = document.createElement("div");
+        dom.innerHTML = str;
+        return dom;
     },
 
     /**
@@ -162,11 +167,9 @@ var GetFeatureInfoDOM = {
      * @returns {DOMElement} DOM element
      */
     _createGetFeatureInfoWaitingDiv : function () {
-        var htmlTemplate = stringToHTML(`
+        var htmlTemplate = this.stringToHTML(`
         <div><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div>
         `);
-        console.log(htmlTemplate.firstChild);
-
         return htmlTemplate.firstChild;
     },
 
@@ -197,7 +200,7 @@ var GetFeatureInfoDOM = {
      * @returns {DOMElement} DOM element
      */
     _createGetFeatureInfoLayerAccordion : function (layername, content) {
-        var dsfrTemplate = stringToHTML(`
+        var dsfrTemplate = this.stringToHTML(`
             <section class="fr-accordion">
                 <h3 class="fr-accordion__title">
                     <button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-${layername}">
@@ -209,10 +212,8 @@ var GetFeatureInfoDOM = {
                 </div>
             </section>
         `);
-        console.log(dsfrTemplate.firstChild);
         var accordeon = dsfrTemplate.firstChild;
         var button = accordeon.querySelector("button, button.fr-accordion__btn");
-        console.log(button);
         button.addEventListener("click", (e) => {
             e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
             var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
