@@ -28,10 +28,10 @@ declare namespace LayerSwitcherDOM {
     function _createBasicToolVisibilityElement(obj: Object): DOMElement[];
     function _createAdvancedToolShowElement(obj: Object): DOMElement[];
     function _createAdvancedToolElement(obj: Object): DOMElement;
-    function _createAdvancedToolDeleteElement(obj: Object): DOMElement;
-    function _createAdvancedToolInformationElement(obj: Object): DOMElement;
+    function _createAdvancedToolDeleteElement(obj: Object, contextual?: boolean): DOMElement;
+    function _createAdvancedToolInformationElement(obj: Object, contextual?: boolean): DOMElement;
     function _createAdvancedToolOpacityElement(obj: Object): DOMElement[];
-    function _createAdvancedToolExtentElement(obj: any): HTMLButtonElement;
+    function _createAdvancedToolExtentElement(obj: Object, contextual?: boolean): DOMElement;
     function _createContainerLayerInfoElement(obj: Object): DOMElement;
 }
 //# sourceMappingURL=LayerSwitcherDOM.d.ts.map

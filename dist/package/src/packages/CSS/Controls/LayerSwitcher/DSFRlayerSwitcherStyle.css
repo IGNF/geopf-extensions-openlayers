@@ -170,10 +170,6 @@ div[id^=GPadvancedTools_ID_] {
 }
 
 .gpf-btn-icon-ls-info {
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iOS4yNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMCIgc3Ryb2tlPSIjMDAwMDkxIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIi8+CjxwYXRoIGQ9Ik0xMy45MTA4IDE2Ljk5NzdIMTAuMDAyM1YxNi4zMzY0SDEwLjIxMDVDMTAuNDg5NyAxNi4zMzY0IDEwLjY5MTEgMTYuMjk3NSAxMC44MTkyIDE2LjIyMkMxMC45NDUxIDE2LjE0NDIgMTEuMDI1MiAxNi4wMzY2IDExLjA1MjYgMTUuODk3QzExLjA4MjQgMTUuNzU3NCAxMS4wOTYxIDE1LjU1MzggMTEuMDk2MSAxNS4yODZWMTMuMTQ4N0MxMS4wOTYxIDEyLjg1MTMgMTEuMDc3OCAxMi42NDA3IDExLjA0MTIgMTIuNTE0OUMxMS4wMDQ2IDEyLjM5MTMgMTAuOTEwOCAxMi4yOTk4IDEwLjc1OTcgMTIuMjQwM0MxMC42MDg3IDEyLjE4MzEgMTAuMzU0NyAxMi4xNTEgMTAgMTIuMTQ2NVYxMS40ODUxTDEyLjk1MTkgMTAuODY1VjE1LjI4NkMxMi45NTE5IDE1LjY4ODggMTMuMDAyMyAxNS45NjU3IDEzLjEwMyAxNi4xMTQ0QzEzLjIwMzcgMTYuMjYzMiAxMy40NzM3IDE2LjMzODcgMTMuOTA4NSAxNi4zMzg3VjE3TDEzLjkxMDggMTYuOTk3N1pNMTMuMDk4NCA4LjA0ODA1QzEzLjA5ODQgOC4zMzYzOCAxMi45OTU0IDguNTgxMjQgMTIuNzkxOCA4Ljc4NzE5QzEyLjU4ODEgOC45OTA4NSAxMi4zNDEgOS4wOTM4MiAxMi4wNTQ5IDkuMDkzODJDMTEuNzY4OSA5LjA5MzgyIDExLjUyNjMgOC45ODg1NiAxMS4zMTgxIDguNzgwMzJDMTEuMTA5OCA4LjU3MjA4IDExLjAwNDYgOC4zMjcyMyAxMS4wMDQ2IDguMDUwMzRDMTEuMDA0NiA3Ljc3MzQ2IDExLjEwNzYgNy41MTQ4NyAxMS4zMTM1IDcuMzA4OTJDMTEuNTE5NSA3LjEwMjk3IDExLjc2NjYgNyAxMi4wNTQ5IDdDMTIuMzQzMiA3IDEyLjU5NSA3LjEwMDY5IDEyLjc5NjMgNy4zMDIwNkMxMi45OTc3IDcuNTAzNDMgMTMuMDk4NCA3Ljc1Mjg2IDEzLjA5ODQgOC4wNTAzNFY4LjA0ODA1WiIgZmlsbD0iIzAwMDA5MSIvPgo8L3N2Zz4K');
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
 }
 
@@ -222,4 +218,113 @@ div[id^=GPlayerInfoContent] {
     width: 350px;
 }
 
+.gpf-btn-icon-close.GPlayersPanelClose {
+    top: 0;
+    right: 0;
+}
 
+.gpf-btn-icon-close.GPlayersPanelClose::after {
+    margin-left: -0.125rem;
+}
+
+/* menu contextuel (mobile) */
+.GPlayerAdvancedToolsContextual {
+    display: none;
+}
+
+.GPlayerAdvancedToolsContextual::after {
+    -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iNCIgdmlld0JveD0iMCAwIDE4IDQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGlkPSJJYyYjMTk1OyYjMTgwO25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTIuNTgzMzMgMC4xNjY2NTdDMS41NzUgMC4xNjY2NTcgMC43NSAwLjk5MTY1NiAwLjc1IDEuOTk5OTlDMC43NSAzLjAwODMyIDEuNTc1IDMuODMzMzIgMi41ODMzMyAzLjgzMzMyQzMuNTkxNjcgMy44MzMzMiA0LjQxNjY3IDMuMDA4MzIgNC40MTY2NyAxLjk5OTk5QzQuNDE2NjcgMC45OTE2NTcgMy41OTE2NyAwLjE2NjY1NyAyLjU4MzMzIDAuMTY2NjU3Wk0xNS40MTY3IDAuMTY2NjU5QzE0LjQwODMgMC4xNjY2NTkgMTMuNTgzMyAwLjk5MTY1OSAxMy41ODMzIDEuOTk5OTlDMTMuNTgzMyAzLjAwODMyIDE0LjQwODMgMy44MzMzMiAxNS40MTY3IDMuODMzMzNDMTYuNDI1IDMuODMzMzMgMTcuMjUgMy4wMDgzMyAxNy4yNSAxLjk5OTk5QzE3LjI1IDAuOTkxNjU5IDE2LjQyNSAwLjE2NjY1OSAxNS40MTY3IDAuMTY2NjU5Wk05IDAuMTY2NjU4QzcuOTkxNjcgMC4xNjY2NTggNy4xNjY2NyAwLjk5MTY1NyA3LjE2NjY3IDEuOTk5OTlDNy4xNjY2NyAzLjAwODMyIDcuOTkxNjcgMy44MzMzMiA5IDMuODMzMzJDMTAuMDA4MyAzLjgzMzMyIDEwLjgzMzMgMy4wMDgzMiAxMC44MzMzIDEuOTk5OTlDMTAuODMzMyAwLjk5MTY1OCAxMC4wMDgzIDAuMTY2NjU4IDkgMC4xNjY2NThaIiBmaWxsPSIjMDAwMDkxIi8+Cjwvc3ZnPgo=') center no-repeat;
+    mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iNCIgdmlld0JveD0iMCAwIDE4IDQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGlkPSJJYyYjMTk1OyYjMTgwO25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTIuNTgzMzMgMC4xNjY2NTdDMS41NzUgMC4xNjY2NTcgMC43NSAwLjk5MTY1NiAwLjc1IDEuOTk5OTlDMC43NSAzLjAwODMyIDEuNTc1IDMuODMzMzIgMi41ODMzMyAzLjgzMzMyQzMuNTkxNjcgMy44MzMzMiA0LjQxNjY3IDMuMDA4MzIgNC40MTY2NyAxLjk5OTk5QzQuNDE2NjcgMC45OTE2NTcgMy41OTE2NyAwLjE2NjY1NyAyLjU4MzMzIDAuMTY2NjU3Wk0xNS40MTY3IDAuMTY2NjU5QzE0LjQwODMgMC4xNjY2NTkgMTMuNTgzMyAwLjk5MTY1OSAxMy41ODMzIDEuOTk5OTlDMTMuNTgzMyAzLjAwODMyIDE0LjQwODMgMy44MzMzMiAxNS40MTY3IDMuODMzMzNDMTYuNDI1IDMuODMzMzMgMTcuMjUgMy4wMDgzMyAxNy4yNSAxLjk5OTk5QzE3LjI1IDAuOTkxNjU5IDE2LjQyNSAwLjE2NjY1OSAxNS40MTY3IDAuMTY2NjU5Wk05IDAuMTY2NjU4QzcuOTkxNjcgMC4xNjY2NTggNy4xNjY2NyAwLjk5MTY1NyA3LjE2NjY3IDEuOTk5OTlDNy4xNjY2NyAzLjAwODMyIDcuOTkxNjcgMy44MzMzMiA5IDMuODMzMzJDMTAuMDA4MyAzLjgzMzMyIDEwLjgzMzMgMy4wMDgzMiAxMC44MzMzIDEuOTk5OTlDMTAuODMzMyAwLjk5MTY1OCAxMC4wMDgzIDAuMTY2NjU4IDkgMC4xNjY2NThaIiBmaWxsPSIjMDAwMDkxIi8+Cjwvc3ZnPgo=') center no-repeat;
+}
+
+.GPlayerAdvancedToolsContextual[aria-pressed="true"] {
+    background-color: var(--hover-tint);
+    overflow: visible;
+}
+
+.GPlayerSwitcher_layer:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    overflow: visible;
+}
+
+[id^=GPlayersList-] .GPpanelBody:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    overflow: visible;
+}
+
+.GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    position: relative;
+}
+
+.GPlayerAdvancedToolsContextual + div {
+    display: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    font-size: 13px;
+    z-index: 12;
+    background-color: var(--background-overlap-grey);
+    border-radius: 6px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+    padding: 14px 6px;
+    gap: 6px;
+}
+
+.GPlayerAdvancedToolsContextual + div > button {
+    padding-left: 2rem;
+}
+
+.GPlayerAdvancedToolsContextual + div > button[visibility="hidden"] {
+    display: none;
+}
+
+.GPlayerAdvancedToolsContextual + div > button::after {
+    mask-position: left;
+}
+
+.GPlayerAdvancedToolsContextual[aria-pressed="true"] + div {
+    display: flex;
+    position: absolute;
+    right: 0;
+    top: calc(2.5rem + 8px);
+}
+
+@media (max-width: 576px) {
+    button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        width: 100vw;
+    }
+
+    .position-container-top-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        transform: translate(58px, -4px);
+    }
+    .position-container-top-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        transform: translate(-62px, -4px);
+    }
+    .position-container-bottom-right:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"]) {
+        top: 4px;
+        bottom: unset;
+    }
+    .position-container-bottom-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        transform: translate(58px, calc(100% - 48px));
+    }
+    .position-container-bottom-left:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"]) {
+        top: 4px;
+        bottom: unset;
+    }
+    .position-container-bottom-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        transform: translate(-62px, calc(100% - 48px));
+    }
+
+    .GPlayerAdvancedTools {
+        width: calc(100% + 40px);
+    }
+
+    .GPlayerAdvancedTools > .GPlayerRemove, .GPlayerAdvancedTools > .GPlayerInfo, .GPlayerAdvancedTools > .GPlayerExtent {
+        display: none;
+    }
+
+    .GPlayerAdvancedToolsContextual {
+        display: inline-flex;
+    }
+
+    [id^=GPopacity_ID_] {
+        flex-grow: 0.6;
+    }
+}
