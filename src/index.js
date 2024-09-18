@@ -40,6 +40,7 @@ export { default as GeoportalZoom } from "./packages/Controls/Zoom/GeoportalZoom
 export { default as GeoportalFullScreen } from "./packages/Controls/FullScreen/GeoportalFullScreen";
 export { default as GeoportalOverviewMap } from "./packages/Controls/OverviewMap/GeoportalOverviewMap";
 export { default as Legends } from "./packages/Controls/Legends/Legends";
+export { default as Catalog } from "./packages/Controls/Catalog/Catalog";
 export { default as Global } from "./packages/Controls/Global/Global";
 
 // proj4

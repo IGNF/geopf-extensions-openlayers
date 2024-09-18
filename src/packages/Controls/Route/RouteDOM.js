@@ -1,6 +1,7 @@
 import ID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
+import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("RouteDOM");
 
@@ -160,6 +161,22 @@ var RouteDOM = {
     },
 
     /**
+     * Create Point label
+     *
+     * @param {String} innerHTML text to display
+     * @param {Boolean} display should the label be dsiplayed?
+     * @returns {DOMElement} DOM element
+     */
+    _createRoutePanelFormPointLabel : function (innerHTML, display = true) {
+        var p = document.createElement("p");
+        p.innerHTML = innerHTML;
+        var classesToAdd = !display ? " GPelementHidden gpf-hidden" : "";
+        p.className = "GProutePointLabelP gpf-label fr-label" + classesToAdd;
+
+        return p;
+    },
+
+    /**
      * Create Form
      * see evenement !
      *
@@ -205,10 +222,19 @@ var RouteDOM = {
 
             // computation mode params
             var modeComputation = null;
-            if (document.getElementById(self._addUID("GProuteComputationSelect"))) {
-                var select = document.getElementById(self._addUID("GProuteResultsComputationSelect"));
-                select.selectedIndex = document.getElementById(self._addUID("GProuteComputationSelect")).selectedIndex;
-                modeComputation = select.options[select.selectedIndex].value;
+            if (document.getElementById(self._addUID("GProuteComputationChoice"))) {
+                // plus rapide ?
+                if (document.getElementById(self._addUID("GProuteComputationFastest"))) {
+                    if (document.getElementById(self._addUID("GProuteComputationFastest")).checked) {
+                        modeComputation = document.getElementById(self._addUID("GProuteComputationFastest")).value;
+                    }
+                }
+                // plus court ?
+                if (document.getElementById(self._addUID("GProuteComputationShortest"))) {
+                    if (document.getElementById(self._addUID("GProuteComputationShortest")).checked) {
+                        modeComputation = document.getElementById(self._addUID("GProuteComputationShortest")).value;
+                    }
+                }
             }
 
             // transport mode params
@@ -265,27 +291,7 @@ var RouteDOM = {
 
         container.appendChild(this._createRouteResultsStagesElement());
         container.appendChild(this._createRouteResultsElement());
-
-        var divBorderUp = document.createElement("div");
-        divBorderUp.className = "GPfakeBorder GPfakeBorderLeft";
-        container.appendChild(divBorderUp);
-
         container.appendChild(this._createRouteShowResultsDetailsElement());
-
-        var labelShow = document.createElement("label");
-        labelShow.htmlFor = this._addUID("GProuteResultsShowDetails");
-        labelShow.innerHTML = "Afficher le détail";
-        container.appendChild(labelShow);
-
-        var labelHide = document.createElement("label");
-        labelHide.htmlFor = this._addUID("GProuteResultsShowDetails");
-        labelHide.innerHTML = "Masquer le détail";
-        container.appendChild(labelHide);
-
-        var divBorderDown = document.createElement("div");
-        divBorderDown.className = "GPfakeBorder";
-        container.appendChild(divBorderDown);
-
         container.appendChild(this._createRouteResultsDetailsElement());
 
         return container;
@@ -384,7 +390,7 @@ var RouteDOM = {
 
         var select = document.createElement("select");
         select.id = this._addUID("GProuteResultsComputationSelect");
-        select.className = "GPselect";
+        select.className = "GPselect gpf-select fr-select";
         // gestionnaire d'evenement :
         // on stocke la valeur du mode de calcul, et on relance le calcul d'itiniraire
         select.addEventListener("change", function (e) {
@@ -410,6 +416,7 @@ var RouteDOM = {
 
         var divNew = document.createElement("div");
         divNew.id = this._addUID("GProuteResultsNew");
+        divNew.className = "GPresetPicto gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary gpf-btn--secondary";
         divNew.title = "Modifier le calcul";
         divNew.addEventListener("click", function (e) {
             document.getElementById(self._addUID("GProuteResultsPanel")).className = "GPelementHidden gpf-hidden";
@@ -491,10 +498,32 @@ var RouteDOM = {
      * @returns {DOMElement} DOM element
      */
     _createRouteShowResultsDetailsElement : function () {
+        var div = document.createElement("div");
+        div.className = "GProuteResultsShowDetailsDiv gpf-flex fr-checkbox-group fr-m-1w";
+        if (!checkDsfr()) {
+            var divBorderUp = document.createElement("div");
+            divBorderUp.className = "GPfakeBorder GPfakeBorderLeft";
+            div.appendChild(divBorderUp);
+        }
         var input = document.createElement("input");
         input.id = this._addUID("GProuteResultsShowDetails");
         input.type = "checkbox";
-        return input;
+        div.appendChild(input);
+        var labelShow = document.createElement("label");
+        labelShow.className = "gpf-label fr-label";
+        labelShow.htmlFor = this._addUID("GProuteResultsShowDetails");
+        labelShow.innerHTML = "Afficher le détail";
+        div.appendChild(labelShow);
+        if (!checkDsfr()) {
+            var labelHide = document.createElement("label");
+            labelHide.htmlFor = this._addUID("GProuteResultsShowDetails");
+            labelHide.innerHTML = "Masquer le détail";
+            div.appendChild(labelHide);
+            var divBorderDown = document.createElement("div");
+            divBorderDown.className = "GPfakeBorder";
+            div.appendChild(divBorderDown);
+        }
+        return div;
     },
 
     /**
@@ -626,7 +655,7 @@ var RouteDOM = {
         inputOrigin.id = "GProuteOrigin" + n;
         inputOrigin.className = "GPelementVisible gpf-visible";
         inputOrigin.type = "text";
-        inputOrigin.placeholder = "Saisir une adresse";
+        inputOrigin.placeholder = "Saisir une adresse, un lieu...";
         inputOrigin.addEventListener("keyup", function (e) {
             var charCode = e.which || e.keyCode;
             if (charCode === 13 || charCode === 10) {
@@ -856,21 +885,6 @@ var RouteDOM = {
     // ################################################################### //
 
     /**
-     * Create Container to Mode choice transport
-     *
-     * @returns {DOMElement} DOM element
-     */
-    _createRoutePanelFormModeChoiceElement : function () {
-        var div = document.createElement("div");
-        div.id = this._addUID("GProuteModeChoice");
-
-        // div.appendChild(this._createRoutePanelFormModeChoiceTransportElement());
-        // div.appendChild(this._createRoutePanelFormModeChoiceComputeElement());
-
-        return div;
-    },
-
-    /**
      * Create Mode choice transport
      * see event !
      * FIXME event not useful
@@ -887,9 +901,11 @@ var RouteDOM = {
 
         var label = document.createElement("label");
         label.className = "GProuteModeLabel gpf-label fr-label";
-        label.innerHTML = "Mode de transport";
+        label.innerHTML = "Choisir un mode de déplacement";
         divContainer.appendChild(label);
 
+        var divRadio = document.createElement("div");
+        divRadio.className = "gpf-radio-btn-group";
         /* jshint -W083 */
         for (var i = 0; i < transports.length; i++) {
             var transport = transports[i];
@@ -959,8 +975,9 @@ var RouteDOM = {
                 div.appendChild(labelPedestrian);
             }
 
-            divContainer.appendChild(div);
+            divRadio.appendChild(div);
         }
+        divContainer.appendChild(divRadio);
 
         return divContainer;
     },
@@ -975,44 +992,80 @@ var RouteDOM = {
         // contexte d'execution
         var context = this;
 
-        var div = document.createElement("div");
-        div.id = this._addUID("GProuteComputationChoice");
+        var divContainer = document.createElement("div");
+        divContainer.id = this._addUID("GProuteComputationChoice");
+        divContainer.className = "fr-mt-2w";
 
         var label = document.createElement("label");
-        label.htmlFor = this._addUID("GProuteComputationSelect");
+        label.className = "GProuteComputationLabel gpf-label fr-label";
         label.innerHTML = "Mode de calcul";
-        var span = document.createElement("span");
-        span.className = "GProuteModeLabel";
-        span.appendChild(label);
-        div.appendChild(span);
+        divContainer.appendChild(label);
 
-        var select = document.createElement("select");
-        select.id = this._addUID("GProuteComputationSelect");
-        select.className = "GPselect gpf-select fr-select";
+        var divRadio = document.createElement("div");
+        divRadio.className = "gpf-radio-btn-group";
+
+        var div = document.createElement("div");
+        div.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        var inputFastest = document.createElement("input");
+        inputFastest.id = this._addUID("GProuteComputationFastest");
+        inputFastest.type = "radio";
+        inputFastest.name = "GProuteComputation";
+        inputFastest.value = "fastest";
+        inputFastest.checked = true;
         // gestionnaire d'evenement :
-        // on stocke la valeur du mode de calcul,
+        // on stocke le mode de transport,
         // utilisation pour la requête sur le service de calcul d'itiniraire
-        select.addEventListener("change", function (e) {
-            context.onRouteModeComputationChange(e);
-        });
-
-        var computes = [{
-            code : "fastest",
-            label : "Plus rapide"
-        }, {
-            code : "shortest",
-            label : "Plus court"
-        }];
-
-        for (var i = 0; i < computes.length; i++) {
-            var option = document.createElement("option");
-            option.value = computes[i].code;
-            option.text = computes[i].label;
-            select.appendChild(option);
+        if (inputFastest.addEventListener) {
+            inputFastest.addEventListener("change", function (e) {
+                context.onRouteModeComputationChange(e);
+            });
+        } else if (inputFastest.attachEvent) {
+            inputFastest.attachEvent("onchange", function (e) {
+                context.onRouteModeComputationChange(e);
+            });
         }
-        div.appendChild(select);
+        div.appendChild(inputFastest);
 
-        return div;
+        var labelFastest = document.createElement("label");
+        labelFastest.className = "gpf-label fr-label";
+        labelFastest.htmlFor = this._addUID("GProuteComputationFastest");
+        labelFastest.title = "Plus rapide";
+        labelFastest.innerHTML = "Plus rapide";
+        div.appendChild(labelFastest);
+        divRadio.appendChild(div);
+
+        var div2 = document.createElement("div");
+        div2.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        var inputShortest = document.createElement("input");
+        inputShortest.id = this._addUID("GProuteComputationShortest");
+        inputShortest.type = "radio";
+        inputShortest.name = "GProuteComputation";
+        inputShortest.value = "shortest";
+        // gestionnaire d'evenement :
+        // on stocke le mode de transport,
+        // utilisation pour la requête sur le service de calcul d'itiniraire
+        if (inputShortest.addEventListener) {
+            inputShortest.addEventListener("change", function (e) {
+                context.onRouteModeComputationChange(e);
+            });
+        } else if (inputShortest.attachEvent) {
+            inputShortest.attachEvent("onchange", function (e) {
+                context.onRouteModeComputationChange(e);
+            });
+        }
+        div2.appendChild(inputShortest);
+
+        var labelShortest = document.createElement("label");
+        labelShortest.className = "gpf-label fr-label";
+        labelShortest.htmlFor = this._addUID("GProuteComputationShortest");
+        labelShortest.title = "Plus court";
+        labelShortest.innerHTML = "Plus court";
+        div2.appendChild(labelShortest);
+
+        divRadio.appendChild(div2);
+        divContainer.appendChild(divRadio);
+
+        return divContainer;
     },
 
     // ################################################################### //
@@ -1032,7 +1085,11 @@ var RouteDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowRouteExclusionsPicto");
-        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill";
+        var hidden = "";
+        if (checkDsfr()) {
+            hidden = "GPelementHidden gpf-hidden";
+        }
+        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill`;
         button.title = "Exclusions";
         // button.style.top = "185px";
         button.setAttribute("tabindex", "0");
@@ -1065,9 +1122,10 @@ var RouteDOM = {
     _createRoutePanelFormExclusionsElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GProuteExclusions");
+        div.className = "fr-mt-2w";
 
         var label = document.createElement("label");
-        label.className = "GProuteExclusionsLabel fr-m-1w";
+        label.className = "GProuteExclusionsLabel fr-label";
         label.innerHTML = "Passages autorisés";
         div.appendChild(label);
 
@@ -1198,9 +1256,9 @@ var RouteDOM = {
     _createRouteSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GProuteSubmit");
-        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn fr-btn--secondary gpf-btn--secondary";
+        input.className = "GPsubmit gpf-btn gpf-btn-icon-submit fr-btn";
         input.type = "submit";
-        input.value = "Calculer";
+        input.value = "Calculer l'itinéraire";
 
         return input;
     },
@@ -1220,7 +1278,7 @@ var RouteDOM = {
         var buttonReset = document.createElement("button");
         buttonReset.id = this._addUID("GProuteReset");
         buttonReset.title = "Réinitialiser les paramètres";
-        buttonReset.className = "GPresetPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary gpf-btn--secondary";
+        buttonReset.className = "GPresetPicto gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary gpf-btn--secondary";
         buttonReset.title = "Réinitialiser les paramètres";
         buttonReset.setAttribute("tabindex", "0");
         buttonReset.setAttribute("aria-pressed", false);

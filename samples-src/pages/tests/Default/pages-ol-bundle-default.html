@@ -46,40 +46,53 @@
                   })
                 });
 
+                var catalog = new ol.control.Catalog({
+                  position : "top-left"
+                });
+                map.addControl(catalog);
+
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });
                 map.addControl(drawing);
+
                 var iso = new ol.control.Isocurve({
                   position : "bottom-left"
                 });
                 map.addControl(iso);
+
                 var layerImport = new ol.control.LayerImport({
                   position : "bottom-left"
                 });
                 map.addControl(layerImport);
+
                 var layerSwitcher = new ol.control.LayerSwitcher({
                   options :{
                     position : "bottom-right"
                   }
                 });
                 map.addControl(layerSwitcher);
+
                 var mp = new ol.control.GeoportalMousePosition({
                   position : "bottom-right"
                 });
                 map.addControl(mp);
+
                 var route = new ol.control.Route({
                   position : "bottom-right"
                 });
                 map.addControl(route);
+
                 var reverse = new ol.control.ReverseGeocode({
                   position : "top-right"
                 });
                 map.addControl(reverse);
+
                 var search = new ol.control.SearchEngine({
                   position : "top-left"
                 });
                 map.addControl(search);
+
                 var feature =  new ol.control.GetFeatureInfo({
                   options :{
                     position : "top-right"
@@ -91,14 +104,17 @@
                   position : "top-left"
                 });
                 map.addControl(measureLength);
+
                 var measureArea = new ol.control.MeasureArea({
                   position : "top-left"
                 });
                 map.addControl(measureArea);
+
                 var measureAzimuth = new ol.control.MeasureAzimuth({
                   position : "top-left"
                 });
                 map.addControl(measureAzimuth);
+
                 var measureProfil = new ol.control.ElevationPath({
                   position : "top-left"
                 });
@@ -111,6 +127,17 @@
                   position : "bottom-left"
                 });
                 map.addControl(zoom);
+
+                var fullscreen = new ol.control.GeoportalFullScreen({
+                  position : "top-right"
+                });
+                map.addControl(fullscreen);
+
+                var overview = new ol.control.GeoportalOverviewMap({
+                  position : "bottom-left",
+                  collapsed: false
+                });
+                map.addControl(overview);
               };
 
               Gp.Services.getConfig({

@@ -1,5 +1,5 @@
 {
-  "name": "geoportal-extensions-openlayers",
+  "name": "geopf-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
   "version": "1.0.0-beta.115",
   "date": "26/07/2024",
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/IGNF/geoportal-extensions-openlayers.git"
+    "url": "https://github.com/IGNF/geopf-extensions-openlayers.git"
   },
   "author": "IGNF",
   "keywords": [
@@ -35,24 +35,24 @@
     "javascript",
     "OpenLayers 8"
   ],
-  "license": "CECILL-B",
+  "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/IGNF/geoportal-extensions-openlayers/issues"
+    "url": "https://github.com/IGNF/geopf-extensions-openlayers/issues"
   },
-  "homepage": "https://github.com/IGNF/geoportal-extensions-openlayers#readme",
+  "homepage": "https://github.com/IGNF/geopf-extensions-openlayers#readme",
   "dependencies": {
     "@gouvfr/dsfr": "^1.11.0",
-    "@mapbox/mapbox-gl-style-spec": "14.5.2",
+    "@mapbox/mapbox-gl-style-spec": "14.6.0",
     "eventbusjs": "0.2.0",
-    "geoportal-access-lib": "3.4.2",
+    "geoportal-access-lib": "3.4.3",
     "loglevel": "^1.9.1",
     "ol": "8.2.0",
-    "ol-mapbox-style": "12.3.4",
-    "proj4": "2.11.0",
-    "sortablejs": "1.15.2",
+    "ol-mapbox-style": "12.3.5",
+    "proj4": "2.12.0",
+    "sortablejs": "1.15.3",
     "typescript": "^5.3.3",
     "whatwg-fetch": "3.6.20",
-    "@xmldom/xmldom": "^0.8.10"
+    "@xmldom/xmldom": "^0.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",

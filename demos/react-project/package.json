@@ -6,12 +6,13 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "geoportal-extensions-openlayers": "../../dist/package/geoportal-extensions-openlayers.tgz",
+    "geopf-extensions-openlayers": "../../dist/package/geopf-extensions-openlayers.tgz",
     "ol": "^9.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@gouvfr/dsfr": "^1.11.0"
   },
   "scripts": {
     "start": "react-scripts start",

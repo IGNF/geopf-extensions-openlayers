@@ -27,6 +27,7 @@ import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 import LocationSelector from "../LocationSelector/LocationSelector";
 import ButtonExport from "../Export/Export";
 import GeoJSONExtended from "../../Formats/GeoJSON";
+import checkDsfr from "../Utils/CheckDsfr";
 
 // DOM
 import IsocurveDOM from "./IsocurveDOM";
@@ -104,7 +105,7 @@ var Isocurve = class Isocurve extends Control {
      * @param {*} options - options
      * @example
      * import Isocurve from from "gpf-ext-ol/controls/Isocurve"
-     * ou 
+     * ou
      * import { Isocurve } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -478,7 +479,7 @@ var Isocurve = class Isocurve extends Control {
             draggable : false,
             export : false,
             methods : ["time", "distance"],
-            graphs : ["Voiture", "Pieton"],
+            graphs : ["Pieton", "Voiture"],
             exclusions : {
                 toll : false,
                 tunnel : false,
@@ -665,12 +666,12 @@ var Isocurve = class Isocurve extends Control {
      */
     _initTransport () {
         // Mode de transport selectionné
-        this._currentTransport = "Voiture"; // par defaut
+        this._currentTransport = "Piéton"; // par defaut
 
         // par defaut
         var transports = this.options.graphs;
         if (!transports || transports.length === 0) {
-            this.options.graphs = ["Voiture", "Pieton"];
+            this.options.graphs = ["Pieton", "Voiture"];
         }
 
         // option
@@ -813,6 +814,9 @@ var Isocurve = class Isocurve extends Control {
     _initContainer (map) {
         // get main container
         var container = this._container;
+        if (container.childElementCount > 0) {
+            return container;
+        }
 
         var picto = this._pictoIsoButton = this._createShowIsoPictoElement();
         container.appendChild(picto);
@@ -829,7 +833,10 @@ var Isocurve = class Isocurve extends Control {
         // form
         var form = this._formContainer = this._createIsoPanelFormElement();
 
+        form.appendChild(this._createIsoPanelFormModeChoiceTransportElement(this.options.graphs));
+
         // form: input de saisie de la localisation (fonction de Isocurve, voir ci-dessous)
+        form.appendChild(this._createIsoPanelFormPointLabel());
         var point = this._createIsoPanelFormPointElement(map);
         form.appendChild(point);
 
@@ -849,15 +856,13 @@ var Isocurve = class Isocurve extends Control {
         form.appendChild(typeChoice);
 
         // form: menu du choix des valeurs
+        form.appendChild(this._createIsoPanelFormLabelIsochronElement(isoChronChecked));
         form.appendChild(this._createIsoPanelFormValueIsochronElement(isoChronChecked));
+        form.appendChild(this._createIsoPanelFormLabelIsodistanceElement(isoDistChecked));
         form.appendChild(this._createIsoPanelFormValueIsodistanceElement(isoDistChecked));
 
-        // form: menu du choix du transport et du sens du parcours
-        var modeChoice = this._createIsoPanelFormModeChoiceElement();
-        modeChoice.appendChild(this._createIsoPanelFormModeChoiceTransportElement(this.options.graphs));
         // FIXME : doit on passer le paramètre defaultDirection ?
-        modeChoice.appendChild(this._createIsoPanelFormModeChoiceDirectionElement(this.options.directions));
-        form.appendChild(modeChoice);
+        form.appendChild(this._createIsoPanelFormModeChoiceDirectionElement(this.options.directions));
 
         // form: menu des exclusions
         if (this.options.exclusions && (typeof this.options.exclusions === "object") && (Object.keys(this.options.exclusions).length !== 0)) {
@@ -871,8 +876,11 @@ var Isocurve = class Isocurve extends Control {
         var footer = this._createIsoPanelFooterElement();
         form.appendChild(footer);
 
-        var buttonReset = this._createIsoFormResetElement();
-        footer.appendChild(buttonReset);
+        if (!checkDsfr()) {
+            var buttonReset = this._createIsoFormResetElement();
+            footer.appendChild(buttonReset);
+        }
+
 
         // form: bouton du calcul
         var buttonSubmit = this._submitContainer = this._createIsoSubmitFormElement();
@@ -909,7 +917,6 @@ var Isocurve = class Isocurve extends Control {
                 id : 1,
                 groupId : this._uid,
                 markerOpts : this.options.markerOpts,
-                label : "Départ",
                 display : true
             },
             autocompleteOptions : this.options.autocompleteOptions || null
@@ -1162,9 +1169,9 @@ var Isocurve = class Isocurve extends Control {
             return;
         }
         if (value.toLowerCase() === "arrival") {
-            this._originPoint._buttonLabel.innerHTML = "Arrivée";
+            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Arrivée";
         } else {
-            this._originPoint._buttonLabel.innerHTML = "Départ";
+            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Départ";
         }
         this._currentDirection = value;
     }
@@ -1492,10 +1499,10 @@ var Isocurve = class Isocurve extends Control {
         if (directionSelect) {
             directionSelect.value = this._currentDirection;
         }
-        if (this._currentDirection === "arrival") {
-            this._originPoint._buttonLabel.innerHTML = "Arrivée";
+        if (directionSelect.value.toLowerCase() === "arrival") {
+            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Arrivée";
         } else {
-            this._originPoint._buttonLabel.innerHTML = "Départ";
+            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Départ";
         }
 
         // 6. set exclusions to default

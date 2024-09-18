@@ -40,7 +40,7 @@ jobs:
         run: npm run build
 
       - name: Build package
-        run: npm run publish
+        run: npm run publish -- --version=${{ github.ref_name }}
 
       - name: Create Zip Modules
         run: |
@@ -87,6 +87,8 @@ jobs:
   # - checkout gh-pages
   # - download des artifacts : build & jsdoc
   # - commit & push
+  # info : on ne realise pas le "deploy" à ce niveau,
+  #        le commit du "changelog" sur main déclenche le deploy du build.yaml
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -121,7 +123,6 @@ jobs:
           git commit -m "build project gh-pages"
           git push
 
-  # not yet actived !
   # - checkout master or main
   # - get date from package.json
   # - get version from package.json
@@ -133,7 +134,7 @@ jobs:
   #   - modules.zip
   #   - package.zip
   release: # Only for tags !
-    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -150,7 +151,8 @@ jobs:
       
       - name: Create ChangeLog
         run: |
-          sed -i 's/__VERSION__/${{ steps.package.outputs.version }}/g' DRAFT_CHANGELOG.md
+          echo "version package internal : ${{ steps.package.outputs.version }}"
+          sed -i 's/__VERSION__/${{ github.ref_name }}/g' DRAFT_CHANGELOG.md
           sed -i 's/__DATE__/${{ steps.date.outputs.date }}/g' DRAFT_CHANGELOG.md
 
       - name: Upload ChangeLog artifacts
@@ -201,13 +203,12 @@ jobs:
           asset_name: package-${{ steps.package.outputs.version }}.zip
           asset_content_type: application/zip
 
-  # not yet actived !
   # - checkout master or main
   # - download changelog (from release)
   # - download package (from build)
   # - then simply publish repo
   publish: # Only for tags !
-    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -233,16 +234,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
 
-  # not yet actived !
   # - checkout master or main
   # - download changelog (from release)
   # - archive changelog
   # - update toc
   # - reset draft changelog
   # - commit & push
-  #   warning: ceci va relancer un job de build et deploy !
+  #   warning: ceci risque de relancer un job de build et deploy du build.yaml !
+  #   on positionne une condition sur le message du commit afin d'éviter de reexecuter les jobs
   changelog: # Only for tags !
-    if: github.event_name == 'push' && contains(github.ref, '/tags/') && false 
+    if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: [release, publish]
     runs-on: ubuntu-latest
     steps:
@@ -276,7 +277,7 @@ jobs:
             git config user.name github-actions
             git config user.email github-actions@github.com
             git add -A
-            git commit -m "update CHANGELOG"
+            git commit -m "[github-actions] update CHANGELOG"
             git push --force
 
   # not yet implemented !

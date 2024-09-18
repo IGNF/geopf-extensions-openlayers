@@ -1,10 +1,10 @@
 .gpf-widget-padding {
-    padding-left: 15px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
+
 .gpf-widget-color {
-    background-color: var(--grey-1000-50);
+  background-color: var(--background-default-grey);
 }
 
 .gpf-panel__items,
@@ -28,6 +28,7 @@
 select[name^="inputSex"].gpf-select {
   padding: unset;
 }
+
 input[name^="inputSex"].gpf-input {
   padding: unset;
 }
@@ -37,7 +38,7 @@ button[id^=GPsearchInputReset] {
   height: 40px;
 }
 
-[id^="GPshowSearchDiv"]{
+[id^="GPshowSearchDiv"] {
   flex-direction: row-reverse;
 }
 
@@ -63,42 +64,58 @@ div.GPbuttonsContainer > button {
 
 .GPbuttonsContainer {
   height: 56px;
+  padding-left: 10px;
 }
 
 .GPsearchRadioContainer {
   display: flex;
   flex-direction: row;
-  background-color: var(--grey-1000-50);
+  background-color: var(--background-default-grey);
   white-space: nowrap;
+  max-height: 0;
+  overflow: clip;
+  transition: max-height 0.3s;
+  gap: 1rem;
+}
+
+[id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
+[id^="GPsearchEngine-"]:focus-within > .GPsearchRadioContainer,
+[id^="GPsearchEngine-"]:hover > .GPsearchRadioContainer {
+  max-height: 3rem;
 }
 
 .GPsearchRadioElements {
   display: flex;
   flex-direction: row;
-}
-
-.GPsearchSplitChoice {
-  margin-right: 1rem;
+  gap: 1rem;
 }
 
 .GPshowAdvancedSearch {
   color: var(--text-action-high-blue-france);
   text-decoration: underline;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .gpf-btn-icon-search {
-    background-image: url("img/dsfr/search-line.svg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    /* cas particulier ou on n'utilise pas la class gpf-icon-button pour la largeur à cause du DOM du control*/
-    width: 40px;
+  background-image: url("img/dsfr/search-line.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  /* cas particulier ou on n'utilise pas la class gpf-icon-button pour la largeur à cause du DOM du control*/
+  width: 40px;
+}
+
+form[id^=GPsearchInput-] {
+  margin-left: 8px;
+  width: 300px;
 }
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
-  max-width: 280px;
+  max-width: 300px;
   border: none;
 }
+
 button[id^="GPshowSearchEnginePicto-"] {
   border-radius: 0 0.25rem 0 0;
 }
@@ -112,6 +129,7 @@ button[id^="GPshowSearchEnginePicto-"] {
   -webkit-mask: url("img/dsfr/localiser.svg") center no-repeat;
   mask: url("img/dsfr/localiser.svg") center no-repeat;
 }
+
 .gpf-btn-icon-search-coordinate::after {
   -webkit-mask: url("img/dsfr/coordonnees.svg") center no-repeat;
   mask: url("img/dsfr/coordonnees.svg") center no-repeat;
@@ -131,7 +149,7 @@ dialog[id^="GPadvancedSearchPanel"] {
 /* Autocomplete list / geocode results */
 
 [id^="GPautocompleteResults-"] {
-  border: 1px solid #000091;
+  border: 1px solid var(--background-open-blue-france);
 }
 
 div[id^=GPautoCompleteList],
@@ -139,7 +157,7 @@ dialog[id^=GPgeocodeResultsList] {
   width: 320px;
   position: absolute;
   height: fit-content;
-  background-color: #FFF
+  background-color: var(--background-default-grey);
 }
 
 div[id^=GPautoCompleteList] {
@@ -163,7 +181,7 @@ dialog[id^=GPgeocodeResultsList] {
 div[id^=GPgeocodeResults-] {
   width: 100%;
   position: relative;
-  background-color: #FFF;
+  background-color: var(--background-default-grey);
   max-height: 240px;
   overflow-y: auto;
 }
@@ -192,5 +210,19 @@ div[id^=GPgeocodeResults-] {
     top: unset;
     margin-left: unset;
   }
-}
 
+  .GPsearchRadioContainer {
+    gap: 0;
+    margin: 0 8px;
+  }
+
+  form[id^=GPsearchInput-] {
+    margin-left: 0;
+  }
+
+  [id^="GPsearchEngine-"]:has([id^="GPshowSearchByCoordinate-"][aria-pressed="true"]) > .GPsearchRadioContainer,
+  [id^="GPsearchEngine-"]:focus-within > .GPsearchRadioContainer,
+  [id^="GPsearchEngine-"]:hover > .GPsearchRadioContainer {
+    max-height: 4rem;
+  }
+}

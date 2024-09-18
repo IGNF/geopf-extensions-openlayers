@@ -22,25 +22,37 @@
   width: max-content;
 }
 
+/* FIXME A remplacer avec gestion des collisions */
+.gpf-panel form {
+  max-height: 400px;
+  overflow: auto;
+  padding: 0 2rem 2rem 2rem;
+}
+
 .gpf-panel--hidden {
   display: none;
 }
 
 .gpf-panel__body {
   overflow: unset;
+  position: relative;
 }
 
 .gpf-panel__header {}
 
 .gpf-panel__title {
-  text-align: center;
-  margin: auto;
+  text-align: left;
 }
 
 .gpf-panel__footer {
   background-color: transparent;
   padding: 0;
   margin-top: 0;
+  justify-content: center;
+}
+
+.gpf-panel__footer > input[type="submit"] {
+  width: 100%;
 }
 
 .gpf-panel__content {
@@ -115,6 +127,7 @@
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
+  z-index: 4000;
 }
 
 .gpf-waiting_info {
@@ -141,8 +154,8 @@
   position: absolute;
 }
 
-.gpf-btn--tertiary,
-.gpf-btn--secondary {
+.gpf-btn--secondary,
+.gpf-btn--tertiary {
   position: relative;
 }
 
@@ -179,12 +192,13 @@
 .gpf-btn-icon-close {
   float: right;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 
 .gpf-btn-icon {
   width: inherit;
+  caret-color: transparent;
 }
 
 .gpf-btn-icon-reset::after {
@@ -223,6 +237,11 @@
 }
 
 .gpf-radio-group {}
+
+.gpf-radio-btn-group {
+  display: flex;
+  gap: 1em;
+}
 
 .gpf-upload {}
 
@@ -455,4 +474,14 @@
   cursor: not-allowed;
   /* instead of display: none */
   display: block;
+}
+
+/* surcharge DSFR pour coller aux règles et au rendu de https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon/ */
+/* FIXME: pourquoi on a besoin de faire ça ?? normalement ces règles devraient être importées avec le reste... */
+.fr-collapse {
+  --collapse-max-height: none;
+}
+
+.fr-collapse:not(.fr-collapse--expanded):not(.fr-collapsing) {
+  --collapse-max-height: 0;
 }

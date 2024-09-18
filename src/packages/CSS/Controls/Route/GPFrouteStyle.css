@@ -14,7 +14,9 @@
 }
 
 /* Route form */
-
+form[id^=GProuteForm] {
+  padding: 15px;
+}
 
 .GProuteStageFlexInput {
   max-height: 28px;
@@ -25,6 +27,14 @@
   max-height: 0;
   opacity: 0;
   overflow: hidden;
+}
+
+.GProutePointLabelP {
+  margin: 2px 0 5px 0;
+}
+
+.GProuteComputationLabel {
+  margin-bottom: 5px;
 }
 
 .GProuteOriginPointerImg,
@@ -82,6 +92,10 @@ div[id^=GProuteTransportChoice] input {
   display: none;
 }
 
+div[id^=GProuteTransportChoice] .gpf-radio-btn-group {
+  justify-content: center;
+}
+
 select[id^=GProuteComputationSelect] {
   width: 100px;
 }
@@ -134,14 +148,17 @@ select[id^=GProuteComputationSelect] {
 
 
 .GPshowRouteExclusionsPicto {
+  top: unset;
   right: 0;
   transition: all 0.3s ease-out 0s;
+  transform: translateY(-100%);
 }
 
 .GProuteExclusionsLabel {
   display: block;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  margin-top: 8px;
   font-weight: bold;
   line-height: 16px;
 }
@@ -182,6 +199,8 @@ button[id^=GProuteReset] {
   /* background-color: #366291; */
   background-image: url("img/GProuteOptions.png");
   background-position: -224px center;
+  opacity: 0.8;
+  transition: opacity 0.2s ease-out;
 }
 
 /* Results popup */
@@ -191,6 +210,48 @@ button[id^=GProuteReset] {
 }
 
 /* Results details header */
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime]  {
+  color: #366291;
+}
+
+input[id^=GProuteResultsShowDetails] + label:hover,
+input[id^=GProuteResultsShowDetails] + label + label:hover {
+  color: #366291;
+}
+
+div[id^=GProuteResultsStages] {
+  margin-bottom: 15px;
+}
+
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime] {
+  display: inline-block;
+  line-height: 18px;
+}
+
+div[id^=GProuteResultsValueDist],
+div[id^=GProuteResultsValueTime] {
+  width: 80px;
+  font-weight: bold;
+}
+
+select[id^=GProuteResultsComputationSelect] {
+  width: 100px;
+}
+
+div[id^=GProuteResultsNew] {
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  opacity: 0.8;
+  background-position: -224px 0;
+  transition: opacity 0.2s ease-out;
+  cursor: pointer;
+  background-color: #366291;
+  background-image: url("img/GProuteOptions.png");
+  position: initial;
+}
 
 .GPfakeBorder {
   display: inline-block;
@@ -224,12 +285,12 @@ input[id^=GProuteResultsShowDetails] + label + label {
   display: none;
 }
 
-input[id^=GProuteResultsShowDetails] + label + label + div + div[id^=GProuteResultsDetails] {
+div:has(input[id^=GProuteResultsShowDetails]) + div[id^=GProuteResultsDetails] {
   max-height: 0;
   opacity: 0;
 }
 
-input[id^=GProuteResultsShowDetails]:checked + label + label + div + div[id^=GProuteResultsDetails] {
+div:has(input[id^=GProuteResultsShowDetails]:checked) + div[id^=GProuteResultsDetails] {
   max-height: 200px;
   opacity: 1;
 }
@@ -259,3 +320,7 @@ div[id^=GProuteResultsDetails] {
   padding-left: 5px;
 }
 
+input[id^=GProuteSubmit-] {
+  width: fit-content;
+  padding: 0 10px;
+}

@@ -9,6 +9,14 @@
   background-image: url("img/GPlocationOptions.png");
 }
 
+[id^=GPlocationStageRemove],
+[id^=GPlocationStageAdd] {
+  width: 28px;
+  height: 28px;
+  border: none;
+  cursor: pointer;
+}
+
 .GPlocationOpen {
   background-color: unset;
 }

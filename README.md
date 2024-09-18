@@ -3,8 +3,8 @@
 ![image](doc/capture-carte.png)
 
 ---
-[![Build](https://github.com/IGNF/geoportal-extensions-openlayers/actions/workflows/build.yml/badge.svg)](https://github.com/IGNF/geoportal-extensions-openlayers/actions/workflows/build.yml)
-[![CeCILL License](https://img.shields.io/badge/licence-CeCILL--B-blue.svg)](https://raw.githubusercontent.com/IGNF/geoportal-extensions-openlayers/main/LICENCE.md)
+[![Build](https://github.com/IGNF/geopf-extensions-openlayers/actions/workflows/build.yml/badge.svg)](https://github.com/IGNF/geopf-extensions-openlayers/actions/workflows/build.yml)
+[![CeCILL License](https://img.shields.io/badge/licence-CeCILL--B-blue.svg)](https://raw.githubusercontent.com/IGNF/geopf-extensions-openlayers/main/LICENCE.md)
 
 ---
 
@@ -28,4 +28,4 @@ Ces extensions proposent des classes et widgets utilisables en complément de la
 
 ## <img src="doc/openlayers.svg" height="15px" /> OPENLAYERS
 
-Voir le détail des [fonctionnalités proposées par l'extension Géoplateforme pour OpenLayers](doc/README.md)
+Voir le détail des [fonctionnalités proposées par l'extension Géoplateforme pour OpenLayers](doc/DOCUMENTATION.md)

@@ -29,6 +29,11 @@
   border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
+.GPbuttonsContainer {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
 .GPsearchRadioContainer:hover {
   background-color: rgba(0,60,136,0.7);
 }
@@ -105,6 +110,10 @@ button[id^="GPadvancedSearchClose"] {
   background-position: -50px 3px;
 }
 
+form[id^=GPsearchInput-] {
+  width: 280px;
+}
+
 form[id^=GPsearchInput-] input {
   display: block;
   width: 100%;
@@ -122,6 +131,10 @@ form[id^=GPsearchInput-] input {
 form[id^=GPsearchInput-] input:disabled {
   background-color: #DDD;
   color: #999;
+}
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] {
+  max-width: 280px;
 }
 
 .GPsearchInputText {
@@ -147,7 +160,7 @@ dialog[id^=GPgeocodeResultsList] {
   width: 280px;
   position: absolute;
   max-height: 140px;
-  background-color: #FFF
+  background-color: var(--background-default-grey);
 }
 
 div[id^=GPautoCompleteList] {

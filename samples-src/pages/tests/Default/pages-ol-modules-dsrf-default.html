@@ -39,6 +39,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalFullScreen.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLegends.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGlobal.css" />
@@ -86,6 +88,11 @@
                   })
                 });
 
+                var catalog = new ol.control.Catalog({
+                  position : "top-left"
+                });
+                map.addControl(catalog);
+                
                 var zoom = new ol.control.GeoportalZoom({
                   position : "top-right"
                 });

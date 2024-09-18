@@ -66,7 +66,7 @@ var logger = Logger.getLogger("layerswitcher");
  *      position : "top-left"
  *  }
  * ));
- * 
+ *
  * LayerSwitcher.on("layerswitcher:add", function (e) {
  *    console.warn("layer", e.layer);
  * });
@@ -89,7 +89,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * @param {*} options - options
      * @example
      * import LayerSwitcher from "gpf-ext-ol/controls/LayerSwitcher"
-     * ou 
+     * ou
      * import { LayerSwitcher } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -307,8 +307,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 this._lastZIndex++;
                 layer.setZIndex(this._lastZIndex);
                 this._layerListContainer.insertBefore(layerDiv, this._layerListContainer.firstChild);
-                // this._layerListContainer.insertBefore(layerDiv, 
-                //     (this.options.panel) ? 
+                // this._layerListContainer.insertBefore(layerDiv,
+                //     (this.options.panel) ?
                 //         this._layerListContainer.childNodes[1] : this._layerListContainer.firstChild);
             }
 
@@ -840,6 +840,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * @private
      */
     _onChangeLayerOpacity (e) {
+        e.target.parentNode.style.setProperty("--progress-right", e.target.value + "%");
         var divId = e.target.id; // ex GPvisibilityPicto_ID_26
         var layerID = SelectorID.index(divId); // ex. 26
         var layer = this._layers[layerID].layer;
@@ -1113,7 +1114,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
     /**
      * change layers order (on map) on drag and drop (on control container)
-     * 
+     *
      * @private
      */
     _onEndDragAndDropLayerClick () {
@@ -1156,7 +1157,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
     /**
      * change layers order (on map) on drag and drop (on control container)
-     * 
+     *
      * @param {Event} e - DragNDrop Event
      * @private
      */
@@ -1172,11 +1173,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     _onZoomToExtentClick (e) {
         logger.debug(e);
 
-        // FIXME 
+        // FIXME
         // le zoom to extent fonctionne par defaut pour les couches raster TMS/WMS/WMTS issues du catalogue
-        // mais doit aussi le faire pour les données utilisateurs du type : 
+        // mais doit aussi le faire pour les données utilisateurs du type :
         // * vecteurs (imports)
-        // * raster par moissonnage (imports) 
+        // * raster par moissonnage (imports)
 
         var domIDShort = e.target.id; // ex GPvisibilityPicto_ID_26
         var domIDLong = SelectorID.index(domIDShort); // ex. 26
@@ -1209,8 +1210,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 }
                 var view = map.getView();
                 var crsTarget = view.getProjection();
-    
-                // récupération de l'étendue (en EPSG:4326 par défaut), 
+
+                // récupération de l'étendue (en EPSG:4326 par défaut),
                 // et reprojection dans la projection de la couche
                 var bbox = [
                     globalConstraints.extent.left,
@@ -1223,7 +1224,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 if (!crsSource) {
                     crsSource = "EPSG:4326";
                 }
-                
+
                 extent = olTransformExtentProj(bbox, crsSource, crsTarget);
                 if (extent) {
                     view.fit(extent);

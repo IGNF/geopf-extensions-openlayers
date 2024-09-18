@@ -1,3 +1,5 @@
+import checkDsfr from "../Utils/CheckDsfr";
+
 var IsoDOM = {
 
     /**
@@ -215,6 +217,20 @@ var IsoDOM = {
         return container;
     },
 
+    /**
+     * Create Point label
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createIsoPanelFormPointLabel : function () {
+        var p = document.createElement("p");
+        p.id = this._addUID("GPisochronPointLabelP");
+        p.className = "gpf-label fr-label";
+        p.innerHTML = "Départ";
+
+        return p;
+    },
+
     // ################################################################### //
     // ############# Methods to the type choice into form ################ //
     // ################################################################### //
@@ -231,7 +247,7 @@ var IsoDOM = {
     _createIsoPanelFormTypeChoiceElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronChoice");
-        div.className = "fr-mt-4w";
+        div.className = "fr-mt-2w";
 
         // div.appendChild(this._createIsoPanelFormTypeChoiceChronElement());
         // div.appendChild(this._createIsoPanelFormTypeChoiceDistElement());
@@ -261,12 +277,18 @@ var IsoDOM = {
             input.addEventListener("change", function (e) {
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex fr-mt-1w";
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "gpf-label fr-label";
+                document.getElementById(self._addUID("GPisochronValueDistLabelP")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isochrone";
                 self.onIsoTypeChoiceChange(e);
             }, false);
         } else if (input.attachEvent) {
             input.attachEvent("onchange", function () {
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex fr-mt-1w";
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "gpf-label fr-label";
+                document.getElementById(self._addUID("GPisochronValueDistLabelP")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isochrone";
                 self.onIsoTypeChoiceChange();
             });
         }
@@ -277,14 +299,14 @@ var IsoDOM = {
         var label = document.createElement("label");
         label.className = "GPisochronChoiceAltImg gpf-label fr-label";
         label.htmlFor = this._addUID("GPisochronChoiceAltChron");
-        label.innerHTML = "isochrone";
-        label.title = "isochrone";
+        label.innerHTML = "Durée";
+        label.title = "Durée";
         div.appendChild(label);
 
         var span = document.createElement("span");
         span.id = this._addUID("GPisochronChoiceAltChronTxt");
         span.className = "gpf-hidden";
-        span.innerHTML = "isochrone";
+        span.innerHTML = "Durée";
         if (span.addEventListener) {
             span.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPisochronChoiceAltChron")).click();
@@ -321,12 +343,18 @@ var IsoDOM = {
             input.addEventListener("change", function (e) {
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "GPflexInput gpf-flex fr-mt-1w";
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronValueDistLabelP")).className = "gpf-label fr-label";
+                document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isodistance";
                 self.onIsoTypeChoiceChange(e);
             }, false);
         } else if (input.attachEvent) {
             input.attachEvent("onchange", function () {
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "GPflexInput gpf-flex fr-mt-1w";
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronValueDistLabelP")).className = "gpf-label fr-label";
+                document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isodistance";
                 self.onIsoTypeChoiceChange();
             });
         }
@@ -337,15 +365,15 @@ var IsoDOM = {
         var label = document.createElement("label");
         label.className = "GPisochronChoiceAltImg gpf-label fr-label";
         label.htmlFor = this._addUID("GPisochronChoiceAltDist");
-        label.innerHTML = "isodistance";
-        label.title = "isodistance";
+        label.innerHTML = "Distance";
+        label.title = "Distance";
 
         div.appendChild(label);
 
         var span = document.createElement("span");
         span.id = this._addUID("GPisochronChoiceAltDistTxt");
         span.className = "gpf-hidden";
-        span.innerHTML = "isodistance";
+        span.innerHTML = "Distance";
         if (span.addEventListener) {
             span.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPisochronChoiceAltDist")).click();
@@ -365,6 +393,22 @@ var IsoDOM = {
     // ################################################################### //
 
     /**
+     * Create isochron inputs label
+     * see event !
+     * @param {Boolean} checked - checked
+     * @returns {DOMElement} DOM element
+     */
+    _createIsoPanelFormLabelIsochronElement : function (checked) {
+        var context = this;
+        var p = document.createElement("p");
+        p.id = this._addUID("GPisochronValueChronLabelP");
+        p.className = (checked) ? "gpf-label fr-label" : "GPelementHidden gpf-hidden";
+        p.innerHTML = "Définir un temps de trajet";
+
+        return p;
+    },
+
+    /**
      * Create isochron inputs values
      * see event !
      * @param {Boolean} checked - checked
@@ -377,13 +421,6 @@ var IsoDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronValueChron");
         div.className = (checked) ? "GPflexInput gpf-flex fr-mt-1w" : "GPelementHidden gpf-hidden";
-
-        var label = document.createElement("label");
-        label.id = this._addUID("GPisochronValueChronLabel");
-        label.className = "gpf-label fr-label";
-        label.htmlFor = this._addUID("GPisochronValueChronInput");
-        label.innerHTML = "Temps";
-        div.appendChild(label);
 
         var input1 = document.createElement("input");
         input1.id = this._addUID("GPisochronValueChronInput1");
@@ -446,6 +483,22 @@ var IsoDOM = {
     },
 
     /**
+     * Create isodistance inputs label
+     * see event !
+     * @param {Boolean} checked - checked
+     * @returns {DOMElement} DOM element
+     */
+    _createIsoPanelFormLabelIsodistanceElement : function (checked) {
+        var context = this;
+        var p = document.createElement("p");
+        p.id = this._addUID("GPisochronValueDistLabelP");
+        p.className = (checked) ? "gpf-label fr-label" : "GPelementHidden gpf-hidden";
+        p.innerHTML = "Définir une distance";
+
+        return p;
+    },
+
+    /**
      * Create isodistance inputs values
      * see event !
      * @param {Boolean} checked - checked
@@ -458,13 +511,6 @@ var IsoDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronValueDist");
         div.className = (checked) ? "GPflexInput gpf-flex fr-mt-1w" : "GPelementHidden gpf-hidden";
-
-        var label = document.createElement("label");
-        label.id = this._addUID("GPisochronValueDistLabel");
-        label.className = "gpf-label fr-label fr-mr-1w";
-        label.htmlFor = this._addUID("GPisochronValueDistInput");
-        label.innerHTML = "Distance";
-        div.appendChild(label);
 
         var input1 = document.createElement("input");
         input1.id = this._addUID("GPisochronValueDistInput");
@@ -491,7 +537,7 @@ var IsoDOM = {
 
         var label1 = document.createElement("label");
         label1.innerHTML = "km";
-        label.className = "gpf-label fr-label";
+        label1.className = "gpf-label fr-label";
         div.appendChild(label1);
 
         return div;
@@ -500,26 +546,6 @@ var IsoDOM = {
     // ################################################################### //
     // ############ Methods to the mode choice into form ################# //
     // ################################################################### //
-
-    /**
-     * Create Container to Mode choice
-     *
-     * FIXME
-     * don't call this._createIsoPanelFormModeChoiceTransportElement
-     * don't call this._createIsoPanelFormModeChoiceDirectionElement
-     *
-     * @returns {DOMElement} DOM element
-     */
-    _createIsoPanelFormModeChoiceElement : function () {
-        var div = document.createElement("div");
-        div.id = this._addUID("GPisochronModeChoice");
-        div.className = "fr-my-4w";
-
-        // div.appendChild(this._createIsoPanelFormModeChoiceTransportElement());
-        // div.appendChild(this._createIsoPanelFormModeChoiceDirectionElement());
-
-        return div;
-    },
 
     /**
      * Create Mode choice transport
@@ -537,15 +563,17 @@ var IsoDOM = {
 
         var label = document.createElement("label");
         label.className = "GPisochronModeLabel gpf-label fr-label";
-        label.innerHTML = "Mode de transport";
+        label.innerHTML = "Choisir un mode de déplacement";
         divContainer.appendChild(label);
+
+        var radioContainer = document.createElement("div");
 
         /* jshint -W083 */
         for (var i = 0; i < transports.length; i++) {
             var transport = transports[i];
 
             var div = document.createElement("div");
-            div.className = "GPisochronTransportChoice gpf-flex gpf-radio-group fr-radio-group fr-m-1w";
+            div.className = "GPisochronTransportChoice gpf-flex gpf-radio-group fr-radio-group";
 
             if (transport === "Voiture") {
                 var inputCar = document.createElement("input");
@@ -611,8 +639,9 @@ var IsoDOM = {
                 div.appendChild(labelPedestrian);
             }
 
-            divContainer.appendChild(div);
+            radioContainer.appendChild(div);
         }
+        divContainer.appendChild(radioContainer);
 
         return divContainer;
     },
@@ -630,10 +659,11 @@ var IsoDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronDirectionChoice");
+        div.className = "fr-my-2w";
 
         var label = document.createElement("label");
-        label.className = "GPisochronModeLabel gpf-label fr-label";
-        label.innerHTML = "Sens de parcours";
+        label.innerHTML = "Définir un sens de parcours";
+        label.className = "fr-label";
         div.appendChild(label);
 
         var select = document.createElement("select");
@@ -687,7 +717,11 @@ var IsoDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowIsoExclusionsPicto");
-        button.className = "GPelementHidden GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto gpf-hidden gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill";
+        var hidden = "";
+        if (checkDsfr()) {
+            hidden = "GPelementHidden gpf-hidden";
+        }
+        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill`;
         button.title = "Exclusions";
         // button.style.top = "240px";
         button.setAttribute("tabindex", "0");
@@ -855,9 +889,9 @@ var IsoDOM = {
     _createIsoSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPisochronSubmit");
-        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary gpf-btn--secondary";
+        input.className = "GPsubmit gpf-btn fr-btn";
         input.type = "submit";
-        input.value = "Calculer";
+        input.value = "Calculer l'isochrone";
 
         return input;
     },

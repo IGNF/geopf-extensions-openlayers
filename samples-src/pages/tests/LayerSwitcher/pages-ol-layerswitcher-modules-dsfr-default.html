@@ -1,9 +1,10 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        
+
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -43,13 +44,17 @@
                             new ol.layer.Tile({
                                 source: new ol.source.OSM(),
                                 opacity: 0.5
+                            }),
+                            new ol.layer.GeoportalWMTS({
+                                layer : "ORTHOIMAGERY.ORTHOPHOTOS"
                             })
                         ]
                     });
 
                     var layerSwitcher = new ol.control.LayerSwitcher({
                         options :{
-                            position: 'top-right'
+                            position: 'top-right',
+                            panel: true,
                         }
                     });
                     map.addControl(layerSwitcher);

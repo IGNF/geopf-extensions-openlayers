@@ -9,9 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "geoportal-extensions-openlayers": "../../dist/package/geoportal-extensions-openlayers.tgz",
+    "geopf-extensions-openlayers": "../../dist/package/geopf-extensions-openlayers.tgz",
     "ol": "^9.1.0",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "@gouvfr/dsfr": "^1.11.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

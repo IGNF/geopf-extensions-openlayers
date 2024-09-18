@@ -31,11 +31,6 @@ button[id^="GPshowIsochronPicto-"][aria-pressed="true"] + dialog {
 
 /* Isochron form */
 
-form[id^=GPisochronForm] {
-  padding: 15px;
-}
-
-
 input[id^="GPisochronOriginPointer"] + .GPisochronOriginPointerImg {
   background-position: -1px -1px;
 }
@@ -51,10 +46,6 @@ div[id^=GPisochronChoice] {
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
-  -webkit-justify-content: space-between;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
 }
 
 /*
@@ -74,11 +65,6 @@ input[id^=GPisochronChoiceAltDist]:checked + .GPisochronChoiceAltImg {
   background-position: -140px 0;
 }*/
 
-div[id^=GPisochronValueChron],
-div[id^=GPisochronValueDist] {
-  width: 220px;
-  margin: auto;
-}
 
 /* Mode choice */
 
@@ -89,24 +75,29 @@ div[id^=GPisochronValueDist] {
 
 .GPisochronFormMini .GPpanelFooter button[id^="GPisochronReset-"],
 .GPisochronFormMini .GPpanelFooter input[id^="GPisochronSubmit-"],
+.GPisochronFormMini [id^="GPisochronPointLabelP-"],
+.GPisochronFormMini [id^="GPisochronChoice-"],
+.GPisochronFormMini [id^="GPisochronValueChronLabelP-"],
+.GPisochronFormMini [id^="GPisochronValueChron-"],
+.GPisochronFormMini [id^="GPisochronTransportChoice-"],
+.GPisochronFormMini [id^="GPisochronDirectionChoice-"],
+.GPisochronFormMini [id^="GPisoExclusions-"],
+.GPisochronFormMini .GPpanelFooter,
 .GPisochronFormMini button[id^="GPshowIsoExclusionsPicto-"] {
     display: none;
 }
 
-div[id^=GPisochronModeChoice] {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -webkit-justify-content: space-between;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  margin: 15px 0;
+.GPisochronFormMini {
+  max-height: 78px;
 }
 
-div[id^=GPisochronTransportChoice] > .GPisochronTransportChoice {
+.GPisochronFormMini .GPelementShow {
+  color: var(--grey-200-850);
+}
+
+div[id^=GPisochronTransportChoice] > div {
   display: inline-flex;
+  gap: 1rem;
 }
 
 /* Showing/hiding exclusions */
@@ -114,9 +105,14 @@ div[id^=GPisochronTransportChoice] > .GPisochronTransportChoice {
 button[id^="GPshowIsoExclusions"] {
   position: absolute;
   border: unset;
-  bottom: 0;
+  bottom: unset;
   right: 0;
   transition: all 0.5s ease-out 0s;
+  transform: translateY(-100%);
+}
+
+button[id^="GPshowIsoExclusions"][aria-pressed="true"] {
+  transform: translateY(-100%) rotateX(180deg);
 }
 
 button[id^=GPshowIsoExclusions][aria-pressed="false"] + div[id^=GPisoExclusions] {
@@ -132,6 +128,10 @@ button[id^=GPshowIsoExclusions][aria-pressed="true"] + div[id^=GPisoExclusions] 
   margin-bottom: 15px;
 }
 
+.GPisochronFormMini button[id^=GPshowIsoExclusions][aria-pressed="true"] + div[id^=GPisoExclusions] {
+  display: none;
+}
+
 div[id^=GPisoExclusions] {
   transition: max-height 0.5s ease-in-out 0.25s, opacity 0.5s ease-in-out 0.25s, margin 0.3s ease-in-out 0.25s;
   overflow: hidden;
@@ -140,7 +140,7 @@ div[id^=GPisoExclusions] {
 /* Reset picto */
 
 button[id^=GPisochronReset] {
-  
+
 }
 
 

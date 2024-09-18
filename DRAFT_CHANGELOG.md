@@ -17,6 +17,7 @@ __DATE__
 
 * ✨ [Added]
 
+  * Catalog: Nouveau widget Catalog (#155)
   * Global: Nouveau widget Selecteur de territoires (#115)
   * Legends: Nouveau widget Legends (#103)
   * OverviewMap: Nouveau widget GeoportalOverviewMap (#81)
@@ -37,7 +38,7 @@ __DATE__
 
 * 🐛 [Fixed]
 
-  * Measures : Fix [#109](https://github.com/IGNF/geoportal-extensions-openlayers/issues/109)
+  * Measures : Fix (#109)
   * LayerSwitcher : divers correctifs dsfr (#64)
   * SearchEngine : Correction sur la recherche avancée de la parcelle Cadastrale (#61)
   * Route : Problème de css DSFR en mode saisie du point d'arriver ou de départ (#60)

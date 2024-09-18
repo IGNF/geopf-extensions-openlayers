@@ -32,6 +32,7 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
 
 .GPlayerSwitcher_layer {
   background-color: var(--background-overlap-grey);
+  padding-right: 40px;
 }
 
 .gpf-btn-icon-layerswitcher {
@@ -72,14 +73,21 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
 .gpf-btn-icon-ls-collapse::after {
     -webkit-mask: url("img/dsfr/collapse.svg") center no-repeat;
     mask: url("img/dsfr/collapse.svg") center no-repeat;
+    transition: transform 0.2s ease-out 0s;
+}
+
+.gpf-btn-icon-ls-collapse[aria-pressed="true"]::after {
+  box-shadow: none;
+  transform: rotate(180deg);
 }
 
 .gpf-btn-icon-ls-dragndrop {
-    background-image: url("img/dsfr/dragndrop-blanc.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
+}
+
+.gpf-btn-icon-ls-dragndrop::after {
+    -webkit-mask: url("img/dsfr/dragndrop.svg") center no-repeat;
+    mask: url("img/dsfr/dragndrop.svg") center no-repeat;
 }
 
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
@@ -93,10 +101,6 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
 }
 
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
-    background-image: url("img/dsfr/collapse.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
 }
 
@@ -106,8 +110,8 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="false "] + .GPlayerAdvancedToo
 
 button[id^=GPshowAdvancedTools_ID_] {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 12px;
+    right: 16px;
 }
 
 div[id^=GPbasicTools_ID_] {
@@ -166,10 +170,6 @@ div[id^=GPadvancedTools_ID_] {
 }
 
 .gpf-btn-icon-ls-info {
-    background-image: url("img/dsfr/info.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
 }
 
@@ -187,7 +187,7 @@ div[id^=GPadvancedTools_ID_] {
     mask: url("img/dsfr/extent.svg") center no-repeat;
 }
 
-div[id^=GPlayerInfoPanel] {
+[id^=GPlayerInfoPanel] {
     position: absolute;
     height: initial;
 }
@@ -207,4 +207,124 @@ div[id^=GPlayerInfoPanel] {
 
 .gpf-range__output {
     width: 35px;
+}
+
+.GPlayerOpacity.fr-range--sm[data-fr-js-range]::after,
+.GPlayerOpacity.fr-range--sm[data-fr-js-range]::before {
+  top: 25%;
+}
+
+div[id^=GPlayerInfoContent] {
+    width: 350px;
+}
+
+.gpf-btn-icon-close.GPlayersPanelClose {
+    top: 0;
+    right: 0;
+}
+
+.gpf-btn-icon-close.GPlayersPanelClose::after {
+    margin-left: -0.125rem;
+}
+
+/* menu contextuel (mobile) */
+.GPlayerAdvancedToolsContextual {
+    display: none;
+}
+
+.GPlayerAdvancedToolsContextual::after {
+    -webkit-mask: url("./img/dsfr/context.svg") center no-repeat;
+    mask: url("./img/dsfr/context.svg") center no-repeat;
+}
+
+.GPlayerAdvancedToolsContextual[aria-pressed="true"] {
+    background-color: var(--hover-tint);
+    overflow: visible;
+}
+
+.GPlayerSwitcher_layer:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    overflow: visible;
+}
+
+[id^=GPlayersList-] .GPpanelBody:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    overflow: visible;
+}
+
+.GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    position: relative;
+}
+
+.GPlayerAdvancedToolsContextual + div {
+    display: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    font-size: 13px;
+    z-index: 12;
+    background-color: var(--background-overlap-grey);
+    border-radius: 6px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+    padding: 14px 6px;
+    gap: 6px;
+}
+
+.GPlayerAdvancedToolsContextual + div > button {
+    padding-left: 2rem;
+}
+
+.GPlayerAdvancedToolsContextual + div > button[visibility="hidden"] {
+    display: none;
+}
+
+.GPlayerAdvancedToolsContextual + div > button::after {
+    mask-position: left;
+}
+
+.GPlayerAdvancedToolsContextual[aria-pressed="true"] + div {
+    display: flex;
+    position: absolute;
+    right: 0;
+    top: calc(2.5rem + 8px);
+}
+
+@media (max-width: 576px) {
+    button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        width: 100vw;
+    }
+
+    .position-container-top-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        transform: translate(58px, -4px);
+    }
+    .position-container-top-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        transform: translate(-62px, -4px);
+    }
+    .position-container-bottom-right:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"]) {
+        top: 4px;
+        bottom: unset;
+    }
+    .position-container-bottom-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        transform: translate(58px, calc(100% - 48px));
+    }
+    .position-container-bottom-left:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"]) {
+        top: 4px;
+        bottom: unset;
+    }
+    .position-container-bottom-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
+        transform: translate(-62px, calc(100% - 48px));
+    }
+
+    .GPlayerAdvancedTools {
+        width: calc(100% + 40px);
+    }
+
+    .GPlayerAdvancedTools > .GPlayerRemove, .GPlayerAdvancedTools > .GPlayerInfo, .GPlayerAdvancedTools > .GPlayerExtent {
+        display: none;
+    }
+
+    .GPlayerAdvancedToolsContextual {
+        display: inline-flex;
+    }
+
+    [id^=GPopacity_ID_] {
+        flex-grow: 0.6;
+    }
 }

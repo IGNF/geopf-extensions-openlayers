@@ -31,12 +31,27 @@ button[id^=GPisochronReset]:hover {
 }
 
 /* Isochron form */
+form[id^=GPisochronForm] {
+  padding: 15px;
+}
 
 div[id^=GPisochronChoice] {
   margin: auto;
-  margin-top: 15px;
+  margin-top: 10px;
   margin-bottom: 5px;
   width: 160px;
+  -webkit-justify-content: space-between;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+p[id^=GPisochronPointLabelP], p[id^=GPisochronValueChronLabelP] {
+  margin: 2px 0 5px 0;
+}
+
+.GProuteComputationLabel {
+  margin-bottom: 5px;
 }
 
 .GPisochronChoiceAlt input:checked + label + span {
@@ -128,6 +143,17 @@ input[id^=GPisochronTransportPedestrian]:checked + .GPisochronTransportImg {
   display: none;
 }
 
+div[id^=GPisochronTransportChoice] > div {
+  width: 100%;
+  justify-content: center;
+}
+
+div[id^=GPisochronValueChron],
+div[id^=GPisochronValueDist] {
+  width: 220px;
+  margin: 5px auto;
+}
+
 .GPisochronTransportImg {
   display: inline-block;
   width: 28px;
@@ -142,14 +168,14 @@ input[id^=GPisochronTransportPedestrian]:checked + .GPisochronTransportImg {
 
 select[id^=GPisochronDirectionSelect] {
   width: 80px;
+  margin: 5px auto;
 }
 
 .GPshowIsoExclusionsPicto {
-  top: 250px;
+  top: unset;
   right: 0;
   transition: all 0.5s ease-out 0s;
 }
-
 
 .GPisoExclusionsLabel {
   display: block;
@@ -187,4 +213,9 @@ input:checked + .GPisoExclusionsOption {
   background-position: 0 -28px;
   color: #797;
   border: 1px solid #797;
+}
+
+input[id^=GPisochronSubmit-] {
+  width: fit-content;
+  padding: 0 10px;
 }

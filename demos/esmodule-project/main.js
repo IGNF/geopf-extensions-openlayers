@@ -7,26 +7,29 @@ import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 
 import {
+    Catalog,
+    CRS,
     Drawing,
-    Isocurve,
-    Route,
-    LayerImport,
-    GeoportalAttribution,
-    GeoportalZoom,
-    GeoportalOverviewMap,
     ElevationPath,
+    GetFeatureInfo,
+    GeoportalAttribution,
+    GeoportalFullScreen,
+    GeoportalOverviewMap,
+    GeoportalZoom,
+    Isocurve,
     MeasureArea,
     MeasureAzimuth,
     MeasureLength,
-    LayerSwitcher,
     MousePosition as GeoportalMousePosition,
-    ReverseGeocode,
-    SearchEngine,
-    GetFeatureInfo,
-    CRS,
+    LayerImport,
     LayerMapBox as GeoportalLayerMapBox,
-    LayerWMTS as GeoportalLayerWMTS
-} from "geoportal-extensions-openlayers";
+    LayerWMTS as GeoportalLayerWMTS,
+    LayerSwitcher,
+    Legends,
+    ReverseGeocode,
+    Route,
+    SearchEngine,
+} from "geopf-extensions-openlayers";
 
 import Gp from "geoportal-access-lib";
 
@@ -64,6 +67,58 @@ var cfg = new Gp.Services.Config({
         });
         map.addControl(zoom);
 
+        var fullscreen = new GeoportalFullScreen({
+            position : "top-right"
+          });
+        map.addControl(fullscreen);
+
+        var legends = new Legends({
+            collapsed: true,
+            position: "bottom-left",
+            panel: true,
+            auto: true,
+            info: true
+        });
+        map.addControl(legends);
+
+        var catalog = new Catalog({
+            position: "top-left",
+            categories : [
+                {
+                    title : "Données",
+                    id : "data",
+                    items : [
+                        {
+                            title : "WMTS",
+                            default : true,
+                            filter : {
+                                field : "service",
+                                value : "WMTS"
+                            }
+                        },
+                        {
+                            title : "WMS",
+                            filter : {
+                                field : "service",
+                                value : "WMS"
+                            }
+                        },
+                        {
+                            title : "TMS",
+                            filter : {
+                                field : "service",
+                                value : "TMS"
+                            }
+                        },
+                        {
+                            title : "Tout",
+                            filter : null
+                        }
+                    ]
+                }
+            ],
+        });
+        map.addControl(catalog);
 
         var drawing = new Drawing({
             position : "top-left"

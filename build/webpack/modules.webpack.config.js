@@ -53,6 +53,7 @@ module.exports = (env, argv) => {
             "GpfExtOlGeoportalFullScreen" : path.join(rootdir, "src", "packages", "Controls/FullScreen", "GeoportalFullScreen.js"),
             "GpfExtOlGeoportalOverviewMap" : path.join(rootdir, "src", "packages", "Controls/OverviewMap", "GeoportalOverviewMap.js"),
             "GpfExtOlLegends" : path.join(rootdir, "src", "packages", "Controls/Legends", "Legends.js"),
+            "GpfExtOlCatalog" : path.join(rootdir, "src", "packages", "Controls/Catalog", "Catalog.js"),
             "GpfExtOlGlobal" : path.join(rootdir, "src", "packages", "Controls/Global", "Global.js"),
             // Formats étendus
             "GpfExtOlFormats" : [
@@ -137,7 +138,9 @@ module.exports = (env, argv) => {
                 mimeTypes : { phtml : "text/html" },
                 publicPath : "/dist/modules/",
                 serverSideRender : true,
-                writeToDisk : false,
+                writeToDisk : (filePath) => {
+                    return /samples\/resources/.test(filePath);
+                },
             },
             compress : true
         },

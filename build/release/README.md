@@ -5,17 +5,17 @@
 ## remise à plat des paths
 
 ```js
-import Drawing from "geoportal-extensions-openlayers/controls/Drawing"
+import Drawing from "geopf-extensions-openlayers/controls/Drawing"
 import {
     Drawing,
     Route
-} from "geoportal-extensions-openlayers/controls"
+} from "geopf-extensions-openlayers/controls"
 
-import LayerWMTS from "geoportal-extensions-openlayers/layers/LayerWMTS";
+import LayerWMTS from "geopf-extensions-openlayers/layers/LayerWMTS";
 import {
     LayerWMTS as GeoportalWMTS,
     LayerWMS as GeoportalWMS
-} from "geoportal-extensions-openlayers/layers";
+} from "geopf-extensions-openlayers/layers";
 ```
 
 utilisation standard :
@@ -41,7 +41,7 @@ utilisation standard :
         ReverseGeocode,
         SearchEngine,
         GetFeatureInfo
-    } from "geoportal-extensions-openlayers";
+    } from "geopf-extensions-openlayers";
 ```
 
 ## creation du changelog

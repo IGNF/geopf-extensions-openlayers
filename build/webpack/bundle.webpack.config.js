@@ -102,7 +102,9 @@ module.exports = (env, argv) => {
                 mimeTypes : { phtml : "text/html" },
                 publicPath : "/dist/packages/",
                 serverSideRender : true,
-                writeToDisk : false,
+                writeToDisk : (filePath) => {
+                    return /samples\/resources/.test(filePath);
+                },
             },
 
         },

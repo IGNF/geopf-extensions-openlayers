@@ -1,15 +1,80 @@
 .gpf-btn-icon-pointer::after {
-    -webkit-mask: url("img/GPlocationOptions.png") 1px center no-repeat;
-    mask: url("img/GPlocationOptions.png") 1px center no-repeat;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask: url("img/reticle.svg") center no-repeat;
+    mask: url("img/reticle.svg") center no-repeat;
+    background-color: var(--text-inverted-blue-france);
+}
+
+.gpf-btn-icon-pointer {
+  min-width: 2.5rem;
+  position: relative;
+  border-top-right-radius: 4px;
+}
+
+.GPlocationStageFlexInput:has(.GPlocationStageRemove) > .gpf-btn-icon-pointer {
+  border-top-right-radius: 0px;
+}
+
+.gpf-btn-icon-remove {
+  height: 2.5rem;
+  width: 2.5rem;
 }
 
 .gpf-btn-icon-label {}
 .gpf-btn-icon-remove::after {
-    -webkit-mask: url("img/GPlocationOptions.png") -82px center no-repeat;
-    mask: url("img/GPlocationOptions.png") -82px center no-repeat;
+    -webkit-mask: url("img/dsfr/close-line.svg") center no-repeat;
+    mask: url("img/dsfr/close-line.svg") center no-repeat;
 }
 
 .gpf-btn-icon-add::after {
-    -webkit-mask: url("img/GPlocationOptions.png") -54px center no-repeat;
-    mask: url("img/GPlocationOptions.png") -54px center no-repeat;
+    -webkit-mask: url("img/GPlocationOptions.png") -51px center no-repeat;
+    mask: url("img/GPlocationOptions.png") -51px center no-repeat;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.GPlocationOriginLabel {
+  display: none;
+  pointer-events: none;
+}
+
+[class^="GPlocationPoint-"] {
+  padding: 0;
+}
+
+[id^="GPlocationPoint_"] {
+  justify-content: left;
+}
+
+.GPlocationStageFlexInput {
+  flex-wrap: wrap;
+  width: 281px;
+}
+
+.GPlocationStageAdd {
+  flex-basis: 65%;
+  width: 0px;
+  min-height: 40px;
+  padding: 0.25rem 0.75rem 0.25rem 2.5rem;
+  text-align: left;
+}
+
+.GPlocationOriginLabel {
+  flex-basis: fit-content;
+}
+
+.GPlocationOriginPointerImg {
+  flex-basis: 2.5em;
+}
+
+.GPlocationStageFlexInput input {
+  flex-basis: 33%;
+  flex-grow: 1;
 }
