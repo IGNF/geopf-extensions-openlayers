@@ -255,12 +255,12 @@ class GetFeatureInfo extends Control {
         this.map = e.map;
         this.pixel = e.pixel;
         this.coordinates = e.coordinate;
-        this.layers = e.map.getLayers().getArray().reverse().filter((l) => {
+        this.layers = e.map.getLayers().getArray().filter((l) => {
             // On ne passe au GFI que les layers visibles
             if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
                 return l;
             }
-        });
+        }).reverse();
         this.res = e.map.getView().getResolution();
         this.displayGetFeatureInfo();
     }
@@ -279,12 +279,10 @@ class GetFeatureInfo extends Control {
     getGetFeatureInfoLayer (layer) {
         var gfiLayer =  {};
         let format = this.getLayerFormat(layer);
-        if (format === "vector") {
-            gfiLayer = {
-                format : format,
-                layer : layer,
-            };
-        }
+        gfiLayer = {
+            format : format,
+            layer : layer
+        };
         if (format === "wmts") {
             let url = layer.getSource().getFeatureInfoUrl(
                 this.coordinates,
@@ -296,9 +294,10 @@ class GetFeatureInfo extends Control {
                 }
             );
             gfiLayer = {
-                format : format,
-                layer : layer,
-                url : url,
+                ...gfiLayer,
+                ...{
+                    url : url
+                }
             };
         }
         if (format === "wms") {
@@ -312,9 +311,10 @@ class GetFeatureInfo extends Control {
                 }
             );
             gfiLayer = {
-                format : format,
-                layer : layer,
-                url : url,
+                ...gfiLayer,
+                ...{
+                    url : url
+                }
             };
         }
         return gfiLayer;
@@ -404,7 +404,6 @@ class GetFeatureInfo extends Control {
             var content = null;
             var waitingDiv = this._createGetFeatureInfoWaitingDiv();
             var accordeon = this._createGetFeatureInfoLayerAccordion(layername, waitingDiv);
-            this.getFeatureInfoAccordionGroup.append(accordeon);
             return new AsyncData({
                 ...gfiLayer, 
                 ...{
@@ -414,6 +413,10 @@ class GetFeatureInfo extends Control {
                 }
             });
         });
+        // Ajout des accordéons par layer selon leur index sur la carte
+        for (let i = 0; i < gfiContent.length; i++) {
+            this.getFeatureInfoAccordionGroup.append(gfiContent[i].data.contentDiv);
+        }
         // Abonnement aux modifications de la valeur du contenu GFI.
         gfiContent.forEach((data) => {
             data.subscribe((key, value) => {
