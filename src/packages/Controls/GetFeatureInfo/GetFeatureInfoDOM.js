@@ -207,7 +207,7 @@ var GetFeatureInfoDOM = {
                         ${layername}
                     </button>
                 </h3>
-                <div class="fr-collapse" id="accordion-${layername}">
+                <div class="fr-collapse GPgetFeatureInfoAccordionContent" id="accordion-${layername}">
                     ${content}
                 </div>
             </section>

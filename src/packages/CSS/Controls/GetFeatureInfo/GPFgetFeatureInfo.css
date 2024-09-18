@@ -17,14 +17,21 @@ button[id^="GPshowGetFeatureInfoPicto-"][aria-pressed="true"] + dialog {
     opacity: 100%;
     width: 350px;
     height: initial;
-    max-height: inherit;
 }
 
 dialog[id^="GPgetFeatureInfoPanel-"] {
     position: absolute;
     left: 47px;
     top: 2px;
-    height: inherit;
+    max-height: 52vh;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    background-color: var(--background-default-grey);
+}
+
+.GPgetFeatureInfoAccordionContent {
+  overflow-x: scroll;
+  scrollbar-width: thin;
 }
 
 .lds-ring,
