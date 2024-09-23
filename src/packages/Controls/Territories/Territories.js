@@ -1,5 +1,5 @@
 // import CSS
-import "../../CSS/Controls/Global/GPFglobal.css";
+import "../../CSS/Controls/Territories/GPFterritories.css";
 
 // import OpenLayers
 import Control from "../Control";
@@ -11,49 +11,49 @@ import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
 
-import Territories from "./Global.json";
+import TerritoriesJson from "./Territories.json";
 
 // DOM
-import GlobalDOM from "./GlobalDOM";
+import TerritoriesDOM from "./TerritoriesDOM";
 
-var logger = Logger.getLogger("global");
+var logger = Logger.getLogger("territories");
 
 /**
  * @classdesc
  *
- * Global map widget
+ * Territories map widget
  *
  * @constructor
- * @alias ol.control.Global
+ * @alias ol.control.Territories
  * @param {Object} options - options for function call.
  * 
  * @fires custom:action
  * @example
- * var global = new ol.control.Global({
+ * var territories = new ol.control.Territories({
  *   collapsed: true,
  *   panel: true,
  *   auto: true
  * });
- * map.addControl(global);
+ * map.addControl(territories);
  * 
  * or/and
  * 
- * var global = new ol.control.Global({});
- * global.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
- * global.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
- * map.addControl(global);
+ * var territories = new ol.control.Territories({});
+ * territories.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
+ * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
+ * map.addControl(territories);
  */
-class Global extends Control {
+class Territories extends Control {
 
     /**
-     * See {@link ol.control.Global}
-     * @module Global
-     * @alias module:~controls/Global
+     * See {@link ol.control.Territories}
+     * @module Territories
+     * @alias module:~controls/Territories
      * @param {Object} [options] - options
      * @example
-     * import Global from "gpf-ext-ol/controls/Global"
+     * import Territories from "gpf-ext-ol/controls/Territories"
      * ou 
-     * import { Global } from "gpf-ext-ol"
+     * import { Territories } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};
@@ -65,14 +65,14 @@ class Global extends Control {
             render : options.render
         });
 
-        if (!(this instanceof Global)) {
+        if (!(this instanceof Territories)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
 
         // initialisation du composant
         this.initialize(options);
 
-        // Global main DOM container
+        // Territories main DOM container
         this.container = this.initContainer();
 
         // ajout du container
@@ -95,20 +95,20 @@ class Global extends Control {
             // mode "draggable"
             if (this.draggable) {
                 Draggable.dragElement(
-                    this.panelGlobalContainer,
-                    this.panelGlobalHeaderContainer,
+                    this.panelTerritoriesContainer,
+                    this.panelTerritoriesHeaderContainer,
                     this.options.position ? null : map.getTargetElement()
                 );
             }
             // mode "collapsed"
             if (!this.collapsed) {
-                this.buttonGlobalShow.setAttribute("aria-pressed", true);
+                this.buttonTerritoriesShow.setAttribute("aria-pressed", true);
             }
 
             // Ajout des territoires par defaut
             if (this.auto) {
-                for (let index = 0; index < Territories.length; index++) {
-                    const territory = Territories[index];
+                for (let index = 0; index < TerritoriesJson.length; index++) {
+                    const territory = TerritoriesJson[index];
                     this.setTerritory(territory);
                 }
             }
@@ -136,7 +136,7 @@ class Global extends Control {
      * @returns {Boolean} - true|false
      * @public
      * @example
-     * global.setTerritory ({ 
+     * territories.setTerritory ({ 
      *  id: "MTQ", 
      *  title: "Martinique", 
      *  description: "", 
@@ -150,7 +150,7 @@ class Global extends Control {
         if (territory && !founded) {
             var entry = this._createTerritoryEntry(territory);
             if (entry) {
-                this.panelGlobalEntriesContainer.appendChild(entry);
+                this.panelTerritoriesEntriesContainer.appendChild(entry);
                 this.territories.push({
                     data : territory,
                     dom : entry
@@ -168,7 +168,7 @@ class Global extends Control {
      * @returns {Boolean} - true|false
      * @public
      * @example
-     * global.removeTerritory("MTQ"); // id du territoire
+     * territories.removeTerritory("MTQ"); // id du territoire
      */
     removeTerritory (territory) {
         var found = false;
@@ -202,7 +202,7 @@ class Global extends Control {
     // ################################################################### //
     
     /**
-     * Initialize Global control (called by Global constructor)
+     * Initialize Territories control (called by Territories constructor)
      *
      * @param {Object} options - constructor options
      * @private
@@ -245,12 +245,12 @@ class Global extends Control {
          */
         this.territories = [];
 
-        this.buttonGlobalShow = null;
-        this.panelGlobalContainer = null;
-        this.panelGlobalHeaderContainer = null; // usefull for the dragNdrop
-        this.buttonGlobalClose = null;
+        this.buttonTerritoriesShow = null;
+        this.panelTerritoriesContainer = null;
+        this.panelTerritoriesHeaderContainer = null; // usefull for the dragNdrop
+        this.buttonTerritoriesClose = null;
 
-        this.panelGlobalEntriesContainer = null;
+        this.panelTerritoriesEntriesContainer = null;
     }
 
     /**
@@ -263,42 +263,42 @@ class Global extends Control {
         // create main container
         var container = this._createMainContainerElement();
 
-        var picto = this.buttonGlobalShow = this._createShowGlobalPictoElement();
+        var picto = this.buttonTerritoriesShow = this._createShowTerritoriesPictoElement();
         container.appendChild(picto);
 
         // panel
-        var globalPanel = this.panelGlobalContainer = this._createGlobalPanelElement();
-        globalPanel.classList.add("tiles-" + this.options.direction);
-        globalPanel.classList.add("tiles-" + this.options.tiles);
-        var globalPanelDiv = this._createGlobalPanelDivElement();
-        globalPanel.appendChild(globalPanelDiv);
+        var territoriesPanel = this.panelTerritoriesContainer = this._createTerritoriesPanelElement();
+        territoriesPanel.classList.add("tiles-" + this.options.direction);
+        territoriesPanel.classList.add("tiles-" + this.options.tiles);
+        var territoriesPanelDiv = this._createTerritoriesPanelDivElement();
+        territoriesPanel.appendChild(territoriesPanelDiv);
 
         // container for the custom code
-        var globalEntriesDiv = this.panelGlobalEntriesContainer = this._createTerritoriesElement();
-        globalEntriesDiv.classList.add("tiles-" + this.options.direction);
-        globalEntriesDiv.classList.add("tiles-" + this.options.tiles);
+        var territoriesEntriesDiv = this.panelTerritoriesEntriesContainer = this._createTerritoriesElement();
+        territoriesEntriesDiv.classList.add("tiles-" + this.options.direction);
+        territoriesEntriesDiv.classList.add("tiles-" + this.options.tiles);
         if (this.options.reduce) {
-            globalEntriesDiv.classList.add("tiles-reduce");
+            territoriesEntriesDiv.classList.add("tiles-reduce");
         }
-        globalPanel.appendChild(globalEntriesDiv);
+        territoriesPanel.appendChild(territoriesEntriesDiv);
 
 
         // header ?
         if (this.options.panel) {
-            var globalPanelHeader = this.panelGlobalHeaderContainer = this._createGlobalPanelHeaderElement();
+            var territoriesPanelHeader = this.panelTerritoriesHeaderContainer = this._createTerritoriesPanelHeaderElement();
             // icone
-            var globalPanelIcon = this._createGlobalPanelIconElement();
-            globalPanelHeader.appendChild(globalPanelIcon);
+            var territoriesPanelIcon = this._createTerritoriesPanelIconElement();
+            territoriesPanelHeader.appendChild(territoriesPanelIcon);
             // title
-            var globalPanelTitle = this._createGlobalPanelTitleElement();
-            globalPanelHeader.appendChild(globalPanelTitle);
+            var territoriesPanelTitle = this._createTerritoriesPanelTitleElement();
+            territoriesPanelHeader.appendChild(territoriesPanelTitle);
             // close picto
-            var globalCloseBtn = this.buttonGlobalClose = this._createGlobalPanelCloseElement();
-            globalPanelHeader.appendChild(globalCloseBtn);
-            globalPanelDiv.appendChild(globalPanelHeader);
+            var territoriesCloseBtn = this.buttonTerritoriesClose = this._createTerritoriesPanelCloseElement();
+            territoriesPanelHeader.appendChild(territoriesCloseBtn);
+            territoriesPanelDiv.appendChild(territoriesPanelHeader);
         }
 
-        container.appendChild(globalPanel);
+        container.appendChild(territoriesPanel);
 
         logger.log(container);
 
@@ -313,7 +313,7 @@ class Global extends Control {
      * ...
      * @param {*} e - ...
      */
-    onShowGlobalClick (e) {
+    onShowTerritoriesClick (e) {
         logger.trace(e);
     }
 
@@ -321,7 +321,7 @@ class Global extends Control {
      * ...
      * @param {*} e - ...
      */
-    onCloseGlobalClick (e) {
+    onCloseTerritoriesClick (e) {
         logger.trace(e);
     }
 
@@ -331,7 +331,7 @@ class Global extends Control {
      * @param {*} id - ...
      * @todo ...
      */
-    onImageGlobalClick (e, id) {
+    onImageTerritoriesClick (e, id) {
         logger.trace(e, id);
         var territory = this.territories.find(e => e.data.id === id);
         if (territory) {
@@ -354,11 +354,11 @@ class Global extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
-Object.assign(Global.prototype, GlobalDOM);
+Object.assign(Territories.prototype, TerritoriesDOM);
 
-export default Global;
+export default Territories;
 
-// Expose Export as ol.control.Global (for a build bundle)
+// Expose Export as ol.control.Territories (for a build bundle)
 if (window.ol && window.ol.control) {
-    window.ol.control.Global = Global;
+    window.ol.control.Territories = Territories;
 }

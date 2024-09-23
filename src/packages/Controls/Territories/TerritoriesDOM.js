@@ -1,4 +1,4 @@
-var GlobalDOM = {
+var TerritoriesDOM = {
 
     /**
     * Add uuid to the tag ID
@@ -17,7 +17,7 @@ var GlobalDOM = {
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
-        container.id = this._addUID("GPglobal");
+        container.id = this._addUID("GPterritories");
         container.className = "GPwidget gpf-widget gpf-widget-button";
         return container;
     },
@@ -27,16 +27,16 @@ var GlobalDOM = {
     // ################################################################### //
 
     /**
-     * Show Global
+     * Show Territories
      *
      * @returns {DOMElement} DOM element
      */
-    _createShowGlobalPictoElement : function () {
+    _createShowTerritoriesPictoElement : function () {
         var self = this;
 
         var button = document.createElement("button");
-        button.id = this._addUID("GPshowGlobalPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGlobalPicto gpf-btn gpf-btn-icon gpf-btn-icon-global fr-btn";
+        button.id = this._addUID("GPshowTerritoriesPicto");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowTerritoriesPicto gpf-btn gpf-btn-icon gpf-btn-icon-territories fr-btn";
         button.title = "Selecteur de territoire";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -47,13 +47,13 @@ var GlobalDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowGlobalClick();
+                self.onShowTerritoriesClick();
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowGlobalClick();
+                self.onShowTerritoriesClick();
             });
         }
 
@@ -69,17 +69,17 @@ var GlobalDOM = {
      *
      * @returns {DOMElement} DOM element
      */
-    _createGlobalPanelElement : function () {
+    _createTerritoriesPanelElement : function () {
         var dialog = document.createElement("dialog");
-        dialog.id = this._addUID("GPglobalPanel");
+        dialog.id = this._addUID("GPterritoriesPanel");
         dialog.className = "GPpanel gpf-panel fr-modal";
 
         return dialog;
     },
 
-    _createGlobalPanelDivElement : function () {
+    _createTerritoriesPanelDivElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__global";
+        div.className = "gpf-panel__territories";
         return div;
     },
 
@@ -88,24 +88,24 @@ var GlobalDOM = {
      *
      * @returns {DOMElement} DOM element
      */
-    _createGlobalPanelHeaderElement : function () {
+    _createTerritoriesPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "gpf-panel__header_global";
+        container.className = "gpf-panel__header_territories";
         return container;
     },
-    _createGlobalPanelIconElement : function () {
+    _createTerritoriesPanelIconElement : function () {
         var label = document.createElement("label");
-        label.className = "gpf-btn-header-global gpf-btn-icon-header-global";
+        label.className = "gpf-btn-header-territories gpf-btn-icon-header-territories";
         label.title = "Selecteur de territoires";
         return label;
     },
-    _createGlobalPanelTitleElement : function () {
+    _createTerritoriesPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__title_global";
+        div.className = "gpf-panel__title_territories";
         div.innerHTML = "Selecteur de territoires";
         return div;
     },
-    _createGlobalPanelCloseElement : function () {
+    _createTerritoriesPanelCloseElement : function () {
         var self = this;
 
         var btnClose = document.createElement("button");
@@ -115,13 +115,13 @@ var GlobalDOM = {
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
             btnClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowGlobalPicto")).click();
-                self.onCloseGlobalClick();
+                document.getElementById(self._addUID("GPshowTerritoriesPicto")).click();
+                self.onCloseTerritoriesClick();
             }, false);
         } else if (btnClose.attachEvent) {
             btnClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowGlobalPicto")).click();
-                self.onCloseGlobalClick();
+                document.getElementById(self._addUID("GPshowTerritoriesPicto")).click();
+                self.onCloseTerritoriesClick();
             });
         }
 
@@ -134,7 +134,7 @@ var GlobalDOM = {
     
     _createTerritoriesElement : function () {
         var div = document.createElement("div");
-        div.className = "global-entries gpf-panel__body_global fr-modal__body";
+        div.className = "territories-entries gpf-panel__body_territories fr-modal__body";
         return div;
     },
 
@@ -190,7 +190,7 @@ var GlobalDOM = {
             var div = entry.firstChild;
             if (div) {
                 div.addEventListener("click", (e) => {
-                    self.onImageGlobalClick(e, o.id);
+                    self.onImageTerritoriesClick(e, o.id);
                 });
             }
             return entry.firstChild;
@@ -199,4 +199,4 @@ var GlobalDOM = {
 
 };
 
-export default GlobalDOM;
+export default TerritoriesDOM;

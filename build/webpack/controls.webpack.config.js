@@ -85,7 +85,7 @@ module.exports = (env, argv) => {
             case "Catalog":
                 // ras
                 break;
-            case "Global":
+            case "Territories":
                 // ras
                 break;
             case "Editor":

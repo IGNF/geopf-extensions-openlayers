@@ -95,7 +95,7 @@ import GeoportalZoom from "./Controls/Zoom/GeoportalZoom";
 import GeoportalFullScreen from "./Controls/FullScreen/GeoportalFullScreen";
 import GeoportalOverviewMap from "./Controls/OverviewMap/GeoportalOverviewMap";
 import Legends from "./Controls/Legends/Legends";
-import Global from "./Controls/Global/Global";
+import Territories from "./Controls/Territories/Territories";
 import Catalog from "./Controls/Catalog/Catalog";
 
 import Proj4 from "proj4";
@@ -265,7 +265,7 @@ Ol.control.GeoportalFullScreen = GeoportalFullScreen;
 Ol.control.GeoportalOverviewMap = GeoportalOverviewMap;
 Ol.control.Legends = Legends;
 Ol.control.Catalog = Catalog;
-Ol.control.Global = Global;
+Ol.control.Territories = Territories;
 
 export {
     /** 

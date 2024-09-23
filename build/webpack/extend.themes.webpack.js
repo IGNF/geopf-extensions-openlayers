@@ -32,7 +32,7 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/OverviewMap", "GPFoverviewMapStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Legends", "GPFlegendsStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Catalog", "GPFcatalogStyle.css"),
-                path.join(rootdir, "src", "packages", "CSS", "Controls/Global", "GPFglobalStyle.css")                
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Territories", "GPFterritoriesStyle.css")                
             ],
             // CSS themes dsfr
             "Dsfr" : [
@@ -64,7 +64,7 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/OverviewMap", "DSFRoverviewMapStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Legends", "DSFRlegendsStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Catalog", "DSFRcatalogStyle.css"),
-                path.join(rootdir, "src", "packages", "CSS", "Controls/Global", "DSFRglobalStyle.css")
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Territories", "DSFRterritoriesStyle.css")
             ],
         }
     };
