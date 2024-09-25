@@ -27,7 +27,8 @@ import {
   Legends,
   ReverseGeocode,
   Route,
-  SearchEngine
+  SearchEngine,
+  Territories
 } from "geopf-extensions-openlayers";
 
 import Gp from "geoportal-access-lib";
@@ -53,7 +54,19 @@ onMounted(() => {
           constrainResolution: true
         }),
       });
-      
+
+      var territories = new Territories({
+                collapsed: false,
+                draggable: true,
+                position: "top-right",
+                panel: true,
+                auto: true,
+                thumbnail : false,
+                reduce: false,
+                tiles: 3
+      });
+      map.addControl(territories);
+
       var fullscreen = new GeoportalFullScreen({
         position : "top-right"
       });
