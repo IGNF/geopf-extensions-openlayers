@@ -181,10 +181,10 @@ var TerritoriesDOM = {
                     </div>    
                 </div>    
                 <div class="gpf-tile__header fr-tile__header">
-                    <div class="fr-tile__thumbnail">           
+                    <div class="fr-tile__pictogram fr-tile__thumbnail">           
                         <img id="${o.id}" src="${thumbnail}" width="100" height="100" title="${o.description}"/>     
                     </div>
-                    <div class="fr-tile__icon"></div>
+                    <div class="fr-tile__pictogram fr-tile__icon"></div>
                 </div>
             </div>
             `);

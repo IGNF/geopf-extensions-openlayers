@@ -48,8 +48,15 @@
 }
 
 /* surchage tile */
-.gpf-tile {}
-
+.gpf-tile {
+    height: 150px;
+    width: 150px;
+}
+.tiles-reduce div.fr-tile {
+    height: unset;
+    width: unset;
+    padding: unset;
+}
 .gpf-tile__header {
     display: flex;
     flex-direction: column;
