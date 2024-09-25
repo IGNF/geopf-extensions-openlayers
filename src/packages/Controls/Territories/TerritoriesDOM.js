@@ -99,16 +99,17 @@ var TerritoriesDOM = {
         label.title = "Selecteur de territoires";
         return label;
     },
-    _createTerritoriesPanelTitleElement : function () {
+    _createTerritoriesPanelTitleElement : function (title) {
         var div = document.createElement("div");
         div.className = "gpf-panel__title_territories";
-        div.innerHTML = "Selecteur de territoires";
+        div.innerHTML = title;
         return div;
     },
     _createTerritoriesPanelCloseElement : function () {
         var self = this;
 
         var btnClose = document.createElement("button");
+        btnClose.id = "GPterritoriesPanelClose";
         btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
 
@@ -179,10 +180,11 @@ var TerritoriesDOM = {
                         </p>      
                     </div>    
                 </div>    
-                <div class="fr-tile__header">
-                    <div class="">           
+                <div class="gpf-tile__header fr-tile__header">
+                    <div class="fr-tile__thumbnail">           
                         <img id="${o.id}" src="${thumbnail}" width="100" height="100" title="${o.description}"/>     
-                    </div>    
+                    </div>
+                    <div class="fr-tile__icon"></div>
                 </div>
             </div>
             `);

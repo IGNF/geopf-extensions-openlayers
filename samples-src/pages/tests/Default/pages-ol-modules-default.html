@@ -38,8 +38,12 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalFullScreen.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLegends.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -175,6 +179,21 @@
 
                 var attributions = new ol.control.GeoportalAttribution();
                 map.addControl(attributions);
+
+                var legends = new ol.control.Legends({
+                    position: "bottom-left",
+                    panel: true,
+                    auto: true
+                });
+                map.addControl(legends);
+
+                var territories = new ol.control.Territories({
+                    position: "bottom-left",
+                    direction: "vertical",
+                    panel: true,
+                    auto: true
+                });
+                map.addControl(territories);
               };
 
               Gp.Services.getConfig({

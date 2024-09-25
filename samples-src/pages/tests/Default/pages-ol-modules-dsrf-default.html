@@ -43,8 +43,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLegends.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGlobal.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlGlobal.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -190,13 +190,13 @@
                 });
                 map.addControl(legends);
 
-                var global = new ol.control.Global({
+                var territories = new ol.control.Territories({
                     position: "bottom-left",
                     direction: "vertical",
                     panel: true,
                     auto: true
                 });
-                map.addControl(global);
+                map.addControl(territories);
               };
 
               Gp.Services.getConfig({

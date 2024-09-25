@@ -197,6 +197,19 @@ class Territories extends Control {
 
     }
 
+    /**
+     * Mode reduit des tuiles (uniquement le nom du territoire)
+     * 
+     * @param {*} reduce - true|false
+     * @public
+     */
+    setReduce (reduce) {
+        if (reduce) {
+            this.panelTerritoriesEntriesContainer.classList.add("tiles-reduce");
+        } else {
+            this.panelTerritoriesEntriesContainer.classList.remove("tiles-reduce");
+        }
+    }
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
@@ -215,10 +228,11 @@ class Territories extends Control {
             collapsed : true,
             draggable : false,
             panel : true, // titre
+            title : "Sélectionner un territoire",
             auto : false, // chargement auto des territoires par defaut
-            direction : "vertical", // horizontal
-            reduce : false, // TODO tuiles reduites par defaut, ouverte avec une vignette en rollover
-            tiles : 3, // nombre de tuiles affichables, 0 = tous !
+            thumbnail : false, // imagette des territoires
+            reduce : false, // tuiles reduites par defaut
+            tiles : 3, // nombre de tuiles affichables, 0 = toutes !
             territories : [] // TODO à spécifier...
         };
 
@@ -268,17 +282,22 @@ class Territories extends Control {
 
         // panel
         var territoriesPanel = this.panelTerritoriesContainer = this._createTerritoriesPanelElement();
-        territoriesPanel.classList.add("tiles-" + this.options.direction);
+        territoriesPanel.classList.add("tiles-direction");
         territoriesPanel.classList.add("tiles-" + this.options.tiles);
         var territoriesPanelDiv = this._createTerritoriesPanelDivElement();
         territoriesPanel.appendChild(territoriesPanelDiv);
 
         // container for the custom code
         var territoriesEntriesDiv = this.panelTerritoriesEntriesContainer = this._createTerritoriesElement();
-        territoriesEntriesDiv.classList.add("tiles-" + this.options.direction);
+        territoriesEntriesDiv.classList.add("tiles-direction");
         territoriesEntriesDiv.classList.add("tiles-" + this.options.tiles);
         if (this.options.reduce) {
             territoriesEntriesDiv.classList.add("tiles-reduce");
+        }
+        if (this.options.thumbnail) {
+            territoriesEntriesDiv.classList.add("tiles-thumbnail");
+        } else {
+            territoriesEntriesDiv.classList.add("tiles-icon");
         }
         territoriesPanel.appendChild(territoriesEntriesDiv);
 
@@ -290,7 +309,7 @@ class Territories extends Control {
             var territoriesPanelIcon = this._createTerritoriesPanelIconElement();
             territoriesPanelHeader.appendChild(territoriesPanelIcon);
             // title
-            var territoriesPanelTitle = this._createTerritoriesPanelTitleElement();
+            var territoriesPanelTitle = this._createTerritoriesPanelTitleElement(this.options.title);
             territoriesPanelHeader.appendChild(territoriesPanelTitle);
             // close picto
             var territoriesCloseBtn = this.buttonTerritoriesClose = this._createTerritoriesPanelCloseElement();
