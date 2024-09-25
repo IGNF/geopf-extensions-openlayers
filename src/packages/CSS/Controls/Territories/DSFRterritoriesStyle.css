@@ -57,6 +57,12 @@
     width: unset;
     padding: unset;
 }
+.fr-tile:hover {
+    background-color: var(--background-contrast-grey);
+}
+.fr-tile__title::before {
+    background-image: unset;
+}
 .gpf-tile__header {
     display: flex;
     flex-direction: column;
