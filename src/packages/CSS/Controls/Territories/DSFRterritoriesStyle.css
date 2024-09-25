@@ -64,7 +64,10 @@ dialog.tiles-direction { }
 .territories-entries.tiles-direction {}
 
 /* nombre de tuiles */
-.tiles-direction.tiles-0 {}
+.tiles-direction.tiles-0 {
+    max-height: none !important;
+    grid-template-columns: repeat(3, 1fr);
+}
 .tiles-direction.tiles-1 {
     grid-template-columns: repeat(1, 1fr);
 }
