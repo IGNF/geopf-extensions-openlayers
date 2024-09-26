@@ -13,6 +13,8 @@ __DATE__
 
 ## 💥 Breaking changes
 
+Un nouvelle version du GFI avec un fonctionnement et des options differentes de l'ancien widget.
+
 ## 📖 Changelog
 
 * ✨ [Added]
@@ -28,6 +30,7 @@ __DATE__
 
 * 🔨 [Changed]
 
+  * GetFeatureInfo : Nouvelle version du GFI (#169)
   * SearchEngine : Modification de l'option `opened:false` en `collapsible:true`
   * CI : Build des binaires et des sources du projet (#13)
 

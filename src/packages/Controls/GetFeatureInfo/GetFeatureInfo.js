@@ -27,6 +27,8 @@ var logger = Logger.getLogger("getFeatureInfo");
  *
  * @constructor
  * @alias ol.control.GetFeatureInfo
+ * @type {ol.control.GetFeatureInfo}
+ * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  * 
  * @fires custom:action
@@ -34,7 +36,7 @@ var logger = Logger.getLogger("getFeatureInfo");
  * var getFeatureInfo = new ol.control.GetFeatureInfo();
  * map.addControl(getFeatureInfo);
  */
-class GetFeatureInfo extends Control {
+var GetFeatureInfo = class GetFeatureInfo extends Control {
 
     /**
      * See {@link ol.control.GetFeatureInfo}
@@ -442,7 +444,6 @@ class GetFeatureInfo extends Control {
      * Return layer format
      *
      * @param {ol.layer.Layer} l - layer openlayers
-     *
      * @return {String} format - layer format can be wms, wmts, vector or unknown
      *
      */
