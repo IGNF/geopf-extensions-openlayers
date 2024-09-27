@@ -1,0 +1,15 @@
+/*!
+ * @brief geopf-extensions-openlayers
+ *
+ * This software is released under the licence AGPL-3.0
+ * @see https://www.gnu.org/licenses/agpl-3.0.html#license-text
+ * @see https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
+ *
+ * @copyright copyright (c) IGN 
+ * @license AGPL-3.0
+ * @author IGN
+ * @version 1.0.0-beta.115
+ * @date 26/07/2024
+ *
+ */div[id^=GPterritories-]{right:0;top:0}button[id^=GPshowTerritoriesPicto][aria-pressed=false]+dialog{display:none;opacity:0;visibility:hidden}button[id^=GPshowTerritoriesPicto-][aria-pressed=true]+dialog{display:block;height:auto;max-height:inherit;max-width:470px;opacity:100%;visibility:visible}dialog[id^=GPterritoriesPanel-]{position:absolute}
+/*# sourceMappingURL=GpfExtOlTerritories.css.map*/
