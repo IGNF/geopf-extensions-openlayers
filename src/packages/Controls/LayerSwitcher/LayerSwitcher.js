@@ -1165,6 +1165,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
          * @property {Object} type - event
          * @property {Object} position - position
          * @property {Object} layer - layer
+         * @property {Object} layers - layers sorted
          * @property {Object} target - instance LayerSwitcher
          * @example
          * LayerSwitcher.on("layerswitcher:change:position", function (e) {
@@ -1174,7 +1175,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         this.dispatchEvent({
             type : "layerswitcher:change:position",
             position : e.newIndex,
-            layer : this._layersOrder[e.newIndex]
+            layer : this._layersOrder[e.newIndex],
+            layers : this._layersOrder
         });
     }
 
