@@ -32,7 +32,8 @@ import {
   Legends,
   ReverseGeocode,
   Route,
-  SearchEngine
+  SearchEngine,
+  Territories
 } from "geopf-extensions-openlayers";
 
 import Gp from "geoportal-access-lib";
@@ -59,6 +60,18 @@ function App() {
   
     CRS.load();
   
+    var territories = new Territories({
+      collapsed: true,
+      draggable: true,
+      position: "top-right",
+      panel: true,
+      auto: true,
+      thumbnail : false,
+      reduce: false,
+      tiles: 3
+    });
+    map.addControl(territories);
+
     var fullscreen = new GeoportalFullScreen({
       position : "top-right"
     });

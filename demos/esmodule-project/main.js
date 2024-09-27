@@ -29,6 +29,7 @@ import {
     ReverseGeocode,
     Route,
     SearchEngine,
+    Territories
 } from "geopf-extensions-openlayers";
 
 import Gp from "geoportal-access-lib";
@@ -57,6 +58,18 @@ var cfg = new Gp.Services.Config({
             })
         });
         
+        var territories = new Territories({
+            collapsed: true,
+            draggable: true,
+            position: "top-right",
+            panel: true,
+            auto: true,
+            thumbnail : false,
+            reduce: false,
+            tiles: 3
+        });
+        map.addControl(territories);
+
         var overmap = new GeoportalOverviewMap({
             position : "bottom-left"
         });
