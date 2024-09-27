@@ -27,8 +27,7 @@ export default LayerSwitcher;
  * @fires layerswitcher:extent
  * @fires layerswitcher:change:opacity
  * @fires layerswitcher:change:visibility
- * @fires layerswitcher:start:dragndrop (todo)
- * @fires layerswitcher:end:dragndrop (todo)
+ * @fires layerswitcher:change:position
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -59,6 +58,9 @@ export default LayerSwitcher;
  * });
  * LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
  *    console.warn("layer", e.layer, e.visibility);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:position", function (e) {
+ *    console.warn("layer", e.layer, e.position);
  * });
  */
 declare var LayerSwitcher: ol.control.LayerSwitcher;

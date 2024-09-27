@@ -875,6 +875,8 @@
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:visibility"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:visibility"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:zoom"> <a href="module-LayerSwitcher.html#~event:layerswitcher:zoom">layerswitcher:zoom</a> </div>
             
 
@@ -888,6 +890,8 @@
                 <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:opacity"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:visibility"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:visibility"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a></li>
             
@@ -5237,7 +5241,7 @@
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 83
+            Controls/LayerSwitcher/LayerSwitcher.js, line 85
         </div>
         
     </div>
@@ -5813,9 +5817,7 @@
     
         <li>layerswitcher:change:visibility</li>
     
-        <li>layerswitcher:start:dragndrop (todo)</li>
-    
-        <li>layerswitcher:end:dragndrop (todo)</li>
+        <li>layerswitcher:change:position</li>
     </ul>
     
 
@@ -5861,6 +5863,9 @@ LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
 });
 LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
    console.warn("layer", e.layer, e.visibility);
+});
+LayerSwitcher.on("layerswitcher:change:position", function (e) {
+   console.warn("layer", e.layer, e.position);
 });</code></pre>
     
 
@@ -5951,7 +5956,7 @@ LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1173
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1198
         </div>
         
     </div>
@@ -6068,7 +6073,7 @@ LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 830
+            Controls/LayerSwitcher/LayerSwitcher.js, line 832
         </div>
         
     </div>
@@ -6139,7 +6144,7 @@ LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 239
+            Controls/LayerSwitcher/LayerSwitcher.js, line 241
         </div>
         
     </div>
@@ -6484,7 +6489,7 @@ LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 481
+            Controls/LayerSwitcher/LayerSwitcher.js, line 483
         </div>
         
     </div>
@@ -6565,7 +6570,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1299
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1324
         </div>
         
     </div>
@@ -6693,7 +6698,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1345
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1370
         </div>
         
     </div>
@@ -6820,7 +6825,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1319
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1344
         </div>
         
     </div>
@@ -6970,7 +6975,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 393
+            Controls/LayerSwitcher/LayerSwitcher.js, line 395
         </div>
         
     </div>
@@ -7094,7 +7099,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 457
+            Controls/LayerSwitcher/LayerSwitcher.js, line 459
         </div>
         
     </div>
@@ -7211,7 +7216,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 144
+            Controls/LayerSwitcher/LayerSwitcher.js, line 146
         </div>
         
     </div>
@@ -7328,7 +7333,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 491
+            Controls/LayerSwitcher/LayerSwitcher.js, line 493
         </div>
         
     </div>
@@ -7479,7 +7484,7 @@ container Id ; null if layer not found.</li>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Sep 13 2024 10:23:30 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Sep 27 2024 13:45:15 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 
