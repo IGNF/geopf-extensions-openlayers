@@ -88,6 +88,7 @@
                 });
 
                 var catalog = new ol.control.Catalog({
+                  draggable: true,
                   position : "top-left"
                 });
                 map.addControl(catalog);
@@ -109,33 +110,39 @@
                 map.addControl(overview);
                 
                 var drawing = new ol.control.Drawing({
+                  draggable: true,
                   position : "bottom-left"
                 });
                 map.addControl(drawing);
 
                 var iso = new ol.control.Isocurve({
+                  draggable: true,
                   position : "bottom-left"
                 });
                 map.addControl(iso);
 
                 var layerImport = new ol.control.LayerImport({
+                  draggable: true,
                   position : "bottom-left"
                 });
                 map.addControl(layerImport);
 
                 var layerSwitcher = new ol.control.LayerSwitcher({
                   options :{
+                    draggable: true,
                     position : "bottom-right"
                   }
                 });
                 map.addControl(layerSwitcher);
 
                 var mp = new ol.control.GeoportalMousePosition({
+                  draggable: true,
                   position : "bottom-right"
                 });
                 map.addControl(mp);
 
                 var route = new ol.control.Route({
+                  draggable: true,
                   position : "bottom-right"
                 });
                 map.addControl(route);
@@ -148,6 +155,7 @@
                 map.addControl(feature);
 
                 var reverse = new ol.control.ReverseGeocode({
+                  draggable: true,
                   position : "top-right"
                 });
                 map.addControl(reverse);
@@ -181,6 +189,7 @@
                 map.addControl(attributions);
 
                 var legends = new ol.control.Legends({
+                    draggable: true,
                     position: "bottom-left",
                     panel: true,
                     auto: true
@@ -188,6 +197,7 @@
                 map.addControl(legends);
 
                 var territories = new ol.control.Territories({
+                    draggable: true,
                     position: "bottom-left",
                     direction: "vertical",
                     panel: true,
