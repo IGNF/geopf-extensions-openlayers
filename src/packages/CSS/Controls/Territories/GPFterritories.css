@@ -1,0 +1,25 @@
+div[id^=GPterritories-] {
+    top: 0px;
+    right: 0px;
+}
+
+/* Showing/hiding */
+
+button[id^=GPshowTerritoriesPicto][aria-pressed="false"] + dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
+}
+
+button[id^="GPshowTerritoriesPicto-"][aria-pressed="true"] + dialog {
+    display: block;
+    visibility: visible;
+    opacity: 100%;
+    max-width: 470px;
+    height: initial;
+    max-height: inherit;
+}
+
+dialog[id^="GPterritoriesPanel-"] {
+    position: absolute;
+}
