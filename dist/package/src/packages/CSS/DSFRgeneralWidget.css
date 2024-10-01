@@ -151,6 +151,7 @@
   width: 3px;
   height: 100%;
   left: calc(100% + 2px);
+  top: 0;
   position: absolute;
 }
 
@@ -485,3 +486,4 @@
 .fr-collapse:not(.fr-collapse--expanded):not(.fr-collapsing) {
   --collapse-max-height: 0;
 }
+
