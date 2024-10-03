@@ -714,28 +714,28 @@ var MousePosition = class MousePosition extends Control {
         var projectionUnitsByDefault = {
             Geographical : [{
                 code : "DEC",
-                label : "degrés décimaux",
+                label : "Degrés décimaux",
                 format : MathUtils.coordinateToDecimal
             }, {
                 code : "DMS",
-                label : "degrés sexagésimaux",
+                label : "Degrés sexagésimaux",
                 format : MathUtils.coordinateToDMS
             }, {
                 code : "RAD",
-                label : "radians",
+                label : "Radians",
                 format : MathUtils.coordinateToRad
             }, {
                 code : "GON",
-                label : "grades",
+                label : "Grades",
                 format : MathUtils.coordinateToGon
             }],
             Metric : [{
                 code : "M",
-                label : "mètres",
+                label : "Mètres",
                 format : MathUtils.coordinateToMeter
             }, {
                 code : "KM",
-                label : "kilomètres",
+                label : "Kilomètres",
                 format : MathUtils.coordinateToKMeter
             }]
         };
