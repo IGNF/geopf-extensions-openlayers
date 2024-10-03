@@ -15,3 +15,6 @@ div[id^=GPmousePositionCoordinate-] > div {
   justify-content: space-between;
 }
 
+div[id^=GPmousePositionCoordinate-] input[readonly] {
+  font-size: 1rem
+}
