@@ -49,10 +49,10 @@
     },
     {
         "id": "IDF",
-        "title": "Paris",
+        "title": "Paris petite couronne",
         "description": "",
-        "zoom": null,
-        "bbox": [2.21, 48.80, 2.43, 48.92],
+        "zoom": 12,
+        "bbox": [2.18, 48.77, 2.52, 48.95],
         "thumbnail": ""
     },
     {
