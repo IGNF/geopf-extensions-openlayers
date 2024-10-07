@@ -75,21 +75,21 @@
         - [Utilisation via les setters](#utilisation-via-les-setters)
         - [Utilisation via les options](#utilisation-via-les-options)
         - [Utilisation directement dans le contrôle associé](#utilisation-directement-dans-le-contrôle-associé)
-    - [widget de catalogue de couche](#widget-de-catalogue-de-couche)
+    - [Widget de catalogue de couche](#widget-de-catalogue-de-couche)
       - [Les options](#les-options)
       - [Les évenements](#les-évenements)
       - [Exemples d'utilisation](#exemples-dutilisation-13)
       - [Constituer le fichier de configuration des couches](#constituer-le-fichier-de-configuration-des-couches)
       - [Spécification du ficher de configuration](#spécification-du-ficher-de-configuration)
-    - [widget des legendes](#widget-des-legendes)
+    - [Widget d'affichage des légendes](#widget-des-légendes)
       - [Les événements](#les-événements)
       - [Comment obtenir la légende d'une couche ?](#comment-obtenir-la-légende-dune-couche-)
       - [Exemples d'utilisation](#exemples-dutilisation-14)
-    - [widget sur la carte d'ensemble](#widget-sur-la-carte-densemble)
+    - [Widget sur la carte d'ensemble](#widget-sur-la-carte-densemble)
       - [Exemples d'utilisation](#exemples-dutilisation-15)
-    - [widget de zoom](#widget-de-zoom)
+    - [Widget de zoom](#widget-de-zoom)
       - [Exemples d'utilisation](#exemples-dutilisation-16)
-    - [widget de pleine écran](#widget-de-pleine-écran)
+    - [Widget de plein écran](#widget-de-pleine-écran)
       - [Exemples d'utilisation](#exemples-dutilisation-17)
 
 <!-- tocstop -->
@@ -2015,7 +2015,7 @@ D'autres informations sont disponible dans la jsdoc du projet : <https://github.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <a id="legends"></a>
 
-### widget des legendes
+### Widget des légendes
 
 Widget avec un bouton et un panneau d'affichage des légendes et des informations
 des couches présentes sur la carte.
@@ -2077,7 +2077,7 @@ map.addControl(legends);
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <a id="overviewMap"></a>
 
-### widget sur la carte d'ensemble
+### Widget sur la carte d'ensemble
 
 Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.OverviewMap]<http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html>.
 
@@ -2096,7 +2096,7 @@ map.addControl(overview);
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <a id="zoom"></a>
 
-### widget de zoom
+### Widget de zoom
 
 Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.Zoom]<http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html>.
 
@@ -2112,7 +2112,7 @@ map.addControl(zoom);
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <a id="fullscreen"></a>
 
-### widget de pleine écran
+### Widget de plein écran
 
 Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.FullScreen]<http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html>
 
