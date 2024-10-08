@@ -191,12 +191,24 @@ var Territories = class Territories extends Control {
     /**
      * Set collapse
      * 
-     * @param {Boolean} collaspe - true|false
+     * @param {Boolean} collapsed - true|false
      * @todo ...
      * @public
      */
-    setCollapse (collaspe) {
-
+    setCollapse (collapsed) {
+        if (collapsed === undefined) {
+            logger.log("[ERROR] Territory:setCollapsed - missing collapsed parameter");
+            return;
+        }
+        if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
+            return;
+        }
+        if (collapsed) {
+            document.getElementById("GPterritoriesPanelClose").click();
+        } else {
+            this.buttonTerritoriesShow.click();
+        }
+        this.collapsed = collapsed;
     }
 
     /**
@@ -336,6 +348,7 @@ var Territories = class Territories extends Control {
      */
     onShowTerritoriesClick (e) {
         logger.trace(e);
+        this.collapsed = !this.collapsed;
     }
 
     /**
@@ -369,6 +382,7 @@ var Territories = class Territories extends Control {
             if (zoom) {
                 map.getView().setZoom(zoom);
             }
+            this.setCollapse(true);
         }
     }
 
