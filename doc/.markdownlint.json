@@ -1,0 +1,11 @@
+{
+    "MD033": {
+      "allowed_elements": [
+        "a",
+        "p"
+      ]
+    },
+    "MD024": {
+        "siblings_only": true
+    }
+  }
