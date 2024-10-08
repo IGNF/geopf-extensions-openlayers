@@ -301,15 +301,25 @@ div[id^=GPlayerInfoContent] {
         top: 4px;
         bottom: unset;
     }
+    .position-container-bottom-right:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"]) [id^="GPlayerSwitcher-"] {
+        position: absolute !important;
+        top: 0px !important;
+    }
     .position-container-bottom-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        transform: translate(58px, calc(100% - 48px));
+        inset: unset !important;
+        transform: translate(calc(-100% + 56px), -46px);
     }
     .position-container-bottom-left:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"]) {
         top: 4px;
         bottom: unset;
     }
+    .position-container-bottom-right:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"]) [id^="GPlayerSwitcher-"] {
+        position: absolute !important;
+        top: 0px !important;
+    }
     .position-container-bottom-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        transform: translate(-62px, calc(100% - 48px));
+        inset: unset !important;
+        transform: translate(-10px, -46px);
     }
 
     .GPlayerAdvancedTools {
