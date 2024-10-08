@@ -246,25 +246,38 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     }
 
     /**
+     * Tells if control is active or not
+     * @private
+     * @return { Boolean } true if active false if not
+     */
+    getFeatureInfoIsActive () {
+        return this.buttonGetFeatureInfoShow.getAttribute("aria-pressed");
+    }
+
+
+    /**
      * event handler
      * @param {Event} e évènement de click
      * @private
      */ 
     onMapClick (e) {
-        this.getFeatureInfoAccordionGroup.remove();
-        var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
-        this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
-        this.map = e.map;
-        this.pixel = e.pixel;
-        this.coordinates = e.coordinate;
-        this.layers = e.map.getLayers().getArray().filter((l) => {
-            // On ne passe au GFI que les layers visibles
-            if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
-                return l;
-            }
-        }).reverse();
-        this.res = e.map.getView().getResolution();
-        this.displayGetFeatureInfo();
+        if (this.getFeatureInfoIsActive() === "true") {
+            this.getFeatureInfoAccordionGroup.remove();
+            var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
+            this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
+            this.map = e.map;
+            this.pixel = e.pixel;
+            this.coordinates = e.coordinate;
+            this.layers = e.map.getLayers().getArray().filter((l) => {
+                // On ne passe au GFI que les layers visibles
+                if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
+                    return l;
+                }
+            }).reverse();
+            this.res = e.map.getView().getResolution();
+            this.displayGetFeatureInfo();
+            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
+        }
     }
 
     /**
@@ -582,6 +595,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      * @param {*} e - ...
      */
     onShowGetFeatureInfoClick (e) {
+        this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", e);
         logger.trace(e);
     }
 

@@ -81,13 +81,13 @@ var GetFeatureInfoDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowGetFeatureInfoClick();
+                self.onShowGetFeatureInfoClick(!status);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowGetFeatureInfoClick();
+                self.onShowGetFeatureInfoClick(!status);
             });
         }
 
@@ -137,18 +137,18 @@ var GetFeatureInfoDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.className = "GPcloseGetFeatureInfo gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowGetFeatureInfoPicto")).click();
+            btnClose.addEventListener("click", function (e) {
+                btnClose.setAttribute("aria-pressed", false);
                 self.onCloseGetFeatureInfoClick();
             }, false);
         } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowGetFeatureInfoPicto")).click();
+            btnClose.attachEvent("onclick", function (e) {
+                btnClose.setAttribute("aria-pressed", false);
                 self.onCloseGetFeatureInfoClick();
             });
         }

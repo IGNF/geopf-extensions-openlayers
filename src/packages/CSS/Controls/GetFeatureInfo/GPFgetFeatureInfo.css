@@ -5,18 +5,18 @@ div[id^=GPgetFeatureInfo-] {
 
 /* Showing/hiding */
 
-button[id^=GPshowGetFeatureInfoPicto][aria-pressed="false"] + dialog {
-    display: none;
-    visibility: hidden;
-    opacity: 0%;
+dialog:has(button.GPcloseGetFeatureInfo[aria-pressed="true"]) {
+  display: block;
+  visibility: visible;
+  opacity: 100%;
+  width: 350px;
+  height: initial;
 }
 
-button[id^="GPshowGetFeatureInfoPicto-"][aria-pressed="true"] + dialog {
-    display: block;
-    visibility: visible;
-    opacity: 100%;
-    width: 350px;
-    height: initial;
+dialog:has(button.GPcloseGetFeatureInfo[aria-pressed="false"]) {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
 }
 
 dialog[id^="GPgetFeatureInfoPanel-"] {
