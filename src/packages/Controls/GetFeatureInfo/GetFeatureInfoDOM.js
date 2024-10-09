@@ -87,7 +87,7 @@ var GetFeatureInfoDOM = {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowGetFeatureInfoClick(!status);
+                self.onShowGetFeatureInfoClick(status);
             });
         }
 
@@ -167,10 +167,10 @@ var GetFeatureInfoDOM = {
      * @returns {DOMElement} DOM element
      */
     _createGetFeatureInfoWaitingDiv : function () {
-        var htmlTemplate = this.stringToHTML(`
-        <div><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div>
-        `);
-        return htmlTemplate.firstChild;
+        var waitingDivString = `
+        <div class="waiting-div-container"><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div>
+        `;
+        return waitingDivString;
     },
 
     // ################################################################### //
@@ -199,7 +199,7 @@ var GetFeatureInfoDOM = {
      * @param { String } content contenu du gfi
      * @returns {DOMElement} DOM element
      */
-    _createGetFeatureInfoLayerAccordion : function (layername, content) {
+    _createGetFeatureInfoLayerAccordion : function (layername) {
         var dsfrTemplate = this.stringToHTML(`
             <section class="fr-accordion">
                 <h3 class="fr-accordion__title">
@@ -208,7 +208,7 @@ var GetFeatureInfoDOM = {
                     </button>
                 </h3>
                 <div class="fr-collapse GPgetFeatureInfoAccordionContent" id="accordion-${layername}">
-                    ${content}
+                    ${this._createGetFeatureInfoWaitingDiv()}
                 </div>
             </section>
         `);

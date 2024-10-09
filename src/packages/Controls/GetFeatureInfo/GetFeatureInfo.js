@@ -262,6 +262,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      */ 
     onMapClick (e) {
         if (this.getFeatureInfoIsActive() === "true") {
+            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
             this.getFeatureInfoAccordionGroup.remove();
             var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
             this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
@@ -276,7 +277,6 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             }).reverse();
             this.res = e.map.getView().getResolution();
             this.displayGetFeatureInfo();
-            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
         }
     }
 
@@ -417,8 +417,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         var gfiContent = gfiLayers.map((gfiLayer) => {
             var layername = gfiLayer.layer.getSource().name ? gfiLayer.layer.getSource().name : gfiLayer.layer.getSource().url_;
             var content = null;
-            var waitingDiv = this._createGetFeatureInfoWaitingDiv();
-            var accordeon = this._createGetFeatureInfoLayerAccordion(layername, waitingDiv);
+            var accordeon = this._createGetFeatureInfoLayerAccordion(layername);
             return new AsyncData({
                 ...gfiLayer, 
                 ...{
@@ -595,7 +594,9 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      * @param {*} e - ...
      */
     onShowGetFeatureInfoClick (e) {
-        this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", e);
+        if (e === false){
+            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
+        }
         logger.trace(e);
     }
 
