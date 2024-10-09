@@ -127,7 +127,7 @@ var MousePosition = class MousePosition extends Control {
      * @param {*} options - options
      * @example
      * import GeoportalMousePosition from "gpf-ext-ol/controls/MousePosition"
-     * ou 
+     * ou
      * import { GeoportalMousePosition } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -181,7 +181,7 @@ var MousePosition = class MousePosition extends Control {
             if (this.draggable) {
                 Draggable.dragElement(
                     this._panelMousePositionContainer,
-                    this._panelHeaderMousePositionContainer,
+                    this._panelHeaderContainer,
                     this.options.position ? null : map.getTargetElement()
                 );
             }
@@ -1132,7 +1132,7 @@ var MousePosition = class MousePosition extends Control {
 
         // format de sortie si spécifié
         var _outputFormat = options.outputFormat || "json";
-        
+
         // ainsi que les coordonnées : si l'utilisateur explicite zonly false
         var _zonly = true;
         // cela permet d'activer l'option measures côté service d'alti (surchargée si zonly = true)
