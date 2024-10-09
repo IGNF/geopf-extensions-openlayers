@@ -67,7 +67,7 @@ var LayerSwitcherDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher");
-        container.className = "GPwidget gpf-widget"; // gpf-widget-button
+        container.className = "GPwidget gpf-widget gpf-mobile-fullscreen"; // gpf-widget-button
         return container;
     },
 

@@ -150,30 +150,6 @@ div.fr-tile div.fr-tile__header div.fr-tile__thumbnail {
 
 /* affichage plein écran sur petit écran */
 @media (max-width: 576px) {
-    button[id^="GPshowTerritoriesPicto"][aria-pressed="true"] + dialog[id^="GPterritoriesPanel"] {
-        width: 100vw;
-    }
-
-    .position-container-top-right button[id^="GPshowTerritoriesPicto"][aria-pressed="true"] + dialog[id^="GPterritoriesPanel"] {
-        transform: translate(58px, -4px);
-    }
-    .position-container-top-left button[id^="GPshowTerritoriesPicto"][aria-pressed="true"] + dialog[id^="GPterritoriesPanel"] {
-        transform: translate(-62px, -4px);
-    }
-    .position-container-bottom-right:has(button[id^="GPshowTerritoriesPicto"][aria-pressed="true"]) {
-        top: 4px;
-        bottom: unset;
-    }
-    .position-container-bottom-right button[id^="GPshowTerritoriesPicto"][aria-pressed="true"] + dialog[id^="GPterritoriesPanel"] {
-        transform: translate(58px, calc(100% - 48px));
-    }
-    .position-container-bottom-left:has(button[id^="GPshowTerritoriesPicto"][aria-pressed="true"] + dialog[id^="GPterritoriesPanel"]) {
-        top: 4px;
-        bottom: unset;
-    }
-    .position-container-bottom-left button[id^="GPshowTerritoriesPicto"][aria-pressed="true"] + dialog[id^="GPterritoriesPanel"] {
-        transform: translate(-62px, calc(100% - 48px));
-    }
     /* si 4 tuiles de large, on force 3 tuiles de large */
     .tiles-direction.tiles-4 {
         grid-template-columns: repeat(3, 1fr);

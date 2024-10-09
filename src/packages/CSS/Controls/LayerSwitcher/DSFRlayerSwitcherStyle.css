@@ -287,41 +287,6 @@ div[id^=GPlayerInfoContent] {
 }
 
 @media (max-width: 576px) {
-    button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        width: 100vw;
-    }
-
-    .position-container-top-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        transform: translate(58px, -4px);
-    }
-    .position-container-top-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        transform: translate(-62px, -4px);
-    }
-    .position-container-bottom-right:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"]) {
-        top: 4px;
-        bottom: unset;
-    }
-    .position-container-bottom-right:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"]) [id^="GPlayerSwitcher-"] {
-        position: absolute !important;
-        top: 0px !important;
-    }
-    .position-container-bottom-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        inset: unset !important;
-        transform: translate(calc(-100% + 56px), -46px);
-    }
-    .position-container-bottom-left:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"]) {
-        top: 4px;
-        bottom: unset;
-    }
-    .position-container-bottom-right:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"]) [id^="GPlayerSwitcher-"] {
-        position: absolute !important;
-        top: 0px !important;
-    }
-    .position-container-bottom-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        inset: unset !important;
-        transform: translate(-10px, -46px);
-    }
-
     .GPlayerAdvancedTools {
         width: calc(100% + 40px);
     }
