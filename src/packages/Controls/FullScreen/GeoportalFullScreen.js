@@ -127,6 +127,15 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         super.setMap(map);
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
+
 };
 
 export default GeoportalFullScreen;

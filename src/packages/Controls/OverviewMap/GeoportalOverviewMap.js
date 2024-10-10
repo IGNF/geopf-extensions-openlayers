@@ -348,6 +348,15 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         super.setMap(map);
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
+
 };
 
 export default GeoportalOverviewMap;

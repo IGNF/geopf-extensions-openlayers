@@ -147,3 +147,24 @@ div.fr-tile div.fr-tile__header div.fr-tile__thumbnail {
 .tiles-icon div.fr-tile div.fr-tile__header div.fr-tile__thumbnail {
     display: none;
 }
+
+/* affichage plein écran sur petit écran */
+@media (max-width: 576px) {
+    /* si 4 tuiles de large, on force 3 tuiles de large */
+    .tiles-direction.tiles-4 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* sur tout petit écran, on force 2 colonnes max */
+@media (max-width: 382px) {
+    .tiles-direction.tiles-0 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .tiles-direction.tiles-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .tiles-direction.tiles-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

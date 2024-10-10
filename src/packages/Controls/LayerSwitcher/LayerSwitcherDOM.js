@@ -67,7 +67,7 @@ var LayerSwitcherDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher");
-        container.className = "GPwidget gpf-widget"; // gpf-widget-button
+        container.className = "GPwidget gpf-widget gpf-mobile-fullscreen"; // gpf-widget-button
         return container;
     },
 
@@ -209,6 +209,12 @@ var LayerSwitcherDOM = {
         btnClose.id = this._addUID("GPlayersPanelClose");
         btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible fr-mx-1w"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        btnClose.appendChild(span);
 
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {

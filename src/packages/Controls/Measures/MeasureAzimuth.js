@@ -177,6 +177,15 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         return this.options.geodesic;
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this._container;
+    }
+    
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

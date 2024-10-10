@@ -29,6 +29,7 @@ __DATE__
 
 * 🔨 [Changed]
 
+  * Mise à jour de la documentation pour les nouveaux widgets (#170)
   * SearchEngine : Modification de l'option `opened:false` en `collapsible:true`
   * CI : Build des binaires et des sources du projet (#13)
 
@@ -39,7 +40,7 @@ __DATE__
 * 🐛 [Fixed]
 
   * Measures : Fix (#109)
-  * LayerSwitcher : divers correctifs dsfr (#64)
+  * LayerSwitcher : divers correctifs dsfr (#64) (#173)
   * SearchEngine : Correction sur la recherche avancée de la parcelle Cadastrale (#61)
   * Route : Problème de css DSFR en mode saisie du point d'arriver ou de départ (#60)
   * MousePosition : Affichage des coordonnées en sexagésimaux en DSFR (#57)

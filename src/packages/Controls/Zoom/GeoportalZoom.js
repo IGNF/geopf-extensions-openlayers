@@ -156,6 +156,15 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         super.setMap(map);
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
+
 };
 
 export default GeoportalZoom;

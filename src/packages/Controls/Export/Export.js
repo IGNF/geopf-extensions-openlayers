@@ -592,8 +592,17 @@ class ButtonExport extends Control {
     }
 
     // ################################################################### //
-    // ##################### public setters ############################## //
+    // ################# public getters/setters ########################## //
     // ################################################################### //
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
+
     /**
      * ...
      * @param {Object} control - ...
