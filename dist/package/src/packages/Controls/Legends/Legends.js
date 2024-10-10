@@ -124,6 +124,15 @@ var Legends = class Legends extends Control {
         }
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
+
     // ################################################################### //
     // ################### getters / setters ############################# //
     // ################################################################### //

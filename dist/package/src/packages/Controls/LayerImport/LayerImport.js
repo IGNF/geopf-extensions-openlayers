@@ -340,6 +340,14 @@ var LayerImport = class LayerImport extends Control {
         return this._name;
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this._container;
+    }
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

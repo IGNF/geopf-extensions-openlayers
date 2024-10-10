@@ -511,6 +511,15 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         }
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

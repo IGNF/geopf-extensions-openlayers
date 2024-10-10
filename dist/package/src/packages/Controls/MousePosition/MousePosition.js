@@ -484,6 +484,14 @@ var MousePosition = class MousePosition extends Control {
         this._showMousePositionContainer.checked = !collapsed;
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
     // ################################################################### //
     // ######################## initialize control ####################### //
     // ################################################################### //

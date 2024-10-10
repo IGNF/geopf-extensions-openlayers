@@ -229,6 +229,12 @@ declare class ButtonExport {
      */
     onClickButtonExport(e: any): void;
     /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer(): DOMElement;
+    /**
      * ...
      * @param {Object} control - ...
      * @public
