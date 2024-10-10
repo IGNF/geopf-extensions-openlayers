@@ -46,8 +46,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @fires layerswitcher:extent
  * @fires layerswitcher:change:opacity
  * @fires layerswitcher:change:visibility
- * @fires layerswitcher:start:dragndrop (todo)
- * @fires layerswitcher:end:dragndrop (todo)
+ * @fires layerswitcher:change:position
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -78,6 +77,9 @@ var logger = Logger.getLogger("layerswitcher");
  * });
  * LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
  *    console.warn("layer", e.layer, e.visibility);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:position", function (e) {
+ *    console.warn("layer", e.layer, e.position);
  * });
  */
 var LayerSwitcher = class LayerSwitcher extends Control {
@@ -507,6 +509,15 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
             }
         }
+    }
+
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
     }
 
     // ################################################################### //
@@ -1115,9 +1126,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     /**
      * change layers order (on map) on drag and drop (on control container)
      *
+     * @param {Event} e - CustomEvent
      * @private
      */
-    _onEndDragAndDropLayerClick () {
+    _onEndDragAndDropLayerClick (e) {
+        logger.trace(e);
         // INFO : e.oldIndex et e.newIndex marchent en mode AMD mais pas Bundle.
         var map = this.getMap();
 
@@ -1153,6 +1166,27 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         // mise à jour de la visu
         map.updateSize();
+
+        /**
+         * event triggered when an position layer is changed
+         *
+         * @event layerswitcher:change:visibility
+         * @property {Object} type - event
+         * @property {Object} position - position
+         * @property {Object} layer - layer
+         * @property {Object} layers - layers sorted
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:change:position", function (e) {
+         *   console.log(e.position);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:change:position",
+            position : e.newIndex,
+            layer : this._layersOrder[e.newIndex],
+            layers : this._layersOrder
+        });
     }
 
     /**

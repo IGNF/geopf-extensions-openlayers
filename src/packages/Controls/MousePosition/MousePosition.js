@@ -127,7 +127,7 @@ var MousePosition = class MousePosition extends Control {
      * @param {*} options - options
      * @example
      * import GeoportalMousePosition from "gpf-ext-ol/controls/MousePosition"
-     * ou 
+     * ou
      * import { GeoportalMousePosition } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -153,10 +153,10 @@ var MousePosition = class MousePosition extends Control {
         this._initialize(options);
 
         // init control DOM container
-        var container = this._initContainer(this.options);
+        this.container = this._initContainer(this.options);
 
         // ajout du container
-        (this.element) ? this.element.appendChild(container) : this.element = container;
+        (this.element) ? this.element.appendChild(this.container) : this.element = this.container;
 
         return this;
     };
@@ -181,7 +181,7 @@ var MousePosition = class MousePosition extends Control {
             if (this.draggable) {
                 Draggable.dragElement(
                     this._panelMousePositionContainer,
-                    this._panelHeaderMousePositionContainer,
+                    this._panelHeaderContainer,
                     this.options.position ? null : map.getTargetElement()
                 );
             }
@@ -484,6 +484,14 @@ var MousePosition = class MousePosition extends Control {
         this._showMousePositionContainer.checked = !collapsed;
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
     // ################################################################### //
     // ######################## initialize control ####################### //
     // ################################################################### //
@@ -714,28 +722,28 @@ var MousePosition = class MousePosition extends Control {
         var projectionUnitsByDefault = {
             Geographical : [{
                 code : "DEC",
-                label : "degrés décimaux",
+                label : "Degrés décimaux",
                 format : MathUtils.coordinateToDecimal
             }, {
                 code : "DMS",
-                label : "degrés sexagésimaux",
+                label : "Degrés sexagésimaux",
                 format : MathUtils.coordinateToDMS
             }, {
                 code : "RAD",
-                label : "radians",
+                label : "Radians",
                 format : MathUtils.coordinateToRad
             }, {
                 code : "GON",
-                label : "grades",
+                label : "Grades",
                 format : MathUtils.coordinateToGon
             }],
             Metric : [{
                 code : "M",
-                label : "mètres",
+                label : "Mètres",
                 format : MathUtils.coordinateToMeter
             }, {
                 code : "KM",
-                label : "kilomètres",
+                label : "Kilomètres",
                 format : MathUtils.coordinateToKMeter
             }]
         };
@@ -1132,7 +1140,7 @@ var MousePosition = class MousePosition extends Control {
 
         // format de sortie si spécifié
         var _outputFormat = options.outputFormat || "json";
-        
+
         // ainsi que les coordonnées : si l'utilisateur explicite zonly false
         var _zonly = true;
         // cela permet d'activer l'option measures côté service d'alti (surchargée si zonly = true)

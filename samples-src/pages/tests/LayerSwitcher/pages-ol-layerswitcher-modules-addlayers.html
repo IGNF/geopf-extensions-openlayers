@@ -106,7 +106,9 @@
                     layerSwitcher.on("layerswitcher:change:visibility", function (e) {
                         console.warn("layer", e, e.layer, e.visibility);
                     });
-
+                    layerSwitcher.on("layerswitcher:change:position", function (e) {
+                        console.warn("layer", e, e.layer, e.position);
+                    });
                     // // Appel du LayerSwitcher
                     // var layerSwitcher1 = new ol.control.LayerSwitcher({
                     //     options : {

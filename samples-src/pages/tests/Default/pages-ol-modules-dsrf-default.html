@@ -41,6 +41,10 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLegends.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -85,10 +89,11 @@
                 });
 
                 var catalog = new ol.control.Catalog({
+                  draggable: true,
                   position : "top-left"
                 });
                 map.addControl(catalog);
-                
+
                 var zoom = new ol.control.GeoportalZoom({
                   position : "top-right"
                 });
@@ -106,41 +111,57 @@
                 map.addControl(overview);
 
                 var drawing = new ol.control.Drawing({
+                  draggable: true,
                   position : "bottom-left"
                 });
                 map.addControl(drawing);
+
                 var iso = new ol.control.Isocurve({
+                  draggable: true,
                   position : "bottom-left"
                 });
                 map.addControl(iso);
+
                 var layerImport = new ol.control.LayerImport({
+                  draggable: true,
                   position : "bottom-left"
                 });
                 map.addControl(layerImport);
+
                 var layerSwitcher = new ol.control.LayerSwitcher({
-                  options :{
-                    position : "bottom-right"
+                  options : {
+                    panel: true,
+                    draggable: true,
+                    position : "top-left"
                   }
                 });
                 map.addControl(layerSwitcher);
+
                 var mp = new ol.control.GeoportalMousePosition({
+                  draggable: true,
                   position : "bottom-right"
                 });
                 map.addControl(mp);
+
                 var route = new ol.control.Route({
+                  draggable: true,
                   position : "bottom-right"
                 });
                 map.addControl(route);
+
                 var feature =  new ol.control.GetFeatureInfo({
                   options :{
                     position : "top-right"
                   }
                 });
                 map.addControl(feature);
+
                 var reverse = new ol.control.ReverseGeocode({
+                  draggable: true,
                   position : "top-right"
                 });
                 map.addControl(reverse);
+
                 var search = new ol.control.SearchEngine({
                   position : "top-left",
                   splitResults : false,
@@ -151,14 +172,17 @@
                   position : "top-left"
                 });
                 map.addControl(measureLength);
+
                 var measureArea = new ol.control.MeasureArea({
                   position : "top-left"
                 });
                 map.addControl(measureArea);
+
                 var measureAzimuth = new ol.control.MeasureAzimuth({
                   position : "top-left"
                 });
                 map.addControl(measureAzimuth);
+
                 var measureProfil = new ol.control.ElevationPath({
                   position : "top-left"
                 });
@@ -166,6 +190,23 @@
 
                 var attributions = new ol.control.GeoportalAttribution();
                 map.addControl(attributions);
+
+                var legends = new ol.control.Legends({
+                    draggable: true,
+                    position: "bottom-left",
+                    panel: true,
+                    auto: true
+                });
+                map.addControl(legends);
+
+                var territories = new ol.control.Territories({
+                    draggable: true,
+                    position: "bottom-left",
+                    direction: "vertical",
+                    panel: true,
+                    auto: true
+                });
+                map.addControl(territories);
               };
 
               Gp.Services.getConfig({

@@ -170,10 +170,6 @@ div[id^=GPadvancedTools_ID_] {
 }
 
 .gpf-btn-icon-ls-info {
-    background-image: url("img/dsfr/info.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
     box-shadow: none;
 }
 
@@ -222,3 +218,88 @@ div[id^=GPlayerInfoContent] {
     width: 350px;
 }
 
+.gpf-btn-icon-close.GPlayersPanelClose {
+    top: 0;
+    right: 0;
+}
+
+.gpf-btn-icon-close.GPlayersPanelClose::after {
+    margin-left: -0.125rem;
+}
+
+/* menu contextuel (mobile) */
+.GPlayerAdvancedToolsContextual {
+    display: none;
+}
+
+.GPlayerAdvancedToolsContextual::after {
+    -webkit-mask: url("./img/dsfr/context.svg") center no-repeat;
+    mask: url("./img/dsfr/context.svg") center no-repeat;
+}
+
+.GPlayerAdvancedToolsContextual[aria-pressed="true"] {
+    background-color: var(--hover-tint);
+    overflow: visible;
+}
+
+.GPlayerSwitcher_layer:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    overflow: visible;
+}
+
+[id^=GPlayersList-] .GPpanelBody:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    overflow: visible;
+}
+
+.GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
+    position: relative;
+}
+
+.GPlayerAdvancedToolsContextual + div {
+    display: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    font-size: 13px;
+    z-index: 12;
+    background-color: var(--background-overlap-grey);
+    border-radius: 6px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+    padding: 14px 6px;
+    gap: 6px;
+}
+
+.GPlayerAdvancedToolsContextual + div > button {
+    padding-left: 2rem;
+}
+
+.GPlayerAdvancedToolsContextual + div > button[visibility="hidden"] {
+    display: none;
+}
+
+.GPlayerAdvancedToolsContextual + div > button::after {
+    mask-position: left;
+}
+
+.GPlayerAdvancedToolsContextual[aria-pressed="true"] + div {
+    display: flex;
+    position: absolute;
+    right: 0;
+    top: calc(2.5rem + 8px);
+}
+
+@media (max-width: 576px) {
+    .GPlayerAdvancedTools {
+        width: calc(100% + 40px);
+    }
+
+    .GPlayerAdvancedTools > .GPlayerRemove, .GPlayerAdvancedTools > .GPlayerInfo, .GPlayerAdvancedTools > .GPlayerExtent {
+        display: none;
+    }
+
+    .GPlayerAdvancedToolsContextual {
+        display: inline-flex;
+    }
+
+    [id^=GPopacity_ID_] {
+        flex-grow: 0.6;
+    }
+}

@@ -301,7 +301,7 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         button.id = "GPshowOverviewMap-" +  this._uid;
         button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowOverviewMap", "gpf-btn-icon", "gpf-btn-icon-overviewmap", "fr-btn", "fr-btn--primary");
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", false);
+        button.setAttribute("aria-pressed", !this.options.collapsed);
         button.setAttribute("type", "button");
         var self = this;
         if (button.addEventListener) {
@@ -346,6 +346,15 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         }
         this.setTarget(this.options.target);
         super.setMap(map);
+    }
+
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
     }
 
 };

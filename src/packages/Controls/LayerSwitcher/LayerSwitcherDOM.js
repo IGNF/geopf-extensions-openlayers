@@ -67,7 +67,7 @@ var LayerSwitcherDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher");
-        container.className = "GPwidget gpf-widget"; // gpf-widget-button
+        container.className = "GPwidget gpf-widget gpf-mobile-fullscreen"; // gpf-widget-button
         return container;
     },
 
@@ -209,6 +209,12 @@ var LayerSwitcherDOM = {
         btnClose.id = this._addUID("GPlayersPanelClose");
         btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible fr-mx-1w"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        btnClose.appendChild(span);
 
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
@@ -458,6 +464,31 @@ var LayerSwitcherDOM = {
         }
 
         container.appendChild(this._createAdvancedToolExtentElement(obj));
+
+        if (checkDsfr()) {
+            var btn = document.createElement("button");
+            btn.className = "GPlayerAdvancedToolsContextual fr-btn gpf-btn gpf-btn--tertiary fr-btn--tertiary-no-outline";
+            btn.setAttribute("aria-pressed", false);
+            if (btn.addEventListener) {
+                btn.addEventListener("click", function (e) {
+                    var status = (e.target.ariaPressed === "true");
+                    e.target.setAttribute("aria-pressed", !status);
+                });
+            } else if (btn.attachEvent) {
+                btn.attachEvent("onclick", function (e) {
+                    var status = (e.target.ariaPressed === "true");
+                    e.target.setAttribute("aria-pressed", !status);
+                });
+            }
+
+            var contextual = document.createElement("div");
+            contextual.appendChild(this._createAdvancedToolDeleteElement(obj, true));
+            contextual.appendChild(this._createAdvancedToolInformationElement(obj, true));
+            contextual.appendChild(this._createAdvancedToolExtentElement(obj, true));
+
+            container.appendChild(btn);
+            container.appendChild(contextual);
+        }
         return container;
     },
 
@@ -465,15 +496,23 @@ var LayerSwitcherDOM = {
      * Creation de l'icone de suppression du layer (DOM)
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
      * @returns {DOMElement} container
      */
-    _createAdvancedToolDeleteElement : function (obj) {
+    _createAdvancedToolDeleteElement : function (obj, contextual = false) {
         var button = document.createElement("button");
-        button.id = this._addUID("GPremove_ID_" + obj.id);
+        if (!contextual) {
+            button.id = this._addUID("GPremove_ID_" + obj.id);
+        } else {
+            button.id = this._addUID("GPremoveContextual_ID_" + obj.id);
+        }
         button.className = "GPlayerRemove gpf-btn gpf-btn-icon gpf-btn-icon-ls-remove fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Supprimer la couche";
         button.layerId = obj.id;
+        if (contextual) {
+            button.innerText = "Supprimer";
+        }
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
         button.setAttribute("type", "button");
@@ -500,23 +539,34 @@ var LayerSwitcherDOM = {
      * Creation de l'icone d'information du layer (DOM)
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
      * @returns {DOMElement} container
      */
-    _createAdvancedToolInformationElement : function (obj) {
+    _createAdvancedToolInformationElement : function (obj, contextual = false) {
         // exemple :
         // <div id="GPinfo_ID_Layer1" class="GPlayerInfo" title="Informations/légende" onclick="GPopenLayerInfo(this);"></div>
 
         var btnInfo = document.createElement("button");
-        btnInfo.id = this._addUID("GPinfo_ID_" + obj.id);
+        if (!contextual) {
+            btnInfo.id = this._addUID("GPinfo_ID_" + obj.id);
+        } else {
+            btnInfo.id = this._addUID("GPinfoContextual_ID_" + obj.id);
+        }
         btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary gpf-btn--tertiary";
         // hack pour garder un emplacement vide
         if (!obj.title || !obj.description) {
             btnInfo.style.opacity = "0";
             btnInfo.style.visibility = "hidden";
+            if (contextual) {
+                btnInfo.style.display = "none";
+            }
         }
         btnInfo.title = "Informations/légende";
         btnInfo.layerId = obj.id;
+        if (contextual) {
+            btnInfo.innerText = "Informations";
+        }
         btnInfo.setAttribute("tabindex", "0");
         btnInfo.setAttribute("aria-pressed", true);
         btnInfo.setAttribute("type", "button");
@@ -572,11 +622,11 @@ var LayerSwitcherDOM = {
         divO.className = "GPlayerOpacity fr-range fr-range--sm";
         // For DSFR
         divO.dataset.frJsRange = "true";
-        divO.style.setProperty("--progress-right", "100%");
         divO.title = "Opacité";
 
         var opacity = (typeof obj.opacity !== "undefined") ? obj.opacity : 1;
         opacity = Math.round(opacity * 100);
+        divO.style.setProperty("--progress-right", opacity + "%");
 
         var input = document.createElement("input");
         input.id = this._addUID("GPopacityValueDiv_ID_" + obj.id);
@@ -640,13 +690,28 @@ var LayerSwitcherDOM = {
         return list;
     },
 
-    _createAdvancedToolExtentElement : function (obj) {
+    /**
+     * Creation de l'icone de zoom sur extent (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     *
+     * @returns {DOMElement} container
+     */
+    _createAdvancedToolExtentElement : function (obj, contextual = false) {
         // FIXME inactif en mode classique !
         var button = document.createElement("button");
-        button.id = this._addUID("GPextent_ID_" + obj.id);
+        if (!contextual) {
+            button.id = this._addUID("GPextent_ID_" + obj.id);
+        } else {
+            button.id = this._addUID("GPextentContextual_ID_" + obj.id);
+        }
         button.className = "GPelementHidden GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Zoomer dans l'étendue";
         button.layerId = obj.id;
+        if (contextual) {
+            button.innerText = "Zommer";
+        }
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
         button.setAttribute("type", "button");

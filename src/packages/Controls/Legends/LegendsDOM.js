@@ -111,8 +111,14 @@ var LegendsDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
         btnClose.title = "Fermer le panneau";
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        btnClose.appendChild(span);
 
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
