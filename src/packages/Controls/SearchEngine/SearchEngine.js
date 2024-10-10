@@ -257,6 +257,14 @@ var SearchEngine = class SearchEngine extends Control {
         return this._geocodedLocations;
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

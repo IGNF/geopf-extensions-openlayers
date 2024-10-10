@@ -257,6 +257,14 @@ var Catalog = class Catalog extends Control {
     // ################### getters / setters ############################# //
     // ################################################################### //
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
 
     // ################################################################### //
     // #################### privates methods ############################# //

@@ -205,6 +205,14 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         return this._reverseGeocodingLocations;
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //
