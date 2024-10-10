@@ -91,16 +91,7 @@
             console.log(map.getLayers().getArray())
             // 3. Ajout du GetFeatureInfo
             var getFeatureInfo = new ol.control.GetFeatureInfo({
-                    options : {
-                        auto : true,
-                        active: true,
-                        hidden: false,
-                        defaultInfoFormat: "text/html",
-                        defaultEvent: "singleclick",
-                        cursorStyle: "pointer",
-                        // noProxyDomains: [],
-                        // proxyUrl: ""
-                    }
+                position: "bottom-left"
             });
             map.addControl(getFeatureInfo);
 

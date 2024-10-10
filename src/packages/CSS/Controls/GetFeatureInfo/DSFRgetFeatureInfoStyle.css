@@ -1,7 +1,5 @@
-/* GET FEATURE INFO */
-
-.gpf-btn-icon-getfeatureinfo {
-    background-image: url("img/NoGFI.svg");
+.gpf-btn-icon-getFeatureInfo {
+    background-image: url("img/GFI.svg");
     background-repeat: no-repeat;
     background-size: auto auto;
     background-position: center center;
