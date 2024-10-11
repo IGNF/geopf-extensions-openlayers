@@ -710,7 +710,7 @@ var LayerSwitcherDOM = {
         button.title = "Zoomer dans l'étendue";
         button.layerId = obj.id;
         if (contextual) {
-            button.innerText = "Zommer";
+            button.innerText = "Zoomer";
         }
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
