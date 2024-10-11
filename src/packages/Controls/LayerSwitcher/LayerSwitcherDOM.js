@@ -875,6 +875,7 @@ var LayerSwitcherDOM = {
                         var reflgd = document.createElement("a");
                         reflgd.className = "fr-link";
                         reflgd.href = urllgd;
+                        reflgd.target = "_blank";
                         reflgd.innerHTML = "Du 1/" + scale + " au 1/" + maxScale;
                         lgdlink.appendChild(reflgd);
                         lgd.appendChild(lgdlink);
