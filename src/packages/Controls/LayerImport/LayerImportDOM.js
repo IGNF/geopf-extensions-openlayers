@@ -52,7 +52,7 @@ var LayerImportDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowImportPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowImportPicto gpf-btn gpf-btn-icon gpf-btn-icon-import fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowImportPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-import fr-btn fr-btn--secondary";
         button.title = "Ouvrir l'import de couches";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

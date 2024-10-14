@@ -1,8 +1,6 @@
-.gpf-btn-icon-reverse {
-    background-image: url("img/reversegeocode.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-reverse::after {
+  -webkit-mask: url("img/reversegeocode.svg") center no-repeat;
+  mask: url("img/reversegeocode.svg") center no-repeat;
 }
 
 .gpf-flex-reverse {

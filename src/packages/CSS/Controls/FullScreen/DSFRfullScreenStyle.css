@@ -5,9 +5,11 @@
     background-position: center center;
     background-repeat: no-repeat;
 }
-.ol-custom-full-screen button.ol-custom-full-screen-false {
-    background-image: url("img/dsfr/fullscreen.svg");
+.ol-custom-full-screen button.ol-custom-full-screen-false::after {
+    -webkit-mask: url("img/dsfr/fullscreen.svg") center no-repeat;
+    mask: url("img/dsfr/fullscreen.svg") center no-repeat;
 }
-.ol-custom-full-screen button.ol-custom-full-screen-true {
-    background-image: url("img/dsfr/fullscreen-off.svg");
+.ol-custom-full-screen button.ol-custom-full-screen-true::after {
+    -webkit-mask: url("img/dsfr/fullscreen-off.svg") center no-repeat;
+    mask: url("img/dsfr/fullscreen-off.svg") center no-repeat;
 }

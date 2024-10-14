@@ -116,7 +116,7 @@ var LayerSwitcherDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowLayersListPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn fr-btn--secondary";
         button.htmlFor = this._addUID("GPshowLayersList");
         button.title = "Afficher/masquer le gestionnaire de couches";
         button.setAttribute("tabindex", "0");

@@ -63,7 +63,7 @@ var CatalogDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowCatalogPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowCatalogPicto gpf-btn gpf-btn-icon gpf-btn-icon-catalog fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowCatalogPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-catalog fr-btn fr-btn--secondary";
         button.title = "Catalogue de données";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -164,7 +164,7 @@ var CatalogDOM = {
     // ################################################################### //
     // ####################### Methods for panel ######################### //
     // ################################################################### //
-    
+
     _createCatalogContentDivElement : function () {
         var container = stringToHTML(`<div class="catalog-container-content" style="padding:10px"></div>`);
         return container.firstChild;
@@ -248,14 +248,14 @@ var CatalogDOM = {
                 value = "true";
                 tabindex = 0;
             }
-            // le listener sur le bouton permet de récuperer à partir de l'ID la catégorie (id) : 
+            // le listener sur le bouton permet de récuperer à partir de l'ID la catégorie (id) :
             // > "tabbutton-${i}_${id}".split('_')[1]
             // et l'attribut 'aria-controls' permet de retrouver le panneau du contenu
             return `
             <li role="presentation">
                 <button id="tabbutton-${i}_${id}" class="fr-tabs__tab" tabindex="${tabindex}" role="tabbutton" aria-selected="${value}" aria-controls="tabpanel-${i}-panel_${id}">${title}</button>
             </li>
-            `;            
+            `;
         };
 
         var strSectionRadios = "";
@@ -308,7 +308,7 @@ var CatalogDOM = {
             if (sections) {
                 strTabContent = tmplSectionRadios(id, sections);
             }
-            // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) : 
+            // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) :
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
             return `
             <!-- panneaux -->
@@ -363,7 +363,7 @@ var CatalogDOM = {
                 btn.addEventListener("click", (e) => {
                     // gestion de l'affichage
 
-                    // modifier les autres buttons : 
+                    // modifier les autres buttons :
                     //   tabindex=-1
                     //   aria-selected=false
                     for (let i = 0; i < buttons.length; i++) {
@@ -401,21 +401,21 @@ var CatalogDOM = {
     },
     _createCatalogContentCategoryTabContent : function (category, layersFiltered) {
         var layers = Object.values(layersFiltered); // object -> array
-        
+
         var strElements = "";
         var tmplElement = (i, name, title, service, categoryId) => {
             // FIXME doit on l'utiliser le champ description en HTML ?
 
-            // le listener sur l'input permet de récuperer à partir de l'ID 
-            // la paire name/service pour identifier la couche: 
+            // le listener sur l'input permet de récuperer à partir de l'ID
+            // la paire name/service pour identifier la couche:
             // > "checkboxes-${categoryId}-${i}_${name}-${service}".split('_')[1]
             return `
             <div class="fr-fieldset__element" id="fieldset-${categoryId}_${name}-${service}">
                 <div class="fr-checkbox-group">
-                    <input 
-                        name="checkboxes-${categoryId}" 
-                        id="checkboxes-${categoryId}-${i}_${name}-${service}" 
-                        type="checkbox" 
+                    <input
+                        name="checkboxes-${categoryId}"
+                        id="checkboxes-${categoryId}-${i}_${name}-${service}"
+                        type="checkbox"
                         data-layer="${name}:${service}"
                         aria-describedby="checkboxes-messages-${categoryId}-${i}_${name}-${service}">
                     <label class="fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="${title}">
@@ -426,7 +426,7 @@ var CatalogDOM = {
             </div>
             `;
         };
-        
+
         // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
         var tmplSection = (id, categoryId, title, count, data) => {
             // FIXME la maquette ne possède pas de compteur de couches
@@ -443,7 +443,7 @@ var CatalogDOM = {
             `;
         };
 
-        // INFO 
+        // INFO
         // les couches par catégorie sont filtrées au préalable
         // on ajoute la repartition par section des couches !
         var isSection = category.section;
@@ -460,7 +460,7 @@ var CatalogDOM = {
             const layer = layers[i];
             // INFO
             // a t on des sections ?
-            // - oui, si elle correspond au filtre, on ajoute la couche dans la section 
+            // - oui, si elle correspond au filtre, on ajoute la couche dans la section
             //   sinon, on ecarte cette couche ou on la met dans la section "Autres"
             // - non, on ajoute directement la couche
             if (isSection) {

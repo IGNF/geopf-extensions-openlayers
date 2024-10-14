@@ -1,9 +1,7 @@
-.gpf-btn-icon-elevation {
-    background-image: url("img/altipath.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
-  }
+.gpf-btn-icon-elevation::after {
+  -webkit-mask: url("img/altipath.svg") center no-repeat;
+  mask: url("img/altipath.svg") center no-repeat;
+}
 
 [id^=GPelevationPathPanelInfo] {
   position: absolute;
