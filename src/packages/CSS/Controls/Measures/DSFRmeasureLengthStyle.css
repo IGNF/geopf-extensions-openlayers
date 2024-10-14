@@ -1,6 +1,4 @@
-.gpf-btn-icon-length {
-    background-image: url('./img/mesurer-distance.svg');
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-length::after {
+    -webkit-mask: url("./img/mesurer-distance.svg") center no-repeat;
+    mask: url("./img/mesurer-distance.svg") center no-repeat;
 }

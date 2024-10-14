@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        
+
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCRS.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalMousePosition.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalMousePosition.js"></script>
@@ -53,7 +53,7 @@
                 });
 
                 mouse = new ol.control.GeoportalMousePosition({
-                  draggable : true,
+                  draggable : false,
                   position : "bottom-left"
                 });
                 map.addControl(mouse);

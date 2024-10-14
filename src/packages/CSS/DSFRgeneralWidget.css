@@ -138,15 +138,17 @@
 /* button  */
 /***********/
 
-.gpf-btn {}
+.gpf-btn-icon.gpf-btn--secondary {
+  background-color: var(--background-default-grey);
+}
 
-.gpf-btn-icon:not([class*=--secondary]):not([class*=--tertiary])[aria-pressed="true"] {
+.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"] {
   background-color: var(--hover-tint);
   position: relative;
 }
 
-.gpf-btn-icon:not([class*=--secondary]):not([class*=--tertiary])[aria-pressed="true"]::before {
-  background-color: var(--hover-tint);
+.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"]::before {
+  background-color: var(--background-action-high-blue-france);
   content: "";
   width: 3px;
   height: 100%;

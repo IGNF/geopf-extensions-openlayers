@@ -1,15 +1,10 @@
 /* GET FEATURE INFO */
-
-.gpf-btn-icon-getfeatureinfo {
-    background-image: url("img/NoGFI.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-getfeatureinfo::after {
+    -webkit-mask: url("img/NoGFI.svg") center no-repeat;
+    mask: url("img/NoGFI.svg") center no-repeat;
 }
 
-button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {
-    background-image: url("img/GFI.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"]::after {
+    -webkit-mask: url("img/GFI.svg") center no-repeat;
+    mask: url("img/GFI.svg") center no-repeat;
 }
