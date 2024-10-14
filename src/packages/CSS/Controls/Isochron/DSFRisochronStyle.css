@@ -1,8 +1,6 @@
-.gpf-btn-icon-isocurve {
-    background-image: url("img/isochrone.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-isocurve::after {
+  -webkit-mask: url("img/isochrone.svg") center no-repeat;
+  mask: url("img/isochrone.svg") center no-repeat;
 }
 
 .gpf-flex-isocurve {

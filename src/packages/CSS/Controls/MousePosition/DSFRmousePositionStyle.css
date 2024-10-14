@@ -1,8 +1,6 @@
-.gpf-btn-icon-position {
-    background-image: url("img/position.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-position::after {
+  -webkit-mask: url("img/position.svg") center no-repeat;
+  mask: url("img/position.svg") center no-repeat;
 }
 
 div[id^=GPmousePositionCoordinate-] input {

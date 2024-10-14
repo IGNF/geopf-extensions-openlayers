@@ -1,8 +1,6 @@
-.gpf-btn-icon-import {
-  background-image: url("img/layerimport.svg");
-  background-repeat: no-repeat;
-  background-size: auto auto;
-  background-position: center center;
+.gpf-btn-icon-import::after {
+  -webkit-mask: url("img/layerimport.svg") center no-repeat;
+  mask: url("img/layerimport.svg") center no-repeat;
 }
 
 .gpf-btn-icon-return::after {

@@ -1,6 +1,4 @@
-.gpf-btn-icon-azimuth {
-    background-image: url("img/mesurer-azimuth.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-azimuth::after {
+    -webkit-mask: url("img/mesurer-azimuth.svg") center no-repeat;
+    mask: url("img/mesurer-azimuth.svg") center no-repeat;
 }

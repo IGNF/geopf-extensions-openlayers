@@ -36,12 +36,12 @@ var GetFeatureInfoDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPgetFeatureInfoPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPgetFeatureInfoPicto gpf-btn gpf-btn-icon gpf-btn-icon-getfeatureinfo fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPgetFeatureInfoPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-getfeatureinfo fr-btn fr-btn--secondary";
         button.title = "activer/desactiver l'interrogation des couches";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", active);
         button.setAttribute("type", "button");
- 
+
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");

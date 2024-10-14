@@ -35,11 +35,9 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
   padding-right: 40px;
 }
 
-.gpf-btn-icon-layerswitcher {
-    background-image: url("img/dsfr/layerswitcher.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-layerswitcher::after {
+    -webkit-mask: url("img/dsfr/layerswitcher.svg") center no-repeat;
+    mask: url("img/dsfr/layerswitcher.svg") center no-repeat;
 }
 
 .gpf-btn-icon-ls-visibility {

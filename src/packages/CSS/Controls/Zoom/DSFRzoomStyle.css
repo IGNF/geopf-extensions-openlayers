@@ -1,30 +1,19 @@
 .gpf-btn-icon-zoom-in {
-    background-image: url("img/dsfr/zoom-in.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
-    box-shadow: none;
     height: inherit;
     width: inherit;
+}
+
+.gpf-btn-icon-zoom-in::after {
+    -webkit-mask: url("img/dsfr/zoom-in.svg") center no-repeat;
+    mask: url("img/dsfr/zoom-in.svg") center no-repeat;
 }
 
 .gpf-btn-icon-zoom-out {
-    background-image: url("img/dsfr/zoom-out.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
-    box-shadow: none;
     height: inherit;
     width: inherit;
 }
 
-#GPzoomIn {
-    margin-bottom: 4px;
-    box-shadow: 0px 12px var(--background-action-high-blue-france);
-}
-
-@supports(-moz-appearance:none) {
-    #GPzoomIn {
-        box-shadow: 0px 4px var(--background-action-high-blue-france);
-    }
+.gpf-btn-icon-zoom-out::after {
+    -webkit-mask: url("img/dsfr/zoom-out.svg") center no-repeat;
+    mask: url("img/dsfr/zoom-out.svg") center no-repeat;
 }

@@ -1,8 +1,6 @@
-.gpf-btn-icon-territories {
-    background-image: url("img/dsfr/territories.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-territories::after {
+    -webkit-mask: url("img/dsfr/territories.svg") center no-repeat;
+    mask: url("img/dsfr/territories.svg") center no-repeat;
 }
 
 .gpf-btn-header-territories {
