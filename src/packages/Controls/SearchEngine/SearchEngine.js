@@ -1277,7 +1277,8 @@ var SearchEngine = class SearchEngine extends Control {
             // création du marker (overlay)
             this._marker = new Overlay({
                 position : position,
-                offset : [-25.5, -38],
+                // offset : [-25.5, -38], // FIXME mauvais rendu !?
+                positioning : "center-center",
                 element : markerDiv,
                 stopEvent : false
             });
