@@ -58,10 +58,28 @@
                         resources : {
                           search : true
                         },
+                        markerUrl : "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAxOSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkuNTAwMjIgMTYuMjkyMkMxMi45NzUzIDE2LjI5MjIgMTUuNzkyNCAxMy40NzUxIDE1Ljc5MjQgOS45OTk5N0MxNS43OTI0IDYuNTI0ODggMTIuOTc1MyAzLjcwNzc2IDkuNTAwMjIgMy43MDc3NkM2LjAyNTEzIDMuNzA3NzYgMy4yMDgwMSA2LjUyNDg4IDMuMjA4MDEgOS45OTk5N0MzLjIwODAxIDEzLjQ3NTEgNi4wMjUxMyAxNi4yOTIyIDkuNTAwMjIgMTYuMjkyMloiIHN0cm9rZT0iIzEwMTA5MiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiLz4KPHBhdGggZD0iTTEgMTBIMy4yMDc3OSIgc3Ryb2tlPSIjMTAxMDkyIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0xNS43OTIgMTBIMTcuOTk5OCIgc3Ryb2tlPSIjMTAxMDkyIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik05LjUgMS41VjMuNzA3NzkiIHN0cm9rZT0iIzEwMTA5MiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNOS41IDE2LjI5MjJWMTguNSIgc3Ryb2tlPSIjMTAxMDkyIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik05LjUwMDM4IDExLjEwMzhDMTAuMTEgMTEuMTAzOCAxMC42MDQzIDEwLjYwOTYgMTAuNjA0MyA5Ljk5OTg5QzEwLjYwNDMgOS4zOTAyMyAxMC4xMSA4Ljg5NiA5LjUwMDM4IDguODk2QzguODkwNzIgOC44OTYgOC4zOTY0OCA5LjM5MDIzIDguMzk2NDggOS45OTk4OUM4LjM5NjQ4IDEwLjYwOTYgOC44OTA3MiAxMS4xMDM4IDkuNTAwMzggMTEuMTAzOFoiIGZpbGw9IiMxMDEwOTIiLz4KPC9zdmc+Cg=="
                     });
 
 					// 3. Ajout du SearchEngine à la carte
                     map.addControl(search);
+
+                    // 4. Evenements
+                    search.on("searchengine:autocomplete:click", function (e) {
+                        console.warn("autocomplete", e.location);
+                    });
+                    search.on("searchengine:search:click", function (e) {
+                        console.warn("search", e.suggest);
+                    });
+                    search.on("searchengine:geocode:click", function (e) {
+                        console.warn("location", e.location);
+                    });
+                    search.on("searchengine:geolocation:click", function (e) {
+                        console.warn("geolocation", e.coordinates);
+                    });
+                    search.on("searchengine:coordinates:click", function (e) {
+                        console.warn("coordinate", e.coordinates);
+                    });
                 };
            </script>
 {{/content}}
