@@ -254,6 +254,10 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         var className = "ol-overviewmap";
         options.className = options.className || className;
         options.collapseLabel = options.collapseLabel || "";
+        options.collapsed = options.collapsed;
+        if (options.collapsed === undefined) {
+            options.collapsed = true;
+        }
         options.label = options.label || "";
         options.tipLabel = "Carte générale";
         options.layers = options.layers || [
