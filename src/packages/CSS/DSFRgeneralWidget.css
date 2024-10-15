@@ -310,13 +310,14 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   /* crée un décalage sur le searchEngine */
   /* align-items: center; */
   /* + 5px pour l'indicateur "bouton actif" */
   width: calc(var(--size-per-row) + 4px);
   min-height: var(--size-per-row);
   /* padding: 5px; */
+  height: calc(100% - 8px);
 }
 
 .position-container-top-left,
@@ -337,6 +338,7 @@
 .position-container-bottom-left,
 .position-container-bottom-right {
   bottom: 4px;
+  justify-content: flex-end;
 }
 
 .position-container-bottom-right {
@@ -490,33 +492,16 @@
 }
 
 @media (max-width: 576px) {
-  .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog {
+  .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
       width: 100vw !important;
   }
 
-  .position-container-bottom-right:has(.gpf-mobile-fullscreen > button[aria-pressed="true"]),
-  .position-container-bottom-left:has(.gpf-mobile-fullscreen > button[aria-pressed="true"]) {
-      top: 4px;
-      bottom: unset;
-  }
-
-  .position-container-top-left:has(.gpf-mobile-fullscreen > button[aria-pressed="true"]) .gpf-mobile-fullscreen,
-  .position-container-top-right:has(.gpf-mobile-fullscreen > button[aria-pressed="true"]) .gpf-mobile-fullscreen,
-  .position-container-bottom-right:has(.gpf-mobile-fullscreen > button[aria-pressed="true"]) .gpf-mobile-fullscreen,
-  .position-container-bottom-left:has(.gpf-mobile-fullscreen > button[aria-pressed="true"]) .gpf-mobile-fullscreen {
-      position: absolute !important;
-      top: 0px !important;
-  }
-
-  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog,
-  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog {
-      inset: unset !important;
-      transform: translate(calc(-100% + 56px), -46px);
-  }
-
-  .position-container-top-left .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog,
-  .position-container-bottom-left .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog {
-      inset: unset !important;
-      transform: translate(-10px, -46px);
+  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-top-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
+      top: -4px !important;
+      left: -8px !important;
+      right: unset !important;
   }
 }
