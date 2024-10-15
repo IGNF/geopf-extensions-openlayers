@@ -787,6 +787,12 @@ var LayerSwitcherDOM = {
             // internet explorer
             btnClose.attachEvent("onclick", onCloseClick);
         }
+        this.addEventListener("layerswitcher:remove", (e) => {
+            if (parseInt(obj.id.split("-")[0].split("GPinfo_ID_")[1]) === e.layer.id) {
+                document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+                document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
+            }
+        });
         header.appendChild(btnClose);
         container.appendChild(header);
 
