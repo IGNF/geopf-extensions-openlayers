@@ -579,7 +579,7 @@ var LayerImportDOM = {
     _createImportSubmitFormElement : function () {
         var input = document.createElement("input");
         input.id = this._addUID("GPimportSubmit");
-        input.className = "GPsubmit gpf-btn fr-btn fr-btn--secondary gpf-btn--secondary";
+        input.className = "GPsubmit gpf-btn fr-btn";
         input.type = "submit";
         input.value = "Importer";
 
