@@ -1,4 +1,5 @@
 import Control from "ol/control/Control";
+import checkDsfr from "./Utils/CheckDsfr";
 
 var ControlExtended = class ControlExtended extends Control {
 
@@ -162,19 +163,35 @@ class PositionFactory {
             // ex. bouton : bottom-left, menu : bottom:0px; left:50px
             switch (pos.toLowerCase()) {
                 case "top-left":
-                    panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
+                    if (checkDsfr()) {
+                        panel.style.top = "0px";
+                    } else {
+                        panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
+                    }
                     panel.style.left = sizeW(pos) + offset + "px";
                     break;
                 case "bottom-left":
-                    panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
+                    if (checkDsfr()) {
+                        panel.style.top = "0px";
+                    } else {
+                        panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
+                    }
                     panel.style.left = sizeW(pos) + offset + "px";
                     break;
                 case "top-right":
-                    panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
+                    if (checkDsfr()) {
+                        panel.style.top = "0px";
+                    } else {
+                        panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
+                    }
                     panel.style.right = sizeW(pos) + offset + "px";
                     break;
                 case "bottom-right":
-                    panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
+                    if (checkDsfr()) {
+                        panel.style.top = "0px";
+                    } else {
+                        panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
+                    }
                     panel.style.right = sizeW(pos) + offset + "px";
                     break;
                 default:
