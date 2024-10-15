@@ -490,7 +490,7 @@
 }
 
 @media (max-width: 576px) {
-  .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog {
+  .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
       width: 100vw !important;
   }
 
@@ -508,14 +508,14 @@
       top: 0px !important;
   }
 
-  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog,
-  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog {
+  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
       inset: unset !important;
       transform: translate(calc(-100% + 56px), -46px);
   }
 
-  .position-container-top-left .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog,
-  .position-container-bottom-left .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog {
+  .position-container-top-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
       inset: unset !important;
       transform: translate(-10px, -46px);
   }
