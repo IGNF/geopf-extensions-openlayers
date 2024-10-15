@@ -492,14 +492,14 @@
 }
 
 @media (max-width: 576px) {
-  .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog {
+  .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
       width: 100vw !important;
   }
 
-  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog,
-  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog,
-  .position-container-top-left .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog,
-  .position-container-bottom-left .gpf-mobile-fullscreen > button[aria-pressed="true"] + dialog {
+  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-top-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
       top: -4px !important;
       left: -8px !important;
       right: unset !important;
