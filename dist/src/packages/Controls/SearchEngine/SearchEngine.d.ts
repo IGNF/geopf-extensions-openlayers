@@ -16,6 +16,7 @@ export default SearchEngine;
  * @param {String}  [options.placeholder] - Placeholder in search bar. Default is "Rechercher un lieu, une adresse".
  * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
  * @param {String}  [options.markerStyle = "lightOrange"] - Marker style. Currently possible values are "lightOrange" (default value), "darkOrange", "red" and "turquoiseBlue".
+ * @param {String}  [options.markerUrl = ""] - Marker url. By default, if not specified, use option markerStyle. Otherwise, you can added a http url or a base64 image.
  * @param {Boolean} [options.displayButtonAdvancedSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
@@ -63,6 +64,8 @@ export default SearchEngine;
  * @fires searchengine:autocomplete:click
  * @fires searchengine:geocode:click
  * @fires searchengine:search:click
+ * @fires searchengine:geolocation:click
+ * @fires searchengine:coordinates:click
  * @todo option : direction (start|end) de la position du picto (loupe)
  * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
  * @example
@@ -73,6 +76,7 @@ export default SearchEngine;
  *      displayButtonAdvancedSearch : true,
  *      displayButtonGeolocate : true,
  *      displayButtonCoordinateSearch : true,
+ *      markerStyle : "lightOrange" // "http://..." or "data/base64..."
  *      resources : {
  *          geocode : ["StreetAddress", "PositionOfInterest"],
  *          autocomplete : ["StreetAddress"],
@@ -112,6 +116,12 @@ export default SearchEngine;
  *  });
  *  SearchEngine.on("searchengine:geocode:click", function (e) {
  *    console.warn("geocode", e.location);
+ *  });
+ *  SearchEngine.on("searchengine:geolocation:click", function (e) {
+ *    console.warn("geolocation", e.);
+ *  });
+ *  SearchEngine.on("searchengine:coordinate:click", function (e) {
+ *    console.warn("coordinate", e.);
  *  });
  */
 declare var SearchEngine: ol.control.SearchEngine;

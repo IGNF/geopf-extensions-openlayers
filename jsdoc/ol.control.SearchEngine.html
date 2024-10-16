@@ -1225,7 +1225,11 @@
             
                 <div class="l3 itemMembers" data-name="module:SearchEngine~searchengine:autocomplete:click"> <a href="module-SearchEngine.html#~event:searchengine:autocomplete:click">searchengine:autocomplete:click</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:SearchEngine~searchengine:coordinates:click"> <a href="module-SearchEngine.html#~event:searchengine:coordinates:click">searchengine:coordinates:click</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:SearchEngine~searchengine:geocode:click"> <a href="module-SearchEngine.html#~event:searchengine:geocode:click">searchengine:geocode:click</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:SearchEngine~searchengine:geolocation:click"> <a href="module-SearchEngine.html#~event:searchengine:geolocation:click">searchengine:geolocation:click</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:SearchEngine~searchengine:search:click"> <a href="module-SearchEngine.html#~event:searchengine:search:click">searchengine:search:click</a> </div>
             
@@ -1237,7 +1241,11 @@
             
                 <li data-name="module:SearchEngine~searchengine:autocomplete:click"><a href="module-SearchEngine.html#~event:searchengine:autocomplete:click">searchengine:autocomplete:click</a></li>
             
+                <li data-name="module:SearchEngine~searchengine:coordinates:click"><a href="module-SearchEngine.html#~event:searchengine:coordinates:click">searchengine:coordinates:click</a></li>
+            
                 <li data-name="module:SearchEngine~searchengine:geocode:click"><a href="module-SearchEngine.html#~event:searchengine:geocode:click">searchengine:geocode:click</a></li>
+            
+                <li data-name="module:SearchEngine~searchengine:geolocation:click"><a href="module-SearchEngine.html#~event:searchengine:geolocation:click">searchengine:geolocation:click</a></li>
             
                 <li data-name="module:SearchEngine~searchengine:search:click"><a href="module-SearchEngine.html#~event:searchengine:search:click">searchengine:search:click</a></li>
             
@@ -5457,7 +5465,7 @@
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 153
+            Controls/SearchEngine/SearchEngine.js, line 163
         </div>
         
     </div>
@@ -5814,6 +5822,42 @@
                     
                 
                 <p>Marker style. Currently possible values are &quot;lightOrange&quot; (default value), &quot;darkOrange&quot;, &quot;red&quot; and &quot;turquoiseBlue&quot;.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">markerUrl</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    ""
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Marker url. By default, if not specified, use option markerStyle. Otherwise, you can added a http url or a base64 image.</p></td>
         </tr>
 	
 	
@@ -7265,6 +7309,10 @@ return zoom;<br>
         <li>searchengine:geocode:click</li>
     
         <li>searchengine:search:click</li>
+    
+        <li>searchengine:geolocation:click</li>
+    
+        <li>searchengine:coordinates:click</li>
     </ul>
     
 
@@ -7288,6 +7336,7 @@ return zoom;<br>
      displayButtonAdvancedSearch : true,
      displayButtonGeolocate : true,
      displayButtonCoordinateSearch : true,
+     markerStyle : "lightOrange" // "http://..." or "data/base64..."
      resources : {
          geocode : ["StreetAddress", "PositionOfInterest"],
          autocomplete : ["StreetAddress"],
@@ -7327,6 +7376,12 @@ return zoom;<br>
  });
  SearchEngine.on("searchengine:geocode:click", function (e) {
    console.warn("geocode", e.location);
+ });
+ SearchEngine.on("searchengine:geolocation:click", function (e) {
+   console.warn("geolocation", e.);
+ });
+ SearchEngine.on("searchengine:coordinate:click", function (e) {
+   console.warn("coordinate", e.);
  });</code></pre>
     
 
@@ -7417,7 +7472,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 1412
+            Controls/SearchEngine/SearchEngine.js, line 1428
         </div>
         
     </div>
@@ -7645,7 +7700,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 224
+            Controls/SearchEngine/SearchEngine.js, line 234
         </div>
         
     </div>
@@ -7726,7 +7781,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 265
+            Controls/SearchEngine/SearchEngine.js, line 275
         </div>
         
     </div>
@@ -7803,7 +7858,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 256
+            Controls/SearchEngine/SearchEngine.js, line 266
         </div>
         
     </div>
@@ -7884,7 +7939,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 233
+            Controls/SearchEngine/SearchEngine.js, line 243
         </div>
         
     </div>
@@ -8001,7 +8056,7 @@ return zoom;<br>
     
         
         <div class="tag-source">
-            Controls/SearchEngine/SearchEngine.js, line 200
+            Controls/SearchEngine/SearchEngine.js, line 210
         </div>
         
     </div>
@@ -8129,7 +8184,7 @@ return zoom;<br>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Oct 15 2024 14:01:23 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Oct 16 2024 12:32:24 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 
