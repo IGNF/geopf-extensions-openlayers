@@ -504,5 +504,11 @@
       left: -8px !important;
       right: unset !important;
   }
+
+  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
+      right: -4px !important;
+      left: unset !important;
+  }
 }
 
