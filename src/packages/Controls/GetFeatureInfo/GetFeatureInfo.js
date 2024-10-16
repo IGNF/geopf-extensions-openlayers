@@ -163,7 +163,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         this.panelGetFeatureInfoHeaderContainer = null; // usefull for the dragNdrop
         this.buttonGetFeatureInfoClose = null;
         this.getFeatureInfoAccordionGroup = null;
-
+        this.noDataMessage = null;
         this.panelGetFeatureInfoEntriesContainer = null;
 
         /** {Array} specify some events listeners */
@@ -212,6 +212,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
         getFeatureInfoPanelDiv.appendChild(accordionGroup);
 
+        this.noDataMessage = this._createGetFeatureInfoNoData();
         container.appendChild(getFeatureInfoPanel);
 
         logger.log(container);
@@ -263,6 +264,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     onMapClick (e) {
         if (this.getFeatureInfoIsActive() === "true") {
             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
+            this.noDataMessage.remove();
             this.getFeatureInfoAccordionGroup.remove();
             var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
             this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
@@ -418,12 +420,14 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             var layername = gfiLayer.layer.getSource().name ? gfiLayer.layer.getSource().name : gfiLayer.layer.getSource().url_;
             var content = null;
             var accordeon = this._createGetFeatureInfoLayerAccordion(layername);
+            var pending = true;
             return new AsyncData({
                 ...gfiLayer, 
                 ...{
                     layername : layername,
                     content : content,
-                    contentDiv : accordeon
+                    contentDiv : accordeon,
+                    pending : pending
                 }
             });
         });
@@ -434,11 +438,19 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         // Abonnement aux modifications de la valeur du contenu GFI.
         gfiContent.forEach((data) => {
             data.subscribe((key, value) => {
-                if (data.get("content")) {
-                    data.get("contentDiv").querySelector("div.fr-collapse").innerHTML = data.get("content");
-                }
-                else {
-                    data.get("contentDiv").remove();
+                if (key == "content") {
+                    data.set("pending", false);
+                    if (data.get("content")) {
+                        data.get("contentDiv").querySelector("div.fr-collapse").innerHTML = data.get("content");
+                    }
+                    else {
+                        data.get("contentDiv").remove();
+                    }
+                    //s'il n'y a aucun résultat valide on affiche un message d'erreur
+                    if (gfiContent.filter(gfi => gfi.get("pending") === true).length == 0
+                        && gfiContent.filter(gfi => gfi.get("content")).length == 0) {
+                        this.getFeatureInfoPanelDiv.append(this.noDataMessage);
+                    }
                 }
             });
         });

@@ -173,6 +173,19 @@ var GetFeatureInfoDOM = {
         return waitingDivString;
     },
 
+    /**
+     * Create group d'accodeon
+     * @returns {DOMElement} DOM element
+     */
+    _createGetFeatureInfoNoData : function () {
+        // contexte d'execution
+        var self = this;
+        var div = document.createElement("div");
+        div.className = "GPgetFeatureInfoNoData fr-py-2w fr-px-2w";
+        div.innerText = "Aucune donnée à afficher";
+        return div;
+    },
+
     // ################################################################### //
     // ####################### Methods for Layer GFI ####################### //
     // ################################################################### //
