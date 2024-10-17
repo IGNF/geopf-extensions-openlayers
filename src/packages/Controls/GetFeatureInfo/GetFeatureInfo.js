@@ -263,22 +263,28 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      */ 
     onMapClick (e) {
         if (this.getFeatureInfoIsActive() === "true") {
-            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
-            this.noDataMessage.remove();
             this.getFeatureInfoAccordionGroup.remove();
-            var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
-            this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
-            this.map = e.map;
-            this.pixel = e.pixel;
-            this.coordinates = e.coordinate;
+            this.noDataMessage.remove();
+            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
             this.layers = e.map.getLayers().getArray().filter((l) => {
                 // On ne passe au GFI que les layers visibles
                 if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
                     return l;
                 }
             }).reverse();
-            this.res = e.map.getView().getResolution();
-            this.displayGetFeatureInfo();
+            if (this.layers.length > 0) {
+                var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
+                this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
+                this.map = e.map;
+                this.pixel = e.pixel;
+                this.coordinates = e.coordinate;
+                this.res = e.map.getView().getResolution();
+                this.displayGetFeatureInfo();
+            }
+            // Aucun layer visible sur la carte
+            else {
+                this.getFeatureInfoPanelDiv.append(this.noDataMessage);
+            }
         }
     }
 
