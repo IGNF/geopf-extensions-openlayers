@@ -1,3 +1,17 @@
 div[id^=GPcatalog-] {
-    display: none;
+    display: block;
+}
+
+.GPshowCatalogPicto {
+    background-image: url("img/GPcatalogOpen.png");
+    background-repeat: no-repeat;
+    background-position: 0px center;
+}
+
+dialog[id^=GPcatalogPanel-] {
+    width: 280px;
+}
+
+.GPcatalogPanelClose {
+    background-image: url("img/GPcatalogOpen.png");
 }

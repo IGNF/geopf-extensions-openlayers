@@ -865,8 +865,10 @@ var Catalog = class Catalog extends Control {
             if (container) {
                 if (hidden) {
                     container.classList.add("gpf-hidden");
+                    container.classList.add("GPelementHidden");
                 } else {
                     container.classList.remove("gpf-hidden");
+                    container.classList.remove("GPelementHidden");
                 }
             }
         }
