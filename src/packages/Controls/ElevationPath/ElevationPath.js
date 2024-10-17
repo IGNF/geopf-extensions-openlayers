@@ -837,9 +837,18 @@ var ElevationPath = class ElevationPath extends Control {
 
         // create main container
         var container = this._createMainContainerElement();
-
         var picto = this._pictoButton = this._createShowElevationPathPictoElement();
         container.appendChild(picto);
+
+        var span = document.createElement("span");
+        span.className = "fr-tooltip fr-placement";
+        span.id = "tooltip-profil";
+        span.setAttribute("role", "tooltip");
+        span.setAttribute("aria-hidden", "true");
+        var t = document.createTextNode("Calculer un profillll");
+        
+        span.appendChild(t);
+        container.appendChild(span);
 
         // mode "active"
         if (this.options.active) {

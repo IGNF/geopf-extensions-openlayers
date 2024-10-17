@@ -45,6 +45,7 @@ var ElevationPathDOM = {
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
+        button.setAttribute("aria-describedby", "tooltip-profil");
 
         // gestionnaire d'evenement :
         // on ouvre le menu de saisie de saisie
