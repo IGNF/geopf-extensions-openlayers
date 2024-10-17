@@ -35,11 +35,9 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
   padding-right: 40px;
 }
 
-.gpf-btn-icon-layerswitcher {
-    background-image: url("img/dsfr/layerswitcher.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-layerswitcher::after {
+    -webkit-mask: url("img/dsfr/layerswitcher.svg") center no-repeat;
+    mask: url("img/dsfr/layerswitcher.svg") center no-repeat;
 }
 
 .gpf-btn-icon-ls-visibility {
@@ -287,31 +285,6 @@ div[id^=GPlayerInfoContent] {
 }
 
 @media (max-width: 576px) {
-    button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        width: 100vw;
-    }
-
-    .position-container-top-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        transform: translate(58px, -4px);
-    }
-    .position-container-top-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        transform: translate(-62px, -4px);
-    }
-    .position-container-bottom-right:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"]) {
-        top: 4px;
-        bottom: unset;
-    }
-    .position-container-bottom-right button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        transform: translate(58px, calc(100% - 48px));
-    }
-    .position-container-bottom-left:has(button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"]) {
-        top: 4px;
-        bottom: unset;
-    }
-    .position-container-bottom-left button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"] {
-        transform: translate(-62px, calc(100% - 48px));
-    }
-
     .GPlayerAdvancedTools {
         width: calc(100% + 40px);
     }

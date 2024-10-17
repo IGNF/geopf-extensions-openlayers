@@ -138,15 +138,17 @@
 /* button  */
 /***********/
 
-.gpf-btn {}
+.gpf-btn-icon.gpf-btn--secondary {
+  background-color: var(--background-default-grey);
+}
 
-.gpf-btn-icon:not([class*=--secondary]):not([class*=--tertiary])[aria-pressed="true"] {
+.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"] {
   background-color: var(--hover-tint);
   position: relative;
 }
 
-.gpf-btn-icon:not([class*=--secondary]):not([class*=--tertiary])[aria-pressed="true"]::before {
-  background-color: var(--hover-tint);
+.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"]::before {
+  background-color: var(--background-action-high-blue-france);
   content: "";
   width: 3px;
   height: 100%;
@@ -308,13 +310,14 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   /* crée un décalage sur le searchEngine */
   /* align-items: center; */
   /* + 5px pour l'indicateur "bouton actif" */
   width: calc(var(--size-per-row) + 4px);
   min-height: var(--size-per-row);
   /* padding: 5px; */
+  height: calc(100% - 8px);
 }
 
 .position-container-top-left,
@@ -335,6 +338,7 @@
 .position-container-bottom-left,
 .position-container-bottom-right {
   bottom: 4px;
+  justify-content: flex-end;
 }
 
 .position-container-bottom-right {
@@ -485,4 +489,25 @@
 
 .fr-collapse:not(.fr-collapse--expanded):not(.fr-collapsing) {
   --collapse-max-height: 0;
+}
+
+@media (max-width: 576px) {
+  .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
+      width: 100vw !important;
+  }
+
+  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-top-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
+      top: -4px !important;
+      left: -8px !important;
+      right: unset !important;
+  }
+
+  .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
+  .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog {
+      right: -4px !important;
+      left: unset !important;
+  }
 }

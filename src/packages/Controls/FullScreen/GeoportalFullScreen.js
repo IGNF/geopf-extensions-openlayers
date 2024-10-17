@@ -80,7 +80,7 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         this.element.classList.remove("ol-full-screen", "ol-unselectable", "ol-control");
 
         var button = this.element.childNodes[0];
-        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPfullScreenPicto", "fr-btn");
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPfullScreenPicto", "fr-btn", "fr-btn--secondary", "gpf-btn--secondary", "gpf-btn", "gpf-btn-icon");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -125,6 +125,15 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         }
         this.setTarget(this.options.target);
         super.setMap(map);
+    }
+
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
     }
 
 };

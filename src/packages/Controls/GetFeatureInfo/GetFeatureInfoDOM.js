@@ -1,5 +1,3 @@
-var title = "GetFeatureInfo";
-
 var GetFeatureInfoDOM = {
 
     /**
@@ -69,9 +67,9 @@ var GetFeatureInfoDOM = {
         var self = this;
 
         var button = document.createElement("button");
-        button.id = this._addUID("GPshowGetFeatureInfoPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGetFeatureInfoPicto gpf-btn gpf-btn-icon gpf-btn-icon-getFeatureInfo fr-btn";
-        button.title = `${title}`;
+        button.id = this._addUID("GPgetFeatureInfoPicto");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPgetFeatureInfoPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-getfeatureinfo fr-btn fr-btn--secondary";
+        button.title = "Activer/désactiver l'interrogation des couches";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -130,7 +128,7 @@ var GetFeatureInfoDOM = {
     _createGetFeatureInfoPanelTitleElement : function () {
         var div = document.createElement("div");
         div.className = "gpf-panel__title fr-modal__title fr-pt-4w";
-        div.innerHTML = `${title}`;
+        div.innerHTML = "GetFeatureInfo";
         return div;
     },
     _createGetFeatureInfoPanelCloseElement : function () {

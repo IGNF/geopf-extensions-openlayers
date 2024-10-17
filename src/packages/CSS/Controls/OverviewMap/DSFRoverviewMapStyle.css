@@ -1,9 +1,4 @@
-.gpf-btn-icon-overviewmap {
-    background-image: url("img/overviewmap.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
-    box-shadow: none;
-    height: inherit;
-    width: inherit;
+.gpf-btn-icon-overviewmap::after {
+    -webkit-mask: url("img/overviewmap.svg") center no-repeat;
+    mask: url("img/overviewmap.svg") center no-repeat;
 }

@@ -67,7 +67,7 @@ var LayerSwitcherDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher");
-        container.className = "GPwidget gpf-widget"; // gpf-widget-button
+        container.className = "GPwidget gpf-widget gpf-mobile-fullscreen"; // gpf-widget-button
         return container;
     },
 
@@ -116,7 +116,7 @@ var LayerSwitcherDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowLayersListPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn fr-btn--secondary";
         button.htmlFor = this._addUID("GPshowLayersList");
         button.title = "Afficher/masquer le gestionnaire de couches";
         button.setAttribute("tabindex", "0");
@@ -209,6 +209,12 @@ var LayerSwitcherDOM = {
         btnClose.id = this._addUID("GPlayersPanelClose");
         btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible fr-mx-1w"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        btnClose.appendChild(span);
 
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
@@ -704,7 +710,7 @@ var LayerSwitcherDOM = {
         button.title = "Zoomer dans l'étendue";
         button.layerId = obj.id;
         if (contextual) {
-            button.innerText = "Zommer";
+            button.innerText = "Zoomer";
         }
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
@@ -781,6 +787,12 @@ var LayerSwitcherDOM = {
             // internet explorer
             btnClose.attachEvent("onclick", onCloseClick);
         }
+        this.addEventListener("layerswitcher:remove", (e) => {
+            if (parseInt(obj.id.split("-")[0].split("GPinfo_ID_")[1]) === e.layer.id) {
+                document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+                document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
+            }
+        });
         header.appendChild(btnClose);
         container.appendChild(header);
 
@@ -869,6 +881,7 @@ var LayerSwitcherDOM = {
                         var reflgd = document.createElement("a");
                         reflgd.className = "fr-link";
                         reflgd.href = urllgd;
+                        reflgd.target = "_blank";
                         reflgd.innerHTML = "Du 1/" + scale + " au 1/" + maxScale;
                         lgdlink.appendChild(reflgd);
                         lgd.appendChild(lgdlink);

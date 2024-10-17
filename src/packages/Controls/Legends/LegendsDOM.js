@@ -37,7 +37,7 @@ var LegendsDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowLegendsPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLegendsPicto gpf-btn gpf-btn-icon gpf-btn-icon-legends fr-btn";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLegendsPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-legends fr-btn fr-btn--secondary";
         button.title = "Afficher les légendes";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
@@ -111,8 +111,14 @@ var LegendsDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
         btnClose.title = "Fermer le panneau";
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        btnClose.appendChild(span);
 
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
@@ -131,7 +137,7 @@ var LegendsDOM = {
     // ################################################################### //
     // ####################### Methods dynamics ########################## //
     // ################################################################### //
-    
+
     _createLegendElement : function () {
         var div = document.createElement("div");
         div.className = "legends-entries gpf-panel__body fr-modal__body";
@@ -140,8 +146,8 @@ var LegendsDOM = {
 
     _createLegendEntry : function (o) {
         // Liste des informations :
-        // id  
-        // title  
+        // id
+        // title
         // legends
         // metadatas
         // desc
@@ -161,26 +167,26 @@ var LegendsDOM = {
                 }
                 return true;
             };
-    
+
             // If DOMParser is supported, use it
             if (support()) {
                 var parser = new DOMParser();
                 var doc = parser.parseFromString(str, "text/html");
                 return doc.body;
             }
-    
+
             // Otherwise, fallback to old-school method
             var dom = document.createElement("div");
             dom.innerHTML = str;
             return dom;
         };
-        
+
         if (o) {
             if (o.legends && o.legends.length) {
                 var url = o.legends[0].url; // 1ere valeur par defaut
                 var entry = stringToHTML(`
-                    <div 
-                        id="${o.id}" 
+                    <div
+                        id="${o.id}"
                         class="legend-entry-container gpf-panel__content fr-modal__content">
                         <label class="legend-entry-title gpf-label-legends-name fr-label">${o.title}</label>
                         <button

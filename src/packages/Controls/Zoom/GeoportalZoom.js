@@ -34,17 +34,17 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
      * @param {*} options - options
      * @example
      * import GeoportalZoom from "gpf-ext-ol/controls/GeoportalZoom"
-     * ou 
+     * ou
      * import { GeoportalZoom } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};
 
-        // FIXME comment traite t on les options sur les classes 
+        // FIXME comment traite t on les options sur les classes
         // du contrôle natif ?
-        // * className, 
+        // * className,
         // * zoomInClassName, zoomOutClassName,
-        // * zoomInLabel, zoomOutLabel, 
+        // * zoomInLabel, zoomOutLabel,
         // * zoomInTipLabel, zoomOutTipLabel
         var className = "ol-custom-zoom";
         options.className = className;
@@ -87,7 +87,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
             const btn = buttons[index];
             if (btn.classList.contains(this.options.className + "-in")) {
                 // btn.classList.remove("ol-custom-zoom-in");
-                btn.classList.add("GPzoomIn", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--primary");
+                btn.classList.add("GPzoomIn", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--secondary", "gpf-btn", "gpf-btn--secondary", "gpf-btn-icon");
                 btn.id = "GPzoomIn";
                 btn.innerHTML = "";
                 if (btn.addEventListener) {
@@ -106,7 +106,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
             }
             if (btn.classList.contains(this.options.className + "-out")) {
                 // btn.classList.remove("ol-custom-zoom-out");
-                btn.classList.add("GPzoomOut", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--primary");
+                btn.classList.add("GPzoomOut", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--secondary", "gpf-btn", "gpf-btn--secondary", "gpf-btn-icon");
                 btn.id = "GPzoomOut";
                 btn.innerHTML = "";
                 if (btn.addEventListener) {
@@ -142,7 +142,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
             this._initContainer();
             // INFO
             // on ne supprime pas le zoom par defaut,
-            // on le desactive simplement pour éviter des effets de bords 
+            // on le desactive simplement pour éviter des effets de bords
             // (ex. evenement de suppression d'un element de la collection)
             var controls = map.getControls();
             controls.forEach(ctrl => {
@@ -154,6 +154,15 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         }
         this.setTarget(this.options.target);
         super.setMap(map);
+    }
+
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
     }
 
 };

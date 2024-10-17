@@ -224,6 +224,16 @@ var Territories = class Territories extends Control {
             this.panelTerritoriesEntriesContainer.classList.remove("tiles-reduce");
         }
     }
+
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
+    
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //

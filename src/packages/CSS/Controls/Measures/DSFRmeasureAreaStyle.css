@@ -1,6 +1,4 @@
-.gpf-btn-icon-area {
-    background-image: url("img/mesurer-surface.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-area::after {
+    -webkit-mask: url("img/mesurer-surface.svg") center no-repeat;
+    mask: url("img/mesurer-surface.svg") center no-repeat;
 }

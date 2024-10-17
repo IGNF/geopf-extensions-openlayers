@@ -58,10 +58,28 @@
                         resources : {
                           search : true
                         },
+                        markerUrl : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAzNiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjMDAwMDkxIiBkPSJNMTguMzY0IDMuNjM2YTkgOSAwIDAgMSAwIDEyLjcyOEwxMiAyMi43MjhsLTYuMzY0LTYuMzY0QTkgOSAwIDAgMSAxOC4zNjQgMy42MzZaTTEyIDhhMiAyIDAgMSAwIDAgNCAyIDIgMCAwIDAgMC00WiIvPjwvc3ZnPg=="
                     });
 
 					// 3. Ajout du SearchEngine à la carte
                     map.addControl(search);
+
+                    // 4. Evenements
+                    search.on("searchengine:autocomplete:click", function (e) {
+                        console.warn("autocomplete", e.location);
+                    });
+                    search.on("searchengine:search:click", function (e) {
+                        console.warn("search", e.suggest);
+                    });
+                    search.on("searchengine:geocode:click", function (e) {
+                        console.warn("location", e.location);
+                    });
+                    search.on("searchengine:geolocation:click", function (e) {
+                        console.warn("geolocation", e.coordinates);
+                    });
+                    search.on("searchengine:coordinates:click", function (e) {
+                        console.warn("coordinate", e.coordinates);
+                    });
                 };
            </script>
 {{/content}}

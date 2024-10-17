@@ -1,6 +1,4 @@
-.gpf-btn-icon-catalog {
-    background-image: url("img/dsfr/catalog.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-catalog::after {
+    -webkit-mask: url("img/dsfr/catalog.svg") center no-repeat;
+    mask: url("img/dsfr/catalog.svg") center no-repeat;
 }

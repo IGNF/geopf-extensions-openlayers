@@ -19,6 +19,7 @@ Un nouvelle version du GFI avec un fonctionnement et des options differentes de 
 
 * ✨ [Added]
 
+  * SearchEngine : Ajout de l'option `markerUrl` pour afficher un marker de position personnalisé (#197)
   * Catalog: Nouveau widget Catalog (#155)
   * Territories: Nouveau widget Selecteur de territoires (#115)
   * Legends: Nouveau widget Legends (#103)

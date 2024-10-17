@@ -52,6 +52,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {String}  [options.placeholder] - Placeholder in search bar. Default is "Rechercher un lieu, une adresse".
  * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
  * @param {String}  [options.markerStyle = "lightOrange"] - Marker style. Currently possible values are "lightOrange" (default value), "darkOrange", "red" and "turquoiseBlue".
+ * @param {String}  [options.markerUrl = ""] - Marker url. By default, if not specified, use option markerStyle. Otherwise, you can added a http url or a base64 image.
  * @param {Boolean} [options.displayButtonAdvancedSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
@@ -99,6 +100,8 @@ var logger = Logger.getLogger("searchengine");
  * @fires searchengine:autocomplete:click
  * @fires searchengine:geocode:click
  * @fires searchengine:search:click
+ * @fires searchengine:geolocation:click
+ * @fires searchengine:coordinates:click
  * @todo option : direction (start|end) de la position du picto (loupe)
  * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
  * @example
@@ -109,6 +112,7 @@ var logger = Logger.getLogger("searchengine");
  *      displayButtonAdvancedSearch : true,
  *      displayButtonGeolocate : true,
  *      displayButtonCoordinateSearch : true,
+ *      markerStyle : "lightOrange" // "http://..." or "data/base64..."
  *      resources : {
  *          geocode : ["StreetAddress", "PositionOfInterest"],
  *          autocomplete : ["StreetAddress"],
@@ -148,6 +152,12 @@ var logger = Logger.getLogger("searchengine");
  *  });
  *  SearchEngine.on("searchengine:geocode:click", function (e) {
  *    console.warn("geocode", e.location);
+ *  });
+ *  SearchEngine.on("searchengine:geolocation:click", function (e) {
+ *    console.warn("geolocation", e.);
+ *  });
+ *  SearchEngine.on("searchengine:coordinate:click", function (e) {
+ *    console.warn("coordinate", e.);
  *  });
  */
 var SearchEngine = class SearchEngine extends Control {
@@ -257,6 +267,14 @@ var SearchEngine = class SearchEngine extends Control {
         return this._geocodedLocations;
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //
@@ -275,7 +293,6 @@ var SearchEngine = class SearchEngine extends Control {
             collapsed : true,
             collapsible : true,
             zoomTo : "",
-
             resources : {
                 geocode : [],
                 autocomplete : [],
@@ -305,6 +322,7 @@ var SearchEngine = class SearchEngine extends Control {
             },
             displayMarker : true,
             markerStyle : "lightOrange",
+            markerUrl : "",
             placeholder : "Rechercher un lieu, une adresse",
             splitResults : true,
         };
@@ -424,9 +442,14 @@ var SearchEngine = class SearchEngine extends Control {
         // marker
         this._marker = null;
 
-        // marker style
+        // marker style or url
         var _markerStyle = this.options.markerStyle;
-        this._markerUrl = (Object.keys(Markers).indexOf(_markerStyle) === -1) ? Markers["lightOrange"] : Markers[_markerStyle];
+        var _markerUrl = this.options.markerUrl;
+        if (_markerUrl) {
+            this._markerUrl = _markerUrl;
+        } else {
+            this._markerUrl = (Object.keys(Markers).indexOf(_markerStyle) === -1) ? Markers["lightOrange"] : Markers[_markerStyle];
+        }
 
         // marker display
         this._displayMarker = this.options.displayMarker;
@@ -1254,7 +1277,8 @@ var SearchEngine = class SearchEngine extends Control {
             // création du marker (overlay)
             this._marker = new Overlay({
                 position : position,
-                offset : [-25.5, -38],
+                // offset : [-25.5, -38], // FIXME mauvais rendu !?
+                positioning : "center-center",
                 element : markerDiv,
                 stopEvent : false
             });
@@ -1507,6 +1531,22 @@ var SearchEngine = class SearchEngine extends Control {
                 if (this._displayMarker) {
                     this._setMarker(coordinates, "sans information");
                 }
+                /**
+                 * event triggered when i want a geolocation
+                 *
+                 * @event searchengine:geolocation:click
+                 * @property {Object} type - event
+                 * @property {Object} coordinates - coordinates
+                 * @property {Object} target - instance SearchEngine
+                 * @example
+                 * SearchEngine.on("searchengine:geolocation:click", function (e) {
+                 *   console.log(e.coordinates);
+                 * })
+                 */
+                this.dispatchEvent({
+                    type : "searchengine:geolocation:click",
+                    coordinates : coordinates
+                });
             });
         } else {
             /* geolocation IS NOT available */
@@ -1551,6 +1591,23 @@ var SearchEngine = class SearchEngine extends Control {
         if (this._displayMarker) {
             this._setMarker(coordinates, "sans information");
         }
+
+        /**
+         * event triggered when we are positioned
+         *
+         * @event searchengine:coordinates:click
+         * @property {Object} type - event
+         * @property {Object} coordinates - coordinates
+         * @property {Object} target - instance SearchEngine
+         * @example
+         * SearchEngine.on("searchengine:coordinates:click", function (e) {
+         *   console.log(e.coordinates);
+         * })
+         */
+        this.dispatchEvent({
+            type : "searchengine:coordinates:click",
+            coordinates : coordinates
+        });
     }
 
     _getCoordinateSearchDMS (dom) {

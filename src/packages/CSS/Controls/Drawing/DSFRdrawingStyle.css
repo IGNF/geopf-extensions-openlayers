@@ -1,6 +1,4 @@
-.gpf-btn-icon-drawing {
-  background-image: url("img/modifier.svg");
-  background-repeat: no-repeat;
-  background-size: auto auto;
-  background-position: center center;
+.gpf-btn-icon-drawing::after {
+  -webkit-mask: url("img/modifier.svg") center no-repeat;
+  mask: url("img/modifier.svg") center no-repeat;
 }

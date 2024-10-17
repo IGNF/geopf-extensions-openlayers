@@ -153,10 +153,10 @@ var MousePosition = class MousePosition extends Control {
         this._initialize(options);
 
         // init control DOM container
-        var container = this._initContainer(this.options);
+        this.container = this._initContainer(this.options);
 
         // ajout du container
-        (this.element) ? this.element.appendChild(container) : this.element = container;
+        (this.element) ? this.element.appendChild(this.container) : this.element = this.container;
 
         return this;
     };
@@ -484,6 +484,14 @@ var MousePosition = class MousePosition extends Control {
         this._showMousePositionContainer.checked = !collapsed;
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
     // ################################################################### //
     // ######################## initialize control ####################### //
     // ################################################################### //

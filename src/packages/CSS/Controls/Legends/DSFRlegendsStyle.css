@@ -1,8 +1,6 @@
-.gpf-btn-icon-legends {
-    background-image: url("img/dsfr/legends.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
+.gpf-btn-icon-legends::after {
+    -webkit-mask: url("img/dsfr/legends.svg") center no-repeat;
+    mask: url("img/dsfr/legends.svg") center no-repeat;
 }
 
 .gpf-btn-header-legends {
