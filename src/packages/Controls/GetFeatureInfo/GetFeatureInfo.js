@@ -17,6 +17,7 @@ import AsyncData from "../Utils/AsyncData";
 
 // DOM
 import GetFeatureInfoDOM from "./GetFeatureInfoDOM";
+import Config from "../../Utils/Config";
 
 var logger = Logger.getLogger("getFeatureInfo");
 
@@ -425,7 +426,16 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         });
         // Structuration de l'objet pour afficher les GFI par layer
         var gfiContent = gfiLayers.map((gfiLayer) => {
+            if (!Config.isConfigLoaded()) {
+                throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
+            }
+
             var layername = gfiLayer.layer.getSource().name ? gfiLayer.layer.getSource().name : gfiLayer.layer.getSource().url_;
+
+            var layerconf = Config.configuration.getLayerParams(layername, gfiLayer.format);
+            if (layerconf && Object.keys(layerconf).length !== 0) {
+                layername = layerconf.title;
+            }
             var content = null;
             var accordeon = this._createGetFeatureInfoLayerAccordion(layername);
             var pending = true;
