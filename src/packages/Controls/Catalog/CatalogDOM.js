@@ -123,12 +123,12 @@ var CatalogDOM = {
      */
     _createCatalogPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
         return container;
     },
     _createCatalogPanelTitleElement : function (title) {
         var div = document.createElement("div");
-        div.className = "gpf-panel__title fr-modal__title fr-pt-4w";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         div.innerHTML = title;
         return div;
     },
@@ -136,7 +136,8 @@ var CatalogDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.id = this._addUID("GPcatalogPanelClose");
+        btnClose.className = "GPpanelClose GPcatalogPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -242,9 +243,11 @@ var CatalogDOM = {
     _createCatalogContentCategoriesTabs : function (categories) {
         var strTabButtons = "";
         var tmplTabButton = (i, id, title, selected) => {
+            var className = "GPtabButton fr-tabs__tab";
             var value = "false";
             var tabindex = -1;
             if (selected) {
+                className = "GPtabButton GPtabButtonActive fr-tabs__tab";
                 value = "true";
                 tabindex = 0;
             }
@@ -252,8 +255,8 @@ var CatalogDOM = {
             // > "tabbutton-${i}_${id}".split('_')[1]
             // et l'attribut 'aria-controls' permet de retrouver le panneau du contenu
             return `
-            <li role="presentation">
-                <button id="tabbutton-${i}_${id}" class="fr-tabs__tab" tabindex="${tabindex}" role="tabbutton" aria-selected="${value}" aria-controls="tabpanel-${i}-panel_${id}">${title}</button>
+            <li class="GPtabList" role="presentation">
+                <button id="tabbutton-${i}_${id}" class="${className}" tabindex="${tabindex}" role="tabbutton" aria-selected="${value}" aria-controls="tabpanel-${i}-panel_${id}">${title}</button>
             </li>
             `;
         };
@@ -282,7 +285,7 @@ var CatalogDOM = {
                 strSectionRadios += tmplSectionRadio(section);
                 var hidden = "";
                 if (!section.default) {
-                    hidden = "gpf-hidden";
+                    hidden = "GPelementHidden gpf-hidden";
                 }
                 strTabContents += `<div class="tabcontent ${hidden}" role="tabpanel-section" id="tabcontent-${section.id}"></div>`;
             }
@@ -298,10 +301,10 @@ var CatalogDOM = {
 
         var strTabPanelContents = "";
         var tmplTabPanelContent = (i, id, selected, sections) => {
-            var className = "fr-tabs__panel";
+            var className = "GPtabContent fr-tabs__panel";
             var tabindex = -1;
             if (selected) {
-                className = "fr-tabs__panel fr-tabs__panel--selected";
+                className = "GPtabContent GPtabContentSelected fr-tabs__panel fr-tabs__panel--selected";
                 tabindex = 0;
             }
             var strTabContent = "<div class=\"tabcontent\"></div>";
@@ -327,8 +330,8 @@ var CatalogDOM = {
         var strContainer = `
         <!-- onglets -->
         <div class="catalog-container-tabs">
-            <div class="fr-tabs">
-                <ul class="fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
+            <div class="GPtabs fr-tabs">
+                <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
                     ${strTabButtons}
                 </ul>
                 ${strTabPanelContents}
@@ -350,9 +353,11 @@ var CatalogDOM = {
                     for (let j = 0; j < panelSections.length; j++) {
                         const section = panelSections[j];
                         section.classList.add("gpf-hidden");
+                        section.classList.add("GPelementHidden");
                     }
                     var panel = document.getElementById(e.target.getAttribute("aria-controls"));
                     panel.classList.remove("gpf-hidden");
+                    panel.classList.remove("GPelementHidden");
                 });
             });
         }
@@ -370,11 +375,13 @@ var CatalogDOM = {
                         const button = buttons[i];
                         button.setAttribute("tabindex", -1);
                         button.ariaSelected = false;
+                        button.classList.remove("GPtabButtonActive");
                     }
                     // modif tabindex=0
                     e.target.setAttribute("tabindex", 0);
                     // modif aria-selected=true
                     e.target.ariaSelected = true;
+                    e.target.classList.add("GPtabButtonActive");
                     // modifier les autres panneaux :
                     //   supp class fr-tabs__panel--selected
                     //   modif tabindex=-1
@@ -382,7 +389,9 @@ var CatalogDOM = {
                         const panel = panelContents[j];
                         panel.setAttribute("tabindex", -1);
                         panel.classList.remove("fr-tabs__panel--selected");
+                        panel.classList.remove("GPtabContentSelected");
                         panel.classList.add("gpf-hidden");
+                        panel.classList.add("GPelementHidden");
                     }
                     // recup id du panneau avec aria-controls
                     //   ajouter class fr-tabs__panel--selected
@@ -390,7 +399,9 @@ var CatalogDOM = {
                     var panel = document.getElementById(e.target.getAttribute("aria-controls"));
                     panel.setAttribute("tabindex", 0);
                     panel.classList.add("fr-tabs__panel--selected");
+                    panel.classList.add("GPtabContentSelected");
                     panel.classList.remove("gpf-hidden");
+                    panel.classList.remove("GPelementHidden");
                     // appel
                     this.onSelectCatalogTabClick(e);
                 });
