@@ -271,7 +271,8 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
                 if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
                     return l;
                 }
-            }).reverse();
+                // tri le tableau des layers selon le z-index pour avoir le même affichage que dans le layerswitcher
+            }).sort((a, b) => b.getZIndex() - a.getZIndex());
             if (this.layers.length > 0) {
                 var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
                 this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
@@ -388,6 +389,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
                         text.indexOf("java.lang.NullPointerException") !== -1 ||
                         text.indexOf("java.lang.OutOfMemoryError") !== -1 ||
                         text.indexOf("not queryable") !== -1 ||
+                        text.indexOf("No data") !== -1 ||
                         text.indexOf("non interrogeable") !== -1) {
                         // rien à afficher
                         exception = true;
