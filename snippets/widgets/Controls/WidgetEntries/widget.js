@@ -22,6 +22,8 @@ var logger = Logger.getLogger("widget");
  *
  * @constructor
  * @alias ol.control.Widget
+ * @type {ol.control.Widget}
+ * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  * 
  * @fires custom:action
@@ -29,7 +31,7 @@ var logger = Logger.getLogger("widget");
  * var widget = new ol.control.Widget();
  * map.addControl(widget);
  */
-class Widget extends Control {
+var Widget = class Widget extends Control {
 
     /**
      * See {@link ol.control.Widget}

@@ -91,33 +91,7 @@
 
             // 3. Ajout du GetFeatureInfo
             var getFeatureInfo = new ol.control.GetFeatureInfo({
-                    layers : [
-                        {
-                            obj : gpHydro,
-                            infoFormat : "text/html",
-                            event: "contextmenu"
-                        },
-                        {
-                            obj : gpMyKml,
-                            infoFormat : "text/html",
-                            event: "dblclick"
-                        },
-                        {
-                            obj : gpRoad,
-                        },
-                        {
-                            obj : gpDrone,
-                        }
-                    ],
-                    options : {
-                        auto : true,
-                        active: true,
-                        defaultInfoFormat: "text/html",
-                        defaultEvent: "singleclick",
-                        cursorStyle: "pointer",
-                        // noProxyDomains: [],
-                        // proxyUrl: ""
-                    }
+                    position: "bottom-left"
             });
             map.addControl(getFeatureInfo);
 
