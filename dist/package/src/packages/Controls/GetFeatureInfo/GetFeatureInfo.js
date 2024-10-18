@@ -17,7 +17,6 @@ import AsyncData from "../Utils/AsyncData";
 
 // DOM
 import GetFeatureInfoDOM from "./GetFeatureInfoDOM";
-import Config from "../../Utils/Config";
 
 var logger = Logger.getLogger("getFeatureInfo");
 
@@ -417,6 +416,24 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     }
 
     /**
+     * Get layer title
+     *
+     * @param {Object} gfiLayer - the layer object used by the gfi widget
+     * @returns {String} layerTitle - layer title
+     */
+    getLayerTitle (gfiLayer) {
+        if (gfiLayer.layer.getProperties !== undefined && gfiLayer.layer.getSource !== undefined) {
+            var layerProperties = gfiLayer.layer.getProperties();
+            var src = layerProperties.source;
+            var layerTitle = "";
+            if (src) {
+                layerTitle = src._title || src.name || src.url_;
+            }
+        }
+        return layerTitle;
+    }
+
+    /**
      * Main render function
      * @private
      */ 
@@ -424,18 +441,11 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         var gfiLayers = this.layers.map((l) => {
             return this.getGetFeatureInfoLayer(l);
         });
+
         // Structuration de l'objet pour afficher les GFI par layer
         var gfiContent = gfiLayers.map((gfiLayer) => {
-            if (!Config.isConfigLoaded()) {
-                throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
-            }
+            var layername = this.getLayerTitle(gfiLayer);
 
-            var layername = gfiLayer.layer.getSource().name ? gfiLayer.layer.getSource().name : gfiLayer.layer.getSource().url_;
-
-            var layerconf = Config.configuration.getLayerParams(layername, gfiLayer.format);
-            if (layerconf && Object.keys(layerconf).length !== 0) {
-                layername = layerconf.title;
-            }
             var content = null;
             var accordeon = this._createGetFeatureInfoLayerAccordion(layername);
             var pending = true;
