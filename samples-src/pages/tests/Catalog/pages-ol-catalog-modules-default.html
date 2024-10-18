@@ -1,0 +1,106 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+          
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample OpenLayers LayerCatalog</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+                background-image:url("{{ resources }}/geoportail-waiting.gif");
+                background-position:center center;
+                background-repeat:no-repeat;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du gestionnaire de catalogue avec options par defaut</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                if (window.Gp) {
+                    // activation des loggers
+                    Gp.Logger.enableAll();
+                }
+                var map;
+                var createMap = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    //Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                opacity: 0.5
+                            })
+                        ],
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 8
+                        })
+                    });
+
+                    var catalog = new ol.control.Catalog({
+                        position: "top-left",
+                        collapsed : false
+                    });
+                    catalog.on("catalog:loaded", (e) => {
+                        console.log(e);
+                    });
+                    catalog.on("catalog:layer:add", (e) => {
+                        console.log(e);
+                    });
+                    catalog.on("catalog:layer:remove", (e) => {
+                        console.log(e);
+                    });
+                    map.addControl(catalog);
+                    
+                    layerSwitcher = new ol.control.LayerSwitcher({
+                        options : {
+                            position : "bottom-right",
+                            collapsed : false,
+                            panel : true,
+                            counter : true
+                        }
+                    });
+
+                    layerSwitcher.on("layerswitcher:add", function (e) {
+                        console.warn("layer", e, e.layer);
+                    });
+                    layerSwitcher.on("layerswitcher:remove", function (e) {
+                        console.warn("layer", e, e.layer);
+                    });
+
+                    map.addControl(layerSwitcher);
+                };
+                Gp.Services.getConfig({
+                    customConfigFile : "{{ configurl }}",
+                    callbackSuffix : "",
+                    // apiKey: "{{ apikey }}",
+                    timeOut : 20000,
+                    onSuccess : createMap,
+                    onFailure : (e) => {
+                        console.error(e);
+                    }
+                });
+           </script>
+{{/content}}
+
+{{/extend}}

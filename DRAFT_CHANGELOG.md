@@ -32,6 +32,7 @@ Un nouvelle version du GFI avec un fonctionnement et des options differentes de 
 
 * 🔨 [Changed]
 
+  * Catalog: Ajout du widget dans le thème classique (#209)
   * GetFeatureInfo : Nouvelle version du GFI (#169)
   * Mise à jour de la documentation pour les nouveaux widgets (#170)
   * SearchEngine : Modification de l'option `opened:false` en `collapsible:true`
