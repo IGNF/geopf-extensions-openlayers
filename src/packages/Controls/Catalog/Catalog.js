@@ -830,7 +830,9 @@ var Catalog = class Catalog extends Control {
                 var words = "";
                 for (let i = 0; i < criteria.length; i++) {
                     const c = criteria[i];
-                    words += layer[c].toLowerCase();
+                    if (layer[c]) {
+                        words += layer[c].toLowerCase();
+                    }
                 }
                 layer.hidden = !words.includes(value.toLowerCase());
                 this.updateFilteredLayersListDOM(layer.name, layer.service, layer.hidden);
