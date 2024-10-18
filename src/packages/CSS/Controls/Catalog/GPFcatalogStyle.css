@@ -50,3 +50,13 @@ dialog[id^=GPcatalogPanel-] {
 .GPtabContentSelected {
     display: block;
 }
+
+.GPshowCatalogAdvancedTools {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    background-image: url("img/GPcatalogTools.png");
+    background-position: -26px 0;
+
+}

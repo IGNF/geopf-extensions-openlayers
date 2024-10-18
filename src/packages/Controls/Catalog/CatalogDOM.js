@@ -440,14 +440,16 @@ var CatalogDOM = {
 
         // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
         var tmplSection = (id, categoryId, title, count, data) => {
-            // FIXME la maquette ne possède pas de compteur de couches
+            // INFO la maquette ne possède pas de compteur de couches
             return `
             <!-- section -->
             <section class="fr-accordion" style="width:100%;">
                 <h3 class="fr-accordion__title">
-                    <button class="fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">${title}</button>
+                    <button class="fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">
+                        <span class="GPshowCatalogAdvancedTools gpf-hidden"></span>${title}
+                    </button>
                 </h3>
-                <div class="fr-collapse" id="accordion-${id}">
+                <div class="fr-collapse GPelementHidden" id="accordion-${id}">
                     ${data}
                 </div>
             </section>
@@ -529,10 +531,15 @@ var CatalogDOM = {
                 button.addEventListener("click", (e) => {
                     e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
                     var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
                     if (e.target.ariaExpanded === "true") {
                         collapse.classList.add("fr-collapse--expanded");
+                        collapse.classList.remove("GPelementHidden");
                     } else {
                         collapse.classList.remove("fr-collapse--expanded");
+                        collapse.classList.add("GPelementHidden");
                     }
                 });
             });
