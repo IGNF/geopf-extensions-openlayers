@@ -159,6 +159,7 @@
 .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before {
   content: attr(title);
   position: absolute;
+  top: 0;
   color: var(--text-default-grey);
   font-size: .75rem;
   width: fit-content;
