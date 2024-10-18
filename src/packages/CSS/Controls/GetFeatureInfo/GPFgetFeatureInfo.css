@@ -1,10 +1,86 @@
-/* GET FEATURE INFO */
-
 div[id^=GPgetFeatureInfo-] {
-  top: 260px;
-  left: 10px;
+    top: 260px;
+    left: 10px;
+  }
+
+/* Showing/hiding */
+
+dialog:has(button.GPcloseGetFeatureInfo[aria-pressed="true"]) {
+  display: block;
+  visibility: visible;
+  opacity: 100%;
+  width: 350px;
+  height: initial;
 }
 
-button[id^="GPgetFeatureInfoPicto-"][aria-pressed="false"] {}
-  
-button[id^="GPgetFeatureInfoPicto-"][aria-pressed="true"] {}
+dialog:has(button.GPcloseGetFeatureInfo[aria-pressed="false"]) {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+dialog[id^="GPgetFeatureInfoPanel-"] {
+    position: absolute;
+    left: 47px;
+    top: 2px;
+    max-height: 52vh;
+    background-color: var(--background-default-grey);
+}
+
+.GPgetFeatureInfoAccordionGroup {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  max-height: calc(52vh - 92px);
+}
+
+.GPgetFeatureInfoAccordionContent {
+  overflow-x: scroll;
+  scrollbar-width: thin;
+}
+
+.waiting-div-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lds-ring,
+.lds-ring div {
+  box-sizing: border-box;
+}
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+  border: 4px solid currentColor;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: currentColor transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
