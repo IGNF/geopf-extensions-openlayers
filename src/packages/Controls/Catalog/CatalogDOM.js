@@ -429,7 +429,7 @@ var CatalogDOM = {
                         type="checkbox"
                         data-layer="${name}:${service}"
                         aria-describedby="checkboxes-messages-${categoryId}-${i}_${name}-${service}">
-                    <label class="fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="${title}">
+                    <label class="GPlabelActive fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="${title}">
                         ${title} (${service})
                     </label>
                     <div class="fr-messages-group" id="checkboxes-messages-${categoryId}-${i}_${name}-${service}" aria-live="assertive"></div>
@@ -440,12 +440,14 @@ var CatalogDOM = {
 
         // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
         var tmplSection = (id, categoryId, title, count, data) => {
-            // INFO la maquette ne possède pas de compteur de couches
+            // INFO 
+            // - la maquette ne possède pas de compteur de couches
+            // - hack pour le thème dsfr, on masque l'icone collapse du thème classic
             return `
             <!-- section -->
             <section class="fr-accordion" style="width:100%;">
                 <h3 class="fr-accordion__title">
-                    <button class="fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">
+                    <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">
                         <span class="GPshowCatalogAdvancedTools gpf-hidden"></span>${title}
                     </button>
                 </h3>

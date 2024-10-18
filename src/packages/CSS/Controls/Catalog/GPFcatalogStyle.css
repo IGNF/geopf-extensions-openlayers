@@ -50,6 +50,17 @@ dialog[id^=GPcatalogPanel-] {
 .GPtabContentSelected {
     display: block;
 }
+.GPlabelActive:hover {
+    background-color:  #ccc;
+}
+.GPcatalogButtonSection {
+    border: unset;
+    background: unset;
+}
+button[aria-expanded="true"].GPcatalogButtonSection span.GPshowCatalogAdvancedTools {
+    -webkit-transform: rotateX(180deg);
+    transform: rotateX(180deg);
+}
 
 .GPshowCatalogAdvancedTools {
     display: inline-block;
