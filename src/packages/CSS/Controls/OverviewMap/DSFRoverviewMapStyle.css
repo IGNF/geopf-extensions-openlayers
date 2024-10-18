@@ -2,3 +2,7 @@
     -webkit-mask: url("img/overviewmap.svg") center no-repeat;
     mask: url("img/overviewmap.svg") center no-repeat;
 }
+
+.ol-overviewmap:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+    transform: translateY(-100%);
+}

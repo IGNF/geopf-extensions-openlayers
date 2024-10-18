@@ -42,7 +42,7 @@
                 "SwitchCase": 1
             }
         ],
-        "no-console": "warn",
+        "no-console": "off",
         "no-proto": "off",
         "no-prototype-builtins": "off",
         "linebreak-style": [
