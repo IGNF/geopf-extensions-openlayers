@@ -190,7 +190,7 @@ var CatalogDOM = {
                 <label class="fr-label" for="search-input">
                     Recherche
                 </label>
-                <input class="fr-input" placeholder="Rechercher" type="search" id="search-input" name="search-input" incremental>
+                <input class="fr-input" placeholder="Rechercher une donnée" type="search" id="search-input" name="search-input" incremental>
                 <button id="search-button" class="fr-btn" title="Rechercher">
                     Rechercher
                 </button>
@@ -448,7 +448,7 @@ var CatalogDOM = {
             <section class="fr-accordion" style="width:100%;">
                 <h3 class="fr-accordion__title">
                     <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">
-                        <span class="GPshowCatalogAdvancedTools gpf-hidden"></span>${title}
+                        <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>${title}
                     </button>
                 </h3>
                 <div class="fr-collapse GPelementHidden" id="accordion-${id}">
@@ -543,6 +543,15 @@ var CatalogDOM = {
                         collapse.classList.remove("fr-collapse--expanded");
                         collapse.classList.add("GPelementHidden");
                     }
+                }, false);
+            });
+        }
+        var spanName = `button-icon-collapse-${category.id}`; 
+        var spans = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
+        if (spans) {
+            spans.forEach((span) => {
+                span.addEventListener("click", (e) => {
+                    e.target.parentElement.click();
                 });
             });
         }

@@ -284,8 +284,8 @@ var Catalog = class Catalog extends Control {
             collapsed : true,
             draggable : false,
             auto : true,
-            titlePrimary : "",
-            titleSecondary : "Gérer vos couches de données",
+            titlePrimary : "Gérer vos couches de données",
+            titleSecondary : "",
             layerLabel : "title",
             layerFilter : [], // TODO filtre
             search : {
