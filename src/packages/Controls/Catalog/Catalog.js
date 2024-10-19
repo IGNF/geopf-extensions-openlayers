@@ -284,8 +284,8 @@ var Catalog = class Catalog extends Control {
             collapsed : true,
             draggable : false,
             auto : true,
-            titlePrimary : "",
-            titleSecondary : "Gérer vos couches de données",
+            titlePrimary : "Gérer vos couches de données",
+            titleSecondary : "",
             layerLabel : "title",
             layerFilter : [], // TODO filtre
             search : {
@@ -830,7 +830,9 @@ var Catalog = class Catalog extends Control {
                 var words = "";
                 for (let i = 0; i < criteria.length; i++) {
                     const c = criteria[i];
-                    words += layer[c].toLowerCase();
+                    if (layer[c]) {
+                        words += layer[c].toLowerCase();
+                    }
                 }
                 layer.hidden = !words.includes(value.toLowerCase());
                 this.updateFilteredLayersListDOM(layer.name, layer.service, layer.hidden);
@@ -865,8 +867,10 @@ var Catalog = class Catalog extends Control {
             if (container) {
                 if (hidden) {
                     container.classList.add("gpf-hidden");
+                    container.classList.add("GPelementHidden");
                 } else {
                     container.classList.remove("gpf-hidden");
+                    container.classList.remove("GPelementHidden");
                 }
             }
         }

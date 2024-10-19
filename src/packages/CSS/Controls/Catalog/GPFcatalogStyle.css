@@ -1,3 +1,73 @@
 div[id^=GPcatalog-] {
+    display: block;
+}
+
+.GPshowCatalogPicto {
+    background-image: url("img/GPcatalogOpen.png");
+    background-repeat: no-repeat;
+    background-position: 0px center;
+}
+
+dialog[id^=GPcatalogPanel-] {
+    width: 280px;
+}
+
+.GPcatalogPanelClose {
+    background-image: url("img/GPcatalogOpen.png");
+}
+
+.GPtabs {}
+.GPtabsList {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+.GPtabList {
+    flex: 1 1 0px;
+}
+.GPtabButton {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+.GPtabButtonActive {
+    background-color: #ccc;
+}
+.GPtabContent {
     display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+.GPtabContentSelected {
+    display: block;
+}
+.GPlabelActive:hover {
+    background-color:  #ccc;
+}
+.GPcatalogButtonSection {
+    border: unset;
+    background: unset;
+}
+button[aria-expanded="true"].GPcatalogButtonSection span.GPshowCatalogAdvancedTools {
+    -webkit-transform: rotateX(180deg);
+    transform: rotateX(180deg);
+}
+
+.GPshowCatalogAdvancedTools {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    background-image: url("img/GPcatalogTools.png");
+    background-position: -26px 0;
+
 }
