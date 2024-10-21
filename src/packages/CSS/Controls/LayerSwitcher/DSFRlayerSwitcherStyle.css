@@ -284,6 +284,10 @@ div[id^=GPlayerInfoContent] {
     top: calc(2.5rem + 8px);
 }
 
+.GplayerSwitcher-counterAdded:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+    bottom: 0;
+}
+
 @media (max-width: 576px) {
     .GPlayerAdvancedTools {
         width: calc(100% + 40px);
