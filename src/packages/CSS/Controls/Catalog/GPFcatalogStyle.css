@@ -69,5 +69,8 @@ button[aria-expanded="true"].GPcatalogButtonSection span.GPshowCatalogAdvancedTo
     vertical-align: middle;
     background-image: url("img/GPcatalogTools.png");
     background-position: -26px 0;
+}
 
+#header-search > label {
+    display: none;
 }
