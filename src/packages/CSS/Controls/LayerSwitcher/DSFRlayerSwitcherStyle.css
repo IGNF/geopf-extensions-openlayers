@@ -284,6 +284,16 @@ div[id^=GPlayerInfoContent] {
     top: calc(2.5rem + 8px);
 }
 
+.GplayerSwitcher-counterAdded:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+    transform: unset;
+}
+
+@supports(-moz-appearance:none) {
+    .gpf-widget:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+      transform: translateY(9px);
+    }
+  }
+
 @media (max-width: 576px) {
     .GPlayerAdvancedTools {
         width: calc(100% + 40px);
