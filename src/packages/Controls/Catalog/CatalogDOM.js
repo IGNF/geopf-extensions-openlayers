@@ -62,6 +62,9 @@ var CatalogDOM = {
         var self = this;
 
         var button = document.createElement("button");
+        // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
+        var span = document.createElement("span");
+        button.appendChild(span);
         button.id = this._addUID("GPshowCatalogPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowCatalogPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-catalog fr-btn fr-btn--secondary";
         button.title = "Catalogue de données";
@@ -440,7 +443,7 @@ var CatalogDOM = {
 
         // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
         var tmplSection = (id, categoryId, title, count, data) => {
-            // INFO 
+            // INFO
             // - la maquette ne possède pas de compteur de couches
             // - hack pour le thème dsfr, on masque l'icone collapse du thème classic
             return `
@@ -546,7 +549,7 @@ var CatalogDOM = {
                 }, false);
             });
         }
-        var spanName = `button-icon-collapse-${category.id}`; 
+        var spanName = `button-icon-collapse-${category.id}`;
         var spans = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
         if (spans) {
             spans.forEach((span) => {

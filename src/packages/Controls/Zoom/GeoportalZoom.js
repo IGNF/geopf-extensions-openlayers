@@ -90,6 +90,9 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
                 btn.classList.add("GPzoomIn", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--secondary", "gpf-btn", "gpf-btn--secondary", "gpf-btn-icon");
                 btn.id = "GPzoomIn";
                 btn.innerHTML = "";
+                // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
+                var span = document.createElement("span");
+                btn.appendChild(span);
                 if (btn.addEventListener) {
                     btn.addEventListener("click", function () {
                         /**
@@ -109,6 +112,9 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
                 btn.classList.add("GPzoomOut", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--secondary", "gpf-btn", "gpf-btn--secondary", "gpf-btn-icon");
                 btn.id = "GPzoomOut";
                 btn.innerHTML = "";
+                // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
+                var span = document.createElement("span");
+                btn.appendChild(span);
                 if (btn.addEventListener) {
                     btn.addEventListener("click", function () {
                         /**

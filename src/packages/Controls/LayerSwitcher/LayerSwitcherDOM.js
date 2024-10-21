@@ -115,6 +115,9 @@ var LayerSwitcherDOM = {
         var self = this;
 
         var button = document.createElement("button");
+        // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
+        var span = document.createElement("span");
+        button.appendChild(span);
         button.id = this._addUID("GPshowLayersListPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn fr-btn--secondary";
         button.htmlFor = this._addUID("GPshowLayersList");

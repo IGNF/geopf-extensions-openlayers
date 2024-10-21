@@ -28,14 +28,14 @@ var GetFeatureInfoDOM = {
             }
             return true;
         };
-    
+
         // If DOMParser is supported, use it
         if (support()) {
             var parser = new DOMParser();
             var doc = parser.parseFromString(str, "text/html");
             return doc.body;
         }
-    
+
         // Otherwise, fallback to old-school method
         var dom = document.createElement("div");
         dom.innerHTML = str;
@@ -67,6 +67,9 @@ var GetFeatureInfoDOM = {
         var self = this;
 
         var button = document.createElement("button");
+        // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
+        var span = document.createElement("span");
+        button.appendChild(span);
         button.id = this._addUID("GPgetFeatureInfoPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPgetFeatureInfoPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-getfeatureinfo fr-btn fr-btn--secondary";
         button.title = "Activer/désactiver l'interrogation des couches";
@@ -187,7 +190,7 @@ var GetFeatureInfoDOM = {
     // ################################################################### //
     // ####################### Methods for Layer GFI ####################### //
     // ################################################################### //
-    
+
     /**
      * Create group d'accodeon
      * @returns {DOMElement} DOM element
@@ -199,7 +202,7 @@ var GetFeatureInfoDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GPgetFeatureInfoAccordionGroup");
         div.className = "GPgetFeatureInfoAccordionGroup fr-accordions-group";
- 
+
         return div;
     },
 
