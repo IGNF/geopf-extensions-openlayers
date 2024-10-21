@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        
+
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSearchEngine.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlSearchEngine.js"></script>
 {{/content}}
@@ -57,6 +57,11 @@
                         collapsible : false,
                         resources : {
                           search : true
+                        },
+                        searchOptions: {
+                            addToMap: false,
+                            filterServices : "WMTS,WMS,TMS",
+                            serviceOptions: {}
                         },
                         markerUrl : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAzNiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjMDAwMDkxIiBkPSJNMTguMzY0IDMuNjM2YTkgOSAwIDAgMSAwIDEyLjcyOEwxMiAyMi43MjhsLTYuMzY0LTYuMzY0QTkgOSAwIDAgMSAxOC4zNjQgMy42MzZaTTEyIDhhMiAyIDAgMSAwIDAgNCAyIDIgMCAwIDAgMC00WiIvPjwvc3ZnPg=="
                     });

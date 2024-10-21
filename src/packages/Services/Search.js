@@ -115,6 +115,14 @@ const suggest = async (text) => {
         return;
     }
 
+    // Attribution d'un score bonus aux couches WMTS puis retriage des résultats
+    for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        var scoreBonus = result.source.type === "WMTS" || result.source.type === "TMS" ? 10 : 0;
+        results[i].score += scoreBonus;
+    }
+    results.sort((a, b) => b.score - a.score);
+
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
         var services = (m_filterByService.length === 0 || m_filterByService.includes(result.source.type));
@@ -122,7 +130,7 @@ const suggest = async (text) => {
             if (unique().length >= m_maximumResponses) {
                 break;
             }
-            // FIXME champs possibles mais pas toujours remplis : 
+            // FIXME champs possibles mais pas toujours remplis :
             // srs[], attributions{}, extent{}, metada_url[]
             var o = {
                 originators : result.source.attributions,
@@ -212,7 +220,7 @@ const setFiltersByService = (value) => {
 };
 /**
  * Filtre sur les couches à exclure
- * @param {Array} value - liste des projections 
+ * @param {Array} value - liste des projections
  */
 const setFiltersByProjection = (value) => {
     m_filterByProjection = value === "" ? [] : value.split(",");
