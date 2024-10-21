@@ -289,7 +289,7 @@ div[id^=GPlayerInfoContent] {
 }
 
 @supports(-moz-appearance:none) {
-    .gpf-widget:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+    .GplayerSwitcher-counterAdded:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
       transform: translateY(9px);
     }
   }
