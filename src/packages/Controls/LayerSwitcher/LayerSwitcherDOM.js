@@ -454,6 +454,7 @@ var LayerSwitcherDOM = {
         container.className = "GPelementHidden GPlayerAdvancedTools gpf-hidden";
 
         container.appendChild(this._createAdvancedToolDeleteElement(obj));
+        container.appendChild(this._createAdvancedToolGrayscaleElement(obj));
         container.appendChild(this._createAdvancedToolInformationElement(obj));
 
         if (obj.type !== "feature") {
@@ -483,6 +484,7 @@ var LayerSwitcherDOM = {
 
             var contextual = document.createElement("div");
             contextual.appendChild(this._createAdvancedToolDeleteElement(obj, true));
+            contextual.appendChild(this._createAdvancedToolGrayscaleElement(obj, true));
             contextual.appendChild(this._createAdvancedToolInformationElement(obj, true));
             contextual.appendChild(this._createAdvancedToolExtentElement(obj, true));
 
@@ -529,6 +531,51 @@ var LayerSwitcherDOM = {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 context._onDropLayerClick(e);
+            });
+        }
+
+        return button;
+    },
+
+    /**
+     * Creation de l'icone de noir et blanc du layer (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+
+     * @returns {DOMElement[]} array containing input and label elements
+     */
+    _createAdvancedToolGrayscaleElement : function (obj, contextual = false) {
+        var grayscale = (typeof obj.grayscale !== "undefined") ? obj.grayscale : false;
+
+        var button = document.createElement("button");
+        if (!contextual) {
+            button.id = this._addUID("GPgrayscalePicto_ID_" + obj.id);
+        } else {
+            button.id = this._addUID("GPgrayscaleContextualPicto_ID_" + obj.id);
+        }
+        button.className = "GPlayerGrayscale gpf-btn gpf-btn-icon gpf-btn-icon-ls-grayscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
+        button.title = "Activer/désactiver le noir et blanc";
+        button.layerId = obj.id;
+        if (contextual) {
+            button.innerText = "Noir et blanc";
+        }
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", grayscale);
+        button.setAttribute("type","button");
+
+        var context = this;
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                context._onGrayscaleLayerClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                context._onGrayscaleLayerClick(e);
             });
         }
 

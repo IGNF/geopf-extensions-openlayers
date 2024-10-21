@@ -314,7 +314,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 //         this._layerListContainer.childNodes[1] : this._layerListContainer.firstChild);
             }
 
-            // 3. Add listeners for opacity and visibility changes
+            // 3. Add listeners for opacity, visibility and grayscale changes
             this._listeners.updateLayerOpacity = layer.on(
                 "change:opacity",
                 (e) => this._updateLayerOpacity(e)
@@ -322,6 +322,10 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             this._listeners.updateLayerVisibility = layer.on(
                 "change:visible",
                 (e) => this._updateLayerVisibility(e)
+            );
+            this._listeners.updateLayerGrayscale = layer.on(
+                "change:grayscale",
+                (e) => this._updateLayerGrayscale(e)
             );
 
             if (this._layers[id].onZIndexChangeEvent == null) {
@@ -743,6 +747,10 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 "change:visible",
                 (e) => this._updateLayerVisibility(e)
             );
+            this._listeners.updateLayerGrayscale = layer.on(
+                "change:grayscale",
+                (e) => this._updateLayerGrayscale(e)
+            );
 
             // récupération des zindex des couches s'ils existent, pour les ordonner.
             if (layer.getZIndex !== undefined) {
@@ -954,6 +962,54 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         this.dispatchEvent({
             type : "layerswitcher:change:visibility",
             visibility : visible,
+            layer : this._layers[id]
+        });
+    }
+
+    /**
+     * Change layer grayscale status on b&w picto click
+     *
+     * @param {Object} e - event
+     * @private
+     */
+    _onGrayscaleLayerClick (e) {
+        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(divId); // ex. 26
+        var layer = this._layers[layerID].layer;
+        console.log(this);
+    }
+
+    /**
+     * Change grayscale picto on layer grayscale change
+     *
+     * @param {Object} e - event
+     * @fires layerswitcher:change:grayscale
+     * @private
+     */
+    _updateLayerGrayscale (e) {
+        var grayscale = e.target.getGrayscale();
+        var id = e.target.gpLayerId;
+        var layerGrayscale = document.getElementById(this._addUID("GPgrayscalePicto_ID_" + id));
+        if (layerGrayscale) {
+            layerGrayscale.ariaPressed = visible;
+        }
+
+        /**
+         * event triggered when an visibility layer is changed
+         *
+         * @event layerswitcher:change:visibility
+         * @property {Object} type - event
+         * @property {Object} grayscale - grayscale
+         * @property {Object} layer - layer
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+         *   console.log(e.grayscale);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:change:grayscale",
+            grayscale : grayscale,
             layer : this._layers[id]
         });
     }
