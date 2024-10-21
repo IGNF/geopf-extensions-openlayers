@@ -154,7 +154,7 @@
   height: 40px;
   left: 44px;
   position: absolute;
-  transform: translateY(-46px);
+  transform: translateY(-40px);
 }
 
 @supports(-moz-appearance:none) {
