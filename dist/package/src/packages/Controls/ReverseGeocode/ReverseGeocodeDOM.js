@@ -36,6 +36,9 @@ var ReverseGeocodeDOM = {
         var self = this;
 
         var button = document.createElement("button");
+        // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
+        var span = document.createElement("span");
+        button.appendChild(span);
         button.id = this._addUID("GPshowReverseGeocodingPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowReverseGeocodingPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-reverse fr-btn fr-btn--secondary";
         button.title = "Ouvrir la recherche inverse";

@@ -37,6 +37,9 @@ var MousePositionDOM = {
         var self = this;
 
         var button = document.createElement("button");
+        // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
+        var span = document.createElement("span");
+        button.appendChild(span);
         button.id = this._addUID("GPshowMousePositionPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-position fr-btn fr-btn--secondary";
         button.title = "Afficher les coordonnées du curseur";
