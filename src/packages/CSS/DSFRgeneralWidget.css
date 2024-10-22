@@ -154,6 +154,13 @@
   height: 40px;
   left: 44px;
   position: absolute;
+  transform: translateY(-40px);
+}
+
+@supports(-moz-appearance:none) {
+  .gpf-widget:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+    transform: unset;
+  }
 }
 
 .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before {
