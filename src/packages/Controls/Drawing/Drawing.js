@@ -173,7 +173,7 @@ var Drawing = class Drawing extends Control {
      * @param {*} options - options
      * @example
      * import Drawing from "gpf-ext-ol/controls/Drawing"
-     * ou 
+     * ou
      * import { Drawing } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -312,13 +312,13 @@ var Drawing = class Drawing extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
-        
+
         // mode "draggable"
         if (this.draggable) {
             Draggable.dragElement(
                 this._drawingPanel,
                 this._drawingPanelHeader,
-                this.options.position ? null : map.getTargetElement()
+                map.getTargetElement()
             );
         }
 
