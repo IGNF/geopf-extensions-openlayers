@@ -28,7 +28,7 @@ var logger = Logger.getLogger("territories");
  * @type {ol.control.Territories}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
- * 
+ *
  * @fires custom:action
  * @example
  * var territories = new ol.control.Territories({
@@ -37,9 +37,9 @@ var logger = Logger.getLogger("territories");
  *   auto: true
  * });
  * map.addControl(territories);
- * 
+ *
  * or/and
- * 
+ *
  * var territories = new ol.control.Territories({});
  * territories.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
  * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
@@ -54,12 +54,12 @@ var Territories = class Territories extends Control {
      * @param {Object} [options] - options
      * @example
      * import Territories from "gpf-ext-ol/controls/Territories"
-     * ou 
+     * ou
      * import { Territories } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};
-        
+
         // call ol.control.Control constructor
         super({
             element : options.element,
@@ -99,7 +99,7 @@ var Territories = class Territories extends Control {
                 Draggable.dragElement(
                     this.panelTerritoriesContainer,
                     this.panelTerritoriesHeaderContainer,
-                    this.options.position ? null : map.getTargetElement()
+                    map.getTargetElement()
                 );
             }
             // mode "collapsed"
@@ -130,19 +130,19 @@ var Territories = class Territories extends Control {
     // ################################################################### //
     // ################### getters / setters ############################# //
     // ################################################################### //
-    
+
     /**
      * Add a territory
-     * 
+     *
      * @param {Object} territory  - territory
      * @returns {Boolean} - true|false
      * @public
      * @example
-     * territories.setTerritory ({ 
-     *  id: "MTQ", 
-     *  title: "Martinique", 
-     *  description: "", 
-     *  bbox: [minx, miny, maxx, maxy], 
+     * territories.setTerritory ({
+     *  id: "MTQ",
+     *  title: "Martinique",
+     *  description: "",
+     *  bbox: [minx, miny, maxx, maxy],
      *  thumbnail: "data:image/png;base64,..."
      * });
      */
@@ -165,7 +165,7 @@ var Territories = class Territories extends Control {
 
     /**
      * Remove a territory
-     * 
+     *
      * @param {String} territory - territory id (FRA, MTQ, ...)
      * @returns {Boolean} - true|false
      * @public
@@ -190,7 +190,7 @@ var Territories = class Territories extends Control {
 
     /**
      * Set collapse
-     * 
+     *
      * @param {Boolean} collapsed - true|false
      * @todo ...
      * @public
@@ -213,7 +213,7 @@ var Territories = class Territories extends Control {
 
     /**
      * Mode reduit des tuiles (uniquement le nom du territoire)
-     * 
+     *
      * @param {*} reduce - true|false
      * @public
      */
@@ -233,11 +233,11 @@ var Territories = class Territories extends Control {
     getContainer () {
         return this.container;
     }
-    
+
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
-    
+
     /**
      * Initialize Territories control (called by Territories constructor)
      *
@@ -271,12 +271,12 @@ var Territories = class Territories extends Control {
 
         /** {Boolean} specify if we load the list of territories by default */
         this.auto = this.options.auto;
-        /** 
-         * {Array} list of object territories 
+        /**
+         * {Array} list of object territories
          * @example
-         * { 
-         *   dom : { HTMLelment }, 
-         *   data : { 
+         * {
+         *   dom : { HTMLelment },
+         *   data : {
          *     id: "MTQ", title: "Martinique", description: "", bbox: [minx, miny, maxx, maxy], thumbnail: "data:image/png;base64,..."
          *   }
          * }
@@ -351,7 +351,7 @@ var Territories = class Territories extends Control {
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
-    
+
     /**
      * ...
      * @param {*} e - ...

@@ -30,7 +30,7 @@ var logger = Logger.getLogger("getFeatureInfo");
  * @type {ol.control.GetFeatureInfo}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
- * 
+ *
  * @fires custom:action
  * @example
  * var getFeatureInfo = new ol.control.GetFeatureInfo();
@@ -45,7 +45,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      * @param {Object} [options] - options
      * @example
      * import GetFeatureInfo from "gpf-ext-ol/controls/GetFeatureInfo"
-     * ou 
+     * ou
      * import { GetFeatureInfo } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -89,7 +89,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
                 Draggable.dragElement(
                     this.panelGetFeatureInfoContainer,
                     this.panelGetFeatureInfoHeaderContainer,
-                    this.options.position ? null : map.getTargetElement()
+                    map.getTargetElement()
                 );
             }
             // mode "collapsed"
@@ -128,7 +128,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
-    
+
     /**
      * Initialize GetFeatureInfo control (called by GetFeatureInfo constructor)
      *
@@ -205,7 +205,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         // close picto
         var getFeatureInfoCloseBtn = this.buttonGetFeatureInfoClose = this._createGetFeatureInfoPanelCloseElement();
         getFeatureInfoPanelHeader.appendChild(getFeatureInfoCloseBtn);
-        
+
         getFeatureInfoPanelDiv.appendChild(getFeatureInfoPanelHeader);
 
         // container for the custom code
@@ -222,7 +222,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
 
     /**
      * Add events listeners on map (called by setMap)
-     * 
+     *
      * @param {*} map - map
      * @private
      */
@@ -232,7 +232,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             logger.trace(e);
             self.onMapClick(e);
         };
-        // the event custom:action is associate with an openlayers event 
+        // the event custom:action is associate with an openlayers event
         map.on("singleclick", this.eventsListeners["singleclick"]);
     }
 
@@ -260,7 +260,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      * event handler
      * @param {Event} e évènement de click
      * @private
-     */ 
+     */
     onMapClick (e) {
         if (this.getFeatureInfoIsActive() === "true") {
             this.getFeatureInfoAccordionGroup.remove();
@@ -292,8 +292,8 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     /**
      * Main render function
      * @param { ol.Layer } layer layer openlayer
-     * @return { Object } gfiLayer 
-     * { 
+     * @return { Object } gfiLayer
+     * {
      *      format : "wmts",
      *      layer: layer,
      *      url :  url          pour wmts et wms
@@ -311,7 +311,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             let url = layer.getSource().getFeatureInfoUrl(
                 this.coordinates,
                 this.res,
-                this.map.getView().getProjection(), 
+                this.map.getView().getProjection(),
                 {
                     INFOFORMAT : "text/html",
                     STYLES : ""
@@ -328,7 +328,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             let url = layer.getSource().getFeatureInfoUrl(
                 this.coordinates,
                 this.res,
-                this.map.getView().getProjection(), 
+                this.map.getView().getProjection(),
                 {
                     INFO_FORMAT : "text/html",
                     STYLES : ""
@@ -347,7 +347,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     /**
      * Main render function
      * @param { ol.Layer } layer layer openlayer
-     * @return { Array } Array of ol features 
+     * @return { Array } Array of ol features
      * @private
      */
     getFeaturesAtClick (layer) {
@@ -363,8 +363,8 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     /**
      * Main render function
      * @param { Object } gfiLayer layer openlayer
-     * @return { Object } gfi result 
-     * { 
+     * @return { Object } gfi result
+     * {
      *      layername : "layername",
      *      content: "html"
      * }
@@ -436,7 +436,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     /**
      * Main render function
      * @private
-     */ 
+     */
     displayGetFeatureInfo () {
         var gfiLayers = this.layers.map((l) => {
             return this.getGetFeatureInfoLayer(l);
@@ -450,7 +450,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             var accordeon = this._createGetFeatureInfoLayerAccordion(layername);
             var pending = true;
             return new AsyncData({
-                ...gfiLayer, 
+                ...gfiLayer,
                 ...{
                     layername : layername,
                     content : content,
@@ -531,7 +531,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         }
         return "unknown";
     }
-    
+
     /**
      * Gets HTML content from features array
      *
@@ -628,7 +628,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
-    
+
     /**
      * ...
      * @param {*} e - ...
