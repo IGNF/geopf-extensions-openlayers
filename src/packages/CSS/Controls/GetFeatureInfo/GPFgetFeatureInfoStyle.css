@@ -1,0 +1,36 @@
+/* GET FEATURE INFO */
+button[id^=GPgetFeatureInfoPicto][aria-pressed="true"] {
+  background-repeat: no-repeat;
+  background-position: 1px center;
+}
+
+button[id^=GPgetFeatureInfoPicto] {
+  background-image: url("img/GPactivateGfi.png");
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  background-position: -25px center;
+  /* transition: border-radius 0.5s ease-out 0s, opacity 0.5s ease-out 0s; */
+}
+
+.GPcloseGetFeatureInfo {
+    background-image: url("../../img/GPclose.png");
+    background-position: 0px center;
+}
+
+.GPgfiLayerButton {
+    border: unset;
+    background: unset;
+}
+button[aria-expanded="true"].GPgfiLayerButton span.GPshowGfiLayerFeature {
+    -webkit-transform: rotateX(180deg);
+    transform: rotateX(180deg);
+}
+
+.GPshowGfiLayerFeature {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    background-image: url("img/GPgfiDetails.png");
+    background-position: -26px 0;
+}
