@@ -352,7 +352,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      */
     getFeaturesAtClick (layer) {
         var features = [];
-        map.forEachFeatureAtPixel(this.pixel, function (feature, olLayer) {
+        this.getMap().forEachFeatureAtPixel(this.pixel, function (feature, olLayer) {
             if (layer == olLayer) {
                 features.push(feature);
             }
