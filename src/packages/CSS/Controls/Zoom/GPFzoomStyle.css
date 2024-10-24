@@ -2,18 +2,24 @@
     background-image: url("img/zoom-in.svg");
     background-repeat: no-repeat;
     background-size: auto auto;
-    background-position: 4px center;
+    background-position: center;
     height: 32px;
-    width: 40px;
+    width: 32px;
+    border-bottom: unset;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .GPzoomOut {
     background-image: url("img/zoom-out.svg");
     background-repeat: no-repeat;
     background-size: auto auto;
-    background-position: 4px center;
+    background-position: center;
     height: 32px;
-    width: 40px;
+    width: 32px;
+    border-top: unset;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .GPzoomIn:hover, .GPzoomOut:hover {
