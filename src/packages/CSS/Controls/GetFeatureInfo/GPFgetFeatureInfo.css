@@ -24,7 +24,6 @@ dialog[id^="GPgetFeatureInfoPanel-"] {
     left: 47px;
     top: 2px;
     max-height: 52vh;
-    background-color: var(--background-default-grey);
 }
 
 .GPgetFeatureInfoAccordionGroup {

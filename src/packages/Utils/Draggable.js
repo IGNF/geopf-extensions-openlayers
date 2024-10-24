@@ -21,8 +21,8 @@ var Draggable = {
     * @param {DOMElement} element - element
     * @param {DOMElement} header - header (optional)
     * @param {DOMElement} container - container (optional)
-    * @see https://www.w3schools.com/howto/howto_js_draggable.asp
-    * @see https://stackoverflow.com/questions/52231588/how-to-constrain-div-drag-space-no-jquery
+    * @see https://gist.github.com/stephanbogner/75de4e84687ae6065fb0a4d81917543e
+    * @see https://stackoverflow.com/questions/48097791/how-to-keep-a-draggable-element-from-being-moved-outside-a-boundary
     * @example
     *   // CSS :
     *       // #element { position: absolute; }
@@ -39,43 +39,36 @@ var Draggable = {
     *       Draggable.dragElement(element, header, container);
     */
     dragElement : function (element, header, container) {
-        var offsetX, offsetY;
-
-        var isDragReady = false;
-
-        var dragoffset = {
-            x : 0,
-            y : 0
-        };
-
+        // Adapted from https://www.w3schools.com/howto/howto_js_draggable.asp
+        let dragStartMouseX = 0, dragStartMouseY = 0, diffX = 0, diffY = 0, positionX = 0, positionY = 0;
         if (header) {
             header.addEventListener("mousedown", dragMouseDown, true);
         } else {
             element.addEventListener("mousedown", dragMouseDown, true);
         }
-
-        // TODO mettre en place les contraintes
-        // var constraints = {};
-        // if (container) {
-        //     constraints = {
-        //         width : container.clientWidth,
-        //         height : container.clientHeight,
-        //         top : container.offsetTop,
-        //         left : container.offsetLeft
-        //     };
-        // }
+        var rect;
+        var viewport = {
+            bottom : 0,
+            left : 0,
+            right : 0,
+            top : 0,
+        };
 
         function dragMouseDown (e) {
             e = e || window.event;
             e.preventDefault();
 
-            isDragReady = true;
+            dragStartMouseX = e.clientX;
+            dragStartMouseY = e.clientY;
 
-            // get the mouse cursor position at startup
-            e._pageX = e._pageX || e.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
-            e._pageY = e._pageY || e.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-            dragoffset.x = e._pageX - element.offsetLeft;
-            dragoffset.y = e._pageY - element.offsetTop;
+            rect = element.getBoundingClientRect();
+            const viewPortRect = container.getBoundingClientRect();
+            viewport = {
+                bottom : viewPortRect.bottom,
+                left : viewPortRect.left,
+                right : viewPortRect.right,
+                top : viewPortRect.top,
+            };
 
             document.addEventListener("mouseup", closeDragElement, true);
             document.addEventListener("mousemove", elementDrag, true);
@@ -83,7 +76,8 @@ var Draggable = {
 
         function closeDragElement () {
             /* stop moving when mouse button is released: */
-            isDragReady = false;
+            positionX -= diffX;
+            positionY -= diffY;
             document.removeEventListener("mouseup", closeDragElement, true);
             document.removeEventListener("mousemove", elementDrag, true);
         }
@@ -91,41 +85,31 @@ var Draggable = {
         function elementDrag (e) {
             e = e || window.event;
             // e.preventDefault();
+            let currentMouseX = e.clientX;
+            let currentMouseY = e.clientY;
 
-            // cf. https://jsfiddle.net/nbbg08mg/2/
-            if (isDragReady) {
-                e._pageX = e._pageX || e.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
-                e._pageY = e._pageY || e.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+            let oldDiffX = diffX;
+            let oldDiffY = diffY;
 
-                var parentLeft = container ? container.offsetLeft : element.parentElement.offsetLeft;
-                var parentTop = container ? container.offsetTop : element.parentElement.parentElement.offsetTop; // hack pas jolie !
-                logger.trace("parent offset", parentLeft, parentTop);
+            diffX = dragStartMouseX - currentMouseX;
+            diffY = dragStartMouseY - currentMouseY;
 
-                // left/right constraint
-                if (e._pageX - dragoffset.x < 0 - parentLeft) {
-                    offsetX = 0 - parentLeft;
-                } else if (e._pageX - dragoffset.x + element.clientWidth > document.body.clientWidth) {
-                    offsetX = document.body.clientWidth - element.clientWidth;
-                } else {
-                    offsetX = e._pageX - dragoffset.x;
-                }
-                logger.trace("left/right constraint", offsetX);
+            var newLeft = rect.left - diffX;
+            var newTop = rect.top - diffY;
 
-                // top/bottom constraint
-                if (e._pageY - dragoffset.y < 0 - parentTop) {
-                    offsetY = 0 - parentTop;
-                } else if (e._pageY - dragoffset.y + element.clientHeight > document.body.clientHeight) {
-                    offsetY = document.body.clientHeight - element.clientHeight;
-                } else {
-                    offsetY = e._pageY - dragoffset.y;
-                }
-                logger.trace("top/bottom constraint", offsetY);
-
+            if (newLeft < viewport.left
+                || newTop < viewport.top
+                || newLeft + rect.width > viewport.right
+                || newTop + rect.height > viewport.bottom
+            ) {
+                // the element will hit the boundary, do nothing...
+                diffX = oldDiffX;
+                diffY = oldDiffY;
+            } else {
                 // set the element's new position:
-                element.style.top = offsetY + "px";
-                element.style.bottom = "unset";
-                element.style.left = offsetX + "px";
-                element.style.right = "unset";
+                let newX = positionX - diffX;
+                let newY = positionY - diffY;
+                element.style.transform = "translate(" + newX + "px," + newY + "px)";
             }
         }
     }
