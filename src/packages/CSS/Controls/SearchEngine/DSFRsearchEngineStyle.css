@@ -7,7 +7,7 @@
   background-color: var(--background-default-grey);
 }
 
-.gpf-panel__items,
+.gpf-panel__items_searchengine,
 .GPlabelTitle {
   color: var(--text-action-high-blue-france);
   border-bottom: 1px solid var(--grey-900-175);

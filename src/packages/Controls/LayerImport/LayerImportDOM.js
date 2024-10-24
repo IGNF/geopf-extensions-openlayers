@@ -109,8 +109,34 @@ var LayerImportDOM = {
      */
     _createImportPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader GPelementVisible gpf-visible gpf-panel__header fr-modal__header";
         return container;
+    },
+
+    /**
+     * Create Return PIcto into Panel
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createImportPanelReturnPictoElement : function () {
+        var self = this;
+        // return picto
+        var returnDiv = document.createElement("button");
+        returnDiv.id = this._addUID("GPimportPanelReturnPicto");
+        returnDiv.title = "Masquer le panneau";
+        returnDiv.className = "GPreturnPicto GPimportPanelReturnPicto GPelementHidden gpf-hidden gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary gpf-btn--secondary";
+        if (returnDiv.addEventListener) {
+            returnDiv.addEventListener("click", function (e) {
+                document.getElementById(self._addUID("GPshowImportPicto")).click();
+                self._onReturnPictoClick(e);
+            });
+        } else if (returnDiv.attachEvent) {
+            returnDiv.attachEvent("onclick", function (e) {
+                document.getElementById(self._addUID("GPshowImportPicto")).click();
+                self._onReturnPictoClick(e);
+            });
+        }
+        return returnDiv;
     },
 
     /**
@@ -144,10 +170,14 @@ var LayerImportDOM = {
         if (divClose.addEventListener) {
             divClose.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPshowImportPicto")).click();
+                self._onGetCapPanelClose();
+                self._onMapBoxPanelClose();
             }, false);
         } else if (divClose.attachEvent) {
             divClose.attachEvent("onclick", function () {
                 document.getElementById(self._addUID("GPshowImportPicto")).click();
+                self._onGetCapPanelClose();
+                self._onMapBoxPanelClose();
             });
         }
 
@@ -176,7 +206,7 @@ var LayerImportDOM = {
 
         var form = document.createElement("form");
         form.id = this._addUID("GPimportForm");
-        form.className = "GPform gpf-panel__content fr-modal__content";
+        form.className = "GPform GPelementVisible gpf-visible gpf-panel__content fr-modal__content";
 
         // TODO ?
         if (form.addEventListener) {
@@ -601,7 +631,7 @@ var LayerImportDOM = {
     _createImportGetCapPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportGetCapPanel");
-        div.className = "GPpanel gpf-panel fr-modal";
+        div.className = "GPpanel GPelementHidden gpf-panel fr-modal gpf-hidden";
         return div;
     },
 
@@ -619,7 +649,7 @@ var LayerImportDOM = {
 
         // panel title
         var panelTitle = document.createElement("div");
-        panelTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        panelTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         panelTitle.innerHTML = "Couches accessibles";
         panelTitle.title = "Couches accessibles";
         container.appendChild(panelTitle);
@@ -632,16 +662,25 @@ var LayerImportDOM = {
         if (closeDiv.addEventListener) {
             closeDiv.addEventListener("click", function () {
                 document.getElementById(context._addUID("GPshowImportPicto")).click();
-                document.getElementById(context._addUID("GPimportGetCapPanel")).style.display = "none";
+                document.getElementById(context._addUID("GPimportGetCapPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(context._addUID("GPimportGetCapPanel")).classList.replace("gpf-visible", "gpf-hidden");
                 context._onGetCapPanelClose();
             });
         } else if (closeDiv.attachEvent) {
             closeDiv.attachEvent("click", function () {
                 document.getElementById(context._addUID("GPshowImportPicto")).click();
-                document.getElementById(context._addUID("GPimportGetCapPanel")).style.display = "none";
+                document.getElementById(context._addUID("GPimportGetCapPanel")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(context._addUID("GPimportGetCapPanel")).classList.replace("gpf-visible", "gpf-hidden");
                 context._onGetCapPanelClose();
             });
         }
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        closeDiv.appendChild(span);
+        
         container.appendChild(closeDiv);
 
         return container;
@@ -671,7 +710,7 @@ var LayerImportDOM = {
 
     _addImportGetCapResultRubrique : function (title, container) {
         var li = document.createElement("li");
-        li.className = "GPimportGetCapRubrique gpf-panel__items";
+        li.className = "GPimportGetCapRubrique gpf-panel__items_layerimport gpf-panel__items";
 
         // input
         var input = document.createElement("input");
@@ -702,7 +741,7 @@ var LayerImportDOM = {
 
     _addImportGetCapResultLayer : function (description, id, container) {
         var li = document.createElement("li");
-        li.className = "GPimportGetCapProposal gpf-panel__items";
+        li.className = "GPimportGetCapProposal gpf-panel__items_layerimport gpf-panel__items";
         li.innerHTML = description.content;
         li.title = description.title;
         li.id = "GPimportGetCapProposal_" + id;
@@ -734,7 +773,7 @@ var LayerImportDOM = {
     _createImportMapBoxPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportMapBoxPanel");
-        div.className = "GPpanel gpf-panel fr-modal";
+        div.className = "GPpanel GPelementHidden gpf-panel fr-modal gpf-hidden";
         return div;
     },
 
@@ -770,7 +809,7 @@ var LayerImportDOM = {
 
         // panel title
         var panelTitle = document.createElement("div");
-        panelTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title";
+        panelTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         panelTitle.innerHTML = "Edition des styles";
         panelTitle.title = "Edition des styles";
         container.appendChild(panelTitle);
@@ -793,6 +832,13 @@ var LayerImportDOM = {
                 context._onMapBoxPanelClose();
             });
         }
+        
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Fermer";
+
+        closeDiv.appendChild(span);
+        
         container.appendChild(closeDiv);
 
         return container;

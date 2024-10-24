@@ -1,7 +1,7 @@
 
 /* Import form */
 [id^="GPimportPanel-"] {
-  width: 280px;
+  width: 340px;
 }
 
 [id^="GPimportGetCapPanel-"],
@@ -32,9 +32,9 @@ div[id^="GPimportChoice-"] {
     background-image: url("img/GPimportOpen.png");
 }
 
-.GPimportMapBoxPanelReturnPicto {
+.GPimportPanelReturnPicto {
   background-color: #366291;
-  background-image: url("img/GPimportMapBoxReturn.png");
+  background-image: url("img/GPimportReturn.png");
   /* background-position: 3px center; */
 }
 
@@ -198,4 +198,14 @@ li.GPimportMapBoxListSource:before {
 }
 
 .GPimportMapBoxSourceScale {
+}
+
+[id^="GPimportPanelReturnPicto-"] {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  opacity: 1;
+  background-position: 0 0;
+  cursor: pointer;
 }
