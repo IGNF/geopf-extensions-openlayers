@@ -256,17 +256,17 @@ var LayerImport = class LayerImport extends Control {
                 );
 
                 // panneau draggable pour les resultats ?
-                Draggable.dragElement(
-                    this._getCapPanel,
-                    this._getCapPanelHeader,
-                    map.getTargetElement()
+                // Draggable.dragElement(
+                //     this._getCapPanel,
+                //     this._getCapPanelHeader,
+                //     map.getTargetElement()
 
-                );
-                Draggable.dragElement(
-                    this._mapBoxPanel,
-                    this._mapBoxPanelHeader,
-                    map.getTargetElement()
-                );
+                // );
+                // Draggable.dragElement(
+                //     this._mapBoxPanel,
+                //     this._mapBoxPanelHeader,
+                //     map.getTargetElement()
+                // );
             }
             // mode "collapsed"
             if (!this.collapsed) {

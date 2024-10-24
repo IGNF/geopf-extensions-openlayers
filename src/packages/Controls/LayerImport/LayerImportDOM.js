@@ -710,7 +710,7 @@ var LayerImportDOM = {
 
     _addImportGetCapResultRubrique : function (title, container) {
         var li = document.createElement("li");
-        li.className = "GPimportGetCapRubrique gpf-panel__items_layerimport gpf-panel__items";
+        li.className = "GPimportGetCapRubrique gpf-panel__items_layerimport"; /* gpf-panel__items */
 
         // input
         var input = document.createElement("input");
