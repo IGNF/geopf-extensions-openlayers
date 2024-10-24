@@ -1,66 +1,109 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-          
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
+
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.css" />
+<script src="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample openlayers GetFeatureInfo</title>
+<title>Sample openlayers GetFeatureInfo</title>
 {{/content}}
 
 {{#content "style"}}
-        <style>
-            div#map {
-                width: 100%;
-                height: 500px;
-                background-image:url("{{ resources }}/geoportail-waiting.gif");
-                background-position:center center;
-                background-repeat:no-repeat;
-            }
-        </style>
+<style>
+  div#map {
+    width: 100%;
+    height: 500px;
+    background-image:url("{{ resources }}/geoportail-waiting.gif");
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+</style>
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du widget du GetFeatureInfo, avec les options par défaut</h2>
-            <!-- map -->
-            <div id="map">
-            </div>
+<h2>Ajout du widget du GetFeatureInfo, avec les options par défaut</h2>
+<!-- map -->
+<div id="map">
+</div>
 {{/content}}
 
 {{#content "js"}}
-            <script type="text/javascript">
+<script type="text/javascript">
 
-              window.onload = function () {
-                // on cache l'image de chargement du Géoportail.
-                document.getElementById("map").style.backgroundImage = "none";
+  var createMap = function () {
+    // on cache l'image de chargement du Géoportail.
+    document.getElementById("map").style.backgroundImage = "none";
 
-                // Création de la map
-                var map = new ol.Map({
-                  target : "map",
-                  layers : [
-                      new ol.layer.Tile({
-                          source: new ol.source.OSM(),
-                          opacity: 0.5
-                      })
-                  ],
-                  view : new ol.View({
-                    center : [288074.8449901076, 6247982.515792289],
-                    zoom : 8
-                  })
-                });
+    // Création de la map
+    var map = new ol.Map({
+      target: "map",
+      view: new ol.View({
+        center: [288074.8449901076, 6247982.515792289],
+        zoom: 8
+      })
+    });
 
-                var info = new ol.control.GetFeatureInfo({
-                  position: "bottom-left"
-                });
-                map.addControl(info);
+    // 2. Ajout de plusieurs couches différentes.
+    var gpMaps = new ol.layer.Tile({
+      source: new ol.source.GeoportalWMTS({
+        layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+      })
+    });
+    map.addLayer(gpMaps);
 
-                var layerSwitcher = new ol.control.LayerSwitcher({});
-                map.addControl(layerSwitcher);
-             };
-            </script>
+    var gpDrone = new ol.layer.Tile({
+      source: new ol.source.GeoportalWMTS({
+        layer: "TRANSPORTS.DRONES.RESTRICTIONS"
+      })
+    });
+    map.addLayer(gpDrone);
+
+    var gpMyKml = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        url: '{{ resources }}/data/kml/S_TOP100.kml',
+        format: new ol.format.KML()
+      })
+    });
+    map.addLayer(gpMyKml);
+
+    var gpRoad = new ol.layer.Tile({
+      source: new ol.source.GeoportalWMS({
+        layer: "TN.RoadTransportNetwork"
+      })
+    });
+    map.addLayer(gpRoad);
+
+    var gpHydro = new ol.layer.Tile({
+      source: new ol.source.GeoportalWMS({
+        layer: "HY.PhysicalWaters"
+      })
+    });
+
+    var info = new ol.control.GetFeatureInfo({
+      position: "bottom-left"
+    });
+    map.addControl(info);
+
+    var layerSwitcher = new ol.control.LayerSwitcher({
+      position: "bottom-left"
+    });
+    map.addControl(layerSwitcher);
+  };
+  Gp.Services.getConfig({
+    customConfigFile: "{{ configurl }}",
+    callbackSuffix: "",
+    // apiKey: "{{ apikey }}",
+    timeOut: 20000,
+    onSuccess: createMap,
+    onFailure: (e) => {
+      console.error(e);
+    }
+  });
+</script>
 {{/content}}
 {{/extend}}
