@@ -150,7 +150,7 @@ var LayerImport = class LayerImport extends Control {
      * @param {*} options - options
      * @example
      * import LayerImport from "gpf-ext-ol/controls/LayerImport"
-     * ou 
+     * ou
      * import { LayerImport } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -252,7 +252,7 @@ var LayerImport = class LayerImport extends Control {
                 Draggable.dragElement(
                     this._importPanel,
                     this._importPanelHeader,
-                    this.options.position ? null : map.getTargetElement()
+                    map.getTargetElement()
                 );
 
                 // panneau draggable pour les resultats ?
@@ -679,15 +679,15 @@ var LayerImport = class LayerImport extends Control {
         // create Import picto
         var picto = this._showImportButton = this._createShowImportPictoElement();
         container.appendChild(picto);
-        
+
         // panel
         var importPanel = this._importPanel = this._createImportPanelElement();
         var importPanelPanelDiv = this._createImportPanelDivElement();
         importPanel.appendChild(importPanelPanelDiv);
-        
+
         // header
         var panelHeader = this._importPanelHeader = this._createImportPanelHeaderElement();
-        
+
         // panel title
         var panelTitle = this._createImportPanelTitleElement();
         panelHeader.appendChild(panelTitle);
@@ -714,11 +714,11 @@ var LayerImport = class LayerImport extends Control {
         mapBoxPanel.appendChild(mapBoxPanelHeader);
         var importMapBoxResultsList = this._mapBoxResultsListContainer = this._createImportMapBoxResultsContainer();
         mapBoxPanel.appendChild(importMapBoxResultsList);
-        
+
         // loading element mapbox
         var loading = this._loadingContainer = this._createLoadingElement();
         mapBoxPanel.appendChild(loading);
-        
+
         importPanelPanelDiv.appendChild(mapBoxPanel);
 
         // waiting
@@ -1245,7 +1245,7 @@ var LayerImport = class LayerImport extends Control {
                             vectorSource = new VectorTileSource({
                                 attributions : _glSource.attribution,
                                 format : vectorFormat,
-                                // INFO 
+                                // INFO
                                 // on supprime la grille pour forcer l'utilisation par defaut des tuiles en 512
                                 // sur du vecteur tuilé
                                 // tileGrid : olCreateXYZTileGrid({ // TODO scheme tms ?

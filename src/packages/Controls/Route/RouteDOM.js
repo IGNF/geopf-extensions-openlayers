@@ -1102,12 +1102,14 @@ var RouteDOM = {
         // on ouvre le menu des options des exclusions
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
+                e.preventDefault();
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 context.onShowRouteExclusionsClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
+                e.preventDefault();
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 context.onShowRouteExclusionsClick(e);

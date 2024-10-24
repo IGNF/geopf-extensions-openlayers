@@ -182,7 +182,7 @@ var MousePosition = class MousePosition extends Control {
                 Draggable.dragElement(
                     this._panelMousePositionContainer,
                     this._panelHeaderContainer,
-                    this.options.position ? null : map.getTargetElement()
+                    map.getTargetElement()
                 );
             }
 
