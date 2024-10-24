@@ -733,12 +733,14 @@ var IsoDOM = {
         // Close all results and panels when minimizing the widget
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
+                e.preventDefault();
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 self.onShowIsoSettingsClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
+                e.preventDefault();
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 self.onShowIsoSettingsClick(e);
