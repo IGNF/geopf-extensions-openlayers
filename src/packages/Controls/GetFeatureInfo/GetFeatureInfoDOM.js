@@ -230,9 +230,9 @@ var GetFeatureInfoDOM = {
         var accordeon = dsfrTemplate.firstChild;
         var button = accordeon.querySelector("button, button.fr-accordion__btn");
         button.addEventListener("click", (e) => {
-            e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
-            var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
-            if (e.target.ariaExpanded === "true") {
+            e.currentTarget.ariaExpanded = !(e.currentTarget.ariaExpanded === "true");
+            var collapse = document.getElementById(e.currentTarget.getAttribute("aria-controls"));
+            if (e.currentTarget.ariaExpanded === "true") {
                 collapse.classList.add("fr-collapse--expanded");
                 collapse.classList.remove("GPelementHidden");
             } else {
