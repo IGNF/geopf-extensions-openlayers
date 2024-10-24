@@ -20,7 +20,10 @@ button[id^=GPgetFeatureInfoPicto] {
 .GPgfiLayerButton {
     border: unset;
     background: unset;
+    text-align: left;
+    font-weight: bold;
 }
+
 button[aria-expanded="true"].GPgfiLayerButton span.GPshowGfiLayerFeature {
     -webkit-transform: rotateX(180deg);
     transform: rotateX(180deg);

@@ -219,7 +219,7 @@ var GetFeatureInfoDOM = {
                 <h3 class="fr-accordion__title">
                     <button class="GPgfiLayerButton fr-accordion__btn" aria-expanded="false" aria-controls="accordion-${layername}">
                         <span class="GPshowGfiLayerFeature"></span>
-                        ${layername}
+                        <span id="gfiLayerName">${layername}</span>
                     </button>
                 </h3>
                 <div class="fr-collapse GPgetFeatureInfoAccordionContent GPelementHidden" id="accordion-${layername}">
