@@ -1158,7 +1158,7 @@ var Route = class Route extends Control {
      * @private
      */
     onRouteOriginLabelClick () {
-        this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
+        this._formRouteContainer.className = "gpf-panel__content gpf-mobile-form fr-modal__content";
         // on désactive l'écouteur d'événements sur la carte (pour ne pas placer un marker au clic)
         // map.un(
         //     "click",

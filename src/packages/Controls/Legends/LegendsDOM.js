@@ -18,7 +18,7 @@ var LegendsDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPlegends");
-        container.className = "GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPwidget gpf-widget gpf-widget-button gpf-mobile-fullscreen";
         return container;
     },
 

@@ -37,6 +37,7 @@ Un nouvelle version du GFI avec un fonctionnement et des options differentes de 
   * Mise à jour de la documentation pour les nouveaux widgets (#170)
   * SearchEngine : Modification de l'option `opened:false` en `collapsible:true`
   * CI : Build des binaires et des sources du projet (#13)
+  * Responsive : Amelioration sur le responsive des widgets en mode mobile (#230) 
 
 * 🔥 [Deprecated]
 

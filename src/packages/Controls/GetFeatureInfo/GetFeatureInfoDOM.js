@@ -50,7 +50,7 @@ var GetFeatureInfoDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPgetFeatureInfo");
-        container.className = "GPgetFeatureInfo GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPgetFeatureInfo gpf-widget gpf-widget-button gpf-mobile-fullscreen";
         return container;
     },
 

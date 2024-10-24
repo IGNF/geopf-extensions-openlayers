@@ -20,7 +20,7 @@ var IsoDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPisochron");
-        container.className = "GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPwidget gpf-widget gpf-widget-button gpf-mobile-fullscreen";
         return container;
     },
 
@@ -178,7 +178,7 @@ var IsoDOM = {
 
         var form = document.createElement("form");
         form.id = this._addUID("GPisochronForm");
-        form.className = "GPform gpf-panel__content fr-modal__content";
+        form.className = "GPform gpf-panel__content gpf-mobile-form fr-modal__content";
 
         form.addEventListener("submit", function (e) {
             e.preventDefault();

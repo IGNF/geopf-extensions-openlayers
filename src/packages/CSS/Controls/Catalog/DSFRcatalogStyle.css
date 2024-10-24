@@ -2,3 +2,12 @@
     -webkit-mask: url("img/dsfr/catalog.svg") center no-repeat;
     mask: url("img/dsfr/catalog.svg") center no-repeat;
 }
+
+/* Mode mobile doit prendre le dessus */
+
+@media (max-width: 576px) {
+    .gpf-mobile-fullscreen .GPtabContent {
+        max-height: unset !important;
+        height: 100vh;
+    }
+}

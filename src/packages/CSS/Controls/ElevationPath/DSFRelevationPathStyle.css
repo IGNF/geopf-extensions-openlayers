@@ -46,3 +46,11 @@ div[id^=GPelevationPathInformationsContainer] {
 .GPelevationPathInformations > span {
   white-space: nowrap;
 }
+
+/* Mode Mobile */
+
+@media (max-width: 576px) {
+  div[id^=GPelevationPathInformationsContainer], #GPelevationPathProfil {
+    margin: auto;
+  }
+}
