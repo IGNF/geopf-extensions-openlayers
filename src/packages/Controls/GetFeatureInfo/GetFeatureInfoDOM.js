@@ -50,7 +50,7 @@ var GetFeatureInfoDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPgetFeatureInfo");
-        container.className = "GPgetFeatureInfo gpf-widget gpf-widget-button";
+        container.className = "GPgetFeatureInfo GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -125,12 +125,12 @@ var GetFeatureInfoDOM = {
      */
     _createGetFeatureInfoPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
         return container;
     },
     _createGetFeatureInfoPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__title fr-modal__title fr-pt-4w";
+        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         div.innerHTML = "GetFeatureInfo";
         return div;
     },
@@ -138,7 +138,7 @@ var GetFeatureInfoDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.className = "GPcloseGetFeatureInfo gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.className = "GPpanelClose GPcloseGetFeatureInfo gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -217,11 +217,12 @@ var GetFeatureInfoDOM = {
         var dsfrTemplate = this.stringToHTML(`
             <section class="fr-accordion">
                 <h3 class="fr-accordion__title">
-                    <button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-${layername}">
-                        ${layername}
+                    <button class="GPgfiLayerButton fr-accordion__btn" aria-expanded="false" aria-controls="accordion-${layername}">
+                        <span class="GPshowGfiLayerFeature"></span>
+                        <span id="gfiLayerName">${layername}</span>
                     </button>
                 </h3>
-                <div class="fr-collapse GPgetFeatureInfoAccordionContent" id="accordion-${layername}">
+                <div class="fr-collapse GPgetFeatureInfoAccordionContent GPelementHidden" id="accordion-${layername}">
                     ${this._createGetFeatureInfoWaitingDiv()}
                 </div>
             </section>
@@ -229,12 +230,14 @@ var GetFeatureInfoDOM = {
         var accordeon = dsfrTemplate.firstChild;
         var button = accordeon.querySelector("button, button.fr-accordion__btn");
         button.addEventListener("click", (e) => {
-            e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
-            var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
-            if (e.target.ariaExpanded === "true") {
+            e.currentTarget.ariaExpanded = !(e.currentTarget.ariaExpanded === "true");
+            var collapse = document.getElementById(e.currentTarget.getAttribute("aria-controls"));
+            if (e.currentTarget.ariaExpanded === "true") {
                 collapse.classList.add("fr-collapse--expanded");
+                collapse.classList.remove("GPelementHidden");
             } else {
                 collapse.classList.remove("fr-collapse--expanded");
+                collapse.classList.add("GPelementHidden");
             }
         });
         return accordeon;
