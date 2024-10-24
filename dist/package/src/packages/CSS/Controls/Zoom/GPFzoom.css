@@ -3,11 +3,6 @@
     left: 0.5em;
 }
 
-#GPzoomIn,
-#GPzoomOut {
-    border: unset;
-}
-
 .ol-custom-zoom {}
 
 .ol-custom-zoom-in,
