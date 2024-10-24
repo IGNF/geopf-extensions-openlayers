@@ -49,8 +49,6 @@ class PositionFactory {
         this.caller = caller;
         this.container = null;
 
-        this.container = null;
-
         this.#createContainer("top-left");
         this.#createContainer("top-right");
         this.#createContainer("bottom-left");
