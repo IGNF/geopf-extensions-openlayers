@@ -30,8 +30,8 @@ button[id^="GPshowImportPicto-"][aria-pressed="true"] + dialog {
 [id^="GPimportPanel-"],
 [id^="GPimportGetCapPanel-"],
 [id^="GPimportMapBoxPanel-"] {
-    left: 34px;
-    top: 0px;
+    /* left: 34px;
+    top: 0px; */
     height: inherit;
 }
 
@@ -41,22 +41,13 @@ button[id^="GPshowImportPicto-"][aria-pressed="true"] + dialog {
 
 [id^="GPimportGetCapPanel-"],
 [id^="GPimportMapBoxPanel-"] {
-    position: absolute;
+    position: relative;
 }
 
 [id^="GPimportGetCapPanel-"],
 [id^="GPimportMapBoxPanel-"] {
-    display: none;
-}
-
-[id^="GPimportMapBoxPanelReturnPicto-"] {
-    position: absolute;
-    width: 26px;
-    height: 26px;
-    border-radius: 3px;
-    opacity: 1;
-    background-position: 0 0;
-    cursor: pointer;
+    /* display: none; */
+    width: 340px;
 }
 
 /***************/
