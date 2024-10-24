@@ -176,7 +176,7 @@ var LayerImportDOM = {
 
         var form = document.createElement("form");
         form.id = this._addUID("GPimportForm");
-        form.className = "GPform gpf-panel__content fr-modal__content";
+        form.className = "GPform gpf-panel__content gpf-mobile-form fr-modal__content";
 
         // TODO ?
         if (form.addEventListener) {

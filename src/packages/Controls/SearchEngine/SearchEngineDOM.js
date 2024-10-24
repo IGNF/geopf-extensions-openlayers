@@ -22,7 +22,7 @@ var SearchEngineDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPsearchEngine");
-        container.className = "GPwidget gpf-widget gpf-mobile-fullscreen";
+        container.className = "GPwidget gpf-widget";
         return container;
     },
 
