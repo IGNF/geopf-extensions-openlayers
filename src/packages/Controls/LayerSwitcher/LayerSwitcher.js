@@ -1209,9 +1209,10 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         // FIXME
         // le zoom to extent fonctionne par defaut pour les couches raster TMS/WMS/WMTS issues du catalogue
+        // et pour les données utilisateurs de type vecteur
         // mais doit aussi le faire pour les données utilisateurs du type :
-        // * vecteurs (imports)
         // * raster par moissonnage (imports)
+        // * style mapbox (imports)
 
         var domIDShort = e.target.id; // ex GPvisibilityPicto_ID_26
         var domIDLong = SelectorID.index(domIDShort); // ex. 26
@@ -1219,53 +1220,62 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         var extent = null;
         var error = null;
-        try {
-            // Check if configuration is loaded
-            if (!Config.isConfigLoaded()) {
-                throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
-            }
 
-            if (!data.layer.hasOwnProperty("gpLayerId")) {
-                throw "WARN : User data not yet implemented !";
-            }
-
-            var layerName = data.layer.name || data.layer.getSource().name;
-            var layerService = data.layer.service || data.layer.getSource().service;
-            var layerId = Config.configuration.getLayerId(layerName, layerService);
-            if (!layerId) {
-                throw "ERROR : Layer ID not found into the catalogue !?";
-            }
-
-            var globalConstraints = Config.configuration.getGlobalConstraints(layerId);
-            if (globalConstraints) {
-                var map = this.getMap();
-                if (!map || !map.getView()) {
-                    return;
-                }
-                var view = map.getView();
-                var crsTarget = view.getProjection();
-
-                // récupération de l'étendue (en EPSG:4326 par défaut),
-                // et reprojection dans la projection de la couche
-                var bbox = [
-                    globalConstraints.extent.left,
-                    globalConstraints.extent.bottom,
-                    globalConstraints.extent.right,
-                    globalConstraints.extent.top
-                ];
-                var crsSource = globalConstraints.crs;
-                // projection par defaut
-                if (!crsSource) {
-                    crsSource = "EPSG:4326";
-                }
-
-                extent = olTransformExtentProj(bbox, crsSource, crsTarget);
-                if (extent) {
-                    view.fit(extent);
+        var map = this.getMap();
+        // cas d'un layer vecteur importé
+        if (data.layer.hasOwnProperty("gpResultLayerId") && data.layer.gpResultLayerId.split(":")[0] === "layerimport") {
+            // TODO : appeler fonction commune
+            // zoom sur l'étendue des entités récupérées (si possible)
+            if (map.getView() && map.getSize() && data.layer.getSource().getExtent) {
+                var sourceExtent = data.layer.getSource().getExtent();
+                if (sourceExtent && sourceExtent[0] !== Infinity) {
+                    map.getView().fit(sourceExtent, map.getSize());
                 }
             }
-        } catch (e) {
-            error = e;
+        } else {
+            try {
+                // Check if configuration is loaded
+                if (!Config.isConfigLoaded()) {
+                    throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
+                }
+
+                var layerName = data.layer.name || data.layer.getSource().name;
+                var layerService = data.layer.service || data.layer.getSource().service;
+                var layerId = Config.configuration.getLayerId(layerName, layerService);
+                if (!layerId) {
+                    throw "ERROR : Layer ID not found into the catalogue !?";
+                }
+
+                var globalConstraints = Config.configuration.getGlobalConstraints(layerId);
+                if (globalConstraints) {
+                    if (!map || !map.getView()) {
+                        return;
+                    }
+                    var view = map.getView();
+                    var crsTarget = view.getProjection();
+
+                    // récupération de l'étendue (en EPSG:4326 par défaut),
+                    // et reprojection dans la projection de la couche
+                    var bbox = [
+                        globalConstraints.extent.left,
+                        globalConstraints.extent.bottom,
+                        globalConstraints.extent.right,
+                        globalConstraints.extent.top
+                    ];
+                    var crsSource = globalConstraints.crs;
+                    // projection par defaut
+                    if (!crsSource) {
+                        crsSource = "EPSG:4326";
+                    }
+
+                    extent = olTransformExtentProj(bbox, crsSource, crsTarget);
+                    if (extent) {
+                        view.fit(extent);
+                    }
+                }
+            } catch (e) {
+                error = e;
+            }
         }
 
         /**
