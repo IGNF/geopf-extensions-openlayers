@@ -1226,8 +1226,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         if (data.layer.hasOwnProperty("gpResultLayerId") && data.layer.gpResultLayerId.split(":")[0] === "layerimport") {
             // TODO : appeler fonction commune
             // zoom sur l'étendue des entités récupérées (si possible)
-            if (map.getView() && map.getSize() && data.layer.getSource().getExtent) {
-                var sourceExtent = data.layer.getSource().getExtent();
+            if (map.getView() && map.getSize()) {
+                var sourceExtent = data.layer.getExtent() || data.layer.getSource().getExtent();
                 if (sourceExtent && sourceExtent[0] !== Infinity) {
                     map.getView().fit(sourceExtent, map.getSize());
                 }
