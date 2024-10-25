@@ -7,6 +7,7 @@ declare namespace LayerImportDOM {
     function _createImportPanelElement(): DOMElement;
     function _createImportPanelDivElement(): HTMLDivElement;
     function _createImportPanelHeaderElement(): DOMElement;
+    function _createImportPanelReturnPictoElement(): DOMElement;
     function _createImportPanelTitleElement(): DOMElement;
     function _createImportPanelCloseElement(): DOMElement;
     function _createImportPanelFormElement(): DOMElement;

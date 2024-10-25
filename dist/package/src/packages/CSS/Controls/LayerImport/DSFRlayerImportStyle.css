@@ -9,3 +9,10 @@
   mask: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4AUXDwQyeFmCzQAAATJJREFUSMftliFLBFEURs/dVUQURJvYLCaLGESz1T9gUJsoWARBEBRM/obFIFgMKxtsNhG2aTUIBqOCySLsHssuTNiVGZ47aU8aZr5537vz3TfvwZAhg0K9UL/U5bLMuuyljFXJYXYOHGVuxcAM1VPg5D+/1sgfZsfAWY9HG+ok0AY+gFfgJSI+UzI7tBht9UHdUqtFzQ5M41GdKZLhQmJMa0A9d6VqqDXT2e41fvQxrQCXQK+X7oGnzvUoMA3MAyvAWEbXjIjVIllW1eseM9/vo59SrzK6ljpXtIGq6k0ew0wcdxntTqGFHxEtYBO4zTPBiBDYBX6SGlAdVRud9baeQ99tunrKz6CizubULnYMn8vczprqW+HdIoEaMF5mhRPqe2kVRsQ30Cj7WLI0PJwNnF82zKAINyZs+wAAAABJRU5ErkJggg==') center no-repeat;
 }
 
+.gpf-panel__items_layerimport {
+  color: var(--text-action-high-blue-france);
+  border-bottom: 1px solid var(--grey-900-175);
+  list-style-type: none;
+  height: auto;
+}
+

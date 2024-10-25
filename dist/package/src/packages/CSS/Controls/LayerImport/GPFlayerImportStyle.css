@@ -1,7 +1,7 @@
 
 /* Import form */
 [id^="GPimportPanel-"] {
-  width: 280px;
+  width: 340px;
 }
 
 [id^="GPimportGetCapPanel-"],
@@ -32,7 +32,7 @@ div[id^="GPimportChoice-"] {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAaCAYAAAD43n+tAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAH7SURBVFiF7dY/aBRhEAXwvcN/sRBBkUNsA8JhoZ1gJaIIamV91SUSFCxtU1oJQS9i0lnZWShYpE5pIYFUNoJIsLGIYhC9n8XOcZt175Ldu2CzD7bYmfne+97O7nybJDVq1KhRFZjFWlyz/3s/lYFDeIjvhviJRRyZAv8cXqA5pqaBp3gwqdglvA8TW+jgNj5HbAOXJ+Cfw5/gWi0yFWaeRU2/kikcx2P8DpKXOJXJn8RSbKYfT/hEBZ2e3VhGI2dmOVfTKytyC59i8Udcy+RA5v4KNiP8BXdLag1epSxW0cx1ZoCVoi6OIm9FJ+BXdOhYrmaXoYgdxiPsRPoNzk3BVL57pcx08C0WrqM9ou4fQ5lcO9YKrs6EpqqZCcLtWPgkv3CMSFG3msEB2/vewHhThcOiCNmi50mSSJLkXpIk3TIbyaEbHIKzLBr7jO0N3JB+2PAapwtqCl856dR7FemvuFNSu2gAVOpSnvgM3gbJFm7uZQhXDc+lNZydgpmVglhlUw3M44f0jFnC0bwh6XRblJ5FO9JJV0pwjJnB2C4c6aVNhVgbH4JoAxcyufOGfxCbuFhR4+AP1pzgTIj2o2Pzue71MDMBf9fw16dwNOc61cf9yoYypNcNBwYVPvwx3AvxYEZOszDVw8I0NAekLbyLqzU14ho1atQ4KPwF7C8m4Xa+2v4AAAAASUVORK5CYII=');
 }
 
-.GPimportMapBoxPanelReturnPicto {
+.GPimportPanelReturnPicto {
   background-color: #366291;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4AUXDwQyeFmCzQAAATJJREFUSMftliFLBFEURs/dVUQURJvYLCaLGESz1T9gUJsoWARBEBRM/obFIFgMKxtsNhG2aTUIBqOCySLsHssuTNiVGZ47aU8aZr5537vz3TfvwZAhg0K9UL/U5bLMuuyljFXJYXYOHGVuxcAM1VPg5D+/1sgfZsfAWY9HG+ok0AY+gFfgJSI+UzI7tBht9UHdUqtFzQ5M41GdKZLhQmJMa0A9d6VqqDXT2e41fvQxrQCXQK+X7oGnzvUoMA3MAyvAWEbXjIjVIllW1eseM9/vo59SrzK6ljpXtIGq6k0ew0wcdxntTqGFHxEtYBO4zTPBiBDYBX6SGlAdVRud9baeQ99tunrKz6CizubULnYMn8vczprqW+HdIoEaMF5mhRPqe2kVRsQ30Cj7WLI0PJwNnF82zKAINyZs+wAAAABJRU5ErkJggg==');
   /* background-position: 3px center; */
@@ -200,3 +200,12 @@ li.GPimportMapBoxListSource:before {
 .GPimportMapBoxSourceScale {
 }
 
+[id^="GPimportPanelReturnPicto-"] {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  opacity: 1;
+  background-position: 0 0;
+  cursor: pointer;
+}
