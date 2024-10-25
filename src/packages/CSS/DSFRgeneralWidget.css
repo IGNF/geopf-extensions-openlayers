@@ -534,7 +534,7 @@
       width: 100vw !important;
   }
 
-  .gpf-mobile-fullscreen form div,p {
+  .gpf-mobile-fullscreen form div, .gpf-mobile-fullscreen form p {
     margin: auto;
     text-align: center;
   }
