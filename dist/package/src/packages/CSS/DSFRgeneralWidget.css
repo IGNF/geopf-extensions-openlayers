@@ -534,6 +534,16 @@
       width: 100vw !important;
   }
 
+  .gpf-mobile-fullscreen form div, .gpf-mobile-fullscreen form p {
+    margin: auto;
+    text-align: center;
+  }
+
+  .gpf-mobile-fullscreen .gpf-mobile-form {
+    max-height: unset;
+    height: 100vh;
+  }
+
   .position-container-top-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
   .position-container-bottom-right .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,
   .position-container-top-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog,

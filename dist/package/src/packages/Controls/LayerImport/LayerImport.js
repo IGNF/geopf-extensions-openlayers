@@ -943,6 +943,8 @@ var LayerImport = class LayerImport extends Control {
         this.contentService = null;
 
         if (this._isCurrentImportTypeStatic) {
+            // on ferme le widget à l'import d'une couche statique
+            this.setCollapsed(true);
             this._importStaticLayer();
         } else {
             this._importServiceLayers();

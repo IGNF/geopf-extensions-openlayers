@@ -95,3 +95,10 @@ div[id^=GProuteResultsDetails-] {
   color: var(--text-label-grey);
 }
 
+/* Mode Mobile */
+
+@media (max-width: 576px) {
+  .gpf-mobile-fullscreen div[id^="GProuteResultsDetails-"] {
+    max-width: unset;
+  }
+}
