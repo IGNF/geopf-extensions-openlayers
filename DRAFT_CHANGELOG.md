@@ -44,7 +44,11 @@ Un nouvelle version du GFI avec un fonctionnement et des options differentes de 
 
 * 🐛 [Fixed]
 
+  * layerswitcher : zoomToExtent sur les données importées (vecteurs et services) (#232)￼
+     - Ajout du zoom to extent pour le vecteur
+     - Ajout du zoom to extent pour le WMS et WMTS
   * LayerImport : Fix (#231)
+  * Zoom : changer style classique des boutons zoom + et - (#227)
   * Measures : Fix (#109)
   * LayerSwitcher : divers correctifs dsfr (#64) (#173)
   * SearchEngine : Correction sur la recherche avancée de la parcelle Cadastrale (#61)
