@@ -152,7 +152,7 @@ module.exports = (env, argv) => {
                     extractComments : false,
                     terserOptions : {
                         output : {
-                            comments : false,
+                            comments : "some",
                         },
                         mangle : true
                     }
