@@ -44,6 +44,7 @@ Un nouvelle version du GFI avec un fonctionnement et des options differentes de 
 
 * 🐛 [Fixed]
 
+  * LayerImport : Fix (#231)
   * Measures : Fix (#109)
   * LayerSwitcher : divers correctifs dsfr (#64) (#173)
   * SearchEngine : Correction sur la recherche avancée de la parcelle Cadastrale (#61)
