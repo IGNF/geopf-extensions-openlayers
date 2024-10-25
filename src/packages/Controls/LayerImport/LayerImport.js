@@ -935,8 +935,7 @@ var LayerImport = class LayerImport extends Control {
      */
     _onImportSubmit () {
         logger.log("import d'une couche de type : " + this._currentImportType);
-        // on ferme le widget à l'import
-        this.setCollapsed(true);
+
         // reinitialisation du contenu d'un import de type
         // - static (KML ou GPX ou GeoJSON)
         this.contentStatic = null;
@@ -944,6 +943,8 @@ var LayerImport = class LayerImport extends Control {
         this.contentService = null;
 
         if (this._isCurrentImportTypeStatic) {
+            // on ferme le widget à l'import d'une couche statique
+            this.setCollapsed(true);
             this._importStaticLayer();
         } else {
             this._importServiceLayers();
