@@ -1445,12 +1445,13 @@ var LayerImport = class LayerImport extends Control {
                                         map.getView().setZoom(p.styles.zoom);
                                     }
 
+                                    // TODO : appeler fonction commune
                                     // zoom sur l'étendue des entités récupérées (si possible)
                                     var source = p.layer.getSource();
                                     if (map.getView() && map.getSize() && source.getExtent) {
                                         var sourceExtent = source.getExtent();
                                         if (sourceExtent && sourceExtent[0] !== Infinity) {
-                                            map.getView().fit(source.getExtent(), map.getSize());
+                                            map.getView().fit(sourceExtent, map.getSize());
                                         }
                                     }
                                 })
@@ -1707,7 +1708,7 @@ var LayerImport = class LayerImport extends Control {
             if (map.getView() && map.getSize() && vectorSource.getExtent) {
                 var sourceExtent = vectorSource.getExtent();
                 if (sourceExtent && sourceExtent[0] !== Infinity) {
-                    map.getView().fit(vectorSource.getExtent(), map.getSize());
+                    map.getView().fit(sourceExtent, map.getSize());
                 }
             }
         }
@@ -1806,7 +1807,7 @@ var LayerImport = class LayerImport extends Control {
         if (map.getView() && map.getSize() && vectorSource.getExtent) {
             var sourceExtent = vectorSource.getExtent();
             if (sourceExtent && sourceExtent[0] !== Infinity) {
-                map.getView().fit(vectorSource.getExtent(), map.getSize());
+                map.getView().fit(sourceExtent, map.getSize());
             }
         }
     }

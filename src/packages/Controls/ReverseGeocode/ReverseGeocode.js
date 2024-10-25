@@ -1231,6 +1231,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
             // 2. Zoom sur l'étendue des résultats (features)
             if (this._resultsFeatures.getLength() > 1) {
+                // TODO : appeler fonction commune
                 if (this._resultsFeaturesSource && this._resultsFeaturesSource.getExtent) {
                     var extent = this._resultsFeaturesSource.getExtent();
                     map.getView().fit(extent, map.getSize());
