@@ -238,8 +238,8 @@ var LayerImport = class LayerImport extends Control {
                             // le panneau des résultats existe t il ?
                             if (self._mapBoxPanel && self._importPanel) {
                                 self.cleanMapBoxResults(e.element.gpEditorId);
-                                self._mapBoxPanel.style.display = "none";
-                                self._importPanel.style.display = "";
+                                self._mapBoxPanel.classList.replace("GPelementVisible", "GPelementHidden");
+                                self._mapBoxPanel.classList.replace("gpf-visible", "gpf-hidden");
                             }
                         }
                     }
@@ -256,17 +256,17 @@ var LayerImport = class LayerImport extends Control {
                 );
 
                 // panneau draggable pour les resultats ?
-                Draggable.dragElement(
-                    this._getCapPanel,
-                    this._getCapPanelHeader,
-                    map.getTargetElement()
+                // Draggable.dragElement(
+                //     this._getCapPanel,
+                //     this._getCapPanelHeader,
+                //     map.getTargetElement()
 
-                );
-                Draggable.dragElement(
-                    this._mapBoxPanel,
-                    this._mapBoxPanelHeader,
-                    map.getTargetElement()
-                );
+                // );
+                // Draggable.dragElement(
+                //     this._mapBoxPanel,
+                //     this._mapBoxPanelHeader,
+                //     map.getTargetElement()
+                // );
             }
             // mode "collapsed"
             if (!this.collapsed) {
@@ -513,6 +513,8 @@ var LayerImport = class LayerImport extends Control {
         this._importPanel = null;
         this._panelCloseButton = null;
         this._importPanelHeader = null;
+        this._importPanelTitle = null;
+        this._importPanelReturnPicto = null;
         this._formContainer = null;
         this._staticLocalImportInput = null;
         this._staticUrlImportInput = null;
@@ -687,9 +689,12 @@ var LayerImport = class LayerImport extends Control {
 
         // header
         var panelHeader = this._importPanelHeader = this._createImportPanelHeaderElement();
+        // return
+        var panelReturn = this._importPanelReturnPicto = this._createImportPanelReturnPictoElement();
+        panelHeader.appendChild(panelReturn);
 
         // panel title
-        var panelTitle = this._createImportPanelTitleElement();
+        var panelTitle = this._importPanelTitle = this._createImportPanelTitleElement();
         panelHeader.appendChild(panelTitle);
         // close picto
         var panelClose = this._panelCloseButton = this._createImportPanelCloseElement();
@@ -702,16 +707,16 @@ var LayerImport = class LayerImport extends Control {
 
         // results (dans le panel)
         var getCapPanel = this._getCapPanel = this._createImportGetCapPanelElement();
-        var getCapPanelHeader = this._getCapPanelHeader = this._createImportGetCapPanelHeaderElement();
-        getCapPanel.appendChild(getCapPanelHeader);
+        // var getCapPanelHeader = this._getCapPanelHeader = this._createImportGetCapPanelHeaderElement();
+        // getCapPanel.appendChild(getCapPanelHeader);
         var importGetCapResultsList = this._getCapResultsListContainer = this._createImportGetCapResultsContainer();
         getCapPanel.appendChild(importGetCapResultsList);
         importPanelPanelDiv.appendChild(getCapPanel);
 
         // mapbox panel results
         var mapBoxPanel = this._mapBoxPanel = this._createImportMapBoxPanelElement();
-        var mapBoxPanelHeader = this._mapBoxPanelHeader = this._createImportMapBoxPanelHeaderElement();
-        mapBoxPanel.appendChild(mapBoxPanelHeader);
+        // var mapBoxPanelHeader = this._mapBoxPanelHeader = this._createImportMapBoxPanelHeaderElement();
+        // mapBoxPanel.appendChild(mapBoxPanelHeader);
         var importMapBoxResultsList = this._mapBoxResultsListContainer = this._createImportMapBoxResultsContainer();
         mapBoxPanel.appendChild(importMapBoxResultsList);
 
@@ -829,11 +834,15 @@ var LayerImport = class LayerImport extends Control {
             this.updatePosition(this.options.position);
         }
         // on affiche les resultats d'une couche MapBox
+        // car on garde la possibilité de modifier la configuration des layers
         if (this._hasMapBoxResults) {
-            this._mapBoxPanel.style.display = "block";
+            this._mapBoxPanel.classList.replace("GPelementHidden", "GPelementVisible");
+            this._mapBoxPanel.classList.replace("gpf-hidden", "gpf-visible");
+            this._hideFormContainer();
         } else {
-            this._formContainer.style.display = "block";
-            this._importPanelHeader.style.display = "";
+            this._getCapPanel.classList.replace("GPelementVisible", "GPelementHidden");
+            this._getCapPanel.classList.replace("gpf-visible", "gpf-hidden");
+            this._displayFormContainer();
         }
     }
 
@@ -892,19 +901,24 @@ var LayerImport = class LayerImport extends Control {
     _onMapBoxPanelClose () {
         this.cleanMapBoxResultsList();
         this._loadingContainer.className = "";
+        this._importPanelReturnPicto.classList.replace("GPelementVisible", "GPelementHidden");
+        this._importPanelReturnPicto.classList.replace("gpf-visible", "gpf-hidden");
+        this._mapBoxPanel.classList.replace("GPelementVisible", "GPelementHidden");
+        this._mapBoxPanel.classList.replace("gpf-visible", "gpf-hidden");
     }
 
     /**
-     * this method is called by event 'click' on 'GPimportMapBoxPanelReturnPicto' tag form
+     * this method is called by event 'click' on 'GPimportPanelReturnPicto' tag form
      * (cf. LayerImportDOM._createImportMapBoxPanelHeaderElement),
      * and return to information
      *
      * @param {Object} e - HTMLElement
      * @private
      */
-    _onMapBoxReturnPictoClick (e) {
+    _onReturnPictoClick (e) {
         // on bascule sur l'icone d'ouverture du composant
-        this._mapBoxPanel.style.display = "none";
+        this._mapBoxPanel.classList.replace("GPelementVisible", "GPelementHidden");
+        this._mapBoxPanel.classList.replace("gpf-visible", "gpf-hidden");
         this._loadingContainer.className = "";
     }
 
@@ -1443,8 +1457,10 @@ var LayerImport = class LayerImport extends Control {
                                 })
                                 .then(function () {
                                     // on cache le panneau principal des imports
-                                    self._formContainer.style.display = "none";
-                                    self._importPanelHeader.style.display = "none";
+                                    self._hideFormContainer();
+                                    self._importPanelHeader.classList.replace("GPelementVisible", "GPelementHidden");
+                                    self._importPanelHeader.classList.replace("gpf-visible", "gpf-hidden");
+                                    self._importPanelTitle.innerHTML = "Edition des styles";
 
                                     // editeur de styles
                                     var editor = new Editor({
@@ -1474,7 +1490,12 @@ var LayerImport = class LayerImport extends Control {
                                         .then(function () {
                                             // affichage du panneau des couches accessibles à l'edition
                                             if (self.options.vectorStyleOptions.MapBox.display) {
-                                                self._mapBoxPanel.style.display = "block";
+                                                self._importPanelHeader.classList.replace("GPelementHidden", "GPelementVisible");
+                                                self._importPanelHeader.classList.replace("gpf-hidden", "gpf-visible");
+                                                self._mapBoxPanel.classList.replace("GPelementHidden", "GPelementVisible");
+                                                self._mapBoxPanel.classList.replace("gpf-hidden", "gpf-visible");
+                                                self._importPanelReturnPicto.classList.replace("GPelementHidden", "GPelementVisible");
+                                                self._importPanelReturnPicto.classList.replace("gpf-hidden", "gpf-visible");
                                             }
                                         })
                                         .then(function () {
@@ -2051,8 +2072,10 @@ var LayerImport = class LayerImport extends Control {
         this.contentService = xmlResponse;
 
         // Affichage du panel des couches accessibles
-        this._importPanel.style.display = "none";
-        this._getCapPanel.style.display = "block";
+        this._hideFormContainer();
+        this._getCapPanel.classList.replace("GPelementHidden", "GPelementVisible");
+        this._getCapPanel.classList.replace("gpf-hidden", "gpf-visible");
+        this._importPanelTitle.innerHTML = "Couches accessibles";
 
         // Parse GetCapabilities Response
         if (this._currentImportType === "WMS") {
@@ -2377,6 +2400,7 @@ var LayerImport = class LayerImport extends Control {
 
         // création de la couche à partir de la source
         var wmsLayer = new TileLayer(layerTileOptions);
+        wmsLayer.setExtent(layerTileOptions.extent);
         // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant. (pour layerSwitcher par ex)
         wmsLayer.gpResultLayerId = "layerimport:WMS";
         // on rajoute le champ gpGFIparams permettant d'identifier si la couche est queryable, et de transmettre les formats reconnus par GetFeatureInfo
@@ -2391,6 +2415,14 @@ var LayerImport = class LayerImport extends Control {
         }
 
         map.addLayer(wmsLayer);
+
+        // zoom sur l'étendue des entités récupérées (si possible)
+        if (map.getView() && map.getSize() && wmsLayer.getExtent) {
+            var sourceExtent = wmsLayer.getExtent();
+            if (sourceExtent && sourceExtent[0] !== Infinity) {
+                map.getView().fit(sourceExtent, map.getSize());
+            }
+        }
     }
 
     /**
@@ -2724,6 +2756,7 @@ var LayerImport = class LayerImport extends Control {
         var wmtsLayer;
         try {
             wmtsLayer = new TileLayer(layerTileOptions);
+            wmtsLayer.setExtent(layerTileOptions.extent);
         } catch (e) {
             logger.warn("[ol.control.LayerImport] an error occured while trying to create ol.layer.Tile from getCapabilities information. error : ", e);
             return;
@@ -2732,6 +2765,14 @@ var LayerImport = class LayerImport extends Control {
         wmtsLayer.gpResultLayerId = "layerimport:WMTS";
 
         map.addLayer(wmtsLayer);
+
+        // zoom sur l'étendue des entités récupérées (si possible)
+        if (map.getView() && map.getSize() && wmtsLayer.getExtent) {
+            var sourceExtent = wmtsLayer.getExtent();
+            if (sourceExtent && sourceExtent[0] !== Infinity) {
+                map.getView().fit(sourceExtent, map.getSize());
+            }
+        }
     }
 
     /**
@@ -2992,6 +3033,19 @@ var LayerImport = class LayerImport extends Control {
         }
     }
 
+    _displayFormContainer () {
+        this._formContainer.classList.replace("GPelementHidden", "GPelementVisible");
+        this._formContainer.classList.replace("gpf-hidden", "gpf-visible");
+        this._importPanelTitle.innerHTML = "Import de données";
+        // this._importPanelHeader.classList.replace("GPelementHidden", "GPelementVisible");
+        // this._importPanelHeader.classList.replace("gpf-hidden", "gpf-visible");
+    }
+    _hideFormContainer () {
+        this._formContainer.classList.replace("GPelementVisible", "GPelementHidden");
+        this._formContainer.classList.replace("gpf-visible", "gpf-hidden");
+        // this._importPanelHeader.classList.replace("GPelementVisible", "GPelementHidden");
+        // this._importPanelHeader.classList.replace("gpf-visible", "gpf-hidden");
+    }
     /**
      * this method empties getCap results list (DOM element)
      *
