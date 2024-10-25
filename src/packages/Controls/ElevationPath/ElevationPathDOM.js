@@ -20,7 +20,7 @@ var ElevationPathDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPelevationPath");
-        container.className = "GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPwidget gpf-widget gpf-widget-button gpf-mobile-fullscreen";
         return container;
     },
 

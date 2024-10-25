@@ -32,7 +32,7 @@ var LayerImportDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPimport");
-        container.className = "GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPwidget gpf-widget gpf-widget-button gpf-mobile-fullscreen";
         return container;
     },
 
@@ -206,7 +206,7 @@ var LayerImportDOM = {
 
         var form = document.createElement("form");
         form.id = this._addUID("GPimportForm");
-        form.className = "GPform GPelementVisible gpf-visible gpf-panel__content fr-modal__content";
+        form.className = "GPform GPelementVisible gpf-visible gpf-mobile-form gpf-panel__content fr-modal__content";
 
         // TODO ?
         if (form.addEventListener) {
