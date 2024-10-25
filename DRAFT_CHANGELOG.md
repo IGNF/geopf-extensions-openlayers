@@ -3,6 +3,13 @@
 __DATE__
 > 🚀 Release Extension Geoplateforme openlayers
 
+## Unreleased
+
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/main%40%7B1year%7D...main>
+
+En attente de la 1ère release :
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/v1.0.0...HEAD>
+
 ## 🎉 Summary
 
 * mise à jour des dependances
