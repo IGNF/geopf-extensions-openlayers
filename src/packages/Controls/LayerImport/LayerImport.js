@@ -2399,6 +2399,7 @@ var LayerImport = class LayerImport extends Control {
 
         // création de la couche à partir de la source
         var wmsLayer = new TileLayer(layerTileOptions);
+        wmsLayer.setExtent(layerTileOptions.extent);
         // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant. (pour layerSwitcher par ex)
         wmsLayer.gpResultLayerId = "layerimport:WMS";
         // on rajoute le champ gpGFIparams permettant d'identifier si la couche est queryable, et de transmettre les formats reconnus par GetFeatureInfo
@@ -2413,6 +2414,14 @@ var LayerImport = class LayerImport extends Control {
         }
 
         map.addLayer(wmsLayer);
+
+        // zoom sur l'étendue des entités récupérées (si possible)
+        if (map.getView() && map.getSize() && wmsLayer.getExtent) {
+            var sourceExtent = wmsLayer.getExtent();
+            if (sourceExtent && sourceExtent[0] !== Infinity) {
+                map.getView().fit(sourceExtent, map.getSize());
+            }
+        }
     }
 
     /**
@@ -2746,6 +2755,7 @@ var LayerImport = class LayerImport extends Control {
         var wmtsLayer;
         try {
             wmtsLayer = new TileLayer(layerTileOptions);
+            wmtsLayer.setExtent(layerTileOptions.extent);
         } catch (e) {
             logger.warn("[ol.control.LayerImport] an error occured while trying to create ol.layer.Tile from getCapabilities information. error : ", e);
             return;
@@ -2754,6 +2764,14 @@ var LayerImport = class LayerImport extends Control {
         wmtsLayer.gpResultLayerId = "layerimport:WMTS";
 
         map.addLayer(wmtsLayer);
+
+        // zoom sur l'étendue des entités récupérées (si possible)
+        if (map.getView() && map.getSize() && wmtsLayer.getExtent) {
+            var sourceExtent = wmtsLayer.getExtent();
+            if (sourceExtent && sourceExtent[0] !== Infinity) {
+                map.getView().fit(sourceExtent, map.getSize());
+            }
+        }
     }
 
     /**
