@@ -66,13 +66,13 @@ var LayerImportDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self._onShowImportClick();
+                self._onShowImportClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self._onShowImportClick();
+                self._onShowImportClick(e);
             });
         }
 

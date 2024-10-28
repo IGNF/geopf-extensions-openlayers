@@ -1101,9 +1101,13 @@ var Isocurve = class Isocurve extends Control {
      * (cf. this._createShowIsoPictoElement),
      * and clear inputs and previous isocurve drawings
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowIsoPanelClick () {
+    onShowIsoPanelClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);

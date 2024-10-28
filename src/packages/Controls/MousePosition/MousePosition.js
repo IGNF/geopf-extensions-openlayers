@@ -1233,9 +1233,13 @@ var MousePosition = class MousePosition extends Control {
      * (cf. this._createShowMousePositionPictoElement),
      * and toggles event 'mousemove' on map.
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowMousePositionClick () {
+    onShowMousePositionClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         // checked : true - panel close
         // checked : false - panel open
         var map = this.getMap();

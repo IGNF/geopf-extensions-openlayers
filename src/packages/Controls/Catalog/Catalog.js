@@ -886,6 +886,9 @@ var Catalog = class Catalog extends Control {
      * @private
      */
     onShowCatalogClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace(e);
     }
 

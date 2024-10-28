@@ -813,9 +813,13 @@ var LayerImport = class LayerImport extends Control {
      * (cf. LayerImportDOM._createShowImportPictoElement),
      * and dispatch event change:collapsed (for tools listening this property)
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    _onShowImportClick () {
+    _onShowImportClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);

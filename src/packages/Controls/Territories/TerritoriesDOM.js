@@ -50,13 +50,13 @@ var TerritoriesDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowTerritoriesClick();
+                self.onShowTerritoriesClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowTerritoriesClick();
+                self.onShowTerritoriesClick(e);
             });
         }
 

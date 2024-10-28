@@ -467,6 +467,9 @@ var Legends = class Legends extends Control {
      * @param {*} e - ...
      */
     onShowLegendsClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace(e);
         var opened = this.buttonLegendsShow.ariaPressed;
         this.collapsed = !(opened === "true");

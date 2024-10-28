@@ -822,9 +822,13 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * ...
      *
      * @method onShowLayerSwitcherClick
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowLayerSwitcherClick () {
+    onShowLayerSwitcherClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var opened = this._showLayerSwitcherButton.ariaPressed;
         this.collapsed = !(opened === "true");// on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser mousePosition.on("change:collapsed", function(e) ) pour s'abonner à cet évènement)

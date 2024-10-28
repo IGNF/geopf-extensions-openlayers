@@ -299,6 +299,9 @@ var MeasureArea = class MeasureArea extends Control {
      * @private
      */
     onShowMeasureAreaClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace("call MeasureArea::onShowMeasureAreaClick()", e);
 
         // appel de la methode commune

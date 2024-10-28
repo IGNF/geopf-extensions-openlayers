@@ -357,6 +357,9 @@ var Territories = class Territories extends Control {
      * @param {*} e - ...
      */
     onShowTerritoriesClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace(e);
         this.collapsed = !this.collapsed;
     }

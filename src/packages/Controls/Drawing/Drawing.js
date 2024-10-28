@@ -1938,9 +1938,13 @@ var Drawing = class Drawing extends Control {
      * and toggles event 'mousemove' on map.
      *
      * @method onShowDrawingClick
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowDrawingClick () {
+    onShowDrawingClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);

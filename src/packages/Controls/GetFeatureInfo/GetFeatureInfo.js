@@ -634,6 +634,9 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      * @param {*} e - ...
      */
     onShowGetFeatureInfoClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         if (e === false){
             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
         }

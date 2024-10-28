@@ -1667,6 +1667,9 @@ var ElevationPath = class ElevationPath extends Control {
      * @private
      */
     onShowElevationPathClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         Interactions.unset(map, {
             current : "ElevationPath"

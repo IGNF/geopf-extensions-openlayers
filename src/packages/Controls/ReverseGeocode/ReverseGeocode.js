@@ -1490,9 +1490,13 @@ var ReverseGeocode = class ReverseGeocode extends Control {
      * (cf. ReverseGeocodeDOM._createShowReverseGeocodingPictoElement), and it cleans the component
      * when it's closed.
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowReverseGeocodingClick () {
+    onShowReverseGeocodingClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         if (!map) {
             return;

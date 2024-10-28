@@ -1238,6 +1238,9 @@ var Route = class Route extends Control {
      * @private
      */
     onShowRoutePanelClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
