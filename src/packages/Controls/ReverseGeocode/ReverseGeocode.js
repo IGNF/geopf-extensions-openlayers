@@ -82,7 +82,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
      * @param {*} options - options
      * @example
      * import ReverseGeocode from "gpf-ext-ol/controls/ReverseGeocode"
-     * ou 
+     * ou
      * import { ReverseGeocode } from "gpf-ext-ol"
      */
     constructor (options) {
@@ -161,7 +161,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
                 Draggable.dragElement(
                     this._panelContainer,
                     this._panelHeaderContainer,
-                    this.options.position ? null : map.getTargetElement()
+                    map.getTargetElement()
                 );
             }
             // mode "collapsed"
@@ -1231,6 +1231,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
             // 2. Zoom sur l'étendue des résultats (features)
             if (this._resultsFeatures.getLength() > 1) {
+                // TODO : appeler fonction commune
                 if (this._resultsFeaturesSource && this._resultsFeaturesSource.getExtent) {
                     var extent = this._resultsFeaturesSource.getExtent();
                     map.getView().fit(extent, map.getSize());
@@ -1513,7 +1514,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         if (this.options.position && !this.collapsed) {
             this.updatePosition(this.options.position);
         }
-        
+
         if (!this._waiting && !this._reverseGeocodingLocations.length) {
             // Cas 1 : input panel (ni en attente, ni sur le panel des résultats)
             if (this.collapsed) {

@@ -25,7 +25,7 @@ var RouteDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GProute");
-        container.className = "GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPwidget gpf-widget gpf-widget-button gpf-mobile-fullscreen";
         return container;
     },
 
@@ -1102,12 +1102,14 @@ var RouteDOM = {
         // on ouvre le menu des options des exclusions
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
+                e.preventDefault();
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 context.onShowRouteExclusionsClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
+                e.preventDefault();
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
                 context.onShowRouteExclusionsClick(e);

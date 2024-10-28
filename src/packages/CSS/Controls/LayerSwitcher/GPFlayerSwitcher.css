@@ -117,6 +117,11 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
   opacity: 1;
 }
 
+[id^="GPlayerInfoPanel"] {
+  left: unset;
+  right: 100%;
+}
+
 div[id^=GPlayerInfoContent] {
   position: relative;
   max-height: 200px;

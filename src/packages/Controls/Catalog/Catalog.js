@@ -31,7 +31,7 @@ var logger = Logger.getLogger("widget");
  * @type {ol.control.Catalog}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
- * 
+ *
  * @fires catalog:loaded
  * @fires catalog:layer:add
  * @fires catalog:layer:remove
@@ -46,7 +46,7 @@ var logger = Logger.getLogger("widget");
  *           layerLabel : "title",
  *           layerFilter : [],
  *           search : {
- *               display : true, 
+ *               display : true,
  *               criteria : [
  *                   "name",
  *                   "title",
@@ -85,7 +85,7 @@ var logger = Logger.getLogger("widget");
  * widget.on("catalog:layer:add", (e) => { console.log(e); });
  * widget.on("catalog:layer:remove", (e) => { console.log(e); });
  * map.addControl(widget);
- * 
+ *
  * @todo filtrage des couches
  * @todo type:service
  * @todo validation du schema
@@ -99,9 +99,9 @@ var Catalog = class Catalog extends Control {
      * @param {Object} [options] - options
      * @example
      * import Catalog from "gpf-ext-ol/controls/Catalog"
-     * ou 
+     * ou
      * import { Catalog } from "gpf-ext-ol"
-     * 
+     *
      * var widget = new Catalog({
      *           collapsed : true,
      *           draggable : false,
@@ -110,7 +110,7 @@ var Catalog = class Catalog extends Control {
      *           layerLabel : "title",
      *           layerFilter : [],
      *           search : {
-     *               display : true, 
+     *               display : true,
      *               criteria : [
      *                   "name",
      *                   "title",
@@ -152,7 +152,7 @@ var Catalog = class Catalog extends Control {
      */
     constructor (options) {
         options = options || {};
-        
+
         // call ol.control.Control constructor
         super({
             element : options.element,
@@ -173,7 +173,7 @@ var Catalog = class Catalog extends Control {
         // ajout du container
         (this.element) ? this.element.appendChild(this.container) : this.element = this.container;
 
-        // INFO 
+        // INFO
         // le DOM est mis en place sans la liste des couches du catalogue
         // car l'opération peut être async si un download est demandé.
         // une patience permet d'attendre que la liste soit récupérée.
@@ -224,7 +224,7 @@ var Catalog = class Catalog extends Control {
                 Draggable.dragElement(
                     this.panelCatalogContainer,
                     this.panelCatalogHeaderContainer,
-                    this.options.position ? null : map.getTargetElement()
+                    map.getTargetElement()
                 );
             }
             // mode "collapsed"
@@ -269,7 +269,7 @@ var Catalog = class Catalog extends Control {
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
-    
+
     /**
      * Initialize Catalog control (called by Catalog constructor)
      *
@@ -289,7 +289,7 @@ var Catalog = class Catalog extends Control {
             layerLabel : "title",
             layerFilter : [], // TODO filtre
             search : {
-                display : true, 
+                display : true,
                 criteria : [
                     "name",
                     "title",
@@ -303,7 +303,7 @@ var Catalog = class Catalog extends Control {
                     id : "data",
                     default : true,
                     filter : null
-                    // INFO 
+                    // INFO
                     // > sous categories avec ou sans section
                     // items : [
                     //     {
@@ -330,27 +330,27 @@ var Catalog = class Catalog extends Control {
         // merge with user options
         Utils.assign(this.options, options);
 
-        /** 
-         * specify if control is collapsed (true) or not (false) 
-         * @type {Boolean} 
+        /**
+         * specify if control is collapsed (true) or not (false)
+         * @type {Boolean}
          */
         this.collapsed = this.options.collapsed;
 
-        /** 
-         * specify if control is draggable (true) or not (false) 
-         * @type {Boolean} 
+        /**
+         * specify if control is draggable (true) or not (false)
+         * @type {Boolean}
          */
         this.draggable = this.options.draggable;
 
-        /** 
-         * specify if control add some stuff auto 
-         * @type {Boolean} 
+        /**
+         * specify if control add some stuff auto
+         * @type {Boolean}
          */
         this.auto = this.options.auto;
 
         /**
-         * specify some events listeners 
-         * @type {Array} 
+         * specify some events listeners
+         * @type {Array}
          */
         this.eventsListeners = [];
 
@@ -362,7 +362,7 @@ var Catalog = class Catalog extends Control {
         this.contentCatalogContainer = null;
         this.waitingContainer = null;
 
-        /** 
+        /**
          * specify all list of layers (configuration service)
          * @type {Object}
          * @see [schema](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json)
@@ -377,7 +377,7 @@ var Catalog = class Catalog extends Control {
         this.categories = this.options.categories.map((cat) => {
             // INFO
             // on reecrit correctement les categories
-            // ex. properties mal renseignées tels que id ou default 
+            // ex. properties mal renseignées tels que id ou default
             var items = cat.items;
             if (cat.items) {
                 items = cat.items.map((i) => {
@@ -399,13 +399,13 @@ var Catalog = class Catalog extends Control {
             };
         });
 
-        /** 
-         * specify the current category selected 
-         * @type {String} 
+        /**
+         * specify the current category selected
+         * @type {String}
          */
         this.categoryId = (() => {
             // INFO
-            // par défaut, la categorie affichée sera la 1ere 
+            // par défaut, la categorie affichée sera la 1ere
             // sauf si on a specifié une categorie avec l'attribut 'default:true'
             var index = this.categories.findIndex((category) => category.default);
             if (index === -1) {
@@ -415,9 +415,9 @@ var Catalog = class Catalog extends Control {
             return this.categories[index].id;
         })();
 
-        /** 
-         * list of layers added on map by key pair : name/service 
-         * @type {Object} 
+        /**
+         * list of layers added on map by key pair : name/service
+         * @type {Object}
          * @example
          * {
          *    "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2:WMTS" : ol/layer/Tile,
@@ -469,7 +469,7 @@ var Catalog = class Catalog extends Control {
 
         widgetContentDiv.appendChild(widgetContentElementDiv);
         widgetPanelDiv.appendChild(widgetContentDiv);
-        
+
         container.appendChild(widgetPanel);
         logger.log(container);
 
@@ -478,7 +478,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Configuration loading
-     * 
+     *
      * @returns {Promise} - promise
      * @private
      */
@@ -491,7 +491,7 @@ var Catalog = class Catalog extends Control {
 
             var widgetContentEntryTabs = self._createCatalogContentCategoriesTabs(this.categories);
             container.appendChild(widgetContentEntryTabs);
-            
+
             var categories = []; // remise à plat des catégories / sous-categories
             self.categories.forEach((category) => {
                 if (category.items) {
@@ -504,7 +504,7 @@ var Catalog = class Catalog extends Control {
                 }
             });
             // INFO
-            // les containers de contenu sont definis à partir 
+            // les containers de contenu sont definis à partir
             // de l'ordre des catégories / sous-categories
             // il y'a autant de catégories / sous-categories que de containers
             var contents = container.querySelectorAll(".tabcontent");
@@ -514,13 +514,13 @@ var Catalog = class Catalog extends Control {
                 content.appendChild(self._createCatalogContentCategoryTabContent(categories[i], layersCategorised));
             }
         };
-        
-        // traitement du contenu (liste de couches) d'une categorie 
+
+        // traitement du contenu (liste de couches) d'une categorie
         // en fonction d'un filtre
         const getLayersByCategory = (category, layers) => {
             // INFO
             // comment gerer les listes de layers filtrées pour chaque categorie ?
-            // on doit les stocker si l'on souhaite faire des requêtes 
+            // on doit les stocker si l'on souhaite faire des requêtes
             // avec l'outil de recherche par la suite
             var layersCategorised = layers;
             var filter = category.filter;
@@ -540,7 +540,7 @@ var Catalog = class Catalog extends Control {
                     }
                 }
             }
-            
+
             return layersCategorised;
         };
 
@@ -548,9 +548,9 @@ var Catalog = class Catalog extends Control {
         const getLayersByFilter = (filter, layers) => {
             // INFO
             // definir les filtres possibles :
-            // - sur un champ spécifique : ex field:"service" 
+            // - sur un champ spécifique : ex field:"service"
             // - sur des valeurs : ex. value:"[WMS,TMS,WMTS]" ou "*"
-            // - ... 
+            // - ...
             return layers;
         };
 
@@ -564,10 +564,10 @@ var Catalog = class Catalog extends Control {
             }
 
             // INFO
-            // on en profite pour ajouter des properties : 
+            // on en profite pour ajouter des properties :
             // - service : utile pour identifier la couche
             // de manière unique : name + service
-            // - categories : utile pour definir l'appartenance d'une couche 
+            // - categories : utile pour definir l'appartenance d'une couche
             // à une ou plusieurs categories
             for (const key in data.layers) {
                 if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
@@ -630,16 +630,16 @@ var Catalog = class Catalog extends Control {
                 }
 
                 // TODO gestion du type service
-            
+
                 if (Config.isConfigLoaded()) {
                     Utils.mergeParams(data, Config.configuration);
                 }
 
                 // INFO
-                // on en profite pour ajouter des properties : 
+                // on en profite pour ajouter des properties :
                 // - service : utile pour identifier la couche
                 // de manière unique : name + service
-                // - categories : utile pour definir l'appartenance d'une couche 
+                // - categories : utile pour definir l'appartenance d'une couche
                 // à une ou plusieurs categories
                 for (const key in data.layers) {
                     if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
@@ -674,7 +674,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Add events listeners on map (called by setMap)
-     * 
+     *
      * @param {*} map - map
      * @private
      */
@@ -694,7 +694,7 @@ var Catalog = class Catalog extends Control {
                 });
             }
         };
-        // the event custom:action is associate with an openlayers event 
+        // the event custom:action is associate with an openlayers event
         map.getLayers().on("add", this.eventsListeners["map:add"]);
 
         this.eventsListeners["map:remove"] = function (e) {
@@ -711,7 +711,7 @@ var Catalog = class Catalog extends Control {
                 });
             }
         };
-        // the event custom:action is associate with an openlayers event 
+        // the event custom:action is associate with an openlayers event
         map.getLayers().on("remove", this.eventsListeners["map:remove"]);
     }
 
@@ -729,7 +729,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Add layer on map
-     * 
+     *
      * @param {*} name - layer name
      * @param {*} service - layer service
      * @private
@@ -765,7 +765,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Remove Layer on map
-     * 
+     *
      * @param {*} name - layer name
      * @param {*} service - layer service
      * @private
@@ -796,7 +796,7 @@ var Catalog = class Catalog extends Control {
     // ################################################################### //
     // ######################## methods search ########################### //
     // ################################################################### //
-    
+
     /**
      * Reset filtered layers
      * @private
@@ -804,7 +804,7 @@ var Catalog = class Catalog extends Control {
     resetFilteredLayersList () {
         // INFO
         // l'outil de recherche filtre les couches via un critère de recherche.
-        // l'affichage des couches filtrées est realisé en cachant 
+        // l'affichage des couches filtrées est realisé en cachant
         // les couches non conforme au critère.
         // le parametre pour masquer les couches : hidden
         for (const key in this.layersList) {
@@ -818,7 +818,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Set filtered layers
-     * 
+     *
      * @param {*} value - value
      * @private
      */
@@ -842,7 +842,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Update DOM layer visibility
-     * 
+     *
      * @param {*} id - ...
      * @param {*} service  - ...
      * @param {*} hidden  - ...
@@ -879,7 +879,7 @@ var Catalog = class Catalog extends Control {
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
-    
+
     /**
      * ...
      * @param {*} e - ...
@@ -983,14 +983,14 @@ var Catalog = class Catalog extends Control {
     }
 
     /**
-     * 
+     *
      * @private
      */
     onSearchCatalogButtonClick () {
         // INFO
-        // la saisie du critère de recherche doit filtrer la liste des couches affichée 
+        // la saisie du critère de recherche doit filtrer la liste des couches affichée
         // dans l'onglet courant.
-        // on masque les entrées non conforme 
+        // on masque les entrées non conforme
         // - en ajoutant la classe 'gpf-hidden' dans le DOM
         // - en sauvegardant l'état avec la property 'hidden:true'
         var value = document.getElementById("search-input").value;
@@ -998,7 +998,7 @@ var Catalog = class Catalog extends Control {
     }
 
     /**
-     * 
+     *
      * @private
      */
     onSearchCatalogInputChange () {

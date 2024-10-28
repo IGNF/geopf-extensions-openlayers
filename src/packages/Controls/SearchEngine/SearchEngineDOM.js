@@ -71,8 +71,8 @@ var SearchEngineDOM = {
             if (checkDsfr()) {
                 // En DSFR, le bouton fait la même chose que la touche Entrée
                 var container = document.getElementById(self._addUID("GPautocompleteResults"));
-                var curr = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items current");
-                var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items");
+                var curr = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current");
+                var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine");
 
                 // si aucune suggestion, on ne va pas plus loin !
                 var length = list.length;
@@ -85,7 +85,7 @@ var SearchEngineDOM = {
                 // si aucun item courant, on prend le 1er !
                 if (!curr.length) {
                     current = list[0];
-                    current.className = "GPautoCompleteProposal gpf-panel__items current";
+                    current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
                     current.style.color = "#000000";
                     current.style["background-color"] = "#CEDBEF";
                 } else {
@@ -209,8 +209,8 @@ var SearchEngineDOM = {
                 return;
             }
 
-            var curr = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items current");
-            var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items");
+            var curr = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current");
+            var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine");
 
             // si aucune suggestion, on ne va pas plus loin !
             var length = list.length;
@@ -223,7 +223,7 @@ var SearchEngineDOM = {
             // si aucun item courant, on prend le 1er !
             if (!curr.length) {
                 current = list[0];
-                current.className = "GPautoCompleteProposal gpf-panel__items current";
+                current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
                 current.style.color = "#000000";
                 current.style["background-color"] = "#CEDBEF";
                 if (charCode !== 13) {
@@ -246,15 +246,15 @@ var SearchEngineDOM = {
 
             switch (charCode) {
                 case 38: // arrow up
-                    current.className = "GPautoCompleteProposal gpf-panel__items";
-                    prev.className = "GPautoCompleteProposal gpf-panel__items current";
+                    current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
+                    prev.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
                     prev.style.color = "#000000";
                     prev.style["background-color"] = "#CEDBEF";
                     current.scrollIntoView();
                     break;
                 case 40: // arrow down
-                    current.className = "GPautoCompleteProposal gpf-panel__items";
-                    next.className = "GPautoCompleteProposal gpf-panel__items current";
+                    current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
+                    next.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
                     next.style.color = "#000000";
                     next.style["background-color"] = "#CEDBEF";
                     current.scrollIntoView();
@@ -722,7 +722,7 @@ var SearchEngineDOM = {
 
         var div = document.createElement("option");
         div.id = this._addUID("AutoCompletedLocation_" + id);
-        div.className = "GPautoCompleteProposal gpf-panel__items";
+        div.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
         var value = GeocodeUtils.getSuggestedLocationFreeform(location);
         div.innerHTML = value;
         div.title = value;
@@ -771,7 +771,7 @@ var SearchEngineDOM = {
 
         var div = document.createElement("option");
         div.id = this._addUID("AutoCompletedSuggest_" + id);
-        div.className = "GPautoCompleteProposal gpf-panel__items";
+        div.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
         div.innerHTML = suggest.title + " (" + suggest.service + ")";
         div.dataset.layer = suggest.name;
         div.title = suggest.description;
@@ -1197,7 +1197,7 @@ var SearchEngineDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GeocodedLocation_" + id);
-        div.className = "GPautoCompleteProposal gpf-panel__items";
+        div.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
 
         if (typeof location === "string") {
             div.innerHTML = location;

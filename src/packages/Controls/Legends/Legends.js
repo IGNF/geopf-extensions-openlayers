@@ -25,7 +25,7 @@ var logger = Logger.getLogger("legends");
  * @type {ol.control.Legends}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
- * 
+ *
  * @fires legends:add
  * @fires legends:remove
  * @fires legends:modify
@@ -42,12 +42,12 @@ var Legends = class Legends extends Control {
      * @param {Object} [options] - options
      * @example
      * import Legends from "gpf-ext-ol/controls/Legends"
-     * ou 
+     * ou
      * import { Legends } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};
-        
+
         // call ol.control.Control constructor
         super({
             element : options.element,
@@ -87,7 +87,7 @@ var Legends = class Legends extends Control {
                 Draggable.dragElement(
                     this.panelLegendsContainer,
                     this.panelLegendsHeaderContainer,
-                    this.options.position ? null : map.getTargetElement()
+                    map.getTargetElement()
                 );
             }
             // mode "collapsed"
@@ -139,12 +139,12 @@ var Legends = class Legends extends Control {
 
     /**
      * Get all meta informations of a IGN's layer
-     * 
+     *
      * @param {*} layer - layer
      * @returns {*} informations
      * @public
      * @example
-     * getLegends() : 
+     * getLegends() :
      * "legends" : [
      *         {
      *             "format" : "image/jpeg",
@@ -171,7 +171,7 @@ var Legends = class Legends extends Control {
     }
 
     /**
-     * Add legends from layers 
+     * Add legends from layers
      * @param {*} layers  - ...
      * @public
      */
@@ -256,7 +256,7 @@ var Legends = class Legends extends Control {
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
-    
+
     /**
      * Initialize Legends control (called by Legends constructor)
      *
@@ -295,8 +295,8 @@ var Legends = class Legends extends Control {
         this.eventsListeners = [];
 
         // tableau des entrées des legendes
-        // ex. 
-        // { 
+        // ex.
+        // {
         //   obj: layer openlayers,
         //   dom: DOMElement
         // }
@@ -349,7 +349,7 @@ var Legends = class Legends extends Control {
 
     /**
      * Add events listeners on map (called by setMap)
-     * 
+     *
      * @param {*} map - map
      * @private
      * @todo listener on change:position
@@ -373,7 +373,7 @@ var Legends = class Legends extends Control {
         this.eventsListeners["layer:remove"] = function (e) {
             logger.trace(e);
             // INFO
-            // à la suppression de la couche, on supprime l'entrée 
+            // à la suppression de la couche, on supprime l'entrée
             // * du DOM
             // * de la liste des entrées
             if (!self.remove(e.element)) {
@@ -384,19 +384,19 @@ var Legends = class Legends extends Control {
         this.eventsListeners["layer:change:position"] = function (e) {
             logger.trace(e);
             // TODO
-            // à la modification de l'ordre de la couche, on modifie l'entrée 
+            // à la modification de l'ordre de la couche, on modifie l'entrée
             // * du DOM
             // * de la liste des entrées
         };
         this.eventsListeners["view:change:resolution"] = function (e) {
             logger.trace(e);
-            // à la modification de l'echelle de la carte, on modifie les entrées 
+            // à la modification de l'echelle de la carte, on modifie les entrées
             // * du DOM si necessaire
             // * de la liste des entrées si necessaire
             var map = self.getMap();
             for (let j = 0; j < self.legends.length; j++) {
                 const legend = self.legends[j];
-                
+
                 var infos = self.getMetaInformations(legend.obj);
                 if (!infos) {
                     continue;
@@ -404,17 +404,17 @@ var Legends = class Legends extends Control {
                 // conversion resolution vers échelle
                 var resolution = map.getView().getResolution() || map.getView().getResolutionForZoom(map.getZoom());
                 var scaleDenominator = resolution*3570;
-                
+
                 // recherche de la legende en fonction de l'échelle
                 var cloneInfoLegends = infos.legends.slice(); //clone
                 var bestInfoLegend = cloneInfoLegends[0];
                 for (let i = 0; i < cloneInfoLegends.length; ++i) {
                     const InfoLegend = cloneInfoLegends[i];
-                    
+
                     if (!InfoLegend.minScaleDenominator) {
                         InfoLegend.minScaleDenominator = 0;
                     }
-    
+
                     if ( ( scaleDenominator > bestInfoLegend.minScaleDenominator && InfoLegend.minScaleDenominator > bestInfoLegend.minScaleDenominator && InfoLegend.minScaleDenominator < scaleDenominator ) ||
                          ( scaleDenominator < bestInfoLegend.minScaleDenominator && InfoLegend.minScaleDenominator < bestInfoLegend.minScaleDenominator ) ) {
                         bestInfoLegend = InfoLegend;
@@ -426,7 +426,7 @@ var Legends = class Legends extends Control {
                 }
                 infos.legends = [];
                 infos.legends.push(bestInfoLegend);
-    
+
                 // mise à jour du DOM
                 var newEntry = self._createLegendEntry(infos);
                 var oldEntry = legend.dom;
