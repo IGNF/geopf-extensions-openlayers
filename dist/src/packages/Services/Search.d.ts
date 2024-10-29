@@ -27,26 +27,109 @@ declare const target: EventTarget;
  * Appel du service de recherche
  * @param {*} text - recherche
  * @returns {Object} json
+ * @example
+ * {
+ *   "originators": {},
+ *   "srs": [
+ *     "EPSG:3857"
+ *   ],
+ *   "keywords": [],
+ *   "extent": {
+ *    "type": "Polygon",
+ *     "coordinates": [
+ *       [
+ *        [
+ *           55.9423828,
+ *           -21.5354858
+ *        ],
+ *         [
+ *           55.9423828,
+ *           51.1237818
+ *         ],
+ *         [
+ *           -63.28125,
+ *           51.1237818
+ *         ],
+ *         [
+ *           -63.28125,
+ *           -21.5354858
+ *         ],
+ *         [
+ *           55.9423828,
+ *           -21.5354858
+ *         ]
+ *       ]
+ *     ]
+ *   },
+ *   "metadata": [],
+ *   "name": "PLAN.IGN",
+ *   "title": "Plan IGN",
+ *   "description": "Plan IGN personnalisable",
+ *   "service": "TMS",
+ *   "url": "https://data.geopf.fr/tms/1.0.0/PLAN.IGN"
+ * }
  * @fire suggest
  */
 declare function suggest(text: any): Object;
+/**
+ * Clear
+ */
 declare function clear(): void;
+/**
+ * Liste des suggestions (unique)
+ * @returns {Array}
+ */
 declare function getSuggestions(): any[];
+/**
+ * Liste des noms (unique)
+ * @returns  {Array}
+ */
 declare function getNames(): any[];
+/**
+ * Liste des titres (unique)
+ * @returns {Array}
+ */
 declare function getTitles(): any[];
-declare function setIndex(value: any): void;
-declare function setFields(value: any): void;
-declare function setSize(value: any): void;
-declare function setUrl(value: any): void;
-declare function setMaximumResponses(value: any): void;
+/**
+ * Renseigne le nom de l'indexe
+ * @param {String} value - nom de l'indexe
+ * @see m_index
+ */
+declare function setIndex(value: string): void;
+/**
+ * Renseigne la liste des champs de recherche
+ * @param {Array} value - liste des champs de recherche
+ * @see m_fields
+ */
+declare function setFields(value: any[]): void;
+/**
+ * Renseigne le nombre de suggestions du service
+ * @param {Number} value - le nombre de suggestions du service
+ * @see m_size
+ */
+declare function setSize(value: number): void;
+/**
+ * Renseigne l'url du service
+ * @param {String} value - url du service
+ * @see m_url
+ */
+declare function setUrl(value: string): void;
+/**
+ * Renseigne le nombre de réponse souhaitée
+ * @param {Number} value - nombre de réponse
+ * @see m_maximumResponses
+ */
+declare function setMaximumResponses(value: number): void;
 /**
  * Filtre sur la liste des services à selectionner
  * @param {Array} value - liste de service
+ * @see m_filterByService
  */
 declare function setFiltersByService(value: any[]): void;
 /**
  * Filtre sur les "purs" couches vecteurs tuilés
  * @param {Array} value - liste des couches
+ * @see m_filterByTMS
  */
 declare function setFiltersByTMS(value: any[]): void;
 /**
@@ -57,6 +140,7 @@ declare function updateFilterByTMS(value: string): Promise<string[]>;
 /**
  * Filtre sur les couches à exclure
  * @param {Array} value - liste des projections
+ * @see m_filterByProjection
  */
 declare function setFiltersByProjection(value: any[]): void;
 //# sourceMappingURL=Search.d.ts.map
