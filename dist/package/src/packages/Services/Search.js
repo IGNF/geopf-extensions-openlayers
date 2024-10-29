@@ -107,7 +107,17 @@ const suggest = async (text) => {
     //       "metadata_urls": [],
     //       "srs": [
     //         "EPSG:2154"
-    //       ]
+    //       ],
+    //       "attribution": {
+    //             "title": "Ministère de la Transition écologique et de la Cohésion des territoires",
+    //             "url": "https://www.ecologie.gouv.fr/",
+    //             "logo": {
+    //                  "format": "image/png",
+    //                  "url": "https://data.geopf.fr/annexes/ressources/logos/mtect.png",
+    //                  "width": 294,
+    //                  "height": 171
+    //             }
+    //       }
     //     }
     //   }
     // ]
@@ -133,9 +143,11 @@ const suggest = async (text) => {
             // FIXME champs possibles mais pas toujours remplis :
             // srs[], attributions{}, extent{}, metada_url[]
             var o = {
-                originators : result.source.attributions,
-                srs : result.source.srs,
-                metadata : result.source.metadata_url,
+                originators : result.source.attribution || {},
+                srs : result.source.srs || [],
+                keywords : result.source.keywords || [],
+                extent : result.source.extent || {},
+                metadata : result.source.metadata_urls || [],
                 name : result.source.layer_name,
                 title : result.source.title,
                 description : result.source.description,
