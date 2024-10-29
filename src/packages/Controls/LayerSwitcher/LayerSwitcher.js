@@ -3,6 +3,7 @@ import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcher.css";
 // import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcherStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import { intersects as olIntersects } from "ol/extent";
@@ -1410,6 +1411,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
 // on récupère les méthodes de la classe commune LayerSwitcherDOM
 Object.assign(LayerSwitcher.prototype, LayerSwitcherDOM);
+Object.assign(LayerSwitcher.prototype, Widget);
 
 export default LayerSwitcher;
 

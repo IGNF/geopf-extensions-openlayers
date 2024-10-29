@@ -3,6 +3,7 @@ import "../../CSS/Controls/Territories/GPFterritories.css";
 
 // import OpenLayers
 import Control from "../Control";
+import Widget from "../Widget";
 import { transformExtent as olTransformExtentProj } from "ol/proj";
 
 // import local
@@ -403,6 +404,7 @@ var Territories = class Territories extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Territories.prototype, TerritoriesDOM);
+Object.assign(Territories.prototype, Widget);
 
 export default Territories;
 

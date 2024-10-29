@@ -3,6 +3,7 @@ import "../../CSS/Controls/MousePosition/GPFmousePosition.css";
 // import "../../CSS/Controls/MousePosition/GPFmousePositionStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import Overlay from "ol/Overlay";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
@@ -1729,6 +1730,7 @@ var MousePosition = class MousePosition extends Control {
 
 // on récupère les méthodes de la classe commune MousePosition
 Object.assign(MousePosition.prototype, MousePositionDOM);
+Object.assign(MousePosition.prototype, Widget);
 
 export default MousePosition;
 

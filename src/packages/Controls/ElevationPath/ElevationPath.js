@@ -4,6 +4,7 @@ import "../../CSS/Controls/ElevationPath/GPFelevationPath.css";
 // import "../../CSS/Controls/ElevationPath/GPFelevationPathStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import {
     Fill,
@@ -1740,6 +1741,7 @@ var ElevationPath = class ElevationPath extends Control {
 
 // on récupère les méthodes de la classe commune ElevationPath
 Object.assign(ElevationPath.prototype, ElevationPathDOM);
+Object.assign(ElevationPath.prototype, Widget);
 
 export default ElevationPath;
 

@@ -4,6 +4,7 @@ import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
 import Control from "../Control";
+import Widget from "../Widget";
 import Overlay from "ol/Overlay";
 import {
     transform as olProjTransform,
@@ -2474,6 +2475,7 @@ var SearchEngine = class SearchEngine extends Control {
 
 // on récupère les méthodes de la classe commune ReverseGeocoding
 Object.assign(SearchEngine.prototype, SearchEngineDOM);
+Object.assign(SearchEngine.prototype, Widget);
 
 export default SearchEngine;
 

@@ -19,7 +19,6 @@ function getSameSideOpenedPanel (position, openedPanelID) {
         var panelID = p.id.match(/(\w+)-[0-9]+/)[1];
         var isException = exceptionPanel.includes(panelID);
         var isOpened = p.getElementsByTagName("button")[0].getAttribute("aria-pressed");
-        console.log(panelID + ": is exception : " + isException + " / isopened : " + isOpened);
         if (isOpened === "true" && !isException) {
             return p;
         }

@@ -3,6 +3,7 @@ import "../../CSS/Controls/LayerImport/GPFlayerImport.css";
 // import "../../CSS/Controls/LayerImport/GPFlayerImportStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
@@ -3107,6 +3108,7 @@ var LayerImport = class LayerImport extends Control {
 
 // on récupère les méthodes de la classe commune LayerImport
 Object.assign(LayerImport.prototype, LayerImportDOM);
+Object.assign(LayerImport.prototype, Widget);
 
 export default LayerImport;
 

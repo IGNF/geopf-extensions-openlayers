@@ -2,6 +2,7 @@
 import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "../Control";
 import VectorTileSource from "ol/source/VectorTile";
 import VectorSource from "ol/source/Vector";
@@ -663,6 +664,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(GetFeatureInfo.prototype, GetFeatureInfoDOM);
+Object.assign(GetFeatureInfo.prototype, Widget);
 
 export default GetFeatureInfo;
 

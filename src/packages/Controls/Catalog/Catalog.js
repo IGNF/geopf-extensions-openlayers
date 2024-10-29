@@ -2,6 +2,7 @@
 import "../../CSS/Controls/Catalog/GPFcatalog.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "../Control";
 
 // import local
@@ -1009,6 +1010,7 @@ var Catalog = class Catalog extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Catalog.prototype, CatalogDOM);
+Object.assign(Catalog.prototype, Widget);
 
 export default Catalog;
 

@@ -3,6 +3,7 @@ import "../../CSS/Controls/Measures/GPFmeasureAzimuth.css";
 // import "../../CSS/Controls/Measures/GPFmeasureAzimuthStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
@@ -369,6 +370,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
 // de "Measures".
 Object.assign(MeasureAzimuth.prototype, Measures);
 Object.assign(MeasureAzimuth.prototype, MeasureAzimuthDOM);
+Object.assign(MeasureAzimuth.prototype, Widget);
 
 export default MeasureAzimuth;
 

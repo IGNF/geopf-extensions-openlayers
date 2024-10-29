@@ -1,21 +1,14 @@
 import Control from "ol/control/Control";
 import checkDsfr from "./Utils/CheckDsfr";
-import PanelManager from "./PanelManager";
 
 var ControlExtended = class ControlExtended extends Control {
 
     constructor (options) {
         super(options);
-        this.position = "";
-    }
-
-    onPanelOpen () {
-        PanelManager(this.position, this.element.id.match(/(\w+)-[0-9]+/)[1]);
     }
 
     setPosition (pos) {
         if (this.getMap()) {
-            this.position = pos;
             var instance = new PositionFactory(this);
             instance.set(pos);
         }
@@ -23,7 +16,6 @@ var ControlExtended = class ControlExtended extends Control {
 
     updatePosition (pos) {
         if (this.getMap()) {
-            this.position = pos;
             var instance = new PositionFactory(this);
             instance.update(pos);
         }

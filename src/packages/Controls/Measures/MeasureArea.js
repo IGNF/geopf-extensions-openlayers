@@ -3,6 +3,7 @@ import "../../CSS/Controls/Measures/GPFmeasureArea.css";
 // import "../../CSS/Controls/Measures/GPFmeasureAreaStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { getArea as olGetAreaSphere } from "ol/sphere";
 import { Polygon } from "ol/geom";
@@ -314,6 +315,7 @@ var MeasureArea = class MeasureArea extends Control {
 // de "Measures".
 Object.assign(MeasureArea.prototype, Measures);
 Object.assign(MeasureArea.prototype, MeasureAreaDOM);
+Object.assign(MeasureArea.prototype, Widget);
 
 export default MeasureArea;
 

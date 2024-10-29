@@ -2,6 +2,7 @@
 import "../../CSS/Controls/Legends/GPFlegends.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "../Control";
 
 // import local
@@ -484,6 +485,7 @@ var Legends = class Legends extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Legends.prototype, LegendsDOM);
+Object.assign(Legends.prototype, Widget);
 
 export default Legends;
 

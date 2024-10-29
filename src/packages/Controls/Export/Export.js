@@ -3,6 +3,7 @@ import "../../CSS/Controls/Export/GPFexport.css";
 // import "../../CSS/Controls/Export/GPFexportStyle.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "ol/control/Control";
 
 // import local
@@ -702,6 +703,7 @@ class ButtonExport extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(ButtonExport.prototype, ExportDOM);
+Object.assign(ButtonExport.prototype, Widget);
 
 export default ButtonExport;
 
