@@ -3,6 +3,7 @@ import "../../CSS/Controls/ReverseGeocoding/GPFreverseGeocoding.css";
 // import "../../CSS/Controls/ReverseGeocoding/GPFreverseGeocodingStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import Overlay from "ol/Overlay";
 import Collection from "ol/Collection";
@@ -1491,9 +1492,13 @@ var ReverseGeocode = class ReverseGeocode extends Control {
      * (cf. ReverseGeocodeDOM._createShowReverseGeocodingPictoElement), and it cleans the component
      * when it's closed.
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowReverseGeocodingClick () {
+    onShowReverseGeocodingClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         if (!map) {
             return;
@@ -1796,6 +1801,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
 // on récupère les méthodes de la classe commune ReverseGeocodeDOM
 Object.assign(ReverseGeocode.prototype, ReverseGeocodeDOM);
+Object.assign(ReverseGeocode.prototype, Widget);
 
 export default ReverseGeocode;
 

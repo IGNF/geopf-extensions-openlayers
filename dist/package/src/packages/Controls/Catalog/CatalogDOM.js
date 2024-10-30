@@ -77,13 +77,13 @@ var CatalogDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowCatalogClick();
+                self.onShowCatalogClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowCatalogClick();
+                self.onShowCatalogClick(e);
             });
         }
 

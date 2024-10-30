@@ -121,7 +121,7 @@ var SearchEngineDOM = {
             if (checkDsfr()) {
                 document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
             }
-            self.onShowSearchEngineClick();
+            self.onShowSearchEngineClick(e);
         });
 
         return button;
@@ -485,7 +485,7 @@ var SearchEngineDOM = {
             if (status) {
                 // somme stuff...
             }
-            self.onShowSearchGeolocateClick();
+            self.onShowSearchGeolocateClick(e);
         });
 
         return button;

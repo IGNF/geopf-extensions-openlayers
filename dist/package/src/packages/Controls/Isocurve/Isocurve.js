@@ -3,6 +3,7 @@ import "../../CSS/Controls/Isochron/GPFisochron.css";
 // import "../../CSS/Controls/Isochron/GPFisochronStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import VectorLayer from "ol/layer/Vector";
@@ -1101,9 +1102,13 @@ var Isocurve = class Isocurve extends Control {
      * (cf. this._createShowIsoPictoElement),
      * and clear inputs and previous isocurve drawings
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowIsoPanelClick () {
+    onShowIsoPanelClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
@@ -1618,6 +1623,7 @@ var Isocurve = class Isocurve extends Control {
 
 // on récupère les méthodes de la classe commune MousePosition
 Object.assign(Isocurve.prototype, IsocurveDOM);
+Object.assign(Isocurve.prototype, Widget);
 
 export default Isocurve;
 
