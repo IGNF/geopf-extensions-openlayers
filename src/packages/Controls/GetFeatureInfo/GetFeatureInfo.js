@@ -638,7 +638,9 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         if (e.target.ariaPressed === "true") {
             this.onPanelOpen();
         }
-        if (e === false){
+        // ouverture du panel pas systématique quand on clic sur le bouton d'activation
+        // donc on doit fermer explicitement le panel quand on désactive le GFI
+        if (e.target.ariaPressed === "false"){
             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
         }
         logger.trace(e);
