@@ -4,6 +4,7 @@ import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
 import Control from "../Control";
+import Widget from "../Widget";
 import Overlay from "ol/Overlay";
 import {
     transform as olProjTransform,
@@ -1473,9 +1474,13 @@ var SearchEngine = class SearchEngine extends Control {
      * (cf. this._createShowSearchEnginePictoElement), and it cleans the component
      * when it's closed.
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowSearchEngineClick () {
+    onShowSearchEngineClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
@@ -2470,6 +2475,7 @@ var SearchEngine = class SearchEngine extends Control {
 
 // on récupère les méthodes de la classe commune ReverseGeocoding
 Object.assign(SearchEngine.prototype, SearchEngineDOM);
+Object.assign(SearchEngine.prototype, Widget);
 
 export default SearchEngine;
 

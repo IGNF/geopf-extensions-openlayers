@@ -3,6 +3,7 @@ import "../../CSS/Controls/LayerImport/GPFlayerImport.css";
 // import "../../CSS/Controls/LayerImport/GPFlayerImportStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
@@ -818,9 +819,13 @@ var LayerImport = class LayerImport extends Control {
      * (cf. LayerImportDOM._createShowImportPictoElement),
      * and dispatch event change:collapsed (for tools listening this property)
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    _onShowImportClick () {
+    _onShowImportClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
@@ -3103,6 +3108,7 @@ var LayerImport = class LayerImport extends Control {
 
 // on récupère les méthodes de la classe commune LayerImport
 Object.assign(LayerImport.prototype, LayerImportDOM);
+Object.assign(LayerImport.prototype, Widget);
 
 export default LayerImport;
 

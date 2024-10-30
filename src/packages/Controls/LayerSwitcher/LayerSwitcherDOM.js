@@ -135,7 +135,7 @@ var LayerSwitcherDOM = {
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
                 }
-                self.onShowLayerSwitcherClick();
+                self.onShowLayerSwitcherClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
@@ -145,7 +145,7 @@ var LayerSwitcherDOM = {
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
                 }
-                self.onShowLayerSwitcherClick();
+                self.onShowLayerSwitcherClick(e);
             });
         }
 

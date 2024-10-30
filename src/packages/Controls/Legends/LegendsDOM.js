@@ -51,13 +51,13 @@ var LegendsDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowLegendsClick();
+                self.onShowLegendsClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowLegendsClick();
+                self.onShowLegendsClick(e);
             });
         }
 

@@ -3,6 +3,7 @@ import "../../CSS/Controls/Measures/GPFmeasureLength.css";
 // import "../../CSS/Controls/Measures/GPFmeasureLengthStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
@@ -296,6 +297,9 @@ var MeasureLength = class MeasureLength extends Control {
      * @private
      */
     onShowMeasureLengthClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace("call MeasureLength::onShowMeasureLengthClick()", e);
 
         // appel de la methode commune
@@ -308,6 +312,7 @@ var MeasureLength = class MeasureLength extends Control {
 // de "Measures".
 Object.assign(MeasureLength.prototype, Measures);
 Object.assign(MeasureLength.prototype, MeasureLengthDOM);
+Object.assign(MeasureLength.prototype, Widget);
 
 export default MeasureLength;
 
