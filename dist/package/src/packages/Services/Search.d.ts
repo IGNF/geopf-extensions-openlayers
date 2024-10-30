@@ -77,17 +77,17 @@ declare function suggest(text: any): Object;
 declare function clear(): void;
 /**
  * Liste des suggestions (unique)
- * @returns {Array}
+ * @returns {Array} Liste des suggestions (unique)
  */
 declare function getSuggestions(): any[];
 /**
  * Liste des noms (unique)
- * @returns  {Array}
+ * @returns  {Array} Liste des noms (unique)
  */
 declare function getNames(): any[];
 /**
  * Liste des titres (unique)
- * @returns {Array}
+ * @returns {Array} Liste des titres (unique)
  */
 declare function getTitles(): any[];
 /**
