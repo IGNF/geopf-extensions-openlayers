@@ -21,34 +21,35 @@
     - [Navigateurs supportés](#navigateurs-supportés)
   - [Fonctionnalités](#fonctionnalités)
     - [Systèmes de coordonnées](#systèmes-de-coordonnées)
-    - [affichage des couches WMTS Géoplateforme](#WMTS)
-    - [affichage des couches WMS Géoplateforme](#WMS)
-    - [affichage d'une couche Vecteur Tuilé Géoplateforme](#VT)
-    - [affichage dynamique des attributions](#attributions)
-    - [widget de gestion d'empilement des couches](#layerswitcher)
-    - [barre de recherche utilisant le service de géocodage IGN](#geocode)
-    - [obtention d'une adresse, d'un nom de lieu, ... au clic sur la carte](#reverse)
-    - [calculs d'itinéraires à partir du service de la Géoplateforme](#route)
-    - [calculs d'isochrones / isodistances à partir du service de la Géoplateforme](#isocurve)
-    - [coordonnées et altitude en un point de la carte à l'aide du service d'altimétrie de la Géoplateforme](#mp)
-    - [outils de croquis](#drawing)
-    - [import de couches](#layerimport)
-    - [profil altimétrique d'un traçé à l'aide du service d'altimétrie de la Géoplateforme](#ep)
-    - [outils de mesures](#measure)
-    - [accès aux informations attributaires des couches](#getfeatureinfo)
-    - [widget d'export](#export)
-    - [widget de catalogue de couche](#catalog)
-    - [widget de legendes](#legends)
-    - [widget de centrage sur territoire](#territories)
-    - [widget sur l'overviewmap](#overviewMap)
-    - [widget de zoom](#zoom)
-    - [widget de plein écran](#fullscreen)
+    - [Affichage des couches WMTS Géoplateforme](#WMTS)
+    - [Affichage des couches WMS Géoplateforme](#WMS)
+    - [Affichage d'une couche Vecteur Tuilé Géoplateforme](#VT)
+    - [Affichage dynamique des attributions](#attributions)
+    - [Widget de gestion d'empilement des couches](#layerswitcher)
+    - [Barre de recherche utilisant le service de géocodage IGN](#geocode)
+    - [Obtention d'une adresse, d'un nom de lieu, ... au clic sur la carte](#reverse)
+    - [Calculs d'itinéraires à partir du service de la Géoplateforme](#route)
+    - [Calculs d'isochrones / isodistances à partir du service de la Géoplateforme](#isocurve)
+    - [Coordonnées et altitude en un point de la carte à l'aide du service d'altimétrie de la Géoplateforme](#mp)
+    - [Outils de croquis](#drawing)
+    - [Import de couches](#layerimport)
+    - [Profil altimétrique d'un traçé à l'aide du service d'altimétrie de la Géoplateforme](#ep)
+    - [Outils de mesures](#measure)
+    - [Accès aux informations attributaires des couches](#getfeatureinfo)
+    - [Widget d'export](#export)
+    - [Widget de catalogue de couche](#catalog)
+    - [Widget de legendes](#legends)
+    - [Widget de centrage sur territoire](#territories)
+    - [Widget de mini carte](#overviewMap)
+    - [Widget de zoom](#zoom)
+    - [Widget de plein écran](#fullscreen)
 
-les fonctionnalités proposées par l'extension Géoplateforme pour OpenLayers sont à utiliser en complément de la bibliothèque [OpenLayers dans ses versions 8 et
+Les fonctionnalités proposées par l'extension Géoplateforme pour OpenLayers sont à utiliser en complément de la bibliothèque [OpenLayers dans ses versions 8 et
 supérieures](https://openlayers.org/)
 
 <a name="readme-top"></a>
 
+<a id="mise-en-oeuvre"></a>
 ## Mise en oeuvre
 
 L'utilisation de l'extension Géoplateforme pour OpenLayers se fait
@@ -61,7 +62,7 @@ via les étapes suivantes :
 Une documentation technique (**jsdoc**), une **demo**
 et un **generateur de carte** sont disponibles [ici](https://ignf.github.io/geoportal-extensions-openlayers/).
 
-<a id="download"></a>
+<a id="téléchargement"></a>
 
 ### Téléchargement
 
@@ -158,7 +159,7 @@ Les scripts d'OpenLayers s'obtiennent sur [la page de téléchargement d'OpenLay
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<a id="download-direct"></a>
+<a id="téléchargement-direct"></a>
 
 #### Téléchargement direct
 
@@ -172,7 +173,7 @@ L'archive téléchargée (.zip) comprend l'arborescence décrite ci-dessus.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<a id="download-npm"></a>
+<a id="récupération-avec-npm"></a>
 
 #### Récupération avec NPM
 
@@ -186,6 +187,7 @@ Prérequis : [NodeJS](https://nodejs.org/en/) et [npm](https://www.npmjs.com/) i
 ```sh
 npm i geopf-extensions-openlayers
 ```
+<a id="accès-direct"></a>
 
 #### Accès direct
 
@@ -203,7 +205,7 @@ todo : liste des bundles !
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<a id="integration"></a>
+<a id="intégration-dans-une-page-web"></a>
 
 ### Intégration dans une page web
 
@@ -256,7 +258,7 @@ Exemple en mode "DSFR" :
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<a id="config"></a>
+<a id="configuration-de-laccès-à-la-géoplateforme"></a>
 
 ### Configuration de l'accès à la Géoplateforme
 
@@ -383,6 +385,8 @@ de mettre une liste de clés dans l'attribut apiKey de la fonction getConfig :
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<a id="optimisation-du-chargement--configuration-locale"></a>
+
 #### Optimisation du chargement : configuration locale
 
 Vous pouvez améliorer le temps de chargement de votre page en mettant en cache
@@ -448,6 +452,8 @@ ainsi que le paramètre *callbackSuffix*, de la manière suivante :
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<a id="appel-de-lextension-dans-un-module-es6"></a>
+
 ### Appel de l'extension dans un module ES6
 
 > **TODO**
@@ -470,6 +476,8 @@ L'utilisateur a le choix entre plusieurs méthodes d'import.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<a id="compatibilités"></a>
+
 ## Compatibilités
 
 ### Versions de OpenLayers supportées
@@ -481,16 +489,20 @@ avec les **version 8.2.0 et supérieures** d'OpenLayers.
 
 Navigateur | version
 -----------|--------
-Chrome     | Versions récentes (21+)
-Firefox    | Versions récentes (28+)
-Edge       | 12+
-Safari     | Versions récentes (6.1+)
+Chrome     | Versions récentes (119+)
+Firefox    | Versions récentes (119+)
+Edge       | Versions récentes (119+)
+Safari     | Versions récentes (17.1+)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<a id="fonctionnalités"></a>
 
 ## Fonctionnalités
 
 <a id="crs"></a>
+
+<a id="systèmes-de-coordonnées"></a>
 
 ### Systèmes de coordonnées
 
@@ -2042,7 +2054,7 @@ Par défaut, les territoires utilisés par le widget sont définis dans le fichi
 
 <a id="overviewMap"></a>
 
-### Widget sur la carte d'ensemble
+### Widget de mini carte
 
 Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.OverviewMap]<http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html>.
 
