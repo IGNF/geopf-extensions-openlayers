@@ -72,7 +72,7 @@ var MeasureArea = class MeasureArea extends Control {
         this.CLASSNAME = "MeasureArea";
 
         // uuid
-        this._uid = ID.generate();
+        this._uid = options.id || ID.generate();
 
         // container d'activation du controle
         this._pictoContainer = null;

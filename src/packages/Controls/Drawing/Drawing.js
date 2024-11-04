@@ -628,7 +628,7 @@ var Drawing = class Drawing extends Control {
      */
     _initialize (options) {
         // determination d'un uid
-        this._uid = SelectorID.generate();
+        this._uid = options.id || SelectorID.generate();
 
         // export name / format / ...
         this._exportName = "Croquis";

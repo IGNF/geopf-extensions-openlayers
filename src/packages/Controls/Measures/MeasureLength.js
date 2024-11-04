@@ -66,7 +66,7 @@ var MeasureLength = class MeasureLength extends Control {
         this.CLASSNAME = "MeasureLength";
 
         // uuid
-        this._uid = ID.generate();
+        this._uid = options.id || ID.generate();
 
         // container d'activation du controle
         this._pictoContainer = null;

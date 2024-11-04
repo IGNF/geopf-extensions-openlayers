@@ -245,7 +245,7 @@ var Territories = class Territories extends Control {
      * @private
      */
     initialize (options) {
-        this.uid = SelectorID.generate();
+        this.uid = options.id || SelectorID.generate();
 
         // set default options
         this.options = {

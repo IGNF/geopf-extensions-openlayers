@@ -149,7 +149,7 @@ var ElevationPath = class ElevationPath extends Control {
         this.CLASSNAME = "ElevationPath";
 
         // uuid
-        this._uid = ID.generate();
+        this._uid = options.id || ID.generate();
 
         // container : HTMLElement
         this._showContainer = null;

@@ -228,7 +228,7 @@ const suggest = async (text) => {
 
 /**
  * Retourne la liste des suggestions sans doublons
- * @returns {Object} 
+ * @returns {Object} liste des suggestions
  */
 const unique = () => {
     return m_suggestions.filter((value, index, self) =>
@@ -253,21 +253,21 @@ const clear = () => {
 
 /**
  * Liste des suggestions (unique)
- * @returns {Array}
+ * @returns {Array} liste des suggestions
  */
 const getSuggestions = () => {
     return unique();
 };
 /**
  * Liste des noms (unique)
- * @returns  {Array}
+ * @returns {Array} liste des noms
  */
 const getNames = () => {
     return unique().map((o) => { return o.name; });
 };
 /**
  * Liste des titres (unique)
- * @returns {Array}
+ * @returns {Array} liste des titres
  */
 const getTitles = () => {
     return unique().map((o) => { return o.title; });

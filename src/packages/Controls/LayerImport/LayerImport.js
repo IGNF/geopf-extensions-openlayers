@@ -493,7 +493,7 @@ var LayerImport = class LayerImport extends Control {
         this.draggable = this.options.draggable;
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // si une requête est en cours ou non
         this._waiting = false;

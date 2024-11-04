@@ -533,7 +533,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      */
     _initialize (options, layers) {
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = options.id || SelectorID.generate();
 
         this.options = options;
         this.options.layers = layers;

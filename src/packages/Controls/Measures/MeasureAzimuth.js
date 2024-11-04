@@ -72,7 +72,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         this.CLASSNAME = "MeasureAzimuth";
 
         // uuid
-        this._uid = ID.generate();
+        this._uid = options.id || ID.generate();
 
         // container d'activation du controle
         this._pictoContainer = null;

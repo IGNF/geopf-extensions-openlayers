@@ -540,7 +540,7 @@ var Route = class Route extends Control {
         /** {Boolean} specify if Route control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // containers principaux
         this._showRouteButton = null;

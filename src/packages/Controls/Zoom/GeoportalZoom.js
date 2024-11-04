@@ -73,7 +73,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
 
     _initContainer () {
         // UID interne pour chaque controle
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // Ajout / Suppression des attributs du DOM
         this.element.id = "GPzoom-" +  this._uid;

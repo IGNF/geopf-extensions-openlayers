@@ -71,7 +71,7 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
 
     _initContainer () {
         // UID interne pour chaque controle
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // Ajout / Suppression des attributs du DOM
         this.element.id = "GPfullScreen-" +  this._uid;
