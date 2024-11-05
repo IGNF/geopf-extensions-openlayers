@@ -42,7 +42,7 @@ var MeasureAreaDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowMeasureAreaPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-area fr-btn fr-btn--secondary";
-        button.title = "Mesurer une surface";
+        button.setAttribute("aria-label", "Mesurer une surface");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");

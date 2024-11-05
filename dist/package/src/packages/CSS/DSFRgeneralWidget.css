@@ -163,8 +163,8 @@
   }
 }
 
-.gpf-btn-icon:not([class*=--tertiary])[title]:hover::before {
-  content: attr(title);
+.gpf-btn-icon:not([class*=--tertiary])[aria-label]:hover::before {
+  content: attr(aria-label);
   position: absolute;
   top: 0;
   color: var(--text-default-grey);
@@ -180,13 +180,13 @@
   background-image: conic-gradient(from 56.31deg at 0% 50%,transparent 0deg,var(--background-overlap-grey) 0deg,var(--background-overlap-grey) 67.38deg,transparent 67.38deg),conic-gradient(from 56.31deg at 0% 50%,transparent 0deg,var(--border-default-grey) 0deg,var(--border-default-grey) 67.38deg,transparent 67.38deg),linear-gradient(90deg,var(--border-default-grey),var(--border-default-grey)),linear-gradient(90deg,var(--background-overlap-grey),var(--background-overlap-grey));
 }
 
-.position-container-top-left .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before,
-.position-container-bottom-left .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before {
+.position-container-top-left .gpf-btn-icon:not([class*=--tertiary])[aria-label]:hover::before,
+.position-container-bottom-left .gpf-btn-icon:not([class*=--tertiary])[aria-label]:hover::before {
   transform: translateX(24px);
 }
 
-.position-container-top-right .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before,
-.position-container-bottom-right .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before {
+.position-container-top-right .gpf-btn-icon:not([class*=--tertiary])[aria-label]:hover::before,
+.position-container-bottom-right .gpf-btn-icon:not([class*=--tertiary])[aria-label]:hover::before {
   transform: translateX(calc(-100% - 16px));
   padding: .5rem 1.25rem .5rem .5rem;
   background-size: .375rem .5rem, .375rem .5rem, 1px 100%, 100%;
