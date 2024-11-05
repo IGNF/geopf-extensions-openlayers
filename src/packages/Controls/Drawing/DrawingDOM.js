@@ -44,7 +44,7 @@ var DrawingDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowDrawingPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowDrawingPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-drawing fr-btn fr-btn--secondary";
-        button.title = this.options.labels.control;
+        button.setAttribute("aria-label", this.options.labels.control);
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
