@@ -67,7 +67,7 @@ var CatalogDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowCatalogPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowCatalogPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-catalog fr-btn fr-btn--secondary";
-        button.title = "Catalogue de données";
+        button.setAttribute("aria-label", "Catalogue de données");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");

@@ -307,6 +307,8 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", !this.options.collapsed);
         button.setAttribute("type", "button");
+        button.removeAttribute("title");
+        button.setAttribute("aria-label", this.options.tipLabel);
         var self = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {

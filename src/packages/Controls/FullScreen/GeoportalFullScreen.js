@@ -87,6 +87,8 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
+        button.removeAttribute("title");
+        button.setAttribute("aria-label", this.options.tipLabel);
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");

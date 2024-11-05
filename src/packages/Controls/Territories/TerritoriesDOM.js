@@ -40,7 +40,7 @@ var TerritoriesDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowTerritoriesPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowTerritoriesPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-territories fr-btn fr-btn--secondary";
-        button.title = "Selecteur de territoire";
+        button.setAttribute("aria-label", "Sélecteur de territoire");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");

@@ -56,7 +56,7 @@ var LayerImportDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowImportPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowImportPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-import fr-btn fr-btn--secondary";
-        button.title = "Ouvrir l'import de couches";
+        button.setAttribute("aria-label", "Ouvrir l'import de couches");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -680,7 +680,7 @@ var LayerImportDOM = {
         span.innerText = "Fermer";
 
         closeDiv.appendChild(span);
-        
+
         container.appendChild(closeDiv);
 
         return container;
@@ -832,13 +832,13 @@ var LayerImportDOM = {
                 context._onMapBoxPanelClose();
             });
         }
-        
+
         var span = document.createElement("span");
         span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
         span.innerText = "Fermer";
 
         closeDiv.appendChild(span);
-        
+
         container.appendChild(closeDiv);
 
         return container;
