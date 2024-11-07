@@ -16,6 +16,7 @@ import {
     Circle
 } from "ol/style";
 import {
+    LineString,
     Point,
     Polygon
 } from "ol/geom";
@@ -1075,6 +1076,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
             }
             requestOptions.searchGeometry = this._requestGeom;
         } else if (this._requestGeom.type.toLowerCase() === "polygon") {
+            // FIXME : geom bbox max length 1000m !
             requestOptions.searchGeometry = this._requestGeom;
         } else if (this._requestGeom.type.toLowerCase() === "point") {
             if (this._currentGeocodingType === "StreetAddress") {
