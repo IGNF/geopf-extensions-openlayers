@@ -309,7 +309,7 @@ var LayerWMTS = class LayerWMTS extends TileLayer {
         // si le param layer n'a pas été renseigné lors de la création de la source,
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
         if (wmtsSource.getLayer() !== undefined) {
-            if (layerCfg.globalConstraints && layerCfg.globalConstraints.projection) {
+            if (layerCfg.globalConstrainWFSts && layerCfg.globalConstraints.projection) {
                 /* INFO : désactivation temporaire de l'étendue, car certaines étendues (trop grandes ?)
                 provoquent quelques bugs d'affichage (zoom > 16 par exemple) */
                 // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj de la couche
@@ -356,13 +356,22 @@ var LayerWMTS = class LayerWMTS extends TileLayer {
         
         this.name = options.layer;
         this.service = "WMTS";
-        
+        this.config = layerCfg;
+
         return this;
     }
     
     /**
+     * Get configuration
+     * @returns {Object} - configuration
+     */
+    getConfiguration () {
+        return this.config;
+    }
+    
+    /**
      * Get legends
-     * @returns  {Array} - legends
+     * @returns {Array} - legends
      */
     getLegends () {
         return this.getSource()._legends;
@@ -370,7 +379,7 @@ var LayerWMTS = class LayerWMTS extends TileLayer {
 
     /**
      * Get metadata
-     * @returns  {Array} - metadata
+     * @returns {Array} - metadata
      */
     getMetadata () {
         return this.getSource()._metadata;
