@@ -67,6 +67,7 @@ export default Catalog;
  * @todo filtrage des couches
  * @todo type:service
  * @todo validation du schema
+ * @fixme enregistrer et afficher du format WFS !?
  */
 declare var Catalog: ol.control.Catalog;
 //# sourceMappingURL=Catalog.d.ts.map

@@ -157,10 +157,19 @@ var LayerWMS = class LayerWMS extends TileLayer {
 
         this.name = options.layer;
         this.service = "WMS";
-        
+        this.config = layerCfg;
+
         return this;
     }
 
+    /**
+     * Get configuration
+     * @returns {Object} - configuration
+     */
+    getConfiguration () {
+        return this.config;
+    }
+    
     /**
      * Get legends
      * @returns  {Array} - legends

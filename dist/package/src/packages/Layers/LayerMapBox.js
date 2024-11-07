@@ -249,6 +249,7 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
         this.protocol = protocol;
         this.sourceId = options.source;
         this.styleUrl = styleUrl;
+        this.config = layerCfg;
         
         // récuperation du style
         this.setStyleMapBox();
@@ -357,6 +358,14 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
         // eslint-disable-next-line no-console
         console.error(error.message);
     };
+
+    /**
+     * Get configuration
+     * @returns {Object} - configuration
+     */
+    getConfiguration () {
+        return this.config;
+    }
 
     /**
      * Get legends
