@@ -4,12 +4,12 @@ function getSameSideOpenedPanel (position, openedPanelID) {
     // on ajoute aux exceptions le panel qui vient d'être ouvert
     var exceptionPanel = [...exceptions, openedPanelID];
     var controlPanels = [];
-    if (position.includes("left")) {
+    if (position && position.includes("left")) {
         var bottomLeft = document.getElementById("position-container-bottom-left");
         var topLeft = document.getElementById("position-container-top-left");
         controlPanels = [...bottomLeft.children, ...topLeft.children];
     }
-    if (position.includes("right")) {
+    if (position && position.includes("right")) {
         var bottomRight = document.getElementById("position-container-bottom-right");
         var topRight = document.getElementById("position-container-top-right");
         controlPanels = [...bottomRight.children, ...topRight.children];
