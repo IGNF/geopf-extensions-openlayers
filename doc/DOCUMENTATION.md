@@ -2056,7 +2056,7 @@ Par défaut, les territoires utilisés par le widget sont définis dans le fichi
 
 ### Widget de mini carte
 
-Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.OverviewMap]<http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html>.
+Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.OverviewMap](http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html).
 
 Par défaut, on utilise la couche **GEOGRAPHICALGRIDSYSTEMS.MAPS.OVERVIEW**.
 
@@ -2075,7 +2075,7 @@ map.addControl(overview);
 
 ### Widget de zoom
 
-Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.Zoom]<http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html>.
+Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.Zoom](http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html).
 
 #### Exemples d'utilisation
 
@@ -2091,7 +2091,7 @@ map.addControl(zoom);
 
 ### Widget de plein écran
 
-Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.FullScreen]<http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html>
+Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.FullScreen](http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html)
 
 #### Exemples d'utilisation
 
