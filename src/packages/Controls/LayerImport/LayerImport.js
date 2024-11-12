@@ -3,6 +3,7 @@ import "../../CSS/Controls/LayerImport/GPFlayerImport.css";
 // import "../../CSS/Controls/LayerImport/GPFlayerImportStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
@@ -531,7 +532,7 @@ var LayerImport = class LayerImport extends Control {
 
         // ################################################################## //
         // ################ Interrogation du GetCapabilities ################ //
-
+        this._hasGetCapResults = false;
         this._getCapRequestUrl = null;
         this._getCapResponseWMS = null;
         this._getCapResponseWMSLayers = [];
@@ -818,9 +819,13 @@ var LayerImport = class LayerImport extends Control {
      * (cf. LayerImportDOM._createShowImportPictoElement),
      * and dispatch event change:collapsed (for tools listening this property)
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    _onShowImportClick () {
+    _onShowImportClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
@@ -839,9 +844,15 @@ var LayerImport = class LayerImport extends Control {
             this._mapBoxPanel.classList.replace("GPelementHidden", "GPelementVisible");
             this._mapBoxPanel.classList.replace("gpf-hidden", "gpf-visible");
             this._hideFormContainer();
+        } else if (this._hasGetCapResults) {
+            this._getCapPanel.classList.replace("GPelementHidden", "GPelementVisible");
+            this._getCapPanel.classList.replace("gpf-hidden", "gpf-visible");
+            this._hideFormContainer();
         } else {
             this._getCapPanel.classList.replace("GPelementVisible", "GPelementHidden");
             this._getCapPanel.classList.replace("gpf-visible", "gpf-hidden");
+            this._mapBoxPanel.classList.replace("GPelementVisible", "GPelementHidden");
+            this._mapBoxPanel.classList.replace("gpf-visible", "gpf-hidden");
             this._displayFormContainer();
         }
     }
@@ -2078,7 +2089,9 @@ var LayerImport = class LayerImport extends Control {
         this._getCapPanel.classList.replace("GPelementHidden", "GPelementVisible");
         this._getCapPanel.classList.replace("gpf-hidden", "gpf-visible");
         this._importPanelTitle.innerHTML = "Couches accessibles";
-
+        this._importPanelReturnPicto.classList.replace("GPelementHidden", "GPelementVisible");
+        this._importPanelReturnPicto.classList.replace("gpf-hidden", "gpf-visible");
+        this._hasGetCapResults = true;
         // Parse GetCapabilities Response
         if (this._currentImportType === "WMS") {
             parser = new WMSCapabilities();
@@ -3054,6 +3067,7 @@ var LayerImport = class LayerImport extends Control {
      * @private
      */
     cleanGetCapResultsList () {
+        this._hasGetCapResults = false;
         this._getCapRequestUrl = null;
         this._getCapResponseWMS = null;
         this._getCapResponseWMTS = null;
@@ -3103,6 +3117,7 @@ var LayerImport = class LayerImport extends Control {
 
 // on récupère les méthodes de la classe commune LayerImport
 Object.assign(LayerImport.prototype, LayerImportDOM);
+Object.assign(LayerImport.prototype, Widget);
 
 export default LayerImport;
 

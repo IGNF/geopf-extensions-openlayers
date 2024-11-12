@@ -3,6 +3,7 @@ import "../../CSS/Controls/Route/GPFroute.css";
 // import "../../CSS/Controls/Route/GPFrouteStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Overlay from "ol/Overlay";
@@ -1238,6 +1239,9 @@ var Route = class Route extends Control {
      * @private
      */
     onShowRoutePanelClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
@@ -2269,6 +2273,7 @@ var Route = class Route extends Control {
 
 // on récupère les méthodes de la classe commune ReverseGeocodingDOM
 Object.assign(Route.prototype, RouteDOM);
+Object.assign(Route.prototype, Widget);
 
 export default Route;
 

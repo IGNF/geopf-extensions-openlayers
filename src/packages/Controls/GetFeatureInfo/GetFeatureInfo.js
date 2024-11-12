@@ -2,6 +2,7 @@
 import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "../Control";
 import VectorTileSource from "ol/source/VectorTile";
 import VectorSource from "ol/source/Vector";
@@ -634,7 +635,12 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      * @param {*} e - ...
      */
     onShowGetFeatureInfoClick (e) {
-        if (e === false){
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
+        // ouverture du panel pas systématique quand on clic sur le bouton d'activation
+        // donc on doit fermer explicitement le panel quand on désactive le GFI
+        if (e.target.ariaPressed === "false"){
             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
         }
         logger.trace(e);
@@ -660,6 +666,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(GetFeatureInfo.prototype, GetFeatureInfoDOM);
+Object.assign(GetFeatureInfo.prototype, Widget);
 
 export default GetFeatureInfo;
 

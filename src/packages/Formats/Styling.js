@@ -570,103 +570,105 @@ var Styling = {
         }
 
         // options du Style en fonction du type de geometrie
-        var type = feature.getGeometry().getType();
-        switch (type) {
-            case "Circle":
-            case "Point":
-            case "MultiPoint":
-                // Cercle
-                var isCircle = false;
-                var optionsCircle = {};
-                if (circleStroke) {
-                    optionsCircle["stroke"] = new StrokeStyle(circleStroke);
-                }
-                if (circleFill) {
-                    optionsCircle["fill"] = new FillStyle(circleFill);
-                }
-                if (Object.keys(optionsCircle).length !== 0) {
-                    isCircle = true;
-                    optionsCircle["radius"] = +circleRadius; // Conversion en nombre
-                    options["image"] = new CircleStyle(optionsCircle);
-                }
-                // Ponctuel
-                if (marker) {
-                    options["image"] = new IconStyle(marker);
-                }
-                // Label
-                if (isLabel) {
-                    var optionsText = {};
-
-                    if (labelStroke) {
-                        optionsText["stroke"] = new StrokeStyle(labelStroke);
+        if (feature.getGeometry()) {
+            var type = feature.getGeometry().getType();
+            switch (type) {
+                case "Circle":
+                case "Point":
+                case "MultiPoint":
+                    // Cercle
+                    var isCircle = false;
+                    var optionsCircle = {};
+                    if (circleStroke) {
+                        optionsCircle["stroke"] = new StrokeStyle(circleStroke);
                     }
-                    if (labelFill) {
-                        optionsText["fill"] = new FillStyle(labelFill);
+                    if (circleFill) {
+                        optionsCircle["fill"] = new FillStyle(circleFill);
                     }
-                    if (Object.keys(optionsText).length !== 0) {
-                        optionsText["text"] = feature.get("name");
-                        optionsText["textAlign"] = feature.get("label-textAlign") || this.DEFAULT_TEXT.textAlign;
-                        optionsText["font"] = feature.get("label-font") || this.DEFAULT_TEXT.font;
-                        options["text"] = new TextStyle(
-                            Object.assign({},
-                                this.DEFAULT_TEXT,
-                                optionsText
-                            ));
-                    } else {
-                        // on applique un style par defaut sur le label
-                        // pour un marker ou un cercle
-                        if (marker || isCircle) {
-                            var styleText = new TextStyle(
+                    if (Object.keys(optionsCircle).length !== 0) {
+                        isCircle = true;
+                        optionsCircle["radius"] = +circleRadius; // Conversion en nombre
+                        options["image"] = new CircleStyle(optionsCircle);
+                    }
+                    // Ponctuel
+                    if (marker) {
+                        options["image"] = new IconStyle(marker);
+                    }
+                    // Label
+                    if (isLabel) {
+                        var optionsText = {};
+    
+                        if (labelStroke) {
+                            optionsText["stroke"] = new StrokeStyle(labelStroke);
+                        }
+                        if (labelFill) {
+                            optionsText["fill"] = new FillStyle(labelFill);
+                        }
+                        if (Object.keys(optionsText).length !== 0) {
+                            optionsText["text"] = feature.get("name");
+                            optionsText["textAlign"] = feature.get("label-textAlign") || this.DEFAULT_TEXT.textAlign;
+                            optionsText["font"] = feature.get("label-font") || this.DEFAULT_TEXT.font;
+                            options["text"] = new TextStyle(
                                 Object.assign({},
-                                    this.DEFAULT_TEXT, {
-                                        fill : new FillStyle(this.DEFAULT_TEXT.fill),
-                                        stroke : new StrokeStyle(this.DEFAULT_TEXT.stroke)
-                                    }
-                                )
-                            );
-                            if (styleText) {
-                                var cloneStyleText = styleText.clone();
-                                cloneStyleText.setText(feature.get("name"));
-                                options["text"] = cloneStyleText;
+                                    this.DEFAULT_TEXT,
+                                    optionsText
+                                ));
+                        } else {
+                            // on applique un style par defaut sur le label
+                            // pour un marker ou un cercle
+                            if (marker || isCircle) {
+                                var styleText = new TextStyle(
+                                    Object.assign({},
+                                        this.DEFAULT_TEXT, {
+                                            fill : new FillStyle(this.DEFAULT_TEXT.fill),
+                                            stroke : new StrokeStyle(this.DEFAULT_TEXT.stroke)
+                                        }
+                                    )
+                                );
+                                if (styleText) {
+                                    var cloneStyleText = styleText.clone();
+                                    cloneStyleText.setText(feature.get("name"));
+                                    options["text"] = cloneStyleText;
+                                }
                             }
                         }
                     }
-                }
-                break;
-
-            case "Polygon":
-            case "MultiPolygon":
-                if (stroke) {
-                    options["stroke"] = new StrokeStyle(stroke);
-                }
-                if (fill) {
-                    options["fill"] = new FillStyle(fill);
-                }
-                break;
-
-            case "LineString":
-            case "MultiLineString":
-                if (stroke) {
-                    options["stroke"] = new StrokeStyle(stroke);
-                }
-                if (this.APPLY_CONVERT_GEOM_GPX && fill) {
-                    // INFO
-                    // Lors d'une transformation de type de geometrie, le type est renseigné.
-                    // Pour le format GPX,
-                    // -> on transforme une surface vers ligne lors de l'écriture
-                    // -> on transforme une ligne vers une surface lors de la lecture si le type est précisé !
-                    var initType = feature.get("type");
-                    if (initType && (initType === "Polygon" || initType === "MultiPolygon")) {
-                        options["fill"] = new FillStyle(fill);
-                        var f = feature.clone();
-                        var ClassPoly = (type === "LineString") ? Polygon : MultiPolygon;
-                        feature.setGeometry(new ClassPoly([f.getGeometry().getCoordinates()]));
+                    break;
+    
+                case "Polygon":
+                case "MultiPolygon":
+                    if (stroke) {
+                        options["stroke"] = new StrokeStyle(stroke);
                     }
-                }
-                break;
-
-            default:
-                break;
+                    if (fill) {
+                        options["fill"] = new FillStyle(fill);
+                    }
+                    break;
+    
+                case "LineString":
+                case "MultiLineString":
+                    if (stroke) {
+                        options["stroke"] = new StrokeStyle(stroke);
+                    }
+                    if (this.APPLY_CONVERT_GEOM_GPX && fill) {
+                        // INFO
+                        // Lors d'une transformation de type de geometrie, le type est renseigné.
+                        // Pour le format GPX,
+                        // -> on transforme une surface vers ligne lors de l'écriture
+                        // -> on transforme une ligne vers une surface lors de la lecture si le type est précisé !
+                        var initType = feature.get("type");
+                        if (initType && (initType === "Polygon" || initType === "MultiPolygon")) {
+                            options["fill"] = new FillStyle(fill);
+                            var f = feature.clone();
+                            var ClassPoly = (type === "LineString") ? Polygon : MultiPolygon;
+                            feature.setGeometry(new ClassPoly([f.getGeometry().getCoordinates()]));
+                        }
+                    }
+                    break;
+    
+                default:
+                    break;
+            }
         }
 
         // si aucun style disponible, on utilisera le style par defaut defini
@@ -700,71 +702,73 @@ var Styling = {
 
         // les styles par defaut
         var styleFunction = (feature, resolution) => {
-            var style = null;
-            var type = feature.getGeometry().getType();
-            switch (type) {
-                case "Point":
-                case "MultiPoint":
-                    // on n'a aucune information sur le type de style à appliquer sur un "Point" :
-                    // * label ou
-                    // * marker ou
-                    // * marker avec label
-                    // donc, c'est en fonction des styles par defaut...
-                    var opts = {};
-                    if (defaultStyle.getImage()) {
-                        opts["image"] = defaultStyle.getImage();
-                    }
-                    if (defaultStyle.getText() && feature.get("name")) {
-                        var styleText = defaultStyle.getText().clone();
-                        styleText.setText(feature.get("name"));
-                        opts["text"] = styleText;
-                    }
-                    style = new Style(opts);
-                    break;
-                case "Circle":
-                    var optsc = {};
-
-                    var optsCircle = {};
-                    if (defaultStyle.getFill()) {
-                        optsCircle.fill = defaultStyle.getFill();
-                    }
-                    if (defaultStyle.getStroke()) {
-                        optsCircle.stroke = defaultStyle.getStroke();
-                    }
-                    if (defaultStyle.getText() && feature.get("name")) {
-                        var styleTextCircle = defaultStyle.getText().clone();
-                        styleTextCircle.setText(feature.get("name"));
-                        optsc.text = styleTextCircle;
-                    }
-                    if (Object.keys(optsCircle).length !== 0) {
-                        // FIXME param radius ?
-                        optsCircle.radius = 3;
-                        optsc.image = new CircleStyle(optsCircle);
-                    }
-                    style = new Style(optsc);
-                    break;
-                case "Polygon":
-                case "MultiPolygon":
-                    var optsp = {};
-                    if (defaultStyle.getFill()) {
-                        optsp.fill = defaultStyle.getFill();
-                    }
-                    if (defaultStyle.getStroke()) {
-                        optsp.stroke = defaultStyle.getStroke();
-                    }
-                    style = new Style(optsp);
-                    break;
-                case "LineString":
-                case "LinearRing":
-                case "MultiLineString":
-                    var optsl = {};
-                    if (defaultStyle.getStroke()) {
-                        optsl.stroke = defaultStyle.getStroke();
-                    }
-                    style = new Style(optsl);
-                    break;
+            if (feature.getGeometry()) {
+                var style = null;
+                var type = feature.getGeometry().getType();
+                switch (type) {
+                    case "Point":
+                    case "MultiPoint":
+                        // on n'a aucune information sur le type de style à appliquer sur un "Point" :
+                        // * label ou
+                        // * marker ou
+                        // * marker avec label
+                        // donc, c'est en fonction des styles par defaut...
+                        var opts = {};
+                        if (defaultStyle.getImage()) {
+                            opts["image"] = defaultStyle.getImage();
+                        }
+                        if (defaultStyle.getText() && feature.get("name")) {
+                            var styleText = defaultStyle.getText().clone();
+                            styleText.setText(feature.get("name"));
+                            opts["text"] = styleText;
+                        }
+                        style = new Style(opts);
+                        break;
+                    case "Circle":
+                        var optsc = {};
+    
+                        var optsCircle = {};
+                        if (defaultStyle.getFill()) {
+                            optsCircle.fill = defaultStyle.getFill();
+                        }
+                        if (defaultStyle.getStroke()) {
+                            optsCircle.stroke = defaultStyle.getStroke();
+                        }
+                        if (defaultStyle.getText() && feature.get("name")) {
+                            var styleTextCircle = defaultStyle.getText().clone();
+                            styleTextCircle.setText(feature.get("name"));
+                            optsc.text = styleTextCircle;
+                        }
+                        if (Object.keys(optsCircle).length !== 0) {
+                            // FIXME param radius ?
+                            optsCircle.radius = 3;
+                            optsc.image = new CircleStyle(optsCircle);
+                        }
+                        style = new Style(optsc);
+                        break;
+                    case "Polygon":
+                    case "MultiPolygon":
+                        var optsp = {};
+                        if (defaultStyle.getFill()) {
+                            optsp.fill = defaultStyle.getFill();
+                        }
+                        if (defaultStyle.getStroke()) {
+                            optsp.stroke = defaultStyle.getStroke();
+                        }
+                        style = new Style(optsp);
+                        break;
+                    case "LineString":
+                    case "LinearRing":
+                    case "MultiLineString":
+                        var optsl = {};
+                        if (defaultStyle.getStroke()) {
+                            optsl.stroke = defaultStyle.getStroke();
+                        }
+                        style = new Style(optsl);
+                        break;
+                }
+                return [style];
             }
-            return [style];
         };
         return styleFunction;
     },
@@ -776,24 +780,26 @@ var Styling = {
      * @param {*} feature - feature
      */
     definePropertiesFromStyleByType : function (feature) {
-        var geomType = feature.getGeometry().getType();
-        switch (geomType) {
-            case "Point":
-            case "MultiPoint":
-                feature.setPropertyMarker();
-                feature.setPropertyLabel();
-                break;
-            case "LineString":
-            case "MultiLineString":
-                feature.setPropertyStroke();
-                break;
-            case "Polygon":
-            case "MultiPolygon":
-                feature.setPropertyStroke();
-                feature.setPropertyFill();
-                break;
-            default:
-                break;
+        if (feature.getGeometry()) {
+            var geomType = feature.getGeometry().getType();
+            switch (geomType) {
+                case "Point":
+                case "MultiPoint":
+                    feature.setPropertyMarker();
+                    feature.setPropertyLabel();
+                    break;
+                case "LineString":
+                case "MultiLineString":
+                    feature.setPropertyStroke();
+                    break;
+                case "Polygon":
+                case "MultiPolygon":
+                    feature.setPropertyStroke();
+                    feature.setPropertyFill();
+                    break;
+                default:
+                    break;
+            }
         }
     },
 

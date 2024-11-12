@@ -1,5 +1,10 @@
 /**
+ * @classdesc
+ * 
  * Gestion du service de recherche de couches
+ * 
+ * @module Search
+ * @alias module:~services/Search
  * @see https://geoservices.ign.fr/documentation/services/services-geoplateforme/service-geoplateforme-de-recherche
  */
 
@@ -54,6 +59,47 @@ const target = new EventTarget();
  * Appel du service de recherche
  * @param {*} text - recherche
  * @returns {Object} json
+ * @example
+ * {
+ *   "originators": {},
+ *   "srs": [
+ *     "EPSG:3857"
+ *   ],
+ *   "keywords": [],
+ *   "extent": {
+ *    "type": "Polygon",
+ *     "coordinates": [
+ *       [
+ *        [
+ *           55.9423828,
+ *           -21.5354858
+ *        ],
+ *         [
+ *           55.9423828,
+ *           51.1237818
+ *         ],
+ *         [
+ *           -63.28125,
+ *           51.1237818
+ *         ],
+ *         [
+ *           -63.28125,
+ *           -21.5354858
+ *         ],
+ *         [
+ *           55.9423828,
+ *           -21.5354858
+ *         ]
+ *       ]
+ *     ]
+ *   },
+ *   "metadata": [],
+ *   "name": "PLAN.IGN",
+ *   "title": "Plan IGN",
+ *   "description": "Plan IGN personnalisable",
+ *   "service": "TMS",
+ *   "url": "https://data.geopf.fr/tms/1.0.0/PLAN.IGN"
+ * }
  * @fire suggest
  */
 const suggest = async (text) => {
@@ -107,7 +153,17 @@ const suggest = async (text) => {
     //       "metadata_urls": [],
     //       "srs": [
     //         "EPSG:2154"
-    //       ]
+    //       ],
+    //       "attribution": {
+    //             "title": "Ministère de la Transition écologique et de la Cohésion des territoires",
+    //             "url": "https://www.ecologie.gouv.fr/",
+    //             "logo": {
+    //                  "format": "image/png",
+    //                  "url": "https://data.geopf.fr/annexes/ressources/logos/mtect.png",
+    //                  "width": 294,
+    //                  "height": 171
+    //             }
+    //       }
     //     }
     //   }
     // ]
@@ -133,9 +189,11 @@ const suggest = async (text) => {
             // FIXME champs possibles mais pas toujours remplis :
             // srs[], attributions{}, extent{}, metada_url[]
             var o = {
-                originators : result.source.attributions,
-                srs : result.source.srs,
-                metadata : result.source.metadata_url,
+                originators : result.source.attribution || {},
+                srs : result.source.srs || [],
+                keywords : result.source.keywords || [],
+                extent : result.source.extent || {},
+                metadata : result.source.metadata_urls || [],
                 name : result.source.layer_name,
                 title : result.source.title,
                 description : result.source.description,
@@ -168,6 +226,10 @@ const suggest = async (text) => {
     return getSuggestions();
 };
 
+/**
+ * Retourne la liste des suggestions sans doublons
+ * @returns {Object} liste des suggestions sans doublons
+ */
 const unique = () => {
     return m_suggestions.filter((value, index, self) =>
         index === self.findIndex((t) => (
@@ -179,41 +241,84 @@ const unique = () => {
     );
 };
 
+/**
+ * Clear
+ */
 const clear = () => {
     controller.abort();
     m_suggestions = [];
 };
 
 // getter (reponse)
+
+/**
+ * Liste des suggestions (unique)
+ * @returns {Array} Liste des suggestions (unique)
+ */
 const getSuggestions = () => {
     return unique();
 };
+/**
+ * Liste des noms (unique)
+ * @returns  {Array} Liste des noms (unique)
+ */
 const getNames = () => {
     return unique().map((o) => { return o.name; });
 };
+/**
+ * Liste des titres (unique)
+ * @returns {Array} Liste des titres (unique)
+ */
 const getTitles = () => {
     return unique().map((o) => { return o.title; });
 };
 
 // setter (conf)
+
+/**
+ * Renseigne le nom de l'indexe
+ * @param {String} value - nom de l'indexe
+ * @see m_index
+ */
 const setIndex = (value) => {
     m_index = value;
 };
+/**
+ * Renseigne la liste des champs de recherche
+ * @param {Array} value - liste des champs de recherche
+ * @see m_fields
+ */
 const setFields = (value) => {
     m_fields = value;
 };
+/**
+ * Renseigne le nombre de suggestions du service
+ * @param {Number} value - le nombre de suggestions du service
+ * @see m_size
+ */
 const setSize = (value) => {
     m_size = parseInt(value);
 };
+/**
+ * Renseigne l'url du service
+ * @param {String} value - url du service
+ * @see m_url
+ */
 const setUrl = (value) => {
     m_url = eval("`" + value + "`"); // insecure !
 };
+/**
+ * Renseigne le nombre de réponse souhaitée
+ * @param {Number} value - nombre de réponse
+ * @see m_maximumResponses
+ */
 const setMaximumResponses = (value) => {
     m_maximumResponses = parseInt(value);
 };
 /**
  * Filtre sur la liste des services à selectionner
  * @param {Array} value - liste de service
+ * @see m_filterByService
  */
 const setFiltersByService = (value) => {
     m_filterByService = value === "" ? [] : value.split(",");
@@ -221,6 +326,7 @@ const setFiltersByService = (value) => {
 /**
  * Filtre sur les couches à exclure
  * @param {Array} value - liste des projections
+ * @see m_filterByProjection
  */
 const setFiltersByProjection = (value) => {
     m_filterByProjection = value === "" ? [] : value.split(",");
@@ -228,6 +334,7 @@ const setFiltersByProjection = (value) => {
 /**
  * Filtre sur les "purs" couches vecteurs tuilés
  * @param {Array} value - liste des couches
+ * @see m_filterByTMS
  */
 const setFiltersByTMS = (value) => {
     m_filterByTMS = value === "" ? [] : value.split(",");

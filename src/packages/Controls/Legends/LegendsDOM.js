@@ -41,7 +41,7 @@ var LegendsDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowLegendsPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLegendsPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-legends fr-btn fr-btn--secondary";
-        button.title = "Afficher les légendes";
+        button.setAttribute("aria-label", "Afficher les légendes");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -51,13 +51,13 @@ var LegendsDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowLegendsClick();
+                self.onShowLegendsClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowLegendsClick();
+                self.onShowLegendsClick(e);
             });
         }
 

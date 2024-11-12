@@ -67,7 +67,7 @@ var CatalogDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowCatalogPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowCatalogPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-catalog fr-btn fr-btn--secondary";
-        button.title = "Catalogue de données";
+        button.setAttribute("aria-label", "Catalogue de données");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -77,13 +77,13 @@ var CatalogDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowCatalogClick();
+                self.onShowCatalogClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowCatalogClick();
+                self.onShowCatalogClick(e);
             });
         }
 

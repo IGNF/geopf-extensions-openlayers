@@ -2,6 +2,7 @@
 import "../../CSS/Controls/Legends/GPFlegends.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "../Control";
 
 // import local
@@ -467,6 +468,9 @@ var Legends = class Legends extends Control {
      * @param {*} e - ...
      */
     onShowLegendsClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace(e);
         var opened = this.buttonLegendsShow.ariaPressed;
         this.collapsed = !(opened === "true");
@@ -481,6 +485,7 @@ var Legends = class Legends extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Legends.prototype, LegendsDOM);
+Object.assign(Legends.prototype, Widget);
 
 export default Legends;
 

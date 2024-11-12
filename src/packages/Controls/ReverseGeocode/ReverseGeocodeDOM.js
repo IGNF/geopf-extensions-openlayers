@@ -41,7 +41,7 @@ var ReverseGeocodeDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowReverseGeocodingPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowReverseGeocodingPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-reverse fr-btn fr-btn--secondary";
-        button.title = "Ouvrir la recherche inverse";
+        button.setAttribute("aria-label", "Ouvrir la recherche inverse");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -51,13 +51,13 @@ var ReverseGeocodeDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowReverseGeocodingClick();
+                self.onShowReverseGeocodingClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowReverseGeocodingClick();
+                self.onShowReverseGeocodingClick(e);
             });
         }
 

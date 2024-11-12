@@ -6,6 +6,7 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -46,6 +47,9 @@
                     map = new ol.Map({
                         target : "map",
                         layers : [
+                            new ol.layer.GeoportalWMTS({
+                                layer : "ACCES.BIOMETHANE"
+                            }),
                             new ol.layer.Tile({
                                 source: new ol.source.OSM(),
                                 opacity: 0.5

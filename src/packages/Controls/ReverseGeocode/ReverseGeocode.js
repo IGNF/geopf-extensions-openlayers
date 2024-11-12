@@ -3,6 +3,7 @@ import "../../CSS/Controls/ReverseGeocoding/GPFreverseGeocoding.css";
 // import "../../CSS/Controls/ReverseGeocoding/GPFreverseGeocodingStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import Overlay from "ol/Overlay";
 import Collection from "ol/Collection";
@@ -15,6 +16,7 @@ import {
     Circle
 } from "ol/style";
 import {
+    LineString,
     Point,
     Polygon
 } from "ol/geom";
@@ -1074,6 +1076,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
             }
             requestOptions.searchGeometry = this._requestGeom;
         } else if (this._requestGeom.type.toLowerCase() === "polygon") {
+            // FIXME : geom bbox max length 1000m !
             requestOptions.searchGeometry = this._requestGeom;
         } else if (this._requestGeom.type.toLowerCase() === "point") {
             if (this._currentGeocodingType === "StreetAddress") {
@@ -1155,7 +1158,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
             // on récupère la description à afficher dans la liste
             var locationDescription = this._fillGeocodedLocationDescription(location);
             // on ajoute chaque résutat à la liste
-            if (locationDescription.length !== 0) {
+            if (locationDescription && locationDescription.length !== 0) {
                 this._createReverseGeocodingResultElement(locationDescription, i);
             }
         }
@@ -1188,7 +1191,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
             case "PositionOfInterest":
                 locationDescription += attr.toponym;
-                if (attr.postcode.length === 1) {
+                if (attr.postcode && attr.postcode.length === 1) {
                     locationDescription += ", " + attr.postcode[0];
                 }
                 locationDescription += " (" + attr.category.join(",") + ")";
@@ -1491,9 +1494,13 @@ var ReverseGeocode = class ReverseGeocode extends Control {
      * (cf. ReverseGeocodeDOM._createShowReverseGeocodingPictoElement), and it cleans the component
      * when it's closed.
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowReverseGeocodingClick () {
+    onShowReverseGeocodingClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         if (!map) {
             return;
@@ -1796,6 +1803,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
 
 // on récupère les méthodes de la classe commune ReverseGeocodeDOM
 Object.assign(ReverseGeocode.prototype, ReverseGeocodeDOM);
+Object.assign(ReverseGeocode.prototype, Widget);
 
 export default ReverseGeocode;
 

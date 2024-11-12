@@ -45,6 +45,7 @@ Un nouvelle version du GFI avec un fonctionnement et des options differentes de 
   * SearchEngine : Modification de l'option `opened:false` en `collapsible:true`
   * CI : Build des binaires et des sources du projet (#13)
   * Responsive : Amelioration sur le responsive des widgets en mode mobile (#230) 
+  * UX : Panel unique par côté (#236)
 
 * 🔥 [Deprecated]
 

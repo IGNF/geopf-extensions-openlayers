@@ -42,7 +42,7 @@ var MousePositionDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowMousePositionPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-position fr-btn fr-btn--secondary";
-        button.title = "Afficher les coordonnées du curseur";
+        button.setAttribute("aria-label", "Afficher les coordonnées du curseur");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -52,13 +52,13 @@ var MousePositionDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowMousePositionClick();
+                self.onShowMousePositionClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowMousePositionClick();
+                self.onShowMousePositionClick(e);
             });
         }
 

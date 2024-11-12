@@ -49,7 +49,7 @@ var RouteDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowRoutePicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowRoutePicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-route fr-btn fr-btn--secondary";
-        button.title = "Ouvrir le calcul d'itinéraire";
+        button.setAttribute("aria-label", "Ouvrir le calcul d'itinéraire");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
