@@ -532,7 +532,7 @@ var LayerImport = class LayerImport extends Control {
 
         // ################################################################## //
         // ################ Interrogation du GetCapabilities ################ //
-
+        this._hasGetCapResults = false;
         this._getCapRequestUrl = null;
         this._getCapResponseWMS = null;
         this._getCapResponseWMSLayers = [];
@@ -844,9 +844,15 @@ var LayerImport = class LayerImport extends Control {
             this._mapBoxPanel.classList.replace("GPelementHidden", "GPelementVisible");
             this._mapBoxPanel.classList.replace("gpf-hidden", "gpf-visible");
             this._hideFormContainer();
+        } else if (this._hasGetCapResults) {
+            this._getCapPanel.classList.replace("GPelementHidden", "GPelementVisible");
+            this._getCapPanel.classList.replace("gpf-hidden", "gpf-visible");
+            this._hideFormContainer();
         } else {
             this._getCapPanel.classList.replace("GPelementVisible", "GPelementHidden");
             this._getCapPanel.classList.replace("gpf-visible", "gpf-hidden");
+            this._mapBoxPanel.classList.replace("GPelementVisible", "GPelementHidden");
+            this._mapBoxPanel.classList.replace("gpf-visible", "gpf-hidden");
             this._displayFormContainer();
         }
     }
@@ -2083,7 +2089,9 @@ var LayerImport = class LayerImport extends Control {
         this._getCapPanel.classList.replace("GPelementHidden", "GPelementVisible");
         this._getCapPanel.classList.replace("gpf-hidden", "gpf-visible");
         this._importPanelTitle.innerHTML = "Couches accessibles";
-
+        this._importPanelReturnPicto.classList.replace("GPelementHidden", "GPelementVisible");
+        this._importPanelReturnPicto.classList.replace("gpf-hidden", "gpf-visible");
+        this._hasGetCapResults = true;
         // Parse GetCapabilities Response
         if (this._currentImportType === "WMS") {
             parser = new WMSCapabilities();
@@ -3059,6 +3067,7 @@ var LayerImport = class LayerImport extends Control {
      * @private
      */
     cleanGetCapResultsList () {
+        this._hasGetCapResults = false;
         this._getCapRequestUrl = null;
         this._getCapResponseWMS = null;
         this._getCapResponseWMTS = null;
