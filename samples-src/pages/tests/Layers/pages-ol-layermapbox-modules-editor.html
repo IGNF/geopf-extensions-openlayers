@@ -78,9 +78,25 @@
                                 break;
                             }
                         }
-                        return olms.applyStyle(layer, style, source);
+                        return olms.applyStyle(layer, style, { source: source });
                     }
                     
+                    function updateLegendMapBoxLayer (layer, source, options) {
+                        console.error(layer, source, options);
+                        
+                        var layers = style.layers;
+                        for (var i = 0; i < layers.length; i++) {
+                            if (layers[i].id === options.data.id) {
+                                var paint = layers[i].paint;
+                                if (paint) {
+                                    paint[options.dataset] = options.value;
+                                }
+                                break;
+                            }
+                        }
+                        return olms.applyStyle(layer, style, { source: source });
+                    }
+
                     // edition des filtres
                     function displayEditor() {
                         waiting(true);
@@ -121,7 +137,20 @@
                                     },
                                     "editor:legend:onchangevalue" : function (e) {
                                         // opacité, epaisseur et couleur
-                                        console.log(e);
+                                        var data = e.target.data.obj;
+                                        var target = e.target.srcElement;
+        
+                                        updateLegendMapBoxLayer(layer, "plan_ign", {
+                                            data:data,
+                                            value:target.value,
+                                            dataset: target.dataset.id
+                                        })
+                                        .then(function () {
+                                            // some stuff...
+                                        })
+                                        .catch(function (error) {
+                                            console.error("[ERROR]", error);
+                                        });
                                     },
                                     "editor:style:scale:onchangemax" : function (e) {console.log(e);},
                                     "editor:style:scale:onchangemin" : function (e) {console.log(e);}
