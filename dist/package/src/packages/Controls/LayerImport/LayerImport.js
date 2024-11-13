@@ -1439,7 +1439,7 @@ var LayerImport = class LayerImport extends Control {
                         // TODO ajouter le style de type background !
                         // fonction de style de la couche
                         var setStyle = () => {
-                            applyStyleOlms(p.layer, p.styles, p.id)
+                            applyStyleOlms(p.layer, p.styles, { source : p.id })
                                 .then(function () {
                                     var visibility = true;
                                     p.layer.setVisible(visibility);
@@ -1870,7 +1870,7 @@ var LayerImport = class LayerImport extends Control {
                     break;
                 }
             }
-            applyStyleOlms(layer, styles, data.source)
+            applyStyleOlms(layer, styles, { source : data.source })
                 .then(function () {})
                 .catch(function (error) {
                     logger.error(error);
@@ -1901,7 +1901,7 @@ var LayerImport = class LayerImport extends Control {
                     break;
                 }
             }
-            applyStyleOlms(layer, styles, data.source)
+            applyStyleOlms(layer, styles,  { source : data.source })
                 .then(function () {})
                 .catch(function (error) {
                     logger.error(error);
@@ -1933,7 +1933,7 @@ var LayerImport = class LayerImport extends Control {
                     break;
                 }
             }
-            applyStyleOlms(layer, styles, data.source)
+            applyStyleOlms(layer, styles,  { source : data.source })
                 .then(function () {})
                 .catch(function (error) {
                     logger.error(error);
@@ -1967,7 +1967,7 @@ var LayerImport = class LayerImport extends Control {
                     break;
                 }
             }
-            applyStyleOlms(layer, styles, data.source)
+            applyStyleOlms(layer, styles,  { source : data.source, updateSource : true })
                 .then(function () {})
                 .catch(function (error) {
                     logger.error(error);
