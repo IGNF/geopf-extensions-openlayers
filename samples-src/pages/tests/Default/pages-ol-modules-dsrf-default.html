@@ -69,7 +69,13 @@
 
 {{#content "js"}}
             <script type="text/javascript">
-
+              const scaleControl = new ol.control.ScaleLine({
+                  units: 'metric',
+                  bar: true,
+                  steps: 4,
+                  text: true,
+                  minWidth: 140,
+              });
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
@@ -87,6 +93,9 @@
                     zoom : 8
                   })
                 });
+
+
+                map.addControl(scaleControl);
 
                 var catalog = new ol.control.Catalog({
                   draggable: true,
