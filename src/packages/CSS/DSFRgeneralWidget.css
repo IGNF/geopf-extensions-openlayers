@@ -402,14 +402,14 @@
   font-size: 0.75em;
   /* font-family: "Open Sans", sans-serif;
   color: #002A50; */
-  background-color: #FFF;
-  box-shadow: 0 0 5px #000;
+  background-color: var(--background-default-grey);
+  box-shadow: 0 0 5px var(--text-default-grey);
 }
 
 .gp-feature-info-div::before {
   content: "";
   position: absolute;
-  border-top: 15px solid #FFF;
+  border-top: 15px solid var(--background-default-grey);
   border-right: 14px solid transparent;
   border-left: 14px solid transparent;
   bottom: -15px;
@@ -428,11 +428,21 @@
   cursor: pointer;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  background-color: #FFF;
-  background-repeat: no-repeat;
-  background-image: url("img/close-blue.svg");
-  background-size: 14px 14px;
-  background-position: center;
+  background-color: var(--background-default-grey);
+}
+
+.gp-feature-info-div .closer::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: var(--text-action-high-blue-france);
+  -webkit-mask: url("img/close-blue.svg") center no-repeat;
+  mask: url("img/close-blue.svg") center no-repeat;
+  -webkit-mask-size: 14px 14px;
+  mask-size: 14px 14px;
 }
 
 .gp-features-content-div {

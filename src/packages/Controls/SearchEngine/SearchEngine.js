@@ -723,8 +723,7 @@ var SearchEngine = class SearchEngine extends Control {
         var context = this;
         var element = document.createElement("div");
         element.className = "gp-feature-info-div gpf-widget-color";
-        var closer = document.createElement("input");
-        closer.type = "button";
+        var closer = document.createElement("button");
         closer.className = "gp-styling-button closer";
         // on closer click : remove popup
         closer.onclick = function () {
@@ -1494,7 +1493,7 @@ var SearchEngine = class SearchEngine extends Control {
         if (this.options.position && !this.collapsed) {
             this.updatePosition(this.options.position);
         }
-        
+
         // on nettoie si on ferme le composant
         if (this.collapsed) {
             this._clearResults();
