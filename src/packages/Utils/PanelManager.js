@@ -1,4 +1,4 @@
-const exceptions = ["GPoverviewMap"];
+const exceptions = ["GPoverviewMap", "GPfullScreen"];
 
 function getSameSideOpenedPanel (position, openedPanelID) {
     // on ajoute aux exceptions le panel qui vient d'être ouvert
