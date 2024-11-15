@@ -469,8 +469,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         var context = this;
         var element = document.createElement("div");
         element.className = "gp-feature-info-div";
-        var closer = document.createElement("input");
-        closer.type = "button";
+        var closer = document.createElement("button");
         closer.className = "gp-styling-button closer";
         // on closer click : remove popup
         closer.onclick = function () {
