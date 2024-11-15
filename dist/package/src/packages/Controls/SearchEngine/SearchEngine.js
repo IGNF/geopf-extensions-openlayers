@@ -722,9 +722,8 @@ var SearchEngine = class SearchEngine extends Control {
     _initPopupDiv () {
         var context = this;
         var element = document.createElement("div");
-        element.className = "gp-feature-info-div";
-        var closer = document.createElement("input");
-        closer.type = "button";
+        element.className = "gp-feature-info-div gpf-widget-color";
+        var closer = document.createElement("button");
         closer.className = "gp-styling-button closer";
         // on closer click : remove popup
         closer.onclick = function () {
@@ -1494,7 +1493,7 @@ var SearchEngine = class SearchEngine extends Control {
         if (this.options.position && !this.collapsed) {
             this.updatePosition(this.options.position);
         }
-        
+
         // on nettoie si on ferme le composant
         if (this.collapsed) {
             this._clearResults();
@@ -1523,10 +1522,13 @@ var SearchEngine = class SearchEngine extends Control {
             navigator.geolocation.getCurrentPosition((position) => {
                 var view = this.getMap().getView();
                 var viewProj = view.getProjection().getCode();
-                var coordinates = [position.coords.longitude, position.coords.latitude];
+                var coordinates_4326 = [position.coords.longitude, position.coords.latitude];
+                var coordinates;
                 if (viewProj !== "EPSG:4326") {
                     // on retransforme les coordonnées de la position dans la projection de la carte
-                    coordinates = olProjTransform(coordinates, "EPSG:4326", viewProj);
+                    coordinates = olProjTransform(coordinates_4326, "EPSG:4326", viewProj);
+                } else {
+                    coordinates = coordinates_4326;
                 }
                 if (isNaN(coordinates[0]) || isNaN(coordinates[1])) {
                     this._setMarker();
@@ -1534,7 +1536,8 @@ var SearchEngine = class SearchEngine extends Control {
                 }
                 this._setPosition(coordinates, 10); // FIXME zoom fixe !
                 if (this._displayMarker) {
-                    this._setMarker(coordinates, "sans information");
+                    var markerInfo = "<h6> Ma position </h6> longitude : " + coordinates_4326[0] + "<br/> latitude : " + coordinates_4326[1];
+                    this._setMarker(coordinates, markerInfo);
                 }
                 /**
                  * event triggered when i want a geolocation
