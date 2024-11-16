@@ -1,0 +1,204 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlExport.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlExport.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+                position: relative;
+            }
+            @keyframes spinner {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            .spinner:after {
+                content: "";
+                box-sizing: border-box;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 40px;
+                height: 40px;
+                margin-top: -20px;
+                margin-left: -20px;
+                border-radius: 50%;
+                border: 5px solid rgba(180, 180, 180, 0.6);
+                border-top-color: rgba(0, 0, 0, 0.6);
+                animation: spinner 0.6s linear infinite;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout d'une couche WFS (avec pagination des résultats)</h2>
+            <ul>
+                <li>implementation native : https://openlayers.org/en/latest/examples/vector-wfs-getfeature.html</li>
+                <li>tests à partir de https://openlayers.org/en/latest/apidoc/module-ol_source_Vector-VectorSource.html</li>
+                <li>spinner : https://openlayers.org/en/latest/examples/load-events.html</li>
+            </ul>
+            <p>
+                Stratégie en place pour recupérer les features :
+                <ul>
+                    <li>le moissonnage est activé 
+                        sur une resolution min/max défini (15/21)
+                        sur l'étendu de la carte
+                    </li>
+                    <li>le nombre d'élements à moissonner est defini (valeur par le service)</li>
+                    <li>le deplacement sur la carte ajoute les données moissonnées</li>
+                    <li>le style des données est defini par l'utilisateur</li>
+                    <li>le format d'export des données est en GeoJSON</li>
+                </ul>
+            </p>
+            <pre>
+                Ex. requête :
+                GET https://data.geopf.fr/wfs/ows?
+                    SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&
+                    typename=BDTOPO_V3:batiment&
+                    outputFormat=application/json&srsname=EPSG:4326&
+                    bbox=${extent},EPSG:4326&
+                    maxFeatures=500&count=500&startIndex=0
+                Ex. de reponse :
+                {
+                    "bbox": [...],
+                    "links": {...},
+                    "type": "FeatureCollection",
+                    "features": [...],
+                    "totalFeatures": 0,
+                    "numberMatched": 0,
+                    "numberReturned": 0,
+                    "timeStamp": "2024-11-15T23:52:20.996Z",
+                    "crs": {...}
+                }
+            </pre>
+            <!-- map -->
+            <div id="btnExport"></div>
+            <div id="map"></div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                var createMap = function() {
+
+                    const vectorSource = new ol.source.Vector({
+                        format: new ol.format.GeoJSON(),
+                        // url: function (extent) {
+                        //     return (
+                        //         'https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&' +
+                        //         'typename=BDTOPO_V3:batiment&' +
+                        //         'outputFormat=application/json&srsname=EPSG:4326&' +
+                        //         'bbox=' + extent.join(',') + ',EPSG:4326'
+                        //         + '&maxFeatures=500&count=500&startIndex=0'
+                        //     );
+                        // },
+                        loader: function(extent, resolution, projection, success, failure) {
+                            const maxFeatures = 5000;
+                            const layerName = "BDTOPO_V3:batiment";
+                            const proj = projection.getCode();
+                            const url = 'https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&' +
+                                'typename=' + layerName + '&' +
+                                'outputFormat=application/json&srsname=' + proj + '&' +
+                                'bbox=' + extent.join(',') + ',' + proj
+                                + '&maxFeatures=' + maxFeatures + '&count=' + maxFeatures + '&startIndex=0';
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('GET', url);
+                            const onError = function() {
+                                vectorSource.removeLoadedExtent(extent);
+                                failure();
+                            }
+                            xhr.onerror = onError;
+                            xhr.onload = function() {
+                                if (xhr.status == 200) {
+                                    const features = vectorSource.getFormat().readFeatures(xhr.responseText);
+                                    vectorSource.addFeatures(features);
+                                    success(features);
+                                } else {
+                                    onError();
+                                }
+                            }
+                            xhr.send();
+                        },
+                        strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({minZoom: 15, maxZoom: 21, tileSize: 512})),
+                    });
+
+                    const vector = new ol.layer.Vector({
+                        minZoom: 15,
+                        maxZoom: 21,
+                        source: vectorSource,
+                        style: new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'rgba(0, 0, 255, 1.0)',
+                                width: 2,
+                            }),
+                            fill: new ol.style.Fill({
+                                color: 'rgba(0, 0, 255, 0.5)'
+                            }),
+                        }),
+                    });
+
+                    vectorSource.on('featuresloadstart', function () {
+                        console.log("featuresloadstart")
+                    });
+                    vectorSource.on(['featuresloadend', 'featuresloaderror'], function (e) {
+                        console.log("featuresloadend", e.features)
+                    });
+
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                opacity: 0.5
+                            }),
+                            // new ol.layer.GeoportalWMTS({
+                            //     layer : "ORTHOIMAGERY.ORTHOPHOTOS"
+                            // }),
+                            vector,
+                        ]
+                    });
+                    map.on('loadstart', function () {
+                        map.getTargetElement().classList.add('spinner');
+                    });
+                    map.on('loadend', function () {
+                        map.getTargetElement().classList.remove('spinner');
+                    });
+
+                    var exportBtn = new ol.control.Export({});
+                    exportBtn.setLayer(vector);
+                    exportBtn.setFormat("geojson");
+                    exportBtn.setName("export");
+                    exportBtn.setTitle("Exporter");
+                    exportBtn.on("export:compute", (e) => {
+                        console.log("Export", e);
+                    });
+                    document.getElementById("btnExport").appendChild(exportBtn.getContainer());
+                };
+                Gp.Services.getConfig({
+                    customConfigFile : "{{ configurl }}",
+                    callbackSuffix : "",
+                    // apiKey: "{{ apikey }}",
+                    timeOut : 20000,
+                    onSuccess : createMap,
+                    onFailure : (e) => {
+                        console.error(e);
+                    }
+                });
+           </script>
+{{/content}}
+
+{{/extend}}
