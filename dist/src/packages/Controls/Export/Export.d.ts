@@ -270,5 +270,6 @@ declare class ButtonExport {
      * @public
      */
     public setMenu(active: boolean): void;
+    setLayer(layer: any): void;
 }
 //# sourceMappingURL=Export.d.ts.map
