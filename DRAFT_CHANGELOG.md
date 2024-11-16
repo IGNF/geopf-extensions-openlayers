@@ -26,25 +26,27 @@ Un nouvelle version du GFI avec un fonctionnement et des options differentes de 
 
 * ✨ [Added]
 
+  * WFS : Exemple de moissonnage WFS avec export des données
   * SearchEngine : Ajout de l'option `markerUrl` pour afficher un marker de position personnalisé (#197)
-  * Catalog: Nouveau widget Catalog (#155)
-  * Territories: Nouveau widget Selecteur de territoires (#115)
-  * Legends: Nouveau widget Legends (#103)
-  * OverviewMap: Nouveau widget GeoportalOverviewMap (#81)
-  * FullScreen: Nouveau widget GeoportalFullScreen (#79)
-  * Zoom: Nouveau widget GeoportalZoom (#63)
+  * Catalog : Nouveau widget Catalog (#155)
+  * Territories : Nouveau widget Selecteur de territoires (#115)
+  * Legends : Nouveau widget Legends (#103)
+  * OverviewMap : Nouveau widget GeoportalOverviewMap (#81)
+  * FullScreen : Nouveau widget GeoportalFullScreen (#79)
+  * Zoom : Nouveau widget GeoportalZoom (#63)
   * SearchEngine : Ajout d'une couche sur la carte sur une sélection du service de recherche (#46)
   * SearchEngine : Ajout d'un filtre d'affichage pour les couches uniquement en TMS/WMTS (#14)
   * CI : Demo sur les frameworks vue, react et angular afin de valider les extensions (#16)
 
 * 🔨 [Changed]
 
-  * Catalog: Ajout du widget dans le thème classique (#209)
+  * Export : Utilisation independante d'un contrôle
+  * Catalog : Ajout du widget dans le thème classique (#209)
   * GetFeatureInfo : Nouvelle version du GFI (#169)
   * Mise à jour de la documentation pour les nouveaux widgets (#170)
   * SearchEngine : Modification de l'option `opened:false` en `collapsible:true`
   * CI : Build des binaires et des sources du projet (#13)
-  * Responsive : Amelioration sur le responsive des widgets en mode mobile (#230) 
+  * Responsive : Amelioration sur le responsive des widgets en mode mobile (#230)
   * UX : Panel unique par côté (#236)
 
 * 🔥 [Deprecated]
