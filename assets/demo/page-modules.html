@@ -72,6 +72,27 @@
             div#map {
                 width: 100%;
                 height: calc(100vh - 272px);
+                position: relative;
+            }
+            @keyframes spinner {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            .spinner:after {
+                content: "";
+                box-sizing: border-box;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 40px;
+                height: 40px;
+                margin-top: -20px;
+                margin-left: -20px;
+                border-radius: 50%;
+                border: 5px solid rgba(180, 180, 180, 0.6);
+                border-top-color: rgba(0, 0, 0, 0.6);
+                animation: spinner 0.6s linear infinite;
             }
           </style>
 
@@ -114,8 +135,6 @@
             <script type="text/javascript">
 
               var createMap = function () {
-                // on cache l'image de chargement du Géoportail.
-                document.getElementById("map").style.backgroundImage = "none";
 
                 // Création de la map
                 var map = new ol.Map({
@@ -129,6 +148,14 @@
                     center : [288074.8449901076, 6247982.515792289],
                     zoom : 18
                   })
+                });
+                
+                map.on('loadstart', function () {
+                  map.getTargetElement().classList.add('spinner');
+                });
+
+                map.on('loadend', function () {
+                  map.getTargetElement().classList.remove('spinner');
                 });
 
                 var zoom = new ol.control.GeoportalZoom({
@@ -258,7 +285,7 @@
               };
 
               Gp.Services.getConfig({
-                serverUrl: "/geopf-extensions-openlayers/assets/data/config.json",
+                customConfigFile: "/geopf-extensions-openlayers/assets/data/config.json",
                 callbackSuffix: "",
                 timeOut: 20000,
                 onSuccess: createMap
