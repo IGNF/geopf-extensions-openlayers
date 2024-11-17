@@ -21,7 +21,7 @@ var logger = Logger.getLogger("sourcewfs");
  * @extends {ol.source.Vector}
  * @param {Object} options            - options for function call.
  * @param {String} options.layer      - Layer name (e.g. "")
- * @param {Object} [options.maxFeatures] - maximum features (max: 5000) 
+ * @param {Number} [options.maxFeatures] - maximum features (max: 5000) 
  * @param {Object} [options.configuration] - configuration (cf. example) 
  * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
  * @param {String} [options.apiKey]   - Access key to Geoportal platform
@@ -33,7 +33,9 @@ var logger = Logger.getLogger("sourcewfs");
  * @param {Object} [options.olParams] - other options for ol.source.Vector function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.Vector.html ol.source.Vector})
  * @example
  * var sourceWFS = new ol.source.GeoportalWFS({
- *      layer  : ""
+ *      layer: "",
+ *      maxFeatures: 500,
+ *      olParams: {}
  * });
  */
 var SourceWFS = class SourceWFS extends VectorSource {
@@ -98,35 +100,58 @@ var SourceWFS = class SourceWFS extends VectorSource {
             urlParams["apikey"] = key;
         }
 
+        var loadFeatures = (self, url, success, failure) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            const onError = function () {
+                self.removeLoadedExtent(extent);
+                failure();
+            };
+            xhr.onerror = onError;
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    const features = self.getFormat().readFeatures(response);
+                    self.addFeatures(features);
+                    success(features);
+                    // next page ?
+                    // "links": [
+                    //     {
+                    //         "title": "next page",
+                    //         "type": "application/json",
+                    //         "rel": "next",
+                    //         "href": "https://data.geopf.fr/wfs/wfs?GP-OL-EXT=1.0.0-beta.0-260&TYPENAME=BDTOPO_V3%3Abatiment&REQUEST=GetFeature&BBOX=261720.38484844193%2C6249491.432596011%2C262943.3773010048%2C6250714.425048574%2CEPSG%3A3857&SRSNAME=EPSG%3A3857&OUTPUTFORMAT=application%2Fjson&VERSION=2.0.0&MAXFEATURES=500&COUNT=500&SERVICE=WFS&STARTINDEX=500"
+                    //     }
+                    // ],
+                    if (response.links) {
+                        for (let i = 0; i < response.links.length; i++) {
+                            const link = response.links[i];
+                            if (link.rel === "next") {
+                                loadFeatures(self, link.href, success, failure);
+                            }
+                        }
+                    }
+                } else {
+                    onError();
+                }
+            };
+            xhr.send();
+        };
         var wfsSourceOptions = {
             format : new GeoJSON(),
             loader : function (extent, resolution, projection, success, failure) {
                 var self = this;
-                const maxFeatures = options.maxFeatures || 5000;
+                const maxFeatures = options.maxFeatures;
                 const layerName = options.layer;
                 const proj = projection.getCode();
-                const url = "https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&" +
+                const url = Gp.Helper.normalyzeUrl(wfsParams.url.replace(/(http|https):\/\//, protocol), urlParams, false) +
+                    "&SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&" +
                     "typename=" + layerName + "&" +
                     "outputFormat=application/json&srsname=" + proj + "&" +
                     "bbox=" + extent.join(",") + "," + proj
                     + "&maxFeatures=" + maxFeatures + "&count=" + maxFeatures + "&startIndex=0";
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", url);
-                const onError = function () {
-                    self.removeLoadedExtent(extent);
-                    failure();
-                };
-                xhr.onerror = onError;
-                xhr.onload = function () {
-                    if (xhr.status == 200) {
-                        const features = self.getFormat().readFeatures(xhr.responseText);
-                        self.addFeatures(features);
-                        success(features);
-                    } else {
-                        onError();
-                    }
-                };
-                xhr.send();
+
+                loadFeatures(self, url, success, failure);
             },
             strategy : olLoadingstrategyTile(olTilegrid.createXYZ({
                 minZoom : options.olParams.minZoom || 15, 

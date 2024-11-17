@@ -54,7 +54,9 @@
 
                     const vector = new ol.layer.GeoportalWFS({
                         layer: "BDTOPO_V3:batiment",
+                        maxFeatures: 500,
                         olParams: {
+                            sourceParams : {},
                             minZoom: 15,
                             maxZoom: 21,
                             style: new ol.style.Style({

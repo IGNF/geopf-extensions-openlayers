@@ -10,6 +10,7 @@ import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWFS from "./SourceWFS";
 
+const MAXFEATURES = 500;
 const MINZOOMDEFAULT = 15;
 const MAXZOOMDEFAULT = 21;
 const STYLEBYDEFAULT = new Style({
@@ -32,6 +33,7 @@ const STYLEBYDEFAULT = new Style({
  * @type {ol.layer.GeoportalWFS}
  * @param {Object} options            - options for function call.
  * @param {String} options.layer      - Layer name (e.g. "")
+ * @param {Number} [options.maxFeatures] - maximum features (max: 5000) 
  * @param {Object} [options.configuration] - configuration (cf. example) 
  * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
  * @param {String} [options.apiKey]   - Access key to Geoportal platform
@@ -39,7 +41,14 @@ const STYLEBYDEFAULT = new Style({
  * @param {Object} [options.olParams.sourceParams] - other options for ol.source.Vector function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.Vector.html ol.source.Vector})
  * @example
  * var layerWFS = new ol.layer.GeoportalWFS({
- *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
+ *      layer  : "BDTOPO_V3:batiment",
+ *      maxFeatures: 500,
+ *      olParams : {
+ *          minZoom: 15,
+ *          maxZoom: 21,
+ *          style: new ol.style.Style(...),
+ *          sourceParams: {}
+ *      }
  * });
  * 
  * layerWFS.getLegends();
@@ -100,6 +109,7 @@ var LayerWFS = class LayerWFS extends VectorLayer {
         var wfsSource = new SourceWFS({
             layer : options.layer,
             configuration : options.configuration,
+            maxFeatures : options.maxFeatures || MAXFEATURES,
             ssl : options.ssl,
             apiKey : options.apiKey,
             olParams : olSourceParams || {
