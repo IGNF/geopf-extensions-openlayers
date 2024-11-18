@@ -1,7 +1,7 @@
 {
   "name": "geopf-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.0-260",
+  "version": "1.0.0-beta.0-263",
   "date": "15/11/2024",
   "module": "src/index.js",
   "directories": {},
