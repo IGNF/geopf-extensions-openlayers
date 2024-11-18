@@ -27,7 +27,7 @@ Pour le WFS, on utilise la version 3.4.4 des services.
 
 * ✨ [Added]
 
-  * WFS : Affichage des couches WFS Géoplateform (#...)
+  * WFS : Affichage des couches WFS Géoplateforme (#265)
   * SearchEngine : Ajout de l'option `markerUrl` pour afficher un marker de position personnalisé (#197)
   * Catalog : Nouveau widget Catalog (#155)
   * Territories : Nouveau widget Selecteur de territoires (#115)
