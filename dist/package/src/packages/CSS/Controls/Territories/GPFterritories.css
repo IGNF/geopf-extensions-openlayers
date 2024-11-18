@@ -12,7 +12,8 @@ button[id^=GPshowTerritoriesPicto][aria-pressed="false"] + dialog {
 }
 
 button[id^="GPshowTerritoriesPicto-"][aria-pressed="true"] + dialog {
-    display: block;
+    display: flex;
+    flex-direction: column;
     visibility: visible;
     opacity: 100%;
     max-width: 470px;
@@ -23,3 +24,4 @@ button[id^="GPshowTerritoriesPicto-"][aria-pressed="true"] + dialog {
 dialog[id^="GPterritoriesPanel-"] {
     position: absolute;
 }
+

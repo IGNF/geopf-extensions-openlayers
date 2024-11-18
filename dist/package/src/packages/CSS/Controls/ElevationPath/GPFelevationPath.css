@@ -14,7 +14,8 @@ button[id^="GPshowElevationPathPicto-"][aria-pressed="false"] + dialog {
 }
 
 button[id^="GPshowElevationPathPicto-"][aria-pressed="true"] + dialog {
-  display: block;
+  display: flex;
+  flex-direction: column;
   visibility: visible;
   opacity: 100%;
 }
@@ -56,3 +57,4 @@ button[id^=GPelevationPathPanelInfo] {
   transition: opacity 500ms ease 0ms;
   opacity: 0;
 }
+

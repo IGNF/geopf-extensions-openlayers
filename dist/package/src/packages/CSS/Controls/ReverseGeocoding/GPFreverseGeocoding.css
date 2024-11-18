@@ -14,7 +14,8 @@ button[id^="GPshowReverseGeocodingPicto-"][aria-pressed="false"] + dialog {
 }
 
 button[id^="GPshowReverseGeocodingPicto-"][aria-pressed="true"] + dialog {
-  display: block;
+  display: flex;
+  flex-direction: column;
   visibility: visible;
   opacity: 100%;
 }
