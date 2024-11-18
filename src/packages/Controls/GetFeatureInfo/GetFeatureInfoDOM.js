@@ -222,7 +222,7 @@ var GetFeatureInfoDOM = {
                         <span id="gfiLayerName">${layername}</span>
                     </button>
                 </h3>
-                <div class="fr-collapse GPgetFeatureInfoAccordionContent GPelementHidden" id="accordion-${layername}">
+                <div class="fr-collapse GPgetFeatureInfoAccordionContent GPelementHidden" id="accordion-${layername}" style="margin:unset;">
                     ${this._createGetFeatureInfoWaitingDiv()}
                 </div>
             </section>
