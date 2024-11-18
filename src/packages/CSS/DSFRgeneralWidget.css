@@ -20,11 +20,10 @@
   position: relative;
   background-color: unset;
   width: max-content;
+  max-height: 100%;
 }
 
-/* FIXME A remplacer avec gestion des collisions */
 .gpf-panel form {
-  max-height: 400px;
   overflow: auto;
   padding: 0 2rem 2rem 2rem;
 }
@@ -36,6 +35,11 @@
 .gpf-panel__body {
   overflow: unset;
   position: relative;
+  max-height: 100% !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .gpf-panel__header {}
@@ -328,10 +332,12 @@
 
 .gpf-panel::after {
   height: unset;
+  flex: 0;
 }
 
 .gpf-panel::before {
   height: unset;
+  flex: 0;
 }
 
 /***********/

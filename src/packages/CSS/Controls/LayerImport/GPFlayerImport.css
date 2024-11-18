@@ -16,9 +16,10 @@ button[id^="GPshowImportPicto-"][aria-pressed="false"] + dialog {
     visibility: hidden;
     opacity: 0%;
 }
-  
+
 button[id^="GPshowImportPicto-"][aria-pressed="true"] + dialog {
-    display: block;
+    display: flex;
+    flex-direction: column;
     visibility: visible;
     opacity: 100%;
 }

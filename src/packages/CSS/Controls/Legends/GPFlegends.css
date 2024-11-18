@@ -16,7 +16,8 @@ button[id^=GPshowLegendsPicto][aria-pressed="false"] + dialog {
 }
 
 button[id^="GPshowLegendsPicto-"][aria-pressed="true"] + dialog {
-    display: block;
+    display: flex;
+    flex-direction: column;
     visibility: visible;
     opacity: 100%;
     width: 350px;
