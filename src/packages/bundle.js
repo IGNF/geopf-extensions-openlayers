@@ -70,8 +70,10 @@ import GeoJSON from "./Formats/GeoJSON";
 import WMTS from "./Sources/WMTS";
 import SourceWMTS from "./Layers/SourceWMTS";
 import SourceWMS from "./Layers/SourceWMS";
+import SourceWFS from "./Layers/SourceWFS";
 import LayerWMTS from "./Layers/LayerWMTS";
 import LayerWMS from "./Layers/LayerWMS";
+import LayerWFS from "./Layers/LayerWFS";
 import LayerMapBox from "./Layers/LayerMapBox";
 
 import LayerSwitcher from "./Controls/LayerSwitcher/LayerSwitcher";
@@ -236,10 +238,12 @@ Ol.source = Ol.source || {};
 Ol.source.WMTSExtended = WMTS;
 Ol.source.GeoportalWMTS = SourceWMTS;
 Ol.source.GeoportalWMS = SourceWMS;
+Ol.source.GeoportalWFS = SourceWFS;
 
 Ol.layer = Ol.layer || {};
 Ol.layer.GeoportalWMTS = LayerWMTS;
 Ol.layer.GeoportalWMS = LayerWMS;
+Ol.layer.GeoportalWFS = LayerWFS;
 Ol.layer.GeoportalMapBox = LayerMapBox;
 
 Ol.control = Ol.control || {};
@@ -292,9 +296,11 @@ export {
      * @see ol.control.Legends
      * @see ol.layer.GeoportalWMTS
      * @see ol.layer.GeoportalWMS
+     * @see ol.layer.GeoportalWFS
      * @see ol.layer.GeoportalMapBox
      * @see ol.source.GeoportalWMTS
      * @see ol.source.GeoportalWMS
+     * @see ol.source.GeoportalWFS
      * @see ol.format.KMLExtended
      * @see ol.format.GPXExtended
      * @see ol.format.GeoJSONExtended

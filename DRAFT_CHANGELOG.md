@@ -21,12 +21,13 @@ En attente de la 1ère release :
 ## 💥 Breaking changes
 
 Un nouvelle version du GFI avec un fonctionnement et des options differentes de l'ancien widget.
+Pour le WFS, on utilise la version 3.4.4 des services.
 
 ## 📖 Changelog
 
 * ✨ [Added]
 
-  * WFS : Exemple de moissonnage WFS avec export des données
+  * WFS : Affichage des couches WFS Géoplateforme (#265)
   * SearchEngine : Ajout de l'option `markerUrl` pour afficher un marker de position personnalisé (#197)
   * Catalog : Nouveau widget Catalog (#155)
   * Territories : Nouveau widget Selecteur de territoires (#115)
@@ -55,9 +56,10 @@ Un nouvelle version du GFI avec un fonctionnement et des options differentes de 
 
 * 🐛 [Fixed]
 
-  * layerswitcher : zoomToExtent sur les données importées (vecteurs et services) (#232)￼
-     - Ajout du zoom to extent pour le vecteur
-     - Ajout du zoom to extent pour le WMS et WMTS
+  * layerswitcher : zoomToExtent sur les données importées (vecteurs et services) (#232)
+    - Ajout du zoom to extent pour le vecteur
+    - Ajout du zoom to extent pour le WMS et WMTS
+
   * LayerImport : Fix (#231)
   * Zoom : changer style classique des boutons zoom + et - (#227)
   * Measures : Fix (#109)
