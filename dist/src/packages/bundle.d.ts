@@ -42,10 +42,12 @@ declare namespace Ol {
         export { WMTS as WMTSExtended };
         export { SourceWMTS as GeoportalWMTS };
         export { SourceWMS as GeoportalWMS };
+        export { SourceWFS as GeoportalWFS };
     }
     namespace layer {
         export { LayerWMTS as GeoportalWMTS };
         export { LayerWMS as GeoportalWMS };
+        export { LayerWFS as GeoportalWFS };
         export { LayerMapBox as GeoportalMapBox };
     }
     namespace control {
@@ -89,8 +91,10 @@ import GeoJSON from "./Formats/GeoJSON";
 import WMTS from "./Sources/WMTS";
 import SourceWMTS from "./Layers/SourceWMTS";
 import SourceWMS from "./Layers/SourceWMS";
+import SourceWFS from "./Layers/SourceWFS";
 import LayerWMTS from "./Layers/LayerWMTS";
 import LayerWMS from "./Layers/LayerWMS";
+import LayerWFS from "./Layers/LayerWFS";
 import LayerMapBox from "./Layers/LayerMapBox";
 import LayerSwitcher from "./Controls/LayerSwitcher/LayerSwitcher";
 import GeoportalAttribution from "./Controls/Attribution/GeoportalAttribution";
