@@ -158,6 +158,7 @@ var SourceWFS = class SourceWFS extends VectorSource {
                 maxZoom : options.olParams.maxZoom || 21, 
                 tileSize : 512
             })),
+            crossOrigin : "anonymous"
         };
 
         // récupération des autres paramètres passés par l'utilisateur

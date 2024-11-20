@@ -77,6 +77,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {Object}  [options.searchOptions = {}] - options of search service
  * @param {Boolean} [options.searchOptions.addToMap = true] - add layer automatically to map, defaults to true.
  * @param {String}  [options.searchOptions.filterServices] - filter on a list of search services, each field is separated by a comma. "WMTS,TMS" by default
+ * @param {String}  [options.searchOptions.filterLayersPriority] - filter on priority layers in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
  * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
@@ -358,6 +359,9 @@ var SearchEngine = class SearchEngine extends Control {
                 }
                 if (this.options.searchOptions.filterServices) {
                     Search.setFiltersByService(this.options.searchOptions.filterServices);
+                }
+                if (this.options.searchOptions.filterLayersPriority) {
+                    Search.setFiltersByLayerPriority(this.options.searchOptions.filterLayersPriority);
                 }
                 if (this.options.searchOptions.filterVectortiles) {
                     Search.setFiltersByTMS(this.options.searchOptions.filterVectortiles);

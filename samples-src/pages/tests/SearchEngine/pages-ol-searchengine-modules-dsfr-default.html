@@ -21,6 +21,18 @@
 
 {{#content "body"}}
             <h2>Ajout du moteur de recherche avec les options par défaut</h2>
+            <p>
+                Liste des couches prioritaires :
+                <pre> 
+                PLAN.IGN,
+                GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1,
+                GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2,
+                CADASTRALPARCELS.PARCELLAIRE_EXPRESS,
+                ORTHOIMAGERY.ORTHOPHOTOS
+                </pre>
+
+                Ex. si on saisie 'ortho', la couche "photographies aeriennes" devrait sortir en 1ere position.
+            </p>
             <!-- map -->
             <div id="map">
             </div>
@@ -28,6 +40,10 @@
 
 {{#content "js"}}
             <script type="text/javascript">
+                if (window.Gp) {
+                    // activation des loggers
+                    Gp.Logger.enableAll();
+                }
                 var map;
                 window.onload = function() {
                     // on cache l'image de chargement du Géoportail.
@@ -54,14 +70,18 @@
                         displayButtonAdvancedSearch : true,
                         displayButtonGeolocate : true,
                         displayButtonCoordinateSearch : true,
+                        displayButtonClose : false,
                         collapsible : false,
                         resources : {
                           search : true
                         },
                         searchOptions: {
                             addToMap: false,
-                            filterServices : "WMTS,WMS,TMS",
-                            serviceOptions: {}
+                            filterServices : "WMTS,WMS,TMS,WFS",
+                            filterLayersPriority : "PLAN.IGN,GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1,GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2,CADASTRALPARCELS.PARCELLAIRE_EXPRESS,ORTHOIMAGERY.ORTHOPHOTOS",
+                            serviceOptions: {
+                                maximumResponses : 20
+                            }
                         },
                         markerUrl : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAzNiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjMDAwMDkxIiBkPSJNMTguMzY0IDMuNjM2YTkgOSAwIDAgMSAwIDEyLjcyOEwxMiAyMi43MjhsLTYuMzY0LTYuMzY0QTkgOSAwIDAgMSAxOC4zNjQgMy42MzZaTTEyIDhhMiAyIDAgMSAwIDAgNCAyIDIgMCAwIDAgMC00WiIvPjwvc3ZnPg=="
                     });

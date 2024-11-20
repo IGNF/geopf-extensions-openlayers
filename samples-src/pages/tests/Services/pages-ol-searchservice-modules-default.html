@@ -80,6 +80,11 @@
                         class="input" 
                         type="text" 
                         value="WMTS,TMS"/>
+                    <label for="conf-services">filtres sur les couches prioritaires</label>
+                    <input id="conf-layers" 
+                        class="input" 
+                        type="text" 
+                        value=""/>
                     <label for="conf-vector">filtres sur les couches vecteurs tuilés</label>
                     <textarea id="conf-vector" 
                         rows="2"
@@ -124,7 +129,7 @@
                         <label for="results-names">Liste des couches :</label>
                         <select name="names" id="results-names"></select>
                     </p>
-                    <textarea id="results-textarea" name="textarea" rows="5" cols="30"></textarea>
+                    <textarea id="results-textarea" name="textarea" rows="100" cols="30"></textarea>
                 </div>
 
             </div>
@@ -163,6 +168,7 @@
                     Search.setUrl(document.getElementById("conf-url").value);
                     Search.setSize(document.getElementById("conf-size").value);
                     Search.setFiltersByService(document.getElementById("conf-services").value);
+                    Search.setFiltersByLayerPriority(document.getElementById("conf-layers").value);
                     Search.setFields(document.getElementById("conf-fields").value);
                     Search.setMaximumResponses(document.getElementById("conf-max").value);
                     Search.setFiltersByTMS(document.getElementById("conf-vector").value);
