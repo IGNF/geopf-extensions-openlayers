@@ -83,7 +83,7 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
         var span = document.createElement("span");
         button.appendChild(span);
-        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPfullScreenPicto", "fr-btn", "fr-btn--secondary", "gpf-btn--secondary", "gpf-btn", "gpf-btn-icon");
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPfullScreenPicto", "fr-btn", "fr-btn--tertiary", "gpf-btn--tertiary", "gpf-btn", "gpf-btn-icon");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");

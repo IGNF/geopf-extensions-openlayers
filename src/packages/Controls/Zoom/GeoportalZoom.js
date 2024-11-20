@@ -87,7 +87,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
             const btn = buttons[index];
             if (btn.classList.contains(this.options.className + "-in")) {
                 // btn.classList.remove("ol-custom-zoom-in");
-                btn.classList.add("GPzoomIn", "GPshowOpen", "GPshowAdvancedToolPicto", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--secondary", "gpf-btn", "gpf-btn--secondary", "gpf-btn-icon");
+                btn.classList.add("GPzoomIn", "GPshowOpen", "GPshowAdvancedToolPicto", "gpf-btn-icon-zoom-in", "fr-btn", "fr-btn--tertiary", "gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
                 btn.id = "GPzoomIn";
                 btn.innerHTML = "";
                 btn.removeAttribute("title");
@@ -111,7 +111,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
             }
             if (btn.classList.contains(this.options.className + "-out")) {
                 // btn.classList.remove("ol-custom-zoom-out");
-                btn.classList.add("GPzoomOut", "GPshowOpen", "GPshowAdvancedToolPicto", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--secondary", "gpf-btn", "gpf-btn--secondary", "gpf-btn-icon");
+                btn.classList.add("GPzoomOut", "GPshowOpen", "GPshowAdvancedToolPicto", "gpf-btn-icon-zoom-out", "fr-btn", "fr-btn--tertiary", "gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
                 btn.id = "GPzoomOut";
                 btn.innerHTML = "";
                 btn.removeAttribute("title");

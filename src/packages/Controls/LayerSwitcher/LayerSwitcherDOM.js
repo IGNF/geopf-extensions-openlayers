@@ -119,7 +119,7 @@ var LayerSwitcherDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowLayersListPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn fr-btn--secondary";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn fr-btn--tertiary";
         button.htmlFor = this._addUID("GPshowLayersList");
         button.setAttribute("aria-label", "Afficher/masquer le gestionnaire de couches");
         button.setAttribute("tabindex", "0");
