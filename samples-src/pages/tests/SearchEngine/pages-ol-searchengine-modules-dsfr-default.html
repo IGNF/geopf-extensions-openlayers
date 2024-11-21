@@ -45,7 +45,7 @@
                     Gp.Logger.enableAll();
                 }
                 var map;
-                window.onload = function() {
+                var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
 
@@ -76,7 +76,7 @@
                           search : true
                         },
                         searchOptions: {
-                            addToMap: false,
+                            addToMap: true,
                             filterServices : "WMTS,WMS,TMS,WFS",
                             filterLayersPriority : "PLAN.IGN,GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1,GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2,CADASTRALPARCELS.PARCELLAIRE_EXPRESS,ORTHOIMAGERY.ORTHOPHOTOS",
                             filterWMTSPriority : true,
@@ -107,6 +107,15 @@
                         console.warn("coordinate", e.coordinates);
                     });
                 };
+                Gp.Services.getConfig({
+                    customConfigFile : "{{ configurl }}",
+                     callbackSuffix : "",
+                     timeOut : 20000,
+                     onSuccess : createMap,
+                     onFailure : (e) => {
+                       console.error(e);
+                     }
+                 });
            </script>
 {{/content}}
 

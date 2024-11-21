@@ -342,7 +342,7 @@ const inventory = (results) => {
             inventory[name] ||= type === "WMTS";
         }
     }
-    console.log(inventory);
+    // console.log(inventory);
     return inventory;
 };
 
