@@ -314,6 +314,11 @@ var Drawing = class Drawing extends Control {
             this.setPosition(this.options.position);
         }
 
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
+        }
+
         // mode "draggable"
         if (this.draggable) {
             Draggable.dragElement(

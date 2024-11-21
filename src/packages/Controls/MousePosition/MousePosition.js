@@ -241,6 +241,11 @@ var MousePosition = class MousePosition extends Control {
             this.setPosition(this.options.position);
         }
 
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
+        }
+
         // mode "collapsed"
         if (!this.collapsed) {
             var inputShow = document.getElementById("GPshowMousePosition-" + this._uid);

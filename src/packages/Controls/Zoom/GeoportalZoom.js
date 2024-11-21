@@ -139,6 +139,11 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         if (this.options.position) {
             this.element.style.position = "unset";
         }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.element.classList.add("gpf-button-no-gutter");
+        }
     }
 
     /**

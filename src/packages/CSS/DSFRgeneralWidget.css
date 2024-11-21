@@ -225,6 +225,15 @@
   background-color: var(--text-disabled-grey);
 }
 
+.position-container-top-left .gpf-button-no-gutter,
+.position-container-top-right .gpf-button-no-gutter {
+  margin-bottom: -5px;
+}
+
+.position-container-bottom-left .gpf-button-no-gutter,
+.position-container-bottom-right .gpf-button-no-gutter {
+  margin-top: -5px;
+}
 
 .gpf-btn--hidden {}
 
