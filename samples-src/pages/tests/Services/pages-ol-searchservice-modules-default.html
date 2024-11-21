@@ -112,6 +112,10 @@
                         class="input" 
                         type="number" 
                         value="10"/>
+                    <label for="conf-wmts">prioriser les couches de type WMTS</label>
+                    <input id="conf-wmts" 
+                        class="input" 
+                        type="checkbox"/>
                     <button id="load">Load</button>
                 </div>
                 <div class="run">
@@ -167,12 +171,13 @@
                     Search.setIndex(document.getElementById("conf-index").value);
                     Search.setUrl(document.getElementById("conf-url").value);
                     Search.setSize(document.getElementById("conf-size").value);
-                    Search.setFiltersByService(document.getElementById("conf-services").value);
-                    Search.setFiltersByLayerPriority(document.getElementById("conf-layers").value);
                     Search.setFields(document.getElementById("conf-fields").value);
                     Search.setMaximumResponses(document.getElementById("conf-max").value);
+                    Search.setFiltersByService(document.getElementById("conf-services").value);
+                    Search.setFiltersByLayerPriority(document.getElementById("conf-layers").value);
                     Search.setFiltersByTMS(document.getElementById("conf-vector").value);
                     Search.setFiltersByProjection(document.getElementById("conf-proj").value);
+                    Search.setFiltersWMTSPriority(document.getElementById("conf-wmts").checked);
                 });
 
                 document.getElementById("update").addEventListener("click", (e) => {

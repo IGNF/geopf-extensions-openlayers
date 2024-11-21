@@ -10,7 +10,6 @@
  * @see https://geoservices.ign.fr/documentation/services/services-geoplateforme/service-geoplateforme-de-recherche
  */
 
-
 /** resultats du service */
 let m_suggestions = [];
 
@@ -61,6 +60,9 @@ let m_filterByProjection = [];
  */
 let m_filterByLayerPriority = [];
 
+/** Prioriser les couches de type WMTS sur le service WMS */
+let m_filterWMTSPriority = false;
+
 /** 
  * filtres les services uniquement en TMS
  * @fixme en attente d'evolution du service pour determiner les "real" couches vecteurs
@@ -91,6 +93,7 @@ const target = new EventTarget();
  * Appel du service de recherche
  * @param {*} text - recherche
  * @returns {Object} json
+ * @fire suggest
  * @example
  * {
  *   "attribution": {},
@@ -204,16 +207,22 @@ const suggest = async (text) => {
     }
 
     // INFO
-    // Attribution d'un score bonus aux couches priortaires, puis retriage des résultats en fonction du score
+    // Attribution d'un score bonus aux couches priortaires,
+    // puis retriage des résultats en fonction du score
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
         const found = m_filterByLayerPriority.findIndex((element) => { return element.includes(result.source.layer_name); });
         if (found >= 0) {
             results[i].score += 100;
-            console.log("found", result);
+            // console.log("found", result);
         }
     }
     results.sort((a, b) => b.score - a.score);
+
+    var filter = null;
+    if (m_filterWMTSPriority) {
+        filter = inventory(results);
+    }
 
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
@@ -236,7 +245,7 @@ const suggest = async (text) => {
                 name : result.source.layer_name || "",
                 title : result.source.title || "",
                 description : result.source.description,
-                service : result.source.type || "",
+                service : result.source.type || "", // mapping
                 url : result.source.url || "",
                 tech : result.source.tech || {},
                 tags : result.source.tags || {},
@@ -255,8 +264,11 @@ const suggest = async (text) => {
                     continue;
                 }
             }
+            if (filter && filter[o.name] && o.service === "WMS") {
+                continue;
+            }
             m_suggestions.push(o);
-            console.log("suggestion", result);
+            // console.log("suggestion", result);
         }
     }
 
@@ -303,6 +315,35 @@ const unique = () => {
 const clear = () => {
     controller.abort();
     m_suggestions = [];
+};
+
+/** 
+ * Determine si une couche est associé avec des services WMS et/ou WMTS
+ * 
+ * true  : WMTS only ou WMTS avec des WMS associés ou pas
+ * false : WMS only
+ * @param {Array} results - réponse de la recherche
+ * @returns {Object} - ...
+ * @example
+ * {
+ *   PLAN.IGN: true, // WMTS et des WMS
+ *   BDTOPO:batiments: false // uniquements des WMS
+ * }
+ */
+const inventory = (results) => {
+    var inventory = {};
+    for (let i = 0; i < results.length; i++) {
+        const type = results[i].source.type;
+        const name = results[i].source.layer_name;
+        if (type === "WMTS" || type === "WMS") {
+            if (inventory[name] === undefined) {
+                inventory[name] = type === "WMTS";
+            }
+            inventory[name] ||= type === "WMTS";
+        }
+    }
+    console.log(inventory);
+    return inventory;
 };
 
 // getter (reponse)
@@ -395,6 +436,13 @@ const setFiltersByProjection = (value) => {
 const setFiltersByLayerPriority = (value) => {
     m_filterByLayerPriority = value === "" ? [] : value.split(",");
 };
+/** 
+ * Active ou non le filtre 'strange' 
+ * @param {Boolean} value - active le filtre
+ */
+const setFilterWMTSPriority = (value) => {
+    m_filterWMTSPriority = value;
+};
 /**
  * Filtre sur les "purs" couches vecteurs tuilés
  * @param {String} value - liste des couches
@@ -447,5 +495,6 @@ export default {
     setFiltersByTMS,
     updateFilterByTMS,
     setFiltersByProjection,
-    setFiltersByLayerPriority
+    setFiltersByLayerPriority,
+    setFilterWMTSPriority
 };
