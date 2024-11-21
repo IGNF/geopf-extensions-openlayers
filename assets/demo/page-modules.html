@@ -74,6 +74,12 @@
                 height: calc(100vh - 272px);
                 position: relative;
             }
+            div[id^="GPsearchEngine-"] {
+              position: relative;
+              width: 480px;
+              margin: 0 auto;
+              left: unset;
+            }
             @keyframes spinner {
                 to {
                     transform: rotate(360deg);
@@ -251,7 +257,30 @@
                 map.addControl(reverse);
 
                 var search = new ol.control.SearchEngine({
-                  position : "top-left"
+                  // position : "top-left",
+                  splitResults : true,
+                  collapsed: false,
+                  collapsible: false,
+                  displayButtonAdvancedSearch : true,
+                  displayButtonGeolocate : true,
+                  displayButtonCoordinateSearch : true,
+                  displayButtonClose : true,
+                  resources : {
+                      search : true
+                  },
+                  searchOptions: {
+                    addToMap: true,
+                    filterServices : "WMTS,WMS,TMS,WFS",
+                    filterLayersPriority : "PLAN.IGN,GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1,GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2,CADASTRALPARCELS.PARCELLAIRE_EXPRESS,ORTHOIMAGERY.ORTHOPHOTOS",
+                    filterWMTSPriority : true,
+                    serviceOptions: {
+                      maximumResponses : 20
+                    }
+                  },
+                  zoomTo : "auto",
+                  placeholder : "Recherche...",
+                  markerDisplay : true,
+                  markerUrl : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAzNiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjMDAwMDkxIiBkPSJNMTguMzY0IDMuNjM2YTkgOSAwIDAgMSAwIDEyLjcyOEwxMiAyMi43MjhsLTYuMzY0LTYuMzY0QTkgOSAwIDAgMSAxOC4zNjQgMy42MzZaTTEyIDhhMiAyIDAgMSAwIDAgNCAyIDIgMCAwIDAgMC00WiIvPjwvc3ZnPg=="
                 });
                 map.addControl(search);
 
