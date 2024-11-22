@@ -163,6 +163,24 @@ jobs:
           name: changelog
           path: DRAFT_CHANGELOG.md
 
+      - name: Download Bundle artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle
+          path: bundle.zip
+
+      - name: Download Module artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: modules
+          path: modules.zip
+      
+      - name: Download Package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: package
+          path: package.zip
+        
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.1.4

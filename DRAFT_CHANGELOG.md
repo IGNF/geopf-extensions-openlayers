@@ -5,7 +5,7 @@ __DATE__
 
 ## Unreleased
 
-<https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.O...HEAD>
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.0...HEAD>
 
 ## 🎉 Summary
 
