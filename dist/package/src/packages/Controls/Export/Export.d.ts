@@ -74,7 +74,7 @@ declare class ButtonExport {
      * ou
      * import { ButtonExport } from "gpf-ext-ol"
      */
-    constructor(options?: Object | undefined);
+    constructor(options?: Object);
     /**
      * Response to the export of the route calculation
      * (only for jsdoc)

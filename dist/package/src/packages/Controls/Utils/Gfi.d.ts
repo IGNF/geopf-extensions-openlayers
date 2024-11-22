@@ -1,7 +1,7 @@
 export default Gfi;
 declare namespace Gfi {
     function getLayerFormat(l: ol.layer.Layer): string;
-    function displayInfo(map: ol.Map, coords: ol.Coordinate, content: string, contentType?: string | undefined, autoPanOptions: {
+    function displayInfo(map: ol.Map, coords: ol.Coordinate, content: string, contentType?: string, autoPanOptions: {
         autoPan?: boolean | Object | undefined;
         autoPanAnimation?: Object | undefined;
         autoPanMargin?: number | undefined;
@@ -12,11 +12,11 @@ declare namespace Gfi {
     function displayFeatureInfo(map: ol.Map, olCoordinate: ol.Coordinate, gfiLayers: Array<Object>, proxyOptions?: {
         proxyUrl?: string | undefined;
         noProxyDomains?: string[] | undefined;
-    } | undefined, autoPanOptions?: {
+    }, autoPanOptions?: {
         autoPan?: boolean | undefined;
         autoPanAnimation?: Object | undefined;
         autoPanMargin?: number | undefined;
-    } | undefined): void;
+    }): void;
     function getPosition(e: any, map: any): any;
     function onDisplayFeatureInfo(e: any, gfiObj: any): void;
 }

@@ -3,6 +3,6 @@ declare namespace ProxyUtils {
     function proxifyUrl(url: string, proxyOptions?: {
         proxyUrl: string;
         noProxyDomains?: string[] | undefined;
-    } | undefined): string;
+    }): string;
 }
 //# sourceMappingURL=ProxyUtils.d.ts.map
