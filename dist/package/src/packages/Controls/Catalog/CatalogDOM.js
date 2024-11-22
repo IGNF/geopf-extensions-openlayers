@@ -432,7 +432,7 @@ var CatalogDOM = {
                         type="checkbox"
                         data-layer="${name}:${service}"
                         aria-describedby="checkboxes-messages-${categoryId}-${i}_${name}-${service}">
-                    <label class="GPlabelActive fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="${title}">
+                    <label class="GPlabelActive fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="nom technique : ${name}">
                         ${title} (${service})
                     </label>
                     <div class="fr-messages-group" id="checkboxes-messages-${categoryId}-${i}_${name}-${service}" aria-live="assertive"></div>

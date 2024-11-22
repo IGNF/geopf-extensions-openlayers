@@ -102,7 +102,6 @@ var SourceWMS = class SourceWMS extends TileWMSSource {
 
         var wmsSourceOptions = {
             // tracker extension openlayers
-            // FIXME : gp-ext version en mode AMD
             url : Gp.Helper.normalyzeUrl(wmsParams.url.replace(/(http|https):\/\//, protocol), urlParams, false),
             params : {
                 SERVICE : "WMS",
@@ -110,7 +109,8 @@ var SourceWMS = class SourceWMS extends TileWMSSource {
                 VERSION : wmsParams.version,
                 STYLES : wmsParams.styles,
                 FORMAT : wmsParams.format
-            }
+            },
+            crossOrigin : "anonymous"
             // ,
             // attributions : [
             //     new ol.Attribution({

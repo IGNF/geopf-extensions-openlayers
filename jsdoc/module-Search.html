@@ -1676,11 +1676,15 @@
             
                 <div class="l3 itemMembers"> <a href="module-Search.html#~m_fields">m_fields</a> </div>
             
+                <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterByLayerPriority">m_filterByLayerPriority</a> </div>
+            
                 <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterByProjection">m_filterByProjection</a> </div>
             
                 <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterByService">m_filterByService</a> </div>
             
                 <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterByTMS">m_filterByTMS</a> </div>
+            
+                <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterWMTSPriority">m_filterWMTSPriority</a> </div>
             
                 <div class="l3 itemMembers"> <a href="module-Search.html#~m_index">m_index</a> </div>
             
@@ -1705,11 +1709,15 @@
             
                 <li data-name="module:Search~m_fields"><a href="module-Search.html#~m_fields">m_fields</a></li>
             
+                <li data-name="module:Search~m_filterByLayerPriority"><a href="module-Search.html#~m_filterByLayerPriority">m_filterByLayerPriority</a></li>
+            
                 <li data-name="module:Search~m_filterByProjection"><a href="module-Search.html#~m_filterByProjection">m_filterByProjection</a></li>
             
                 <li data-name="module:Search~m_filterByService"><a href="module-Search.html#~m_filterByService">m_filterByService</a></li>
             
                 <li data-name="module:Search~m_filterByTMS"><a href="module-Search.html#~m_filterByTMS">m_filterByTMS</a></li>
+            
+                <li data-name="module:Search~m_filterWMTSPriority"><a href="module-Search.html#~m_filterWMTSPriority">m_filterWMTSPriority</a></li>
             
                 <li data-name="module:Search~m_index"><a href="module-Search.html#~m_index">m_index</a></li>
             
@@ -1745,13 +1753,19 @@
             
                 <div class="l3 itemMembers" data-name="module:Search~getTitles"> <a href="module-Search.html#~getTitles">getTitles</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:Search~inventory"> <a href="module-Search.html#~inventory">inventory</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:Search~setFields"> <a href="module-Search.html#~setFields">setFields</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:Search~setFiltersByLayerPriority"> <a href="module-Search.html#~setFiltersByLayerPriority">setFiltersByLayerPriority</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:Search~setFiltersByProjection"> <a href="module-Search.html#~setFiltersByProjection">setFiltersByProjection</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:Search~setFiltersByService"> <a href="module-Search.html#~setFiltersByService">setFiltersByService</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:Search~setFiltersByTMS"> <a href="module-Search.html#~setFiltersByTMS">setFiltersByTMS</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:Search~setFilterWMTSPriority"> <a href="module-Search.html#~setFilterWMTSPriority">setFilterWMTSPriority</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:Search~setIndex"> <a href="module-Search.html#~setIndex">setIndex</a> </div>
             
@@ -1781,13 +1795,19 @@
             
                 <li data-name="getTitles"><a href="module-Search.html#~getTitles">getTitles</a></li>
             
+                <li data-name="inventory"><a href="module-Search.html#~inventory">inventory</a></li>
+            
                 <li data-name="setFields"><a href="module-Search.html#~setFields">setFields</a></li>
+            
+                <li data-name="setFiltersByLayerPriority"><a href="module-Search.html#~setFiltersByLayerPriority">setFiltersByLayerPriority</a></li>
             
                 <li data-name="setFiltersByProjection"><a href="module-Search.html#~setFiltersByProjection">setFiltersByProjection</a></li>
             
                 <li data-name="setFiltersByService"><a href="module-Search.html#~setFiltersByService">setFiltersByService</a></li>
             
                 <li data-name="setFiltersByTMS"><a href="module-Search.html#~setFiltersByTMS">setFiltersByTMS</a></li>
+            
+                <li data-name="setFilterWMTSPriority"><a href="module-Search.html#~setFilterWMTSPriority">setFilterWMTSPriority</a></li>
             
                 <li data-name="setIndex"><a href="module-Search.html#~setIndex">setIndex</a></li>
             
@@ -5936,7 +5956,8 @@
 <dd>
     
     <div class="description">
-        <p>liste des champs de recherche</p>
+        <p>liste des champs de recherche<br>
+valeurs : &quot;title, description, theme, keywords, layer_name&quot;</p>
     </div>
     
     
@@ -5973,7 +5994,65 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="~m_filterByProjection"><span class="type-signature ">inner</span>m_filterByProjection</h4>
+        <h4 class="name" id="~m_filterByLayerPriority"><span class="type-signature ">inner</span>m_filterByLayerPriority<span class="type-signature type array">Array</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>liste des couches priortaires dans la recherche<br>
+sous la forme : [name]</p>
+<blockquote>
+<p>mettre un poids au score des couches que l'on souhaite<br>
+mettre en avant dans la recherche</p>
+</blockquote>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>"PLAN.IGN$GEOPORTAIL:GPP:TMS" ou "PLAN.IGN:TMS" ou "PLAN.IGN"</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~m_filterByProjection"><span class="type-signature ">inner</span>m_filterByProjection<span class="type-signature type array">Array</span> </h4>
     </div>
     
     
@@ -6012,13 +6091,21 @@
 
     
     
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>["EPSG:4326",...]</code></pre>
+    
+
+    
 </dd>
 
         
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="~m_filterByService"><span class="type-signature ">inner</span>m_filterByService</h4>
+        <h4 class="name" id="~m_filterByService"><span class="type-signature ">inner</span>m_filterByService<span class="type-signature type array">Array</span> </h4>
     </div>
     
     
@@ -6057,13 +6144,21 @@
 
     
     
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>valeurs : ["WMTS", "TMS", "WMS", "WFS", ...]</code></pre>
+    
+
+    
 </dd>
 
         
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="~m_filterByTMS"><span class="type-signature ">inner</span>m_filterByTMS</h4>
+        <h4 class="name" id="~m_filterByTMS"><span class="type-signature ">inner</span>m_filterByTMS<span class="type-signature type array">Array</span> </h4>
     </div>
     
     
@@ -6072,6 +6167,51 @@
     
     <div class="description">
         <p>filtres les services uniquement en TMS</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~m_filterWMTSPriority"><span class="type-signature ">inner</span>m_filterWMTSPriority</h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Prioriser les couches de type WMTS sur le service WMS</p>
     </div>
     
     
@@ -6400,7 +6540,7 @@ target.addEventListener("myEvent", handler);</code></pre>
     
         
         <div class="tag-source">
-            Services/Search.js, line 247
+            Services/Search.js, line 315
         </div>
         
     </div>
@@ -6471,7 +6611,7 @@ target.addEventListener("myEvent", handler);</code></pre>
     
         
         <div class="tag-source">
-            Services/Search.js, line 265
+            Services/Search.js, line 362
         </div>
         
     </div>
@@ -6552,7 +6692,7 @@ des noms (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 258
+            Services/Search.js, line 355
         </div>
         
     </div>
@@ -6633,7 +6773,7 @@ des suggestions (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 272
+            Services/Search.js, line 369
         </div>
         
     </div>
@@ -6707,6 +6847,142 @@ des titres (unique)
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="~inventory">
+            
+            <span class="type-signature ">inner</span>inventory<span class="signature">(results)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Object}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Services/Search.js, line 333
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Determine si une couche est associé avec des services WMS et/ou WMTS</p>
+<p>true  : WMTS only ou WMTS avec des WMS associés ou pas<br>
+false : WMS only</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">results</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>réponse de la recherche</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>{
+  PLAN.IGN: true, // WMTS et des WMS
+  BDTOPO:batiments: false // uniquements des WMS
+}</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="~setFields">
             
             <span class="type-signature ">inner</span>setFields<span class="signature">(value)</span>
@@ -6714,7 +6990,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 291
+            Services/Search.js, line 388
         </div>
         
     </div>
@@ -6831,6 +7107,130 @@ des titres (unique)
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="~setFiltersByLayerPriority">
+            
+            <span class="type-signature ">inner</span>setFiltersByLayerPriority<span class="signature">(value)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Services/Search.js, line 436
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Filtre sur les couches prioritaires dans la recherche</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">value</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>liste des couches prioritaires</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>m_filterByLayerPriority</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="~setFiltersByProjection">
             
             <span class="type-signature ">inner</span>setFiltersByProjection<span class="signature">(value)</span>
@@ -6838,7 +7238,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 331
+            Services/Search.js, line 428
         </div>
         
     </div>
@@ -6886,7 +7286,7 @@ des titres (unique)
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">String</span>
 
 
             
@@ -6962,7 +7362,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 323
+            Services/Search.js, line 420
         </div>
         
     </div>
@@ -7010,7 +7410,7 @@ des titres (unique)
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">String</span>
 
 
             
@@ -7086,7 +7486,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 339
+            Services/Search.js, line 451
         </div>
         
     </div>
@@ -7134,7 +7534,7 @@ des titres (unique)
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">String</span>
 
 
             
@@ -7203,6 +7603,123 @@ des titres (unique)
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="~setFilterWMTSPriority">
+            
+            <span class="type-signature ">inner</span>setFilterWMTSPriority<span class="signature">(value)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Services/Search.js, line 443
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Active ou non le filtre 'strange'</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">value</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>active le filtre</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="~setIndex">
             
             <span class="type-signature ">inner</span>setIndex<span class="signature">(value)</span>
@@ -7210,7 +7727,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 283
+            Services/Search.js, line 380
         </div>
         
     </div>
@@ -7334,7 +7851,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 315
+            Services/Search.js, line 412
         </div>
         
     </div>
@@ -7458,7 +7975,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 299
+            Services/Search.js, line 396
         </div>
         
     </div>
@@ -7582,7 +8099,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 307
+            Services/Search.js, line 404
         </div>
         
     </div>
@@ -7706,7 +8223,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 105
+            Services/Search.js, line 140
         </div>
         
     </div>
@@ -7821,7 +8338,7 @@ des titres (unique)
 
     
     <pre class="prettyprint"><code>{
-  "originators": {},
+  "attribution": {},
   "srs": [
     "EPSG:3857"
   ],
@@ -7876,7 +8393,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 233
+            Services/Search.js, line 289
         </div>
         
     </div>
@@ -7957,7 +8474,7 @@ des suggestions sans doublons
     
         
         <div class="tag-source">
-            Services/Search.js, line 346
+            Services/Search.js, line 458
         </div>
         
     </div>
@@ -8085,7 +8602,7 @@ des suggestions sans doublons
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Nov 19 2024 12:43:53 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Nov 22 2024 10:05:55 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

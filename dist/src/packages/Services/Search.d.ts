@@ -14,6 +14,8 @@ declare namespace _default {
     export { setFiltersByTMS };
     export { updateFilterByTMS };
     export { setFiltersByProjection };
+    export { setFiltersByLayerPriority };
+    export { setFilterWMTSPriority };
 }
 export default _default;
 /**
@@ -27,9 +29,10 @@ declare const target: EventTarget;
  * Appel du service de recherche
  * @param {*} text - recherche
  * @returns {Object} json
+ * @fire suggest
  * @example
  * {
- *   "originators": {},
+ *   "attribution": {},
  *   "srs": [
  *     "EPSG:3857"
  *   ],
@@ -122,25 +125,36 @@ declare function setUrl(value: string): void;
 declare function setMaximumResponses(value: number): void;
 /**
  * Filtre sur la liste des services à selectionner
- * @param {Array} value - liste de service
+ * @param {String} value - liste de service
  * @see m_filterByService
  */
-declare function setFiltersByService(value: any[]): void;
+declare function setFiltersByService(value: string): void;
 /**
  * Filtre sur les "purs" couches vecteurs tuilés
- * @param {Array} value - liste des couches
+ * @param {String} value - liste des couches
  * @see m_filterByTMS
  */
-declare function setFiltersByTMS(value: any[]): void;
+declare function setFiltersByTMS(value: string): void;
 /**
  * Mise à jour de la liste des "purs" couches vecteurs tuilés
  * @param {String} value - url
  */
-declare function updateFilterByTMS(value: string): Promise<string[]>;
+declare function updateFilterByTMS(value: string): Promise<any[]>;
 /**
  * Filtre sur les couches à exclure
- * @param {Array} value - liste des projections
+ * @param {String} value - liste des projections
  * @see m_filterByProjection
  */
-declare function setFiltersByProjection(value: any[]): void;
+declare function setFiltersByProjection(value: string): void;
+/**
+ * Filtre sur les couches prioritaires dans la recherche
+ * @param {String} value - liste des couches prioritaires
+ * @see m_filterByLayerPriority
+ */
+declare function setFiltersByLayerPriority(value: string): void;
+/**
+ * Active ou non le filtre 'strange'
+ * @param {Boolean} value - active le filtre
+ */
+declare function setFilterWMTSPriority(value: boolean): void;
 //# sourceMappingURL=Search.d.ts.map

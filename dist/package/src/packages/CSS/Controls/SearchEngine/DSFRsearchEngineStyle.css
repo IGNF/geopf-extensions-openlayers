@@ -158,6 +158,7 @@ dialog[id^=GPgeocodeResultsList] {
   position: absolute;
   height: fit-content;
   background-color: var(--background-default-grey);
+  max-height: unset;
 }
 
 div[id^=GPautoCompleteList] {
