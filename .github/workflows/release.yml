@@ -53,7 +53,8 @@ jobs:
 
       - name: Create Zip Package
         run: |
-          zip --junk-paths ${{env.PACKAGE_NAME}} dist/${{env.PACKAGE_NAME}}/* -x "dist/package/*.tgz"
+          cd dist/package/
+          zip -r ../../${{env.PACKAGE_NAME}}.zip * -x "*.tgz"
 
       - name: Upload JSDoc artifacts
         uses: actions/upload-artifact@v4
