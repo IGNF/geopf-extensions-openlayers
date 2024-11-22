@@ -5,9 +5,10 @@
  * 
  * @module Search
  * @alias module:~services/Search
+ * @fixme en attente d'evolution du service pour le filtrage sur le type 
+ * afin d'écarter des reponses de la recherche (ex. DOWNLOAD)
  * @see https://geoservices.ign.fr/documentation/services/services-geoplateforme/service-geoplateforme-de-recherche
  */
-
 
 /** resultats du service */
 let m_suggestions = [];
@@ -18,22 +19,55 @@ let controller = new AbortController();
 /** index de recherche */
 let m_index = "geoplateforme";
 
-/** liste des champs de recherche */
+/** 
+ * liste des champs de recherche
+ * valeurs : "title, description, theme, keywords, layer_name"
+ */
 let m_fields = "title,layer_name";
 
 /** nombre de suggestions du service */
 let m_size = "1000";
 
 /** nombre maximum de réponses */
-let m_maximumResponses = 5;
+let m_maximumResponses = 10;
 
-/** liste des filtres sur les services */
+/** 
+ * liste des filtres sur les services
+ * @type {Array}
+ * @example
+ * valeurs : ["WMTS", "TMS", "WMS", "WFS", ...]
+ */
 let m_filterByService = ["WMTS", "TMS"];
 
-/** liste des couches à exclure avec ces projections */
+/** 
+ * liste des couches à exclure avec ces projections 
+ * @type {Array}
+ * @example
+ * ["EPSG:4326",...]
+ */
 let m_filterByProjection = [];
 
-/** filtres les services uniquement en TMS */
+/** 
+ * liste des couches priortaires dans la recherche
+ * sous la forme : [name]
+ * > mettre un poids au score des couches que l'on souhaite 
+ * > mettre en avant dans la recherche
+ * 
+ * @type {Array}
+ * @example
+ * "PLAN.IGN$GEOPORTAIL:GPP:TMS" ou "PLAN.IGN:TMS" ou "PLAN.IGN"
+ * 
+ */
+let m_filterByLayerPriority = [];
+
+/** Prioriser les couches de type WMTS sur le service WMS */
+let m_filterWMTSPriority = false;
+
+/** 
+ * filtres les services uniquement en TMS
+ * @fixme en attente d'evolution du service pour determiner les "real" couches vecteurs
+ * @type {Array}
+ */
 let m_filterByTMS = [
     "ADMIN_EXPRESS",
     "ISOHYPSE",
@@ -59,9 +93,10 @@ const target = new EventTarget();
  * Appel du service de recherche
  * @param {*} text - recherche
  * @returns {Object} json
+ * @fire suggest
  * @example
  * {
- *   "originators": {},
+ *   "attribution": {},
  *   "srs": [
  *     "EPSG:3857"
  *   ],
@@ -171,34 +206,51 @@ const suggest = async (text) => {
         return;
     }
 
-    // Attribution d'un score bonus aux couches WMTS puis retriage des résultats
+    // INFO
+    // Attribution d'un score bonus aux couches priortaires,
+    // puis retriage des résultats en fonction du score
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
-        var scoreBonus = result.source.type === "WMTS" || result.source.type === "TMS" ? 10 : 0;
-        results[i].score += scoreBonus;
+        const found = m_filterByLayerPriority.findIndex((element) => { return element.includes(result.source.layer_name); });
+        if (found >= 0) {
+            results[i].score += 100;
+            // console.log("found", result);
+        }
     }
     results.sort((a, b) => b.score - a.score);
+
+    var filter = null;
+    if (m_filterWMTSPriority) {
+        filter = inventory(results);
+    }
 
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
         var services = (m_filterByService.length === 0 || m_filterByService.includes(result.source.type));
+        // FIXME 
+        // utilisation le champ : result.source.open ?
         if (services) {
             if (unique().length >= m_maximumResponses) {
                 break;
             }
-            // FIXME champs possibles mais pas toujours remplis :
+            // INFO
+            // champs possibles mais pas toujours remplis :
             // srs[], attributions{}, extent{}, metada_url[]
             var o = {
-                originators : result.source.attribution || {},
+                attribution : result.source.attribution || {},
                 srs : result.source.srs || [],
                 keywords : result.source.keywords || [],
                 extent : result.source.extent || {},
-                metadata : result.source.metadata_urls || [],
-                name : result.source.layer_name,
-                title : result.source.title,
+                metadata : result.source.metadata_urls || [], // mapping ?
+                name : result.source.layer_name || "",
+                title : result.source.title || "",
                 description : result.source.description,
-                service : result.source.type,
-                url : result.source.url
+                service : result.source.type || "", // mapping
+                url : result.source.url || "",
+                tech : result.source.tech || {},
+                tags : result.source.tags || {},
+                theme : result.source.theme || "",
+                producer : result.source.producer || ""
             };
             if (m_filterByTMS.length) {
                 if ((o.service === "WMTS" && m_filterByTMS.includes(o.name)) ||
@@ -212,7 +264,11 @@ const suggest = async (text) => {
                     continue;
                 }
             }
+            if (filter && filter[o.name] && o.service === "WMS") {
+                continue;
+            }
             m_suggestions.push(o);
+            // console.log("suggestion", result);
         }
     }
 
@@ -239,6 +295,18 @@ const unique = () => {
             t.description === value.description
         ))
     );
+    // INFO
+    // soit on trie, 
+    // soit on laisse le trie natif en fonction du score
+    // .sort((a, b) => {
+    //     // INFO
+    //     // titleA (WMTS)
+    //     // titleA (WMS)
+    //     // titleA (WFS)
+    //     // titleA (TMS)
+    //     // titleB (WMTS)
+    //     return a.title.localeCompare(b.title) || b.service - a.service;
+    // });
 };
 
 /**
@@ -247,6 +315,35 @@ const unique = () => {
 const clear = () => {
     controller.abort();
     m_suggestions = [];
+};
+
+/** 
+ * Determine si une couche est associé avec des services WMS et/ou WMTS
+ * 
+ * true  : WMTS only ou WMTS avec des WMS associés ou pas
+ * false : WMS only
+ * @param {Array} results - réponse de la recherche
+ * @returns {Object} - ...
+ * @example
+ * {
+ *   PLAN.IGN: true, // WMTS et des WMS
+ *   BDTOPO:batiments: false // uniquements des WMS
+ * }
+ */
+const inventory = (results) => {
+    var inventory = {};
+    for (let i = 0; i < results.length; i++) {
+        const type = results[i].source.type;
+        const name = results[i].source.layer_name;
+        if (type === "WMTS" || type === "WMS") {
+            if (inventory[name] === undefined) {
+                inventory[name] = type === "WMTS";
+            }
+            inventory[name] ||= type === "WMTS";
+        }
+    }
+    // console.log(inventory);
+    return inventory;
 };
 
 // getter (reponse)
@@ -317,7 +414,7 @@ const setMaximumResponses = (value) => {
 };
 /**
  * Filtre sur la liste des services à selectionner
- * @param {Array} value - liste de service
+ * @param {String} value - liste de service
  * @see m_filterByService
  */
 const setFiltersByService = (value) => {
@@ -325,15 +422,30 @@ const setFiltersByService = (value) => {
 };
 /**
  * Filtre sur les couches à exclure
- * @param {Array} value - liste des projections
+ * @param {String} value - liste des projections
  * @see m_filterByProjection
  */
 const setFiltersByProjection = (value) => {
     m_filterByProjection = value === "" ? [] : value.split(",");
 };
 /**
+ * Filtre sur les couches prioritaires dans la recherche
+ * @param {String} value - liste des couches prioritaires
+ * @see m_filterByLayerPriority
+ */
+const setFiltersByLayerPriority = (value) => {
+    m_filterByLayerPriority = value === "" ? [] : value.split(",");
+};
+/** 
+ * Active ou non le filtre 'strange' 
+ * @param {Boolean} value - active le filtre
+ */
+const setFilterWMTSPriority = (value) => {
+    m_filterWMTSPriority = value;
+};
+/**
  * Filtre sur les "purs" couches vecteurs tuilés
- * @param {Array} value - liste des couches
+ * @param {String} value - liste des couches
  * @see m_filterByTMS
  */
 const setFiltersByTMS = (value) => {
@@ -382,5 +494,7 @@ export default {
     setFiltersByService,
     setFiltersByTMS,
     updateFilterByTMS,
-    setFiltersByProjection
+    setFiltersByProjection,
+    setFiltersByLayerPriority,
+    setFilterWMTSPriority
 };

@@ -693,7 +693,7 @@ var SearchEngineDOM = {
         var container = document.createElement("select");
         container.id = this._addUID("GPautocompleteResultsLocation");
         container.className = "GPelementHidden gpf-hidden gpf-select";
-        container.size = 6;
+        container.size = 20;
         container.autofocus = true;
         return container;
     },
@@ -774,7 +774,7 @@ var SearchEngineDOM = {
         div.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
         div.innerHTML = suggest.title + " (" + suggest.service + ")";
         div.dataset.layer = suggest.name;
-        div.title = suggest.description;
+        div.title = `${suggest.description} (nom technique : ${suggest.name})`;
         if (div.addEventListener) {
             div.addEventListener("click", function (e) {
                 self.onSearchedResultsItemClick(e);

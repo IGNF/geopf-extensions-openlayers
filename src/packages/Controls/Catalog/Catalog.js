@@ -13,6 +13,7 @@ import Draggable from "../../Utils/Draggable";
 import Config from "../../Utils/Config";
 
 // import local des layers
+import GeoportalWFS from "../../Layers/LayerWFS";
 import GeoportalWMS from "../../Layers/LayerWMS";
 import GeoportalWMTS from "../../Layers/LayerWMTS";
 import GeoportalMapBox from "../../Layers/LayerMapBox";
@@ -90,7 +91,6 @@ var logger = Logger.getLogger("widget");
  * @todo filtrage des couches
  * @todo type:service
  * @todo validation du schema
- * @fixme enregistrer et afficher du format WFS !?
  */
 var Catalog = class Catalog extends Control {
 
@@ -791,6 +791,12 @@ var Catalog = class Catalog extends Control {
                 layer = new GeoportalMapBox({
                     layer : name
                 });
+                break;
+            case "WFS":
+                layer = new GeoportalWFS({
+                    layer : name
+                });
+                break;
             default:
                 break;
         }
@@ -976,9 +982,9 @@ var Catalog = class Catalog extends Control {
         // - ajout ou pas de la couche à la carte
         // - envoi d'un evenement avec la conf tech
 
-        var id = e.target.id.split("_")[1];
-        var name = id.split("-")[0];
-        var service = id.split("-")[1];
+        var ds = e.target.dataset.layer;
+        var name = ds.substring(0, ds.lastIndexOf(":"));
+        var service = ds.substring(ds.lastIndexOf(":") + 1);
         var layer = {}; // TODO fournir la conf tech
 
         if (e.target.checked) {
