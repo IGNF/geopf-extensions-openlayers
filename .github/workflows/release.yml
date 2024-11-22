@@ -166,20 +166,20 @@ jobs:
       - name: Download Bundle artifacts
         uses: actions/download-artifact@v4
         with:
-          name: bundle
-          path: bundle.zip
+          name: ${{env.BUNDLE_NAME}}
+          path: ./
 
       - name: Download Module artifacts
         uses: actions/download-artifact@v4
         with:
-          name: modules
-          path: modules.zip
+          name: ${{env.MODULE_NAME}}
+          path: ./
       
       - name: Download Package artifacts
         uses: actions/download-artifact@v4
         with:
-          name: package
-          path: package.zip
+          name: ${{env.PACKAGE_NAME}}
+          path: ./
         
       - name: Create Release
         id: create_release
