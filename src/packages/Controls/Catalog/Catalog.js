@@ -159,7 +159,8 @@ var Catalog = class Catalog extends Control {
         super({
             element : options.element,
             target : options.target,
-            render : options.render
+            render : options.render,
+            listable : options.listable,
         });
 
         if (!(this instanceof Catalog)) {
@@ -484,7 +485,6 @@ var Catalog = class Catalog extends Control {
         widgetPanelDiv.appendChild(widgetContentDiv);
 
         container.appendChild(widgetPanel);
-        logger.log(container);
 
         return container;
     }

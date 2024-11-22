@@ -45,6 +45,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlControlList.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlControlList.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -70,11 +72,8 @@
 {{#content "js"}}
             <script type="text/javascript">
               const scaleControl = new ol.control.ScaleLine({
-                  units: 'metric',
-                  bar: true,
-                  steps: 4,
-                  text: true,
-                  minWidth: 140,
+                units: 'metric',
+                bar: false,
               });
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
@@ -154,7 +153,8 @@
 
                 var route = new ol.control.Route({
                   draggable: true,
-                  position : "bottom-right"
+                  position : "bottom-right",
+                  listable: true,
                 });
                 map.addControl(route);
 
@@ -165,7 +165,8 @@
 
                 var reverse = new ol.control.ReverseGeocode({
                   draggable: true,
-                  position : "top-right"
+                  position : "top-right",
+                  listable: true,
                 });
                 map.addControl(reverse);
 
@@ -211,9 +212,16 @@
                     position: "bottom-left",
                     direction: "vertical",
                     panel: true,
-                    auto: true
+                    auto: true,
+                    listable: true,
                 });
                 map.addControl(territories);
+
+                var controlList = new ol.control.ControlList({
+                    draggable: false,
+                    position: "bottom-right",
+                });
+                map.addControl(controlList);
               };
 
               Gp.Services.getConfig({

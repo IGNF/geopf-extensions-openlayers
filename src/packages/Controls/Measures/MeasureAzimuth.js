@@ -59,7 +59,8 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         super({
             element : options.element,
             target : options.target,
-            render : options.render
+            render : options.render,
+            listable : options.listable,
         });
 
         if (!(this instanceof MeasureAzimuth)) {
@@ -191,7 +192,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
     getContainer () {
         return this._container;
     }
-    
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

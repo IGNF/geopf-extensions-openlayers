@@ -59,7 +59,8 @@ var MeasureArea = class MeasureArea extends Control {
         super({
             element : options.element,
             target : options.target,
-            render : options.render
+            render : options.render,
+            listable : options.listable,
         });
 
         if (!(this instanceof MeasureArea)) {
@@ -173,7 +174,7 @@ var MeasureArea = class MeasureArea extends Control {
     getContainer () {
         return this._container;
     }
-    
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

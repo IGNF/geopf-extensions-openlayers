@@ -124,7 +124,8 @@ var Route = class Route extends Control {
         super({
             element : options.element,
             target : options.target,
-            render : options.render
+            render : options.render,
+            listable : options.listable,
         });
 
         if (!(this instanceof Route)) {

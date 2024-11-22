@@ -1,0 +1,25 @@
+/* Showing/hiding */
+
+button[id^=GPshowControlListPicto][aria-pressed="false"] + dialog {
+  display: none;
+  visibility: hidden;
+  opacity: 0%;
+}
+
+button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {
+  display: flex;
+  flex-direction: column;
+  visibility: visible;
+  opacity: 100%;
+  width: 370px;
+  height: initial;
+  max-height: inherit;
+}
+
+dialog[id^="GPcontrolListPanel-"] {
+  position: absolute;
+  left: 34px;
+  top: 0px;
+  height: inherit;
+}
+

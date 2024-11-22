@@ -56,7 +56,8 @@ var MeasureLength = class MeasureLength extends Control {
         super({
             element : options.element,
             target : options.target,
-            render : options.render
+            render : options.render,
+            listable : options.listable,
         });
 
         if (!(this instanceof MeasureLength)) {
@@ -167,7 +168,7 @@ var MeasureLength = class MeasureLength extends Control {
     getContainer () {
         return this._container;
     }
-    
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

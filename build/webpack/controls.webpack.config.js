@@ -17,10 +17,10 @@ module.exports = (env, argv) => {
         var name = names[index];
         var moduledir = name;
         var key = name;
-        
+
         switch (name) {
             case "GeoportalAttribution":
-                moduledir = "Attribution"; 
+                moduledir = "Attribution";
                 // ras
                 break;
             case "Drawing":
@@ -88,24 +88,27 @@ module.exports = (env, argv) => {
             case "Territories":
                 // ras
                 break;
+            case "ControlList":
+                // ras
+                break;
             case "Editor":
                 // ras
                 break;
             case "GeoportalZoom":
-                moduledir = "Zoom"; 
+                moduledir = "Zoom";
                 break;
             case "GeoportalFullScreen":
-                moduledir = "FullScreen"; 
+                moduledir = "FullScreen";
                 // ras
                 break;
             case "GeoportalOverviewMap":
-                moduledir = "OverviewMap"; 
+                moduledir = "OverviewMap";
                 // ras
                 break;
             default:
                 break;
         }
-    
+
         entries["GpfExtOl" + key] = path.join(rootdir, "src", "packages", "Controls", moduledir, name + ".js");
         console.log("####", key, entries["GpfExtOl" + key], externals);
     }

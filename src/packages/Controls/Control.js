@@ -5,6 +5,12 @@ var ControlExtended = class ControlExtended extends Control {
 
     constructor (options) {
         super(options);
+        // Can the control appear in the ControlList control
+        if (options && options.listable) {
+            this.listable = true;
+        } else {
+            this.listable = false;
+        }
     }
 
     setPosition (pos) {

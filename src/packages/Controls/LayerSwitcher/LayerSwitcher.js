@@ -104,7 +104,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         super({
             element : _options.element,
             target : _options.target,
-            render : _options.render
+            render : _options.render,
+            listable : _options.listable,
         });
 
         if (!(this instanceof LayerSwitcher)) {
