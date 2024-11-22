@@ -5,23 +5,21 @@ __DATE__
 
 ## Unreleased
 
-<https://github.com/IGNF/geopf-extensions-openlayers/compare/main%40%7B1year%7D...main>
-
-En attente de la 1ère release :
-<https://github.com/IGNF/geopf-extensions-openlayers/compare/v1.0.0...HEAD>
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.O...HEAD>
 
 ## 🎉 Summary
 
-* mise à jour des dependances
+* mise à jour des dependances (ex. openlayers)
 * mise à jour de la documentation
 * modification du processus de build
 * passage des extensions en mode DSFR
-* ajout d'un demonstrateur
+* ajout de nouvelles extensions (ex. catalogue)
+* ajout d'un demonstrateur dans differents frameworks (ex. vuejs, react...)
 
 ## 💥 Breaking changes
 
+Les widgets utilisent la version > 8.2.0 d'OpenLayers
 Un nouvelle version du GFI avec un fonctionnement et des options differentes de l'ancien widget.
-Pour le WFS, on utilise la version 3.4.4 des services.
 
 ## 📖 Changelog
 
@@ -72,11 +70,11 @@ Pour le WFS, on utilise la version 3.4.4 des services.
 * 🔒 [Security]
 
   * replace dependency xmldom with @xmldom/xmldom
-  * update dependency ol-mapbox-style to v12.3.3
-  * update dependency @mapbox/mapbox-gl-style-spec to v14.4.0
+  * update dependency ol-mapbox-style to v12.3.5
+  * update dependency @mapbox/mapbox-gl-style-spec to v14.7.1
   * update dependency css-loader to v7
-  * update dependency geoportal-access-lib to v3.4.2
+  * update dependency geoportal-access-lib to v3.4.4
   * update dependency webpack-dev-server to v5
-  * update dependency proj4 to v2.11.0
+  * update dependency proj4 to v2.14.0
 
 ---
