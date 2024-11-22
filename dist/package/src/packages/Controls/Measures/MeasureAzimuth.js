@@ -158,6 +158,11 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
+        }
     }
 
     /**
@@ -207,6 +212,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         this.options.position = (typeof options.position !== "undefined") ? options.position : null;
         this.options.target = (typeof options.target !== "undefined") ? options.target : null;
         this.options.render = (typeof options.render !== "undefined") ? options.render : null;
+        this.options.gutter = (typeof options.gutter !== "undefined") ? options.gutter : null;
         this.options.layerDescription = (typeof options.layerDescription !== "undefined") ? options.layerDescription : {
             title : "Mesures d'azimuth",
             description : "Mes mesures"

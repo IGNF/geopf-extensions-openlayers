@@ -119,6 +119,11 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.element.classList.add("gpf-button-no-gutter");
+        }
     }
 
     // ################################################################### //
