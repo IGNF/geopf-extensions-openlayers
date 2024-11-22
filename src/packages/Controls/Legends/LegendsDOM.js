@@ -40,7 +40,7 @@ var LegendsDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowLegendsPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLegendsPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-legends fr-btn fr-btn--secondary";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLegendsPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-legends fr-btn fr-btn--tertiary";
         button.setAttribute("aria-label", "Afficher les légendes");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
