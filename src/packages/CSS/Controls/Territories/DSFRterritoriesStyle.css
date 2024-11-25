@@ -111,33 +111,6 @@ div.fr-tile div.fr-tile__header div.fr-tile__thumbnail {
     height: 50px;
     width: 50px;
 }
-.fr-tile__icon--fxx {
-    background-image: url("img/dsfr/picto/fxx.svg");
-}
-.fr-tile__icon--glp {
-    background-image: url("img/dsfr/picto/glp.svg");
-}
-.fr-tile__icon--guf {
-    background-image: url("img/dsfr/picto/guf.svg");
-}
-.fr-tile__icon--idf {
-    background-image: url("img/dsfr/picto/idf.svg");
-}
-.fr-tile__icon--mtq {
-    background-image: url("img/dsfr/picto/mtq.svg");
-}
-.fr-tile__icon--myt {
-    background-image: url("img/dsfr/picto/myt.svg");
-}
-.fr-tile__icon--ncl {
-    background-image: url("img/dsfr/picto/ncl.svg");
-}
-.fr-tile__icon--reu {
-    background-image: url("img/dsfr/picto/reu.svg");
-}
-.fr-tile__icon--spm {
-    background-image: url("img/dsfr/picto/spm.svg");
-}
 
 .tiles-thumbnail div.fr-tile div.fr-tile__header div.fr-tile__icon {
     display: none;
