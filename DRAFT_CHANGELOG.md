@@ -18,6 +18,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+    * Territories : optimisation des ressources du widget (#278)
   
 * 🔒 [Security]
 
