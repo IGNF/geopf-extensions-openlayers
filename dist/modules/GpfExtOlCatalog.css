@@ -8,8 +8,8 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.0-272
- * @date 22/11/2024
+ * @version 1.0.0-beta.0-277
+ * @date 25/11/2024
  *
  */div[id^=GPcatalog-]{right:0;top:0}button[id^=GPshowCatalogPicto][aria-pressed=false]+dialog{display:none;opacity:0;visibility:hidden}button[id^=GPshowCatalogPicto-][aria-pressed=true]+dialog{display:flex;flex-direction:column;height:auto;max-height:inherit;opacity:100%;visibility:visible;width:370px}dialog[id^=GPcatalogPanel-]{height:inherit;left:34px;position:absolute;top:0}form[id^=GPcatalogForm]{padding:15px}.catalog-container-tabs .fr-accordion .fr-collapse--expanded{padding-bottom:0}
 /*# sourceMappingURL=GpfExtOlCatalog.css.map*/
