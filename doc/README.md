@@ -66,7 +66,7 @@ https://ignf.github.io/cartes.gouv.fr-entree-carto/
 
 [Documentation technique](https://ignf.github.io/geopf-extensions-openlayers/jsdoc/)
 
-[Documentation génerale](DOCUMENTATION.md)
+[Documentation génerale](./DOCUMENTATION.md)
 
 ## Widgets
 
@@ -197,9 +197,7 @@ import {
     map.addControl(search);
     
     var feature = new GetFeatureInfo({
-        options : {
-            position : "top-right"
-        }
+        position : "top-right"
     });
     map.addControl(feature);
     
@@ -250,7 +248,7 @@ var cfg = new Gp.Services.Config({
 cfg.call();
 ```
 
-> Pour une utilisation avec les binaires (bundles), se référer à la [Documentation génerale](DOCUMENTATION.md)
+> Pour une utilisation avec les binaires (bundles), se référer à la [Documentation génerale](./DOCUMENTATION.md)
 
 ## Contributions
 

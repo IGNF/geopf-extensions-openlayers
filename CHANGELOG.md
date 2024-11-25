@@ -7,25 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- toc -->
 
-- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta0)
-  * [Unreleased](#unreleased)
-  * [🎉 Summary](#%F0%9F%8E%89-summary)
-  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes)
-  * [📖 Changelog](#%F0%9F%93%96-changelog)
+- [CHANGELOG EXTENSION GEOPORTAL](#changelog-extension-geoportal)
+  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0](#extension-geoplateforme-openlayers--version-100-beta0)
+    - [Unreleased](#unreleased)
+    - [🎉 Summary](#-summary)
+    - [💥 Breaking changes](#-breaking-changes)
+    - [📖 Changelog](#-changelog)
 
 <!-- tocstop -->
 
 ---
-# Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0
+## Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0
 
 2024-11-22
 > 🚀 Release Extension Geoplateforme openlayers
 
-## Unreleased
+### Unreleased
 
 <https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.0...HEAD>
 
-## 🎉 Summary
+### 🎉 Summary
 
 * mise à jour des dependances (ex. openlayers)
 * mise à jour de la documentation
@@ -34,12 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * ajout de nouvelles extensions (ex. catalogue)
 * ajout d'un demonstrateur dans differents frameworks (ex. vuejs, react...)
 
-## 💥 Breaking changes
+### 💥 Breaking changes
 
 Les widgets utilisent la version > 8.2.0 d'OpenLayers
 Un nouvelle version du GFI avec un fonctionnement et des options differentes de l'ancien widget.
 
-## 📖 Changelog
+### 📖 Changelog
 
 * ✨ [Added]
 

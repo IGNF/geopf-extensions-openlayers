@@ -1,13 +1,17 @@
-# Extension Geoplateforme OpenLayers, 🔖 version __VERSION__
+## Extension Geoplateforme OpenLayers, 🔖 version __VERSION__
 
 __DATE__
 > 🚀 Release Extension Geoplateforme openlayers
 
-## 🎉 Summary
+### Unreleased
 
-## 💥 Breaking changes
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/__VERSION__...HEAD>
 
-## 📖 Changelog
+### 🎉 Summary
+
+### 💥 Breaking changes
+
+### 📖 Changelog
 
 * ✨ [Added]
 
