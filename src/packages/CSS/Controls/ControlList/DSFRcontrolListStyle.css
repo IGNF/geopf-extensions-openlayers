@@ -11,6 +11,10 @@ dialog[id^="GPcontrolListPanel-"] .gpf-panel__content {
   overflow: auto;
 }
 
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content:not(:has(~ .gpf-panel__footer)) {
+  padding-bottom: 2rem;
+}
+
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div {
   display: flex;
   flex-direction: row;

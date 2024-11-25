@@ -149,14 +149,18 @@ var ControlListDOM = {
     /**
      * Create Footer Panel
      *
+     * @param {DOMElement} controlCatalogelement - DOM element
      * @returns {DOMElement} DOM element
      */
-    _createControlListPanelFooterElement : function () {
+    _createControlListPanelFooterElement : function (controlCatalogelement) {
         var container = document.createElement("div");
         container.className = "GPpanelFooter gpf-panel__footer fr-modal__footer";
         var addToolsBtn = document.createElement("button");
         addToolsBtn.classList.add("gpf-btn", "gpf-btn--tertiary", "fr-btn", "fr-btn--tertiary");
         addToolsBtn.innerText = "+ Ajouter plus d'outils";
+        addToolsBtn.addEventListener("click", function () {
+            controlCatalogelement.click();
+        });
         container.appendChild(addToolsBtn);
         return container;
     },

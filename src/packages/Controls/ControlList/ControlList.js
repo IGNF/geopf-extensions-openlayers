@@ -53,6 +53,12 @@ var ControlList = class ControlList extends Control {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
 
+        if (options.controlCatalogElement) {
+            this.controlCatalogElement = options.controlCatalogElement;
+        } else {
+            this.controlCatalogElement = null;
+        }
+
         // initialisation du composant
         this.initialize(options);
         // // Widget main DOM container
@@ -226,9 +232,11 @@ var ControlList = class ControlList extends Control {
         var content = this._ControlListPanelContentContainer = this._createControlListPanelContentElement();
         panelDiv.appendChild(content);
 
-        // footer
-        var footer = this._createControlListPanelFooterElement();
-        panelDiv.appendChild(footer);
+        if (this.controlCatalogElement) {
+            // footer
+            var footer = this._createControlListPanelFooterElement(this.controlCatalogElement);
+            panelDiv.appendChild(footer);
+        }
 
         container.appendChild(panel);
         return container;
