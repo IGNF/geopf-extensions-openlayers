@@ -4,7 +4,24 @@ import checkDsfr from "./Utils/CheckDsfr";
 var ControlExtended = class ControlExtended extends Control {
 
     constructor (options) {
-        super(options);
+        options = options || {};
+        super({
+            element : options.element,
+            target : options.target,
+            render : options.render
+        });
+        // Can the control appear in the ControlList control
+        if (options && options.listable) {
+            this.listable = true;
+        } else {
+            this.listable = false;
+        }
+        // Set the control desctiption
+        if (options && options.description) {
+            this.description = options.description;
+        } else {
+            this.description = "";
+        }
     }
 
     setPosition (pos) {

@@ -181,11 +181,7 @@ var Drawing = class Drawing extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Drawing)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
