@@ -185,6 +185,7 @@ var ControlListDOM = {
         }
         if (control.description) {
             var spanDescription = document.createElement("span");
+            spanDescription.innerText = control.description;
             divText.appendChild(spanDescription);
         }
         container.appendChild(divText);

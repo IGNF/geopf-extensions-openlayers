@@ -35,6 +35,16 @@ dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > button::after {
   background-color: var(--text-default-grey);
 }
 
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > div {
+  display: flex;
+  flex-direction: column;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > div > span:nth-child(2) {
+  color: var(--text-mention-grey);
+  font-size: 0.75rem;
+}
+
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__footer {
   padding: 2rem;
 }

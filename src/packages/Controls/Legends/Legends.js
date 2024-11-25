@@ -50,12 +50,7 @@ var Legends = class Legends extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render,
-            listable : options.listable,
-        });
+        super(options);
 
         if (!(this instanceof Legends)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");

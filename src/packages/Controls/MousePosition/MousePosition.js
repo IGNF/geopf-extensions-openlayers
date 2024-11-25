@@ -135,12 +135,7 @@ var MousePosition = class MousePosition extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render,
-            listable : options.listable,
-        });
+        super(options);
 
         if (!(this instanceof MousePosition)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");

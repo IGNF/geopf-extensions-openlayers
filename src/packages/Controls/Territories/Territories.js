@@ -62,12 +62,7 @@ var Territories = class Territories extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render,
-            listable : options.listable,
-        });
+        super(options);
 
         if (!(this instanceof Territories)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
