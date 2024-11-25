@@ -101,12 +101,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var _layers = options.layers || [];
 
         // call ol.control.Control constructor
-        super({
-            element : _options.element,
-            target : _options.target,
-            render : _options.render,
-            listable : _options.listable,
-        });
+        super(_options);
 
         if (!(this instanceof LayerSwitcher)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
