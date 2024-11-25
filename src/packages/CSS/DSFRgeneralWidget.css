@@ -147,12 +147,12 @@
   background-color: var(--background-default-grey);
 }
 
-.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"] {
+.gpf-btn-icon[aria-pressed="true"] {
   background-color: var(--hover-tint);
   position: relative;
 }
 
-.gpf-widget:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+.gpf-widget:has(.gpf-btn-icon[aria-pressed="true"])::after {
   background-color: var(--background-action-high-blue-france);
   content: "";
   width: 3px;
@@ -163,7 +163,7 @@
 }
 
 @supports(-moz-appearance:none) {
-  .gpf-widget:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+  .gpf-widget:has(.gpf-btn-icon[aria-pressed="true"])::after {
     transform: unset;
   }
 }

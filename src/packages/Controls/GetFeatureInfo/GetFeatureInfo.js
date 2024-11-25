@@ -52,11 +52,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     constructor (options) {
         options = options || {};
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof GetFeatureInfo)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
