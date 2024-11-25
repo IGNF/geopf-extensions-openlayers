@@ -8,6 +8,7 @@ dialog[id^="GPcontrolListPanel-"] .gpf-panel__content {
   display: flex;
   flex-direction: column;
   padding: 0 1.5rem;
+  overflow: auto;
 }
 
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div {
@@ -46,7 +47,8 @@ dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > div > span:nth-chi
 }
 
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__footer {
-  padding: 2rem;
+  padding: 1rem 2rem 2rem 2rem;
+  background-color: var(--background-lifted-grey);
 }
 
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__footer > button {

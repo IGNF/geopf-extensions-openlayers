@@ -12,8 +12,6 @@ button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {
   visibility: visible;
   opacity: 100%;
   width: 370px;
-  height: initial;
-  max-height: inherit;
 }
 
 dialog[id^="GPcontrolListPanel-"] {
