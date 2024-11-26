@@ -184,8 +184,10 @@ var ControlListDOM = {
         divText.appendChild(spanTitle);
         if (controlContainer.querySelector(".GPpanelTitle")) {
             spanTitle.innerText = controlContainer.querySelector(".GPpanelTitle").innerText;
-        } else {
+        } else if (controlContainer.querySelector("[class^='gpf-btn-header-']")) {
             spanTitle.innerText = controlContainer.querySelector("[class^='gpf-btn-header-']").title;
+        } else {
+            spanTitle.innerText = controlContainer.querySelector(".GPshowOpen").ariaLabel;
         }
         if (control.description) {
             var spanDescription = document.createElement("span");
