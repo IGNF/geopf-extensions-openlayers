@@ -48,8 +48,8 @@ var RouteDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowRoutePicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowRoutePicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-route fr-btn fr-btn--secondary";
-        button.title = "Ouvrir le calcul d'itinéraire";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowRoutePicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-route fr-btn fr-btn--tertiary";
+        button.setAttribute("aria-label", "Ouvrir le calcul d'itinéraire");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -1092,7 +1092,7 @@ var RouteDOM = {
         if (checkDsfr()) {
             hidden = "GPelementHidden gpf-hidden";
         }
-        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill`;
+        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowRouteExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--tertiary gpf-btn--tertiary fr-icon-arrow-down-fill`;
         button.title = "Exclusions";
         // button.style.top = "185px";
         button.setAttribute("tabindex", "0");

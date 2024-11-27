@@ -45,6 +45,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlControlList.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlControlList.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -69,7 +71,10 @@
 
 {{#content "js"}}
             <script type="text/javascript">
-
+              const scaleControl = new ol.control.ScaleLine({
+                units: 'metric',
+                bar: false,
+              });
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
@@ -87,6 +92,9 @@
                     zoom : 8
                   })
                 });
+
+
+                map.addControl(scaleControl);
 
                 var catalog = new ol.control.Catalog({
                   id: 1,
@@ -140,7 +148,8 @@
                     id: 1,
                     panel: true,
                     draggable: true,
-                    position : "top-left"
+                    position : "top-left",
+                    counter : true,
                   }
                 });
                 map.addControl(layerSwitcher);
@@ -155,7 +164,9 @@
                 var route = new ol.control.Route({
                   id: "route",
                   draggable: true,
-                  position : "bottom-right"
+                  position : "bottom-right",
+                  listable: true,
+                  description: "Calculez un itinéraire véhicule ou piéton entre deux ou plusieurs points",
                 });
                 map.addControl(route);
 
@@ -168,7 +179,8 @@
                 var reverse = new ol.control.ReverseGeocode({
                   id: 1,
                   draggable: true,
-                  position : "top-right"
+                  position : "top-right",
+                  listable: true,
                 });
                 map.addControl(reverse);
 
@@ -187,7 +199,8 @@
 
                 var measureArea = new ol.control.MeasureArea({
                   id: 1,
-                  position : "top-left"
+                  position : "top-left",
+                  listable : true
                 });
                 map.addControl(measureArea);
 
@@ -221,9 +234,17 @@
                     position: "bottom-left",
                     direction: "vertical",
                     panel: true,
-                    auto: true
+                    auto: true,
+                    listable: true,
                 });
                 map.addControl(territories);
+
+                var controlList = new ol.control.ControlList({
+                    draggable: false,
+                    position: "bottom-right",
+                    controlCatalogElement: document.getElementById("sampleLightDark"),
+                });
+                map.addControl(controlList);
               };
 
               Gp.Services.getConfig({

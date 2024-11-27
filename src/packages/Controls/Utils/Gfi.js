@@ -125,8 +125,7 @@ var Gfi = {
         var element = document.createElement("div");
         element.className = "gp-feature-info-div";
 
-        var closer = document.createElement("input");
-        closer.type = "button";
+        var closer = document.createElement("button");
         closer.className = "gp-styling-button closer";
 
         // fait disparaître la popup au clic sur x

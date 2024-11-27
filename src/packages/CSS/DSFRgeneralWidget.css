@@ -20,11 +20,10 @@
   position: relative;
   background-color: unset;
   width: max-content;
+  max-height: 100%;
 }
 
-/* FIXME A remplacer avec gestion des collisions */
 .gpf-panel form {
-  max-height: 400px;
   overflow: auto;
   padding: 0 2rem 2rem 2rem;
 }
@@ -36,6 +35,11 @@
 .gpf-panel__body {
   overflow: unset;
   position: relative;
+  max-height: 100% !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .gpf-panel__header {}
@@ -138,16 +142,17 @@
 /* button  */
 /***********/
 
-.gpf-btn-icon.gpf-btn--secondary {
+.gpf-btn-icon.gpf-btn--secondary,
+.gpf-btn-icon.gpf-btn--tertiary {
   background-color: var(--background-default-grey);
 }
 
-.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"] {
+.gpf-widget > .gpf-btn-icon[aria-pressed="true"] {
   background-color: var(--hover-tint);
   position: relative;
 }
 
-.gpf-widget:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+.gpf-widget:has(> .gpf-btn-icon[aria-pressed="true"])::after {
   background-color: var(--background-action-high-blue-france);
   content: "";
   width: 3px;
@@ -158,13 +163,13 @@
 }
 
 @supports(-moz-appearance:none) {
-  .gpf-widget:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+  .gpf-widget:has(.gpf-btn-icon[aria-pressed="true"])::after {
     transform: unset;
   }
 }
 
-.gpf-btn-icon:not([class*=--tertiary])[title]:hover::before {
-  content: attr(title);
+.gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
+  content: attr(aria-label);
   position: absolute;
   top: 0;
   color: var(--text-default-grey);
@@ -180,13 +185,13 @@
   background-image: conic-gradient(from 56.31deg at 0% 50%,transparent 0deg,var(--background-overlap-grey) 0deg,var(--background-overlap-grey) 67.38deg,transparent 67.38deg),conic-gradient(from 56.31deg at 0% 50%,transparent 0deg,var(--border-default-grey) 0deg,var(--border-default-grey) 67.38deg,transparent 67.38deg),linear-gradient(90deg,var(--border-default-grey),var(--border-default-grey)),linear-gradient(90deg,var(--background-overlap-grey),var(--background-overlap-grey));
 }
 
-.position-container-top-left .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before,
-.position-container-bottom-left .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before {
+.position-container-top-left .gpf-widget > .gpf-btn-icon[aria-label]:hover::before,
+.position-container-bottom-left .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   transform: translateX(24px);
 }
 
-.position-container-top-right .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before,
-.position-container-bottom-right .gpf-btn-icon:not([class*=--tertiary])[title]:hover::before {
+.position-container-top-right .gpf-widget > .gpf-btn-icon[aria-label]:hover::before,
+.position-container-bottom-right .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   transform: translateX(calc(-100% - 16px));
   padding: .5rem 1.25rem .5rem .5rem;
   background-size: .375rem .5rem, .375rem .5rem, 1px 100%, 100%;
@@ -220,6 +225,15 @@
   background-color: var(--text-disabled-grey);
 }
 
+.position-container-top-left .gpf-button-no-gutter,
+.position-container-top-right .gpf-button-no-gutter {
+  margin-bottom: -5px;
+}
+
+.position-container-bottom-left .gpf-button-no-gutter,
+.position-container-bottom-right .gpf-button-no-gutter {
+  margin-top: -5px;
+}
 
 .gpf-btn--hidden {}
 
@@ -328,10 +342,12 @@
 
 .gpf-panel::after {
   height: unset;
+  flex: 0;
 }
 
 .gpf-panel::before {
   height: unset;
+  flex: 0;
 }
 
 /***********/
@@ -402,14 +418,14 @@
   font-size: 0.75em;
   /* font-family: "Open Sans", sans-serif;
   color: #002A50; */
-  background-color: #FFF;
-  box-shadow: 0 0 5px #000;
+  background-color: var(--background-default-grey);
+  box-shadow: 0 0 5px var(--text-default-grey);
 }
 
 .gp-feature-info-div::before {
   content: "";
   position: absolute;
-  border-top: 15px solid #FFF;
+  border-top: 15px solid var(--background-default-grey);
   border-right: 14px solid transparent;
   border-left: 14px solid transparent;
   bottom: -15px;
@@ -428,11 +444,21 @@
   cursor: pointer;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  background-color: #FFF;
-  background-repeat: no-repeat;
-  background-image: url("img/close-blue.svg");
-  background-size: 14px 14px;
-  background-position: center;
+  background-color: var(--background-default-grey);
+}
+
+.gp-feature-info-div .closer::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: var(--text-action-high-blue-france);
+  -webkit-mask: url("img/close-blue.svg") center no-repeat;
+  mask: url("img/close-blue.svg") center no-repeat;
+  -webkit-mask-size: 14px 14px;
+  mask-size: 14px 14px;
 }
 
 .gp-features-content-div {
@@ -508,6 +534,7 @@
   border-bottom: 1px dotted #666;
 }
 
+/* surcharge css OpenLayers */
 .ol-disabled {
   --idle: transparent;
   --hover: var(--background-disabled-grey-hover);
@@ -517,6 +544,10 @@
   cursor: not-allowed;
   /* instead of display: none */
   display: block;
+}
+
+.ol-scale-bar, .ol-scale-line {
+  z-index: -1;
 }
 
 /* surcharge DSFR pour coller aux règles et au rendu de https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon/ */

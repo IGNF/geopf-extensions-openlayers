@@ -71,8 +71,8 @@ var GetFeatureInfoDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPgetFeatureInfoPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPgetFeatureInfoPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-getfeatureinfo fr-btn fr-btn--secondary";
-        button.title = "Activer/désactiver l'interrogation des couches";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPgetFeatureInfoPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-getfeatureinfo fr-btn fr-btn--tertiary";
+        button.setAttribute("aria-label", "Activer/désactiver l'interrogation des couches");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -82,13 +82,13 @@ var GetFeatureInfoDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowGetFeatureInfoClick(!status);
+                self.onShowGetFeatureInfoClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowGetFeatureInfoClick(status);
+                self.onShowGetFeatureInfoClick(e);
             });
         }
 
@@ -222,7 +222,7 @@ var GetFeatureInfoDOM = {
                         <span id="gfiLayerName">${layername}</span>
                     </button>
                 </h3>
-                <div class="fr-collapse GPgetFeatureInfoAccordionContent GPelementHidden" id="accordion-${layername}">
+                <div class="fr-collapse GPgetFeatureInfoAccordionContent GPelementHidden" id="accordion-${layername}" style="margin:unset;">
                     ${this._createGetFeatureInfoWaitingDiv()}
                 </div>
             </section>

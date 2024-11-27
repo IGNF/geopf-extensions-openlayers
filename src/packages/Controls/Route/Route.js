@@ -3,6 +3,7 @@ import "../../CSS/Controls/Route/GPFroute.css";
 // import "../../CSS/Controls/Route/GPFrouteStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Overlay from "ol/Overlay";
@@ -120,11 +121,7 @@ var Route = class Route extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Route)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -188,6 +185,11 @@ var Route = class Route extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
     };
 
@@ -847,8 +849,7 @@ var Route = class Route extends Control {
         var context = this;
         var element = document.createElement("div");
         element.className = "gp-feature-info-div";
-        var closer = document.createElement("input");
-        closer.type = "button";
+        var closer = document.createElement("button");
         closer.className = "gp-styling-button closer";
         // on closer click : remove popup
         closer.onclick = function () {
@@ -1238,6 +1239,9 @@ var Route = class Route extends Control {
      * @private
      */
     onShowRoutePanelClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
@@ -2269,6 +2273,7 @@ var Route = class Route extends Control {
 
 // on récupère les méthodes de la classe commune ReverseGeocodingDOM
 Object.assign(Route.prototype, RouteDOM);
+Object.assign(Route.prototype, Widget);
 
 export default Route;
 

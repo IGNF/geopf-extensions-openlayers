@@ -4,6 +4,7 @@ import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
 import Control from "../Control";
+import Widget from "../Widget";
 import Overlay from "ol/Overlay";
 import {
     transform as olProjTransform,
@@ -76,6 +77,8 @@ var logger = Logger.getLogger("searchengine");
  * @param {Object}  [options.searchOptions = {}] - options of search service
  * @param {Boolean} [options.searchOptions.addToMap = true] - add layer automatically to map, defaults to true.
  * @param {String}  [options.searchOptions.filterServices] - filter on a list of search services, each field is separated by a comma. "WMTS,TMS" by default
+ * @param {String}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
+ * @param {Boolean}  [options.searchOptions.filterLayersPriority = false] - filter on priority layers in search, false by default
  * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
@@ -176,11 +179,7 @@ var SearchEngine = class SearchEngine extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof SearchEngine)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -223,6 +222,11 @@ var SearchEngine = class SearchEngine extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
     }
 
@@ -357,6 +361,12 @@ var SearchEngine = class SearchEngine extends Control {
                 }
                 if (this.options.searchOptions.filterServices) {
                     Search.setFiltersByService(this.options.searchOptions.filterServices);
+                }
+                if (this.options.searchOptions.filterLayersPriority) {
+                    Search.setFiltersByLayerPriority(this.options.searchOptions.filterLayersPriority);
+                }
+                if (this.options.searchOptions.filterWMTSPriority) {
+                    Search.setFilterWMTSPriority(this.options.searchOptions.filterWMTSPriority);
                 }
                 if (this.options.searchOptions.filterVectortiles) {
                     Search.setFiltersByTMS(this.options.searchOptions.filterVectortiles);
@@ -721,9 +731,8 @@ var SearchEngine = class SearchEngine extends Control {
     _initPopupDiv () {
         var context = this;
         var element = document.createElement("div");
-        element.className = "gp-feature-info-div";
-        var closer = document.createElement("input");
-        closer.type = "button";
+        element.className = "gp-feature-info-div gpf-widget-color";
+        var closer = document.createElement("button");
         closer.className = "gp-styling-button closer";
         // on closer click : remove popup
         closer.onclick = function () {
@@ -1473,9 +1482,13 @@ var SearchEngine = class SearchEngine extends Control {
      * (cf. this._createShowSearchEnginePictoElement), and it cleans the component
      * when it's closed.
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowSearchEngineClick () {
+    onShowSearchEngineClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
@@ -1489,7 +1502,7 @@ var SearchEngine = class SearchEngine extends Control {
         if (this.options.position && !this.collapsed) {
             this.updatePosition(this.options.position);
         }
-        
+
         // on nettoie si on ferme le composant
         if (this.collapsed) {
             this._clearResults();
@@ -1518,10 +1531,13 @@ var SearchEngine = class SearchEngine extends Control {
             navigator.geolocation.getCurrentPosition((position) => {
                 var view = this.getMap().getView();
                 var viewProj = view.getProjection().getCode();
-                var coordinates = [position.coords.longitude, position.coords.latitude];
+                var coordinates_4326 = [position.coords.longitude, position.coords.latitude];
+                var coordinates;
                 if (viewProj !== "EPSG:4326") {
                     // on retransforme les coordonnées de la position dans la projection de la carte
-                    coordinates = olProjTransform(coordinates, "EPSG:4326", viewProj);
+                    coordinates = olProjTransform(coordinates_4326, "EPSG:4326", viewProj);
+                } else {
+                    coordinates = coordinates_4326;
                 }
                 if (isNaN(coordinates[0]) || isNaN(coordinates[1])) {
                     this._setMarker();
@@ -1529,7 +1545,8 @@ var SearchEngine = class SearchEngine extends Control {
                 }
                 this._setPosition(coordinates, 10); // FIXME zoom fixe !
                 if (this._displayMarker) {
-                    this._setMarker(coordinates, "sans information");
+                    var markerInfo = "<h6> Ma position </h6> longitude : " + coordinates_4326[0] + "<br/> latitude : " + coordinates_4326[1];
+                    this._setMarker(coordinates, markerInfo);
                 }
                 /**
                  * event triggered when i want a geolocation
@@ -2470,6 +2487,7 @@ var SearchEngine = class SearchEngine extends Control {
 
 // on récupère les méthodes de la classe commune ReverseGeocoding
 Object.assign(SearchEngine.prototype, SearchEngineDOM);
+Object.assign(SearchEngine.prototype, Widget);
 
 export default SearchEngine;
 

@@ -14,8 +14,10 @@ export { default as GeoJSON } from "./packages/Formats/GeoJSON";
 export { default as WMTS } from "./packages/Sources/WMTS";
 export { default as SourceWMTS } from "./packages/Layers/SourceWMTS";
 export { default as SourceWMS } from "./packages/Layers/SourceWMS";
+export { default as SourceWFS } from "./packages/Layers/SourceWFS";
 export { default as LayerWMTS } from "./packages/Layers/LayerWMTS";
 export { default as LayerWMS } from "./packages/Layers/LayerWMS";
+export { default as LayerWFS } from "./packages/Layers/LayerWFS";
 export { default as LayerMapBox } from "./packages/Layers/LayerMapBox";
 
 // controles
@@ -42,6 +44,7 @@ export { default as GeoportalOverviewMap } from "./packages/Controls/OverviewMap
 export { default as Legends } from "./packages/Controls/Legends/Legends";
 export { default as Catalog } from "./packages/Controls/Catalog/Catalog";
 export { default as Territories } from "./packages/Controls/Territories/Territories";
+export { default as ControlList } from "./packages/Controls/ControlList/ControlList";
 
 // proj4
 export { default as Proj4 } from "proj4";

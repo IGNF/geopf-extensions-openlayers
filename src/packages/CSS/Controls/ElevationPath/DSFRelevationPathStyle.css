@@ -10,6 +10,11 @@
   left: 0;
 }
 
+/* surcharge de fr-panel pour permettre la saisie sous la fenêtre de résultat */
+[id^=GPelevationPathPanel] {
+  height: unset;
+}
+
 [id^=GPelevationPathPanelInfo]::after {
   -webkit-mask: url("../../img/GPinfo_secondary.svg") center no-repeat;
   mask: url("../../img/GPinfo_secondary.svg") center no-repeat;

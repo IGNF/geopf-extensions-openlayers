@@ -3,6 +3,7 @@ import "../../CSS/Controls/Territories/GPFterritories.css";
 
 // import OpenLayers
 import Control from "../Control";
+import Widget from "../Widget";
 import { transformExtent as olTransformExtentProj } from "ol/proj";
 
 // import local
@@ -61,11 +62,7 @@ var Territories = class Territories extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Territories)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -124,6 +121,11 @@ var Territories = class Territories extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
     }
 
@@ -357,6 +359,9 @@ var Territories = class Territories extends Control {
      * @param {*} e - ...
      */
     onShowTerritoriesClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace(e);
         this.collapsed = !this.collapsed;
     }
@@ -400,6 +405,7 @@ var Territories = class Territories extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Territories.prototype, TerritoriesDOM);
+Object.assign(Territories.prototype, Widget);
 
 export default Territories;
 

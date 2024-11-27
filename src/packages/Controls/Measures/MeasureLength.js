@@ -3,6 +3,7 @@ import "../../CSS/Controls/Measures/GPFmeasureLength.css";
 // import "../../CSS/Controls/Measures/GPFmeasureLengthStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
@@ -52,11 +53,7 @@ var MeasureLength = class MeasureLength extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof MeasureLength)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -151,6 +148,11 @@ var MeasureLength = class MeasureLength extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
+        }
     }
 
     /**
@@ -161,7 +163,7 @@ var MeasureLength = class MeasureLength extends Control {
     getContainer () {
         return this._container;
     }
-    
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //
@@ -182,6 +184,7 @@ var MeasureLength = class MeasureLength extends Control {
         this.options.position = (typeof options.position !== "undefined") ? options.position : null;
         this.options.target = (typeof options.target !== "undefined") ? options.target : null;
         this.options.render = (typeof options.render !== "undefined") ? options.render : null;
+        this.options.gutter = (typeof options.gutter !== "undefined") ? options.gutter : null;
         this.options.layerDescription = (typeof options.layerDescription !== "undefined") ? options.layerDescription : {
             title : "Mesures de distance",
             description : "Mes mesures"
@@ -296,6 +299,9 @@ var MeasureLength = class MeasureLength extends Control {
      * @private
      */
     onShowMeasureLengthClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace("call MeasureLength::onShowMeasureLengthClick()", e);
 
         // appel de la methode commune
@@ -308,6 +314,7 @@ var MeasureLength = class MeasureLength extends Control {
 // de "Measures".
 Object.assign(MeasureLength.prototype, Measures);
 Object.assign(MeasureLength.prototype, MeasureLengthDOM);
+Object.assign(MeasureLength.prototype, Widget);
 
 export default MeasureLength;
 

@@ -3,6 +3,7 @@ import "../../CSS/Controls/Measures/GPFmeasureArea.css";
 // import "../../CSS/Controls/Measures/GPFmeasureAreaStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { getArea as olGetAreaSphere } from "ol/sphere";
 import { Polygon } from "ol/geom";
@@ -55,11 +56,7 @@ var MeasureArea = class MeasureArea extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof MeasureArea)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -157,6 +154,11 @@ var MeasureArea = class MeasureArea extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
+        }
     }
 
     /**
@@ -167,7 +169,7 @@ var MeasureArea = class MeasureArea extends Control {
     getContainer () {
         return this._container;
     }
-    
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //
@@ -188,6 +190,7 @@ var MeasureArea = class MeasureArea extends Control {
         this.options.position = (typeof options.position !== "undefined") ? options.position : null;
         this.options.target = (typeof options.target !== "undefined") ? options.target : null;
         this.options.render = (typeof options.render !== "undefined") ? options.render : null;
+        this.options.gutter = (typeof options.gutter !== "undefined") ? options.gutter : null;
         this.options.layerDescription = (typeof options.layerDescription !== "undefined") ? options.layerDescription : {
             title : "Mesures de surface",
             description : "Mes mesures"
@@ -299,6 +302,9 @@ var MeasureArea = class MeasureArea extends Control {
      * @private
      */
     onShowMeasureAreaClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace("call MeasureArea::onShowMeasureAreaClick()", e);
 
         // appel de la methode commune
@@ -311,6 +317,7 @@ var MeasureArea = class MeasureArea extends Control {
 // de "Measures".
 Object.assign(MeasureArea.prototype, Measures);
 Object.assign(MeasureArea.prototype, MeasureAreaDOM);
+Object.assign(MeasureArea.prototype, Widget);
 
 export default MeasureArea;
 

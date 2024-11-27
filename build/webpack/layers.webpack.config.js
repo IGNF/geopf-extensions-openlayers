@@ -19,8 +19,10 @@ module.exports = (env, argv) => {
             "GpfExtOl-Layers" : [
                 path.join(rootdir, "src", "packages", "Sources", "WMTS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "LayerWMS.js"),
+                path.join(rootdir, "src", "packages", "Layers", "LayerWFS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "LayerWMTS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "SourceWMS.js"),
+                path.join(rootdir, "src", "packages", "Layers", "SourceWFS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "SourceWMTS.js"),
                 path.join(rootdir, "src", "packages", "Layers", "LayerMapBox.js"),
             ]

@@ -21,107 +21,35 @@
     - [Navigateurs supportés](#navigateurs-supportés)
   - [Fonctionnalités](#fonctionnalités)
     - [Systèmes de coordonnées](#systèmes-de-coordonnées)
-    - [Affichage des couches WMTS Géoplateforme](#affichage-des-couches-wmts-géoplateforme)
-      - [Utilisation d'un layer WMTS Géoplateforme](#utilisation-dun-layer-wmts-géoplateforme)
-        - [Exemple d'utilisation](#exemple-dutilisation)
-        - [Affichage en Lambert 93 (EPSG:2154)](#affichage-en-lambert-93-epsg2154)
-      - [Utilisation d'une source WMTS Géoplateforme](#utilisation-dune-source-wmts-géoplateforme)
-        - [Exemple d'utilisation](#exemple-dutilisation-1)
-        - [Affichage en Lambert 93 (EPSG:2154)](#affichage-en-lambert-93-epsg2154-1)
-    - [Affichage des couches WMS Géoplateforme](#affichage-des-couches-wms-géoplateforme)
-      - [Utilisation d'un layer WMS Géoplateforme](#utilisation-dun-layer-wms-géoplateforme)
-        - [Exemple d'utilisation](#exemple-dutilisation-2)
-      - [Utilisation d'une source WMS Géoplateforme](#utilisation-dune-source-wms-géoplateforme)
-        - [Exemple d'utilisation](#exemple-dutilisation-3)
-    - [Affichage d'une couche Vecteur Tuilé Géoplateforme](#affichage-dune-couche-vecteur-tuilé-géoplateforme)
-    - [Widget de gestion d'empilement des couches](#widget-de-gestion-dempilement-des-couches)
-      - [Exemples d'utilisation](#exemples-dutilisation)
-        - [Utilisation simple](#utilisation-simple)
-    - [Barre de recherche](#barre-de-recherche)
-      - [Exemples d'utilisation](#exemples-dutilisation-1)
-        - [Utilisation simple](#utilisation-simple-1)
-    - [Calculs d'itinéraires](#calculs-ditinéraires)
-      - [Exemples d'utilisation](#exemples-dutilisation-2)
-        - [Utilisation simple](#utilisation-simple-2)
-    - [Calculs d'isochrones / isodistances](#calculs-disochrones--isodistances)
-      - [Exemples d'utilisation](#exemples-dutilisation-3)
-        - [Utilisation simple](#utilisation-simple-3)
-    - [Coordonnées et altitude en un point de la carte](#coordonnées-et-altitude-en-un-point-de-la-carte)
-      - [Exemples d'utilisation](#exemples-dutilisation-4)
-        - [Utilisation simple](#utilisation-simple-4)
-    - [Affichage dynamique des attributions](#affichage-dynamique-des-attributions)
-      - [Exemples d'utilisation](#exemples-dutilisation-5)
-        - [Utilisation simple](#utilisation-simple-5)
-    - [Adresse ou lieu en un point de la carte](#adresse-ou-lieu-en-un-point-de-la-carte)
-      - [Exemples d'utilisation](#exemples-dutilisation-6)
-        - [Utilisation simple](#utilisation-simple-6)
-    - [Outils de croquis](#outils-de-croquis)
-      - [Exemples d'utilisation](#exemples-dutilisation-7)
-        - [Utilisation simple](#utilisation-simple-7)
-    - [Widget d'import de couches](#widget-dimport-de-couches)
-      - [Exemples d'utilisation](#exemples-dutilisation-8)
-        - [Utilisation simple](#utilisation-simple-8)
-    - [Profil altimétrique le long d'un traçé](#profil-altimétrique-le-long-dun-traçé)
-      - [Exemples d'utilisation](#exemples-dutilisation-9)
-        - [Utilisation simple](#utilisation-simple-9)
-    - [Outils de mesures](#outils-de-mesures)
-      - [Exemples d'utilisation](#exemples-dutilisation-10)
-        - [Utilisation simple](#utilisation-simple-10)
-    - [Accès aux informations attributaires des couches](#accès-aux-informations-attributaires-des-couches)
-      - [Exemples d'utilisation](#exemples-dutilisation-11)
-        - [Utilisation simple pour une seule couche](#utilisation-simple-pour-une-seule-couche)
-    - [Widget d'export](#widget-dexport)
-      - [Exemples d'utilisation](#exemples-dutilisation-12)
-        - [Utilisation via les setters](#utilisation-via-les-setters)
-        - [Utilisation via les options](#utilisation-via-les-options)
-        - [Utilisation directement dans le contrôle associé](#utilisation-directement-dans-le-contrôle-associé)
-    - [Widget de catalogue de couche](#widget-de-catalogue-de-couche)
-      - [Les options](#les-options)
-      - [Les évenements](#les-évenements)
-      - [Exemples d'utilisation](#exemples-dutilisation-13)
-      - [Constituer le fichier de configuration des couches](#constituer-le-fichier-de-configuration-des-couches)
-      - [Spécification du ficher de configuration](#spécification-du-ficher-de-configuration)
-    - [Widget d'affichage des légendes](#widget-des-légendes)
-      - [Les événements](#les-événements)
-      - [Comment obtenir la légende d'une couche ?](#comment-obtenir-la-légende-dune-couche-)
-      - [Exemples d'utilisation](#exemples-dutilisation-14)
-    - [Widget sur la carte d'ensemble](#widget-sur-la-carte-densemble)
-      - [Exemples d'utilisation](#exemples-dutilisation-15)
-    - [Widget de zoom](#widget-de-zoom)
-      - [Exemples d'utilisation](#exemples-dutilisation-16)
-    - [Widget de plein écran](#widget-de-pleine-écran)
-      - [Exemples d'utilisation](#exemples-dutilisation-17)
+    - [Affichage des couches WMTS Géoplateforme](#WMTS)
+    - [Affichage des couches WMS Géoplateforme](#WMS)
+    - [Affichage d'une couche Vecteur Tuilé Géoplateforme](#VT)
+    - [Affichage dynamique des attributions](#attributions)
+    - [Widget de gestion d'empilement des couches](#layerswitcher)
+    - [Barre de recherche utilisant le service de géocodage IGN](#geocode)
+    - [Obtention d'une adresse, d'un nom de lieu, ... au clic sur la carte](#reverse)
+    - [Calculs d'itinéraires à partir du service de la Géoplateforme](#route)
+    - [Calculs d'isochrones / isodistances à partir du service de la Géoplateforme](#isocurve)
+    - [Coordonnées et altitude en un point de la carte à l'aide du service d'altimétrie de la Géoplateforme](#mp)
+    - [Outils de croquis](#drawing)
+    - [Import de couches](#layerimport)
+    - [Profil altimétrique d'un traçé à l'aide du service d'altimétrie de la Géoplateforme](#ep)
+    - [Outils de mesures](#measure)
+    - [Accès aux informations attributaires des couches](#getfeatureinfo)
+    - [Widget d'export](#export)
+    - [Widget de catalogue de couche](#catalog)
+    - [Widget de legendes](#legends)
+    - [Widget de centrage sur territoire](#territories)
+    - [Widget de mini carte](#overviewMap)
+    - [Widget de zoom](#zoom)
+    - [Widget de plein écran](#fullscreen)
 
-<!-- tocstop -->
+Les fonctionnalités proposées par l'extension Géoplateforme pour OpenLayers sont à utiliser en complément de la bibliothèque [OpenLayers dans ses versions 8 et
+supérieures](https://openlayers.org/)
 
 <a name="readme-top"></a>
 
-L'extension Géoplateforme pour OpenLayers propose les fonctionnalités suivantes
-à utiliser en complément de la bibliothèque [OpenLayers dans ses versions 3 et
-supérieures](https://openlayers.org/) :
-
-- [affichage des couches WMTS Géoplateforme](#WMTS)
-- [affichage des couches WMS Géoplateforme](#WMS)
-- [affichage d'une couche Vecteur Tuilé Géoplateforme](#VT)
-- [affichage dynamique des attributions](#attributions)
-- [widget de gestion d'empilement des couches](#layerswitcher)
-- [barre de recherche utilisant le service de géocodage IGN](#geocode)
-- [obtention d'une adresse, d'un nom de lieu, ... au clic sur la carte](#reverse)
-- [calculs d'itinéraires à partir du service de la Géoplateforme](#route)
-- [calculs d'isochrones / isodistances à partir du service de la Géoplateforme](#isocurve)
-- [coordonnées et altitude en un point de la carte à l'aide du service d'altimétrie de la Géoplateforme](#mp)
-- [outils de croquis](#drawing)
-- [import de couches](#layerimport)
-- [profil altimétrique d'un traçé à l'aide du service d'altimétrie de la Géoplateforme](#ep)
-- [outils de mesures](#measure)
-- [accès aux informations attributaires des couches](#getfeatureinfo)
-- [widget d'export](#export)
-- [widget de catalogue de couche](#catalog)
-- [widget de legendes](#legends)
-- [widget sur l'overviewmap](#overviewMap)
-- [widget de zoom](#zoom)
-- [widget de pleine écran](#fullscreen)
-
+<a id="mise-en-oeuvre"></a>
 ## Mise en oeuvre
 
 L'utilisation de l'extension Géoplateforme pour OpenLayers se fait
@@ -134,7 +62,7 @@ via les étapes suivantes :
 Une documentation technique (**jsdoc**), une **demo**
 et un **generateur de carte** sont disponibles [ici](https://ignf.github.io/geoportal-extensions-openlayers/).
 
-<a id="download"></a>
+<a id="téléchargement"></a>
 
 ### Téléchargement
 
@@ -231,7 +159,7 @@ Les scripts d'OpenLayers s'obtiennent sur [la page de téléchargement d'OpenLay
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<a id="download-direct"></a>
+<a id="téléchargement-direct"></a>
 
 #### Téléchargement direct
 
@@ -245,7 +173,7 @@ L'archive téléchargée (.zip) comprend l'arborescence décrite ci-dessus.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<a id="download-npm"></a>
+<a id="récupération-avec-npm"></a>
 
 #### Récupération avec NPM
 
@@ -259,6 +187,7 @@ Prérequis : [NodeJS](https://nodejs.org/en/) et [npm](https://www.npmjs.com/) i
 ```sh
 npm i geopf-extensions-openlayers
 ```
+<a id="accès-direct"></a>
 
 #### Accès direct
 
@@ -276,7 +205,7 @@ todo : liste des bundles !
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<a id="integration"></a>
+<a id="intégration-dans-une-page-web"></a>
 
 ### Intégration dans une page web
 
@@ -288,19 +217,48 @@ Intégrez l'extension géoplateforme pour OpenLayers dans votre page web classiq
 et d'une balise **link** pour charger le fichier css en plus des balises
 correspondantes utilisées pour charger la bibliothèque OpenLayers.
 
+Exemple en mode "Classic" :
 ``` html
+
 <!-- Library OpenLayers -->
-<link rel="stylesheet" href="chemin/vers/ol/ol.css" />
-<script src="chemin/vers/ol/ol.js"></script>
+<link rel="stylesheet" href="../../resources/vendor/ol/v8.2.0/ol.css" />
+<script src="../../resources/vendor/ol/v8.2.0/ol.js"></script>
+
+<!-- Library Access Geoportal Service -->
+<script src="../../../node_modules/geoportal-access-lib/dist/GpServices.js"></script>
+
+<!-- Classic IGN theme -->
+<link rel="stylesheet" href="../../../dist/bundle/Classic.css" />    
 
 <!-- Extension Géoplateforme pour OpenLayers -->
-<script src="chemin/vers/bundle.js"></script>
-<link rel="stylesheet" href="chemin/vers/bundle.css" />
+<link rel="stylesheet" href="../../../dist/bundle/GpfExtOL.css" />
+<script src="../../../dist/bundle/GpfExtOL.js"></script>
 ```
+
+Exemple en mode "DSFR" :
+``` html
+
+<!-- Library OpenLayers -->
+<link rel="stylesheet" href="ol/v8.2.0/ol.css" />
+<script src="ol/v8.2.0/ol.js"></script>
+
+<!-- Library Access Geoportal Service -->
+<script src="GpServices.js"></script>
+
+<!-- DSFR theme -->
+<link rel="stylesheet" href="@gouvfr/dsfr/dist/dsfr.css" />
+<link rel="stylesheet" href="@gouvfr/dsfr/dist/utility/icons/icons.css" />
+<link rel="stylesheet" href="Dsfr.css" /> 
+
+<!-- Extension Géoplateforme pour OpenLayers -->
+<link rel="stylesheet" href="GpfExtOL.css" />
+<script src="GpfExtOL.js"></script>
+```
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<a id="config"></a>
+<a id="configuration-de-laccès-à-la-géoplateforme"></a>
 
 ### Configuration de l'accès à la Géoplateforme
 
@@ -346,9 +304,11 @@ comme sur l'exemple suivant :
         <!-- Library OpenLayers -->
         <link rel="stylesheet" href="ol.css" />
         <script src="ol.js"></script>
+        <!-- Classic IGN theme -->
+        <link rel="stylesheet" href="Classic.css" />
         <!-- Extension Géoplateforme pour OpenLayers -->
-        <link rel="stylesheet" href="bundle.css" />
-        <script src="bundle.js" data-key="THEME"></script>
+        <link rel="stylesheet" href="GpfExtOL.css" />
+        <script src="GpfExtOL.js" data-key="THEME"></script>
     </head>
     <body>
         <script>
@@ -372,9 +332,11 @@ comme sur l'exemple suivant :
         <!-- Library OpenLayers -->
         <link rel="stylesheet" href="ol.css" />
         <script src="ol.js"></script>
+        <!-- Classic IGN theme -->
+        <link rel="stylesheet" href="Classic.css" />
         <!-- Extension Géoplateforme pour OpenLayers -->
-        <link rel="stylesheet" href="bundle.css" />
-        <script src="bundle.js"></script>
+        <link rel="stylesheet" href="GpfExtOL.css" />
+        <script src="GpfExtOL.js" data-key="THEME"></script>
     </head>
     <body>
         <script>
@@ -397,12 +359,14 @@ de mettre une liste de clés dans l'attribut apiKey de la fonction getConfig :
 ``` html
 <html>
     <head>
-        <!-- Bibliothèque OpenLayers -->
+        <!-- Library OpenLayers -->
         <link rel="stylesheet" href="ol.css" />
         <script src="ol.js"></script>
+        <!-- Classic IGN theme -->
+        <link rel="stylesheet" href="Classic.css" />
         <!-- Extension Géoplateforme pour OpenLayers -->
-        <link rel="stylesheet" href="bundle.css" />
-        <script src="bundle.js"></script>
+        <link rel="stylesheet" href="GpfExtOL.css" />
+        <script src="GpfExtOL.js" data-key="THEME"></script>
     </head>
     <body>
         <script>
@@ -420,6 +384,8 @@ de mettre une liste de clés dans l'attribut apiKey de la fonction getConfig :
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<a id="optimisation-du-chargement--configuration-locale"></a>
 
 #### Optimisation du chargement : configuration locale
 
@@ -486,6 +452,8 @@ ainsi que le paramètre *callbackSuffix*, de la manière suivante :
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<a id="appel-de-lextension-dans-un-module-es6"></a>
+
 ### Appel de l'extension dans un module ES6
 
 > **TODO**
@@ -508,30 +476,33 @@ L'utilisateur a le choix entre plusieurs méthodes d'import.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<a id="compatibilités"></a>
+
 ## Compatibilités
 
 ### Versions de OpenLayers supportées
 
 Les **releases de l'extension Géoplateforme pour OpenLayers** peuvent s'utiliser
-avec la **version 8.2.0** d'OpenLayers.
-
-Le support des versions d'OpenLayers supérieur à la version 8.2.0 n'a pas été
-complètement testé.
+avec les **version 8.2.0 et supérieures** d'OpenLayers.
 
 ### Navigateurs supportés
 
 Navigateur | version
 -----------|--------
-Chrome     | Versions récentes (21+)
-Firefox    | Versions récentes (28+)
-Edge       | 12+
-Safari     | Versions récentes (6.1+)
+Chrome     | Versions récentes (119+)
+Firefox    | Versions récentes (119+)
+Edge       | Versions récentes (119+)
+Safari     | Versions récentes (17.1+)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<a id="fonctionnalités"></a>
 
 ## Fonctionnalités
 
 <a id="crs"></a>
+
+<a id="systèmes-de-coordonnées"></a>
 
 ### Systèmes de coordonnées
 
@@ -650,8 +621,6 @@ var map = new ol.Map({
     });
 ```
 
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/j5rdjt2z/embedded/result,js,html,css/)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ##### Affichage en Lambert 93 (EPSG:2154)
@@ -678,8 +647,6 @@ var map = new ol.Map({
     })
 });
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/bw0za4a8/embedded/result,js,html,css/)
 
 NB : D'autres systèmes de coordonnées peuvent être définis et utilisés : [plus d'informations...](#crs)
 
@@ -732,8 +699,6 @@ var map = new ol.Map({
 });
 ```
 
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/sdktaf9r/embedded/result,js,html,css/)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ##### Affichage en Lambert 93 (EPSG:2154)
@@ -763,8 +728,6 @@ var map = new ol.Map({
     })
 });
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/o6tnhpnd/embedded/result,js,html,css/)
 
 NB : D'autres systèmes de coordonnées peuvent être définis et utilisés : [plus d'informations...](#crs)
 
@@ -829,8 +792,6 @@ var map = new ol.Map({
 });
 ```
 
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/jnfwc7k6/embedded/result,js,html,css/)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <a id="sourceWMS"></a>
@@ -879,8 +840,6 @@ var map = new ol.Map({
     })
 });
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/e36ur78k/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -1020,8 +979,6 @@ var lsControl = new ol.control.LayerSwitcher({
 map.addControl(lsControl);
 ```
 
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/5f9wxsof/embedded/result,js,html,css/)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <a id="geocode"></a>
@@ -1074,8 +1031,6 @@ var searchControl = new ol.control.SearchEngine({
 map.addControl(searchControl);
 ```
 
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/qpcyp8nr/embedded/result,js,html,css/)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <a id="route"></a>
@@ -1122,8 +1077,6 @@ var routeControl = new ol.control.Route({
 // Ajout à la carte
 map.addControl(routeControl);
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/1ngLrhuj/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -1172,8 +1125,6 @@ var isoControl = new ol.control.Isocurve({
 // Ajout à la carte
 map.addControl(isoControl);
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/jpwf385t/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -1226,12 +1177,6 @@ var mpControl = new ol.control.GeoportalMousePosition({
 // Ajout à la carte
 map.addControl(mpControl);
 ```
-
-**Exemple d'utilisation avec affichage unique de l'altitude** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/jhg5fhor/embedded/result,js,html,css/)
-
-**Exemple d'utilisation avec paramétrage des systèmes de coordonnées** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/myg4t6qo/embedded/result,js,html,css/)
-
-**Exemple d'utilisation avec activation de l'édition de coordonnées pour localisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/jrL59w29/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -1290,8 +1235,6 @@ var attControl = new ol.control.GeoportalAttribution({
 map.addControl(attControl);
 ```
 
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/x1jrLavb/embedded/result,js,html,css/)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <a id="reverse"/>
@@ -1341,8 +1284,6 @@ var rvControl = new ol.control.ReverseGeocode({
 // Ajout à la carte
 map.addControl(rvControl);
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/9y6dgq15/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -1394,8 +1335,6 @@ var drawControl = new ol.control.Drawing({
 map.addControl(drawControl);
 ```
 
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/2Lj85jf1/embedded/result,js,html,css/)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <a id="layerimport"/>
@@ -1443,8 +1382,6 @@ var lyrImport = new ol.control.LayerImport({
 // Ajout à la carte
 map.addControl(lyrImport);
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/u04nvno2/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -1494,8 +1431,6 @@ var ep = new ol.control.ElevationPath({
 // Ajout à la carte
 map.addControl(ep);
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/cwfsLge7/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -1548,8 +1483,6 @@ var length = new ol.control.MeasureLength({
 // Ajout à la carte
 map.addControl(length);
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/cwfsLge7/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -1616,8 +1549,6 @@ var getfeatureinfo = new ol.control.GetFeatureInfo({
 // Ajout à la carte
 map.addControl(getfeatureinfo);
 ```
-
-**Exemple d'utilisation** [![jsFiddle](https://jsfiddle.net/img/embeddable/logo-dark.png)](https://jsfiddle.net/ignfgeoportail/vg6dz7bn/embedded/result,js,html,css/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -2075,11 +2006,57 @@ map.addControl(legends);
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<a id="territories"></a>
+
+### Widget de centrage sur territoires
+
+Ce widget permet de centrer la visualisation cartographique sur un territoire défini. Une configuration par défaut est disponible, mais les territoires sont également configurables.
+
+Par défaut, les territoires utilisés par le widget sont définis dans le fichier "Controls/Territories/Territories.json".
+
+#### Exemples d'utilisation
+
+```js
+    // Ajout du contrôle de gestion  des legendes
+    territories = new ol.control.Territories({
+        collapsed: false,
+        draggable: true,
+        position: "top-right",
+        panel: true,
+        auto: true,
+        thumbnail : false,
+        reduce: false,
+        tiles: 0
+    });
+    map.addControl(territories);
+    
+    // ajout en debut de la liste
+    territories.setTerritory({
+        "id": "PAR",
+        "title": "Paris",
+        "description": "test...", 
+        "bbox": [2.21, 48.80, 2.43, 48.92],
+        "thumbnail": "./PARIS.png"
+    })
+    
+    // ajout à la fin de la liste
+    territories.setTerritory({
+        "id": "UNK",
+        "title": "territoire inconnu",
+        "description": "", 
+        "bbox": [],
+        "thumbnail": ""
+    });
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <a id="overviewMap"></a>
 
-### Widget sur la carte d'ensemble
+### Widget de mini carte
 
-Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.OverviewMap]<http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html>.
+Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.OverviewMap](http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html).
 
 Par défaut, on utilise la couche **GEOGRAPHICALGRIDSYSTEMS.MAPS.OVERVIEW**.
 
@@ -2098,7 +2075,7 @@ map.addControl(overview);
 
 ### Widget de zoom
 
-Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.Zoom]<http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html>.
+Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.Zoom](http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html).
 
 #### Exemples d'utilisation
 
@@ -2114,7 +2091,7 @@ map.addControl(zoom);
 
 ### Widget de plein écran
 
-Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.FullScreen]<http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html>
+Ce widget est herité du contrôle natif d'OpenLayers [ol.Control.FullScreen](http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html)
 
 #### Exemples d'utilisation
 

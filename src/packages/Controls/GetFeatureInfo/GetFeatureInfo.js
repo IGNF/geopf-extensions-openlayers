@@ -2,6 +2,7 @@
 import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "../Control";
 import VectorTileSource from "ol/source/VectorTile";
 import VectorSource from "ol/source/Vector";
@@ -51,11 +52,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     constructor (options) {
         options = options || {};
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof GetFeatureInfo)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -117,6 +114,11 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.element.classList.add("gpf-button-no-gutter");
         }
     }
 
@@ -634,7 +636,12 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      * @param {*} e - ...
      */
     onShowGetFeatureInfoClick (e) {
-        if (e === false){
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
+        // ouverture du panel pas systématique quand on clic sur le bouton d'activation
+        // donc on doit fermer explicitement le panel quand on désactive le GFI
+        if (e.target.ariaPressed === "false"){
             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
         }
         logger.trace(e);
@@ -660,6 +667,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(GetFeatureInfo.prototype, GetFeatureInfoDOM);
+Object.assign(GetFeatureInfo.prototype, Widget);
 
 export default GetFeatureInfo;
 

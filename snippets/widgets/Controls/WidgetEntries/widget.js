@@ -114,6 +114,11 @@ var Widget = class Widget extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
+        }
     }
 
     // ################################################################### //
@@ -259,6 +264,8 @@ var Widget = class Widget extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Widget.prototype, WidgetDOM);
+// on récupère les méthodes d'une classe applicable à tous les widgets'
+Object.assign(Widget.prototype, Widget);
 
 export default Widget;
 

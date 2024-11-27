@@ -4,6 +4,7 @@ import "../../CSS/Controls/ElevationPath/GPFelevationPath.css";
 // import "../../CSS/Controls/ElevationPath/GPFelevationPathStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import {
     Fill,
@@ -132,11 +133,7 @@ var ElevationPath = class ElevationPath extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof ElevationPath)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -553,6 +550,11 @@ var ElevationPath = class ElevationPath extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
     };
 
@@ -1667,6 +1669,9 @@ var ElevationPath = class ElevationPath extends Control {
      * @private
      */
     onShowElevationPathClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         Interactions.unset(map, {
             current : "ElevationPath"
@@ -1737,6 +1742,7 @@ var ElevationPath = class ElevationPath extends Control {
 
 // on récupère les méthodes de la classe commune ElevationPath
 Object.assign(ElevationPath.prototype, ElevationPathDOM);
+Object.assign(ElevationPath.prototype, Widget);
 
 export default ElevationPath;
 

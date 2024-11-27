@@ -121,7 +121,7 @@ var SearchEngineDOM = {
             if (checkDsfr()) {
                 document.querySelector("#GPshowSearchEnginePicto-" + self._uid).disabled = false;
             }
-            self.onShowSearchEngineClick();
+            self.onShowSearchEngineClick(e);
         });
 
         return button;
@@ -474,7 +474,7 @@ var SearchEngineDOM = {
         var button = document.createElement("button");
         button.id = this._addUID("GPshowGeolocate");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowGeolocate gpf-btn gpf-btn-icon-search-geolocate fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
-        button.title = "Activer la geolocalisation";
+        button.title = "Activer la géolocalisation";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
 
@@ -485,7 +485,7 @@ var SearchEngineDOM = {
             if (status) {
                 // somme stuff...
             }
-            self.onShowSearchGeolocateClick();
+            self.onShowSearchGeolocateClick(e);
         });
 
         return button;
@@ -693,7 +693,7 @@ var SearchEngineDOM = {
         var container = document.createElement("select");
         container.id = this._addUID("GPautocompleteResultsLocation");
         container.className = "GPelementHidden gpf-hidden gpf-select";
-        container.size = 6;
+        container.size = 20;
         container.autofocus = true;
         return container;
     },
@@ -774,7 +774,7 @@ var SearchEngineDOM = {
         div.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
         div.innerHTML = suggest.title + " (" + suggest.service + ")";
         div.dataset.layer = suggest.name;
-        div.title = suggest.description;
+        div.title = `${suggest.description} (nom technique : ${suggest.name})`;
         if (div.addEventListener) {
             div.addEventListener("click", function (e) {
                 self.onSearchedResultsItemClick(e);
@@ -879,7 +879,7 @@ var SearchEngineDOM = {
             var data = [];
             // liste des attributs de la ressource de geocodage
             var id = "#GPadvancedSearchFilters-" + self._uid;
-            var matchesFilters = document.querySelectorAll(id + " > div > div > input,select#category");            
+            var matchesFilters = document.querySelectorAll(id + " > div > div > input,select#category");
             for (var i = 0; i < matchesFilters.length; i++) {
                 var element = matchesFilters[i];
                 data.push({

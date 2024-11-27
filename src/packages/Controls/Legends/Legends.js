@@ -2,6 +2,7 @@
 import "../../CSS/Controls/Legends/GPFlegends.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "../Control";
 
 // import local
@@ -49,11 +50,7 @@ var Legends = class Legends extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Legends)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -121,6 +118,11 @@ var Legends = class Legends extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
     }
 
@@ -467,6 +469,9 @@ var Legends = class Legends extends Control {
      * @param {*} e - ...
      */
     onShowLegendsClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace(e);
         var opened = this.buttonLegendsShow.ariaPressed;
         this.collapsed = !(opened === "true");
@@ -481,6 +486,7 @@ var Legends = class Legends extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Legends.prototype, LegendsDOM);
+Object.assign(Legends.prototype, Widget);
 
 export default Legends;
 

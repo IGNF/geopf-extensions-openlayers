@@ -3,6 +3,7 @@ import "../../CSS/Controls/MousePosition/GPFmousePosition.css";
 // import "../../CSS/Controls/MousePosition/GPFmousePositionStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import Overlay from "ol/Overlay";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
@@ -134,11 +135,7 @@ var MousePosition = class MousePosition extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof MousePosition)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -238,6 +235,11 @@ var MousePosition = class MousePosition extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
 
         // mode "collapsed"
@@ -1233,9 +1235,13 @@ var MousePosition = class MousePosition extends Control {
      * (cf. this._createShowMousePositionPictoElement),
      * and toggles event 'mousemove' on map.
      *
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowMousePositionClick () {
+    onShowMousePositionClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         // checked : true - panel close
         // checked : false - panel open
         var map = this.getMap();
@@ -1725,6 +1731,7 @@ var MousePosition = class MousePosition extends Control {
 
 // on récupère les méthodes de la classe commune MousePosition
 Object.assign(MousePosition.prototype, MousePositionDOM);
+Object.assign(MousePosition.prototype, Widget);
 
 export default MousePosition;
 

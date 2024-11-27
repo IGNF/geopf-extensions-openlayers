@@ -66,8 +66,8 @@ var CatalogDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowCatalogPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowCatalogPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-catalog fr-btn fr-btn--secondary";
-        button.title = "Catalogue de données";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowCatalogPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-catalog fr-btn fr-btn--tertiary";
+        button.setAttribute("aria-label", "Catalogue de données");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -77,13 +77,13 @@ var CatalogDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowCatalogClick();
+                self.onShowCatalogClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowCatalogClick();
+                self.onShowCatalogClick(e);
             });
         }
 
@@ -432,7 +432,7 @@ var CatalogDOM = {
                         type="checkbox"
                         data-layer="${name}:${service}"
                         aria-describedby="checkboxes-messages-${categoryId}-${i}_${name}-${service}">
-                    <label class="GPlabelActive fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="${title}">
+                    <label class="GPlabelActive fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="nom technique : ${name}">
                         ${title} (${service})
                     </label>
                     <div class="fr-messages-group" id="checkboxes-messages-${categoryId}-${i}_${name}-${service}" aria-live="assertive"></div>

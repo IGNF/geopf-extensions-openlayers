@@ -43,8 +43,8 @@ var IsoDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowIsochronPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowIsochronPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-isocurve fr-btn fr-btn--secondary";
-        button.title = "Calculer une isochrone";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowIsochronPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-isocurve fr-btn fr-btn--tertiary";
+        button.setAttribute("aria-label", "Calculer une isochrone");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -724,7 +724,7 @@ var IsoDOM = {
         if (checkDsfr()) {
             hidden = "GPelementHidden gpf-hidden";
         }
-        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-icon-arrow-down-fill`;
+        button.className = `GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowIsoExclusionsPicto ${hidden} gpf-btn fr-btn--sm fr-btn--tertiary gpf-btn--tertiary fr-icon-arrow-down-fill`;
         button.title = "Exclusions";
         // button.style.top = "240px";
         button.setAttribute("tabindex", "0");

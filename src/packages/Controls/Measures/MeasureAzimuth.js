@@ -3,6 +3,7 @@ import "../../CSS/Controls/Measures/GPFmeasureAzimuth.css";
 // import "../../CSS/Controls/Measures/GPFmeasureAzimuthStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
@@ -55,11 +56,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof MeasureAzimuth)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -157,6 +154,11 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
+        }
     }
 
     /**
@@ -185,7 +187,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
     getContainer () {
         return this._container;
     }
-    
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //
@@ -206,6 +208,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         this.options.position = (typeof options.position !== "undefined") ? options.position : null;
         this.options.target = (typeof options.target !== "undefined") ? options.target : null;
         this.options.render = (typeof options.render !== "undefined") ? options.render : null;
+        this.options.gutter = (typeof options.gutter !== "undefined") ? options.gutter : null;
         this.options.layerDescription = (typeof options.layerDescription !== "undefined") ? options.layerDescription : {
             title : "Mesures d'azimuth",
             description : "Mes mesures"
@@ -337,6 +340,9 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
      * @private
      */
     onShowMeasureAzimuthClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace("call MeasureAzimuth::onShowMeasureAzimuthClick()", e);
 
         // appel de la methode commune
@@ -366,6 +372,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
 // de "Measures".
 Object.assign(MeasureAzimuth.prototype, Measures);
 Object.assign(MeasureAzimuth.prototype, MeasureAzimuthDOM);
+Object.assign(MeasureAzimuth.prototype, Widget);
 
 export default MeasureAzimuth;
 

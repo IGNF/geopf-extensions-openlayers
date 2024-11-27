@@ -3,6 +3,7 @@ import "../../CSS/Controls/Export/GPFexport.css";
 // import "../../CSS/Controls/Export/GPFexportStyle.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "ol/control/Control";
 
 // import local
@@ -469,7 +470,7 @@ class ButtonExport extends Control {
         // donc, on y ajoute les styles par defaut...
         layer.getSource().getFeatures().forEach((feature) => {
             var style = feature.getStyle();
-            if (!style && typeof this.options.control.getStyle === "function") {
+            if (!style && this.options.control && typeof this.options.control.getStyle === "function") {
                 feature.setStyle(this.options.control.getStyle());
             }
         });
@@ -540,12 +541,12 @@ class ButtonExport extends Control {
     onClickButtonExport (e) {
         if (!this.isPluggableControl()) {
             logger.warn("Componant not pluggable with the control !");
-            return;
+            // return;
         }
 
-        var layer = this.options.control.getLayer();
-        var data = (this.options.control.getData !== undefined) ? this.options.control.getData() : {};
-        var style = (this.options.control.getStyle !== undefined) ? this.options.control.getStyle() : {};
+        var layer = (this.options.control && this.options.control.getLayer !== undefined) ? this.options.control.getData() : this.options.layer;
+        var data = (this.options.control && this.options.control.getData !== undefined) ? this.options.control.getData() : {};
+        var style = (this.options.control && this.options.control.getStyle !== undefined) ? this.options.control.getStyle() : {};
 
         var content = this.exportFeatures(layer, data, style);
         if (!content || content === "null") {
@@ -698,10 +699,15 @@ class ButtonExport extends Control {
         }
     }
 
+    setLayer (layer) {
+        this.options.layer = layer;
+    }
+
 };
 
 // on récupère les méthodes de la classe DOM
 Object.assign(ButtonExport.prototype, ExportDOM);
+Object.assign(ButtonExport.prototype, Widget);
 
 export default ButtonExport;
 

@@ -53,7 +53,8 @@ jobs:
 
       - name: Create Zip Package
         run: |
-          zip --junk-paths ${{env.PACKAGE_NAME}} dist/${{env.PACKAGE_NAME}}/* -x "dist/package/*.tgz"
+          cd dist/package/
+          zip -r ../../${{env.PACKAGE_NAME}}.zip * -x "*.tgz"
 
       - name: Upload JSDoc artifacts
         uses: actions/upload-artifact@v4
@@ -98,7 +99,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          repository: ${GITHUB_REPOSITORY}
+          repository: ${{ github.repository }}
           ref: gh-pages
       
       - name: Download Binaries artifacts
@@ -163,6 +164,24 @@ jobs:
           name: changelog
           path: DRAFT_CHANGELOG.md
 
+      - name: Download Bundle artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{env.BUNDLE_NAME}}
+          path: ./
+
+      - name: Download Module artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{env.MODULE_NAME}}
+          path: ./
+      
+      - name: Download Package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{env.PACKAGE_NAME}}
+          path: ./
+        
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.1.4
@@ -182,7 +201,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./${{env.BUNDLE_NAME}}.zip
-          asset_name: bundle-${{ steps.package.outputs.version }}.zip
+          asset_name: ${{env.BUNDLE_NAME}}.zip
           asset_content_type: application/zip
       
       - name: Upload Release Asset Modules
@@ -192,7 +211,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./${{env.MODULE_NAME}}.zip
-          asset_name: modules-${{ steps.package.outputs.version }}.zip
+          asset_name: ${{env.MODULE_NAME}}.zip
           asset_content_type: application/zip
       
       - name: Upload Release Asset Package
@@ -202,7 +221,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./${{env.PACKAGE_NAME}}.zip
-          asset_name: package-${{ steps.package.outputs.version }}.zip
+          asset_name: ${{env.PACKAGE_NAME}}.zip
           asset_content_type: application/zip
 
   # - checkout master or main
@@ -229,6 +248,12 @@ jobs:
           name: changelog
           path: ./dist/package/CHANGELOG.md
   
+      - name: Use registry npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          
       - name: Publish on npm
         run: |
           cd ./dist/package

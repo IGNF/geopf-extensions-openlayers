@@ -3,6 +3,7 @@ import "../../CSS/Controls/Drawing/GPFdrawing.css";
 // import "../../CSS/Controls/Drawing/GPFdrawingStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
@@ -180,11 +181,7 @@ var Drawing = class Drawing extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Drawing)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -311,6 +308,11 @@ var Drawing = class Drawing extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
 
         // mode "draggable"
@@ -1938,9 +1940,13 @@ var Drawing = class Drawing extends Control {
      * and toggles event 'mousemove' on map.
      *
      * @method onShowDrawingClick
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowDrawingClick () {
+    onShowDrawingClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
@@ -1994,6 +2000,7 @@ var Drawing = class Drawing extends Control {
 
 // on récupère les méthodes de la classe commune Drawing
 Object.assign(Drawing.prototype, DrawingDOM);
+Object.assign(Drawing.prototype, Widget);
 
 export default Drawing;
 

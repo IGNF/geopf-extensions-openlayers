@@ -303,10 +303,12 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         // button
         var button = elements[1];
         button.id = "GPshowOverviewMap-" +  this._uid;
-        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowOverviewMap", "gpf-btn-icon", "gpf-btn-icon-overviewmap", "fr-btn", "fr-btn--secondary", "gpf-btn--secondary");
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowOverviewMap", "gpf-btn-icon", "gpf-btn-icon-overviewmap", "fr-btn", "fr-btn--tertiary", "gpf-btn--tertiary");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", !this.options.collapsed);
         button.setAttribute("type", "button");
+        button.removeAttribute("title");
+        button.setAttribute("aria-label", this.options.tipLabel);
         var self = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
@@ -335,6 +337,11 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         // Surcharge CSS de positionnement par defaut
         if (this.options.position) {
             this.element.style.position = "unset";
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.element.classList.add("gpf-button-no-gutter");
         }
     }
 

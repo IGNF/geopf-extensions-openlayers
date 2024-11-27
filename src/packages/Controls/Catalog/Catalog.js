@@ -2,6 +2,7 @@
 import "../../CSS/Controls/Catalog/GPFcatalog.css";
 
 // import OpenLayers
+import Widget from "../Widget";
 import Control from "../Control";
 
 // import local
@@ -12,6 +13,7 @@ import Draggable from "../../Utils/Draggable";
 import Config from "../../Utils/Config";
 
 // import local des layers
+import GeoportalWFS from "../../Layers/LayerWFS";
 import GeoportalWMS from "../../Layers/LayerWMS";
 import GeoportalWMTS from "../../Layers/LayerWMTS";
 import GeoportalMapBox from "../../Layers/LayerMapBox";
@@ -154,11 +156,7 @@ var Catalog = class Catalog extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Catalog)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -219,6 +217,10 @@ var Catalog = class Catalog extends Control {
      */
     setMap (map) {
         if (map) {
+            // INFO
+            // on verifie les couches déjà présentes sur la cartes
+            this.on("catalog:loaded", this.initMapLayers);
+
             // mode "draggable"
             if (this.draggable) {
                 Draggable.dragElement(
@@ -227,6 +229,7 @@ var Catalog = class Catalog extends Control {
                     map.getTargetElement()
                 );
             }
+
             // mode "collapsed"
             if (!this.collapsed) {
                 this.buttonCatalogShow.setAttribute("aria-pressed", true);
@@ -237,6 +240,7 @@ var Catalog = class Catalog extends Control {
                 this.addEventsListeners(map);
             }
         } else {
+            this.un("catalog:loaded", this.initMapLayers);
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
             if (this.auto) {
@@ -250,6 +254,11 @@ var Catalog = class Catalog extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
     }
 
@@ -471,9 +480,33 @@ var Catalog = class Catalog extends Control {
         widgetPanelDiv.appendChild(widgetContentDiv);
 
         container.appendChild(widgetPanel);
-        logger.log(container);
 
         return container;
+    }
+
+    /**
+     * ...
+     * @private
+     */
+    initMapLayers () {
+        var map = this.getMap();
+        if (!map) {
+            return;
+        }
+        var layers = map.getLayers();
+        layers.forEach((layer) => {
+            if (layer.name && layer.service) {
+                // sauvegarde
+                this.layersListOnMap[layer.name + ":" + layer.service] = layer;
+                // cocher la case dans le catalogue
+                var inputs = document.querySelectorAll(`input[data-layer="${layer.name}:${layer.service}"]`);
+                if (inputs) {
+                    inputs.forEach((input) => {
+                        input.checked = true;
+                    });
+                }
+            }
+        });
     }
 
     /**
@@ -732,9 +765,11 @@ var Catalog = class Catalog extends Control {
      *
      * @param {*} name - layer name
      * @param {*} service - layer service
+     * @returns {Object} - layer config
      * @private
      */
     addLayer (name, service) {
+        var layerConf = null;
         var layer = null;
         switch (service) {
             case "WMS":
@@ -751,6 +786,12 @@ var Catalog = class Catalog extends Control {
                 layer = new GeoportalMapBox({
                     layer : name
                 });
+                break;
+            case "WFS":
+                layer = new GeoportalWFS({
+                    layer : name
+                });
+                break;
             default:
                 break;
         }
@@ -760,7 +801,11 @@ var Catalog = class Catalog extends Control {
             map.addLayer(layer);
             // sauvegarde
             this.layersListOnMap[name + ":" + service] = layer;
+            // layer configuration
+            layerConf = layer.getConfiguration();
         }
+
+        return layerConf;
     }
 
     /**
@@ -768,16 +813,22 @@ var Catalog = class Catalog extends Control {
      *
      * @param {*} name - layer name
      * @param {*} service - layer service
+     * @returns {Object} - layer config
      * @private
      */
     removeLayer (name, service) {
+        var layerConf = null;
         var layer = this.layersListOnMap[name + ":" + service];
         if (layer) {
+            // layer configuration
+            layerConf = layer.getConfiguration();
             var map = this.getMap();
             map.removeLayer(layer);
             // sauvegarde
             delete this.layersListOnMap[name + ":" + service];
         }
+
+        return layerConf;
     }
 
     // ################################################################### //
@@ -886,6 +937,9 @@ var Catalog = class Catalog extends Control {
      * @private
      */
     onShowCatalogClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         logger.trace(e);
     }
 
@@ -923,14 +977,14 @@ var Catalog = class Catalog extends Control {
         // - ajout ou pas de la couche à la carte
         // - envoi d'un evenement avec la conf tech
 
-        var id = e.target.id.split("_")[1];
-        var name = id.split("-")[0];
-        var service = id.split("-")[1];
+        var ds = e.target.dataset.layer;
+        var name = ds.substring(0, ds.lastIndexOf(":"));
+        var service = ds.substring(ds.lastIndexOf(":") + 1);
         var layer = {}; // TODO fournir la conf tech
 
         if (e.target.checked) {
             if (this.options.addToMap) {
-                this.addLayer(name, service);
+                layer = this.addLayer(name, service);
             }
             /**
              * event triggered when layer is added
@@ -954,7 +1008,7 @@ var Catalog = class Catalog extends Control {
             });
         } else {
             if (this.options.addToMap) {
-                this.removeLayer(name, service);
+                layer = this.removeLayer(name, service);
             }
             /**
              * event triggered when layer is removed
@@ -966,7 +1020,7 @@ var Catalog = class Catalog extends Control {
              * @property {Object} layer - layer conf
              * @property {Object} target - instance Catalog
              * @example
-             * Catalog.on("catalog:layer:add", function (e) {
+             * Catalog.on("catalog:layer:remove", function (e) {
              *   console.log(e.layer);
              * })
              */
@@ -1006,6 +1060,7 @@ var Catalog = class Catalog extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Catalog.prototype, CatalogDOM);
+Object.assign(Catalog.prototype, Widget);
 
 export default Catalog;
 

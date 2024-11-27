@@ -142,7 +142,7 @@
                         },
                         searchOptions : {
                           addToMap : bAddToMapAuto,
-                          filterServices : "WMTS,TMS",
+                          filterServices : "WMTS,TMS,WFS",
                           filterVectortiles : "PLAN.IGN,PCI",
                           updateVectortiles : true,
                           serviceOptions : {
@@ -172,6 +172,11 @@
                             break;
                           case "TMS":
                             layer = new ol.layer.GeoportalMapBox({
+                              layer : name
+                            });
+                            break;
+                          case "WFS":
+                            layer = new ol.layer.GeoportalWFS({
                               layer : name
                             });
                           default:

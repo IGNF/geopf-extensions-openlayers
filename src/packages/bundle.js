@@ -70,8 +70,10 @@ import GeoJSON from "./Formats/GeoJSON";
 import WMTS from "./Sources/WMTS";
 import SourceWMTS from "./Layers/SourceWMTS";
 import SourceWMS from "./Layers/SourceWMS";
+import SourceWFS from "./Layers/SourceWFS";
 import LayerWMTS from "./Layers/LayerWMTS";
 import LayerWMS from "./Layers/LayerWMS";
+import LayerWFS from "./Layers/LayerWFS";
 import LayerMapBox from "./Layers/LayerMapBox";
 
 import LayerSwitcher from "./Controls/LayerSwitcher/LayerSwitcher";
@@ -96,6 +98,7 @@ import GeoportalFullScreen from "./Controls/FullScreen/GeoportalFullScreen";
 import GeoportalOverviewMap from "./Controls/OverviewMap/GeoportalOverviewMap";
 import Legends from "./Controls/Legends/Legends";
 import Territories from "./Controls/Territories/Territories";
+import ControlList from "./Controls/ControlList/ControlList";
 import Catalog from "./Controls/Catalog/Catalog";
 
 import Proj4 from "proj4";
@@ -236,10 +239,12 @@ Ol.source = Ol.source || {};
 Ol.source.WMTSExtended = WMTS;
 Ol.source.GeoportalWMTS = SourceWMTS;
 Ol.source.GeoportalWMS = SourceWMS;
+Ol.source.GeoportalWFS = SourceWFS;
 
 Ol.layer = Ol.layer || {};
 Ol.layer.GeoportalWMTS = LayerWMTS;
 Ol.layer.GeoportalWMS = LayerWMS;
+Ol.layer.GeoportalWFS = LayerWFS;
 Ol.layer.GeoportalMapBox = LayerMapBox;
 
 Ol.control = Ol.control || {};
@@ -266,10 +271,11 @@ Ol.control.GeoportalOverviewMap = GeoportalOverviewMap;
 Ol.control.Legends = Legends;
 Ol.control.Catalog = Catalog;
 Ol.control.Territories = Territories;
+Ol.control.ControlList = ControlList;
 
 export {
-    /** 
-     * Expose extensions openlayers extended 
+    /**
+     * Expose extensions openlayers extended
      * @see ol.control.LayerSwitcher
      * @see ol.control.GeoportalAttribution
      * @see ol.control.GetFeatureInfo
@@ -292,13 +298,15 @@ export {
      * @see ol.control.Legends
      * @see ol.layer.GeoportalWMTS
      * @see ol.layer.GeoportalWMS
+     * @see ol.layer.GeoportalWFS
      * @see ol.layer.GeoportalMapBox
      * @see ol.source.GeoportalWMTS
      * @see ol.source.GeoportalWMS
+     * @see ol.source.GeoportalWFS
      * @see ol.format.KMLExtended
      * @see ol.format.GPXExtended
      * @see ol.format.GeoJSONExtended
-     * @see ol.style.Editor 
+     * @see ol.style.Editor
      * @see ol.includeProjections
      */
     Ol as olExtended

@@ -118,7 +118,8 @@ var SourceWMTS = class SourceWMTS extends WMTSExtended {
                 resolutions : wmtsParams.nativeResolutions,
                 matrixIds : wmtsParams.matrixIds,
                 origin : [Object.values(wmtsParams.tileMatrices)[0].topLeftCorner.x, Object.values(wmtsParams.tileMatrices)[0].topLeftCorner.y]
-            })
+            }),
+            crossOrigin : "anonymous"
         };
 
         // récupération des autres paramètres passés par l'utilisateur

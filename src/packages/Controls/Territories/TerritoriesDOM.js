@@ -39,8 +39,8 @@ var TerritoriesDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowTerritoriesPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowTerritoriesPicto gpf-btn gpf-btn--secondary gpf-btn-icon gpf-btn-icon-territories fr-btn fr-btn--secondary";
-        button.title = "Selecteur de territoire";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowTerritoriesPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-territories fr-btn fr-btn--tertiary";
+        button.setAttribute("aria-label", "Sélecteur de territoire");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -50,13 +50,13 @@ var TerritoriesDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowTerritoriesClick();
+                self.onShowTerritoriesClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowTerritoriesClick();
+                self.onShowTerritoriesClick(e);
             });
         }
 
@@ -178,7 +178,9 @@ var TerritoriesDOM = {
         };
         if (o) {
             // test si la vignette est renseignée
-            var thumbnail = o.thumbnail || "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iNTgxLjAwMDAwMHB0IiBoZWlnaHQ9IjM1Ni4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDU4MS4wMDAwMDAgMzU2LjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgoKPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsMzU2LjAwMDAwMCkgc2NhbGUoMC4xMDAwMDAsLTAuMTAwMDAwKSIKZmlsbD0iI2I0YjNiMyIgc3Ryb2tlPSJub25lIj4KPHBhdGggZD0iTTAgMTc4MCBsMCAtMTc4MCAyOTA1IDAgMjkwNSAwIDAgMTc4MCAwIDE3ODAgLTI5MDUgMCAtMjkwNSAwIDAKLTE3ODB6Ii8+CjwvZz4KPC9zdmc+Cg==";
+            var defaultImage = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iNTgxLjAwMDAwMHB0IiBoZWlnaHQ9IjM1Ni4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDU4MS4wMDAwMDAgMzU2LjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgoKPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsMzU2LjAwMDAwMCkgc2NhbGUoMC4xMDAwMDAsLTAuMTAwMDAwKSIKZmlsbD0iI2I0YjNiMyIgc3Ryb2tlPSJub25lIj4KPHBhdGggZD0iTTAgMTc4MCBsMCAtMTc4MCAyOTA1IDAgMjkwNSAwIDAgMTc4MCAwIDE3ODAgLTI5MDUgMCAtMjkwNSAwIDAKLTE3ODB6Ii8+CjwvZz4KPC9zdmc+Cg==";
+            var thumbnail = o.thumbnail || defaultImage;
+            var icon = o.icon || defaultImage;
             var id = o.id.toLowerCase();
             // tile dsfr
             var entry = stringToHTML(`
@@ -192,9 +194,13 @@ var TerritoriesDOM = {
                 </div>
                 <div class="gpf-tile__header fr-tile__header">
                     <div class="fr-tile__pictogram fr-tile__thumbnail">
-                        <img id="${o.id}" src="${thumbnail}" width="100%" height="100%" title="${o.description}"/>
+                        <img id="thumbnail-${o.id}" src="${thumbnail}" width="100%" height="100%" title="${o.description}"/>
                     </div>
-                    <div class="fr-tile__pictogram fr-tile__icon fr-tile__icon--${id}"></div>
+                    <div class="fr-tile__pictogram fr-tile__icon fr-tile__icon--${id}">
+                        <svg>       
+                            <image id="icon-${o.id}" xlink:href="${icon}"/>    
+                        </svg>
+                    </div>
                 </div>
             </div>
             `);

@@ -3,6 +3,7 @@ import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcher.css";
 // import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcherStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import Widget from "../Widget";
 import Control from "../Control";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import { intersects as olIntersects } from "ol/extent";
@@ -100,11 +101,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var _layers = options.layers || [];
 
         // call ol.control.Control constructor
-        super({
-            element : _options.element,
-            target : _options.target,
-            render : _options.render
-        });
+        super(_options);
 
         if (!(this instanceof LayerSwitcher)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -214,6 +211,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        // reunion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.getContainer().classList.add("gpf-button-no-gutter");
         }
     }
 
@@ -822,9 +824,13 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * ...
      *
      * @method onShowLayerSwitcherClick
+     * @param { event } e évènement associé au clic
      * @private
      */
-    onShowLayerSwitcherClick () {
+    onShowLayerSwitcherClick (e) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var opened = this._showLayerSwitcherButton.ariaPressed;
         this.collapsed = !(opened === "true");// on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser mousePosition.on("change:collapsed", function(e) ) pour s'abonner à cet évènement)
@@ -1406,6 +1412,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
 // on récupère les méthodes de la classe commune LayerSwitcherDOM
 Object.assign(LayerSwitcher.prototype, LayerSwitcherDOM);
+Object.assign(LayerSwitcher.prototype, Widget);
 
 export default LayerSwitcher;
 

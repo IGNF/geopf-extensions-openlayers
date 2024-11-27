@@ -212,6 +212,9 @@ var Measures = {
      * @private
      */
     onShowMeasureClick : function (e, type) {
+        if (e.target.ariaPressed === "true") {
+            this.onPanelOpen();
+        }
         var map = this.getMap();
         var currentMapId = map.getTargetElement().id;
 
