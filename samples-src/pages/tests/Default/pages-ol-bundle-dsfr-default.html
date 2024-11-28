@@ -112,9 +112,7 @@
                 map.addControl(search);
 
                 var feature =  new ol.control.GetFeatureInfo({
-                  options :{
-                    position : "top-right"
-                  }
+                  position : "top-right"
                 });
                 map.addControl(feature);
 
@@ -148,13 +146,13 @@
                 });
                 map.addControl(legends);
 
-                var global = new ol.control.Global({
+                var territories = new ol.control.Territories({
                     position: "bottom-left",
                     direction: "vertical",
                     panel: true,
                     auto: true
                 });
-                map.addControl(global);
+                map.addControl(territories);
               };
 
               Gp.Services.getConfig({
