@@ -83,6 +83,7 @@ button[id^=drawing-export-] {
   background-color: #FFF;
   box-shadow: 0 0 5px #000;
   box-sizing: border-box;
+  border: unset;
 }
 
 .gp-label-div::before,

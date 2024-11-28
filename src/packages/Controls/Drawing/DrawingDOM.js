@@ -1,7 +1,12 @@
 import Logger from "../../Utils/LoggerByDefault";
+import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("DrawingDOM");
 
+/**
+ * DrawingDOM
+ * @type {Object}
+ */
 var DrawingDOM = {
 
     /**
@@ -400,6 +405,19 @@ var DrawingDOM = {
             // ie 11 input type== color ne marche pas...
             inputElem.type = "text";
         }
+        if (options.type === "range") {
+            // For DSFR
+            li.dataset.frJsRange = "true";
+            li.title = options.label;
+
+            var value = options.defaultValue;
+            value = Math.round(((value - options.min) / (options.max - options.min)) * 100);
+            li.style.setProperty("--progress-right", value + "%");
+
+            inputElem.addEventListener("change", (e) => {
+                e.target.parentNode.style.setProperty("--progress-right", `${((e.target.value - options.min) / (options.max - options.min)) * 100}%`);
+            });
+        }
         inputElem.id = options.id;
         inputElem.value = options.defaultValue;
         if (options.title) {
@@ -434,8 +452,54 @@ var DrawingDOM = {
      * @returns {DOMElement} DOM element created
      */
     _createStylingDiv : function (options) {
+        var dialog = document.createElement("dialog");
+        dialog.className = "gp-styling-div gpf-panel fr-modal gpf-visible GPelementVisible";
+        var mainDiv = document.createElement("div");
+        mainDiv.className = "gpf-modal__body fr-modal__body";
+        dialog.appendChild(mainDiv);
+
+        // header DSFR
+        if (checkDsfr()) {
+            var header = document.createElement("div");
+            header.className = "GPpanelHeader gpf-panel__header fr-modal__header fr-m-1w";
+
+            var divTitle = document.createElement("div");
+            divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+            divTitle.innerHTML = "Modifier le style";
+            header.appendChild(divTitle);
+
+            var divClose = document.createElement("button");
+            divClose.id = this._addUID("GPdrawingStylePanelClose");
+            divClose.className = "GPpanelClose GPdrawingStylePanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+            divClose.title = "Fermer le panneau";
+
+            // Link panel close / visibility checkbox
+            var dtObj = this;
+            if (divClose.addEventListener) {
+                divClose.addEventListener("click", function () {
+                    options.applyFunc.call(this, "cancel");
+                }, false);
+            } else if (divClose.attachEvent) {
+                divClose.attachEvent("onclick", function () {
+                    options.applyFunc.call(this, "cancel");
+                });
+            }
+
+            var span = document.createElement("span");
+            span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+            span.innerText = "Fermer";
+
+            divClose.appendChild(span);
+
+            header.appendChild(divClose);
+
+            mainDiv.appendChild(header);
+        }
+
         var div = document.createElement("div");
-        div.className = "gp-styling-div";
+        div.className = "gpf-modal__content fr-modal__content";
+        mainDiv.appendChild(div);
+
         var ul = document.createElement("ul");
         var li = null;
         /*
@@ -453,7 +517,7 @@ var DrawingDOM = {
                 ul.appendChild(li);
                 li = this._createStylingElement({
                     type : "range",
-                    className : "gp-styling-option",
+                    className : "gp-styling-option fr-range fr-range--sm",
                     label : this.options.labels.markerSize,
                     title : "petit, moyen ou grand",
                     id : this._addUID("markerSize"),
@@ -529,7 +593,7 @@ var DrawingDOM = {
                 ul.appendChild(li);
                 li = this._createStylingElement({
                     type : "range",
-                    className : "gp-styling-option",
+                    className : "gp-styling-option fr-range fr-range--sm",
                     label : this.options.labels.strokeWidth,
                     title : "1 à 10 pixels",
                     id : this._addUID("strokeWidth"),
@@ -551,7 +615,7 @@ var DrawingDOM = {
                 ul.appendChild(li);
                 li = this._createStylingElement({
                     type : "range",
-                    className : "gp-styling-option",
+                    className : "gp-styling-option fr-range fr-range--sm",
                     label : this.options.labels.strokeWidth,
                     title : "1 à 10 pixels",
                     id : this._addUID("strokeWidth"),
@@ -571,7 +635,7 @@ var DrawingDOM = {
                 ul.appendChild(li);
                 li = this._createStylingElement({
                     type : "range",
-                    className : "gp-styling-option",
+                    className : "gp-styling-option fr-range fr-range--sm",
                     label : this.options.labels.fillOpacity,
                     title : "0 (transparent) à 100% (opaque)",
                     id : this._addUID("fillOpacity"),
@@ -589,7 +653,7 @@ var DrawingDOM = {
         // apply button
         var applyButton = document.createElement("input");
         applyButton.type = "button";
-        applyButton.className = "gp-styling-button";
+        applyButton.className = "gp-styling-button fr-btn fr-btn--tertiary";
         applyButton.value = this.options.labels.applyToObject;
         /** click sur applyButton */
         applyButton.onclick = function () {
@@ -600,7 +664,7 @@ var DrawingDOM = {
         var setDefaultButton = document.createElement("input");
         setDefaultButton.type = "button";
         setDefaultButton.value = this.options.labels.setAsDefault;
-        setDefaultButton.className = "gp-styling-button";
+        setDefaultButton.className = "gp-styling-button fr-btn fr-btn--tertiary";
         /** click sur set Default Button */
         setDefaultButton.onclick = function () {
             options.applyFunc.call(this, "default");
@@ -616,7 +680,7 @@ var DrawingDOM = {
             options.applyFunc.call(this, "cancel");
         };
         div.appendChild(cancelButton);
-        return div;
+        return dialog;
     },
 
     /**
@@ -634,8 +698,11 @@ var DrawingDOM = {
      * @private
      */
     _createLabelDiv : function (options) {
-        var popup = document.createElement("div");
-        popup.className = "gp-label-div";
+        var popup = document.createElement("dialog");
+        popup.className = "gp-label-div gpf-panel fr-modal gpf-visible GPelementVisible";
+        var div = document.createElement("div");
+        div.className = "gpf-modal__body fr-modal__body";
+        popup.appendChild(div);
         var inputLabel = null;
         if (options.geomType === "Text") {
             inputLabel = document.createElement("input");
@@ -655,7 +722,7 @@ var DrawingDOM = {
         inputLabel.autocomplete = "off";
         inputLabel.placeholder = options.placeholder;
         inputLabel.id = options.inputId;
-        popup.appendChild(inputLabel);
+        div.appendChild(inputLabel);
         // blur
         inputLabel.onblur = function () {
             options.applyFunc.call(this, options.key, inputLabel.value, true);
@@ -676,7 +743,7 @@ var DrawingDOM = {
             inputMeasure.readonly = true;
             inputMeasure.className = "gp-input-measure-style";
             inputMeasure.value = options.measure;
-            popup.appendChild(inputMeasure);
+            div.appendChild(inputMeasure);
         }
 
         if (options.geomType !== "Text") {
@@ -689,7 +756,7 @@ var DrawingDOM = {
             applyButton.onclick = function () {
                 options.applyFunc.call(this, options.key, inputLabel.value, true);
             };
-            popup.appendChild(applyButton);
+            div.appendChild(applyButton);
             // cancel Button
             var cancelButton = document.createElement("input");
             cancelButton.type = "button";
@@ -698,7 +765,7 @@ var DrawingDOM = {
             cancelButton.onclick = function () {
                 options.applyFunc.call(this, options.key, inputLabel.value, false);
             };
-            popup.appendChild(cancelButton);
+            div.appendChild(cancelButton);
         }
 
         return popup;

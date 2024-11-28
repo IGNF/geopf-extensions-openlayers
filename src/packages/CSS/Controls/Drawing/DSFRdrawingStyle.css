@@ -2,3 +2,17 @@
   -webkit-mask: url("img/modifier.svg") center no-repeat;
   mask: url("img/modifier.svg") center no-repeat;
 }
+
+.gp-styling-div {
+  width: 370px;
+  transform: translateY(20px);
+}
+
+.gp-styling-button.closer {
+  display: none;
+}
+
+.gp-styling-option.fr-range--sm[data-fr-js-range]::before,
+.gp-styling-option.fr-range--sm[data-fr-js-range]::after {
+  top: 1.74rem;
+}
