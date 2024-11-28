@@ -717,15 +717,15 @@ var DrawingDOM = {
             var li = document.getElementById(availToolId);
             // ce n'est pas l'outil selectionne : on le desactive (s'il ne l'était pas déjà).
             if (availToolId !== toolId) {
-                li.className = "drawing-tool";
+                li.className = "drawing-tool fr-m-1w";
                 context.dtOptions[availType].active = false;
                 continue;
             }
             // ici, c'est le l'outil selectionne
             if (context.dtOptions[availType].active) {
-                li.className = "drawing-tool";
+                li.className = "drawing-tool fr-m-1w";
             } else {
-                li.className = "drawing-tool drawing-tool-active";
+                li.className = "drawing-tool drawing-tool-active fr-m-1w";
             }
             context.dtOptions[availType].active = !context.dtOptions[availType].active;
         }
