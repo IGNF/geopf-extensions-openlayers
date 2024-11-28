@@ -173,7 +173,6 @@ var ControlListDOM = {
      */
     _createControlListPanelControl : function (control) {
         const controlContainer = control.getContainer();
-        console.log(controlContainer);
         var container = document.createElement("div");
         var btn = controlContainer.querySelector(".GPshowOpen").cloneNode();
         btn.id = btn.id + "-controllist";
