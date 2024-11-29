@@ -3,9 +3,19 @@
   mask: url("img/modifier.svg") center no-repeat;
 }
 
+.gp-label-div,
 .gp-styling-div {
   width: 370px;
   transform: translateY(20px);
+}
+
+.gp-label-div textarea {
+  max-width: 100%;
+  margin-bottom: 1rem;
+}
+
+.gp-label-div input {
+  width: 100%;
 }
 
 .gp-styling-button.closer {

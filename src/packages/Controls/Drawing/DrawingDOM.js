@@ -700,19 +700,59 @@ var DrawingDOM = {
     _createLabelDiv : function (options) {
         var popup = document.createElement("dialog");
         popup.className = "gp-label-div gpf-panel fr-modal gpf-visible GPelementVisible";
+        var mainDiv = document.createElement("div");
+        mainDiv.className = "gpf-modal__body fr-modal__body";
+        popup.appendChild(mainDiv);
+        // header DSFR
+        if (checkDsfr()) {
+            var header = document.createElement("div");
+            header.className = "GPpanelHeader gpf-panel__header fr-modal__header fr-m-1w";
+
+            var divTitle = document.createElement("div");
+            divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+            divTitle.innerHTML = "Texte de l'annotation";
+            header.appendChild(divTitle);
+
+            var divClose = document.createElement("button");
+            divClose.id = this._addUID("GPdrawingStylePanelClose");
+            divClose.className = "GPpanelClose GPdrawingStylePanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+            divClose.title = "Fermer le panneau";
+
+            // Link panel close / visibility checkbox
+            var dtObj = this;
+            if (divClose.addEventListener) {
+                divClose.addEventListener("click", function () {
+                    options.applyFunc.call(this, "cancel");
+                }, false);
+            } else if (divClose.attachEvent) {
+                divClose.attachEvent("onclick", function () {
+                    options.applyFunc.call(this, "cancel");
+                });
+            }
+
+            var span = document.createElement("span");
+            span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+            span.innerText = "Fermer";
+
+            divClose.appendChild(span);
+
+            header.appendChild(divClose);
+
+            mainDiv.appendChild(header);
+        }
         var div = document.createElement("div");
-        div.className = "gpf-modal__body fr-modal__body";
-        popup.appendChild(div);
+        div.className = "gpf-modal__content fr-modal__content";
+        mainDiv.appendChild(div);
         var inputLabel = null;
         if (options.geomType === "Text") {
             inputLabel = document.createElement("input");
             inputLabel.type = "text";
-            inputLabel.className = "gp-input-label-style";
+            inputLabel.className = "gp-input-label-style fr-input";
         } else {
             inputLabel = document.createElement("textArea");
             inputLabel.rows = 2;
             inputLabel.cols = 40;
-            inputLabel.className = "gp-textarea-att-label-style";
+            inputLabel.className = "gp-textarea-att-label-style fr-input";
         }
 
         if (options.text) {
@@ -723,10 +763,6 @@ var DrawingDOM = {
         inputLabel.placeholder = options.placeholder;
         inputLabel.id = options.inputId;
         div.appendChild(inputLabel);
-        // blur
-        inputLabel.onblur = function () {
-            options.applyFunc.call(this, options.key, inputLabel.value, true);
-        };
         // keyup
         inputLabel.onkeyup = function (evtk) {
             if (options.geomType === "Text" && evtk.keyCode === 13) {
@@ -750,7 +786,7 @@ var DrawingDOM = {
             // apply button
             var applyButton = document.createElement("input");
             applyButton.type = "button";
-            applyButton.className = "gp-styling-button";
+            applyButton.className = "gp-styling-button fr-btn fr-btn--tertiary";
             applyButton.value = this.options.labels.saveDescription;
             /** click sur applyButton */
             applyButton.onclick = function () {
