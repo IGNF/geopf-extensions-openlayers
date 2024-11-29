@@ -16,3 +16,58 @@
 .gp-styling-option.fr-range--sm[data-fr-js-range]::after {
   top: 1.74rem;
 }
+
+.drawing-tool {
+  width: 40px;
+}
+
+.drawing-tool-active {
+  background-color: var(--hover-tint);
+}
+
+/*
+* Drawing tools
+*/
+button[id^=drawing-tool-point-]::after {
+  -webkit-mask: url("img/dsfr/create-point.svg") center no-repeat;
+  mask: url("img/dsfr/create-point.svg") center no-repeat;
+}
+
+
+button[id^=drawing-tool-line-]::after {
+  -webkit-mask: url("img/dsfr/create-line.svg") center no-repeat;
+  mask: url("img/dsfr/create-line.svg") center no-repeat;
+}
+
+button[id^=drawing-tool-polygon-]::after {
+  -webkit-mask: url("img/dsfr/create-polygon.svg") center no-repeat;
+  mask: url("img/dsfr/create-polygon.svg") center no-repeat;
+}
+
+button[id^=drawing-tool-text-]::after {
+  -webkit-mask: url("img/dsfr/create-label.svg") center no-repeat;
+  mask: url("img/dsfr/create-label.svg") center no-repeat;
+}
+
+/*
+* Editing tools
+*/
+button[id^=drawing-tool-edit-]::after {
+  -webkit-mask: url("img/dsfr/edit-geom.svg") center no-repeat;
+  mask: url("img/dsfr/edit-geom.svg") center no-repeat;
+}
+
+button[id^=drawing-tool-display]::after {
+  -webkit-mask: url("img/dsfr/edit-style.svg") center no-repeat;
+  mask: url("img/dsfr/edit-style.svg") center no-repeat;
+}
+
+button[id^=drawing-tool-tooltip]::after {
+  -webkit-mask: url("img/dsfr/edit-text.svg") center no-repeat;
+  mask: url("img/dsfr/edit-text.svg") center no-repeat;
+}
+
+button[id^=drawing-tool-remove]::after {
+  -webkit-mask: url("img/dsfr/delete.svg") center no-repeat;
+  mask: url("img/dsfr/delete.svg") center no-repeat;
+}

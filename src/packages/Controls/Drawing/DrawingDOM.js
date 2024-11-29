@@ -288,7 +288,7 @@ var DrawingDOM = {
         p.innerHTML = sectionLabel;
         container.appendChild(p);
 
-        var ul = document.createElement("ul");
+        var ul = document.createElement("div");
         ul.className = "drawing-tools-flex-display fr-m-1w";
         var context = this;
         // li click handler function
@@ -302,8 +302,8 @@ var DrawingDOM = {
             if (this.dtOptions[type].panel !== panelType) {
                 continue;
             }
-            var li = document.createElement("li");
-            li.className = "drawing-tool fr-m-1w";
+            var li = document.createElement("button");
+            li.className = "drawing-tool fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
             li.id = this._addUID("drawing-tool-" + this.dtOptions[type].id);
             li.title = this.dtOptions[type].label;
             li.addEventListener("click", liClickHandler);
@@ -355,7 +355,7 @@ var DrawingDOM = {
      * @returns {DOMElement} - created li element
      */
     _createMarkersChooser : function (options) {
-        var li = document.createElement("li");
+        var li = document.createElement("div");
         li.className = options.className;
         for (var i = 0; i < this.options.markersList.length; i++) {
             // radio bouton pour la selection
@@ -394,7 +394,7 @@ var DrawingDOM = {
      * @returns {DOMElement} - created li element
      */
     _createStylingElement : function (options) {
-        var li = document.createElement("li");
+        var li = document.createElement("div");
         li.className = options.className;
         var textNode = document.createTextNode(options.label);
         li.appendChild(textNode);
@@ -500,7 +500,7 @@ var DrawingDOM = {
         div.className = "gpf-modal__content fr-modal__content";
         mainDiv.appendChild(div);
 
-        var ul = document.createElement("ul");
+        var ul = document.createElement("div");
         var li = null;
         /*
          * TODO : finir de remplir la div pour tous les styles éditables.
@@ -784,15 +784,15 @@ var DrawingDOM = {
             var li = document.getElementById(availToolId);
             // ce n'est pas l'outil selectionne : on le desactive (s'il ne l'était pas déjà).
             if (availToolId !== toolId) {
-                li.className = "drawing-tool fr-m-1w";
+                li.className = "drawing-tool fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
                 context.dtOptions[availType].active = false;
                 continue;
             }
             // ici, c'est le l'outil selectionne
             if (context.dtOptions[availType].active) {
-                li.className = "drawing-tool fr-m-1w";
+                li.className = "drawing-tool fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
             } else {
-                li.className = "drawing-tool drawing-tool-active fr-m-1w";
+                li.className = "drawing-tool drawing-tool-active fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
             }
             context.dtOptions[availType].active = !context.dtOptions[availType].active;
         }
