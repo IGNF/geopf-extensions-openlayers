@@ -1,3 +1,7 @@
 export default DrawingDOM;
-declare var DrawingDOM: any;
+/**
+ * DrawingDOM
+ * @type {Object}
+ */
+declare var DrawingDOM: Object;
 //# sourceMappingURL=DrawingDOM.d.ts.map
