@@ -139,7 +139,18 @@ var servicesDate = Gp.servicesDate;
 var servicesVersion = Gp.servicesVersion;
 
 // HACK !?
-// export const Config = (window.Gp) ? window.Gp.Config : {};
+var Config = window.Gp.Config || {};
+Object.defineProperty(Gp, "Config", {
+    get () {
+        return Config;
+    },
+    set (value) {
+        Config = value;
+    },
+    enumerable : true,
+    configurable : true,
+});
+export { Config };
 
 export {
     /** Services
