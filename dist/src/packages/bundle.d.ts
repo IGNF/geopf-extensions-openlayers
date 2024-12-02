@@ -2,6 +2,7 @@
 export const version: any;
 /** Publication date */
 export const date: any;
+export var Config: any;
 export var Services: any;
 export var Error: any;
 export var Helper: any;
