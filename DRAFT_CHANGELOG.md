@@ -15,7 +15,11 @@ __DATE__
 
 * ✨ [Added]
 
+  * ControlList : Ajout d'un nouveau widget (#272) 
+
 * 🔨 [Changed]
+
+   * Drawing : migration de l'outil en DSFR (#288)
 
 * 🔥 [Deprecated]
 
@@ -24,6 +28,7 @@ __DATE__
 * 🐛 [Fixed]
 
     * Territories : optimisation des ressources du widget (#278)
+    * Utilisation de l'attribut *data-url* pour charger la configuration en mode browser (#290)
   
 * 🔒 [Security]
 
