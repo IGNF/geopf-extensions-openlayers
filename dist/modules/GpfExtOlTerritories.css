@@ -8,7 +8,7 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.0-290
+ * @version 1.0.0-beta.0-292
  * @date 02/12/2024
  *
  */div[id^=GPterritories-]{right:0;top:0}button[id^=GPshowTerritoriesPicto][aria-pressed=false]+dialog{display:none;opacity:0;visibility:hidden}button[id^=GPshowTerritoriesPicto-][aria-pressed=true]+dialog{display:flex;flex-direction:column;height:auto;max-height:inherit;max-width:470px;opacity:100%;visibility:visible}dialog[id^=GPterritoriesPanel-]{position:absolute}
