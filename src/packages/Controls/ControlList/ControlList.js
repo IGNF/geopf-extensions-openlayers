@@ -59,6 +59,12 @@ var ControlList = class ControlList extends Control {
             this.controlCatalogElement = null;
         }
 
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "ControlList";
+
         // initialisation du composant
         this.initialize(options);
         // // Widget main DOM container

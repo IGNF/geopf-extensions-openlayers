@@ -184,7 +184,11 @@ var SearchEngine = class SearchEngine extends Control {
         if (!(this instanceof SearchEngine)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "SearchEngine";
         // initialisation du composant
         this.initialize(options);
 

@@ -82,7 +82,11 @@ var LocationSelector = class LocationSelector extends Control {
         if (!(this instanceof LocationSelector)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "LocationSelector";
         // initialisation du composant
         this.initialize(options);
 

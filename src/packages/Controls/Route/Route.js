@@ -126,7 +126,11 @@ var Route = class Route extends Control {
         if (!(this instanceof Route)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Route";
         // initialisation du composant
         this.initialize(options);
 
