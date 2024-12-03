@@ -76,6 +76,11 @@ declare class ButtonExport {
      */
     constructor(options?: Object);
     /**
+     * Nom de la classe (heritage)
+     * @private
+     */
+    private CLASSNAME;
+    /**
      * Response to the export of the route calculation
      * (only for jsdoc)
      *

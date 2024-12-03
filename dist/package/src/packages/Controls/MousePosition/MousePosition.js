@@ -140,7 +140,11 @@ var MousePosition = class MousePosition extends Control {
         if (!(this instanceof MousePosition)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "MousePosition";
         // init Proj4 defs manually
         // Register.load(Proj4);
         // try {

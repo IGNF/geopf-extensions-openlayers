@@ -118,7 +118,11 @@ class ButtonExport extends Control {
         if (!(this instanceof ButtonExport)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Export";
         /**
          * Response to the export of the route calculation
          * (only for jsdoc)

@@ -118,7 +118,11 @@ var Isocurve = class Isocurve extends Control {
         if (!(this instanceof Isocurve)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Isocurve";
         // initialisation du composant
         this.initialize(options);
 
