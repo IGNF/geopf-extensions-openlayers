@@ -186,6 +186,11 @@ var Drawing = class Drawing extends Control {
         if (!(this instanceof Drawing)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Drawing";
 
         this._initialize(options);
 

@@ -57,7 +57,11 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         if (!(this instanceof GetFeatureInfo)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "GetFeatureInfo";
         // initialisation du composant
         this.initialize(options);
 

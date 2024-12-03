@@ -47,7 +47,11 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         options.tipLabel = options.tipLabel || "Basculer en mode plein écran";
 
         super(options);
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "FullScreen";
         this.container = null;
         this.options = options;
     }
