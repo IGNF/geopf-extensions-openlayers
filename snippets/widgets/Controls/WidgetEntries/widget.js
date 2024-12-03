@@ -57,6 +57,12 @@ var Widget = class Widget extends Control {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
 
+        /**
+        * Nom de la classe (heritage)
+        * @private
+        */
+        this.CLASSNAME = "Widget";
+
         // initialisation du composant
         this.initialize(options);
 
