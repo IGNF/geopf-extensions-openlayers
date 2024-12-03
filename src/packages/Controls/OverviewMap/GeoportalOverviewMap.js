@@ -39,11 +39,7 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
      */
     constructor (options) {
         options = options || {};
-        /**
-         * Nom de la classe (heritage)
-         * @private
-         */
-        this.CLASSNAME = "OverviewMap";
+
         /**
          * Layer by default
          */
@@ -272,7 +268,11 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         ];
 
         super(options);
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "OverviewMap";
         this.container = null;
         this.options = options;
     }
