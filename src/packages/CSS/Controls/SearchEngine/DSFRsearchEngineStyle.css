@@ -25,6 +25,11 @@
   font-size: 1.0em;
 }
 
+dialog[id^=GPcoordinateSearchPanel],
+dialog[id^=GPadvancedSearchPanel] {
+  max-height: unset;
+}
+
 select[name^="inputSex"].gpf-select {
   padding: unset;
 }

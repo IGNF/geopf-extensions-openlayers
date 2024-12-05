@@ -3,6 +3,10 @@
     mask: url("img/overviewmap.svg") center no-repeat;
 }
 
-.ol-overviewmap:has(.gpf-btn-icon:not([class*=--tertiary])[aria-pressed="true"])::after {
+.ol-overviewmap:has(> .gpf-btn-icon[aria-pressed="true"])::after {
     transform: translateY(-100%);
+}
+
+.ol-overviewmap:not(.ol-collapsed) {
+    background: unset;
 }

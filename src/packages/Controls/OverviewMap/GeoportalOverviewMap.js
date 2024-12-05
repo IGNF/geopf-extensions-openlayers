@@ -268,7 +268,11 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         ];
 
         super(options);
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "OverviewMap";
         this.container = null;
         this.options = options;
     }

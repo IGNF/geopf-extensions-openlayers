@@ -96,7 +96,11 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         if (!(this instanceof ReverseGeocode)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "ReverseGeocode";
         // initialisation du composant
         this.initialize(options);
 

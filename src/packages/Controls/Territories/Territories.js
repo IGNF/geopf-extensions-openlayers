@@ -67,7 +67,11 @@ var Territories = class Territories extends Control {
         if (!(this instanceof Territories)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Territories";
         // initialisation du composant
         this.initialize(options);
 

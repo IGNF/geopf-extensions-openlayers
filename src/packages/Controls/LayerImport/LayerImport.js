@@ -160,6 +160,12 @@ var LayerImport = class LayerImport extends Control {
         // call ol.control.Control constructor
         super(options);
 
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "LayerImport";
+
         if (!(this instanceof LayerImport)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
