@@ -91,46 +91,54 @@
                 });
 
                 const scaleControl = new ol.control.ScaleLine({
+                  position : "bottom-left",
                   units: 'metric',
                   bar: false,
                 });
                 map.addControl(scaleControl);
 
                 var catalog = new ol.control.Catalog({
+                  id: 1,
                   draggable: true,
                   position : "top-left"
                 });
                 map.addControl(catalog);
 
                 var zoom = new ol.control.GeoportalZoom({
+                  id: 1,
                   position : "top-right"
                 });
                 map.addControl(zoom);
 
                 var fullscreen = new ol.control.GeoportalFullScreen({
+                  id: 1,
                   position : "top-right"
                 });
                 map.addControl(fullscreen);
 
                 var overview = new ol.control.GeoportalOverviewMap({
+                  id: 1,
                   position : "bottom-left",
                   collapsed: false
                 });
                 map.addControl(overview);
 
                 var drawing = new ol.control.Drawing({
+                  id: 1,
                   draggable: true,
                   position : "bottom-left"
                 });
                 map.addControl(drawing);
 
                 var iso = new ol.control.Isocurve({
+                  id: 10,
                   draggable: true,
                   position : "bottom-left"
                 });
                 map.addControl(iso);
 
                 var layerImport = new ol.control.LayerImport({
+                  id: 1,
                   draggable: true,
                   position : "bottom-left"
                 });
@@ -138,6 +146,7 @@
 
                 var layerSwitcher = new ol.control.LayerSwitcher({
                   options : {
+                    id: 1,
                     panel: true,
                     draggable: true,
                     position : "top-left",
@@ -147,12 +156,14 @@
                 map.addControl(layerSwitcher);
 
                 var mp = new ol.control.GeoportalMousePosition({
+                  id: 1,
                   draggable: true,
                   position : "bottom-right"
                 });
                 map.addControl(mp);
 
                 var route = new ol.control.Route({
+                  id: 100,
                   draggable: true,
                   position : "bottom-right",
                   listable: true,
@@ -161,11 +172,13 @@
                 map.addControl(route);
 
                 var feature =  new ol.control.GetFeatureInfo({
+                  id: 1,
                   position : "top-left"
                 });
                 map.addControl(feature);
 
                 var reverse = new ol.control.ReverseGeocode({
+                  id: 1,
                   draggable: true,
                   position : "top-right",
                   listable: true,
@@ -173,28 +186,33 @@
                 map.addControl(reverse);
 
                 var search = new ol.control.SearchEngine({
+                  id: 1,
                   position : "top-left",
                   splitResults : false,
                 });
                 map.addControl(search);
 
                 var measureLength = new ol.control.MeasureLength({
+                  id: 1,
                   position : "top-left"
                 });
                 map.addControl(measureLength);
 
                 var measureArea = new ol.control.MeasureArea({
+                  id: 1,
                   position : "top-left",
                   listable : true
                 });
                 map.addControl(measureArea);
 
                 var measureAzimuth = new ol.control.MeasureAzimuth({
+                  id: 1,
                   position : "top-left"
                 });
                 map.addControl(measureAzimuth);
 
                 var measureProfil = new ol.control.ElevationPath({
+                  id: 1,
                   position : "top-left"
                 });
                 map.addControl(measureProfil);
@@ -203,6 +221,7 @@
                 map.addControl(attributions);
 
                 var legends = new ol.control.Legends({
+                    id: 1,
                     draggable: true,
                     position: "bottom-left",
                     panel: true,
@@ -211,6 +230,7 @@
                 map.addControl(legends);
 
                 var territories = new ol.control.Territories({
+                    id: 1,
                     draggable: true,
                     position: "bottom-left",
                     direction: "vertical",
