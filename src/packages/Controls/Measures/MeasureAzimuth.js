@@ -32,6 +32,7 @@ var logger = Logger.getLogger("measureazimut");
  * @type {ol.control.MeasureAzimuth}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.geodesic = false] - If true, azimuth will be computed on the global sphere. Otherwise, it will be computed on the projected plane.
  * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
  * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the line. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.

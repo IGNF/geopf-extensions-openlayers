@@ -71,6 +71,7 @@ var logger = Logger.getLogger("layerimport");
  * @extends {ol.control.Control}
  * @type {ol.control.LayerImport}
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.collapsed = true] - Specify if LayerImport control should be collapsed at startup. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
  * @param {Array} [options.layerTypes = ["KML", "GPX", "GeoJSON", "WMS", "WMTS", "MAPBOX"]] - data types that could be imported : "KML", "GPX", "GeoJSON", "WMS", "WMTS" and "MAPBOX". Values will be displayed in the same order in widget list.

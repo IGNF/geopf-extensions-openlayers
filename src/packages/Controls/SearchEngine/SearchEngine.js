@@ -45,6 +45,7 @@ var logger = Logger.getLogger("searchengine");
  * @type {ol.control.SearchEngine}
  * @alias ol.control.SearchEngine
  * @param {Object}  options - control options
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - collapse mode, true by default

@@ -45,7 +45,8 @@ var logger = Logger.getLogger("isocurve");
  * @type {ol.control.Isocurve}
  * @extends {ol.control.Control}
  * @param {Object} options - Isocurve control options
- * @param {String}   [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+ * @param {String} [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable

@@ -51,6 +51,7 @@ var logger = Logger.getLogger("elevationpath");
  * @type {ol.control.ElevationPath}
  * @extends ol.control.Control
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {String} [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
  * @param {Boolean} [options.active = false] - specify if control should be actived at startup. Default is false.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
