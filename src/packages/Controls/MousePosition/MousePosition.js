@@ -44,7 +44,8 @@ var logger = Logger.getLogger("GeoportalMousePosition");
  * @type {ol.control.GeoportalMousePosition}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
- * @param {String}   [options.apiKey] - API key. The key "calcul" is used by default.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+ * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
  * @param {Boolean} [options.collapsed = true] - Specify if MousePosition control should be collapsed at startup. Default is true.
@@ -558,7 +559,7 @@ var MousePosition = class MousePosition extends Control {
         }
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // initialisation des systemes de projections
         this._projectionSystems = [];

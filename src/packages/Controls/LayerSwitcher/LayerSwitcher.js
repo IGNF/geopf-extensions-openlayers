@@ -39,6 +39,7 @@ var logger = Logger.getLogger("layerswitcher");
  *      - minScaleDenominator (Number, optional) : min scale denominator for legend validity.
  * @param {Array} [options.layers.config.metadata] - array of layer metadata. Each array element is an object, with property url (String, mandatory) : link to a metadata
  * @param {Object} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
+ * @param {Number} [options.options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
@@ -535,7 +536,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      */
     _initialize (options, layers) {
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = options.id || SelectorID.generate();
 
         this.options = options;
         this.options.layers = layers;

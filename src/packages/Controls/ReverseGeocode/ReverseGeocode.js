@@ -54,12 +54,13 @@ var logger = Logger.getLogger("reversegeocoding");
  * @type {ol.control.ReverseGeocode}
  * @extends {ol.control.Control}
  * @param {Object} options - ReverseGeocode control options
- * @param {String}   [options.apiKey] - API key for services call (reverse geocode service). The key "calcul" is used by default.
- * @param {String}   [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+ * @param {String}  [options.apiKey] - API key for services call (reverse geocode service). The key "calcul" is used by default.
+ * @param {String}  [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Object}   [options.resources =  ["StreetAddress", "PositionOfInterest", "CadastralParcel"]] - resources for geocoding, by default : ["StreetAddress", "PositionOfInterest", "CadastralParcel"]. Possible values are : "StreetAddress", "PositionOfInterest", "CadastralParcel". Resources will be displayed in the same order in widget list.
- * @param {Object}   [options.delimitations = ["Point", "Circle", "Extent"]] - delimitations for reverse geocoding, by default : ["Point", "Circle", "Extent"]. Possible values are : "Point", "Circle", "Extent". Delimitations will be displayed in the same order in widget list.
+ * @param {Object}  [options.resources =  ["StreetAddress", "PositionOfInterest", "CadastralParcel"]] - resources for geocoding, by default : ["StreetAddress", "PositionOfInterest", "CadastralParcel"]. Possible values are : "StreetAddress", "PositionOfInterest", "CadastralParcel". Resources will be displayed in the same order in widget list.
+ * @param {Object}  [options.delimitations = ["Point", "Circle", "Extent"]] - delimitations for reverse geocoding, by default : ["Point", "Circle", "Extent"]. Possible values are : "Point", "Circle", "Extent". Delimitations will be displayed in the same order in widget list.
  * @param {Object}  [options.reverseGeocodeOptions = {}] - reverse geocode service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~reverseGeocode Gp.Services.reverseGeocode()} to know all reverse geocode options.
  * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
  * @param {String} [options.layerDescription.title = "Saisie (recherche inverse)"] - Layer title to be displayed in LayerSwitcher
@@ -260,7 +261,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         this.draggable = this.options.draggable;
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // #################################################################### //
         // ################### informations sur les droits #################### //

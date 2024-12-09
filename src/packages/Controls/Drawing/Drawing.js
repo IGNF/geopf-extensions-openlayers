@@ -68,6 +68,7 @@ var logger = Logger.getLogger("Drawing");
  * @type {ol.control.Drawing}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.collapsed = true] - Specify if Drawing control should be collapsed at startup. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
  * @param {Object} [options.layer = {}] - Openlayers layer that will hosts created features. If none, an empty vector layer will be created.
@@ -635,7 +636,7 @@ var Drawing = class Drawing extends Control {
      */
     _initialize (options) {
         // determination d'un uid
-        this._uid = SelectorID.generate();
+        this._uid = options.id || SelectorID.generate();
 
         // export name / format / ...
         this._exportName = "Croquis";
