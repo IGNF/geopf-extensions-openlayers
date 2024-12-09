@@ -19,7 +19,8 @@ __DATE__
 
 * 🔨 [Changed]
 
-   * Drawing : migration de l'outil en DSFR (#288)
+   * Drawing : Migration de l'outil en DSFR (#288)
+   * Widgets : Possibilité de configurer l'ID du widget (#284)
 
 * 🔥 [Deprecated]
 
@@ -27,7 +28,7 @@ __DATE__
 
 * 🐛 [Fixed]
 
-    * Territories : optimisation des ressources du widget (#278)
+    * Territories : Optimisation des ressources du widget (#278)
     * Utilisation de l'attribut *data-url* pour charger la configuration en mode browser (#290)
   
 * 🔒 [Security]
