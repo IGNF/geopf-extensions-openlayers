@@ -1,1 +1,4 @@
-
+/* En attente d'implementation */
+div[id^="GPcontrolList-"] {
+    display: none;
+}

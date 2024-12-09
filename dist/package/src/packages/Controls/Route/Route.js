@@ -47,8 +47,9 @@ var logger = Logger.getLogger("route");
  * @type {ol.control.Route}
  * @extends {ol.control.Control}
  * @param {Object} options - route control options
- * @param {String}   [options.apiKey] - API key for services call (route and autocomplete services). The key "calcul" is used by default.
- * @param {Boolean}   [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+ * @param {String}  [options.apiKey] - API key for services call (route and autocomplete services). The key "calcul" is used by default.
+ * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
  * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link ol.control.Export}
@@ -546,7 +547,7 @@ var Route = class Route extends Control {
         /** {Boolean} specify if Route control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // containers principaux
         this._showRouteButton = null;

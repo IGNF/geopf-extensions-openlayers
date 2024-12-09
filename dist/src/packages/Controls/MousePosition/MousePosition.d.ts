@@ -8,7 +8,8 @@ export default MousePosition;
  * @type {ol.control.GeoportalMousePosition}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
- * @param {String}   [options.apiKey] - API key. The key "calcul" is used by default.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+ * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
  * @param {Boolean} [options.collapsed = true] - Specify if MousePosition control should be collapsed at startup. Default is true.

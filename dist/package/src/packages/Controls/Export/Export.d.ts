@@ -7,6 +7,7 @@ export default ButtonExport;
  * @constructor
  * @alias ol.control.Export
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {String} [options.format = "geojson"] - geojson / kml / gpx
  * @param {String} [options.name = "export"] - export name
  * @param {String} [options.title = "Exporter"] - button name
