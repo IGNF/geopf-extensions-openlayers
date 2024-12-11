@@ -1230,7 +1230,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         var map = this.getMap();
         // cas d'un layer vecteur importé
-        if (data.layer.hasOwnProperty("gpResultLayerId") && data.layer.gpResultLayerId.split(":")[0] === "layerimport") {
+        if (data.layer.hasOwnProperty("gpResultLayerId") && (data.layer.gpResultLayerId.split(":")[0] === "layerimport" || data.layer.gpResultLayerId.split(":")[0] === "drawing")) {
             // TODO : appeler fonction commune
             // zoom sur l'étendue des entités récupérées (si possible)
             if (map.getView() && map.getSize()) {
