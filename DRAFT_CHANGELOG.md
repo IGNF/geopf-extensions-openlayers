@@ -22,6 +22,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - Ajout d'un titre par défaut à la couche vectorielle du drawing (#296)
   
 * 🔒 [Security]
 
