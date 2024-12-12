@@ -1348,21 +1348,24 @@ var Isocurve = class Isocurve extends Control {
         );
 
         // 2. ajout de la géométrie comme nouvelle couche vecteur à la carte
+        var method = (this._currentComputation === "time") ? "Isochrone" : "Isodistance";
+
         this._geojsonLayer = new VectorLayer({
             source : new VectorSource({
                 features : features
             }),
             style : this._defaultFeatureStyle,
-            opacity : 0.9
+            opacity : 0.9,
+            title : "Mon " + method
         });
         // ajout d'un identifiant à la couche
         var graph;
         if (this._currentTransport === "Pieton") {
             graph = "piéton";
-            this._geojsonLayer.gpResultLayerId = "Pieton$GEOPORTAIL:GPP:Isocurve";
+            this._geojsonLayer.gpResultLayerId = "compute:Pieton$GEOPORTAIL:GPP:Isocurve";
         } else {
             graph = "voiture";
-            this._geojsonLayer.gpResultLayerId = "Voiture$GEOPORTAIL:GPP:Isocurve";
+            this._geojsonLayer.gpResultLayerId = "compute:Voiture$GEOPORTAIL:GPP:Isocurve";
         }
         // ajout à la carte
         map.addLayer(this._geojsonLayer);

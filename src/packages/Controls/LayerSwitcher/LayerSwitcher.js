@@ -1229,9 +1229,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var error = null;
 
         var map = this.getMap();
-        // cas d'un layer vecteur importé
-        if (data.layer.hasOwnProperty("gpResultLayerId") && (data.layer.gpResultLayerId.split(":")[0] === "layerimport" || data.layer.gpResultLayerId.split(":")[0] === "drawing")) {
-            // TODO : appeler fonction commune
+        // cas d'un layer vecteur importé, d'un croquis, d'une couche de calcul
+        if (data.layer.hasOwnProperty("gpResultLayerId") && 
+            (data.layer.gpResultLayerId.split(":")[0] === "layerimport" || data.layer.gpResultLayerId.split(":")[0] === "drawing"
+            || data.layer.gpResultLayerId.split(":")[0] === "compute")) {
+            // TODO : appeler fonc  tion commune
             // zoom sur l'étendue des entités récupérées (si possible)
             if (map.getView() && map.getSize()) {
                 var sourceExtent = data.layer.getExtent() || data.layer.getSource().getExtent();
@@ -1240,7 +1242,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 }
             }
         } else {
-            try {
+            try {   
                 // Check if configuration is loaded
                 if (!Config.isConfigLoaded()) {
                     throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
