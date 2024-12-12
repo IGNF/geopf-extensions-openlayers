@@ -1656,7 +1656,8 @@ var Route = class Route extends Control {
             source : new VectorSource({
                 features : features
             }),
-            style : style
+            style : style,
+            title : "Mon Itinéraire"
         });
         map.addLayer(this._geojsonRoute);
     }
@@ -1776,16 +1777,17 @@ var Route = class Route extends Control {
                 features : features
             }),
             style : style,
-            opacity : 0.9
+            opacity : 0.9,
+            title : "Mon Itinéraire"
         });
 
         var graph;
         if (this._currentTransport === "Pieton") {
             graph = "piéton";
-            this._geojsonSections.gpResultLayerId = "Pieton$OGC:OPENLS;Itineraire";
+            this._geojsonSections.gpResultLayerId = "compute:Pieton$OGC:OPENLS;Itineraire";
         } else {
             graph = "voiture";
-            this._geojsonSections.gpResultLayerId = "Voiture$OGC:OPENLS;Itineraire";
+            this._geojsonSections.gpResultLayerId = "compute:Voiture$OGC:OPENLS;Itineraire";
         }
         // ajout à la carte
         map.addLayer(this._geojsonSections);

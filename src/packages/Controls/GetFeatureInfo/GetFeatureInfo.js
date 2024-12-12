@@ -433,7 +433,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             var src = layerProperties.source;
             var layerTitle = "";
             if (src) {
-                layerTitle = src._title || src.name || src.url_;
+                layerTitle = src._title || src.name || layerProperties.title || layerProperties.name || src.url_ || "Couche de données";
             }
         }
         return layerTitle;

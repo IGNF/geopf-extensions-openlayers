@@ -765,7 +765,8 @@ var Drawing = class Drawing extends Control {
         var layer = new VectorLayer({
             source : new VectorSource({
                 features : features
-            })
+            }),
+            title : "Mon Croquis"
         });
         // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant.
         layer.gpResultLayerId = "drawing";
