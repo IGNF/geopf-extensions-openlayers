@@ -1401,11 +1401,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             var layerProperties = layer.getProperties();
             var src = layerProperties.source;
             if (src) {
-                layerInfo._title = src._title || layerProperties.id || "";
-                layerInfo._description = src._description || "";
-                layerInfo._quicklookUrl = src._quicklookUrl || "";
-                layerInfo._metadata = src._metadata || [];
-                layerInfo._legends = src._legends || [];
+                layerInfo._title = src._title || layerProperties.title || layerProperties.id || "";
+                layerInfo._description = src._description || layerProperties.description || "";
+                layerInfo._quicklookUrl = src._quicklookUrl || layerProperties.quicklookUrl || "";
+                layerInfo._metadata = src._metadata || layerProperties.metadata || [];
+                layerInfo._legends = src._legends || layerProperties.legends || [];
             }
         }
         return layerInfo;
