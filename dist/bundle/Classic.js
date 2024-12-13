@@ -50,7 +50,7 @@
  * @copyright Copyright (c) 2014, Mike Adair, Richard Greenwood, Didier Richard, Stephen Irons, Olivier Terral and Calvin Metcalf
  * @license   Licensed under MIT license
  *            See https://raw.githubusercontent.com/proj4js/proj4js/master/LICENSE.md
- * @version   2.14.0
+ * @version   2.15.0
  */
 var Gp;(()=>{"use strict";var e={r:e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})}},r={};e.r(r),Gp=r})();
 //# sourceMappingURL=Classic.js.map
