@@ -33,7 +33,7 @@
     "loglevel": "^1.9.1",
     "markdown-toc": "^1.2.0",
     "ol": "8.2.0",
-    "ol-mapbox-style": "12.3.5",
+    "ol-mapbox-style": "12.4.0",
     "proj4": "2.14.0",
     "sortablejs": "1.15.3",
     "typescript": "^5.3.3",
