@@ -27,7 +27,7 @@
  * @copyright Copyright (c) 2019 All contributors to Sortable
  *            https://github.com/SortableJS/Sortable
  * @license   Licensed under MIT license
- * @version 1.15.3
+ * @version 1.15.6
  */
 /*!
  * @overview  EventBus - Simple JavaScript class for managing events in JavaScript
