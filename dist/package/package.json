@@ -35,7 +35,7 @@
     "ol": "8.2.0",
     "ol-mapbox-style": "12.4.0",
     "proj4": "2.15.0",
-    "sortablejs": "1.15.6",
+    "sortablejs": "1.15.3",
     "typescript": "^5.3.3",
     "whatwg-fetch": "3.6.20"
   }
