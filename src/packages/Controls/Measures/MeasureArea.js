@@ -32,6 +32,7 @@ var logger = Logger.getLogger("measurearea");
  * @type {ol.control.MeasureArea}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.geodesic = true] - If true, area will be computed on the global sphere using the {@link https://openlayers.org/en/latest/apidoc/module-ol_sphere.html#geodesicArea ol.Sphere.geodesicArea()} function. Otherwise, area will be computed on the projected plane.
  * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
  * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the polygon to measure. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
@@ -56,11 +57,7 @@ var MeasureArea = class MeasureArea extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof MeasureArea)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -73,7 +70,7 @@ var MeasureArea = class MeasureArea extends Control {
         this.CLASSNAME = "MeasureArea";
 
         // uuid
-        this._uid = ID.generate();
+        this._uid = options.id || ID.generate();
 
         // container d'activation du controle
         this._pictoContainer = null;
@@ -173,7 +170,7 @@ var MeasureArea = class MeasureArea extends Control {
     getContainer () {
         return this._container;
     }
-    
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

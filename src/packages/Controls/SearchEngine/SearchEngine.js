@@ -45,6 +45,7 @@ var logger = Logger.getLogger("searchengine");
  * @type {ol.control.SearchEngine}
  * @alias ol.control.SearchEngine
  * @param {Object}  options - control options
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - collapse mode, true by default
@@ -179,16 +180,16 @@ var SearchEngine = class SearchEngine extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof SearchEngine)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "SearchEngine";
         // initialisation du composant
         this.initialize(options);
 
@@ -393,7 +394,7 @@ var SearchEngine = class SearchEngine extends Control {
         this.collapsed = this.options.collapsed;
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         this._showSearchEngineButton = null;
 

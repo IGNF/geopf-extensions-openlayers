@@ -45,6 +45,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlControlList.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlControlList.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -69,13 +71,7 @@
 
 {{#content "js"}}
             <script type="text/javascript">
-              const scaleControl = new ol.control.ScaleLine({
-                  units: 'metric',
-                  bar: true,
-                  steps: 4,
-                  text: true,
-                  minWidth: 140,
-              });
+              
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
@@ -94,7 +90,10 @@
                   })
                 });
 
-
+                const scaleControl = new ol.control.ScaleLine({
+                  units: 'metric',
+                  bar: false,
+                });
                 map.addControl(scaleControl);
 
                 var catalog = new ol.control.Catalog({
@@ -141,7 +140,8 @@
                   options : {
                     panel: true,
                     draggable: true,
-                    position : "top-left"
+                    position : "top-left",
+                    counter : true,
                   }
                 });
                 map.addControl(layerSwitcher);
@@ -154,18 +154,21 @@
 
                 var route = new ol.control.Route({
                   draggable: true,
-                  position : "bottom-right"
+                  position : "bottom-right",
+                  listable: true,
+                  description: "Calculez un itinéraire véhicule ou piéton entre deux ou plusieurs points",
                 });
                 map.addControl(route);
 
                 var feature =  new ol.control.GetFeatureInfo({
-                    position : "top-left"
+                  position : "top-left"
                 });
                 map.addControl(feature);
 
                 var reverse = new ol.control.ReverseGeocode({
                   draggable: true,
-                  position : "top-right"
+                  position : "top-right",
+                  listable: true,
                 });
                 map.addControl(reverse);
 
@@ -181,7 +184,8 @@
                 map.addControl(measureLength);
 
                 var measureArea = new ol.control.MeasureArea({
-                  position : "top-left"
+                  position : "top-left",
+                  listable : true
                 });
                 map.addControl(measureArea);
 
@@ -211,9 +215,17 @@
                     position: "bottom-left",
                     direction: "vertical",
                     panel: true,
-                    auto: true
+                    auto: true,
+                    listable: true,
                 });
                 map.addControl(territories);
+
+                var controlList = new ol.control.ControlList({
+                    draggable: false,
+                    position: "bottom-right",
+                    controlCatalogElement: document.getElementById("sampleLightDark"),
+                });
+                map.addControl(controlList);
               };
 
               Gp.Services.getConfig({

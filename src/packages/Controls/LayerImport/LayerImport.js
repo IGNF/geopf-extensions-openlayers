@@ -71,6 +71,7 @@ var logger = Logger.getLogger("layerimport");
  * @extends {ol.control.Control}
  * @type {ol.control.LayerImport}
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.collapsed = true] - Specify if LayerImport control should be collapsed at startup. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
  * @param {Array} [options.layerTypes = ["KML", "GPX", "GeoJSON", "WMS", "WMTS", "MAPBOX"]] - data types that could be imported : "KML", "GPX", "GeoJSON", "WMS", "WMTS" and "MAPBOX". Values will be displayed in the same order in widget list.
@@ -158,11 +159,13 @@ var LayerImport = class LayerImport extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
+
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "LayerImport";
 
         if (!(this instanceof LayerImport)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -282,7 +285,7 @@ var LayerImport = class LayerImport extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
-        
+
         // reunion du bouton avec le précédent
         if (this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
@@ -499,7 +502,7 @@ var LayerImport = class LayerImport extends Control {
         this.draggable = this.options.draggable;
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // si une requête est en cours ou non
         this._waiting = false;

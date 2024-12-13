@@ -55,6 +55,7 @@ module.exports = (env, argv) => {
             "GpfExtOlLegends" : path.join(rootdir, "src", "packages", "Controls/Legends", "Legends.js"),
             "GpfExtOlCatalog" : path.join(rootdir, "src", "packages", "Controls/Catalog", "Catalog.js"),
             "GpfExtOlTerritories" : path.join(rootdir, "src", "packages", "Controls/Territories", "Territories.js"),
+            "GpfExtOlControlList" : path.join(rootdir, "src", "packages", "Controls/ControlList", "ControlList.js"),
             // Formats étendus
             "GpfExtOlFormats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),
@@ -227,7 +228,7 @@ module.exports = (env, argv) => {
         plugins : [
             /** EXECUTION DU LINTER */
             new ESLintWebpackPlugin({
-                
+
             }),
             /** CSS avec IMAGES en base64 */
             new MiniCssExtractPlugin({

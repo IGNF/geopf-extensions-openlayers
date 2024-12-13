@@ -52,16 +52,16 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     constructor (options) {
         options = options || {};
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof GetFeatureInfo)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "GetFeatureInfo";
         // initialisation du composant
         this.initialize(options);
 
@@ -142,7 +142,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
      * @private
      */
     initialize (options) {
-        this.uid = SelectorID.generate();
+        this.uid = options.id || SelectorID.generate();
 
         // set default options
         this.options = {
@@ -433,7 +433,7 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             var src = layerProperties.source;
             var layerTitle = "";
             if (src) {
-                layerTitle = src._title || src.name || src.url_;
+                layerTitle = src._title || src.name || layerProperties.title || layerProperties.name || src.url_ || "Couche de données";
             }
         }
         return layerTitle;

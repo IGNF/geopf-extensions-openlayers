@@ -44,6 +44,7 @@ export { default as GeoportalOverviewMap } from "./packages/Controls/OverviewMap
 export { default as Legends } from "./packages/Controls/Legends/Legends";
 export { default as Catalog } from "./packages/Controls/Catalog/Catalog";
 export { default as Territories } from "./packages/Controls/Territories/Territories";
+export { default as ControlList } from "./packages/Controls/ControlList/ControlList";
 
 // proj4
 export { default as Proj4 } from "proj4";

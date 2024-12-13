@@ -67,7 +67,7 @@ var LayerSwitcherDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher");
-        container.className = "GPwidget gpf-widget gpf-mobile-fullscreen"; // gpf-widget-button
+        container.className = "GPwidget gpf-widget gpf-mobile-fullscreen gpf-widget-button";
         return container;
     },
 
@@ -319,19 +319,14 @@ var LayerSwitcherDOM = {
         button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon gpf-btn-icon-ls-dragndrop gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         button.title = "Deplacer la couche";
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", true);
 
         var self = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
                 self._onStartDragAndDropLayerClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
                 self._onStartDragAndDropLayerClick(e);
             });
         }
@@ -517,20 +512,15 @@ var LayerSwitcherDOM = {
             button.innerText = "Supprimer";
         }
         button.setAttribute("tabindex", "0");
-        button.setAttribute("aria-pressed", true);
         button.setAttribute("type", "button");
 
         var context = this;
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
                 context._onDropLayerClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
                 context._onDropLayerClick(e);
             });
         }
@@ -571,7 +561,6 @@ var LayerSwitcherDOM = {
             btnInfo.innerText = "Informations";
         }
         btnInfo.setAttribute("tabindex", "0");
-        btnInfo.setAttribute("aria-pressed", true);
         btnInfo.setAttribute("type", "button");
 
         // add event on click
@@ -580,8 +569,6 @@ var LayerSwitcherDOM = {
             btnInfo.addEventListener(
                 "click",
                 function (e) {
-                    var status = (e.target.ariaPressed === "true");
-                    e.target.setAttribute("aria-pressed", !status);
                     context._onOpenLayerInfoClick(e);
                 }
             );
@@ -590,8 +577,6 @@ var LayerSwitcherDOM = {
             btnInfo.attachEvent(
                 "onclick",
                 function (e) {
-                    var status = (e.target.ariaPressed === "true");
-                    e.target.setAttribute("aria-pressed", !status);
                     context._onOpenLayerInfoClick(e);
                 }
             );

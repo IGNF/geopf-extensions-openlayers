@@ -4,7 +4,7 @@
 
 ---
 [![Build](https://github.com/IGNF/geopf-extensions-openlayers/actions/workflows/build.yml/badge.svg)](https://github.com/IGNF/geopf-extensions-openlayers/actions/workflows/build.yml)
-[![CeCILL License](https://img.shields.io/badge/licence-CeCILL--B-blue.svg)](https://raw.githubusercontent.com/IGNF/geopf-extensions-openlayers/main/LICENCE.md)
+[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
 ---
 

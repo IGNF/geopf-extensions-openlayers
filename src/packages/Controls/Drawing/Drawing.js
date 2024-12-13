@@ -68,6 +68,7 @@ var logger = Logger.getLogger("Drawing");
  * @type {ol.control.Drawing}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.collapsed = true] - Specify if Drawing control should be collapsed at startup. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
  * @param {Object} [options.layer = {}] - Openlayers layer that will hosts created features. If none, an empty vector layer will be created.
@@ -181,15 +182,16 @@ var Drawing = class Drawing extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Drawing)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Drawing";
 
         this._initialize(options);
 
@@ -634,7 +636,7 @@ var Drawing = class Drawing extends Control {
      */
     _initialize (options) {
         // determination d'un uid
-        this._uid = SelectorID.generate();
+        this._uid = options.id || SelectorID.generate();
 
         // export name / format / ...
         this._exportName = "Croquis";
@@ -763,7 +765,8 @@ var Drawing = class Drawing extends Control {
         var layer = new VectorLayer({
             source : new VectorSource({
                 features : features
-            })
+            }),
+            title : "Mon Croquis"
         });
         // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant.
         layer.gpResultLayerId = "drawing";
@@ -1968,7 +1971,7 @@ var Drawing = class Drawing extends Control {
             if (this.dtOptions.hasOwnProperty(toolsType)) {
                 if (this.dtOptions[toolsType].active) {
                     var toolsId = this._addUID("drawing-tool-" + this.dtOptions[toolsType].id);
-                    document.getElementById(toolsId).className = "drawing-tool";
+                    document.getElementById(toolsId).className = "drawing-tool fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
                     this.dtOptions[toolsType].active = false;
                 }
             }

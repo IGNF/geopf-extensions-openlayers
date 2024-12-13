@@ -98,6 +98,7 @@ import GeoportalFullScreen from "./Controls/FullScreen/GeoportalFullScreen";
 import GeoportalOverviewMap from "./Controls/OverviewMap/GeoportalOverviewMap";
 import Legends from "./Controls/Legends/Legends";
 import Territories from "./Controls/Territories/Territories";
+import ControlList from "./Controls/ControlList/ControlList";
 import Catalog from "./Controls/Catalog/Catalog";
 
 import Proj4 from "proj4";
@@ -138,7 +139,18 @@ var servicesDate = Gp.servicesDate;
 var servicesVersion = Gp.servicesVersion;
 
 // HACK !?
-// export const Config = (window.Gp) ? window.Gp.Config : {};
+var Config = window.Gp.Config || {};
+Object.defineProperty(Gp, "Config", {
+    get () {
+        return Config;
+    },
+    set (value) {
+        Config = value;
+    },
+    enumerable : true,
+    configurable : true,
+});
+export { Config };
 
 export {
     /** Services
@@ -270,10 +282,11 @@ Ol.control.GeoportalOverviewMap = GeoportalOverviewMap;
 Ol.control.Legends = Legends;
 Ol.control.Catalog = Catalog;
 Ol.control.Territories = Territories;
+Ol.control.ControlList = ControlList;
 
 export {
-    /** 
-     * Expose extensions openlayers extended 
+    /**
+     * Expose extensions openlayers extended
      * @see ol.control.LayerSwitcher
      * @see ol.control.GeoportalAttribution
      * @see ol.control.GetFeatureInfo
@@ -304,7 +317,7 @@ export {
      * @see ol.format.KMLExtended
      * @see ol.format.GPXExtended
      * @see ol.format.GeoJSONExtended
-     * @see ol.style.Editor 
+     * @see ol.style.Editor
      * @see ol.includeProjections
      */
     Ol as olExtended

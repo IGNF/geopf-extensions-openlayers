@@ -8,9 +8,10 @@ import Gp from "geoportal-access-lib";
     var timeout = scripts[scripts.length - 1].getAttribute("data-timeout");
 
     // callback
-    var success = function () {
+    var success = function (data) {
         // Pas de messages en mode prod
-        // console.log("GetConfig success!");
+        console.log("GetConfig success!");
+        window.Gp.Config = data;
     };
 
     // callback
@@ -41,7 +42,7 @@ import Gp from "geoportal-access-lib";
     }
 
     // test d'existance de la varibale globale Gp.Config
-    if (!window.Gp) {
+    if (window.Gp) {
         // appel du service
         Gp.Services.getConfig(options);
     }

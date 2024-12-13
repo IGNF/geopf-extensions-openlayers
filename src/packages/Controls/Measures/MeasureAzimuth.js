@@ -32,6 +32,7 @@ var logger = Logger.getLogger("measureazimut");
  * @type {ol.control.MeasureAzimuth}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.geodesic = false] - If true, azimuth will be computed on the global sphere. Otherwise, it will be computed on the projected plane.
  * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
  * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the line. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
@@ -56,11 +57,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof MeasureAzimuth)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
@@ -73,7 +70,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
         this.CLASSNAME = "MeasureAzimuth";
 
         // uuid
-        this._uid = ID.generate();
+        this._uid = options.id || ID.generate();
 
         // container d'activation du controle
         this._pictoContainer = null;
@@ -191,7 +188,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
     getContainer () {
         return this._container;
     }
-    
+
     // ################################################################### //
     // ##################### init component ############################## //
     // ################################################################### //

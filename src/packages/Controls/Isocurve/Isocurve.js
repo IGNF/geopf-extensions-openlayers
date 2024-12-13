@@ -45,7 +45,8 @@ var logger = Logger.getLogger("isocurve");
  * @type {ol.control.Isocurve}
  * @extends {ol.control.Control}
  * @param {Object} options - Isocurve control options
- * @param {String}   [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+ * @param {String} [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
@@ -113,16 +114,16 @@ var Isocurve = class Isocurve extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Isocurve)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Isocurve";
         // initialisation du composant
         this.initialize(options);
 
@@ -514,7 +515,7 @@ var Isocurve = class Isocurve extends Control {
         this.draggable = this.options.draggable;
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // Options du service paramétrables via l'interface (graph, method, exclusions)
         // Mode de transport selectionné : 'Voiture' ou 'Pieton'
@@ -1347,21 +1348,24 @@ var Isocurve = class Isocurve extends Control {
         );
 
         // 2. ajout de la géométrie comme nouvelle couche vecteur à la carte
+        var method = (this._currentComputation === "time") ? "Isochrone" : "Isodistance";
+
         this._geojsonLayer = new VectorLayer({
             source : new VectorSource({
                 features : features
             }),
             style : this._defaultFeatureStyle,
-            opacity : 0.9
+            opacity : 0.9,
+            title : "Mon " + method
         });
         // ajout d'un identifiant à la couche
         var graph;
         if (this._currentTransport === "Pieton") {
             graph = "piéton";
-            this._geojsonLayer.gpResultLayerId = "Pieton$GEOPORTAIL:GPP:Isocurve";
+            this._geojsonLayer.gpResultLayerId = "compute:Pieton$GEOPORTAIL:GPP:Isocurve";
         } else {
             graph = "voiture";
-            this._geojsonLayer.gpResultLayerId = "Voiture$GEOPORTAIL:GPP:Isocurve";
+            this._geojsonLayer.gpResultLayerId = "compute:Voiture$GEOPORTAIL:GPP:Isocurve";
         }
         // ajout à la carte
         map.addLayer(this._geojsonLayer);

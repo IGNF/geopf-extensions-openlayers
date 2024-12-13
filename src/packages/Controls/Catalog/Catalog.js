@@ -156,15 +156,17 @@ var Catalog = class Catalog extends Control {
         options = options || {};
 
         // call ol.control.Control constructor
-        super({
-            element : options.element,
-            target : options.target,
-            render : options.render
-        });
+        super(options);
 
         if (!(this instanceof Catalog)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
+
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Catalog";
 
         // initialisation du composant
         this.initialize(options);
@@ -259,7 +261,7 @@ var Catalog = class Catalog extends Control {
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
-        
+
         // reunion du bouton avec le précédent
         if (this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
@@ -290,7 +292,7 @@ var Catalog = class Catalog extends Control {
      * @private
      */
     initialize (options) {
-        this.uid = SelectorID.generate();
+        this.uid = options.id || SelectorID.generate();
 
         // set default options
         this.options = {
@@ -484,7 +486,6 @@ var Catalog = class Catalog extends Control {
         widgetPanelDiv.appendChild(widgetContentDiv);
 
         container.appendChild(widgetPanel);
-        logger.log(container);
 
         return container;
     }

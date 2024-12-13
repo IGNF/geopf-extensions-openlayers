@@ -1,0 +1,264 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCRS.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawing.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawing.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalMousePosition.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalMousePosition.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlRoute.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlRoute.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlReverseGeocode.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlReverseGeocode.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSearchEngine.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlSearchEngine.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlMeasureLength.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlMeasureLength.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlMeasureArea.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlMeasureArea.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlMeasureAzimuth.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlMeasureAzimuth.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlElevationPath.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlElevationPath.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalAttribution.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalAttribution.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalZoom.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalZoom.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalFullScreen.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalFullScreen.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLegends.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlControlList.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlControlList.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 700px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout de tous les widgets</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+              
+              var createMap = function () {
+                // on cache l'image de chargement du Géoportail.
+                document.getElementById("map").style.backgroundImage = "none";
+
+                // Création de la map
+                var map = new ol.Map({
+                  target : "map",
+                  layers : [
+                    new ol.layer.GeoportalWMTS({
+                      layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+                    })
+                  ],
+                  view : new ol.View({
+                    center : [288074.8449901076, 6247982.515792289],
+                    zoom : 8
+                  })
+                });
+
+                const scaleControl = new ol.control.ScaleLine({
+                  units: 'metric',
+                  bar: false,
+                });
+                map.addControl(scaleControl);
+
+                var catalog = new ol.control.Catalog({
+                  id: 1,
+                  draggable: true,
+                  position : "top-left"
+                });
+                map.addControl(catalog);
+
+                var zoom = new ol.control.GeoportalZoom({
+                  id: 2,
+                  position : "top-right"
+                });
+                map.addControl(zoom);
+
+                var fullscreen = new ol.control.GeoportalFullScreen({
+                  id: 3,
+                  position : "top-right"
+                });
+                map.addControl(fullscreen);
+
+                var overview = new ol.control.GeoportalOverviewMap({
+                  id: 4,
+                  position : "bottom-left",
+                  collapsed: false
+                });
+                map.addControl(overview);
+
+                var drawing = new ol.control.Drawing({
+                  id: 5,
+                  draggable: true,
+                  position : "bottom-left"
+                });
+                map.addControl(drawing);
+
+                var iso = new ol.control.Isocurve({
+                  id: 6,
+                  draggable: true,
+                  position : "bottom-left"
+                });
+                map.addControl(iso);
+
+                var layerImport = new ol.control.LayerImport({
+                  id: 7,
+                  draggable: true,
+                  position : "bottom-left"
+                });
+                map.addControl(layerImport);
+
+                var layerSwitcher = new ol.control.LayerSwitcher({
+                  options : {
+                    id: 8,
+                    panel: true,
+                    draggable: true,
+                    position : "top-right",
+                    counter : true,
+                  }
+                });
+                map.addControl(layerSwitcher);
+
+                var mp = new ol.control.GeoportalMousePosition({
+                  id: 9,
+                  draggable: true,
+                  position : "bottom-right"
+                });
+                map.addControl(mp);
+
+                var route = new ol.control.Route({
+                  id: 10,
+                  draggable: true,
+                  position : "bottom-right",
+                  listable: true,
+                  description: "Calculez un itinéraire véhicule ou piéton entre deux ou plusieurs points",
+                });
+                map.addControl(route);
+
+                var feature =  new ol.control.GetFeatureInfo({
+                  id: 11,
+                  position : "top-left"
+                });
+                map.addControl(feature);
+
+                var reverse = new ol.control.ReverseGeocode({
+                  id: 12,
+                  draggable: true,
+                  position : "top-right",
+                  listable: true,
+                });
+                map.addControl(reverse);
+
+                var search = new ol.control.SearchEngine({
+                  id: 13,
+                  position : "top-left",
+                  splitResults : false,
+                });
+                map.addControl(search);
+
+                var measureLength = new ol.control.MeasureLength({
+                  id: 14,
+                  position : "top-left"
+                });
+                map.addControl(measureLength);
+
+                var measureArea = new ol.control.MeasureArea({
+                  id: 15,
+                  position : "top-left",
+                  listable : true
+                });
+                map.addControl(measureArea);
+
+                var measureAzimuth = new ol.control.MeasureAzimuth({
+                  id: 16,
+                  position : "top-left"
+                });
+                map.addControl(measureAzimuth);
+
+                var measureProfil = new ol.control.ElevationPath({
+                  id: 17,
+                  position : "top-left"
+                });
+                map.addControl(measureProfil);
+
+                var attributions = new ol.control.GeoportalAttribution();
+                map.addControl(attributions);
+
+                var legends = new ol.control.Legends({
+                    id: 18,
+                    draggable: true,
+                    position: "bottom-left",
+                    panel: true,
+                    auto: true
+                });
+                map.addControl(legends);
+
+                var territories = new ol.control.Territories({
+                    id: 19,
+                    draggable: true,
+                    position: "bottom-left",
+                    direction: "vertical",
+                    panel: true,
+                    auto: true,
+                    listable: true,
+                });
+                map.addControl(territories);
+
+                var controlList = new ol.control.ControlList({
+                    id: 20,
+                    draggable: false,
+                    position: "bottom-right",
+                    controlCatalogElement: document.getElementById("sampleLightDark"),
+                });
+                map.addControl(controlList);
+              };
+
+              Gp.Services.getConfig({
+                  customConfigFile : "{{ configurl }}",
+                  callbackSuffix : "",
+                  // apiKey: "{{ apikey }}",
+                  timeOut : 20000,
+                  onSuccess : createMap,
+                  onFailure : (e) => {
+                    console.error(e);
+                  }
+              });
+
+            </script>
+{{/content}}
+{{/extend}}

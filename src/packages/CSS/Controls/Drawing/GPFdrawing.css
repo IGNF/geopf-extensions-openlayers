@@ -55,9 +55,10 @@ div[id^=GPdrawingBasicPanel-] {
   text-transform: uppercase;
 }
 
-ul.drawing-tools-flex-display {
+div.drawing-tools-flex-display {
   justify-content: center;
   padding : 0;
+  margin: 12px 0;
 }
 .drawing-tools-flex-display {
   align-items: center;
@@ -68,102 +69,3 @@ ul.drawing-tools-flex-display {
   margin-right: 10px;
 }
 
-.drawing-tool {
-  border-radius: 10px;
-  cursor: pointer;
-  display: block;
-  height: 40px;
-  width: 40px;
-}
-
-.drawing-tool {
-  background-image: url("img/drawing-tools.svg");
-  background-size: 720px 40px;
-}
-
-.drawing-tool {
-  background-color: #e9edf0;
-}
-
-.drawing-tool-active {
-  background-color: #002a50;
-}
-
-
-/*
-* Drawing tools
-*/
-li[id^=drawing-tool-point-] {
-  background-position: 0 0;
-}
-
-li[id^=drawing-tool-point-].drawing-tool-active {
-  background-position: -40px 0;
-}
-
-li[id^=drawing-tool-line-].drawing-tool-active {
-  background-position: -120px 0;
-}
-
-li[id^=drawing-tool-line-] {
-  background-position: -80px 0;
-}
-
-li[id^=drawing-tool-holes-] {
-  background-position: -640px 0;
-}
-
-li[id^=drawing-tool-holes-].drawing-tool-active {
-  background-position: -680px 0;
-}
-
-li[id^=drawing-tool-polygon-] {
-  background-position: -160px 0;
-}
-
-li[id^=drawing-tool-polygon-].drawing-tool-active {
-  background-position: -200px 0;
-}
-
-li[id^=drawing-tool-text-] {
-  background-position: -240px 0;
-}
-
-li[id^=drawing-tool-text-].drawing-tool-active {
-  background-position: -280px 0;
-}
-
-/*
-* Editing tools
-*/
-li[id^=drawing-tool-edit-] {
-  background-position: -320px 0;
-}
-
-li[id^=drawing-tool-edit-].drawing-tool-active {
-  background-position: -360px 0;
-}
-
-li[id^=drawing-tool-display] {
-  background-position: -400px 0;
-}
-
-li[id^=drawing-tool-display-].drawing-tool-active {
-  background-position: -440px 0;
-}
-
-li[id^=drawing-tool-tooltip] {
-  background-position: -480px 0;
-}
-
-li[id^=drawing-tool-tooltip-].drawing-tool-active {
-  background-position: -520px 0;
-}
-
-li[id^=drawing-tool-remove] {
-  background-position: -560px 0;
-}
-
-li[id^=drawing-tool-remove-].drawing-tool-active {
-  background-position: -600px 0;
-}
