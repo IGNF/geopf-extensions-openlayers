@@ -55,7 +55,11 @@ var Legends = class Legends extends Control {
         if (!(this instanceof Legends)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Legends";
         // initialisation du composant
         this.initialize(options);
 
@@ -266,7 +270,7 @@ var Legends = class Legends extends Control {
      * @private
      */
     initialize (options) {
-        this.uid = SelectorID.generate();
+        this.uid = options.id || SelectorID.generate();
 
         // set default options
         this.options = {

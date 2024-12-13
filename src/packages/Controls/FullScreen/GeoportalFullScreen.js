@@ -47,7 +47,11 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
         options.tipLabel = options.tipLabel || "Basculer en mode plein écran";
 
         super(options);
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "FullScreen";
         this.container = null;
         this.options = options;
     }
@@ -71,7 +75,7 @@ var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
 
     _initContainer () {
         // UID interne pour chaque controle
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // Ajout / Suppression des attributs du DOM
         this.element.id = "GPfullScreen-" +  this._uid;

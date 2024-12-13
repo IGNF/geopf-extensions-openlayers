@@ -23,7 +23,7 @@ __DATE__
 
 * 🐛 [Fixed]
 
-    * Territories : optimisation des ressources du widget (#278)
+  - Ajout d'un titre par défaut à la couche vectorielle du drawing (#296)
   
 * 🔒 [Security]
 

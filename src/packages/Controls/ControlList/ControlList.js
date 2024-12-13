@@ -59,6 +59,12 @@ var ControlList = class ControlList extends Control {
             this.controlCatalogElement = null;
         }
 
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "ControlList";
+
         // initialisation du composant
         this.initialize(options);
         // // Widget main DOM container
@@ -199,7 +205,7 @@ var ControlList = class ControlList extends Control {
         this.draggable = this.options.draggable;
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
     }
 
     // ################################################################### //

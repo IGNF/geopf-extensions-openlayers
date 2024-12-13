@@ -268,7 +268,11 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
         ];
 
         super(options);
-
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "OverviewMap";
         this.container = null;
         this.options = options;
     }
@@ -292,7 +296,7 @@ var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
 
     _initContainer () {
         // UID interne pour chaque controle
-        this._uid = SelectorID.generate();
+        this._uid = this.options.id || SelectorID.generate();
 
         // Ajout / Suppression des attributs du DOM
         this.element.id = "GPoverviewMap-" +  this._uid;
