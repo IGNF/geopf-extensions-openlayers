@@ -1440,7 +1440,7 @@ var ElevationPath = class ElevationPath extends Control {
                 _data[i].color = "#00B798";
             }
             _data[i].oldlat = _data[i].lat;
-            _data[i].oldlon =_data[i].lon;
+            _data[i].oldlon = _data[i].lon;
             _data[i].lat = Math.round(_data[i].lat * 100000) / 100000;
             _data[i].lon = Math.round(_data[i].lon * 100000) / 100000;
         }
