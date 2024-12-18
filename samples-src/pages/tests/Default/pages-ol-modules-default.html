@@ -152,7 +152,8 @@
                 map.addControl(route);
 
                 var feature =  new ol.control.GetFeatureInfo({
-                    position : "top-left"
+                  position : "top-left",
+                  listable: true,
                 });
                 map.addControl(feature);
 

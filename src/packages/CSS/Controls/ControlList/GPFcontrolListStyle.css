@@ -28,6 +28,10 @@ dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div:hover {
   cursor: pointer;
 }
 
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > button {
+  flex-shrink: 0;
+}
+
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > button:hover {
   background-color: rgba(0,60,136,0.5);
 }
