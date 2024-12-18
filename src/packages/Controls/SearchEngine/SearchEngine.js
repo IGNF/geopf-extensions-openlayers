@@ -1956,6 +1956,8 @@ var SearchEngine = class SearchEngine extends Control {
                     case "TMS":
                         layer = new GeoportalMapBox({
                             layer : name
+                        },{
+                            declutter : true
                         });
                     default:
                         break;
