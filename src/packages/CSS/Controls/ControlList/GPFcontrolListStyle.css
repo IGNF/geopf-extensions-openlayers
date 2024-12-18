@@ -1,4 +1,33 @@
-/* En attente d'implementation */
-div[id^="GPcontrolList-"] {
-    display: none;
+div[id^="GPcontrolList-"] .GPshowOpen > span {
+  font-size: 24px;
+  color: white;
+  display: block;
+  height: 24px;
+  line-height: 24px;
+  pointer-events: none;
+}
+
+button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {
+  width: 200px;
+}
+
+.GPcontrolListPanelClose {
+  background-image: url("img/close.png");
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div:hover {
+  background-color: #EEE;
+  cursor: pointer;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > button:hover {
+  background-color: rgba(0,60,136,0.5);
 }
