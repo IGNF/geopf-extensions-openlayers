@@ -1,4 +1,37 @@
-/* En attente d'implementation */
-div[id^="GPcontrolList-"] {
-    display: none;
+div[id^="GPcontrolList-"] .GPshowOpen > span {
+  font-size: 24px;
+  color: white;
+  display: block;
+  height: 24px;
+  line-height: 24px;
+  pointer-events: none;
+}
+
+button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {
+  width: 200px;
+}
+
+.GPcontrolListPanelClose {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAaCAYAAAD43n+tAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIRSURBVFiF7ZbRS1RBFMbPbLq9ldjaY88Zkv1JQRqt+Wf0aCrYBuY/UkRQRFQvQQax+JipEUIoQdHq/nrYb3K8zl33zl20h/vBwnLOmfPNN+fMmWtWoUKFMwPwjiO8Pu/9xOAGDQRqZnYYmLrOuQvD31I51AYJAqbNbNnMfgXm38AyMFV2E8AssKpDy4txwAowX4booogO1WYdYEu/jmwHIqqXEOPzr8VEScwjxXSTREnMSyXZBGaAscA/DtyTOIDnKaKAFsfxGHCB38kWopUiaNVffmC8T9wE8FaxKwk8vpVCrAG1TGU8nsSqeBrJLbXBl5gY4C7wOSNqW+13Y4iistUrLkYE/lTu5PhfAR8ytjmteViYMF9UeTFK3qZ36S9HfJeAP8CDjL2hqq4nkVpfUdFhEcNIjv2ame045/aA22Z2PeMbNbOn4QLn3C6wK38ZxN7Ggd/LKICfwKb+tyMntgGcOAzgO/AjkTM2AJKqFEvuW27s9Oh/aybUch8T+PKmWdaWJiro49kCa+a1ZmFIYvzYjo70ooJu6rS/Ao0B4q8C31TVyYJcZ/aw+iRv+omSmPeKXUrgmeHo0yc6mjOV6gL3i/IYUAdeKMkW0ASuBP6G2mxHMc+A0cJEvVxNVSp3mklUC2imcPgkdSU5CE5nWyK6snXofXUniTkXAFPAIvAJ2Af2gHVgoeidqVChwv+NvxOT737B3Fc7AAAAAElFTkSuQmCC');
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div:hover {
+  background-color: #EEE;
+  cursor: pointer;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > button {
+  flex-shrink: 0;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > button:hover {
+  background-color: rgba(0,60,136,0.5);
 }
