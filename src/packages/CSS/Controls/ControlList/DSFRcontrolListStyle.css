@@ -1,3 +1,7 @@
+button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {
+  width: 370px;
+}
+
 div[id^="GPcontrolList-"] .GPshowOpen > span {
   font-size: 32px;
   position: absolute;

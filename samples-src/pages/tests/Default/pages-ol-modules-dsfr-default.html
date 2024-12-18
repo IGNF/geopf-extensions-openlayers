@@ -71,7 +71,7 @@
 
 {{#content "js"}}
             <script type="text/javascript">
-              
+
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
@@ -161,7 +161,8 @@
                 map.addControl(route);
 
                 var feature =  new ol.control.GetFeatureInfo({
-                  position : "top-left"
+                  position : "top-left",
+                  listable: true,
                 });
                 map.addControl(feature);
 
