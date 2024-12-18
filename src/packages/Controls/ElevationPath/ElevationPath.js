@@ -1400,7 +1400,6 @@ var ElevationPath = class ElevationPath extends Control {
         for (var i = 1; i < _data.length; i++) {
             var a = [_data[i].lon, _data[i].lat];
             var distanceToPrevious = olGetDistanceSphere(a, [_data[i-1].oldlon, _data[i-1].oldlat]);
-            console.log(distanceToPrevious);
             var dist = distanceToPrevious + _distance;
 
             var za = _data[i].z;
