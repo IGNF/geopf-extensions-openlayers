@@ -171,14 +171,19 @@ div[id^=GPautoCompleteList] {
   margin-left: 2px;
 }
 
-.position-container-top-left [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList] ,
-.position-container-bottom-left [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList] ,
-.position-container-top-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList] ,
+.position-container-top-left [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
+.position-container-bottom-left [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
+.position-container-top-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
 .position-container-bottom-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList] {
   width: 340px;
   position: relative;
   top: unset;
   margin-left: 8px;
+}
+
+.position-container-top-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
+.position-container-bottom-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList] {
+  margin-right: 10px;
 }
 
 .gpf-widget-padding > div[id^=GPautoCompleteList] {
