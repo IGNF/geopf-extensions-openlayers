@@ -45,7 +45,7 @@
     "@mapbox/mapbox-gl-style-spec": "14.8.0",
     "@xmldom/xmldom": "^0.9.0",
     "eventbusjs": "0.2.0",
-    "geoportal-access-lib": "3.4.5",
+    "geoportal-access-lib": "3.4.4",
     "loglevel": "^1.9.1",
     "markdown-toc": "^1.2.0",
     "ol": "8.2.0",
