@@ -11,7 +11,6 @@ button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {
   flex-direction: column;
   visibility: visible;
   opacity: 100%;
-  width: 370px;
 }
 
 dialog[id^="GPcontrolListPanel-"] {
