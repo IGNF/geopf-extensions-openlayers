@@ -15,7 +15,12 @@ __DATE__
 
 * ✨ [Added]
 
+  - ajout du widget ControlList en mode classique (#300)
+
 * 🔨 [Changed]
+
+  - La fenêtre de résultat du getFeatureInfo ne s'affiche pas si aucune donnée n'est renvoyée (#301)
+  - Les zones que l'on peut dessiner pour le geocodage inverse correspondent aux limites du service (#305)
 
 * 🔥 [Deprecated]
 
@@ -24,7 +29,9 @@ __DATE__
 * 🐛 [Fixed]
 
   - Ajout d'un titre par défaut à la couche vectorielle du drawing (#296)
-  
+  - Positionnement de la fenêtre de résultats d'autocomplétion du searchEngine (#307)
+  - Mauvais rendu du profil altimétrique (#303) 
+    
 * 🔒 [Security]
 
 
