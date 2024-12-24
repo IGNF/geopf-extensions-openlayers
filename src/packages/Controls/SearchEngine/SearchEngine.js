@@ -737,8 +737,11 @@ var SearchEngine = class SearchEngine extends Control {
         var context = this;
         var element = document.createElement("div");
         element.className = "gp-feature-info-div gpf-widget-color";
+        // bouton de fermeture de la pop-up
         var closer = document.createElement("button");
-        closer.className = "gp-styling-button closer";
+        closer.title = "Fermer la pop-up";
+        closer.className = "gp-styling-button closer gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-mt-1v fr-mr-2v";
+
         // on closer click : remove popup
         closer.onclick = function () {
             if (context._popupOverlay != null) {
@@ -1548,7 +1551,7 @@ var SearchEngine = class SearchEngine extends Control {
                     this._setMarker();
                     return;
                 }
-                this._setPosition(coordinates, 10); // FIXME zoom fixe !
+                this._setPosition(coordinates, 15); // FIXME zoom fixe !
                 if (this._displayMarker) {
                     var markerInfo = "<h6> Ma position </h6> longitude : " + coordinates_4326[0] + "<br/> latitude : " + coordinates_4326[1];
                     this._setMarker(coordinates, markerInfo);
