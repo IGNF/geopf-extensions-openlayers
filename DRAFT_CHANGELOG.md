@@ -15,10 +15,14 @@ __DATE__
 
 * ✨ [Added]
 
+  - ajout du widget ControlList en mode classique (#300)
+
 * 🔨 [Changed]
 
-    - Ajout d'une croix de fermeture au pop-up issue du clic sur les markers de searchEngine (#313)
-    - Augmentation du niveau de zoom lors du centrage par geolocalisation (#313)
+  - Ajout d'une croix de fermeture au pop-up issue du clic sur les markers de searchEngine (#313)
+  - Augmentation du niveau de zoom lors du centrage par geolocalisation (#313)
+  - La fenêtre de résultat du getFeatureInfo ne s'affiche pas si aucune donnée n'est renvoyée (#301)
+  - Les zones que l'on peut dessiner pour le geocodage inverse correspondent aux limites du service (#305)
 
 * 🔥 [Deprecated]
 
@@ -27,7 +31,9 @@ __DATE__
 * 🐛 [Fixed]
 
   - Ajout d'un titre par défaut à la couche vectorielle du drawing (#296)
- 
+  - Positionnement de la fenêtre de résultats d'autocomplétion du searchEngine (#307)
+  - Mauvais rendu du profil altimétrique (#303) 
+    
 * 🔒 [Security]
 
 
