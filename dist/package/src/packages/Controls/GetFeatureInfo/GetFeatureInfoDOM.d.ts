@@ -10,7 +10,6 @@ declare namespace GetFeatureInfoDOM {
     function _createGetFeatureInfoPanelTitleElement(): HTMLDivElement;
     function _createGetFeatureInfoPanelCloseElement(): HTMLButtonElement;
     function _createGetFeatureInfoWaitingDiv(): DOMElement;
-    function _createGetFeatureInfoNoData(): DOMElement;
     function _createGetFeatureInfoAccordionGroup(): DOMElement;
     function _createGetFeatureInfoLayerAccordion(layername: string): DOMElement;
 }
