@@ -17,6 +17,9 @@ __DATE__
 
 * 🔨 [Changed]
 
+    - Ajout d'une croix de fermeture au pop-up issue du clic sur les markers de searchEngine (#313)
+    - Augmentation du niveau de zoom lors du centrage par geolocalisation (#313)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
@@ -24,7 +27,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - Ajout d'un titre par défaut à la couche vectorielle du drawing (#296)
-  
+ 
 * 🔒 [Security]
 
 
