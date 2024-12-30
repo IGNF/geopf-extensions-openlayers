@@ -18,6 +18,7 @@ export default SearchEngine;
  * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
  * @param {String}  [options.markerStyle = "lightOrange"] - Marker style. Currently possible values are "lightOrange" (default value), "darkOrange", "red" and "turquoiseBlue".
  * @param {String}  [options.markerUrl = ""] - Marker url. By default, if not specified, use option markerStyle. Otherwise, you can added a http url or a base64 image.
+ * @param {Boolean} [options.splitResults = true] - False to disable layers search
  * @param {Boolean} [options.displayButtonAdvancedSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
@@ -57,6 +58,8 @@ export default SearchEngine;
  * @param {Object}  [options.autocompleteOptions.serviceOptions] - options of autocomplete service
  * @param {Boolean} [options.autocompleteOptions.triggerGeocode = false] - trigger a geocoding request if the autocompletion does not return any suggestions, false by default
  * @param {Number}  [options.autocompleteOptions.triggerDelay = 1000] - waiting time before sending the geocoding request, 1000ms by default
+ * @param {Number}  [options.autocompleteOptions.maximumEntries] - maximum autocompletion results we want to display
+ * @param {Boolean} [options.autocompleteOptions.prettifyResults = false] - apply a filter/prettifier function to clean or prettify autocomplete entries
  * @param {Sting|Numeric|Function} [options.zoomTo] - zoom to results, by default, current zoom.
  *       Value possible : auto or zoom level.
  *       Possible to overload it with a function :
