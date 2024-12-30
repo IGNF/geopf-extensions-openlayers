@@ -19,6 +19,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - Ajout d'une croix de fermeture au pop-up issue du clic sur les markers de searchEngine (#313)
+  - Augmentation du niveau de zoom lors du centrage par geolocalisation (#313)
   - La fenêtre de résultat du getFeatureInfo ne s'affiche pas si aucune donnée n'est renvoyée (#301)
   - Les zones que l'on peut dessiner pour le geocodage inverse correspondent aux limites du service (#305)
 

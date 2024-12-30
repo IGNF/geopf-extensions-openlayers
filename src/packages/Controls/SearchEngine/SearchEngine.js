@@ -55,6 +55,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
  * @param {String}  [options.markerStyle = "lightOrange"] - Marker style. Currently possible values are "lightOrange" (default value), "darkOrange", "red" and "turquoiseBlue".
  * @param {String}  [options.markerUrl = ""] - Marker url. By default, if not specified, use option markerStyle. Otherwise, you can added a http url or a base64 image.
+ * @param {Boolean} [options.splitResults = true] - False to disable layers search
  * @param {Boolean} [options.displayButtonAdvancedSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
@@ -94,6 +95,8 @@ var logger = Logger.getLogger("searchengine");
  * @param {Object}  [options.autocompleteOptions.serviceOptions] - options of autocomplete service
  * @param {Boolean} [options.autocompleteOptions.triggerGeocode = false] - trigger a geocoding request if the autocompletion does not return any suggestions, false by default
  * @param {Number}  [options.autocompleteOptions.triggerDelay = 1000] - waiting time before sending the geocoding request, 1000ms by default
+ * @param {Number}  [options.autocompleteOptions.maximumEntries] - maximum autocompletion results we want to display
+ * @param {Boolean} [options.autocompleteOptions.prettifyResults = false] - apply a filter/prettifier function to clean or prettify autocomplete entries
  * @param {Sting|Numeric|Function} [options.zoomTo] - zoom to results, by default, current zoom.
  *       Value possible : auto or zoom level.
  *       Possible to overload it with a function :
@@ -327,7 +330,8 @@ var SearchEngine = class SearchEngine extends Control {
                     maximumResponses : 5,
                 },
                 triggerGeocode : false,
-                triggerDelay : 1000
+                triggerDelay : 1000,
+                prettifyResults : false
             },
             displayMarker : true,
             markerStyle : "lightOrange",
@@ -737,8 +741,11 @@ var SearchEngine = class SearchEngine extends Control {
         var context = this;
         var element = document.createElement("div");
         element.className = "gp-feature-info-div gpf-widget-color";
+        // bouton de fermeture de la pop-up
         var closer = document.createElement("button");
-        closer.className = "gp-styling-button closer";
+        closer.title = "Fermer la pop-up";
+        closer.className = "gp-styling-button closer gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-mt-1v fr-mr-2v";
+
         // on closer click : remove popup
         closer.onclick = function () {
             if (context._popupOverlay != null) {
@@ -1548,7 +1555,7 @@ var SearchEngine = class SearchEngine extends Control {
                     this._setMarker();
                     return;
                 }
-                this._setPosition(coordinates, 10); // FIXME zoom fixe !
+                this._setPosition(coordinates, 15); // FIXME zoom fixe !
                 if (this._displayMarker) {
                     var markerInfo = "<h6> Ma position </h6> longitude : " + coordinates_4326[0] + "<br/> latitude : " + coordinates_4326[1];
                     this._setMarker(coordinates, markerInfo);
@@ -1689,6 +1696,8 @@ var SearchEngine = class SearchEngine extends Control {
 
         var _triggerGeocode = this.options.autocompleteOptions.triggerGeocode;
         var _triggerDelay = this.options.autocompleteOptions.triggerDelay;
+        var _maximumEntries = this.options.autocompleteOptions.maximumEntries;
+        var _prettifyResults = this.options.autocompleteOptions.prettifyResults;
 
         // INFORMATION
         // on effectue la requête au service d'autocompletion.
@@ -1716,6 +1725,15 @@ var SearchEngine = class SearchEngine extends Control {
                             context._locationsToBeDisplayed.push(ilocation);
                         }
                     };
+                    // on filtre et enjolive éventuellement les résultats
+                    if (_prettifyResults === true) {
+                        context._prettifyAutocompleteResults(context._locationsToBeDisplayed);
+                    }
+                    // on ne garde que le nombre de résultats que l'on veut afficher
+                    if (_maximumEntries) {
+                        context._locationsToBeDisplayed = context._locationsToBeDisplayed.slice(0, _maximumEntries);
+                    }
+
                     // on affiche les résultats qui n'ont pas des coordonnées nulles
                     context._fillAutoCompletedLocationListContainer(context._locationsToBeDisplayed);
                     // on annule eventuellement une requete de geocodage en cours car on obtient des
@@ -2447,6 +2465,29 @@ var SearchEngine = class SearchEngine extends Control {
                 }
             }
         }
+    }
+
+    /**
+     * this method is called by this.onAutoCompleteSearchText()
+     * and it clears suggested location from duplicate entries and improve unprecise fulltext entries.
+     *
+     * @param {Array} autocompleteResults - Array of autocompleteResults to display
+     * @private
+     */
+    _prettifyAutocompleteResults (autocompleteResults) {
+        for (var i = autocompleteResults.length - 1; i >= 0; i--) {
+            var autocompleteResult = autocompleteResults[i];
+            if ((autocompleteResult.type === "StreetAddress" && autocompleteResult.kind === "municipality") ||
+            autocompleteResult.type === "PositionOfInterest" && autocompleteResult.poiType[0] === "lieu-dit habité" && autocompleteResult.poiType[1] === "zone d'habitation") {
+                // on retire les éléments streetAdress - municipality car déjà pris en compte par POI
+                autocompleteResults.splice(i, 1);
+            }
+            // on précise le type dans le fulltext au POI des types département et région
+            if ((autocompleteResult.type === "PositionOfInterest" && autocompleteResult.poiType[0] === "administratif" &&
+                (autocompleteResult.poiType[1] === "département" || autocompleteResult.poiType[1] === "région"))) {
+                autocompleteResult.fullText = autocompleteResult.fullText + ", " + autocompleteResult.poiType[1];
+            }
+        };
     }
 
     /**
