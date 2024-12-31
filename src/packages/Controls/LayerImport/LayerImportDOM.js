@@ -1,4 +1,5 @@
 import SelectorID from "../../Utils/SelectorID";
+import checkDsfr from "../Utils/CheckDsfr";
 
 var LayerImportDOM = {
 
@@ -124,16 +125,28 @@ var LayerImportDOM = {
         var returnDiv = document.createElement("button");
         returnDiv.id = this._addUID("GPimportPanelReturnPicto");
         returnDiv.title = "Masquer le panneau";
-        returnDiv.className = "GPreturnPicto GPimportPanelReturnPicto GPelementHidden gpf-hidden gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary gpf-btn--secondary";
+        returnDiv.className = "GPreturnPicto GPimportPanelReturnPicto GPelementHidden gpf-hidden gpf-btn gpf-btn-icon-return fr-btn fr-btn--close fr-btn--tertiary-no-outline";
+        
+        if (checkDsfr()) {
+            var returnSpan = document.createElement("span");
+            returnSpan.className = "GPelementHidden";
+            returnSpan.innerHTML = "Retour";
+            returnDiv.appendChild(returnSpan);
+        }
         if (returnDiv.addEventListener) {
             returnDiv.addEventListener("click", function (e) {
+                // on ferme le panneau
                 document.getElementById(self._addUID("GPshowImportPicto")).click();
+                // on nettoie la fenêtre de résultats
                 self._onReturnPictoClick(e);
+                // on rouvre le panneau vierge
+                document.getElementById(self._addUID("GPshowImportPicto")).click();
             });
         } else if (returnDiv.attachEvent) {
             returnDiv.attachEvent("onclick", function (e) {
                 document.getElementById(self._addUID("GPshowImportPicto")).click();
                 self._onReturnPictoClick(e);
+                document.getElementById(self._addUID("GPshowImportPicto")).click();
             });
         }
         return returnDiv;
@@ -163,21 +176,17 @@ var LayerImportDOM = {
 
         var divClose = document.createElement("button");
         divClose.id = this._addUID("GPimportPanelClose");
-        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
         divClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
         if (divClose.addEventListener) {
             divClose.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPshowImportPicto")).click();
-                self._onGetCapPanelClose();
-                self._onMapBoxPanelClose();
             }, false);
         } else if (divClose.attachEvent) {
             divClose.attachEvent("onclick", function () {
                 document.getElementById(self._addUID("GPshowImportPicto")).click();
-                self._onGetCapPanelClose();
-                self._onMapBoxPanelClose();
             });
         }
 

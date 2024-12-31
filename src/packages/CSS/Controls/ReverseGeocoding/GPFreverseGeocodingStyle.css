@@ -14,7 +14,7 @@
 }
 
 .GPreverseGeocodingReturnPicto {
-  background-image: url("img/GPreverseGeocodingReturn.png");
+  background-image: url("../../img/GPreturn.png");
   background-repeat: no-repeat;
   background-position: 0 center;
 }
