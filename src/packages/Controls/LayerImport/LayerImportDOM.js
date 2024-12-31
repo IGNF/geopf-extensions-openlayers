@@ -801,7 +801,7 @@ var LayerImportDOM = {
         // return picto
         var returnDiv = document.createElement("button");
         returnDiv.id = this._addUID("GPimportMapBoxPanelReturnPicto");
-        returnDiv.title = "Masquer le panneau";
+        returnDiv.title = "Nouvel import";
         returnDiv.className = "GPreturnPicto GPimportMapBoxPanelReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary gpf-btn--secondary";
         if (returnDiv.addEventListener) {
             returnDiv.addEventListener("click", function (e) {
