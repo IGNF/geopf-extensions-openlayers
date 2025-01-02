@@ -251,6 +251,19 @@
   right: 0.5rem;
 }
 
+.gpf-btn-icon-return {
+  float: left;
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+}
+
+.gpf-btn-icon-return::after {
+  /* INFO : utiliser l'icone DSFR "fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon" */
+  -webkit-mask: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAANVJREFUKJGd07EuREEYxfGzK0hsQSOhkKxoZButR9B5FJ3Gc2gUKPU6CkGx0XgGuhsaDVH5aSxjc+9u9p7kK74z8/9OJjPTQdqq25qcAPeTDKbSGK8BhjitWftX48nbSU6S7CZZSbKaZDnJ3LTkLdz50xsecYsz7GGxTC7hY3xp1ieO0K2D13FTbH7BPR5Q/QyusFMHBxvFgAvMYwE9HOIDB01wsFmcs/SXcInzSXCwhn6Nv4/rpqsaqUryVOMPkzyPmlmf52uSq1HTMfvH6CV5bwv/6htI1GwnhVkfqAAAAABJRU5ErkJggg==') center no-repeat;
+  mask: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAANVJREFUKJGd07EuREEYxfGzK0hsQSOhkKxoZButR9B5FJ3Gc2gUKPU6CkGx0XgGuhsaDVH5aSxjc+9u9p7kK74z8/9OJjPTQdqq25qcAPeTDKbSGK8BhjitWftX48nbSU6S7CZZSbKaZDnJ3LTkLdz50xsecYsz7GGxTC7hY3xp1ieO0K2D13FTbH7BPR5Q/QyusFMHBxvFgAvMYwE9HOIDB01wsFmcs/SXcInzSXCwhn6Nv4/rpqsaqUryVOMPkzyPmlmf52uSq1HTMfvH6CV5bwv/6htI1GwnhVkfqAAAAABJRU5ErkJggg==') center no-repeat;
+}
+
 .gpf-btn-icon {
   width: inherit;
   caret-color: transparent;
