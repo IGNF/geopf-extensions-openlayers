@@ -3,12 +3,6 @@
   mask: url("img/layerimport.svg") center no-repeat;
 }
 
-.gpf-btn-icon-return::after {
-  /* INFO : utiliser l'icone DSFR "fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon" */
-  -webkit-mask: url("img/GPimportReturn.png") center no-repeat;
-  mask: url("img/GPimportReturn.png") center no-repeat;
-}
-
 .gpf-panel__items_layerimport {
   color: var(--text-action-high-blue-france);
   border-bottom: 1px solid var(--grey-900-175);

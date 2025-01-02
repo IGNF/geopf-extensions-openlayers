@@ -251,6 +251,19 @@
   right: 0.5rem;
 }
 
+.gpf-btn-icon-return {
+  float: left;
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+}
+
+.gpf-btn-icon-return::after {
+  /* INFO : utiliser l'icone DSFR "fr-icon-arrow-go-back-fill fr-btn--sm fr-btn--icon" */
+  -webkit-mask: url("img/GPreturnDSFR.png") center no-repeat;
+  mask: url("img/GPreturnDSFR.png") center no-repeat;
+}
+
 .gpf-btn-icon {
   width: inherit;
   caret-color: transparent;
