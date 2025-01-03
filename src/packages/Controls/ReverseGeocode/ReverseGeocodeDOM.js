@@ -1,3 +1,5 @@
+import checkDsfr from "../Utils/CheckDsfr";
+
 var ReverseGeocodeDOM = {
 
     /**
@@ -212,9 +214,18 @@ var ReverseGeocodeDOM = {
         var buttonNew = document.createElement("button");
         buttonNew.id = this._addUID("GPreverseGeocodingReturnPicto");
         buttonNew.title = "Nouvelle recherche";
-        buttonNew.className = "GPreturnPicto GPreverseGeocodingReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--secondary gpf-btn--secondary";
+        buttonNew.className = "GPreturnPicto GPimportPanelReturnPicto gpf-btn gpf-btn-icon-return fr-btn fr-btn--close fr-btn--tertiary-no-outline fr-m-1w";
+
         buttonNew.classList.add("GPelementHidden");
         buttonNew.classList.add("gpf-hidden");
+
+        if (checkDsfr()) {
+            var returnSpan = document.createElement("span");
+            returnSpan.className = "GPelementHidden gpf-visible";
+            returnSpan.innerHTML = "Retour";
+            buttonNew.appendChild(returnSpan);
+        }
+
         if (buttonNew.addEventListener) {
             buttonNew.addEventListener("click", function (e) {
                 document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
@@ -418,7 +429,7 @@ var ReverseGeocodeDOM = {
 
         var select = document.createElement("select");
         select.setAttribute("aria-labelledby", "label-delimitation");
-        select.className ="GPselect gpf-select fr-select";
+        select.className = "GPselect gpf-select fr-select";
         // gestionnaire d'evenement : on stocke la valeur du type de délimitation,
         // et on modifie l'événement de pointage sur la carte en fonction
         if (select.addEventListener) {

@@ -169,7 +169,6 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         this.panelGetFeatureInfoHeaderContainer = null; // usefull for the dragNdrop
         this.buttonGetFeatureInfoClose = null;
         this.getFeatureInfoAccordionGroup = null;
-        this.noDataMessage = null;
         this.panelGetFeatureInfoEntriesContainer = null;
 
         /** {Array} specify some events listeners */
@@ -218,7 +217,6 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
         var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
         getFeatureInfoPanelDiv.appendChild(accordionGroup);
 
-        this.noDataMessage = this._createGetFeatureInfoNoData();
         container.appendChild(getFeatureInfoPanel);
 
         logger.log(container);
@@ -270,8 +268,6 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
     onMapClick (e) {
         if (this.getFeatureInfoIsActive() === "true") {
             this.getFeatureInfoAccordionGroup.remove();
-            this.noDataMessage.remove();
-            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
             this.layers = e.map.getLayers().getArray().filter((l) => {
                 // On ne passe au GFI que les layers visibles
                 if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
@@ -290,7 +286,8 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
             }
             // Aucun layer visible sur la carte
             else {
-                this.getFeatureInfoPanelDiv.append(this.noDataMessage);
+                // rien à afficher car pas de couches visibles sur la carte, on s'arrête là.
+                return;
             }
         }
     }
@@ -454,6 +451,8 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
 
             var content = null;
             var accordeon = this._createGetFeatureInfoLayerAccordion(layername);
+            // on affiche pas l'entrée avant d'être confirmation qu'elle aura du contenu renvoyé
+            accordeon.style.display = "none";
             var pending = true;
             return new AsyncData({
                 ...gfiLayer,
@@ -476,14 +475,20 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
                     data.set("pending", false);
                     if (data.get("content")) {
                         data.get("contentDiv").querySelector("div.fr-collapse").innerHTML = data.get("content");
+                        // on affiche la pop-up car il y a au moins une entrée à afficher
+                        this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
+                        // du contenu est renvoyé : on affiche l'entrée
+                        data.get("contentDiv").style.display = "block";
                     }
                     else {
+                        // pas de contenu renvoyé : on retire l'entrée du DOM
                         data.get("contentDiv").remove();
                     }
-                    //s'il n'y a aucun résultat valide on affiche un message d'erreur
+                    // s'il n'y a aucun contenu renvoyé par le GFI
                     if (gfiContent.filter(gfi => gfi.get("pending") === true).length == 0
                         && gfiContent.filter(gfi => gfi.get("content")).length == 0) {
-                        this.getFeatureInfoPanelDiv.append(this.noDataMessage);
+                        // on n'affiche pas la pop-up car pas de données
+                        this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
                     }
                 }
             });

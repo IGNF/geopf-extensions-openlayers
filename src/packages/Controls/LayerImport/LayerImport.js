@@ -936,8 +936,8 @@ var LayerImport = class LayerImport extends Control {
      */
     _onReturnPictoClick (e) {
         // on bascule sur l'icone d'ouverture du composant
-        this._mapBoxPanel.classList.replace("GPelementVisible", "GPelementHidden");
-        this._mapBoxPanel.classList.replace("gpf-visible", "gpf-hidden");
+        this._onGetCapPanelClose();
+        this._onMapBoxPanelClose();
         this._loadingContainer.className = "";
     }
 

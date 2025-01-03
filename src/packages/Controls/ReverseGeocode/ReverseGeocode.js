@@ -723,7 +723,21 @@ var ReverseGeocode = class ReverseGeocode extends Control {
                 })
             }),
             type : ("Circle"),
-            source : this._inputFeaturesSource
+            source : this._inputFeaturesSource,
+            geometryFunction : function (coordinates, geometry) {
+                const center = coordinates[0];
+                const last = coordinates[coordinates.length - 1];
+                const dx = center[0] - last[0];
+                const dy = center[1] - last[1];
+                const maxRadius = 500;
+                const radius = Math.min(Math.sqrt(dx * dx + dy * dy), maxRadius);
+                if (!geometry) {
+                    geometry = new ol.geom.Circle(center, radius);
+                } else {
+                    geometry.setCenterAndRadius(center, radius);
+                }
+                return geometry;
+            }
         });
 
         this._mapInteraction.on(
@@ -783,9 +797,14 @@ var ReverseGeocode = class ReverseGeocode extends Control {
             }
             var start = coordinates[0];
             var end = coordinates[1];
+            const dx = start[0] - end[0];
+            const dy = start[1] - end[1];
+            const maxLength = 1000;
+            const lengthX = Math.max(-maxLength, Math.min(dx, maxLength));
+            const lengthY = Math.max(-maxLength, Math.min(dy, maxLength));
             // on crée les 5 coordonnées de la ligne à partir des 2 points saisis.
             geometry.setCoordinates([
-                [start, [start[0], end[1]], end, [end[0], start[1]], start]
+                [start, [start[0], start[1] - lengthY], [start[0] - lengthX, start[1] - lengthY], [start[0] - lengthX, start[1]], start]
             ]);
             return geometry;
         };

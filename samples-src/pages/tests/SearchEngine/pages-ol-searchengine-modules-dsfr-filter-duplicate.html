@@ -1,0 +1,104 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSearchEngine.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlSearchEngine.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers SearchEngine</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du moteur de recherche avec les options ppour filtrer les résultats de l'autocomplete</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                if (window.Gp) {
+                    // activation des loggers
+                    Gp.Logger.enableAll();
+                }
+                var map;
+                var createMap = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+					// 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
+                            })
+                        ]
+                    });
+
+					// 2. Appel du SearchEngine avec filtre sur les résultats affichés de l'autocmpletion
+                    // On ne garde que 5 résultats filtrés sur les 10 requêtés
+                    var search = new ol.control.SearchEngine({
+                        autocompleteOptions : {
+                            serviceOptions : {
+                                maximumResponses : 10,
+                            },
+                            triggerGeocode : false,
+                            triggerDelay : 1000,
+                            prettifyResults : true,
+                            maximumEntries : 5
+                        },
+                        splitResults : false,
+                        markerUrl : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAzNiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjMDAwMDkxIiBkPSJNMTguMzY0IDMuNjM2YTkgOSAwIDAgMSAwIDEyLjcyOEwxMiAyMi43MjhsLTYuMzY0LTYuMzY0QTkgOSAwIDAgMSAxOC4zNjQgMy42MzZaTTEyIDhhMiAyIDAgMSAwIDAgNCAyIDIgMCAwIDAgMC00WiIvPjwvc3ZnPg=="
+                    });
+
+					// 3. Ajout du SearchEngine à la carte
+                    map.addControl(search);
+
+                    // 4. Evenements
+                    search.on("searchengine:autocomplete:click", function (e) {
+                        console.warn("autocomplete", e.location);
+                    });
+                    search.on("searchengine:search:click", function (e) {
+                        console.warn("search", e.suggest);
+                    });
+                    search.on("searchengine:geocode:click", function (e) {
+                        console.warn("location", e.location);
+                    });
+                    search.on("searchengine:geolocation:click", function (e) {
+                        console.warn("geolocation", e.coordinates);
+                    });
+                    search.on("searchengine:coordinates:click", function (e) {
+                        console.warn("coordinate", e.coordinates);
+                    });
+                };
+                Gp.Services.getConfig({
+                    customConfigFile : "{{ configurl }}",
+                     callbackSuffix : "",
+                     timeOut : 20000,
+                     onSuccess : createMap,
+                     onFailure : (e) => {
+                       console.error(e);
+                     }
+                 });
+           </script>
+{{/content}}
+
+{{/extend}}
