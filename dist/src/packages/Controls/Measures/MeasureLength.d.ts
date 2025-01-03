@@ -11,6 +11,7 @@ export default MeasureLength;
  * @param {Object} options - options for function call.
  * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.geodesic = true] - If true, length will be computed on the global sphere using the {@link https://openlayers.org/en/latest/apidoc/module-ol_sphere.html#haversineDistance ol.Sphere.haversineDistance()} function. Otherwise, length will be computed on the projected plane.
+ * @param {String} [options.unit] - If not specified, the measure will be displayed in m until 999m, then in km. Values possible : m or km.
  * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
  * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the path. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
  * @param {Object} [options.styles.start = {}] - Line Style when drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
