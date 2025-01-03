@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - ajout du widget ControlList en mode classique (#300)
+  - ajout d'une option unit au widget de mesure de distance (#317)
 
 * 🔨 [Changed]
 
