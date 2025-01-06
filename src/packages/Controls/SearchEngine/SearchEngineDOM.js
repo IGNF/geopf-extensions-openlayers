@@ -740,7 +740,7 @@ var SearchEngineDOM = {
     },
 
     _createSearchedSuggestContainer () {
-        var container = document.createElement("select");
+        var container = document.createElement("div");
         container.id = this._addUID("GPautocompleteResultsSuggest");
         container.className = "GPelementHidden gpf-hidden gpf-select";
         container.size = 6;
