@@ -18,6 +18,7 @@
 .gpf-panel__items.GPautoCompleteProposal {
   height: 45px;
   box-sizing: border-box;
+  margin-bottom: 0;
 }
 
 .GPlabelTitle {
