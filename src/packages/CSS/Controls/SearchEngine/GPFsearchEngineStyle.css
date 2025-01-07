@@ -5,6 +5,24 @@
   align-items: center;
 }
 
+.position-container-top-left [id^="GPsearchEngine-"],
+.position-container-bottom-left [id^="GPsearchEngine-"],
+.position-container-top-right [id^="GPsearchEngine-"],
+.position-container-bottom-right [id^="GPsearchEngine-"] {
+  flex-direction: column;
+  align-items: flex-start;
+  height: 32px;
+}
+
+.position-container-top-left [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
+.position-container-bottom-left [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
+.position-container-top-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
+.position-container-bottom-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList] {
+  width: 340px;
+  position: relative;
+  top: unset;
+}
+
 .GPshowSearchEnginePicto {
   background-image: url("img/GPsearchEngineOpen.png");
   background-repeat: no-repeat;
@@ -64,6 +82,10 @@
 .GPsearchInputReset {
   background-image: url("img/GPsearchEngineClose.png");
   background-position: 0 center;
+}
+
+.gpf-select {
+  background-color: #FFF;
 }
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
