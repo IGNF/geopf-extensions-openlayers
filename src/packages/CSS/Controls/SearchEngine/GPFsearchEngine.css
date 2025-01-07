@@ -141,6 +141,7 @@ input[id^=GPadvancedSearchSubmit] {
 
 .GPlabelTitle {
   font-weight: bold;
+  margin-bottom: 0;
 }
 
 [id^="GPautocompleteResults-"] {

@@ -407,6 +407,7 @@ input.GPsubmit:hover {
   white-space: nowrap;
   text-overflow:ellipsis;
   cursor: pointer;
+  margin-bottom: 0;
 }
 
 .GPautoCompleteProposal:hover {
