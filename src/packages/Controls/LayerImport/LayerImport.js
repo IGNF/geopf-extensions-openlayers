@@ -1469,8 +1469,14 @@ var LayerImport = class LayerImport extends Control {
                                     // TODO : appeler fonction commune
                                     // zoom sur l'étendue des entités récupérées (si possible)
                                     var source = p.layer.getSource();
-                                    if (map.getView() && map.getSize() && source.getExtent) {
-                                        var sourceExtent = source.getExtent();
+                                    if (map.getView() && map.getSize()) {
+                                        var sourceExtent = null;
+                                        if (source && source.getExtent) {
+                                            sourceExtent = source.getExtent();
+                                        } else {
+                                            sourceExtent = source.getTileGrid().getExtent();
+                                        }
+                                        
                                         if (sourceExtent && sourceExtent[0] !== Infinity) {
                                             map.getView().fit(sourceExtent, map.getSize());
                                         }
