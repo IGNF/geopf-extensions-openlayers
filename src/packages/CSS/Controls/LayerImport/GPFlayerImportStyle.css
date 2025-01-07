@@ -34,7 +34,7 @@ div[id^="GPimportChoice-"] {
 
 .GPimportPanelReturnPicto {
   background-color: #366291;
-  background-image: url("img/GPimportReturn.png");
+  background-image: url("../../img/GPreturn.png");
   /* background-position: 3px center; */
 }
 

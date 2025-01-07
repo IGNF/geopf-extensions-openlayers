@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - ajout du widget ControlList en mode classique (#300)
+  - ajout d'une option unit au widget de mesure de distance (#317)
 
 * 🔨 [Changed]
 
@@ -33,6 +34,7 @@ __DATE__
   - Ajout d'un titre par défaut à la couche vectorielle du drawing (#296)
   - Positionnement de la fenêtre de résultats d'autocomplétion du searchEngine (#307)
   - Mauvais rendu du profil altimétrique (#303) 
+  - Correction du rendu et du comportement du bouton "retour" du layerImport et du geocodage inverse (#316)
     
 * 🔒 [Security]
 
