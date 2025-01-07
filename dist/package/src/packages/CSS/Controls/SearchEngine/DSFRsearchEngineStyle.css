@@ -18,11 +18,13 @@
 .gpf-panel__items.GPautoCompleteProposal {
   height: 45px;
   box-sizing: border-box;
+  margin-bottom: 0;
 }
 
 .GPlabelTitle {
   background-color: var(--background-open-blue-france);
   font-size: 1.0em;
+  margin-bottom: 0;
 }
 
 dialog[id^=GPcoordinateSearchPanel],

@@ -690,7 +690,7 @@ var SearchEngineDOM = {
     },
 
     _createAutoCompletedLocationContainer () {
-        var container = document.createElement("select");
+        var container = document.createElement("div");
         container.id = this._addUID("GPautocompleteResultsLocation");
         container.className = "GPelementHidden gpf-hidden gpf-select";
         container.size = 20;
@@ -699,7 +699,7 @@ var SearchEngineDOM = {
     },
     _createAutoCompletedLocationTitleElement () {
         var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
-        var label = document.createElement("option");
+        var label = document.createElement("p");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
         label.innerHTML = "Lieux et adresses";
         container.appendChild(label);
@@ -720,7 +720,7 @@ var SearchEngineDOM = {
 
         var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
 
-        var div = document.createElement("option");
+        var div = document.createElement("p");
         div.id = this._addUID("AutoCompletedLocation_" + id);
         div.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
         var value = GeocodeUtils.getSuggestedLocationFreeform(location);
@@ -740,7 +740,7 @@ var SearchEngineDOM = {
     },
 
     _createSearchedSuggestContainer () {
-        var container = document.createElement("select");
+        var container = document.createElement("div");
         container.id = this._addUID("GPautocompleteResultsSuggest");
         container.className = "GPelementHidden gpf-hidden gpf-select";
         container.size = 6;
@@ -749,7 +749,7 @@ var SearchEngineDOM = {
     },
     _createSearchedSuggestTitleElement () {
         var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
-        var label = document.createElement("option");
+        var label = document.createElement("p");
         label.className = "GPlabel GPlabelTitle gpf-label fr-label";
         label.innerHTML = "Cartes et données";
         container.appendChild(label);
@@ -769,7 +769,7 @@ var SearchEngineDOM = {
 
         var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
 
-        var div = document.createElement("option");
+        var div = document.createElement("p");
         div.id = this._addUID("AutoCompletedSuggest_" + id);
         div.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
         div.innerHTML = suggest.title + " (" + suggest.service + ")";
