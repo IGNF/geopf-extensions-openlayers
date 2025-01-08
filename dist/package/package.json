@@ -32,7 +32,7 @@
     "geoportal-access-lib": "3.4.6",
     "loglevel": "^1.9.1",
     "markdown-toc": "^1.2.0",
-    "ol": "10.3.1",
+    "ol": "8.2.0",
     "ol-mapbox-style": "12.4.0",
     "proj4": "2.15.0",
     "sortablejs": "1.15.3",
