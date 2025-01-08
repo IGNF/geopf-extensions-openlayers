@@ -10,6 +10,19 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
     width: 350px;
 }
 
+div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayersList]{
+    margin-top: -40px;
+    transform: translateX(calc(-100% - 4px));
+}
+
+div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel]{
+    transform: translate(calc(-100% - 2px), 2px);
+}
+
+div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > .gpf-panel__body {
+    max-height: unset !important;
+}
+
 .GPlayerSwitcher_layer {
   background-color: var(--background-overlap-grey);
   padding-right: 40px;
