@@ -230,13 +230,13 @@ var Drawing = class Drawing extends Control {
      */
     static DefaultLabels = {
         control : "Annoter la carte",
-        creatingTools : "Outils de création",
+        creatingTools : "Créer",
         points : "Placer des points",
         lines : "Dessiner des lignes",
         polygons : "Dessiner des polygones",
         holes : "Créer des trous sur un polygone",
         text : "Ecrire sur la carte",
-        editingTools : "Outils d'édition",
+        editingTools : "Éditer",
         edit : "Editer les tracés",
         display : "Modifier l'apparence des objets",
         tooltip : "Modifier les textes / infos-bulles",
@@ -269,11 +269,11 @@ var Drawing = class Drawing extends Control {
             src : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNiYAAAAAkAAxkR2eQAAAAASUVORK5CYII=",
             anchor : [0, 0]
         },
-        polyFillColor : "#ffffff",
-        polyFillOpacity : 0.4,
-        polyStrokeColor : "#ffcc33",
+        polyFillColor : "#000091",
+        polyFillOpacity : 0.7,
+        polyStrokeColor : "#000091",
         polyStrokeWidth : 4,
-        strokeColor : "#ffcc33",
+        strokeColor : "#FF7F00",
         strokeWidth : 4,
         markerSize : 1,
         markerColor : "#ffcc33",
@@ -737,6 +737,9 @@ var Drawing = class Drawing extends Control {
         this.stylingOvl = null;
         this.popupOvl = null;
 
+        this.tooltipOvl = null;
+        this.tooltipElem = null;
+
         this.layer = null;
         if (this.options.layer && this.options.layer instanceof VectorLayer) {
             this.layer = this.options.layer;
@@ -959,7 +962,7 @@ var Drawing = class Drawing extends Control {
                 popup = this._createLabelDiv({
                     applyFunc : setAttValue,
                     inputId : this._addUID("att-input"),
-                    placeholder : "Saisir une description...",
+                    placeholder : "Saisir une description... (facultatif)",
                     measure : (this.options.tools.measure) ? feature.getProperties().measure : null,
                     geomType : geomType,
                     key : "description"
@@ -1253,7 +1256,7 @@ var Drawing = class Drawing extends Control {
                         // pictogramme ou la taille..., on garde donc le picto initial.
                         var markerSelected = null;
                         var scale = parseInt(markerSizeElem.value, 10) / 10;
-                        var markerChecked = document.querySelector("input[name='marker']:checked");
+                        var markerChecked = document.querySelector("input[name='gpf-dropdown-radio-style']:checked");
                         if (markerChecked) {
                             markerSelected = dtObj._getsMarkersOptionsFromSrc(markerChecked.value);
                             markerSelected.scale = scale;
@@ -1480,7 +1483,7 @@ var Drawing = class Drawing extends Control {
             var popupDiv = this._createLabelDiv({
                 applyFunc : setTextValue,
                 inputId : this._addUID("label-input"),
-                placeholder : (geomType === "Text" ? "Saisir un label..." : "Saisir une description..."),
+                placeholder : (geomType === "Text" ? "Saisir un label..." : "Saisir une description... (facultatif)"),
                 text : _textValue,
                 key : "description",
                 measure : (this.options.tools.measure) ? _measure : null,
@@ -1619,11 +1622,35 @@ var Drawing = class Drawing extends Control {
             context.getMap().removeOverlay(context.popupOvl);
             context.popupOvl = null;
         }
+        if (context.stylingOvl) {
+            context.getMap().removeOverlay(context.stylingOvl);
+            context.stylingOvl = null;
+        }
+        if (context.tooltipOvl) {
+            context.getMap().removeOverlay(context.tooltipOvl);
+            context.tooltipOvl = null;
+        }
 
         // si aucune couche de dessin, on en crée une vide.
         if (!this.layer) {
             this._createEmptyLayer();
         }
+        const followCursor = (e) => {
+            if (e.dragging) {
+                return;
+            }
+            if (!context.tooltipOvl) {
+                return;
+            }
+            const coordinate = e.coordinate;
+            context.tooltipOvl.setPosition(coordinate);
+        };
+        const removeToolTip = () => {
+            if (context.tooltipOvl) {
+                context.getMap().removeOverlay(context.tooltipOvl);
+                context.tooltipOvl = null;
+            }
+        };
         switch (toolId) {
             case this._addUID("drawing-tool-point"):
                 if (context.dtOptions["points"].active) {
@@ -1665,13 +1692,26 @@ var Drawing = class Drawing extends Control {
                                 width : this.options.defaultStyles.strokeWidth
                             })
                         }),
-                        type : ("LineString")
+                        type : ("LineString"),
+                        handleMoveEvent : followCursor,
                     });
+                    if (!context.tootlTipElem) {
+                        context.tootlTipElem = document.createElement("div");
+                        context.tootlTipElem.className = "gpf-draw-linestring-tooltip";
+                    }
+                    context.tootlTipElem.innerText = "Double-cliquer pour terminer";
+                    context.tooltipOvl = new ol.Overlay({
+                        element : context.tootlTipElem,
+                        positioning : "top-right"
+                    });
+
                     context.interactionCurrent.on("drawend", function (deEv) {
                         // ajout eventuel d'un attribut description sur le feature
                         context._drawEndFeature(deEv.feature, "LineString");
+                        removeToolTip();
                     },
                     context);
+                    context.interactionCurrent.on("drawabort", removeToolTip, context);
                 }
                 break;
             case this._addUID("drawing-tool-polygon"):
@@ -1702,13 +1742,25 @@ var Drawing = class Drawing extends Control {
                                 )
                             })
                         }),
-                        type : ("Polygon")
+                        type : ("Polygon"),
+                        handleMoveEvent : followCursor,
+                    });
+                    if (!context.tootlTipElem) {
+                        context.tootlTipElem = document.createElement("div");
+                        context.tootlTipElem.className = "gpf-draw-linestring-tooltip";
+                    }
+                    context.tootlTipElem.innerText = "Double-cliquer pour terminer";
+                    context.tooltipOvl = new ol.Overlay({
+                        element : context.tootlTipElem,
+                        positioning : "top-right"
                     });
                     context.interactionCurrent.on("drawend", function (deEv) {
                         // ajout eventuel d'un attribut description sur le feature
                         context._drawEndFeature(deEv.feature, "Polygon");
+                        removeToolTip();
                     },
                     context);
+                    context.interactionCurrent.on("drawabort", removeToolTip, context);
                 }
                 break;
             case this._addUID("drawing-tool-holes"):
@@ -1933,6 +1985,9 @@ var Drawing = class Drawing extends Control {
                 source : this
             });
             map.addInteraction(context.interactionCurrent);
+            if (context.tooltipOvl) {
+                map.addOverlay(context.tooltipOvl);
+            }
         }
         logger.log("interactions", map.getInteractions());
     }

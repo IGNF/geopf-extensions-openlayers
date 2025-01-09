@@ -97,7 +97,7 @@ var DrawingDOM = {
 
     _createDrawingToolsDivSections : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__content fr-modal__content";
+        div.className = "gpf-panel__content fr-px-3w fr-modal__content";
         return div;
     },
 
@@ -281,15 +281,15 @@ var DrawingDOM = {
          * </div>
          */
         var container = document.createElement("div");
-        container.className = "drawing-tool-section fr-m-1w";
+        container.className = "drawing-tool-section fr-mx-2w";
 
         var p = document.createElement("p");
-        p.className = "drawing-tool-section-title fr-m-1w";
+        p.className = "drawing-tool-section-title";
         p.innerHTML = sectionLabel;
         container.appendChild(p);
 
         var ul = document.createElement("div");
-        ul.className = "drawing-tools-flex-display fr-m-1w";
+        ul.className = "drawing-tools-flex-display";
         var context = this;
         // li click handler function
         function liClickHandler (e) {
@@ -303,7 +303,7 @@ var DrawingDOM = {
                 continue;
             }
             var li = document.createElement("button");
-            li.className = "drawing-tool fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
+            li.className = "drawing-tool fr-btn fr-btn--tertiary gpf-btn--tertiary";
             li.id = this._addUID("drawing-tool-" + this.dtOptions[type].id);
             li.title = this.dtOptions[type].label;
             li.addEventListener("click", liClickHandler);
@@ -357,26 +357,44 @@ var DrawingDOM = {
     _createMarkersChooser : function (options) {
         var li = document.createElement("div");
         li.className = options.className;
+        var globalHiddenInput = document.createElement("input");
+        globalHiddenInput.type = "checkbox";
+        globalHiddenInput.className = "gpf-custom-dropdown-toggle";
+        globalHiddenInput.id = this._addUID(`gpf-custom-dropdown-toggle`);
+        li.appendChild(globalHiddenInput);
         for (var i = 0; i < this.options.markersList.length; i++) {
-            // radio bouton pour la selection
-            var inputElem = document.createElement("input");
-            inputElem.type = "radio";
-            inputElem.name = "marker";
-            inputElem.id = this._addUID("marker-" + i);
-            inputElem.value = this.options.markersList[i].src;
-            inputElem.className = "marker-input-radio";
-            if (options.defaultValue === inputElem.value) {
-                inputElem.checked = true;
+            var hiddenInput = document.createElement("input");
+            hiddenInput.type = "radio";
+            hiddenInput.name = "gpf-dropdown-radio-style";
+            hiddenInput.value = this.options.markersList[i].src;
+            hiddenInput.className = "gpf-custom-dropdown-display";
+            hiddenInput.id = this._addUID(`gpf-custom-dropdown-display-${i}`);
+            li.appendChild(hiddenInput);
+            if (i === 0) {
+                hiddenInput.checked = true;
             }
-            li.appendChild(inputElem);
-            // label pour l'affichage du marker
-            var labelElem = document.createElement("label");
-            labelElem.className = "marker-label"; // utile ?
-            labelElem.setAttribute("for", inputElem.id);
-            var imgElem = document.createElement("img");
-            imgElem.src = inputElem.value;
-            labelElem.appendChild(imgElem);
-            li.appendChild(labelElem);
+            var labelToggle = document.createElement("label");
+            labelToggle.htmlFor = this._addUID(`gpf-custom-dropdown-toggle`);
+            li.appendChild(labelToggle);
+            var selectedImg = document.createElement("img");
+            selectedImg.src = this.options.markersList[i].src;
+            selectedImg.alt = `Option ${i + 1}`;
+            labelToggle.appendChild(selectedImg);
+        }
+
+        var dropdownOptions = document.createElement("div");
+        dropdownOptions.className = "gpf-custom-dropdown-options";
+        li.append(dropdownOptions);
+        for (var i = 0; i < this.options.markersList.length; i++) {
+            var label = document.createElement("label");
+            label.htmlFor = this._addUID(`gpf-custom-dropdown-display-${i}`);
+            label.className = "gpf-custom-dropdown-option";
+            dropdownOptions.appendChild(label);
+            var optionImg = document.createElement("img");
+            optionImg.src = this.options.markersList[i].src;
+            optionImg.alt = `Option ${i + 1}`;
+            label.appendChild(optionImg);
+            label.addEventListener("click", () => {globalHiddenInput.click();});
         }
         return li;
     },
@@ -497,7 +515,7 @@ var DrawingDOM = {
         }
 
         var div = document.createElement("div");
-        div.className = "gpf-modal__content fr-modal__content";
+        div.className = "gpf-panel__content fr-px-3w fr-modal__content";
         mainDiv.appendChild(div);
 
         var ul = document.createElement("div");
@@ -650,16 +668,18 @@ var DrawingDOM = {
                 logger.log("Unhandled geometry type for styling.");
         }
         div.appendChild(ul);
+        var divWrapper = document.createElement("div");
+        divWrapper.className = "gpf-flex-row";
+        div.appendChild(divWrapper);
         // apply button
         var applyButton = document.createElement("input");
         applyButton.type = "button";
-        applyButton.className = "gp-styling-button fr-btn fr-btn--tertiary";
+        applyButton.className = "gp-styling-button fr-btn fr-btn--secondary";
         applyButton.value = this.options.labels.applyToObject;
         /** click sur applyButton */
         applyButton.onclick = function () {
             options.applyFunc.call(this, "apply");
         };
-        div.appendChild(applyButton);
         // set default button
         var setDefaultButton = document.createElement("input");
         setDefaultButton.type = "button";
@@ -669,7 +689,8 @@ var DrawingDOM = {
         setDefaultButton.onclick = function () {
             options.applyFunc.call(this, "default");
         };
-        div.appendChild(setDefaultButton);
+        divWrapper.appendChild(setDefaultButton);
+        divWrapper.appendChild(applyButton);
         // cancel Button
         var cancelButton = document.createElement("input");
         cancelButton.type = "button";
@@ -710,7 +731,10 @@ var DrawingDOM = {
 
             var divTitle = document.createElement("div");
             divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-            divTitle.innerHTML = "Texte de l'annotation";
+            divTitle.innerHTML = "Ajouter une description";
+            if (options.geomType === "Text") {
+                divTitle.innerHTML = "Texte de l'annotation";
+            }
             header.appendChild(divTitle);
 
             var divClose = document.createElement("button");
@@ -741,13 +765,13 @@ var DrawingDOM = {
             mainDiv.appendChild(header);
         }
         var div = document.createElement("div");
-        div.className = "gpf-modal__content fr-modal__content";
+        div.className = "gpf-panel__content fr-px-3w fr-modal__content";
         mainDiv.appendChild(div);
         var inputLabel = null;
         if (options.geomType === "Text") {
             inputLabel = document.createElement("input");
             inputLabel.type = "text";
-            inputLabel.className = "gp-input-label-style fr-input";
+            inputLabel.className = "gp-input-label-style fr-input fr-mb-3w";
         } else {
             inputLabel = document.createElement("textArea");
             inputLabel.rows = 2;
@@ -820,15 +844,15 @@ var DrawingDOM = {
             var li = document.getElementById(availToolId);
             // ce n'est pas l'outil selectionne : on le desactive (s'il ne l'était pas déjà).
             if (availToolId !== toolId) {
-                li.className = "drawing-tool fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
+                li.className = "drawing-tool fr-btn fr-btn--tertiary gpf-btn--tertiary";
                 context.dtOptions[availType].active = false;
                 continue;
             }
             // ici, c'est le l'outil selectionne
             if (context.dtOptions[availType].active) {
-                li.className = "drawing-tool fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
+                li.className = "drawing-tool fr-btn fr-btn--tertiary gpf-btn--tertiary";
             } else {
-                li.className = "drawing-tool drawing-tool-active fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
+                li.className = "drawing-tool drawing-tool-active fr-btn fr-btn--tertiary gpf-btn--tertiary";
             }
             context.dtOptions[availType].active = !context.dtOptions[availType].active;
         }

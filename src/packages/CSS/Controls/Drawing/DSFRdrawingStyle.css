@@ -9,6 +9,10 @@
   transform: translateY(20px);
 }
 
+.gp-styling-div {
+  width: 410px;
+}
+
 .gp-label-div textarea {
   max-width: 100%;
   margin-bottom: 1rem;
@@ -27,8 +31,29 @@
   width: 40px;
 }
 
+.drawing-tool-section-title {
+  color: var(--text-label-grey);
+  margin-bottom: 0.3rem;
+}
+
 .drawing-tool-active {
   background-color: var(--hover-tint);
+}
+
+div.drawing-tools-flex-display {
+  justify-content: space-between;
+  padding : 0;
+  margin: 0;
+}
+
+div.drawing-tools-flex-display {
+  border-bottom: 1px solid var(--border-default-grey);
+  padding-bottom: 15px;
+}
+
+.drawing-tool-section:last-child.drawing-tools-flex-display {
+  border-bottom: unset;
+  padding-bottom: unset;
 }
 
 /*
@@ -76,4 +101,27 @@ button[id^=drawing-tool-tooltip]::after {
 button[id^=drawing-tool-remove]::after {
   -webkit-mask: url("img/dsfr/delete.svg") center no-repeat;
   mask: url("img/dsfr/delete.svg") center no-repeat;
+}
+
+.gpf-draw-linestring-tooltip::before {
+  background-color: var(--background-default-grey);
+}
+
+.gpf-flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.gp-styling-div .gpf-flex-row {
+  padding-top: 1em;
+}
+
+.gpf-custom-dropdown-options .gpf-custom-dropdown-option:hover {
+  background-color: var(--background-default-grey-hover);
+}
+
+.gpf-custom-dropdown-options {
+  border: 1px solid var(--border-default-grey);
+  background-color: var(--background-default-grey);
 }
