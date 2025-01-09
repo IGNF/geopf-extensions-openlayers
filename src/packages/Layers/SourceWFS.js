@@ -1,3 +1,5 @@
+import Gp from "geoportal-access-lib";
+// import OpenLayers
 import VectorSource from "ol/source/Vector";
 import GeoJSON from "ol/format/GeoJSON";
 import { tile as olLoadingstrategyTile } from "ol/loadingstrategy";
