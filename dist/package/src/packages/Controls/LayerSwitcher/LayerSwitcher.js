@@ -1229,14 +1229,29 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var error = null;
 
         var map = this.getMap();
-        // cas d'un layer vecteur importé, d'un croquis, d'une couche de calcul
+        // cas d'un layer vecteur 
+        // - importé, 
+        // - d'un croquis, 
+        // - d'une couche de calcul
+        // - enregistré sur l'espace personnel
         if (data.layer.hasOwnProperty("gpResultLayerId") && 
-            (data.layer.gpResultLayerId.split(":")[0] === "layerimport" || data.layer.gpResultLayerId.split(":")[0] === "drawing"
-            || data.layer.gpResultLayerId.split(":")[0] === "compute")) {
+            (data.layer.gpResultLayerId.split(":")[0] === "layerimport" || 
+            data.layer.gpResultLayerId.split(":")[0] === "drawing" || 
+            data.layer.gpResultLayerId.split(":")[0] === "compute" ||
+            data.layer.gpResultLayerId.split(":")[0] === "bookmark"
+            )) {
             // TODO : appeler fonc  tion commune
             // zoom sur l'étendue des entités récupérées (si possible)
             if (map.getView() && map.getSize()) {
-                var sourceExtent = data.layer.getExtent() || data.layer.getSource().getExtent();
+                var sourceExtent = data.layer.getExtent();
+                if (!sourceExtent) {
+                    var source = data.layer.getSource();
+                    if (source && source.getExtent) {
+                        sourceExtent = source.getExtent();
+                    } else {
+                        sourceExtent = source.getTileGrid().getExtent();
+                    }
+                }
                 if (sourceExtent && sourceExtent[0] !== Infinity) {
                     map.getView().fit(sourceExtent, map.getSize());
                 }
