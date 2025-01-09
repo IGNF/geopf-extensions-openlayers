@@ -33,7 +33,7 @@
     "geoportail",
     "geoplateforme",
     "javascript",
-    "OpenLayers 8"
+    "OpenLayers 10"
   ],
   "license": "AGPL-3.0",
   "bugs": {
