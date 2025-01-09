@@ -23,11 +23,9 @@ Vous pouvez ouvrir un ticket dans les situations suivantes :
 
 Votre ticket est ensuite pris en compte par les membres de l'équipe ou de la communauté. Et une action peut vous être demandée telle qu'**ouvrir une Pull Request** afin de contribuer...
 
-
 ## Ouvrir une pull request (PR)
 
 Une pull request vous permet de soumettre une proposition d'évolution du code source à l'équipe en charge du projet. Voici comment soumettre une **pull request** !
-
 
 ### On «fork» le projet
 
@@ -36,7 +34,6 @@ Une pull request vous permet de soumettre une proposition d'évolution du code s
 - Ajoutez le dépôt d'origine en tant que `dépôt distant` avec le mot cléf : `upstream` (cf. https://help.github.com/articles/configuring-a-remote-for-a-fork/).
 - Si vous avez créé votre `fork` il y a quelque temps, assurez-vous de récupérer les modifications dans votre dépôt local (cf. https://help.github.com/articles/syncing-a-fork/).
 - Récupérez les modification le plus souvent possible de "upstream" afin d'être le plus à jour possible, de sorte que lorsque vous soumettez votre demande (PR), les conflits de fusion seront plus faciles à résoudre !
-
 
 ### On code...
 
