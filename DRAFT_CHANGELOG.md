@@ -35,6 +35,7 @@ __DATE__
   - Positionnement de la fenêtre de résultats d'autocomplétion du searchEngine (#307)
   - Mauvais rendu du profil altimétrique (#303) 
   - Correction du rendu et du comportement du bouton "retour" du layerImport et du geocodage inverse (#316)
+  - Zoom sur l'étendu pour le format MapBox importé (#320)
     
 * 🔒 [Security]
 
