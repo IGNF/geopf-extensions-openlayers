@@ -85,6 +85,7 @@ module.exports = (env, argv) => {
         devtool : "source-map",
         stats : "normal",
         devServer : {
+            webSocketServer: false,
             server : "https",
             open : ["samples/index-bundle.html"],
             static : {
