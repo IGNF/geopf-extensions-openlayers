@@ -1,0 +1,58 @@
+.point-info-content {
+    width: auto;
+    height: fit-content;
+    padding: 20px 20px 20px 20px;
+}
+.point-info-content div{
+    margin-bottom: 10px;
+}
+
+div[id^=GPpointInfo-] {
+    top: 4px;
+    bottom: unset;
+    left: 60px;
+    right: unset;
+}
+
+.position > div[id^=GPpointInfo-] > dialog[id^=GPpointInfoPanel] {
+    position: absolute;
+}
+
+/* Showing/hiding */
+
+button[id^=GPshowPointInfoPicto][aria-pressed="false"] + dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
+}
+
+button[id^="GPshowPointInfoPicto-"][aria-pressed="true"] + dialog {
+    display: flex;
+    flex-direction: column;
+    visibility: visible;
+    opacity: 100%;
+    width: 350px;
+    height: initial;
+    max-height: inherit;
+}
+button[id^="GPshowPointInfoPicto-"] {
+    display: none;
+}
+
+
+.ol-ctx-menu-container {
+    border-radius: 0 !important;
+    font-size: 0.75rem !important;
+    /* font-family:  !important; */
+}
+.ol-context-menu-custom li {
+    line-height: 2em !important;
+}
+.ol-context-menu-custom:hover {
+    background-color: transparent !important;
+    color: var(--text-default-grey) !important;
+}
+.ol-context-menu-custom  {
+    color: var(--text-default-grey);
+}
+

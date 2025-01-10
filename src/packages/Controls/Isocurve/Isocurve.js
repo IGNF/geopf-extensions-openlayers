@@ -317,8 +317,10 @@ var Isocurve = class Isocurve extends Control {
         // (cf. _createIsoPanelFormPointElement),
         var inputPointer = document.getElementById("GPlocationOriginPointer_" + 1 + "-" + this._uid);
         inputPointer.checked = true;
+        var inputCoordsDOM = document.getElementById("GPlocationOrigin_" + 1 + "-" + this._uid);
         var inputCoords = document.getElementById("GPlocationOriginCoords_" + 1 + "-" + this._uid);
-        inputCoords.value = "";
+        inputCoords.value = data.point;
+        inputCoordsDOM.value = data.point;
         this._originPoint.setCoordinate(data.point, "EPSG:4326");
         this._currentIsoResults = data.results;
     }

@@ -323,6 +323,13 @@ var Route = class Route extends Control {
         this._currentTransport = data.transport;
         this._currentComputation = data.computation;
         this._currentExclusions = data.exclusions;
+        // ajout des nouvelles coordonnnées
+        for (var j = 0; j < data.points.length; j++) {
+            const c = data.points[j];
+            if (c) {
+                this._currentPoints[j].setCoordinate(c, "EPSG:4326");
+            }
+        }
         // INFO
         // nettoyer les points du calcul précedent
         for (var i = 0; i < this._currentPoints.length; i++) {
@@ -330,12 +337,12 @@ var Route = class Route extends Control {
             if (point.getCoordinate()) {
                 // clean de l'objet sans declencher les evenements qui suppriment la couche précedente !
                 // /!\ point.clear()
-                point.clearResults();
+                // point.clearResults();
                 // clean du dom
                 var id = (i + 1) + "-" + this._uid;
-                document.getElementById("GPlocationOriginCoords_" + id).value = "";
-                document.getElementById("GPlocationOrigin_" + id).value = "";
-                document.getElementById("GPlocationPoint_" + id).style.cssText = "";
+                document.getElementById("GPlocationOriginCoords_" + id).value = point.getCoordinate();
+                document.getElementById("GPlocationOrigin_" + id).value = point.getCoordinate();
+                // document.getElementById("GPlocationPoint_" + id).style.cssText = "";
                 if (i > 0 && i < 6) {
                     // on masque les points intermediaires
                     document.getElementById("GPlocationPoint_" + id).className = "GPflexInput GPelementHidden gpf-flex gpf-hidden ";
@@ -343,13 +350,6 @@ var Route = class Route extends Control {
                 document.getElementById("GPlocationOriginPointer_" + id).checked = false;
                 document.getElementById("GPlocationOrigin_" + id).className = "GPelementVisible gpf-visible";
                 document.getElementById("GPlocationOriginCoords_" + id).className = "GPelementHidden gpf-hidden";
-            }
-        }
-        // ajout des nouvelles coordonnnées
-        for (var j = 0; j < data.points.length; j++) {
-            const c = data.points[j];
-            if (c) {
-                this._currentPoints[j].setCoordinate(c, "EPSG:4326");
             }
         }
         this._currentRouteInformations = data.results;
@@ -1407,6 +1407,7 @@ var Route = class Route extends Control {
         this._clearRouteResultsDetails();
         this._clearRouteResultsGeometry();
         this._clearRouteResultsFeatureGeometry();
+        this.dispatchEvent("route:newresults");
     }
 
     /**

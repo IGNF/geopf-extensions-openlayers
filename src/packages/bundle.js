@@ -283,6 +283,7 @@ Ol.control.Legends = Legends;
 Ol.control.Catalog = Catalog;
 Ol.control.Territories = Territories;
 Ol.control.ControlList = ControlList;
+Ol.control.ContextMenu = ContextMenu;
 
 export {
     /**
