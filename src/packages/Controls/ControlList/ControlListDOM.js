@@ -172,7 +172,12 @@ var ControlListDOM = {
      * @returns {DOMElement} DOM element
      */
     _createControlListPanelControl : function (control) {
-        const controlContainer = control.getContainer();
+        let controlContainer;
+        try {
+            controlContainer = control.getContainer();
+        } catch (e) {
+            controlContainer = control.container;
+        }
         var container = document.createElement("div");
         var btn = controlContainer.querySelector(".GPshowOpen").cloneNode();
         btn.id = btn.id + "-controllist";
@@ -181,12 +186,12 @@ var ControlListDOM = {
         var divText = document.createElement("div");
         var spanTitle = document.createElement("span");
         divText.appendChild(spanTitle);
-        if (controlContainer.querySelector(".GPpanelTitle")) {
+        if (controlContainer.querySelector(".GPshowOpen").ariaLabel) {
+            spanTitle.innerText = controlContainer.querySelector(".GPshowOpen").ariaLabel;
+        } else if (controlContainer.querySelector(".GPpanelTitle")) {
             spanTitle.innerText = controlContainer.querySelector(".GPpanelTitle").innerText;
         } else if (controlContainer.querySelector("[class^='gpf-btn-header-']")) {
             spanTitle.innerText = controlContainer.querySelector("[class^='gpf-btn-header-']").title;
-        } else {
-            spanTitle.innerText = controlContainer.querySelector(".GPshowOpen").ariaLabel;
         }
         if (control.description) {
             var spanDescription = document.createElement("span");

@@ -32,7 +32,9 @@ var logger = Logger.getLogger("measurelength");
  * @type {ol.control.MeasureLength}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
+ * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.geodesic = true] - If true, length will be computed on the global sphere using the {@link https://openlayers.org/en/latest/apidoc/module-ol_sphere.html#haversineDistance ol.Sphere.haversineDistance()} function. Otherwise, length will be computed on the projected plane.
+ * @param {String} [options.unit] - If not specified, the measure will be displayed in m until 999m, then in km. Values possible : m or km.
  * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
  * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the path. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
  * @param {Object} [options.styles.start = {}] - Line Style when drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
@@ -63,7 +65,7 @@ var MeasureLength = class MeasureLength extends Control {
         this.CLASSNAME = "MeasureLength";
 
         // uuid
-        this._uid = ID.generate();
+        this._uid = options.id || ID.generate();
 
         // container d'activation du controle
         this._pictoContainer = null;
@@ -181,6 +183,7 @@ var MeasureLength = class MeasureLength extends Control {
         // liste des options
         this.options = {};
         this.options.geodesic = (typeof options.geodesic !== "undefined") ? options.geodesic : true;
+        this.options.unit = (typeof options.unit !== "undefined") ? options.unit : null;
         this.options.position = (typeof options.position !== "undefined") ? options.position : null;
         this.options.target = (typeof options.target !== "undefined") ? options.target : null;
         this.options.render = (typeof options.render !== "undefined") ? options.render : null;
@@ -279,10 +282,18 @@ var MeasureLength = class MeasureLength extends Control {
         }
 
         var output;
-        if (measure > 1000) {
+        // si option unit spécifiée, on force l'unité
+        // sinon on est en mode automatique entre m et km.
+        if (this.options.unit === "km") {
             output = (Math.round(measure / 1000 * 100) / 100) + " " + "km";
-        } else {
+        } else if (this.options.unit === "m") {
             output = (Math.round(measure * 100) / 100) + " " + "m";
+        } else {
+            if (measure > 1000) {
+                output = (Math.round(measure / 1000 * 100) / 100) + " " + "km";
+            } else {
+                output = (Math.round(measure * 100) / 100) + " " + "m";
+            }
         }
         return output;
     }

@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import View from 'ol/View';
 import Map from 'ol/Map';
+import ScaleLine from 'ol/control/ScaleLine';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 
@@ -33,7 +34,8 @@ import {
   ReverseGeocode,
   Route,
   SearchEngine,
-  Territories
+  Territories,
+  ControlList
 } from "geopf-extensions-openlayers";
 
 import Gp from "geoportal-access-lib";
@@ -59,7 +61,13 @@ function App() {
     })
   
     CRS.load();
-  
+
+    const scaleControl = new ScaleLine({
+      units: 'metric',
+      bar: false,
+    });
+    map.addControl(scaleControl);
+
     var territories = new Territories({
       collapsed: true,
       draggable: true,
@@ -141,12 +149,14 @@ function App() {
     map.addControl(drawing);
   
     var iso = new Isocurve({
-      position: "bottom-left"
+      position: "bottom-left",
+      listable: true
     });
     map.addControl(iso);
   
     var layerImport = new LayerImport({
-      position: "bottom-left"
+      position: "bottom-left",
+      listable: true
     });
     map.addControl(layerImport);
   
@@ -163,17 +173,36 @@ function App() {
     map.addControl(mp);
   
     var route = new Route({
-      position: "top-right"
+      position: "top-right",
+      listable: true
     });
     map.addControl(route);
   
     var reverse = new ReverseGeocode({
-      position: "top-right"
+      position: "top-right",
+      listable: true
     });
     map.addControl(reverse);
   
     var search = new SearchEngine({
-      position: "top-right"
+            displayButtonAdvancedSearch : true,
+            displayButtonGeolocate : true,
+            displayButtonCoordinateSearch : true,
+            displayButtonClose : false,
+            collapsible : false,
+            resources : {
+              search : true
+            },
+            searchOptions: {
+                addToMap: true,
+                filterServices : "WMTS,WMS,TMS,WFS",
+                filterLayersPriority : "PLAN.IGN,GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1,GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2,CADASTRALPARCELS.PARCELLAIRE_EXPRESS,ORTHOIMAGERY.ORTHOPHOTOS",
+                filterWMTSPriority : true,
+                serviceOptions: {
+                    maximumResponses : 20
+                }
+            },
+            markerUrl : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAzNiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjMDAwMDkxIiBkPSJNMTguMzY0IDMuNjM2YTkgOSAwIDAgMSAwIDEyLjcyOEwxMiAyMi43MjhsLTYuMzY0LTYuMzY0QTkgOSAwIDAgMSAxOC4zNjQgMy42MzZaTTEyIDhhMiAyIDAgMSAwIDAgNCAyIDIgMCAwIDAgMC00WiIvPjwvc3ZnPg=="
     });
     map.addControl(search);
   
@@ -185,28 +214,38 @@ function App() {
     map.addControl(feature);
   
     var measureLength = new MeasureLength({
-      position: "bottom-left"
+      position: "bottom-left",
+      listable: true
     });
     map.addControl(measureLength);
   
     var measureArea = new MeasureArea({
-      position: "bottom-left"
+      position: "bottom-left",
+      listable: true
     });
     map.addControl(measureArea);
 
     var measureAzimuth = new MeasureAzimuth({
-      position: "bottom-left"
+      position: "bottom-left",
+      listable: true
     });
     map.addControl(measureAzimuth);
   
     var measureProfil = new ElevationPath({
-      position: "bottom-left"
+      position: "bottom-left",
+      listable: true
     });
     map.addControl(measureProfil);
   
     var attributions = new GeoportalAttribution();
     map.addControl(attributions);
   
+    var controlList = new ControlList({
+      draggable: false,
+      position: "bottom-right"
+    });
+    map.addControl(controlList);
+
     setMap(map);
   };
 

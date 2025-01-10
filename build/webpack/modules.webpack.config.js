@@ -125,6 +125,7 @@ module.exports = (env, argv) => {
         ],
         devtool : "source-map",
         devServer : {
+            webSocketServer: false,
             server : "https",
             open : ["samples/index-modules.html"],
             static : {

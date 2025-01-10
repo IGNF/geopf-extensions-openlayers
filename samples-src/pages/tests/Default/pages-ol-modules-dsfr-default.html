@@ -71,10 +71,7 @@
 
 {{#content "js"}}
             <script type="text/javascript">
-              const scaleControl = new ol.control.ScaleLine({
-                units: 'metric',
-                bar: false,
-              });
+
               var createMap = function () {
                 // on cache l'image de chargement du Géoportail.
                 document.getElementById("map").style.backgroundImage = "none";
@@ -93,7 +90,10 @@
                   })
                 });
 
-
+                const scaleControl = new ol.control.ScaleLine({
+                  units: 'metric',
+                  bar: false,
+                });
                 map.addControl(scaleControl);
 
                 var catalog = new ol.control.Catalog({
@@ -161,7 +161,8 @@
                 map.addControl(route);
 
                 var feature =  new ol.control.GetFeatureInfo({
-                    position : "top-left"
+                  position : "top-left",
+                  listable: true,
                 });
                 map.addControl(feature);
 
@@ -185,7 +186,7 @@
 
                 var measureArea = new ol.control.MeasureArea({
                   position : "top-left",
-                  listable : true,
+                  listable : true
                 });
                 map.addControl(measureArea);
 

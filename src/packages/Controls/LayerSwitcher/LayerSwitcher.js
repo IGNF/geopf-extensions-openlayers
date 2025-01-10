@@ -39,6 +39,7 @@ var logger = Logger.getLogger("layerswitcher");
  *      - minScaleDenominator (Number, optional) : min scale denominator for legend validity.
  * @param {Array} [options.layers.config.metadata] - array of layer metadata. Each array element is an object, with property url (String, mandatory) : link to a metadata
  * @param {Object} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
+ * @param {Number} [options.options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
@@ -535,7 +536,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      */
     _initialize (options, layers) {
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = SelectorID.generate();
+        this._uid = options.id || SelectorID.generate();
 
         this.options = options;
         this.options.layers = layers;
@@ -1228,18 +1229,35 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var error = null;
 
         var map = this.getMap();
-        // cas d'un layer vecteur importé
-        if (data.layer.hasOwnProperty("gpResultLayerId") && data.layer.gpResultLayerId.split(":")[0] === "layerimport") {
-            // TODO : appeler fonction commune
+        // cas d'un layer vecteur 
+        // - importé, 
+        // - d'un croquis, 
+        // - d'une couche de calcul
+        // - enregistré sur l'espace personnel
+        if (data.layer.hasOwnProperty("gpResultLayerId") && 
+            (data.layer.gpResultLayerId.split(":")[0] === "layerimport" || 
+            data.layer.gpResultLayerId.split(":")[0] === "drawing" || 
+            data.layer.gpResultLayerId.split(":")[0] === "compute" ||
+            data.layer.gpResultLayerId.split(":")[0] === "bookmark"
+            )) {
+            // TODO : appeler fonc  tion commune
             // zoom sur l'étendue des entités récupérées (si possible)
             if (map.getView() && map.getSize()) {
-                var sourceExtent = data.layer.getExtent() || data.layer.getSource().getExtent();
+                var sourceExtent = data.layer.getExtent();
+                if (!sourceExtent) {
+                    var source = data.layer.getSource();
+                    if (source && source.getExtent) {
+                        sourceExtent = source.getExtent();
+                    } else {
+                        sourceExtent = source.getTileGrid().getExtent();
+                    }
+                }
                 if (sourceExtent && sourceExtent[0] !== Infinity) {
                     map.getView().fit(sourceExtent, map.getSize());
                 }
             }
         } else {
-            try {
+            try {   
                 // Check if configuration is loaded
                 if (!Config.isConfigLoaded()) {
                     throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
@@ -1398,11 +1416,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             var layerProperties = layer.getProperties();
             var src = layerProperties.source;
             if (src) {
-                layerInfo._title = src._title || layerProperties.id || "";
-                layerInfo._description = src._description || "";
-                layerInfo._quicklookUrl = src._quicklookUrl || "";
-                layerInfo._metadata = src._metadata || [];
-                layerInfo._legends = src._legends || [];
+                layerInfo._title = src._title || layerProperties.title || layerProperties.id || "";
+                layerInfo._description = src._description || layerProperties.description || "";
+                layerInfo._quicklookUrl = src._quicklookUrl || layerProperties.quicklookUrl || "";
+                layerInfo._metadata = src._metadata || layerProperties.metadata || [];
+                layerInfo._legends = src._legends || layerProperties.legends || [];
             }
         }
         return layerInfo;
