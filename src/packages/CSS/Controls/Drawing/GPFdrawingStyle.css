@@ -495,3 +495,18 @@ button[id^=drawing-export-] {
 .gp-styling-option input.gpf-custom-dropdown-display {
   display: none;
 }
+
+.gpf-custom-dropdown-display:checked + label {
+  width: 53px;
+  border-radius: 3px;
+}
+
+.gpf-custom-dropdown-display:checked + label::after {
+  content: ">";
+  font-weight: bold;
+  display: flex;
+  transform: rotate(90deg);
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+}

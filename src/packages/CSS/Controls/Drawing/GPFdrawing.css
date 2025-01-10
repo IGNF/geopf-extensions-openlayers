@@ -85,7 +85,7 @@ div[id^=GPdrawingBasicPanel-] {
   z-index: 1000;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-top: -32px;
+  margin-top: -48px;
 }
 
 .gpf-custom-dropdown-option {

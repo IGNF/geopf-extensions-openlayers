@@ -125,3 +125,11 @@ button[id^=drawing-tool-remove]::after {
   border: 1px solid var(--border-default-grey);
   background-color: var(--background-default-grey);
 }
+
+.gpf-custom-dropdown-display:checked + label {
+  width: calc(43px + 3.5rem);
+}
+
+div:not(.position) > div[id^=GPdrawing-] > dialog[id^=GPdrawingPanel] {
+  max-height: unset !important;
+}

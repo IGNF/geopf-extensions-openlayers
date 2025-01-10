@@ -362,6 +362,9 @@ var DrawingDOM = {
         globalHiddenInput.className = "gpf-custom-dropdown-toggle";
         globalHiddenInput.id = this._addUID(`gpf-custom-dropdown-toggle`);
         li.appendChild(globalHiddenInput);
+        var span = document.createElement("span");
+        span.innerText = "Sélectionner le pictogramme :";
+        li.appendChild(span);
         for (var i = 0; i < this.options.markersList.length; i++) {
             var hiddenInput = document.createElement("input");
             hiddenInput.type = "radio";
@@ -375,6 +378,7 @@ var DrawingDOM = {
             }
             var labelToggle = document.createElement("label");
             labelToggle.htmlFor = this._addUID(`gpf-custom-dropdown-toggle`);
+            labelToggle.className = "fr-select GPselect gpf-select";
             li.appendChild(labelToggle);
             var selectedImg = document.createElement("img");
             selectedImg.src = this.options.markersList[i].src;
