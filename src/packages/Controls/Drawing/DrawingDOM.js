@@ -810,27 +810,25 @@ var DrawingDOM = {
             div.appendChild(inputMeasure);
         }
 
-        if (options.geomType !== "Text") {
-            // apply button
-            var applyButton = document.createElement("input");
-            applyButton.type = "button";
-            applyButton.className = "gp-styling-button fr-btn fr-btn--tertiary";
-            applyButton.value = this.options.labels.saveDescription;
-            /** click sur applyButton */
-            applyButton.onclick = function () {
-                options.applyFunc.call(this, options.key, inputLabel.value, true);
-            };
-            div.appendChild(applyButton);
-            // cancel Button
-            var cancelButton = document.createElement("input");
-            cancelButton.type = "button";
-            cancelButton.className = "gp-styling-button closer";
-            /** click sur cancel Button */
-            cancelButton.onclick = function () {
-                options.applyFunc.call(this, options.key, inputLabel.value, false);
-            };
-            div.appendChild(cancelButton);
-        }
+        // apply button
+        var applyButton = document.createElement("input");
+        applyButton.type = "button";
+        applyButton.className = "gp-styling-button fr-btn fr-btn--tertiary";
+        applyButton.value = this.options.labels.saveDescription;
+        /** click sur applyButton */
+        applyButton.onclick = function () {
+            options.applyFunc.call(this, options.key, inputLabel.value, true);
+        };
+        div.appendChild(applyButton);
+        // cancel Button
+        var cancelButton = document.createElement("input");
+        cancelButton.type = "button";
+        cancelButton.className = "gp-styling-button closer";
+        /** click sur cancel Button */
+        cancelButton.onclick = function () {
+            options.applyFunc.call(this, options.key, inputLabel.value, false);
+        };
+        div.appendChild(cancelButton);
 
         return popup;
     },

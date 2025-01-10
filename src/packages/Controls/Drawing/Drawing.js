@@ -1616,7 +1616,6 @@ var Drawing = class Drawing extends Control {
             map.removeInteraction(context.interactionSelectEdit);
             context.interactionSelectEdit = null;
         }
-
         // on supprime la popup courante s'il y en a une.
         if (context.popupOvl) {
             context.getMap().removeOverlay(context.popupOvl);
@@ -1860,8 +1859,6 @@ var Drawing = class Drawing extends Control {
                         type : ("Point")
                     });
                     context.interactionCurrent.on("drawend", (deEv) => {
-                        // creation overlay pour saisie du label
-                        var popupOvl = null;
                         /**
                         * Enregistrement de la valeur saisie dans l'input.
                         *
@@ -1870,8 +1867,8 @@ var Drawing = class Drawing extends Control {
                         * @param {Boolean} save - true si on garde le label.
                         */
                         var setTextValue = function (key, value, save) {
-                            context.getMap().removeOverlay(popupOvl);
-                            if (!save) {
+                            context.getMap().removeOverlay(context.popupOvl);
+                            if (!save || !value) {
                                 // removes feature from overlay.
                                 context.layer.getSource().removeFeature(deEv.feature);
                                 return;
@@ -1906,15 +1903,19 @@ var Drawing = class Drawing extends Control {
                             key : "name",
                             placeholder : "Saisir un label..."
                         });
-                        popupOvl = new Overlay({
+                        // un peu de menage...
+                        if (context.popupOvl) {
+                            context.popupOvl.element.querySelector(".gp-styling-button.closer").click();
+                        }
+                        context.popupOvl = new Overlay({
                             element : popup,
                             // FIXME : autres valeurs.
                             positioning : "top-center" // par defaut, top-left...
                             // stopEvent : false
                         });
-                        context.getMap().addOverlay(popupOvl);
-                        popupOvl.setPosition(deEv.feature.getGeometry().getCoordinates());
-                        document.getElementById(this._addUID("label-input")).focus();
+                        context.getMap().addOverlay(context.popupOvl);
+                        context.popupOvl.setPosition(deEv.feature.getGeometry().getCoordinates());
+                        document.getElementById(context._addUID("label-input")).focus();
                     });
                 }
                 break;
@@ -1966,7 +1967,6 @@ var Drawing = class Drawing extends Control {
                 }
                 break;
             case this._addUID("drawing-tool-tooltip"):
-
                 if (context.dtOptions["tooltip"].active) {
                     context.interactionCurrent = this._createLabelInteraction();
                 }
