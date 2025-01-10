@@ -1868,12 +1868,12 @@ var Drawing = class Drawing extends Control {
                         */
                         var setTextValue = function (key, value, save) {
                             context.getMap().removeOverlay(context.popupOvl);
+                            context.popupOvl = null;
                             if (!save || !value) {
                                 // removes feature from overlay.
                                 context.layer.getSource().removeFeature(deEv.feature);
                                 return;
                             }
-
                             var obj = {};
                             obj[key] = value;
                             deEv.feature.setProperties(obj);
