@@ -9,6 +9,8 @@ __DATE__
 
 ### 🎉 Summary
 
+> upgrade OpenLayers en v10.3.1 🎉
+
 ### 💥 Breaking changes
 
 ### 📖 Changelog
