@@ -34,7 +34,7 @@ Les pages html de test d'utilisation sont dans le répertoire *samples-src/*.
 ``` bash
 npm run build
 npm run build:bundle
-bnpm run uild:modules
+npm run build:modules
 ```
 
 **Construction des modules**
