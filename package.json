@@ -1,8 +1,8 @@
 {
   "name": "geopf-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.1-320",
-  "date": "08/01/2025",
+  "version": "1.0.0-beta.2-323",
+  "date": "09/01/2025",
   "module": "src/index.js",
   "directories": {},
   "engines": {
@@ -33,7 +33,7 @@
     "geoportail",
     "geoplateforme",
     "javascript",
-    "OpenLayers 8"
+    "OpenLayers 10"
   ],
   "license": "AGPL-3.0",
   "bugs": {
@@ -48,7 +48,7 @@
     "geoportal-access-lib": "3.4.6",
     "loglevel": "^1.9.1",
     "markdown-toc": "^1.2.0",
-    "ol": "8.2.0",
+    "ol": "10.3.1",
     "ol-mapbox-style": "12.4.0",
     "proj4": "2.15.0",
     "sortablejs": "1.15.3",
