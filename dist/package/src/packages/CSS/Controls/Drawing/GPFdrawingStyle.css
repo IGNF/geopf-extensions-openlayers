@@ -52,6 +52,23 @@ input.marker-input-radio:checked + label {
   background-color: #002a50;
 }
 
+.drawing-tool-section-title {
+  /* font-family: OpenSansExtraBold,"Open Sans",Arial,sans-serif; */
+  font-size: 0.75em;
+  margin-bottom: 0;
+  margin-top: 0;
+  text-transform: uppercase;
+}
+
+div.drawing-tools-flex-display {
+  justify-content: center;
+  padding : 0;
+  margin: 12px 0;
+}
+
+.drawing-tool-section:not(:last-child) {
+  border-bottom: 1px solid #ddd;
+}
 
 /*
 * Drawing tools
@@ -458,3 +475,38 @@ button[id^=drawing-export-] {
   height: 24px;
 }
 
+.gpf-draw-linestring-tooltip::before {
+  background-color: white;
+}
+
+.gpf-custom-dropdown-options .gpf-custom-dropdown-option:hover {
+  background-color: #f0f0f0;
+}
+
+.gpf-custom-dropdown-options {
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.gp-styling-option input.gpf-custom-dropdown-toggle {
+  display: none;
+}
+
+.gp-styling-option input.gpf-custom-dropdown-display {
+  display: none;
+}
+
+.gpf-custom-dropdown-display:checked + label {
+  width: 53px;
+  border-radius: 3px;
+}
+
+.gpf-custom-dropdown-display:checked + label::after {
+  content: ">";
+  font-weight: bold;
+  display: flex;
+  transform: rotate(90deg);
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+}
