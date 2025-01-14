@@ -200,43 +200,43 @@ var ContextMenu = class ContextMenu extends Control {
         var contextMenuItems = [
             {
                 text : "Adresse / Coordonnées",
-                classname : "ol-context-menu-custom",
+                classname : "ol-context-menu-custom fr-text--md",
                 callback : this.displayAdressAndCoordinate.bind(this)
             },
             {
                 text : "Itinéraire depuis ce lieu",
-                classname : "ol-context-menu-custom",
+                classname : "ol-context-menu-custom fr-text--md",
                 callback : this.defineStartPoint.bind(this)
             },
             {
                 text : "Itinéraire vers ce lieu",
-                classname : "ol-context-menu-custom",
+                classname : "ol-context-menu-custom fr-text--md",
                 callback : this.defineEndPoint.bind(this)
             },
             {
                 text : "Isochrone - à proximité",
-                classname : "ol-context-menu-custom",
+                classname : "ol-context-menu-custom fr-text--md",
                 callback : this.computeIsochrone.bind(this)
             },
             {
                 text : "Ajouter des cartes / données",
-                classname : "ol-context-menu-custom",
+                classname : "ol-context-menu-custom fr-text--md",
                 callback : this.openCatalogue.bind(this)
             },
             " ",
             {
                 text : "Afficher la légende",
-                classname : "ol-context-menu-custom",
+                classname : "ol-context-menu-custom fr-text--md",
                 callback : this.displayLegend.bind(this)
             },
             // {
             //     text : "Imprimer la carte",
-            //     classname : "ol-context-menu-custom",
+            //     classname : "ol-context-menu-custom fr-text--md",
             //     // callback : this.defineStartPoint.bind(this)
             // },
             // {
             //     text : "Partager la carte",
-            //     classname : "ol-context-menu-custom",
+            //     classname : "ol-context-menu-custom fr-text--md",
             //     // callback : this.defineStartPoint.bind(this)
             // }
         ];
