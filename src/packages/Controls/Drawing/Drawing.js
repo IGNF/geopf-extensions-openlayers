@@ -1699,7 +1699,7 @@ var Drawing = class Drawing extends Control {
                         context.tootlTipElem.className = "gpf-draw-linestring-tooltip";
                     }
                     context.tootlTipElem.innerText = "Double-cliquer pour terminer";
-                    context.tooltipOvl = new ol.Overlay({
+                    context.tooltipOvl = new Overlay({
                         element : context.tootlTipElem,
                         positioning : "top-right"
                     });
