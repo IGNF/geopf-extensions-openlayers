@@ -197,50 +197,7 @@ var ContextMenu = class ContextMenu extends Control {
 
         this.layerFeature = new VectorLayer({source : this.sourceLayerFeature});
 
-        var contextMenuItems = [
-            {
-                text : "Adresse / Coordonnées",
-                classname : "ol-context-menu-custom fr-text--md",
-                callback : this.displayAdressAndCoordinate.bind(this)
-            },
-            {
-                text : "Itinéraire depuis ce lieu",
-                classname : "ol-context-menu-custom fr-text--md",
-                callback : this.defineStartPoint.bind(this)
-            },
-            {
-                text : "Itinéraire vers ce lieu",
-                classname : "ol-context-menu-custom fr-text--md",
-                callback : this.defineEndPoint.bind(this)
-            },
-            {
-                text : "Isochrone - à proximité",
-                classname : "ol-context-menu-custom fr-text--md",
-                callback : this.computeIsochrone.bind(this)
-            },
-            {
-                text : "Ajouter des cartes / données",
-                classname : "ol-context-menu-custom fr-text--md",
-                callback : this.openCatalogue.bind(this)
-            },
-            " ",
-            {
-                text : "Afficher la légende",
-                classname : "ol-context-menu-custom fr-text--md",
-                callback : this.displayLegend.bind(this)
-            },
-            // {
-            //     text : "Imprimer la carte",
-            //     classname : "ol-context-menu-custom fr-text--md",
-            //     // callback : this.defineStartPoint.bind(this)
-            // },
-            // {
-            //     text : "Partager la carte",
-            //     classname : "ol-context-menu-custom fr-text--md",
-            //     // callback : this.defineStartPoint.bind(this)
-            // }
-        ];
-  
+        var contextMenuItems = this.getAvailableContextMenuControls.call(this);
         this.contextmenu = new olContextMenu(
             {
                 defaultItems : false, // defaultItems are (for now) Zoom In/Zoom Out
@@ -302,19 +259,8 @@ var ContextMenu = class ContextMenu extends Control {
      * @private
      */
     addEventsListeners () {
-        var addMenuToolsEventListeners = () => {
-            this.controlList = []; 
-            var controlArray = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route");
-            if (controlArray.length > 0) {
-                controlArray[0].on("route:newresults", () => {
-                    this.itiPoints = new Array(7);
-                });
-            }
-        };
-
-        this.contextmenu.on("open", function (evt) {
-            addMenuToolsEventListeners();
-        });
+        this.contextmenu.on("open", (evt) => {evt.this = this; this.onOpenContextMenu(evt);});
+        this.contextmenu.on("close", (evt) => {evt.this = this; this.onCloseContextMenu(evt);});
     }
 
     /**
@@ -324,6 +270,64 @@ var ContextMenu = class ContextMenu extends Control {
     removeEventsListeners () {
     }
 
+
+    /**
+     * Add tools if added to the map Controls list
+     * @private
+     */
+    getAvailableContextMenuControls () {
+        var allItems = [
+            {
+                text : "Adresse / Coordonnées",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : this.displayAdressAndCoordinate.bind(this),
+                control_CLASSNAME : "ContextMenu"
+            },
+            {
+                text : "Itinéraire depuis ce lieu",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : this.defineStartPoint.bind(this),
+                control_CLASSNAME : "Route"
+            },
+            {
+                text : "Itinéraire vers ce lieu",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : this.defineEndPoint.bind(this),
+                control_CLASSNAME : "Route"
+            },
+            {
+                text : "Isochrone - à proximité",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : this.computeIsochrone.bind(this),
+                control_CLASSNAME : "Isocurve"
+            },
+            {
+                text : "Ajouter des cartes / données",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : this.openCatalogue.bind(this),
+                control_CLASSNAME : "Catalog"
+            },
+            "separator",
+            {
+                text : "Afficher la légende",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : this.displayLegend.bind(this),
+                control_CLASSNAME : "Legends"
+            }
+        ];
+        var map = this.getMap();
+        var controls = [];
+        if (map) {
+            controls = map.getControls().getArray();
+        }
+        var items = allItems.filter((item) => {
+            let control = controls.filter((control) => control.CLASSNAME && control.CLASSNAME == item.control_CLASSNAME);
+            if (control.length > 0 || item == "separator") {
+                return item;
+            }
+        });
+        return items;
+    }
 
     // ################################################################### //
     // ######################## Contextmenu specific code ################################ //
@@ -376,7 +380,6 @@ var ContextMenu = class ContextMenu extends Control {
         isocurve._pictoIsoButton.click();
         isocurve._pictoIsoButton.setAttribute("aria-pressed", true);
         let clickedCoordinate = this.to4326(evt.coordinate);
-        console.log(clickedCoordinate);
         var data = isocurve.getData();
         data.point = clickedCoordinate;
         isocurve.setData(data);
@@ -478,6 +481,33 @@ var ContextMenu = class ContextMenu extends Control {
     onClosePointInfoClick (e) {
         logger.trace(e);
         this.sourceLayerFeature.clear();
+    }
+
+    /**
+     * ...
+     * @param {*} e - ...
+     */
+    onCloseContextMenu (e) {
+        e.target.clear();
+    }
+
+    /**
+     * ...
+     * @param {*} e - ...
+     */
+    onOpenContextMenu (e) {
+        var addMenuToolsEventListeners = () => {
+            e.this.controlList = []; 
+            var controlArray = e.this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route");
+            if (controlArray.length > 0) {
+                controlArray[0].on("route:newresults", () => {
+                    e.this.itiPoints = new Array(7);
+                });
+            }
+        };
+        var contextMenuItems = e.this.getAvailableContextMenuControls();
+        e.target.extend(contextMenuItems);
+        addMenuToolsEventListeners();
     }
 
 };

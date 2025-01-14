@@ -43,6 +43,7 @@ button[id^="GPshowPointInfoPicto-"] {
 .ol-ctx-menu-container {
     border-radius: 0 !important;
     font-size: 0.75rem !important;
+    z-index: 1800;
 }
 .ol-context-menu-custom li {
     line-height: 2em !important;
