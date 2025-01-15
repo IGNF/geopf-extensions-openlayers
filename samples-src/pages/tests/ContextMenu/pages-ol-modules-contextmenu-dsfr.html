@@ -82,8 +82,15 @@
             });
             map.addLayer(gpMaps);
 
-            // 3. Ajout du GetFeatureInfo
+            // 3. Ajout du context menu
+            var itemsOpt = [            {
+                text : "Imprimer la carte",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : function() {console.log("succeed add callbakc to menu")},
+            }]
+            
             var contextMenu = new ol.control.ContextMenu({
+                contextMenuItemsOptions : itemsOpt
             });
             map.addControl(contextMenu);
 

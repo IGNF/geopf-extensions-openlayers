@@ -198,6 +198,12 @@ var ContextMenu = class ContextMenu extends Control {
         this.layerFeature = new VectorLayer({source : this.sourceLayerFeature});
 
         var contextMenuItems = this.getAvailableContextMenuControls.call(this);
+        this.contextMenuItemsOptions = [];
+        if (options.contextMenuItemsOptions instanceof Array 
+            && options.contextMenuItemsOptions
+            && options.contextMenuItemsOptions.length > 0) {
+            this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : "ol-context-menu-custom fr-text--md"}));
+        }
         this.contextmenu = new olContextMenu(
             {
                 defaultItems : false, // defaultItems are (for now) Zoom In/Zoom Out
@@ -326,6 +332,7 @@ var ContextMenu = class ContextMenu extends Control {
                 return item;
             }
         });
+        Array.prototype.push.apply(items, this.contextMenuItemsOptions);
         return items;
     }
 
