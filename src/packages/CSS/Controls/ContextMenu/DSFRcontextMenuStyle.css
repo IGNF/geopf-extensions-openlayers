@@ -95,5 +95,11 @@ padding: 0 16px;
   
 .gpf-panel__body {
     overflow: auto;
-    max-height: 300px !important;
+}
+
+.ol-context-menu-custom:hover {
+  background-color: var(--hover) !important;
+}
+.ol-context-menu-custom  {
+  color : var(--text-action-high-grey) !important;
 }

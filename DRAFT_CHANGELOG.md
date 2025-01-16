@@ -19,6 +19,7 @@ __DATE__
 
   - ajout du widget ControlList en mode classique (#300)
   - ajout d'une option unit au widget de mesure de distance (#317)
+  - ajout du menu contextuel en mode DSFR et classique (#329)
 
 * 🔨 [Changed]
 

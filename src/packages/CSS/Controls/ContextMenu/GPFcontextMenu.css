@@ -51,11 +51,5 @@ button[id^="GPshowPointInfoPicto-"] {
 .ol-ctx-menu-separator hr {
     background-image: none !important;
 }
-.ol-context-menu-custom:hover {
-    background-color: transparent !important;
-    color: var(--text-default-grey) !important;
-}
-.ol-context-menu-custom  {
-    color: var(--text-default-grey);
-}
+
 
