@@ -791,6 +791,8 @@ var Catalog = class Catalog extends Control {
             case "TMS":
                 layer = new GeoportalMapBox({
                     layer : name
+                },{
+                    declutter : true
                 });
                 break;
             case "WFS":
