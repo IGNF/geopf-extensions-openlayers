@@ -418,7 +418,7 @@ var ContextMenu = class ContextMenu extends Control {
         this.buttonPointInfoShow.click();
         this.buttonPointInfoShow.setAttribute("aria-pressed", true);
         var coordinate = document.createElement("div");
-        coordinate.innerHTML = clickedCoordinate[0].toFixed(4) + ", " + clickedCoordinate[1].toFixed(2);
+        coordinate.innerHTML = clickedCoordinate[0].toFixed(6) + ", " + clickedCoordinate[1].toFixed(6);
         var address = document.createElement("div");
         var parcel = document.createElement("div");
         var altitude = document.createElement("div");

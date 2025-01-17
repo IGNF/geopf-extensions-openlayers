@@ -113,7 +113,7 @@ var ContextMenuDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
         btnClose.title = "Fermer le panneau";
 
         var span = document.createElement("span");
