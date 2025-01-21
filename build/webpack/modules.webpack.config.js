@@ -56,6 +56,7 @@ module.exports = (env, argv) => {
             "GpfExtOlCatalog" : path.join(rootdir, "src", "packages", "Controls/Catalog", "Catalog.js"),
             "GpfExtOlTerritories" : path.join(rootdir, "src", "packages", "Controls/Territories", "Territories.js"),
             "GpfExtOlControlList" : path.join(rootdir, "src", "packages", "Controls/ControlList", "ControlList.js"),
+            "GpfExtOlContextMenu" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "ContextMenu.js"),
             // Formats étendus
             "GpfExtOlFormats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),
