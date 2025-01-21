@@ -1,159 +1,244 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.js"></script>
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.css" />
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample openlayers</title>
+<title>Sample openlayers</title>
 {{/content}}
 
 {{#content "style"}}
-        <style>
-            div#map {
-                width: 100%;
-                height: 500px;
-            }
-        </style>
+<style>
+    div#map {
+        width: 100%;
+        height: 500px;
+    }
+</style>
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout d'une couche MapBox</h2>
-            <!-- map -->
-            <div id="map">
-            </div>
+<h2>Ajout d'une couche MapBox</h2>
+<!-- map -->
+<div id="map">
+</div>
+<button type="button" id="PLAN_IGN">Declutter PI to False</button>
+<button type="button" id="ADMIN_EXPRESS">Declutter AE to False</button>
+<button type="button" id="RUE_FEMININE">Declutter RF to False</button>
 {{/content}}
 
 {{#content "js"}}
-            <script type="text/javascript">
+<script type="text/javascript">
 
-                    // on cache l'image de chargement du Géoportail.
-                    document.getElementById('map').style.backgroundImage = 'none';
+    // on cache l'image de chargement du Géoportail.
+    document.getElementById('map').style.backgroundImage = 'none';
 
-                    var conf = {
-                        hidden: true,
-                        queryable: false,
-                        serviceParams: {
-                            id: "GPP:TMS",
-                            version: "1.0.0",
-                            serverUrl: {
-                                essentiels: "https://data.geopf.fr/tms/1.0.0/"
-                            }
-                        },
-                        name: "PLAN.IGN",
-                        title: "Plan IGN",
-                        description: "BDUni tuilée",
-                        formats: [
-                            {
-                                current: true,
-                                name: "application/x-protobuf"
-                            }
-                        ],
-                        styles: [
-                            {
-                                name: "standard",
-                                title: "Style standard",
-                                current: true,
-                                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/standard.json"
-                            },
-                            {
-                                name: "classique",
-                                title: "Style classique",
-                                current: false,
-                                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/classique.json"
-                            },
-                            {
-                                name: "transparent",
-                                title: "Style transparent",
-                                current: false,
-                                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/transparent.json"
-                            },
-                            {
-                                name: "accentue",
-                                title: "Style accentue",
-                                current: false,
-                                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/accentue.json"
-                            },
-                            {
-                                name: "attenue",
-                                title: "Style attenue",
-                                current: false,
-                                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/attenue.json"
-                            },
-                            {
-                                name: "gris",
-                                title: "Style en noir et blanc",
-                                current: false,
-                                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json"
-                            },
-                            {
-                                name: "epure",
-                                title: "Style epure",
-                                current: false,
-                                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/epure.json"
-                            },
-                            {
-                                name: "sans_toponymes",
-                                title: "Style sans toponymes",
-                                current: false,
-                                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/sans_toponymes.json"
-                            }
-                        ],
-                        globalConstraint: {
-                            crs: null,
-                            bbox: {
-                                left: -724011.531917197,
-                                right: 1095801.237496279,
-                                top: 6672646.821182753,
-                                bottom: 5009377.0856973175
-                            },
-                            minScaleDenominator: null,
-                            maxScaleDenominator: null
-                        },
-                        layerId: "PLAN.IGN$GEOPORTAIL:GPP:TMS",
-                        defaultProjection: "EPSG:3857"
-                    };
+    var confPlan = {
+        hidden: true,
+        queryable: false,
+        serviceParams: {
+            id: "GPP:TMS",
+            version: "1.0.0",
+            serverUrl: {
+                essentiels: "https://data.geopf.fr/tms/1.0.0/"
+            }
+        },
+        name: "PLAN.IGN",
+        title: "P-I declutter true",
+        description: "BDUni tuilée",
+        formats: [
+            {
+                current: true,
+                name: "application/x-protobuf"
+            }
+        ],
+        styles: [
+            {
+                name: "standard",
+                title: "Style standard",
+                current: true,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/standard.json"
+            },
+            {
+                name: "classique",
+                title: "Style classique",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/classique.json"
+            },
+            {
+                name: "transparent",
+                title: "Style transparent",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/transparent.json"
+            },
+            {
+                name: "accentue",
+                title: "Style accentue",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/accentue.json"
+            },
+            {
+                name: "attenue",
+                title: "Style attenue",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/attenue.json"
+            },
+            {
+                name: "gris",
+                title: "Style en noir et blanc",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json"
+            },
+            {
+                name: "epure",
+                title: "Style epure",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/epure.json"
+            },
+            {
+                name: "sans_toponymes",
+                title: "Style sans toponymes",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/sans_toponymes.json"
+            }
+        ],
+        globalConstraint: {
+            crs: null,
+            bbox: {
+                left: -724011.531917197,
+                right: 1095801.237496279,
+                top: 6672646.821182753,
+                bottom: 5009377.0856973175
+            },
+            minScaleDenominator: null,
+            maxScaleDenominator: null
+        },
+        layerId: "PLAN.IGN$GEOPORTAIL:GPP:TMS",
+        defaultProjection: "EPSG:3857"
+    };
 
-                    var map = new ol.Map({
-                        target : "map",
-                        view : new ol.View({
-                            center : [288074.8449901076, 6247982.515792289],
-                            zoom : 6
-                        }),
-                        layers : [
-                            new ol.layer.GeoportalMapBox({
-                                layer  : "PLAN.IGN",
-                                style  : "gris",
-                                configuration : conf
-                            },{
-                                declutter : true
-                            }),
-                            new ol.layer.GeoportalMapBox({
-                                layer  : "PLAN.IGN",
-                                style  : "attenue",
-                                configuration : conf
-                            },{
-                                declutter : false
-                            }),
-                        ]
-                    });
+    var confFemme = {
+        hidden: true,
+        queryable: false,
+        serviceParams: {
+            id: "GPP:TMS",
+            version: "1.0.0",
+            serverUrl: {
+                essentiels: "https://data.geopf.fr/tms/1.0.0/"
+            }
+        },
+        name: "RUE_FEMININE",
+        title: "R-F declutter true",
+        description: "rues feminines en france",
+        formats: [
+            {
+                current: true,
+                name: "application/x-protobuf"
+            }
+        ],
+        styles: [
+            {
+                name: "ruefeminine",
+                title: "Style Rue Feminine",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/RUE_FEMININE/carte_journee_femme.json"
+            }
+        ]
+    };
 
-                    // Appel du LayerSwitcher
-                    var layerSwitcher = new ol.control.LayerSwitcher();
+    var confAdmin = {
+        hidden: true,
+        queryable: false,
+        serviceParams: {
+            id: "GPP:TMS",
+            version: "1.0.0",
+            serverUrl: {
+                essentiels: "https://data.geopf.fr/tms/1.0.0/"
+            }
+        },
+        name: "ADMIN_EXPRESS",
+        title: "A-E declutter false",
+        description: "BDUni tuilée",
+        formats: [
+            {
+                current: true,
+                name: "application/x-protobuf"
+            }
+        ],
+        styles: [
+            {
+                name: "adminexpress",
+                title: "Style Admin express",
+                current: false,
+                url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/ADMIN_EXPRESS/adminexpress.json"
+            }
+        ]
+    };
 
-					// Ajout du LayerSwitcher à la carte
-                    map.addControl(layerSwitcher);
+    var map = new ol.Map({
+        target: "map",
+        view: new ol.View({
+            center: [288074.8449901076, 6247982.515792289],
+            zoom: 6
+        }),
+        layers: [
+            new ol.layer.GeoportalMapBox({
+                layer: "PLAN.IGN",
+                style: "standard",
+                configuration: confPlan
+            }, {
+                declutter: true
+            }),
+            new ol.layer.GeoportalMapBox({
+                layer: "RUE_FEMININE",
+                style: "ruefeminine",
+                configuration: confFemme
+            }, {
+                declutter: true
+            }),
+            new ol.layer.GeoportalMapBox({
+                layer: "ADMIN_EXPRESS",
+                style: "adminexpress",
+                configuration: confAdmin
+            }, {
+                declutter: true
+            }),
+        ]
+    });
 
-                    var layerImport = new ol.control.LayerImport({
-                        draggable : true,
-                        position : "bottom-left"
-                    });
-                    map.addControl(layerImport);
-           </script>
+    // Appel du LayerSwitcher
+    var layerSwitcher = new ol.control.LayerSwitcher();
+
+    // Ajout du LayerSwitcher à la carte
+    map.addControl(layerSwitcher);
+
+    var layerImport = new ol.control.LayerImport({
+        draggable: true,
+        position: "bottom-left"
+    });
+    map.addControl(layerImport);
+
+
+    document.getElementById("ADMIN_EXPRESS").onclick = function (e) {
+        map.getLayers().getArray()[2].declutter_ = !map.getLayers().getArray()[2].declutter_;
+        map.getLayers().getArray()[2].getSource().refresh();
+        e.target.innerHTML = "Declutter AE to " + !map.getLayers().getArray()[2].declutter_;
+    }
+    document.getElementById("RUE_FEMININE").onclick = function (e) {
+        map.getLayers().getArray()[1].declutter_ = !map.getLayers().getArray()[1].declutter_;
+        map.getLayers().getArray()[1].getSource().refresh();
+        e.target.innerHTML = "Declutter RF to " + !map.getLayers().getArray()[1].declutter_;
+    }
+    document.getElementById("PLAN_IGN").onclick = function (e) {
+        map.getLayers().getArray()[0].declutter_ = !map.getLayers().getArray()[0].declutter_;
+        map.getLayers().getArray()[0].getSource().refresh();
+        e.target.innerHTML = "Declutter PI to " + !map.getLayers().getArray()[0].declutter_;
+    }
+</script>
 {{/content}}
 
 {{/extend}}
