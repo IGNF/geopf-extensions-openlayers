@@ -40,7 +40,6 @@ import olContextMenu from "ol-contextmenu";
 import Route from "../Route/Route";
 import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 import Widget from "../Widget";
-import { add } from "../../../../node_modules/ol/coordinate";
 
 var logger = Logger.getLogger("contextMenu");
 
