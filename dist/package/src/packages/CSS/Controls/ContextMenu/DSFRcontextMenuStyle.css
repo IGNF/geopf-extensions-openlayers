@@ -1,0 +1,113 @@
+
+.gpf-btn-header-pointInfo {
+  z-index: 2;
+  position: absolute;
+  width: 26px;
+  height: 26px;
+}
+
+.gpf-btn-icon-header-pointInfo {
+  background-repeat: no-repeat;
+  background-size: auto auto;
+  background-position: center center;
+}
+
+.gpf-panel__body_pointInfo {
+  overflow: auto;
+  max-height: 300px !important;
+}
+
+.gpf-panel__title_pointInfo {
+  color: #101092;
+  padding: 32px 15px;
+  position: relative;
+  font-size: 1rem;
+  font-weight: normal;
+  margin: 0;
+  right: -16px;
+}
+.gpf-panel__header_pointInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  background: #E3E3FD;
+  height: 48px;
+}
+
+
+div[id^=GPpointInfo-] {
+  top: 4px;
+  bottom: unset;
+  left: 60px;
+  right: unset;
+}
+
+button[id^=GPcollapsePointInfo_ID_] {
+  position: absolute;
+  top: 8px;
+  right: 0;
+}
+
+.gpf-btn-icon-pointInfo-collapse {
+  box-shadow: none;
+}
+
+.gpf-btn-icon-pointInfo-collapse[aria-pressed="true"]::after {
+  box-shadow: none;
+  transform: rotate(180deg);
+}
+
+.pointInfo-entry-container {
+  position: relative;
+  top: 0;
+  border-bottom: 1px solid var(--border-default-grey);
+  overflow: hidden;
+}
+
+.pointInfo-entry-container {
+  background-color: var(--background-overlap-grey);
+}
+
+.gpf-label-pointInfo-name {
+  width: calc(100% - 40px);
+  line-height: 56px;
+  overflow: hidden;
+  white-space:  nowrap;
+  text-overflow: ellipsis;
+  padding-left: 4px;
+}
+
+button[id^=GPcollapsePointInfo_ID_][aria-pressed="true"] + .pointInfo-entry-image {
+  opacity: 1;
+}
+
+button[id^=GPcollapsePointInfo_ID_][aria-pressed="true"] + .pointInfo-entry-image {
+  max-height: 300px;
+  overflow: auto;
+  border-top: 1px solid var(--border-default-grey);
+  padding: 10px 0;
+}
+
+.pointInfo-entry-image {
+  display: block;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
+}
+
+.pointInfo-entries {
+padding: 0 16px;
+}
+
+  
+.gpf-panel__body {
+    overflow: auto;
+}
+
+.ol-context-menu-custom:hover {
+  background-color: var(--hover) !important;
+}
+.ol-context-menu-custom  {
+  color : var(--text-action-high-grey) !important;
+}

@@ -1,0 +1,19 @@
+.GPpointInfoPanelClose {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAaCAYAAAD43n+tAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAE3SURBVFiF7ZZBTkJBDEDnE125MhyHHV5FF0RvI58EOIYuTIw79S5wB3lu+vU7tp8Z6IiLectJp+1L/xRCqFQqfwawATan7sMNhFP3McQoPgAugEcilDiLJXCe0wRwI/d+9dOLaYB74C4n8Rh417rsS+wRAngGLjNkPuTeWpMSmbnE7JKlgCerw0whgIfEmm10bwE0kcwiimlThcbAm4NQzoS6T6nPGhjxczIdKwY+Ta2A+YYShQ55Q5ZUPL08mYTCX0LeGFLlZKSoNaFXYOqQ35JSl4WGl/EkhPDilKtJPDuePRO6OjK3tgAOmlJO0SJvyJBZKWe+UiWEBmS6ta2udK/iJYTK/bAmFC8hdM33Xx91NUeT2gG3XsXdhSTvTCZlbjORaoGZZ+EiQp6cZcZvi3RRqVT+DZ/jc6+cH/zb+QAAAABJRU5ErkJggg==);
+}
+
+.GPpointInfoHeader {
+    height: 2.4em;
+}
+
+button[id^=GPcollapsePointInfo_ID_] {
+    position: absolute;
+    top: 8px;
+    right: 0;
+  }
+
+  div[id^=GPpointInfo-] {
+    z-index: 2;
+    top: 4px;
+    left: 42px;
+}

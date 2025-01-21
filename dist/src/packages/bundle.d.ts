@@ -76,6 +76,7 @@ declare namespace Ol {
         export { Catalog };
         export { Territories };
         export { ControlList };
+        export { ContextMenu };
     }
 }
 import GfiUtils from "./Controls/Utils/Gfi";
@@ -122,5 +123,6 @@ import Legends from "./Controls/Legends/Legends";
 import Catalog from "./Controls/Catalog/Catalog";
 import Territories from "./Controls/Territories/Territories";
 import ControlList from "./Controls/ControlList/ControlList";
+import ContextMenu from "./Controls/ContextMenu/ContextMenu";
 export { HelperUtils, LayerUtils, ProxyUtils, ColorUtils, MathUtils, Logger, Parser, Register, Ol as olExtended };
 //# sourceMappingURL=bundle.d.ts.map
