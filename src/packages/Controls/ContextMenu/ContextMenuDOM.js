@@ -22,7 +22,7 @@ var ContextMenuDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPpointInfo");
-        container.className = "GPpointInfo gpf-widget gpf-widget-button";
+        container.className = "GPpointInfo GPwidget gpf-widget gpf-widget-button";
         return container;
     },
 
@@ -94,18 +94,18 @@ var ContextMenuDOM = {
  */
     _createPointInfoPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "gpf-panel__header_pointInfo";
+        container.className = "GPpointInfoHeader gpf-panel__header_pointInfo";
         return container;
     },
     _createPointInfoPanelIconElement : function () {
         var label = document.createElement("label");
-        label.className = "gpf-btn-header-pointInfo gpf-btn-icon-header-pointInfo";
+        label.className = "GPpanelHeader gpf-btn-header-pointInfo gpf-btn-icon-header-pointInfo";
         label.title = `Adresse et coordonnées`;
         return label;
     },
     _createPointInfoPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__title_pointInfo";
+        div.className = "GPpanelTitle gpf-panel__title_pointInfo fr-pt-4w";
         div.innerHTML = `Adresse et coordonnées`;
         return div;
     },
@@ -113,7 +113,7 @@ var ContextMenuDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
+        btnClose.className = "GPpanelClose GPpointInfoPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
         btnClose.title = "Fermer le panneau";
 
         var span = document.createElement("span");
@@ -126,6 +126,7 @@ var ContextMenuDOM = {
         if (btnClose.addEventListener) {
             btnClose.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPshowPointInfoPicto")).click();
+                console.log("close info point");
                 self.onClosePointInfoClick();
             }, false);
         } else if (btnClose.attachEvent) {

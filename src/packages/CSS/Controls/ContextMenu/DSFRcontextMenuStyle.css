@@ -19,7 +19,7 @@
 
 .gpf-panel__title_pointInfo {
   color: #101092;
-  padding: 12px 15px;
+  padding: 32px 15px;
   position: relative;
   font-size: 1rem;
   font-weight: normal;
@@ -33,6 +33,14 @@
   align-content: center;
   background: #E3E3FD;
   height: 48px;
+}
+
+
+div[id^=GPpointInfo-] {
+  top: 4px;
+  bottom: unset;
+  left: 60px;
+  right: unset;
 }
 
 button[id^=GPcollapsePointInfo_ID_] {

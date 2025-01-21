@@ -253,7 +253,6 @@ var ContextMenu = class ContextMenu extends Control {
 
         container.appendChild(pointInfoPanel);
 
-
         logger.log(container);
 
         return container;
@@ -280,6 +279,7 @@ var ContextMenu = class ContextMenu extends Control {
     /**
      * Add tools if added to the map Controls list
      * @private
+     * @returns { Object } liste d'items par défaut du menu contextuel si control actif sur la carte
      */
     getAvailableContextMenuControls () {
         var allItems = [
