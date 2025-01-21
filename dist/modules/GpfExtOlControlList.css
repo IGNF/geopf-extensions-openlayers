@@ -8,8 +8,8 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.1-306
- * @date 17/01/2025
+ * @version 1.0.0-beta.1-329
+ * @date 21/01/2025
  *
  */button[id^=GPshowControlListPicto][aria-pressed=false]+dialog{display:none;opacity:0;visibility:hidden}button[id^=GPshowControlListPicto-][aria-pressed=true]+dialog{display:flex;flex-direction:column;opacity:100%;visibility:visible}dialog[id^=GPcontrolListPanel-]{height:inherit;left:34px;position:absolute;top:0}
 /*# sourceMappingURL=GpfExtOlControlList.css.map*/
