@@ -321,7 +321,7 @@ var Isocurve = class Isocurve extends Control {
         var inputCoordsDOM = document.getElementById("GPlocationOrigin_" + 1 + "-" + this._uid);
         var inputCoords = document.getElementById("GPlocationOriginCoords_" + 1 + "-" + this._uid);
         inputCoords.value = data.point;
-        inputCoordsDOM.value = data.point;
+        inputCoordsDOM.value = data.point[1].toFixed(4) + " / " + data.point[0].toFixed(4);
         this._originPoint.setCoordinate(data.point, "EPSG:4326");
         this._currentIsoResults = data.results;
     }

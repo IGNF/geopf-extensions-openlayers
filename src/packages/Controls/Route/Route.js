@@ -341,8 +341,9 @@ var Route = class Route extends Control {
                 // point.clearResults();
                 // clean du dom
                 var id = (i + 1) + "-" + this._uid;
-                document.getElementById("GPlocationOriginCoords_" + id).value = point.getCoordinate();
-                document.getElementById("GPlocationOrigin_" + id).value = point.getCoordinate();
+                var coordinate = point.getCoordinate()[1].toFixed(4) + " / " + point.getCoordinate()[0].toFixed(4);
+                document.getElementById("GPlocationOriginCoords_" + id).value = coordinate;
+                document.getElementById("GPlocationOrigin_" + id).value = coordinate;
                 // document.getElementById("GPlocationPoint_" + id).style.cssText = "";
                 if (i > 0 && i < 6) {
                     // on masque les points intermediaires
