@@ -91,6 +91,9 @@ module.exports = (env, argv) => {
             case "ControlList":
                 // ras
                 break;
+            case "ContextMenu":
+                // ras
+                break;
             case "Editor":
                 // ras
                 break;

@@ -100,6 +100,7 @@ import Legends from "./Controls/Legends/Legends";
 import Territories from "./Controls/Territories/Territories";
 import ControlList from "./Controls/ControlList/ControlList";
 import Catalog from "./Controls/Catalog/Catalog";
+import ContextMenu from "./Controls/ContextMenu/ContextMenu";
 
 import Proj4 from "proj4";
 
@@ -283,6 +284,7 @@ Ol.control.Legends = Legends;
 Ol.control.Catalog = Catalog;
 Ol.control.Territories = Territories;
 Ol.control.ControlList = ControlList;
+Ol.control.ContextMenu = ContextMenu;
 
 export {
     /**

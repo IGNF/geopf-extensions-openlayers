@@ -24,6 +24,7 @@ Mise à jour de la dépendance à Openlayers dans sa version 10.3.1
 
   - ajout du widget ControlList en mode classique (#300)
   - ajout d'une option unit au widget de mesure de distance (#317)
+  - ajout du menu contextuel en mode DSFR et classique (#329)
   - ajout de documentation de contribution (#327)
 
 * 🔨 [Changed]

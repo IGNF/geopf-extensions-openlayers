@@ -1,8 +1,8 @@
 {
   "name": "geopf-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.1-306",
-  "date": "17/01/2025",
+  "version": "1.0.0-beta.1-329",
+  "date": "21/01/2025",
   "module": "src/index.js",
   "directories": {},
   "engines": {
@@ -12,6 +12,7 @@
     "setup": "npm install",
     "clean": "npx rimraf  dist/ jsdoc/ samples/",
     "eslint": "eslint src/",
+    "lintfix": "eslint --fix src/",
     "test": "npm run test:serve",
     "test:serve": "echo \"Warning: target not yet implemented!\" && exit 0",
     "sample:bundle": "webpack serve --config build/webpack/bundle.webpack.config --mode development",
@@ -49,11 +50,13 @@
     "loglevel": "^1.9.1",
     "markdown-toc": "^1.2.0",
     "ol": "10.3.1",
+    "ol-contextmenu": "^5.5.0",
     "ol-mapbox-style": "12.4.0",
     "proj4": "2.15.0",
     "sortablejs": "1.15.3",
     "typescript": "^5.3.3",
-    "whatwg-fetch": "3.6.20"
+    "whatwg-fetch": "3.6.20",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
