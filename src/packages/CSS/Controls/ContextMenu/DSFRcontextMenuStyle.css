@@ -111,3 +111,7 @@ padding: 0 16px;
 .ol-context-menu-custom  {
   color : var(--text-action-high-grey) !important;
 }
+
+.ol-ctx-menu-container {
+  background: var(--background-default-grey);
+}
