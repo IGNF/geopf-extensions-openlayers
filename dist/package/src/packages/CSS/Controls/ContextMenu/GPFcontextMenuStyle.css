@@ -17,3 +17,7 @@ button[id^=GPcollapsePointInfo_ID_] {
     top: 4px;
     left: 42px;
 }
+
+.ol-ctx-menu-container {
+    background: #fff;
+}
