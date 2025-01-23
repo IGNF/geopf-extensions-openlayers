@@ -52,7 +52,7 @@ button[id^="GPshowPointInfoPicto-"] {
 .ol-ctx-menu-container {
     position: absolute;
     padding: 8px;
-    background: #fff;
+    background: var(--background-default-grey);;
     color: #222;
     font-size: 13px;
     border-radius: 5px;

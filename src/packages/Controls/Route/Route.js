@@ -349,9 +349,9 @@ var Route = class Route extends Control {
                     // on masque les points intermediaires
                     document.getElementById("GPlocationPoint_" + id).className = "GPflexInput GPelementHidden gpf-flex gpf-hidden ";
                 }
-                document.getElementById("GPlocationOriginPointer_" + id).checked = false;
-                document.getElementById("GPlocationOrigin_" + id).className = "GPelementVisible gpf-visible";
-                document.getElementById("GPlocationOriginCoords_" + id).className = "GPelementHidden gpf-hidden";
+                // document.getElementById("GPlocationOriginPointer_" + id).checked = false;
+                // document.getElementById("GPlocationOrigin_" + id).className = "GPelementVisible gpf-visible";
+                // document.getElementById("GPlocationOriginCoords_" + id).className = "GPelementHidden gpf-hidden";
             }
         }
         this._currentRouteInformations = data.results;
