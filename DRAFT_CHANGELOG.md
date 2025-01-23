@@ -23,7 +23,7 @@ __DATE__
 
 * 🐛 [Fixed]
 
-  - ContextMenu : correction pour affichage du menu en mode dark (#332)
+  - ContextMenu : correction pour affichage du menu en mode dark (#332, #333)
   
 * 🔒 [Security]
 

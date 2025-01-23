@@ -22,7 +22,7 @@ var ContextMenuDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPpointInfo");
-        container.className = "GPpointInfo GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPpointInfo GPwidget gpf-widget";
         return container;
     },
 
