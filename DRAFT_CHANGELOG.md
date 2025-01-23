@@ -22,6 +22,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - ContextMenu : correction pour affichage du menu en mode dark (#332)
   
 * 🔒 [Security]
 
