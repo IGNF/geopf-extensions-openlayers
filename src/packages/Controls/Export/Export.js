@@ -30,6 +30,7 @@ var logger = Logger.getLogger("export");
  * @alias ol.control.Export
  * @param {Object} options - options for function call.
  * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+ * @param {String} [options.export = "true"] - triggering the download of the file
  * @param {String} [options.format = "geojson"] - geojson / kml / gpx
  * @param {String} [options.name = "export"] - export name file
  * @param {String} [options.description = "export"] - export description put into file
@@ -43,7 +44,7 @@ var logger = Logger.getLogger("export");
  * @param {DOMElement} [options.target] - target
  * @param {Object} [options.control] - instance of control
  * @param {Object} [options.layer] - the layer instance is retrieved from the control, but you can defined it
- * @fires export:compute
+ * @fires button:clicked 
  * @example
  * // pluggued widget Export into control Isocurve
  * var iso = new ol.control.Isocurve();
@@ -51,6 +52,7 @@ var logger = Logger.getLogger("export");
  *
  * // method : call render()
  * var export = new ButtonExport();
+ * export.setDownload(true);
  * export.setControl(iso);
  * export.setTarget(<!-- DOMElement -->);
  * export.setName("export");
@@ -59,10 +61,11 @@ var logger = Logger.getLogger("export");
  * export.setTitle("Exporter");
  * export.setMenu(false);
  * export.render(); // <-- direct call to render function !
- * export.on("export:compute", (data) => { console.log(data); });
+ * export.on("button:exported", (data) => { console.log(data); });
  *
  * // method : call map.addControl()
  * var export = new ButtonExport();
+ * export.setDownload(true);
  * export.setControl(iso);
  * export.setTarget(<!-- DOMElement -->);
  * export.setName("export");
@@ -71,11 +74,12 @@ var logger = Logger.getLogger("export");
  * export.setTitle("Exporter");
  * export.setKind("secondary");
  * export.setMenu(false);
- * export.on("export:compute", (data) => { console.log(data); });
+ * export.on("button:exported", (data) => { console.log(data); });
  * map.addControl(export); // <-- using the OpenLayers mechanism, don't call to render function !
  *
  * // use control options instead of setters
  * var export = new ButtonExport({
+ *   export : true,
  *   control : iso,
  *   target : <!-- DOMElement -->,
  *   name : "export",
@@ -90,6 +94,7 @@ var logger = Logger.getLogger("export");
  * var iso = new ol.control.Isocurve({ export : true });
  * // with control options :
  * var iso = new ol.control.Isocurve({ export : {
+ *   export : true,
  *   name : "export",
  *   format : "geojson",
  *   title : "Exporter",
@@ -301,6 +306,7 @@ class ButtonExport extends Control {
             layer : null,
             control : null,
             target : null,
+            export : true,
             format : "geojson",
             name : "export",
             description : "export",
@@ -668,19 +674,21 @@ class ButtonExport extends Control {
         /**
          * event triggered when the export is finished
          *
-         * @event export:compute
+         * @event button:clicked
          * @typedef {Object}
          * @property {Object} type - event
          * @property {Object} target - instance Export
          * @property {String} content - export data
+         * @property {Object} layer - layer
          * @example
-         * Export.on("export:compute", function (e) {
+         * Export.on("button:clicked", function (e) {
          *   console.log(e.target);
          * })
          */
         this.dispatchEvent({
-            type : "export:compute",
-            content : content
+            type : "button:clicked",
+            content : content,
+            layer : layer
         });
 
         // INFO
@@ -690,17 +698,19 @@ class ButtonExport extends Control {
             return;
         }
 
-        var link = document.createElement("a");
-        // determiner le bon charset !
-        var charset = "utf-8";
-        link.setAttribute("href", "data:" + this.mimeType + ";charset=" + charset + "," + encodeURIComponent(content));
-        link.setAttribute("download", (this.inputName && this.inputName.value) ? this.inputName.value + this.extension : this.options.name + this.extension);
-        if (document.createEvent) {
-            var event = document.createEvent("MouseEvents");
-            event.initEvent("click", true, true);
-            link.dispatchEvent(event);
-        } else {
-            link.click();
+        if (this.options.export) {
+            var link = document.createElement("a");
+            // determiner le bon charset !
+            var charset = "utf-8";
+            link.setAttribute("href", "data:" + this.mimeType + ";charset=" + charset + "," + encodeURIComponent(content));
+            link.setAttribute("download", (this.inputName && this.inputName.value) ? this.inputName.value + this.extension : this.options.name + this.extension);
+            if (document.createEvent) {
+                var event = document.createEvent("MouseEvents");
+                event.initEvent("click", true, true);
+                link.dispatchEvent(event);
+            } else {
+                link.click();
+            }
         }
     }
 
@@ -874,8 +884,22 @@ class ButtonExport extends Control {
         }
     }
 
+    /**
+     * ...
+     * @param {*} layer  - ...
+     * @public
+     */
     setLayer (layer) {
         this.options.layer = layer;
+    }
+
+    /**
+     * ...
+     * @param {Boolean} value - ...
+     * @public
+     */
+    setDownload (value) {
+        this.options.export = value;
     }
 
 };

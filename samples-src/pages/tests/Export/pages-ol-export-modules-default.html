@@ -93,7 +93,7 @@
                   }
                 });
                 map.addControl(exportDrawing);
-                exportDrawing.on("export:compute", (e) => {
+                exportDrawing.on("button:clicked", (e) => {
                   console.log("Export Drawing", e);
                 });
 
@@ -120,7 +120,7 @@
                   // }
                 });
                 map.addControl(exportIso);
-                exportIso.on("export:compute", (e) => {
+                exportIso.on("button:clicked", (e) => {
                   console.log("Export Iso", e);
                 });
 
@@ -136,7 +136,7 @@
                 exportRoute.setName("export-route");
                 exportRoute.setTitle("Exporter Iti");
                 exportRoute.setMenu(true);
-                exportRoute.on("export:compute", (e) => {
+                exportRoute.on("button:clicked", (e) => {
                   console.log("Export Route", e);
                 });
                 map.addControl(exportRoute);
@@ -153,7 +153,7 @@
                   menu: false
                 });
                 map.addControl(exportProfil);
-                exportProfil.on("export:compute", (e) => {
+                exportProfil.on("button:clicked", (e) => {
                   console.log("Export Profil", e);
                 });
               };

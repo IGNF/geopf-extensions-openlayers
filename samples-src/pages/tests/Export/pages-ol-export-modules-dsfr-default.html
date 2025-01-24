@@ -78,7 +78,7 @@
                 map.addControl(layerSwitcher);
 
                 var importLayer = new ol.control.LayerImport({
-                  position: "bottom-left"
+                  position: "top-right"
                 });
                 map.addControl(importLayer);
 
@@ -91,6 +91,8 @@
                 });
                 map.addControl(drawing);
                 var exportDrawing = new ol.control.Export({
+                  title : "Sauvegarde",
+                  export : false,
                   control: drawing,
                   format : "kml",
                   icons : {
@@ -100,7 +102,7 @@
                   target : drawing.getContainer().querySelector(".gpf-panel__content .drawing-tool-section:last-child")
                 });
                 map.addControl(exportDrawing);
-                exportDrawing.on("export:compute", (e) => {
+                exportDrawing.on("button:clicked", (e) => {
                   console.log("Export Drawing", e);
                 });
 
@@ -128,7 +130,7 @@
                   // }
                 });
                 map.addControl(exportIso);
-                exportIso.on("export:compute", (e) => {
+                exportIso.on("button:clicked", (e) => {
                   console.log("Export Iso", e);
                 });
 
@@ -145,12 +147,12 @@
                 exportRoute.setName("export-route");
                 exportRoute.setTitle("Exporter Itineraire");
                 exportRoute.setMenu(true);
-                exportRoute.on("export:compute", (e) => {
+                exportRoute.on("button:clicked", (e) => {
                   console.log("Export Route", e);
                 });
                 map.addControl(exportRoute);
 
-                // profil
+                // button export pluggued into profil
                 var measureProfil = new ol.control.ElevationPath({
                   position: "bottom-left"
                 });
@@ -163,7 +165,7 @@
                   target : measureProfil.getContainer().querySelector(".gpf-panel__body")
                 });
                 map.addControl(exportProfil);
-                exportProfil.on("export:compute", (e) => {
+                exportProfil.on("button:clicked", (e) => {
                   console.log("Export Profil", e);
                 });
               };
