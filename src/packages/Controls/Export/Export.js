@@ -9,6 +9,7 @@ import Control from "ol/control/Control";
 // import local
 import ID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
 
 // import local with ol dependencies
 import KMLExtended from "../../Formats/KML";
@@ -30,13 +31,18 @@ var logger = Logger.getLogger("export");
  * @param {Object} options - options for function call.
  * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {String} [options.format = "geojson"] - geojson / kml / gpx
- * @param {String} [options.name = "export"] - export name
+ * @param {String} [options.name = "export"] - export name file
+ * @param {String} [options.description = "export"] - export description put into file
  * @param {String} [options.title = "Exporter"] - button name
  * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
- * @param {Boolean} [options.menu = false] - displays the format choice menu
- * @param {Function} [options.onExport] - callback
+ * @param {Boolean} [options.menu = false] - displays the menu
+ * @param {Object} [options.icons] - icons
+ * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon
+ * @param {Boolean} [options.icons.button = "false"] - displays the button icon
+ * @param {Function} [options.callback] - the callback cancels the file download or the implementation is your responsibility
  * @param {DOMElement} [options.target] - target
- * @param {Object} options.control - instance of control
+ * @param {Object} [options.control] - instance of control
+ * @param {Object} [options.layer] - the layer instance is retrieved from the control, but you can defined it
  * @fires export:compute
  * @example
  * // pluggued widget Export into control Isocurve
@@ -49,6 +55,7 @@ var logger = Logger.getLogger("export");
  * export.setTarget(<!-- DOMElement -->);
  * export.setName("export");
  * export.setFormat("geojson");
+ * export.setDescription("Export Isochrone");
  * export.setTitle("Exporter");
  * export.setMenu(false);
  * export.render(); // <-- direct call to render function !
@@ -60,6 +67,7 @@ var logger = Logger.getLogger("export");
  * export.setTarget(<!-- DOMElement -->);
  * export.setName("export");
  * export.setFormat("geojson");
+ * export.setDescription("Export Isochrone");
  * export.setTitle("Exporter");
  * export.setKind("secondary");
  * export.setMenu(false);
@@ -71,6 +79,7 @@ var logger = Logger.getLogger("export");
  *   control : iso,
  *   target : <!-- DOMElement -->,
  *   name : "export",
+ *   description : "Export Isochrone",
  *   format : "geojson",
  *   title : "Exporter",
  *   menu : false
@@ -101,14 +110,20 @@ class ButtonExport extends Control {
      */
     constructor (options) {
         options = options || {
+            layer : null,
             control : null,
             target : null,
             format : "geojson",
             name : "export",
+            description : "export",
             title : "Exporter",
             kind : "secondary",
             menu : false,
-            onExport : null
+            icons : {
+                menu : "\u2630 ",
+                button : ""
+            },
+            callback : null
         };
 
         logger.trace("[constructor] Export", options);
@@ -237,8 +252,9 @@ class ButtonExport extends Control {
         // dom
         this.container = null;
         this.button = null;
+        this.inputName = null;
+        this.inputDesc = null;
         this.menu = null;
-        this.icon = "\u2630 ";
         this.menuClassHidden = "GPelementHidden gpf-hidden";
 
         this.initOptions(options);
@@ -281,15 +297,36 @@ class ButtonExport extends Control {
      * @private
      */
     initOptions (options) {
-        // options
-        this.options = options;
+        this.options = {
+            layer : null,
+            control : null,
+            target : null,
+            format : "geojson",
+            name : "export",
+            description : "export",
+            title : "Exporter",
+            kind : "secondary",
+            menu : false,
+            icons : {
+                menu : "\u2630 ",
+                button : false
+            },
+            callback : null
+        };
+
+        // merge with user options
+        Utils.assign(this.options, options);
+
+        if (this.options.layer) {
+            // TODO test...
+        }
 
         if (this.options.control) {
-            // ...
+            // TODO test...
         }
 
         if (this.options.target) {
-            // ...
+            // TODO test...
         }
 
         var format = this.options.format;
@@ -297,6 +334,10 @@ class ButtonExport extends Control {
 
         if (!this.options.name) {
             this.setName("export");
+        }
+
+        if (!this.options.description) {
+            this.setDescription("export");
         }
 
         if (!this.options.title) {
@@ -330,12 +371,96 @@ class ButtonExport extends Control {
         // afficher l'icone du menu
         var title = this.options.title;
         if (this.options.menu) {
-            title = this.icon + this.options.title;
+            title = this.options.icons.menu + this.options.title;
         }
 
         var div = document.createElement("div");
         div.id = this._addUID("GPexportContainer");
         div.className = "GPexportMenuContainer fr-m-1w";
+
+        // menu des options
+        // utiliser les templates literals avec la substitution ${...}
+        var menu = this.stringToHTML(`
+            <div class="gpf-accordion fr-accordion ${this.menuClassHidden}">
+                <h3 class="gpf-accordion__title fr-accordion__title">
+                    <button type="button" 
+                        id="GPexportBtnMenuContent-${this.uid}"
+                        class="gpf-accordion__btn fr-accordion__btn" 
+                        aria-expanded="false" aria-controls="GPexportMenuContent-${this.uid}">options</button>
+                </h3>
+                <div id="GPexportMenuContent-${this.uid}"
+                    class="GPexportMenuContent fr-collapse">
+                    <div id="GPexportMenuName-${this.uid}" 
+                        class="GPexportMenuName">
+                        <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputName-${this.uid}" title="Nom">Nom</label>
+                        <input type="text" id="GPexportMenuInputName-${this.uid}" class="GPinput gpf-input fr-input">
+                    </div>
+                    <div id="GPexportMenuDesc-${this.uid}"
+                        class="GPexportMenuDesc">
+                        <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputDesc-${this.uid}" title="Description">Description</label>
+                        <input type="text" id="GPexportMenuInputDesc-${this.uid}" class="GPinput gpf-input fr-input">
+                    </div>
+                    <div id="GPexportMenuFormat-${this.uid}">
+                        <label class="GPlabel gpf-label fr-label" title="Formats">Formats</label>
+                        <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
+                            <input type="radio" 
+                                id="GPmenuFormatGeojson-${this.uid}"
+                                name="format" 
+                                value="geojson">
+                            <label class="fr-label container" for="GPmenuFormatGeojson-${this.uid}">GeoJSON
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
+                            <input type="radio" 
+                                id="GPmenuFormatKml-${this.uid}"
+                                name="format" 
+                                value="kml">
+                            <label class="fr-label container" for="GPmenuFormatKml-${this.uid}">KML
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
+                            <input type="radio" 
+                                id="GPmenuFormatGpx-${this.uid}"
+                                name="format" 
+                                value="gpx">
+                            <label class="fr-label container" for="GPmenuFormatGpx-${this.uid}">GPX
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        this.menu = menu.firstChild;
+        if (this.menu) {
+            if (this.options.menu) {
+                var className = this.menu.className;
+                this.menu.className = className.replace(this.menuClassHidden, "");
+            }
+            var format = this.options.format.toUpperCase();
+            var radios = this.menu.querySelectorAll(`input[type=radio][name="format"]`);
+            for (let i = 0; i < radios.length; i++) {
+                var radio = radios[i];
+                // radio checked par defaut
+                if (radio.id.toUpperCase().includes(format)) {
+                    radio.checked = true;
+                }
+                // ecouteur pour changer de format
+                radio.addEventListener("change", (e) => this.onChangeRadioFormat(e));
+            }
+
+            var btn = this.menu.querySelector("#GPexportBtnMenuContent-" + this.uid);
+            if (btn) {
+                btn.addEventListener("click", (e) => this.onClickButtonToggleOptions(e));
+            }
+
+            this.inputName = this.menu.querySelector("#GPexportMenuInputName-" + this.uid);
+            this.inputDesc = this.menu.querySelector("#GPexportMenuInputDesc-" + this.uid);
+        }
+        div.appendChild(this.menu);
 
         // bouton Exporter
         // utiliser les templates literals avec la substitution ${...}
@@ -343,7 +468,7 @@ class ButtonExport extends Control {
             <button 
                 type="button"
                 id="${this._addUID("GPexportButton")}" 
-                class="GPsubmit gpf-btn gpf-btn-icon-submit fr-btn fr-m-1w">
+                class="GPexportButtonIcon GPsubmit gpf-btn gpf-btn-icon-submit fr-btn fr-m-1w">
                 ${title}
             </button>
         `);
@@ -365,65 +490,12 @@ class ButtonExport extends Control {
             default:
                 break;
         }
-        div.appendChild(button.firstChild);
-
-        // menu des options
-        // utiliser les templates literals avec la substitution ${...}
-        var menu = this.stringToHTML(`
-            <div id="GPexportMenuContent-${this.uid}"
-                class="GPexportMenuContent ${this.menuClassHidden}">
-                <div class="fr-radio-group fr-m-1w">
-                    <input type="radio" 
-                        id="GPmenuFormatGeojson-${this.uid}"
-                        name="format" 
-                        value="geojson">
-                    <label class="fr-label container" for="GPmenuFormatGeojson-${this.uid}">GeoJSON
-                        <span class="checkmark"></span>
-                    </label>
-                </div>
-                <div class="fr-radio-group fr-m-1w">
-                    <input type="radio" 
-                        id="GPmenuFormatKml-${this.uid}"
-                        name="format" 
-                        value="kml">
-                    <label class="fr-label container" for="GPmenuFormatKml-${this.uid}">KML
-                        <span class="checkmark"></span>
-                    </label>
-                </div>
-                <div class="fr-radio-group fr-m-1w">
-                    <input type="radio" 
-                        id="GPmenuFormatGpx-${this.uid}"
-                        name="format" 
-                        value="gpx">
-                    <label class="fr-label container" for="GPmenuFormatGpx-${this.uid}">GPX
-                        <span class="checkmark"></span>
-                    </label>
-                </div>
-            </div>
-        `);
-
-        this.menu = menu.firstChild;
-        if (this.menu) {
-            if (this.options.menu) {
-                var className = this.menu.className;
-                this.menu.className = className.replace(this.menuClassHidden, "");
-            }
-            var format = this.options.format.toUpperCase();
-            var radios = this.menu.querySelectorAll(`input[type=radio][name="format"]`);
-            for (let i = 0; i < radios.length; i++) {
-                var radio = radios[i];
-                // radio checked par defaut
-                if (radio.id.toUpperCase().includes(format)) {
-                    radio.checked = true;
-                }
-                // ecouteur pour changer de format
-                radio.addEventListener("change", (e) => {
-                    this.setFormat(e.target.value);
-                });
-            }
+        // icon button
+        if (!this.options.icons.button) {
+            this.button.classList.remove("GPexportButtonIcon", "gpf-btn-icon-submit");
         }
-        div.appendChild(menu.firstChild);
-
+        div.appendChild(this.button);
+        
         this.container = div;
     }
 
@@ -512,7 +584,8 @@ class ButtonExport extends Control {
 
         // ajouter les metadonnées de calcul et de configuration
         var options = {
-            defaultStyle : style
+            defaultStyle : style,
+            extensions : {}
         };
         if (data) {
             // properties ajoutées à la racine :
@@ -520,6 +593,10 @@ class ButtonExport extends Control {
             options.extensions = {
                 "geoportail:compute" : data
             };
+        }
+
+        if (this.options.description) {
+            options.extensions.description = (this.inputDesc && this.inputDesc.value) ? this.inputDesc.value : this.options.description;
         }
 
         var ClassName = null;
@@ -608,8 +685,8 @@ class ButtonExport extends Control {
 
         // INFO
         // la callback annule le download du fichier.
-        if (this.options.onExport && typeof this.options.onExport === "function") {
-            this.options.onExport(content);
+        if (this.options.callback && typeof this.options.callback === "function") {
+            this.options.callback(content);
             return;
         }
 
@@ -617,13 +694,40 @@ class ButtonExport extends Control {
         // determiner le bon charset !
         var charset = "utf-8";
         link.setAttribute("href", "data:" + this.mimeType + ";charset=" + charset + "," + encodeURIComponent(content));
-        link.setAttribute("download", this.options.name + this.extension);
+        link.setAttribute("download", (this.inputName && this.inputName.value) ? this.inputName.value + this.extension : this.options.name + this.extension);
         if (document.createEvent) {
             var event = document.createEvent("MouseEvents");
             event.initEvent("click", true, true);
             link.dispatchEvent(event);
         } else {
             link.click();
+        }
+    }
+
+    /**
+     * 
+     * @param {*} e - Click
+     */
+    onChangeRadioFormat (e) {
+        this.setFormat(e.target.value);
+    }
+
+    /**
+     * 
+     * @param {*} e - Click
+     */
+    onClickButtonToggleOptions (e) {
+        e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+        var collapse = this.menu.querySelector("#" + e.target.getAttribute("aria-controls"));
+        if (!collapse) {
+            return;
+        }
+        if (e.target.ariaExpanded === "true") {
+            collapse.classList.add("fr-collapse--expanded");
+            collapse.classList.remove("GPelementHidden");
+        } else {
+            collapse.classList.remove("fr-collapse--expanded");
+            collapse.classList.add("GPelementHidden");
         }
     }
 
@@ -697,6 +801,15 @@ class ButtonExport extends Control {
 
     /**
      * ...
+     * @param {String} desc - ...
+     * @public
+     */
+    setDescription (desc) {
+        this.options.description = desc;
+    }
+
+    /**
+     * ...
      * @param {String} title - ...
      * @public
      */
@@ -704,7 +817,7 @@ class ButtonExport extends Control {
         this.options.title = title;
         if (this.button) {
             // afficher l'icone du menu / titre
-            this.button.textContent = (this.options.menu) ? this.icon + title : title;
+            this.button.textContent = (this.options.menu) ? this.options.icons.menu + title : title;
         }
     }
 
@@ -731,6 +844,7 @@ class ButtonExport extends Control {
             }
         }
     }
+
     /**
      * ...
      * @param {Boolean} active - ...
@@ -740,7 +854,7 @@ class ButtonExport extends Control {
         this.options.menu = active;
         if (this.button) {
             // afficher l'icone du menu / titre
-            this.button.textContent = (this.options.menu) ? this.icon + this.options.title : this.options.title;
+            this.button.textContent = (this.options.menu) ? this.options.icons.menu + this.options.title : this.options.title;
         }
         if (this.menu && this.options.menu) {
             // afficher le menu

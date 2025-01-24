@@ -69,7 +69,7 @@
 
                 var layerSwitcher = new ol.control.LayerSwitcher({
                   options : {
-                    position : "bottom-right",
+                    position : "top-right",
                     collapsed : true,
                     panel : true,
                     counter : true
@@ -93,6 +93,9 @@
                 var exportDrawing = new ol.control.Export({
                   control: drawing,
                   format : "kml",
+                  icons : {
+                    button : true
+                  },
                   kind : "secondary",
                   target : drawing.getContainer().querySelector(".gpf-panel__content .drawing-tool-section:last-child")
                 });
@@ -113,10 +116,14 @@
                   format: "kml",
                   kind: "primary",
                   name: "export-iso",
+                  description : "Graphe isochrone",
                   title : "Exporter Isochrone",
                   menu : true,
+                  icons : {
+                    menu : ""
+                  }
                   // Desactive le download de l'export :
-                  // onExport : function (content) {
+                  // callback : function (content) {
                   //   console.log(content);
                   // }
                 });

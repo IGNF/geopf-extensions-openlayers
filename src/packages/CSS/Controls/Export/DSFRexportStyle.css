@@ -1,0 +1,16 @@
+.gpf-btn-icon-submit {
+    background-image: url("img/GPexportSave.svg");
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+}
+.gpf-accordion::before {
+    box-shadow: unset;
+}
+
+.gpf-accordion__btn {
+    width: fit-content;
+}
+
+.gpf-accordion__title {
+
+}
