@@ -381,7 +381,7 @@ class ButtonExport extends Control {
         // menu des options
         // utiliser les templates literals avec la substitution ${...}
         var menu = this.stringToHTML(`
-            <div class="gpf-accordion fr-accordion fr-m-1w ${this.menuClassHidden}">
+            <div class="GPexportMenuHidden gpf-accordion fr-accordion fr-m-1w ${this.menuClassHidden}">
                 <h3 class="gpf-accordion__title fr-accordion__title">
                     <button type="button" 
                         id="GPexportBtnMenuContent-${this.uid}"

@@ -44,9 +44,10 @@ button[id^=GPexportButton-].GPexportButtonIcon {
     z-index: 1;
 }
 
+/* 
 .GPexportMenuContent a:hover { background-color: #f1f1f1; }
-
-.GPexportMenuContainer:hover .GPexportMenuContent { display: block; }
+.GPexportMenuContainer:hover .GPexportMenuContent { display: block; } 
+*/
 
 /* menu des formats */
 .GPexportMenuContent .container {
