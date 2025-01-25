@@ -24,6 +24,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - ContextMenu : correction pour affichage du menu en mode dark (#332, #333)
+  - Export : mise en conformité DSFR du bouton Export (#334)
   
 * 🔒 [Security]
 
