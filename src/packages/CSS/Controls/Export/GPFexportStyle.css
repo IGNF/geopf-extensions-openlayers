@@ -15,11 +15,20 @@ button[id^=GPexportButton-] {
     padding-right: 5px;
 }
 
-button[id^=GPexportButton-].GPexportButtonIcon {
+button[id^=GPexportButton-].GPexportButtonExportIcon {
+    padding-left: 25px;
+    background-image: url("img/GPexportDownload.svg");
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    background-position: left;
+}
+
+button[id^=GPexportButton-].GPexportButtonSaveIcon {
     padding-left: 25px;
     background-image: url("img/GPexportSave.svg");
     background-size: 25px 25px;
     background-repeat: no-repeat;
+    background-position: left;
 }
 
 /* menu */

@@ -30,7 +30,7 @@ var logger = Logger.getLogger("export");
  * @alias ol.control.Export
  * @param {Object} options - options for function call.
  * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {String} [options.export = "true"] - triggering the download of the file
+ * @param {String} [options.download = "true"] - triggering the download of the file
  * @param {String} [options.format = "geojson"] - geojson / kml / gpx
  * @param {String} [options.name = "export"] - export name file
  * @param {String} [options.description = "export"] - export description put into file
@@ -38,9 +38,9 @@ var logger = Logger.getLogger("export");
  * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
  * @param {Boolean} [options.menu = false] - displays the menu
  * @param {Object} [options.icons] - icons
- * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon
- * @param {Boolean} [options.icons.button = "false"] - displays the button icon
- * @param {Function} [options.callback] - the callback cancels the file download or the implementation is your responsibility
+ * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
+ * @param {String} [options.icons.button = "export"] - displays the button icon : save or export icon, or otherwise left blank if you don't want it
+ * @param {Function} [options.callback] - with a callback, the implementation is your responsibility
  * @param {DOMElement} [options.target] - target
  * @param {Object} [options.control] - instance of control
  * @param {Object} [options.layer] - the layer instance is retrieved from the control, but you can defined it
@@ -61,7 +61,7 @@ var logger = Logger.getLogger("export");
  * export.setTitle("Exporter");
  * export.setMenu(false);
  * export.render(); // <-- direct call to render function !
- * export.on("button:exported", (data) => { console.log(data); });
+ * export.on("button:clicked", (data) => { console.log(data); });
  *
  * // method : call map.addControl()
  * var export = new ButtonExport();
@@ -74,19 +74,22 @@ var logger = Logger.getLogger("export");
  * export.setTitle("Exporter");
  * export.setKind("secondary");
  * export.setMenu(false);
- * export.on("button:exported", (data) => { console.log(data); });
+ * export.on("button:clicked", (data) => { console.log(data); });
  * map.addControl(export); // <-- using the OpenLayers mechanism, don't call to render function !
  *
  * // use control options instead of setters
  * var export = new ButtonExport({
- *   export : true,
+ *   download : true,
  *   control : iso,
  *   target : <!-- DOMElement -->,
  *   name : "export",
  *   description : "Export Isochrone",
  *   format : "geojson",
  *   title : "Exporter",
- *   menu : false
+ *   menu : false,
+ *   callback : (content, layer) => {
+ *      console.log(content, layer);
+ *   }
  * });
  * map.addControl(export);
  *
@@ -94,10 +97,10 @@ var logger = Logger.getLogger("export");
  * var iso = new ol.control.Isocurve({ export : true });
  * // with control options :
  * var iso = new ol.control.Isocurve({ export : {
- *   export : true,
- *   name : "export",
+ *   download : false,
+ *   name : "save-iso",
  *   format : "geojson",
- *   title : "Exporter",
+ *   title : "Sauvegarde",
  *   menu : false
  * }});
  */
@@ -306,7 +309,7 @@ class ButtonExport extends Control {
             layer : null,
             control : null,
             target : null,
-            export : true,
+            download : true,
             format : "geojson",
             name : "export",
             description : "export",
@@ -315,7 +318,7 @@ class ButtonExport extends Control {
             menu : false,
             icons : {
                 menu : "\u2630 ",
-                button : false
+                button : "export"
             },
             callback : null
         };
@@ -474,7 +477,7 @@ class ButtonExport extends Control {
             <button 
                 type="button"
                 id="${this._addUID("GPexportButton")}" 
-                class="GPexportButtonIcon GPsubmit gpf-btn gpf-btn-icon-submit fr-btn fr-m-1w">
+                class="GPexportButtonExportIcon GPsubmit gpf-btn gpf-btn-icon-export-submit fr-btn fr-m-1w">
                 ${title}
             </button>
         `);
@@ -494,11 +497,24 @@ class ButtonExport extends Control {
                 break;
             case "primary":
             default:
+                this.button.classList.add("fr-btn--primary", "gpf-btn--primary");
                 break;
         }
         // icon button
         if (!this.options.icons.button) {
-            this.button.classList.remove("GPexportButtonIcon", "gpf-btn-icon-submit");
+            this.button.classList.remove("GPexportButtonExportIcon", "gpf-btn-icon-export-submit");
+        } else {
+            switch (this.options.icons.button) {
+                case "export":
+                    break;
+                case "save":
+                    this.button.classList.replace("GPexportButtonExportIcon", "GPexportButtonSaveIcon");
+                    this.button.classList.replace("gpf-btn-icon-export-submit", "gpf-btn-icon-save-submit");
+                    break;
+                default:
+                    this.button.classList.remove("GPexportButtonExportIcon", "gpf-btn-icon-export-submit");
+                    break;
+            }
         }
         div.appendChild(this.button);
         
@@ -691,14 +707,7 @@ class ButtonExport extends Control {
             layer : layer
         });
 
-        // INFO
-        // la callback annule le download du fichier.
-        if (this.options.callback && typeof this.options.callback === "function") {
-            this.options.callback(content);
-            return;
-        }
-
-        if (this.options.export) {
+        if (this.options.download) {
             var link = document.createElement("a");
             // determiner le bon charset !
             var charset = "utf-8";
@@ -711,6 +720,10 @@ class ButtonExport extends Control {
             } else {
                 link.click();
             }
+        }
+
+        if (this.options.callback && typeof this.options.callback === "function") {
+            this.options.callback(content, layer);
         }
     }
 
@@ -852,6 +865,7 @@ class ButtonExport extends Control {
                     break;
                 case "primary":
                 default:
+                    this.button.classList.add("fr-btn--primary", "gpf-btn--primary");
                     break;
             }
         }
@@ -899,7 +913,7 @@ class ButtonExport extends Control {
      * @public
      */
     setDownload (value) {
-        this.options.export = value;
+        this.options.download = value;
     }
 
 };

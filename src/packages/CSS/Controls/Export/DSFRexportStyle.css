@@ -1,8 +1,35 @@
-.gpf-btn-icon-submit {
-    background-image: url("img/GPexportSave.svg");
+.gpf-btn-icon-export-submit {
+    padding-left: 25px;
+    /* background-image: url("img/GPexportDownload.svg");
     background-size: 25px 25px;
     background-repeat: no-repeat;
+    background-position: left;
+    background-color: var(--text-action-high-blue-france); */
 }
+
+.gpf-btn-icon-export-submit::after {
+    content: '';
+    -webkit-mask: url("img/GPexportDownload.svg") left no-repeat;
+    mask: url("img/GPexportDownload.svg") left no-repeat;
+    mask-size: 25px 25px;
+}
+
+.gpf-btn-icon-save-submit {
+    padding-left: 25px;
+    /* background-image: url("img/GPexportSave.svg");
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-color: var(--text-action-high-blue-france); */
+}
+
+.gpf-btn-icon-save-submit::after {
+    content: '';
+    -webkit-mask: url("img/GPexportSave.svg") left no-repeat;
+    mask: url("img/GPexportSave.svg") left no-repeat;
+    mask-size: 25px 25px;
+}
+
 .gpf-accordion::before {
     box-shadow: unset;
 }

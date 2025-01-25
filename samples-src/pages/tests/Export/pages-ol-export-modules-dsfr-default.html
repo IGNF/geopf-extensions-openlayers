@@ -92,11 +92,11 @@
                 map.addControl(drawing);
                 var exportDrawing = new ol.control.Export({
                   title : "Sauvegarde",
-                  export : false,
+                  download : false,
                   control: drawing,
                   format : "kml",
                   icons : {
-                    button : true
+                    button : "save"
                   },
                   kind : "secondary",
                   target : drawing.getContainer().querySelector(".gpf-panel__content .drawing-tool-section:last-child")
@@ -109,41 +109,63 @@
                 // iso + export with config
                 var iso = new ol.control.Isocurve({
                   position: "bottom-left",
-                  draggable:true
+                  draggable:true,
+                  export : {
+                    target: document.getElementById("btnExportIso"),
+                    format: "kml",
+                    kind: "primary",
+                    name: "export-iso",
+                    description : "Graphe isochrone",
+                    title : "Exporter Isochrone",
+                    menu : true,
+                    icons : {
+                      menu : "",
+                      button : "export"
+                    },
+                    callback : function (content, layer) {
+                      console.log(content, layer);
+                    }
+                  }
                 });
                 map.addControl(iso);
-                var exportIso = new ol.control.Export({
-                  control: iso,
-                  target: document.getElementById("btnExportIso"),
-                  format: "kml",
-                  kind: "primary",
-                  name: "export-iso",
-                  description : "Graphe isochrone",
-                  title : "Exporter Isochrone",
-                  menu : true,
-                  icons : {
-                    menu : ""
-                  }
-                  // Desactive le download de l'export :
-                  // callback : function (content) {
-                  //   console.log(content);
-                  // }
-                });
-                map.addControl(exportIso);
-                exportIso.on("button:clicked", (e) => {
-                  console.log("Export Iso", e);
-                });
+                // var exportIso = new ol.control.Export({
+                //   control: iso,
+                //   target: document.getElementById("btnExportIso"),
+                //   format: "kml",
+                //   kind: "primary",
+                //   name: "export-iso",
+                //   description : "Graphe isochrone",
+                //   title : "Exporter Isochrone",
+                //   menu : true,
+                //   icons : {
+                //     menu : ""
+                //   }
+                //   // Desactive le download de l'export :
+                //   // callback : function (content) {
+                //   //   console.log(content);
+                //   // }
+                // });
+                // map.addControl(exportIso);
+                // exportIso.on("button:clicked", (e) => {
+                //   console.log("Export Iso", e);
+                // });
 
                 // route + export with setters
                 var route = new ol.control.Route({
                   position: "bottom-left"
                 });
                 map.addControl(route);
-                exportRoute = new ol.control.Export({});
+                exportRoute = new ol.control.Export({
+                  icons: {
+                    menu : "",
+                    button : "export"
+                  }
+                });
+                exportRoute.setDownload(true);
                 exportRoute.setControl(route);
                 exportRoute.setTarget(document.getElementById("btnExportRoute"));
                 exportRoute.setFormat("gpx");
-                exportRoute.setKind("primary");
+                exportRoute.setKind("secondary");
                 exportRoute.setName("export-route");
                 exportRoute.setTitle("Exporter Itineraire");
                 exportRoute.setMenu(true);
