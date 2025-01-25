@@ -871,6 +871,9 @@ var ElevationPath = class ElevationPath extends Control {
         var info = this._infoContainer = this._createElevationPathInformationsElement();
         panelDiv.appendChild(info);
 
+        var plugin = this._createDrawingButtonsPluginDiv();
+        panelDiv.appendChild(plugin);
+
         if (this.options.displayProfileOptions.target === null) {
             container.appendChild(panel);
         }

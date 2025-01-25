@@ -890,13 +890,15 @@ var Isocurve = class Isocurve extends Control {
             footer.appendChild(buttonReset);
         }
 
-
         // form: bouton du calcul
         var buttonSubmit = this._submitContainer = this._createIsoSubmitFormElement();
         footer.appendChild(buttonSubmit);
 
         panelDiv.appendChild(form);
 
+        var plugin = this._createDrawingButtonsPluginDiv();
+        panelDiv.appendChild(plugin);
+        
         // waiting
         var waiting = this._waitingContainer = this._createIsoWaitingElement();
         panel.appendChild(waiting);

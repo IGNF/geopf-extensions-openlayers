@@ -67,6 +67,7 @@
                   })
                 });
 
+                // Ajout du widget LayerSwitcher
                 var layerSwitcher = new ol.control.LayerSwitcher({
                   options : {
                     position : "top-right",
@@ -76,13 +77,19 @@
                   }
                 });
                 map.addControl(layerSwitcher);
-
+                
+                // Ajout du widget LayerImport
                 var importLayer = new ol.control.LayerImport({
                   position: "top-right"
                 });
                 map.addControl(importLayer);
 
-                // drawing + export into widget
+                // cas drawing : 
+                // * bouton secondary avec icone
+                // * mode sauvegarde
+                // * sans menu
+                // * target interne 
+                // * appel instance externe
                 var drawing = new ol.control.Drawing({
                   position: "bottom-left",
                   tools : {
@@ -98,15 +105,19 @@
                   icons : {
                     button : "save"
                   },
-                  kind : "secondary",
-                  target : drawing.getContainer().querySelector(".gpf-panel__content .drawing-tool-section:last-child")
+                  kind : "secondary"
                 });
                 map.addControl(exportDrawing);
                 exportDrawing.on("button:clicked", (e) => {
                   console.log("Export Drawing", e);
                 });
 
-                // iso + export with config
+                // cas iso :
+                // * bouton primary avec icone
+                // * mode export
+                // * avec menu
+                // * target externe
+                // * appel instance interne
                 var iso = new ol.control.Isocurve({
                   position: "bottom-left",
                   draggable:true,
@@ -128,6 +139,13 @@
                   }
                 });
                 map.addControl(iso);
+
+                // cas iso :
+                // * bouton primary avec icone
+                // * mode export
+                // * avec menu
+                // * target externe
+                // * appel instance externe
                 // var exportIso = new ol.control.Export({
                 //   control: iso,
                 //   target: document.getElementById("btnExportIso"),
@@ -139,18 +157,22 @@
                 //   menu : true,
                 //   icons : {
                 //     menu : ""
+                //   },
+                //   callback : function (content) {
+                //     console.log(content);
                 //   }
-                //   // Desactive le download de l'export :
-                //   // callback : function (content) {
-                //   //   console.log(content);
-                //   // }
                 // });
                 // map.addControl(exportIso);
                 // exportIso.on("button:clicked", (e) => {
                 //   console.log("Export Iso", e);
                 // });
 
-                // route + export with setters
+                // cas route :
+                // * bouton secondary avec icone
+                // * mode export
+                // * avec menu
+                // * target externe
+                // * appel instance externe avec setters
                 var route = new ol.control.Route({
                   position: "bottom-left"
                 });
@@ -174,7 +196,12 @@
                 });
                 map.addControl(exportRoute);
 
-                // button export pluggued into profil
+                // cas profil :
+                // * bouton secondary avec icone
+                // * mode export avec icone de menu
+                // * avec menu
+                // * target interne
+                // * appel instance externe
                 var measureProfil = new ol.control.ElevationPath({
                   position: "bottom-left"
                 });
@@ -184,7 +211,7 @@
                   name: "export-profil", 
                   format : "geojson",
                   menu: true,
-                  target : measureProfil.getContainer().querySelector(".gpf-panel__body")
+                  // target : measureProfil.getContainer().querySelector(".gpf-panel__body")
                 });
                 map.addControl(exportProfil);
                 exportProfil.on("button:clicked", (e) => {

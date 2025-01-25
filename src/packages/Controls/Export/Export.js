@@ -24,7 +24,7 @@ var logger = Logger.getLogger("export");
 /**
  * @classdesc
  *
- * Export button
+ * button that will plug into a widget and export the contents of the calculation
  *
  * @constructor
  * @alias ol.control.Export
@@ -41,7 +41,7 @@ var logger = Logger.getLogger("export");
  * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
  * @param {String} [options.icons.button = "export"] - displays the button icon : save or export icon, or otherwise left blank if you don't want it
  * @param {Function} [options.callback] - with a callback, the implementation is your responsibility
- * @param {DOMElement} [options.target] - target
+ * @param {DOMElement} [options.target] - target where the button will plug in. By default, the target is 'container-buttons-plugin' into the wikdget
  * @param {Object} [options.control] - instance of control
  * @param {Object} [options.layer] - the layer instance is retrieved from the control, but you can defined it
  * @fires button:clicked 
@@ -283,9 +283,10 @@ class ButtonExport extends Control {
         if (!this.options.target) {
             if (this.options.control) {
                 // insertion du composant dans le panneau du controle
-                var container = this.options.control.getContainer();
+                var containerMain = this.options.control.getContainer();
+                var containerPlug = containerMain.querySelector(".container-buttons-plugin");
                 // ex. GP(iso|route)Panel-
-                this.options.target = container.lastChild;
+                this.options.target = containerPlug || containerMain.lastChild;
             }
         }
         if (this.container) {
@@ -324,8 +325,12 @@ class ButtonExport extends Control {
         };
 
         // merge with user options
+        var icons = Utils.assign(this.options.icons, options.icons);
         Utils.assign(this.options, options);
+        Utils.assign(this.options.icons, icons);
 
+        logger.debug(this.options);
+        
         if (this.options.layer) {
             // TODO test...
         }
@@ -385,12 +390,12 @@ class ButtonExport extends Control {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPexportContainer");
-        div.className = "GPexportMenuContainer fr-m-1w";
+        div.className = "GPexportMenuContainer gpf-export-menu-container";
 
         // menu des options
         // utiliser les templates literals avec la substitution ${...}
         var menu = this.stringToHTML(`
-            <div class="GPexportMenuHidden gpf-accordion fr-accordion fr-m-1w ${this.menuClassHidden}">
+            <div class="GPexportMenuHidden gpf-accordion fr-accordion ${this.menuClassHidden}">
                 <h3 class="gpf-accordion__title fr-accordion__title">
                     <button type="button" 
                         id="GPexportBtnMenuContent-${this.uid}"
@@ -398,7 +403,7 @@ class ButtonExport extends Control {
                         aria-expanded="false" aria-controls="GPexportMenuContent-${this.uid}">options</button>
                 </h3>
                 <div id="GPexportMenuContent-${this.uid}"
-                    class="GPexportMenuContent fr-collapse">
+                    class="GPexportMenuContent fr-collapse fr-mx-2w">
                     <div id="GPexportMenuName-${this.uid}" 
                         class="GPexportMenuName">
                         <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputName-${this.uid}" title="Nom">Nom</label>
@@ -748,10 +753,12 @@ class ButtonExport extends Control {
         if (e.target.ariaExpanded === "true") {
             collapse.classList.add("fr-collapse--expanded");
             this.menu.classList.add("gpf-full-container");
+            this.menu.classList.add("gpf-accordion--opened");
             collapse.classList.remove("GPelementHidden");
         } else {
             collapse.classList.remove("fr-collapse--expanded");
             this.menu.classList.remove("gpf-full-container");
+            this.menu.classList.remove("gpf-accordion--opened");
             collapse.classList.add("GPelementHidden");
         }
     }

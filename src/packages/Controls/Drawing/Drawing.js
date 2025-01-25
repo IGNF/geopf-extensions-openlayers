@@ -850,6 +850,9 @@ var Drawing = class Drawing extends Control {
             sections.appendChild(tools[i]);
         }
 
+        var containerButtonsPlugin = this._createDrawingButtonsPluginDiv();
+        sections.appendChild(containerButtonsPlugin);
+
         container.appendChild(panel);
 
         return container;

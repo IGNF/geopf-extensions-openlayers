@@ -738,6 +738,9 @@ var Route = class Route extends Control {
         // results
         var routeResults = this._resultsRouteContainer = this._createRoutePanelResultsElement();
         routePanelDiv.appendChild(routeResults);
+        
+        var plugin = this._createDrawingButtonsPluginDiv();
+        routePanelDiv.appendChild(plugin);
 
         // waiting
         var waiting = this._waitingContainer = this._createRouteWaitingElement();
