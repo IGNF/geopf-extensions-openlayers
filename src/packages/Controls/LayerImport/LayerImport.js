@@ -70,6 +70,12 @@ var logger = Logger.getLogger("layerimport");
  * @alias ol.control.LayerImport
  * @extends {ol.control.Control}
  * @type {ol.control.LayerImport}
+ * @fires layerimport:mapbox:added
+ * @fires layerimport:vector:added
+ * @fires layerimport:service:added
+ * @fires editor:loaded
+ * @fires render:success
+ * @fires render:failure
  * @param {Object} options - options for function call.
  * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.collapsed = true] - Specify if LayerImport control should be collapsed at startup. Default is true.
@@ -1592,6 +1598,29 @@ var LayerImport = class LayerImport extends Control {
                         // ajout du layer sur la carte
                         map.addLayer(p.layer);
 
+                        /**
+                         * event triggered when a layer is added
+                         *
+                         * @event layerimport:mapbox:added
+                         * @property {Object} type - event
+                         * @property {String} name - layerName
+                         * @property {String} data - data
+                         * @property {Object} layer - layer
+                         * @property {String} format - format
+                         * @property {Object} target - instance LayerImport
+                         * @example
+                         * LayerImport.on("layerimport:mapbox:added", function (e) {
+                         *   console.log(e.layer);
+                         * })
+                         */
+                        this.dispatchEvent({
+                            type : "layerimport:mapbox:added",
+                            name : layerName,
+                            data : fileContent,
+                            layer : p.layer,
+                            format : this._currentImportType.toLowerCase() || "mapbox"
+                        });
+
                         // application du style
                         if (p.layer.getSource()) {
                             setStyle();
@@ -1738,6 +1767,29 @@ var LayerImport = class LayerImport extends Control {
                     map.getView().fit(sourceExtent, map.getSize());
                 }
             }
+
+            /**
+             * event triggered when a layer is added
+             *
+             * @event layerimport:vector:added
+             * @property {Object} type - event
+             * @property {String} name - layerName
+             * @property {String} data - data
+             * @property {Object} layer - layer
+             * @property {String} format - format
+             * @property {Object} target - instance LayerImport
+             * @example
+             * LayerImport.on("layerimport:vector:added", function (e) {
+             *   console.log(e.layer);
+             * })
+             */
+            this.dispatchEvent({
+                type : "layerimport:vector:added",
+                name : layerName,
+                data : fileContent,
+                layer : vectorLayer,
+                format : this._currentImportType.toLowerCase()
+            });
         }
     }
 
@@ -1837,6 +1889,29 @@ var LayerImport = class LayerImport extends Control {
                 map.getView().fit(sourceExtent, map.getSize());
             }
         }
+
+        /**
+         * event triggered when a layer is added
+         *
+         * @event layerimport:vector:added
+         * @property {Object} type - event
+         * @property {String} name - layerName
+         * @property {String} url - url
+         * @property {Object} layer - layer
+         * @property {String} format - format
+         * @property {Object} target - instance LayerImport
+         * @example
+         * LayerImport.on("layerimport:vector:added", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerimport:vector:added",
+            name : layerName,
+            url : url,
+            layer : vectorLayer,
+            format : this._currentImportType.toLowerCase()
+        });
     }
 
     // Events MapBox DOM
@@ -2452,6 +2527,29 @@ var LayerImport = class LayerImport extends Control {
                 map.getView().fit(sourceExtent, map.getSize());
             }
         }
+
+        /**
+         * event triggered when a layer is added
+         *
+         * @event layerimport:service:added
+         * @property {Object} type - event
+         * @property {String} name - layerName
+         * @property {String} data - data
+         * @property {Object} layer - layer
+         * @property {String} format - format
+         * @property {Object} target - instance LayerImport
+         * @example
+         * LayerImport.on("layerimport:service:added", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerimport:service:added",
+            name : layerInfo.Name,
+            data : layerInfo,
+            layer : wmsLayer,
+            format : "wms"
+        });
     }
 
     /**
@@ -2802,6 +2900,29 @@ var LayerImport = class LayerImport extends Control {
                 map.getView().fit(sourceExtent, map.getSize());
             }
         }
+
+        /**
+         * event triggered when a layer is added
+         *
+         * @event layerimport:service:added
+         * @property {Object} type - event
+         * @property {String} name - layerName
+         * @property {String} data - data
+         * @property {Object} layer - layer
+         * @property {String} format - format
+         * @property {Object} target - instance LayerImport
+         * @example
+         * LayerImport.on("layerimport:service:added", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerimport:service:added",
+            name : layerInfo.Identifier,
+            data : layerInfo,
+            layer : wmtsLayer,
+            format : "wmts"
+        });
     }
 
     /**

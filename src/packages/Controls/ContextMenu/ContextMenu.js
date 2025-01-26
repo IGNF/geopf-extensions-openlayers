@@ -54,7 +54,6 @@ var logger = Logger.getLogger("contextMenu");
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  * 
- * @fires custom:action
  * @example
  * var contextMenu = new ol.control.ContextMenu();
  * map.addControl(contextMenu);
