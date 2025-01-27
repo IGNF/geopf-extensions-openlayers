@@ -478,6 +478,8 @@ class ButtonExport extends Control {
 
             this.inputName = this.menu.querySelector("#GPexportMenuInputName-" + this.uid);
             this.inputDesc = this.menu.querySelector("#GPexportMenuInputDesc-" + this.uid);
+            this.inputName.addEventListener("change", (e) => this.onChangeInputName(e));
+            this.inputDesc.addEventListener("change", (e) => this.onChangeInputDesc(e));
         }
         div.appendChild(this.menu);
 
@@ -707,6 +709,7 @@ class ButtonExport extends Control {
          * @property {String} content - export data
          * @property {String} name - name
          * @property {String} description - description
+         * @property {String} format - format : kml, geojson, ...
          * @property {Object} layer - layer
          * @example
          * Export.on("button:clicked", function (e) {
@@ -716,8 +719,9 @@ class ButtonExport extends Control {
         this.dispatchEvent({
             type : "button:clicked",
             content : content,
-            name : this.inputName.value || this.options.name,
-            description : this.inputDesc.value || this.options.description,
+            name : this.options.name,
+            description : this.options.description,
+            format : this.options.format,
             layer : layer
         });
 
@@ -726,7 +730,7 @@ class ButtonExport extends Control {
             // determiner le bon charset !
             var charset = "utf-8";
             link.setAttribute("href", "data:" + this.mimeType + ";charset=" + charset + "," + encodeURIComponent(content));
-            link.setAttribute("download", (this.inputName && this.inputName.value) ? this.inputName.value + this.extension : this.options.name + this.extension);
+            link.setAttribute("download", this.options.name + this.extension);
             if (document.createEvent) {
                 var event = document.createEvent("MouseEvents");
                 event.initEvent("click", true, true);
@@ -747,6 +751,22 @@ class ButtonExport extends Control {
      */
     onChangeRadioFormat (e) {
         this.setFormat(e.target.value);
+    }
+
+    /**
+     * 
+     * @param {*} e - Click
+     */
+    onChangeInputName (e) {
+        this.setName(e.target.value);
+    }
+
+    /**
+     * 
+     * @param {*} e - Click
+     */
+    onChangeInputDesc (e) {
+        this.setDescription(e.target.value);
     }
 
     /**
