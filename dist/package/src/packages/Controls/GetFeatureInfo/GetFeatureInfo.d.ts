@@ -10,7 +10,6 @@ export default GetFeatureInfo;
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  *
- * @fires custom:action
  * @example
  * var getFeatureInfo = new ol.control.GetFeatureInfo();
  * map.addControl(getFeatureInfo);

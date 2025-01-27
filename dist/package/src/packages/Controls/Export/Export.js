@@ -9,6 +9,7 @@ import Control from "ol/control/Control";
 // import local
 import ID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
+import Utils from "../../Utils/Helper";
 
 // import local with ol dependencies
 import KMLExtended from "../../Formats/KML";
@@ -23,20 +24,28 @@ var logger = Logger.getLogger("export");
 /**
  * @classdesc
  *
- * Export button
+ * button that will plug into a widget and export the contents of the calculation
  *
  * @constructor
  * @alias ol.control.Export
  * @param {Object} options - options for function call.
  * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+ * @param {String} [options.download = "true"] - triggering the download of the file
  * @param {String} [options.format = "geojson"] - geojson / kml / gpx
- * @param {String} [options.name = "export"] - export name
+ * @param {String} [options.name = "export"] - export name file
+ * @param {String} [options.description = "export"] - export description put into file
  * @param {String} [options.title = "Exporter"] - button name
- * @param {Boolean} [options.menu = false] - displays the format choice menu
- * @param {Function} [options.onExport] - callback
- * @param {DOMElement} [options.target] - target
- * @param {Object} options.control - instance of control
- * @fires export:compute
+ * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
+ * @param {Boolean} [options.menu = false] - displays the menu
+ * @param {String} [options.direction = "row"] - buttons and menus layout
+ * @param {Object} [options.icons] - icons
+ * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
+ * @param {String} [options.icons.button = "export"] - displays the button icon : save or export icon, or otherwise left blank if you don't want it
+ * @param {Function} [options.callback] - with a callback, the implementation is your responsibility
+ * @param {DOMElement} [options.target] - target where the button will plug in. By default, the target is 'container-buttons-plugin' into the wikdget
+ * @param {Object} [options.control] - instance of control
+ * @param {Object} [options.layer] - the layer instance is retrieved from the control, but you can defined it
+ * @fires button:clicked 
  * @example
  * // pluggued widget Export into control Isocurve
  * var iso = new ol.control.Isocurve();
@@ -44,34 +53,44 @@ var logger = Logger.getLogger("export");
  *
  * // method : call render()
  * var export = new ButtonExport();
+ * export.setDownload(true);
  * export.setControl(iso);
  * export.setTarget(<!-- DOMElement -->);
  * export.setName("export");
  * export.setFormat("geojson");
+ * export.setDescription("Export Isochrone");
  * export.setTitle("Exporter");
  * export.setMenu(false);
  * export.render(); // <-- direct call to render function !
- * export.on("export:compute", (data) => { console.log(data); });
+ * export.on("button:clicked", (data) => { console.log(data); });
  *
  * // method : call map.addControl()
  * var export = new ButtonExport();
+ * export.setDownload(true);
  * export.setControl(iso);
  * export.setTarget(<!-- DOMElement -->);
  * export.setName("export");
  * export.setFormat("geojson");
+ * export.setDescription("Export Isochrone");
  * export.setTitle("Exporter");
+ * export.setKind("secondary");
  * export.setMenu(false);
- * export.on("export:compute", (data) => { console.log(data); });
+ * export.on("button:clicked", (data) => { console.log(data); });
  * map.addControl(export); // <-- using the OpenLayers mechanism, don't call to render function !
  *
  * // use control options instead of setters
  * var export = new ButtonExport({
+ *   download : true,
  *   control : iso,
  *   target : <!-- DOMElement -->,
  *   name : "export",
+ *   description : "Export Isochrone",
  *   format : "geojson",
  *   title : "Exporter",
- *   menu : false
+ *   menu : false,
+ *   callback : (content, layer) => {
+ *      console.log(content, layer);
+ *   }
  * });
  * map.addControl(export);
  *
@@ -79,9 +98,10 @@ var logger = Logger.getLogger("export");
  * var iso = new ol.control.Isocurve({ export : true });
  * // with control options :
  * var iso = new ol.control.Isocurve({ export : {
- *   name : "export",
+ *   download : false,
+ *   name : "save-iso",
  *   format : "geojson",
- *   title : "Exporter",
+ *   title : "Sauvegarde",
  *   menu : false
  * }});
  */
@@ -99,13 +119,20 @@ class ButtonExport extends Control {
      */
     constructor (options) {
         options = options || {
+            layer : null,
             control : null,
             target : null,
             format : "geojson",
             name : "export",
+            description : "export",
             title : "Exporter",
+            kind : "secondary",
             menu : false,
-            onExport : null
+            icons : {
+                menu : "\u2630 ",
+                button : ""
+            },
+            callback : null
         };
 
         logger.trace("[constructor] Export", options);
@@ -113,7 +140,7 @@ class ButtonExport extends Control {
         super({
             element : document.createElement("div"),
             render : options.render,
-            target : options.target
+            target : null
         });
 
         if (!(this instanceof ButtonExport)) {
@@ -234,8 +261,9 @@ class ButtonExport extends Control {
         // dom
         this.container = null;
         this.button = null;
+        this.inputName = null;
+        this.inputDesc = null;
         this.menu = null;
-        this.icon = "\u2630 ";
         this.menuClassHidden = "GPelementHidden gpf-hidden";
 
         this.initOptions(options);
@@ -256,9 +284,10 @@ class ButtonExport extends Control {
         if (!this.options.target) {
             if (this.options.control) {
                 // insertion du composant dans le panneau du controle
-                var container = this.options.control.getContainer();
+                var containerMain = this.options.control.getContainer();
+                var containerPlug = containerMain.querySelector(".container-buttons-plugin");
                 // ex. GP(iso|route)Panel-
-                this.options.target = container.lastChild;
+                this.options.target = containerPlug || containerMain.lastChild;
             }
         }
         if (this.container) {
@@ -278,15 +307,41 @@ class ButtonExport extends Control {
      * @private
      */
     initOptions (options) {
-        // options
-        this.options = options;
+        this.options = {
+            layer : null,
+            control : null,
+            target : null,
+            download : true,
+            format : "geojson",
+            name : "export",
+            description : "export",
+            title : "Exporter",
+            kind : "secondary",
+            menu : false,
+            icons : {
+                menu : "\u2630 ",
+                button : "export"
+            },
+            callback : null
+        };
+
+        // merge with user options
+        var icons = Utils.assign(this.options.icons, options.icons);
+        Utils.assign(this.options, options);
+        Utils.assign(this.options.icons, icons);
+
+        logger.debug(this.options);
+        
+        if (this.options.layer) {
+            // TODO test...
+        }
 
         if (this.options.control) {
-            // ...
+            // TODO test...
         }
 
         if (this.options.target) {
-            // ...
+            // TODO test...
         }
 
         var format = this.options.format;
@@ -296,8 +351,16 @@ class ButtonExport extends Control {
             this.setName("export");
         }
 
+        if (!this.options.description) {
+            this.setDescription("export");
+        }
+
         if (!this.options.title) {
             this.setTitle("Exporter");
+        }
+
+        if (!this.options.kind) {
+            this.setKind("secondary");
         }
 
         if (this.options.menu === undefined) {
@@ -323,54 +386,70 @@ class ButtonExport extends Control {
         // afficher l'icone du menu
         var title = this.options.title;
         if (this.options.menu) {
-            title = this.icon + this.options.title;
+            title = this.options.icons.menu + this.options.title;
         }
 
         var div = document.createElement("div");
         div.id = this._addUID("GPexportContainer");
-        div.className = "GPexportMenuContainer";
+        div.className = "GPexportMenuContainer gpf-export-menu-container gpf-export-menu-container-row";
 
-        // bouton Exporter
-        // utiliser les templates literals avec la substitution ${...}
-        var button = this.stringToHTML(`
-            <input type="button"
-                id="${this._addUID("GPexportButton")}" 
-                class="GPsubmit gpf-btn gpf-btn-icon-submit  fr-btn"
-                value="${title}">
-        `);
-
-        // add event click button
-        this.button = button.firstChild;
-        if (this.button) {
-            this.button.addEventListener("click", (e) => this.onClickButtonExport(e));
+        if (this.options.direction === "column") {
+            div.classList.replace("gpf-export-menu-container-row", "gpf-export-menu-container-column");
         }
-        div.appendChild(button.firstChild);
-
+        
         // menu des options
         // utiliser les templates literals avec la substitution ${...}
         var menu = this.stringToHTML(`
-            <div class="GPexportMenuContent ${this.menuClassHidden}">
-                <label class="container">GeoJSON
-                    <input type="radio" 
-                        id="GPmenuFormatGeojson-${this.uid}"
-                        name="format" 
-                        value="geojson">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="container">KML
-                    <input type="radio" 
-                        id="GPmenuFormatKml-${this.uid}"
-                        name="format" 
-                        value="kml">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="container">GPX
-                    <input type="radio" 
-                        id="GPmenuFormatGpx-${this.uid}"
-                        name="format" 
-                        value="gpx">
-                    <span class="checkmark"></span>
-                </label>
+            <div class="GPexportMenuHidden gpf-accordion fr-accordion ${this.menuClassHidden}">
+                <h3 class="gpf-accordion__title fr-accordion__title">
+                    <button type="button" 
+                        id="GPexportBtnMenuContent-${this.uid}"
+                        class="gpf-accordion__btn fr-accordion__btn" 
+                        aria-expanded="false" aria-controls="GPexportMenuContent-${this.uid}">options</button>
+                </h3>
+                <div id="GPexportMenuContent-${this.uid}"
+                    class="GPexportMenuContent fr-collapse fr-mx-2w">
+                    <div id="GPexportMenuName-${this.uid}" 
+                        class="GPexportMenuName">
+                        <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputName-${this.uid}" title="Nom">Nom</label>
+                        <input type="text" id="GPexportMenuInputName-${this.uid}" class="GPinput gpf-input fr-input">
+                    </div>
+                    <div id="GPexportMenuDesc-${this.uid}"
+                        class="GPexportMenuDesc">
+                        <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputDesc-${this.uid}" title="Description">Description</label>
+                        <input type="text" id="GPexportMenuInputDesc-${this.uid}" class="GPinput gpf-input fr-input">
+                    </div>
+                    <div id="GPexportMenuFormat-${this.uid}">
+                        <label class="GPlabel gpf-label fr-label" title="Formats">Formats</label>
+                        <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
+                            <input type="radio" 
+                                id="GPmenuFormatGeojson-${this.uid}"
+                                name="format" 
+                                value="geojson">
+                            <label class="fr-label container" for="GPmenuFormatGeojson-${this.uid}">GeoJSON
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
+                            <input type="radio" 
+                                id="GPmenuFormatKml-${this.uid}"
+                                name="format" 
+                                value="kml">
+                            <label class="fr-label container" for="GPmenuFormatKml-${this.uid}">KML
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
+                            <input type="radio" 
+                                id="GPmenuFormatGpx-${this.uid}"
+                                name="format" 
+                                value="gpx">
+                            <label class="fr-label container" for="GPmenuFormatGpx-${this.uid}">GPX
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
         `);
 
@@ -380,20 +459,77 @@ class ButtonExport extends Control {
                 var className = this.menu.className;
                 this.menu.className = className.replace(this.menuClassHidden, "");
             }
+            var format = this.options.format.toUpperCase();
             var radios = this.menu.querySelectorAll(`input[type=radio][name="format"]`);
-            radios.forEach((radio) => {
+            for (let i = 0; i < radios.length; i++) {
+                var radio = radios[i];
                 // radio checked par defaut
-                if (radio.id.toUpperCase().includes(this.options.format.toUpperCase())) {
+                if (radio.id.toUpperCase().includes(format)) {
                     radio.checked = true;
                 }
                 // ecouteur pour changer de format
-                radio.addEventListener("change", (e) => {
-                    this.setFormat(e.target.value);
-                });
-            });
-        }
-        div.appendChild(menu.firstChild);
+                radio.addEventListener("change", (e) => this.onChangeRadioFormat(e));
+            }
 
+            var btn = this.menu.querySelector("#GPexportBtnMenuContent-" + this.uid);
+            if (btn) {
+                btn.addEventListener("click", (e) => this.onClickButtonToggleOptions(e));
+            }
+
+            this.inputName = this.menu.querySelector("#GPexportMenuInputName-" + this.uid);
+            this.inputDesc = this.menu.querySelector("#GPexportMenuInputDesc-" + this.uid);
+            this.inputName.addEventListener("change", (e) => this.onChangeInputName(e));
+            this.inputDesc.addEventListener("change", (e) => this.onChangeInputDesc(e));
+        }
+        div.appendChild(this.menu);
+
+        // bouton Exporter
+        // utiliser les templates literals avec la substitution ${...}
+        var button = this.stringToHTML(`
+            <button 
+                type="button"
+                id="${this._addUID("GPexportButton")}" 
+                class="GPexportButtonExportIcon GPsubmit gpf-btn gpf-btn-icon-export-submit fr-btn fr-m-1w">
+                ${title}
+            </button>
+        `);
+
+        // add event click button
+        this.button = button.firstChild;
+        if (this.button) {
+            this.button.addEventListener("click", (e) => this.onClickButtonExport(e));
+        }
+        // primary | secondary | tertiary
+        switch (this.options.kind) {
+            case "tertiary":
+                this.button.classList.add("fr-btn--tertiary", "gpf-btn--tertiary");
+                break;
+            case "secondary":
+                this.button.classList.add("fr-btn--secondary", "gpf-btn--secondary");
+                break;
+            case "primary":
+            default:
+                this.button.classList.add("fr-btn--primary", "gpf-btn--primary");
+                break;
+        }
+        // icon button
+        if (!this.options.icons.button) {
+            this.button.classList.remove("GPexportButtonExportIcon", "gpf-btn-icon-export-submit");
+        } else {
+            switch (this.options.icons.button) {
+                case "export":
+                    break;
+                case "save":
+                    this.button.classList.replace("GPexportButtonExportIcon", "GPexportButtonSaveIcon");
+                    this.button.classList.replace("gpf-btn-icon-export-submit", "gpf-btn-icon-save-submit");
+                    break;
+                default:
+                    this.button.classList.remove("GPexportButtonExportIcon", "gpf-btn-icon-export-submit");
+                    break;
+            }
+        }
+        div.appendChild(this.button);
+        
         this.container = div;
     }
 
@@ -482,7 +618,8 @@ class ButtonExport extends Control {
 
         // ajouter les metadonnées de calcul et de configuration
         var options = {
-            defaultStyle : style
+            defaultStyle : style,
+            extensions : {}
         };
         if (data) {
             // properties ajoutées à la racine :
@@ -490,6 +627,10 @@ class ButtonExport extends Control {
             options.extensions = {
                 "geoportail:compute" : data
             };
+        }
+
+        if (this.options.description) {
+            options.extensions.description = (this.inputDesc && this.inputDesc.value) ? this.inputDesc.value : this.options.description;
         }
 
         var ClassName = null;
@@ -549,7 +690,7 @@ class ButtonExport extends Control {
             // return;
         }
 
-        var layer = (this.options.control && this.options.control.getLayer !== undefined) ? this.options.control.getData() : this.options.layer;
+        var layer = (this.options.control && this.options.control.getLayer !== undefined) ? this.options.control.getLayer() : this.options.layer;
         var data = (this.options.control && this.options.control.getData !== undefined) ? this.options.control.getData() : {};
         var style = (this.options.control && this.options.control.getStyle !== undefined) ? this.options.control.getStyle() : {};
 
@@ -561,39 +702,93 @@ class ButtonExport extends Control {
         /**
          * event triggered when the export is finished
          *
-         * @event export:compute
+         * @event button:clicked
          * @typedef {Object}
          * @property {Object} type - event
          * @property {Object} target - instance Export
          * @property {String} content - export data
+         * @property {String} name - name
+         * @property {String} description - description
+         * @property {String} format - format : kml, geojson, ...
+         * @property {Object} layer - layer
          * @example
-         * Export.on("export:compute", function (e) {
+         * Export.on("button:clicked", function (e) {
          *   console.log(e.target);
          * })
          */
         this.dispatchEvent({
-            type : "export:compute",
-            content : content
+            type : "button:clicked",
+            content : content,
+            name : this.options.name,
+            description : this.options.description,
+            format : this.options.format,
+            layer : layer
         });
 
-        // INFO
-        // la callback annule le download du fichier.
-        if (this.options.onExport && typeof this.options.onExport === "function") {
-            this.options.onExport(content);
-            return;
+        if (this.options.download) {
+            var link = document.createElement("a");
+            // determiner le bon charset !
+            var charset = "utf-8";
+            link.setAttribute("href", "data:" + this.mimeType + ";charset=" + charset + "," + encodeURIComponent(content));
+            link.setAttribute("download", this.options.name + this.extension);
+            if (document.createEvent) {
+                var event = document.createEvent("MouseEvents");
+                event.initEvent("click", true, true);
+                link.dispatchEvent(event);
+            } else {
+                link.click();
+            }
         }
 
-        var link = document.createElement("a");
-        // determiner le bon charset !
-        var charset = "utf-8";
-        link.setAttribute("href", "data:" + this.mimeType + ";charset=" + charset + "," + encodeURIComponent(content));
-        link.setAttribute("download", this.options.name + this.extension);
-        if (document.createEvent) {
-            var event = document.createEvent("MouseEvents");
-            event.initEvent("click", true, true);
-            link.dispatchEvent(event);
+        if (this.options.callback && typeof this.options.callback === "function") {
+            this.options.callback(content, layer);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} e - Click
+     */
+    onChangeRadioFormat (e) {
+        this.setFormat(e.target.value);
+    }
+
+    /**
+     * 
+     * @param {*} e - Click
+     */
+    onChangeInputName (e) {
+        this.setName(e.target.value);
+    }
+
+    /**
+     * 
+     * @param {*} e - Click
+     */
+    onChangeInputDesc (e) {
+        this.setDescription(e.target.value);
+    }
+
+    /**
+     * 
+     * @param {*} e - Click
+     */
+    onClickButtonToggleOptions (e) {
+        e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+        var collapse = this.menu.querySelector("#" + e.target.getAttribute("aria-controls"));
+        if (!collapse) {
+            return;
+        }
+        if (e.target.ariaExpanded === "true") {
+            collapse.classList.add("fr-collapse--expanded");
+            this.menu.classList.add("gpf-full-container");
+            this.menu.classList.add("gpf-accordion--opened");
+            collapse.classList.remove("GPelementHidden");
         } else {
-            link.click();
+            collapse.classList.remove("fr-collapse--expanded");
+            this.menu.classList.remove("gpf-full-container");
+            this.menu.classList.remove("gpf-accordion--opened");
+            collapse.classList.add("GPelementHidden");
         }
     }
 
@@ -667,6 +862,15 @@ class ButtonExport extends Control {
 
     /**
      * ...
+     * @param {String} desc - ...
+     * @public
+     */
+    setDescription (desc) {
+        this.options.description = desc;
+    }
+
+    /**
+     * ...
      * @param {String} title - ...
      * @public
      */
@@ -674,7 +878,32 @@ class ButtonExport extends Control {
         this.options.title = title;
         if (this.button) {
             // afficher l'icone du menu / titre
-            this.button.value = (this.options.menu) ? this.icon + title : title;
+            this.button.textContent = (this.options.menu) ? this.options.icons.menu + title : title;
+        }
+    }
+
+    /**
+     * ...
+     * @param {String} type - ...
+     * @public
+     */
+    setKind (type) {
+        this.options.kind = type;
+        if (this.button) {
+            this.button.classList.remove("fr-btn--tertiary", "gpf-btn--tertiary");
+            this.button.classList.remove("fr-btn--secondary", "gpf-btn--secondary");
+            switch (this.options.kind) {
+                case "tertiary":
+                    this.button.classList.add("fr-btn--tertiary", "gpf-btn--tertiary");
+                    break;
+                case "secondary":
+                    this.button.classList.add("fr-btn--secondary", "gpf-btn--secondary");
+                    break;
+                case "primary":
+                default:
+                    this.button.classList.add("fr-btn--primary", "gpf-btn--primary");
+                    break;
+            }
         }
     }
 
@@ -687,25 +916,40 @@ class ButtonExport extends Control {
         this.options.menu = active;
         if (this.button) {
             // afficher l'icone du menu / titre
-            this.button.value = (this.options.menu) ? this.icon + this.options.title : this.options.title;
+            this.button.textContent = (this.options.menu) ? this.options.icons.menu + this.options.title : this.options.title;
         }
         if (this.menu && this.options.menu) {
             // afficher le menu
             var className = this.menu.className;
             this.menu.className = className.replace(this.menuClassHidden, "");
             // format par defaut
+            var format = this.options.format.toUpperCase();
             var radios = this.menu.querySelectorAll(`input[type=radio][name="format"]`);
-            radios.forEach((radio) => {
-                // radio checked par defaut
-                if (radio.id.toUpperCase().includes(this.options.format.toUpperCase())) {
+            for (let i = 0; i < radios.length; i++) {
+                var radio = radios[i];
+                if (radio.id.toUpperCase().includes(format)) {
                     radio.checked = true;
                 }
-            });
+            }
         }
     }
 
+    /**
+     * ...
+     * @param {*} layer  - ...
+     * @public
+     */
     setLayer (layer) {
         this.options.layer = layer;
+    }
+
+    /**
+     * ...
+     * @param {Boolean} value - ...
+     * @public
+     */
+    setDownload (value) {
+        this.options.download = value;
     }
 
 };

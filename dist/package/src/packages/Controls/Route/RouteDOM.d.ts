@@ -5,6 +5,7 @@ declare namespace RouteDOM {
     function _createShowRoutePictoElement(): DOMElement;
     function _createRoutePanelElement(): DOMElement;
     function _createRoutePanelDivElement(): HTMLDivElement;
+    function _createDrawingButtonsPluginDiv(): HTMLDivElement;
     function _createRoutePanelHeaderElement(): DOMElement;
     function _createRoutePanelFooterElement(): DOMElement;
     function _createRoutePanelFormPointLabel(innerHTML: string, display?: boolean): DOMElement;

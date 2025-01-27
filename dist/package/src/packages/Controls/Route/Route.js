@@ -161,7 +161,7 @@ var Route = class Route extends Control {
                 this.export = new ButtonExport(opts);
                 this.export.render();
                 var self = this;
-                this.export.on("export:compute", (e) => {
+                this.export.on("button:clicked", (e) => {
                     self.dispatchEvent({
                         type : "export:compute",
                         content : e.content
@@ -738,6 +738,9 @@ var Route = class Route extends Control {
         // results
         var routeResults = this._resultsRouteContainer = this._createRoutePanelResultsElement();
         routePanelDiv.appendChild(routeResults);
+        
+        var plugin = this._createDrawingButtonsPluginDiv();
+        routePanelDiv.appendChild(plugin);
 
         // waiting
         var waiting = this._waitingContainer = this._createRouteWaitingElement();

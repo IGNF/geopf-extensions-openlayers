@@ -114,7 +114,7 @@ var logger = Logger.getLogger("Drawing");
  * @param {Array.<Object>} [options.markersList = [{"src" : "data:image/png;base64,xxxx", "anchor" : [0.5,1]}]] - List of markers src to be used for points with their anchor offsets See {@link http://openlayers.org/en/latest/apidoc/ol.style.Icon.html OpenLayers params} for anchor offset options.
  * @param {Object} options.defaultStyles - Default styles applying to geometries (labels, lines and polygons).
  * @param {String} [options.defaultStyles.textFillColor = "#000000"] - Text fill color for labels (RGB hex value).
- * @param {String} [options.defaultStyles.textStrokeColor = "#FFFFFF"] - Text surrounding color for labels (RGB hex value).
+ * @param {String} [options.defaultStyles.textStrokeColor = "#ffffff"] - Text surrounding color for labels (RGB hex value).
  * @param {String} [options.defaultStyles.strokeColor = "#ffcc33"] - Stroke color (RGB hex value).
  * @param {Number} [options.defaultStyles.strokeWidth = 2] - Stroke width in pixels.
  * @param {String} [options.defaultStyles.polyStrokeColor = "#ffcc33"] - Stroke color (RGB hex value) for polygons.
@@ -123,7 +123,7 @@ var logger = Logger.getLogger("Drawing");
  * @param {Number} [options.defaultStyles.polyFillOpacity = 0.2] - Polygon fill opacity (alpha value between 0:transparent and 1:opaque).
  * @param {Object} options.cursorStyle - cursor (circle) style when drawing or editing.
  * @param {String} [options.cursorStyle.fillColor = "rgba(0, 153, 255, 1)"] - Cursor fill color.
- * @param {String} [options.cursorStyle.strokeColor = "#FFF"] - Cursor stroke color.
+ * @param {String} [options.cursorStyle.strokeColor = "#ffffff"] - Cursor stroke color.
  * @param {String} [options.cursorStyle.strokeWidth = 1] - Cursor surrounding stroke width.
  * @param {String} [options.cursorStyle.radius = 6] - Cursor radius.
  * @example
@@ -849,6 +849,9 @@ var Drawing = class Drawing extends Control {
         for (var i = 0; i < tools.length; i++) {
             sections.appendChild(tools[i]);
         }
+
+        var containerButtonsPlugin = this._createDrawingButtonsPluginDiv();
+        sections.appendChild(containerButtonsPlugin);
 
         container.appendChild(panel);
 

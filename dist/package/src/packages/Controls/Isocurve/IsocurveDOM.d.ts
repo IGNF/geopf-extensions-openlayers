@@ -5,6 +5,7 @@ declare namespace IsoDOM {
     function _createShowIsoPictoElement(): DOMElement;
     function _createIsoPanelElement(): DOMElement;
     function _createIsoPanelDivElement(): HTMLDivElement;
+    function _createDrawingButtonsPluginDiv(): HTMLDivElement;
     function _createIsoPanelHeaderElement(): DOMElement;
     function _createIsoPanelFormElement(): DOMElement;
     function _createIsoWaitingElement(): DOMElement;

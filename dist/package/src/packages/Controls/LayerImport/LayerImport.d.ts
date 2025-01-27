@@ -8,6 +8,12 @@ export default LayerImport;
  * @alias ol.control.LayerImport
  * @extends {ol.control.Control}
  * @type {ol.control.LayerImport}
+ * @fires layerimport:mapbox:added
+ * @fires layerimport:vector:added
+ * @fires layerimport:service:added
+ * @fires editor:loaded
+ * @fires render:success
+ * @fires render:failure
  * @param {Object} options - options for function call.
  * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
  * @param {Boolean} [options.collapsed = true] - Specify if LayerImport control should be collapsed at startup. Default is true.

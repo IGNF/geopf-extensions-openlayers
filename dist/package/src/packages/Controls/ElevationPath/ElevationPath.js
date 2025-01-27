@@ -536,7 +536,7 @@ var ElevationPath = class ElevationPath extends Control {
                 this.export = new ButtonExport(opts);
                 this.export.render();
                 var self = this;
-                this.export.on("export:compute", (e) => {
+                this.export.on("button:clicked", (e) => {
                     self.dispatchEvent({
                         type : "export:compute",
                         content : e.content
@@ -870,6 +870,9 @@ var ElevationPath = class ElevationPath extends Control {
         // info
         var info = this._infoContainer = this._createElevationPathInformationsElement();
         panelDiv.appendChild(info);
+
+        var plugin = this._createDrawingButtonsPluginDiv();
+        panelDiv.appendChild(plugin);
 
         if (this.options.displayProfileOptions.target === null) {
             container.appendChild(panel);

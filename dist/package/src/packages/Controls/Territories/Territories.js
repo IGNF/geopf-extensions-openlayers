@@ -30,7 +30,7 @@ var logger = Logger.getLogger("territories");
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  *
- * @fires custom:action
+ * @fires territories:change
  * @example
  * var territories = new ol.control.Territories({
  *   collapsed: true,
@@ -402,6 +402,22 @@ var Territories = class Territories extends Control {
                 map.getView().setZoom(zoom);
             }
             this.setCollapse(true);
+            /**
+             * event triggered when a territory is clicked
+             *
+             * @event territories:change
+             * @property {Object} type - event
+             * @property {Object} target - instance Territories
+             * @property {Object} territory - territory
+             * @example
+             * Route.on("territories:change", function (e) {
+             *   console.log(e.target.getData());
+             * })
+             */
+            this.dispatchEvent({
+                type : "territories:change",
+                territory : territory
+            });
         }
     }
 

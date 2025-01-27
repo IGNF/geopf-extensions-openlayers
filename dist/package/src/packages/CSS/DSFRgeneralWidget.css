@@ -204,12 +204,13 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
 }
 
 
-
+.gpf-btn--primary,
 .gpf-btn--secondary,
 .gpf-btn--tertiary {
   position: relative;
 }
 
+.gpf-btn--primary::after,
 .gpf-btn--tertiary::after,
 .gpf-btn--secondary::after {
   content: "";
@@ -225,6 +226,11 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   mask: linear-gradient(#0000, #0000);
 }
 
+.gpf-btn--primary::after {
+  background-color: var(--text-inverted-blue-france);
+}
+
+.gpf-btn--primary:disabled:after,
 .gpf-btn--tertiary:disabled:after,
 .gpf-btn--secondary:disabled::after {
   background-color: var(--text-disabled-grey);

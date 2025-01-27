@@ -10,7 +10,7 @@ export default Territories;
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  *
- * @fires custom:action
+ * @fires territories:change
  * @example
  * var territories = new ol.control.Territories({
  *   collapsed: true,

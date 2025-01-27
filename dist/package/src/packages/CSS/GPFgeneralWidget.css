@@ -312,6 +312,7 @@
 /* Submit input */
 /****************/
 
+button.GPsubmit,
 input.GPsubmit {
   display: block;
   width: 80px;
@@ -331,6 +332,7 @@ input.GPsubmit {
   cursor: pointer;
 }
 
+button.GPsubmit:hover,
 input.GPsubmit:hover {
   opacity: 1;
 }
