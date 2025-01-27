@@ -37,6 +37,7 @@ var logger = Logger.getLogger("export");
  * @param {String} [options.title = "Exporter"] - button name
  * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
  * @param {Boolean} [options.menu = false] - displays the menu
+ * @param {String} [options.direction = "row"] - buttons and menus layout
  * @param {Object} [options.icons] - icons
  * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
  * @param {String} [options.icons.button = "export"] - displays the button icon : save or export icon, or otherwise left blank if you don't want it
@@ -390,8 +391,12 @@ class ButtonExport extends Control {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPexportContainer");
-        div.className = "GPexportMenuContainer gpf-export-menu-container";
+        div.className = "GPexportMenuContainer gpf-export-menu-container gpf-export-menu-container-row";
 
+        if (this.options.direction === "column") {
+            div.classList.replace("gpf-export-menu-container-row", "gpf-export-menu-container-column");
+        }
+        
         // menu des options
         // utiliser les templates literals avec la substitution ${...}
         var menu = this.stringToHTML(`
@@ -700,6 +705,8 @@ class ButtonExport extends Control {
          * @property {Object} type - event
          * @property {Object} target - instance Export
          * @property {String} content - export data
+         * @property {String} name - name
+         * @property {String} description - description
          * @property {Object} layer - layer
          * @example
          * Export.on("button:clicked", function (e) {
@@ -709,6 +716,8 @@ class ButtonExport extends Control {
         this.dispatchEvent({
             type : "button:clicked",
             content : content,
+            name : this.inputName.value || this.options.name,
+            description : this.inputDesc.value || this.options.description,
             layer : layer
         });
 
