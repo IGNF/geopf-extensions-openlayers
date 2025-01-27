@@ -1,0 +1,79 @@
+.gpf-btn-icon-export-submit {
+    padding-left: 25px;
+    height: fit-content;
+    width: 150px;
+    justify-content: center;
+}
+
+.gpf-btn-icon-export-submit::after {
+    content: '';
+    -webkit-mask: url("img/GPexportDownload.svg") left no-repeat;
+    mask: url("img/GPexportDownload.svg") left no-repeat;
+    mask-size: 20px 20px;
+    mask-position: 5px;
+}
+
+.gpf-btn-icon-save-submit {
+    padding-left: 25px;
+    height: fit-content;
+    width: 150px;
+    justify-content: center;
+}
+
+.gpf-btn-icon-save-submit::after {
+    content: '';
+    -webkit-mask: url("img/GPexportSave.svg") left no-repeat;
+    mask: url("img/GPexportSave.svg") left no-repeat;
+    mask-size: 20px 20px;
+    mask-position: 5px;
+}
+
+dialog div .gpf-export-menu-container {
+    justify-content: center;
+}
+
+.gpf-export-menu-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.gpf-export-menu-container-row {
+    flex-direction: row-reverse;
+}
+
+.gpf-export-menu-container-column {
+    flex-direction: column-reverse;
+}
+
+.gpf-accordion {
+    width: min-content;
+}
+
+.gpf-accordion--opened {
+    width: unset;
+}
+
+.gpf-accordion::before {
+    box-shadow: unset;
+}
+
+.gpf-accordion__btn {
+    width: fit-content;
+}
+
+.gpf-accordion__title {
+
+}
+
+dialog div .gpf-full-container {
+    position: absolute;
+    width: auto;
+    z-index: 1;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,1);
+    overflow: hidden;
+  }

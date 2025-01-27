@@ -100,6 +100,12 @@ var IsoDOM = {
         return div;
     },
 
+    _createDrawingButtonsPluginDiv : function () {
+        var div = document.createElement("div");
+        div.className = "container-buttons-plugin fr-mx-2w";
+        return div;
+    },
+
     /**
      * Create Header Panel
      *

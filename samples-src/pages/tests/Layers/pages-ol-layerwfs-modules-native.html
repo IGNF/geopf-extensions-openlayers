@@ -184,7 +184,7 @@
                     exportBtn.setFormat("geojson");
                     exportBtn.setName("export");
                     exportBtn.setTitle("Exporter");
-                    exportBtn.on("export:compute", (e) => {
+                    exportBtn.on("button:clicked", (e) => {
                         console.log("Export", e);
                     });
                     document.getElementById("btnExport").appendChild(exportBtn.getContainer());

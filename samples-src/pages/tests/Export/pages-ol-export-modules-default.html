@@ -67,7 +67,11 @@
                   })
                 });
 
-                var layerSwitcher = new ol.control.LayerSwitcher({});
+                var layerSwitcher = new ol.control.LayerSwitcher({
+                  options : {
+                    position : "top-right"
+                  }
+                });
                 map.addControl(layerSwitcher);
 
                 // var importLayer = new ol.control.LayerImport();
@@ -75,6 +79,7 @@
 
                 // drawing + export into widget
                 var drawing = new ol.control.Drawing({
+                  position : "bottom-left",
                   tools : {
                     export : false
                   }
@@ -82,15 +87,21 @@
                 map.addControl(drawing);
                 var exportDrawing = new ol.control.Export({
                   control: drawing,
-                  format : "kml"
+                  format : "kml",
+                  icons : {
+                    button : true
+                  }
                 });
                 map.addControl(exportDrawing);
-                exportDrawing.on("export:compute", (e) => {
+                exportDrawing.on("button:clicked", (e) => {
                   console.log("Export Drawing", e);
                 });
 
                 // iso + export with config
-                var iso = new ol.control.Isocurve({draggable:true});
+                var iso = new ol.control.Isocurve({
+                  position : "bottom-left",
+                  draggable : true
+                });
                 map.addControl(iso);
                 var exportIso = new ol.control.Export({
                   control: iso,
@@ -99,18 +110,24 @@
                   name: "export-iso",
                   title : "Exporter",
                   menu : true,
+                  icons : {
+                    menu : "",
+                    button : true
+                  }
                   // Desactive le download de l'export :
-                  // onExport : function (content) {
+                  // callback : function (content) {
                   //   console.log(content);
                   // }
                 });
                 map.addControl(exportIso);
-                exportIso.on("export:compute", (e) => {
+                exportIso.on("button:clicked", (e) => {
                   console.log("Export Iso", e);
                 });
 
                 // route + export with setters
-                var route = new ol.control.Route();
+                var route = new ol.control.Route({
+                  position : "bottom-left"
+                });
                 map.addControl(route);
                 exportRoute = new ol.control.Export({});
                 exportRoute.setControl(route);
@@ -119,13 +136,15 @@
                 exportRoute.setName("export-route");
                 exportRoute.setTitle("Exporter Iti");
                 exportRoute.setMenu(true);
-                exportRoute.on("export:compute", (e) => {
+                exportRoute.on("button:clicked", (e) => {
                   console.log("Export Route", e);
                 });
                 map.addControl(exportRoute);
 
                 // profil
-                var measureProfil = new ol.control.ElevationPath();
+                var measureProfil = new ol.control.ElevationPath({
+                  position : "bottom-left"
+                });
                 map.addControl(measureProfil);
                 var exportProfil = new ol.control.Export({
                   control: measureProfil,
@@ -134,7 +153,7 @@
                   menu: false
                 });
                 map.addControl(exportProfil);
-                exportProfil.on("export:compute", (e) => {
+                exportProfil.on("button:clicked", (e) => {
                   console.log("Export Profil", e);
                 });
               };

@@ -3,18 +3,32 @@ div[id^=GPexportContainer-] {
     padding: 5px;
 }
 
-div[id^=GPexportContainer-] > input.GPsubmit {
+div[id^=GPexportContainer-] > button.GPsubmit {
     color: white;
 }
 
 /* bouton */
-input[id^=GPexportButton-] {
+button[id^=GPexportButton-] {
+    width: fit-content;
     min-width: fit-content;
-    padding-left: 25px;
+    padding-left: 5px;
     padding-right: 5px;
+}
+
+button[id^=GPexportButton-].GPexportButtonExportIcon {
+    padding-left: 25px;
+    background-image: url("img/GPexportDownload.svg");
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    background-position: left;
+}
+
+button[id^=GPexportButton-].GPexportButtonSaveIcon {
+    padding-left: 25px;
     background-image: url("img/GPexportSave.svg");
     background-size: 25px 25px;
     background-repeat: no-repeat;
+    background-position: left;
 }
 
 /* menu */
@@ -32,15 +46,17 @@ input[id^=GPexportButton-] {
     position: absolute;
     background-color: #f1f1f1;
     min-width: 80px;
+    width: 100%;
     padding: 8px;
     border-radius: 10px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
 
+/* 
 .GPexportMenuContent a:hover { background-color: #f1f1f1; }
-
-.GPexportMenuContainer:hover .GPexportMenuContent { display: block; }
+.GPexportMenuContainer:hover .GPexportMenuContent { display: block; } 
+*/
 
 /* menu des formats */
 .GPexportMenuContent .container {
@@ -99,4 +115,10 @@ input[id^=GPexportButton-] {
     height: 4px;
     border-radius: 50%;
     background: white;
+}
+
+.GPexportMenuContent .GPexportMenuFormat {
+    display: flex;
+    align-items: baseline;
+    flex-direction: row;
 }

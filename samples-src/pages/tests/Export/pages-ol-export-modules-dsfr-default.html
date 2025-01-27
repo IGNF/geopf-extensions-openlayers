@@ -2,6 +2,8 @@
 
 {{#content "vendor"}}
         
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlExport.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlExport.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawing.css" />
@@ -14,8 +16,6 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlElevationPath.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlRoute.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlRoute.js"></script>
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlExport.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlExport.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -26,7 +26,7 @@
         <style>
             div#map {
                 width: 100%;
-                height: 500px;
+                height: 100vh;
             }
             div[id^=GPlayerSwitcher-] {
               top: 80px;
@@ -48,9 +48,9 @@
             <script type="text/javascript">
               var map;
               var exportRoute;
-              window.onload = function () {
-                // on cache l'image de chargement du Géoportail.
-                document.getElementById("map").style.backgroundImage = "none";
+              var createMap = function() {
+                  // on cache l'image de chargement du Géoportail.
+                  document.getElementById('map').style.backgroundImage = 'none';
 
                 // Création de la map
                 map = new ol.Map({
@@ -67,78 +67,169 @@
                   })
                 });
 
-                var layerSwitcher = new ol.control.LayerSwitcher({});
+                // Ajout du widget LayerSwitcher
+                var layerSwitcher = new ol.control.LayerSwitcher({
+                  options : {
+                    position : "top-right",
+                    collapsed : true,
+                    panel : true,
+                    counter : true
+                  }
+                });
                 map.addControl(layerSwitcher);
-
-                var importLayer = new ol.control.LayerImport();
+                
+                // Ajout du widget LayerImport
+                var importLayer = new ol.control.LayerImport({
+                  position: "top-right"
+                });
                 map.addControl(importLayer);
 
-                // drawing + export into widget
+                // cas drawing : 
+                // * bouton secondary avec icone
+                // * mode sauvegarde
+                // * sans menu
+                // * target interne 
+                // * appel instance externe
                 var drawing = new ol.control.Drawing({
+                  position: "bottom-left",
                   tools : {
                     export : false
                   }
                 });
                 map.addControl(drawing);
                 var exportDrawing = new ol.control.Export({
+                  title : "Sauvegarde",
+                  download : false,
                   control: drawing,
-                  format : "kml"
+                  format : "kml",
+                  menu : true,
+                  direction : "column",
+                  icons : {
+                    button : "save"
+                  },
+                  kind : "secondary"
                 });
                 map.addControl(exportDrawing);
-                exportDrawing.on("export:compute", (e) => {
+                exportDrawing.on("button:clicked", (e) => {
                   console.log("Export Drawing", e);
                 });
 
-                // iso + export with config
-                var iso = new ol.control.Isocurve({draggable:true});
+                // cas iso :
+                // * bouton primary avec icone
+                // * mode export
+                // * avec menu
+                // * target externe
+                // * appel instance interne
+                var iso = new ol.control.Isocurve({
+                  position: "bottom-left",
+                  draggable:true,
+                  export : {
+                    target: document.getElementById("btnExportIso"),
+                    format: "kml",
+                    kind: "primary",
+                    name: "export-iso",
+                    description : "Graphe isochrone",
+                    title : "Exporter Isochrone",
+                    menu : true,
+                    icons : {
+                      menu : "",
+                      button : "export"
+                    },
+                    callback : function (content, layer) {
+                      console.log(content, layer);
+                    }
+                  }
+                });
                 map.addControl(iso);
-                var exportIso = new ol.control.Export({
-                  control: iso,
-                  // target: document.getElementById("btnExportIso"),
-                  format: "kml",
-                  name: "export-iso",
-                  title : "Exporter",
-                  menu : true,
-                  // Desactive le download de l'export :
-                  // onExport : function (content) {
-                  //   console.log(content);
-                  // }
-                });
-                map.addControl(exportIso);
-                exportIso.on("export:compute", (e) => {
-                  console.log("Export Iso", e);
-                });
 
-                // route + export with setters
-                var route = new ol.control.Route();
+                // cas iso :
+                // * bouton primary avec icone
+                // * mode export
+                // * avec menu
+                // * target externe
+                // * appel instance externe
+                // var exportIso = new ol.control.Export({
+                //   control: iso,
+                //   target: document.getElementById("btnExportIso"),
+                //   format: "kml",
+                //   kind: "primary",
+                //   name: "export-iso",
+                //   description : "Graphe isochrone",
+                //   title : "Exporter Isochrone",
+                //   menu : true,
+                //   icons : {
+                //     menu : ""
+                //   },
+                //   callback : function (content) {
+                //     console.log(content);
+                //   }
+                // });
+                // map.addControl(exportIso);
+                // exportIso.on("button:clicked", (e) => {
+                //   console.log("Export Iso", e);
+                // });
+
+                // cas route :
+                // * bouton secondary avec icone
+                // * mode export
+                // * avec menu
+                // * target externe
+                // * appel instance externe avec setters
+                var route = new ol.control.Route({
+                  position: "bottom-left"
+                });
                 map.addControl(route);
-                exportRoute = new ol.control.Export({});
+                exportRoute = new ol.control.Export({
+                  icons: {
+                    menu : "",
+                    button : "export"
+                  }
+                });
+                exportRoute.setDownload(true);
                 exportRoute.setControl(route);
                 exportRoute.setTarget(document.getElementById("btnExportRoute"));
                 exportRoute.setFormat("gpx");
+                exportRoute.setKind("secondary");
                 exportRoute.setName("export-route");
-                exportRoute.setTitle("Exporter Iti");
+                exportRoute.setTitle("Exporter Itineraire");
                 exportRoute.setMenu(true);
-                exportRoute.on("export:compute", (e) => {
+                exportRoute.on("button:clicked", (e) => {
                   console.log("Export Route", e);
                 });
                 map.addControl(exportRoute);
 
-                // profil
-                var measureProfil = new ol.control.ElevationPath();
+                // cas profil :
+                // * bouton secondary avec icone
+                // * mode export avec icone de menu
+                // * avec menu
+                // * target interne
+                // * appel instance externe
+                var measureProfil = new ol.control.ElevationPath({
+                  position: "bottom-left"
+                });
                 map.addControl(measureProfil);
                 var exportProfil = new ol.control.Export({
                   control: measureProfil,
                   name: "export-profil", 
                   format : "geojson",
-                  menu: false
+                  menu: true,
+                  // target : measureProfil.getContainer().querySelector(".gpf-panel__body")
                 });
                 map.addControl(exportProfil);
-                exportProfil.on("export:compute", (e) => {
+                exportProfil.on("button:clicked", (e) => {
                   console.log("Export Profil", e);
                 });
               };
-
+              Gp.Services.getConfig({
+                    customConfigFile : "{{ configurl }}",
+                    callbackSuffix : "",
+                    // apiKey: "{{ apikey }}",
+                    timeOut : 20000,
+                    onSuccess : createMap,
+                    onFailure : (e) => {
+                        console.error(e);
+                    }
+                });
             </script>
 {{/content}}
 {{/extend}}
