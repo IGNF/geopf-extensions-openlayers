@@ -511,6 +511,7 @@ var ContextMenu = class ContextMenu extends Control {
             }
         };
         var contextMenuItems = e.this.getAvailableContextMenuControls();
+        e.target.clear();
         e.target.extend(contextMenuItems);
         addMenuToolsEventListeners();
     }
