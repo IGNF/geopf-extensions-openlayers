@@ -115,7 +115,7 @@ var ContextMenu = class ContextMenu extends Control {
         if (map) {
             // some stuff
             map.addControl(this.contextmenu);
-            map.addLayer(this.layerFeature);
+            map.addOverlay(this._marker);
 
             // ajout des evenements sur la carte
             if (this.auto) {
@@ -185,15 +185,11 @@ var ContextMenu = class ContextMenu extends Control {
         // Point pour le calcul d'itinéraire
         this.itiPoints =  new Array(7);
 
-        this.PinStyle = new Style({
-            image : new Icon({
-                src : Markers["lightOrange"],
-                anchor : [0.5, 1],
-                snapToPixel : true
-            })});
-        this.sourceLayerFeature = new VectorSource();
-
-        this.layerFeature = new VectorLayer({source : this.sourceLayerFeature});
+        this._marker = new Overlay({
+            element : this._createPinDOMOverlay(Markers["lightOrange"]),
+            stopEvent : false,
+            offset : Markers.defaultOffset
+        });;
 
         var contextMenuItems = this.getAvailableContextMenuControls.call(this);
         this.contextMenuItemsOptions = [];
@@ -406,13 +402,9 @@ var ContextMenu = class ContextMenu extends Control {
         let clickedCoordinate = this.to4326(evt.coordinate);
         this.panelPointInfoEntriesContainer.innerHTML = "";   
     
-        this.sourceLayerFeature.clear();
-        var feature = new Feature({
-            type : "place",
-            geometry : new Point(olFromLonLat(clickedCoordinate))
-        });
-        feature.setStyle(this.PinStyle);
-        this.sourceLayerFeature.addFeature(feature);
+
+        this._marker.setPosition(olFromLonLat(clickedCoordinate));
+
         this.buttonPointInfoShow.click();
         this.buttonPointInfoShow.setAttribute("aria-pressed", true);
         var coordinate = document.createElement("div");
@@ -485,7 +477,7 @@ var ContextMenu = class ContextMenu extends Control {
      */
     onClosePointInfoClick (e) {
         logger.trace(e);
-        this.sourceLayerFeature.clear();
+        this._marker.setPosition(undefined);
     }
 
     /**

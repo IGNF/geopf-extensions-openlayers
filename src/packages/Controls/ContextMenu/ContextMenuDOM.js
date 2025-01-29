@@ -149,8 +149,15 @@ var ContextMenuDOM = {
         var divContent = document.createElement("div");
         div.appendChild(divContent);
         return div;
-    }
+    },
 
+    _createPinDOMOverlay : function (ImgURL) {
+        var div = document.createElement("div");
+        var img = document.createElement("img");
+        img.src = ImgURL;
+        div.appendChild(img);
+        return div;
+    }
 };
 
 export default ContextMenuDOM;
