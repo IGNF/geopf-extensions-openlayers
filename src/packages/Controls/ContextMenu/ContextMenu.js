@@ -38,11 +38,9 @@ var logger = Logger.getLogger("contextMenu");
  * @param {Object} options - options for function call.
  *    la clé contextMenuItemsOptions permet de paramétrer 
  *    un tableau d'item dont le format est hérité de la librairie
- *    https://www.npmjs.com/package/ol-contextmenu
+ *    {@link https://www.npmjs.com/package/ol-contextmenu}
  * 
- *    ex : {
-                contextMenuItemsOptions : itemsOpt
-        }
+ *    ex : { contextMenuItemsOptions : itemsOpt }
  * 
  * @example
  * var contextMenu = new ol.control.ContextMenu();
@@ -146,7 +144,8 @@ var ContextMenu = class ContextMenu extends Control {
             collapsed : true,
             draggable : false,
             auto : true,
-            panel : true
+            panel : true,
+            contextMenuItemsOptions : []
         };
 
         // merge with user options
@@ -259,7 +258,6 @@ var ContextMenu = class ContextMenu extends Control {
     removeEventsListeners () {
     }
 
-
     /**
      * Add tools if added to the map Controls list
      * @private
@@ -326,14 +324,15 @@ var ContextMenu = class ContextMenu extends Control {
     /**
      * 
      * ---- Ajouter un point sur la carte 
+     * 
      * Fonction utilisée lors d'un clique droit sur la carte 
      * Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire 
      * @param {*} evt event
      * 
-   */
+     */
     defineStartPoint (evt) {
-    // on récupère les coordonnées du point cliqué
+        // on récupère les coordonnées du point cliqué
         let clickedCoordinate = this.to4326(evt.coordinate);
         var route = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route")[0];
         route._showRouteButton.click();
@@ -344,6 +343,7 @@ var ContextMenu = class ContextMenu extends Control {
   
     /**
      * ---- Ajouter un point sur la carte 
+     * 
      * Fonction utilisée lors d'un clique droit sur la carte 
      * Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire 
@@ -351,7 +351,7 @@ var ContextMenu = class ContextMenu extends Control {
      * @param {*} evt event
      */
     defineEndPoint (evt) {
-    // on récupère les coordonnées du point cliqué
+        // on récupère les coordonnées du point cliqué
         let clickedCoordinate = this.to4326(evt.coordinate);
         var route = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route")[0];
         route._showRouteButton.click();
@@ -363,7 +363,6 @@ var ContextMenu = class ContextMenu extends Control {
     /**
      * Convertit les coordonnées en EPSG:4326
      *  
-     * 
      * @param { Array } coord Coordonnées en 3857
      * @returns { Array } tableau de coordonnées en 4326
      */
@@ -374,7 +373,6 @@ var ContextMenu = class ContextMenu extends Control {
     }
 
     /**
-     * 
      * Fonction qui lance le calcul d'isochrone 
      * pour les coordonnées sous le clic
      * 
@@ -391,7 +389,6 @@ var ContextMenu = class ContextMenu extends Control {
     }
 
     /**
-     * 
      * Fonction qui ouvre le widget des légendes
      * 
      * @param {*} evt event
@@ -403,7 +400,6 @@ var ContextMenu = class ContextMenu extends Control {
     }
 
     /**
-     * 
      * Fonction qui ouvre le widget Catalogue
      * 
      * @param {*} evt event
@@ -415,7 +411,6 @@ var ContextMenu = class ContextMenu extends Control {
     }
 
     /**
-     * 
      * Fonction qui ouvre un panel qui affiche les coordonnées et l'adresse sous le clic
      * 
      * @param {*} evt event
@@ -424,7 +419,6 @@ var ContextMenu = class ContextMenu extends Control {
         let clickedCoordinate = this.to4326(evt.coordinate);
         this.panelPointInfoEntriesContainer.innerHTML = "";   
     
-
         this._marker.setPosition(olFromLonLat(clickedCoordinate));
 
         this.buttonPointInfoShow.click();
@@ -468,7 +462,6 @@ var ContextMenu = class ContextMenu extends Control {
             maximumResponses : 1
         };
         Gp.Services.reverseGeocode(geocodageParcelOptions);
-
 
         var geocodageAdressOptions = {
             onSuccess : function (json) {
