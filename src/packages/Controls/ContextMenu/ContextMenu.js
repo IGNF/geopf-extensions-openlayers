@@ -36,6 +36,13 @@ var logger = Logger.getLogger("contextMenu");
  * @type {ol.control.ContextMenu}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
+ *    la clé contextMenuItemsOptions permet de paramétrer 
+ *    un tableau d'item dont le format est hérité de la librairie
+ *    https://www.npmjs.com/package/ol-contextmenu
+ * 
+ *    ex : {
+                contextMenuItemsOptions : itemsOpt
+        }
  * 
  * @example
  * var contextMenu = new ol.control.ContextMenu();
@@ -353,12 +360,26 @@ var ContextMenu = class ContextMenu extends Control {
         route.setData({ points : this.itiPoints });
     }
 
+    /**
+     * Convertit les coordonnées en EPSG:4326
+     *  
+     * 
+     * @param { Array } coord Coordonnées en 3857
+     * @returns { Array } tableau de coordonnées en 4326
+     */
     to4326 (coord) {
         return olTransformProj([
             parseFloat(coord[0]), parseFloat(coord[1])
         ], "EPSG:3857", "EPSG:4326");
     }
 
+    /**
+     * 
+     * Fonction qui lance le calcul d'isochrone 
+     * pour les coordonnées sous le clic
+     * 
+     * @param {*} evt event
+     */
     computeIsochrone (evt) {
         var isocurve = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Isocurve")[0];
         isocurve._pictoIsoButton.click();
@@ -369,18 +390,36 @@ var ContextMenu = class ContextMenu extends Control {
         isocurve.setData(data);
     }
 
+    /**
+     * 
+     * Fonction qui ouvre le widget des légendes
+     * 
+     * @param {*} evt event
+     */
     displayLegend (evt) {
         var legend = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Legends")[0];
         legend.buttonLegendsShow.click();
         legend.buttonLegendsShow.setAttribute("aria-pressed", true);
     }
 
+    /**
+     * 
+     * Fonction qui ouvre le widget Catalogue
+     * 
+     * @param {*} evt event
+     */
     openCatalogue (evt) {
         var catalog = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Catalog")[0];
         catalog.buttonCatalogShow.click();
         catalog.buttonCatalogShow.setAttribute("aria-pressed", true);
     }
 
+    /**
+     * 
+     * Fonction qui ouvre un panel qui affiche les coordonnées et l'adresse sous le clic
+     * 
+     * @param {*} evt event
+     */
     displayAdressAndCoordinate (evt) {
         let clickedCoordinate = this.to4326(evt.coordinate);
         this.panelPointInfoEntriesContainer.innerHTML = "";   
@@ -400,35 +439,51 @@ var ContextMenu = class ContextMenu extends Control {
         this.panelPointInfoEntriesContainer.appendChild(parcel);
         this.panelPointInfoEntriesContainer.appendChild(altitude);
 
-        fetch("https://data.geopf.fr/altimetrie/1.0/calcul/alti/rest/elevation.json?gp-access-lib=3.4.2&lon=" + clickedCoordinate[0] + "&lat=" + clickedCoordinate[1] + "&indent=false&crs=%27CRS:84%27&resource=ign_rge_alti_wld&measures=false&zonly=true")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                if (json.elevations) {
-                    altitude.innerHTML = "Altitude : " + json.elevations[0] + "m";
+        var altiOptions = {
+            rawResponse : false, // true|false
+            scope : null, // this
+            onSuccess : function (json) {
+                if (json.elevations.length > 0 && json.elevations[0].z) {
+                    altitude.innerHTML = "Altitude : " + json.elevations[0].z + "m";
                 }
-            });
+            },
+            onFailure : function (error) {},
+            // spécifique au service
+            positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
+            outputFormat : "json" // json|xml
+        };
+        Gp.Services.getAltitude(altiOptions);
 
-        fetch("https://data.geopf.fr/geocodage/reverse?gp-access-lib=3.4.2&index=parcel&searchgeom={%22type%22:%22Circle%22,%22coordinates%22:[" + clickedCoordinate[0] + "," + clickedCoordinate[1] + "],%22radius%22:100}&lon=" + clickedCoordinate[0] + "&lat=" + clickedCoordinate[1] + "&limit=1")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                if (json.features.length > 0) {
-                    parcel.innerHTML = "Parcelle : " + json.features[0].properties.districtcode + " / " + json.features[0].properties.section + " / " + json.features[0].properties.number;
+        var geocodageParcelOptions = {
+            onSuccess : function (json) {
+                if (json.locations.length > 0) {
+                    parcel.innerHTML = "Parcelle : " + json.locations[0].placeAttributes.districtcode + " / " + json.locations[0].placeAttributes.section + " / " + json.locations[0].placeAttributes.number;
                 }
-            });
+            },
+            onFailure : function (error) {},
+            // spécifique au service
+            position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
+            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
+            index : "CadastralParcel",
+            maximumResponses : 1
+        };
+        Gp.Services.reverseGeocode(geocodageParcelOptions);
 
-        fetch("https://data.geopf.fr/geocodage/reverse?gp-access-lib=3.4.2&index=address&searchgeom={%22type%22:%22Circle%22,%22coordinates%22:[" + clickedCoordinate[0] + "," + clickedCoordinate[1] + "],%22radius%22:100}&lon=" + clickedCoordinate[0] + "&lat=" + clickedCoordinate[1] + "&limit=1&category=commune")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                if (json.features.length > 0) {
-                    address.innerHTML = json.features[0].properties.label;
+
+        var geocodageAdressOptions = {
+            onSuccess : function (json) {
+                if (json.locations.length > 0) {
+                    address.innerHTML = json.locations[0].placeAttributes.label;
                 }
-            });
+            },
+            onFailure : function (error) {},
+            // spécifique au service
+            position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
+            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
+            index : "StreetAddress",
+            maximumResponses : 1
+        };
+        Gp.Services.reverseGeocode(geocodageAdressOptions);
     }
     
 
