@@ -1245,7 +1245,8 @@ var Route = class Route extends Control {
      * @private
      */
     onShowRoutePanelClick (e) {
-        if (e.target.ariaPressed === "true") {
+        var opened = this._showRouteButton.ariaPressed;
+        if (opened === "true") {
             this.onPanelOpen();
         }
         var map = this.getMap();
@@ -1255,7 +1256,6 @@ var Route = class Route extends Control {
         if (!this._geojsonSections && !this._waiting) {
             this._clear();
         }
-        var opened = this._showRouteButton.ariaPressed;
         this.collapsed = !(opened === "true");
         // on génère nous même l'evenement OpenLayers de changement de pté
         // (utiliser ol.control.Route.on("change:collapsed", function ) pour s'abonner à cet évènement)

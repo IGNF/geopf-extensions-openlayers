@@ -837,7 +837,8 @@ var LayerImport = class LayerImport extends Control {
      * @private
      */
     _onShowImportClick (e) {
-        if (e.target.ariaPressed === "true") {
+        var opened = this._showImportButton.ariaPressed;
+        if (opened === "true") {
             this.onPanelOpen();
         }
         var map = this.getMap();
@@ -845,7 +846,6 @@ var LayerImport = class LayerImport extends Control {
         Interactions.unset(map);
         // info : on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser ol.control.LayerImport.on("change:collapsed", function ) pour s'abonner à cet évènement)
-        var opened = this._showImportButton.ariaPressed;
         this.collapsed = !(opened === "true");
         this.dispatchEvent("change:collapsed");
         // on recalcule la position
@@ -1613,12 +1613,12 @@ var LayerImport = class LayerImport extends Control {
                          *   console.log(e.layer);
                          * })
                          */
-                        this.dispatchEvent({
+                        self.dispatchEvent({
                             type : "layerimport:mapbox:added",
                             name : layerName,
                             data : fileContent,
                             layer : p.layer,
-                            format : this._currentImportType.toLowerCase() || "mapbox"
+                            format : self._currentImportType.toLowerCase() || "mapbox"
                         });
 
                         // application du style

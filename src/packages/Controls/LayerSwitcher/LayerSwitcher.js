@@ -10,6 +10,8 @@ import { intersects as olIntersects } from "ol/extent";
 import {
     transformExtent as olTransformExtentProj
 } from "ol/proj";
+import VectorLayer from "ol/layer/Vector";
+import VectorTileLayer from "ol/layer/VectorTile";
 // import local
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
@@ -46,6 +48,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:extent
+ * @fires layerswitcher:edit
  * @fires layerswitcher:change:opacity
  * @fires layerswitcher:change:visibility
  * @fires layerswitcher:change:position
@@ -802,11 +805,17 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var isLegends = layerOptions.legends && layerOptions.legends.length !== 0;
         var isMetadata = layerOptions.metadata && layerOptions.metadata.length !== 0;
         var isQuicklookUrl = layerOptions.quicklookUrl;
-        // on n'affiche les informations que si elles sont renseignées (pour ne pas avoir un panneau vide)
+        // on n'affiche les informations que si elles sont renseignées 
+        // (pour ne pas avoir un panneau vide)
         if (isLegends || isMetadata || isQuicklookUrl) {
             layerOptions.displayInformationElement = true;
         }
 
+        // information sur le type de couche : vecteur
+        layerOptions.type = "";
+        if (layerOptions.layer instanceof VectorLayer || layerOptions.layer instanceof VectorTileLayer) {
+            layerOptions.type = "feature";
+        }
         // ajout d'une div pour cette layer dans le control
         var layerDiv = this._createContainerLayerElement(layerOptions);
 
@@ -1128,6 +1137,39 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         // le retrait de la couche va déclencher l'ecouteur d'évenement,
         // et appeler this.removeLayer qui va supprimer la div.
         this.getMap().getLayers().remove(layer);
+    }
+
+    /**
+     * edit layer
+     *
+     * @param {Event} e - MouseEvent
+     * @private
+     */
+    _onEditLayerClick (e) {
+        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(divId); // ex. 26
+
+        var options = this._layers[layerID];
+        var layer = this._layers[layerID].layer;
+
+        /**
+         * event triggered when the edit button is clicked
+         *
+         * @event layerswitcher:edit
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} options - layer options
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:edit", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:edit",
+            layer : layer,
+            options : options
+        });
     }
 
     /**

@@ -243,6 +243,7 @@ var LayerSwitcherDOM = {
      * @param {String} obj.description - description de la couche à afficher
      * @param {Boolean} obj.visibility - visibilité de la couche dans la carte (true or false)
      * @param {Float} obj.opacity - opacité de la couche
+     * @param {String} obj.type - feature or vector
      *
      * @returns {DOMElement} container
      */
@@ -452,15 +453,16 @@ var LayerSwitcherDOM = {
         container.className = "GPelementHidden GPlayerAdvancedTools gpf-hidden";
 
         container.appendChild(this._createAdvancedToolDeleteElement(obj));
+        if (checkDsfr()) {
+            container.appendChild(this._createAdvancedToolEditionElement(obj));
+        }
         container.appendChild(this._createAdvancedToolInformationElement(obj));
 
-        if (obj.type !== "feature") {
-            var array = this._createAdvancedToolOpacityElement(obj);
-            for (var i = 0; i < array.length; i++) {
-                container.appendChild(array[i]);
-            }
+        var array = this._createAdvancedToolOpacityElement(obj);
+        for (var i = 0; i < array.length; i++) {
+            container.appendChild(array[i]);
         }
-
+        
         container.appendChild(this._createAdvancedToolExtentElement(obj));
 
         if (checkDsfr()) {
@@ -522,6 +524,41 @@ var LayerSwitcherDOM = {
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 context._onDropLayerClick(e);
+            });
+        }
+
+        return button;
+    },
+ 
+    /**
+     * Creation de l'icone d'edition du layer (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @returns {DOMElement} container
+     */
+    _createAdvancedToolEditionElement : function (obj) {
+        var button = document.createElement("button");
+        button.id = this._addUID("GPedit_ID_" + obj.id);
+        button.className = "GPlayerEdit gpf-btn gpf-btn-icon gpf-btn-icon-ls-edit fr-btn fr-btn--tertiary gpf-btn--tertiary";
+        button.title = "Editer la couche";
+        button.layerId = obj.id;
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("type", "button");
+
+        // hack pour garder un emplacement vide
+        if (obj.type !== "feature") {
+            button.style.opacity = "0";
+            button.style.visibility = "hidden";
+        }
+
+        var context = this;
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                context._onEditLayerClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                context._onEditLayerClick(e);
             });
         }
 
