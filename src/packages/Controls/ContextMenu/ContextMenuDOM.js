@@ -126,7 +126,6 @@ var ContextMenuDOM = {
         if (btnClose.addEventListener) {
             btnClose.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPshowPointInfoPicto")).click();
-                console.log("close info point");
                 self.onClosePointInfoClick();
             }, false);
         } else if (btnClose.attachEvent) {

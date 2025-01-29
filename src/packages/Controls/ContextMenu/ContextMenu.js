@@ -7,38 +7,21 @@ import "../../CSS/Controls/ContextMenu/GPFcontextMenu.css";
 // import OpenLayers
 import Control from "../Control";
 import Overlay from "ol/Overlay";
-import Feature from "ol/Feature";
-import olKML from "ol/format/KML";
-import Polyline from "ol/format/Polyline";
-import Point from "ol/geom/Point";
-import VectorSource from "ol/source/Vector";
-import VectorLayer from "ol/layer/Vector";
 import {
     transform as olTransformProj,
-    get as olGetProj,
-    transformExtent as olTransformExtentProj,
     fromLonLat as olFromLonLat
 } from "ol/proj";
-import {
-    Icon,
-    Stroke,
-    Style,
-    Circle,
-    Fill
-} from "ol/style";
 
 // import local
 import Utils from "../../Utils/Helper";
 import Markers from "../Utils/Markers";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
-import Draggable from "../../Utils/Draggable";
 
 // DOM
 import ContextMenuDOM from "./ContextMenuDOM";
 import olContextMenu from "ol-contextmenu";
 import Route from "../Route/Route";
-import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 import Widget from "../Widget";
 
 var logger = Logger.getLogger("contextMenu");
