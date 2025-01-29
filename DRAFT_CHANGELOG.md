@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - LayerSwitcher : ajout d'un bouton d'édition des données de type vecteur (#342)
+
 * 🔨 [Changed]
 
 * 🔥 [Deprecated]
