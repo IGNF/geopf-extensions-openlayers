@@ -12,6 +12,9 @@ import {
     fromLonLat as olFromLonLat
 } from "ol/proj";
 
+// import geoportal library access
+import Gp from "geoportal-access-lib";
+
 // import local
 import Utils from "../../Utils/Helper";
 import Markers from "../Utils/Markers";
