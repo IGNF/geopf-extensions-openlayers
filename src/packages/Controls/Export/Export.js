@@ -261,6 +261,7 @@ class ButtonExport extends Control {
         // dom
         this.container = null;
         this.button = null;
+        this.buttonOptions = null;
         this.inputName = null;
         this.inputDesc = null;
         this.menu = null;
@@ -449,6 +450,21 @@ class ButtonExport extends Control {
                             </label>
                         </div>
                     </div>
+                    <div id="GPexportMenuButtons-${this.uid}" 
+                        class="GPexportMenuButtons">
+                        <button 
+                            type="button"
+                            id="GPexportMenuButtonValidate-${this.uid}" 
+                            class="GPexportMenuButtonValidate GPsubmit gpf-btn gpf-btn-icon-export-validate fr-btn fr-btn--secondary fr-m-1w">
+                            Valider
+                        </button>
+                        <button 
+                            type="button"
+                            id="GPexportMenuButtonCancel-${this.uid}" 
+                            class="GPexportMenuButtonIconCancel GPsubmit gpf-btn gpf-btn-icon-export-cancel fr-btn fr-btn--secondary fr-m-1w">
+                            Annuler
+                        </button>
+                    </div>
                 </div>
             </div>
         `);
@@ -471,15 +487,21 @@ class ButtonExport extends Control {
                 radio.addEventListener("change", (e) => this.onChangeRadioFormat(e));
             }
 
-            var btn = this.menu.querySelector("#GPexportBtnMenuContent-" + this.uid);
-            if (btn) {
-                btn.addEventListener("click", (e) => this.onClickButtonToggleOptions(e));
+            this.buttonOptions = this.menu.querySelector("#GPexportBtnMenuContent-" + this.uid);
+            if (this.buttonOptions) {
+                this.buttonOptions.addEventListener("click", (e) => this.onClickButtonToggleOptions(e));
             }
 
             this.inputName = this.menu.querySelector("#GPexportMenuInputName-" + this.uid);
             this.inputDesc = this.menu.querySelector("#GPexportMenuInputDesc-" + this.uid);
             this.inputName.addEventListener("change", (e) => this.onChangeInputName(e));
             this.inputDesc.addEventListener("change", (e) => this.onChangeInputDesc(e));
+
+            var btnValidate = this.menu.querySelector("#GPexportMenuButtonValidate-" + this.uid);
+            btnValidate.addEventListener("click", (e) => this.onClickButtonValidate(e));
+            var btnCancel = this.menu.querySelector("#GPexportMenuButtonCancel-" + this.uid);
+            btnCancel.addEventListener("click", (e) => this.onClickButtonCancel(e));
+            
         }
         div.appendChild(this.menu);
 
@@ -790,6 +812,18 @@ class ButtonExport extends Control {
             this.menu.classList.remove("gpf-accordion--opened");
             collapse.classList.add("GPelementHidden");
         }
+    }
+
+    onClickButtonValidate (e) {
+        this.setName(this.inputName.value);
+        this.setDescription(this.inputDesc.value);
+        this.buttonOptions.click();
+    }
+
+    onClickButtonCancel (e) {
+        this.inputName.value = "";
+        this.inputDesc.value = "";
+        this.buttonOptions.click();
     }
 
     // ################################################################### //

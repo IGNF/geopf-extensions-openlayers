@@ -28,7 +28,14 @@
     mask-position: 5px;
 }
 
+.gpf-btn-icon-export-validate::after,
+.gpf-btn-icon-export-cancel::after {
+    /* -webkit-mask: url("img/GPexportButton.svg") left no-repeat;
+    mask: url("img/GPexportButton.svg") left no-repeat; */
+}
+
 dialog div .gpf-export-menu-container {
+    width: 100%;
     justify-content: center;
 }
 
@@ -47,7 +54,7 @@ dialog div .gpf-export-menu-container {
 }
 
 .gpf-accordion {
-    width: min-content;
+    width: 110px;
 }
 
 .gpf-accordion--opened {
@@ -59,7 +66,7 @@ dialog div .gpf-export-menu-container {
 }
 
 .gpf-accordion__btn {
-    width: fit-content;
+    width: 100%;
 }
 
 .gpf-accordion__title {
@@ -68,12 +75,13 @@ dialog div .gpf-export-menu-container {
 
 dialog div .gpf-full-container {
     position: absolute;
-    width: auto;
+    width: 100%;
+    height: 100%;
     z-index: 1;
-    top: 0px;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     background-color: rgba(255,255,255,1);
-    overflow: hidden;
+    overflow: auto;
   }
