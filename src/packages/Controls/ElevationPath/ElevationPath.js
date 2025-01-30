@@ -1643,16 +1643,17 @@ var ElevationPath = class ElevationPath extends Control {
      * @private
      */
     onShowElevationPathClick (e) {
-        if (e.target.ariaPressed === "true") {
+        var opened = this._pictoButton.ariaPressed;
+        if (opened === "true") {
             this.onPanelOpen();
         }
+
         var map = this.getMap();
         Interactions.unset(map, {
             current : "ElevationPath"
         });
 
         // Activation/Desactivation des interactions de dessins
-        var opened = this._pictoButton.ariaPressed;
         if (opened === "true") {
             // on n'affiche pas la fenetre de profile s'il n'existe pas...
             if (this._profile === null) {

@@ -56,6 +56,14 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
     mask: url("img/dsfr/remove.svg") center no-repeat;
 }
 
+.gpf-btn-icon-ls-edit {
+    box-shadow: none;
+}
+
+.gpf-btn-icon-ls-edit::after {
+    -webkit-mask: url("img/dsfr/edit.svg") center no-repeat;
+    mask: url("img/dsfr/edit.svg") center no-repeat;
+}
 
 .gpf-btn-icon-ls-collapse {
     box-shadow: none;

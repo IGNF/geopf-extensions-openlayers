@@ -10,7 +10,10 @@ import { intersects as olIntersects } from "ol/extent";
 import {
     transformExtent as olTransformExtentProj
 } from "ol/proj";
+import VectorLayer from "ol/layer/Vector";
+import VectorTileLayer from "ol/layer/VectorTile";
 // import local
+import Utils from "../../Utils/Helper";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Config from "../../Utils/Config";
@@ -43,9 +46,11 @@ var logger = Logger.getLogger("layerswitcher");
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
+ * @param {Boolean} [options.options.allowEdit = false] - Specify if widget has to have an edit button. Default is false.
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:extent
+ * @fires layerswitcher:edit
  * @fires layerswitcher:change:opacity
  * @fires layerswitcher:change:visibility
  * @fires layerswitcher:change:position
@@ -64,7 +69,8 @@ var logger = Logger.getLogger("layerswitcher");
  *      collapsed : true,
  *      panel : false,
  *      counter : false,
- *      position : "top-left"
+ *      position : "top-left",
+ *      allowEdit : true
  *  }
  * ));
  *
@@ -72,6 +78,12 @@ var logger = Logger.getLogger("layerswitcher");
  *    console.warn("layer", e.layer);
  * });
  * LayerSwitcher.on("layerswitcher:remove", function (e) {
+ *    console.warn("layer", e.layer);
+ * });
+ * LayerSwitcher.on("layerswitcher:extent", function (e) {
+ *    console.warn("layer", e.layer);
+ * });
+ * LayerSwitcher.on("layerswitcher:edit", function (e) {
  *    console.warn("layer", e.layer);
  * });
  * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
@@ -83,6 +95,7 @@ var logger = Logger.getLogger("layerswitcher");
  * LayerSwitcher.on("layerswitcher:change:position", function (e) {
  *    console.warn("layer", e.layer, e.position);
  * });
+ * 
  */
 var LayerSwitcher = class LayerSwitcher extends Control {
 
@@ -535,12 +548,24 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * @private
      */
     _initialize (options, layers) {
-        // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
-        this._uid = options.id || SelectorID.generate();
-
-        this.options = options;
+        // options par defaut
+        this.options = {
+            id : "",
+            collapsed : true,
+            draggable : false,
+            counter : false,
+            panel : false,
+            gutter : false,
+            allowEdit : false
+        };
+        
+        // merge with user options
+        Utils.assign(this.options, options);
+        
         this.options.layers = layers;
-
+        
+        // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
+        this._uid = this.options.id || SelectorID.generate();
         // {Object} control layers list. Each key is a layer id, and its value is an object of layers options (layer, id, opacity, visibility, title, description...)
         this._layers = {};
         // [Array] array of ordered control layers
@@ -552,7 +577,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         // {Number} layers max id, incremented when a new layer is added
         this._layerId = 0;
         /** {Boolean} true if widget is collapsed, false otherwise */
-        this.collapsed = (options.collapsed !== undefined) ? options.collapsed : true;
+        this.collapsed = (this.options.collapsed !== undefined) ? this.options.collapsed : true;
         // div qui contiendra les div des listes.
         this._layerListContainer = null;
         // [Object] listeners added to the layerSwitcher saved here in order to delete them if we remove the control from the map)
@@ -802,11 +827,19 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var isLegends = layerOptions.legends && layerOptions.legends.length !== 0;
         var isMetadata = layerOptions.metadata && layerOptions.metadata.length !== 0;
         var isQuicklookUrl = layerOptions.quicklookUrl;
-        // on n'affiche les informations que si elles sont renseignées (pour ne pas avoir un panneau vide)
+        // on n'affiche les informations que si elles sont renseignées 
+        // (pour ne pas avoir un panneau vide)
         if (isLegends || isMetadata || isQuicklookUrl) {
             layerOptions.displayInformationElement = true;
         }
 
+        layerOptions.type = "";
+        if (this.options.allowEdit) {
+            // information sur le type de couche : vecteur
+            if (layerOptions.layer instanceof VectorLayer || layerOptions.layer instanceof VectorTileLayer) {
+                layerOptions.type = "feature";
+            }
+        }
         // ajout d'une div pour cette layer dans le control
         var layerDiv = this._createContainerLayerElement(layerOptions);
 
@@ -1128,6 +1161,39 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         // le retrait de la couche va déclencher l'ecouteur d'évenement,
         // et appeler this.removeLayer qui va supprimer la div.
         this.getMap().getLayers().remove(layer);
+    }
+
+    /**
+     * edit layer
+     *
+     * @param {Event} e - MouseEvent
+     * @private
+     */
+    _onEditLayerClick (e) {
+        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(divId); // ex. 26
+
+        var options = this._layers[layerID];
+        var layer = this._layers[layerID].layer;
+
+        /**
+         * event triggered when the edit button is clicked
+         *
+         * @event layerswitcher:edit
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} options - layer options
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:edit", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:edit",
+            layer : layer,
+            options : options
+        });
     }
 
     /**

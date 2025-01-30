@@ -2009,14 +2009,14 @@ var Drawing = class Drawing extends Control {
      * @private
      */
     onShowDrawingClick (e) {
-        if (e.target.ariaPressed === "true") {
+        var opened = this._showDrawingButton.ariaPressed;
+        if (opened === "true") {
             this.onPanelOpen();
         }
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
 
-        var opened = this._showDrawingButton.ariaPressed;
         this.collapsed = !(opened === "true");// on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser mousePosition.on("change:collapsed", function(e) ) pour s'abonner à cet évènement)
         this.dispatchEvent("change:collapsed");

@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - LayerSwitcher : ajout d'un bouton d'édition des données de type vecteur via l'option `options.allowEdit:true` (#342)
+
 * 🔨 [Changed]
 
     - ContextMenu: refacto et documentation du code du menu contextuel (#340)

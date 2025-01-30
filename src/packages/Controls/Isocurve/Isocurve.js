@@ -1116,13 +1116,14 @@ var Isocurve = class Isocurve extends Control {
      * @private
      */
     onShowIsoPanelClick (e) {
-        if (e.target.ariaPressed === "true") {
+        var opened = this._pictoIsoButton.ariaPressed;
+        if (opened === "true") {
             this.onPanelOpen();
         }
+
         var map = this.getMap();
         // on supprime toutes les interactions
         Interactions.unset(map);
-        var opened = this._pictoIsoButton.ariaPressed;
         this.collapsed = !(opened === "true");
         // on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser ol.control.Isocurve.on("change:collapsed", function ) pour s'abonner à cet évènement)
