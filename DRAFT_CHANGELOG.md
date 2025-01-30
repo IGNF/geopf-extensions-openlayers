@@ -17,6 +17,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+    - ContextMenu: refacto et documentation du code du menu contextuel (#340)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
