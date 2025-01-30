@@ -21,6 +21,7 @@ declare namespace LayerSwitcherDOM {
         description: string;
         visibility: boolean;
         opacity: Float;
+        type: string;
     }): DOMElement;
     function _createBasicToolElement(obj: Object): DOMElement;
     function _createBasicToolDragNDropElement(obj: any): HTMLDivElement;
@@ -29,6 +30,7 @@ declare namespace LayerSwitcherDOM {
     function _createAdvancedToolShowElement(obj: Object): DOMElement[];
     function _createAdvancedToolElement(obj: Object): DOMElement;
     function _createAdvancedToolDeleteElement(obj: Object, contextual?: boolean): DOMElement;
+    function _createAdvancedToolEditionElement(obj: Object): DOMElement;
     function _createAdvancedToolInformationElement(obj: Object, contextual?: boolean): DOMElement;
     function _createAdvancedToolOpacityElement(obj: Object): DOMElement[];
     function _createAdvancedToolExtentElement(obj: Object, contextual?: boolean): DOMElement;

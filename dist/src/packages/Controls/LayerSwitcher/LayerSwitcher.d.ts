@@ -23,9 +23,11 @@ export default LayerSwitcher;
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
+ * @param {Boolean} [options.options.allowEdit = false] - Specify if widget has to have an edit button. Default is false.
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:extent
+ * @fires layerswitcher:edit
  * @fires layerswitcher:change:opacity
  * @fires layerswitcher:change:visibility
  * @fires layerswitcher:change:position
@@ -44,7 +46,8 @@ export default LayerSwitcher;
  *      collapsed : true,
  *      panel : false,
  *      counter : false,
- *      position : "top-left"
+ *      position : "top-left",
+ *      allowEdit : true
  *  }
  * ));
  *
@@ -52,6 +55,12 @@ export default LayerSwitcher;
  *    console.warn("layer", e.layer);
  * });
  * LayerSwitcher.on("layerswitcher:remove", function (e) {
+ *    console.warn("layer", e.layer);
+ * });
+ * LayerSwitcher.on("layerswitcher:extent", function (e) {
+ *    console.warn("layer", e.layer);
+ * });
+ * LayerSwitcher.on("layerswitcher:edit", function (e) {
  *    console.warn("layer", e.layer);
  * });
  * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
@@ -63,6 +72,7 @@ export default LayerSwitcher;
  * LayerSwitcher.on("layerswitcher:change:position", function (e) {
  *    console.warn("layer", e.layer, e.position);
  * });
+ *
  */
 declare var LayerSwitcher: ol.control.LayerSwitcher;
 //# sourceMappingURL=LayerSwitcher.d.ts.map
