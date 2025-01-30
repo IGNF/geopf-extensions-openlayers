@@ -7,38 +7,21 @@ import "../../CSS/Controls/ContextMenu/GPFcontextMenu.css";
 // import OpenLayers
 import Control from "../Control";
 import Overlay from "ol/Overlay";
-import Feature from "ol/Feature";
-import olKML from "ol/format/KML";
-import Polyline from "ol/format/Polyline";
-import Point from "ol/geom/Point";
-import VectorSource from "ol/source/Vector";
-import VectorLayer from "ol/layer/Vector";
 import {
     transform as olTransformProj,
-    get as olGetProj,
-    transformExtent as olTransformExtentProj,
     fromLonLat as olFromLonLat
 } from "ol/proj";
-import {
-    Icon,
-    Stroke,
-    Style,
-    Circle,
-    Fill
-} from "ol/style";
 
 // import local
 import Utils from "../../Utils/Helper";
 import Markers from "../Utils/Markers";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
-import Draggable from "../../Utils/Draggable";
 
 // DOM
 import ContextMenuDOM from "./ContextMenuDOM";
 import olContextMenu from "ol-contextmenu";
 import Route from "../Route/Route";
-import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 import Widget from "../Widget";
 
 var logger = Logger.getLogger("contextMenu");
@@ -53,6 +36,11 @@ var logger = Logger.getLogger("contextMenu");
  * @type {ol.control.ContextMenu}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
+ *    la clé contextMenuItemsOptions permet de paramétrer 
+ *    un tableau d'item dont le format est hérité de la librairie
+ *    {@link https://www.npmjs.com/package/ol-contextmenu}
+ * 
+ *    ex : { contextMenuItemsOptions : itemsOpt }
  * 
  * @example
  * var contextMenu = new ol.control.ContextMenu();
@@ -115,7 +103,7 @@ var ContextMenu = class ContextMenu extends Control {
         if (map) {
             // some stuff
             map.addControl(this.contextmenu);
-            map.addLayer(this.layerFeature);
+            map.addOverlay(this._marker);
 
             // ajout des evenements sur la carte
             if (this.auto) {
@@ -156,7 +144,8 @@ var ContextMenu = class ContextMenu extends Control {
             collapsed : true,
             draggable : false,
             auto : true,
-            panel : true
+            panel : true,
+            contextMenuItemsOptions : []
         };
 
         // merge with user options
@@ -185,15 +174,11 @@ var ContextMenu = class ContextMenu extends Control {
         // Point pour le calcul d'itinéraire
         this.itiPoints =  new Array(7);
 
-        this.PinStyle = new Style({
-            image : new Icon({
-                src : Markers["lightOrange"],
-                anchor : [0.5, 1],
-                snapToPixel : true
-            })});
-        this.sourceLayerFeature = new VectorSource();
-
-        this.layerFeature = new VectorLayer({source : this.sourceLayerFeature});
+        this._marker = new Overlay({
+            element : this._createPinDOMOverlay(Markers["lightOrange"]),
+            stopEvent : false,
+            offset : Markers.defaultOffset
+        });;
 
         var contextMenuItems = this.getAvailableContextMenuControls.call(this);
         this.contextMenuItemsOptions = [];
@@ -273,7 +258,6 @@ var ContextMenu = class ContextMenu extends Control {
     removeEventsListeners () {
     }
 
-
     /**
      * Add tools if added to the map Controls list
      * @private
@@ -340,14 +324,15 @@ var ContextMenu = class ContextMenu extends Control {
     /**
      * 
      * ---- Ajouter un point sur la carte 
+     * 
      * Fonction utilisée lors d'un clique droit sur la carte 
      * Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire 
      * @param {*} evt event
      * 
-   */
+     */
     defineStartPoint (evt) {
-    // on récupère les coordonnées du point cliqué
+        // on récupère les coordonnées du point cliqué
         let clickedCoordinate = this.to4326(evt.coordinate);
         var route = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route")[0];
         route._showRouteButton.click();
@@ -358,6 +343,7 @@ var ContextMenu = class ContextMenu extends Control {
   
     /**
      * ---- Ajouter un point sur la carte 
+     * 
      * Fonction utilisée lors d'un clique droit sur la carte 
      * Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire 
@@ -365,7 +351,7 @@ var ContextMenu = class ContextMenu extends Control {
      * @param {*} evt event
      */
     defineEndPoint (evt) {
-    // on récupère les coordonnées du point cliqué
+        // on récupère les coordonnées du point cliqué
         let clickedCoordinate = this.to4326(evt.coordinate);
         var route = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route")[0];
         route._showRouteButton.click();
@@ -374,12 +360,24 @@ var ContextMenu = class ContextMenu extends Control {
         route.setData({ points : this.itiPoints });
     }
 
+    /**
+     * Convertit les coordonnées en EPSG:4326
+     *  
+     * @param { Array } coord Coordonnées en 3857
+     * @returns { Array } tableau de coordonnées en 4326
+     */
     to4326 (coord) {
         return olTransformProj([
             parseFloat(coord[0]), parseFloat(coord[1])
         ], "EPSG:3857", "EPSG:4326");
     }
 
+    /**
+     * Fonction qui lance le calcul d'isochrone 
+     * pour les coordonnées sous le clic
+     * 
+     * @param {*} evt event
+     */
     computeIsochrone (evt) {
         var isocurve = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Isocurve")[0];
         isocurve._pictoIsoButton.click();
@@ -390,29 +388,39 @@ var ContextMenu = class ContextMenu extends Control {
         isocurve.setData(data);
     }
 
+    /**
+     * Fonction qui ouvre le widget des légendes
+     * 
+     * @param {*} evt event
+     */
     displayLegend (evt) {
         var legend = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Legends")[0];
         legend.buttonLegendsShow.click();
         legend.buttonLegendsShow.setAttribute("aria-pressed", true);
     }
 
+    /**
+     * Fonction qui ouvre le widget Catalogue
+     * 
+     * @param {*} evt event
+     */
     openCatalogue (evt) {
         var catalog = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Catalog")[0];
         catalog.buttonCatalogShow.click();
         catalog.buttonCatalogShow.setAttribute("aria-pressed", true);
     }
 
+    /**
+     * Fonction qui ouvre un panel qui affiche les coordonnées et l'adresse sous le clic
+     * 
+     * @param {*} evt event
+     */
     displayAdressAndCoordinate (evt) {
         let clickedCoordinate = this.to4326(evt.coordinate);
         this.panelPointInfoEntriesContainer.innerHTML = "";   
     
-        this.sourceLayerFeature.clear();
-        var feature = new Feature({
-            type : "place",
-            geometry : new Point(olFromLonLat(clickedCoordinate))
-        });
-        feature.setStyle(this.PinStyle);
-        this.sourceLayerFeature.addFeature(feature);
+        this._marker.setPosition(olFromLonLat(clickedCoordinate));
+
         this.buttonPointInfoShow.click();
         this.buttonPointInfoShow.setAttribute("aria-pressed", true);
         var coordinate = document.createElement("div");
@@ -425,35 +433,50 @@ var ContextMenu = class ContextMenu extends Control {
         this.panelPointInfoEntriesContainer.appendChild(parcel);
         this.panelPointInfoEntriesContainer.appendChild(altitude);
 
-        fetch("https://data.geopf.fr/altimetrie/1.0/calcul/alti/rest/elevation.json?gp-access-lib=3.4.2&lon=" + clickedCoordinate[0] + "&lat=" + clickedCoordinate[1] + "&indent=false&crs=%27CRS:84%27&resource=ign_rge_alti_wld&measures=false&zonly=true")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                if (json.elevations) {
-                    altitude.innerHTML = "Altitude : " + json.elevations[0] + "m";
+        var altiOptions = {
+            rawResponse : false, // true|false
+            scope : null, // this
+            onSuccess : function (json) {
+                if (json.elevations.length > 0 && json.elevations[0].z) {
+                    altitude.innerHTML = "Altitude : " + json.elevations[0].z + "m";
                 }
-            });
+            },
+            onFailure : function (error) {},
+            // spécifique au service
+            positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
+            outputFormat : "json" // json|xml
+        };
+        Gp.Services.getAltitude(altiOptions);
 
-        fetch("https://data.geopf.fr/geocodage/reverse?gp-access-lib=3.4.2&index=parcel&searchgeom={%22type%22:%22Circle%22,%22coordinates%22:[" + clickedCoordinate[0] + "," + clickedCoordinate[1] + "],%22radius%22:100}&lon=" + clickedCoordinate[0] + "&lat=" + clickedCoordinate[1] + "&limit=1")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                if (json.features.length > 0) {
-                    parcel.innerHTML = "Parcelle : " + json.features[0].properties.districtcode + " / " + json.features[0].properties.section + " / " + json.features[0].properties.number;
+        var geocodageParcelOptions = {
+            onSuccess : function (json) {
+                if (json.locations.length > 0) {
+                    parcel.innerHTML = "Parcelle : " + json.locations[0].placeAttributes.districtcode + " / " + json.locations[0].placeAttributes.section + " / " + json.locations[0].placeAttributes.number;
                 }
-            });
+            },
+            onFailure : function (error) {},
+            // spécifique au service
+            position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
+            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
+            index : "CadastralParcel",
+            maximumResponses : 1
+        };
+        Gp.Services.reverseGeocode(geocodageParcelOptions);
 
-        fetch("https://data.geopf.fr/geocodage/reverse?gp-access-lib=3.4.2&index=address&searchgeom={%22type%22:%22Circle%22,%22coordinates%22:[" + clickedCoordinate[0] + "," + clickedCoordinate[1] + "],%22radius%22:100}&lon=" + clickedCoordinate[0] + "&lat=" + clickedCoordinate[1] + "&limit=1&category=commune")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                if (json.features.length > 0) {
-                    address.innerHTML = json.features[0].properties.label;
+        var geocodageAdressOptions = {
+            onSuccess : function (json) {
+                if (json.locations.length > 0) {
+                    address.innerHTML = json.locations[0].placeAttributes.label;
                 }
-            });
+            },
+            onFailure : function (error) {},
+            // spécifique au service
+            position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
+            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
+            index : "StreetAddress",
+            maximumResponses : 1
+        };
+        Gp.Services.reverseGeocode(geocodageAdressOptions);
     }
     
 
@@ -485,7 +508,7 @@ var ContextMenu = class ContextMenu extends Control {
      */
     onClosePointInfoClick (e) {
         logger.trace(e);
-        this.sourceLayerFeature.clear();
+        this._marker.setPosition(undefined);
     }
 
     /**
@@ -511,6 +534,7 @@ var ContextMenu = class ContextMenu extends Control {
             }
         };
         var contextMenuItems = e.this.getAvailableContextMenuControls();
+        e.target.clear();
         e.target.extend(contextMenuItems);
         addMenuToolsEventListeners();
     }

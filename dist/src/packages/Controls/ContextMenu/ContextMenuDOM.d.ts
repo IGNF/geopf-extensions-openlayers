@@ -10,5 +10,6 @@ declare namespace ContextMenuDOM {
     function _createPointInfoPanelTitleElement(): HTMLDivElement;
     function _createPointInfoPanelCloseElement(): HTMLButtonElement;
     function _createEntriesElement(): HTMLDivElement;
+    function _createPinDOMOverlay(ImgURL: any): HTMLDivElement;
 }
 //# sourceMappingURL=ContextMenuDOM.d.ts.map

@@ -1287,6 +1287,8 @@
             
                 <div class="l3 itemMembers" data-name="module:Route~route:drawstart"> <a href="module-Route.html#~event:route:drawstart">route:drawstart</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:Route~route:newresults"> <a href="module-Route.html#~event:route:newresults">route:newresults</a> </div>
+            
 
 <!--
             <ul class="events itemMembers">
@@ -1298,6 +1300,8 @@
                 <li data-name="module:Route~route:drawend"><a href="module-Route.html#~event:route:drawend">route:drawend</a></li>
             
                 <li data-name="module:Route~route:drawstart"><a href="module-Route.html#~event:route:drawstart">route:drawstart</a></li>
+            
+                <li data-name="module:Route~route:newresults"><a href="module-Route.html#~event:route:newresults">route:newresults</a></li>
             
             </ul>
 -->
@@ -2673,9 +2677,15 @@
             
             <div class="l2 itemMembers"> Methods </div>
             
+                <div class="l3 itemMembers" data-name="ol.control.ContextMenu#computeIsochrone"> <a href="ol.control.ContextMenu.html#computeIsochrone">computeIsochrone</a> </div>
+            
                 <div class="l3 itemMembers" data-name="ol.control.ContextMenu#defineEndPoint"> <a href="ol.control.ContextMenu.html#defineEndPoint">defineEndPoint</a> </div>
             
                 <div class="l3 itemMembers" data-name="ol.control.ContextMenu#defineStartPoint"> <a href="ol.control.ContextMenu.html#defineStartPoint">defineStartPoint</a> </div>
+            
+                <div class="l3 itemMembers" data-name="ol.control.ContextMenu#displayAdressAndCoordinate"> <a href="ol.control.ContextMenu.html#displayAdressAndCoordinate">displayAdressAndCoordinate</a> </div>
+            
+                <div class="l3 itemMembers" data-name="ol.control.ContextMenu#displayLegend"> <a href="ol.control.ContextMenu.html#displayLegend">displayLegend</a> </div>
             
                 <div class="l3 itemMembers" data-name="ol.control.ContextMenu#onCloseContextMenu"> <a href="ol.control.ContextMenu.html#onCloseContextMenu">onCloseContextMenu</a> </div>
             
@@ -2685,7 +2695,11 @@
             
                 <div class="l3 itemMembers" data-name="ol.control.ContextMenu#onShowPointInfoClick"> <a href="ol.control.ContextMenu.html#onShowPointInfoClick">onShowPointInfoClick</a> </div>
             
+                <div class="l3 itemMembers" data-name="ol.control.ContextMenu#openCatalogue"> <a href="ol.control.ContextMenu.html#openCatalogue">openCatalogue</a> </div>
+            
                 <div class="l3 itemMembers" data-name="ol.control.ContextMenu#setMap"> <a href="ol.control.ContextMenu.html#setMap">setMap</a> </div>
+            
+                <div class="l3 itemMembers" data-name="ol.control.ContextMenu#to4326"> <a href="ol.control.ContextMenu.html#to4326">to4326</a> </div>
             
 
 <!--
@@ -2693,9 +2707,15 @@
             
             <span class="subtitle">Methods</span>
             
+                <li data-name="computeIsochrone"><a href="ol.control.ContextMenu.html#computeIsochrone">computeIsochrone</a></li>
+            
                 <li data-name="defineEndPoint"><a href="ol.control.ContextMenu.html#defineEndPoint">defineEndPoint</a></li>
             
                 <li data-name="defineStartPoint"><a href="ol.control.ContextMenu.html#defineStartPoint">defineStartPoint</a></li>
+            
+                <li data-name="displayAdressAndCoordinate"><a href="ol.control.ContextMenu.html#displayAdressAndCoordinate">displayAdressAndCoordinate</a></li>
+            
+                <li data-name="displayLegend"><a href="ol.control.ContextMenu.html#displayLegend">displayLegend</a></li>
             
                 <li data-name="onCloseContextMenu"><a href="ol.control.ContextMenu.html#onCloseContextMenu">onCloseContextMenu</a></li>
             
@@ -2705,7 +2725,11 @@
             
                 <li data-name="onShowPointInfoClick"><a href="ol.control.ContextMenu.html#onShowPointInfoClick">onShowPointInfoClick</a></li>
             
+                <li data-name="openCatalogue"><a href="ol.control.ContextMenu.html#openCatalogue">openCatalogue</a></li>
+            
                 <li data-name="setMap"><a href="ol.control.ContextMenu.html#setMap">setMap</a></li>
+            
+                <li data-name="to4326"><a href="ol.control.ContextMenu.html#to4326">to4326</a></li>
             
             </ul>
 -->
@@ -6209,7 +6233,7 @@
     
         
         <div class="tag-source">
-            Controls/ContextMenu/ContextMenu.js, line 61
+            Controls/ContextMenu/ContextMenu.js, line 49
         </div>
         
     </div>
@@ -6263,7 +6287,11 @@
             
             <td class="description last">
                 
-                <p>options for function call.</p></td>
+                <p>options for function call.<br>
+la clé contextMenuItemsOptions permet de paramétrer<br>
+un tableau d'item dont le format est hérité de la librairie<br>
+<a href="https://www.npmjs.com/package/ol-contextmenu">https://www.npmjs.com/package/ol-contextmenu</a></p>
+<p>ex : { contextMenuItemsOptions : itemsOpt }</p></td>
         </tr>
 	
 	
@@ -6532,14 +6560,14 @@ map.addControl(contextMenu);</code></pre>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="defineEndPoint">
+        <h4 class="name" id="computeIsochrone">
             
-            defineEndPoint<span class="signature">(evt)</span>
+            computeIsochrone<span class="signature">(evt)</span>
         </h4>
     
         
         <div class="tag-source">
-            Controls/ContextMenu/ContextMenu.js, line 367
+            Controls/ContextMenu/ContextMenu.js, line 381
         </div>
         
     </div>
@@ -6550,8 +6578,126 @@ map.addControl(contextMenu);</code></pre>
     
     
     <div class="description">
-        <p>---- Ajouter un point sur la carte<br>
-Fonction utilisée lors d'un clique droit sur la carte<br>
+        <p>Fonction qui lance le calcul d'isochrone<br>
+pour les coordonnées sous le clic</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">evt</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>event</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="defineEndPoint">
+            
+            defineEndPoint<span class="signature">(evt)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/ContextMenu/ContextMenu.js, line 353
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>---- Ajouter un point sur la carte</p>
+<p>Fonction utilisée lors d'un clique droit sur la carte<br>
 Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point<br>
 Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire</p>
     </div>
@@ -6659,7 +6805,7 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     
         
         <div class="tag-source">
-            Controls/ContextMenu/ContextMenu.js, line 349
+            Controls/ContextMenu/ContextMenu.js, line 334
         </div>
         
     </div>
@@ -6670,10 +6816,244 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     
     
     <div class="description">
-        <p>---- Ajouter un point sur la carte<br>
-Fonction utilisée lors d'un clique droit sur la carte<br>
+        <p>---- Ajouter un point sur la carte</p>
+<p>Fonction utilisée lors d'un clique droit sur la carte<br>
 Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point<br>
 Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">evt</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>event</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="displayAdressAndCoordinate">
+            
+            displayAdressAndCoordinate<span class="signature">(evt)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/ContextMenu/ContextMenu.js, line 418
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Fonction qui ouvre un panel qui affiche les coordonnées et l'adresse sous le clic</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">evt</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>event</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="displayLegend">
+            
+            displayLegend<span class="signature">(evt)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/ContextMenu/ContextMenu.js, line 396
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Fonction qui ouvre le widget des légendes</p>
     </div>
     
 
@@ -6779,7 +7159,7 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     
         
         <div class="tag-source">
-            Controls/ContextMenu/ContextMenu.js, line 495
+            Controls/ContextMenu/ContextMenu.js, line 518
         </div>
         
     </div>
@@ -6896,7 +7276,7 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     
         
         <div class="tag-source">
-            Controls/ContextMenu/ContextMenu.js, line 486
+            Controls/ContextMenu/ContextMenu.js, line 509
         </div>
         
     </div>
@@ -7013,7 +7393,7 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     
         
         <div class="tag-source">
-            Controls/ContextMenu/ContextMenu.js, line 503
+            Controls/ContextMenu/ContextMenu.js, line 526
         </div>
         
     </div>
@@ -7130,7 +7510,7 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     
         
         <div class="tag-source">
-            Controls/ContextMenu/ContextMenu.js, line 468
+            Controls/ContextMenu/ContextMenu.js, line 491
         </div>
         
     </div>
@@ -7240,6 +7620,123 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="openCatalogue">
+            
+            openCatalogue<span class="signature">(evt)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/ContextMenu/ContextMenu.js, line 407
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Fonction qui ouvre le widget Catalogue</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">evt</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>event</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="setMap">
             
             setMap<span class="signature">(map)</span>
@@ -7247,7 +7744,7 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     
         
         <div class="tag-source">
-            Controls/ContextMenu/ContextMenu.js, line 114
+            Controls/ContextMenu/ContextMenu.js, line 102
         </div>
         
     </div>
@@ -7353,6 +7850,133 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="to4326">
+            
+            to4326<span class="signature">(coord)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/ContextMenu/ContextMenu.js, line 369
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Convertit les coordonnées en EPSG:4326</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">coord</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>Coordonnées en 3857</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+<h5>Returns:</h5>
+de coordonnées en 4326
+<br />
+
+
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -7375,7 +7999,7 @@ Et tout cela en intéragissant avec le formulaire des paramètres de l'itinérai
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Jan 27 2025 14:00:19 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Jan 30 2025 10:41:29 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

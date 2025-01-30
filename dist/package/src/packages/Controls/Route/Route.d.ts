@@ -28,7 +28,8 @@ export default Route;
  * @fires route:drawstart
  * @fires route:drawend
  * @fires route:compute
- * @fires export:compute
+ * @fires route:compute
+ * @fires route:newresults
  * @example
  *  var route = ol.control.Route({
  *      "collapsed" : true

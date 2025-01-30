@@ -126,7 +126,6 @@ var ContextMenuDOM = {
         if (btnClose.addEventListener) {
             btnClose.addEventListener("click", function () {
                 document.getElementById(self._addUID("GPshowPointInfoPicto")).click();
-                console.log("close info point");
                 self.onClosePointInfoClick();
             }, false);
         } else if (btnClose.attachEvent) {
@@ -149,8 +148,15 @@ var ContextMenuDOM = {
         var divContent = document.createElement("div");
         div.appendChild(divContent);
         return div;
-    }
+    },
 
+    _createPinDOMOverlay : function (ImgURL) {
+        var div = document.createElement("div");
+        var img = document.createElement("img");
+        img.src = ImgURL;
+        div.appendChild(img);
+        return div;
+    }
 };
 
 export default ContextMenuDOM;
