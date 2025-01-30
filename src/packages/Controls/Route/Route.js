@@ -66,7 +66,8 @@ var logger = Logger.getLogger("route");
  * @fires route:drawstart
  * @fires route:drawend
  * @fires route:compute
- * @fires export:compute
+ * @fires route:compute
+ * @fires route:newresults
  * @example
  *  var route = ol.control.Route({
  *      "collapsed" : true
@@ -1409,6 +1410,11 @@ var Route = class Route extends Control {
         this._clearRouteResultsDetails();
         this._clearRouteResultsGeometry();
         this._clearRouteResultsFeatureGeometry();
+        /**
+        * event triggered when user clear points to compute route
+        *
+        * @event route:newresults
+        */
         this.dispatchEvent("route:newresults");
     }
 
