@@ -501,7 +501,6 @@ class ButtonExport extends Control {
             btnValidate.addEventListener("click", (e) => this.onClickButtonValidate(e));
             var btnCancel = this.menu.querySelector("#GPexportMenuButtonCancel-" + this.uid);
             btnCancel.addEventListener("click", (e) => this.onClickButtonCancel(e));
-            
         }
         div.appendChild(this.menu);
 
