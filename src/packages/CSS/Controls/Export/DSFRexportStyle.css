@@ -29,10 +29,7 @@
 }
 
 .gpf-btn-icon-export-validate::after,
-.gpf-btn-icon-export-cancel::after {
-    /* -webkit-mask: url("img/GPexportButton.svg") left no-repeat;
-    mask: url("img/GPexportButton.svg") left no-repeat; */
-}
+.gpf-btn-icon-export-cancel::after {}
 
 dialog div .gpf-export-menu-container {
     width: 100%;
