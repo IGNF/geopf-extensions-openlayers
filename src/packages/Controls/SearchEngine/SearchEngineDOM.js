@@ -413,7 +413,7 @@ var SearchEngineDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPshowAdvancedSearch");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch gpf-btn gpf-btn-icon-search-advanced fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch GPshowOpen gpf-btn gpf-btn-icon-search-advanced fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
 
