@@ -51,7 +51,7 @@
     "markdown-toc": "^1.2.0",
     "ol": "10.3.1",
     "ol-contextmenu": "^5.5.0",
-    "ol-mapbox-style": "12.4.0",
+    "ol-mapbox-style": "12.4.1",
     "proj4": "2.15.0",
     "sortablejs": "1.15.3",
     "typescript": "^5.3.3",
