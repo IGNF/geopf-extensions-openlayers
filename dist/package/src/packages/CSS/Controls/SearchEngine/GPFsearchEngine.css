@@ -169,7 +169,6 @@ dialog[id^="GPgeocodeResultsList"] {
 [id^="GPautocompleteResultsSuggest"],
 [id^="GPautocompleteResultsLocation"] {
   width: inherit;
-  padding: 0;
   overflow-y: auto;
 }
 

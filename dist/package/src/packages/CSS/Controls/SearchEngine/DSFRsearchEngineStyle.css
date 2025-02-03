@@ -9,22 +9,36 @@
 
 .gpf-panel__items_searchengine,
 .GPlabelTitle {
-  color: var(--text-action-high-blue-france);
   border-bottom: 1px solid var(--grey-900-175);
   padding: 12px;
 }
 
+.gpf-panel__items_searchengine:last-child {
+  border-bottom: unset;
+}
 
 .gpf-panel__items.GPautoCompleteProposal {
-  height: 45px;
+  height: 48px;
   box-sizing: border-box;
   margin-bottom: 0;
+  line-height: unset;
 }
 
 .GPlabelTitle {
-  background-color: var(--background-open-blue-france);
-  font-size: 1.0em;
+  font-size: 1.4rem;
   margin-bottom: 0;
+  padding-left: 35px;
+  background-size: 32px;
+  background-position: center left;
+  background-repeat: no-repeat;
+}
+
+.GPlabelTitle.search-results-loc {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Im1hcC1waW4tMiI+CjxwYXRoIGlkPSJJYyYjMTk1OyYjMTgwO25lIiBkPSJNMTYgMzEuNjM4M0w3LjUxNDY3IDIzLjE1M0M1LjgzNjQ2IDIxLjQ3NDcgNC42OTM1OCAxOS4zMzY1IDQuMjMwNTcgMTcuMDA4OEMzLjc2NzU2IDE0LjY4MSA0LjAwNTIxIDEyLjI2ODIgNC45MTM0NiAxMC4wNzU1QzUuODIxNzIgNy44ODI3OCA3LjM1OTc5IDYuMDA4NjUgOS4zMzMxOCA0LjY5MDA4QzExLjMwNjYgMy4zNzE1MSAxMy42MjY2IDIuNjY3NzIgMTYgMi42Njc3MkMxOC4zNzM0IDIuNjY3NzIgMjAuNjkzNCAzLjM3MTUxIDIyLjY2NjggNC42OTAwOEMyNC42NDAyIDYuMDA4NjUgMjYuMTc4MyA3Ljg4Mjc4IDI3LjA4NjUgMTAuMDc1NUMyNy45OTQ4IDEyLjI2ODIgMjguMjMyNCAxNC42ODEgMjcuNzY5NCAxNy4wMDg4QzI3LjMwNjQgMTkuMzM2NSAyNi4xNjM2IDIxLjQ3NDcgMjQuNDg1MyAyMy4xNTNMMTYgMzEuNjM4M1pNMjIuNiAyMS4yNjc2QzIzLjkwNTIgMTkuOTYyMyAyNC43OTQgMTguMjk5MiAyNS4xNTQxIDE2LjQ4ODhDMjUuNTE0MSAxNC42NzgzIDI1LjMyOTIgMTIuODAxNyAyNC42MjI4IDExLjA5NjRDMjMuOTE2MyA5LjM5MDk3IDIyLjcyMDEgNy45MzMzNiAyMS4xODUyIDYuOTA3ODRDMTkuNjUwNCA1Ljg4MjMzIDE3Ljg0NTkgNS4zMzQ5NiAxNiA1LjMzNDk2QzE0LjE1NDEgNS4zMzQ5NiAxMi4zNDk2IDUuODgyMzMgMTAuODE0OCA2LjkwNzg0QzkuMjc5OTQgNy45MzMzNiA4LjA4MzY3IDkuMzkwOTcgNy4zNzcyMiAxMS4wOTY0QzYuNjcwNzcgMTIuODAxNyA2LjQ4NTg5IDE0LjY3ODMgNi44NDU5NCAxNi40ODg4QzcuMjA1OTkgMTguMjk5MiA4LjA5NDgxIDE5Ljk2MjMgOS40IDIxLjI2NzZMMTYgMjcuODY3NkwyMi42IDIxLjI2NzZaTTE2IDE3LjMzNDNDMTUuMjkyOCAxNy4zMzQzIDE0LjYxNDUgMTcuMDUzMyAxNC4xMTQ0IDE2LjU1MzJDMTMuNjE0MyAxNi4wNTMxIDEzLjMzMzMgMTUuMzc0OSAxMy4zMzMzIDE0LjY2NzZDMTMuMzMzMyAxMy45NjA0IDEzLjYxNDMgMTMuMjgyMSAxNC4xMTQ0IDEyLjc4MkMxNC42MTQ1IDEyLjI4MTkgMTUuMjkyOCAxMi4wMDEgMTYgMTIuMDAxQzE2LjcwNzIgMTIuMDAxIDE3LjM4NTUgMTIuMjgxOSAxNy44ODU2IDEyLjc4MkMxOC4zODU3IDEzLjI4MjEgMTguNjY2NyAxMy45NjA0IDE4LjY2NjcgMTQuNjY3NkMxOC42NjY3IDE1LjM3NDkgMTguMzg1NyAxNi4wNTMxIDE3Ljg4NTYgMTYuNTUzMkMxNy4zODU1IDE3LjA1MzMgMTYuNzA3MiAxNy4zMzQzIDE2IDE3LjMzNDNaIiBmaWxsPSIjMTYxNjE2Ii8+CjwvZz4KPC9zdmc+Cg==');
+}
+
+.GPlabelTitle.search-results-data {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9ImNhdGFsb2d1ZSI+CjxwYXRoIGlkPSJJYyYjMTk1OyYjMTgwO25lIiBkPSJNMTcuMzMzMiAyOC4wMDE1VjMwLjY2ODFIMTQuNjY2NVYyOC4wMDE1SDMuOTk5ODRDMy4yNjM0NiAyOC4wMDE1IDIuNjY2NSAyNy40MDQ1IDIuNjY2NSAyNi42NjgxVjUuMzM0OEMyLjY2NjUgNC41OTg0MiAzLjI2MzQ2IDQuMDAxNDYgMy45OTk4NCA0LjAwMTQ2SDExLjk5OThDMTMuNTkyOCA0LjAwMTQ2IDE1LjAyMjYgNC42OTk4IDE1Ljk5OTggNS44MDcwNEMxNi45NzcgNC42OTk4IDE4LjQwNjkgNC4wMDE0NiAxOS45OTk4IDQuMDAxNDZIMjcuOTk5OEMyOC43MzYyIDQuMDAxNDYgMjkuMzMzMiA0LjU5ODQyIDI5LjMzMzIgNS4zMzQ4VjI2LjY2ODFDMjkuMzMzMiAyNy40MDQ1IDI4LjczNjIgMjguMDAxNSAyNy45OTk4IDI4LjAwMTVIMTcuMzMzMlpNMjYuNjY2NSAyNS4zMzQ4VjYuNjY4MTNIMTkuOTk5OEMxOC41MjcgNi42NjgxMyAxNy4zMzMyIDcuODYyMDQgMTcuMzMzMiA5LjMzNDhWMjUuMzM0OEgyNi42NjY1Wk0xNC42NjY1IDI1LjMzNDhWOS4zMzQ4QzE0LjY2NjUgNy44NjIwNCAxMy40NzI2IDYuNjY4MTMgMTEuOTk5OCA2LjY2ODEzSDUuMzMzMTdWMjUuMzM0OEgxNC42NjY1WiIgZmlsbD0iIzE2MTYxNiIvPgo8L2c+Cjwvc3ZnPgo=');
 }
 
 dialog[id^=GPcoordinateSearchPanel],
@@ -101,7 +115,6 @@ div.GPbuttonsContainer > button {
   color: var(--text-action-high-blue-france);
   text-decoration: underline;
   cursor: pointer;
-  display: flex;
   align-items: center;
 }
 
@@ -211,7 +224,9 @@ div[id^=GPgeocodeResults-] {
 
 [id^="GPautocompleteResultsSuggest"],
 [id^="GPautocompleteResultsLocation"] {
-  height: 225px;
+  max-height: 322px;
+  padding: 16px;
+  border-bottom: 1px solid var(--grey-900-175);
 }
 
 /* Mode Mobile */
