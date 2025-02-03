@@ -228,3 +228,8 @@ div[id^=GPgeocodeResults-] {
 .GPadvancedSearchFilterInput {
   margin-bottom: 5px;
 }
+
+[id^="GPautocompleteResultsSuggest"],
+[id^="GPautocompleteResultsLocation"] {
+  padding: 0;
+}

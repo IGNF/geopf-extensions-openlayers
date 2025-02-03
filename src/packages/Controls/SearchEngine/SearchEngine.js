@@ -337,7 +337,7 @@ var SearchEngine = class SearchEngine extends Control {
             markerStyle : "lightOrange",
             markerUrl : "",
             placeholder : "Rechercher un lieu, une adresse",
-            splitResults : true,
+            splitResults : false,
         };
 
         // merge with user options
@@ -810,7 +810,7 @@ var SearchEngine = class SearchEngine extends Control {
         firstLineWrapper.appendChild(buttonsContainer);
         container.appendChild(firstLineWrapper);
 
-        if (checkDsfr() && this.options.splitResults || this.options.displayButtonAdvancedSearch) {
+        if (checkDsfr() && this.options.splitResults) {
             var radioContainer = this._createRadioContainer();
             container.appendChild(radioContainer);
         }
@@ -819,28 +819,6 @@ var SearchEngine = class SearchEngine extends Control {
             var radioElements;
             [radioElements, this._radioButtonLocation, this._radioButtonSuggest] = this._createRadioElements();
             radioContainer.appendChild(radioElements);
-        }
-
-        if (this.options.displayButtonAdvancedSearch) {
-            var advancedShow = this._createShowAdvancedSearchElement();
-            radioContainer.appendChild(advancedShow);
-
-            // INFO je decompose les appels car j'ai besoin de recuperer le container
-            // des filtres
-            var advancedPanel = this._createAdvancedSearchPanelElement();
-            var advancedPanelDiv = this._createAdvancedSearchPanelDivElement();
-            var advancedHeader = this._createAdvancedSearchPanelHeaderElement();
-            var advancedForm = this._createAdvancedSearchPanelFormElement(this._advancedSearchCodes);
-            var advancedFormFilters = this._filterContainer = this._createAdvancedSearchFormFiltersElement();
-            this._setFilter(this._advancedSearchCodes[0].id); // ex "PositionOfInterest"
-            var advancedFormInput = this._createAdvancedSearchFormInputElement();
-
-            advancedForm.appendChild(advancedFormFilters);
-            advancedForm.appendChild(advancedFormInput);
-            advancedPanelDiv.appendChild(advancedHeader);
-            advancedPanelDiv.appendChild(advancedForm);
-            advancedPanel.appendChild(advancedPanelDiv);
-            container.appendChild(advancedPanel);
         }
 
         if (this.options.displayButtonGeolocate) {
@@ -894,6 +872,28 @@ var SearchEngine = class SearchEngine extends Control {
 
             coordinatePanel.appendChild(coordinatePanelDiv);
             container.appendChild(coordinatePanel);
+        }
+
+        if (this.options.displayButtonAdvancedSearch) {
+            var advancedShow = this._createShowAdvancedSearchElement();
+            buttonsContainer.appendChild(advancedShow);
+
+            // INFO je decompose les appels car j'ai besoin de recuperer le container
+            // des filtres
+            var advancedPanel = this._createAdvancedSearchPanelElement();
+            var advancedPanelDiv = this._createAdvancedSearchPanelDivElement();
+            var advancedHeader = this._createAdvancedSearchPanelHeaderElement();
+            var advancedForm = this._createAdvancedSearchPanelFormElement(this._advancedSearchCodes);
+            var advancedFormFilters = this._filterContainer = this._createAdvancedSearchFormFiltersElement();
+            this._setFilter(this._advancedSearchCodes[0].id); // ex "PositionOfInterest"
+            var advancedFormInput = this._createAdvancedSearchFormInputElement();
+
+            advancedForm.appendChild(advancedFormFilters);
+            advancedForm.appendChild(advancedFormInput);
+            advancedPanelDiv.appendChild(advancedHeader);
+            advancedPanelDiv.appendChild(advancedForm);
+            advancedPanel.appendChild(advancedPanelDiv);
+            container.appendChild(advancedPanel);
         }
 
         // INFO je decompose les appels car j'ai besoin de recuperer le container

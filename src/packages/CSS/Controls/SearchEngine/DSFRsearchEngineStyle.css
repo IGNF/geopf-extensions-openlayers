@@ -9,22 +9,36 @@
 
 .gpf-panel__items_searchengine,
 .GPlabelTitle {
-  color: var(--text-action-high-blue-france);
   border-bottom: 1px solid var(--grey-900-175);
   padding: 12px;
 }
 
+.gpf-panel__items_searchengine:last-child {
+  border-bottom: unset;
+}
 
 .gpf-panel__items.GPautoCompleteProposal {
-  height: 45px;
+  height: 48px;
   box-sizing: border-box;
   margin-bottom: 0;
+  line-height: unset;
 }
 
 .GPlabelTitle {
-  background-color: var(--background-open-blue-france);
-  font-size: 1.0em;
+  font-size: 1.4rem;
   margin-bottom: 0;
+  padding-left: 35px;
+  background-size: 32px;
+  background-position: center left;
+  background-repeat: no-repeat;
+}
+
+.GPlabelTitle.search-results-loc {
+  background-image: url(img/dsfr/lieux-adresses.svg);
+}
+
+.GPlabelTitle.search-results-data {
+  background-image: url(img/dsfr/catalogue.svg);
 }
 
 dialog[id^=GPcoordinateSearchPanel],
@@ -101,7 +115,6 @@ div.GPbuttonsContainer > button {
   color: var(--text-action-high-blue-france);
   text-decoration: underline;
   cursor: pointer;
-  display: flex;
   align-items: center;
 }
 
@@ -211,7 +224,9 @@ div[id^=GPgeocodeResults-] {
 
 [id^="GPautocompleteResultsSuggest"],
 [id^="GPautocompleteResultsLocation"] {
-  height: 225px;
+  height: 322px;
+  padding: 16px;
+  border-bottom: 1px solid var(--grey-900-175);
 }
 
 /* Mode Mobile */

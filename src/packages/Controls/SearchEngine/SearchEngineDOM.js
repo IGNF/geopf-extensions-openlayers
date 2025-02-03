@@ -411,15 +411,14 @@ var SearchEngineDOM = {
         // contexte d'execution
         var self = this;
 
-        var span = document.createElement("span");
-        span.id = this._addUID("GPshowAdvancedSearch");
-        span.className = "GPshowOpen  GPshowAdvancedSearch";
-        span.innerText = "Recherche avancée";
-        span.setAttribute("tabindex", "0");
-        span.setAttribute("aria-pressed", false);
+        var button = document.createElement("button");
+        button.id = this._addUID("GPshowAdvancedSearch");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowAdvancedSearch gpf-btn gpf-btn-icon-search-advanced fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
 
         // Open advanced search
-        span.addEventListener("click", function (e) {
+        button.addEventListener("click", function (e) {
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
 
@@ -459,7 +458,7 @@ var SearchEngineDOM = {
             document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
         });
 
-        return span;
+        return button;
     },
 
     /**
@@ -700,7 +699,7 @@ var SearchEngineDOM = {
     _createAutoCompletedLocationTitleElement () {
         var container = document.getElementById(this._addUID("GPautocompleteResultsLocation"));
         var label = document.createElement("p");
-        label.className = "GPlabel GPlabelTitle gpf-label fr-label";
+        label.className = "GPlabel GPlabelTitle gpf-label fr-label search-results-loc";
         label.innerHTML = "Lieux et adresses";
         container.appendChild(label);
     },
@@ -750,7 +749,7 @@ var SearchEngineDOM = {
     _createSearchedSuggestTitleElement () {
         var container = document.getElementById(this._addUID("GPautocompleteResultsSuggest"));
         var label = document.createElement("p");
-        label.className = "GPlabel GPlabelTitle gpf-label fr-label";
+        label.className = "GPlabel GPlabelTitle gpf-label fr-label search-results-data";
         label.innerHTML = "Cartes et données";
         container.appendChild(label);
     },
