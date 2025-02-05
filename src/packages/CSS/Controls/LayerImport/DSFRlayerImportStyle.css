@@ -9,3 +9,7 @@
   list-style-type: none;
   height: auto;
 }
+
+div[id^="GPimportGetCapResults-"] {
+    width: inherit;
+}
