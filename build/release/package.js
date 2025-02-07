@@ -56,6 +56,7 @@ async function main () {
     const entries = fg.globSync(path.join(builddir, "src", "**/*.{css,scss}"));
     for (let index = 0; index < entries.length; index++) {
         const entry = entries[index];
+        console.debug(entry);
         
         let result = "";
         const lines = fse.readFileSync(path.resolve(entry), "utf8").split("\n");

@@ -142,6 +142,15 @@
 /* button  */
 /***********/
 
+.container-buttons-plugin {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-buttons-plugin > div > button {
+  width: 224px;
+}
+
 .gpf-btn-icon.gpf-btn--secondary,
 .gpf-btn-icon.gpf-btn--tertiary {
   background-color: var(--background-default-grey);
