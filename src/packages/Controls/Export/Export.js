@@ -37,6 +37,12 @@ var logger = Logger.getLogger("export");
  * @param {String} [options.title = "Exporter"] - button name
  * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
  * @param {Boolean} [options.menu = false] - displays the menu
+ * @param {Object} [options.menuOptions] - options of the menu.
+ * @param {Boolean} [options.menuOptions.outside = false] - displays all element outside of menu
+ * @param {Boolean} [options.menuOptions.above = false] - displays menu above or not of the button
+ * @param {Boolean} [options.menuOptions.labelName = true] - displays the label name
+ * @param {Boolean} [options.menuOptions.labelDesc = true] - displays the label description
+ * @param {Boolean} [options.menuOptions.selectFormat = true] - displays the select format
  * @param {String} [options.direction = "row"] - buttons and menus layout
  * @param {Object} [options.icons] - icons
  * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
@@ -60,7 +66,13 @@ var logger = Logger.getLogger("export");
  * export.setFormat("geojson");
  * export.setDescription("Export Isochrone");
  * export.setTitle("Exporter");
- * export.setMenu(false);
+ * export.setMenu(true);
+ * export.setMenuOptions({
+ *   outside : false,
+ *   labelName : true,
+ *   labelDesc : true,
+ *   selectFormat : true
+ * });
  * export.render(); // <-- direct call to render function !
  * export.on("button:clicked", (data) => { console.log(data); });
  *
@@ -102,7 +114,7 @@ var logger = Logger.getLogger("export");
  *   name : "save-iso",
  *   format : "geojson",
  *   title : "Sauvegarde",
- *   menu : false
+ *   menu : true
  * }});
  */
 class ButtonExport extends Control {
@@ -318,9 +330,17 @@ class ButtonExport extends Control {
             description : "export",
             title : "Exporter",
             kind : "secondary",
+            direction : "row",
             menu : false,
+            menuOptions : {
+                above : false, // au dessus ou en dessous du bouton !
+                outside : false,
+                labelName : true,
+                labelDesc : true,
+                selectFormat : true
+            },
             icons : {
-                menu : "\u2630 ",
+                menu : "\u2630 ", // FIXME à supprimer !
                 button : "export"
             },
             callback : null
@@ -328,8 +348,10 @@ class ButtonExport extends Control {
 
         // merge with user options
         var icons = Utils.assign(this.options.icons, options.icons);
+        var menuOptions = Utils.assign(this.options.menuOptions, options.menuOptions);
         Utils.assign(this.options, options);
         Utils.assign(this.options.icons, icons);
+        Utils.assign(this.options.menuOptions, menuOptions);
 
         logger.debug(this.options);
         
@@ -377,13 +399,6 @@ class ButtonExport extends Control {
      * @todo menu des options
      */
     initContainer () {
-        // TODO
-        // menu des options de l'export :
-        // * [ nom ]
-        // * format
-        // https://www.w3schools.com/howto/howto_css_dropdown.asp
-        // https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
-
         // afficher l'icone du menu
         var title = this.options.title;
         if (this.options.menu) {
@@ -392,14 +407,14 @@ class ButtonExport extends Control {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPexportContainer");
-        div.className = "GPexportMenuContainer gpf-export-menu-container gpf-export-menu-container-row";
+        div.className = "GPexportMenuContainer gpf-export-menu-container gpf-export-menu-container-row-reverse";
 
         if (this.options.direction === "column") {
-            div.classList.replace("gpf-export-menu-container-row", "gpf-export-menu-container-column");
+            div.classList.replace("gpf-export-menu-container-row-reverse", "gpf-export-menu-container-column-reverse");
         }
         
         // menu des options
-        // utiliser les templates literals avec la substitution ${...}
+        // > GPexportMenuHidden : pas de menu pour le mode classic !
         var menu = this.stringToHTML(`
             <div class="GPexportMenuHidden gpf-accordion fr-accordion ${this.menuClassHidden}">
                 <h3 class="gpf-accordion__title fr-accordion__title">
@@ -501,6 +516,35 @@ class ButtonExport extends Control {
             btnValidate.addEventListener("click", (e) => this.onClickButtonValidate(e));
             var btnCancel = this.menu.querySelector("#GPexportMenuButtonCancel-" + this.uid);
             btnCancel.addEventListener("click", (e) => this.onClickButtonCancel(e));
+        
+            // les options du menu
+            if (this.options.menuOptions) {
+                if (this.options.menuOptions.outside) {
+                    this.menu.classList.remove("gpf-accordion", "fr-accordion");
+                    var divButton = this.menu.querySelector("#GPexportBtnMenuContent-" + this.uid);
+                    divButton.classList.add("gpf-hidden");
+                    var divContent = this.menu.querySelector("#GPexportMenuContent-" + this.uid);
+                    divContent.classList.remove("fr-collapse");
+                    var divButtons = this.menu.querySelector("#GPexportMenuButtons-" + this.uid);
+                    divButtons.classList.add("gpf-hidden");
+                }
+                if (this.options.menuOptions.above) {
+                    div.classList.replace("gpf-export-menu-container-row-reverse", "gpf-export-menu-container-row");
+                    div.classList.replace("gpf-export-menu-container-column-reverse", "gpf-export-menu-container-column");
+                }
+                if (!this.options.menuOptions.labelName) {
+                    var divName = this.menu.querySelector("#GPexportMenuName-" + this.uid);
+                    divName.classList.add("gpf-hidden");
+                }
+                if (!this.options.menuOptions.labelDesc) {
+                    var divDesc = this.menu.querySelector("#GPexportMenuDesc-" + this.uid);
+                    divDesc.classList.add("gpf-hidden");
+                }
+                if (!this.options.menuOptions.selectFormat) {
+                    var divFormat = this.menu.querySelector("#GPexportMenuFormat-" + this.uid);
+                    divFormat.classList.add("gpf-hidden");
+                }
+            }
         }
         div.appendChild(this.menu);
 
@@ -965,6 +1009,15 @@ class ButtonExport extends Control {
                 }
             }
         }
+    }
+
+    /**
+     * ...
+     * @param {Object} opts - ...
+     * @todo ...
+     */
+    setMenuOptions (opts) {
+
     }
 
     /**

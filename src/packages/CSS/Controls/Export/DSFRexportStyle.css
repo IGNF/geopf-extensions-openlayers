@@ -42,12 +42,20 @@ dialog div .gpf-export-menu-container {
     justify-content: flex-end;
 }
 
-.gpf-export-menu-container-row {
+.gpf-export-menu-container-row-reverse {
     flex-direction: row-reverse;
 }
 
-.gpf-export-menu-container-column {
+.gpf-export-menu-container-column-reverse {
     flex-direction: column-reverse;
+}
+
+.gpf-export-menu-container-row {
+    flex-direction: row;
+}
+
+.gpf-export-menu-container-column {
+    flex-direction: column;
 }
 
 .gpf-accordion {

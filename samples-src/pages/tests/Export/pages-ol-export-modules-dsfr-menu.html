@@ -85,9 +85,9 @@
                 map.addControl(importLayer);
 
                 // cas drawing : 
-                // * bouton secondary avec icone
-                // * mode sauvegarde
-                // * sans menu
+                // * bouton primaire avec icone
+                // * mode export
+                // * avec menu customisé
                 // * target interne 
                 // * appel instance externe
                 var drawing = new ol.control.Drawing({
@@ -98,15 +98,22 @@
                 });
                 map.addControl(drawing);
                 var exportDrawing = new ol.control.Export({
-                  title : "Sauvegarde",
-                  download : false,
+                  title : "Exporter",
+                  download : true,
                   control: drawing,
-                  format : "kml",
-                  menu : false,
-                  icons : {
-                    button : "save"
+                  format : "geojson",
+                  direction : "column",
+                  menu : true,
+                  menuOptions : {
+                    above : true,
+                    outside : true,
+                    labelFormat : false
                   },
-                  kind : "secondary"
+                  icons : {
+                    menu : "",
+                    button : "export"
+                  },
+                  kind : "primary"
                 });
                 map.addControl(exportDrawing);
                 exportDrawing.on("button:clicked", (e) => {
@@ -116,14 +123,13 @@
                 // cas iso :
                 // * bouton primary avec icone
                 // * mode export
-                // * avec menu par defaut sous le bouton
-                // * target interne (ou externe en decommentant target)
+                // * avec menu customisé
+                // * target interne
                 // * appel instance interne
                 var iso = new ol.control.Isocurve({
                   position: "bottom-left",
                   draggable:true,
                   export : {
-                    // target: document.getElementById("btnExportIso"),
                     format: "kml",
                     kind: "primary",
                     name: "export-iso",
@@ -131,6 +137,9 @@
                     description : "Graphe isochrone",
                     title : "Exporter Isochrone",
                     menu: true,
+                    menuOptions : {
+                      outside : true
+                    },
                     icons : {
                       menu : "",
                       button : "export"
@@ -142,44 +151,24 @@
                 });
                 map.addControl(iso);
 
-                // cas iso :
-                // * bouton primary avec icone
-                // * mode export
-                // * avec menu par defaut
-                // * target externe
-                // * appel instance externe
-                // var exportIso = new ol.control.Export({
-                //   control: iso,
-                //   target: document.getElementById("btnExportIso"),
-                //   format: "kml",
-                //   kind: "primary",
-                //   name: "export-iso",
-                //   description : "Graphe isochrone",
-                //   title : "Exporter Isochrone",
-                //   menu : true,
-                //   icons : {
-                //     menu : ""
-                //   },
-                //   callback : function (content) {
-                //     console.log(content);
-                //   }
-                // });
-                // map.addControl(exportIso);
-                // exportIso.on("button:clicked", (e) => {
-                //   console.log("Export Iso", e);
-                // });
-
                 // cas route :
                 // * bouton secondary avec icone
                 // * mode export
                 // * avec menu par defaut
-                // * target externe
+                // * target interne
                 // * appel instance externe avec setters
                 var route = new ol.control.Route({
                   position: "bottom-left"
                 });
                 map.addControl(route);
                 exportRoute = new ol.control.Export({
+                  direction: "column",
+                  menu : true,
+                  menuOptions : {
+                    above : true,
+                    outside : true,
+                    selectFormat : false
+                  },
                   icons: {
                     menu : "",
                     button : "export"
@@ -187,12 +176,16 @@
                 });
                 exportRoute.setDownload(true);
                 exportRoute.setControl(route);
-                exportRoute.setTarget(document.getElementById("btnExportRoute"));
                 exportRoute.setFormat("gpx");
                 exportRoute.setKind("secondary");
                 exportRoute.setName("export-route");
                 exportRoute.setTitle("Exporter Itineraire");
                 exportRoute.setMenu(true);
+                exportRoute.setMenuOptions({
+                  above : true,
+                  outside : true,
+                  selectFormat : false
+                });
                 exportRoute.on("button:clicked", (e) => {
                   console.log("Export Route", e);
                 });
@@ -212,10 +205,12 @@
                   control: measureProfil,
                   name: "export-profil", 
                   format : "geojson",
+                  direction: "column",
                   menu : true,
                   menuOptions : {
                     outside : true,
-                    labelFormat : false
+                    selectFormat : false,
+                    labelDesc : false
                   }
                 });
                 map.addControl(exportProfil);
