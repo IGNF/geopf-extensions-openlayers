@@ -79,3 +79,8 @@
   flex-grow: 1;
 }
 
+div[id^=GPlocationAutoCompleteResult] {
+  background-color: var(--background-default-grey);
+  border: 1px solid var(--grey-900-175);
+  width: 281px;
+}

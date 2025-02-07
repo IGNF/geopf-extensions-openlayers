@@ -10,3 +10,17 @@
   height: auto;
 }
 
+div[id^="GPimportGetCapResults-"] {
+  width: inherit;
+}
+
+div[id^="GPimportGetCapResults-"],
+div[id^="GPimportMapBoxResults-"] {
+    height: fit-content;
+    max-height: unset;
+}
+
+[id^="GPimportPanel-"]:has([id^="GPimportGetCapPanel-"].gpf-visible) {
+  height: 350px;
+}
+

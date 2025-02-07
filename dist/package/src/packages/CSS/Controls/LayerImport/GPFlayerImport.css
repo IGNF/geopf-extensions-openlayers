@@ -77,9 +77,6 @@ input[id^="GPimportSubmit-"] {
 div[id^="GPimportGetCapResults-"],
 div[id^="GPimportMapBoxResults-"] {
     background-color: #FFF;
-    height: 140px;
-    overflow-y: auto;
-    resize: vertical;
 }
 
 input[id^="GPimportGetCapRubrique-"],

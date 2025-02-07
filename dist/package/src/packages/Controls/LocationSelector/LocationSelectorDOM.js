@@ -483,6 +483,7 @@ var LocationSelectorDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("AutoCompletedLocation_" + n);
         div.className = "GPautoCompleteProposal gpf-panel__items";
+        div.title = GeocodeUtils.getSuggestedLocationFreeform(location);
         div.innerHTML = GeocodeUtils.getSuggestedLocationFreeform(location);
 
         container.appendChild(div);

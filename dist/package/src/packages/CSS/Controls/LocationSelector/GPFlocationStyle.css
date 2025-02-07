@@ -52,7 +52,12 @@ button.GPlocationOriginPointerImg[id*="GPlocationOriginPointerImg"] {
     margin-bottom: 5px;
 }
 
-div[id^=GPlocationAutoCompleteList] {
+div[id^=GPlocationAutoCompleteResult] {
+  background-color: #fff;
+  border: 1px solid grey;
+}
 
+div[id^=GPlocationAutoCompleteList] {
+  width: 100%;
 }
 

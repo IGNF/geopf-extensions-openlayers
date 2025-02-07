@@ -16,3 +16,9 @@
   width: 100%;
 }
 
+/* Result panel */
+
+div[id^=GPreverseGeocodingResultsList-] {
+  width: inherit;
+}
+
