@@ -29,6 +29,8 @@ __DATE__
 
   - ContextMenu : correction pour affichage du menu en mode dark (#332, #333)
   - Export : mise en conformité DSFR du bouton Export (#334)
+  - LocationSelector : fenêtre transparente en mode classique et pas assez large en mode DSFR (#349)
+  - LayerImport : fenêtre d'affichage des getCapabilities agrandie (#349)
   
 * 🔒 [Security]
 

@@ -20,6 +20,13 @@ div[id^="GPimportChoice-"] {
   margin-bottom: 5px;
 }
 
+div[id^="GPimportGetCapResults-"],
+div[id^="GPimportMapBoxResults-"] {
+    height: 140px;
+    overflow-y: auto;
+    resize: vertical;
+}
+
 .GPshowImportPicto {
   background-image: url("img/GPimportOpen.png");
   background-repeat: no-repeat;
