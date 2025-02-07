@@ -168,6 +168,8 @@
   }
 }
 
+/* Affichage du tooltip au survol du bouton */
+
 .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   content: attr(aria-label);
   position: absolute;
