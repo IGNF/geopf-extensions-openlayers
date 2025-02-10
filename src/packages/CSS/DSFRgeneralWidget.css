@@ -177,6 +177,8 @@
   }
 }
 
+/* Affichage du tooltip au survol du bouton */
+
 .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   content: attr(aria-label);
   position: absolute;
@@ -340,7 +342,7 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
 .gpf-panel__list,
 .gpf-panel__advancedlist {
   z-index: 2;
-  width: inherit;
+  /* width: inherit; */
   /* display: none; */
   position: absolute;
   max-height: 140px;

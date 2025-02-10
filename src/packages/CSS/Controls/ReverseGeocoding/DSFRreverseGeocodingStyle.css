@@ -15,3 +15,9 @@
   /* INFO : surcharge de .gpf-panel par defaut */
   width: 100%;
 }
+
+/* Result panel */
+
+div[id^=GPreverseGeocodingResultsList-] {
+  width: inherit;
+}

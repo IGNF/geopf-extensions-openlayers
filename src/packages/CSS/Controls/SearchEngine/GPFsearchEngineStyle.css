@@ -18,7 +18,6 @@
 .position-container-bottom-left [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
 .position-container-top-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList],
 .position-container-bottom-right [id^="GPsearchEngine-"] > div[id^=GPautoCompleteList] {
-  width: 340px;
   position: relative;
   top: unset;
 }
