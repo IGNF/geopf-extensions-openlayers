@@ -18,6 +18,7 @@ import Gp from "geoportal-access-lib";
 // import local
 import Utils from "../../Utils/Helper";
 import Markers from "../Utils/Markers";
+import OGCRequest from "../Utils/OGCRequest";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 
@@ -466,13 +467,40 @@ var ContextMenu = class ContextMenu extends Control {
         };
         Gp.Services.reverseGeocode(geocodageParcelOptions);
 
+        var getCommuneName = async function () {
+            let config = {
+                id : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
+                layer : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
+                attributes : ["nom"]
+            };
+            const result = await OGCRequest.computeGenericGPFWFS(
+                config.layer,
+                config.attributes,
+                config.around || 0,
+                config.geom_name || "geom",
+                config.additional_cql || "",
+                config.epsg || 4326,
+                config.get_geom || false,
+                clickedCoordinate[0], 
+                clickedCoordinate[1]
+            );
+            if (result.length) {
+                address.innerHTML = result[0];
+            }
+        };
+
         var geocodageAdressOptions = {
             onSuccess : function (json) {
                 if (json.locations.length > 0) {
                     address.innerHTML = json.locations[0].placeAttributes.label;
                 }
+                else {
+                    getCommuneName();
+                }
             },
-            onFailure : function (error) {},
+            onFailure : function (error) {
+                getCommuneName();
+            },
             // spécifique au service
             position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
             searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
