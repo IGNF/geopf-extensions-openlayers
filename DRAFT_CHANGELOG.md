@@ -20,6 +20,7 @@ __DATE__
 * 🔨 [Changed]
 
     - ContextMenu: refacto et documentation du code du menu contextuel (#340)
+    - ContextMenu: Adresse : affichage du nom de commune quand il n'y a pas d'adresse (#351)
 
 * 🔥 [Deprecated]
 
