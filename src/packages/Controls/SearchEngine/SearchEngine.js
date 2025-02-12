@@ -82,6 +82,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {String}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
  * @param {Boolean}  [options.searchOptions.filterLayersPriority = false] - filter on priority layers in search, false by default
  * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
+ * @param {String}  [options.searchOptions.filterLayers] - filter on list of search layers list. By Default, the layers available in Config.configuration.layers
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
  * @param {Sring}   [options.searchOptions.serviceOptions.url] - url of service
@@ -387,7 +388,11 @@ var SearchEngine = class SearchEngine extends Control {
             // abonnement au service
             Search.target.addEventListener("suggest", (e) => {
                 logger.debug(e);
-                this._fillSearchedSuggestListContainer(e.detail);
+                let suggestResults = e.detail;
+                console.log(Config);
+                
+                suggestResults = this._filterResultsFromConfigLayers(suggestResults);
+                this._fillSearchedSuggestListContainer(suggestResults);
             });
         }
 
@@ -1112,6 +1117,30 @@ var SearchEngine = class SearchEngine extends Control {
                 const suggest = suggests[i];
                 this._createSearchedSuggestElement(suggest, i);
             }
+        }
+    }
+
+    /**
+     * this method is called by this.() (case of success)
+     * and clean the results of the suggest list from a list of layers
+     * by default, the Config.layers list.
+     *
+     * @param {Array} suggests - Array of suggested corresponding to search results list
+     * @private
+     */
+    _filterResultsFromConfigLayers (suggests) {
+        var layerList;
+        if (this.options.searchOptions.filterLayers) {
+            return;
+        } else {
+            console.log(Config);
+            var layersObject = Config.configuration.layers;
+            for (let layer in layersObject) {
+                if (layersObject.hasOwnProperty(layer)) {
+                    layerList.push(Gp.Config.layers[layer].name);
+                }
+            }       
+            console.log(layerList);
         }
     }
 

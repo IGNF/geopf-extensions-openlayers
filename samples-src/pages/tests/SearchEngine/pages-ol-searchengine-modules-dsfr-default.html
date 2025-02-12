@@ -14,25 +14,12 @@
         <style>
             div#map {
                 width: 100%;
-                height: 500px;
+                height: 800px;
             }
         </style>
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du moteur de recherche avec les options par défaut</h2>
-            <p>
-                Liste des couches prioritaires :
-                <pre> 
-                PLAN.IGN,
-                GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1,
-                GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2,
-                CADASTRALPARCELS.PARCELLAIRE_EXPRESS,
-                ORTHOIMAGERY.ORTHOPHOTOS
-                </pre>
-
-                Ex. si on saisie 'ortho', la couche "photographies aeriennes" devrait sortir en 1ere position.
-            </p>
             <!-- map -->
             <div id="map">
             </div>
