@@ -1,5 +1,11 @@
 import proj4 from "proj4";
 
+/**
+     * Convertit les coordonnées en EPSG:4326
+     *  
+     * @param { Array } coord Coordonnées en 3857
+     * @returns { Array } tableau de coordonnées en 4326
+     */
 var OGCRequest = {
     computeGenericGPFWFS : async function (layer, attributes, around=0, geom_name="geom", additional_cql="", epsg=4326, getGeom=false, lat, lng) {
         let coord1 = lng;
