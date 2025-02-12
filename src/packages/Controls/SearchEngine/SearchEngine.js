@@ -27,6 +27,7 @@ import CRS from "../../CRS/CRS";
 // import local des layers
 import GeoportalWMS from "../../Layers/LayerWMS";
 import GeoportalWMTS from "../../Layers/LayerWMTS";
+import GeoportalWFS from "../../Layers/LayerWFS";
 import GeoportalMapBox from "../../Layers/LayerMapBox";
 // Service
 import Search from "../../Services/Search";
@@ -1126,22 +1127,29 @@ var SearchEngine = class SearchEngine extends Control {
      * by default, the Config.layers list.
      *
      * @param {Array} suggests - Array of suggested corresponding to search results list
+     * @returns {Array} suggests - Array of suggested corresponding to search results list filtered by Config
      * @private
      */
     _filterResultsFromConfigLayers (suggests) {
-        var layerList;
+        var layerList = [];
         if (this.options.searchOptions.filterLayers) {
-            return;
+            layerList = this.options.searchOptions.filterLayers;
         } else {
-            console.log(Config);
-            var layersObject = Config.configuration.layers;
+            var layersObject = window.Gp.Config.layers;
             for (let layer in layersObject) {
                 if (layersObject.hasOwnProperty(layer)) {
-                    layerList.push(Gp.Config.layers[layer].name);
+                    layerList.push(layersObject[layer].name);
                 }
-            }       
-            console.log(layerList);
+            }
         }
+        let i = suggests.length;
+        while (i--) {                
+            if (!layerList.includes(suggests[i].name)) {
+                suggests.splice(i, 1);
+            }
+        }  
+        Search.setSuggestions(suggests);
+        return suggests;
     }
 
     /**
@@ -1997,6 +2005,11 @@ var SearchEngine = class SearchEngine extends Control {
                         break;
                     case "WMTS":
                         layer = new GeoportalWMTS({
+                            layer : name
+                        });
+                        break;
+                    case "WFS":
+                        layer = new GeoportalWFS({
                             layer : name
                         });
                         break;
