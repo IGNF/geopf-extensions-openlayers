@@ -31,7 +31,7 @@ __DATE__
   - Export : mise en conformité DSFR du bouton Export (#334)
   - LocationSelector : fenêtre transparente en mode classique et pas assez large en mode DSFR (#349)
   - LayerImport : fenêtre d'affichage des getCapabilities agrandie (#349)
-  - Search : ajout wfs fonctionnel et filtre automatique des suggests selon la configuration si liste non spécifiée (#351)
+  - Search : ajout wfs fonctionnel et filtre automatique des suggests selon la configuration si liste non spécifiée (#352)
  
 * 🔒 [Security]
 
