@@ -390,8 +390,7 @@ var SearchEngine = class SearchEngine extends Control {
             Search.target.addEventListener("suggest", (e) => {
                 logger.debug(e);
                 let suggestResults = e.detail;
-                console.log(Config);
-                
+                // filtre des suggestions selon la configuration ou l'option filterLayers                
                 suggestResults = this._filterResultsFromConfigLayers(suggestResults);
                 this._fillSearchedSuggestListContainer(suggestResults);
             });
