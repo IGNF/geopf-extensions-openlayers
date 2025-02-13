@@ -7,6 +7,7 @@ declare namespace _default {
     export { getTitles };
     export { setIndex };
     export { setFields };
+    export { setSuggestions };
     export { setSize };
     export { setUrl };
     export { setMaximumResponses };
@@ -105,6 +106,12 @@ declare function setIndex(value: string): void;
  * @see m_fields
  */
 declare function setFields(value: any[]): void;
+/**
+ * Renseigne la liste des suggestions
+ * @param {Array} value - liste des suggestions
+ * @see m_suggestions
+ */
+declare function setSuggestions(value: any[]): void;
 /**
  * Renseigne le nombre de suggestions du service
  * @param {Number} value - le nombre de suggestions du service

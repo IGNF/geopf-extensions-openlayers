@@ -45,6 +45,7 @@ export default SearchEngine;
  * @param {String}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
  * @param {Boolean}  [options.searchOptions.filterLayersPriority = false] - filter on priority layers in search, false by default
  * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
+ * @param {String}  [options.searchOptions.filterLayers] - filter on list of search layers list. By Default, the layers available in Config.configuration.layers
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
  * @param {Sring}   [options.searchOptions.serviceOptions.url] - url of service
