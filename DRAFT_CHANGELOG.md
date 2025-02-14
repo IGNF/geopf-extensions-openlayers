@@ -34,6 +34,7 @@ __DATE__
   - LocationSelector : fenêtre transparente en mode classique et pas assez large en mode DSFR (#349)
   - LayerImport : fenêtre d'affichage des getCapabilities agrandie (#349)
   - Search : ajout wfs fonctionnel et filtre automatique des suggests selon la configuration si liste non spécifiée (#352)
+  - AdvancedSearch : correction de la recherche avancée et évolution de  l'UX (#354)
  
 * 🔒 [Security]
 
