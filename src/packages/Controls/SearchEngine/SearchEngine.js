@@ -79,16 +79,17 @@ var logger = Logger.getLogger("searchengine");
  * @param {Boolean} [options.resources.search = false] - false to disable search service, by default : "false"
  * @param {Object}  [options.searchOptions = {}] - options of search service
  * @param {Boolean} [options.searchOptions.addToMap = true] - add layer automatically to map, defaults to true.
- * @param {String}  [options.searchOptions.filterServices] - filter on a list of search services, each field is separated by a comma. "WMTS,TMS" by default
- * @param {String}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
+ * @param {String[]}  [options.searchOptions.filterServices] - filter on a list of search services, each field is separated by a comma. "WMTS,TMS" by default
+ * @param {String[]}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
+ * @param {String[]}  [options.searchOptions.filterProjections] - filter on a list of projections : the searchEngine ignore the suggestions with one of the projections listed. Each field is separated by a comma.
  * @param {Boolean}  [options.searchOptions.filterLayersPriority = false] - filter on priority layers in search, false by default
- * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
- * @param {String}  [options.searchOptions.filterLayers] - filter on list of search layers list. By Default, the layers available in Config.configuration.layers
+ * @param {String[]}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
+ * @param {String[]}  [options.searchOptions.filterLayers] - filter on list of search layers list. By Default, the layers available in Config.configuration.layers
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
- * @param {Sring}   [options.searchOptions.serviceOptions.url] - url of service
+ * @param {String}   [options.searchOptions.serviceOptions.url] - url of service
  * @param {String}  [options.searchOptions.serviceOptions.index] - index of search, "standard" by default
- * @param {String}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
+ * @param {String[]}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
  * @param {Number}  [options.searchOptions.serviceOptions.size] - number of response in the service. 1000 by default
  * @param {Number}  [options.searchOptions.serviceOptions.maximumResponses] - number of results in the response. 10 by default
  * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
@@ -378,6 +379,9 @@ var SearchEngine = class SearchEngine extends Control {
                 }
                 if (this.options.searchOptions.filterWMTSPriority) {
                     Search.setFilterWMTSPriority(this.options.searchOptions.filterWMTSPriority);
+                }
+                if (this.options.searchOptions.filterProjections) {
+                    Search.setFiltersByProjection(this.options.searchOptions.filterProjections);
                 }
                 if (this.options.searchOptions.filterVectortiles) {
                     Search.setFiltersByTMS(this.options.searchOptions.filterVectortiles);
