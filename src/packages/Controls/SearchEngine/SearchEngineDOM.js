@@ -590,8 +590,6 @@ var SearchEngineDOM = {
         div.id = this._addUID("GPgeocodeResultsList");
         div.className = "GPpanel GPelementHidden gpf-panel gpf-hidden fr-modal";
 
-        div.appendChild(this._createGeocodeResultsHeaderElement());
-
         // FIXME on decompose la fonction pour les besoins du controle,
         // on ajoutera ces childs à la main...
         // div.appendChild(this._createGeocodeResultsListElement ());
@@ -602,6 +600,8 @@ var SearchEngineDOM = {
     _createGeocodeResultsDivElement : function () {
         var div = document.createElement("div");
         div.className = "gpf-panel__body fr-modal__body";
+        div.appendChild(this._createGeocodeResultsHeaderElement());
+
         return div;
     },
 
