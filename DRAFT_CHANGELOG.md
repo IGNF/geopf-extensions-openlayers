@@ -16,11 +16,12 @@ __DATE__
 * ✨ [Added]
 
   - LayerSwitcher : ajout d'un bouton d'édition des données de type vecteur via l'option `options.allowEdit:true` (#342)
+  - SearchEngine : ajout d'un filtre sur les données en fonction de leur projection (#353) 
 
 * 🔨 [Changed]
 
-    - ContextMenu: refacto et documentation du code du menu contextuel (#340)
-    - ContextMenu: Adresse : affichage du nom de commune quand il n'y a pas d'adresse (#351)
+  - ContextMenu: refacto et documentation du code du menu contextuel (#340)
+  - ContextMenu: Adresse : affichage du nom de commune quand il n'y a pas d'adresse (#351)
 
 * 🔥 [Deprecated]
 
@@ -32,7 +33,8 @@ __DATE__
   - Export : mise en conformité DSFR du bouton Export (#334)
   - LocationSelector : fenêtre transparente en mode classique et pas assez large en mode DSFR (#349)
   - LayerImport : fenêtre d'affichage des getCapabilities agrandie (#349)
-  
+  - Search : ajout wfs fonctionnel et filtre automatique des suggests selon la configuration si liste non spécifiée (#352)
+ 
 * 🔒 [Security]
 
 
