@@ -17,6 +17,10 @@ var SearchEngineUtils = {
     advancedSearchFiltersByDefault : {
         PositionOfInterest : [
             {
+                name : "q",
+                title : "Chercher un lieu"
+            },
+            {
                 name : "category",
                 title : "Type",
                 value : [
@@ -39,7 +43,8 @@ var SearchEngineUtils = {
                     "zone d'habitation",
                     "lieu-dit non habité"
                 ]
-            }, {
+            },
+            {
                 name : "postcode",
                 title : "Code postal"
             }, {
@@ -49,14 +54,15 @@ var SearchEngineUtils = {
         ],
         StreetAddress : [
             {
+                name : "address",
+                title : "Adresse"
+            },
+            {
                 name : "city",
                 title : "Ville"
             }, {
                 name : "postcode",
                 title : "Code postal"
-            }, {
-                name : "citycode",
-                title : "Code INSEE"
             }
         ],
         CadastralParcel : [

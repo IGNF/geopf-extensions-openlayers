@@ -162,6 +162,7 @@ dialog[id^=GPgeocodeResultsList] {
   background-color: var(--background-default-grey);
 }
 
+
 div[id^=GPautoCompleteList] {
   top: 35px;
 }
@@ -171,7 +172,9 @@ dialog[id^=GPgeocodeResultsList] {
   top: 35px;
   border-radius: 4px;
   overflow: hidden;
+  margin-left: 33px;
 }
+
 
 div[id^=GPgeocodeResults-] {
   width: 100%;

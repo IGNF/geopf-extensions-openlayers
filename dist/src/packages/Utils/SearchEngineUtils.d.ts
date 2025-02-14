@@ -4,11 +4,11 @@ declare namespace SearchEngineUtils {
         let PositionOfInterest: ({
             name: string;
             title: string;
-            value: string[];
+            value?: undefined;
         } | {
             name: string;
             title: string;
-            value?: undefined;
+            value: string[];
         })[];
         let StreetAddress: {
             name: string;
