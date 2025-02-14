@@ -389,6 +389,14 @@ const setFields = (value) => {
     m_fields = value;
 };
 /**
+ * Renseigne la liste des suggestions
+ * @param {Array} value - liste des suggestions
+ * @see m_suggestions
+ */
+const setSuggestions = (value) => {
+    m_suggestions = value;
+};
+/**
  * Renseigne le nombre de suggestions du service
  * @param {Number} value - le nombre de suggestions du service
  * @see m_size
@@ -488,6 +496,7 @@ export default {
     getTitles,
     setIndex,
     setFields,
+    setSuggestions,
     setSize,
     setUrl,
     setMaximumResponses,

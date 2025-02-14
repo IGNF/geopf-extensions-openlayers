@@ -27,6 +27,7 @@ import CRS from "../../CRS/CRS";
 // import local des layers
 import GeoportalWMS from "../../Layers/LayerWMS";
 import GeoportalWMTS from "../../Layers/LayerWMTS";
+import GeoportalWFS from "../../Layers/LayerWFS";
 import GeoportalMapBox from "../../Layers/LayerMapBox";
 // Service
 import Search from "../../Services/Search";
@@ -82,6 +83,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {String}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
  * @param {Boolean}  [options.searchOptions.filterLayersPriority = false] - filter on priority layers in search, false by default
  * @param {String}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
+ * @param {String}  [options.searchOptions.filterLayers] - filter on list of search layers list. By Default, the layers available in Config.configuration.layers
  * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
  * @param {Sring}   [options.searchOptions.serviceOptions.url] - url of service
@@ -387,7 +389,10 @@ var SearchEngine = class SearchEngine extends Control {
             // abonnement au service
             Search.target.addEventListener("suggest", (e) => {
                 logger.debug(e);
-                this._fillSearchedSuggestListContainer(e.detail);
+                let suggestResults = e.detail;
+                // filtre des suggestions selon la configuration ou l'option filterLayers                
+                suggestResults = this._filterResultsFromConfigLayers(suggestResults);
+                this._fillSearchedSuggestListContainer(suggestResults);
             });
         }
 
@@ -1113,6 +1118,37 @@ var SearchEngine = class SearchEngine extends Control {
                 this._createSearchedSuggestElement(suggest, i);
             }
         }
+    }
+
+    /**
+     * this method is called by this.() (case of success)
+     * and clean the results of the suggest list from a list of layers
+     * by default, the Config.layers list.
+     *
+     * @param {Array} suggests - Array of suggested corresponding to search results list
+     * @returns {Array} suggests - Array of suggested corresponding to search results list filtered by Config
+     * @private
+     */
+    _filterResultsFromConfigLayers (suggests) {
+        var layerList = [];
+        if (this.options.searchOptions.filterLayers) {
+            layerList = this.options.searchOptions.filterLayers;
+        } else {
+            var layersObject = window.Gp.Config.layers;
+            for (let layer in layersObject) {
+                if (layersObject.hasOwnProperty(layer)) {
+                    layerList.push(layersObject[layer].name);
+                }
+            }
+        }
+        let i = suggests.length;
+        while (i--) {                
+            if (!layerList.includes(suggests[i].name)) {
+                suggests.splice(i, 1);
+            }
+        }  
+        Search.setSuggestions(suggests);
+        return suggests;
     }
 
     /**
@@ -1968,6 +2004,11 @@ var SearchEngine = class SearchEngine extends Control {
                         break;
                     case "WMTS":
                         layer = new GeoportalWMTS({
+                            layer : name
+                        });
+                        break;
+                    case "WFS":
+                        layer = new GeoportalWFS({
                             layer : name
                         });
                         break;
