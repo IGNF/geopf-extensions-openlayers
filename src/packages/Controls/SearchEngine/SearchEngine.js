@@ -2180,6 +2180,16 @@ var SearchEngine = class SearchEngine extends Control {
         if (this._currentGeocodingCode === "CadastralParcel") {
             _location = "";
         }
+        console.log(this._currentGeocodingCode);
+        console.log(data);
+        if (this._currentGeocodingCode === "StreetAddress") {
+            _location = `${_filterOptions.address} ${_filterOptions.postcode} ${_filterOptions.city}`;
+            _filterOptions = {};
+        }
+        if (this._currentGeocodingCode === "PositionOfInterest") {
+            _location = _filterOptions.q;
+            delete _filterOptions.q;
+        }
 
         // on met en place l'affichage des resultats dans une fenetre de recherche.
         var context = this;
