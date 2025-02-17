@@ -46,7 +46,11 @@ var logger = Logger.getLogger("widget");
  *           titlePrimary : "",
  *           titleSecondary : "Gérer vos couches de données",
  *           layerLabel : "title",
- *           layerFilter : [],
+ *           layerFilters : [{
+ *             field : "service",
+ *             logical : "=",
+ *             value : ["WMS"]
+ *           }],
  *           search : {
  *               display : true,
  *               criteria : [
@@ -110,7 +114,17 @@ var Catalog = class Catalog extends Control {
      *           titlePrimary : "",
      *           titleSecondary : "Gérer vos couches de données",
      *           layerLabel : "title",
-     *           layerFilter : [],
+     *           layerFilters : [
+     *              {
+     *                  field : "service",
+     *                  value : ["WMTS", "TMS"],
+     *              },
+     *              {
+     *                  field : "defaultProjection",
+     *                  logical : "!",
+     *                  value : ["EPSG:2154", "IGNF:LAMB93"]
+     *              }
+     *           ],
      *           search : {
      *               display : true,
      *               criteria : [
@@ -302,7 +316,7 @@ var Catalog = class Catalog extends Control {
             titlePrimary : "Gérer vos couches de données",
             titleSecondary : "",
             layerLabel : "title",
-            layerFilter : [], // TODO filtre
+            layerFilters : [], // TODO filtre
             search : {
                 display : true,
                 criteria : [
@@ -584,12 +598,29 @@ var Catalog = class Catalog extends Control {
         };
 
         // TODO filtre sur la liste de couches à prendre en compte
-        const getLayersByFilter = (filter, layers) => {
+        const getLayersByFilter = (filters, layers) => {
             // INFO
             // definir les filtres possibles :
             // - sur un champ spécifique : ex field:"service"
             // - sur des valeurs : ex. value:"[WMS,TMS,WMTS]" ou "*"
             // - ...
+            if (filters && filters.length) {
+                var layersFilter = {...layers}; // clone
+                for (let i = 0; i < filters.length; i++) {
+                    const filter = filters[i];
+                    for (const key in layersFilter) {
+                        if (Object.prototype.hasOwnProperty.call(layersFilter, key)) {
+                            const layer = layers[key];
+                            var include = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
+                            var exclude = (filter.logical && filter.logical === "!") ? true : false;
+                            if ((exclude && include) || (!exclude && !include)) {
+                                delete layersFilter[key];
+                            }
+                        }
+                    }
+                }
+                return layersFilter;
+            }
             return layers;
         };
 
@@ -618,7 +649,7 @@ var Catalog = class Catalog extends Control {
             }
 
             // on applique un filtre sur la liste des couches
-            var layers = getLayersByFilter(this.options.layerFilter, data.layers);
+            var layers = getLayersByFilter(this.options.layerFilters, data.layers);
 
             // sauvegarde de la liste des couches
             this.layersList = layers;
@@ -690,7 +721,7 @@ var Catalog = class Catalog extends Control {
                 }
 
                 // on applique un filtre sur la liste des couches
-                var layers = getLayersByFilter(this.options.layerFilter, data.layers);
+                var layers = getLayersByFilter(this.options.layerFilters, data.layers);
 
                 // sauvegarde de la liste des couches
                 this.layersList = layers;

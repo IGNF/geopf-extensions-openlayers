@@ -58,13 +58,16 @@
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
                         layerLabel : "name",
-                        layerFilter : [
+                        layerFilters : [
                             {
                                 field : "service",
-                                value : "WMTS"
+                                logical : "=",
+                                value : ["WMS"]
                             },
                             {
-                                
+                                field : "defaultProjection",
+                                logical : "!",
+                                value : ["EPSG:2154", "IGNF:LAMB93"]
                             }
                         ]
                     });
