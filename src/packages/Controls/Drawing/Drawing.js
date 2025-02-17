@@ -2029,7 +2029,7 @@ var Drawing = class Drawing extends Control {
             if (this.dtOptions.hasOwnProperty(toolsType)) {
                 if (this.dtOptions[toolsType].active) {
                     var toolsId = this._addUID("drawing-tool-" + this.dtOptions[toolsType].id);
-                    document.getElementById(toolsId).className = "drawing-tool fr-m-1w fr-btn fr-btn--tertiary gpf-btn--tertiary";
+                    document.getElementById(toolsId).className = "drawing-tool fr-btn fr-btn--tertiary gpf-btn--tertiary";
                     this.dtOptions[toolsType].active = false;
                 }
             }

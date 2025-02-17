@@ -10,6 +10,7 @@ import Control from "ol/control/Control";
 import ID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Utils from "../../Utils/Helper";
+import Interactions from "../Utils/Interactions";
 
 // import local with ol dependencies
 import KMLExtended from "../../Formats/KML";
@@ -510,7 +511,9 @@ class ButtonExport extends Control {
             this.inputName = this.menu.querySelector("#GPexportMenuInputName-" + this.uid);
             this.inputDesc = this.menu.querySelector("#GPexportMenuInputDesc-" + this.uid);
             this.inputName.addEventListener("change", (e) => this.onChangeInputName(e));
+            this.inputName.addEventListener("focusin", (e) => this.onFocusInputName(e));
             this.inputDesc.addEventListener("change", (e) => this.onChangeInputDesc(e));
+            this.inputDesc.addEventListener("focusin", (e) => this.onFocusInputDesc(e));
 
             var btnValidate = this.menu.querySelector("#GPexportMenuButtonValidate-" + this.uid);
             btnValidate.addEventListener("click", (e) => this.onClickButtonValidate(e));
@@ -826,12 +829,28 @@ class ButtonExport extends Control {
         this.setName(e.target.value);
     }
 
+    onFocusInputName (e) {
+        var map = this.getMap();
+        if (!map) {
+            return;
+        }
+        Interactions.unset(map);
+    }
+
     /**
      * 
      * @param {*} e - Click
      */
     onChangeInputDesc (e) {
         this.setDescription(e.target.value);
+    }
+
+    onFocusInputDesc (e) {
+        var map = this.getMap();
+        if (!map) {
+            return;
+        }
+        Interactions.unset(map);
     }
 
     /**

@@ -40,7 +40,8 @@
                   Gp.Logger.enableAll();
               }
               var map;
-              var exportRoute;
+              var exportDrawingExport;
+              var exportDrawingSave;
               var createMap = function() {
                   // on cache l'image de chargement du Géoportail.
                   document.getElementById('map').style.backgroundImage = 'none';
@@ -85,14 +86,21 @@
                 });
                 map.addControl(drawing);
 
-                var exportDrawingExport = new ol.control.Export({
+                exportDrawingExport = new ol.control.Export({
                   title : "Exporter",
                   download : true,
                   control: drawing,
                   format : "kml",
                   direction : "column",
-                  menu : false,
+                  menu : true,
+                  menuOptions : {
+                    outside : true,
+                    above : true,
+                    labelDesc : false,
+                    selectFormat : false
+                  },
                   icons : {
+                    menu : "",
                     button : "export"
                   },
                   kind : "secondary"
@@ -101,16 +109,19 @@
                 exportDrawingExport.on("button:clicked", (e) => {
                   console.log("Export Drawing", e);
                 });
-                var exportDrawingSave = new ol.control.Export({
+
+                exportDrawingSave = new ol.control.Export({
                   title : "Sauvegarder",
                   download : false,
                   control: drawing,
                   format : "kml",
                   direction : "column",
+                  menu : false,
                   icons : {
+                    menu : "",
                     button : "save"
                   },
-                  kind : "secondary"
+                  kind : "primary"
                 });
                 map.addControl(exportDrawingSave);
                 exportDrawingSave.on("button:clicked", (e) => {
