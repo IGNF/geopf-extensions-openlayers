@@ -88,8 +88,8 @@ var logger = Logger.getLogger("widget");
  * widget.on("catalog:layer:remove", (e) => { console.log(e); });
  * map.addControl(widget);
  *
- * @todo filtrage des couches
- * @todo type:service
+ * @todo ajouter des filtres sur les couches
+ * @todo mise en place du type:service afin de récuperer les themes, producteurs et/ou conf tech (extra)
  * @todo validation du schema
  */
 var Catalog = class Catalog extends Control {
