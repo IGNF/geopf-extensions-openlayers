@@ -1,13 +1,13 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-
+          
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample OpenLayers Drawing</title>
+        <title>Sample OpenLayers LayerCatalog</title>
 {{/content}}
 
 {{#content "style"}}
@@ -23,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de catalogue avec option sur la configuration</h2>
+            <h2>Ajout du gestionnaire de catalogue avec option sur la configuration (download)</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -44,6 +44,7 @@
                     return data;
                 }
                 var data = getData();
+
                 var map;
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
@@ -63,19 +64,34 @@
                             zoom : 8
                         })
                     });
+
                     data.then( data => {
                         var catalog = new ol.control.Catalog({
                             position: "top-left",
-                            configuration : {
-                                type : "json",
-                                data : data
-                            }
+                            configurations : [
+                                {
+                                    type : "data",
+                                    data : data
+                                },
+                                {
+                                    type : "json",
+                                    urls : [
+                                        // INFO facultatif si la config est déjà chargée
+                                        // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+                                        "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
+                                    ]
+                                }
+                            ]
+                        });
+                        catalog.on("catalog:loaded", (e) => {
+                            console.log(e);
                         });
                         map.addControl(catalog);
-                    })
+                    });
                 };
+                // INFO facultatif
                 Gp.Services.getConfig({
-                    customConfigFile : "{{ resources }}/data/configuration/sample.json",
+                    customConfigFile : "{{ configurl }}",
                     callbackSuffix : "",
                     // apiKey: "{{ apikey }}",
                     timeOut : 20000,

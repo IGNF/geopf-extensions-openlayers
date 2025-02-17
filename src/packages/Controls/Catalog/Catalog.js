@@ -18,6 +18,9 @@ import GeoportalWMS from "../../Layers/LayerWMS";
 import GeoportalWMTS from "../../Layers/LayerWMTS";
 import GeoportalMapBox from "../../Layers/LayerMapBox";
 
+// Service
+import Search from "../../Services/Search";
+
 // DOM
 import CatalogDOM from "./CatalogDOM";
 
@@ -79,21 +82,39 @@ var logger = Logger.getLogger("widget");
  *                   // ]
  *               }
  *           ],
- *           configuration : {
- *               type : "json", // type:"service"
- *               urls : [ // data:{}
+ *           configurations : [
+ *             {
+ *               type : "json", 
+ *               urls : [
  *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
  *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
  *               ]
- *           }
+ *             },
+ *             {
+ *                  type : "data",
+ *                  data : {<!-- JSON -->}
+ *             },
+ *             {
+ *               type : "service",
+ *               url : "https:// data.geopf.fr/recherche/api/indexes/geoplateforme/suggest",
+ *               filters : [
+ *                  {
+ *                      field : "producer",
+ *                      value : ["IGN"]
+ *                  },
+ *                  {
+ *                      field : "theme",
+ *                      value : ["Administratif","Foncier","Agriculture","Forêt","Hydrographie, mer et littoral"]
+ *                  }
+ *               ]
+ *             }
+ *           ]
  * });
  * widget.on("catalog:loaded", (e) => { console.log(e.data); });
  * widget.on("catalog:layer:add", (e) => { console.log(e); });
  * widget.on("catalog:layer:remove", (e) => { console.log(e); });
  * map.addControl(widget);
  *
- * @todo ajouter des filtres sur les couches
- * @todo mise en place du type:service afin de récuperer les themes, producteurs et/ou conf tech (extra)
  * @todo validation du schema
  */
 var Catalog = class Catalog extends Control {
@@ -153,13 +174,13 @@ var Catalog = class Catalog extends Control {
      *                   // ]
      *               }
      *           ],
-     *           configuration : {
-     *               type : "json", // type:"service"
-     *               urls : [ // data:{}
+     *           configurations : [{
+     *               type : "json",
+     *               urls : [
      *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
      *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
      *               ]
-     *           }
+     *           }]
      * });
      * widget.on("catalog:loaded", (e) => { console.log(e.data); });
      * widget.on("catalog:layer:add", (e) => { console.log(e); });
@@ -316,7 +337,7 @@ var Catalog = class Catalog extends Control {
             titlePrimary : "Gérer vos couches de données",
             titleSecondary : "",
             layerLabel : "title",
-            layerFilters : [], // TODO filtre
+            layerFilters : [],
             search : {
                 display : true,
                 criteria : [
@@ -347,13 +368,13 @@ var Catalog = class Catalog extends Control {
                     // ]
                 }
             ],
-            configuration : {
-                type : "json", // TODO type:"service"
-                urls : [ // data:{}
+            configurations : [{
+                type : "json",
+                urls : [
                     "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
                     "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
                 ]
-            }
+            }]
         };
 
         // merge with user options
@@ -536,7 +557,7 @@ var Catalog = class Catalog extends Control {
      * @private
      */
     async initLayersList () {
-        var data = null; // reponse brute du service
+        var data = {}; // reponse brute du service
 
         var self = this;
         const createCatalogContentEntries = (layers) => {
@@ -597,7 +618,7 @@ var Catalog = class Catalog extends Control {
             return layersCategorised;
         };
 
-        // TODO filtre sur la liste de couches à prendre en compte
+        // filtre sur la liste de couches à prendre en compte
         const getLayersByFilter = (filters, layers) => {
             // INFO
             // definir les filtres possibles :
@@ -624,118 +645,113 @@ var Catalog = class Catalog extends Control {
             return layers;
         };
 
-        if (this.options.configuration.data) {
-            data = this.options.configuration.data || {};
-
-            // TODO gestion du type service
-
-            if (Config.isConfigLoaded()) {
-                Utils.mergeParams(data, Config.configuration);
+        const configs = this.options.configurations;
+        for (let i = 0; i < configs.length; i++) {
+            const config = configs[i];
+            
+            if (config.type === "data" && config.data) {
+                Utils.mergeParams(data, config.data || {});              
             }
-
-            // INFO
-            // on en profite pour ajouter des properties :
-            // - service : utile pour identifier la couche
-            // de manière unique : name + service
-            // - categories : utile pour definir l'appartenance d'une couche
-            // à une ou plusieurs categories
-            for (const key in data.layers) {
-                if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
-                    const layer = data.layers[key];
-                    var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                    layer.service = service; // new proprerty !
-                    layer.categories = []; // new property ! vide pour le moment
-                }
-            }
-
-            // on applique un filtre sur la liste des couches
-            var layers = getLayersByFilter(this.options.layerFilters, data.layers);
-
-            // sauvegarde de la liste des couches
-            this.layersList = layers;
-
-            createCatalogContentEntries(layers);
-            return new Promise((resolve, reject) => {
-                resolve(data);
-            });
-        }
-
-        if (this.options.configuration.urls) {
-            var fetchUrls = [];
-            for (let i = 0; i < this.options.configuration.urls.length; i++) {
-                const url = this.options.configuration.urls[i];
-                const fetchUrl = function () {
-                    return fetch(url, {})
-                        .then(function (response) {
-                            if (response.ok) {
-                                return response.json()
-                                    .then(function (json) {
-                                        return json;
-                                    })
-                                    .catch(error => {
-                                        logger.warn("fetch json exception :", error);
-                                    });
-                            } else {
-                                var err = new Error("HTTP status code: " + response.status);
-                                throw err;
-                            }
-                        })
-                        .catch(error => {
-                            return new Promise((resolve, reject) => {
-                                logger.error("fetch json exception :", error);
-                                reject(error);
+    
+            if (config.type === "json" && config.urls) {
+                var fetchUrls = [];
+                for (let i = 0; i < config.urls.length; i++) {
+                    const url = config.urls[i];
+                    const fetchUrl = function () {
+                        return fetch(url, {})
+                            .then(function (response) {
+                                if (response.ok) {
+                                    return response.json()
+                                        .then(function (json) {
+                                            return json;
+                                        })
+                                        .catch(error => {
+                                            logger.warn("fetch json exception :", error);
+                                        });
+                                } else {
+                                    var err = new Error("HTTP status code: " + response.status);
+                                    throw err;
+                                }
+                            })
+                            .catch(error => {
+                                return new Promise((resolve, reject) => {
+                                    logger.error("fetch json exception :", error);
+                                    reject(error);
+                                });
                             });
-                        });
-                };
-                fetchUrls.push(fetchUrl());
+                    };
+                    fetchUrls.push(fetchUrl());
+                }
+    
+                try {
+                    const values = await Promise.all(fetchUrls);
+    
+                    Utils.mergeParams(data, values[0]);
+                    for (let i = 1; i < values.length; i++) {
+                        const value = values[i];
+                        Utils.mergeParams(data, value);
+                    }
+
+                } catch (e) {
+                    return new Promise((resolve, reject) => {
+                        reject(e);
+                    });
+                }
             }
-
-            try {
-                const values = await Promise.all(fetchUrls);
-
-                data = values[0];
-                for (let i = 1; i < values.length; i++) {
-                    const value = values[i];
-                    Utils.mergeParams(data, value);
-                }
-
-                // TODO gestion du type service
-
-                if (Config.isConfigLoaded()) {
-                    Utils.mergeParams(data, Config.configuration);
-                }
-
-                // INFO
-                // on en profite pour ajouter des properties :
-                // - service : utile pour identifier la couche
-                // de manière unique : name + service
-                // - categories : utile pour definir l'appartenance d'une couche
-                // à une ou plusieurs categories
-                for (const key in data.layers) {
-                    if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
-                        const layer = data.layers[key];
-                        var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                        layer.service = service; // new proprerty !
-                        layer.categories = []; // new property ! vide pour le moment
+    
+            if (config.type === "service" && config.url && config.filters) {
+                
+                var fetchSuggests = [];
+                for (let j = 0; j < config.filters.length; j++) {
+                    const filter = config.filters[j];
+                    Search.setFields(filter.field);
+                    for (let i = 0; i < filter.value.length; i++) {
+                        const value = filter.value[i];
+                        fetchSuggests.push(Search.suggest(value));
                     }
                 }
-
-                // on applique un filtre sur la liste des couches
-                var layers = getLayersByFilter(this.options.layerFilters, data.layers);
-
-                // sauvegarde de la liste des couches
-                this.layersList = layers;
-
-                createCatalogContentEntries(layers);
-                return await new Promise((resolve, reject) => {
-                    resolve(data);
-                });
-            } catch (e) {
-                return await new Promise((resolve, reject) => {
-                    reject(e);
-                });
+                try {
+                    const values = await Promise.all(fetchSuggests);
+                    // TODO copier les champs producer et theme dans data
+                    console.log(values);
+                } catch (e) {
+                    return new Promise((resolve, reject) => {
+                        reject(e);
+                    });
+                }   
             }
         }
+
+        if (Config.isConfigLoaded()) {
+            Utils.mergeParams(data, Config.configuration);
+        }
+
+        // INFO
+        // on en profite pour ajouter des properties :
+        // - service : utile pour identifier la couche
+        // de manière unique : name + service
+        // - categories : utile pour definir l'appartenance d'une couche
+        // à une ou plusieurs categories
+        for (const key in data.layers) {
+            if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
+                const layer = data.layers[key];
+                var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
+                layer.service = service; // new proprerty !
+                layer.categories = []; // new property ! vide pour le moment
+            }
+        }
+
+        // on applique un filtre sur la liste des couches
+        var layers = getLayersByFilter(this.options.layerFilters, data.layers);
+
+        // sauvegarde de la liste des couches
+        this.layersList = layers;
+
+        createCatalogContentEntries(layers);
+
+        return new Promise((resolve, reject) => {
+            resolve(data);
+        });
     }
 
     // ################################################################### //

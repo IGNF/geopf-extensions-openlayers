@@ -12,6 +12,7 @@
     "layers": {
       "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMTS": {
         "name": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+        "overload" : true,
         "title": "Plan IGN v2",
         "description": "Cartographie multi-échelles sur le territoire national, issue des bases de données vecteur de l’IGN, mis à jour régulièrement et réalisée selon un processus entièrement automatisé.",
         "globalConstraint": {
@@ -181,6 +182,7 @@
       },
       "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMS": {
         "name": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+        "overload" : true,
         "title": "Plan IGN v2",
         "description": "Cartographie multi-échelles sur le territoire national, issue des bases de données vecteur de l’IGN, mis à jour régulièrement et réalisée selon un processus entièrement automatisé.",
         "globalConstraint": {
@@ -241,6 +243,7 @@
       "PLAN.IGN$GEOPORTAIL:GPP:TMS": {
         "hidden": true,
         "queryable": false,
+        "overload" : true,
         "serviceParams": {
           "id": "GPP:TMS",
           "version": "1.0.0",
@@ -322,6 +325,7 @@
         "defaultProjection": "EPSG:3857"
       },
       "BDTOPO_V3:batiment$GEOPORTAIL:OGC:WFS": {
+        "overload" : true,
         "name": "BDTOPO_V3:batiment",
         "title": "BDTOPO : Bâtiments",
         "description": "Bâtiments - BDTOPO",

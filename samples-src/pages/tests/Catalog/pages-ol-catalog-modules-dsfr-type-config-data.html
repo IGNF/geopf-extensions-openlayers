@@ -1,13 +1,13 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-          
+
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample OpenLayers LayerCatalog</title>
+        <title>Sample OpenLayers Drawing</title>
 {{/content}}
 
 {{#content "style"}}
@@ -23,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de catalogue avec option sur le filtrage des couches</h2>
+            <h2>Ajout du gestionnaire de catalogue avec option sur la configuration</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -35,6 +35,15 @@
                     // activation des loggers
                     Gp.Logger.enableAll();
                 }
+                async function getData () {
+                    var response = await fetch("{{ resources }}/data/configuration/sample.json", {});
+                    var data = await response.json();
+                    if (response.status !== 200) {
+                        throw new Error("Erreur de récupération du JSON !");
+                    }
+                    return data;
+                }
+                var data = getData();
                 var map;
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
@@ -54,35 +63,29 @@
                             zoom : 8
                         })
                     });
-
-                    var catalog = new ol.control.Catalog({
-                        position: "top-left",
-                        layerLabel : "name",
-                        layerFilters : [
-                            {
-                                field : "service",
-                                logical : "=",
-                                value : ["WMTS", "WMS", "TMS"]
-                            },
-                            {
-                                field : "defaultProjection",
-                                logical : "!",
-                                value : ["EPSG:2154", "IGNF:LAMB93", "EPSG:4326"]
-                            }
-                        ]
-                    });
-                    map.addControl(catalog);
+                    data.then( data => {
+                        var catalog = new ol.control.Catalog({
+                            position: "top-left",
+                            configurations : [{
+                                type : "data",
+                                data : data
+                            }]
+                        });
+                        map.addControl(catalog);
+                    })
                 };
-                Gp.Services.getConfig({
-                    customConfigFile : "{{ configurl }}",
-                    callbackSuffix : "",
-                    // apiKey: "{{ apikey }}",
-                    timeOut : 20000,
-                    onSuccess : createMap,
-                    onFailure : (e) => {
-                        console.error(e);
-                    }
-                });
+                createMap();
+                // INFO facultatif
+                // Gp.Services.getConfig({
+                //     customConfigFile : "{{ resources }}/data/configuration/sample.json",
+                //     callbackSuffix : "",
+                //     // apiKey: "{{ apikey }}",
+                //     timeOut : 20000,
+                //     onSuccess : createMap,
+                //     onFailure : (e) => {
+                //         console.error(e);
+                //     }
+                // });
            </script>
 {{/content}}
 
