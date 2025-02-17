@@ -227,6 +227,7 @@ var Gfi = {
                     // styles
                     "fill",
                     "fill-opacity",
+                    "label-stroke",
                     "stroke",
                     "stroke-opacity",
                     "stroke-width",
