@@ -97,16 +97,10 @@ var logger = Logger.getLogger("widget");
  *             {
  *               type : "service",
  *               url : "https:// data.geopf.fr/recherche/api/indexes/geoplateforme/suggest",
- *               filters : [
- *                  {
- *                      field : "producer",
- *                      value : ["IGN"]
- *                  },
- *                  {
- *                      field : "theme",
- *                      value : ["Administratif","Foncier","Agriculture","Forêt","Hydrographie, mer et littoral"]
- *                  }
- *               ]
+ *               filter : {
+ *                  field : "theme",
+ *                  value : ["Administratif","Foncier","Agriculture","Forêt","Hydrographie, mer et littoral"]
+ *               }
  *             }
  *           ]
  * });
@@ -116,6 +110,7 @@ var logger = Logger.getLogger("widget");
  * map.addControl(widget);
  *
  * @todo validation du schema
+ * @todo service et combinaison de filtres
  */
 var Catalog = class Catalog extends Control {
 
@@ -557,7 +552,7 @@ var Catalog = class Catalog extends Control {
      * @private
      */
     async initLayersList () {
-        var data = {}; // reponse brute du service
+        var data = {}; // reponse
 
         var self = this;
         const createCatalogContentEntries = (layers) => {
@@ -698,27 +693,74 @@ var Catalog = class Catalog extends Control {
                     });
                 }
             }
-    
-            if (config.type === "service" && config.url && config.filters) {
+ 
+            if (config.type === "service" && config.url && config.filter) {
+                // on obtient une réponse du service de recherche selon un filtre :
+                // - ex. une liste de themes
+                // - ex. un producteur
+                // - ex. un texte libre 
+                // et, on convertit la reponse du service de recherche vers le schema de 'data'
+                // puis, on procede à un merge des résultats
+
+                const filter = config.filter;
+                const url = filter.url;
+                if (url) {
+                    Search.setUrl(url);
+                }
+                Search.setMaximumResponses(100);
+                // on utilise :
+                // soit un filtre ou 
+                // soit un champ libre !
+                const field = filter.field;
+                const value = filter.value;
+                // filtre
+                Search.setFields(field);
+                if (field === "text") {
+                    Search.setFields("layer_name");
+                }
+                // une valeur ou une liste de valeurs ?
+                var values = Array.isArray(value) ? value : [value];
                 
                 var fetchSuggests = [];
-                for (let j = 0; j < config.filters.length; j++) {
-                    const filter = config.filters[j];
-                    Search.setFields(filter.field);
-                    for (let i = 0; i < filter.value.length; i++) {
-                        const value = filter.value[i];
-                        fetchSuggests.push(Search.suggest(value));
-                    }
+                for (let i = 0; i < values.length; i++) {
+                    const text = values[i];
+                    fetchSuggests.push(Search.suggest(text));
                 }
+
                 try {
-                    const values = await Promise.all(fetchSuggests);
-                    // TODO copier les champs producer et theme dans data
-                    console.log(values);
+                    const lstValues = await Promise.all(fetchSuggests);
+                    console.debug(lstValues);
+                    // transformation de schema :
+                    // values --> data.layers
+                    var data_tmp = {
+                        layers : {}
+                    };
+                    for (let i = 0; i < lstValues.length; i++) {
+                        const values = lstValues[i]; // liste de reponse de chaque fetch
+                        for (let j = 0; j < values.length; j++) {
+                            const v = values[j];
+                            // on ajoute les 2 properties pour le moment
+                            data_tmp.layers[`${v.name}.$GEOPORTAIL:OGC:${v.service}`] = {
+                                theme : v.theme || "",
+                                producer : v.producer || ""
+                            };
+                        }
+                    }
+                    Utils.mergeParams(data, data_tmp);
+
+                    // for (const id in data_tmp.layers) {
+                    //     if (Object.prototype.hasOwnProperty.call(data_tmp.layers, id)) {
+                    //         if (id in data.layers) {
+                    //             Utils.mergeParams(data.layers[id], data_tmp.layers[id]);
+                    //         }
+                    //     }
+                    // }
+
                 } catch (e) {
                     return new Promise((resolve, reject) => {
                         reject(e);
                     });
-                }   
+                }
             }
         }
 
@@ -732,9 +774,14 @@ var Catalog = class Catalog extends Control {
         // de manière unique : name + service
         // - categories : utile pour definir l'appartenance d'une couche
         // à une ou plusieurs categories
-        for (const key in data.layers) {
-            if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
-                const layer = data.layers[key];
+        for (const id in data.layers) {
+            if (Object.prototype.hasOwnProperty.call(data.layers, id)) {
+                const layer = data.layers[id];
+                // clean des conf partielles
+                if (!("serviceParams" in layer)) {
+                    delete data.layers[id];
+                    continue;
+                }
                 var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                 layer.service = service; // new proprerty !
                 layer.categories = []; // new property ! vide pour le moment
