@@ -83,9 +83,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {String[]}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
  * @param {String[]}  [options.searchOptions.filterProjections] - filter on a list of projections : the searchEngine ignore the suggestions with one of the projections listed. Each field is separated by a comma.
  * @param {Boolean}  [options.searchOptions.filterLayersPriority = false] - filter on priority layers in search, false by default
- * @param {String[]}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
- * @param {String[]}  [options.searchOptions.filterLayers] - filter on list of search layers list. By Default, the layers available in Config.configuration.layers
- * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
+ * @param {Object}  [options.searchOptions.filterLayers] - filter on list of search layers list with a struture {"layerName" : "service"}. By Default, the layers available in Config.configuration.layers.
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
  * @param {String}   [options.searchOptions.serviceOptions.url] - url of service
  * @param {String}  [options.searchOptions.serviceOptions.index] - index of search, "standard" by default
@@ -382,12 +380,6 @@ var SearchEngine = class SearchEngine extends Control {
                 }
                 if (this.options.searchOptions.filterProjections) {
                     Search.setFiltersByProjection(this.options.searchOptions.filterProjections);
-                }
-                if (this.options.searchOptions.filterVectortiles) {
-                    Search.setFiltersByTMS(this.options.searchOptions.filterVectortiles);
-                }
-                if (this.options.searchOptions.updateVectortiles) {
-                    Search.updateFilterByTMS(); // url par defaut
                 }
             }
             // abonnement au service
@@ -1134,20 +1126,23 @@ var SearchEngine = class SearchEngine extends Control {
      * @private
      */
     _filterResultsFromConfigLayers (suggests) {
-        var layerList = [];
+        var layerList = {};
         if (this.options.searchOptions.filterLayers) {
             layerList = this.options.searchOptions.filterLayers;
         } else {
             var layersObject = window.Gp.Config.layers;
             for (let layer in layersObject) {
                 if (layersObject.hasOwnProperty(layer)) {
-                    layerList.push(layersObject[layer].name);
+                    layerList[layersObject[layer].name] = layersObject[layer].serviceParams.id.split(":")[1];
                 }
             }
         }
         let i = suggests.length;
-        while (i--) {                
-            if (!layerList.includes(suggests[i].name)) {
+        while (i--) {
+            // on retire la suggestion si :
+            // - son nom ne correspond pas à une couche dans la conf
+            // - le service associé à la suggestion n'est pas celui associé à la couche dans la conf
+            if (!layerList[suggests[i].name] || suggests[i].service.toUpperCase() !==  layerList[suggests[i].name].toUpperCase()) {
                 suggests.splice(i, 1);
             }
         }  

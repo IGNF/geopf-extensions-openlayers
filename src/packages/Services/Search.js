@@ -63,21 +63,6 @@ let m_filterByLayerPriority = [];
 /** Prioriser les couches de type WMTS sur le service WMS */
 let m_filterWMTSPriority = false;
 
-/** 
- * filtres les services uniquement en TMS
- * @fixme en attente d'evolution du service pour determiner les "real" couches vecteurs
- * @type {Array}
- */
-let m_filterByTMS = [
-    "ADMIN_EXPRESS",
-    "ISOHYPSE",
-    "PLAN.IGN",
-    "OCSGE_2016",
-    "OCSGE_2019",
-    "PCI",
-    "BDTOPO"
-];
-
 /** url du service (template avec ${m_index}) */
 let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
 
@@ -252,12 +237,7 @@ const suggest = async (text) => {
                 theme : result.source.theme || "",
                 producer : result.source.producer || ""
             };
-            if (m_filterByTMS.length) {
-                if ((o.service === "WMTS" && m_filterByTMS.includes(o.name)) ||
-                    (o.service === "TMS" && !m_filterByTMS.includes(o.name))) {
-                    continue;
-                }
-            }
+
             if (m_filterByProjection.length) {
                 // FIXME Array !?
                 if (m_filterByProjection.includes(o.srs[0])) {
@@ -451,41 +431,6 @@ const setFiltersByLayerPriority = (value) => {
 const setFilterWMTSPriority = (value) => {
     m_filterWMTSPriority = value;
 };
-/**
- * Filtre sur les "purs" couches vecteurs tuilés
- * @param {String} value - liste des couches
- * @see m_filterByTMS
- */
-const setFiltersByTMS = (value) => {
-    m_filterByTMS = value === "" ? [] : value.split(",");
-};
-/**
- * Mise à jour de la liste des "purs" couches vecteurs tuilés
- * @param {String} value - url
- */
-const updateFilterByTMS = async (value) => {
-    var url = value;
-    if (!url) {
-        url = "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/vectorTileConfig/fullVectorTileConfig.json";
-    }
-    const response = await fetch(url);
-    const results = await response.json();
-
-    if (response.status !== 200) {
-        throw new Error(response.message);
-    }
-
-    if (!results) {
-        throw new Error("Liste vide !");
-    }
-
-    var lstName = Object.keys(results.layers).map((k) => { return k.split("$")[0]; });
-    if (lstName) {
-        setFiltersByTMS(lstName.toString());
-    }
-
-    return m_filterByTMS;
-};
 
 export default {
     target,
@@ -501,8 +446,6 @@ export default {
     setUrl,
     setMaximumResponses,
     setFiltersByService,
-    setFiltersByTMS,
-    updateFilterByTMS,
     setFiltersByProjection,
     setFiltersByLayerPriority,
     setFilterWMTSPriority
