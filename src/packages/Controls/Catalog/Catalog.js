@@ -36,7 +36,7 @@ var logger = Logger.getLogger("widget");
  * @type {ol.control.Catalog}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
- *
+ * 
  * @fires catalog:loaded
  * @fires catalog:layer:add
  * @fires catalog:layer:remove
@@ -110,7 +110,6 @@ var logger = Logger.getLogger("widget");
  * map.addControl(widget);
  *
  * @todo validation du schema
- * @todo service et combinaison de filtres
  */
 var Catalog = class Catalog extends Control {
 
