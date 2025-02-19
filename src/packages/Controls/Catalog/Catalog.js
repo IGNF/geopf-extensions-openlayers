@@ -110,6 +110,7 @@ var logger = Logger.getLogger("widget");
  * map.addControl(widget);
  *
  * @todo validation du schema
+ * @todo conf tech du service de recherche
  */
 var Catalog = class Catalog extends Control {
 
@@ -640,6 +641,11 @@ var Catalog = class Catalog extends Control {
             return layers;
         };
 
+        // conversion de schema service vers data
+        const convertSchema = (extra) => {
+            return {};
+        };
+
         var ids = [];
         const configs = this.options.configurations;
         for (let i = 0; i < configs.length; i++) {
@@ -756,10 +762,16 @@ var Catalog = class Catalog extends Control {
                         for (let j = 0; j < values.length; j++) {
                             const v = values[j];
                             // on ajoute les 2 properties pour le moment
-                            data_tmp.layers[`${v.name}.$GEOPORTAIL:OGC:${v.service}`] = {
+                            var id = `${v.name}.$GEOPORTAIL:OGC:${v.service}`;
+                            data_tmp.layers[id] = {
                                 theme : v.theme || "",
                                 producer : v.producer || ""
                             };
+                            // TODO transformation de schema de la conf tech
+                            // renvoyé par le service
+                            if (v.extra) {
+                                Utils.mergeParams(data_tmp.layers[id], convertSchema(v.extra));
+                            }
                         }
                     }
                     if (!config.ref) {
