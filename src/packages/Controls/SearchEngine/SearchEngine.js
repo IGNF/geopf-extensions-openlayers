@@ -90,6 +90,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {String[]}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
  * @param {Number}  [options.searchOptions.serviceOptions.size] - number of response in the service. 1000 by default
  * @param {Number}  [options.searchOptions.serviceOptions.maximumResponses] - number of results in the response. 10 by default
+ * @param {Number}  [options.searchOptions.maximumEntries] - maximum search results we want to display. 
  * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
  * @param {Object}  [options.geocodeOptions.serviceOptions] - options of geocode service
  * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})
@@ -319,8 +320,9 @@ var SearchEngine = class SearchEngine extends Control {
             coordinateSearch : {},
             searchOptions : {
                 addToMap : true,
+                maximumEntries : 5,
                 serviceOptions : {
-                    maximumResponses : 5,
+                    maximumResponses : 10,
                 }
             },
             geocodeOptions : {
@@ -388,6 +390,7 @@ var SearchEngine = class SearchEngine extends Control {
                 let suggestResults = e.detail;
                 // filtre des suggestions selon la configuration ou l'option filterLayers                
                 suggestResults = this._filterResultsFromConfigLayers(suggestResults);
+
                 this._fillSearchedSuggestListContainer(suggestResults);
             });
         }
@@ -1094,6 +1097,10 @@ var SearchEngine = class SearchEngine extends Control {
      * @private
      */
     _fillSearchedSuggestListContainer (suggests) {
+        // on réduit la liste de suggests au nombre d'éléments maximum que l'on veut afficher
+        if (this.options.searchOptions.maximumEntries) {
+            suggests = suggests.slice(0, this.options.searchOptions.maximumEntries);
+        }
         // on vide la liste avant de la construire
         var element = this._containerResultsSuggest;
         if (element.childElementCount) {
