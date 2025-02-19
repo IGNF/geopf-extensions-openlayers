@@ -63,6 +63,9 @@ let m_filterByLayerPriority = [];
 /** Prioriser les couches de type WMTS sur le service WMS */
 let m_filterWMTSPriority = false;
 
+/** Filtre les TMS : seuls ceux ayant un style en metadata sont conservés */
+let m_filterTMS = true;
+
 /** url du service (template avec ${m_index}) */
 let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
 
@@ -247,8 +250,16 @@ const suggest = async (text) => {
             if (filter && filter[o.name] && o.service === "WMS") {
                 continue;
             }
+            if (o.service === "TMS") {
+                // si la couche TMS a un style renseigné en metadata on l'indique
+                if (o.metadata.length !== 0 && /(\.json)$/i.test(o.metadata[0])) {
+                    o.styles = true;
+                } else if (m_filterTMS === true) {
+                    // sinon on la retire des suggestions
+                    continue;
+                }
+            }
             m_suggestions.push(o);
-            // console.log("suggestion", result);
         }
     }
 
@@ -431,6 +442,13 @@ const setFiltersByLayerPriority = (value) => {
 const setFilterWMTSPriority = (value) => {
     m_filterWMTSPriority = value;
 };
+/** 
+ * Active ou non le filtre pour ne conserver que les TMS ayant un style 
+ * @param {Boolean} value - active le filtre
+ */
+const setFilterTMS = (value) => {
+    m_filterTMS = value;
+};
 
 export default {
     target,
@@ -448,5 +466,6 @@ export default {
     setFiltersByService,
     setFiltersByProjection,
     setFiltersByLayerPriority,
-    setFilterWMTSPriority
+    setFilterWMTSPriority,
+    setFilterTMS
 };

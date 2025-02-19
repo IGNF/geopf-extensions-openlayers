@@ -64,9 +64,11 @@
                         },
                         searchOptions: {
                             addToMap: true,
-                            filterServices : "WMTS,WMS,TMS,WFS",
+                            filterServices : "WMTS,WMS,TMS",
                             // filterProjections: "IGNF:LAMB93,EPSG:2154",
-                            // filterLayers : {"GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2" : "WMTS", "PLAN.IGN" : "TMS"},
+                            // filterLayers : false,
+                            // filterTMS : false,
+                            // filterLayersList : {"GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2" : "WMTS", "PLAN.IGN" : "TMS"},
                             filterLayersPriority : "PLAN.IGN,GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1,GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2,CADASTRALPARCELS.PARCELLAIRE_EXPRESS,ORTHOIMAGERY.ORTHOPHOTOS",
                             filterWMTSPriority : true,
                             serviceOptions: {
