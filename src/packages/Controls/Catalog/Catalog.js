@@ -84,7 +84,7 @@ var logger = Logger.getLogger("widget");
  *           ],
  *           configurations : [
  *             {
- *               type : "json", 
+ *               type : "json",
  *               urls : [
  *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
  *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
@@ -364,6 +364,7 @@ var Catalog = class Catalog extends Control {
             ],
             configurations : [{
                 type : "json",
+                default : true,
                 urls : [
                     "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
                     "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
@@ -639,12 +640,22 @@ var Catalog = class Catalog extends Control {
             return layers;
         };
 
+        var ids = [];
         const configs = this.options.configurations;
         for (let i = 0; i < configs.length; i++) {
             const config = configs[i];
+            config.ref = (i === 0); // reference
             
             if (config.type === "data" && config.data) {
-                Utils.mergeParams(data, config.data || {});              
+                if (!config.ref) {
+                    Object.keys(config.data.layers).forEach((id) => {
+                        if (!ids.includes(id)) {
+                            delete config.data.layers[id];
+                        }
+                    });
+                }
+                Utils.mergeParams(data, config.data || {});
+                console.debug("config.type === data finish !");
             }
     
             if (config.type === "json" && config.urls) {
@@ -679,12 +690,18 @@ var Catalog = class Catalog extends Control {
     
                 try {
                     const values = await Promise.all(fetchUrls);
-    
-                    Utils.mergeParams(data, values[0]);
-                    for (let i = 1; i < values.length; i++) {
+                    for (let i = 0; i < values.length; i++) {
                         const value = values[i];
+                        if (!config.ref) {
+                            Object.keys(value.layers).forEach((id) => {
+                                if (!ids.includes(id)) {
+                                    delete value.layers[id];
+                                }
+                            });
+                        }
                         Utils.mergeParams(data, value);
                     }
+                    console.debug("config.type === json finish !");
 
                 } catch (e) {
                     return new Promise((resolve, reject) => {
@@ -745,7 +762,16 @@ var Catalog = class Catalog extends Control {
                             };
                         }
                     }
+                    if (!config.ref) {
+                        Object.keys(data_tmp.layers).forEach((id) => {
+                            if (!ids.includes(id)) {
+                                delete data_tmp.layers[id];
+                            }
+                        });
+                    }
                     Utils.mergeParams(data, data_tmp);
+
+                    console.debug("config.type === service finish !");
 
                     // for (const id in data_tmp.layers) {
                     //     if (Object.prototype.hasOwnProperty.call(data_tmp.layers, id)) {
@@ -761,9 +787,17 @@ var Catalog = class Catalog extends Control {
                     });
                 }
             }
+
+            // liste de couche de reference à traiter uniquement !
+            if (config.ref) {
+                ids = Object.keys(data.layers);
+                console.debug(ids);
+            }
         }
 
-        if (Config.isConfigLoaded()) {
+        // on choisie d'utiliser la config chargée par defaut
+        // si aucune configuration n'a été précisé !
+        if (Config.isConfigLoaded() && this.options.configurations[0].default) {
             Utils.mergeParams(data, Config.configuration);
         }
 

@@ -39,6 +39,7 @@
                     Gp.Logger.enableAll();
                 }
                 var map;
+                var catalog;
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
@@ -61,7 +62,7 @@
                         })
                     });
 
-                    var catalog = new ol.control.Catalog({
+                    catalog = new ol.control.Catalog({
                         position: "top-left",
                         collapsed : false
                     });

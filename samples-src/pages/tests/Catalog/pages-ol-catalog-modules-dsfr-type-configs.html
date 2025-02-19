@@ -46,6 +46,7 @@
                 var data = getData();
 
                 var map;
+                var catalog;
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
@@ -66,21 +67,28 @@
                     });
 
                     data.then( data => {
-                        var catalog = new ol.control.Catalog({
+                        catalog = new ol.control.Catalog({
                             position: "top-left",
                             configurations : [
+                                {
+                                    type : "json",
+                                    urls : [
+                                        "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+                                        "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
+                                    ]
+                                },
                                 {
                                     type : "data",
                                     data : data
                                 },
                                 {
-                                    type : "json",
-                                    urls : [
-                                        // INFO facultatif si la config est déjà chargée
-                                        // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
-                                        "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
-                                    ]
-                                }
+                                    type : "service",
+                                    url : "https:// data.geopf.fr/recherche/api/indexes/geoplateforme/suggest",
+                                    filter : {
+                                        field : "text",
+                                        value : "orthophoto"
+                                    }
+                                },
                             ]
                         });
                         catalog.on("catalog:loaded", (e) => {

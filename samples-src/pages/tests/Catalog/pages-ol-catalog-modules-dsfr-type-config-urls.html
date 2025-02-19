@@ -36,6 +36,7 @@
                     Gp.Logger.enableAll();
                 }
                 var map;
+                var catalog;
                 var createMap = function() {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
@@ -55,13 +56,12 @@
                         })
                     });
 
-                    var catalog = new ol.control.Catalog({
+                    catalog = new ol.control.Catalog({
                         position: "top-left",
                         configurations : [{
                             type : "json",
                             urls : [
-                                // INFO facultatif si la config est déjà chargée
-                                // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+                                "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
                                 "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
                             ]
                         }]
