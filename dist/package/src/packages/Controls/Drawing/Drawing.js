@@ -578,6 +578,23 @@ var Drawing = class Drawing extends Control {
         return this._container;
     }
 
+    /** Disable interaction */
+    disable () {
+        var map = this.getMap();
+        // on supprime toutes les interactions
+        Interactions.unset(map);
+
+        // on deselectionne les Tools
+        for (var toolsType in this.dtOptions) {
+            if (this.dtOptions.hasOwnProperty(toolsType)) {
+                if (this.dtOptions[toolsType].active) {
+                    var toolsId = this._addUID("drawing-tool-" + this.dtOptions[toolsType].id);
+                    document.getElementById(toolsId).className = "drawing-tool fr-btn fr-btn--tertiary gpf-btn--tertiary";
+                    this.dtOptions[toolsType].active = false;
+                }
+            }
+        }
+    }
     // ################################################################### //
     // ######################## initialize control ####################### //
     // ################################################################### //
@@ -2013,9 +2030,8 @@ var Drawing = class Drawing extends Control {
         if (opened === "true") {
             this.onPanelOpen();
         }
-        var map = this.getMap();
-        // on supprime toutes les interactions
-        Interactions.unset(map);
+        
+        this.disable();
 
         this.collapsed = !(opened === "true");// on génère nous même l'evenement OpenLayers de changement de propriété
         // (utiliser mousePosition.on("change:collapsed", function(e) ) pour s'abonner à cet évènement)
@@ -2023,16 +2039,6 @@ var Drawing = class Drawing extends Control {
         // on recalcule la position
         if (this.options.position && !this.collapsed) {
             this.updatePosition(this.options.position);
-        }
-        // on deselectionne les Tools
-        for (var toolsType in this.dtOptions) {
-            if (this.dtOptions.hasOwnProperty(toolsType)) {
-                if (this.dtOptions[toolsType].active) {
-                    var toolsId = this._addUID("drawing-tool-" + this.dtOptions[toolsType].id);
-                    document.getElementById(toolsId).className = "drawing-tool fr-btn fr-btn--tertiary gpf-btn--tertiary";
-                    this.dtOptions[toolsType].active = false;
-                }
-            }
         }
     }
 
