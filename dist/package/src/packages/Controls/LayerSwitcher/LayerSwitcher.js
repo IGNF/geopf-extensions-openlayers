@@ -295,6 +295,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 id : id,
                 name : layer.name, // only geoportal layers
                 service : layer.service, // only geoportal layers
+                type : "", // only geoportal website : ie 'feature'
                 opacity : opacity != null ? opacity : 1,
                 visibility : visibility != null ? visibility : true,
                 inRange : isInRange != null ? isInRange : true,

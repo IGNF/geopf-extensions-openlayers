@@ -15,6 +15,12 @@ export default ButtonExport;
  * @param {String} [options.title = "Exporter"] - button name
  * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
  * @param {Boolean} [options.menu = false] - displays the menu
+ * @param {Object} [options.menuOptions] - options of the menu.
+ * @param {Boolean} [options.menuOptions.outside = false] - displays all element outside of menu
+ * @param {Boolean} [options.menuOptions.above = false] - displays menu above or not of the button
+ * @param {Boolean} [options.menuOptions.labelName = true] - displays the label name
+ * @param {Boolean} [options.menuOptions.labelDesc = true] - displays the label description
+ * @param {Boolean} [options.menuOptions.selectFormat = true] - displays the select format
  * @param {String} [options.direction = "row"] - buttons and menus layout
  * @param {Object} [options.icons] - icons
  * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
@@ -38,7 +44,13 @@ export default ButtonExport;
  * export.setFormat("geojson");
  * export.setDescription("Export Isochrone");
  * export.setTitle("Exporter");
- * export.setMenu(false);
+ * export.setMenu(true);
+ * export.setMenuOptions({
+ *   outside : false,
+ *   labelName : true,
+ *   labelDesc : true,
+ *   selectFormat : true
+ * });
  * export.render(); // <-- direct call to render function !
  * export.on("button:clicked", (data) => { console.log(data); });
  *
@@ -80,7 +92,7 @@ export default ButtonExport;
  *   name : "save-iso",
  *   format : "geojson",
  *   title : "Sauvegarde",
- *   menu : false
+ *   menu : true
  * }});
  */
 declare class ButtonExport {
@@ -199,6 +211,7 @@ declare class ButtonExport {
     mimeType: string | null;
     container: HTMLDivElement | null;
     button: any;
+    buttonOptions: any;
     inputName: any;
     inputDesc: any;
     menu: any;
@@ -227,7 +240,15 @@ declare class ButtonExport {
         description: string;
         title: string;
         kind: string;
+        direction: string;
         menu: boolean;
+        menuOptions: {
+            above: boolean;
+            outside: boolean;
+            labelName: boolean;
+            labelDesc: boolean;
+            selectFormat: boolean;
+        };
         icons: {
             menu: string;
             button: string;
@@ -280,16 +301,20 @@ declare class ButtonExport {
      * @param {*} e - Click
      */
     onChangeInputName(e: any): void;
+    onFocusInputName(e: any): void;
     /**
      *
      * @param {*} e - Click
      */
     onChangeInputDesc(e: any): void;
+    onFocusInputDesc(e: any): void;
     /**
      *
      * @param {*} e - Click
      */
     onClickButtonToggleOptions(e: any): void;
+    onClickButtonValidate(e: any): void;
+    onClickButtonCancel(e: any): void;
     /**
      * Get container
      *
@@ -344,6 +369,12 @@ declare class ButtonExport {
      * @public
      */
     public setMenu(active: boolean): void;
+    /**
+     * ...
+     * @param {Object} opts - ...
+     * @todo ...
+     */
+    setMenuOptions(opts: Object): void;
     /**
      * ...
      * @param {*} layer  - ...

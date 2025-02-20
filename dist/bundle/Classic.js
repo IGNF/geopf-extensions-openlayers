@@ -8,8 +8,8 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.2-357
- * @date 17/02/2025
+ * @version 1.0.0-beta.2-343
+ * @date 20/02/2025
  *
  */
 /*!
@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2016 openlayers
  * @license   BSD 2-Clause "Simplified" License
  *            See https://raw.githubusercontent.com/openlayers/ol-mapbox-style/master/LICENSE
- * @version   12.4.0
+ * @version   12.4.1
  */
 /*!
  * @overview   Sortable -- JavaScript library for reorderable drag-and-drop lists on modern
