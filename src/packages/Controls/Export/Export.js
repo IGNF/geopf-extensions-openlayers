@@ -10,7 +10,6 @@ import Control from "ol/control/Control";
 import ID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Utils from "../../Utils/Helper";
-import Interactions from "../Utils/Interactions";
 
 // import local with ol dependencies
 import KMLExtended from "../../Formats/KML";
@@ -834,7 +833,9 @@ class ButtonExport extends Control {
         if (!map) {
             return;
         }
-        Interactions.unset(map);
+        if (this.options.control && typeof this.options.control.disable === "function") {
+            this.options.control.disable();
+        }
     }
 
     /**
@@ -850,7 +851,9 @@ class ButtonExport extends Control {
         if (!map) {
             return;
         }
-        Interactions.unset(map);
+        if (this.options.control && typeof this.options.control.disable === "function") {
+            this.options.control.disable();
+        }
     }
 
     /**
