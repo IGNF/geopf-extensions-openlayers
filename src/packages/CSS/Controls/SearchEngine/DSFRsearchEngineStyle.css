@@ -159,10 +159,10 @@ button[id^="GPshowSearchEnginePicto-"] {
   background-position: -25px center;
 }
 
+dialog[id^=GPgeocodeResultsList],
 dialog[id^=GPcoordinateSearchPanel],
 dialog[id^="GPadvancedSearchPanel"] {
   position: absolute;
-  top: 66px;
   width: inherit;
 }
 
@@ -172,8 +172,7 @@ dialog[id^="GPadvancedSearchPanel"] {
   border: 1px solid var(--background-open-blue-france);
 }
 
-div[id^=GPautoCompleteList],
-dialog[id^=GPgeocodeResultsList] {
+div[id^=GPautoCompleteList] {
   width: 320px;
   position: absolute;
   height: fit-content;
@@ -208,10 +207,10 @@ div[id^=GPautoCompleteList] {
 }
 
 dialog[id^=GPgeocodeResultsList] {
-  position: absolute;
-  top: 55px;
-  border-radius: 4px;
   overflow: hidden;
+  max-height: unset;
+  height: inherit;
+  bottom: unset;
 }
 
 div[id^=GPgeocodeResults-] {

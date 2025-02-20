@@ -583,6 +583,13 @@ var GetFeatureInfo = class GetFeatureInfo extends Control {
                     // styles
                     "fill",
                     "fill-opacity",
+                    "label-fill",
+                    "label-fill-opacity",
+                    "label-stroke",
+                    "label-stroke-opacity",
+                    "label-stroke-width",
+                    "label-font",
+                    "label-textAlign",
                     "stroke",
                     "stroke-opacity",
                     "stroke-width",

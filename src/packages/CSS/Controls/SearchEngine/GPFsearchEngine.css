@@ -150,8 +150,7 @@ input[id^=GPadvancedSearchSubmit] {
   width: 100%;
 }
 
-[id^="GPautoCompleteList"],
-dialog[id^="GPgeocodeResultsList"] {
+[id^="GPautoCompleteList"] {
   margin-left: 33px;
 }
 
@@ -159,12 +158,6 @@ dialog[id^="GPgeocodeResultsList"] {
   /* overflow-y: auto; */
 }
 
-dialog[id^="GPgeocodeResultsList"] {
-  top: 35px;
-  border-radius: 4px;
-  height: inherit;
-  bottom: unset; /* fix dsfr */
-}
 
 [id^="GPautocompleteResultsSuggest"],
 [id^="GPautocompleteResultsLocation"] {
