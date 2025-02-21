@@ -85,22 +85,11 @@
                         class="input" 
                         type="text" 
                         value=""/>
-                    <label for="conf-vector">filtres sur les couches vecteurs tuilés</label>
-                    <textarea id="conf-vector" 
-                        rows="2"
-                        cols="1">ADMIN_EXPRESS,PLAN.IGN,PCI,BDTOPO
-                    </textarea>
                     <label for="conf-proj">filtres sur les projections</label>
                     <input id="conf-proj" 
                         class="input" 
                         type="text" 
                         value="EPSG:4326"/>
-                    <label for="conf-vector-update">mise à jour des couches vecteurs tuilés</label>
-                    <input id="conf-vector-update" 
-                        class="input" 
-                        type="text" 
-                        value="https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/vectorTileConfig/fullVectorTileConfig.json"
-                        style="width: auto;"/>
                     <button id="update">Update</button>
                     <label for="conf-size">nombre de reponses demandées au service</label>
                     <input id="conf-size" 
@@ -114,6 +103,10 @@
                         value="10"/>
                     <label for="conf-wmts">prioriser les couches de type WMTS</label>
                     <input id="conf-wmts" 
+                        class="input" 
+                        type="checkbox"/>
+                    <label for="conf-tms">filtre sur les TMS avec style en metadata</label>
+                    <input id="conf-tms" 
                         class="input" 
                         type="checkbox"/>
                     <button id="load">Load</button>
@@ -175,17 +168,9 @@
                     Search.setMaximumResponses(document.getElementById("conf-max").value);
                     Search.setFiltersByService(document.getElementById("conf-services").value);
                     Search.setFiltersByLayerPriority(document.getElementById("conf-layers").value);
-                    Search.setFiltersByTMS(document.getElementById("conf-vector").value);
                     Search.setFiltersByProjection(document.getElementById("conf-proj").value);
-                    Search.setFiltersWMTSPriority(document.getElementById("conf-wmts").checked);
-                });
-
-                document.getElementById("update").addEventListener("click", (e) => {
-                    Search.updateFilterByTMS(document.getElementById("conf-vector-update").value)
-                    .then((e) => {
-                        console.log(e);
-                        document.getElementById("conf-vector").value = e;
-                    })
+                    Search.setFilterWMTSPriority(document.getElementById("conf-wmts").checked);
+                    Search.setFilterTMS(document.getElementById("conf-tms").checked);
                 });
 
                 document.getElementById("run").addEventListener("click", (e) => {
