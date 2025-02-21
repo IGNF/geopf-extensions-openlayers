@@ -9,6 +9,8 @@ __DATE__
 
 ### 🎉 Summary
 
+- on fixe les versions : ol 10.3.1 & ol-mapbox-style 12.3.5
+
 ### 💥 Breaking changes
 
 ### 📖 Changelog
