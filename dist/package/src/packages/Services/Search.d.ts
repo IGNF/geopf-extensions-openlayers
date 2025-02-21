@@ -12,11 +12,10 @@ declare namespace _default {
     export { setUrl };
     export { setMaximumResponses };
     export { setFiltersByService };
-    export { setFiltersByTMS };
-    export { updateFilterByTMS };
     export { setFiltersByProjection };
     export { setFiltersByLayerPriority };
     export { setFilterWMTSPriority };
+    export { setFilterTMS };
 }
 export default _default;
 /**
@@ -72,7 +71,6 @@ declare const target: EventTarget;
  *   "service": "TMS",
  *   "url": "https://data.geopf.fr/tms/1.0.0/PLAN.IGN"
  * }
- * @fire suggest
  */
 declare function suggest(text: any): Object;
 /**
@@ -137,17 +135,6 @@ declare function setMaximumResponses(value: number): void;
  */
 declare function setFiltersByService(value: string): void;
 /**
- * Filtre sur les "purs" couches vecteurs tuilés
- * @param {String} value - liste des couches
- * @see m_filterByTMS
- */
-declare function setFiltersByTMS(value: string): void;
-/**
- * Mise à jour de la liste des "purs" couches vecteurs tuilés
- * @param {String} value - url
- */
-declare function updateFilterByTMS(value: string): Promise<any[]>;
-/**
  * Filtre sur les couches à exclure
  * @param {String} value - liste des projections
  * @see m_filterByProjection
@@ -164,4 +151,9 @@ declare function setFiltersByLayerPriority(value: string): void;
  * @param {Boolean} value - active le filtre
  */
 declare function setFilterWMTSPriority(value: boolean): void;
+/**
+ * Active ou non le filtre pour ne conserver que les TMS ayant un style
+ * @param {Boolean} value - active le filtre
+ */
+declare function setFilterTMS(value: boolean): void;
 //# sourceMappingURL=Search.d.ts.map

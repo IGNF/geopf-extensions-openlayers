@@ -1822,7 +1822,7 @@
             
                 <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterByService">m_filterByService</a> </div>
             
-                <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterByTMS">m_filterByTMS</a> </div>
+                <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterTMS">m_filterTMS</a> </div>
             
                 <div class="l3 itemMembers"> <a href="module-Search.html#~m_filterWMTSPriority">m_filterWMTSPriority</a> </div>
             
@@ -1855,7 +1855,7 @@
             
                 <li data-name="module:Search~m_filterByService"><a href="module-Search.html#~m_filterByService">m_filterByService</a></li>
             
-                <li data-name="module:Search~m_filterByTMS"><a href="module-Search.html#~m_filterByTMS">m_filterByTMS</a></li>
+                <li data-name="module:Search~m_filterTMS"><a href="module-Search.html#~m_filterTMS">m_filterTMS</a></li>
             
                 <li data-name="module:Search~m_filterWMTSPriority"><a href="module-Search.html#~m_filterWMTSPriority">m_filterWMTSPriority</a></li>
             
@@ -1903,7 +1903,7 @@
             
                 <div class="l3 itemMembers" data-name="module:Search~setFiltersByService"> <a href="module-Search.html#~setFiltersByService">setFiltersByService</a> </div>
             
-                <div class="l3 itemMembers" data-name="module:Search~setFiltersByTMS"> <a href="module-Search.html#~setFiltersByTMS">setFiltersByTMS</a> </div>
+                <div class="l3 itemMembers" data-name="module:Search~setFilterTMS"> <a href="module-Search.html#~setFilterTMS">setFilterTMS</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:Search~setFilterWMTSPriority"> <a href="module-Search.html#~setFilterWMTSPriority">setFilterWMTSPriority</a> </div>
             
@@ -1920,8 +1920,6 @@
                 <div class="l3 itemMembers" data-name="module:Search~suggest"> <a href="module-Search.html#~suggest">suggest</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:Search~unique"> <a href="module-Search.html#~unique">unique</a> </div>
-            
-                <div class="l3 itemMembers" data-name="module:Search~updateFilterByTMS"> <a href="module-Search.html#~updateFilterByTMS">updateFilterByTMS</a> </div>
             
 
 <!--
@@ -1947,7 +1945,7 @@
             
                 <li data-name="setFiltersByService"><a href="module-Search.html#~setFiltersByService">setFiltersByService</a></li>
             
-                <li data-name="setFiltersByTMS"><a href="module-Search.html#~setFiltersByTMS">setFiltersByTMS</a></li>
+                <li data-name="setFilterTMS"><a href="module-Search.html#~setFilterTMS">setFilterTMS</a></li>
             
                 <li data-name="setFilterWMTSPriority"><a href="module-Search.html#~setFilterWMTSPriority">setFilterWMTSPriority</a></li>
             
@@ -1964,8 +1962,6 @@
                 <li data-name="suggest"><a href="module-Search.html#~suggest">suggest</a></li>
             
                 <li data-name="unique"><a href="module-Search.html#~unique">unique</a></li>
-            
-                <li data-name="updateFilterByTMS"><a href="module-Search.html#~updateFilterByTMS">updateFilterByTMS</a></li>
             
             </ul>
 -->
@@ -6550,7 +6546,7 @@ mettre en avant dans la recherche</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="~m_filterByTMS"><span class="type-signature ">inner</span>m_filterByTMS<span class="type-signature type array">Array</span> </h4>
+        <h4 class="name" id="~m_filterTMS"><span class="type-signature ">inner</span>m_filterTMS</h4>
     </div>
     
     
@@ -6558,7 +6554,7 @@ mettre en avant dans la recherche</p>
 <dd>
     
     <div class="description">
-        <p>filtres les services uniquement en TMS</p>
+        <p>Filtrer sur les TMS ayant un style</p>
     </div>
     
     
@@ -6932,7 +6928,7 @@ target.addEventListener("myEvent", handler);</code></pre>
     
         
         <div class="tag-source">
-            Services/Search.js, line 315
+            Services/Search.js, line 332
         </div>
         
     </div>
@@ -7003,7 +6999,7 @@ target.addEventListener("myEvent", handler);</code></pre>
     
         
         <div class="tag-source">
-            Services/Search.js, line 362
+            Services/Search.js, line 379
         </div>
         
     </div>
@@ -7084,7 +7080,7 @@ des noms (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 355
+            Services/Search.js, line 372
         </div>
         
     </div>
@@ -7165,7 +7161,7 @@ des suggestions (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 369
+            Services/Search.js, line 386
         </div>
         
     </div>
@@ -7246,7 +7242,7 @@ des titres (unique)
     
         
         <div class="tag-source">
-            Services/Search.js, line 333
+            Services/Search.js, line 350
         </div>
         
     </div>
@@ -7382,7 +7378,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 388
+            Services/Search.js, line 405
         </div>
         
     </div>
@@ -7506,7 +7502,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 444
+            Services/Search.js, line 461
         </div>
         
     </div>
@@ -7630,7 +7626,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 436
+            Services/Search.js, line 453
         </div>
         
     </div>
@@ -7754,7 +7750,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 428
+            Services/Search.js, line 445
         </div>
         
     </div>
@@ -7871,14 +7867,14 @@ false : WMS only</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="~setFiltersByTMS">
+        <h4 class="name" id="~setFilterTMS">
             
-            <span class="type-signature ">inner</span>setFiltersByTMS<span class="signature">(value)</span>
+            <span class="type-signature ">inner</span>setFilterTMS<span class="signature">(value)</span>
         </h4>
     
         
         <div class="tag-source">
-            Services/Search.js, line 459
+            Services/Search.js, line 475
         </div>
         
     </div>
@@ -7889,7 +7885,7 @@ false : WMS only</p>
     
     
     <div class="description">
-        <p>Filtre sur les &quot;purs&quot; couches vecteurs tuilés</p>
+        <p>Active ou non le filtre pour ne conserver que les TMS ayant un style</p>
     </div>
     
 
@@ -7926,7 +7922,7 @@ false : WMS only</p>
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -7936,7 +7932,7 @@ false : WMS only</p>
             
             <td class="description last">
                 
-                <p>liste des couches</p></td>
+                <p>active le filtre</p></td>
         </tr>
 	
 	
@@ -7965,13 +7961,6 @@ false : WMS only</p>
     
     
     
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>m_filterByTMS</li>
-        </ul>
-    </dd>
     
     
     
@@ -8002,7 +7991,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 451
+            Services/Search.js, line 468
         </div>
         
     </div>
@@ -8119,7 +8108,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 380
+            Services/Search.js, line 397
         </div>
         
     </div>
@@ -8243,7 +8232,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 420
+            Services/Search.js, line 437
         </div>
         
     </div>
@@ -8367,7 +8356,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 404
+            Services/Search.js, line 421
         </div>
         
     </div>
@@ -8491,7 +8480,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 396
+            Services/Search.js, line 413
         </div>
         
     </div>
@@ -8615,7 +8604,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 412
+            Services/Search.js, line 429
         </div>
         
     </div>
@@ -8739,7 +8728,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 140
+            Services/Search.js, line 127
         </div>
         
     </div>
@@ -8909,7 +8898,7 @@ false : WMS only</p>
     
         
         <div class="tag-source">
-            Services/Search.js, line 289
+            Services/Search.js, line 306
         </div>
         
     </div>
@@ -8979,123 +8968,6 @@ des suggestions sans doublons
     
 </dd>
 
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="~updateFilterByTMS">
-            
-            <span class="type-signature ">async,inner</span>updateFilterByTMS<span class="signature">(value)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            Services/Search.js, line 466
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Mise à jour de la liste des &quot;purs&quot; couches vecteurs tuilés</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name">value</td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>url</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
         </dl>
     
     
@@ -9118,7 +8990,7 @@ des suggestions sans doublons
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Feb 20 2025 20:12:15 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Feb 21 2025 11:54:53 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

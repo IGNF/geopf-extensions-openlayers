@@ -45,15 +45,16 @@ export default SearchEngine;
  * @param {String[]}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
  * @param {String[]}  [options.searchOptions.filterProjections] - filter on a list of projections : the searchEngine ignore the suggestions with one of the projections listed. Each field is separated by a comma.
  * @param {Boolean}  [options.searchOptions.filterLayersPriority = false] - filter on priority layers in search, false by default
- * @param {String[]}  [options.searchOptions.filterVectortiles] - filter on list of search layers only on service TMS, each field is separated by a comma. "PLAN.IGN, ..." by default
- * @param {String[]}  [options.searchOptions.filterLayers] - filter on list of search layers list. By Default, the layers available in Config.configuration.layers
- * @param {Boolean} [options.searchOptions.updateVectortiles = false] - updating the list of search layers only on service TMS
+ * @param {Boolean}  [options.searchOptions.filterLayers] - false to disable the automatic filter from Config or from the filterLayerList parameter. True by Default.
+ * @param {Object}  [options.searchOptions.filterLayersList] - filter on list of search layers list with a struture {"layerName" : "service"}. By Default, the layers available in Config.configuration.layers.
+ * @param {Boolean}  [options.searchOptions.filterTMS] - filter the results to keep TMS with at least a style (.json) into the metadata. True by Default.
  * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
  * @param {String}   [options.searchOptions.serviceOptions.url] - url of service
  * @param {String}  [options.searchOptions.serviceOptions.index] - index of search, "standard" by default
  * @param {String[]}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
  * @param {Number}  [options.searchOptions.serviceOptions.size] - number of response in the service. 1000 by default
  * @param {Number}  [options.searchOptions.serviceOptions.maximumResponses] - number of results in the response. 10 by default
+ * @param {Number}  [options.searchOptions.maximumEntries] - maximum search results we want to display.
  * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
  * @param {Object}  [options.geocodeOptions.serviceOptions] - options of geocode service
  * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})
