@@ -102,8 +102,7 @@
                   download : false,
                   control: drawing,
                   format : "kml",
-                  menu : true,
-                  direction : "column",
+                  menu : false,
                   icons : {
                     button : "save"
                   },
@@ -117,20 +116,21 @@
                 // cas iso :
                 // * bouton primary avec icone
                 // * mode export
-                // * avec menu
-                // * target externe
+                // * avec menu par defaut sous le bouton
+                // * target interne (ou externe en decommentant target)
                 // * appel instance interne
                 var iso = new ol.control.Isocurve({
                   position: "bottom-left",
                   draggable:true,
                   export : {
-                    target: document.getElementById("btnExportIso"),
+                    // target: document.getElementById("btnExportIso"),
                     format: "kml",
                     kind: "primary",
                     name: "export-iso",
+                    direction: "column",
                     description : "Graphe isochrone",
                     title : "Exporter Isochrone",
-                    menu : true,
+                    menu: true,
                     icons : {
                       menu : "",
                       button : "export"
@@ -145,7 +145,7 @@
                 // cas iso :
                 // * bouton primary avec icone
                 // * mode export
-                // * avec menu
+                // * avec menu par defaut
                 // * target externe
                 // * appel instance externe
                 // var exportIso = new ol.control.Export({
@@ -172,7 +172,7 @@
                 // cas route :
                 // * bouton secondary avec icone
                 // * mode export
-                // * avec menu
+                // * avec menu par defaut
                 // * target externe
                 // * appel instance externe avec setters
                 var route = new ol.control.Route({
@@ -201,7 +201,7 @@
                 // cas profil :
                 // * bouton secondary avec icone
                 // * mode export avec icone de menu
-                // * avec menu
+                // * avec menu customisé
                 // * target interne
                 // * appel instance externe
                 var measureProfil = new ol.control.ElevationPath({
@@ -212,8 +212,11 @@
                   control: measureProfil,
                   name: "export-profil", 
                   format : "geojson",
-                  menu: true,
-                  // target : measureProfil.getContainer().querySelector(".gpf-panel__body")
+                  menu : true,
+                  menuOptions : {
+                    outside : true,
+                    labelFormat : false
+                  }
                 });
                 map.addControl(exportProfil);
                 exportProfil.on("button:clicked", (e) => {
