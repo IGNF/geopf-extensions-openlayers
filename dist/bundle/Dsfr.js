@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2016 openlayers
  * @license   BSD 2-Clause "Simplified" License
  *            See https://raw.githubusercontent.com/openlayers/ol-mapbox-style/master/LICENSE
- * @version   12.4.1
+ * @version   ^12.3.5
  */
 /*!
  * @overview   Sortable -- JavaScript library for reorderable drag-and-drop lists on modern
