@@ -5,8 +5,8 @@
  * 
  * @module Search
  * @alias module:~services/Search
- * @fixme en attente d'evolution du service pour le filtrage sur le type 
- * afin d'écarter des reponses de la recherche (ex. DOWNLOAD)
+ * @fixme en attente d'evolution du service pour le filtrage
+ * @fixme en attente d'evolution du service pour les champs techniques (extra)
  * @see https://geoservices.ign.fr/documentation/services/services-geoplateforme/service-geoplateforme-de-recherche
  */
 
@@ -63,20 +63,8 @@ let m_filterByLayerPriority = [];
 /** Prioriser les couches de type WMTS sur le service WMS */
 let m_filterWMTSPriority = false;
 
-/** 
- * filtres les services uniquement en TMS
- * @fixme en attente d'evolution du service pour determiner les "real" couches vecteurs
- * @type {Array}
- */
-let m_filterByTMS = [
-    "ADMIN_EXPRESS",
-    "ISOHYPSE",
-    "PLAN.IGN",
-    "OCSGE_2016",
-    "OCSGE_2019",
-    "PCI",
-    "BDTOPO"
-];
+/** Filtrer sur les TMS ayant un style */
+let m_filterTMS = true;
 
 /** url du service (template avec ${m_index}) */
 let m_url = `https://data.geopf.fr/recherche/api/indexes/${m_index}/suggest`;
@@ -135,7 +123,6 @@ const target = new EventTarget();
  *   "service": "TMS",
  *   "url": "https://data.geopf.fr/tms/1.0.0/PLAN.IGN"
  * }
- * @fire suggest
  */
 const suggest = async (text) => {
     // ex. request
@@ -219,6 +206,7 @@ const suggest = async (text) => {
     }
     results.sort((a, b) => b.score - a.score);
 
+    // inventaire sur les données ayant plusieurs services associés
     var filter = null;
     if (m_filterWMTSPriority) {
         filter = inventory(results);
@@ -226,6 +214,7 @@ const suggest = async (text) => {
 
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
+        // filtrage par services
         var services = (m_filterByService.length === 0 || m_filterByService.includes(result.source.type));
         // FIXME 
         // utilisation le champ : result.source.open ?
@@ -235,40 +224,68 @@ const suggest = async (text) => {
             }
             // INFO
             // champs possibles mais pas toujours remplis :
-            // srs[], attributions{}, extent{}, metada_url[]
+            // srs[], attributions{}, extent{}, metadata_url[]
             var o = {
                 attribution : result.source.attribution || {},
                 srs : result.source.srs || [],
                 keywords : result.source.keywords || [],
                 extent : result.source.extent || {},
-                metadata : result.source.metadata_urls || [], // mapping ?
+                metadata : result.source.metadata_urls || [], // mapping
                 name : result.source.layer_name || "",
                 title : result.source.title || "",
                 description : result.source.description,
                 service : result.source.type || "", // mapping
                 url : result.source.url || "",
-                tech : result.source.tech || {},
+                tech : result.source.tech || {}, // FIXME extra ?
                 tags : result.source.tags || {},
                 theme : result.source.theme || "",
                 producer : result.source.producer || ""
             };
-            if (m_filterByTMS.length) {
-                if ((o.service === "WMTS" && m_filterByTMS.includes(o.name)) ||
-                    (o.service === "TMS" && !m_filterByTMS.includes(o.name))) {
-                    continue;
-                }
-            }
+
+            // filtrage par projection
             if (m_filterByProjection.length) {
                 // FIXME Array !?
                 if (m_filterByProjection.includes(o.srs[0])) {
                     continue;
                 }
             }
+            // filtrage par priorité du WMTS sur le WMS
             if (filter && filter[o.name] && o.service === "WMS") {
                 continue;
             }
+
+            // EVOL : en attente des param techniques pour determiner les vrais TMS
+            // filtrage sur les TMS n'ayant pas de style
+            if (o.service === "TMS") {
+                // FIXME 
+                // on part d'une hypothese :
+                // si la couche TMS a une metadata renseignée au format JSON en 1ere position
+                // on estime que ceci doit être un style...
+                o.styles = false;
+                if (o.metadata.length !== 0 && /(\.json)$/i.test(o.metadata[0])) {
+                    o.styles = true;
+                }
+                
+                // Si aucun style et si on décide d'écarter les TMS sans styles
+                // on n'enregistre pas la donnée...
+                if (!o.styles && m_filterTMS) {
+                    continue;
+                }
+            }
+
+            // EVOL : en attente des param techniques pour determiner les faux WMTS
+            // filtrage des WMTS ayant un TMS vecteur tuilé avec des styles
+            if (o.service === "WMTS") {
+                // FIXME
+                // on part d'une hypothese :
+                // si la couche WMTS a un style renseigné en metadata 
+                // cela signifie qu'elle a un TMS valide correspondant
+                if (o.metadata.length !== 0 && /(.json)$/i.test(o.metadata[0]) && m_filterTMS === true) {
+                    continue;
+                }
+            }
+
             m_suggestions.push(o);
-            // console.log("suggestion", result);
         }
     }
 
@@ -451,40 +468,12 @@ const setFiltersByLayerPriority = (value) => {
 const setFilterWMTSPriority = (value) => {
     m_filterWMTSPriority = value;
 };
-/**
- * Filtre sur les "purs" couches vecteurs tuilés
- * @param {String} value - liste des couches
- * @see m_filterByTMS
+/** 
+ * Active ou non le filtre pour ne conserver que les TMS ayant un style 
+ * @param {Boolean} value - active le filtre
  */
-const setFiltersByTMS = (value) => {
-    m_filterByTMS = value === "" ? [] : value.split(",");
-};
-/**
- * Mise à jour de la liste des "purs" couches vecteurs tuilés
- * @param {String} value - url
- */
-const updateFilterByTMS = async (value) => {
-    var url = value;
-    if (!url) {
-        url = "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/vectorTileConfig/fullVectorTileConfig.json";
-    }
-    const response = await fetch(url);
-    const results = await response.json();
-
-    if (response.status !== 200) {
-        throw new Error(response.message);
-    }
-
-    if (!results) {
-        throw new Error("Liste vide !");
-    }
-
-    var lstName = Object.keys(results.layers).map((k) => { return k.split("$")[0]; });
-    if (lstName) {
-        setFiltersByTMS(lstName.toString());
-    }
-
-    return m_filterByTMS;
+const setFilterTMS = (value) => {
+    m_filterTMS = value;
 };
 
 export default {
@@ -501,9 +490,8 @@ export default {
     setUrl,
     setMaximumResponses,
     setFiltersByService,
-    setFiltersByTMS,
-    updateFilterByTMS,
     setFiltersByProjection,
     setFiltersByLayerPriority,
-    setFilterWMTSPriority
+    setFilterWMTSPriority,
+    setFilterTMS
 };
