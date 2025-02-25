@@ -713,7 +713,8 @@ var Route = class Route extends Control {
             routeForm.appendChild(points[i]);
         }
 
-        routeForm.appendChild(this._createRoutePanelFormModeChoiceComputeElement());
+        // form : retrait du choix du mode de calcul
+        // routeForm.appendChild(this._createRoutePanelFormModeChoiceComputeElement());
 
         // form: menu des exclusions
         this._showRouteExclusionsElement = this._createShowRouteExclusionsPictoElement();
@@ -1097,13 +1098,20 @@ var Route = class Route extends Control {
         // on recupere les éventuelles options du service passées par l'utilisateur
         var routeOptions = this.options.routeOptions;
 
-        // OVERLOAD : la resource bd-topo-osrm ne gère pas le calcul piéton en mode fastest
-        // dans ce cas, on utilise valhalla dans le cas d'une utilisation par défaut du widget
-        // sans paramétrage de resource explicitement demandé
+        // OVERLOAD : valhalla par défaut
+
         var routeResource;
         if (!routeOptions.resource) {
-            if (this._currentComputation === "fastest" && this._currentTransport === "Pieton") {
-                routeResource = "bdtopo-valhalla";
+            // si pas d'optimization (shortest/fastest), comportement par défaut
+            if (!routeOptions.routePreference) {
+                if (this._currentTransport === "Pieton") {
+                    routeResource = "bdtopo-osrm";
+                    this._currentComputation = "shortest";
+                }
+                if ( this._currentTransport === "Voiture") {
+                    routeResource = "bdtopo-valhalla";
+                    this._currentComputation = "fastest";
+                }
             }
         } else {
             routeResource = routeOptions.resource;

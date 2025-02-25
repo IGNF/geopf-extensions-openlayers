@@ -393,7 +393,8 @@ var RouteDOM = {
         var divValue = document.createElement("div");
         divValue.id = this._addUID("GProuteResultsValues");
         container.appendChild(divValue);
-
+        
+        /*
         var divMode = document.createElement("div");
         divMode.id = this._addUID("GProuteResultsMode");
 
@@ -422,7 +423,7 @@ var RouteDOM = {
         }
         divMode.appendChild(select);
         container.appendChild(divMode);
-
+        */
         var divNew = document.createElement("div");
         divNew.id = this._addUID("GProuteResultsNew");
         divNew.className = "GPresetPicto gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary gpf-btn--secondary";
@@ -992,7 +993,7 @@ var RouteDOM = {
     },
 
     /**
-     * Create Mode choice computation
+     * Create Mode choice computation : CODE MORT
      * see event!
      *
      * @returns {DOMElement} DOM element
