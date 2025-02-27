@@ -9,7 +9,9 @@ __DATE__
 
 ### 🎉 Summary
 
-- on fixe les versions : ol 10.3.1 & ol-mapbox-style 12.3.5
+Ajout d'options pour exporter les croquis, mieux filtrer les résultats issus de la recherche.
+Refonte graphique de la barre de recherche et ajout d'un menu contextuel au clic droit sur la carte.
+Fixage des versions openlayers en 10.3.1 et ol-mapbox-style en 12.3.5.
 
 ### 💥 Breaking changes
 
@@ -19,11 +21,13 @@ __DATE__
 
   - LayerSwitcher : ajout d'un bouton d'édition des données de type vecteur via l'option `options.allowEdit:true` (#342)
   - SearchEngine : ajout d'un filtre sur les données en fonction de leur projection (#353) 
-
+  - Export : ajout d'un control Export ou Save pour exporter les croquis (#343)
+ 
 * 🔨 [Changed]
 
   - ContextMenu: refacto et documentation du code du menu contextuel (#340)
   - ContextMenu: Adresse : affichage du nom de commune quand il n'y a pas d'adresse (#351)
+  - SearchEngine : Le srésultats de recherche sont listés dans un panel unique (#346)
 
 * 🔥 [Deprecated]
 
