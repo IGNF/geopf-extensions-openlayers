@@ -362,8 +362,7 @@ var RouteDOM = {
                 resultStageValue.className = "GProuteResultStageValue";
                 var elementCoords = document.getElementById(this._addUID("GPlocationOriginCoords_" + id));
                 var stageCoords = elementCoords.value;
-                var visible = (elementCoords.className === "GPelementVisible gpf-visible");
-                if (stageCoords !== null && stageCoords !== "" && visible) {
+                if (stageCoords !== null && stageCoords !== "") {
                     resultStageValue.innerHTML = stageCoords;
                 } else {
                     resultStageValue.innerHTML = document.getElementById(this._addUID("GPlocationOrigin_" + id)).value;
