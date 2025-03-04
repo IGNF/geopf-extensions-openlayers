@@ -17,6 +17,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - route: amélioration de la lisibilité du panel de résultats de l'itinéraire (#362)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
