@@ -353,17 +353,16 @@ var RouteDOM = {
             var id = ID.index(tag);
             if (document.getElementById(this._addUID("GPlocationPoint_" + id)).className === "GPflexInput GPlocationStageFlexInput gpf-flex") {
                 var resultStage = document.createElement("div");
-                resultStage.className = "GProuteResultsStages";
-                var resultStageLabel = document.createElement("div");
+                resultStage.className = "GProuteResultsStages fr-my-1w";
+                var resultStageLabel = document.createElement("span");
                 resultStageLabel.className = "GProuteResultStageLabel";
-                resultStageLabel.innerHTML = document.getElementById(this._addUID("GPlocationOriginLabel_" + id)).innerHTML + " :";
+                resultStageLabel.innerHTML = document.getElementById(this._addUID("GPlocationOriginLabel_" + id)).innerHTML + " : ";
                 resultStage.appendChild(resultStageLabel);
-                var resultStageValue = document.createElement("div");
+                var resultStageValue = document.createElement("span");
                 resultStageValue.className = "GProuteResultStageValue";
                 var elementCoords = document.getElementById(this._addUID("GPlocationOriginCoords_" + id));
                 var stageCoords = elementCoords.value;
-                var visible = (elementCoords.className === "GPelementVisible gpf-visible");
-                if (stageCoords !== null && stageCoords !== "" && visible) {
+                if (stageCoords !== null && stageCoords !== "") {
                     resultStageValue.innerHTML = stageCoords;
                 } else {
                     resultStageValue.innerHTML = document.getElementById(this._addUID("GPlocationOrigin_" + id)).value;
