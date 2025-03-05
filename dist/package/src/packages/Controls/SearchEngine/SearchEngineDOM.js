@@ -862,10 +862,11 @@ var SearchEngineDOM = {
 
     /**
      * @param {Object[]} advancedSearchCodes - codes
+     * @param {Boolean} coordinateSearchInAdvancedSearch - coords in advanced search?
      *
      * @returns {DOMElement} DOM element
      */
-    _createAdvancedSearchPanelFormElement : function (advancedSearchCodes) {
+    _createAdvancedSearchPanelFormElement : function (advancedSearchCodes, coordinateSearchInAdvancedSearch) {
         // contexte d'execution
         var self = this;
 
@@ -904,7 +905,7 @@ var SearchEngineDOM = {
         label.innerHTML = "Recherche par";
         div.appendChild(label);
 
-        var select = this._createAdvancedSearchFormCodeElement(advancedSearchCodes);
+        var select = this._createAdvancedSearchFormCodeElement(advancedSearchCodes, coordinateSearchInAdvancedSearch);
         div.appendChild(select);
 
         // FIXME on decompose la fonction pour les besoins du controle,
@@ -923,9 +924,10 @@ var SearchEngineDOM = {
 
     /**
      * @param {Object[]} codes - codes
+     * @param {Boolean} coordinateSearchInAdvancedSearch - coords in advanced search?
      * @returns {DOMElement} DOM element
      */
-    _createAdvancedSearchFormCodeElement : function (codes) {
+    _createAdvancedSearchFormCodeElement : function (codes, coordinateSearchInAdvancedSearch) {
         // contexte d'execution
         var self = this;
 
@@ -959,6 +961,13 @@ var SearchEngineDOM = {
             var option = document.createElement("option");
             option.value = codes[i].id;
             option.text = codes[i].title;
+            select.appendChild(option);
+        }
+
+        if (coordinateSearchInAdvancedSearch) {
+            var option = document.createElement("option");
+            option.value = "Coordinates";
+            option.text = "Coordonnées";
             select.appendChild(option);
         }
 

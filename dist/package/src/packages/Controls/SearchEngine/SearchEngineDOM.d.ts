@@ -28,8 +28,8 @@ declare namespace SearchEngineDOM {
     function _createSearchedSuggestTitleElement(): void;
     function _createSearchedSuggestElement(suggest: Object, id: number): void;
     function _createAdvancedSearchPanelHeaderElement(): DOMElement;
-    function _createAdvancedSearchPanelFormElement(advancedSearchCodes: Object[]): DOMElement;
-    function _createAdvancedSearchFormCodeElement(codes: Object[]): DOMElement;
+    function _createAdvancedSearchPanelFormElement(advancedSearchCodes: Object[], coordinateSearchInAdvancedSearch: boolean): DOMElement;
+    function _createAdvancedSearchFormCodeElement(codes: Object[], coordinateSearchInAdvancedSearch: boolean): DOMElement;
     function _createAdvancedSearchFormInputElement(): DOMElement;
     function _createAdvancedSearchFormFiltersElement(): DOMElement;
     function _createAdvancedSearchFiltersTableElement(code: string, display: boolean): DOMElement;

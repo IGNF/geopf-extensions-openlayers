@@ -60,6 +60,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {Boolean} [options.displayButtonAdvancedSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
  * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
+ * @param {Boolean} [options.coordinateSearchInAdvancedSearch = false] -True to display coord search in advanced search
  * @param {Boolean} [options.displayButtonClose = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
  * @param {Object}  [options.coordinateSearch] - coordinates search options.
  * @param {DOMElement} [options.coordinateSearch.target = null] - TODO : target location of results window. By default under the search bar.
@@ -92,7 +93,7 @@ var logger = Logger.getLogger("searchengine");
  * @param {String[]}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
  * @param {Number}  [options.searchOptions.serviceOptions.size] - number of response in the service. 1000 by default
  * @param {Number}  [options.searchOptions.serviceOptions.maximumResponses] - number of results in the response. 10 by default
- * @param {Number}  [options.searchOptions.maximumEntries] - maximum search results we want to display. 
+ * @param {Number}  [options.searchOptions.maximumEntries] - maximum search results we want to display.
  * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
  * @param {Object}  [options.geocodeOptions.serviceOptions] - options of geocode service
  * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})
@@ -318,6 +319,7 @@ var SearchEngine = class SearchEngine extends Control {
             displayButtonAdvancedSearch : false,
             displayButtonGeolocate : false,
             displayButtonCoordinateSearch : false,
+            coordinateSearchInAdvancedSearch : false,
             advancedSearch : {},
             coordinateSearch : {},
             searchOptions : {
@@ -394,7 +396,7 @@ var SearchEngine = class SearchEngine extends Control {
             Search.target.addEventListener("suggest", (e) => {
                 logger.debug(e);
                 let suggestResults = e.detail;
-                // filtre des suggestions selon la configuration ou l'option filterLayersList                
+                // filtre des suggestions selon la configuration ou l'option filterLayersList
                 suggestResults = this._filterResultsFromConfigLayers(suggestResults);
 
                 this._fillSearchedSuggestListContainer(suggestResults);
@@ -836,9 +838,11 @@ var SearchEngine = class SearchEngine extends Control {
             buttonsContainer.appendChild(geolocateShow);
         }
 
-        if (this.options.displayButtonCoordinateSearch) {
+        if (this.options.displayButtonCoordinateSearch || this.options.coordinateSearchInAdvancedSearch) {
             var searchByCoordinateShow = this._createShowSearchByCoordinateElement();
-            buttonsContainer.appendChild(searchByCoordinateShow);
+            if (!this.options.coordinateSearchInAdvancedSearch) {
+                buttonsContainer.appendChild(searchByCoordinateShow);
+            }
 
             var coordinatePanel = this._createCoordinateSearchPanelElement();
             var coordinatePanelDiv = this._createCoordinateSearchPanelDivElement();
@@ -881,7 +885,9 @@ var SearchEngine = class SearchEngine extends Control {
             coordinatePanelDiv.appendChild(coordinateForm);
 
             coordinatePanel.appendChild(coordinatePanelDiv);
-            container.appendChild(coordinatePanel);
+            if (!this.options.coordinateSearchInAdvancedSearch) {
+                container.appendChild(coordinatePanel);
+            }
         }
 
         if (this.options.displayButtonAdvancedSearch) {
@@ -893,12 +899,15 @@ var SearchEngine = class SearchEngine extends Control {
             var advancedPanel = this._createAdvancedSearchPanelElement();
             var advancedPanelDiv = this._createAdvancedSearchPanelDivElement();
             var advancedHeader = this._createAdvancedSearchPanelHeaderElement();
-            var advancedForm = this._createAdvancedSearchPanelFormElement(this._advancedSearchCodes);
+            var advancedForm = this._createAdvancedSearchPanelFormElement(this._advancedSearchCodes, this.options.coordinateSearchInAdvancedSearch);
             var advancedFormFilters = this._filterContainer = this._createAdvancedSearchFormFiltersElement();
             this._setFilter(this._advancedSearchCodes[0].id); // ex "PositionOfInterest"
             var advancedFormInput = this._createAdvancedSearchFormInputElement();
 
             advancedForm.appendChild(advancedFormFilters);
+            if (this.options.coordinateSearchInAdvancedSearch) {
+                advancedForm.appendChild(coordinateForm);
+            }
             advancedForm.appendChild(advancedFormInput);
             advancedPanelDiv.appendChild(advancedHeader);
             advancedPanelDiv.appendChild(advancedForm);
@@ -1139,7 +1148,7 @@ var SearchEngine = class SearchEngine extends Control {
      * @private
      */
     _filterResultsFromConfigLayers (suggests) {
-        // si l'option de filtrage des entrées à afficher est activée (true par défaut) : on nettoie la liste 
+        // si l'option de filtrage des entrées à afficher est activée (true par défaut) : on nettoie la liste
         if (this.options.searchOptions.filterLayers) {
             var layerList = {};
             if (this.options.searchOptions.filterLayersList) {
@@ -1160,7 +1169,7 @@ var SearchEngine = class SearchEngine extends Control {
                 if (!layerList[suggests[i].name] || suggests[i].service.toUpperCase() !==  layerList[suggests[i].name].toUpperCase()) {
                     suggests.splice(i, 1);
                 }
-            } 
+            }
         }
         Search.setSuggestions(suggests);
         return suggests;
