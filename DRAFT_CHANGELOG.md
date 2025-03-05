@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - searchEngine : ajout d'une option pour afficher la recherche par coordonnées dans la recherche avancée (#363)
+
 * 🔨 [Changed]
 
   - route: amélioration de la lisibilité du panel de résultats de l'itinéraire (#362)
