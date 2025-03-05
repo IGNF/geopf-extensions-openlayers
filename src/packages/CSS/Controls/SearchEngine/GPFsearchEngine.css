@@ -118,7 +118,19 @@ input[id^=GPadvancedSearchSubmit] {
   margin-bottom: 15px;
 }
 
+form[id^=GPadvancedSearchForm] > form[id^=GPcoordinateSearchForm] {
+  padding: 0;
+  max-height: unset;
+  display: none;
+}
 
+form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > form[id^=GPcoordinateSearchForm] {
+  display: unset;
+}
+
+form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[id^=GPadvancedSearchSubmit] {
+  display: none;
+}
 
 /* Simple search input */
 
