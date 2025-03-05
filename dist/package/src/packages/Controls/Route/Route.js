@@ -895,6 +895,7 @@ var Route = class Route extends Control {
             apiKey : this.options.apiKey || null,
             tag : {
                 id : count,
+                label : "Départ",
                 groupId : this._uid,
                 markerOpts : this.options.markersOpts["departure"],
                 display : true
@@ -915,6 +916,7 @@ var Route = class Route extends Control {
                 apiKey : this.options.apiKey || null,
                 tag : {
                     id : count,
+                    label : "Etape " + (count-1),
                     groupId : this._uid,
                     markerOpts : this.options.markersOpts["stages"],
                     display : false,
@@ -934,6 +936,7 @@ var Route = class Route extends Control {
             apiKey : this.options.apiKey || null,
             tag : {
                 id : count,
+                label : "Arrivée",
                 groupId : this._uid,
                 markerOpts : this.options.markersOpts["arrival"],
                 display : true,

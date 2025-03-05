@@ -49,6 +49,11 @@ button[id^=GProuteReset-], div[id^=GProuteResultsNew-] {
   min-width: 2.5em;
 }
 
+.GProuteResultStageLabel,
+.GProuteResultsValueLabel {
+  font-weight: bold;
+}
+
 div[id^=GProuteResultsValueDist],
 div[id^=GProuteResultsValueTime]  {
   color: var(--text-action-high-blue-france);

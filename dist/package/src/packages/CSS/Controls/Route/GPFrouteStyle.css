@@ -113,7 +113,6 @@ select[id^=GProuteComputationSelect] {
   display: flex;
 }
 
-
 .GProuteResultStageLabel,
 .GProuteResultStageValue,
 .GProuteResultsValueLabel {
@@ -132,16 +131,6 @@ select[id^=GProuteComputationSelect] {
 
 .GProuteResultsValueLabel {
   width: 65px;
-}
-
-.GProuteResultStageValue {
-  -webkit-flex: 1;
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  overflow-x: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 /* Exclusions */
