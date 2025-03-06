@@ -41,6 +41,7 @@ nb-configuration.xml
 /coverage/
 /dist/
 /jsdoc/
+/jsdoc_new/
 /nbproject/
 /node_modules/
 /samples/
