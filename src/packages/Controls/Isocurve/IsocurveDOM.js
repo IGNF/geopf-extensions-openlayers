@@ -196,6 +196,189 @@ var IsoDOM = {
     },
 
     /**
+     * Create Results Panel
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createIsoPanelResultsElement : function () {
+        // contexte
+        var self = this;
+
+        var container = document.createElement("div");
+        container.id = this._addUID("GPisoResultsPanel");
+        container.className = "GPelementHidden gpf-hidden";
+
+        var divNew = document.createElement("div");
+        divNew.id = this._addUID("GPisoResultsNew");
+        divNew.className = "GPresetPicto gpf-btn gpf-btn-icon-reset fr-btn fr-btn--secondary gpf-btn--secondary fr-m-2w";
+        divNew.title = "Modifier le calcul";
+        divNew.addEventListener("click", function (e) {
+            document.getElementById(self._addUID("GPisoResultsPanel")).className = "GPelementHidden gpf-hidden";
+            document.getElementById(self._addUID("GPisochronForm")).className = "gpf-panel__content fr-modal__content";
+            self.onShowIsoResultsNewClick(e);
+        });
+        container.appendChild(divNew);
+        
+        return container;
+    },
+
+    /**
+     * Add Results Duration and Distance
+     * (results dynamically generate !)
+     * see event!
+     * @param {Object} results - resultats renvoyé par le service d'isochrone
+     * @param {Object} computeOptions - options données au service d'isochrone
+     * @param {Function} fconvert - fconvert
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _addIsoResultsValuesElement : function (results, computeOptions, fconvert) {
+        var distance = results.distance;
+        var duration = results.time;
+        var origin = results.location;
+        var mode = computeOptions.graph;
+        var type = computeOptions.method;
+        var exclusions = computeOptions.exclusions;
+
+        var div = document.getElementById(this._addUID("GPisoResultsPanel"));
+        
+        // Nettoyage de la div des metadonnées du précédent calcul
+        if (div.childElementCount && div.firstChild.id === this._addUID("GPisoResultsValueDiv")) {
+            div.removeChild(div.firstChild);
+        }
+
+        // Création de la div des metadonnées du calcul
+        var isoResultsValueDiv = document.createElement("div");
+        isoResultsValueDiv.id = this._addUID("GPisoResultsValueDiv");
+        isoResultsValueDiv.className = "fr-m-2w";
+
+        // Affichage du type de calcul
+        
+        var containerType = document.createElement("div");
+        containerType.className = "GPisoResultsValue";
+
+        var labelType = document.createElement("label");
+        labelType.className = "GPisoResultsValueLabel";
+        labelType.innerHTML = "Type :";
+        containerType.appendChild(labelType);
+
+        var divType = document.createElement("div");
+        divType.id = this._addUID("GPisoResultsValueType");
+        if (type === "time") {
+            divType.innerHTML = "temps";
+        } else {
+            divType.innerHTML = "distance";
+        }
+        containerType.appendChild(divType);
+
+        isoResultsValueDiv.appendChild(containerType);
+
+        // Affichage du graphe utilisé
+
+        var containerMode = document.createElement("div");
+        containerMode.className = "GPisoResultsValue";
+
+        var labelMode = document.createElement("label");
+        labelMode.className = "GPisoResultsValueLabel";
+        labelMode.innerHTML = "Mode :";
+        containerMode.appendChild(labelMode);
+
+        var divMode = document.createElement("div");
+        divMode.id = this._addUID("GPisoResultsValueMode");
+        divMode.innerHTML = mode;
+        containerMode.appendChild(divMode);
+
+        isoResultsValueDiv.appendChild(containerMode);
+
+        // Affichage coords de l'origine du calcul
+        var containerOrigin = document.createElement("div");
+        containerOrigin.className = "GPisoResultsValue";
+
+        var labelOrigin = document.createElement("label");
+        labelOrigin.className = "GPisoResultsValueLabel";
+        labelOrigin.innerHTML = "Centre :";
+        containerOrigin.appendChild(labelOrigin);
+
+        var divOrigin = document.createElement("div");
+        divOrigin.id = this._addUID("GPisoResultsValueOrigin");
+        divOrigin.innerHTML = parseFloat(origin.x).toFixed(4) + ", " + parseFloat(origin.y).toFixed(4);
+        containerOrigin.appendChild(divOrigin);
+
+        isoResultsValueDiv.appendChild(containerOrigin);
+
+        // Affichage distance de l'isodistance en cas d'isodistance
+        if (distance && distance.length !== 0) {
+            var containerDistance = document.createElement("div");
+            containerDistance.className = "GPisoResultsValue";
+    
+            var labelDistance = document.createElement("label");
+            labelDistance.className = "GPisoResultsValueLabel";
+            labelDistance.innerHTML = "Distance :";
+            containerDistance.appendChild(labelDistance);
+    
+            var distanceLabel = 0;
+            var isKm = parseInt(distance / 1000, 10);
+    
+            if (!isKm) {
+                distanceLabel = Math.round(distance) + " m";
+            } else {
+                var distanceArrondi = Math.round(distance);
+                distanceArrondi = distanceArrondi / 1000;
+                distanceLabel = distanceArrondi + " km";
+            }
+    
+            var divDistance = document.createElement("div");
+            divDistance.id = this._addUID("GPisoResultsValueDist");
+            divDistance.innerHTML = distanceLabel;
+            containerDistance.appendChild(divDistance);
+    
+            isoResultsValueDiv.appendChild(containerDistance);
+        }
+
+        // Affichage durée de l'isochrone en cas d'isochrone
+        if (duration && duration.length !== 0) {
+            var containerDuration = document.createElement("div");
+            containerDuration.className = "GPisoResultsValue";
+    
+            var labelDuration = document.createElement("label");
+            labelDuration.className = "GPisoResultsValueLabel";
+            labelDuration.innerHTML = "Durée :";
+            containerDuration.appendChild(labelDuration);
+    
+            var divDuration = document.createElement("div");
+            divDuration.id = this._addUID("GPisoResultsValueTime");
+            divDuration.innerHTML = fconvert(duration);
+            containerDuration.appendChild(divDuration);
+    
+            isoResultsValueDiv.appendChild(containerDuration);
+        }
+
+        // Affichage des éventuelles exclusions
+
+        if (exclusions.length > 0) {
+            var containerExclusions = document.createElement("div");
+            containerExclusions.className = "GPisoResultsValue";
+    
+            var labelExclusions = document.createElement("label");
+            labelExclusions.className = "GPisoResultsValueLabel";
+            labelExclusions.innerHTML = "Exclusions :";
+            containerExclusions.appendChild(labelExclusions);
+    
+            var divExclusions = document.createElement("div");
+            divExclusions.id = this._addUID("GPisoResultsValueExclusions");
+                
+            divExclusions.innerHTML = exclusions.join(", ");
+            containerExclusions.appendChild(divExclusions);
+    
+            isoResultsValueDiv.appendChild(containerExclusions);
+        }
+
+        // ajout de la div des résultats en premier élément
+        div.prepend(isoResultsValueDiv);
+        return div;
+    },
+
+    /**
      * Create Waiting Panel
      *
      * @returns {DOMElement} DOM element

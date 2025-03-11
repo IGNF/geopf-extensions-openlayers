@@ -3,17 +3,17 @@ import proj4 from "proj4";
 // Objet interface requête OGC
 var OGCRequest = {
     /**
-   * Computes data for a given layer of Geoplateforme's WFS
-   * @param {string} layer name of the WFS layer
-   * @param {Array} attributes list of strings of the relevant attributes to return
-   * @param {number} around distance around the point in km for the query, default 0
-   * @param {string} geom_name name of the geometry column, default "geom"
-   * @param {string} additional_cql cql filter needed other than geometry, e.g. "AND nature_de_l_objet='Bois'", default ""
-   * @param {number} epsg epsg number of the layer's CRS, default 4326
-   * @param {number} lat Latitude
-   * @param {number} lng Longitude
-   * @returns {Promise(Array)} results of each attributes (no duplicates)
-   */
+    * Computes data for a given layer of Geoplateforme's WFS
+    * @param {string} layer name of the WFS layer
+    * @param {Array} attributes list of strings of the relevant attributes to return
+    * @param {number} around distance around the point in km for the query, default 0
+    * @param {string} geom_name name of the geometry column, default "geom"
+    * @param {string} additional_cql cql filter needed other than geometry, e.g. "AND nature_de_l_objet='Bois'", default ""
+    * @param {number} epsg epsg number of the layer's CRS, default 4326
+    * @param {number} lat Latitude
+    * @param {number} lng Longitude
+    * @returns {Promise(Array)} results of each attributes (no duplicates)
+    */
     computeGenericGPFWFS : async function (layer, attributes, around=0, geom_name="geom", additional_cql="", epsg=4326, getGeom=false, lat, lng) {
         let coord1 = lng;
         let coord2 = lat;

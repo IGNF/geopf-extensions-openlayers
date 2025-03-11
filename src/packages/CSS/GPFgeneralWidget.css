@@ -377,6 +377,10 @@ input.GPsubmit:hover {
   opacity: 100%;
 }
 
+.GPflex {
+  display: flex;
+}
+
 /********************************/
 /* Autocomplete/geocode results */
 /********************************/

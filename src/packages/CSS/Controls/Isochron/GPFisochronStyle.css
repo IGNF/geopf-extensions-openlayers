@@ -219,3 +219,38 @@ input[id^=GPisochronSubmit-] {
   width: fit-content;
   padding: 0 10px;
 }
+
+div[id^=GPisoResultsNew] {
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  opacity: 0.8;
+  background-position: 3px 0;
+  transition: opacity 0.2s ease-out;
+  cursor: pointer;
+  background-color: #366291;
+  background-image: url("img/GPisochronClose.png");
+  position: initial;
+}
+
+/* Results Div */
+div[id^=GPisoResultsValueDiv-] {
+  display: inline-block;
+  margin-top: 4px;
+  line-height: 16px;
+}
+
+.GPisoResultsValue div {
+  color: #666;
+}
+
+.GPisoResultsValueLabel {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+div[id^=GPisoResultsPanel-] {
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
