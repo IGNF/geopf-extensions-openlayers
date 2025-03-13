@@ -171,4 +171,8 @@ div[id^=GProuteResultsNew]:hover {
   opacity: 1;
 }
 
-
+/* Showing/hiding control Export ajouté à l'itinéraire */
+div[id^=GProuteResultsPanel-].GPelementHidden  + .container-buttons-plugin,
+div[id^=GProuteResultsPanel-].gpf-hidden + .container-buttons-plugin {
+  display: none;
+}

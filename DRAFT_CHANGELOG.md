@@ -16,7 +16,8 @@ __DATE__
 * ✨ [Added]
 
   - searchEngine : ajout d'une option pour afficher la recherche par coordonnées dans la recherche avancée (#363)
-
+  - isocurve : ajout d'un panel affichant les informations du calcul d'isochrone (#364)
+ 
 * 🔨 [Changed]
 
   - route: amélioration de la lisibilité du panel de résultats de l'itinéraire (#362)
@@ -26,6 +27,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - export : le menu d'export des calculs n'apparait qu'une fois le calcul réalisé (#364)
   
 * 🔒 [Security]
 

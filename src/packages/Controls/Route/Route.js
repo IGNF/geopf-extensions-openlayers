@@ -26,6 +26,7 @@ import SelectorID from "../../Utils/SelectorID";
 import Markers from "../Utils/Markers";
 import Draggable from "../../Utils/Draggable";
 import Interactions from "../Utils/Interactions";
+import MathUtils from "../../Utils/MathUtils";
 // import local with ol dependencies
 import LocationSelector from "../LocationSelector/LocationSelector";
 import ButtonExport from "../Export/Export";
@@ -1610,10 +1611,10 @@ var Route = class Route extends Control {
      */
     _fillRouteResultsDetailsContainer (distance, duration, instructions) {
         // Distance et Durée
-        this._resultsRouteValuesContainer = this._addRouteResultsValuesElement(distance, duration, this._convertSecondsToTime);
+        this._resultsRouteValuesContainer = this._addRouteResultsValuesElement(distance, duration, MathUtils.convertSecondsToTime);
 
         // Détails
-        this._resultsRouteDetailsContainer = this._addRouteResultsDetailsElement(instructions, this._convertSecondsToTime);
+        this._resultsRouteDetailsContainer = this._addRouteResultsDetailsElement(instructions, MathUtils.convertSecondsToTime);
     }
 
     /**
@@ -1716,8 +1717,8 @@ var Route = class Route extends Control {
                 type : "Feature",
                 geometry : o.geometry,
                 properties : {
-                    popupContent : "(" + id + ") distance : " + this._convertDistance(o.distance) +
-                        " / temps : " + this._convertSecondsToTime(o.duration)
+                    popupContent : "(" + id + ") distance : " + MathUtils.convertDistance(o.distance) +
+                        " / temps : " + MathUtils.convertSecondsToTime(o.duration)
                 },
                 id : id
             });
@@ -2226,67 +2227,7 @@ var Route = class Route extends Control {
         logger.log(newInstructions);
         return newInstructions;
     }
-
-    // ################################################################### //
-    // ################# Utils for Distance/Duration ##################### //
-    // ################################################################### //
-
-    /**
-     * convert seconds to time : HH:MM:SS
-     *
-     * @param {Number} duration - duration in seconds
-     *
-     * @returns {String} time in hours/minutes/seconds
-     *
-     * @private
-     */
-    _convertSecondsToTime (duration) {
-        var time = "";
-
-        duration = Math.round(duration);
-        var hours = Math.floor(duration / (60 * 60));
-
-        var divisor4minutes = duration % (60 * 60);
-        var minutes = Math.floor(divisor4minutes / 60);
-        // if (!minutes) {
-        //     minutes = "00";
-        // }
-
-        // var divisor4seconds = divisor4minutes % 60;
-        // var seconds = Math.ceil(divisor4seconds);
-        // if (!seconds) {
-        //     seconds = "00";
-        // }
-
-        if (hours) {
-            time = hours + "h ";
-        }
-        time += minutes + " min";
-        return time;
-    }
-
-    /**
-     * convert distance in meters or kilometers
-     *
-     * @param {Number} distance - distance in meters
-     *
-     * @returns {String} distance in km
-     *
-     * @private
-     */
-    _convertDistance (distance) {
-        var d = "";
-
-        var distanceKm = parseInt(distance / 1000, 10);
-        if (!distanceKm) {
-            d = parseInt(distance, 10) + " m"; // arrondi !
-        } else {
-            d = distanceKm + " km";
-        }
-
-        return d;
-    }
-
+    
 };
 
 // on récupère les méthodes de la classe commune ReverseGeocodingDOM
