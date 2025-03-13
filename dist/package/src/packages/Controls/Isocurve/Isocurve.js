@@ -23,6 +23,7 @@ import SelectorID from "../../Utils/SelectorID";
 import Markers from "../Utils/Markers";
 import Draggable from "../../Utils/Draggable";
 import Interactions from "../Utils/Interactions";
+import MathUtils from "../../Utils/MathUtils";
 // import local with ol dependencies
 import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 import LocationSelector from "../LocationSelector/LocationSelector";
@@ -447,6 +448,8 @@ var Isocurve = class Isocurve extends Control {
         // direction
         (this._currentDirection === "departure")
             ? document.getElementById("GPisochronDirectionSelect-" + this._uid).selectedIndex = 0 : document.getElementById("GPisochronDirectionSelect-" + this._uid).selectedIndex = 1;
+    
+        this._resultsIsoContainer.className = "";
     }
 
     /**
@@ -467,6 +470,8 @@ var Isocurve = class Isocurve extends Control {
         document.getElementById("GPlocationOriginCoords_1-" + this._uid).className = "GPlocationOriginHidden gpf-hidden";
         this._currentIsoResults = null;
         this.setLayer();
+
+        this._resultsIsoContainer.className = "GPelementHidden gpf-hidden";
     }
 
     // ################################################################### //
@@ -540,6 +545,7 @@ var Isocurve = class Isocurve extends Control {
         this._pictoIsoButton = null;
         this._waitingContainer = null;
         this._formContainer = null;
+        this._resultsIsoContainer = null;
         this._IsoPanelContainer = null;
         this._IsoPanelHeaderContainer = null;
 
@@ -896,6 +902,10 @@ var Isocurve = class Isocurve extends Control {
 
         panelDiv.appendChild(form);
 
+        // panel results
+        var isoResults = this._resultsIsoContainer = this._createIsoPanelResultsElement();
+        panelDiv.appendChild(isoResults);
+
         var plugin = this._createDrawingButtonsPluginDiv();
         panelDiv.appendChild(plugin);
         
@@ -1078,6 +1088,7 @@ var Isocurve = class Isocurve extends Control {
             onSuccess : function (results) {
                 logger.log(results);
                 if (results) {
+                    context._fillIsoResultsDetails(results, isoRequestOptions);
                     context._drawIsoResults(results);
                 }
                 if (bOnSuccess) {
@@ -1240,6 +1251,24 @@ var Isocurve = class Isocurve extends Control {
     }
 
     /**
+     * this method is called by event 'click' on 'GPIsoSubmit'
+     * tag label (cf. this._createIsoSubmitFormElement),
+     * and it cleans the isochrone geometry.
+     *
+     * @private
+     */
+    onShowIsoResultsNewClick () {
+        // clean avant un nouveau calcul !
+        this._clearGeojsonLayer();
+        /**
+        * event triggered when user clear points to compute isochrone
+        *
+        * @event route:newresults
+        */
+        this.dispatchEvent("iso:newresults");
+    }
+
+    /**
      * ...
      * @private
      */
@@ -1286,6 +1315,58 @@ var Isocurve = class Isocurve extends Control {
 
         // appel du service de calcul d'isochrones
         Gp.Services.isoCurve(options);
+    }
+
+    /**
+     * this method is called by this.onIsoComputationSubmit() (in case of route computation success)
+     * and fills the container of the iso compute results with its metadata
+     * information, also, constructs the geometry isochrone.
+     *
+     * @param {Object} results - results of the iso calculation
+     * @param {Object} computeOptions - options of the iso calculation
+     *
+     * @private
+     */
+    _fillIsoResultsDetails (results, computeOptions) {
+        // 1. Affichage des distances et durées
+        this._fillIsoResultsDetailsContainer(results, computeOptions);
+
+        // sauvegarde de l'etat des resultats
+        this._currentIsoInformations = results;
+
+        /**
+         * event triggered when the compute is finished
+         *
+         * @event iso:compute
+         * @property {Object} type - event
+         * @property {Object} target - instance Iso
+         * @example
+         * Iso.on("iso:compute", function (e) {
+         *   console.log(e.target.getData());
+         * })
+         */
+        this.dispatchEvent({
+            type : "iso:compute"
+        });
+
+        // mise à jour du controle !
+        this._formContainer.className = "GPelementHidden gpf-hidden gpf-panel__content fr-modal__content";
+        this._hideWaitingContainer();
+        this._resultsIsoContainer.className = "gpf-flex GPflex";
+    }
+
+    /**
+     * this method is called by this._fillIsoResultsDetails()
+     * and fills the container of the iso compute results with its metadata
+     * information.
+     *
+     * @param {Object} results - Resultats renvoyés par le service d'isochrone
+     * @param {Object} computeOptions - options of the iso calculation
+     * 
+     * @private
+     */
+    _fillIsoResultsDetailsContainer (results, computeOptions) {
+        this._resultsIsoValuesContainer = this._addIsoResultsValuesElement(results, computeOptions, MathUtils.convertSecondsToTime);
     }
 
     /**

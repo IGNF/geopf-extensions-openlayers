@@ -54,4 +54,18 @@ div[id^=GPisochronValueDist] {
   width: 80%;
 }
 
+.GPisoResultsValueLabel {
+  font-weight: bold;
+  margin-right: 4px;
+}
 
+.GPisoResultsValue div {
+  color: var(--text-action-high-blue-france);
+  font-weight: bold;
+}
+
+/* Reset picto */
+button[id^=GPisoReset-], div[id^=GPisoResultsNew-] {
+  min-width: 2.5em;
+  height: 2.5rem;
+}

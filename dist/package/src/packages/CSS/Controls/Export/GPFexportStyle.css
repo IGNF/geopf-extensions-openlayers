@@ -33,7 +33,7 @@ button[id^=GPexportButton-].GPexportButtonSaveIcon {
 
 /* menu */
 .GPexportMenuHidden {
-    visibility: hidden;
+    display: none;
 }
 
 .GPexportMenuContainer {

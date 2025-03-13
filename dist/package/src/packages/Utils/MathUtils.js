@@ -228,6 +228,49 @@ var MathUtils = {
             return n;
         }
         return null;
+    },
+
+    /**
+     * convert seconds to time : HH:MM:SS
+     *
+     * @param {Number} duration - duration in seconds
+     *
+     * @returns {String} time in hours/minutes/seconds
+     */
+    convertSecondsToTime : function (duration) {
+        var time = "";
+
+        duration = Math.round(duration);
+        var hours = Math.floor(duration / (60 * 60));
+
+        var divisor4minutes = duration % (60 * 60);
+        var minutes = Math.floor(divisor4minutes / 60);
+
+        if (hours) {
+            time = hours + "h ";
+        }
+        time += minutes + " min";
+        return time;
+    },
+
+    /**
+     * convert distance in meters or kilometers
+     *
+     * @param {Number} distance - distance in meters
+     *
+     * @returns {String} distance in km
+     */
+    convertDistance : function (distance) {
+        var d = "";
+
+        var distanceKm = parseInt(distance / 1000, 10);
+        if (!distanceKm) {
+            d = parseInt(distance, 10) + " m"; // arrondi !
+        } else {
+            d = distanceKm + " km";
+        }
+
+        return d;
     }
 };
 

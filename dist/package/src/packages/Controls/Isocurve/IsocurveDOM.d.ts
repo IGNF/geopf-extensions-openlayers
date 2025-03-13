@@ -8,6 +8,8 @@ declare namespace IsoDOM {
     function _createDrawingButtonsPluginDiv(): HTMLDivElement;
     function _createIsoPanelHeaderElement(): DOMElement;
     function _createIsoPanelFormElement(): DOMElement;
+    function _createIsoPanelResultsElement(): DOMElement;
+    function _addIsoResultsValuesElement(results: Object, computeOptions: Object, fconvert: Function): DOMElement;
     function _createIsoWaitingElement(): DOMElement;
     function _createIsoPanelFooterElement(): DOMElement;
     function _createIsoPanelFormPointLabel(): DOMElement;

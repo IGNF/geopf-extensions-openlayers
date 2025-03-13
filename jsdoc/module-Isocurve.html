@@ -855,9 +855,13 @@
             
             <div class="l2 itemMembers"> Events </div>
             
+                <div class="l3 itemMembers" data-name="module:Isocurve~iso:compute"> <a href="module-Isocurve.html#~event:iso:compute">iso:compute</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:Isocurve~isocurve:drawend"> <a href="module-Isocurve.html#~event:isocurve:drawend">isocurve:drawend</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:Isocurve~isocurve:drawstart"> <a href="module-Isocurve.html#~event:isocurve:drawstart">isocurve:drawstart</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:Isocurve~route:newresults"> <a href="module-Isocurve.html#~event:route:newresults">route:newresults</a> </div>
             
 
 <!--
@@ -865,9 +869,13 @@
             
             <span class="subtitle">Events</span>
             
+                <li data-name="module:Isocurve~iso:compute"><a href="module-Isocurve.html#~event:iso:compute">iso:compute</a></li>
+            
                 <li data-name="module:Isocurve~isocurve:drawend"><a href="module-Isocurve.html#~event:isocurve:drawend">isocurve:drawend</a></li>
             
                 <li data-name="module:Isocurve~isocurve:drawstart"><a href="module-Isocurve.html#~event:isocurve:drawstart">isocurve:drawstart</a></li>
+            
+                <li data-name="module:Isocurve~route:newresults"><a href="module-Isocurve.html#~event:route:newresults">route:newresults</a></li>
             
             </ul>
 -->
@@ -6434,6 +6442,162 @@ import { Isocurve } from "gpf-ext-ol"</code></pre>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="~event:iso:compute">
+            
+            iso:compute
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/Isocurve/Isocurve.js, line 1337
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>event triggered when the compute is finished</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">type</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>event</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">target</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>instance Iso</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+</dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>Iso.on("iso:compute", function (e) {
+  console.log(e.target.getData());
+})</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="~event:isocurve:drawend">
             
             isocurve:drawend
@@ -6441,7 +6605,7 @@ import { Isocurve } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/Isocurve/Isocurve.js, line 983
+            Controls/Isocurve/Isocurve.js, line 993
         </div>
         
     </div>
@@ -6512,7 +6676,7 @@ import { Isocurve } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/Isocurve/Isocurve.js, line 960
+            Controls/Isocurve/Isocurve.js, line 970
         </div>
         
     </div>
@@ -6524,6 +6688,77 @@ import { Isocurve } from "gpf-ext-ol"</code></pre>
     
     <div class="description">
         <p>event triggered at the start of drawing input</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~event:route:newresults">
+            
+            route:newresults
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/Isocurve/Isocurve.js, line 1263
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>event triggered when user clear points to compute isochrone</p>
     </div>
     
 
@@ -6590,7 +6825,7 @@ import { Isocurve } from "gpf-ext-ol"</code></pre>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Mar 06 2025 22:46:17 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Mar 13 2025 14:18:51 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

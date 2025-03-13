@@ -144,6 +144,25 @@ button[id^=GPisochronReset] {
 
 }
 
+/* Result panel */
+
+div[id^=GPisoResultsPanel] {
+  padding: 15px;
+}
+
+div[id^=GPisoResultsNew]:hover {
+  opacity: 1;
+}
+
+.GPisoResultsValue {
+  display: flex;
+}
+
+/* Showing/hiding control Export ajouté à l'isochrone */
+div[id^=GPisoResultsPanel-].GPelementHidden  + .container-buttons-plugin,
+div[id^=GPisoResultsPanel-].gpf-hidden + .container-buttons-plugin {
+  display: none;
+}
 
 
 

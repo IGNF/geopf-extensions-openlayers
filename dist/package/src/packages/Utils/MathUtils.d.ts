@@ -64,5 +64,7 @@ declare namespace MathUtils {
     function toInteger(s: string, base: Numeric): null | Numeric;
     function isInteger(s: string): boolean;
     function toFloat(s: string): null | Numeric;
+    function convertSecondsToTime(duration: number): string;
+    function convertDistance(distance: number): string;
 }
 //# sourceMappingURL=MathUtils.d.ts.map
