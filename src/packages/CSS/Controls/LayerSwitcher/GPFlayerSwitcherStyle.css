@@ -72,6 +72,7 @@ div[id^=GPlayerInfoTitle] {
 .GPlayerExtent,
 .GPlayerVisibility,
 .GPlayerInfo,
+.GPlayerGreyscale,
 .GPlayerInfoOpened,
 .GPlayerRemove,
 .GPlayerEdit {
@@ -84,6 +85,7 @@ div[id^=GPlayerInfoTitle] {
 .GPlayerVisibility,
 .GPlayerName,
 .GPlayerInfo,
+.GPlayerGreyscale,
 .GPlayerInfoOpened,
 .GPlayerRemove,
 .GPlayerEdit,
@@ -110,6 +112,7 @@ div[id^=GPlayerInfoTitle] {
 .GPlayerVisibility,
 .GPshowLayerAdvancedTools,
 .GPlayerInfo,
+.GPlayerGreyscale,
 .GPlayerInfoOpened,
 .GPlayerRemove,
 .GPlayerEdit {
@@ -175,6 +178,11 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
 }
 
 .GPlayerInfo {
+  left: 0;
+  background-position: -55px 0;
+}
+
+.GPlayerGreyscale {
   left: 0;
   background-position: -55px 0;
 }

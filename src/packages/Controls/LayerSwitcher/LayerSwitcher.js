@@ -5,6 +5,9 @@ import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcher.css";
 // import Control from "ol/control/Control";
 import Widget from "../Widget";
 import Control from "../Control";
+import ImageWMSSource from "ol/source/ImageWMS";
+import WMTSSource from "ol/source/WMTS";
+import TileWMSSource from "ol/source/TileWMS";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import { intersects as olIntersects } from "ol/extent";
 import {
@@ -95,7 +98,7 @@ var logger = Logger.getLogger("layerswitcher");
  * LayerSwitcher.on("layerswitcher:change:position", function (e) {
  *    console.warn("layer", e.layer, e.position);
  * });
- * 
+ *
  */
 var LayerSwitcher = class LayerSwitcher extends Control {
 
@@ -559,12 +562,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             gutter : false,
             allowEdit : false
         };
-        
+
         // merge with user options
         Utils.assign(this.options, options);
-        
+
         this.options.layers = layers;
-        
+
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
         this._uid = this.options.id || SelectorID.generate();
         // {Object} control layers list. Each key is a layer id, and its value is an object of layers options (layer, id, opacity, visibility, title, description...)
@@ -828,7 +831,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var isLegends = layerOptions.legends && layerOptions.legends.length !== 0;
         var isMetadata = layerOptions.metadata && layerOptions.metadata.length !== 0;
         var isQuicklookUrl = layerOptions.quicklookUrl;
-        // on n'affiche les informations que si elles sont renseignées 
+        // on n'affiche les informations que si elles sont renseignées
         // (pour ne pas avoir un panneau vide)
         if (isLegends || isMetadata || isQuicklookUrl) {
             layerOptions.displayInformationElement = true;
@@ -1274,6 +1277,126 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     }
 
     /**
+     * togglegreyscale
+     * @param {Event} e - Event
+     * @private
+     */
+    _onToggleLayerGreyscaleClick (e) {
+        // fonction de conversion d'une image en n/b SEE: https://github.com/IGNF/geoportal-sdk/blob/316168e8de142627da59dff008cc4c4b308bf2c2/src/OpenLayers/OlMapLayers.js#L965
+        function getGrayScaledDataUrl (img) {
+            // FIXME : patch pour safari !?
+            // ce patch cause des problemes sur Chrome v83+
+            // img.crossOrigin = null;
+            img.crossOrigin = "anonymous";
+
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
+
+            // si la taille est nulle, on force à une taille de tuile par defaut
+            // afin d'eviter une exception !
+            img.width = img.width || 256;
+            img.height = img.height || 256;
+
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+
+            var imageData = ctx.getImageData(0, 0, img.width, img.height);
+            var data = imageData.data;
+
+            for (var i = 0; i < data.length; i += 4) {
+                var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                data[i] = avg; // red
+                data[i + 1] = avg; // green
+                data[i + 2] = avg; // blue
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+            return canvas.toDataURL();
+        };
+
+        // fonction de conversion et de chargement d'une image en n/b
+        function convertImagetoGrayScale (image, context) {
+            // conversion en n/b
+            var dataUrl = getGrayScaledDataUrl(image);
+
+            // chargement d'une image vide intermediaire pour eviter
+            // l'affichage d'images couleurs (pour certains navigateurs
+            // le chargement de l'image n/b et plus long et l'image originale
+            // apparait de manière transitoire)
+            image.src = "";
+
+            // forcer le raffraichissement de l'affichage a l'issu
+            // du chargement de l'image n/b
+            /** onload */
+            image.onload = function () {
+                context.changed();
+            };
+            // chargement image n/b
+            image.src = dataUrl;
+        }
+
+        // handler for event 'imageloadstart'
+        function imageloadstartHandler (evt) {
+            evt.image.getImage().crossOrigin = "Anonymous";
+        };
+
+        // handler for event 'tileloadstart'
+        function tileloadstartHandler (evt) {
+            evt.tile.getImage().crossOrigin = "Anonymous";
+        };
+
+        // handler for event 'imageloadend'
+        function imageloadendHandler (evt) {
+            convertImagetoGrayScale(evt.image.getImage(), evt.target);
+        };
+
+        // handler for event 'tileloadend'
+        function tileloadendHandler (evt) {
+            convertImagetoGrayScale(evt.tile.getImage(), evt.target);
+        };
+
+        // abonnement/desabonnement aux evenements permettant la conversion en n/b
+        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(divId); // ex. 26
+
+        var layer = this._layers[layerID].layer;
+        var source = layer.getSource();
+        console.warn(source);
+        if (!(source instanceof TileWMSSource || source instanceof WMTSSource)) {
+            console.warn("greyscale only implemented of raster pour l'instant");
+            return;
+        }
+        var toGrayScale = true;
+        if (e.target.classList.contains("GPlayerGreyscaleOff")) {
+            e.target.classList.remove("GPlayerGreyscaleOff");
+            e.target.classList.add("GPlayerGreyscaleOn");
+        } else {
+            e.target.classList.add("GPlayerGreyscaleOff");
+            e.target.classList.remove("GPlayerGreyscaleOn");
+            toGrayScale = false;
+        }
+
+        if (toGrayScale) {
+            if (source instanceof TileWMSSource) {
+                source.loadstartListenerKey = source.on("imageloadstart", imageloadstartHandler);
+                source.loadendListenerKey = source.on("imageloadend", imageloadendHandler);
+            } else {
+                source.loadstartListenerKey = source.on("tileloadstart", tileloadstartHandler);
+                source.loadendListenerKey = source.on("tileloadend", tileloadendHandler);
+            }
+        } else {
+            olObservableUnByKey(source.loadstartListenerKey);
+            olObservableUnByKey(source.loadendListenerKey);
+            source.loadstartListenerKey = null;
+            source.loadendListenerKey = null;
+        }
+
+        // maj du cache
+        source.refresh();
+    }
+
+    /**
      * zoom to extent
      * @fixme dot it for other user data
      * @param {PointerEvent} e - Event
@@ -1296,14 +1419,14 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var error = null;
 
         var map = this.getMap();
-        // cas d'un layer vecteur 
-        // - importé, 
-        // - d'un croquis, 
+        // cas d'un layer vecteur
+        // - importé,
+        // - d'un croquis,
         // - d'une couche de calcul
         // - enregistré sur l'espace personnel
-        if (data.layer.hasOwnProperty("gpResultLayerId") && 
-            (data.layer.gpResultLayerId.split(":")[0] === "layerimport" || 
-            data.layer.gpResultLayerId.split(":")[0] === "drawing" || 
+        if (data.layer.hasOwnProperty("gpResultLayerId") &&
+            (data.layer.gpResultLayerId.split(":")[0] === "layerimport" ||
+            data.layer.gpResultLayerId.split(":")[0] === "drawing" ||
             data.layer.gpResultLayerId.split(":")[0] === "compute" ||
             data.layer.gpResultLayerId.split(":")[0] === "bookmark"
             )) {
@@ -1324,7 +1447,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 }
             }
         } else {
-            try {   
+            try {
                 // Check if configuration is loaded
                 if (!Config.isConfigLoaded()) {
                     throw "ERROR : contract key configuration has to be loaded to load Geoportal layers.";
