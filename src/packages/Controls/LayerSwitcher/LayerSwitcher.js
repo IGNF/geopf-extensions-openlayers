@@ -1283,7 +1283,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      */
     _onToggleLayerGreyscaleClick (e) {
         // fonction de conversion d'une image en n/b SEE: https://github.com/IGNF/geoportal-sdk/blob/316168e8de142627da59dff008cc4c4b308bf2c2/src/OpenLayers/OlMapLayers.js#L965
-        function getGrayScaledDataUrl (img) {
+        function getGreyScaledDataUrl (img) {
             // FIXME : patch pour safari !?
             // ce patch cause des problemes sur Chrome v83+
             // img.crossOrigin = null;
@@ -1316,23 +1316,15 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         };
 
         // fonction de conversion et de chargement d'une image en n/b
-        function convertImagetoGrayScale (image, context) {
+        function convertImagetoGreyScale (image, context) {
             // conversion en n/b
-            var dataUrl = getGrayScaledDataUrl(image);
+            var dataUrl = getGreyScaledDataUrl(image);
 
             // chargement d'une image vide intermediaire pour eviter
             // l'affichage d'images couleurs (pour certains navigateurs
             // le chargement de l'image n/b et plus long et l'image originale
             // apparait de manière transitoire)
             image.src = "";
-
-            // forcer le raffraichissement de l'affichage a l'issu
-            // du chargement de l'image n/b
-            /** onload */
-            image.onload = function () {
-                context.changed();
-            };
-            // chargement image n/b
             image.src = dataUrl;
         }
 
@@ -1348,12 +1340,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         // handler for event 'imageloadend'
         function imageloadendHandler (evt) {
-            convertImagetoGrayScale(evt.image.getImage(), evt.target);
+            convertImagetoGreyScale(evt.image.getImage(), evt.target);
         };
 
         // handler for event 'tileloadend'
         function tileloadendHandler (evt) {
-            convertImagetoGrayScale(evt.tile.getImage(), evt.target);
+            convertImagetoGreyScale(evt.tile.getImage(), evt.target);
         };
 
         // abonnement/desabonnement aux evenements permettant la conversion en n/b
@@ -1362,22 +1354,22 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         var layer = this._layers[layerID].layer;
         var source = layer.getSource();
-        console.warn(source);
+
         if (!(source instanceof TileWMSSource || source instanceof WMTSSource)) {
             console.warn("greyscale only implemented of raster pour l'instant");
             return;
         }
-        var toGrayScale = true;
+        var toGreyScale = true;
         if (e.target.classList.contains("GPlayerGreyscaleOff")) {
             e.target.classList.remove("GPlayerGreyscaleOff");
             e.target.classList.add("GPlayerGreyscaleOn");
         } else {
             e.target.classList.add("GPlayerGreyscaleOff");
             e.target.classList.remove("GPlayerGreyscaleOn");
-            toGrayScale = false;
+            toGreyScale = false;
         }
 
-        if (toGrayScale) {
+        if (toGreyScale) {
             if (source instanceof TileWMSSource) {
                 source.loadstartListenerKey = source.on("imageloadstart", imageloadstartHandler);
                 source.loadendListenerKey = source.on("imageloadend", imageloadendHandler);
