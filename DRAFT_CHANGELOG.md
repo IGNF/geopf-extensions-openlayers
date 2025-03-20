@@ -29,7 +29,8 @@ __DATE__
 * 🐛 [Fixed]
 
   - export : le menu d'export des calculs n'apparait qu'une fois le calcul réalisé (#364)
-  
+  - catalog : verification que la configuration des couches est disponible (#369)
+ 
 * 🔒 [Security]
 
 
