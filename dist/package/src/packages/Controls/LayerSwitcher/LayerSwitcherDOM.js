@@ -462,8 +462,9 @@ var LayerSwitcherDOM = {
         for (var i = 0; i < array.length; i++) {
             container.appendChild(array[i]);
         }
-        
+
         container.appendChild(this._createAdvancedToolExtentElement(obj));
+        container.appendChild(this._createAdvancedToolGreyscaleElement(obj));
 
         if (checkDsfr()) {
             var btn = document.createElement("button");
@@ -485,6 +486,7 @@ var LayerSwitcherDOM = {
             contextual.appendChild(this._createAdvancedToolDeleteElement(obj, true));
             contextual.appendChild(this._createAdvancedToolInformationElement(obj, true));
             contextual.appendChild(this._createAdvancedToolExtentElement(obj, true));
+            contextual.appendChild(this._createAdvancedToolGreyscaleElement(obj, true));
 
             container.appendChild(btn);
             container.appendChild(contextual);
@@ -529,7 +531,7 @@ var LayerSwitcherDOM = {
 
         return button;
     },
- 
+
     /**
      * Creation de l'icone d'edition du layer (DOM)
      *
@@ -620,6 +622,55 @@ var LayerSwitcherDOM = {
         }
 
         return btnInfo;
+    },
+
+    /**
+     * Creation de l'icone de n&b du layer (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     *
+     * @returns {DOMElement} container
+     */
+    _createAdvancedToolGreyscaleElement : function (obj, contextual = false) {
+        // exemple :
+        // <div id="GPgreyscale_ID_Layer1" class="GPlayerBreyscale" title="Noir & blanc" onclick="GPtoggleGreyscale(this);"></div>
+
+        var btnGreyscale = document.createElement("button");
+        if (!contextual) {
+            btnGreyscale.id = this._addUID("GPgreyscale_ID_" + obj.id);
+        } else {
+            btnGreyscale.id = this._addUID("GPgreyscaleContextual_ID_" + obj.id);
+        }
+        btnGreyscale.className = "GPelementHidden GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn-icon gpf-btn-icon-ls-greyscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
+        btnGreyscale.title = "Noir et blanc";
+        btnGreyscale.layerId = obj.id;
+        if (contextual) {
+            btnGreyscale.innerText = "N&B";
+        }
+        btnGreyscale.setAttribute("tabindex", "0");
+        btnGreyscale.setAttribute("type", "button");
+
+        // add event on click
+        var context = this;
+        if (btnGreyscale.addEventListener) {
+            btnGreyscale.addEventListener(
+                "click",
+                function (e) {
+                    context._onToggleLayerGreyscaleClick(e);
+                }
+            );
+        } else if (btnGreyscale.attachEvent) {
+            // internet explorer
+            btnGreyscale.attachEvent(
+                "onclick",
+                function (e) {
+                    context._onToggleLayerGreyscaleClick(e);
+                }
+            );
+        }
+
+        return btnGreyscale;
     },
 
     /**
