@@ -611,9 +611,15 @@ var Catalog = class Catalog extends Control {
             for (const key in data.layers) {
                 if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
                     const layer = data.layers[key];
-                    var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                    layer.service = service; // new proprerty !
-                    layer.categories = []; // new property ! vide pour le moment
+                    if (layer.serviceParams) {
+                        // si la couche a bien une configuration valide liée au service
+                        var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
+                        layer.service = service; // new proprerty !
+                        layer.categories = []; // new property ! vide pour le moment
+                    } else {
+                        // sinon on supprime l'entrée car pas de configuration valide
+                        delete data.layers[key];
+                    }                
                 }
             }
 
@@ -683,9 +689,15 @@ var Catalog = class Catalog extends Control {
                 for (const key in data.layers) {
                     if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
                         const layer = data.layers[key];
-                        var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                        layer.service = service; // new proprerty !
-                        layer.categories = []; // new property ! vide pour le moment
+                        if (layer.serviceParams) {
+                            // si la couche a bien une configuration valide liée au service
+                            var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
+                            layer.service = service; // new proprerty !
+                            layer.categories = []; // new property ! vide pour le moment
+                        } else {
+                            // sinon on supprime l'entrée car pas de configuration valide
+                            delete data.layers[key];
+                        }
                     }
                 }
 
