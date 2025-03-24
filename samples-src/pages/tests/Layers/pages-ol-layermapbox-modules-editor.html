@@ -39,6 +39,8 @@
             <div id="map"></div>
             <div id="editor">
                 <button id="apply">Appliquer un style</button>
+                <button id="styles" disabled>Ouvrir l'éditeur de styles</button>
+                <button id="themes" disabled>Ouvrir l'éditeur de thèmes</button>
             </div>
         </div>
         <script type="text/javascript">
@@ -65,10 +67,45 @@
                         }
                     }
 
+                    // applique un style sur une couche MapBox
+                    function applyStyleMapBoxLayer (url, layer, source) {
+                            return fetch(url, {
+                                credentials : "same-origin"
+                            })
+                            .then(function (response) {
+                                if (response.ok) {
+                                response.json()
+                                    .then(function (glStyle) {
+                                        style = glStyle;
+                                        map.set("mapbox-style", style);
+                                    })
+                                    .then(function() {
+                                        olms.applyStyle(layer, style, { source: source })
+                                        .then(()=>{
+                                            waiting(false);
+                                        })
+                                        .catch((e)=>{
+                                            console.error(e);
+                                        });
+                                    })
+
+                                    .catch(function(e) {
+                                        console.error(e);
+                                        waiting(false);
+                                    })
+                                }
+                            })
+                            .catch(function(e) {
+                                console.error(e);
+                                waiting(false);
+                            })
+                    }
+
                     // mise à jour des filtres
-                    function updateFilterMapBoxLayer (layer, source, options) {
+                    function updateVisibilityMapBoxLayer (layer, source, options) {
                         console.error(layer, source, options);
                         
+                        var layerMapBox;
                         var layers = style.layers;
                         for (var i = 0; i < layers.length; i++) {
                             if (layers[i].id === options.data.id) {
@@ -80,15 +117,19 @@
                                         visibility : (options.active) ? "visible" : "none"
                                     };
                                 }
+                                layerMapBox = layers[i];
                                 break;
                             }
                         }
-                        return olms.applyStyle(layer, style, { source: source });
+                        olms.updateMapboxLayer(map, layerMapBox);
+                        return Promise.resolve();
+                        // return olms.applyStyle(layer, style, { source: source });
                     }
                     
                     function updateLegendMapBoxLayer (layer, source, options) {
                         console.error(layer, source, options);
                         
+                        var layerMapBox;
                         var layers = style.layers;
                         for (var i = 0; i < layers.length; i++) {
                             if (layers[i].id === options.data.id) {
@@ -96,40 +137,60 @@
                                 if (paint) {
                                     paint[options.dataset] = options.value;
                                 }
+                                layerMapBox = layers[i];
                                 break;
                             }
                         }
-                        return olms.applyStyle(layer, style, { source: source });
+                        olms.updateMapboxLayer(map, layerMapBox);
+                        return Promise.resolve();
+                        // return olms.applyStyle(layer, style, { source: source });
                     }
 
-                    // edition des filtres
-                    function displayEditor() {
+                    // editeur de styles ou de themes
+                    function displayEditor(options) {
                         waiting(true);
 
                         // Editeur de filtres
                         if (!editor) {
-                            editor = new ol.style.Editor({
+                            var opts = {
                                 target : document.getElementById("editor"),
                                 style : style,
+                                themes : options.themes,
                                 tools : {
-                                    themes : false,
-                                    layers : true,
+                                    themes : options.btheme,
+                                    layers : options.blayer,
                                     filter : false,
                                     style : false,
                                     legend : true,
                                     title : true,
                                     group : false,
                                     sort : false,
-                                    type : true,
-                                    pin : false
+                                    type : false,
+                                    pin : false,
+                                    editable : true
                                 },
                                 events : {
+                                    "editor:themes:onclicktitle" : function (e) {
+                                        // on recupere des informations
+                                        var data = e.target.data.obj;
+                                        var target = e.target.srcElement;
+                                        if (this.getID() === e.target.editorID) {
+                                            console.log("editor:themes:onclicktitle", this.getID(), e);
+                                            applyStyleMapBoxLayer(target.data, layer, "plan_ign")
+                                            .then(function () {
+                                                // some stuff...
+                                            })
+                                            .catch(function (error) {
+                                                console.error("[ERROR]", error);
+                                            });
+                                        }
+                                    },
                                     "editor:layer:onclickvisibility" : function (e) {
                                         // on recupere des informations
                                         var data = e.target.data.obj;
                                         var target = e.target.srcElement;
         
-                                        updateFilterMapBoxLayer(layer, "plan_ign", {
+                                        updateVisibilityMapBoxLayer(layer, "plan_ign", {
                                             data:data,
                                             active:target.checked
                                         })
@@ -160,7 +221,8 @@
                                     "editor:style:scale:onchangemax" : function (e) {console.log(e);},
                                     "editor:style:scale:onchangemin" : function (e) {console.log(e);}
                                 }
-                            });
+                            };
+                            editor = new ol.style.Editor(opts);
                             editor.createElement()
                             .then(function () {
                                 waiting(false);
@@ -173,6 +235,23 @@
                     function hideButton() {
                         var button = document.getElementById("apply");
                         button.style.display = "none";
+                        disableButton("styles");
+                        disableButton("themes");
+                    }
+
+                    function disableButton(id) {
+                        var button = document.getElementById(id);
+                        if (button) {
+                            button.removeAttribute("disabled");
+                        }
+                    }
+
+                    function cleanEditor() {
+                        if (editor) {
+                            var div = editor.getContainer();
+                            document.getElementById("editor").removeChild(div);
+                            editor = null;
+                        }
                     }
 
                     window.onload = function() {
@@ -202,43 +281,49 @@
 
                             var url = "{{ resources }}/data/mapbox/styles/planign/standard.json";
                             
-                            fetch(url, {
-                                credentials : "same-origin"
-                            })
-                            .then(function (response) {
-                                if (response.ok) {
-                                response.json()
-                                    .then(function (glStyle) {
-                                        style = glStyle;
-                                    })
-                                    .then(function() {
-                                        olms.applyStyle(layer, style, { source: "plan_ign" })
-                                        .then(()=>{
-                                            waiting(false);
-                                        })
-                                        .then(()=>{
-                                            displayEditor();
-                                        })
-                                        .then(()=>{
-                                            hideButton();
-                                        })
-                                        .catch((e)=>{
-                                            console.error(e);
-                                        });
-                                    })
-
-                                    .catch(function(e) {
-                                        console.error(e);
-                                        waiting(false);
-                                    })
-                                }
-                            })
-                            .catch(function(e) {
-                                console.error(e);
-                                waiting(false);
-                            })
+                            applyStyleMapBoxLayer(url, layer, "plan_ign")
+                                .then(()=>{
+                                    hideButton();
+                                })
+                                .catch(function(e) {
+                                    console.error(e);
+                                    waiting(false);
+                                });
                         });
-                            
+                        document.getElementById("styles").addEventListener("click", (e) => {
+                            cleanEditor();
+                            displayEditor({
+                                "blayer" : true,
+                                "btheme" : false
+                            });
+                        });
+                        document.getElementById("themes").addEventListener("click", (e) => {
+                            cleanEditor();
+                            displayEditor({
+                                "btheme" : true,
+                                "blayer" : false,
+                                "themes" : {
+                                    themesSummary : "Liste des themes",
+                                    themes : [
+                                        {
+                                            "name" : "standard",
+                                            "url" : "{{ resources }}/data/mapbox/styles/planign/standard.json",
+                                            "selected" : true
+                                        },
+                                        {
+                                            "name" : "accentue",
+                                            "url" : "{{ resources }}/data/mapbox/styles/planign/accentue.json",
+                                            "selected" : false
+                                        },
+                                        {
+                                            "name" : "gris",
+                                            "url" : "{{ resources }}/data/mapbox/styles/planign/gris.json",
+                                            "selected" : false
+                                        }
+                                    ]
+                                }
+                            });
+                        });
                     };
         </script>
     </body>
