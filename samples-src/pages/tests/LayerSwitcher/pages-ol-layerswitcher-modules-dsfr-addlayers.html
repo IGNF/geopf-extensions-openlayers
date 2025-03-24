@@ -1,7 +1,7 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        
+
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
@@ -28,6 +28,7 @@
             <div style="display: flex;flex-direction: column;align-items: center;width: 210px;">
                 <button type="button" class="fr-btn" id="addMapsLayer">Ajouter une couche Map</button>
                 <button type="button" class="fr-btn" id="addOSMLayer">Ajouter une couche OSM</button>
+                <button type="button" class="fr-btn" id="addVTLayer">Ajouter une couche Tuiles Vecteur</button>
                 <br>
                 <button type="button" class="fr-btn" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
                 <button type="button" class="fr-btn" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
@@ -156,6 +157,12 @@
                     });
                     map.addLayer(osm); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
                 };
+                addVTLayer = function() {
+                    layer = new ol.layer.GeoportalMapBox({
+                        layer  : "PLAN.IGN",
+                    });
+                    map.addLayer(layer); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
+                };
                 modifyVisibilityOSMLayer = function () {
                     var visibility = osm.getVisible();
                     osm.setVisible(!visibility);
@@ -177,6 +184,7 @@
                 };
                 document.getElementById("addMapsLayer").onclick = addMapsLayer;
                 document.getElementById("addOSMLayer").onclick = addOSMLayer;
+                document.getElementById("addVTLayer").onclick = addVTLayer;
                 document.getElementById("modifyVisibilityOSMLayer").onclick = modifyVisibilityOSMLayer;
                 document.getElementById("modifyOpacityOSMLayer").onclick = modifyOpacityOSMLayer;
                 document.getElementById("modifyIndexOSMLayerMin").onclick = modifyIndexOSMLayerMin;

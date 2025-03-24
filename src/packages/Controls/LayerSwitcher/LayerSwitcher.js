@@ -5,7 +5,6 @@ import "../../CSS/Controls/LayerSwitcher/GPFlayerSwitcher.css";
 // import Control from "ol/control/Control";
 import Widget from "../Widget";
 import Control from "../Control";
-import ImageWMSSource from "ol/source/ImageWMS";
 import WMTSSource from "ol/source/WMTS";
 import TileWMSSource from "ol/source/TileWMS";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
@@ -15,6 +14,8 @@ import {
 } from "ol/proj";
 import VectorLayer from "ol/layer/Vector";
 import VectorTileLayer from "ol/layer/VectorTile";
+import VectorTileSource from "ol/source/VectorTile";
+import { applyStyle } from "ol-mapbox-style";
 // import local
 import Utils from "../../Utils/Helper";
 import SelectorID from "../../Utils/SelectorID";
@@ -1348,6 +1349,70 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             convertImagetoGreyScale(evt.tile.getImage(), evt.target);
         };
 
+        // converts hex color to greyscale
+        function toGrayscale (color) {
+            if (!color || typeof color !== "string" || !color.startsWith("#")) {
+                return color; // Return original if not a hex color
+            }
+
+            // Convert HEX to RGB
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+
+            // Compute grayscale value
+            const gray = Math.round(0.3 * r + 0.59 * g + 0.11 * b);
+            const grayHex = gray.toString(16).padStart(2, "0");
+
+            return `#${grayHex}${grayHex}${grayHex}`; // Return grayscale hex
+        }
+
+        // Function to fetch and modify the style
+        async function applyGrayscaleStyle (layer, styleUrl) {
+            const response = await fetch(styleUrl);
+            const styleJson = await response.json();
+
+            // Iterate over layers and modify colors
+            styleJson.layers.forEach(layer => {
+                if (layer.paint) {
+                    Object.keys(layer.paint).forEach(prop => {
+                        let value = layer.paint[prop];
+
+                        // Handle zoom-dependent color stops
+                        if (Array.isArray(value) && value[0] === "interpolate" && value[2] === "zoom") {
+                            // Interpolate function: Modify colors in the stops array
+                            for (let i = 4; i < value.length; i += 2) {
+                                value[i] = toGrayscale(value[i]); // Convert color
+                            }
+                        } else if (Array.isArray(value) && value[0] === "step") {
+                            // Step function: Modify each step's color value
+                            for (let i = 2; i < value.length; i += 2) {
+                                value[i] = toGrayscale(value[i]);
+                            }
+                        } else if (value instanceof Object && value.stops) {
+                            // Step function: Modify each step's color value
+                            for (let i = 0; i < value.stops.length; i += 1) {
+                                value.stops[i][1] = toGrayscale(value.stops[i][1]);
+                            }
+                        } else {
+                            // Simple color value
+                            layer.paint[prop] = toGrayscale(value);
+                        }
+                    });
+                }
+            });
+
+            // Apply the modified style to the layer
+            applyStyle(layer, styleJson);
+        }
+
+        // Function to fetch and apply the original style
+        async function applyOriginalStyle (layer, styleUrl) {
+            const response = await fetch(styleUrl);
+            const styleJson = await response.json();
+            applyStyle(layer, styleJson);
+        }
+
         // abonnement/desabonnement aux evenements permettant la conversion en n/b
         var divId = e.target.id; // ex GPvisibilityPicto_ID_26
         var layerID = SelectorID.index(divId); // ex. 26
@@ -1355,8 +1420,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var layer = this._layers[layerID].layer;
         var source = layer.getSource();
 
-        if (!(source instanceof TileWMSSource || source instanceof WMTSSource)) {
-            console.warn("greyscale only implemented of raster pour l'instant");
+        if (!(source instanceof TileWMSSource || source instanceof WMTSSource || source instanceof VectorTileSource)) {
+            console.warn("Greyscale only implemented for raster and vector tiles");
             return;
         }
         var toGreyScale = true;
@@ -1370,7 +1435,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         }
 
         if (toGreyScale) {
-            if (source instanceof TileWMSSource) {
+            if (source instanceof VectorTileSource ) {
+                applyGrayscaleStyle(layer, layer.styleUrl);
+            } else if (source instanceof TileWMSSource) {
                 source.loadstartListenerKey = source.on("imageloadstart", imageloadstartHandler);
                 source.loadendListenerKey = source.on("imageloadend", imageloadendHandler);
             } else {
@@ -1378,14 +1445,20 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 source.loadendListenerKey = source.on("tileloadend", tileloadendHandler);
             }
         } else {
-            olObservableUnByKey(source.loadstartListenerKey);
-            olObservableUnByKey(source.loadendListenerKey);
-            source.loadstartListenerKey = null;
-            source.loadendListenerKey = null;
+            if (source instanceof VectorTileSource ) {
+                applyOriginalStyle(layer, layer.styleUrl);
+            } else {
+                olObservableUnByKey(source.loadstartListenerKey);
+                olObservableUnByKey(source.loadendListenerKey);
+                source.loadstartListenerKey = null;
+                source.loadendListenerKey = null;
+            }
         }
 
-        // maj du cache
-        source.refresh();
+        if ( !(source instanceof VectorTileSource) ) {
+            // maj du cache
+            source.refresh();
+        }
     }
 
     /**
