@@ -642,7 +642,7 @@ var LayerSwitcherDOM = {
         } else {
             btnGreyscale.id = this._addUID("GPgreyscaleContextual_ID_" + obj.id);
         }
-        btnGreyscale.className = "GPelementHidden GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn-icon gpf-btn-icon-ls-greyscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
+        btnGreyscale.className = "GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn-icon gpf-btn-icon-ls-greyscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
         btnGreyscale.title = "Noir et blanc";
         btnGreyscale.layerId = obj.id;
         if (contextual) {
