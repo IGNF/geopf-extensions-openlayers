@@ -23,6 +23,7 @@ __DATE__
 * 🔨 [Changed]
 
   - route: amélioration de la lisibilité du panel de résultats de l'itinéraire (#362)
+  - elevationPath : changement du style des résultats textuels en mode DSFR (#373)
 
 * 🔥 [Deprecated]
 
