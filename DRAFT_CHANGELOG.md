@@ -17,7 +17,8 @@ __DATE__
 
   - searchEngine : ajout d'une option pour afficher la recherche par coordonnées dans la recherche avancée (#363)
   - isocurve : ajout d'un panel affichant les informations du calcul d'isochrone (#364)
-  - layerSwitcher : bouton permettant de passer une couche en noir et blanc (#367) pour raster et (#370) pour tuiles vecteur
+  - layerSwitcher : bouton permettant de passer une couche en noir et blanc (#367) pour raster et (#370) pour tuiles vecteur en mode DSFR
+  - layerSwitcher : bouton permettant de passer une couche en noir et blanc en mode classique (#371)
 
 * 🔨 [Changed]
 

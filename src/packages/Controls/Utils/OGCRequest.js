@@ -4,15 +4,16 @@ import proj4 from "proj4";
 var OGCRequest = {
     /**
     * Computes data for a given layer of Geoplateforme's WFS
-    * @param {string} layer name of the WFS layer
+    * @param {String} layer name of the WFS layer
     * @param {Array} attributes list of strings of the relevant attributes to return
-    * @param {number} around distance around the point in km for the query, default 0
-    * @param {string} geom_name name of the geometry column, default "geom"
-    * @param {string} additional_cql cql filter needed other than geometry, e.g. "AND nature_de_l_objet='Bois'", default ""
-    * @param {number} epsg epsg number of the layer's CRS, default 4326
-    * @param {number} lat Latitude
-    * @param {number} lng Longitude
-    * @returns {Promise(Array)} results of each attributes (no duplicates)
+    * @param {Number} around distance around the point in km for the query, default 0
+    * @param {String} geom_name name of the geometry column, default "geom"
+    * @param {String} additional_cql cql filter needed other than geometry, e.g. "AND nature_de_l_objet='Bois'", default ""
+    * @param {Number} epsg epsg number of the layer's CRS, default 4326
+    * @param {Boolean} getGeom whether to get the geometry
+    * @param {Number} lat Latitude
+    * @param {Number} lng Longitude
+    * @returns {Promise[]} results of each attributes (no duplicates)
     */
     computeGenericGPFWFS : async function (layer, attributes, around=0, geom_name="geom", additional_cql="", epsg=4326, getGeom=false, lat, lng) {
         let coord1 = lng;
@@ -27,12 +28,12 @@ var OGCRequest = {
         if (additional_cql) {
             cql_filter += ` ${additional_cql}`;
         }
-    
+
         const results = await fetch(
             `https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&typename=${layer}&outputFormat=json&count=50&CQL_FILTER=${cql_filter}`
         );
         const json = await results.json();
-    
+
         const results_attributes = [];
         json.features.forEach((feature) => {
             const feature_attributes = [];
