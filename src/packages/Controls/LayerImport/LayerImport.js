@@ -2474,6 +2474,7 @@ var LayerImport = class LayerImport extends Control {
                 wmsSourceOptions.url = this._getCapRequestUrl;
             }
         }
+        layerInfo.Url = getMapUrl || wmsSourceOptions.url;
 
         wmsSourceOptions.params = {};
         if (layerInfo.Name) {
@@ -2486,6 +2487,7 @@ var LayerImport = class LayerImport extends Control {
         if (this._getCapResponseWMS.version) {
             wmsSourceOptions.params["VERSION"] = this._getCapResponseWMS.version;
         }
+        layerInfo.Version = this._getCapResponseWMS.version;
 
         // on a déjà vérifié que la couche peut être reprojetée,
         // on vérifie que la couche ait une projection compatible avec celle de la carte
@@ -2499,6 +2501,7 @@ var LayerImport = class LayerImport extends Control {
             // on spécifie une projection (qui doit avoir été définie dans proj4js) pour reprojection par Openlayers
             wmsSourceOptions.projection = projection;
         }
+        layerInfo.Projection = projection || wmsSourceOptions.projection;
 
         // récupération du premier style disponible (pas d'info default?)
         var legend;
@@ -2819,6 +2822,8 @@ var LayerImport = class LayerImport extends Control {
         if (this._getCapResponseWMTS.version) {
             wmtsSourceOptions.version = this._getCapResponseWMTS.version;
         }
+        layerInfo.Version = wmtsSourceOptions.version;
+
         // Récupération de l'url
         var getMapUrl = this._getWMTSLayerGetTileUrl();
         // on essaie de récupérer l'url du service dans le getCapbilities
@@ -2833,6 +2838,7 @@ var LayerImport = class LayerImport extends Control {
                 wmtsSourceOptions.url = this._getCapRequestUrl;
             }
         }
+        layerInfo.Url = getMapUrl || wmtsSourceOptions.url;
 
         // Récupération des informations de la pyramide (tileGrid information) : matrixIds, resolutions, origin et projection
         var tmsOptions = this._getTMSParams(layerInfo);
@@ -2843,6 +2849,10 @@ var LayerImport = class LayerImport extends Control {
             matrixIds : tmsOptions.matrixIds,
             origin : tmsOptions.origin
         });
+        layerInfo.MatrixIds = tmsOptions.matrixIds;
+        layerInfo.Projection = wmtsSourceOptions.projection;
+        layerInfo.Resolutions = tmsOptions.resolutions;
+        layerInfo.Origin = tmsOptions.origin;
 
         // Récupération du style par défaut
         var defaultStyle;
