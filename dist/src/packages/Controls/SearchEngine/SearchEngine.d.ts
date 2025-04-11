@@ -75,6 +75,7 @@ export default SearchEngine;
  * @fires searchengine:geocode:click
  * @fires searchengine:search:click
  * @fires searchengine:geolocation:click
+ * @fires searchengine:geolocation:remove
  * @fires searchengine:coordinates:click
  * @todo option : direction (start|end) de la position du picto (loupe)
  * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
