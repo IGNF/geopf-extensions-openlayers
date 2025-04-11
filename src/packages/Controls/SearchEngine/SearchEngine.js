@@ -113,6 +113,7 @@ var logger = Logger.getLogger("searchengine");
  * @fires searchengine:geocode:click
  * @fires searchengine:search:click
  * @fires searchengine:geolocation:click
+ * @fires searchengine:geolocation:remove
  * @fires searchengine:coordinates:click
  * @todo option : direction (start|end) de la position du picto (loupe)
  * @todo option : choix du target pour les fenetres geocodage ou recherche par coordonnées
@@ -753,6 +754,40 @@ var SearchEngine = class SearchEngine extends Control {
         var context = this;
         var element = document.createElement("div");
         element.className = "gp-feature-info-div gpf-widget-color";
+        // bouton de suppression de la pop-up / marker
+        // var span = document.createElement("span");
+        // span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        // span.innerText = "Supprimer";
+        var remove = document.createElement("button");
+        remove.title = "Supprimer le marqueur";
+        remove.className = "gp-styling-button remove gpf-btn gpf-btn-icon-remove fr-btn--remove fr-btn fr-btn--tertiary-no-outline fr-mt-1v fr-mr-2v";
+        // on remove click : remove marker
+        remove.onclick = function () {
+            var map = context.getMap();
+            if (context._marker) {
+                map.removeOverlay(context._marker);
+                context._marker = null;
+            }
+            if (context._popupOverlay != null) {
+                context._popupOverlay.setPosition(undefined);
+            }
+            /**
+             * event triggered when i want a remove geolocation popup
+             *
+             * @event searchengine:geolocation:remove
+             * @property {Object} type - event
+             * @property {Object} target - instance SearchEngine
+             * @example
+             * SearchEngine.on("searchengine:geolocation:remove", function (e) {
+             *   console.log(e.coordinates);
+             * })
+             */
+            context.dispatchEvent({
+                type : "searchengine:geolocation:remove"
+            });
+        };
+        // remove.appendChild(span);
+
         // bouton de fermeture de la pop-up
         var closer = document.createElement("button");
         closer.title = "Fermer la pop-up";
@@ -768,8 +803,9 @@ var SearchEngine = class SearchEngine extends Control {
         this._popupContent = document.createElement("div");
         this._popupContent.className = "gp-features-content-div";
         this._popupContent.style["min-width"] = "200px";
-        element.appendChild(this._popupContent);
         element.appendChild(closer);
+        element.appendChild(this._popupContent);
+        element.appendChild(remove);
 
         return element;
     }

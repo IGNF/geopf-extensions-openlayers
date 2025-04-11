@@ -468,6 +468,7 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   left: 50%;
 }
 
+.gp-feature-info-div .remove,
 .gp-feature-info-div .closer {
   position: absolute;
   display: block;
@@ -482,6 +483,10 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   background-color: var(--background-default-grey);
 }
 
+.gp-feature-info-div .remove {
+  right: 16px;
+}
+.gp-feature-info-div .remove::after,
 .gp-feature-info-div .closer::after {
   content: "";
   position: absolute;
@@ -494,6 +499,13 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   mask: url("img/close-blue.svg") center no-repeat;
   -webkit-mask-size: 14px 14px;
   mask-size: 14px 14px;
+}
+
+.gp-feature-info-div .remove::after {
+  width: 30px;
+  height: 30px;
+  -webkit-mask: url("img/remove.svg") center no-repeat;
+  mask: url("img/remove.svg") center no-repeat;
 }
 
 .gp-features-content-div {
