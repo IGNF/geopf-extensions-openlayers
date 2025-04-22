@@ -297,6 +297,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             var layerInfos = this.getLayerInfo(layer) || {};
             var opacity = layer.getOpacity();
             var visibility = layer.getVisible();
+            var gray = layer.get("gray") || false;
             var isInRange = this.isInRange(layer, map);
             var layerOptions = {
                 layer : layer,
@@ -306,6 +307,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 type : "", // only geoportal website : ie 'feature'
                 opacity : opacity != null ? opacity : 1,
                 visibility : visibility != null ? visibility : true,
+                gray : gray != null ? gray : false,
                 inRange : isInRange != null ? isInRange : true,
                 title : config.title != null ? config.title : (layerInfos._title || id),
                 description : config.description || layerInfos._description || null,
@@ -348,6 +350,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 "change:visible",
                 (e) => this._updateLayerVisibility(e)
             );
+            this._listeners.updateLayerGrayScale = layer.on(
+                "change:gray",
+                (e) => this._updateLayerGrayScale(e)
+            );
+            layer.set("gray", gray);
 
             if (this._layers[id].onZIndexChangeEvent == null) {
                 this._layers[id].onZIndexChangeEvent = layer.on(
@@ -392,6 +399,16 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         }
         // on met à jour le compteur
         this._updateLayerCounter();
+
+        var self = this;
+        setTimeout(() => {
+            self._updateLayerGrayScale({
+                target : { 
+                    gpLayerId : id
+                }
+            });
+        }, 0);
+
         /**
          * event triggered when a layer is added
          *
@@ -424,6 +441,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         olObservableUnByKey(this._listeners.updateLayerOpacity);
         olObservableUnByKey(this._listeners.updateLayerVisibility);
+        olObservableUnByKey(this._listeners.updateLayerGrayScale);
         // olObservableUnByKey(this._listeners.updateLayersOrder);
 
         logger.trace(layer);
@@ -613,6 +631,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 var conf = layers[i].config || {};
                 var opacity = layer.getOpacity();
                 var visibility = layer.getVisible();
+                var gray = layer.get("gray");
                 var layerOptions = {
                     layer : layer, // la couche ol.layer concernée
                     id : id,
@@ -620,6 +639,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                     service : layer.service, // only geoportal layers
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
+                    gray : gray != null ? gray : false,
                     title : conf.title != null ? conf.title : conf.id ? conf.id : id,
                     description : conf.description || null,
                     legends : conf.legends || [],
@@ -746,6 +766,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 // si la couche n'est pas encore dans la liste des layers (this._layers), on l'ajoute
                 var opacity = layer.getOpacity();
                 var visibility = layer.getVisible();
+                var gray = layer.get("gray");
                 var isInRange = this.isInRange(layer, map);
                 var layerOptions = {
                     layer : layer,
@@ -754,6 +775,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                     service : layer.service, // only geoportal layers
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
+                    gray : gray != null ? gray : false,
                     inRange : isInRange != null ? isInRange : true,
                     title : layerInfos._title || id,
                     description : layerInfos._description || null,
@@ -766,6 +788,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 // si elle existe déjà, on met à jour ses informations (visibility, opacity, inRange)
                 this._layers[id].opacity = layer.getOpacity();
                 this._layers[id].visibility = layer.getVisible();
+                this._layers[id].gray = layer.get("gray");
                 this._layers[id].inRange = this.isInRange(layer, map);
             }
             // on met à jour le compteur
@@ -776,10 +799,15 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 "change:opacity",
                 (e) => this._updateLayerOpacity(e)
             );
-            this._listeners._updateLayerVisibility = layer.on(
+            this._listeners.updateLayerVisibility = layer.on(
                 "change:visible",
                 (e) => this._updateLayerVisibility(e)
             );
+            this._listeners.updateLayerGrayScale = layer.on(
+                "change:gray",
+                (e) => this._updateLayerGrayScale(e)
+            );
+            layer.set("gray", gray);
 
             // récupération des zindex des couches s'ils existent, pour les ordonner.
             if (layer.getZIndex !== undefined) {
@@ -1286,7 +1314,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * @param {Event} e - Event
      * @private
      */
-    _onToggleLayerGreyscaleClick (e) {
+    _updateLayerGrayScale (e) {
         // fonction de conversion d'une image en n/b SEE: https://github.com/IGNF/geoportal-sdk/blob/316168e8de142627da59dff008cc4c4b308bf2c2/src/OpenLayers/OlMapLayers.js#L965
         function getGreyScaledDataUrl (img) {
             // FIXME : patch pour safari !?
@@ -1418,26 +1446,16 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         }
 
         // abonnement/desabonnement aux evenements permettant la conversion en n/b
-        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
-        var layerID = SelectorID.index(divId); // ex. 26
-
-        var layer = this._layers[layerID].layer;
+        var id = e.target.gpLayerId;
+        var layer = this._layers[id].layer;
         var source = layer.getSource();
 
         if (!(source instanceof TileWMSSource || source instanceof WMTSSource || source instanceof VectorTileSource)) {
             console.warn("Greyscale only implemented for raster and vector tiles");
             return;
         }
-        var toGreyScale = true;
-        if (e.target.classList.contains("GPlayerGreyscaleOff")) {
-            e.target.classList.remove("GPlayerGreyscaleOff");
-            e.target.classList.add("GPlayerGreyscaleOn");
-        } else {
-            e.target.classList.add("GPlayerGreyscaleOff");
-            e.target.classList.remove("GPlayerGreyscaleOn");
-            toGreyScale = false;
-        }
 
+        var toGreyScale = layer.get("gray");
         if (toGreyScale) {
             if (source instanceof VectorTileSource ) {
                 applyGrayscaleStyle(layer, layer.styleUrl);
@@ -1480,8 +1498,28 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         this.dispatchEvent({
             type : "layerswitcher:change:grayscale",
             grayscale : toGreyScale,
-            layer : this._layers[layerID]
+            layer : this._layers[id]
         });
+    }
+
+    _onToggleLayerGreyscaleClick (e) {
+        console.trace(e);
+        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(divId); // ex. 26
+
+        var layer = this._layers[layerID].layer;
+
+        var toGreyScale = true;
+        if (e.target.classList.contains("GPlayerGreyscaleOff")) {
+            e.target.classList.remove("GPlayerGreyscaleOff");
+            e.target.classList.add("GPlayerGreyscaleOn");
+        } else {
+            e.target.classList.add("GPlayerGreyscaleOff");
+            e.target.classList.remove("GPlayerGreyscaleOn");
+            toGreyScale = false;
+        }
+
+        layer.set("gray", toGreyScale);
     }
 
     /**
