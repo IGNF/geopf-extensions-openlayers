@@ -548,7 +548,7 @@ var LayerSwitcherDOM = {
         button.setAttribute("type", "button");
 
         // hack pour garder un emplacement vide
-        if (obj.type !== "feature") {
+        if (!obj.editable) {
             button.style.opacity = "0";
             button.style.visibility = "hidden";
         }
@@ -635,7 +635,7 @@ var LayerSwitcherDOM = {
     _createAdvancedToolGreyscaleElement : function (obj, contextual = false) {
         // exemple :
         // <div id="GPgreyscale_ID_Layer1" class="GPlayerBreyscale" title="Noir & blanc" onclick="GPtoggleGreyscale(this);"></div>
-        var gray = (typeof obj.gray !== "undefined") ? obj.gray : false;
+        var grayscale = (typeof obj.grayscale !== "undefined") ? obj.grayscale : false;
         
         var btnGreyscale = document.createElement("button");
         if (!contextual) {
@@ -644,7 +644,7 @@ var LayerSwitcherDOM = {
             btnGreyscale.id = this._addUID("GPgreyscaleContextual_ID_" + obj.id);
         }
         btnGreyscale.className = "GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn-icon gpf-btn-icon-ls-greyscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
-        if (gray) {
+        if (grayscale) {
             btnGreyscale.classList.replace("GPlayerGreyscaleOff", "GPlayerGreyscaleOn");
         }
         btnGreyscale.title = "Noir et blanc";
@@ -652,9 +652,15 @@ var LayerSwitcherDOM = {
         if (contextual) {
             btnGreyscale.innerText = "N&B";
         }
-        btnGreyscale.setAttribute("aria-pressed", gray);
+        btnGreyscale.setAttribute("aria-pressed", grayscale);
         btnGreyscale.setAttribute("tabindex", "0");
         btnGreyscale.setAttribute("type", "button");
+
+        // hack pour garder un emplacement vide
+        if (!obj.grayable) {
+            btnGreyscale.style.opacity = "0";
+            btnGreyscale.style.visibility = "hidden";
+        }
 
         // add event on click
         var context = this;

@@ -6261,7 +6261,7 @@
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 108
+            Controls/LayerSwitcher/LayerSwitcher.js, line 111
         </div>
         
     </div>
@@ -6831,7 +6831,7 @@
             
                 <td class="default">
                 
-                    false
+                    true
                 
                 </td>
             
@@ -6845,7 +6845,43 @@
                         
                     
                 
-                <p>Specify if widget has to have an edit button. Default is false.</p></td>
+                <p>Specify if widget has to have an edit button (available only for vector layers). Default is true.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">allowGrayScale</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Specify if widget has to have an grayscale button (not available for vector layers). Default is true.</p></td>
         </tr>
 	
 	
@@ -6943,7 +6979,8 @@
      panel : false,
      counter : false,
      position : "top-left",
-     allowEdit : true
+     allowEdit : true,
+     allowGrayScale : true,
  }
 ));
 
@@ -7060,7 +7097,7 @@ LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1530
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1547
         </div>
         
     </div>
@@ -7177,7 +7214,7 @@ LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 918
+            Controls/LayerSwitcher/LayerSwitcher.js, line 935
         </div>
         
     </div>
@@ -7248,7 +7285,7 @@ LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 265
+            Controls/LayerSwitcher/LayerSwitcher.js, line 268
         </div>
         
     </div>
@@ -7593,7 +7630,7 @@ LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 526
+            Controls/LayerSwitcher/LayerSwitcher.js, line 528
         </div>
         
     </div>
@@ -7674,7 +7711,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 562
+            Controls/LayerSwitcher/LayerSwitcher.js, line 564
         </div>
         
     </div>
@@ -7751,7 +7788,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1683
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1700
         </div>
         
     </div>
@@ -7879,7 +7916,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1729
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1746
         </div>
         
     </div>
@@ -8006,7 +8043,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1703
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1720
         </div>
         
     </div>
@@ -8156,7 +8193,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 437
+            Controls/LayerSwitcher/LayerSwitcher.js, line 439
         </div>
         
     </div>
@@ -8280,7 +8317,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 502
+            Controls/LayerSwitcher/LayerSwitcher.js, line 504
         </div>
         
     </div>
@@ -8397,7 +8434,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 165
+            Controls/LayerSwitcher/LayerSwitcher.js, line 168
         </div>
         
     </div>
@@ -8514,7 +8551,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 536
+            Controls/LayerSwitcher/LayerSwitcher.js, line 538
         </div>
         
     </div>
@@ -8665,7 +8702,7 @@ container Id ; null if layer not found.</li>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Apr 22 2025 15:32:28 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Apr 22 2025 21:31:47 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

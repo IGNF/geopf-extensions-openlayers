@@ -23,7 +23,8 @@ export default LayerSwitcher;
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
- * @param {Boolean} [options.options.allowEdit = false] - Specify if widget has to have an edit button. Default is false.
+ * @param {Boolean} [options.options.allowEdit = true] - Specify if widget has to have an edit button (available only for vector layers). Default is true.
+ * @param {Boolean} [options.options.allowGrayScale = true] - Specify if widget has to have an grayscale button (not available for vector layers). Default is true.
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:extent
@@ -48,7 +49,8 @@ export default LayerSwitcher;
  *      panel : false,
  *      counter : false,
  *      position : "top-left",
- *      allowEdit : true
+ *      allowEdit : true,
+ *      allowGrayScale : true,
  *  }
  * ));
  *

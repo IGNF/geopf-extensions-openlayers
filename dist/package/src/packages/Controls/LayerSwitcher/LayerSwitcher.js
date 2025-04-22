@@ -13,6 +13,7 @@ import {
     transformExtent as olTransformExtentProj
 } from "ol/proj";
 import VectorLayer from "ol/layer/Vector";
+import TileLayer from "ol/layer/Tile";
 import VectorTileLayer from "ol/layer/VectorTile";
 import VectorTileSource from "ol/source/VectorTile";
 import { applyStyle } from "ol-mapbox-style";
@@ -50,7 +51,8 @@ var logger = Logger.getLogger("layerswitcher");
  * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
- * @param {Boolean} [options.options.allowEdit = false] - Specify if widget has to have an edit button. Default is false.
+ * @param {Boolean} [options.options.allowEdit = true] - Specify if widget has to have an edit button (available only for vector layers). Default is true.
+ * @param {Boolean} [options.options.allowGrayScale = true] - Specify if widget has to have an grayscale button (not available for vector layers). Default is true.
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:extent
@@ -75,7 +77,8 @@ var logger = Logger.getLogger("layerswitcher");
  *      panel : false,
  *      counter : false,
  *      position : "top-left",
- *      allowEdit : true
+ *      allowEdit : true,
+ *      allowGrayScale : true,
  *  }
  * ));
  *
@@ -297,7 +300,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             var layerInfos = this.getLayerInfo(layer) || {};
             var opacity = layer.getOpacity();
             var visibility = layer.getVisible();
-            var gray = layer.get("gray") || false;
+            var grayscale = layer.get("grayscale");
             var isInRange = this.isInRange(layer, map);
             var layerOptions = {
                 layer : layer,
@@ -307,7 +310,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 type : "", // only geoportal website : ie 'feature'
                 opacity : opacity != null ? opacity : 1,
                 visibility : visibility != null ? visibility : true,
-                gray : gray != null ? gray : false,
+                grayscale : grayscale,
                 inRange : isInRange != null ? isInRange : true,
                 title : config.title != null ? config.title : (layerInfos._title || id),
                 description : config.description || layerInfos._description || null,
@@ -351,10 +354,9 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 (e) => this._updateLayerVisibility(e)
             );
             this._listeners.updateLayerGrayScale = layer.on(
-                "change:gray",
+                "change:grayscale",
                 (e) => this._updateLayerGrayScale(e)
             );
-            layer.set("gray", gray);
 
             if (this._layers[id].onZIndexChangeEvent == null) {
                 this._layers[id].onZIndexChangeEvent = layer.on(
@@ -583,7 +585,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             counter : false,
             panel : false,
             gutter : false,
-            allowEdit : false
+            allowEdit : true,
+            allowGrayScale : true
         };
 
         // merge with user options
@@ -631,7 +634,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 var conf = layers[i].config || {};
                 var opacity = layer.getOpacity();
                 var visibility = layer.getVisible();
-                var gray = layer.get("gray");
+                var grayscale = layer.get("grayscale");
                 var layerOptions = {
                     layer : layer, // la couche ol.layer concernée
                     id : id,
@@ -639,7 +642,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                     service : layer.service, // only geoportal layers
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
-                    gray : gray != null ? gray : false,
+                    grayscale : grayscale,
                     title : conf.title != null ? conf.title : conf.id ? conf.id : id,
                     description : conf.description || null,
                     legends : conf.legends || [],
@@ -766,7 +769,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 // si la couche n'est pas encore dans la liste des layers (this._layers), on l'ajoute
                 var opacity = layer.getOpacity();
                 var visibility = layer.getVisible();
-                var gray = layer.get("gray");
+                var grayscale = layer.get("grayscale");
                 var isInRange = this.isInRange(layer, map);
                 var layerOptions = {
                     layer : layer,
@@ -775,7 +778,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                     service : layer.service, // only geoportal layers
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
-                    gray : gray != null ? gray : false,
+                    grayscale : grayscale,
                     inRange : isInRange != null ? isInRange : true,
                     title : layerInfos._title || id,
                     description : layerInfos._description || null,
@@ -788,7 +791,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 // si elle existe déjà, on met à jour ses informations (visibility, opacity, inRange)
                 this._layers[id].opacity = layer.getOpacity();
                 this._layers[id].visibility = layer.getVisible();
-                this._layers[id].gray = layer.get("gray");
+                this._layers[id].grayscale = layer.get("grayscale");
                 this._layers[id].inRange = this.isInRange(layer, map);
             }
             // on met à jour le compteur
@@ -804,11 +807,18 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 (e) => this._updateLayerVisibility(e)
             );
             this._listeners.updateLayerGrayScale = layer.on(
-                "change:gray",
+                "change:grayscale",
                 (e) => this._updateLayerGrayScale(e)
             );
-            layer.set("gray", gray);
 
+            var self = this;
+            setTimeout(() => {
+                self._updateLayerGrayScale({
+                    target : { 
+                        gpLayerId : id
+                    }
+                });
+            }, 0);
             // récupération des zindex des couches s'ils existent, pour les ordonner.
             if (layer.getZIndex !== undefined) {
                 var layerIndex = layer.getZIndex() || 0; // FIXME le zIndex peut être undefined !? donc par defaut à 0 !
@@ -870,11 +880,18 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             layerOptions.displayInformationElement = true;
         }
 
-        layerOptions.type = "";
+        layerOptions.editable = false;
+        // information sur le type de couche : vecteur
         if (this.options.allowEdit) {
-            // information sur le type de couche : vecteur
             if (layerOptions.layer instanceof VectorLayer || layerOptions.layer instanceof VectorTileLayer) {
-                layerOptions.type = "feature";
+                layerOptions.editable = true;
+            }
+        }
+        layerOptions.grayable = false;
+        // information sur le type de couche : raster
+        if (this.options.allowGrayScale) {
+            if (layerOptions.layer instanceof TileLayer || layerOptions.layer instanceof VectorTileLayer) {
+                layerOptions.grayable = true;
             }
         }
         // ajout d'une div pour cette layer dans le control
@@ -1455,7 +1472,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             return;
         }
 
-        var toGreyScale = layer.get("gray");
+        var toGreyScale = layer.get("grayscale");
         if (toGreyScale) {
             if (source instanceof VectorTileSource ) {
                 applyGrayscaleStyle(layer, layer.styleUrl);
@@ -1519,7 +1536,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             toGreyScale = false;
         }
 
-        layer.set("gray", toGreyScale);
+        layer.set("grayscale", toGreyScale);
     }
 
     /**
