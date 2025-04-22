@@ -92,6 +92,9 @@
                     layerSwitcher.on("layerswitcher:change:visibility", function (e) {
                         console.warn("layer", e, e.layer, e.visibility);
                     });
+                    layerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+                        console.warn("layer", e, e.layer, e.grayscale);
+                    });
                     layerSwitcher.on("layerswitcher:extent", function (e) {
                         console.warn("layer", e);
                     });
@@ -160,6 +163,10 @@
                 addVTLayer = function() {
                     layer = new ol.layer.GeoportalMapBox({
                         layer  : "PLAN.IGN",
+                        style  : "standard"
+                    }, {
+                        opacity : 0.8,
+                        gray : true
                     });
                     map.addLayer(layer); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
                 };

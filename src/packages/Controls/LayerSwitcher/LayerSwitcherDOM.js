@@ -635,7 +635,8 @@ var LayerSwitcherDOM = {
     _createAdvancedToolGreyscaleElement : function (obj, contextual = false) {
         // exemple :
         // <div id="GPgreyscale_ID_Layer1" class="GPlayerBreyscale" title="Noir & blanc" onclick="GPtoggleGreyscale(this);"></div>
-
+        var gray = (typeof obj.gray !== "undefined") ? obj.gray : false;
+        
         var btnGreyscale = document.createElement("button");
         if (!contextual) {
             btnGreyscale.id = this._addUID("GPgreyscale_ID_" + obj.id);
@@ -643,11 +644,15 @@ var LayerSwitcherDOM = {
             btnGreyscale.id = this._addUID("GPgreyscaleContextual_ID_" + obj.id);
         }
         btnGreyscale.className = "GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn-icon gpf-btn-icon-ls-greyscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
+        if (gray) {
+            btnGreyscale.classList.replace("GPlayerGreyscaleOff", "GPlayerGreyscaleOn");
+        }
         btnGreyscale.title = "Noir et blanc";
         btnGreyscale.layerId = obj.id;
         if (contextual) {
             btnGreyscale.innerText = "N&B";
         }
+        btnGreyscale.setAttribute("aria-pressed", gray);
         btnGreyscale.setAttribute("tabindex", "0");
         btnGreyscale.setAttribute("type", "button");
 
@@ -657,6 +662,8 @@ var LayerSwitcherDOM = {
             btnGreyscale.addEventListener(
                 "click",
                 function (e) {
+                    var status = (e.target.ariaPressed === "true");
+                    e.target.setAttribute("aria-pressed", !status);
                     context._onToggleLayerGreyscaleClick(e);
                 }
             );
@@ -665,6 +672,8 @@ var LayerSwitcherDOM = {
             btnGreyscale.attachEvent(
                 "onclick",
                 function (e) {
+                    var status = (e.target.ariaPressed === "true");
+                    e.target.setAttribute("aria-pressed", !status);
                     context._onToggleLayerGreyscaleClick(e);
                 }
             );
