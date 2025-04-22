@@ -58,6 +58,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @fires layerswitcher:change:opacity
  * @fires layerswitcher:change:visibility
  * @fires layerswitcher:change:position
+ * @fires layerswitcher:change:grayscale
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -98,6 +99,9 @@ var logger = Logger.getLogger("layerswitcher");
  * });
  * LayerSwitcher.on("layerswitcher:change:position", function (e) {
  *    console.warn("layer", e.layer, e.position);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+ *    console.warn("layer", e.layer, e.grayscale);
  * });
  *
  */
@@ -1459,6 +1463,25 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             // maj du cache
             source.refresh();
         }
+
+        /**
+         * event triggered when an grayscale is changed
+         *
+         * @event layerswitcher:change:grayscale
+         * @property {Object} type - event
+         * @property {Object} grayscale - grayscale
+         * @property {Object} layer - layer
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+         *   console.log(e.grayscale);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:change:grayscale",
+            grayscale : toGreyScale,
+            layer : this._layers[layerID]
+        });
     }
 
     /**
