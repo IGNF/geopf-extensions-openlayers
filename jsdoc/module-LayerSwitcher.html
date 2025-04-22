@@ -1003,6 +1003,8 @@
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:add"> <a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:grayscale"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:visibility"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a> </div>
@@ -1022,6 +1024,8 @@
                 <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:grayscale"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:opacity"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a></li>
             
@@ -6319,7 +6323,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 391
+            Controls/LayerSwitcher/LayerSwitcher.js, line 395
         </div>
         
     </div>
@@ -6498,7 +6502,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 451
+            Controls/LayerSwitcher/LayerSwitcher.js, line 455
         </div>
         
     </div>
@@ -6670,6 +6674,208 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="~event:layerswitcher:change:grayscale">
+            
+            layerswitcher:change:grayscale
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1467
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>event triggered when an grayscale is changed</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">type</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>event</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">grayscale</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>grayscale</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">layer</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>layer</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">target</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>instance LayerSwitcher</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+</dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+  console.log(e.grayscale);
+})</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="~event:layerswitcher:change:opacity">
             
             layerswitcher:change:opacity
@@ -6677,7 +6883,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 938
+            Controls/LayerSwitcher/LayerSwitcher.js, line 942
         </div>
         
     </div>
@@ -6879,7 +7085,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 986
+            Controls/LayerSwitcher/LayerSwitcher.js, line 990
         </div>
         
     </div>
@@ -7081,7 +7287,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1248
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1252
         </div>
         
     </div>
@@ -7306,7 +7512,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1184
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1188
         </div>
         
     </div>
@@ -7508,7 +7714,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1560
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1583
         </div>
         
     </div>
@@ -7740,7 +7946,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Apr 11 2025 20:52:35 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Apr 22 2025 12:49:43 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

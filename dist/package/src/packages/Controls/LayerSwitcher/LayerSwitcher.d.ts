@@ -31,6 +31,7 @@ export default LayerSwitcher;
  * @fires layerswitcher:change:opacity
  * @fires layerswitcher:change:visibility
  * @fires layerswitcher:change:position
+ * @fires layerswitcher:change:grayscale
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -71,6 +72,9 @@ export default LayerSwitcher;
  * });
  * LayerSwitcher.on("layerswitcher:change:position", function (e) {
  *    console.warn("layer", e.layer, e.position);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+ *    console.warn("layer", e.layer, e.grayscale);
  * });
  *
  */

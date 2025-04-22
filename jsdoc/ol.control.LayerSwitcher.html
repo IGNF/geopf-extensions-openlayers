@@ -1003,6 +1003,8 @@
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:add"> <a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:grayscale"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:visibility"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a> </div>
@@ -1022,6 +1024,8 @@
                 <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:add"><a href="module-LayerSwitcher.html#~event:layerswitcher:add">layerswitcher:add</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:grayscale"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:opacity"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a></li>
             
@@ -6257,7 +6261,7 @@
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 104
+            Controls/LayerSwitcher/LayerSwitcher.js, line 108
         </div>
         
     </div>
@@ -6906,6 +6910,8 @@
         <li>layerswitcher:change:visibility</li>
     
         <li>layerswitcher:change:position</li>
+    
+        <li>layerswitcher:change:grayscale</li>
     </ul>
     
 
@@ -6961,6 +6967,9 @@ LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
 });
 LayerSwitcher.on("layerswitcher:change:position", function (e) {
    console.warn("layer", e.layer, e.position);
+});
+LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+   console.warn("layer", e.layer, e.grayscale);
 });</code></pre>
     
 
@@ -7051,7 +7060,7 @@ LayerSwitcher.on("layerswitcher:change:position", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1469
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1492
         </div>
         
     </div>
@@ -7168,7 +7177,7 @@ LayerSwitcher.on("layerswitcher:change:position", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 886
+            Controls/LayerSwitcher/LayerSwitcher.js, line 890
         </div>
         
     </div>
@@ -7239,7 +7248,7 @@ LayerSwitcher.on("layerswitcher:change:position", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 261
+            Controls/LayerSwitcher/LayerSwitcher.js, line 265
         </div>
         
     </div>
@@ -7584,7 +7593,7 @@ LayerSwitcher.on("layerswitcher:change:position", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 504
+            Controls/LayerSwitcher/LayerSwitcher.js, line 508
         </div>
         
     </div>
@@ -7665,7 +7674,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 540
+            Controls/LayerSwitcher/LayerSwitcher.js, line 544
         </div>
         
     </div>
@@ -7742,7 +7751,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1622
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1645
         </div>
         
     </div>
@@ -7870,7 +7879,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1668
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1691
         </div>
         
     </div>
@@ -7997,7 +8006,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1642
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1665
         </div>
         
     </div>
@@ -8147,7 +8156,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 416
+            Controls/LayerSwitcher/LayerSwitcher.js, line 420
         </div>
         
     </div>
@@ -8271,7 +8280,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 480
+            Controls/LayerSwitcher/LayerSwitcher.js, line 484
         </div>
         
     </div>
@@ -8388,7 +8397,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 161
+            Controls/LayerSwitcher/LayerSwitcher.js, line 165
         </div>
         
     </div>
@@ -8505,7 +8514,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 514
+            Controls/LayerSwitcher/LayerSwitcher.js, line 518
         </div>
         
     </div>
@@ -8656,7 +8665,7 @@ container Id ; null if layer not found.</li>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Apr 11 2025 20:52:35 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Apr 22 2025 12:49:44 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 
