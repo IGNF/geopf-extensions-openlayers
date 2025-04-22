@@ -53,7 +53,12 @@
                         opacity : 0.8
                     });
                     ortho = new ol.layer.GeoportalWMTS({
-                        layer : "ORTHOIMAGERY.ORTHOPHOTOS"
+                        layer : "ORTHOIMAGERY.ORTHOPHOTOS",
+                        olParams : { 
+                            visible : true,
+                            opacity : 0.8,
+                            grayscale : true 
+                        }
                     });
 
 					// Création de la map
@@ -148,7 +153,8 @@
                     maps = new ol.layer.Tile({
                         source : new ol.source.GeoportalWMTS({
                             layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
-                        }) // , zIndex : 0
+                        }), // , zIndex : 0
+                        grayscale : true
                     });
                     map.addLayer(maps);
                 };
@@ -164,9 +170,10 @@
                     layer = new ol.layer.GeoportalMapBox({
                         layer  : "PLAN.IGN",
                         style  : "standard"
-                    }, {
+                    },{
+                        visible : true,
                         opacity : 0.8,
-                        gray : true
+                        grayscale : true
                     });
                     map.addLayer(layer); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
                 };
