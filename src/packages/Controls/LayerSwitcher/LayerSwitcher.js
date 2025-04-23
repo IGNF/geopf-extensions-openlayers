@@ -7,6 +7,7 @@ import Widget from "../Widget";
 import Control from "../Control";
 import WMTSSource from "ol/source/WMTS";
 import TileWMSSource from "ol/source/TileWMS";
+import ImageSource from "ol/source/Image";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import { intersects as olIntersects } from "ol/extent";
 import {
@@ -1467,7 +1468,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var layer = this._layers[id].layer;
         var source = layer.getSource();
 
-        if (!(source instanceof TileWMSSource || source instanceof WMTSSource || source instanceof VectorTileSource)) {
+        if (!(source instanceof ImageSource || source instanceof TileWMSSource || source instanceof WMTSSource || source instanceof VectorTileSource)) {
             console.warn("Greyscale only implemented for raster and vector tiles");
             return;
         }
@@ -1476,7 +1477,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         if (toGreyScale) {
             if (source instanceof VectorTileSource ) {
                 applyGrayscaleStyle(layer, layer.styleUrl);
-            } else if (source instanceof TileWMSSource) {
+            } else if (source instanceof ImageSource) {
                 source.loadstartListenerKey = source.on("imageloadstart", imageloadstartHandler);
                 source.loadendListenerKey = source.on("imageloadend", imageloadendHandler);
             } else {
