@@ -1,5 +1,5 @@
 /* ROUTE */
-[id^=GProutePanel-] {
+dialog[id^=GProutePanel-] {
   width: 320px;
 }
 
