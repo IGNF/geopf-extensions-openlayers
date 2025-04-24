@@ -9,6 +9,8 @@ __DATE__
 
 ### 🎉 Summary
 
+Ajout de la fonctionnalité pour passer les couches raster ou TMS en noir et blanc et amélioration de l'affichage des résultats des calculs dans les panels.
+
 ### 💥 Breaking changes
 
 ### 📖 Changelog
