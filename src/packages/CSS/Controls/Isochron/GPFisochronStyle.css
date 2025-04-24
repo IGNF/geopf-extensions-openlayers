@@ -1,5 +1,5 @@
 /* ISOCHRON */
-[id^=GPisochronPanel-] {
+dialog[id^=GPisochronPanel-] {
   width: 280px;
 }
 
