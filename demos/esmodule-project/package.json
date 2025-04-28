@@ -7,7 +7,7 @@
     "serve": "vite preview"
   },
   "devDependencies": {
-    "vite": "^5.2.11"
+    "vite": "^6.0.0"
   },
   "dependencies": {
     "geopf-extensions-openlayers": "../../dist/package/geopf-extensions-openlayers.tgz",
