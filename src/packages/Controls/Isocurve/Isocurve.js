@@ -448,8 +448,12 @@ var Isocurve = class Isocurve extends Control {
         // direction
         (this._currentDirection === "departure")
             ? document.getElementById("GPisochronDirectionSelect-" + this._uid).selectedIndex = 0 : document.getElementById("GPisochronDirectionSelect-" + this._uid).selectedIndex = 1;
-    
-        this._resultsIsoContainer.className = "";
+        
+        this._fillIsoResultsDetails(this._currentIsoResults, {
+            graph : this._currentTransport,
+            exclusions : this._currentExclusions,
+            method : this._currentComputation
+        });
     }
 
     /**
@@ -472,6 +476,7 @@ var Isocurve = class Isocurve extends Control {
         this.setLayer();
 
         this._resultsIsoContainer.className = "GPelementHidden gpf-hidden";
+        this._formContainer.className = "gpf-panel__content fr-modal__content";
     }
 
     // ################################################################### //
