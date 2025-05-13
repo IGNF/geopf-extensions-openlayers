@@ -118,11 +118,18 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
   opacity: 1;
 }
 
+[id^="GPlayerStylePanel"],
 [id^="GPlayerInfoPanel"] {
   left: unset;
   right: 100%;
 }
 
+[id^="GPlayerStyleList"] {
+  display: flex;
+  flex-direction: column;
+}
+
+div[id^=GPlayerStyleContent],
 div[id^=GPlayerInfoContent] {
   position: relative;
   max-height: 200px;
@@ -131,3 +138,6 @@ div[id^=GPlayerInfoContent] {
   padding-right: 10px;
 }
 
+div[id^=GPlayerStyleContent] {
+  max-height: 500px;
+}

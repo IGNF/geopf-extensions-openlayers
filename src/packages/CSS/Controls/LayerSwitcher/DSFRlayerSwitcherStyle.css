@@ -15,11 +15,15 @@ div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayersList]{
     transform: translateX(calc(-100% - 4px));
 }
 
-div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel]{
+div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerStylePanel],
+div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel]
+{
     transform: translate(calc(-100% - 2px), 2px);
 }
 
-div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > .gpf-panel__body {
+div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerStylePanel] > .gpf-panel__body,
+div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > .gpf-panel__body
+ {
     max-height: unset !important;
 }
 
@@ -195,6 +199,7 @@ div[id^=GPadvancedTools_ID_] {
     mask: url("img/dsfr/extent.svg") center no-repeat;
 }
 
+[id^=GPlayerStylePanel],
 [id^=GPlayerInfoPanel] {
     position: absolute;
     height: initial;
@@ -225,6 +230,11 @@ div[id^=GPadvancedTools_ID_] {
 div[id^=GPlayerInfoContent] {
     width: 350px;
 }
+
+div[id^=GPlayerStyleContent] {
+  width: 260px;
+}
+
 
 .gpf-btn-icon-close.GPlayersPanelClose {
     top: 0;
