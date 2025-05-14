@@ -10,6 +10,8 @@ declare namespace LayerSwitcherDOM {
     function _createMainCounterLayersElement(): HTMLSpanElement;
     function _createMainInfoElement(): DOMElement;
     function _createMainInfoDivElement(): HTMLDivElement;
+    function _createMainStyleElement(): DOMElement;
+    function _createMainStyleDivElement(): HTMLDivElement;
     function _createLayersPanelHeaderElement(): HTMLDivElement;
     function _createLayersPanelIconElement(): HTMLLabelElement;
     function _createLayersPanelTitleElement(): HTMLDivElement;
@@ -30,11 +32,12 @@ declare namespace LayerSwitcherDOM {
     function _createAdvancedToolShowElement(obj: Object): DOMElement[];
     function _createAdvancedToolElement(obj: Object): DOMElement;
     function _createAdvancedToolDeleteElement(obj: Object, contextual?: boolean): DOMElement;
-    function _createAdvancedToolEditionElement(obj: Object): DOMElement;
+    function _createAdvancedToolEditionElement(obj: Object, contextual?: boolean): DOMElement;
     function _createAdvancedToolInformationElement(obj: Object, contextual?: boolean): DOMElement;
     function _createAdvancedToolGreyscaleElement(obj: Object, contextual?: boolean): DOMElement;
     function _createAdvancedToolOpacityElement(obj: Object): DOMElement[];
     function _createAdvancedToolExtentElement(obj: Object, contextual?: boolean): DOMElement;
     function _createContainerLayerInfoElement(obj: Object): DOMElement;
+    function _createContainerLayerStyleElement(obj: Object): DOMElement;
 }
 //# sourceMappingURL=LayerSwitcherDOM.d.ts.map
