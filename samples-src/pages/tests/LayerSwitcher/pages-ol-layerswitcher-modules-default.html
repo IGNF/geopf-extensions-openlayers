@@ -1,9 +1,10 @@
 {{#extend "ol-sample-modules-layout"}}
 
 {{#content "vendor"}}
-        
+
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -32,7 +33,6 @@
                 var createMap = function () {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
-
                     map = new ol.Map({
                         target : "map",
                         view : new ol.View({
@@ -43,6 +43,9 @@
                             new ol.layer.Tile({
                                 source: new ol.source.OSM(),
                                 opacity: 0.5
+                            }),
+                            new ol.layer.GeoportalMapBox({
+                                layer : "PLAN.IGN"
                             })
                         ]
                     });

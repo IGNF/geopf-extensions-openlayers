@@ -134,6 +134,8 @@ var LayerSwitcherDOM = {
                 if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+                    document.getElementById(self._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
+                    document.getElementById(self._addUID("GPlayerStylePanel")).classList.remove("GPlayerStylePanelOpened", "gpf-visible");
                 }
                 self.onShowLayerSwitcherClick(e);
             });
@@ -144,6 +146,8 @@ var LayerSwitcherDOM = {
                 if (document.getElementById(self._addUID("GPshowLayersList")).checked) {
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
                     document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+                    document.getElementById(self._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
+                    document.getElementById(self._addUID("GPlayerStylePanel")).classList.remove("GPlayerStylePanelOpened", "gpf-visible");
                 }
                 self.onShowLayerSwitcherClick(e);
             });
@@ -175,6 +179,26 @@ var LayerSwitcherDOM = {
     },
 
     _createMainInfoDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
+        return div;
+    },
+
+    /**
+     * Creation du container du panneau des styles (DOM)
+     *
+     * @returns {DOMElement} container
+     */
+    _createMainStyleElement : function () {
+        // gestion du panneau d"information dans le container principal
+        // <div id="GPlayerInfoPanel" class="GPlayerInfoPanelClosed">...</div>
+        var divP = document.createElement("dialog");
+        divP.id = this._addUID("GPlayerStylePanel");
+        divP.className = "GPpanel GPlayerStylePanelClosed gpf-panel fr-modal";
+        return divP;
+    },
+
+    _createMainStyleDivElement : function () {
         var div = document.createElement("div");
         div.className = "gpf-panel__body fr-modal__body";
         return div;
@@ -350,6 +374,9 @@ var LayerSwitcherDOM = {
         label.className = "GPlayerName gpf-label gpf-label-name fr-label";
         label.title = obj.description || obj.title;
         label.innerHTML = obj.title;
+        if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
+            label.innerHTML = obj.description;
+        }
 
         return label;
     },
@@ -484,6 +511,7 @@ var LayerSwitcherDOM = {
 
             var contextual = document.createElement("div");
             contextual.appendChild(this._createAdvancedToolDeleteElement(obj, true));
+            contextual.appendChild(this._createAdvancedToolEditionElement(obj, true));
             contextual.appendChild(this._createAdvancedToolInformationElement(obj, true));
             contextual.appendChild(this._createAdvancedToolExtentElement(obj, true));
             contextual.appendChild(this._createAdvancedToolGreyscaleElement(obj, true));
@@ -536,32 +564,58 @@ var LayerSwitcherDOM = {
      * Creation de l'icone d'edition du layer (DOM)
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      * @returns {DOMElement} container
      */
-    _createAdvancedToolEditionElement : function (obj) {
+    _createAdvancedToolEditionElement : function (obj, contextual = false) {
         var button = document.createElement("button");
-        button.id = this._addUID("GPedit_ID_" + obj.id);
+        if (!contextual) {
+            button.id = this._addUID("GPedit_ID_" + obj.id);
+        } else {
+            button.id = this._addUID("GPeditContextual_ID_" + obj.id);
+        }
         button.className = "GPlayerEdit gpf-btn gpf-btn-icon gpf-btn-icon-ls-edit fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Editer la couche";
+        if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
+            button.title = "Changer de style";
+        }
         button.layerId = obj.id;
+        if (contextual) {
+            button.innerText = "Editer la couche";
+            if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
+                button.innerText = "Changer de style";
+            }
+        }
         button.setAttribute("tabindex", "0");
         button.setAttribute("type", "button");
 
         // hack pour garder un emplacement vide
-        if (!obj.editable) {
+        if (!obj.editable || (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS" && obj.layer.config.styles.length === 1)) {
             button.style.opacity = "0";
             button.style.visibility = "hidden";
         }
 
         var context = this;
-        if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                context._onEditLayerClick(e);
-            });
-        } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                context._onEditLayerClick(e);
-            });
+        if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS" && obj.layer.config.styles.length > 1) {
+            if (button.addEventListener) {
+                button.addEventListener("click", function (e) {
+                    context._onEditLayerStyleClick(e, obj.layer.config.styles);
+                });
+            } else if (button.attachEvent) {
+                button.attachEvent("onclick", function (e) {
+                    context._onEditLayerStyleClick(e, obj.layer.config.styles);
+                });
+            }
+        } else {
+            if (button.addEventListener) {
+                button.addEventListener("click", function (e) {
+                    context._onEditLayerClick(e);
+                });
+            } else if (button.attachEvent) {
+                button.attachEvent("onclick", function (e) {
+                    context._onEditLayerClick(e);
+                });
+            }
         }
 
         return button;
@@ -636,7 +690,7 @@ var LayerSwitcherDOM = {
         // exemple :
         // <div id="GPgreyscale_ID_Layer1" class="GPlayerBreyscale" title="Noir & blanc" onclick="GPtoggleGreyscale(this);"></div>
         var grayscale = (typeof obj.grayscale !== "undefined") ? obj.grayscale : false;
-        
+
         var btnGreyscale = document.createElement("button");
         if (!contextual) {
             btnGreyscale.id = this._addUID("GPgreyscale_ID_" + obj.id);
@@ -986,6 +1040,104 @@ var LayerSwitcherDOM = {
                 content.appendChild(lgd);
             }
         }
+
+        return container;
+    },
+
+    // ################################################################### //
+    // ############################ Layer style ########################### //
+    // ################################################################### //
+
+    /**
+     * Creation du container du layer style (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     *
+     * @returns {DOMElement} container
+     */
+    _createContainerLayerStyleElement : function (obj) {
+        var container = document.createElement("div");
+
+        var header = document.createElement("div");
+        // FIXME on n'utilise pas le dsfr !
+        // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        header.className = "gpf-panel__header_ls";
+        container.appendChild(header);
+
+        var label = document.createElement("label");
+        label.className = "GPlayerStyle gpf-btn-header gpf-btn-icon-ls-info";
+        label.title = "Informations";
+        header.appendChild(label);
+
+        var title = document.createElement("div");
+        title.id = this._addUID("GPlayerStyleTitle");
+        title.innerHTML = "Options de style";
+        title.className = "gpf-panel__title_ls";
+        header.appendChild(title);
+
+        var btnClose = document.createElement("button");
+        btnClose.id = this._addUID("GPlayerStyleClose");
+        btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.title = "Fermer la fenêtre";
+
+        var self = this;
+        /** Call event function on close click */
+        var onCloseClick = function () {
+            document.getElementById(self._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
+            document.getElementById(self._addUID("GPlayerStylePanel")).classList.remove("GPlayerStylePanelOpened", "gpf-visible");
+            document.getElementById(obj.id).classList.add("GPlayerStyleClosed");
+            document.getElementById(obj.id).classList.remove("GPlayerStyleOpened");
+        };
+        if (btnClose.addEventListener) {
+            btnClose.addEventListener("click", onCloseClick);
+        } else if (btnClose.attachEvent) {
+            // internet explorer
+            btnClose.attachEvent("onclick", onCloseClick);
+        }
+        this.addEventListener("layerswitcher:remove", (e) => {
+            if (parseInt(obj.id.split("-")[0].split("GPinfo_ID_")[1]) === e.layer.id) {
+                document.getElementById(self._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
+                document.getElementById(self._addUID("GPlayerStylePanel")).classList.remove("GPlayerStylePanelOpened", "gpf-visible");
+            }
+        });
+        header.appendChild(btnClose);
+        container.appendChild(header);
+
+        var content = document.createElement("div");
+        content.id = this._addUID("GPlayerStyleContent");
+        content.className = "gpf-panel__content fr-modal__content";
+        container.appendChild(content);
+
+        var list = document.createElement("div");
+        list.id = this._addUID("GPlayerStyleList");
+
+        console.log(obj.layer);
+
+        for (let i = 0; i < obj.styles.length; i++) {
+            var style = obj.styles[i];
+            var elem = document.createElement("div");
+            elem.className = "gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+            var input = document.createElement("input");
+            input.type = "radio";
+            input.name = this._addUID("styleradio_");
+            input.id = this._addUID("styleradio_" + style.name);
+            input.value = style.url;
+            var label = document.createElement("label");
+            label.className = "gpf-label fr-label";
+            label.innerText = style.title;
+            label.htmlFor = this._addUID("styleradio_" + style.name);
+            elem.appendChild(input);
+            elem.appendChild(label);
+            list.appendChild(elem);
+            if (obj.layerInfo.layer.styleUrl === style.url) {
+                input.checked = true;
+            }
+            input.addEventListener("change", (e) => {
+                obj.layerInfo.layer.styleUrl = e.target.value;
+                obj.layerInfo.layer.setStyleMapBox();
+            });
+        }
+        content.appendChild(list);
 
         return container;
     }
