@@ -1378,7 +1378,7 @@ var SearchEngine = class SearchEngine extends Control {
                 markerDiv.addEventListener(
                     "click",
                     function () {
-                        context._onResultMarkerSelect(info);
+                        context._onResultMarkerSelect(info, position);
                     }
                 );
             } else if (markerDiv.attachEvent) {
@@ -1386,7 +1386,7 @@ var SearchEngine = class SearchEngine extends Control {
                 markerDiv.attachEvent(
                     "onclick",
                     function () {
-                        context._onResultMarkerSelect(info);
+                        context._onResultMarkerSelect(info, position);
                     }
                 );
             }
@@ -1488,10 +1488,18 @@ var SearchEngine = class SearchEngine extends Control {
      * and sets a popup with marker information
      *
      * @param {Object} information - location information
+     * @param {Array} position - [lon, lat] of marker
      * @private
      */
-    _onResultMarkerSelect (information) {
+    _onResultMarkerSelect (information, position = null) {
         var map = this.getMap();
+
+        if (position) {
+            map.getView().animate({
+                center : position,
+                duration : 250,
+            });
+        }
 
         var popupContent = "";
         if (typeof information !== "string") {
