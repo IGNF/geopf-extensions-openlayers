@@ -28,7 +28,9 @@
             <div id="map">
             </div>
                 <div style="display: flex;flex-direction: column;align-items: center;width: 150px;">
-                    <button type="button" class="fr-btn" id="addLayerConfigWFS">Ajouter une couche WFS</button>
+                    <button type="button" class="fr-btn" id="addLayerConfigWFS">Ajouter des couches WFS</button>
+                    <button type="button" class="fr-btn" id="activeLayerWMTS">Activer la couche WMTS</button>
+                    <button type="button" class="fr-btn" id="disableLayerWMTS">Desactiver la couche WMTS</button>
                 </div>
 {{/content}}
 
@@ -140,7 +142,15 @@
                         }
                     });
                 };
+                const activeLayerWMTS = (e) => {
+                    catalog.activeLayerByID("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMTS");
+                };
+                const disableLayerWMTS = (e) => {
+                    catalog.disableLayerByID("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMTS");
+                };
                 document.getElementById("addLayerConfigWFS").onclick = addLayerConfigWFS;
+                document.getElementById("activeLayerWMTS").onclick = activeLayerWMTS;
+                document.getElementById("disableLayerWMTS").onclick = disableLayerWMTS;
            </script>
 {{/content}}
 

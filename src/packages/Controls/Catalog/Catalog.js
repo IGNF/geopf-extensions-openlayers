@@ -295,6 +295,47 @@ var Catalog = class Catalog extends Control {
         this.createCatalogContentEntries(this.layersList);
     }
 
+    activeLayerByID (id) {
+        var name = id.split("$")[0];
+        var service = id.split(":").slice(-1)[0];
+        this.activeLayer(name, service);
+    }
+    disableLayerByID (id) {
+        var name = id.split("$")[0];
+        var service = id.split(":").slice(-1)[0];
+        this.disableLayer(name, service);
+    }
+    activeLayer (name, service) {
+        // cf. this.onSelectCatalogEntryClick
+        var id = this.getLayerId(name, service);
+        if (id) {
+            var layer = {}; // conf tech
+            if (this.options.addToMap) {
+                layer = this.addLayer(name, service);
+            }
+            this.dispatchEvent({
+                type : "catalog:layer:add",
+                name : name,
+                service : service,
+                layer : layer
+            });
+        }
+    }
+    disableLayer (name, service) {
+        var id = this.getLayerId(name, service);
+        if (id) {
+            var layer = {}; // conf tech
+            if (this.options.addToMap) {
+                layer = this.removeLayer(name, service);
+            }
+            this.dispatchEvent({
+                type : "catalog:layer:remove",
+                name : name,
+                service : service,
+                layer : layer
+            });
+        }
+    }
     // ################################################################### //
     // ################### getters / setters ############################# //
     // ################################################################### //
@@ -306,6 +347,29 @@ var Catalog = class Catalog extends Control {
      */
     getContainer () {
         return this.container;
+    }
+
+    /**
+     * Get long layer ID
+     * @param {*} name 
+     * @param {*} service 
+     * @returns {String} - long layer ID
+     */
+    getLayerId (name, service) {
+        if (!this.layersList || typeof this.layersList !== "object") {
+            return null;
+        }
+
+        var regex = new RegExp(name + ".*" + service);
+        for (const key in this.layersList) {
+            if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
+                if (regex.test(key)) {
+                    return key;
+                }
+            }
+        }
+
+        return null;
     }
 
     // ################################################################### //
@@ -748,8 +812,9 @@ var Catalog = class Catalog extends Control {
             content.appendChild(this._createCatalogContentCategoryTabContent(categories[i], layersCategorised));
         }
     }
+
     // ################################################################### //
-    // ######################## methods on map ########################### //
+    // ######################## methods on listeners ##################### //
     // ################################################################### //
 
     /**
@@ -807,28 +872,9 @@ var Catalog = class Catalog extends Control {
         delete this.eventsListeners["map:remove"];
     }
 
-    /**
-     * Get long layer ID
-     * @param {*} name 
-     * @param {*} service 
-     * @returns {String} - long layer ID
-     */
-    getLayerId (name, service) {
-        if (!this.layersList || typeof this.layersList !== "object") {
-            return null;
-        }
-
-        var regex = new RegExp(name + ".*" + service);
-        for (const key in this.layersList) {
-            if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
-                if (regex.test(key)) {
-                    return key;
-                }
-            }
-        }
-
-        return null;
-    }
+    // ################################################################### //
+    // ######################## methods on map ########################### //
+    // ################################################################### //
 
     /**
      * Add layer on map
@@ -925,6 +971,7 @@ var Catalog = class Catalog extends Control {
     showWaiting () {
         this.waitingContainer.className = "GPwaitingContainerVisible gpf-waiting--visible";
     }
+
     // ################################################################### //
     // ######################## methods search ########################### //
     // ################################################################### //
