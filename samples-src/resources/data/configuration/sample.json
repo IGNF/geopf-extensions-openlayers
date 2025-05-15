@@ -1,7 +1,7 @@
 {
     "generalOptions": {
       "apiKeys": {
-        "cartes": [
+        "full": [
           "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMTS",
           "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMS",
           "PLAN.IGN$GEOPORTAIL:GPP:TMS",
@@ -28,7 +28,7 @@
           "id": "OGC:WMTS",
           "version": "1.0.0",
           "serverUrl": {
-            "cartes": "https://data.geopf.fr/wmts"
+            "full": "https://data.geopf.fr/wmts"
           }
         },
         "defaultProjection": "EPSG:3857",
@@ -197,7 +197,7 @@
           "id": "OGC:WMS",
           "version": "1.3.0",
           "serverUrl": {
-            "cartes": "https://data.geopf.fr/wms-r/wms"
+            "full": "https://data.geopf.fr/wms-r/wms"
           }
         },
         "defaultProjection": "EPSG:3857",
@@ -245,7 +245,7 @@
           "id": "GPP:TMS",
           "version": "1.0.0",
           "serverUrl": {
-            "cartes": "https://data.geopf.fr/tms/1.0.0/"
+            "full": "https://data.geopf.fr/tms/1.0.0/"
           }
         },
         "name": "PLAN.IGN",

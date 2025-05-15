@@ -332,7 +332,7 @@ var CatalogDOM = {
 
         var strContainer = `
         <!-- onglets -->
-        <div class="catalog-container-tabs">
+        <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
             <div class="GPtabs fr-tabs">
                 <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
                     ${strTabButtons}

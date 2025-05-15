@@ -11,6 +11,7 @@ import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
 import Config from "../../Utils/Config";
+import LayerConfig from "../../Utils/LayerConfigUtils";
 
 // import local des layers
 import GeoportalWFS from "../../Layers/LayerWFS";
@@ -266,6 +267,32 @@ var Catalog = class Catalog extends Control {
         if (this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
         }
+    }
+
+    /**
+     * Add a layer config
+     * @param {*} conf 
+     */
+    addLayerConfig (conf) {
+        for (const key in conf) {
+            if (Object.prototype.hasOwnProperty.call(conf, key)) {
+                const layer = conf[key];
+                if (layer.serviceParams) {
+                    // si la couche a bien une configuration valide liée au service
+                    var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
+                    layer.service = service; // new proprerty !
+                    layer.categories = []; // new property ! vide pour le moment
+                    this.layersList[key] = layer;
+                }
+            }
+        }
+        // clean container
+        var element = document.getElementById("GPcatalogContainerTabs");
+        if (element) {
+            element.remove();
+        }
+        // on va recréer le container
+        this.createCatalogContentEntries(this.layersList);
     }
 
     // ################################################################### //
@@ -524,65 +551,6 @@ var Catalog = class Catalog extends Control {
     async initLayersList () {
         var data = null; // reponse brute du service
 
-        var self = this;
-        const createCatalogContentEntries = (layers) => {
-            var container = self.contentCatalogContainer;
-
-            var widgetContentEntryTabs = self._createCatalogContentCategoriesTabs(this.categories);
-            container.appendChild(widgetContentEntryTabs);
-
-            var categories = []; // remise à plat des catégories / sous-categories
-            self.categories.forEach((category) => {
-                if (category.items) {
-                    for (let i = 0; i < category.items.length; i++) {
-                        const element = category.items[i];
-                        categories.push(element);
-                    }
-                } else {
-                    categories.push(category);
-                }
-            });
-            // INFO
-            // les containers de contenu sont definis à partir
-            // de l'ordre des catégories / sous-categories
-            // il y'a autant de catégories / sous-categories que de containers
-            var contents = container.querySelectorAll(".tabcontent");
-            for (let i = 0; i < contents.length; i++) {
-                const content = contents[i];
-                var layersCategorised = getLayersByCategory(categories[i], layers);
-                content.appendChild(self._createCatalogContentCategoryTabContent(categories[i], layersCategorised));
-            }
-        };
-
-        // traitement du contenu (liste de couches) d'une categorie
-        // en fonction d'un filtre
-        const getLayersByCategory = (category, layers) => {
-            // INFO
-            // comment gerer les listes de layers filtrées pour chaque categorie ?
-            // on doit les stocker si l'on souhaite faire des requêtes
-            // avec l'outil de recherche par la suite
-            var layersCategorised = layers;
-            var filter = category.filter;
-            if (filter) {
-                layersCategorised = {};
-                for (const key in layers) {
-                    if (Object.prototype.hasOwnProperty.call(layers, key)) {
-                        const layer = layers[key];
-                        if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
-                            var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
-                            if (condition) {
-                                layersCategorised[key] = layer;
-                                // on ajoute l'appartenance de la couche à une categorie
-                                this.layersList[key].categories.push(category.id);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return layersCategorised;
-        };
-
         // TODO filtre sur la liste de couches à prendre en compte
         const getLayersByFilter = (filter, layers) => {
             // INFO
@@ -629,7 +597,7 @@ var Catalog = class Catalog extends Control {
             // sauvegarde de la liste des couches
             this.layersList = layers;
 
-            createCatalogContentEntries(layers);
+            this.createCatalogContentEntries(layers);
             return new Promise((resolve, reject) => {
                 resolve(data);
             });
@@ -707,7 +675,7 @@ var Catalog = class Catalog extends Control {
                 // sauvegarde de la liste des couches
                 this.layersList = layers;
 
-                createCatalogContentEntries(layers);
+                this.createCatalogContentEntries(layers);
                 return await new Promise((resolve, reject) => {
                     resolve(data);
                 });
@@ -719,6 +687,67 @@ var Catalog = class Catalog extends Control {
         }
     }
 
+    /**
+     * Create DOM content categories and entries
+     * @param {*} layers 
+     */
+    createCatalogContentEntries (layers) {
+        // traitement du contenu (liste de couches) d'une categorie
+        // en fonction d'un filtre
+        const getLayersByCategory = (category, layers) => {
+            // INFO
+            // comment gerer les listes de layers filtrées pour chaque categorie ?
+            // on doit les stocker si l'on souhaite faire des requêtes
+            // avec l'outil de recherche par la suite
+            var layersCategorised = layers;
+            var filter = category.filter;
+            if (filter) {
+                layersCategorised = {};
+                for (const key in layers) {
+                    if (Object.prototype.hasOwnProperty.call(layers, key)) {
+                        const layer = layers[key];
+                        if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
+                            var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
+                            if (condition) {
+                                layersCategorised[key] = layer;
+                                // on ajoute l'appartenance de la couche à une categorie
+                                this.layersList[key].categories.push(category.id);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return layersCategorised;
+        };
+                
+        var container = this.contentCatalogContainer;
+
+        var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories);
+        container.appendChild(widgetContentEntryTabs);
+
+        var categories = []; // remise à plat des catégories / sous-categories
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categories.push(element);
+                }
+            } else {
+                categories.push(category);
+            }
+        });
+        // INFO
+        // les containers de contenu sont definis à partir
+        // de l'ordre des catégories / sous-categories
+        // il y'a autant de catégories / sous-categories que de containers
+        var contents = container.querySelectorAll(".tabcontent");
+        for (let i = 0; i < contents.length; i++) {
+            const content = contents[i];
+            var layersCategorised = getLayersByCategory(categories[i], layers);
+            content.appendChild(this._createCatalogContentCategoryTabContent(categories[i], layersCategorised));
+        }
+    }
     // ################################################################### //
     // ######################## methods on map ########################### //
     // ################################################################### //
@@ -779,6 +808,29 @@ var Catalog = class Catalog extends Control {
     }
 
     /**
+     * Get long layer ID
+     * @param {*} name 
+     * @param {*} service 
+     * @returns {String} - long layer ID
+     */
+    getLayerId (name, service) {
+        if (!this.layersList || typeof this.layersList !== "object") {
+            return null;
+        }
+
+        var regex = new RegExp(name + ".*" + service);
+        for (const key in this.layersList) {
+            if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
+                if (regex.test(key)) {
+                    return key;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Add layer on map
      *
      * @param {*} name - layer name
@@ -789,27 +841,36 @@ var Catalog = class Catalog extends Control {
     addLayer (name, service) {
         var layerConf = null;
         var layer = null;
+        var id = this.getLayerId(name, service);
+        if (!id) {
+            return;
+        }
+        var c = (!Config.isConfigLoaded()) ? LayerConfig.getLayerConfig(this.layersList[id]) : null;
         switch (service) {
             case "WMS":
                 layer = new GeoportalWMS({
-                    layer : name
+                    layer : name,
+                    configuration : c
                 });
                 break;
             case "WMTS":
                 layer = new GeoportalWMTS({
-                    layer : name
+                    layer : name,
+                    configuration : c
                 });
                 break;
             case "TMS":
                 layer = new GeoportalMapBox({
-                    layer : name
+                    layer : name,
+                    configuration : c
                 },{
                     declutter : true
                 });
                 break;
             case "WFS":
                 layer = new GeoportalWFS({
-                    layer : name
+                    layer : name,
+                    configuration : c
                 });
                 break;
             default:
