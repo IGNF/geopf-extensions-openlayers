@@ -406,7 +406,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var self = this;
         setTimeout(() => {
             self._updateLayerGrayScale({
-                target : { 
+                target : {
                     gpLayerId : id
                 }
             });
@@ -456,6 +456,10 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         if (infodiv && infodiv.className === "GPlayerInfoOpened") {
             document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
             // infodiv.className = "GPlayerInfo";
+        }
+        var stylediv = document.getElementById(this._addUID("GPedit_ID_" + layerID));
+        if (stylediv && stylediv.classList.contains("GPlayerStyleOpened")) {
+            document.getElementById(this._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
         }
         // remove layer div
         var layerDiv = document.getElementById(this._addUID("GPlayerSwitcher_ID_" + layerID));
@@ -518,6 +522,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             //     layers[i].className = "GPlayerInfo";
             // }
             document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+            document.getElementById(this._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
         }
         document.getElementById(this._addUID("GPshowLayersList")).checked = !collapsed;
     }
@@ -739,6 +744,12 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         divI.appendChild(divD);
         container.appendChild(divI);
 
+        // ajout dans le container principal du panneau des styles
+        var divS = this._createMainStyleElement();
+        var divSd = this._createMainStyleDivElement();
+        divS.appendChild(divSd);
+        container.appendChild(divS);
+
         return container;
     }
 
@@ -815,7 +826,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             var self = this;
             setTimeout(() => {
                 self._updateLayerGrayScale({
-                    target : { 
+                    target : {
                         gpLayerId : id
                     }
                 });
@@ -1200,6 +1211,70 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         }
         var infoLayer = this._createContainerLayerInfoElement(obj);
         panel.firstChild.appendChild(infoLayer);
+    }
+
+    /**
+     * Open layer style select panel on picto click
+     *
+     * @param {Event} e - MouseEvent
+     * @param {Array} styles - List of styles
+     * @private
+     */
+    _onEditLayerStyleClick (e, styles) {
+        var id = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(id); // ex. 26
+        var layerOptions = this._layers[layerID];
+
+        var panel;
+        var style;
+
+        // Close layer style switch panel
+        var divId = document.getElementById(e.target.id);
+        if (divId.classList.contains("GPlayerStyleOpened")) {
+            divId.classList.remove("GPlayerStyleOpened");
+            divId.classList.add("GPlayerStyleClosed");
+
+            panel = document.getElementById(this._addUID("GPlayerStylePanel"));
+            panel.classList.remove("GPlayerStylePanelOpened", "gpf-visible");
+            panel.classList.add("GPlayerStylePanelClosed", "gpf-hidden");
+
+            style = document.getElementById(this._addUID("GPlayerStyleContent"));
+            if (style) {
+                style.parentNode.remove();
+            }
+            return;
+        }
+
+        // Open layer info panel
+        if (divId.classList.contains("GPlayerStyleClosed")) {
+            divId.classList.remove("GPlayerStyleClosed");
+            divId.classList.add("GPlayerStyleOpened");
+        }
+
+        panel = document.getElementById(this._addUID("GPlayerStylePanel"));
+        panel.classList.remove("GPlayerStylePanelClosed", "gpf-hidden");
+        panel.classList.add("GPlayerStylePanelOpened", "gpf-visible");
+
+        style = document.getElementById(this._addUID("GPlayerStyleContent"));
+        if (style) {
+            style.parentNode.remove();
+        }
+
+        // on récupère les infos associées au layer pour mettre dynamiquement le contenu du panel d'informations
+        var obj = {
+            id : id,
+            styles : styles,
+            layerInfo : layerOptions,
+        };
+        // get layer max scale denominator
+        var maxResolution = layerOptions.layer.getMaxResolution();
+        if (maxResolution === Infinity) {
+            obj._maxScaleDenominator = 560000000;
+        } else {
+            obj._maxScaleDenominator = Math.round(maxResolution / 0.00028);
+        }
+        var styleLayer = this._createContainerLayerStyleElement(obj);
+        panel.firstChild.appendChild(styleLayer);
     }
 
     /**
