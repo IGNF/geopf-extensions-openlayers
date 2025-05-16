@@ -15,7 +15,10 @@ __DATE__
 
 * ✨ [Added]
 
+  - Catalog: Ajout de méthodes publiques pour ajouter une config partielle, activer ou desactiver l'affichage d'une couche (#378)
+  
 * 🔨 [Changed]
+
 
 * 🔥 [Deprecated]
 
