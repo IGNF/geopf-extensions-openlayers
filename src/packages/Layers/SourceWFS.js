@@ -102,7 +102,7 @@ var SourceWFS = class SourceWFS extends VectorSource {
             urlParams["apikey"] = key;
         }
 
-        var loadFeatures = (self, url, success, failure) => {
+        var loadFeatures = (self, url, extent, success, failure) => {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", url);
             const onError = function () {
@@ -129,7 +129,7 @@ var SourceWFS = class SourceWFS extends VectorSource {
                         for (let i = 0; i < response.links.length; i++) {
                             const link = response.links[i];
                             if (link.rel === "next") {
-                                loadFeatures(self, link.href, success, failure);
+                                loadFeatures(self, link.href, extent, success, failure);
                             }
                         }
                     }
@@ -153,7 +153,7 @@ var SourceWFS = class SourceWFS extends VectorSource {
                     "bbox=" + extent.join(",") + "," + proj
                     + "&maxFeatures=" + maxFeatures + "&count=" + maxFeatures + "&startIndex=0";
 
-                loadFeatures(self, url, success, failure);
+                loadFeatures(self, url, extent, success, failure);
             },
             strategy : olLoadingstrategyTile(olTilegrid.createXYZ({
                 minZoom : options.olParams.minZoom || 15, 

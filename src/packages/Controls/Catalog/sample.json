@@ -1,7 +1,7 @@
 {
     "generalOptions": {
       "apiKeys": {
-        "cartes": [
+        "full": [
           "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMTS",
           "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMS",
           "PLAN.IGN$GEOPORTAIL:GPP:TMS"
@@ -27,7 +27,7 @@
           "id": "OGC:WMTS",
           "version": "1.0.0",
           "serverUrl": {
-            "cartes": "https://data.geopf.fr/wmts"
+            "full": "https://data.geopf.fr/wmts"
           }
         },
         "defaultProjection": "EPSG:3857",
@@ -196,7 +196,7 @@
           "id": "OGC:WMS",
           "version": "1.3.0",
           "serverUrl": {
-            "cartes": "https://data.geopf.fr/wms-r/wms"
+            "full": "https://data.geopf.fr/wms-r/wms"
           }
         },
         "defaultProjection": "EPSG:3857",
@@ -244,7 +244,7 @@
           "id": "GPP:TMS",
           "version": "1.0.0",
           "serverUrl": {
-            "cartes": "https://data.geopf.fr/tms/1.0.0/"
+            "full": "https://data.geopf.fr/tms/1.0.0/"
           }
         },
         "name": "PLAN.IGN",
@@ -319,6 +319,34 @@
         },
         "layerId": "PLAN.IGN$GEOPORTAIL:GPP:TMS",
         "defaultProjection": "EPSG:3857"
+      },
+      "BDTOPO_V3:batiment$GEOPORTAIL:OGC:WFS": {
+        "name": "BDTOPO_V3:batiment",
+        "title": "BDTOPO : Bâtiments",
+        "description": "Bâtiments - BDTOPO",
+        "globalConstraint": {
+          "minScaleDenominator": 0.0,
+          "maxScaleDenominator": 62236752975597,
+          "bbox": {
+            "left": -63.28125,
+            "right": 55.8984375,
+            "top": 51.9734375,
+            "bottom": -21.77265625
+          }
+        },
+        "serviceParams": {
+          "id": "OGC:WFS",
+          "version": "2.0.0",
+          "serverUrl": {
+            "full": "https://data.geopf.fr/wfs/ows"
+          }
+        },
+        "defaultProjection": "EPSG:4326",
+        "queryable": false,
+        "metadata": [],
+        "styles": [],
+        "legends": [],
+        "formats": []
       }
     },
     "tileMatrixSets": {

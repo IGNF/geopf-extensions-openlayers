@@ -1492,16 +1492,14 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             return `#${grayHex}${grayHex}${grayHex}`; // Return grayscale hex
         }
 
-        // Function to fetch and modify the style
-        async function applyGrayscaleStyle (layer, styleUrl) {
-            const response = await fetch(styleUrl);
-            const styleJson = await response.json();
-
+        // Function to modify the style
+        async function applyGrayscaleStyle (layer) {
+            var styleJson = await getStyle(layer);
             // Iterate over layers and modify colors
-            styleJson.layers.forEach(layer => {
-                if (layer.paint) {
-                    Object.keys(layer.paint).forEach(prop => {
-                        let value = layer.paint[prop];
+            styleJson.layers.forEach(lyr => {
+                if (lyr.paint) {
+                    Object.keys(lyr.paint).forEach(prop => {
+                        let value = lyr.paint[prop];
 
                         // Handle zoom-dependent color stops
                         if (Array.isArray(value) && value[0] === "interpolate" && value[2] === "zoom") {
@@ -1521,7 +1519,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                             }
                         } else {
                             // Simple color value
-                            layer.paint[prop] = toGrayscale(value);
+                            lyr.paint[prop] = toGrayscale(value);
                         }
                     });
                 }
@@ -1531,11 +1529,17 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             applyStyle(layer, styleJson);
         }
 
-        // Function to fetch and apply the original style
-        async function applyOriginalStyle (layer, styleUrl) {
-            const response = await fetch(styleUrl);
-            const styleJson = await response.json();
+        // Function to apply the original style
+        async function applyOriginalStyle (layer) {
+            var styleJson = await getStyle(layer);
             applyStyle(layer, styleJson);
+        }
+
+        // Function to fetch style
+        async function getStyle (layer) {
+            const response = await fetch(layer.styleUrl);
+            const styleJson = await response.json();
+            return styleJson;
         }
 
         // abonnement/desabonnement aux evenements permettant la conversion en n/b
@@ -1551,7 +1555,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var toGreyScale = layer.get("grayscale");
         if (toGreyScale) {
             if (source instanceof VectorTileSource ) {
-                applyGrayscaleStyle(layer, layer.styleUrl);
+                applyGrayscaleStyle(layer);
             } else if (source instanceof ImageSource) {
                 source.loadstartListenerKey = source.on("imageloadstart", imageloadstartHandler);
                 source.loadendListenerKey = source.on("imageloadend", imageloadendHandler);
@@ -1561,7 +1565,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             }
         } else {
             if (source instanceof VectorTileSource ) {
-                applyOriginalStyle(layer, layer.styleUrl);
+                applyOriginalStyle(layer);
             } else {
                 olObservableUnByKey(source.loadstartListenerKey);
                 olObservableUnByKey(source.loadendListenerKey);
