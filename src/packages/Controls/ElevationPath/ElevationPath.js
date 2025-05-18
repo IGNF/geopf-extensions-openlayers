@@ -1687,6 +1687,11 @@ var ElevationPath = class ElevationPath extends Control {
                 this._removeMeasureInteraction(map, true);
             }
         }
+
+        this.collapsed = !(opened === "true");
+        // on génère nous même l'evenement OpenLayers de changement de propriété
+        // (utiliser ol.control.Isocurve.on("change:collapsed", function ) pour s'abonner à cet évènement)
+        this.dispatchEvent("change:collapsed");
     }
 
     /**
