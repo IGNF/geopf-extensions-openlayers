@@ -669,12 +669,9 @@ var Drawing = class Drawing extends Control {
         // Set default options
         this.options = options;
 
-        if (!this.options.layerDescription) {
-            this.options.layerDescription = {
-                title : "Croquis",
-                description : "Mon croquis"
-            };
-        }
+        this.options.layerDescription = Object.assign({
+            title : "Croquis",
+            description : "Mon croquis"}, options.layerDescription);
 
         // applying default tools
         if (!this.options.tools) {
