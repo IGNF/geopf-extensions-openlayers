@@ -25,6 +25,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - Drawing: Prise en compte de l'option layerDescription (#380)
   
 * 🔒 [Security]
 
