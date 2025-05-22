@@ -545,7 +545,11 @@ var Drawing = class Drawing extends Control {
                     if (control instanceof LayerSwitcher) {
                         // un layer switcher est présent dans la carte
                         var layerId = this.layer.gpLayerId;
-                        // on n'ajoute des informations que s'il n'y en a pas déjà (si le titre est le numéro par défaut)
+                        // INFO
+                        // dans des cas "très" particuliers, le titre peut être un identifiant
+                        // car le titre n'a pas été renseigné.
+                        // donc, on force le croquis à être renommé avec une description
+                        // dans le gestionnaire de couche.
                         if (control._layers[layerId].title === layerId) {
                             control.addLayer(
                                 this.layer, {
@@ -665,12 +669,9 @@ var Drawing = class Drawing extends Control {
         // Set default options
         this.options = options;
 
-        if (!this.options.layerDescription) {
-            this.options.layerDescription = {
-                title : "Croquis",
-                description : "Mon croquis"
-            };
-        }
+        this.options.layerDescription = Object.assign({
+            title : "Croquis",
+            description : "Mon croquis"}, options.layerDescription);
 
         // applying default tools
         if (!this.options.tools) {
@@ -786,7 +787,8 @@ var Drawing = class Drawing extends Control {
             source : new VectorSource({
                 features : features
             }),
-            title : "Mon Croquis"
+            title : this.options.layerDescription.title,
+            description : this.options.layerDescription.description
         });
         // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant.
         layer.gpResultLayerId = "drawing";

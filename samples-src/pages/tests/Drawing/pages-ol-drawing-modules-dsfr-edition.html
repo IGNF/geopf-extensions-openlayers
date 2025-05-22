@@ -65,7 +65,11 @@
                     });
 
                     var drawing = new ol.control.Drawing({
-                        position: "top-left"
+                        position: "top-left",
+                        layerDescription : {
+                            title: "Croquis par défaut",
+                            description : "C'est mon croquis"
+                        }
                     });
                     map.addControl(drawing);
                     drawing.on("change:collapsed", (e) => {
