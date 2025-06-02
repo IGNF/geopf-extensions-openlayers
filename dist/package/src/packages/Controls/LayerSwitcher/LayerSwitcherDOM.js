@@ -1085,8 +1085,8 @@ var LayerSwitcherDOM = {
         var onCloseClick = function () {
             document.getElementById(self._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
             document.getElementById(self._addUID("GPlayerStylePanel")).classList.remove("GPlayerStylePanelOpened", "gpf-visible");
-            document.getElementById(obj.id).classList.add("GPlayerStyleClosed");
-            document.getElementById(obj.id).classList.remove("GPlayerStyleOpened");
+            document.getElementById(obj.div).classList.add("GPlayerStyleClosed");
+            document.getElementById(obj.div).classList.remove("GPlayerStyleOpened");
         };
         if (btnClose.addEventListener) {
             btnClose.addEventListener("click", onCloseClick);
@@ -1111,21 +1111,20 @@ var LayerSwitcherDOM = {
         var list = document.createElement("div");
         list.id = this._addUID("GPlayerStyleList");
 
-        console.log(obj.layer);
-
         for (let i = 0; i < obj.styles.length; i++) {
             var style = obj.styles[i];
             var elem = document.createElement("div");
             elem.className = "gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
             var input = document.createElement("input");
             input.type = "radio";
-            input.name = this._addUID("styleradio_");
-            input.id = this._addUID("styleradio_" + style.name);
+            input.name = this._addUID("styleradio_ID_" + obj.id);
+            input.id = this._addUID("styleradio_" + style.name + "_ID_" + obj.id);
             input.value = style.url;
+            input.dataset.name = style.name;
             var label = document.createElement("label");
             label.className = "gpf-label fr-label";
             label.innerText = style.title;
-            label.htmlFor = this._addUID("styleradio_" + style.name);
+            label.htmlFor = this._addUID("styleradio_" + style.name + "_ID_" + obj.id);
             elem.appendChild(input);
             elem.appendChild(label);
             list.appendChild(elem);
@@ -1133,8 +1132,7 @@ var LayerSwitcherDOM = {
                 input.checked = true;
             }
             input.addEventListener("change", (e) => {
-                obj.layerInfo.layer.styleUrl = e.target.value;
-                obj.layerInfo.layer.setStyleMapBox();
+                self._onChangeStyleLayerClick(e);
             });
         }
         content.appendChild(list);

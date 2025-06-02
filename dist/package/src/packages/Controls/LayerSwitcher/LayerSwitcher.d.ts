@@ -33,6 +33,7 @@ export default LayerSwitcher;
  * @fires layerswitcher:change:visibility
  * @fires layerswitcher:change:position
  * @fires layerswitcher:change:grayscale
+ * @fires layerswitcher:change:style
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -78,7 +79,9 @@ export default LayerSwitcher;
  * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
  *    console.warn("layer", e.layer, e.grayscale);
  * });
- *
+ * LayerSwitcher.on("layerswitcher:change:style", function (e) {
+ *    console.warn("layer", e.layer, e.name, e.url);
+ * });
  */
 declare var LayerSwitcher: ol.control.LayerSwitcher;
 //# sourceMappingURL=LayerSwitcher.d.ts.map

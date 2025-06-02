@@ -62,6 +62,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @fires layerswitcher:change:visibility
  * @fires layerswitcher:change:position
  * @fires layerswitcher:change:grayscale
+ * @fires layerswitcher:change:style
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -107,7 +108,9 @@ var logger = Logger.getLogger("layerswitcher");
  * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
  *    console.warn("layer", e.layer, e.grayscale);
  * });
- *
+ * LayerSwitcher.on("layerswitcher:change:style", function (e) {
+ *    console.warn("layer", e.layer, e.name, e.url);
+ * });
  */
 var LayerSwitcher = class LayerSwitcher extends Control {
 
@@ -480,7 +483,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         /**
          * event triggered when a layer is removed
          *
-         * @event layerswitcher:add
+         * @event layerswitcher:remove
          * @property {Object} type - event
          * @property {Object} layer - layer
          * @property {Object} target - instance LayerSwitcher
@@ -1065,6 +1068,43 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     }
 
     /**
+     * Change layer style on mapbox layer dialog
+     *
+     * @param {Object} e - event
+     * @private
+     */
+    _onChangeStyleLayerClick (e) {
+        var id = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(id); // ex. 26
+        var layer = this._layers[layerID].layer;
+
+        layer.styleUrl = e.target.value;
+        layer.styleName = e.target.dataset.name;
+        layer.setStyleMapBox();
+
+        /**
+         * event triggered when an select style is changed
+         *
+         * @event layerswitcher:change:style
+         * @property {Object} type - event
+         * @property {String} name - name
+         * @property {String} url - url
+         * @property {Object} layer - layer
+         * @property {Object} target - instance LayerSwitcher
+         * @example
+         * LayerSwitcher.on("layerswitcher:change:style", function (e) {
+         *   console.log(e.url);
+         * })
+         */
+        this.dispatchEvent({
+            type : "layerswitcher:change:style",
+            name : layer.styleName,
+            url : layer.styleUrl,
+            layer : this._layers[layerID]
+        });
+    }
+
+    /**
      * Change layers order in layerswitcher (control container) on a layer index change (on map) or when a layer is added to a specific zindex
      * @todo fires layerswitcher:change:zindex
      * @private
@@ -1262,7 +1302,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         // on récupère les infos associées au layer pour mettre dynamiquement le contenu du panel d'informations
         var obj = {
-            id : id,
+            id : layerID,
+            div : id,
             styles : styles,
             layerInfo : layerOptions,
         };
