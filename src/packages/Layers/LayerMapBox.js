@@ -25,6 +25,7 @@ import Config from "../Utils/Config";
 * @param {String} [options.source]   - Source name (e.g. "plan_ign")
 * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
 * @param {Object} [settings] - other options for ol.layer.VectorTile function (see {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_VectorTile-VectorTileLayer.html ol.layer.VectorTile})
+* @fires mapbox:style:loaded
 * @example
 * var LayerMapBox = new ol.layer.GeoportalMapBox({
 *      layer  : "PLAN.IGN",
@@ -249,6 +250,7 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
         this.protocol = protocol;
         this.sourceId = options.source;
         this.styleUrl = styleUrl;
+        this.styleName = styleName;
         this.config = layerCfg;
         
         // récuperation du style
@@ -340,12 +342,34 @@ var LayerMapBox = class LayerMapBox extends VectorTileLayer {
             source.setUrls(styleSource.tiles);
         }
         
-        applyStyle(this, style, this.sourceId).then(() => {
-            source.setState("ready");
-            this.set("mapbox-styles", style);
-        }).catch((error) => {
-            this.onStyleMapBoxError(error);
-        });
+        applyStyle(this, style, this.sourceId)
+            .then(() => {
+                source.setState("ready");
+                this.set("mapbox-styles", style);
+            })
+            .then(() => {
+                /**
+                 * event triggered when a style is apply
+                 *
+                 * @event mapbox:style:loaded
+                 * @property {Object} type - event
+                 * @property {String} style - style url
+                 * @property {String} name - style name
+                 * @property {Object} target - instance LayerMapBox
+                 * @example
+                 * LayerMapBox.on("mapbox:style:loaded", function (e) {
+                 *   console.log(e.style);
+                 * })
+                 */
+                this.dispatchEvent({
+                    type : "mapbox:style:loaded",
+                    style : this.styleUrl,
+                    name : this.styleName
+                });
+            })
+            .catch((error) => {
+                this.onStyleMapBoxError(error);
+            });
     };
     
     /**

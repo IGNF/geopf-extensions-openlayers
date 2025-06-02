@@ -33,12 +33,12 @@
                 var createMap = function () {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
-
+                    
                     map = new ol.Map({
                         target : "map",
                         view : new ol.View({
                             center : [288074.8449901076, 6247982.515792289],
-                            zoom : 6
+                            zoom : 16
                         }),
                         layers : [
                             new ol.layer.Tile({
@@ -47,9 +47,6 @@
                             }),
                             new ol.layer.GeoportalWMTS({
                                 layer : "ORTHOIMAGERY.ORTHOPHOTOS"
-                            }),
-                            new ol.layer.GeoportalMapBox({
-                                layer : "PLAN.IGN"
                             })
                         ]
                     });
@@ -60,6 +57,27 @@
                         }
                     });
                     map.addControl(layerSwitcher);
+                    layerSwitcher.on("layerswticher:add", (e) => {
+                        console.log(e);
+                    })
+                    layerSwitcher.on("layerswitcher:change:style", (e) => {
+                        console.log(e);
+                    });
+                    // Couches TMS
+                    var plan = new ol.layer.GeoportalMapBox({
+                        layer : "PLAN.IGN"
+                    });
+                    plan.on("mapbox:style:loaded", (e) => {
+                        console.log(e);
+                    });
+                    map.addLayer(plan);
+                    var bdtopo = new ol.layer.GeoportalMapBox({
+                        layer : "BDTOPO"
+                    });
+                    bdtopo.on("mapbox:style:loaded", (e) => {
+                        console.log(e);
+                    });
+                    map.addLayer(bdtopo);
                 };
                 Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",
