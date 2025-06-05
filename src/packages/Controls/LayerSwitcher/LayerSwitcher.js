@@ -1078,6 +1078,13 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var layerID = SelectorID.index(id); // ex. 26
         var layer = this._layers[layerID].layer;
 
+        layer.set("grayscale", false);
+        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(divId); // ex. 26
+        var greyscaleBtn = document.getElementById(this._addUID("GPgreyscale_ID_" + layerID));
+        greyscaleBtn.classList.add("GPlayerGreyscaleOff");
+        greyscaleBtn.classList.remove("GPlayerGreyscaleOn");
+
         layer.styleUrl = e.target.value;
         layer.styleName = e.target.dataset.name;
         layer.setStyleMapBox();

@@ -27,6 +27,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - Drawing: Prise en compte de l'option layerDescription (#380)
+  - LayerSwitcher : passage en noir et balnc sur des tuiles vecteru après changement de style (#382)
   
 * 🔒 [Security]
 
