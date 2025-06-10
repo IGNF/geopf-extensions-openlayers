@@ -19,8 +19,7 @@ __DATE__
 
 * 🔨 [Changed]
 
-  - Buttons : style arrondi
-
+  - Buttons : style arrondi (#383)
 
 * 🔥 [Deprecated]
 
