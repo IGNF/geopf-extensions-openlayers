@@ -2,9 +2,10 @@ import TMS from "./TMS.json";
 
 var LayerConfigUtils = {
     /**
-     * ...
-     * @param {*} config 
-     * @returns 
+     * Get the layer configuration from the given config object.
+     *
+     * @param {*} config The configuration object containing layer information.
+     * @returns {*} An object containing the extracted layer configuration parameters.
      */
     getLayerConfig : function (config) {
         var params = {};
@@ -25,7 +26,7 @@ var LayerConfigUtils = {
             params.version = config.serviceParams.version;
             params.format = (config.formats && config.formats.length) ? config.formats[0].name : "";
             params.projection = config.defaultProjection;
-    
+
             // get layer info and constraints
             params.minScale = config.globalConstraint ? config.globalConstraint.minScaleDenominator : null;
             params.maxScale = config.globalConstraint ? config.globalConstraint.maxScaleDenominator : null;
@@ -58,9 +59,10 @@ var LayerConfigUtils = {
     },
 
     /**
-     * ...
-     * @param {*} id 
-     * @returns 
+     * Get the TMS configuration for a given ID.
+     *
+     * @param {*} id The ID of the TMS configuration to retrieve.
+     * @returns {*} The TMS configuration object corresponding to the given ID.
      */
     getTMSConfig : function (id) {
         return TMS[id];

@@ -1,0 +1,1 @@
+//# sourceMappingURL=anotherWidget.d.ts.map
