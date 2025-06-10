@@ -1,6 +1,8 @@
 .gpf-btn-icon-zoom-in {
     height: inherit;
     width: inherit;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .gpf-btn-icon-zoom-in::after {
@@ -11,9 +13,22 @@
 .gpf-btn-icon-zoom-out {
     height: inherit;
     width: inherit;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .gpf-btn-icon-zoom-out::after {
     -webkit-mask: url("img/dsfr/zoom-out.svg") center no-repeat;
     mask: url("img/dsfr/zoom-out.svg") center no-repeat;
+}
+
+.gpf-btn-icon-zoom-out::before {
+    display: block;
+    content: "";
+    height: 1px;
+    width: calc(100% - 8px);
+    background-color: var(--border-default-grey);
+    position: absolute;
+    top: 0px;
+    left: 4px;
 }

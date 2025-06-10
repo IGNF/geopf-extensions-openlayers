@@ -16,9 +16,10 @@ __DATE__
 * ✨ [Added]
 
   - Catalog: Ajout de méthodes publiques pour ajouter une config partielle, activer ou desactiver l'affichage d'une couche (#378)
-  
+
 * 🔨 [Changed]
 
+  - Buttons : style arrondi (#383)
 
 * 🔥 [Deprecated]
 
@@ -28,7 +29,7 @@ __DATE__
 
   - Drawing: Prise en compte de l'option layerDescription (#380)
   - LayerSwitcher : passage en noir et balnc sur des tuiles vecteru après changement de style (#382)
-  
+
 * 🔒 [Security]
 
 
