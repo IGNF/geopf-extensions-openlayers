@@ -271,7 +271,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Add a layer config
-     * @param {*} conf 
+     * @param {*} conf conf
      */
     addLayerConfig (conf) {
         for (const key in conf) {
@@ -351,8 +351,8 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Get long layer ID
-     * @param {*} name 
-     * @param {*} service 
+     * @param {*} name  nom de la couche
+     * @param {*} service service de la couche
      * @returns {String} - long layer ID
      */
     getLayerId (name, service) {
@@ -651,7 +651,7 @@ var Catalog = class Catalog extends Control {
                     } else {
                         // sinon on supprime l'entrée car pas de configuration valide
                         delete data.layers[key];
-                    }                
+                    }
                 }
             }
 
@@ -753,7 +753,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Create DOM content categories and entries
-     * @param {*} layers 
+     * @param {*} layers couches
      */
     createCatalogContentEntries (layers) {
         // traitement du contenu (liste de couches) d'une categorie
@@ -784,7 +784,7 @@ var Catalog = class Catalog extends Control {
 
             return layersCategorised;
         };
-                
+
         var container = this.contentCatalogContainer;
 
         var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories);
