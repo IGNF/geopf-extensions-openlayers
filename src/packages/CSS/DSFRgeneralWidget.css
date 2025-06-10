@@ -252,6 +252,16 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   margin-bottom: -5px;
 }
 
+.gpf-button-no-gutter + .gpf-button-no-gutter > .gpf-btn-icon {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.gpf-button-no-gutter:has(+ .gpf-button-no-gutter) > .gpf-btn-icon {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .position-container-bottom-left .gpf-button-no-gutter,
 .position-container-bottom-right .gpf-button-no-gutter {
   margin-top: -5px;
