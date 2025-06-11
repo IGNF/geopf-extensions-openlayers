@@ -45,6 +45,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLegends.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlControlList.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlControlList.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -232,7 +234,15 @@
                     auto: true
                 });
                 map.addControl(territories);
+
+                var controlList = new ol.control.ControlList({
+                      draggable: false,
+                      position: "top-right",
+                      controlCatalogElement: document.getElementById("sampleLightDark"),
+                  });
+                map.addControl(controlList);
               };
+
 
               Gp.Services.getConfig({
                   customConfigFile : "{{ configurl }}",
