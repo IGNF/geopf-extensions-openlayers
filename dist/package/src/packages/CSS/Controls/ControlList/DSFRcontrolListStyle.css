@@ -2,6 +2,10 @@ button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {
   width: 370px;
 }
 
+div[id^="GPcontrolList-"] {
+  position: relative;
+}
+
 div[id^="GPcontrolList-"] .GPshowOpen > span {
   font-size: 32px;
   position: absolute;
@@ -62,5 +66,16 @@ dialog[id^="GPcontrolListPanel-"] .gpf-panel__footer {
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__footer > button {
   width: 100%;
   justify-content: center;
+}
+
+.gpf-button-no-gutter + [id^="GPcontrolList-"] > .gpf-btn-icon-controllist::before {
+    display: block;
+    content: "";
+    height: 1px;
+    width: calc(100% - 8px);
+    background-color: var(--border-default-grey);
+    position: absolute;
+    top: 0px;
+    left: 4px;
 }
 
