@@ -300,7 +300,7 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   width: inherit;
   caret-color: transparent;
   border-radius: 4px;
-  box-shadow: 0px 0px 15px var(--grey-975-75);
+  box-shadow: var(--raised-shadow);
 }
 
 .gpf-btn-icon-reset::after {
