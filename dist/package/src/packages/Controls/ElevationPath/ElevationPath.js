@@ -1341,6 +1341,12 @@ var ElevationPath = class ElevationPath extends Control {
         // le sampling est soit defini par l'utilisateur (opts),
         // ou soit calculé dynamiquement...
         var sampling = options.sampling || 200;
+        var p = Math.max(50, Math.floor(this._getLength()) / 5);
+        if (p > 200) {
+            sampling = 200;
+        } else {
+            sampling = Math.floor(p);
+        }
 
         if (sampling > 0) {
             Utils.mergeParams(options, {
@@ -1399,7 +1405,6 @@ var ElevationPath = class ElevationPath extends Control {
         var _slopes = 0;
 
         var distances = [];
-        console.log(_data);
         for (var i = 1; i < _data.length; i++) {
             var a = [_data[i].lon, _data[i].lat];
             var distanceToPrevious = olGetDistanceSphere(a, [_data[i-1].oldlon, _data[i-1].oldlat]);
@@ -1424,10 +1429,8 @@ var ElevationPath = class ElevationPath extends Control {
             _distance = dist;
             _data[i].dist = dist;
 
-            distances.push(_distance);
-
-            _slopes += (slope) ? Math.abs(Math.round(slope / dist * 100)) : 0;
-            _data[i].slope = (slope) ? Math.abs(Math.round(slope / dist * 100)) : 0;
+            _slopes += (slope) ? Math.abs(Math.round(slope / distanceToPrevious * 100)) : 0;
+            _data[i].slope = (slope) ? Math.abs(Math.round(slope / distanceToPrevious * 100)) : 0;
 
             // EVOL ?
             // cf. gradiant
