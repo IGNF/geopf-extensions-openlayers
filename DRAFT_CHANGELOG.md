@@ -29,6 +29,7 @@ __DATE__
 
   - Drawing: Prise en compte de l'option layerDescription (#380)
   - LayerSwitcher : passage en noir et balnc sur des tuiles vecteru après changement de style (#382)
+  - Profil alti : les pentes sont mal calculées (#385)
 
 * 🔒 [Security]
 
