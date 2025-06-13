@@ -65,6 +65,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+      
+      - name: Fix line endings
+        run: npm run lintfix
 
       - name: Build bundle
         run: npm run build:bundle
@@ -74,18 +77,6 @@ jobs:
 
       - name: Build package
         run: npm run publish
-  
-      - name: Upload Binary artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist
-      
-      - name: Upload JSDoc artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: jsdoc
-          path: jsdoc
         
   # - checkout gh-pages
   # - download des artifacts : build & jsdoc
