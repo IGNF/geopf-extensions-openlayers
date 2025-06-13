@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - Catalog: Ajout de méthodes publiques pour ajouter une config partielle, activer ou desactiver l'affichage d'une couche (#378)
+  - LayerSwitcher : Ajout des méthodes publiques forget et listen pour (des)activer l'écouteur d'ajout de couche sur la carte (#389)
 
 * 🔨 [Changed]
 
