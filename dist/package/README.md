@@ -22,8 +22,13 @@ Ce projet a pour but de fournir des extensions facilitant l'accès aux ressource
     ```bash
     npm install
     ```
+    
+* Lancer un premier build
 
-* Démarrer le serveur des exemples
+    ```bash
+    npm run build
+    ```
+* Démarrer le serveur des exemples (nodeJs >20)
 
     ```bash
     npm run samples:modules
