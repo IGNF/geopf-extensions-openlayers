@@ -309,23 +309,25 @@ var LayerWMTS = class LayerWMTS extends TileLayer {
         // si le param layer n'a pas été renseigné lors de la création de la source,
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
         if (wmtsSource.getLayer() !== undefined) {
-            if (layerCfg.globalConstrainWFSts && layerCfg.globalConstraints.projection) {
+            if (layerCfg.globalConstraint) {
                 /* INFO : désactivation temporaire de l'étendue, car certaines étendues (trop grandes ?)
                 provoquent quelques bugs d'affichage (zoom > 16 par exemple) */
                 // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj de la couche
-                // var geobbox = [
-                //     layerCfg.globalConstraints.extent.left,
-                //     layerCfg.globalConstraints.extent.bottom,
-                //     layerCfg.globalConstraints.extent.right,
-                //     layerCfg.globalConstraints.extent.top
-                // ];
-                // layerTileOptions.extent = ol.proj.transformExtent(geobbox, "EPSG:4326", layerCfg.globalConstraints.projection);
+                var geobbox = [
+                    layerCfg.globalConstraint.bbox.left,
+                    layerCfg.globalConstraint.bbox.bottom,
+                    layerCfg.globalConstraint.bbox.right,
+                    layerCfg.globalConstraint.bbox.top
+                ];
+                layerTileOptions.extent = ol.proj.transformExtent(geobbox, "EPSG:4326", layerCfg.globalConstraint.projection || "EPSG:3857");
                 
                 // récupération des résolutions min et max
                 var p;
                 // on récupère tout d'abord la projection
-                if (typeof layerCfg.globalConstraints.projection === "string") {
-                    p = olGetProj(layerCfg.globalConstraints.projection);
+                if (typeof layerCfg.globalConstraint.projection === "string") {
+                    p = olGetProj(layerCfg.globalConstraint.projection);
+                } else {
+                    p = olGetProj("EPSG:3857");
                 }
                 // puis, selon l'unité de la projection, on calcule la résolution correspondante
                 if (p && p.getUnits()) {
@@ -334,15 +336,15 @@ var LayerWMTS = class LayerWMTS extends TileLayer {
                         * on les arrondit respectivement à l'unité inférieure et supérieure
                         * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
                         // info : 1 pixel = 0.00028 m
-                        layerTileOptions.minResolution = (layerCfg.globalConstraints.minScale - 1) * 0.00028;
-                        layerTileOptions.maxResolution = (layerCfg.globalConstraints.maxScale + 1) * 0.00028;
+                        layerTileOptions.minResolution = (layerCfg.globalConstraint.minScaleDenominator - 1) * 0.00028;
+                        layerTileOptions.maxResolution = (layerCfg.globalConstraint.maxScaleDenominator + 1) * 0.00028;
                     } else if (p.getUnits() === "degrees") {
                         /* fixme : fix temporaire pour gérer les min/max scaledenominator qui sont arrondis dans la configuration !
                         * on les arrondit respectivement à l'unité inférieure et supérieure
                         * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
                         // info : 6378137 * 2 * pi / 360 = rayon de la terre (ellipsoide WGS84)
-                        layerTileOptions.minResolution = (layerCfg.globalConstraints.minScale - 1) * 0.00028 * 180 / (Math.PI * 6378137);
-                        layerTileOptions.maxResolution = (layerCfg.globalConstraints.maxScale + 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                        layerTileOptions.minResolution = (layerCfg.globalConstraint.minScaleDenominator - 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                        layerTileOptions.maxResolution = (layerCfg.globalConstraint.maxScaleDenominator + 1) * 0.00028 * 180 / (Math.PI * 6378137);
                     }
                 }
             }

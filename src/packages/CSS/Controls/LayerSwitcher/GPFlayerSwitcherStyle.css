@@ -431,10 +431,6 @@ div[id^=GPlayerInfoMetadata] {
   cursor: move;
 }
 
-.outOfRange .GPlayerName {
-  color: #AAA;
-}
-
 div[id^=GPlayerInfoContent] {
   width: 280px;
 }
