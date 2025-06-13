@@ -114,10 +114,10 @@ var LayerWMS = class LayerWMS extends TileLayer {
             if (olSourceParams && olSourceParams.projection) {
                 // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj spécifiée
                 var geobbox = [
-                    layerCfg.globalConstraints.extent.left,
-                    layerCfg.globalConstraints.extent.bottom,
-                    layerCfg.globalConstraints.extent.right,
-                    layerCfg.globalConstraints.extent.top
+                    layerCfg.globalConstraint.bbox.left,
+                    layerCfg.globalConstraint.bbox.bottom,
+                    layerCfg.globalConstraint.bbox.right,
+                    layerCfg.globalConstraint.bbox.top
                 ];
                 layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
 
@@ -136,15 +136,15 @@ var LayerWMS = class LayerWMS extends TileLayer {
                          * on les arrondit respectivement à l'unité inférieure et supérieure
                          * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
                         // info : 1 pixel = 0.00028 m
-                        layerTileOptions.minResolution = (layerCfg.globalConstraints.minScale - 1) * 0.00028;
-                        layerTileOptions.maxResolution = (layerCfg.globalConstraints.maxScale + 1) * 0.00028;
+                        layerTileOptions.minResolution = (layerCfg.globalConstraint.minScaleDenominator - 1) * 0.00028;
+                        layerTileOptions.maxResolution = (layerCfg.globalConstraint.maxScaleDenominator + 1) * 0.00028;
                     } else if (p.getUnits() === "degrees") {
                         /* fixme : fix temporaire pour gérer les min/max scaledenominator qui sont arrondis dans la configuration !
                          * on les arrondit respectivement à l'unité inférieure et supérieure
                          * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
                         // info : 6378137 * 2 * pi / 360 = rayon de la terre (ellipsoide WGS84)
-                        layerTileOptions.minResolution = (layerCfg.globalConstraints.minScale - 1) * 0.00028 * 180 / (Math.PI * 6378137);
-                        layerTileOptions.maxResolution = (layerCfg.globalConstraints.maxScale + 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                        layerTileOptions.minResolution = (layerCfg.globalConstraint.minScaleDenominator - 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                        layerTileOptions.maxResolution = (layerCfg.globalConstraint.maxScaleDenominator + 1) * 0.00028 * 180 / (Math.PI * 6378137);
                     }
                 }
             }
