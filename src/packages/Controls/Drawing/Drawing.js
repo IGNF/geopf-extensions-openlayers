@@ -126,6 +126,8 @@ var logger = Logger.getLogger("Drawing");
  * @param {String} [options.cursorStyle.strokeColor = "#ffffff"] - Cursor stroke color.
  * @param {String} [options.cursorStyle.strokeWidth = 1] - Cursor surrounding stroke width.
  * @param {String} [options.cursorStyle.radius = 6] - Cursor radius.
+ * @fires drawing:add:before - event triggered before an layer is added
+ * @fires drawing:add:after - event triggered after an layer is added
  * @example
  * var drawing = new ol.control.Drawing({
  *   collapsed : false,
@@ -521,6 +523,22 @@ var Drawing = class Drawing extends Control {
             // si le layer n'est pas sur la carte, on l'ajoute.
             if (!found) {
                 this.getMap().addLayer(vlayer);
+                /**
+                 * event triggered after an layer is added
+                 *
+                 * @event drawing:add:after
+                 * @property {Object} type - event
+                 * @property {Object} layer - layer
+                 * @property {Object} target - instance Drawing
+                 * @example
+                 * Drawing.on("drawing:add:after", function (e) {
+                 *   console.log(e.layer);
+                 * })
+                 */
+                this.dispatchEvent({
+                    type : "drawing:add:after",
+                    layer : vlayer
+                });
             }
             // style par defaut !
             // application des styles ainsi que ceux par defaut de ol sur le layer
@@ -550,7 +568,7 @@ var Drawing = class Drawing extends Control {
                         // car le titre n'a pas été renseigné.
                         // donc, on force le croquis à être renommé avec une description
                         // dans le gestionnaire de couche.
-                        if (control._layers[layerId].title === layerId) {
+                        if (layerId && control._layers[layerId].title === layerId) {
                             control.addLayer(
                                 this.layer, {
                                     title : this.options.layerDescription.title,
@@ -792,6 +810,24 @@ var Drawing = class Drawing extends Control {
         });
         // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant.
         layer.gpResultLayerId = "drawing";
+
+        /**
+         * event triggered before an layer is added
+         *
+         * @event drawing:add:before
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} target - instance Drawing
+         * @example
+         * Drawing.on("drawing:add:before", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.dispatchEvent({
+            type : "drawing:add:before",
+            layer : layer
+        });
+
         // on le rajoute au controle (et à la carte)
         this.setLayer(layer);
     }
