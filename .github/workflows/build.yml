@@ -11,7 +11,7 @@ jobs:
   # - build des binaires
   # - build package des sources
   # - build jsdoc
-  build:
+  build-linux:
     if: ${{ !contains(github.event.head_commit.message, '[github-actions]') }}
     runs-on: ubuntu-latest
     steps:
@@ -47,13 +47,44 @@ jobs:
           name: jsdoc
           path: jsdoc
   
+  build-windows:
+    if: ${{ !contains(github.event.head_commit.message, '[github-actions]') }}
+    # This job is optional and will run only if the previous job fails
+    # It is useful to ensure that the build can also run on Windows
+    # and to provide a Windows binary if needed.
+    continue-on-error: true
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.12.1'
+
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Fix line endings
+        run: npm run lintfix
+
+      - name: Build bundle
+        run: npm run build:bundle
+
+      - name: Build modules
+        run: npm run build:modules
+
+      - name: Build package
+        run: npm run publish
+        
   # - checkout gh-pages
   # - download des artifacts : build & jsdoc
   # - commit & push
   deploy:
     if: ${{ !contains(github.event.head_commit.message, '[github-actions]') }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-linux
     steps:
       - name: Checkout
         uses: actions/checkout@v4
