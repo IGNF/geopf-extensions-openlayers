@@ -1845,6 +1845,14 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                         layerOptions.inRange = true;
                         layerDiv = document.getElementById(this._addUID("GPlayerSwitcher_ID_" + id));
                         layerDiv.classList.remove("outOfRange");
+                        var infos = this.getLayerInfo(layer);
+                        var title = infos._title;
+                        var description = infos._description;
+                        var label = document.getElementById(this._addUID("GPname_ID_" + id));
+                        if (label) {
+                            // on remet le label à jour
+                            label.title =  description || title;
+                        }
                     } else if (!this.isInRange(layer, map) && layerOptions.inRange) {
                         layerOptions.inRange = false;
                         layerDiv = document.getElementById(this._addUID("GPlayerSwitcher_ID_" + id));
@@ -1889,9 +1897,17 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         if (!map) {
             return;
         }
+        var id = layer.gpLayerId;
+        var label = document.getElementById(this._addUID("GPname_ID_" + id));
+
         // check if map zoom is in layer zoom range
         var mapResolution = map.getView().getResolution();
         if (mapResolution > layer.getMaxResolution() || mapResolution < layer.getMinResolution()) {
+            var message = "Cette couche n'est pas visible à ce niveau de zoom";
+            if (label) {
+                // on ajoute un message d'information dans le label
+                label.title = message;
+            }
             return false;
         }
 
@@ -1899,6 +1915,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
         var mapExtent = map.getView().calculateExtent(map.getSize());
         var layerExtent = layer.getExtent();
         if (layerExtent && !olIntersects(mapExtent, layerExtent)) {
+            var message = "Cette couche n'est pas visible à cet endroit";
+            if (label) {
+                // on ajoute un message d'information dans le label
+                label.title = message;
+            }
             return false;
         }
 
