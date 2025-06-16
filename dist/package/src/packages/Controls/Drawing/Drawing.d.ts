@@ -67,6 +67,8 @@ export default Drawing;
  * @param {String} [options.cursorStyle.strokeColor = "#ffffff"] - Cursor stroke color.
  * @param {String} [options.cursorStyle.strokeWidth = 1] - Cursor surrounding stroke width.
  * @param {String} [options.cursorStyle.radius = 6] - Cursor radius.
+ * @fires drawing:add:before - event triggered before an layer is added
+ * @fires drawing:add:after - event triggered after an layer is added
  * @example
  * var drawing = new ol.control.Drawing({
  *   collapsed : false,

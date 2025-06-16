@@ -447,9 +447,21 @@
 -->
 
             
+            <div class="l2 itemMembers"> Events </div>
+            
+                <div class="l3 itemMembers" data-name="module:Drawing~drawing:add:after"> <a href="module-Drawing.html#~event:drawing:add:after">drawing:add:after</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:Drawing~drawing:add:before"> <a href="module-Drawing.html#~event:drawing:add:before">drawing:add:before</a> </div>
+            
 
 <!--
             <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li data-name="module:Drawing~drawing:add:after"><a href="module-Drawing.html#~event:drawing:add:after">drawing:add:after</a></li>
+            
+                <li data-name="module:Drawing~drawing:add:before"><a href="module-Drawing.html#~event:drawing:add:before">drawing:add:before</a></li>
             
             </ul>
 -->
@@ -3981,6 +3993,8 @@
             
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#addLayer"> <a href="ol.control.LayerSwitcher.html#addLayer">addLayer</a> </div>
             
+                <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#forget"> <a href="ol.control.LayerSwitcher.html#forget">forget</a> </div>
+            
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#getCollapsed"> <a href="ol.control.LayerSwitcher.html#getCollapsed">getCollapsed</a> </div>
             
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#getContainer"> <a href="ol.control.LayerSwitcher.html#getContainer">getContainer</a> </div>
@@ -3990,6 +4004,8 @@
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#getLayerInfo"> <a href="ol.control.LayerSwitcher.html#getLayerInfo">getLayerInfo</a> </div>
             
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#isInRange"> <a href="ol.control.LayerSwitcher.html#isInRange">isInRange</a> </div>
+            
+                <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#listen"> <a href="ol.control.LayerSwitcher.html#listen">listen</a> </div>
             
                 <div class="l3 itemMembers" data-name="ol.control.LayerSwitcher#removeLayer"> <a href="ol.control.LayerSwitcher.html#removeLayer">removeLayer</a> </div>
             
@@ -4011,6 +4027,8 @@
             
                 <li data-name="addLayer"><a href="ol.control.LayerSwitcher.html#addLayer">addLayer</a></li>
             
+                <li data-name="forget"><a href="ol.control.LayerSwitcher.html#forget">forget</a></li>
+            
                 <li data-name="getCollapsed"><a href="ol.control.LayerSwitcher.html#getCollapsed">getCollapsed</a></li>
             
                 <li data-name="getContainer"><a href="ol.control.LayerSwitcher.html#getContainer">getContainer</a></li>
@@ -4020,6 +4038,8 @@
                 <li data-name="getLayerInfo"><a href="ol.control.LayerSwitcher.html#getLayerInfo">getLayerInfo</a></li>
             
                 <li data-name="isInRange"><a href="ol.control.LayerSwitcher.html#isInRange">isInRange</a></li>
+            
+                <li data-name="listen"><a href="ol.control.LayerSwitcher.html#listen">listen</a></li>
             
                 <li data-name="removeLayer"><a href="ol.control.LayerSwitcher.html#removeLayer">removeLayer</a></li>
             
@@ -7126,7 +7146,7 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1675
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1715
         </div>
         
     </div>
@@ -7243,7 +7263,7 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 950
+            Controls/LayerSwitcher/LayerSwitcher.js, line 990
         </div>
         
     </div>
@@ -7314,7 +7334,7 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 272
+            Controls/LayerSwitcher/LayerSwitcher.js, line 274
         </div>
         
     </div>
@@ -7652,6 +7672,77 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="forget">
+            
+            forget<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/LayerSwitcher/LayerSwitcher.js, line 582
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Forget add listener added to the control</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="getCollapsed">
             
             getCollapsed<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Boolean}</span>
@@ -7659,7 +7750,7 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 537
+            Controls/LayerSwitcher/LayerSwitcher.js, line 539
         </div>
         
     </div>
@@ -7740,7 +7831,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 573
+            Controls/LayerSwitcher/LayerSwitcher.js, line 575
         </div>
         
     </div>
@@ -7817,7 +7908,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1828
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1868
         </div>
         
     </div>
@@ -7945,7 +8036,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1874
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1914
         </div>
         
     </div>
@@ -8072,7 +8163,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1848
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1888
         </div>
         
     </div>
@@ -8215,6 +8306,77 @@ container Id ; null if layer not found.</li>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="listen">
+            
+            listen<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/LayerSwitcher/LayerSwitcher.js, line 590
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Add listeners to catch map layers addition</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="removeLayer">
             
             removeLayer<span class="signature">(layer)</span>
@@ -8222,7 +8384,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 443
+            Controls/LayerSwitcher/LayerSwitcher.js, line 445
         </div>
         
     </div>
@@ -8346,7 +8508,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 512
+            Controls/LayerSwitcher/LayerSwitcher.js, line 514
         </div>
         
     </div>
@@ -8580,7 +8742,7 @@ container Id ; null if layer not found.</li>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 547
+            Controls/LayerSwitcher/LayerSwitcher.js, line 549
         </div>
         
     </div>
@@ -8731,7 +8893,7 @@ container Id ; null if layer not found.</li>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Jun 13 2025 22:44:12 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Jun 16 2025 08:41:30 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 
