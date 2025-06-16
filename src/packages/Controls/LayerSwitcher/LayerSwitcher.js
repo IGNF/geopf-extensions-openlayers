@@ -192,6 +192,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             this._listeners.onAddListener = map.getLayers().on(
                 "add",
                 (evt) => {
+                    logger.debug("LayerSwitcher:onAddListener", evt);
                     var layer = evt.element;
                     var id;
                     // on attribue un nouvel identifiant à cette couche,
@@ -213,6 +214,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             this._listeners.onRemoveListener = map.getLayers().on(
                 "remove",
                 (evt) => {
+                    logger.debug("LayerSwitcher:onRemoveListener", evt);
                     var layer = evt.element;
                     var id = layer.gpLayerId;
                     if (this._layers[id]) {
@@ -572,6 +574,44 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      */
     getContainer () {
         return this.container;
+    }
+
+    /**
+     * Forget add listener added to the control
+     */
+    forget () {
+        // on supprime les listeners d'ajout de couches
+        olObservableUnByKey(this._listeners.onAddListener);
+    }
+
+    /**
+     * Add listeners to catch map layers addition
+     */
+    listen () {
+        // on ajoute les listeners d'ajout de couches
+        var map = this.getMap();
+        if (map) {
+            this._listeners.onAddListener = map.getLayers().on(
+                "add",
+                (evt) => {
+                    logger.debug("LayerSwitcher:onAddListener", evt);
+                    var layer = evt.element;
+                    var id;
+                    // on attribue un nouvel identifiant à cette couche,
+                    // sauf si c'est une couche qui a déjà été ajoutée dans le LayerSwitcher au préalable (si gpLayerId existe)
+                    if (!layer.hasOwnProperty("gpLayerId")) {
+                        id = this._layerId;
+                        layer.gpLayerId = id;
+                        this._layerId++;
+                    } else {
+                        id = layer.gpLayerId;
+                    }
+                    if (!this._layers[id]) {
+                        this.addLayer(layer);
+                    }
+                }
+            );
+        }
     }
 
     // ################################################################### //
