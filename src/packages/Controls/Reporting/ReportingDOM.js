@@ -1,5 +1,32 @@
 var title = "reporting";
 
+const stringToHTML = (str) => {
+    var support = function () {
+        if (!window.DOMParser) {
+            return false;
+        }
+        var parser = new DOMParser();
+        try {
+            parser.parseFromString("x", "text/html");
+        } catch (err) {
+            return false;
+        }
+        return true;
+    };
+
+    // If DOMParser is supported, use it
+    if (support()) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(str, "text/html");
+        return doc.body;
+    }
+
+    // Otherwise, fallback to old-school method
+    var dom = document.createElement("div");
+    dom.innerHTML = str;
+    return dom;
+};
+
 var ReportingDOM = {
 
     /**
@@ -95,7 +122,7 @@ var ReportingDOM = {
      */
     _createReportingPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "gpf-panel__header fr-modal__header";
+        container.className = "gpf-panel__header fr-modal__header gpf-panel__header_reporting";
         return container;
     },
     _createReportingPanelIconElement : function () {
@@ -238,11 +265,52 @@ var ReportingDOM = {
             return false;
         });
 
-        var p = document.createElement("p");
-        p.innerHTML = "Panneau du formulaire";
-        p.className = "gpf-label fr-label";
+        var idName = this._addUID("GPreportingLabelName");
+        var divName = document.createElement("div");
+        divName.className = "fr-input-group";
+        divName.innerHTML = `
+            <label class="gpf-label fr-label" for="${idName}">Nom (obligatoire)</label>
+            <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName">
+        `;
+        form.appendChild(divName);
 
-        form.appendChild(p);
+        var idTheme = this._addUID("GPreportingSelectTheme");
+        var divTheme = document.createElement("div");
+        divTheme.className = "fr-select-group";
+        divTheme.innerHTML = `
+        <label class="gpf-label fr-label" for="${idTheme}">
+            Objet du signalement (obligatoire)  
+        </label>  
+        <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme">
+            <option value="" selected disabled >Sélectionner une option</option>
+            <option value="1">Option 1</option>    
+            <option value="2">Option 2</option>    
+            <option value="3">Option 3</option>    
+            <option value="4">Option 4</option>  
+        </select>
+        `;
+        form.appendChild(divTheme);
+
+        var idDesc = this._addUID("GPreportingTextDesc");
+        var divDesc = document.createElement("div");
+        divDesc.className = "fr-input-group";
+        divDesc.innerHTML = `
+        <label class="gpf-label fr-label" for="${idDesc}">      
+            Description (obligatoire)    
+        </label>    
+        <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc"></textarea>
+        `;
+        form.appendChild(divDesc);
+
+        var idBtn = this._addUID("GPreportingButtonDrawing");
+        var divBtn = document.createElement("div");
+        divBtn.className = "gpf-btn-group";
+        divBtn.innerHTML = `
+        <button class="gpf-btn fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-edit-box-line">
+            Dessiner sur la carte
+        </button>
+        `;
+        form.appendChild(divBtn);
 
         return form;
     },
@@ -274,11 +342,17 @@ var ReportingDOM = {
         panel.id = this._addUID("GPreportingPanelSend");
         panel.className = "gpf-panel__content fr-modal__content fr-px-3w gpf-hidden";
 
-        var p = document.createElement("p");
-        p.innerHTML = "Panneau d'envoi";
-        p.className = "gpf-label fr-label";
+        var id = this._addUID("GPreportingLabelEmail");
 
-        panel.appendChild(p);
+        var div = document.createElement("div");
+        div.className = "fr-input-group";
+        div.innerHTML = `
+            <label class="gpf-label fr-label" for="${id}">Adresse courriel
+                <span class="fr-hint-text">Pour valider le signalement, renseignez votre adresse courriel. Nous vous tiendrons informés de sa prise en compte.</span>
+            </label>
+            <input class="gpf-input fr-input" type="text" id="${id}" name="${id}">
+        `;
+        panel.appendChild(div);
 
         return panel;
     },

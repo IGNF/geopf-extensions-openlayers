@@ -400,6 +400,7 @@ var Reporting = class Reporting extends Control {
         this.panelReportingHeaderContainer = null; // usefull for the dragNdrop
         this.panelReportingFooterContainer = null;
         this.buttonReportingClose = null;
+        this.divReportingTitle = null;
 
         this.inputReportingContainer = null;
         this.formReportingContainer = null;
@@ -471,7 +472,7 @@ var Reporting = class Reporting extends Control {
         var reportingPanelIcon = this._createReportingPanelIconElement();
         reportingPanelHeader.appendChild(reportingPanelIcon);
         // title
-        var reportingPanelTitle = this._createReportingPanelTitleElement();
+        var reportingPanelTitle = this.divReportingTitle = this._createReportingPanelTitleElement();
         reportingPanelHeader.appendChild(reportingPanelTitle);
         // close picto
         var reportingCloseBtn = this.buttonReportingClose = this._createReportingPanelCloseElement();
@@ -559,6 +560,8 @@ var Reporting = class Reporting extends Control {
             // puis, on active l'action IoC courrante
             action.active();
         }
+        // on modifie le titre
+        this.divReportingTitle.innerHTML = this.stepContainer[num].name;
     }
 
     /**

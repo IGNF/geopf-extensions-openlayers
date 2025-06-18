@@ -16,4 +16,11 @@
     background-size: auto auto;
     background-position: center center;
     cursor: pointer;
+    position: relative;
+}
+
+.gpf-panel__header_reporting {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

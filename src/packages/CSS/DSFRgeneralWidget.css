@@ -171,6 +171,11 @@
   transform: translateY(-40px);
 }
 
+.gpf-btn-group {
+  display: flex;
+  justify-content: center;
+}
+
 @supports(-moz-appearance:none) {
   .gpf-widget:has(.gpf-btn-icon[aria-pressed="true"])::after {
     transform: unset;
