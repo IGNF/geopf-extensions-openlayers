@@ -1,0 +1,19 @@
+.gpf-btn-icon-reporting::after {
+    -webkit-mask: url("img/dsfr/reporting.svg") center no-repeat;
+    mask: url("img/dsfr/reporting.svg") center no-repeat;
+}
+
+.gpf-btn-icon-reporting {
+    background-image: url("img/dsfr/reporting.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-btn-icon-header-reporting {
+    background-image: url("img/dsfr/header-return.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+    cursor: pointer;
+}

@@ -1,0 +1,32 @@
+div[id^=GPreporting-] {
+    top: 0px;
+    right: 0px;
+}
+
+/* Showing/hiding */
+
+button[id^=GPshowReportingPicto][aria-pressed="false"] + dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
+}
+
+button[id^="GPshowReportingPicto-"][aria-pressed="true"] + dialog {
+    display: block;
+    visibility: visible;
+    opacity: 100%;
+    width: 350px;
+    height: initial;
+    max-height: inherit;
+}
+
+dialog[id^="GPreportingPanel-"] {
+    position: absolute;
+    left: 34px;
+    top: 0px;
+    height: inherit;
+}
+
+form[id^=GPreportingForm] {
+    padding: 15px;
+}
