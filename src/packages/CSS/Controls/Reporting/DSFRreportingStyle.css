@@ -19,6 +19,7 @@
     position: relative;
 }
 
+.gpf-panel__footer_reporting,
 .gpf-panel__header_reporting {
     display: flex;
     flex-direction: row;

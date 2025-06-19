@@ -133,7 +133,7 @@ var ReportingDOM = {
         label.className = "gpf-btn-header gpf-btn-icon-header-reporting";
         label.title = "Retour à l'étape précédente";
         label.addEventListener("click", function (e) {
-            self.onReturnReportingClick(e);
+            self.onPrevReportingClick(e);
         });
         return label;
     },
@@ -180,7 +180,7 @@ var ReportingDOM = {
         var self = this;
 
         var container = document.createElement("div");
-        container.className = "gpf-panel__footer fr-modal__footer";
+        container.className = "gpf-panel__footer fr-modal__footer gpf-panel__footer_reporting gpf-visible";
 
         var btnAnnuler = document.createElement("button");
         btnAnnuler.className = "gpf-btn gpf-btn--tertiary gpf-btn-icon-annuler fr-btn fr-btn--tertiary fr-m-1w";
@@ -224,8 +224,7 @@ var ReportingDOM = {
      * Create input panel
      */
     _createReportingPanelInputElement : function () {
-        // TODO : 
-        // - header : sans titre / sans icone return
+        // - header : sans titre
         // - content : message
         // - footer
         var panel = document.createElement("div");
@@ -247,8 +246,7 @@ var ReportingDOM = {
      * @returns {DOMElement} DOM element
      */
     _createReportingPanelFormElement : function () {
-        // TODO : 
-        // - header
+        // - header : titre
         // - content : formulaire
         // - footer
 
@@ -261,58 +259,127 @@ var ReportingDOM = {
 
         form.addEventListener("submit", function (e) {
             e.preventDefault();
-            self.onReportingComputationSubmit(e);
+            var nameValue = document.getElementById(idName).value;
+            var descValue = document.getElementById(idDesc).value;
+            var themeContainer = document.getElementById(idTheme);
+            var themeValue = themeContainer.options[themeContainer.selectedIndex].textContent;
+            self.onReportingFormSubmit({
+                target : e.target,
+                name : nameValue,
+                desc : descValue,
+                theme : themeValue
+            });
             return false;
         });
 
-        var idName = this._addUID("GPreportingLabelName");
-        var divName = document.createElement("div");
-        divName.className = "fr-input-group";
-        divName.innerHTML = `
+        var idName = this._addUID("GPreportingFormLabelName");
+        var divName = `
+        <div class="fr-input-group">
             <label class="gpf-label fr-label" for="${idName}">Nom (obligatoire)</label>
             <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName">
+        </div>
         `;
-        form.appendChild(divName);
 
-        var idTheme = this._addUID("GPreportingSelectTheme");
-        var divTheme = document.createElement("div");
-        divTheme.className = "fr-select-group";
-        divTheme.innerHTML = `
-        <label class="gpf-label fr-label" for="${idTheme}">
-            Objet du signalement (obligatoire)  
-        </label>  
-        <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme">
-            <option value="" selected disabled >Sélectionner une option</option>
-            <option value="1">Option 1</option>    
-            <option value="2">Option 2</option>    
-            <option value="3">Option 3</option>    
-            <option value="4">Option 4</option>  
-        </select>
+        var idTheme = this._addUID("GPreportingFormSelectTheme");
+        var divTheme = `
+        <div class="fr-select-group">
+            <label class="gpf-label fr-label" for="${idTheme}">
+                Objet du signalement (obligatoire)  
+            </label>  
+            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme">
+                <option value="" selected disabled >Sélectionner une option</option>
+                <option value="1">Option 1</option>    
+                <option value="2">Option 2</option>    
+                <option value="3">Option 3</option>    
+                <option value="4">Option 4</option>  
+            </select>
+        </div>
         `;
-        form.appendChild(divTheme);
 
-        var idDesc = this._addUID("GPreportingTextDesc");
-        var divDesc = document.createElement("div");
-        divDesc.className = "fr-input-group";
-        divDesc.innerHTML = `
-        <label class="gpf-label fr-label" for="${idDesc}">      
-            Description (obligatoire)    
-        </label>    
-        <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc"></textarea>
+        var idDesc = this._addUID("GPreportingFormTextDesc");
+        var divDesc = `
+        <div class="fr-input-group">
+            <label class="gpf-label fr-label" for="${idDesc}">      
+                Description (obligatoire)    
+            </label>    
+            <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc"></textarea>
+        </div>
         `;
-        form.appendChild(divDesc);
 
-        var idBtn = this._addUID("GPreportingButtonDrawing");
-        var divBtn = document.createElement("div");
-        divBtn.className = "gpf-btn-group";
-        divBtn.innerHTML = `
-        <button class="gpf-btn fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-edit-box-line">
-            Dessiner sur la carte
-        </button>
+        var idBtn = this._addUID("GPreportingFormButtonDrawing");
+        var divBtn = `
+        <div class="gpf-btn-group">
+            <button id="${idBtn}" class="gpf-btn fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-edit-box-line">
+                Dessiner sur la carte
+            </button>
+        </div>
         `;
-        form.appendChild(divBtn);
+
+        var strContainer = `
+            ${divName}
+            ${divTheme}
+            ${divDesc}
+            ${divBtn}
+        `;
+        var container = stringToHTML(strContainer);
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+
+        // listener sur le DOM
+        var button = shadow.getElementById(idBtn);
+        if (button) {
+            button.addEventListener("click", (e) => {
+                this.onShowFormDrawingReportingClick(e);
+            });
+        }
+
+        // utile ?
+        var input = shadow.getElementById(idName);
+        if (input) {
+            input.addEventListener("change", (e) => {
+                this.onEntryFormNameReportingChange(e);
+            });
+        }
+
+        // utile ?
+        var select = shadow.getElementById(idTheme);
+        if (select) {
+            select.addEventListener("change", (e) => {
+                this.onSelectFormThemeReportingChange(e);
+            });
+        }
+
+        // utile ?
+        var text = shadow.getElementById(idDesc);
+        if (text) {
+            text.addEventListener("change", (e) => {
+                this.onEntryFormDescReportingChange(e);
+            });
+        }
+        
+        form.appendChild(shadow);
 
         return form;
+    },
+
+    /**
+     * Create the submit button
+     * 
+     * @returns {DOMElement} DOM element
+     * @description Create the submit button for the reporting form.
+     * This button is used to submit the reporting form.
+     * It is hidden.
+     * The form will be submitted when the user clicks on the button "Suivant".
+     */
+    _createReportingSubmitFormElement : function () {
+        var input = document.createElement("input");
+        input.id = this._addUID("GPreportingSubmit");
+        input.className = "gpf-btn fr-btn gpf-hidden";
+        input.type = "submit";
+        input.value = "";
+        return input;
     },
 
     /**
@@ -334,25 +401,62 @@ var ReportingDOM = {
      * Create panel send reporting
      */
     _createReportingPanelSendElement : function () {
-        // TODO : 
-        // - header
+        // - header : titre
         // - content : label + email + btn envoyer
         // - footer : pas de footer !
         var panel = document.createElement("div");
         panel.id = this._addUID("GPreportingPanelSend");
         panel.className = "gpf-panel__content fr-modal__content fr-px-3w gpf-hidden";
 
-        var id = this._addUID("GPreportingLabelEmail");
-
-        var div = document.createElement("div");
-        div.className = "fr-input-group";
-        div.innerHTML = `
-            <label class="gpf-label fr-label" for="${id}">Adresse courriel
+        var idMail = this._addUID("GPreportingLabelEmail");
+        var divMail = `
+        <div class="fr-input-group">
+            <label class="gpf-label fr-label" for="${idMail}">Adresse courriel
                 <span class="fr-hint-text">Pour valider le signalement, renseignez votre adresse courriel. Nous vous tiendrons informés de sa prise en compte.</span>
             </label>
-            <input class="gpf-input fr-input" type="text" id="${id}" name="${id}">
+            <input class="gpf-input fr-input" type="text" id="${idMail}" name="GPreportingLabelEmail">
+        </div>
         `;
-        panel.appendChild(div);
+
+        var idBtn = this._addUID("GPreportingButtonEnvoyer");
+        var divBtn =`
+        <div class="gpf-btn-group fr-pb-1w">
+            <button id="${idBtn}" class="gpf-btn fr-btn fr-btn--primary">
+                Envoyer
+            </button>
+        </div>
+        `;
+        
+        var strContainer = `
+            ${divMail}
+            ${divBtn}
+        `;
+        var container = stringToHTML(strContainer);
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+
+        // listener sur le DOM
+        var button = shadow.getElementById(idBtn);
+        if (button) {
+            button.addEventListener("click", (e) => {
+                this.onShowSendReportingClick({
+                    target : e.target,
+                    mail : document.getElementById(idMail).value
+                });
+            });
+        }
+
+        // utile ?
+        var input = shadow.getElementById(idMail);
+        if (input) {
+            input.addEventListener("change", (e) => {
+                this.onEntrySendMailReportingChange(e);
+            });
+        }
+
+        panel.appendChild(shadow);
 
         return panel;
     },

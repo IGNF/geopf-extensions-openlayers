@@ -402,6 +402,8 @@ var Reporting = class Reporting extends Control {
         this.buttonReportingClose = null;
         this.divReportingTitle = null;
 
+        this.buttonReportingSubmit = null;
+
         this.inputReportingContainer = null;
         this.formReportingContainer = null;
         this.sendReportingContainer = null;
@@ -411,6 +413,8 @@ var Reporting = class Reporting extends Control {
         this.stepContainer = [
             {
                 name : "", 
+                footer : true,
+                header : true,
                 next : 1, 
                 prev : -1,
                 action : null, // this.iocInput
@@ -418,20 +422,26 @@ var Reporting = class Reporting extends Control {
             },
             {
                 name : "Décrire le signalement",  
+                footer : true,
+                header : true,
                 next : 2, 
                 prev : 0, 
                 action : null, // this.iocForm
                 container : null // this.formReportingContainer
             },
             {
-                name : "Envoyer un signalement",  
+                name : "Envoyer un signalement", 
+                footer : false, 
+                header : true,
                 next : -1, 
                 prev : 1, 
                 action : null, // this.iocService
                 container : null // this.sendReportingContainer
             },
             {
-                name : "Dessiner sur la carte",  
+                name : "Dessiner sur la carte",
+                footer : true,
+                header : true,
                 next : 1, 
                 prev : 1, 
                 action : null, // this.iocDrawing
@@ -443,6 +453,9 @@ var Reporting = class Reporting extends Control {
         this.iocInput = null;
         this.iocForm = null;
         this.iocService = null;
+
+        /** {Object} raw data */
+        this.data = null;
 
         /** {Array} specify some events listener */
         this.eventsListeners = [];
@@ -491,6 +504,9 @@ var Reporting = class Reporting extends Control {
         var draw = this.drawingReportingContainer = this._createReportingPanelDrawingElement();
         this.stepContainer[3].container = draw;
         
+        var submit = this.buttonReportingSubmit = this._createReportingSubmitFormElement();
+        form.appendChild(submit);
+
         reportingPanelDiv.appendChild(reportingPanelHeader);
         reportingPanelDiv.appendChild(input);
         reportingPanelDiv.appendChild(form);
@@ -562,6 +578,8 @@ var Reporting = class Reporting extends Control {
         }
         // on modifie le titre
         this.divReportingTitle.innerHTML = this.stepContainer[num].name;
+        // on modifie l'affichage du footer
+        this.panelReportingFooterContainer.style.display = (this.stepContainer[num].footer) ? "flex" : "none";
     }
 
     /**
@@ -630,9 +648,21 @@ var Reporting = class Reporting extends Control {
      * ...
      * @param {*} e - ...
      */
-    onReturnReportingClick (e) {
+    onPrevReportingClick (e) {
         logger.trace(e);
         this.prevStep();
+    }
+    
+    /**
+     * ...
+     * @param {*} e - ...
+     */
+    onNextReportingClick (e) {
+        logger.trace(e);
+        if (this.step === 1) {
+            this.buttonReportingSubmit.click();
+        }
+        this.nextStep();
     }
 
     /**
@@ -647,28 +677,102 @@ var Reporting = class Reporting extends Control {
      * ...
      * @param {*} e - ...
      */
-    onNextReportingClick (e) {
-        logger.trace(e);
-        this.nextStep();
-    }
-
-    /**
-     * ...
-     * @param {*} e - ...
-     */
     onCancelReportingClick (e) {
         logger.trace(e);
         this.setStep(0);
     }
 
+    // ######################################### //
+    // ############# Panel Form ################ //
+
+    /**
+     * ...
+     * @param {*} e - {target, name, desc, theme}
+     */
+    onReportingFormSubmit (e) {
+        logger.trace("onReportingFormSubmit", e);
+        // on récupère les données du formulaire
+        // et on les stocke dans l'objet data
+
+        // TODO 
+        // la récupération des données doit plus dynamique
+        // et ne pas être codée en dur !
+        this.data = Object.assign({}, this.data, {
+            name : e.name,
+            desc : e.desc,
+            theme : e.theme
+        });
+    }
+
     /**
      * ...
      * @param {*} e - ...
      */
-    onReportingComputationSubmit (e) {
-        logger.trace(e);
+    onShowFormDrawingReportingClick (e) {
+        logger.trace("onShowFormDrawingReportingClick", e);
     }
 
+    /**
+     * ...
+     * @param {*} e - ...
+     */
+    onEntryFormNameReportingChange (e) {
+        logger.trace("onEntryFormNameReportingChange", e);
+    }
+
+    /**
+     * ...
+     * @param {*} e - ...
+     */
+    onSelectFormThemeReportingChange (e) {
+        logger.trace("onSelectFormThemeReportingChange", e);
+    }
+
+    /**
+     * ...
+     * @param {*} e - ...
+     */
+    onEntryFormDescReportingChange (e) {
+        logger.trace("onEntryFormDescReportingChange", e);
+    }
+
+    // ######################################### //
+    // ############# Panel Send ################ //
+
+    /**
+     * ...
+     * @param {*} e - ...
+     */
+    onEntrySendMailReportingChange (e) {
+        logger.trace("onEntrySendMailReportingChange", e);
+    }
+
+    /**
+     * ...
+     * @param {*} e - {target, mail}
+     * @description
+     * This method is called when the user clicks on the "Send Reporting" button.
+     * It is responsible for handling the click event and processing the reporting data.
+     */
+    onShowSendReportingClick (e) {
+        logger.trace("onShowSendReportingClick", e);
+        this.data = Object.assign({}, this.data, {
+            mail : e.mail
+        });
+        // send the reporting data to the server or process it as needed
+        logger.info("Reporting data to send:", this.data);
+        // For now, we just log the data to the console
+        // In a real application, you would send this data to a server or handle it accordingly
+        // see IoC Service
+        if (this.iocService) {
+            // TODO
+            // call the service action to send the data
+        }
+        // clear data after sending
+        this.data = null;
+        // reset the step to the first step
+        this.setStep(0);
+    }
 };
 
 // on récupère les méthodes de la classe DOM
