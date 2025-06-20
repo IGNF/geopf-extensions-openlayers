@@ -1,12 +1,13 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <script src="{{ resources }}/reporting/iocForm.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlReporting.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlReporting.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
@@ -27,7 +28,12 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du widget Reporting, avec les options par défaut</h2>
+            <h2>Ajout du widget Reporting avec une implementation du type iocForm</h2>
+            <p>
+                Cet exemple montre comment personnaliser la saisie sur la carte avec une implémentation du type iocInput.<br />
+                Il est possible de personnaliser le formulaire de signalement en fonction des besoins, <br />
+                ainsi que les actions à réaliser lors de la soumission du formulaire.<br />
+            </p>
             <!-- map -->
             <div id="map">
             </div>
@@ -78,35 +84,18 @@
             });
             map.addControl(layerSwitcher);
 
-            var catalog = new ol.control.Catalog({
-                position: "top-left",
-                collapsed : true
+            // Ajout du contrôle de GetFeatureInfo
+            var getFeatureInfo = new ol.control.GetFeatureInfo({
+                position: "bottom-left"
             });
-            map.addControl(catalog);
+            map.addControl(getFeatureInfo);
 
             // Ajout du contrôle de signalement des couches
             reporting = new ol.control.Reporting({
                 collapsed: false,
-                position: "top-left",
-                thematics: [
-                    "Réseau routier",
-                    "Bâtiment",
-                    "Toponyme",
-                    "Touristique/randonnée",
-                    "Environnement",
-                    "Urbanisme",
-                    "Risques naturels",
-                    "Risques technologiques",
-                    "Infrastructures",
-                    "Énergie",
-                    "Agriculture",
-                    "Forêt",
-                    "Hydrologie",
-                    "Hydrographie",
-                    "Végétation",
-                    "Autre"
-                ],
+                position: "top-right"
             });
+            reporting.setComponentForm(new MyFormAction());
             map.addControl(reporting);
         };
         Gp.Services.getConfig({

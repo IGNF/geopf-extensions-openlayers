@@ -656,11 +656,20 @@ var Reporting = class Reporting extends Control {
         this.stepContainer[3].action = this.iocDrawing;
     }
 
-    setComponentInput (input) {}
+    setComponentInput (input) {
+        // TODO 
+        // verifier si l'input est une instance de InputActionByDefaut
+        // if (input instanceof InputActionByDefaut)
+        this.iocInput = input;
+    }
 
-    setComponentForm (form) {}
+    setComponentForm (form) {
+        this.iocForm = form;
+    }
 
-    setComponentService (service) {}
+    setComponentService (service) {
+        this.iocService = service;
+    }
 
     // ################################################################### //
     // #################### privates methods ############################# //
