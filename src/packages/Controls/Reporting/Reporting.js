@@ -360,6 +360,9 @@ class DrawingActionByDefaut {
                 title : "Signalement",
                 description : "Dessin de signalement",
             },
+            popup : {
+                display : false
+            },
             tools : {
                 export : false
             }
