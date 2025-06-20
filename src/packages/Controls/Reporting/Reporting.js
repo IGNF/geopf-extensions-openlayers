@@ -22,6 +22,7 @@ var logger = Logger.getLogger("reporting");
 // ################################################################### //
 
 class InputActionByDefaut {
+
     /**
      * @classdesc
      * Input action for the Reporting control.
@@ -99,7 +100,7 @@ class InputActionByDefaut {
         };
         this.data = {
             location : geometry
-        }
+        };
         return this.data || { location : null };
     }
     /**
@@ -161,11 +162,12 @@ class InputActionByDefaut {
             return;
         }
         this.coordinate = e.coordinate;
-
     }
+
 }
 
 class FormActionByDefaut {
+
     /**
      * @classdesc
      * Form action for the Reporting control.
@@ -210,7 +212,7 @@ class FormActionByDefaut {
     setForm (form) {
         logger.info("FormActionByDefaut form");
         this.form = form;
-        this.submit = this.form.querySelector('input[type="submit"]');
+        this.submit = this.form.querySelector("input[type=\"submit\"]");
     }
     /**
      * Get the data for this action
@@ -259,9 +261,26 @@ class FormActionByDefaut {
             theme : formData.get("GPreportingSelectTheme")
         };
     }
+
 }
 
 class DrawingActionByDefaut {
+
+    /**
+     * @classdesc
+     * Drawing action for the Reporting control.
+     * This class handles drawing actions on the map, allowing users to create and manage drawings.
+     * @constructor
+     * @alias DrawingActionByDefaut
+     * @type {DrawingActionByDefaut}
+     * @param {ol.Map} [map] - Optional OpenLayers map instance.
+     * @description
+     * The constructor initializes the action with an optional map instance.
+     * If no map is provided, it defaults to null.
+     * It also initializes properties for data, map, DOM elements, and the Drawing instance.
+     * The Drawing instance is used to manage the drawing functionality on the map.
+     * The DOM elements for the drawing button and panel will be set by the IoC (Inversion of Control) container.
+     */
     constructor (map) {
         logger.info("DrawingActionByDefaut constructor");
         this.data = null;
@@ -275,6 +294,12 @@ class DrawingActionByDefaut {
      * Activate the action by adding event listeners
      * @api
      * @description
+     * This method initializes the Drawing instance if it is not already created.
+     * It sets the Drawing instance to be active and configures its panel.
+     * The Drawing instance allows users to create and manage drawings on the map.
+     * It also sets the position of the Drawing panel to be relative, allowing it to be positioned within its parent container.
+     * If the Drawing instance is already initialized, it simply makes the Drawing panel visible.
+     * This method is typically called when the user wants to start drawing on the map.
      */
     active () {
         logger.info("ServiceActionByDefaut active");
@@ -293,6 +318,11 @@ class DrawingActionByDefaut {
      * Disable the action by removing event listeners
      * @api
      * @description
+     * This method collapses the Drawing instance, effectively hiding the drawing panel.
+     * It is typically called when the user wants to stop drawing or hide the drawing panel.
+     * If the Drawing instance is not initialized, it simply returns without performing any action.
+     * This method is intended to be called when the drawing functionality is no longer needed.
+     * It ensures that the Drawing panel is hidden and the Drawing instance is not active.
      */
     disable () {
         logger.info("DrawingActionByDefaut disable");
@@ -306,6 +336,13 @@ class DrawingActionByDefaut {
      * Clear the data 
      * @api
      * @description
+     * This method resets the data property to null,
+     * effectively clearing any previously captured drawing data.
+     * It is intended to be called when the drawing needs to be reset or cleared.
+     * It does not perform any action on the Drawing instance itself.
+     * This method is useful when the user wants to start a new drawing or discard the current drawing.
+     * It ensures that the data property is cleared, allowing for a fresh start on the next drawing action.
+     * It does not remove the Drawing instance or its event listeners, allowing the user to continue drawing if desired.
      */
     clear () {
         logger.info("DrawingActionByDefaut clear");
@@ -327,14 +364,27 @@ class DrawingActionByDefaut {
         if (this.Drawing) {
             this.data = {
                 drawing : JSON.parse(this.Drawing.exportFeatures())
-            } 
+            }; 
         }
         return this.data || { drawing : null };
     }
+    /**
+     * Set the map for this action
+     * @param {ol.Map} map - Map.
+     * @description
+     * This method sets the map instance for the Drawing action.
+     * It initializes the Drawing instance if it is not already created.
+     * If the Drawing instance is already initialized, it simply updates the map property.
+     * This method is typically called when the map is ready or when the Drawing action needs to be associated with a specific map instance.
+     */
     setMap (map) {
         logger.info("DrawingActionByDefaut map");
         this.map = map;
     }
+    /**
+     * Set the target DOM element for the Drawing action
+     * @param {DOMElement} dom - The DOM element to set as the target for the Drawing action.
+     */
     setTarget (dom) {
         logger.info("DrawingActionByDefaut target");
         if (!dom) {
@@ -394,9 +444,11 @@ class DrawingActionByDefaut {
         // on ajoute le widget de dessin à la carte
         this.map.addControl(this.Drawing);
     }
+
 }
 
 class ServiceActionByDefaut {
+
     constructor () {
         logger.info("ServiceActionByDefaut constructor");
     }
@@ -443,6 +495,7 @@ class ServiceActionByDefaut {
     clear () {
         logger.info("ServiceActionByDefaut clear");
     }
+
 }
 
 // ################################################################### //
@@ -549,7 +602,6 @@ var Reporting = class Reporting extends Control {
             if (this.auto) {
                 this.#addEventsListeners(map);
             }
-
         } else {
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
@@ -570,7 +622,6 @@ var Reporting = class Reporting extends Control {
         if (this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
         }
-
     }
 
     // ################################################################### //
@@ -603,7 +654,6 @@ var Reporting = class Reporting extends Control {
         this.stepContainer[1].action = this.iocForm;
         this.stepContainer[2].action = this.iocService;
         this.stepContainer[3].action = this.iocDrawing;
-
     }
 
     setComponentInput (input) {}
@@ -816,9 +866,16 @@ var Reporting = class Reporting extends Control {
     // ################################################################### //
 
     /**
-     * ...
+     * Set the current step of the reporting process.
      * @param {*} num 
-     * @returns 
+     * @returns {void}
+     * @description
+     * This method sets the current step of the reporting process.
+     * It updates the visibility of the step containers,
+     * activates the corresponding IoC action,
+     * and updates the reporting title and footer display.
+     * It is typically called when the user navigates to a different step in the reporting process,
+     * such as moving from the input step to the form step or the send step.
      */
     setStep (num) {
         if (num === undefined) {
@@ -853,8 +910,15 @@ var Reporting = class Reporting extends Control {
     }
 
     /**
-     * ...
-     * @returns 
+     * Move to the next step in the reporting process.
+     * This method checks if there is a next step available.
+     * @returns {void}
+     * @description
+     * This method is used to navigate to the next step in the reporting process.
+     * It retrieves the next step from the stepContainer array based on the current step index.
+     * If a next step exists (indicated by a valid index), it retrieves the action associated with the current step,
+     * clears its data, and disables it.
+     * The data from the current action is merged into the reporting data object.
      */
     nextStep () {
         var current = this.step;
@@ -876,8 +940,25 @@ var Reporting = class Reporting extends Control {
     }
 
     /**
-     * ...
-     * @returns 
+     * Move to the previous step in the reporting process.
+     * This method checks if there is a previous step available.
+     * If there is a previous step, it clears the current action's data
+     * and sets the step to the previous one.
+     * @returns {void}
+     * @description
+     * This method is used to navigate back to the previous step in the reporting process.
+     * It retrieves the previous step from the stepContainer array based on the current step index.
+     * If a previous step exists (indicated by a valid index), it clears the current action's data
+     * and sets the step to the previous one.
+     * The current action's data is cleared to ensure that any unsaved changes are discarded.
+     * This method is typically called when the user wants to go back to the previous step
+     * in the reporting process, allowing them to review or modify their input before proceeding.
+     * It is useful for scenarios where users may need to correct or change their input
+     * before finalizing their report.
+     * If the current step does not have a previous step (indicated by prev being -1),
+     * the method does nothing, effectively preventing navigation to a non-existent step.
+     * This ensures that the reporting process remains linear and prevents users from navigating
+     * to steps that are not part of the defined workflow.
      */
     prevStep () {
         var current = this.step;
@@ -899,8 +980,8 @@ var Reporting = class Reporting extends Control {
     // ################################################################### //
     
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the click event on the "Show Reporting" button.
+     * @param {*} e - The click event object.
      */
     onShowReportingClick (e) {
         logger.trace("onShowReportingClick", e);
@@ -917,8 +998,8 @@ var Reporting = class Reporting extends Control {
     }
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the click event on the "Previous Reporting" button.
+     * @param {*} e - The click event object.
      */
     onPrevReportingClick (e) {
         logger.trace("onPrevReportingClick", e);
@@ -926,8 +1007,8 @@ var Reporting = class Reporting extends Control {
     }
     
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the click event on the "Next Reporting" button.
+     * @param {*} e - The click event object.
      */
     onNextReportingClick (e) {
         logger.trace("onNextReportingClick", e);
@@ -935,16 +1016,16 @@ var Reporting = class Reporting extends Control {
     }
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the click event on the "Close Reporting" button.
+     * @param {*} e - The click event object.
      */
     onCloseReportingClick (e) {
         logger.trace("onCloseReportingClick", e);
     }
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the click event on the "Cancel Reporting" button.
+     * @param {*} e - The click event object.
      */
     onCancelReportingClick (e) {
         logger.trace("onCancelReportingClick", e);
@@ -955,16 +1036,16 @@ var Reporting = class Reporting extends Control {
     // ############# Panel Form ################ //
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the form submission event for the reporting form.
+     * @param {*} e - The form submission event object.
      */
     onReportingFormSubmit (e) {
         logger.trace("onReportingFormSubmit", e);
     }
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the click event on the "Show Form Drawing Reporting" button.
+     * @param {*} e - The click event object.
      */
     onShowFormDrawingReportingClick (e) {
         logger.trace("onShowFormDrawingReportingClick", e);
@@ -972,24 +1053,24 @@ var Reporting = class Reporting extends Control {
     }
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the click event on the "Show Form Input Reporting" button.
+     * @param {*} e - The click event object.
      */
     onEntryFormNameReportingChange (e) {
         logger.trace("onEntryFormNameReportingChange", e);
     }
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the change event on the "Form Theme Reporting" select element.
+     * @param {*} e - The change event object.
      */
     onSelectFormThemeReportingChange (e) {
         logger.trace("onSelectFormThemeReportingChange", e);
     }
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the change event on the "Form Description Reporting" textarea element.
+     * @param {*} e - The change event object.
      */
     onEntryFormDescReportingChange (e) {
         logger.trace("onEntryFormDescReportingChange", e);
@@ -999,19 +1080,23 @@ var Reporting = class Reporting extends Control {
     // ############# Panel Send ################ //
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Handle the change event on the "Send Mail Reporting" input element.
+     * @param {*} e - The change event object.
      */
     onEntrySendMailReportingChange (e) {
         logger.trace("onEntrySendMailReportingChange", e);
     }
 
     /**
-     * ...
-     * @param {*} e - {target, mail}
+     * Handle the click event on the "Send Reporting" button.
+     * @param {*} e - {mail, name, desc, theme, drawing, location}
      * @description
      * This method is called when the user clicks on the "Send Reporting" button.
      * It is responsible for handling the click event and processing the reporting data.
+     * It retrieves the mail from the event, updates the data object,
+     * and sends the reporting data to the server or processes it as needed.
+     * If the sending is successful, it clears the data and resets the step to the first step.
+     * If there is an error during the sending process, it displays an error message for a limited time.
      */
     onShowSendReportingClick (e) {
         logger.trace("onShowSendReportingClick", e);
@@ -1025,23 +1110,24 @@ var Reporting = class Reporting extends Control {
         
         // call the service action to send the data
         this.iocService.send(this.data)
-        .then(() => {
+            .then(() => {
             // clear data after sending
-            this.data = null;
-        })
-        .then(() => {
+                this.data = null;
+            })
+            .then(() => {
             // reset the step to the first step
-            this.setStep(0);
-        })
-        .catch((e) => {
+                this.setStep(0);
+            })
+            .catch((e) => {
             // UI error message !
-            this.spanReportingError.classList.replace("gpf-hidden", "gpf-visible");
-            setTimeout(() => {
-                this.spanReportingError.classList.replace("gpf-visible", "gpf-hidden");
-            }, 5000);
-            logger.error(e);
-        });
+                this.spanReportingError.classList.replace("gpf-hidden", "gpf-visible");
+                setTimeout(() => {
+                    this.spanReportingError.classList.replace("gpf-visible", "gpf-hidden");
+                }, 5000);
+                logger.error(e);
+            });
     }
+
 };
 
 // on récupère les méthodes de la classe DOM
