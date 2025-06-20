@@ -13,6 +13,7 @@ import Draggable from "../../Utils/Draggable";
 
 // DOM
 import ReportingDOM from "./ReportingDOM";
+import Drawing from "../Drawing/Drawing";
 
 var logger = Logger.getLogger("reporting");
 
@@ -97,9 +98,9 @@ class InputActionByDefaut {
             ]
         };
         this.data = {
-            feature : geometry
+            location : geometry
         }
-        return this.data || { feature : null };
+        return this.data || { location : null };
     }
     /**
      * Clear the data and remove the event listener
@@ -260,6 +261,138 @@ class FormActionByDefaut {
     }
 }
 
+class DrawingActionByDefaut {
+    constructor (map) {
+        logger.info("DrawingActionByDefaut constructor");
+        this.data = null;
+        this.map = map || null; // will be set by the IoC
+        this.dom = null; // will be set by the IoC
+        this.Drawing = null; // will be set by the IoC
+        this.DrawingBtn = null; // will be set by the IoC;
+        this.DrawingPanel = null; // will be set by the IoC
+    }
+    /**
+     * Activate the action by adding event listeners
+     * @api
+     * @description
+     */
+    active () {
+        logger.info("ServiceActionByDefaut active");
+        if (!this.Drawing) {
+            this.#initializeDrawing();
+        }
+        // this.DrawingBtn.setAttribute("aria-pressed", true);
+        this.Drawing.setCollapsed(false);
+        this.DrawingPanel.style.position = "relative";
+        this.DrawingPanel.style.left = "0px";
+        this.DrawingPanel.style.top = "0px";
+        this.DrawingPanel.style.bottom = "unset";
+        this.DrawingPanel.style.right = "unset";
+    }
+    /**
+     * Disable the action by removing event listeners
+     * @api
+     * @description
+     */
+    disable () {
+        logger.info("DrawingActionByDefaut disable");
+        if (!this.Drawing) {
+            return;
+        }
+        this.Drawing.setCollapsed(true);
+        // this.DrawingBtn.setAttribute("aria-pressed", false);
+    }
+    /**
+     * Clear the data 
+     * @api
+     * @description
+     */
+    clear () {
+        logger.info("DrawingActionByDefaut clear");
+        this.data = null;
+    }
+    /**
+     * Get the data for this action
+     * @api
+     * @returns {Object} data - Data for this action.
+     * @description
+     * This method retrieves the data captured from the drawing.
+     * It exports the features from the Drawing instance
+     * and returns them as an object.
+     * If no drawing data is available, it returns an empty object.
+     */
+    getData () {
+        logger.info("DrawingActionByDefaut data");
+        // on récupère les données du dessin
+        if (this.Drawing) {
+            this.data = {
+                drawing : JSON.parse(this.Drawing.exportFeatures())
+            } 
+        }
+        return this.data || { drawing : null };
+    }
+    setMap (map) {
+        logger.info("DrawingActionByDefaut map");
+        this.map = map;
+    }
+    setTarget (dom) {
+        logger.info("DrawingActionByDefaut target");
+        if (!dom) {
+            logger.warn("DrawingActionByDefaut target is null");
+            return;
+        }
+        this.dom = dom;
+    }
+
+    // ######################################################## //
+    // ######################### privates ##################### //
+
+    #initializeDrawing () {
+        logger.info("DrawingActionByDefaut initializeDrawing");
+        if (!this.map) {
+            return;
+        }
+        var id = 1000;
+        this.Drawing = new Drawing({
+            target : this.dom,
+            id : id,
+            layerDescription : {
+                title : "Signalement",
+                description : "Dessin de signalement",
+            },
+            tools : {
+                export : false
+            }
+        });
+
+        this.Drawing.setExportFormat("geojson");
+
+        var container = this.Drawing.getContainer();
+        container.className = "";
+
+        var button = this.DrawingBtn = container.querySelector("#GPshowDrawingPicto-" + id);
+        if (button) {
+            button.style.display = "none";
+        }
+
+        var panel = this.DrawingPanel = container.querySelector("#GPdrawingPanel-" + id);
+        if (panel) {
+            panel.style.position = "relative";
+            panel.style.left = "0px";
+            panel.style.top = "0px";
+            panel.style.bottom = "unset";
+            panel.style.right = "unset";
+        }
+
+        var header = container.querySelector(".gpf-panel__header");
+        if (header) {
+            header.style.display = "none";
+        }
+        // on ajoute le widget de dessin à la carte
+        this.map.addControl(this.Drawing);
+    }
+}
+
 class ServiceActionByDefaut {
     constructor () {
         logger.info("ServiceActionByDefaut constructor");
@@ -414,7 +547,6 @@ var Reporting = class Reporting extends Control {
                 this.#addEventsListeners(map);
             }
 
-
         } else {
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
@@ -447,7 +579,6 @@ var Reporting = class Reporting extends Control {
         if (!this.iocInput) {
             this.iocInput = new InputActionByDefaut();
         }
-        // on transmet la map
         this.iocInput.setMap(map);
 
         if (!this.iocForm) {
@@ -458,10 +589,17 @@ var Reporting = class Reporting extends Control {
         if (!this.iocService) {
             this.iocService = new ServiceActionByDefaut();
         }
+
+        if (!this.iocDrawing) {
+            this.iocDrawing = new DrawingActionByDefaut();
+        }
+        this.iocDrawing.setMap(map);
+        this.iocDrawing.setTarget(this.drawingReportingContainer);
         
         this.stepContainer[0].action = this.iocInput;
         this.stepContainer[1].action = this.iocForm;
         this.stepContainer[2].action = this.iocService;
+        this.stepContainer[3].action = this.iocDrawing;
 
     }
 
@@ -573,6 +711,7 @@ var Reporting = class Reporting extends Control {
         this.iocInput = null;
         this.iocForm = null;
         this.iocService = null;
+        this.iocDrawing = null;
 
         /** {Object} raw data */
         this.data = null;
@@ -826,6 +965,7 @@ var Reporting = class Reporting extends Control {
      */
     onShowFormDrawingReportingClick (e) {
         logger.trace("onShowFormDrawingReportingClick", e);
+        this.setStep(3);
     }
 
     /**

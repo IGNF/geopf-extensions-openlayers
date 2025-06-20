@@ -276,7 +276,7 @@ var ReportingDOM = {
         var divName = `
         <div class="fr-input-group">
             <label class="gpf-label fr-label" for="${idName}">Nom (obligatoire)</label>
-            <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName" required>
+            <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName">
         </div>
         `;
 
@@ -286,7 +286,7 @@ var ReportingDOM = {
             <label class="gpf-label fr-label" for="${idTheme}">
                 Objet du signalement (obligatoire)  
             </label>  
-            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme" required>
+            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme">
                 <option value="" selected disabled >Sélectionner une option</option>
                 ${thematics.map((theme) => {
                     return `<option value="${theme}">${theme}</option>`;
@@ -301,7 +301,7 @@ var ReportingDOM = {
             <label class="gpf-label fr-label" for="${idDesc}">      
                 Description (obligatoire)    
             </label>    
-            <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc" required></textarea>
+            <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc"></textarea>
         </div>
         `;
 
