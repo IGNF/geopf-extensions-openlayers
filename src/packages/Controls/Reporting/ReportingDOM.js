@@ -245,7 +245,7 @@ var ReportingDOM = {
      *
      * @returns {DOMElement} DOM element
      */
-    _createReportingPanelFormElement : function () {
+    _createReportingPanelFormElement : function (thematics) {
         // - header : titre
         // - content : formulaire
         // - footer
@@ -276,7 +276,7 @@ var ReportingDOM = {
         var divName = `
         <div class="fr-input-group">
             <label class="gpf-label fr-label" for="${idName}">Nom (obligatoire)</label>
-            <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName">
+            <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName" required>
         </div>
         `;
 
@@ -286,12 +286,11 @@ var ReportingDOM = {
             <label class="gpf-label fr-label" for="${idTheme}">
                 Objet du signalement (obligatoire)  
             </label>  
-            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme">
+            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme" required>
                 <option value="" selected disabled >Sélectionner une option</option>
-                <option value="1">Option 1</option>    
-                <option value="2">Option 2</option>    
-                <option value="3">Option 3</option>    
-                <option value="4">Option 4</option>  
+                ${thematics.map((theme) => {
+                    return `<option value="${theme}">${theme}</option>`;
+                }).join("")}  
             </select>
         </div>
         `;
@@ -302,7 +301,7 @@ var ReportingDOM = {
             <label class="gpf-label fr-label" for="${idDesc}">      
                 Description (obligatoire)    
             </label>    
-            <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc"></textarea>
+            <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc" required></textarea>
         </div>
         `;
 
@@ -414,7 +413,7 @@ var ReportingDOM = {
             <label class="gpf-label fr-label" for="${idMail}">Adresse courriel
                 <span class="fr-hint-text">Pour valider le signalement, renseignez votre adresse courriel. Nous vous tiendrons informés de sa prise en compte.</span>
             </label>
-            <input class="gpf-input fr-input" type="text" id="${idMail}" name="GPreportingLabelEmail">
+            <input class="gpf-input fr-input" type="text" id="${idMail}" name="GPreportingLabelEmail" required>
         </div>
         `;
 
@@ -426,7 +425,7 @@ var ReportingDOM = {
             </button>
         </div>
         `;
-        
+
         var strContainer = `
             ${divMail}
             ${divBtn}
@@ -460,6 +459,14 @@ var ReportingDOM = {
 
         return panel;
     },
+    _createReportingErrorSendElement : function () {
+        var idError = this._addUID("GPreportingSpanError");
+        var spanError = document.createElement("span");
+        spanError.id = idError;
+        spanError.className = "gpf-error fr-error fr-error-text gpf-hidden";
+        spanError.innerHTML = "Une erreur est survenue lors de l'envoi du signalement. <br> Veuillez réessayer plus tard.";
+        return spanError;
+    }
 };
 
 export default ReportingDOM;
