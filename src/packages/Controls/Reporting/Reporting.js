@@ -65,6 +65,34 @@ class InputActionByDefaut {
      * The Point's coordinates are set to the last clicked coordinate on the map.
      * The FeatureCollection also includes a CRS (Coordinate Reference System) definition
      * based on the map's current projection.
+     * @example
+     * var data = inputAction.getData();
+     * console.log(data);
+     * // Output:
+     * // {
+     * //   location: {
+     * //     type: "FeatureCollection",
+     * //     crs: {
+     * //       type: "name",
+     * //       properties: {
+     * //         name: "EPSG:4326"
+     * //       }
+     * //     },
+     * //     features: [
+     * //       {
+     * //         type: "Feature",
+     * //         geometry: {
+     * //           type: "Point",
+     * //           coordinates: [longitude, latitude]
+     * //         },
+     * //         properties: {
+     * //           description: "Point de signalement",
+     * //           date: "2023-10-01T12:00:00Z",
+     * //         },
+     * //       }
+     * //     ]
+     * //   }
+     * // }
      */
     getData () {
         logger.info("InputActionByDefaut data");
@@ -222,6 +250,15 @@ class FormActionByDefaut {
      * This method retrieves the data captured from the form submission.
      * It simulates a form submission by clicking the submit button,
      * and returns the data as an object.
+     * @example
+     * var data = formAction.getData();
+     * console.log(data);
+     * // Output:
+     * // {
+     * //   name: "Report Name",
+     * //   desc: "Report Description",
+     * //   theme: "Selected Theme"
+     * // }
      */
     getData () {
         logger.info("FormActionByDefaut data");
@@ -284,6 +321,7 @@ class DrawingActionByDefaut {
     constructor (map) {
         logger.info("DrawingActionByDefaut constructor");
         this.data = null;
+        this.format = "geojson"; // default format for export
         this.map = map || null; // will be set by the IoC
         this.dom = null; // will be set by the IoC
         this.Drawing = null; // will be set by the IoC
@@ -357,13 +395,24 @@ class DrawingActionByDefaut {
      * It exports the features from the Drawing instance
      * and returns them as an object.
      * If no drawing data is available, it returns an empty object.
+     * @example
+     * var data = drawingAction.getData();
+     * console.log(data);
+     * // Output:
+     * // {
+     * //   drawing: {
+     * //     type: "FeatureCollection",
+     * //     features: [...]
+     * //   }
+     * // }
      */
     getData () {
         logger.info("DrawingActionByDefaut data");
         // on récupère les données du dessin
         if (this.Drawing) {
+            var content = this.Drawing.exportFeatures();
             this.data = {
-                drawing : JSON.parse(this.Drawing.exportFeatures())
+                drawing : (this.format.toLowerCase() === "geojson") ? JSON.parse(content) : content
             }; 
         }
         return this.data || { drawing : null };
@@ -393,6 +442,16 @@ class DrawingActionByDefaut {
         }
         this.dom = dom;
     }
+    /**
+     * Set the format for exporting drawings
+     * @param {String} format - The format to set for exporting drawings.
+     */
+    setFormat (format) {
+        logger.info("DrawingActionByDefaut format");
+        if (format) {
+            this.format = format;
+        }
+    }
 
     // ######################################################## //
     // ######################### privates ##################### //
@@ -418,7 +477,7 @@ class DrawingActionByDefaut {
             }
         });
 
-        this.Drawing.setExportFormat("geojson");
+        this.Drawing.setExportFormat(this.format);
 
         var container = this.Drawing.getContainer();
         container.className = "";
@@ -480,6 +539,17 @@ class ServiceActionByDefaut {
      * @description
      * This method is intended to send data to a service.
      * It currently throws an error indicating that the method is not implemented.
+     * @example
+     * var serviceAction = new ServiceActionByDefaut();
+     * serviceAction.send(data);
+     * // Output data to the service :
+     * // {
+     * //   location: { ... }, // GeoJSON FeatureCollection with Point geometry
+     * //   name: "Report Name",
+     * //   desc: "Report Description",
+     * //   theme: "Selected Theme",
+     * //   drawing: { ... } // GeoJSON FeatureCollection with drawing features
+     * // }
      */
     send (data) {
         logger.info("ServiceActionByDefaut send");
@@ -529,6 +599,7 @@ var Reporting = class Reporting extends Control {
      * @param {Boolean} [options.draggable=false] - specify if control is draggable (true) or not (false)
      * @param {Boolean} [options.auto=true] - specify if control add some stuff auto
      * @param {Array} [options.thematics] - specify the list of thematics
+     * @param {String} [options.format="geojson"] - specify the format for export (default: "geojson")
      * @param {DOMElement} [options.element] - specify the DOM element to append the control
      * @param {String} [options.target] - specify the target element to append the control
      * @param {Function} [options.render] - specify the render function
@@ -647,6 +718,7 @@ var Reporting = class Reporting extends Control {
         if (!this.iocDrawing) {
             this.iocDrawing = new DrawingActionByDefaut();
         }
+        this.iocDrawing.setFormat(this.options.format || "geojson");
         this.iocDrawing.setMap(map);
         this.iocDrawing.setTarget(this.drawingReportingContainer);
         
@@ -669,6 +741,10 @@ var Reporting = class Reporting extends Control {
 
     setComponentService (service) {
         this.iocService = service;
+    }
+
+    setComponentDrawing (drawing) {
+        this.iocDrawing = drawing;
     }
 
     // ################################################################### //
