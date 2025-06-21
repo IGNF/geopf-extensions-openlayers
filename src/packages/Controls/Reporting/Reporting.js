@@ -3,6 +3,7 @@ import "../../CSS/Controls/Reporting/GPFreporting.css";
 
 // import OpenLayers
 import Control from "../Control";
+import Widget from "../Widget";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 
 // import local
@@ -1072,6 +1073,9 @@ var Reporting = class Reporting extends Control {
     onShowReportingClick (e) {
         logger.trace("onShowReportingClick", e);
         var opened = this.buttonReportingShow.ariaPressed;
+        if (opened === "true") {
+            this.onPanelOpen();
+        }
         this.collapsed = !(opened === "true");
         this.dispatchEvent("change:collapsed");
 
@@ -1245,6 +1249,7 @@ var Reporting = class Reporting extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(Reporting.prototype, ReportingDOM);
+Object.assign(Reporting.prototype, Widget);
 
 export default Reporting;
 
