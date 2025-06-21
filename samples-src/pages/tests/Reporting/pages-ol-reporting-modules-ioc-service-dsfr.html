@@ -82,11 +82,14 @@
             });
             map.addControl(layerSwitcher);
 
-            // Ajout du contrôle de signalement des couches
+            // Ajout du contrôle de signalement des anomalies
             reporting = new ol.control.Reporting({
                 collapsed: false,
                 position: "top-right",
                 format : "kml"
+            });
+            reporting.on("reporting:sending", (e) => {
+                console.log("Reporting event sending: ", e);
             });
             reporting.setComponentService(new MyServiceAction());
             map.addControl(reporting);

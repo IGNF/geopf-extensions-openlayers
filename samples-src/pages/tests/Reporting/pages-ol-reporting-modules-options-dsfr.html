@@ -107,6 +107,11 @@
                     "Autre"
                 ],
             });
+            // Gestion de l'événement d'ouverture du formulaire de signalement
+            // mais, une seule fois !
+            reporting.once("reporting:opened", function () {
+                console.log("Reporting event opened !");
+            });
             map.addControl(reporting);
         };
         Gp.Services.getConfig({

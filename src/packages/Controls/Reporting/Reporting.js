@@ -584,6 +584,7 @@ class ServiceActionByDefaut {
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
  * @fires reporting:sending
+ * @fires reporting:opened
  * @example
  * var reporting = new ol.control.Reporting();
  * map.addControl(reporting);
@@ -1079,6 +1080,16 @@ var Reporting = class Reporting extends Control {
         } else {
             // FIXME doit on revenir à la 1ére étape ?
             this.iocInput.active();
+            /**
+             * event triggered when the reporting panel is opened
+             * @event reporting:opened
+             * @description
+             * This event is dispatched when the reporting panel is opened.
+             * It indicates that the reporting process has started and the user can begin inputting data.
+             * This event can be used to perform additional actions when the reporting panel is opened,
+             * such as initializing the input fields or updating the UI to reflect the reporting state.
+             */
+            this.dispatchEvent("reporting:opened");
         }
     }
 
