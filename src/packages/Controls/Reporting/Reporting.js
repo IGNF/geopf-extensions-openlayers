@@ -575,15 +575,15 @@ class ServiceActionByDefaut {
 /**
  * @classdesc
  *
- * Reporting button
+ * Reporting control.
+ * This control allows users to report issues or provide feedback on the map.
  *
  * @constructor
  * @alias ol.control.Reporting
  * @type {ol.control.Reporting}
  * @extends {ol.control.Control}
  * @param {Object} options - options for function call.
- * 
- * @fires custom:action
+ * @fires reporting:sending
  * @example
  * var reporting = new ol.control.Reporting();
  * map.addControl(reporting);
@@ -1175,6 +1175,7 @@ var Reporting = class Reporting extends Control {
     /**
      * Handle the click event on the "Send Reporting" button.
      * @param {*} e - {mail, name, desc, theme, drawing, location}
+     * @fires reporting:send
      * @description
      * This method is called when the user clicks on the "Send Reporting" button.
      * It is responsible for handling the click event and processing the reporting data.
@@ -1196,12 +1197,28 @@ var Reporting = class Reporting extends Control {
         // call the service action to send the data
         this.iocService.send(this.data)
             .then(() => {
-            // clear data after sending
+                // clear data after sending
                 this.data = null;
             })
             .then(() => {
-            // reset the step to the first step
+                // FIXME ?
+                // reset the step to the first step
                 this.setStep(0);
+            })
+            .then(() => {
+                /**
+                 * event triggered at the end of the reporting process
+                 * @event reporting:sending
+                 * @description
+                 * This event is dispatched when the reporting data is successfully sent.
+                 * It contains the reporting data that was sent.
+                 * This event can be used to perform additional actions after the reporting data is sent,
+                 * such as updating the UI or notifying other components.
+                 */
+                this.dispatchEvent({
+                    type : "reporting:sending",
+                    data : this.data
+                });
             })
             .catch((e) => {
             // UI error message !
