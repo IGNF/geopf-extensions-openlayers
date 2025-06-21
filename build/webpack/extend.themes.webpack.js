@@ -35,6 +35,7 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Territories", "GPFterritoriesStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ControlList", "GPFcontrolListStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ContextMenu", "GPFcontextMenuStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Reporting", "GPFreportingStyle.css"),
             ],
             // CSS themes dsfr
             "Dsfr" : [
@@ -69,6 +70,7 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Territories", "DSFRterritoriesStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ControlList", "DSFRcontrolListStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ContextMenu", "DSFRcontextMenuStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Reporting", "DSFRreportingStyle.css"),
             ],
         }
     };

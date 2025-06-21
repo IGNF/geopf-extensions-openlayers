@@ -41,6 +41,9 @@ module.exports = (env, argv) => {
             case "Export":
                 // formats
                 break;
+            case "Reporting":
+                // ras
+                break
             case "GetFeatureInfo":
                 // ras
                 break;

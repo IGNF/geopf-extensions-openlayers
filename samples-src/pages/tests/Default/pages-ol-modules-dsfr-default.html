@@ -47,6 +47,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlControlList.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlControlList.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlReporting.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlReporting.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -101,6 +103,12 @@
                   position : "top-left"
                 });
                 map.addControl(catalog);
+
+                var reporting = new ol.control.Reporting({
+                  draggable: true,
+                  position : "top-left"
+                });
+                map.addControl(reporting);
 
                 var zoom = new ol.control.GeoportalZoom({
                   position : "top-right"

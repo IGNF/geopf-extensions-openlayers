@@ -46,6 +46,7 @@ export { default as Catalog } from "./packages/Controls/Catalog/Catalog";
 export { default as Territories } from "./packages/Controls/Territories/Territories";
 export { default as ControlList } from "./packages/Controls/ControlList/ControlList";
 export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextMenu";
+export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
 
 // proj4
 export { default as Proj4 } from "proj4";

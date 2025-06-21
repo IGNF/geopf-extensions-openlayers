@@ -20,7 +20,7 @@ var WidgetDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPwidget");
-        container.className = "GPwidget gpf-widget gpf-widget-button";
+        container.className = "GPwidget gpf-widget gpf-mobile-fullscreen gpf-widget-button";
         return container;
     },
 
@@ -49,13 +49,13 @@ var WidgetDOM = {
             button.addEventListener("click", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowWidgetClick();
+                self.onShowWidgetClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onShowWidgetClick();
+                self.onShowWidgetClick(e);
             });
         }
 
@@ -95,6 +95,12 @@ var WidgetDOM = {
         container.className = "gpf-panel__header fr-modal__header";
         return container;
     },
+    _createWidgetPanelIconElement : function () {
+        var label = document.createElement("label");
+        label.className = "GPpanelIcon gpf-btn-header gpf-btn-icon-widget";
+        label.title = `${title}`;
+        return label;
+    },
     _createWidgetPanelTitleElement : function () {
         var div = document.createElement("div");
         div.className = "gpf-panel__title fr-modal__title fr-pt-4w";
@@ -110,14 +116,14 @@ var WidgetDOM = {
 
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function () {
+            btnClose.addEventListener("click", function (e) {
                 document.getElementById(self._addUID("GPshowWidgetPicto")).click();
-                self.onCloseWidgetClick();
+                self.onCloseWidgetClick(e);
             }, false);
         } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function () {
+            btnClose.attachEvent("onclick", function (e) {
                 document.getElementById(self._addUID("GPshowWidgetPicto")).click();
-                self.onCloseWidgetClick();
+                self.onCloseWidgetClick(e);
             });
         }
 
