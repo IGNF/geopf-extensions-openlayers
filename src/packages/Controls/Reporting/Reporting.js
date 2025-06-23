@@ -705,6 +705,35 @@ var Reporting = class Reporting extends Control {
     getContainer () {
         return this.container;
     }
+
+    /**
+     * Returns true if widget is collapsed (minimized), false otherwise
+     *
+     * @returns {Boolean} collapsed - true if widget is collapsed
+     */
+    getCollapsed () {
+        return this.collapsed;
+    }
+
+    /**
+     * Collapse or display widget main container
+     *
+     * @param {Boolean} collapsed - True to collapse widget, False to display it
+     */
+    setCollapsed (collapsed) {
+        if (collapsed === undefined) {
+            return;
+        }
+        if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
+            return;
+        }
+        if (collapsed) {
+            this.buttonReportingClose.click();
+        } else {
+            this.buttonReportingShow.click();
+        }
+        this.collapsed = collapsed;
+    }
     // ################################################################### //
     // ##################### public methods IoC ########################## //
     // ################################################################### //
