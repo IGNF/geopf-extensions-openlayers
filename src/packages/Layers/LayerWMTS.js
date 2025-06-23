@@ -1,5 +1,8 @@
 // import openlayers
-import { get as olGetProj } from "ol/proj";
+import { 
+    get as olGetProj,
+    transformExtent as olTransformExtentProj
+} from "ol/proj";
 import TileLayer from "ol/layer/Tile";
 // import local
 import Utils from "../Utils/Helper";
@@ -319,7 +322,7 @@ var LayerWMTS = class LayerWMTS extends TileLayer {
                     layerCfg.globalConstraint.bbox.right,
                     layerCfg.globalConstraint.bbox.top
                 ];
-                layerTileOptions.extent = ol.proj.transformExtent(geobbox, "EPSG:4326", layerCfg.globalConstraint.projection || "EPSG:3857");
+                layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", layerCfg.globalConstraint.projection || "EPSG:3857");
                 
                 // récupération des résolutions min et max
                 var p;

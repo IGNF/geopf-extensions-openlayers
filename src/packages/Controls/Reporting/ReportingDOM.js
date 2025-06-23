@@ -288,9 +288,7 @@ var ReportingDOM = {
             </label>  
             <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme">
                 <option value="" selected disabled >Sélectionner une option</option>
-                ${thematics.map((theme) => {
-                    return `<option value="${theme}">${theme}</option>`;
-                }).join("")}  
+                ${thematics.map((theme) => { return `<option value="${theme}">${theme}</option>`; }).join("")}  
             </select>
         </div>
         `;

@@ -156,7 +156,7 @@ class InputActionByDefaut {
      * When a single click occurs, it triggers the handler method to capture the coordinates.
      */
     active () {
-        this.#addEventsListeners();
+        this._addEventsListeners();
     }
     /**
      * Disable the action by removing event listeners
@@ -165,27 +165,27 @@ class InputActionByDefaut {
      * This method removes the event listeners that were added during activation.
      */
     disable () {
-        this.#removeEventsListeners();
+        this._removeEventsListeners();
     }
 
     // ######################################################## //
     // ######################### privates ##################### //
 
-    #addEventsListeners () {
+    _addEventsListeners () {
         logger.info("InputActionByDefaut active");
         if (!this.map) {
             return;
         }
-        this.listener = this.map.on("singleclick", this.#handler.bind(this));
+        this.listener = this.map.on("singleclick", this._handler.bind(this));
     }
-    #removeEventsListeners () {
+    _removeEventsListeners () {
         logger.info("InputActionByDefaut disable");
         if (!this.map) {
             return;
         }
         olObservableUnByKey(this.listener);
     }
-    #handler (e) {
+    _handler (e) {
         logger.info("InputActionByDefaut handler", e);
         if (!this.map) {
             return;
@@ -226,7 +226,7 @@ class FormActionByDefaut {
      */
     active () {
         logger.info("FormActionByDefaut active");
-        this.#addEventsListeners();
+        this._addEventsListeners();
     }
     /**
      * Disable the action by removing event listeners
@@ -282,10 +282,10 @@ class FormActionByDefaut {
     // ######################################################## //
     // ######################### privates ##################### //
 
-    #addEventsListeners () {
-        this.form.addEventListener("submit", this.#handler.bind(this), {once : true});
+    _addEventsListeners () {
+        this.form.addEventListener("submit", this._handler.bind(this), {once : true});
     }
-    #handler (e) {
+    _handler (e) {
         logger.info("FormActionByDefaut handler", e);
         e.preventDefault();
         // on récupère les données du formulaire
@@ -343,7 +343,7 @@ class DrawingActionByDefaut {
     active () {
         logger.info("ServiceActionByDefaut active");
         if (!this.Drawing) {
-            this.#initializeDrawing();
+            this._initializeDrawing();
         }
         // this.DrawingBtn.setAttribute("aria-pressed", true);
         this.Drawing.setCollapsed(false);
@@ -457,7 +457,7 @@ class DrawingActionByDefaut {
     // ######################################################## //
     // ######################### privates ##################### //
 
-    #initializeDrawing () {
+    _initializeDrawing () {
         logger.info("DrawingActionByDefaut initializeDrawing");
         if (!this.map) {
             return;
@@ -656,7 +656,7 @@ var Reporting = class Reporting extends Control {
 
             // on initialise les actions IoC
             // (Input, Form, Service)
-            this.#setComponents(map);
+            this._setComponents(map);
 
             // mode "draggable"
             if (this.draggable) {
@@ -673,13 +673,13 @@ var Reporting = class Reporting extends Control {
 
             // ajout des evenements sur la carte
             if (this.auto) {
-                this.#addEventsListeners(map);
+                this._addEventsListeners(map);
             }
         } else {
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
             if (this.auto) {
-                this.#removeEventsListeners();
+                this._removeEventsListeners();
             }
         }
 
@@ -697,11 +697,27 @@ var Reporting = class Reporting extends Control {
         }
     }
 
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
     // ################################################################### //
     // ##################### public methods IoC ########################## //
     // ################################################################### //
 
-    #setComponents (map) {
+    /**
+     * Set the components for the Reporting control.
+     * @private
+     * @param {ol.Map} map - The OpenLayers map instance to set for the components.
+     * @description
+     * This method initializes the IoC (Inversion of Control) components for the Reporting control.
+     * It sets up the input, form, service, and drawing actions by creating instances of the respective classes.
+     */
+    _setComponents (map) {
         // on initialise les actions IoC
         if (!this.iocInput) {
             this.iocInput = new InputActionByDefaut();
@@ -929,7 +945,7 @@ var Reporting = class Reporting extends Control {
      * @param {*} map - map
      * @private
      */
-    #addEventsListeners (map) {
+    _addEventsListeners (map) {
         var self = this;
         this.eventsListeners["custom:action"] = function (e) {
             logger.trace(e);
@@ -942,7 +958,7 @@ var Reporting = class Reporting extends Control {
      * Remove events listener on map (called by setMap)
      * @private
      */
-    #removeEventsListeners () {
+    _removeEventsListeners () {
         var map = this.getMap();
         map.getLayers().un("some:event", this.eventsListeners["custom:action"]);
         delete this.eventsListeners["custom:action"];
