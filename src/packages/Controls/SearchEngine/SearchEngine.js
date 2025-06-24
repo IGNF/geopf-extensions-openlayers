@@ -1906,17 +1906,17 @@ var SearchEngine = class SearchEngine extends Control {
             // appel du service (cf. abonnement : Search.target.addEventListener("suggest"))
             Search.suggest(value);
         }
-
+        var context = this;
         var map = this.getMap();
-        map.on(
-            "click",
-            this._hideSuggestedLocation,
-            this
+        map.once(
+            "click", function () {
+                context._hideSuggestedLocation();
+            }
         );
-        map.on(
-            "pointerdrag",
-            this._hideSuggestedLocation,
-            this
+        map.once(
+            "pointerdrag", function () {
+                context._hideSuggestedLocation();
+            }
         );
     }
 
