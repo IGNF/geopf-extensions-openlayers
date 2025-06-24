@@ -185,11 +185,18 @@ var SearchEngineDOM = {
             // on récupère la valeur de saisie pour requête sur le service d'autocompletion
             self.onAutoCompleteSearchText(e);
         });
-
-        // FIXME ce code interfere avec le click sur la liste des suggested locations !
-        // input.addEventListener("blur", function (e) {
-        //     document.getElementById(self._addUID("GPautoCompleteList")).style.display = "none";
-        // });
+        var lastFocusedElement = null;
+        document.addEventListener("pointerdown", function (e) {
+            // Save the last focused element
+            lastFocusedElement = e.target;
+        });
+        input.addEventListener("blur", function (e) {
+            // si le clic n'est pas sur une proposition de la liste d'autocompletion, on cache la liste
+            if (!lastFocusedElement.classList.contains("GPautoCompleteProposal")) {
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
+                document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
+            }
+        });
 
         input.addEventListener("keydown", function (e) {
             // FIXME
@@ -1413,7 +1420,6 @@ var SearchEngineDOM = {
                 input.title += " géographiques (en sexa)";
                 input.className = "GPelementHidden gpf-hidden";
                 return this._setCoordinateSearchLngDMSElement();
-                break;
             case "DEC":
                 input.title += " géographiques (en decimal)";
                 input.min = "-180";
@@ -1521,7 +1527,6 @@ var SearchEngineDOM = {
                 input.title += " géographiques (en sexa)";
                 input.className = "GPelementHidden gpf-hidden";
                 return this._setCoordinateSearchLatDMSElement();
-                break;
             case "DEC":
                 input.title += " géographiques (en decimal)";
                 input.min = "-180";

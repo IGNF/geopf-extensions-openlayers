@@ -32,6 +32,7 @@ __DATE__
   - Drawing: Prise en compte de l'option layerDescription (#380)
   - LayerSwitcher : passage en noir et balnc sur des tuiles vecteru après changement de style (#382)
   - Profil alti : les pentes sont mal calculées (#385)
+  - Search : la fenêtre de résultats se ferme à l aperte du focus (#391)
 
 * 🔒 [Security]
 
