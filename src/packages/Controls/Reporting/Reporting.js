@@ -165,6 +165,10 @@ class InputActionByDefaut {
             olObservableUnByKey(this.listener);
             this.listener = null;
         }
+        if (this.marker != null) {
+            this.map.removeOverlay(this.marker);
+            this.marker = null;
+        }
     }
     /**
      * Activate the action by adding event listeners

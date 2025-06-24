@@ -77,6 +77,10 @@ class MyInputAction {
             ol.Observable.unByKey(this.listener);
             this.listener = null;
         }
+        if (this.marker != null) {
+            this.map.removeOverlay(this.marker);
+            this.marker = null;
+        }
     }
     active () {
         this.#addEventsListeners();
