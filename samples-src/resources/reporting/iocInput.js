@@ -15,7 +15,9 @@ class MyInputAction {
         this.data = null;
         this.coordinate = null;
         this.listener = null;
-    }
+        this.marker = null;
+        this.icon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAzNiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjMDAwMDkxIiBkPSJNMTguMzY0IDMuNjM2YTkgOSAwIDAgMSAwIDEyLjcyOEwxMiAyMi43MjhsLTYuMzY0LTYuMzY0QTkgOSAwIDAgMSAxOC4zNjQgMy42MzZaTTEyIDhhMiAyIDAgMSAwIDAgNCAyIDIgMCAwIDAgMC00WiIvPjwvc3ZnPg==";
+}
 
     // ######################################################## //
     // ########################## API ######################### //
@@ -23,6 +25,12 @@ class MyInputAction {
     setMap (map) {
         console.info("MyInputAction map");
         this.map = map;
+    }
+    setIcon (icon) {
+        console.info("MyInputAction icon");
+        if (icon) {
+            this.icon = icon;
+        }
     }
     getData () {
         console.info("MyInputAction data");
@@ -104,6 +112,21 @@ class MyInputAction {
         var crs = view.getProjection();
         var coordinate = view.getCenter();
         this.coordinate = ol.proj.transform(coordinate, crs, "EPSG:4326");
+        // on supprime le marqueur précédent
+        if (this.marker != null) {
+            this.map.removeOverlay(this.marker);
+            this.marker = null;
+        }
+        // on ajoute un marqueur sur la carte
+        var markerDiv = document.createElement("img");
+        markerDiv.src = this.icon;
+        this.marker = new ol.Overlay({
+            position : coordinate,
+            positioning : "center-center",
+            element : markerDiv,
+            stopEvent : false
+        });
+        this.map.addOverlay(this.marker);
     }
 }
 

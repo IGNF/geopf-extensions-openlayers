@@ -93,7 +93,8 @@
             // Ajout du contrôle de signalement des couches
             reporting = new ol.control.Reporting({
                 collapsed: false,
-                position: "top-right"
+                position: "top-right",
+                icon: "https://img.icons8.com/forma-bold-filled/24/12B886/marker.png"
             });
             reporting.setComponentInput(new MyInputAction());
             map.addControl(reporting);

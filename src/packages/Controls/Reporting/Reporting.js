@@ -5,6 +5,7 @@ import "../../CSS/Controls/Reporting/GPFreporting.css";
 import Control from "../Control";
 import Widget from "../Widget";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
+import Overlay from "ol/Overlay";
 
 // import local
 import Utils from "../../Utils/Helper";
@@ -44,6 +45,7 @@ class InputActionByDefaut {
         this.data = null;
         this.coordinate = null;
         this.listener = null;
+        this.icon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAzNiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjMDAwMDkxIiBkPSJNMTguMzY0IDMuNjM2YTkgOSAwIDAgMSAwIDEyLjcyOEwxMiAyMi43MjhsLTYuMzY0LTYuMzY0QTkgOSAwIDAgMSAxOC4zNjQgMy42MzZaTTEyIDhhMiAyIDAgMSAwIDAgNCAyIDIgMCAwIDAgMC00WiIvPjwvc3ZnPg==";
     }
 
     // ######################################################## //
@@ -51,11 +53,27 @@ class InputActionByDefaut {
 
     /**
      * Set the map for this action
+     * @api
      * @param {ol.Map} map - Map.
      */
     setMap (map) {
         logger.info("InputActionByDefaut map");
         this.map = map;
+    }
+    /**
+     * Set the icon for this action
+     * @api
+     * @param {String} icon - Icon URL or base64 encoded string.
+     * @description
+     * This method sets the icon for the input action.
+     * It updates the icon property with the provided value.
+     * If the icon is not provided, it defaults to a base64 encoded SVG string.
+     */
+    setIcon (icon) {
+        logger.info("InputActionByDefaut icon");
+        if (icon) {
+            this.icon = icon;
+        }
     }
     /**
      * Get the data for this action
@@ -191,6 +209,21 @@ class InputActionByDefaut {
             return;
         }
         this.coordinate = e.coordinate;
+        // on supprime le marqueur précédent
+        if (this.marker != null) {
+            this.map.removeOverlay(this.marker);
+            this.marker = null;
+        }
+        // on ajoute un marqueur sur la carte
+        var markerDiv = document.createElement("img");
+        markerDiv.src = this.icon;
+        this.marker = new Overlay({
+            position : this.coordinate,
+            positioning : "center-center",
+            element : markerDiv,
+            stopEvent : false
+        });
+        this.map.addOverlay(this.marker);
     }
 
 }
@@ -238,6 +271,11 @@ class FormActionByDefaut {
     disable () {
         logger.info("FormActionByDefaut disable");
     }
+    /**
+     * Set the form for this action
+     * @api
+     * @param {*} form 
+     */
     setForm (form) {
         logger.info("FormActionByDefaut form");
         this.form = form;
@@ -420,6 +458,7 @@ class DrawingActionByDefaut {
     }
     /**
      * Set the map for this action
+     * @api
      * @param {ol.Map} map - Map.
      * @description
      * This method sets the map instance for the Drawing action.
@@ -433,6 +472,7 @@ class DrawingActionByDefaut {
     }
     /**
      * Set the target DOM element for the Drawing action
+     * @api
      * @param {DOMElement} dom - The DOM element to set as the target for the Drawing action.
      */
     setTarget (dom) {
@@ -445,6 +485,7 @@ class DrawingActionByDefaut {
     }
     /**
      * Set the format for exporting drawings
+     * @api
      * @param {String} format - The format to set for exporting drawings.
      */
     setFormat (format) {
@@ -534,9 +575,9 @@ class ServiceActionByDefaut {
     }
     /**
      * Send data to the service
+     * @api
      * @param {Object} data - Data to send.
      * @returns {Promise} - A promise that resolves when the data is sent.
-     * @api
      * @description
      * This method is intended to send data to a service.
      * It currently throws an error indicating that the method is not implemented.
@@ -602,6 +643,7 @@ var Reporting = class Reporting extends Control {
      * @param {Boolean} [options.auto=true] - specify if control add some stuff auto
      * @param {Array} [options.thematics] - specify the list of thematics
      * @param {String} [options.format="geojson"] - specify the format for export (default: "geojson")
+     * @param {String} [options.icon] - specify the icon for point entry (default: base64 encoded SVG)
      * @param {DOMElement} [options.element] - specify the DOM element to append the control
      * @param {String} [options.target] - specify the target element to append the control
      * @param {Function} [options.render] - specify the render function
@@ -752,6 +794,7 @@ var Reporting = class Reporting extends Control {
             this.iocInput = new InputActionByDefaut();
         }
         this.iocInput.setMap(map);
+        this.iocInput.setIcon(this.options.icon || null);
 
         if (!this.iocForm) {
             this.iocForm = new FormActionByDefaut();
