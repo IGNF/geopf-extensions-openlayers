@@ -185,10 +185,14 @@ var SearchEngineDOM = {
             // on récupère la valeur de saisie pour requête sur le service d'autocompletion
             self.onAutoCompleteSearchText(e);
         });
-
+        var lastFocusedElement = null;
+        document.addEventListener("pointerdown", function (e) {
+            // Save the last focused element
+            lastFocusedElement = e.target;
+        });
         input.addEventListener("blur", function (e) {
             // si le clic n'est pas sur une proposition de la liste d'autocompletion, on cache la liste
-            if (!e.explicitOriginalTarget.classList.contains("GPautoCompleteProposal")) {
+            if (!lastFocusedElement.classList.contains("GPautoCompleteProposal")) {
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("GPelementVisible", "GPelementHidden");
                 document.getElementById(self._addUID("GPautoCompleteList")).classList.replace("gpf-visible", "gpf-hidden");
             }
