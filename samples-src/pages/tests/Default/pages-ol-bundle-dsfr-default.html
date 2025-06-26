@@ -50,6 +50,11 @@
                   position : "top-left"
                 });
                 map.addControl(catalog);
+
+                var reporting = new ol.control.Reporting({
+                  position : "top-left"
+                });
+                map.addControl(reporting);
                 
                 var zoom = new ol.control.GeoportalZoom({
                   position : "bottom-left"
