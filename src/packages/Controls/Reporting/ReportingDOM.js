@@ -177,11 +177,12 @@ var ReportingDOM = {
      * @todo
      */
     _createReportingPanelFooterElement : function () {
-        var self = this;
-
         var container = document.createElement("div");
         container.className = "gpf-panel__footer fr-modal__footer gpf-panel__footer_reporting gpf-visible";
-
+        return container;
+    },
+    _createReportingButtonAnnulerFooterElement : function () {
+        var self = this;
         var btnAnnuler = document.createElement("button");
         btnAnnuler.className = "gpf-btn gpf-btn--tertiary gpf-btn-icon-annuler fr-btn fr-btn--tertiary fr-m-1w";
         btnAnnuler.title = "Annuler";
@@ -196,8 +197,10 @@ var ReportingDOM = {
                 self.onCancelReportingClick(e);
             });
         }
-        container.appendChild(btnAnnuler);
-
+        return btnAnnuler;
+    },
+    _createReportingButtonSuivantFooterElement : function () {
+        var self = this;
         var btnSuivant = document.createElement("button");
         btnSuivant.className = "gpf-btn gpf-btn--primary gpf-btn-icon-suivant fr-btn fr-btn--primary fr-m-1w";
         btnSuivant.title = "Suivant";
@@ -212,9 +215,7 @@ var ReportingDOM = {
                 self.onNextReportingClick(e);
             });
         }
-        container.appendChild(btnSuivant);
-
-        return container;
+        return btnSuivant;
     },
     // ################################################################### //
     // ############################# windows ############################# //

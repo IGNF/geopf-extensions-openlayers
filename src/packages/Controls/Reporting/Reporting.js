@@ -41,7 +41,7 @@ class InputActionByDefaut {
      */
     constructor (map /* optionnel !!! */) {
         logger.info("InputActionByDefaut constructor");
-        this.map = map || null;
+        this.map = map || null; // will be set by the IoC
         this.data = null;
         this.coordinate = null;
         this.listener = null;
@@ -385,9 +385,10 @@ class DrawingActionByDefaut {
         this.format = "geojson"; // default format for export
         this.map = map || null; // will be set by the IoC
         this.dom = null; // will be set by the IoC
-        this.Drawing = null; // will be set by the IoC
-        this.DrawingBtn = null; // will be set by the IoC;
-        this.DrawingPanel = null; // will be set by the IoC
+        // containers
+        this.Drawing = null; // widget
+        this.DrawingBtn = null; // bouton picto
+        this.DrawingPanel = null; // panneau
     }
     /**
      * Activate the action by adding event listeners
@@ -906,6 +907,8 @@ var Reporting = class Reporting extends Control {
         this.panelReportingContainer = null;
         this.panelReportingHeaderContainer = null; // usefull for the dragNdrop
         this.panelReportingFooterContainer = null;
+        this.reportingBtnAnnulerFooter = null;
+        this.reportingBtnSuivantFooter = null;
         this.buttonReportingClose = null;
         this.divReportingTitle = null;
 
@@ -1002,6 +1005,10 @@ var Reporting = class Reporting extends Control {
         
         // footer
         var reportingPanelFooter = this.panelReportingFooterContainer = this._createReportingPanelFooterElement();
+        var BtnAnnulerFooter = this.reportingBtnAnnulerFooter = this._createReportingButtonAnnulerFooterElement();
+        var BtnSuivantFooter = this.reportingBtnSuivantFooter = this._createReportingButtonSuivantFooterElement();
+        reportingPanelFooter.appendChild(BtnAnnulerFooter);
+        reportingPanelFooter.appendChild(BtnSuivantFooter);
 
         // step container for the custom code
         var input = this.inputReportingContainer = this._createReportingPanelInputElement();
@@ -1104,6 +1111,8 @@ var Reporting = class Reporting extends Control {
         this.divReportingTitle.innerHTML = this.stepContainer[num].name;
         // on modifie l'affichage du footer
         this.panelReportingFooterContainer.style.display = (this.stepContainer[num].footer) ? "flex" : "none";
+        this.reportingBtnAnnulerFooter.style.display = (this.stepContainer[num].prev === -1) ? "none" : "flex";
+        this.reportingBtnSuivantFooter.style.display = (this.stepContainer[num].next === -1) ? "none" : "flex";
     }
 
     /**
