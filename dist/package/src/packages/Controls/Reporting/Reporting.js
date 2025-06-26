@@ -1185,6 +1185,30 @@ var Reporting = class Reporting extends Control {
         }
     }
 
+    clear () {
+        // on reinitialise les panneaux par defaut et on desactive les actions IoC
+        for (let index = 0; index < this.stepContainer.length; index++) {
+            const element = this.stepContainer[index].container;
+            element.classList.replace("gpf-visible", "gpf-hidden");
+            var action = this.stepContainer[index].action;
+            if (action) {
+                action.disable();
+                action.clear();
+            }
+        }
+        // on supprime la couche de signalement
+        // créée par l'outil de dessin
+        var drawing =  this.iocDrawing.Drawing;
+        if (drawing) {
+            var layer = drawing.getLayer();
+            var map = this.getMap();
+            if (layer) {
+                map.removeLayer(layer);
+                drawing.setLayer();
+            }
+        }
+        this.setStep(0);
+    }
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
@@ -1244,6 +1268,7 @@ var Reporting = class Reporting extends Control {
      */
     onCloseReportingClick (e) {
         logger.trace("onCloseReportingClick", e);
+        this.clear();
     }
 
     /**
@@ -1252,16 +1277,7 @@ var Reporting = class Reporting extends Control {
      */
     onCancelReportingClick (e) {
         logger.trace("onCancelReportingClick", e);
-        this.setStep(0);
-        // on supprime la couche de signalement
-        // créée par l'outil de dessin
-        var drawing =  this.iocDrawing.Drawing;
-        var layer = drawing.getLayer();
-        var map = this.getMap();
-        if (layer) {
-            map.removeLayer(layer);
-            drawing.setLayer();
-        }
+        this.clear();
     }
 
     // ######################################### //
