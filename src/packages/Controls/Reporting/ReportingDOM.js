@@ -276,7 +276,7 @@ var ReportingDOM = {
         var divName = `
         <div class="fr-input-group">
             <label class="gpf-label fr-label" for="${idName}">Nom (obligatoire)</label>
-            <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName">
+            <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName" required>
         </div>
         `;
 
@@ -286,7 +286,7 @@ var ReportingDOM = {
             <label class="gpf-label fr-label" for="${idTheme}">
                 Objet du signalement (obligatoire)  
             </label>  
-            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme">
+            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme" required>
                 <option value="" selected disabled >Sélectionner une option</option>
                 ${thematics.map((theme) => { return `<option value="${theme}">${theme}</option>`; }).join("")}  
             </select>
@@ -299,7 +299,7 @@ var ReportingDOM = {
             <label class="gpf-label fr-label" for="${idDesc}">      
                 Description (obligatoire)    
             </label>    
-            <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc"></textarea>
+            <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc" required></textarea>
         </div>
         `;
 
@@ -313,10 +313,15 @@ var ReportingDOM = {
         `;
 
         var strContainer = `
+        <fieldset class="fr-fieldset" id="GPreportingFormFieldset" role="group" aria-labelledby="GPreportingFormFieldsetMessages">
             ${divName}
             ${divTheme}
             ${divDesc}
+            <div class="fr-messages-group gpf-hidden" id="GPreportingFormFieldsetMessages" aria-live="polite">
+                <p class="fr-message fr-message--error" id="GPreportingFormFieldsetMessage">Les champs sont obligatoires</p>
+            </div>
             ${divBtn}
+        </fieldset>
         `;
         var container = stringToHTML(strContainer);
 

@@ -30,3 +30,11 @@ dialog[id^="GPreportingPanel-"] {
 form[id^=GPreportingForm] {
     padding: 15px;
 }
+
+#GPreportingFormFieldset {
+    margin: unset;
+    padding-left: 10px;
+    display: block;
+}
+#GPreportingFormFieldsetMessages {}
+#GPreportingFormFieldsetMessage {}

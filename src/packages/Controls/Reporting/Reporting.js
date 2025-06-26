@@ -116,6 +116,9 @@ class InputActionByDefaut {
     getData () {
         logger.info("InputActionByDefaut data");
         var projection = this.map.getView().getProjection();
+        if (!this.coordinate) {
+            this.coordinate = this.map.getView().getCenter();
+        }
         var geometry = {
             type : "FeatureCollection",
             crs : {
@@ -252,7 +255,9 @@ class FormActionByDefaut {
         logger.info("FormActionByDefaut constructor");
         this.data = null;
         this.form = null; // will be set by the IoC
-        this.submit = null; // will be set by the IoC
+        this.submit = null;
+        this.error = null;
+        this.message = null;
     }
     /**
      * Activate the action by adding event listeners
@@ -284,6 +289,8 @@ class FormActionByDefaut {
         logger.info("FormActionByDefaut form");
         this.form = form;
         this.submit = this.form.querySelector("input[type=\"submit\"]");
+        this.error = this.form.querySelector("#GPreportingFormFieldset");
+        this.message = this.form.querySelector("#GPreportingFormFieldsetMessages");
     }
     /**
      * Get the data for this action
@@ -306,7 +313,14 @@ class FormActionByDefaut {
     getData () {
         logger.info("FormActionByDefaut data");
         this.submit.click(); // simulate form submission
-        return this.data || {};
+        if (!this.data) {
+            this.error.classList.add("fr-fieldset--error");
+            this.message.classList.replace("gpf-hidden", "gpf-visible");
+        } else {
+            this.error.classList.remove("fr-fieldset--error");
+            this.message.classList.replace("gpf-visible", "gpf-hidden");
+        }
+        return this.data;
     }
     /**
      * Clear the data and reset the form
@@ -332,14 +346,18 @@ class FormActionByDefaut {
         e.preventDefault();
         // on récupère les données du formulaire
         var formData = new FormData(e.target);
-        // TODO
-        // rendre plus dynamique
-        // on transforme les données du formulaire en objet 
-        this.data = {
-            name : formData.get("GPreportingLabelName"),
-            desc : formData.get("GPreportingTextDesc"),
-            theme : formData.get("GPreportingSelectTheme")
-        };
+        var name = formData.get("GPreportingLabelName");
+        var desc = formData.get("GPreportingTextDesc");
+        var theme = formData.get("GPreportingSelectTheme");
+        // on transforme les données du formulaire en objet
+        if (name && desc && theme) {
+            this.data = {
+                name : name,
+                desc : desc,
+                theme : theme
+            };
+        }
+        return false;
     }
 
 }
@@ -1107,6 +1125,10 @@ var Reporting = class Reporting extends Control {
             if (action) {
                 // on récupère les données de l'action IoC courrante
                 var data = action.getData();
+                // si les données sont vides, on ne va pas plus loin !
+                if (!data) {
+                    return;
+                }
                 logger.trace("Reporting nextStep", data);
                 this.data = Object.assign({}, this.data, data);
                 // puis, on desactive l'action IoC courrante
@@ -1222,6 +1244,15 @@ var Reporting = class Reporting extends Control {
     onCancelReportingClick (e) {
         logger.trace("onCancelReportingClick", e);
         this.setStep(0);
+        // on supprime la couche de signalement
+        // créée par l'outil de dessin
+        var drawing =  this.iocDrawing.Drawing;
+        var layer = drawing.getLayer();
+        var map = this.getMap();
+        if (layer) {
+            map.removeLayer(layer);
+            drawing.setLayer();
+        }
     }
 
     // ######################################### //
@@ -1306,6 +1337,13 @@ var Reporting = class Reporting extends Control {
             .then(() => {
                 // clear data after sending
                 this.data = null;
+                var drawing =  this.iocDrawing.Drawing;
+                var layer = drawing.getLayer();
+                var map = this.getMap();
+                if (layer) {
+                    map.removeLayer(layer);
+                    drawing.setLayer();
+                }
             })
             .then(() => {
                 // FIXME ?
