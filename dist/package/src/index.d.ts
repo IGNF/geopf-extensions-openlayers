@@ -35,6 +35,7 @@ export { default as Catalog } from "./packages/Controls/Catalog/Catalog";
 export { default as Territories } from "./packages/Controls/Territories/Territories";
 export { default as ControlList } from "./packages/Controls/ControlList/ControlList";
 export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextMenu";
+export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
 export { default as EditorStyle } from "./packages/Controls/Editor/Style";
 export { default as EditorFilter } from "./packages/Controls/Editor/Filter";
 export { default as EditorLayer } from "./packages/Controls/Editor/Layer";
