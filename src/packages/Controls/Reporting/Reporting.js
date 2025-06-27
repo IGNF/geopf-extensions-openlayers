@@ -559,6 +559,7 @@ class DrawingActionByDefaut {
             panel.style.top = "0px";
             panel.style.bottom = "unset";
             panel.style.right = "unset";
+            panel.style.margin = "auto";
         }
 
         var header = container.querySelector(".gpf-panel__header");
