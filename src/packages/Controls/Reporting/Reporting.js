@@ -1208,7 +1208,6 @@ var Reporting = class Reporting extends Control {
                 drawing.setLayer();
             }
         }
-        this.setStep(0);
     }
     // ################################################################### //
     // ######################## event dom ################################ //
@@ -1228,10 +1227,10 @@ var Reporting = class Reporting extends Control {
         this.dispatchEvent("change:collapsed");
 
         if (this.collapsed) {
-            this.iocInput.disable();
+            this.clear();
         } else {
-            // FIXME doit on revenir à la 1ére étape ?
-            this.iocInput.active();
+            // doit on revenir à la 1ére étape ?
+            this.setStep(0);
             /**
              * event triggered when the reporting panel is opened
              * @event reporting:opened
@@ -1279,6 +1278,7 @@ var Reporting = class Reporting extends Control {
     onCancelReportingClick (e) {
         logger.trace("onCancelReportingClick", e);
         this.clear();
+        this.setStep(0);
     }
 
     // ######################################### //
