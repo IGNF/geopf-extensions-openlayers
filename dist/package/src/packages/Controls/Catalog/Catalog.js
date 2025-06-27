@@ -427,8 +427,9 @@ var Catalog = class Catalog extends Control {
             configuration : {
                 type : "json", // TODO type:"service"
                 urls : [ // data:{}
-                    "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
-                    "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
+                    // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+                    // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json",
+                    "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/entreeCarto.json"
                 ]
             }
         };
