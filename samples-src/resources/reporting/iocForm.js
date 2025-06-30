@@ -70,7 +70,7 @@ class MyFormAction {
         var label = document.createElement("label");
         label.setAttribute("for", "GPreportingLabelTitle");
         label.className = "gpf-label fr-label";
-        label.textContent = "Titre du signalement";
+        label.textContent = "Nom du signalement";
         div.appendChild(label);
 
         var input = document.createElement("input");
@@ -78,7 +78,7 @@ class MyFormAction {
         input.id = "GPreportingLabelTitle";
         input.name = "GPreportingLabelTitle";
         input.className = "gpf-input fr-input",
-        input.placeholder = "Titre du signalement";
+        input.placeholder = "Nom du signalement";
         div.appendChild(input);
 
         this.form.replaceChild(div, this.form.firstChild);
