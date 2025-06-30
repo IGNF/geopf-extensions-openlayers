@@ -276,7 +276,7 @@ var ReportingDOM = {
         var idName = this._addUID("GPreportingFormLabelName");
         var divName = `
         <div class="fr-input-group">
-            <label class="gpf-label fr-label" for="${idName}">Nom (obligatoire)</label>
+            <label class="gpf-label fr-label" for="${idName}">Titre (obligatoire)</label>
             <input class="gpf-input fr-input" type="text" id="${idName}" name="GPreportingLabelName" required>
         </div>
         `;
