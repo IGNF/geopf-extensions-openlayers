@@ -47,7 +47,6 @@ var logger = Logger.getLogger("widget");
  *           titlePrimary : "",
  *           titleSecondary : "Gérer vos couches de données",
  *           layerLabel : "title",
- *           layerFilter : [],
  *           search : {
  *               display : true,
  *               criteria : [
@@ -77,7 +76,7 @@ var logger = Logger.getLogger("widget");
  *               }
  *           ],
  *           configuration : {
- *               type : "json", // type:"service"
+ *               type : "json",
  *               urls : [ // data:{}
  *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
  *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
@@ -90,7 +89,6 @@ var logger = Logger.getLogger("widget");
  * map.addControl(widget);
  *
  * @todo filtrage des couches
- * @todo type:service
  * @todo validation du schema
  */
 var Catalog = class Catalog extends Control {
@@ -111,7 +109,6 @@ var Catalog = class Catalog extends Control {
      *           titlePrimary : "",
      *           titleSecondary : "Gérer vos couches de données",
      *           layerLabel : "title",
-     *           layerFilter : [],
      *           search : {
      *               display : true,
      *               criteria : [
@@ -291,6 +288,8 @@ var Catalog = class Catalog extends Control {
         if (element) {
             element.remove();
         }
+        // on reordonne la liste
+        this.layersList.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
         // on va recréer le container
         this.createCatalogContentEntries(this.layersList);
     }
@@ -393,7 +392,6 @@ var Catalog = class Catalog extends Control {
             titlePrimary : "Gérer vos couches de données",
             titleSecondary : "",
             layerLabel : "title",
-            layerFilter : [], // TODO filtre
             search : {
                 display : true,
                 criteria : [
@@ -475,7 +473,7 @@ var Catalog = class Catalog extends Control {
          * @see [schema](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json)
          * @see [jsdoc](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc)
          */
-        this.layersList = [];
+        this.layersList = {};
 
         /**
          * specify all categories
@@ -616,20 +614,8 @@ var Catalog = class Catalog extends Control {
     async initLayersList () {
         var data = null; // reponse brute du service
 
-        // TODO filtre sur la liste de couches à prendre en compte
-        const getLayersByFilter = (filter, layers) => {
-            // INFO
-            // definir les filtres possibles :
-            // - sur un champ spécifique : ex field:"service"
-            // - sur des valeurs : ex. value:"[WMS,TMS,WMTS]" ou "*"
-            // - ...
-            return layers;
-        };
-
         if (this.options.configuration.data) {
             data = this.options.configuration.data || {};
-
-            // TODO gestion du type service
 
             if (Config.isConfigLoaded()) {
                 Utils.mergeParams(data, Config.configuration);
@@ -656,13 +642,10 @@ var Catalog = class Catalog extends Control {
                 }
             }
 
-            // on applique un filtre sur la liste des couches
-            var layers = getLayersByFilter(this.options.layerFilter, data.layers);
-
             // sauvegarde de la liste des couches
-            this.layersList = layers;
-
-            this.createCatalogContentEntries(layers);
+            this.layersList = data.layers;
+            
+            this.createCatalogContentEntries(data.layers);
             return new Promise((resolve, reject) => {
                 resolve(data);
             });
@@ -707,8 +690,6 @@ var Catalog = class Catalog extends Control {
                     Utils.mergeParams(data, value);
                 }
 
-                // TODO gestion du type service
-
                 if (Config.isConfigLoaded()) {
                     Utils.mergeParams(data, Config.configuration);
                 }
@@ -734,13 +715,10 @@ var Catalog = class Catalog extends Control {
                     }
                 }
 
-                // on applique un filtre sur la liste des couches
-                var layers = getLayersByFilter(this.options.layerFilter, data.layers);
-
                 // sauvegarde de la liste des couches
-                this.layersList = layers;
-
-                this.createCatalogContentEntries(layers);
+                this.layersList = data.layers;
+                
+                this.createCatalogContentEntries(data.layers);
                 return await new Promise((resolve, reject) => {
                     resolve(data);
                 });
