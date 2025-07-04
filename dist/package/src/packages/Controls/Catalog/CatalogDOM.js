@@ -414,7 +414,7 @@ var CatalogDOM = {
         return shadow;
     },
     _createCatalogContentCategoryTabContent : function (category, layersFiltered) {
-        var layers = Object.values(layersFiltered); // object -> array
+        var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
 
         var strElements = "";
         var tmplElement = (i, name, title, service, categoryId) => {
@@ -469,7 +469,7 @@ var CatalogDOM = {
             // on procède à un tri
             // ex. tri sur le champ 'thematic'
             layers = layers.sort((a, b) => {
-                return a[category.filter.field].localeCompare(b[category.filter.field]);
+                return a[category.filter.field][0].localeCompare(b[category.filter.field][0]);
             });
         }
 
@@ -482,7 +482,7 @@ var CatalogDOM = {
             //   sinon, on ecarte cette couche ou on la met dans la section "Autres"
             // - non, on ajoute directement la couche
             if (isSection) {
-                var title = layer[category.filter.field];
+                var title = layer[category.filter.field][0];
                 if (title) {
                     if (!sections.hasOwnProperty(title)) {
                         sections[title] = "";

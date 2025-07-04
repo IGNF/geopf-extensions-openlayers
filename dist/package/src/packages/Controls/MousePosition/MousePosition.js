@@ -1063,6 +1063,11 @@ var MousePosition = class MousePosition extends Control {
     onMouseMove (e) {
         var self = this;
 
+        const event = e.originalEvent || e;
+        if (this._panelMousePositionContainer.contains(event.target)) {
+            // Le curseur est sur le panneau, on ne fait rien
+            return;
+        }
         // info: coordinate = [x, y]
         var coordinate = e.coordinate;
         if (!e.map || !e.map.getView()) {

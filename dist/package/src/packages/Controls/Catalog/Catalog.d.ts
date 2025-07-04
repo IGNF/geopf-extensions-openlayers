@@ -22,7 +22,6 @@ export default Catalog;
  *           titlePrimary : "",
  *           titleSecondary : "Gérer vos couches de données",
  *           layerLabel : "title",
- *           layerFilter : [],
  *           search : {
  *               display : true,
  *               criteria : [
@@ -52,7 +51,7 @@ export default Catalog;
  *               }
  *           ],
  *           configuration : {
- *               type : "json", // type:"service"
+ *               type : "json",
  *               urls : [ // data:{}
  *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
  *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
@@ -65,7 +64,6 @@ export default Catalog;
  * map.addControl(widget);
  *
  * @todo filtrage des couches
- * @todo type:service
  * @todo validation du schema
  */
 declare var Catalog: ol.control.Catalog;
