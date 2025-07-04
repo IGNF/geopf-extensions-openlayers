@@ -289,7 +289,7 @@ var Catalog = class Catalog extends Control {
             element.remove();
         }
         // on reordonne la liste
-        this.layersList.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
+        this.layersList.sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" }));
         // on va recréer le container
         this.createCatalogContentEntries(this.layersList);
     }

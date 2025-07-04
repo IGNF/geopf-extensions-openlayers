@@ -414,7 +414,7 @@ var CatalogDOM = {
         return shadow;
     },
     _createCatalogContentCategoryTabContent : function (category, layersFiltered) {
-        var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' })); // object -> array
+        var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
 
         var strElements = "";
         var tmplElement = (i, name, title, service, categoryId) => {
