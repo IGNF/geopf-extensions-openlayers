@@ -460,9 +460,15 @@ var SearchEngineDOM = {
             document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("GPelementVisible", "GPelementHidden");
             document.getElementById(self._addUID("GPgeocodeResultsList")).classList.replace("gpf-visible", "gpf-hidden");
 
-            document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("GPelementVisible", "GPelementHidden");
-            document.getElementById(self._addUID("GPcoordinateSearchPanel")).classList.replace("gpf-visible", "gpf-hidden");
-            document.getElementById(self._addUID("GPshowSearchByCoordinate")).setAttribute("aria-pressed", false);
+            var panelCoordinate = document.getElementById(self._addUID("GPcoordinateSearchPanel"));
+            if (panelCoordinate) {
+                panelCoordinate.classList.replace("GPelementVisible", "GPelementHidden");
+                panelCoordinate.classList.replace("gpf-visible", "gpf-hidden");
+            }
+            var btnCoordinate = document.getElementById(self._addUID("GPshowSearchByCoordinate"));
+            if (btnCoordinate) {
+                btnCoordinate.setAttribute("aria-pressed", false);
+            }
         });
 
         return button;
