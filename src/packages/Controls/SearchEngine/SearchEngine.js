@@ -414,6 +414,7 @@ var SearchEngine = class SearchEngine extends Control {
         this._uid = this.options.id || SelectorID.generate();
 
         this._showSearchEngineButton = null;
+        this._showSearchEngineAdvancedButton = null;
 
         // container de l'input de recherche
         this._inputSearchContainer = null;
@@ -927,7 +928,7 @@ var SearchEngine = class SearchEngine extends Control {
         }
 
         if (this.options.displayButtonAdvancedSearch) {
-            var advancedShow = this._createShowAdvancedSearchElement();
+            var advancedShow = this._showSearchEngineAdvancedButton = this._createShowAdvancedSearchElement();
             buttonsContainer.appendChild(advancedShow);
 
             // INFO je decompose les appels car j'ai besoin de recuperer le container
@@ -2019,6 +2020,22 @@ var SearchEngine = class SearchEngine extends Control {
         if (this._displayMarker) {
             this._setMarker(position, info);
         }
+
+        var container = document.getElementById(this._addUID("GPautocompleteResults"));
+        // si aucun container !?
+        if (!container) {
+            return;
+        }
+        // on reinitialise l'ancienne proposition courrante d'autocompletion
+        var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine");
+        for (let index = 0; index < list.length; index++) {
+            const element = list[index];
+            element.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
+        }
+        // et, on definie la nouvelle selection de proposition d'autocompletion
+        var current = list[idx];
+        current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
+
         /**
          * event triggered when an element of the results is clicked for autocompletion
          *
@@ -2213,11 +2230,15 @@ var SearchEngine = class SearchEngine extends Control {
          * SearchEngine.on("searchengine:geocode:click", function (e) {
          *   console.log(e.location);
          * })
-         */
+        */
         this.dispatchEvent({
             type : "searchengine:geocode:click",
             location : this._geocodedLocations[idx]
         });
+        // on nettoie !
+        this._clearSuggestedLocation();
+        // on ferme le panneau de recherche avancée
+        this._showSearchEngineAdvancedButton.click();
     }
 
     // ################################################################### //

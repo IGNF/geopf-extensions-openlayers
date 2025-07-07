@@ -37,7 +37,8 @@ __DATE__
   - LayerSwitcher : le nom des couches se grise correctement quand la vue sort de son emprise (#390)
   - Search : la fenêtre de résultats se ferme à la perte du focus (#391)
   - MousePosition : désactivation de l'interaction mouseMove au survol de la fenêtre MousePosition (#395)
-
+  - SearchEngine : Nettoyage des réponses après une recherche avancée (#397)
+  
 * 🔒 [Security]
 
 
