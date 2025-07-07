@@ -19,7 +19,7 @@ __DATE__
   - LayerSwitcher : Ajout des méthodes publiques forget et listen pour (des)activer l'écouteur d'ajout de couche sur la carte (#389)
   - Reporting : Nouvel outil de signalement (#392)
   - LayerSwitcher : Ajout d'un menu selecteur de style pour les couches TMS (#377)
-
+  - Territories : Customisation du choix des entités du sélecteur (#398)
 
 * 🔨 [Changed]
 
