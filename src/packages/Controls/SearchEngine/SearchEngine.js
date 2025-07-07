@@ -2019,6 +2019,22 @@ var SearchEngine = class SearchEngine extends Control {
         if (this._displayMarker) {
             this._setMarker(position, info);
         }
+
+        var container = document.getElementById(this._addUID("GPautocompleteResults"));
+        // si aucun container !?
+        if (!container) {
+            return;
+        }
+        // on reinitialise l'ancienne proposition courrante d'autocompletion
+        var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine");
+        for (let index = 0; index < list.length; index++) {
+            const element = list[index];
+            element.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
+        }
+        // et, on definie la nouvelle selection de proposition d'autocompletion
+        var current = list[idx];
+        current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
+
         /**
          * event triggered when an element of the results is clicked for autocompletion
          *
@@ -2196,6 +2212,7 @@ var SearchEngine = class SearchEngine extends Control {
             // on retransforme les coordonnées de la position dans la projection de la carte
             position = olProjTransform(position, "EPSG:4326", mapProj);
         }
+        this._clearResults();
         // on centre la vue et positionne le marker, à la position reprojetée dans la projection de la carte
         var zoom = this._getZoom(this.options.zoomTo);
         this._setPosition(position, zoom);
