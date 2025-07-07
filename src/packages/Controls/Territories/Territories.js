@@ -4,7 +4,10 @@ import "../../CSS/Controls/Territories/GPFterritories.css";
 // import OpenLayers
 import Control from "../Control";
 import Widget from "../Widget";
-import { transformExtent as olTransformExtentProj } from "ol/proj";
+import { 
+    transformExtent as olTransformExtentProj,
+    transform as olTransformProj
+} from "ol/proj";
 
 // import local
 import Utils from "../../Utils/Helper";
@@ -108,12 +111,11 @@ var Territories = class Territories extends Control {
                 this.buttonTerritoriesShow.setAttribute("aria-pressed", true);
             }
 
-            // Ajout des territoires par defaut
-            if (this.auto) {
-                for (let index = 0; index < TerritoriesJson.length; index++) {
-                    const territory = TerritoriesJson[index];
-                    this.setTerritory(territory);
-                }
+            // Ajout des territoires par defaut ou customisés
+            var territories = (this.auto) ? TerritoriesJson : this.options.territories;
+            for (let index = 0; index < territories.length; index++) {
+                const territory = territories[index];
+                this.setTerritory(territory);
             }
         } else {
             // some stuff when remove widget
@@ -263,7 +265,7 @@ var Territories = class Territories extends Control {
             thumbnail : false, // imagette des territoires
             reduce : false, // tuiles reduites par defaut
             tiles : 3, // nombre de tuiles affichables, 0 = toutes !
-            territories : [] // TODO à spécifier...
+            territories : []
         };
 
         // merge with user options
@@ -283,7 +285,11 @@ var Territories = class Territories extends Control {
          * {
          *   dom : { HTMLelment },
          *   data : {
-         *     id: "MTQ", title: "Martinique", description: "", bbox: [minx, miny, maxx, maxy], thumbnail: "data:image/png;base64,..."
+         *     id: "MTQ",
+         *     title: "Martinique",
+         *     description: "", 
+         *     bbox: [minx, miny, maxx, maxy], 
+         *     thumbnail: "data:image/png;base64,..."
          *   }
          * }
          */
@@ -389,15 +395,25 @@ var Territories = class Territories extends Control {
         var territory = this.territories.find(e => e.data.id === id);
         if (territory) {
             var zoom = territory.data.zoom;
-            var bbox = territory.data.bbox || []; // left, bottom, right, top
-            if (!bbox.length) {
+            var bbox = territory.data.bbox; // [left, bottom, right, top]
+            var point = territory.data.point;
+            if (bbox && !bbox.length) {
+                return;
+            }
+            if (!point && !bbox) {
                 return;
             }
 
             var map = this.getMap();
             var proj = map.getView().getProjection().getCode();
-            var extent = olTransformExtentProj(bbox, "EPSG:4326", proj);
-            map.getView().fit(extent, map.getSize());
+            if (bbox) {
+                var extent = olTransformExtentProj(bbox, "EPSG:4326", proj);
+                map.getView().fit(extent, map.getSize());
+            }
+            if (point) {
+                var coord = olTransformProj(point, "EPSG:4326", proj);
+                map.getView().setCenter(coord);
+            }
             if (zoom) {
                 map.getView().setZoom(zoom);
             }

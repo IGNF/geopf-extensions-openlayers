@@ -198,7 +198,7 @@ var TerritoriesDOM = {
                     </div>
                     <div class="fr-tile__pictogram fr-tile__icon fr-tile__icon--${id}">
                         <svg>       
-                            <image id="icon-${o.id}" xlink:href="${icon}"/>    
+                            <image id="icon-${o.id}" xlink:href="${icon}" style="width:100%;"/>    
                         </svg>
                     </div>
                 </div>
