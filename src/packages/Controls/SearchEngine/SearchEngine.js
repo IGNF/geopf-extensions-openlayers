@@ -2231,9 +2231,9 @@ var SearchEngine = class SearchEngine extends Control {
          *   console.log(e.location);
          * })
         */
-       this.dispatchEvent({
-           type : "searchengine:geocode:click",
-           location : this._geocodedLocations[idx]
+        this.dispatchEvent({
+            type : "searchengine:geocode:click",
+            location : this._geocodedLocations[idx]
         });
         // on nettoie !
         this._clearSuggestedLocation();
