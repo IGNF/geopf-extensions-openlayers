@@ -414,6 +414,7 @@ var SearchEngine = class SearchEngine extends Control {
         this._uid = this.options.id || SelectorID.generate();
 
         this._showSearchEngineButton = null;
+        this._showSearchEngineAdvancedButton = null;
 
         // container de l'input de recherche
         this._inputSearchContainer = null;
@@ -927,7 +928,7 @@ var SearchEngine = class SearchEngine extends Control {
         }
 
         if (this.options.displayButtonAdvancedSearch) {
-            var advancedShow = this._createShowAdvancedSearchElement();
+            var advancedShow = this._showSearchEngineAdvancedButton = this._createShowAdvancedSearchElement();
             buttonsContainer.appendChild(advancedShow);
 
             // INFO je decompose les appels car j'ai besoin de recuperer le container
@@ -2212,7 +2213,6 @@ var SearchEngine = class SearchEngine extends Control {
             // on retransforme les coordonnées de la position dans la projection de la carte
             position = olProjTransform(position, "EPSG:4326", mapProj);
         }
-        this._clearResults();
         // on centre la vue et positionne le marker, à la position reprojetée dans la projection de la carte
         var zoom = this._getZoom(this.options.zoomTo);
         this._setPosition(position, zoom);
@@ -2230,11 +2230,15 @@ var SearchEngine = class SearchEngine extends Control {
          * SearchEngine.on("searchengine:geocode:click", function (e) {
          *   console.log(e.location);
          * })
-         */
-        this.dispatchEvent({
-            type : "searchengine:geocode:click",
-            location : this._geocodedLocations[idx]
+        */
+       this.dispatchEvent({
+           type : "searchengine:geocode:click",
+           location : this._geocodedLocations[idx]
         });
+        // on nettoie !
+        this._clearSuggestedLocation();
+        // on ferme le panneau de recherche avancée
+        this._showSearchEngineAdvancedButton.click();
     }
 
     // ################################################################### //
