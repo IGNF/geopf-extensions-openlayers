@@ -16,6 +16,7 @@ import {
     Circle
 } from "ol/style";
 import {
+    Circle as CircleGeom,
     LineString,
     Point,
     Polygon
@@ -732,7 +733,7 @@ var ReverseGeocode = class ReverseGeocode extends Control {
                 const maxRadius = 500;
                 const radius = Math.min(Math.sqrt(dx * dx + dy * dy), maxRadius);
                 if (!geometry) {
-                    geometry = new ol.geom.Circle(center, radius);
+                    geometry = new CircleGeom(center, radius);
                 } else {
                     geometry.setCenterAndRadius(center, radius);
                 }
