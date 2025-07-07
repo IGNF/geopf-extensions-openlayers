@@ -8,8 +8,8 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.4-395
- * @date 04/07/2025
+ * @version 1.0.0-beta.4-397
+ * @date 07/07/2025
  *
  */div[id^=GPlegends-]{right:8px;top:58px}.position>div[id^=GPlegends-]>dialog[id^=GPlegendsPanel]{position:absolute}button[id^=GPshowLegendsPicto][aria-pressed=false]+dialog{display:none;opacity:0;visibility:hidden}button[id^=GPshowLegendsPicto-][aria-pressed=true]+dialog{display:flex;flex-direction:column;height:auto;max-height:inherit;opacity:100%;visibility:visible;width:350px}
 /*# sourceMappingURL=GpfExtOlLegends.css.map*/
