@@ -912,6 +912,7 @@ var Reporting = class Reporting extends Control {
         this.reportingBtnSuivantFooter = null;
         this.buttonReportingClose = null;
         this.divReportingTitle = null;
+        this.labelReportingIcon = null;
 
         this.buttonReportingSubmit = null;
         this.spanReportingError = null;
@@ -995,7 +996,7 @@ var Reporting = class Reporting extends Control {
         // header
         var reportingPanelHeader = this.panelReportingHeaderContainer = this._createReportingPanelHeaderElement();
         // icone
-        var reportingPanelIcon = this._createReportingPanelIconElement();
+        var reportingPanelIcon = this.labelReportingIcon = this._createReportingPanelIconElement();
         reportingPanelHeader.appendChild(reportingPanelIcon);
         // title
         var reportingPanelTitle = this.divReportingTitle = this._createReportingPanelTitleElement();
@@ -1114,6 +1115,7 @@ var Reporting = class Reporting extends Control {
         this.panelReportingFooterContainer.style.display = (this.stepContainer[num].footer) ? "flex" : "none";
         this.reportingBtnAnnulerFooter.style.display = (this.stepContainer[num].prev === -1) ? "none" : "flex";
         this.reportingBtnSuivantFooter.style.display = (this.stepContainer[num].next === -1) ? "none" : "flex";
+        this.labelReportingIcon.style.display = (this.stepContainer[num].prev === -1) ? "none" : "flex";
     }
 
     /**
