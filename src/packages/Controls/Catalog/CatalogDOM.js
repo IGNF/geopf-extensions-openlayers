@@ -318,7 +318,7 @@ var CatalogDOM = {
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
             return `
             <!-- panneaux -->
-            <div id="tabpanel-${i}-panel_${id}" class="${className}" role="tabpanel" aria-labelledby="tabbutton-${i}_${id}" tabindex="${tabindex}" style="max-height: 250px;overflow-y: auto;">
+            <div id="tabpanel-${i}-panel_${id}" class="${className}" role="tabpanel" aria-labelledby="tabbutton-${i}_${id}" tabindex="${tabindex}" style="max-height: 250px;overflow-y: auto; padding: 1em;">
                 ${strTabContent}
             </div>
             `;
@@ -417,7 +417,7 @@ var CatalogDOM = {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
 
         var strElements = "";
-        var tmplElement = (i, name, title, service, categoryId) => {
+        var tmplElement = (i, name, title, service, description, informations, categoryId) => {
             // FIXME doit on l'utiliser le champ description en HTML ?
 
             // le listener sur l'input permet de récuperer à partir de l'ID
@@ -435,6 +435,17 @@ var CatalogDOM = {
                     <label class="GPlabelActive fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="nom technique : ${name}">
                         ${title} (${service})
                     </label>
+                    <section class="fr-accordion">
+                        <h5 class="fr-accordion__title">
+                            <button class="GPcatalogButtonMoreInfo fr-accordion__btn" role="button-collapse-more-${categoryId}" aria-expanded="false" aria-controls="accordion-more-${i}-${categoryId}">
+                                <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-more-${i}-${categoryId}"></span>En savoir plus
+                            </button>
+                        </h5>
+                        <div class="fr-collapse GPelementHidden" id="accordion-more-${i}-${categoryId}">
+                            ${description}
+                            <p>${informations}</p>
+                        </div>
+                    </section>
                     <div class="fr-messages-group" id="checkboxes-messages-${categoryId}-${i}_${name}-${service}" aria-live="assertive"></div>
                 </div>
             </div>
@@ -450,11 +461,11 @@ var CatalogDOM = {
             <!-- section -->
             <section class="fr-accordion" style="width:100%;">
                 <h3 class="fr-accordion__title">
-                    <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">
-                        <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>${title}
+                    <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
+                        <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>${title} (${count})
                     </button>
                 </h3>
-                <div class="fr-collapse GPelementHidden" id="accordion-${id}">
+                <div class="fr-collapse GPelementHidden" id="accordion-${categoryId}-${id}">
                     ${data}
                 </div>
             </section>
@@ -487,10 +498,10 @@ var CatalogDOM = {
                     if (!sections.hasOwnProperty(title)) {
                         sections[title] = "";
                     }
-                    sections[title] += tmplElement(i, layer.name, layer.title, layer.service, category.id);
+                    sections[title] += tmplElement(i, layer.name, layer.title, layer.service, layer.description, "", category.id);
                 }
             } else {
-                strElements += tmplElement(i, layer.name, layer.title, layer.service, category.id);
+                strElements += tmplElement(i, layer.name, layer.title, layer.service, layer.description, "", category.id);
             }
         }
 
@@ -533,6 +544,26 @@ var CatalogDOM = {
         var buttons = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
         if (buttons) {
             buttons.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaExpanded === "true") {
+                        collapse.classList.add("fr-collapse--expanded");
+                        collapse.classList.remove("GPelementHidden");
+                    } else {
+                        collapse.classList.remove("fr-collapse--expanded");
+                        collapse.classList.add("GPelementHidden");
+                    }
+                }, false);
+            });
+        }
+        var buttonNameMore = `button-collapse-more-${category.id}`;
+        var buttonsMore = shadow.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
+        if (buttonsMore) {
+            buttonsMore.forEach((button) => {
                 button.addEventListener("click", (e) => {
                     e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
                     var collapse = document.getElementById(e.target.getAttribute("aria-controls"));

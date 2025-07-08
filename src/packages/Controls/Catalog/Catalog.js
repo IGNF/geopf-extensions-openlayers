@@ -737,6 +737,7 @@ var Catalog = class Catalog extends Control {
     createCatalogContentEntries (layers) {
         // traitement du contenu (liste de couches) d'une categorie
         // en fonction d'un filtre
+        var self = this;
         const getLayersByCategory = (category, layers) => {
             // INFO
             // comment gerer les listes de layers filtrées pour chaque categorie ?
@@ -754,7 +755,7 @@ var Catalog = class Catalog extends Control {
                             if (condition) {
                                 layersCategorised[key] = layer;
                                 // on ajoute l'appartenance de la couche à une categorie
-                                this.layersList[key].categories.push(category.id);
+                                self.layersList[key].categories.push(category.id);
                             }
                         }
                     }
