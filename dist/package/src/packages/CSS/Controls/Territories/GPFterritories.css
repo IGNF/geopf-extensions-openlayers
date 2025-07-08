@@ -18,7 +18,7 @@ button[id^="GPshowTerritoriesPicto-"][aria-pressed="true"] + dialog {
     opacity: 100%;
     max-width: 470px;
     height: initial;
-    max-height: inherit;
+    /* max-height: inherit; */
 }
 
 dialog[id^="GPterritoriesPanel-"] {
