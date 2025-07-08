@@ -38,3 +38,7 @@ form[id^=GPreportingForm] {
 }
 #GPreportingFormFieldsetMessages {}
 #GPreportingFormFieldsetMessage {}
+
+textarea[id^=GPreportingFormTextDesc] {
+    resize: none;
+}
