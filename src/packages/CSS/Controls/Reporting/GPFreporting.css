@@ -12,12 +12,12 @@ button[id^=GPshowReportingPicto][aria-pressed="false"] + dialog {
 }
 
 button[id^="GPshowReportingPicto-"][aria-pressed="true"] + dialog {
-    display: block;
+    display: flex;
     visibility: visible;
     opacity: 100%;
     width: 350px;
-    height: initial;
-    max-height: inherit;
+    /* height: initial; */
+    /* max-height: inherit; */
 }
 
 dialog[id^="GPreportingPanel-"] {
