@@ -19,7 +19,7 @@ __DATE__
   - LayerSwitcher : Ajout des méthodes publiques forget et listen pour (des)activer l'écouteur d'ajout de couche sur la carte (#389)
   - Reporting : Nouvel outil de signalement (#392)
   - LayerSwitcher : Ajout d'un menu selecteur de style pour les couches TMS (#377)
-
+  - Territories : Customisation du choix des entités du sélecteur (#398)
 
 * 🔨 [Changed]
 
@@ -37,7 +37,8 @@ __DATE__
   - LayerSwitcher : le nom des couches se grise correctement quand la vue sort de son emprise (#390)
   - Search : la fenêtre de résultats se ferme à la perte du focus (#391)
   - MousePosition : désactivation de l'interaction mouseMove au survol de la fenêtre MousePosition (#395)
-
+  - SearchEngine : Nettoyage des réponses après une recherche avancée (#397)
+  
 * 🔒 [Security]
 
 

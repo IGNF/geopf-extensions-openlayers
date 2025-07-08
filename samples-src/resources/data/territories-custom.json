@@ -1,0 +1,110 @@
+[
+    {
+        "id": "SSM",
+        "title": "Services Saint-Mandé",
+        "description": "Services Saint-Mandé",
+        "zoom": 16,
+        "point": [2.424444253967285,48.84563414811194],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "DTCE",
+        "title": "DT centre-est",
+        "description": "Direction territoriale centre-est",
+        "zoom": 16,
+        "point": [4.853185169311518,45.754797579836975],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "DTGON",
+        "title": "DT site de Nantes",
+        "description": "Direction territoriale grand-ouest (site de Nantes)",
+        "zoom": 16,
+        "point": [-1.5430467460327155,47.20651117967003],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "DTGOC",
+        "title": "DT site de Caen",
+        "description": "Direction territoriale grand-ouest (site de Caen",
+        "zoom": 16,
+        "point": [-0.3491729999999998,49.19963967566363],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "DTSE",
+        "title": "DT sud-est",
+        "description": "",
+        "zoom": 16,
+        "point": [5.370966501371475,43.478702489381675],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "DTNN",
+        "title": "DT nord",
+        "description": "Direction territoriale nord et outre-mer (site de Champigneulles)",
+        "zoom": 16,
+        "point": [6.1562635423278795,48.73997763280997],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "DTSO",
+        "title": "DT sud-ouest",
+        "description": "Direction territoriale sud-ouest",
+        "zoom": 16,
+        "point": [-0.7423062883605956,44.89091269402681],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "SIS",
+        "title": "Service de l'imagerie spatiale",
+        "description": "Service de l'imagerie spatiale",
+        "zoom": 16,
+        "point": [1.481507457672119,43.561871100286226],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "SIA",
+        "title": "Service de l'imagerie et de l'aéronautique",
+        "description": "Service de l'imagerie et de l'aéronautiqu",
+        "zoom": 16,
+        "point": [2.106011373016357,49.45413126936026],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "SISFE",
+        "title": "Service de l'information forestière",
+        "description": "Service de l'information statistique forestière et environnementale",
+        "zoom": 16,
+        "point": [2.761920711639404,47.835724827317165],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "ENSG",
+        "title": "ENSG-Géomatique",
+        "description": "ENSG-Géomatique",
+        "zoom": 16,
+        "point": [2.588662626983642,48.84047113864244],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    },
+    {
+        "id": "SLOG",
+        "title": "Site logistique et patrimonial",
+        "description": "Site logistique et patrimonial",
+        "zoom": 16,
+        "point": [1.7139914576721194,47.29548159183565],
+        "thumbnail": "",
+        "icon": "/samples/resources/data/IGN.png"
+    }
+]

@@ -1,13 +1,11 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlCRS.js"></script>
+                 
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlTerritories.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlTerritories.js"></script>
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalMousePosition.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalMousePosition.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
@@ -43,6 +41,14 @@
 
 {{#content "js"}}
     <script>
+        async function getData () {
+            var response = await fetch("{{ resources }}/data/territories-custom.json", {});
+            var data = await response.json();
+            if (response.status !== 200) {
+                throw new Error("Erreur de récupération du JSON !");
+            }
+            return data;
+        }
         var map;
         var territories;
         var createMap = function () {
@@ -89,51 +95,22 @@
             });
             map.addControl(layerSwitcher);
 
-            var mouse = new ol.control.GeoportalMousePosition({
-                draggable : false,
-                position : "bottom-left"
-            });
-            map.addControl(mouse);
-
             // Ajout du contrôle de gestion  des legendes
-            territories = new ol.control.Territories({
-                collapsed: false,
-                draggable: true,
-                position: "top-right",
-                panel: true,
-                auto: true,
-                thumbnail : false,
-                reduce: false,
-                tiles: 0
-            });
-            map.addControl(territories);
-            
-            // ajout en debut de la liste
-            territories.setTerritory({
-                "id": "PAR",
-                "title": "Paris2",
-                "description": "test...", 
-                "bbox": [2.21, 48.80, 2.43, 48.92],
-                "icon": "{{ resources }}/data/PAR.png"
-            });
-
-            territories.setTerritory({
-                "id": "CRZ",
-                "title": "Crozon",
-                "description": "test...", 
-                "point": [-4.5, 48.2],
-                "zoom": 10,
-                "icon": "{{ resources }}/data/CRZ.png"
-            });
-
-            // ajout à la fin de la liste
-            territories.setTerritory({
-                "id": "UNK",
-                "title": "territoire inconnu",
-                "description": "", 
-                "bbox": [],
-                "thumbnail": "" // image par defaut !
-            });
+            getData()
+            .then((data) => {
+                territories = new ol.control.Territories({
+                    collapsed: false,
+                    draggable: true,
+                    position: "top-right",
+                    panel: true,
+                    auto: false,
+                    thumbnail : false,
+                    reduce: false,
+                    tiles: 0,
+                    territories : data
+                });
+                map.addControl(territories);
+            })
         };
         Gp.Services.getConfig({
             customConfigFile : "{{ configurl }}",
