@@ -12,12 +12,12 @@ button[id^=GPshowWidgetPicto][aria-pressed="false"] + dialog {
 }
 
 button[id^="GPshowWidgetPicto-"][aria-pressed="true"] + dialog {
-    display: block;
+    display: flex;
     visibility: visible;
     opacity: 100%;
     width: 350px;
     height: initial;
-    max-height: inherit;
+    /* max-height: inherit; */
 }
 
 dialog[id^="GPcatalogPanel-"] {
