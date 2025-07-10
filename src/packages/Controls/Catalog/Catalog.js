@@ -651,7 +651,7 @@ var Catalog = class Catalog extends Control {
 
             // sauvegarde de la liste des couches
             this.layersList = data.layers;
-            
+
             this.createCatalogContentEntries(data.layers);
             return new Promise((resolve, reject) => {
                 resolve(data);
@@ -726,7 +726,7 @@ var Catalog = class Catalog extends Control {
 
                 // sauvegarde de la liste des couches
                 this.layersList = data.layers;
-                
+
                 this.createCatalogContentEntries(data.layers);
                 return await new Promise((resolve, reject) => {
                     resolve(data);
@@ -804,10 +804,10 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Get information in the catalog
-     * @param {*} key 
-     * @param {*} value 
+     * @param {*} key type de catégorisation 'producer' ou 'thematic'
+     * @param {*} value tableau de couches
      * @private
-     * @returns {Object} 
+     * @returns {Object} fiche d'information
      * @todo récuperer l'url du service du catalogue selon l'environnement !
      * @example
      * // OUTPUT ?
@@ -1105,7 +1105,7 @@ var Catalog = class Catalog extends Control {
 
     /**
      * Update DOM sections visibility if no layers are visible
-     * 
+     *
      * @todo cacher les section si elles sont vides
      * @private
      */

@@ -580,7 +580,7 @@ var CatalogDOM = {
         }
         var strContainer = `
             <!-- liste de couches -->
-            <fieldset class="fr-fieldset" id="checkboxes-${category.id}" aria-labelledby="checkboxes-legend checkboxes-messages">
+            <div class="fr-accordions-group" id="checkboxes-${category.id}" aria-labelledby="checkboxes-legend checkboxes-messages">
                 ${strElements}
             </fieldset>
         `;
