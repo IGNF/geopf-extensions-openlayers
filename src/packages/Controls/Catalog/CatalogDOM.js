@@ -510,17 +510,17 @@ var CatalogDOM = {
             `;
         };
 
-        // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
         var tmplSection = (id, categoryId, title, count, data) => {
             // INFO
             // - la maquette ne possède pas de compteur de couches
             // - hack pour le thème dsfr, on masque l'icone collapse du thème classic
             return `
             <!-- section -->
-            <section class="fr-accordion" style="width:100%;">
+            <section id="section-${categoryId}-${id}" class="fr-accordion" style="">
                 <h3 class="fr-accordion__title">
                     <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
-                        <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>${title} (${count})
+                        <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>
+                        ${title} (${count})
                     </button>
                 </h3>
                 <div class="fr-collapse GPelementHidden" id="accordion-${categoryId}-${id}">

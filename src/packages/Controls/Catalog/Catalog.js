@@ -1064,6 +1064,7 @@ var Catalog = class Catalog extends Control {
                 this.updateFilteredLayersListDOM(layer.name, layer.service, layer.hidden);
             }
         }
+        this.updateSectionsListDOM();
     }
 
     /**
@@ -1102,6 +1103,15 @@ var Catalog = class Catalog extends Control {
         }
     }
 
+    /**
+     * Update DOM sections visibility if no layers are visible
+     * 
+     * @todo cacher les section si elles sont vides
+     * @private
+     */
+    updateSectionsListDOM () {
+
+    }
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
