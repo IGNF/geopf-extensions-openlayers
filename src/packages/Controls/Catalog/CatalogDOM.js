@@ -417,9 +417,65 @@ var CatalogDOM = {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
 
         var strElements = "";
+        // FIXME doit on utiliser le champ description avec parsing HTML ou string ?
         var tmplElement = (i, name, title, service, description, informations, categoryId) => {
-            // FIXME doit on l'utiliser le champ description en HTML ?
-
+            // ajout des meta informations
+            var tmplInfos = (informations) => {
+                // TODO les informations sont des tableaux !
+                if (!informations.producers && !informations.thematics && !informations.metadatas) {
+                    return "";
+                }
+                var producers = "";
+                if (informations.producers) {
+                    if (informations.producers.length === 1) {
+                        producers = `
+                        <a href="${informations.producers[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                            Informations sur le producteur - ${informations.producers[0].name}
+                        </a>
+                        `;
+                    } else {
+                        console.warn("producteurs multiples", informations.producers);
+                    }
+                }
+                var thematics = "";
+                if (informations.thematics) {
+                    if (informations.thematics.length === 1) {
+                        thematics = `
+                        <a href="${informations.thematics[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                            Informations sur le thème - ${informations.thematics[0].name}
+                        </a>`;
+                    } else {
+                        console.warn("themes multiples", informations.thematics);
+                    }
+                }
+                var metadatas = "";
+                if (informations.metadatas) {
+                    var lst = [];
+                    for (let i = 0; i < informations.metadatas.length; i++) {
+                        const element = informations.metadatas[i];
+                        lst.push(`
+                            <li>
+                                <a href="${element}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                    ${element}
+                                </a>
+                            </li>
+                        `);
+                    }
+                    metadatas = `
+                    <label class="fr-label">Liste des meta données disponibles</label>
+                    <ul>
+                        ${lst.join()}
+                    </ul>
+                    `;
+                }
+                return `
+                    <div class="informations-more">
+                        ${producers}
+                        ${thematics}
+                        ${metadatas}
+                    </div>
+                `;
+            };
             // le listener sur l'input permet de récuperer à partir de l'ID
             // la paire name/service pour identifier la couche:
             // > "checkboxes-${categoryId}-${i}_${name}-${service}".split('_')[1]
@@ -443,7 +499,9 @@ var CatalogDOM = {
                         </h5>
                         <div class="fr-collapse GPelementHidden" id="accordion-more-${i}-${categoryId}">
                             ${description}
-                            <p>${informations}</p>
+                            <p>
+                                ${tmplInfos(informations)}
+                            </p>
                         </div>
                     </section>
                     <div class="fr-messages-group" id="checkboxes-messages-${categoryId}-${i}_${name}-${service}" aria-live="assertive"></div>
@@ -487,6 +545,11 @@ var CatalogDOM = {
         var sections = {};
         for (let i = 0; i < layers.length; i++) {
             const layer = layers[i];
+            const infos = {
+                producers : layer.producer_urls, // tableau d'objets [{name,url}]
+                thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
+                metadatas : layer.metadata_urls  // tableau
+            };
             // INFO
             // a t on des sections ?
             // - oui, si elle correspond au filtre, on ajoute la couche dans la section
@@ -498,10 +561,10 @@ var CatalogDOM = {
                     if (!sections.hasOwnProperty(title)) {
                         sections[title] = "";
                     }
-                    sections[title] += tmplElement(i, layer.name, layer.title, layer.service, layer.description, "", category.id);
+                    sections[title] += tmplElement(i, layer.name, layer.title, layer.service, layer.description, infos, category.id);
                 }
             } else {
-                strElements += tmplElement(i, layer.name, layer.title, layer.service, layer.description, "", category.id);
+                strElements += tmplElement(i, layer.name, layer.title, layer.service, layer.description, infos, category.id);
             }
         }
 

@@ -22,6 +22,9 @@ import GeoportalMapBox from "../../Layers/LayerMapBox";
 // DOM
 import CatalogDOM from "./CatalogDOM";
 
+// Mapping de themes anglais -> français
+import Topics from "./topics.json";
+
 var logger = Logger.getLogger("widget");
 
 /**
@@ -279,6 +282,8 @@ var Catalog = class Catalog extends Control {
                     var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                     layer.service = service; // new proprerty !
                     layer.categories = []; // new property ! vide pour le moment
+                    layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
+                    layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
                     this.layersList[key] = layer;
                 }
             }
@@ -635,6 +640,8 @@ var Catalog = class Catalog extends Control {
                         var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                         layer.service = service; // new proprerty !
                         layer.categories = []; // new property ! vide pour le moment
+                        layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
+                        layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
                     } else {
                         // sinon on supprime l'entrée car pas de configuration valide
                         delete data.layers[key];
@@ -708,6 +715,8 @@ var Catalog = class Catalog extends Control {
                             var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                             layer.service = service; // new proprerty !
                             layer.categories = []; // new property ! vide pour le moment
+                            layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
+                            layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
                         } else {
                             // sinon on supprime l'entrée car pas de configuration valide
                             delete data.layers[key];
@@ -793,6 +802,64 @@ var Catalog = class Catalog extends Control {
         }
     }
 
+    /**
+     * Get information in the catalog
+     * @param {*} key 
+     * @param {*} value 
+     * @private
+     * @returns {Object} 
+     * @todo récuperer l'url du service du catalogue selon l'environnement !
+     * @example
+     * // OUTPUT ?
+     */
+    getInformationsCatalog (key, value) {
+        if (!value) {
+            return null;
+        }
+        var url = "https://cartes.gouv.fr/catalogue/search?";
+        var data = [];
+        // INFO liens vers le catalogue
+        //
+        // - comment recuperer la fiche si pas renseigné dans metadata_urls ?
+        // ex. https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN
+        // > la conf nous fournit une liste via le champ 'metada_urls'
+        //
+        // - comment avoir l'info sur le producteur à partir de la liste des acronymes ?
+        // ex. https://cartes.gouv.fr/catalogue/search?organization=IGN
+        // > la conf nous fournit une liste via le champ 'producer'
+        if (key === "producer") {
+            for (let i = 0; i < value.length; i++) {
+                const element = value[i];
+                if (element === "Autres") {
+                    continue;
+                }
+                data.push({
+                    name : element,
+                    url : url + "organization=" + element
+                });
+            }
+        }
+        // - comment faire le lien entre les noms pour obtenir les données du theme ?
+        // ex. pour Agriculture, l'url est https://cartes.gouv.fr/catalogue/search?topic=farming
+        // > un fichier de mapping est disponible
+        if (key === "thematic") {
+            for (let j = 0; j < value.length; j++) {
+                const element = value[j];
+                if (element === "Autres") {
+                    continue;
+                }
+                var mapping = Object.keys(Topics).find((key) => { Topics[key] === element; });
+                data.push({
+                    name : element,
+                    url : url + "topic=" + mapping
+                });
+            }
+        }
+        if (data.length === 0) {
+            data = null;
+        }
+        return data;
+    }
     // ################################################################### //
     // ######################## methods on listeners ##################### //
     // ################################################################### //
