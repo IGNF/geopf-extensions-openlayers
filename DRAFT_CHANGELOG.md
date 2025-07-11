@@ -24,6 +24,7 @@ __DATE__
 * 🔨 [Changed]
 
   - Buttons : style arrondi (#383 #384 #386)
+  - Geolocate : Centrage de la vue sur le marker quand cliqué (#376)
 
 * 🔥 [Deprecated]
 
