@@ -22,6 +22,9 @@ import GeoportalMapBox from "../../Layers/LayerMapBox";
 // DOM
 import CatalogDOM from "./CatalogDOM";
 
+// Mapping de themes anglais -> français
+import Topics from "./topics.json";
+
 var logger = Logger.getLogger("widget");
 
 /**
@@ -279,6 +282,8 @@ var Catalog = class Catalog extends Control {
                     var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                     layer.service = service; // new proprerty !
                     layer.categories = []; // new property ! vide pour le moment
+                    layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
+                    layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
                     this.layersList[key] = layer;
                 }
             }
@@ -403,21 +408,29 @@ var Catalog = class Catalog extends Control {
             addToMap : true,
             categories : [
                 {
+                    // INFO
+                    // categories : sous forme d'un onglet par categorie
                     title : "Données",
                     id : "data",
                     default : true,
                     filter : null
                     // INFO
-                    // > sous categories avec ou sans section
+                    // subcategories : sous forme d'un bouton radio par sous categoris
                     // items : [
                     //     {
                     //         title : "",
                     //         default : true,
-                    //         section : true,
+                    //         section : true, // avec section (ex. regroupement par themes)
                     //         filter : {
-                    //             field : "",
+                    //             field : "thematic",
                     //             value : ""
                     //         }
+                    //     }
+                    //     {
+                    //         title : "Toutes les données",
+                    //         default : false,
+                    //         section : false, // sans section
+                    //         filter : null // sans filtre, on prend toutes les données
                     //     }
                     // ]
                 }
@@ -488,8 +501,9 @@ var Catalog = class Catalog extends Control {
                 items = cat.items.map((i) => {
                     return {
                         title : i.title,
-                        id : i.id || Math.abs(Array.from(i.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0)),
+                        id : i.id || this.generateID(i.title),
                         section : i.hasOwnProperty("section") ? i.section : false,
+                        sections : [], // liste des valeurs des sections remplie ulterieurement !
                         default : i.hasOwnProperty("default") ? i.default : false,
                         filter : i.filter || null,
                     };
@@ -497,7 +511,7 @@ var Catalog = class Catalog extends Control {
             }
             return {
                 title : cat.title,
-                id : cat.id || Math.abs(Array.from(cat.title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0)),
+                id : cat.id || this.generateID(cat.title),
                 default : cat.hasOwnProperty("default") ? cat.default : false,
                 filter : cat.filter || null,
                 items : items || null
@@ -635,6 +649,8 @@ var Catalog = class Catalog extends Control {
                         var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                         layer.service = service; // new proprerty !
                         layer.categories = []; // new property ! vide pour le moment
+                        layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
+                        layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
                     } else {
                         // sinon on supprime l'entrée car pas de configuration valide
                         delete data.layers[key];
@@ -644,7 +660,7 @@ var Catalog = class Catalog extends Control {
 
             // sauvegarde de la liste des couches
             this.layersList = data.layers;
-            
+
             this.createCatalogContentEntries(data.layers);
             return new Promise((resolve, reject) => {
                 resolve(data);
@@ -708,6 +724,8 @@ var Catalog = class Catalog extends Control {
                             var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                             layer.service = service; // new proprerty !
                             layer.categories = []; // new property ! vide pour le moment
+                            layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
+                            layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
                         } else {
                             // sinon on supprime l'entrée car pas de configuration valide
                             delete data.layers[key];
@@ -717,7 +735,7 @@ var Catalog = class Catalog extends Control {
 
                 // sauvegarde de la liste des couches
                 this.layersList = data.layers;
-                
+
                 this.createCatalogContentEntries(data.layers);
                 return await new Promise((resolve, reject) => {
                     resolve(data);
@@ -737,6 +755,7 @@ var Catalog = class Catalog extends Control {
     createCatalogContentEntries (layers) {
         // traitement du contenu (liste de couches) d'une categorie
         // en fonction d'un filtre
+        var self = this;
         const getLayersByCategory = (category, layers) => {
             // INFO
             // comment gerer les listes de layers filtrées pour chaque categorie ?
@@ -754,7 +773,7 @@ var Catalog = class Catalog extends Control {
                             if (condition) {
                                 layersCategorised[key] = layer;
                                 // on ajoute l'appartenance de la couche à une categorie
-                                this.layersList[key].categories.push(category.id);
+                                self.layersList[key].categories.push(category.id);
                             }
                         }
                     }
@@ -792,6 +811,64 @@ var Catalog = class Catalog extends Control {
         }
     }
 
+    /**
+     * Get information in the catalog
+     * @param {*} key type de catégorisation 'producer' ou 'thematic'
+     * @param {*} value tableau de couches
+     * @private
+     * @returns {Object} fiche d'information
+     * @todo récuperer l'url du service du catalogue selon l'environnement !
+     * @example
+     * // OUTPUT ?
+     */
+    getInformationsCatalog (key, value) {
+        if (!value) {
+            return null;
+        }
+        var url = "https://cartes.gouv.fr/catalogue/search?";
+        var data = [];
+        // INFO liens vers le catalogue
+        //
+        // - comment recuperer la fiche si pas renseigné dans metadata_urls ?
+        // ex. https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN
+        // > la conf nous fournit une liste via le champ 'metada_urls'
+        //
+        // - comment avoir l'info sur le producteur à partir de la liste des acronymes ?
+        // ex. https://cartes.gouv.fr/catalogue/search?organization=IGN
+        // > la conf nous fournit une liste via le champ 'producer'
+        if (key === "producer") {
+            for (let i = 0; i < value.length; i++) {
+                const element = value[i];
+                if (element === "Autres") {
+                    continue;
+                }
+                data.push({
+                    name : element,
+                    url : url + "organization=" + element
+                });
+            }
+        }
+        // - comment faire le lien entre les noms pour obtenir les données du theme ?
+        // ex. pour Agriculture, l'url est https://cartes.gouv.fr/catalogue/search?topic=farming
+        // > un fichier de mapping est disponible
+        if (key === "thematic") {
+            for (let j = 0; j < value.length; j++) {
+                const element = value[j];
+                if (element === "Autres") {
+                    continue;
+                }
+                var mapping = Object.keys(Topics).find((key) => Topics[key] === element);
+                data.push({
+                    name : element,
+                    url : url + "topic=" + mapping
+                });
+            }
+        }
+        if (data.length === 0) {
+            data = null;
+        }
+        return data;
+    }
     // ################################################################### //
     // ######################## methods on listeners ##################### //
     // ################################################################### //
@@ -969,7 +1046,7 @@ var Catalog = class Catalog extends Control {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
                 layer.hidden = false;
-                this.updateFilteredLayersListDOM(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayersDOM(layer.name, layer.service, layer.hidden);
             }
         }
     }
@@ -981,6 +1058,8 @@ var Catalog = class Catalog extends Control {
      * @private
      */
     setFilteredLayersList (value) {
+        // on rend invisible les couches qui ne respecte pas la valeur 
+        // selon le critère de recherche
         var criteria = this.options.search.criteria;
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
@@ -993,9 +1072,12 @@ var Catalog = class Catalog extends Control {
                     }
                 }
                 layer.hidden = !words.includes(value.toLowerCase());
-                this.updateFilteredLayersListDOM(layer.name, layer.service, layer.hidden);
+                // on met à jour pour chaque couche la visibilité
+                this.updateVisibilityFilteredLayersDOM(layer.name, layer.service, layer.hidden);
             }
         }
+        // on rend invisible les sections qui ne possède plus de couches visibles
+        this.updateVisibilitySectionsDOM();
     }
 
     /**
@@ -1006,8 +1088,8 @@ var Catalog = class Catalog extends Control {
      * @param {*} hidden  - ...
      * @private
      */
-    updateFilteredLayersListDOM (id, service, hidden) {
-        var categories = []; // remise à plat des catégories / sous-categories
+    updateVisibilityFilteredLayersDOM (id, service, hidden) {
+        var categories = []; // remise à plat des catégories / sous-categories pour obtenir leur id
         this.categories.forEach((category) => {
             if (category.items) {
                 for (let i = 0; i < category.items.length; i++) {
@@ -1021,6 +1103,7 @@ var Catalog = class Catalog extends Control {
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
+            // on modifie la visibilité du container pour chaque couche
             var container = document.getElementById(`fieldset-${category}_${id}-${service}`);
             if (container) {
                 if (hidden) {
@@ -1034,6 +1117,58 @@ var Catalog = class Catalog extends Control {
         }
     }
 
+    /**
+     * Update DOM sections visibility if no layers are visible
+     *
+     * @todo cacher les section si elles sont vides
+     * @private
+     */
+    updateVisibilitySectionsDOM () {
+        // il faut savoir si les couches d'une section sont toutes à hidden
+        // si oui, on cache la section
+        // si non, on met à jour le compteur des couches visibles
+
+        // ID d'une section : section-${categoryId}-${id}
+        // avec id = this.generateID(title) où title est le titre de la section
+        // le title d'une section est disponible pour une category qui possède des sections
+
+        // on compte le nombre de couches encore visible, 
+        // si 0 alors la section est hidden : 
+        // var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+        // avec data est la liste des couches (DOM)
+
+        for (let i = 0; i < this.categories.length; i++) {
+            const category = this.categories[i];
+            if (category.items) {
+                for (let j = 0; j < category.items.length; j++) {
+                    const subcategory = category.items[j];
+                    // sous categorie ayant des sections
+                    if (subcategory.section) {
+                        for (let k = 0; k < subcategory.sections.length; k++) {
+                            const section = subcategory.sections[k];
+                            var id = `section-${subcategory.id}-${this.generateID(section)}`;
+                            var container = document.getElementById(id);
+                            if (container) {
+                                var data = container.innerHTML;
+                                var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                                var countDom = document.getElementById(`section-count-${subcategory.id}-${this.generateID(section)}`);
+                                if (count === 0) {
+                                    container.classList.add("gpf-hidden");
+                                    container.classList.add("GPelementHidden");
+                                } else {
+                                    if (countDom) {
+                                        countDom.textContent = count;
+                                    }
+                                    container.classList.remove("gpf-hidden");
+                                    container.classList.remove("GPelementHidden");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //

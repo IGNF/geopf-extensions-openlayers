@@ -283,7 +283,7 @@ class FormActionByDefaut {
     /**
      * Set the form for this action
      * @api
-     * @param {*} form 
+     * @param {*} form DOM element - The form element to be set for this action.
      */
     setForm (form) {
         logger.info("FormActionByDefaut form");
@@ -433,7 +433,7 @@ class DrawingActionByDefaut {
         // this.DrawingBtn.setAttribute("aria-pressed", false);
     }
     /**
-     * Clear the data 
+     * Clear the data
      * @api
      * @description
      * This method resets the data property to null,
@@ -475,7 +475,7 @@ class DrawingActionByDefaut {
             var content = this.Drawing.exportFeatures();
             this.data = {
                 drawing : (this.format.toLowerCase() === "geojson") ? JSON.parse(content) : content
-            }; 
+            };
         }
         return this.data || { drawing : null };
     }
@@ -622,7 +622,7 @@ class ServiceActionByDefaut {
         return Promise.reject(new Error("ServiceActionByDefaut send not implemented"));
     }
     /**
-     * Clear the data 
+     * Clear the data
      * @api
      * @description
      * This method does not perform any action in this implementation.
@@ -677,12 +677,12 @@ var Reporting = class Reporting extends Control {
      * the location, description, and thematic category of the issue.
      * @example
      * import Reporting from "gpf-ext-ol/controls/Reporting"
-     * ou 
+     * ou
      * import { Reporting } from "gpf-ext-ol"
      */
     constructor (options) {
         options = options || {};
-        
+
         // call ol.control.Control constructor
         super({
             element : options.element,
@@ -835,7 +835,7 @@ var Reporting = class Reporting extends Control {
         this.iocDrawing.setFormat(this.options.format || "geojson");
         this.iocDrawing.setMap(map);
         this.iocDrawing.setTarget(this.drawingReportingContainer);
-        
+
         this.stepContainer[0].action = this.iocInput;
         this.stepContainer[1].action = this.iocForm;
         this.stepContainer[2].action = this.iocService;
@@ -843,7 +843,7 @@ var Reporting = class Reporting extends Control {
     }
 
     setComponentInput (input) {
-        // TODO 
+        // TODO
         // verifier si l'input est une instance de InputActionByDefaut
         // if (input instanceof InputActionByDefaut)
         this.iocInput = input;
@@ -864,7 +864,7 @@ var Reporting = class Reporting extends Control {
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
-    
+
     /**
      * Initialize Reporting control (called by Reporting constructor)
      *
@@ -925,29 +925,29 @@ var Reporting = class Reporting extends Control {
         this.step = 0;
         this.stepContainer = [
             {
-                name : "", 
+                name : "",
                 footer : true,
                 header : true,
-                next : 1, 
+                next : 1,
                 prev : -1,
                 action : null, // this.iocInput
                 container : null // this.inputReportingContainer
             },
             {
-                name : "Décrire le signalement",  
+                name : "Décrire le signalement",
                 footer : true,
                 header : true,
-                next : 2, 
-                prev : 0, 
+                next : 2,
+                prev : 0,
                 action : null, // this.iocForm
                 container : null // this.formReportingContainer
             },
             {
-                name : "Envoyer un signalement", 
-                footer : false, 
+                name : "Envoyer un signalement",
+                footer : false,
                 header : true,
-                next : -1, 
-                prev : 1, 
+                next : -1,
+                prev : 1,
                 action : null, // this.iocService
                 container : null // this.sendReportingContainer
             },
@@ -955,8 +955,8 @@ var Reporting = class Reporting extends Control {
                 name : "Dessiner sur la carte",
                 footer : true,
                 header : true,
-                next : 1, 
-                prev : 1, 
+                next : 1,
+                prev : 1,
                 action : null, // this.iocDrawing
                 container : null // this.drawingReportingContainer
             },
@@ -1004,7 +1004,7 @@ var Reporting = class Reporting extends Control {
         // close picto
         var reportingCloseBtn = this.buttonReportingClose = this._createReportingPanelCloseElement();
         reportingPanelHeader.appendChild(reportingCloseBtn);
-        
+
         // footer
         var reportingPanelFooter = this.panelReportingFooterContainer = this._createReportingPanelFooterElement();
         var BtnAnnulerFooter = this.reportingBtnAnnulerFooter = this._createReportingButtonAnnulerFooterElement();
@@ -1021,7 +1021,7 @@ var Reporting = class Reporting extends Control {
         this.stepContainer[2].container = send;
         var draw = this.drawingReportingContainer = this._createReportingPanelDrawingElement();
         this.stepContainer[3].container = draw;
-        
+
         var submit = this.buttonReportingSubmit = this._createReportingSubmitFormElement();
         form.appendChild(submit);
 
@@ -1044,7 +1044,7 @@ var Reporting = class Reporting extends Control {
 
     /**
      * Add events listener on map (called by setMap)
-     * 
+     *
      * @param {*} map - map
      * @private
      */
@@ -1053,7 +1053,7 @@ var Reporting = class Reporting extends Control {
         this.eventsListeners["custom:action"] = function (e) {
             logger.trace(e);
         };
-        // the event custom:action is associate with an openlayers event 
+        // the event custom:action is associate with an openlayers event
         map.getLayers().on("some:event", this.eventsListeners["custom:action"]);
     }
 
@@ -1073,7 +1073,7 @@ var Reporting = class Reporting extends Control {
 
     /**
      * Set the current step of the reporting process.
-     * @param {*} num 
+     * @param {*} num - The step number to set.
      * @returns {void}
      * @description
      * This method sets the current step of the reporting process.
@@ -1087,7 +1087,7 @@ var Reporting = class Reporting extends Control {
         if (num === undefined) {
             return;
         }
-        
+
         // on reinitialise les panneaux par defaut et on desactive les actions IoC
         for (let index = 0; index < this.stepContainer.length; index++) {
             const element = this.stepContainer[index].container;
@@ -1214,7 +1214,7 @@ var Reporting = class Reporting extends Control {
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
-    
+
     /**
      * Handle the click event on the "Show Reporting" button.
      * @param {*} e - The click event object.
@@ -1254,7 +1254,7 @@ var Reporting = class Reporting extends Control {
         logger.trace("onPrevReportingClick", e);
         this.prevStep();
     }
-    
+
     /**
      * Handle the click event on the "Next Reporting" button.
      * @param {*} e - The click event object.
@@ -1359,7 +1359,7 @@ var Reporting = class Reporting extends Control {
 
         // send the reporting data to the server or process it as needed
         logger.info("Reporting data to send:", this.data);
-        
+
         // call the service action to send the data
         this.iocService.send(this.data)
             .then(() => {

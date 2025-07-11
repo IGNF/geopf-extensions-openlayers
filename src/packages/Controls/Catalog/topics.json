@@ -1,0 +1,21 @@
+{
+    "biota": "Biologie, faune et flore",
+    "boundaries": "Limites politiques et administratives",
+    "climatologyMeteorologyAtmosphere": "Climatologie, météorologie, atmosphère",
+    "economy": "Économie",
+    "elevation": "Altimétrie",
+    "environment": "Environnement",
+    "farming": "Agriculture",
+    "geoscientificInformation": "Sciences de la terre, géosciences",
+    "health": "Santé",
+    "imageryBaseMapsEarthCover": "Carte de référence de la couverture terrestre",
+    "intelligenceMilitary": "Infrastructures militaires",
+    "inlandWaters": "Eaux intérieures, Hydrographie",
+    "location": "Localisation",
+    "oceans": "Océans",
+    "planningCadastre": "Cadastre, aménagement",
+    "society": "Société",
+    "structure": "Constructions et ouvrages",
+    "transportation": "Infrastructures de transport",
+    "utilitiesCommunication": "Télécommunication, approvisionnement et énergie"
+}

@@ -3,8 +3,11 @@
     mask: url("img/dsfr/catalog.svg") center no-repeat;
 }
 
+.informations-more {
+    display: flex;
+    flex-direction: column;
+}
 /* Mode mobile doit prendre le dessus */
-
 @media (max-width: 576px) {
     .gpf-mobile-fullscreen .GPtabContent {
         max-height: unset !important;
