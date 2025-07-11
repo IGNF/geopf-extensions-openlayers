@@ -30,7 +30,8 @@ var CatalogDOM = {
     /**
      * Generate an ID from a text
      * 
-     * @param {String} text 
+     * @param {String} text - text
+     * @returns {String} id - id
      */
     generateID : function (text) {
         return Math.abs(Array.from(text).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
