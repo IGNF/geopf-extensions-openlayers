@@ -28,6 +28,15 @@ const stringToHTML = (str) => {
 var CatalogDOM = {
 
     /**
+     * Generate an ID from a text
+     * 
+     * @param {String} text 
+     */
+    generateID : function (text) {
+        return Math.abs(Array.from(text).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
+    },
+
+    /**
     * Add uuid to the tag ID
     * @param {String} id - id selector
     * @returns {String} uid - id selector with an unique id
@@ -244,8 +253,8 @@ var CatalogDOM = {
         return div;
     },
     _createCatalogContentCategoriesTabs : function (categories) {
-        var strTabButtons = "";
-        var tmplTabButton = (i, id, title, selected) => {
+        var strCategoriesTabButtons = "";
+        var tmplCategoryTabButton = (i, id, title, selected) => {
             var className = "GPtabButton fr-tabs__tab";
             var value = "false";
             var tabindex = -1;
@@ -264,46 +273,46 @@ var CatalogDOM = {
             `;
         };
 
-        var strSectionRadios = "";
-        var tmplSectionRadio = (section) => {
-            var checked = (section.default) ? "checked" : "";
+        var strSubCategoriesRadios = "";
+        var tmplSubCategoryRadio = (subcategory) => {
+            var checked = (subcategory.default) ? "checked" : "";
             return `
             <!-- sous categorie -->
             <div class="fr-fieldset__element fr-fieldset__element--inline">
                 <div class="fr-radio-group fr-radio-group--sm">
-                    <input type="radio" id="radio-inline_${section.id}" name="radio-inline" ${checked} aria-controls="tabcontent-${section.id}">
-                    <label class="fr-label" for="radio-inline_${section.id}">
-                        ${section.title}
+                    <input type="radio" id="radio-inline_${subcategory.id}" name="radio-inline" ${checked} aria-controls="tabcontent-${subcategory.id}">
+                    <label class="fr-label" for="radio-inline_${subcategory.id}">
+                        ${subcategory.title}
                     </label>
                 </div>
             </div>
             `;
         };
-        var tmplSectionRadios = (id, sections) => {
+        var tmplSubCategoriesRadios = (id, subcategories) => {
             // chaque sous categories à son propre container de couches
             // et son bouton radio de groupe
             var strTabContents = "";
-            for (let j = 0; j < sections.length; j++) {
-                const section = sections[j];
-                strSectionRadios += tmplSectionRadio(section);
+            for (let j = 0; j < subcategories.length; j++) {
+                const subcategory = subcategories[j];
+                strSubCategoriesRadios += tmplSubCategoryRadio(subcategory);
                 var hidden = "";
-                if (!section.default) {
+                if (!subcategory.default) {
                     hidden = "GPelementHidden gpf-hidden";
                 }
-                strTabContents += `<div class="tabcontent ${hidden}" role="tabpanel-section" id="tabcontent-${section.id}"></div>`;
+                strTabContents += `<div class="tabcontent ${hidden}" role="tabpanel-section" id="tabcontent-${subcategory.id}"></div>`;
             }
             return `
             <!-- sous categories -->
             <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend radio-inline-messages">
-                ${strSectionRadios}
+                ${strSubCategoriesRadios}
                 <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive"></div>
             </fieldset>
             ${strTabContents}
             `;
         };
 
-        var strTabPanelContents = "";
-        var tmplTabPanelContent = (i, id, selected, sections) => {
+        var strCategoriesTabPanelContents = "";
+        var tmplCategoryTabPanelContent = (i, id, selected, subcategories) => {
             var className = "GPtabContent fr-tabs__panel";
             var tabindex = -1;
             if (selected) {
@@ -311,8 +320,8 @@ var CatalogDOM = {
                 tabindex = 0;
             }
             var strTabContent = "<div class=\"tabcontent\"></div>";
-            if (sections) {
-                strTabContent = tmplSectionRadios(id, sections);
+            if (subcategories) {
+                strTabContent = tmplSubCategoriesRadios(id, subcategories);
             }
             // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) :
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
@@ -326,8 +335,8 @@ var CatalogDOM = {
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
-            strTabButtons += tmplTabButton(i, category.id, category.title, category.default);
-            strTabPanelContents += tmplTabPanelContent(i, category.id, category.default, category.items);
+            strCategoriesTabButtons += tmplCategoryTabButton(i, category.id, category.title, category.default);
+            strCategoriesTabPanelContents += tmplCategoryTabPanelContent(i, category.id, category.default, category.items);
         }
 
         var strContainer = `
@@ -335,9 +344,9 @@ var CatalogDOM = {
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
             <div class="GPtabs fr-tabs">
                 <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
-                    ${strTabButtons}
+                    ${strCategoriesTabButtons}
                 </ul>
-                ${strTabPanelContents}
+                ${strCategoriesTabPanelContents}
             </div>
         </div>
         `;
@@ -520,7 +529,7 @@ var CatalogDOM = {
                 <h3 class="fr-accordion__title">
                     <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
                         <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>
-                        ${title} (${count})
+                        ${title} (<span id="section-count-${categoryId}-${id}">${count}</span>)
                     </button>
                 </h3>
                 <div class="fr-collapse GPelementHidden" id="accordion-${categoryId}-${id}">
@@ -532,7 +541,7 @@ var CatalogDOM = {
 
         // INFO
         // les couches par catégorie sont filtrées au préalable
-        // on ajoute la repartition par section des couches !
+        // on ajoute la repartition par section des couches (regroupement) !
         var isSection = category.section;
         if (isSection) {
             // on procède à un tri
@@ -543,6 +552,7 @@ var CatalogDOM = {
         }
 
         var sections = {};
+        // regroupement ou pas des couches par sections
         for (let i = 0; i < layers.length; i++) {
             const layer = layers[i];
             const infos = {
@@ -551,30 +561,39 @@ var CatalogDOM = {
                 metadatas : layer.metadata_urls  // tableau
             };
             // INFO
-            // a t on des sections ?
+            // a t on des sections (regroupements) ?
             // - oui, si elle correspond au filtre, on ajoute la couche dans la section
-            //   sinon, on ecarte cette couche ou on la met dans la section "Autres"
-            // - non, on ajoute directement la couche
+            //   sinon, on ecarte cette couche (normalement, dans la section "Autres")
+            // - non, on ajoute directement la couche dans la sous categorie
+            var element = tmplElement(i, layer.name, layer.title, layer.service, layer.description, infos, category.id);
             if (isSection) {
                 var title = layer[category.filter.field][0];
                 if (title) {
                     if (!sections.hasOwnProperty(title)) {
                         sections[title] = "";
                     }
-                    sections[title] += tmplElement(i, layer.name, layer.title, layer.service, layer.description, infos, category.id);
+                    sections[title] += element;
+                } else {
+                    // au cas où...
+                    sections["Autres"] += element;
                 }
             } else {
-                strElements += tmplElement(i, layer.name, layer.title, layer.service, layer.description, infos, category.id);
+                strElements += element;
             }
         }
 
         if (isSection) {
+            category.sections = [];
+            // creation des sections de regroupement
+            // et ajout des couches dans les sections
             for (const title in sections) {
                 if (Object.prototype.hasOwnProperty.call(sections, title)) {
                     const data = sections[title];
-                    var count = [...data.matchAll(/fr-fieldset__element/g)].length;
-                    var id = Math.abs(Array.from(title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
+                    var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                    var id = this.generateID(title);
                     strElements += tmplSection(id, category.id, title, count, data);
+                    // HACK on enregistre les valeurs des sections dans l'objet category
+                    category.sections.push(title);
                 }
             }
         }
