@@ -430,34 +430,66 @@ var CatalogDOM = {
         var tmplElement = (i, name, title, service, description, informations, categoryId) => {
             // ajout des meta informations
             var tmplInfos = (informations) => {
-                // TODO les informations sont des tableaux !
+                // les informations sont des tableaux !
                 if (!informations.producers && !informations.thematics && !informations.metadatas) {
                     return "";
                 }
-                var producers = "";
+                var strProducers = "";
                 if (informations.producers) {
                     if (informations.producers.length === 1) {
-                        producers = `
+                        strProducers = `
                         <a href="${informations.producers[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
                             Informations sur le producteur - ${informations.producers[0].name}
                         </a>
                         `;
                     } else {
-                        console.warn("producteurs multiples", informations.producers);
+                        var lst = [];
+                        for (let i = 0; i < informations.producers.length; i++) {
+                            const element = informations.producers[i];
+                            lst.push(`
+                                <li>
+                                    <a href="${element.url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                        ${element.name}
+                                    </a>
+                                </li>
+                            `);
+                        }
+                        strProducers = `
+                        <label class="fr-label">Informations sur les producteurs</label>
+                        <ul>
+                            ${lst.join()}
+                        </ul>
+                        `;
                     }
                 }
-                var thematics = "";
+                var strThematics = "";
                 if (informations.thematics) {
                     if (informations.thematics.length === 1) {
-                        thematics = `
+                        strThematics = `
                         <a href="${informations.thematics[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
                             Informations sur le thème - ${informations.thematics[0].name}
                         </a>`;
                     } else {
-                        console.warn("themes multiples", informations.thematics);
+                        var lst = [];
+                        for (let i = 0; i < informations.thematics.length; i++) {
+                            const element = informations.thematics[i];
+                            lst.push(`
+                                <li>
+                                    <a href="${element.url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                        ${element.name}
+                                    </a>
+                                </li>
+                            `);
+                        }
+                        strThematics = `
+                        <label class="fr-label">Informations sur les thèmes</label>
+                        <ul>
+                            ${lst.join()}
+                        </ul>
+                        `;
                     }
                 }
-                var metadatas = "";
+                var strMetadatas = "";
                 if (informations.metadatas) {
                     var lst = [];
                     for (let i = 0; i < informations.metadatas.length; i++) {
@@ -470,7 +502,7 @@ var CatalogDOM = {
                             </li>
                         `);
                     }
-                    metadatas = `
+                    strMetadatas = `
                     <label class="fr-label">Liste des meta données disponibles</label>
                     <ul>
                         ${lst.join()}
@@ -479,9 +511,9 @@ var CatalogDOM = {
                 }
                 return `
                     <div class="informations-more">
-                        ${producers}
-                        ${thematics}
-                        ${metadatas}
+                        ${strProducers}
+                        ${strThematics}
+                        ${strMetadatas}
                     </div>
                 `;
             };

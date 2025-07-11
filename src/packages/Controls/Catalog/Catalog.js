@@ -1124,7 +1124,6 @@ var Catalog = class Catalog extends Control {
      * @private
      */
     updateVisibilitySectionsDOM () {
-        console.error(this.categories);
         // il faut savoir si les couches d'une section sont toutes à hidden
         // si oui, on cache la section
         // si non, on met à jour le compteur des couches visibles

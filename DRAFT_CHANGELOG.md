@@ -23,7 +23,8 @@ __DATE__
 
 * 🔨 [Changed]
 
-  - Buttons : style arrondi (#383 #384 #386)
+  - Buttons: style arrondi (#383 #384 #386)
+  - Catalog: mise en conformité du widget (#401)
 
 * 🔥 [Deprecated]
 
