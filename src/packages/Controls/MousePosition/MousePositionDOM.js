@@ -370,7 +370,6 @@ var MousePositionDOM = {
 
         // latitude
         var divLat = document.createElement("div");
-        divLat.classList.add("fr-mb-1w");
 
         var spanLat = document.createElement("span");
         spanLat.className = "GPmousePositionLabel";
@@ -395,7 +394,6 @@ var MousePositionDOM = {
 
         // longitude
         var divLon = document.createElement("div");
-        divLon.classList.add("fr-mb-1w");
 
         var spanLon = document.createElement("span");
         spanLon.className = "GPmousePositionLabel";
@@ -429,7 +427,6 @@ var MousePositionDOM = {
     _createMousePositionPanelBasicAltitudeElement : function (display) {
         var div = document.createElement("div");
         div.id = this._addUID("GPmousePositionAltitude");
-        div.classList.add("fr-mb-1w");
         div.style.display = display ? "block" : "none";
 
         var spanLabel = document.createElement("span");
@@ -467,7 +464,7 @@ var MousePositionDOM = {
         }
 
         var span1 = document.createElement("span");
-        span1.className = "GPmousePositionEditTool";
+        span1.className = "GPmousePositionEditTool gpf-btn gpf-btn-icon gpf-btn-icon-mp-edit fr-btn fr-btn--tertiary gpf-btn--tertiary";
         span1.id = this._addUID("GPmousePositionLocate");
         span1.title = editCoordinates === true ? "Cliquer pour saisir des coordonnées" : "";
         if (editCoordinates) {
@@ -478,7 +475,7 @@ var MousePositionDOM = {
         div.appendChild(span1);
 
         var span2 = document.createElement("span");
-        span2.className = "GPmousePositionEditTool";
+        span2.className = "GPmousePositionEditTool gpf-btn gpf-btn-icon gpf-btn-icon-mp-edit-close fr-btn fr-btn--tertiary gpf-btn--tertiary";
         span2.id = this._addUID("GPmousePositionCloseEdit");
         span2.title = "Quitter la saisie des coordonnées";
         span2.style.display = "none";
@@ -698,10 +695,19 @@ var MousePositionDOM = {
     _setEditMode : function (editing) {
         var locateElt = document.getElementById(this._addUID("GPmousePositionLocate"));
         locateElt.title = editing ? "Aller à la position ..." : "Cliquer pour saisir des coordonnées";
-
+        
         var closeEditElt = document.getElementById(this._addUID("GPmousePositionCloseEdit"));
         closeEditElt.style.display = editing ? "inline-block" : "none";
 
+        if (editing === true) {
+            locateElt.classList.remove("gpf-btn-icon-mp-edit");
+            locateElt.classList.add("gpf-btn-icon-mp-edit-center");
+            document.getElementById(this._addUID("GPmousePositionLat")).focus();
+        } else {
+            locateElt.classList.remove("gpf-btn-icon-mp-edit-center");
+            locateElt.classList.add("gpf-btn-icon-mp-edit");
+        }
+        
         var selector = "div[id^=" + this._addUID("GPmousePositionCoordinate") + "]";
         var inputs = document.querySelectorAll(selector + " input");
         for (var i = 0; i < inputs.length; i++) {

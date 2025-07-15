@@ -10,10 +10,6 @@ button[id^="GPshowMousePositionPicto-"] {
   background-position: 1px center;
 }
 
-.GPmousePositionEditTool {
-    background-image: url("img/GPmousePositionEditCoordinates.png");
-}
-
 button[id^=GPmousePositionPanelClose]  {
   background-image: url("img/GPmousePositionOpen.png");
 }
@@ -106,6 +102,7 @@ select.GPmousePositionDirection:disabled::-ms-value {
 }
 
 /* EDIT COORDINATES TOOLS */
+
 .GPmousePositionPanelEditTools {
   position: absolute;
   top: 20px;
@@ -113,8 +110,9 @@ select.GPmousePositionDirection:disabled::-ms-value {
 }
 
 .GPmousePositionEditTool {
-  width: 18px;
-  height: 18px;
   display: inline-block;
-  cursor: pointer;
+}
+
+.GPmousePositionEditTool {
+  background-image: url("img/GPmousePositionEditCoordinates.png");
 }
