@@ -273,8 +273,7 @@ var CatalogDOM = {
             </li>
             `;
         };
-
-        var strSubCategoriesRadios = "";
+        
         var tmplSubCategoryRadio = (subcategory) => {
             var checked = (subcategory.default) ? "checked" : "";
             return `
@@ -293,6 +292,7 @@ var CatalogDOM = {
             // chaque sous categories à son propre container de couches
             // et son bouton radio de groupe
             var strTabContents = "";
+            var strSubCategoriesRadios = "";
             for (let j = 0; j < subcategories.length; j++) {
                 const subcategory = subcategories[j];
                 strSubCategoriesRadios += tmplSubCategoryRadio(subcategory);
