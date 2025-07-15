@@ -1,5 +1,6 @@
 export default CatalogDOM;
 declare namespace CatalogDOM {
+    function generateID(text: string): string;
     function _addUID(id: string): string;
     function _createMainContainerElement(): DOMElement;
     function _createShowCatalogPictoElement(): DOMElement;

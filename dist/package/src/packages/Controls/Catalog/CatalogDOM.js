@@ -28,6 +28,16 @@ const stringToHTML = (str) => {
 var CatalogDOM = {
 
     /**
+     * Generate an ID from a text
+     *
+     * @param {String} text - text
+     * @returns {String} id - id
+     */
+    generateID : function (text) {
+        return Math.abs(Array.from(text).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
+    },
+
+    /**
     * Add uuid to the tag ID
     * @param {String} id - id selector
     * @returns {String} uid - id selector with an unique id
@@ -244,8 +254,8 @@ var CatalogDOM = {
         return div;
     },
     _createCatalogContentCategoriesTabs : function (categories) {
-        var strTabButtons = "";
-        var tmplTabButton = (i, id, title, selected) => {
+        var strCategoriesTabButtons = "";
+        var tmplCategoryTabButton = (i, id, title, selected) => {
             var className = "GPtabButton fr-tabs__tab";
             var value = "false";
             var tabindex = -1;
@@ -264,46 +274,46 @@ var CatalogDOM = {
             `;
         };
 
-        var strSectionRadios = "";
-        var tmplSectionRadio = (section) => {
-            var checked = (section.default) ? "checked" : "";
+        var strSubCategoriesRadios = "";
+        var tmplSubCategoryRadio = (subcategory) => {
+            var checked = (subcategory.default) ? "checked" : "";
             return `
             <!-- sous categorie -->
             <div class="fr-fieldset__element fr-fieldset__element--inline">
                 <div class="fr-radio-group fr-radio-group--sm">
-                    <input type="radio" id="radio-inline_${section.id}" name="radio-inline" ${checked} aria-controls="tabcontent-${section.id}">
-                    <label class="fr-label" for="radio-inline_${section.id}">
-                        ${section.title}
+                    <input type="radio" id="radio-inline_${subcategory.id}" name="radio-inline" ${checked} aria-controls="tabcontent-${subcategory.id}">
+                    <label class="fr-label" for="radio-inline_${subcategory.id}">
+                        ${subcategory.title}
                     </label>
                 </div>
             </div>
             `;
         };
-        var tmplSectionRadios = (id, sections) => {
+        var tmplSubCategoriesRadios = (id, subcategories) => {
             // chaque sous categories à son propre container de couches
             // et son bouton radio de groupe
             var strTabContents = "";
-            for (let j = 0; j < sections.length; j++) {
-                const section = sections[j];
-                strSectionRadios += tmplSectionRadio(section);
+            for (let j = 0; j < subcategories.length; j++) {
+                const subcategory = subcategories[j];
+                strSubCategoriesRadios += tmplSubCategoryRadio(subcategory);
                 var hidden = "";
-                if (!section.default) {
+                if (!subcategory.default) {
                     hidden = "GPelementHidden gpf-hidden";
                 }
-                strTabContents += `<div class="tabcontent ${hidden}" role="tabpanel-section" id="tabcontent-${section.id}"></div>`;
+                strTabContents += `<div class="tabcontent ${hidden}" role="tabpanel-section" id="tabcontent-${subcategory.id}"></div>`;
             }
             return `
             <!-- sous categories -->
             <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend radio-inline-messages">
-                ${strSectionRadios}
+                ${strSubCategoriesRadios}
                 <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive"></div>
             </fieldset>
             ${strTabContents}
             `;
         };
 
-        var strTabPanelContents = "";
-        var tmplTabPanelContent = (i, id, selected, sections) => {
+        var strCategoriesTabPanelContents = "";
+        var tmplCategoryTabPanelContent = (i, id, selected, subcategories) => {
             var className = "GPtabContent fr-tabs__panel";
             var tabindex = -1;
             if (selected) {
@@ -311,14 +321,14 @@ var CatalogDOM = {
                 tabindex = 0;
             }
             var strTabContent = "<div class=\"tabcontent\"></div>";
-            if (sections) {
-                strTabContent = tmplSectionRadios(id, sections);
+            if (subcategories) {
+                strTabContent = tmplSubCategoriesRadios(id, subcategories);
             }
             // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) :
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
             return `
             <!-- panneaux -->
-            <div id="tabpanel-${i}-panel_${id}" class="${className}" role="tabpanel" aria-labelledby="tabbutton-${i}_${id}" tabindex="${tabindex}" style="max-height: 250px;overflow-y: auto;">
+            <div id="tabpanel-${i}-panel_${id}" class="${className}" role="tabpanel" aria-labelledby="tabbutton-${i}_${id}" tabindex="${tabindex}" style="max-height: 250px;overflow-y: auto; padding: 1em;">
                 ${strTabContent}
             </div>
             `;
@@ -326,18 +336,18 @@ var CatalogDOM = {
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
-            strTabButtons += tmplTabButton(i, category.id, category.title, category.default);
-            strTabPanelContents += tmplTabPanelContent(i, category.id, category.default, category.items);
+            strCategoriesTabButtons += tmplCategoryTabButton(i, category.id, category.title, category.default);
+            strCategoriesTabPanelContents += tmplCategoryTabPanelContent(i, category.id, category.default, category.items);
         }
-
+        /* FIXME style="--tabs-height: 294px;" ajouté à la main pour pallier le manque de JS DSFR */
         var strContainer = `
         <!-- onglets -->
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
-            <div class="GPtabs fr-tabs">
+            <div class="GPtabs fr-tabs" style="--tabs-height: 294px;">
                 <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
-                    ${strTabButtons}
+                    ${strCategoriesTabButtons}
                 </ul>
-                ${strTabPanelContents}
+                ${strCategoriesTabPanelContents}
             </div>
         </div>
         `;
@@ -417,9 +427,97 @@ var CatalogDOM = {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
 
         var strElements = "";
-        var tmplElement = (i, name, title, service, categoryId) => {
-            // FIXME doit on l'utiliser le champ description en HTML ?
-
+        // FIXME doit on utiliser le champ description avec parsing HTML ou string ?
+        var tmplElement = (i, name, title, service, description, informations, categoryId) => {
+            // ajout des meta informations
+            var tmplInfos = (informations) => {
+                // les informations sont des tableaux !
+                if (!informations.producers && !informations.thematics && !informations.metadatas) {
+                    return "";
+                }
+                var strProducers = "";
+                if (informations.producers) {
+                    if (informations.producers.length === 1) {
+                        strProducers = `
+                        <a href="${informations.producers[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                            Informations sur le producteur - ${informations.producers[0].name}
+                        </a>
+                        `;
+                    } else {
+                        var lst = [];
+                        for (let i = 0; i < informations.producers.length; i++) {
+                            const element = informations.producers[i];
+                            lst.push(`
+                                <li>
+                                    <a href="${element.url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                        ${element.name}
+                                    </a>
+                                </li>
+                            `);
+                        }
+                        strProducers = `
+                        <label class="fr-label">Informations sur les producteurs</label>
+                        <ul>
+                            ${lst.join()}
+                        </ul>
+                        `;
+                    }
+                }
+                var strThematics = "";
+                if (informations.thematics) {
+                    if (informations.thematics.length === 1) {
+                        strThematics = `
+                        <a href="${informations.thematics[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                            Informations sur le thème - ${informations.thematics[0].name}
+                        </a>`;
+                    } else {
+                        var lst = [];
+                        for (let i = 0; i < informations.thematics.length; i++) {
+                            const element = informations.thematics[i];
+                            lst.push(`
+                                <li>
+                                    <a href="${element.url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                        ${element.name}
+                                    </a>
+                                </li>
+                            `);
+                        }
+                        strThematics = `
+                        <label class="fr-label">Informations sur les thèmes</label>
+                        <ul>
+                            ${lst.join()}
+                        </ul>
+                        `;
+                    }
+                }
+                var strMetadatas = "";
+                if (informations.metadatas) {
+                    var lst = [];
+                    for (let i = 0; i < informations.metadatas.length; i++) {
+                        const element = informations.metadatas[i];
+                        lst.push(`
+                            <li>
+                                <a href="${element}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                    ${element}
+                                </a>
+                            </li>
+                        `);
+                    }
+                    strMetadatas = `
+                    <label class="fr-label">Liste des meta données disponibles</label>
+                    <ul>
+                        ${lst.join()}
+                    </ul>
+                    `;
+                }
+                return `
+                    <div class="informations-more">
+                        ${strProducers}
+                        ${strThematics}
+                        ${strMetadatas}
+                    </div>
+                `;
+            };
             // le listener sur l'input permet de récuperer à partir de l'ID
             // la paire name/service pour identifier la couche:
             // > "checkboxes-${categoryId}-${i}_${name}-${service}".split('_')[1]
@@ -435,26 +533,39 @@ var CatalogDOM = {
                     <label class="GPlabelActive fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="nom technique : ${name}">
                         ${title} (${service})
                     </label>
+                    <section class="fr-accordion">
+                        <h5 class="fr-accordion__title">
+                            <button class="GPcatalogButtonMoreInfo fr-accordion__btn" role="button-collapse-more-${categoryId}" aria-expanded="false" aria-controls="accordion-more-${i}-${categoryId}">
+                                <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-more-${i}-${categoryId}"></span>En savoir plus
+                            </button>
+                        </h5>
+                        <div class="fr-collapse GPelementHidden" id="accordion-more-${i}-${categoryId}">
+                            ${description}
+                            <p>
+                                ${tmplInfos(informations)}
+                            </p>
+                        </div>
+                    </section>
                     <div class="fr-messages-group" id="checkboxes-messages-${categoryId}-${i}_${name}-${service}" aria-live="assertive"></div>
                 </div>
             </div>
             `;
         };
 
-        // cf. https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/accordeon
         var tmplSection = (id, categoryId, title, count, data) => {
             // INFO
             // - la maquette ne possède pas de compteur de couches
             // - hack pour le thème dsfr, on masque l'icone collapse du thème classic
             return `
             <!-- section -->
-            <section class="fr-accordion" style="width:100%;">
+            <section id="section-${categoryId}-${id}" class="fr-accordion" style="">
                 <h3 class="fr-accordion__title">
-                    <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${id}">
-                        <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>${title}
+                    <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
+                        <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>
+                        ${title} (<span id="section-count-${categoryId}-${id}">${count}</span>)
                     </button>
                 </h3>
-                <div class="fr-collapse GPelementHidden" id="accordion-${id}">
+                <div class="fr-collapse GPelementHidden" id="accordion-${categoryId}-${id}">
                     ${data}
                 </div>
             </section>
@@ -463,7 +574,7 @@ var CatalogDOM = {
 
         // INFO
         // les couches par catégorie sont filtrées au préalable
-        // on ajoute la repartition par section des couches !
+        // on ajoute la repartition par section des couches (regroupement) !
         var isSection = category.section;
         if (isSection) {
             // on procède à un tri
@@ -474,39 +585,54 @@ var CatalogDOM = {
         }
 
         var sections = {};
+        // regroupement ou pas des couches par sections
         for (let i = 0; i < layers.length; i++) {
             const layer = layers[i];
+            const infos = {
+                producers : layer.producer_urls, // tableau d'objets [{name,url}]
+                thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
+                metadatas : layer.metadata_urls  // tableau
+            };
             // INFO
-            // a t on des sections ?
+            // a t on des sections (regroupements) ?
             // - oui, si elle correspond au filtre, on ajoute la couche dans la section
-            //   sinon, on ecarte cette couche ou on la met dans la section "Autres"
-            // - non, on ajoute directement la couche
+            //   sinon, on ecarte cette couche (normalement, dans la section "Autres")
+            // - non, on ajoute directement la couche dans la sous categorie
+            var element = tmplElement(i, layer.name, layer.title, layer.service, layer.description, infos, category.id);
             if (isSection) {
                 var title = layer[category.filter.field][0];
                 if (title) {
                     if (!sections.hasOwnProperty(title)) {
                         sections[title] = "";
                     }
-                    sections[title] += tmplElement(i, layer.name, layer.title, layer.service, category.id);
+                    sections[title] += element;
+                } else {
+                    // au cas où...
+                    sections["Autres"] += element;
                 }
             } else {
-                strElements += tmplElement(i, layer.name, layer.title, layer.service, category.id);
+                strElements += element;
             }
         }
 
         if (isSection) {
+            category.sections = [];
+            // creation des sections de regroupement
+            // et ajout des couches dans les sections
             for (const title in sections) {
                 if (Object.prototype.hasOwnProperty.call(sections, title)) {
                     const data = sections[title];
-                    var count = [...data.matchAll(/fr-fieldset__element/g)].length;
-                    var id = Math.abs(Array.from(title).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
+                    var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                    var id = this.generateID(title);
                     strElements += tmplSection(id, category.id, title, count, data);
+                    // HACK on enregistre les valeurs des sections dans l'objet category
+                    category.sections.push(title);
                 }
             }
         }
         var strContainer = `
             <!-- liste de couches -->
-            <fieldset class="fr-fieldset" id="checkboxes-${category.id}" aria-labelledby="checkboxes-legend checkboxes-messages">
+            <div class="fr-accordions-group" id="checkboxes-${category.id}" aria-labelledby="checkboxes-legend checkboxes-messages">
                 ${strElements}
             </fieldset>
         `;
@@ -533,6 +659,26 @@ var CatalogDOM = {
         var buttons = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
         if (buttons) {
             buttons.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaExpanded === "true") {
+                        collapse.classList.add("fr-collapse--expanded");
+                        collapse.classList.remove("GPelementHidden");
+                    } else {
+                        collapse.classList.remove("fr-collapse--expanded");
+                        collapse.classList.add("GPelementHidden");
+                    }
+                }, false);
+            });
+        }
+        var buttonNameMore = `button-collapse-more-${category.id}`;
+        var buttonsMore = shadow.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
+        if (buttonsMore) {
+            buttonsMore.forEach((button) => {
                 button.addEventListener("click", (e) => {
                     e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
                     var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
