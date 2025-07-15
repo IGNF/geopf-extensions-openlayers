@@ -29,7 +29,7 @@ var CatalogDOM = {
 
     /**
      * Generate an ID from a text
-     * 
+     *
      * @param {String} text - text
      * @returns {String} id - id
      */
@@ -339,11 +339,11 @@ var CatalogDOM = {
             strCategoriesTabButtons += tmplCategoryTabButton(i, category.id, category.title, category.default);
             strCategoriesTabPanelContents += tmplCategoryTabPanelContent(i, category.id, category.default, category.items);
         }
-
+        /* FIXME style="--tabs-height: 294px;" ajouté à la main pour pallier le manque de JS DSFR */
         var strContainer = `
         <!-- onglets -->
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
-            <div class="GPtabs fr-tabs">
+            <div class="GPtabs fr-tabs" style="--tabs-height: 294px;">
                 <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
                     ${strCategoriesTabButtons}
                 </ul>
