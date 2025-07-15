@@ -695,7 +695,7 @@ var MousePositionDOM = {
     _setEditMode : function (editing) {
         var locateElt = document.getElementById(this._addUID("GPmousePositionLocate"));
         locateElt.title = editing ? "Aller à la position ..." : "Cliquer pour saisir des coordonnées";
-        
+
         var closeEditElt = document.getElementById(this._addUID("GPmousePositionCloseEdit"));
         closeEditElt.style.display = editing ? "inline-block" : "none";
 
