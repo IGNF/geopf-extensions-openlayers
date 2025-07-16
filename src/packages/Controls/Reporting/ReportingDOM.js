@@ -172,8 +172,9 @@ var ReportingDOM = {
         return btnClose;
     },
 
-    /** 
+    /**
      * Create Reporting Panel Footer
+     * @returns {DOMElement} DOM element
      * @todo
      */
     _createReportingPanelFooterElement : function () {
@@ -223,6 +224,7 @@ var ReportingDOM = {
 
     /**
      * Create input panel
+     * @returns {HTMLElement} The input panel DOM element
      */
     _createReportingPanelInputElement : function () {
         // - header : sans titre
@@ -243,7 +245,7 @@ var ReportingDOM = {
 
     /**
      * Create panel form
-     *
+     * @param {Array} thematics - List of thematics for the reporting form
      * @returns {DOMElement} DOM element
      */
     _createReportingPanelFormElement : function (thematics) {
@@ -285,11 +287,11 @@ var ReportingDOM = {
         var divTheme = `
         <div class="fr-select-group">
             <label class="gpf-label fr-label" for="${idTheme}">
-                Objet du signalement (obligatoire)  
-            </label>  
+                Objet du signalement (obligatoire)
+            </label>
             <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme" required>
                 <option value="" selected disabled >Sélectionner une option</option>
-                ${thematics.map((theme) => { return `<option value="${theme}">${theme}</option>`; }).join("")}  
+                ${thematics.map((theme) => { return `<option value="${theme}">${theme}</option>`; }).join("")}
             </select>
         </div>
         `;
@@ -297,9 +299,9 @@ var ReportingDOM = {
         var idDesc = this._addUID("GPreportingFormTextDesc");
         var divDesc = `
         <div class="fr-input-group">
-            <label class="gpf-label fr-label" for="${idDesc}">      
-                Description (obligatoire)    
-            </label>    
+            <label class="gpf-label fr-label" for="${idDesc}">
+                Description (obligatoire)
+            </label>
             <textarea class="gpf-input fr-input" id="${idDesc}" name="GPreportingTextDesc" required></textarea>
         </div>
         `;
@@ -361,7 +363,7 @@ var ReportingDOM = {
                 this.onEntryFormDescReportingChange(e);
             });
         }
-        
+
         form.appendChild(shadow);
 
         return form;
@@ -369,7 +371,7 @@ var ReportingDOM = {
 
     /**
      * Create the submit button
-     * 
+     *
      * @returns {DOMElement} DOM element
      * @description Create the submit button for the reporting form.
      * This button is used to submit the reporting form.
@@ -387,9 +389,10 @@ var ReportingDOM = {
 
     /**
      * Create panel drawing
+     * @returns {HTMLElement} The drawing panel DOM element
      */
     _createReportingPanelDrawingElement : function () {
-        // TODO : 
+        // TODO :
         // - header
         // - content : injection d'un outil drawing
         // - footer
@@ -402,6 +405,7 @@ var ReportingDOM = {
 
     /**
      * Create panel send reporting
+     * @returns {HTMLElement} The send reporting panel DOM element
      */
     _createReportingPanelSendElement : function () {
         // - header : titre
