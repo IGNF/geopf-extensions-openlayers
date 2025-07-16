@@ -172,6 +172,7 @@ var TerritoriesDOM = {
         var idButton = "gpf-territories-button-option-id";
         var idInput = "gpf-territories-upload-id";
         var idClose = "gpf-territories-upload-close-id";
+        var idToggle = "gpf-territories-toggle-messages";
 
         var strContainer = `
         <div>
@@ -198,6 +199,15 @@ var TerritoriesDOM = {
                     ${title}
                     <span class="fr-hint-text">${description}</span>
                 </label>
+                <div class="fr-toggle fr-m-2v">
+                    <input 
+                        id="${idToggle}" 
+                        class="fr-toggle__input" 
+                        type="checkbox" 
+                        aria-describedby="gpf-territories-toggle-messages">
+                    <label class="fr-toggle__label" for="${idToggle}">Ajouter à liste courrante</label>
+                    <div class="fr-messages-group" id="gpf-territories-toggle-messages" aria-live="polite"></div>
+                </div>
                 <input 
                     id="${idInput}" 
                     class="fr-upload" 
@@ -248,6 +258,14 @@ var TerritoriesDOM = {
             input.addEventListener("change", (e) => {
                 self.onUploadFileClick(e);
             }, false);
+        }
+
+        var toggle = shadow.getElementById(idToggle);
+        if (idToggle) {
+            toggle.addEventListener("click", (e) => {
+                console.log(e.target.checked);
+                self.onUploadToggleClick(e);
+            });
         }
         return shadow.firstChild;
     },

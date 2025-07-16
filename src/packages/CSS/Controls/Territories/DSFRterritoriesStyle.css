@@ -91,7 +91,7 @@ dialog.tiles-direction { }
 
 /* nombre de tuiles */
 .tiles-direction.tiles-0 {
-    max-height: none !important;
+    /* max-height: none !important; */
     grid-template-columns: repeat(3, 1fr);
 }
 .tiles-direction.tiles-1 {

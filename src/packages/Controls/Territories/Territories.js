@@ -324,6 +324,9 @@ var Territories = class Territories extends Control {
          */
         this.territories = [];
 
+        /** {Boolean} specify if a list of object territories must be appended or replaced */
+        this.append = false;
+
         this.buttonTerritoriesShow = null;
         this.panelTerritoriesContainer = null;
         this.panelTerritoriesHeaderContainer = null; // usefull for the dragNdrop
@@ -541,14 +544,27 @@ var Territories = class Territories extends Control {
             self.closePanelUpLoad(target);
             // on convertie string -> json
             var config = JSON.parse(e.target.result);
-            // on nettoie l'ancienne configuration
-            self.removeTerritories();
+            if (!self.append) {
+                // on nettoie l'ancienne configuration
+                self.removeTerritories();
+            }
             // et, on en ajoute une autre
             self.setTerritories(config);
         };
 
         // Lecture du fichier chargé à l'aide de fileReader
         fReader.readAsText(file);
+    }
+
+    /**
+     * ...
+     * @param {*} e  - ...
+     */
+    onUploadToggleClick (e) {
+        // INFO
+        // la configuration des territoires doit elle être ajoutée
+        // à la liste courrante ou remplacée ?
+        this.append = e.target.checked;
     }
 
 };
