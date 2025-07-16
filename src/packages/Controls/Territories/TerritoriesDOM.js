@@ -164,12 +164,10 @@ var TerritoriesDOM = {
 
         return btnClose;
     },
-    _createTerritoriesPanelOptionsElement : function () {
+    _createTerritoriesPanelOptionsElement : function (title, description) {
         var self = this;
 
         var content = "&#x2630";
-        var titre = "Ajouter un fichier de configuration";
-        var description = "";
 
         var idButton = "gpf-territories-button-option-id";
         var idInput = "gpf-territories-upload-id";
@@ -197,7 +195,7 @@ var TerritoriesDOM = {
                     </button>
                 </div>
                 <label class="fr-label" for="gpf-territories-upload-id">
-                    ${titre}
+                    ${title}
                     <span class="fr-hint-text">${description}</span>
                 </label>
                 <input 

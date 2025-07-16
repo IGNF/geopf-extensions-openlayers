@@ -174,7 +174,7 @@ var Territories = class Territories extends Control {
     /**
      * Load a new configuration
      * 
-     * @param {Object} config 
+     * @param {Object} config - file config
      */
     setTerritories (config) {
         for (let j = 0; j < config.length; j++) {
@@ -282,7 +282,11 @@ var Territories = class Territories extends Control {
             collapsed : true,
             draggable : false,
             panel : true, // titre
-            upload : false, // menu du upload
+            upload : {
+                active : false,
+                title : "Ajouter un fichier de configuration",
+                description : ""
+            }, // menu du upload
             title : "Sélectionner un territoire",
             auto : false, // chargement auto des territoires par defaut
             thumbnail : false, // imagette des territoires
@@ -292,7 +296,9 @@ var Territories = class Territories extends Control {
         };
 
         // merge with user options
+        var uploadOpts = Utils.assign(this.options.upload, options.upload);
         Utils.assign(this.options, options);
+        Utils.assign(this.options.upload, uploadOpts);
 
         /** {Boolean} specify if control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
@@ -372,8 +378,8 @@ var Territories = class Territories extends Control {
             var territoriesPanelTitle = this._createTerritoriesPanelTitleElement(this.options.title);
             territoriesPanelHeader.appendChild(territoriesPanelTitle);
             // options
-            if (this.options.upload) {
-                var territoriesPanelOptions = this.containerTerritoriesOptions = this._createTerritoriesPanelOptionsElement();
+            if (this.options.upload && this.options.upload.active) {
+                var territoriesPanelOptions = this.containerTerritoriesOptions = this._createTerritoriesPanelOptionsElement(this.options.upload.title, this.options.upload.description);
                 territoriesPanelHeader.appendChild(territoriesPanelOptions);
             }
             // close picto
@@ -475,7 +481,7 @@ var Territories = class Territories extends Control {
 
     /**
      * ...
-     * @param {*} e 
+     * @param {*} e  - ...
      */
     onUploadFileClick (e) {
         var file = e.target.files[0];
@@ -488,27 +494,46 @@ var Territories = class Territories extends Control {
          
         // Définition des fonctions de callbacks associées au reader
         var self = this;
-        /** on readAsText error */
+        /** 
+         * on readAsText error 
+         * @param {*} e  - ...
+         * @private
+         */
         fReader.onerror = (e) => {
             logger.log("onerror");
         };
-        /** on readAsText progress */
-        fReader.onprogress = () => {
+        /** on readAsText progress 
+         * @param {*} e  - ...
+         * @private
+         */
+        fReader.onprogress = (e) => {
             logger.log("onprogress");
         };
-        /** on load start */
-        fReader.onloadstart = () => {
+        /** on load start 
+         * @param {*} e  - ...
+         * @private
+         */
+        fReader.onloadstart = (e) => {
             logger.log("onloadstart");
         };
-        /** on readAsText abort */
-        fReader.onabort = () => {
+        /** on readAsText abort 
+         * @param {*} e  - ...
+         * @private
+         */
+        fReader.onabort = (e) => {
             logger.log("onabort");
         };
-        /** on readAsText loadend */
+        /** on readAsText loadend 
+         * @param {*} e  - ...
+         * @private
+         */
         fReader.onloadend = (e) => {
             logger.log("onloadend : ", e);
         };
-        /** on readAsText load */
+        /** on readAsText load 
+         * @param {*} e  - ...
+         * @private
+         */
         fReader.onload = (e) => {
             logger.log("file content : ", e.target.result);
 
