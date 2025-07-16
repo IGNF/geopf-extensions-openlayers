@@ -1366,11 +1366,13 @@ var Reporting = class Reporting extends Control {
                 // clear data after sending
                 this.data = null;
                 var drawing =  this.iocDrawing.Drawing;
-                var layer = drawing.getLayer();
-                var map = this.getMap();
-                if (layer) {
-                    map.removeLayer(layer);
-                    drawing.setLayer();
+                if (drawing) {
+                    var layer = drawing.getLayer();
+                    var map = this.getMap();
+                    if (layer) {
+                        map.removeLayer(layer);
+                        drawing.setLayer();
+                    }
                 }
             })
             .then(() => {
