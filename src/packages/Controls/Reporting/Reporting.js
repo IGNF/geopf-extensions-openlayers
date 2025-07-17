@@ -1357,6 +1357,16 @@ var Reporting = class Reporting extends Control {
             mail : e.mail
         });
 
+        var errorDom = this.sendReportingContainer.querySelector("#GPreportingSendFieldset");
+        var messDom = this.sendReportingContainer.querySelector("#GPreportingSendFieldsetMessages");
+        if (!e.mail) {
+            errorDom.classList.add("fr-fieldset--error");
+            messDom.classList.replace("gpf-hidden", "gpf-visible");
+            return;
+        } else {
+            errorDom.classList.remove("fr-fieldset--error");
+            messDom.classList.replace("gpf-visible", "gpf-hidden");
+        }
         // send the reporting data to the server or process it as needed
         logger.info("Reporting data to send:", this.data);
 
