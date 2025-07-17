@@ -133,3 +133,10 @@ img[id^=GPmousePositionMarker]:hover {
   display: block;
 }
 
+/* EDIT COORDINATES TOOLS */
+
+.GPmousePositionEditTool {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
