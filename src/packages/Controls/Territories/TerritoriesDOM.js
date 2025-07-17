@@ -205,7 +205,7 @@ var TerritoriesDOM = {
                         class="fr-toggle__input" 
                         type="checkbox" 
                         aria-describedby="gpf-territories-toggle-messages">
-                    <label class="fr-toggle__label" for="${idToggle}">Ajouter à liste courrante</label>
+                    <label class="fr-toggle__label" for="${idToggle}">Compléter la liste</label>
                     <div class="fr-messages-group" id="gpf-territories-toggle-messages" aria-live="polite"></div>
                 </div>
                 <input 
