@@ -435,8 +435,13 @@ var ReportingDOM = {
         `;
 
         var strContainer = `
+        <fieldset class="fr-fieldset" id="GPreportingSendFieldset" role="group" aria-labelledby="GPreportingSendFieldsetMessages">
             ${divMail}
             ${divBtn}
+            <div class="fr-messages-group gpf-hidden" id="GPreportingSendFieldsetMessages" aria-live="polite">
+                <p class="fr-message fr-message--error" id="GPreportingSendFieldsetMessage">Le champ est obligatoire</p>
+            </div>
+        </fieldset>
         `;
         var container = stringToHTML(strContainer);
 
