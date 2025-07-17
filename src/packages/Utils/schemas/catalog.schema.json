@@ -17,9 +17,7 @@
                 "items": {}
               }
             },
-            "required": [
-              "$apikey"
-            ]
+            "required": []
           }
         },
         "required": [
@@ -618,9 +616,7 @@
             ]
           }
         },
-        "required": [
-          "$tmsid"
-        ]
+        "required": []
       }
     },
     "required": [

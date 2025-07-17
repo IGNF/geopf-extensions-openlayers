@@ -1,4 +1,5 @@
 import Ajv from "ajv";
+import addFormats from "ajv-formats";
 // import Ajv2020 from "ajv/dist/2020";
 
 // liste des schemas
@@ -29,7 +30,8 @@ var JsonValidatorUtils = class JsonValidatorUtils {
 
     constructor () {
         this.ajv = new Ajv({ strict : false, allErrors : true });
-        
+        addFormats(this.ajv, {mode : "fast", formats : ["uri"], keywords : true});
+
         this.schemas = {};
         this.loadSchemas();
     }
