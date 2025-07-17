@@ -1,0 +1,126 @@
+{
+  "$id": "layer-wmts",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["name", "globalConstraint", "params"],
+  "properties": {
+    "name": { "type": "string" },
+    "globalConstraint": {
+      "type": "object",
+      "required": ["maxScaleDenominator", "minScaleDenominator", "bbox"],
+      "properties": {
+        "maxScaleDenominator": { "type": "number" },
+        "minScaleDenominator": { "type": "number" },
+        "bbox": {
+          "type": "object",
+          "required": ["left", "right", "top", "bottom"],
+          "properties": {
+            "left": { "type": "number" },
+            "right": { "type": "number" },
+            "top": { "type": "number" },
+            "bottom": { "type": "number" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "params": {
+      "type": "object",
+      "required": ["url", "styles", "version", "format", "projection", "minScale", "maxScale", "extent", "legends", "title", "description", "tileMatrixSetLimits", "TMSLink", "matrixIds", "tileMatrices", "nativeResolutions"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "styles": { "type": "string" },
+        "version": { "type": "string" },
+        "format": { "type": "string" },
+        "projection": { "type": "string" },
+        "minScale": { "type": "number" },
+        "maxScale": { "type": "number" },
+        "extent": {
+          "type": "object",
+          "required": ["left", "right", "top", "bottom"],
+          "properties": {
+            "left": { "type": "number" },
+            "right": { "type": "number" },
+            "top": { "type": "number" },
+            "bottom": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "legends": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["format", "url", "minScaleDenominator"],
+            "properties": {
+              "format": { "type": "string" },
+              "url": { "type": "string" },
+              "minScaleDenominator": {
+                "type": ["string", "number"]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "tileMatrixSetLimits": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]+$": {
+              "type": "object",
+              "required": ["minTileRow", "maxTileRow", "minTileCol", "maxTileCol"],
+              "properties": {
+                "minTileRow": { "type": "string" },
+                "maxTileRow": { "type": "string" },
+                "minTileCol": { "type": "string" },
+                "maxTileCol": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "TMSLink": { "type": "string" },
+        "matrixIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tileMatrices": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]+$": {
+              "type": "object",
+              "required": ["matrixId", "matrixHeight", "matrixWidth", "scaleDenominator", "tileHeight", "tileWidth", "topLeftCorner"],
+              "properties": {
+                "matrixId": { "type": "string" },
+                "matrixHeight": { "type": "integer" },
+                "matrixWidth": { "type": "integer" },
+                "scaleDenominator": { "type": "number" },
+                "tileHeight": { "type": "integer" },
+                "tileWidth": { "type": "integer" },
+                "topLeftCorner": {
+                  "type": "object",
+                  "required": ["x", "y"],
+                  "properties": {
+                    "x": { "type": "number" },
+                    "y": { "type": "number" }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "nativeResolutions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

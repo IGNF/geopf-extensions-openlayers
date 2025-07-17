@@ -1,0 +1,158 @@
+{
+    "name": "Noms_routes",
+    "title": "BDTopo Noms Routes",
+    "description": "BD Topo Noms routes: 2024-09-15",
+    "globalConstraint": {
+        "minScaleDenominator": 0,
+        "maxScaleDenominator": 62236752975597,
+        "bbox": {
+            "left": -63.28125,
+            "right": 55.8984375,
+            "top": 51.27109375,
+            "bottom": -21.421484375
+        }
+    },
+    "serviceParams": {
+        "id": "OGC:WMS",
+        "version": "1.3.0",
+        "serverUrl": {
+            "full": "https://data.geopf.fr/wms-v/ows"
+        }
+    },
+    "defaultProjection": "EPSG:4326",
+    "queryable": true,
+    "metadata": [],
+    "styles": [
+        {
+            "name": "default-style-Noms_routes",
+            "title": "Noms_routes style"
+        }
+    ],
+    "legends": [
+        {
+            "format": "image/png",
+            "url": "https://data.geopf.fr/wms-v/ows?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=Noms_routes"
+        }
+    ],
+    "formats": [
+        {
+            "name": "image/png",
+            "current": true
+        },
+        {
+            "name": "application/atom+xml",
+            "current": false
+        },
+        {
+            "name": "application/json;type=utfgrid",
+            "current": false
+        },
+        {
+            "name": "application/pdf",
+            "current": false
+        },
+        {
+            "name": "application/rss+xml",
+            "current": false
+        },
+        {
+            "name": "application/vnd.google-earth.kml+xml",
+            "current": false
+        },
+        {
+            "name": "application/vnd.google-earth.kml+xml;mode=networklink",
+            "current": false
+        },
+        {
+            "name": "application/vnd.google-earth.kmz",
+            "current": false
+        },
+        {
+            "name": "image/geotiff",
+            "current": false
+        },
+        {
+            "name": "image/geotiff8",
+            "current": false
+        },
+        {
+            "name": "image/gif",
+            "current": false
+        },
+        {
+            "name": "image/jpeg",
+            "current": false
+        },
+        {
+            "name": "image/png; mode=8bit",
+            "current": false
+        },
+        {
+            "name": "image/svg+xml",
+            "current": false
+        },
+        {
+            "name": "image/tiff",
+            "current": false
+        },
+        {
+            "name": "image/tiff8",
+            "current": false
+        },
+        {
+            "name": "image/vnd.jpeg-png",
+            "current": false
+        },
+        {
+            "name": "image/vnd.jpeg-png8",
+            "current": false
+        },
+        {
+            "name": "text/html; subtype=openlayers",
+            "current": false
+        },
+        {
+            "name": "text/html; subtype=openlayers2",
+            "current": false
+        },
+        {
+            "name": "text/html; subtype=openlayers3",
+            "current": false
+        }
+    ],
+    "producer": [
+        "Autres"
+    ],
+    "thematic": [
+        "Autres"
+    ],
+    "base": false,
+    "key": "Noms_routes$GEOPORTAIL:OGC:WMS",
+    "position": -1,
+    "opacity": 1,
+    "visible": true,
+    "grayscale": false,
+    "params": {
+        "url": "https://data.geopf.fr/wms-v/ows",
+        "styles": "default-style-Noms_routes",
+        "version": "1.3.0",
+        "format": "image/png",
+        "projection": "EPSG:4326",
+        "minScale": 0,
+        "maxScale": 62236752975597,
+        "extent": {
+            "left": -63.28125,
+            "right": 55.8984375,
+            "top": 51.27109375,
+            "bottom": -21.421484375
+        },
+        "legends": [
+            {
+                "format": "image/png",
+                "url": "https://data.geopf.fr/wms-v/ows?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=Noms_routes"
+            }
+        ],
+        "title": "BDTopo Noms Routes",
+        "description": "BD Topo Noms routes: 2024-09-15"
+    }
+}

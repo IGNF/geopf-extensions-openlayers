@@ -42,7 +42,7 @@
 {{#content "js"}}
     <script>
         async function getData () {
-            var response = await fetch("{{ resources }}/data/territories-custom.json", {});
+            var response = await fetch("{{ resources }}/data/configuration/territories-custom.json", {});
             var data = await response.json();
             if (response.status !== 200) {
                 throw new Error("Erreur de récupération du JSON !");
