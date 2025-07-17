@@ -45,6 +45,21 @@
     right: 0;
 }
 
+#gpf-territories-upload-container-id {
+    top: 50px;
+    z-index: 10000;
+    border-color: #ddd;
+    border-width: 1px;
+}
+
+.gpf-territories-header-upload {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    height: 30px;
+}
+
 /* surchage tile */
 .gpf-tile {
     height: 150px;
@@ -76,7 +91,7 @@ dialog.tiles-direction { }
 
 /* nombre de tuiles */
 .tiles-direction.tiles-0 {
-    max-height: none !important;
+    /* max-height: none !important; */
     grid-template-columns: repeat(3, 1fr);
 }
 .tiles-direction.tiles-1 {

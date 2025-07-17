@@ -9,6 +9,7 @@ declare namespace TerritoriesDOM {
     function _createTerritoriesPanelIconElement(): HTMLLabelElement;
     function _createTerritoriesPanelTitleElement(title: any): HTMLDivElement;
     function _createTerritoriesPanelCloseElement(): HTMLButtonElement;
+    function _createTerritoriesPanelOptionsElement(title: any, description: any): ChildNode | null;
     function _createTerritoriesElement(): HTMLDivElement;
     function _createTerritoryEntry(o: any): ChildNode | null | undefined;
 }
