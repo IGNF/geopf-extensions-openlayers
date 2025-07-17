@@ -13,6 +13,31 @@ div[id^=GPmousePositionCoordinate-] > div {
   justify-content: space-between;
 }
 
-div[id^=GPmousePositionCoordinate-] input[readonly] {
+div[id^=GPmousePositionCoordinate-] input {
   font-size: 1rem
+}
+
+/* EDIT COORDINATES TOOLS */
+
+.GPmousePositionPanelEditTools {
+  display: flex;
+}
+
+.gpf-btn-icon-mp-edit, .gpf-btn-icon-mp-edit-close, .gpf-btn-icon-mp-edit-center {
+  box-shadow: none;
+}
+
+.gpf-btn-icon-mp-edit::after {
+  -webkit-mask: url("img/dsfr/edit.svg") center no-repeat;
+  mask: url("img/dsfr/edit.svg") center no-repeat;
+}
+
+.gpf-btn-icon-mp-edit-center::after {
+  -webkit-mask: url("img/dsfr/map-pin-2-fill.svg") center no-repeat;
+  mask: url("img/dsfr/map-pin-2-fill.svg") center no-repeat;
+}
+
+.gpf-btn-icon-mp-edit-close::after {
+  -webkit-mask: url("img/dsfr/arrow-go-back-fill.svg") center no-repeat;
+  mask: url("img/dsfr/arrow-go-back-fill.svg") center no-repeat;
 }

@@ -22,6 +22,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - MousePosition : Edition des coordonnées (#407)
   
 * 🔒 [Security]
 
