@@ -1,5 +1,166 @@
 {
   "$id": "layer-wms",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object"
+  "type": "object",
+  "required": ["name", "title", "description", "globalConstraint", "serviceParams", "defaultProjection", "queryable", "metadata", "styles", "legends", "formats", "producer", "thematic", "base", "key", "position", "opacity", "visible", "grayscale", "params"],
+  "properties": {
+    "name": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+
+    "globalConstraint": {
+      "type": "object",
+      "required": ["minScaleDenominator", "maxScaleDenominator", "bbox"],
+      "properties": {
+        "minScaleDenominator": { "type": "number" },
+        "maxScaleDenominator": { "type": "number" },
+        "bbox": {
+          "type": "object",
+          "required": ["left", "right", "top", "bottom"],
+          "properties": {
+            "left": { "type": "number" },
+            "right": { "type": "number" },
+            "top": { "type": "number" },
+            "bottom": { "type": "number" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "serviceParams": {
+      "type": "object",
+      "required": ["id", "version", "serverUrl"],
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string" },
+        "serverUrl": {
+          "type": "object",
+          "required": ["full"],
+          "properties": {
+            "full": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "defaultProjection": { "type": "string" },
+    "queryable": { "type": "boolean" },
+    "metadata": {
+      "type": "array",
+      "items": {}
+    },
+
+    "styles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "title"],
+        "properties": {
+          "name": { "type": "string" },
+          "title": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "legends": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["format", "url"],
+        "properties": {
+          "format": { "type": "string" },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "formats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "current"],
+        "properties": {
+          "name": { "type": "string" },
+          "current": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "producer": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "thematic": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "base": { "type": "boolean" },
+    "key": { "type": "string" },
+    "position": { "type": "integer" },
+    "opacity": { "type": "number" },
+    "visible": { "type": "boolean" },
+    "grayscale": { "type": "boolean" },
+
+    "params": {
+      "type": "object",
+      "required": ["url", "styles", "version", "format", "projection", "minScale", "maxScale", "extent", "legends", "title", "description"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "styles": { "type": "string" },
+        "version": { "type": "string" },
+        "format": { "type": "string" },
+        "projection": { "type": "string" },
+        "minScale": { "type": "number" },
+        "maxScale": { "type": "number" },
+        "extent": {
+          "type": "object",
+          "required": ["left", "right", "top", "bottom"],
+          "properties": {
+            "left": { "type": "number" },
+            "right": { "type": "number" },
+            "top": { "type": "number" },
+            "bottom": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "legends": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["format", "url"],
+            "properties": {
+              "format": { "type": "string" },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
 }
