@@ -39,7 +39,7 @@ export default LayerWMTS;
 *     }
 * },
 * "params" : {
-*     "url" : "https:*data.geopf.fr/wmts",
+*     "url" : "https://data.geopf.fr/wmts",
 *     "styles" : "normal",
 *     "version" : "1.0.0",
 *     "format" : "image/jpeg",

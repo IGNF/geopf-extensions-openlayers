@@ -14,6 +14,7 @@ import LayerUtils from "./Utils/LayerUtils";
 import ProxyUtils from "./Utils/ProxyUtils";
 import ColorUtils from "./Utils/ColorUtils";
 import MathUtils from "./Utils/MathUtils";
+import JsonValidatorUtils from "./Utils/JsonValidatorUtils";
 import Logger from "./Utils/LoggerByDefault";
 import Parser from "./Utils/Parser";
 import Register from "./Utils/Register";
@@ -126,5 +127,5 @@ import Territories from "./Controls/Territories/Territories";
 import ControlList from "./Controls/ControlList/ControlList";
 import ContextMenu from "./Controls/ContextMenu/ContextMenu";
 import Reporting from "./Controls/Reporting/Reporting";
-export { HelperUtils, LayerUtils, ProxyUtils, ColorUtils, MathUtils, Logger, Parser, Register, Ol as olExtended };
+export { HelperUtils, LayerUtils, ProxyUtils, ColorUtils, MathUtils, JsonValidatorUtils, Logger, Parser, Register, Ol as olExtended };
 //# sourceMappingURL=bundle.d.ts.map

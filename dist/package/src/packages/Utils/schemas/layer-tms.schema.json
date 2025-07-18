@@ -1,0 +1,120 @@
+{
+  "$id": "layer-tms",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["name", "title", "description", "params", "formats", "styles", "globalConstraint"],
+  "properties": {
+    "hidden": { "type": "boolean" },
+    "queryable": { "type": "boolean" },
+    "serviceParams": {
+      "type": "object",
+      "required": ["id", "version", "serverUrl"],
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string" },
+        "serverUrl": {
+          "type": "object",
+          "required": ["full"],
+          "properties": {
+            "full": { "type": "string", "format": "uri" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "name": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "formats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "current"],
+        "properties": {
+          "name": { "type": "string" },
+          "current": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "styles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "title", "url"],
+        "properties": {
+          "name": { "type": "string" },
+          "title": { "type": "string" },
+          "current": { "type": "boolean" },
+          "url": { "type": "string", "format": "uri" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "globalConstraint": {
+      "type": "object",
+      "required": ["crs", "bbox", "minScaleDenominator", "maxScaleDenominator"],
+      "properties": {
+        "crs": { "type": "string" },
+        "bbox": {
+          "type": "object",
+          "required": ["left", "right", "top", "bottom"],
+          "properties": {
+            "left": { "type": "number" },
+            "right": { "type": "number" },
+            "top": { "type": "number" },
+            "bottom": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "minScaleDenominator": { "type": "number" },
+        "maxScaleDenominator": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "defaultProjection": { "type": "string" },
+    "thematic": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "base": { "type": "boolean" },
+    "producer": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "key": { "type": "string" },
+    "position": { "type": "integer" },
+    "opacity": { "type": "number" },
+    "visible": { "type": "boolean" },
+    "grayscale": { "type": "boolean" },
+    "params": {
+      "type": "object",
+      "required": ["url", "styles", "version", "format", "projection", "minScale", "maxScale", "extent", "title", "description"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "styles": { "type": "string" },
+        "version": { "type": "string" },
+        "format": { "type": "string" },
+        "projection": { "type": "string" },
+        "minScale": { "type": "number" },
+        "maxScale": { "type": "number" },
+        "extent": {
+          "type": "object",
+          "required": ["left", "right", "top", "bottom"],
+          "properties": {
+            "left": { "type": "number" },
+            "right": { "type": "number" },
+            "top": { "type": "number" },
+            "bottom": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
