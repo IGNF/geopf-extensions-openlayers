@@ -1,0 +1,117 @@
+{
+    "hidden": true,
+    "queryable": false,
+    "serviceParams": {
+        "id": "GPP:TMS",
+        "version": "1.0.0",
+        "serverUrl": {
+            "full": "https://data.geopf.fr/tms/1.0.0/"
+        }
+    },
+    "name": "PLAN.IGN",
+    "title": "PLAN.IGN",
+    "description": "Plan IGN personnalisable",
+    "formats": [
+        {
+            "current": true,
+            "name": "application/x-protobuf"
+        }
+    ],
+    "styles": [
+        {
+            "name": "accentue",
+            "title": "accentue",
+            "current": true,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/accentue.json"
+        },
+        {
+            "name": "epure",
+            "title": "epure",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/epure.json"
+        },
+        {
+            "name": "classique",
+            "title": "classique",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/classique.json"
+        },
+        {
+            "name": "gris",
+            "title": "gris",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json"
+        },
+        {
+            "name": "attenue",
+            "title": "attenue",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/attenue.json"
+        },
+        {
+            "name": "sans_toponymes",
+            "title": "sans_toponymes",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/sans_toponymes.json"
+        },
+        {
+            "name": "toponymes",
+            "title": "toponymes",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/toponymes.json"
+        },
+        {
+            "name": "standard",
+            "title": "standard",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/standard.json"
+        },
+        {
+            "name": "transparent",
+            "title": "transparent",
+            "current": false,
+            "url": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/transparent.json"
+        }
+    ],
+    "globalConstraint": {
+        "crs": "EPSG:3857",
+        "bbox": {
+            "left": -20026376.393709917,
+            "right": 20026376.393709917,
+            "top": 15538711.09630922,
+            "bottom": -15538711.09630922
+        },
+        "minScaleDenominator": 559082264.0287179,
+        "maxScaleDenominator": 2132.7295838497826
+    },
+    "defaultProjection": "EPSG:3857",
+    "thematic": [
+        "Carte de référence de la couverture terrestre"
+    ],
+    "base": false,
+    "producer": [
+        "Autres"
+    ],
+    "key": "PLAN.IGN$GEOPORTAIL:GPP:TMS",
+    "position": -1,
+    "opacity": 1,
+    "visible": true,
+    "grayscale": false,
+    "params": {
+        "url": "https://data.geopf.fr/tms/1.0.0/",
+        "styles": "accentue",
+        "version": "1.0.0",
+        "format": "application/x-protobuf",
+        "projection": "EPSG:3857",
+        "minScale": 559082264.0287179,
+        "maxScale": 2132.7295838497826,
+        "extent": {
+            "left": -20026376.393709917,
+            "right": 20026376.393709917,
+            "top": 15538711.09630922,
+            "bottom": -15538711.09630922
+        },
+        "title": "PLAN.IGN",
+        "description": "Plan IGN personnalisable"
+    }
+}

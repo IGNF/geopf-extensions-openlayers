@@ -119,6 +119,7 @@ import LayerUtils from "./Utils/LayerUtils";
 import ProxyUtils from "./Utils/ProxyUtils";
 import ColorUtils  from "./Utils/ColorUtils";
 import MathUtils from "./Utils/MathUtils";
+import JsonValidatorUtils from "./Utils/JsonValidatorUtils";
 import Logger from "./Utils/LoggerByDefault";
 import Parser from "./Utils/Parser";
 import Register from "./Utils/Register";
@@ -197,6 +198,8 @@ export {
     ColorUtils,
     /** @see Gp.MathUtils */
     MathUtils,
+    /** @see Gp.JsonValidatorUtils */
+    JsonValidatorUtils,
     /** @see Gp.Logger */
     Logger,
     /** @see Gp.Parser */

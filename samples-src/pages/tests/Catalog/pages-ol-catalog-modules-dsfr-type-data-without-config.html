@@ -41,7 +41,7 @@
                     Gp.Logger.enableAll();
                 }
                 async function getData () {
-                    var response = await fetch("{{ resources }}/data/configuration/sample.json", {});
+                    var response = await fetch("{{ resources }}/data/configuration/config-catalog.json", {});
                     var data = await response.json();
                     if (response.status !== 200) {
                         throw new Error("Erreur de récupération du JSON !");
