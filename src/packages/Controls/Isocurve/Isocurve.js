@@ -1026,8 +1026,8 @@ var Isocurve = class Isocurve extends Control {
         // récupération de l'origine
         var positionCoordinates = this._originPoint.getCoordinate();
         var position = {
-            x : positionCoordinates[0],
-            y : positionCoordinates[1]
+            x : positionCoordinates[0].toFixed(5),
+            y : positionCoordinates[1].toFixed(5)
         };
         logger.log("origin : ", position);
 
