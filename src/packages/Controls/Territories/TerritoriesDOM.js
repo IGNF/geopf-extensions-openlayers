@@ -1,3 +1,30 @@
+const stringToHTML = (str) => {
+    var support = function () {
+        if (!window.DOMParser) {
+            return false;
+        }
+        var parser = new DOMParser();
+        try {
+            parser.parseFromString("x", "text/html");
+        } catch (err) {
+            return false;
+        }
+        return true;
+    };
+
+    // If DOMParser is supported, use it
+    if (support()) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(str, "text/html");
+        return doc.body;
+    }
+
+    // Otherwise, fallback to old-school method
+    var dom = document.createElement("div");
+    dom.innerHTML = str;
+    return dom;
+};
+
 var TerritoriesDOM = {
 
     /**
@@ -137,6 +164,111 @@ var TerritoriesDOM = {
 
         return btnClose;
     },
+    _createTerritoriesPanelOptionsElement : function (title, description) {
+        var self = this;
+
+        var content = "&#x2630";
+
+        var idButton = "gpf-territories-button-option-id";
+        var idInput = "gpf-territories-upload-id";
+        var idClose = "gpf-territories-upload-close-id";
+        var idToggle = "gpf-territories-toggle-messages";
+
+        var strContainer = `
+        <div>
+            <button type="button" 
+                id="${idButton}"
+                class="fr-btn fr-btn--tertiary-no-outline" 
+                role="territories-button-options" 
+                aria-expanded="false" 
+                aria-controls="gpf-territories-upload-container-id">
+                ${content}
+            </button>
+            <dialog id="gpf-territories-upload-container-id" class="fr-modal__body fr-upload-group gpf-hidden">
+                <div class="gpf-territories-header-upload">
+                    <button 
+                        id="${idClose}"
+                        type="button" 
+                        class="gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w"
+                        aria-expanded="false"
+                        title="Fermer le panneau">
+                        <span>Fermer</span>
+                    </button>
+                </div>
+                <label class="fr-label" for="gpf-territories-upload-id">
+                    ${title}
+                    <span class="fr-hint-text">${description}</span>
+                </label>
+                <div class="fr-toggle fr-m-2v">
+                    <input 
+                        id="${idToggle}" 
+                        class="fr-toggle__input" 
+                        type="checkbox" 
+                        aria-describedby="gpf-territories-toggle-messages">
+                    <label class="fr-toggle__label" for="${idToggle}">Compléter la liste</label>
+                    <div class="fr-messages-group" id="gpf-territories-toggle-messages" aria-live="polite"></div>
+                </div>
+                <input 
+                    id="${idInput}" 
+                    class="fr-upload" 
+                    aria-describedby="gpf-territories-upload-id-messages" 
+                    type="file" 
+                    name="upload">
+                <div class="fr-messages-group" id="gpf-territories-upload-id-messages" aria-live="polite"></div>
+            </dialog>
+        </div>
+        `;
+        var container = stringToHTML(strContainer);
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+
+        var button = shadow.getElementById(idButton);
+        if (button) {
+            button.addEventListener("click", (e) => {
+                e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                if (!collapse) {
+                    return;
+                }
+                if (e.target.ariaExpanded === "true") {
+                    collapse.classList.add("gpf-visible");
+                    collapse.classList.remove("gpf-hidden");
+                } else {
+                    collapse.classList.remove("gpf-visible");
+                    collapse.classList.add("gpf-hidden");
+                }
+            }, false);
+        }
+
+        var close = shadow.getElementById(idClose);
+        if (close) {
+            close.addEventListener("click", (e) => {
+                e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                var button = document.getElementById(idButton);
+                button.click();
+            });
+        }
+
+        // INFO
+        // https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications
+        var input = shadow.getElementById(idInput);
+        if (input) {
+            input.addEventListener("change", (e) => {
+                self.onUploadFileClick(e);
+            }, false);
+        }
+
+        var toggle = shadow.getElementById(idToggle);
+        if (idToggle) {
+            toggle.addEventListener("click", (e) => {
+                console.log(e.target.checked);
+                self.onUploadToggleClick(e);
+            });
+        }
+        return shadow.firstChild;
+    },
 
     // ################################################################### //
     // ####################### Methods for entries ####################### //
@@ -150,32 +282,7 @@ var TerritoriesDOM = {
 
     _createTerritoryEntry : function (o) {
         var self = this;
-        const stringToHTML = (str) => {
-            var support = function () {
-                if (!window.DOMParser) {
-                    return false;
-                }
-                var parser = new DOMParser();
-                try {
-                    parser.parseFromString("x", "text/html");
-                } catch (err) {
-                    return false;
-                }
-                return true;
-            };
-
-            // If DOMParser is supported, use it
-            if (support()) {
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(str, "text/html");
-                return doc.body;
-            }
-
-            // Otherwise, fallback to old-school method
-            var dom = document.createElement("div");
-            dom.innerHTML = str;
-            return dom;
-        };
+        
         if (o) {
             // test si la vignette est renseignée
             var defaultImage = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iNTgxLjAwMDAwMHB0IiBoZWlnaHQ9IjM1Ni4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDU4MS4wMDAwMDAgMzU2LjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgoKPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsMzU2LjAwMDAwMCkgc2NhbGUoMC4xMDAwMDAsLTAuMTAwMDAwKSIKZmlsbD0iI2I0YjNiMyIgc3Ryb2tlPSJub25lIj4KPHBhdGggZD0iTTAgMTc4MCBsMCAtMTc4MCAyOTA1IDAgMjkwNSAwIDAgMTc4MCAwIDE3ODAgLTI5MDUgMCAtMjkwNSAwIDAKLTE3ODB6Ii8+CjwvZz4KPC9zdmc+Cg==";

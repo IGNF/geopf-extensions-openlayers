@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+- Territories : Ajout d'un menu option pour permettre de charger une configuration des territoires (#408)
+
 * 🔨 [Changed]
 
 * 🔥 [Deprecated]
@@ -22,6 +24,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - MousePosition : Edition des coordonnées (#407)
   
 * 🔒 [Security]
 

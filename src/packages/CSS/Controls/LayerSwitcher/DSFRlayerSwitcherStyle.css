@@ -313,7 +313,7 @@ div[id^=GPlayerStyleContent] {
         width: calc(100% + 40px);
     }
 
-    .GPlayerAdvancedTools > .GPlayerRemove, .GPlayerAdvancedTools > .GPlayerGreyscale, .GPlayerAdvancedTools > .GPlayerInfo, .GPlayerAdvancedTools > .GPlayerExtent {
+    .GPlayerAdvancedTools > .GPlayerEdit, .GPlayerAdvancedTools > .GPlayerRemove, .GPlayerAdvancedTools > .GPlayerGreyscale, .GPlayerAdvancedTools > .GPlayerInfo, .GPlayerAdvancedTools > .GPlayerExtent {
         display: none;
     }
 
