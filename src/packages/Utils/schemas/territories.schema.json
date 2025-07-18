@@ -42,12 +42,16 @@
         "description": "Coordonnées"
       },
       "thumbnail": {
-        "type": "string",
-        "format": "uri"
+        "anyOf": [
+          { "type": "string", "format": "uri" },
+          { "type": "string" }
+        ]
       },
       "icon": {
-        "type": "string",
-        "format": "uri"
+        "anyOf": [
+          { "type": "string", "format": "uri" },
+          { "type": "string" }
+        ]
       }
     },
     "additionalProperties": false
