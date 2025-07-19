@@ -19,6 +19,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+- Zoom : changement des icones de zoom en mode DSFR (#412)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
