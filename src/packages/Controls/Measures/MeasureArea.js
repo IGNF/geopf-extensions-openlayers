@@ -47,7 +47,7 @@ var logger = Logger.getLogger("measurearea");
  *    geodesic : false
  * });
  */
-var MeasureArea = class MeasureArea extends Control {
+class MeasureArea extends Control {
 
     constructor (options) {
         /**

@@ -49,7 +49,7 @@ var logger = Logger.getLogger("territories");
  * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
  * map.addControl(territories);
  */
-var Territories = class Territories extends Control {
+class Territories extends Control {
 
     /**
      * See {@link ol.control.Territories}

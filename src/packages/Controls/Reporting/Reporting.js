@@ -655,7 +655,7 @@ class ServiceActionByDefaut {
  * var reporting = new ol.control.Reporting();
  * map.addControl(reporting);
  */
-var Reporting = class Reporting extends Control {
+class Reporting extends Control {
 
     /**
      * See {@link ol.control.Reporting}

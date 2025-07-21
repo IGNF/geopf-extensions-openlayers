@@ -94,7 +94,7 @@ var logger = Logger.getLogger("widget");
  * @todo filtrage des couches
  * @todo validation du schema
  */
-var Catalog = class Catalog extends Control {
+class Catalog extends Control {
 
     /**
      * See {@link ol.control.Catalog}

@@ -44,7 +44,7 @@ var logger = Logger.getLogger("extended KML format");
  * @param {Object} options - Options
  * @param {Object} [options.extensions] - Add properties to file root
  */
-var KML = class KML extends olKML {
+class KML extends olKML {
 
     /**
      * See {@link ol.format.KMLExtended}

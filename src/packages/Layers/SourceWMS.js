@@ -34,7 +34,7 @@ var logger = Logger.getLogger("sourcewms");
  *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
  * });
  */
-var SourceWMS = class SourceWMS extends TileWMSSource {
+class SourceWMS extends TileWMSSource {
 
     constructor (options) {
         // if (!(this instanceof SourceWMS)) {

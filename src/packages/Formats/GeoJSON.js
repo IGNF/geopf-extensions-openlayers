@@ -21,7 +21,7 @@ import Styling from "./Styling";
  * @param {Object} [options.defaultStyle] - Styles by default
  * @param {Object} [options.extensions] - Add properties to file root
  */
-var GeoJSON = class GeoJSON extends olGeoJSON {
+class GeoJSON extends olGeoJSON {
 
     /**
      * See {@link ol.format.GeoJSONExtended}

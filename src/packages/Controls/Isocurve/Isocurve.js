@@ -99,7 +99,7 @@ var logger = Logger.getLogger("isocurve");
  *    }
  *  });
  */
-var Isocurve = class Isocurve extends Control {
+class Isocurve extends Control {
 
     /**
      * See {@link ol.control.Isocurve}

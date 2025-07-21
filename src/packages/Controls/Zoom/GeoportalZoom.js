@@ -25,7 +25,7 @@ var logger = Logger.getLogger("zoom");
  * });
  * map.addControl(zoom);
  */
-var GeoportalZoom = class GeoportalZoom extends Zoom {
+class GeoportalZoom extends Zoom {
 
     /**
      * See {@link ol.control.GeoportalZoom}

@@ -25,7 +25,7 @@ var logger = Logger.getLogger("overviewMap");
  * });
  * map.addControl(overviewmap);
  */
-var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
+class GeoportalOverviewMap extends OverviewMap {
 
     /**
      * See {@link ol.control.GeoportalOverviewMap}

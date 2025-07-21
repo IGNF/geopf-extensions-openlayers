@@ -108,7 +108,7 @@ var logger = Logger.getLogger("route");
  *    }
  *  });
  */
-var Route = class Route extends Control {
+class Route extends Control {
 
     /**
      * See {@link ol.control.Route}

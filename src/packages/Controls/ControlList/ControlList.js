@@ -31,7 +31,7 @@ var logger = Logger.getLogger("controlList");
  * @extends {ol.control.ControlList}
  * @param {Object} options - ControlList control options
  */
-var ControlList = class ControlList extends Control {
+class ControlList extends Control {
 
     /**
      * See {@link ol.control.ControlList}

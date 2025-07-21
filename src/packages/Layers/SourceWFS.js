@@ -40,7 +40,7 @@ var logger = Logger.getLogger("sourcewfs");
  *      olParams: {}
  * });
  */
-var SourceWFS = class SourceWFS extends VectorSource {
+class SourceWFS extends VectorSource {
 
     constructor (options) {
         // check layer params

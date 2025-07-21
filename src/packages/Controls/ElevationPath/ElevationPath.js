@@ -112,7 +112,7 @@ var logger = Logger.getLogger("elevationpath");
  * - displayProfileOptions.apply : ol.control.ElevationPath.DISPLAY_PROFILE_{LIB_AMCHARTS | LIB_D3 | RAW}
  *
  */
-var ElevationPath = class ElevationPath extends Control {
+class ElevationPath extends Control {
 
     /**
      * See {@link ol.control.ElevationPath}

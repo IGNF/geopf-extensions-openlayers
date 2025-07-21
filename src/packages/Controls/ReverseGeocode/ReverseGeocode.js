@@ -77,7 +77,7 @@ var logger = Logger.getLogger("reversegeocoding");
  *      "reverseGeocodeOptions" : {}
  *  });
  */
-var ReverseGeocode = class ReverseGeocode extends Control {
+class ReverseGeocode extends Control {
 
     /**
      * See {@link ol.control.ReverseGeocode}

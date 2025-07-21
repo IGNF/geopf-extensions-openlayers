@@ -22,7 +22,7 @@ import Utils from "../Utils/Helper";
  * @extends {ol.source.WMTS}
  * @param {Object} options - Options
  */
-var WMTS = class WMTS extends WMTSSource {
+class WMTS extends WMTSSource {
 
     constructor (options) {
         // if (!(this instanceof WMTS)) {

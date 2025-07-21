@@ -26,7 +26,7 @@ import Parser from "../Utils/Parser";
  * @param {Object} [options.extensions] - Add properties to file root
  * @param {function} [options.readExtensions] - Reading extensions (native)
  */
-var GPX = class GPX extends olGPX {
+class GPX extends olGPX {
 
     /**
      * See {@link ol.format.GPXExtended}

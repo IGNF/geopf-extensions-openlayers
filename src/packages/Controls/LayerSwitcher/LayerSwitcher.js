@@ -112,7 +112,7 @@ var logger = Logger.getLogger("layerswitcher");
  *    console.warn("layer", e.layer, e.name, e.url);
  * });
  */
-var LayerSwitcher = class LayerSwitcher extends Control {
+class LayerSwitcher extends Control {
 
     /**
      * See {@link ol.control.LayerSwitcher}

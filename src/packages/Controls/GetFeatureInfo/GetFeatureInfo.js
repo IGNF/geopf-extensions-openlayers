@@ -36,7 +36,7 @@ var logger = Logger.getLogger("getFeatureInfo");
  * var getFeatureInfo = new ol.control.GetFeatureInfo();
  * map.addControl(getFeatureInfo);
  */
-var GetFeatureInfo = class GetFeatureInfo extends Control {
+class GetFeatureInfo extends Control {
 
     /**
      * See {@link ol.control.GetFeatureInfo}

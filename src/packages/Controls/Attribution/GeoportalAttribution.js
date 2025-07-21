@@ -28,7 +28,7 @@ var logger = Logger.getLogger("geoportalattribution");
  * // listeners for attributions update :
  * attribution.on("attributions:update", function (e) {});
  */
-var GeoportalAttribution = class GeoportalAttribution extends Attribution {
+class GeoportalAttribution extends Attribution {
 
     /**
      * See {@link ol.control.GeoportalAttribution}

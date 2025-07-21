@@ -152,7 +152,7 @@ var logger = Logger.getLogger("layerimport");
  *      }
  *  });
  */
-var LayerImport = class LayerImport extends Control {
+class LayerImport extends Control {
 
     /**
      * See {@link ol.control.LayerImport}

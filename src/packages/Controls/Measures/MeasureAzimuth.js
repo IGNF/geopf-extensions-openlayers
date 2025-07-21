@@ -47,7 +47,7 @@ var logger = Logger.getLogger("measureazimut");
  *   geodesic : true
  * });
  */
-var MeasureAzimuth = class MeasureAzimuth extends Control {
+class MeasureAzimuth extends Control {
 
     constructor (options) {
         /**

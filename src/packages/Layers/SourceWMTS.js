@@ -37,7 +37,7 @@ var logger = Logger.getLogger("sourcewmts");
  *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
  * });
  */
-var SourceWMTS = class SourceWMTS extends WMTSExtended {
+class SourceWMTS extends WMTSExtended {
 
     constructor (options) {
         // if (!(this instanceof SourceWMTS)) {

@@ -48,7 +48,7 @@ var logger = Logger.getLogger("measurelength");
  *    geodesic : false
  * });
  */
-var MeasureLength = class MeasureLength extends Control {
+class MeasureLength extends Control {
 
     constructor (options) {
         // options

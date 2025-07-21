@@ -173,7 +173,7 @@ var logger = Logger.getLogger("searchengine");
  *    console.warn("coordinate", e.);
  *  });
  */
-var SearchEngine = class SearchEngine extends Control {
+class SearchEngine extends Control {
 
     /**
      * See {@link ol.control.SearchEngine}
