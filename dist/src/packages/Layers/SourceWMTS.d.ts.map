@@ -1,1 +1,1 @@
-{"version":3,"file":"SourceWMTS.d.ts","sourceRoot":"","sources":["../../../../src/packages/Layers/SourceWMTS.js"],"names":[],"mappings":";AAeA;;;;;;;;;;;;;;;;;;;;;;;GAuBG;AACH,wBAlBU,EAAE,CAAC,MAAM,CAAC,aAAa,CAkI/B"}
+{"version":3,"file":"SourceWMTS.d.ts","sourceRoot":"","sources":["../../../../src/packages/Layers/SourceWMTS.js"],"names":[],"mappings":";AAeA;;;;;;;;;;;;;;;;;;;;;;;GAuBG;AACH;IAiGQ,kBAA0C;IAG1C,cAAqD;IACrD,eAAwD;IACxD,kBAAiE;IACjE,YAA+C;IAC/C,mBAAoE;IAEpE,UAAyB;IACzB,gBAAqB;CAK5B;yBAnJwB,iBAAiB"}

@@ -232,5 +232,55 @@ export default LayerWMTS;
 *     ]
 * }
 */
-declare var LayerWMTS: ol.layer.GeoportalWMTS;
+declare class LayerWMTS {
+    /**
+    * See {@link ol.layer.GeoportalWMTS}
+    * @module LayerWMTS
+    * @alias module:~layers/GeoportalWMTS
+    * @param {*} options - options
+    * @example
+    * import LayerWMTS from "gpf-ext-ol/layers/LayerWMTS
+    * ou
+    * import { LayerWMTS } from "gpf-ext-ol"
+    */
+    constructor(options: any);
+    name: any;
+    service: string;
+    config: any;
+    /**
+     * Get configuration
+     * @returns {Object} - configuration
+     */
+    getConfiguration(): Object;
+    /**
+     * Get legends
+     * @returns {Array} - legends
+     */
+    getLegends(): any[];
+    /**
+     * Get metadata
+     * @returns {Array} - metadata
+     */
+    getMetadata(): any[];
+    /**
+     * Get description
+     * @returns {String} - description
+     */
+    getDescription(): string;
+    /**
+     * Get title
+     * @returns {String} - title
+     */
+    getTitle(): string;
+    /**
+     * Get quicklook url
+     * @returns {String} - quicklook
+     */
+    getQuicklookUrl(): string;
+    /**
+     * Get originators
+     * @returns {Array} - originators
+     */
+    getOriginators(): any[];
+}
 //# sourceMappingURL=LayerWMTS.d.ts.map

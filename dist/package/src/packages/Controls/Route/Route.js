@@ -53,7 +53,7 @@ var logger = Logger.getLogger("route");
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link ol.control.Export}
+ * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
  * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
  * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of resources, by default : ["Voiture", "Pieton"]. The first element is selected.
  * @param {Object} [options.routeOptions = {}] - route service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~route Gp.Services.route()} to know all route options.
@@ -108,7 +108,7 @@ var logger = Logger.getLogger("route");
  *    }
  *  });
  */
-var Route = class Route extends Control {
+class Route extends Control {
 
     /**
      * See {@link ol.control.Route}
@@ -850,7 +850,7 @@ var Route = class Route extends Control {
      * this method is called by this.initialize() and initialize popup div
      * (to display results information on route result click)
      *
-     * @return {Object} element - DOM element for popup
+     * @returns {Object} element - DOM element for popup
      * @private
      */
     _initPopupDiv () {

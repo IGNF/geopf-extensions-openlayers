@@ -26,5 +26,55 @@ export default LayerWMS;
  * layerWMS.getQuicklookUrl();
  * layerWMS.getOriginators();
  */
-declare var LayerWMS: ol.layer.GeoportalWMS;
+declare class LayerWMS {
+    /**
+     * See {@link ol.layer.GeoportalWMS}
+     * @module LayerWMS
+     * @alias module:~layers/GeoportalWMS
+     * @param {*} options - options
+     * @example
+     * import LayerWMS from "gpf-ext-ol/layers/LayerWMS"
+     * ou
+     * import { LayerWMS } from "gpf-ext-ol"
+     */
+    constructor(options: any);
+    name: any;
+    service: string;
+    config: any;
+    /**
+     * Get configuration
+     * @returns {Object} - configuration
+     */
+    getConfiguration(): Object;
+    /**
+     * Get legends
+     * @returns  {Array} - legends
+     */
+    getLegends(): any[];
+    /**
+     * Get metadata
+     * @returns  {Array} - metadata
+     */
+    getMetadata(): any[];
+    /**
+     * Get description
+     * @returns {String} - description
+     */
+    getDescription(): string;
+    /**
+     * Get title
+     * @returns {String} - title
+     */
+    getTitle(): string;
+    /**
+     * Get quicklook url
+     * @returns {String} - quicklook
+     */
+    getQuicklookUrl(): string;
+    /**
+     * Get originators
+     * @returns {Array} - originators
+     */
+    getOriginators(): any[];
+}
 //# sourceMappingURL=LayerWMS.d.ts.map

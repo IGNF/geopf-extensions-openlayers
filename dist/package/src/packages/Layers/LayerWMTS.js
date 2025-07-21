@@ -243,7 +243,7 @@ import SourceWMTS from "./SourceWMTS";
 *     ]
 * }
 */
-var LayerWMTS = class LayerWMTS extends TileLayer {
+class LayerWMTS extends TileLayer {
     
     /**
     * See {@link ol.layer.GeoportalWMTS}

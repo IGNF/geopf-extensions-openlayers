@@ -23,5 +23,15 @@ export default SourceWMS;
  *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
  * });
  */
-declare var SourceWMS: ol.source.GeoportalWMS;
+declare class SourceWMS {
+    constructor(options: any);
+    _originators: any;
+    _legends: any;
+    _metadata: any;
+    _title: any;
+    _description: any;
+    _quicklookUrl: any;
+    name: any;
+    service: string;
+}
 //# sourceMappingURL=SourceWMS.d.ts.map

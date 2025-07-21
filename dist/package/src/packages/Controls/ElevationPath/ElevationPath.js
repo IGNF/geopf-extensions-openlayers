@@ -55,7 +55,7 @@ var logger = Logger.getLogger("elevationpath");
  * @param {String} [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
  * @param {Boolean} [options.active = false] - specify if control should be actived at startup. Default is false.
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
- * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link ol.control.Export}
+ * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
  * @param {Object} [options.elevationOptions = {}] - elevation path service options. See {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~getAltitude Gp.Services.getAltitude()} for available options
  * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
  * @param {String} [options.layerDescription.title = "Profil altimétrique"] - Layer title to be displayed in LayerSwitcher
@@ -112,7 +112,7 @@ var logger = Logger.getLogger("elevationpath");
  * - displayProfileOptions.apply : ol.control.ElevationPath.DISPLAY_PROFILE_{LIB_AMCHARTS | LIB_D3 | RAW}
  *
  */
-var ElevationPath = class ElevationPath extends Control {
+class ElevationPath extends Control {
 
     /**
      * See {@link ol.control.ElevationPath}
@@ -1376,7 +1376,7 @@ var ElevationPath = class ElevationPath extends Control {
      * this method computes results elevations (Z and distance)
      *
      * @param {Array} elevations - array of elevation
-     * @return {Array} elevations
+     * @returns {Array} elevations
      * @private
      */
     _computeElevationMeasure (elevations) {

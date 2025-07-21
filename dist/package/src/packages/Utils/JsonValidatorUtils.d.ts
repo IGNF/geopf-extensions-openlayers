@@ -15,18 +15,16 @@ export default JsonValidatorUtils;
  *   console.error('❌ Erreurs:', result.errors);
  * }
  */
-declare var JsonValidatorUtils: {
-    new (): {
-        ajv: any;
-        schemas: {};
-        loadSchemas(): void;
-        validate(type: any, data: any): {
-            valid: boolean;
-            errors: any;
-        } | {
-            valid: boolean;
-            errors?: undefined;
-        };
+declare class JsonValidatorUtils {
+    ajv: any;
+    schemas: {};
+    loadSchemas(): void;
+    validate(type: any, data: any): {
+        valid: boolean;
+        errors: any;
+    } | {
+        valid: boolean;
+        errors?: undefined;
     };
-};
+}
 //# sourceMappingURL=JsonValidatorUtils.d.ts.map

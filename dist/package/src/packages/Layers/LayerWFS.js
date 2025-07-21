@@ -58,7 +58,7 @@ const STYLEBYDEFAULT = new Style({
  * layerWFS.getQuicklookUrl();
  * layerWFS.getOriginators();
  */
-var LayerWFS = class LayerWFS extends VectorLayer {
+class LayerWFS extends VectorLayer {
 
     /**
      * See {@link ol.layer.GeoportalWFS}

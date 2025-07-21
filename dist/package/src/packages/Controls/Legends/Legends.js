@@ -34,7 +34,7 @@ var logger = Logger.getLogger("legends");
  * var legends = new ol.control.Legends();
  * map.addControl(legends);
  */
-var Legends = class Legends extends Control {
+class Legends extends Control {
 
     /**
      * See {@link ol.control.Legends}

@@ -120,7 +120,7 @@ var logger = Logger.getLogger("GeoportalMousePosition");
  *      "units" : ["DEC", "DMS"]
  * });
  */
-var MousePosition = class MousePosition extends Control {
+class MousePosition extends Control {
 
     /**
      * See {@link ol.control.GeoportalMousePosition}

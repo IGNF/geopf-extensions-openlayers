@@ -24,5 +24,74 @@ export default MeasureArea;
  *    geodesic : false
  * });
  */
-declare var MeasureArea: ol.control.MeasureArea;
+declare class MeasureArea {
+    constructor(options: any);
+    /**
+     * Nom de la classe (heritage)
+     * @private
+     */
+    private CLASSNAME;
+    _uid: any;
+    _pictoContainer: any;
+    _container: DOMElement;
+    element: any;
+    /**
+     * Overwrite OpenLayers setMap method
+     *
+     * @param {ol.Map} map - Map.
+     */
+    setMap(map: ol.Map): void;
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer(): DOMElement;
+    /**
+     * Initialize measure control (called by constructor)
+     *
+     * @param {Object} options - options
+     *
+     * @private
+     */
+    private _initialize;
+    options: {} | undefined;
+    /**
+     * initialize component container (DOM)
+     *
+     * @returns {DOMElement} DOM element
+     *
+     * @private
+     */
+    private _initializeContainer;
+    /**
+     * Add all events on map
+     *
+     * @private
+     */
+    private addMeasureEvents;
+    eventLayerRemove: any;
+    /**
+     * Remove all events on map
+     *
+     * @private
+     */
+    private removeMeasureEvents;
+    /**
+     * Format length output.
+     *
+     * @param {ol.geom.Polygon} polygon - geometry polygon.
+     * @returns {String} The formatted output.
+     * @private
+     */
+    private format;
+    /**
+     * this method is called by event 'click' on picto
+     *
+     * @param {Object} e - HTMLElement
+     *
+     * @private
+     */
+    private onShowMeasureAreaClick;
+}
 //# sourceMappingURL=MeasureArea.d.ts.map

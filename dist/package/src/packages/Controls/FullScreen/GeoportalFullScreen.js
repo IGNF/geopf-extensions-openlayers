@@ -23,7 +23,7 @@ var logger = Logger.getLogger("fullscreen");
  * });
  * map.addControl(zoom);
  */
-var GeoportalFullScreen = class GeoportalFullScreen extends FullScreen {
+class GeoportalFullScreen extends FullScreen {
 
     /**
      * See {@link ol.control.GeoportalFullScreen}

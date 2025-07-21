@@ -26,7 +26,7 @@ import Parser from "../Utils/Parser";
  * @param {Object} [options.extensions] - Add properties to file root
  * @param {function} [options.readExtensions] - Reading extensions (native)
  */
-var GPX = class GPX extends olGPX {
+class GPX extends olGPX {
 
     /**
      * See {@link ol.format.GPXExtended}
@@ -77,7 +77,7 @@ var GPX = class GPX extends olGPX {
      * @see ol.format.GPX.prototype.readFeatures
      * @param {Document|Node} source - Source.
      * @param {olx.format.ReadOptions=} options - options.
-     * @return {Array.<ol.Feature>} Features.
+     * @returns {Array.<ol.Feature>} Features.
      */
     readFeatures (source, options) {
         // INFO
@@ -126,7 +126,7 @@ var GPX = class GPX extends olGPX {
      * @param {Object[]} features - Features.
      * @param {Object} options - Options.
      *
-     * @return {String} Result or null.
+     * @returns {String} Result or null.
      */
     writeFeatures (features, options) {
         // INFO

@@ -26,5 +26,15 @@ export default SourceWFS;
  *      olParams: {}
  * });
  */
-declare var SourceWFS: ol.source.GeoportalWFS;
+declare class SourceWFS {
+    constructor(options: any);
+    _originators: any;
+    _legends: any;
+    _metadata: any;
+    _title: any;
+    _description: any;
+    _quicklookUrl: any;
+    name: any;
+    service: string;
+}
 //# sourceMappingURL=SourceWFS.d.ts.map

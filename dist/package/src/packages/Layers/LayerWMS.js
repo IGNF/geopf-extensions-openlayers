@@ -37,7 +37,7 @@ import SourceWMS from "./SourceWMS";
  * layerWMS.getQuicklookUrl();
  * layerWMS.getOriginators();
  */
-var LayerWMS = class LayerWMS extends TileLayer {
+class LayerWMS extends TileLayer {
 
     /**
      * See {@link ol.layer.GeoportalWMS}

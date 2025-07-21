@@ -25,5 +25,70 @@ export default MeasureLength;
  *    geodesic : false
  * });
  */
-declare var MeasureLength: ol.control.MeasureLength;
+declare class MeasureLength {
+    constructor(options: any);
+    CLASSNAME: string;
+    _uid: any;
+    _pictoContainer: any;
+    _container: DOMElement;
+    element: any;
+    /**
+     * Overwrite OpenLayers setMap method
+     *
+     * @param {ol.Map} map - Map.
+     */
+    setMap(map: ol.Map): void;
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer(): DOMElement;
+    /**
+     * Initialize measure control (called by constructor)
+     *
+     * @param {Object} options - options
+     *
+     * @private
+     */
+    private _initialize;
+    options: {} | undefined;
+    /**
+     * initialize component container (DOM)
+     *
+     * @returns {DOMElement} DOM element
+     *
+     * @private
+     */
+    private _initializeContainer;
+    /**
+     * Add all events on map
+     *
+     * @private
+     */
+    private addMeasureEvents;
+    eventLayerRemove: any;
+    /**
+     * Remove all events on map
+     *
+     * @private
+     */
+    private removeMeasureEvents;
+    /**
+     * Format length output.
+     *
+     * @param {ol.geom.Line} line - geometry line.
+     * @returns {String} The formatted output.
+     * @private
+     */
+    private format;
+    /**
+     * this method is called by event 'click' on picto
+     *
+     * @param {Object} e - HTMLElement
+     *
+     * @private
+     */
+    private onShowMeasureLengthClick;
+}
 //# sourceMappingURL=MeasureLength.d.ts.map

@@ -41,8 +41,8 @@ var logger = Logger.getLogger("widget");
  * @fires catalog:loaded
  * @fires catalog:layer:add
  * @fires catalog:layer:remove
- * @see schema : https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json
- * @see jsdoc : https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc
+ * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
+ * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
  * @example
  * var widget = new ol.control.Catalog({
  *           collapsed : true,
@@ -94,7 +94,7 @@ var logger = Logger.getLogger("widget");
  * @todo filtrage des couches
  * @todo validation du schema
  */
-var Catalog = class Catalog extends Control {
+class Catalog extends Control {
 
     /**
      * See {@link ol.control.Catalog}

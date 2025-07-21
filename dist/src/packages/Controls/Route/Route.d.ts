@@ -14,7 +14,7 @@ export default Route;
  * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
  * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
  * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link ol.control.Export}
+ * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
  * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
  * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of resources, by default : ["Voiture", "Pieton"]. The first element is selected.
  * @param {Object} [options.routeOptions = {}] - route service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~route Gp.Services.route()} to know all route options.
@@ -69,5 +69,485 @@ export default Route;
  *    }
  *  });
  */
-declare var Route: ol.control.Route;
+declare class Route {
+    /**
+     * See {@link ol.control.Route}
+     * @module Route
+     * @alias module:~controls/Route
+     * @param {*} options - options
+     * @example
+     * import Route from "gpf-ext-ol/controls/Route"
+     * ou
+     * import { Route } from "gpf-ext-ol"
+     */
+    constructor(options: any);
+    /**
+     * Nom de la classe (heritage)
+     * @private
+     */
+    private CLASSNAME;
+    _container: any;
+    element: any;
+    /**
+     * Overwrite OpenLayers setMap method
+     *
+     * @param {ol.Map} map - Map.
+     */
+    setMap(map: ol.Map): void;
+    export: ButtonExport | null | undefined;
+    /**
+     * Returns true if widget is collapsed (minimized), false otherwise
+     *
+     * @returns {Boolean} collapsed - true if widget is collapsed
+     */
+    getCollapsed(): boolean;
+    /**
+     * Collapse or display widget main container
+     *
+     * @param {Boolean} collapsed - True to collapse widget, False to display it
+     */
+    setCollapsed(collapsed: boolean): void;
+    collapsed: boolean | undefined;
+    /**
+     * Get vector layer where geoJson route is drawn
+     *
+     * @returns {Object} layer - ol.layer.Vector route layer
+     */
+    getLayer(): Object;
+    /**
+     * Set vector layer where route geometry is drawn
+     *
+     * @param {Object} layer - ol.layer.Vector route layer
+     */
+    setLayer(layer: Object): void;
+    _geojsonSections: any;
+    /**
+     * Get vector layer
+     *
+     * @returns {String} geojson - GeoJSON format layer
+     */
+    getGeoJSON(): string;
+    /**
+     * Set vector layer
+     *
+     * @param {String} geojson - GeoJSON format layer
+     */
+    setGeoJSON(geojson: string): void;
+    _geojsonObject: any;
+    /**
+     * Get route informations
+     *
+     * @returns {Object} data - route informations
+     */
+    getData(): Object;
+    /**
+     * Set route data
+     *
+     * @param {Object} data - control informations
+     * @param {String} data.transport - transport type
+     * @param {String} data.computation - computation type
+     * @param {Array} data.exclusions - list of exclusions
+     * @param {Array} data.points - list of points : [[lon, lat]]
+     * @param {Object} data.results - service response
+     */
+    setData(data: {
+        transport: string;
+        computation: string;
+        exclusions: any[];
+        points: any[];
+        results: Object;
+    }): void;
+    _currentTransport: any;
+    _currentComputation: any;
+    _currentExclusions: any;
+    _currentRouteInformations: Object | null | undefined;
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer(): DOMElement;
+    /**
+     * Get default style
+     *
+     * @returns {ol.style} style
+     */
+    getStyle(): ol.style;
+    /**
+     * This method is public.
+     * It allows to init the control.
+     */
+    init(): void;
+    /**
+     * Clean UI : reinit control
+     */
+    clean(): void;
+    /**
+     * Initialize route control (called by Route constructor)
+     *
+     * @param {Object} options - constructor options
+     * @private
+     */
+    private initialize;
+    options: {
+        collapsed: boolean;
+        draggable: boolean;
+        export: boolean;
+        graphs: string[];
+        exclusions: {
+            toll: boolean;
+            tunnel: boolean;
+            bridge: boolean;
+        };
+        routeOptions: {};
+        autocompleteOptions: {};
+        layerDescription: {
+            title: string;
+            description: string;
+        };
+    } | undefined;
+    /** {Boolean} specify if Route control is draggable (true) or not (false) */
+    draggable: boolean | undefined;
+    _uid: any;
+    _showRouteButton: any;
+    _panelRouteContainer: any;
+    _panelHeaderRouteContainer: any;
+    _waitingContainer: any;
+    _formRouteContainer: any;
+    _resultsRouteContainer: any;
+    _showRouteExclusionsElement: any;
+    _currentPoints: any[] | undefined;
+    _waiting: boolean | undefined;
+    _timer: NodeJS.Timeout | null | undefined;
+    _geojsonRoute: any;
+    _popupContent: HTMLDivElement | null | undefined;
+    _popupDiv: Object | undefined;
+    _popupOverlay: any;
+    _resultsSelectInteraction: any;
+    _resultsHoverInteraction: any;
+    _defaultFeatureStyle: any;
+    _selectedFeatureStyle: any;
+    _resources: {} | undefined;
+    listenerKey: any;
+    /**
+     * this method is called by this.initialize()
+     *
+     * @param {Object} options - options
+     *
+     * @private
+     */
+    private _checkInputOptions;
+    /**
+     * initialize component container (DOM)
+     *
+     * @param {Object} map - the map
+     *
+     * @returns {DOMElement} DOM element
+     *
+     * @private
+     */
+    private _initContainer;
+    /**
+     * this method is called by the constructor and initialize transport mode
+     * ("Voiture" ou "Pieton")
+     *
+     * @private
+     */
+    private _initTransport;
+    /**
+     * this method is called by the constructor and initialize computation mode
+     * (fastest or shortest)
+     *
+     * @private
+     */
+    private _initComputation;
+    /**
+     * this method is called by the constructor and initialize exclusions
+     *
+     * @private
+     */
+    private _initExclusions;
+    /**
+     * this method is called by this.initialize() and initialize popup div
+     * (to display results information on route result click)
+     *
+     * @returns {Object} element - DOM element for popup
+     * @private
+     */
+    private _initPopupDiv;
+    /**
+     * Create List Points
+     * Overwrite RouteDOM method !
+     *
+     * @param {Object} map - the map
+     *
+     * @returns {Array} List DOM element
+     * @private
+     */
+    private _createRoutePanelFormPointsElement;
+    /**
+     * Attach events listeners to route form points (locationSelector)
+     *
+     * @param {Object} formPoint - route form point (locationSelector)
+     * @private
+     */
+    private _addFormPointsEventListeners;
+    /**
+     * this method is called by event 'submit' on 'GProuteForm' tag form
+     * (cf. this._createRoutePanelFormElement), and it displays the results.
+     *
+     * @param {Object} options - options
+     * @private
+     */
+    private onRouteComputationSubmit;
+    /**
+     * this method is called by event 'click' on 'GPlocationOriginLabel' label
+     * and set 'GProuteForm' CSS class to "" (normal)
+     *
+     * @param {Object} routeControl - context : route Control (this)
+     * @private
+     */
+    private onRouteOriginLabelClick;
+    /**
+     * this method is called by event 'click' on 'GPlocationOriginPointerImg' label
+     * and display or minimize 'GProuteForm', using CSS class ("GProuteFormMini" or "")
+     *
+     * @param {Object} e - context : route Control (equivalent to this)
+     * @param {Object} locationSelector - context : locationSelector input (one of this._currentPoints)
+     * @private
+     */
+    private onRouteOriginPointerClick;
+    /**
+     * this method is called by event 'click' on 'GPshowRoutePicto'
+     * tag label (cf. this._createShowRoutePictoElement),
+     * and it cleans all value of input.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onShowRoutePanelClick;
+    /**
+     * this method is called by event 'change' on 'GProuteComputationSelect' tag select
+     * (cf. this._createRoutePanelFormModeChoiceComputeElement).
+     * this value is saved as a parameter for the service route.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onRouteModeComputationChange;
+    /**
+     * this method is called by event 'change' on 'GProuteResultsComputationSelect' tag select
+     * (cf. this._createRouteResultsElement).
+     * this value is saved as a parameter for the service route,
+     * and this launches the route request !
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onRouteModeComputationChangeAndRun;
+    /**
+     * this method is called by event 'change' on 'GProuteTransportCar' or 'GProuteTransportPedestrian' tag input
+     * (cf. this._createRoutePanelFormModeChoiceTransportElement).
+     * this value is saved as a parameter for the service route.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onRouteModeTransportChange;
+    /**
+     * TODO this method is called by event 'click' on 'GPshowRouteExclusionsPicto' tag input
+     * (cf. this._createShowRouteExclusionsPictoElement), and it displays the panel options of exclusions.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onShowRouteExclusionsClick;
+    /**
+     * this method is called by event 'change' on 'GProuteExclusionsToll'
+     * or 'GProuteExclusionsTunnel' or 'GProuteExclusionsBridge' tag input
+     * (cf. this._createRoutePanelFormExclusionOptionsElement).
+     * this value is saved as a parameter for the service route.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onRouteExclusionsChange;
+    /**
+     * this method is called by event 'click' on 'GProuteReset'
+     * tag label (cf. this._createRouteFormResetElement),
+     * and it cleans all route input options and results.
+     *
+     * @private
+     */
+    private onRouteResetClick;
+    /**
+     * this method is called by event 'click' on 'GProuteSubmit'
+     * tag label (cf. this._createRouteSubmitFormElement),
+     * and it cleans the route geometry.
+     *
+     * @private
+     */
+    private onShowRouteResultsNewClick;
+    /**
+     * this method is called by event 'mouseover' on 'GProuteResultsDetailsInstruction_'
+     * tag label (cf. this._addRouteResultsDetailsElement),
+     * and it makes a style on feature route.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onRouteResultsDetailsMouseOver;
+    /**
+     * this method is called by event 'mouseout' on 'GProuteResultsDetailsInstruction_'
+     * tag label (cf. this._addRouteResultsDetailsElement),
+     * and it deletes a style on feature route.
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onRouteResultsDetailsMouseOut;
+    /**
+     * this method is called by this.onRouteComputationSubmit()
+     * and executes a request to the service.
+     *
+     * @param {Object} options - route service request options
+     * @param {Function} options.onSuccess - callback
+     * @param {Function} options.onFailure - callback
+     * @private
+     */
+    private _requestRouting;
+    /**
+     * this method is called by this.onRouteComputationSubmit() (in case of route computation success)
+     * and fills the container of the route instructions list, distance and time
+     * information, also, constructs the geometry route.
+     *
+     * @param {Object} results - results of the route calculation
+     *
+     * @private
+     */
+    private _fillRouteResultsDetails;
+    /**
+     * this method is called by this._fillRouteResultsDetails()
+     * and fills the container of the route instructions list, distance and time
+     * information.
+     *
+     * @param {Number} distance - distance
+     * @param {Number} duration - duration
+     * @param {Object[]} instructions - list of instructions
+     *
+     * @private
+     */
+    private _fillRouteResultsDetailsContainer;
+    _resultsRouteValuesContainer: any;
+    _resultsRouteDetailsContainer: any;
+    /**
+     * this method is called by this._fillRouteResultsDetails()
+     * and constructs the geometry route.
+     *
+     * @param {Object} geometry - geoJSON object for route geometry
+     * @param {Object} style - route ol.style.Style object
+     * @private
+     */
+    private _fillRouteResultsDetailsGeometry;
+    /**
+     * this method is called by this._fillRouteResultsDetails()
+     * and constructs the geometries street with informations.
+     *
+     * @param {Array} instructions - route instructions list (containing geoJSON geometry)
+     * @param {Object} style - route ol.style.Style object
+     * @private
+     */
+    private _fillRouteResultsDetailsFeatureGeometry;
+    /**
+     * this method is called on route features hover
+     * and highlight instruction label
+     *
+     * @param {Object} e - event
+     *
+     * @private
+     */
+    private _onResultsFeatureMouseOver;
+    /**
+     * this method is called on route features select
+     * and set a popup with feature information
+     *
+     * @param {Object} e - on select event
+     * @private
+     */
+    private _onResultsFeatureSelect;
+    /**
+     * this method is called by this.onShowRoutePanelClick()
+     * and it clears all elements (reinit).
+     *
+     * @private
+     */
+    private _clear;
+    /**
+     * this method is called by this.onRouteResetClick()
+     * and it clears all options inputs (reinit).
+     *
+     * @private
+     */
+    private _clearRouteInputOptions;
+    /**
+     * this method is called by this._clear()
+     * and it removes step location inputs (excepted departure and arrival)
+     *
+     * @private
+     */
+    private _removeRouteStepLocations;
+    /**
+     * this method is called by this.onRouteComputationSubmit() (in case of failure)
+     * and it clears all route instructions.
+     *
+     * @private
+     */
+    private _clearRouteResultsDetails;
+    /**
+     * this method is called by this.onRouteComputationSubmit()
+     * and it clears all route geometries.
+     *
+     * @private
+     */
+    private _clearRouteResultsGeometry;
+    /**
+     * this method is called by this.onRouteComputationSubmit()
+     * and it clears all route geometries.
+     *
+     * @private
+     */
+    private _clearRouteResultsFeatureGeometry;
+    /**
+     * this method is called by event 'click' on control main container
+     * and hide suggested Locations (unless target is an autocomplete input)
+     *
+     * @param {Object} e - event
+     *
+     * @private
+     */
+    private _hideRouteSuggestedLocations;
+    /**
+     * this method displays waiting container and sets a timeout
+     *
+     * @private
+     */
+    private _displayWaitingContainer;
+    /**
+     * this method hides waiting container and clears timeout
+     *
+     * @private
+     */
+    private _hideWaitingContainer;
+    /**
+     * simplified instructions
+     *
+     * @param {Object[]} instructions - list of instructions
+     *
+     * @returns {Object[]} simplified instructions
+     *
+     * @private
+     */
+    private _simplifiedInstructions;
+}
+import ButtonExport from "../Export/Export";
 //# sourceMappingURL=Route.d.ts.map

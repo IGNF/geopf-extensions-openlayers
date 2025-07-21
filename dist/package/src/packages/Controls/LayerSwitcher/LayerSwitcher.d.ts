@@ -83,5 +83,353 @@ export default LayerSwitcher;
  *    console.warn("layer", e.layer, e.name, e.url);
  * });
  */
-declare var LayerSwitcher: ol.control.LayerSwitcher;
+declare class LayerSwitcher {
+    /**
+     * See {@link ol.control.LayerSwitcher}
+     * @module LayerSwitcher
+     * @alias module:~controls/LayerSwitcher
+     * @param {*} options - options
+     * @example
+     * import LayerSwitcher from "gpf-ext-ol/controls/LayerSwitcher"
+     * ou
+     * import { LayerSwitcher } from "gpf-ext-ol"
+     */
+    constructor(options: any);
+    /**
+     * Nom de la classe
+     * @private
+     */
+    private CLASSNAME;
+    container: DOMElement;
+    element: any;
+    /**
+     * Overload setMap function, that enables to catch map events, such as movend events.
+     * @inheritdoc {@link https://openlayers.org/en/latest/apidoc/module-ol_control_Control-Control.html#setMap}
+     * @param {ol.Map} map - Map.
+     */
+    setMap(map: ol.Map): void;
+    /**
+     * Add a new layer to control (when added to map) or add new layer configuration
+     *
+     * @param {ol.layer.Layer} layer - layer to add to layer switcher
+     * @param {Object} [config] - additional options for layer configuration
+     * @param {Object} [config.title] - layer title (default is layer identifier)
+     * @param {Object} [config.description] - layer description (default is null)
+     * @param {Object} [config.legends] - layer legends (default is an empty array)
+     * @param {Object} [config.metadata] - layer metadata (default is an empty array)
+     * @param {Object} [config.quicklookUrl] - layer quicklookUrl (default is null)
+     * @fires layerswitcher:add
+     * @example
+     *   layerSwitcher.addLayer(
+     *       gpParcels,
+     *       {
+     *           title : "Parcelles cadastrales",
+     *           description : "description de la couche",
+     *           quicklookUrl : "http://quicklookUrl.fr"
+     *       }
+     *   )
+     */
+    addLayer(layer: ol.layer.Layer, config?: {
+        title?: Object | undefined;
+        description?: Object | undefined;
+        legends?: Object | undefined;
+        metadata?: Object | undefined;
+        quicklookUrl?: Object | undefined;
+    }): void;
+    /**
+     * Remove a layer from control
+     *
+     * @param {ol.layer.Layer} layer - layer.
+     * @fires layerswitcher:remove
+     * @deprecated on the future version ...
+     */
+    removeLayer(layer: ol.layer.Layer): void;
+    /**
+     * Collapse or display control main container
+     *
+     * @param {Boolean} collapsed - True to collapse control, False to display it
+     */
+    setCollapsed(collapsed: boolean): void;
+    /**
+     * Returns true if widget is collapsed (minimize), false otherwise
+     * @returns {Boolean} is collapsed
+     */
+    getCollapsed(): boolean;
+    /**
+     * Display or hide removeLayerPicto from layerSwitcher for this layer
+     *
+     * @param {ol.layer.Layer} layer - ol.layer to be configured
+     * @param {Boolean} removable - specify if layer can be remove from layerSwitcher (true) or not (false). Default is true
+     */
+    setRemovable(layer: ol.layer.Layer, removable: boolean): void;
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer(): DOMElement;
+    /**
+     * Forget add listener added to the control
+     */
+    forget(): void;
+    /**
+     * Add listeners to catch map layers addition
+     */
+    listen(): void;
+    /**
+     * Initialize LayerSwitcher control (called by constructor)
+     *
+     * @param {Object} options - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
+     * @param {Array} layers - list of layers to be configured. Each array element is an object, with following properties :
+     * @private
+     */
+    private _initialize;
+    options: {
+        id: string;
+        collapsed: boolean;
+        draggable: boolean;
+        counter: boolean;
+        panel: boolean;
+        gutter: boolean;
+        allowEdit: boolean;
+        allowGrayScale: boolean;
+    } | undefined;
+    /**
+     * identifiant du contrôle
+     * utile pour suffixer les identifiants CSS
+     * (pour gérer le cas où il y en a plusieurs dans la même page)
+     * @type {String}
+     * @private
+     */
+    private _uid;
+    /**
+     * Control layers list.
+     * ach key is a layer id, and its value is an object of layers options (layer, id, opacity, visibility, title, description...)
+     * @type {Object}
+     * @private
+     */
+    private _layers;
+    /**
+     * array of ordered control layers
+     * @type {Array}
+     * @private
+     */
+    private _layersOrder;
+    /**
+     * associative array of layers ordered by zindex (keys are zindex values, and corresponding values are arrays of layers at this zindex)
+     * @type {Object}
+     * @private
+     */
+    private _layersIndex;
+    /**
+     * layers max z index, to order layers using their z index
+     * @type {Number}
+     * @private
+     */
+    private _lastZIndex;
+    /**
+     * layers max id, incremented when a new layer is added
+     * @typr {Number}
+     * @private
+     */
+    private _layerId;
+    /** true if widget is collapsed, false otherwise */
+    collapsed: boolean | undefined;
+    /**
+     * div qui contiendra les div des listes.
+     * @type {DOMElement}
+     * @private
+     */
+    private _layerListContainer;
+    /**
+     * listeners added to the layerSwitcher saved here in order to delete them if we remove the control from the map)
+     * @type {Object}
+     * @private
+     */
+    private _listeners;
+    /**
+     * counter of layers in layerSwitcher control
+     * @private
+     */
+    private _layerSwitcherCounter;
+    /**
+     * button to show/hide layerSwitcher control
+     * @private
+     */
+    private _showLayerSwitcherButton;
+    /**
+     * Create control main container (called by constructor)
+     *
+     * @returns {DOMElement} container - control container
+     * @private
+     */
+    private _initContainer;
+    /**
+     * Add all map layers to control main container
+     *
+     * @param {Object} map - ol.Map object, to which control is added
+     * @private
+     */
+    private _addMapLayers;
+    /**
+     * create layer div (to append to control DOM element).
+     *
+     * @param {Object} layerOptions - layer options (id, title, description, legends, metadata, quicklookUrl ...)
+     *
+     * @returns {DOMElement} DOM element
+     *
+     * @private
+     */
+    private _createLayerDiv;
+    /**
+     * ...
+     *
+     * @method onShowLayerSwitcherClick
+     * @param { event } e évènement associé au clic
+     * @private
+     */
+    private onShowLayerSwitcherClick;
+    /**
+     * update layer counter
+     * @private
+     */
+    private _updateLayerCounter;
+    /**
+     * Change layer opacity on layer opacity picto click
+     *
+     * @param {Object} e - event
+     * @private
+     */
+    private _onChangeLayerOpacity;
+    /**
+     * Update picto opacity value on layer opacity change
+     *
+     * @param {Object} e - event
+     * @fires layerswitcher:change:opacity
+     * @private
+     */
+    private _updateLayerOpacity;
+    /**
+     * Change layer visibility on layer visibility picto click
+     *
+     * @param {Object} e - event
+     * @private
+     */
+    private _onVisibilityLayerClick;
+    /**
+     * Change picto visibility on layer visibility change
+     *
+     * @param {Object} e - event
+     * @fires layerswitcher:change:visibility
+     * @private
+     */
+    private _updateLayerVisibility;
+    /**
+     * Change layer style on mapbox layer dialog
+     *
+     * @param {Object} e - event
+     * @private
+     */
+    private _onChangeStyleLayerClick;
+    /**
+     * Change layers order in layerswitcher (control container) on a layer index change (on map) or when a layer is added to a specific zindex
+     * @todo fires layerswitcher:change:zindex
+     * @private
+     */
+    private _updateLayersOrder;
+    /**
+     * Open layer information panel on picto click
+     *
+     * @param {Event} e - MouseEvent
+     * @private
+     */
+    private _onOpenLayerInfoClick;
+    /**
+     * Open layer style select panel on picto click
+     *
+     * @param {Event} e - MouseEvent
+     * @param {Array} styles - List of styles
+     * @private
+     */
+    private _onEditLayerStyleClick;
+    /**
+     * remove layer from layer switcher and map on picto click
+     *
+     * @param {Event} e - MouseEvent
+     * @private
+     */
+    private _onDropLayerClick;
+    /**
+     * edit layer
+     *
+     * @param {Event} e - MouseEvent
+     * @private
+     */
+    private _onEditLayerClick;
+    /**
+     * change layers order (on map) on drag and drop (on control container)
+     *
+     * @param {Event} e - CustomEvent
+     * @private
+     */
+    private _onEndDragAndDropLayerClick;
+    /**
+     * change layers order (on map) on drag and drop (on control container)
+     *
+     * @param {Event} e - DragNDrop Event
+     * @private
+     */
+    private _onStartDragAndDropLayerClick;
+    /**
+     * togglegreyscale
+     * @param {Event} e - Event
+     * @fires layerswitcher:change:grayscale
+     * @private
+     */
+    private _updateLayerGrayScale;
+    /**
+     * togglegreyscale
+     * @param {Event} e - Event
+     * @private
+     */
+    private _onToggleLayerGreyscaleClick;
+    /**
+     * zoom to extent
+     * @fixme dot it for other user data
+     * @param {PointerEvent} e - Event
+     * @fires layerswitcher:extent
+     * @private
+     */
+    private _onZoomToExtentClick;
+    /**
+     * check layers range on map movement
+     *
+     * @param {ol.Map} map - ol map on which event occured
+     * @private
+     */
+    private _onMapMoveEnd;
+    /**
+     * Returns Layer Container Id associated with given olLayer
+     *
+     * @param {ol.layer.Layer} olLayer - ol layer object
+     * @returns {String} - div container Id ; null if layer not found.
+     * @private
+     */
+    private getLayerDOMId;
+    /**
+     * Check if map view is out of layer range (in terms of extent and zoom)
+     *
+     * @param {Object} layer - the ol.layer object
+     * @param {Object} map   - the ol.Map object
+     * @returns {Boolean} outOfRange - false if map view is out of layer range
+     */
+    isInRange(layer: Object, map: Object): boolean;
+    /**
+     * Get layer informations : title, description, quicklookurl, legends, metadata
+     *
+     * @param {Object} layer - the ol.layer object
+     * @returns {Object} layerInfo - layer informations
+     */
+    getLayerInfo(layer: Object): Object;
+}
 //# sourceMappingURL=LayerSwitcher.d.ts.map

@@ -23,5 +23,15 @@ export default SourceWMTS;
  *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
  * });
  */
-declare var SourceWMTS: ol.source.GeoportalWMTS;
+declare class SourceWMTS extends WMTSExtended {
+    _originators: any;
+    _legends: any;
+    _metadata: any;
+    _description: any;
+    _title: any;
+    _quicklookUrl: any;
+    name: any;
+    service: string;
+}
+import WMTSExtended from "../Sources/WMTS";
 //# sourceMappingURL=SourceWMTS.d.ts.map

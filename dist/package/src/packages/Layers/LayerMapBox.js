@@ -127,7 +127,7 @@ import Config from "../Utils/Config";
 * }
 *
 */
-var LayerMapBox = class LayerMapBox extends VectorTileLayer {
+class LayerMapBox extends VectorTileLayer {
     
     /**
      * See {@link ol.layer.GeoportalMapBox}

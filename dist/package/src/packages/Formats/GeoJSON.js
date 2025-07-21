@@ -21,7 +21,7 @@ import Styling from "./Styling";
  * @param {Object} [options.defaultStyle] - Styles by default
  * @param {Object} [options.extensions] - Add properties to file root
  */
-var GeoJSON = class GeoJSON extends olGeoJSON {
+class GeoJSON extends olGeoJSON {
 
     /**
      * See {@link ol.format.GeoJSONExtended}
@@ -60,7 +60,7 @@ var GeoJSON = class GeoJSON extends olGeoJSON {
      * @see ol.format.GeoJSON.prototype.readFeatures
      * @param {Object|String} source - Source.
      * @param {olx.format.ReadOptions} [options] - Options.
-     * @return {Array.<ol.Feature>} Features.
+     * @returns {Array.<ol.Feature>} Features.
      */
     readFeatures (source, options) {
         var features = super.readFeatures(source, options);
@@ -112,7 +112,7 @@ var GeoJSON = class GeoJSON extends olGeoJSON {
      * @param {Array.<ol.Feature>} features - Features.
      * @param {Object} [options] - Options.
      *
-     * @return {String} Result.
+     * @returns {String} Result.
      */
     writeFeatures (features, options) {
         // on met à jour les properties de styles

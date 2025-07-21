@@ -109,5 +109,249 @@ export default Drawing;
  *      }
  * });
  */
-declare var Drawing: ol.control.Drawing;
+declare class Drawing {
+    /**
+     * Default tools to display for widget
+     *
+     * @private
+     */
+    private static DefaultTools;
+    /**
+     * Default labels for widget
+     *
+     * @private
+     */
+    private static DefaultLabels;
+    /**
+     * Default styles applyied to drawn features.
+     *
+     * @private
+     */
+    private static DefaultStyles;
+    /**
+     * Default styles when drawing
+     *
+     * @private
+     */
+    private static DefaultCursorStyle;
+    /**
+     * See {@link ol.control.Drawing}
+     * @module Drawing
+     * @alias module:~controls/Drawing
+     * @param {*} options - options
+     * @example
+     * import Drawing from "gpf-ext-ol/controls/Drawing"
+     * ou
+     * import { Drawing } from "gpf-ext-ol"
+     */
+    constructor(options: any);
+    /**
+     * Nom de la classe (heritage)
+     * @private
+     */
+    private CLASSNAME;
+    _container: DOMElement;
+    element: any;
+    /**
+     * Overload of {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html#setMap ol.control.Control.setMap()} method, called when control is added to or removed from map.
+     *
+     * @param {Object} map - {@link http://openlayers.org/en/latest/apidoc/ol.Map.html ol.Map} object.
+     */
+    setMap(map: Object): void;
+    eventKey: any;
+    layer: any;
+    interactionCurrent: any;
+    /**
+     * Export features of current drawing layer (KML by default).
+     *
+     * @returns {String} a representation of drawn features (KML, GPX or GeoJSON) or null if not possible.
+     */
+    exportFeatures(): string;
+    /**
+     * Collapse or display control main container
+     *
+     * @param {Boolean} collapsed - True to collapse control, False to display it
+     */
+    setCollapsed(collapsed: boolean): void;
+    /**
+     * Setter for Export Name.
+     *
+     * @param {String} name - Export Name. By default, "Croquis".
+     */
+    setExportName(name: string): void;
+    _exportName: string | undefined;
+    /**
+     * getter for Export Name.
+     *
+     * @returns {String} export name
+     */
+    getExportName(): string;
+    /**
+     * Setter for Export format (KML, GPX or GeoJSON).
+     *
+     * @param {String} format - Export format. By default, "KML".
+     */
+    setExportFormat(format: string): void;
+    _exportFormat: string | undefined;
+    _exportExt: string | undefined;
+    _exportMimeType: string | undefined;
+    /**
+     * getter for Export format.
+     *
+     * @returns {String} export format
+     */
+    getExportFormat(): string;
+    /**
+     * Sets vector layer to hosts feature.
+     *
+     * @param {ol.layer.Vector} vlayer - vector layer
+     */
+    setLayer(vlayer: ol.layer.Vector): void;
+    /**
+     * Get vector layer
+     *
+     * @returns {Object} layer - isocurve layer
+     */
+    getLayer(): Object;
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer(): DOMElement;
+    /** Disable interaction */
+    disable(): void;
+    /**
+     * Gets marker options in options.markersList given its src.
+     *
+     * @param {String} src - marker image URI,
+     * @returns {Object} markers options
+     * @private
+     */
+    private _getsMarkersOptionsFromSrc;
+    /**
+     * Converts markerElement options into Openlayers IconStyles options.
+     *
+     * @param {Object} markerElement - marker element
+     * @returns {Object} ol.Style.Icon constructor options.
+     * @private
+     */
+    private _getIconStyleOptions;
+    /**
+     * Initialize control (called by Drawing constructor)
+     *
+     * @method _initialize
+     * @param {Object} options - control options (set by user)
+     * @private
+     */
+    private _initialize;
+    _uid: any;
+    options: Object | undefined;
+    /** {Boolean} specify if Drawing control is collapsed (true) or not (false) */
+    collapsed: any;
+    /** {Boolean} specify if Drawing control is draggable (true) or not (false) */
+    draggable: any;
+    interactionSelectEdit: any;
+    featuresCollectionSelected: any;
+    stylingOvl: any;
+    popupOvl: any;
+    tooltipOvl: any;
+    tooltipElem: any;
+    _isDesktop: boolean | undefined;
+    /**
+     * Creates empty layer to host features
+     *
+     * @private
+     */
+    private _createEmptyLayer;
+    /**
+     * this method is called by the constructor.
+     * this information is useful to switch to touch mode.
+     * Detection : test for desktop or tactile
+     *
+     * @method _detectSupport
+     *
+     * @returns {Boolean} is desktop
+     * @private
+     */
+    private _detectSupport;
+    /**
+     * Create control main container (called by Drawing constructor)
+     *
+     * @method _initContainer
+     *
+     * @returns {DOMElement} DOM element
+     * @private
+     */
+    private _initContainer;
+    _showDrawingButton: any;
+    _drawingPanel: any;
+    _drawingPanelHeader: any;
+    /**
+     * Callback de fin de dessin de geometrie
+     * @param {Object} feature - ol feature
+     * @param {String} geomType - geometry type
+     * @param {Boolean} clean - clean last feature
+     *
+     * @private
+     */
+    private _drawEndFeature;
+    /**
+     * Creates Interaction for features removal.
+     *
+     * @returns {SelectInteraction} created interaction.
+     * @private
+     */
+    private _createRemoveInteraction;
+    /**
+     * Creates Interaction for features style definition.
+     *
+     * @returns {ol.interaction.Select} created interaction.
+     * @private
+     */
+    private _createStylingInteraction;
+    /**
+     * Creates Interaction for text definition.
+     *
+     * @returns {SelectInteraction} created interaction.
+     * @private
+     */
+    private _createLabelInteraction;
+    labelOvl: any;
+    /**
+     * Callback de fin de modification du dessin afin de mettre à jour la mesure
+     * TODO
+     * @param {Object} feature - ol feature
+     * @param {String} geomType - geometry type
+     *
+     * @private
+     */
+    private _updateMeasure;
+    /**
+     * Handles click on drawing tools icons
+     *
+     * @param {Event} clickEvent - click event
+     * @param {String} toolId - selected tool Id
+     * @param {Drawing} context - Drawing control.
+     * @private
+     */
+    private _handleToolClick;
+    /**
+     * this method is called by event 'click' on 'GPshowDrawingPicto' tag label
+     * (cf. this._createShowDrawingPictoElement),
+     * and toggles event 'mousemove' on map.
+     *
+     * @method onShowDrawingClick
+     * @param { event } e évènement associé au clic
+     * @private
+     */
+    private onShowDrawingClick;
+    /**
+     * this method is called by event 'click' on 'drawing-export' tag button.
+     *
+     * @method onExportFeatureClick
+     * @private
+     */
+    private onExportFeatureClick;
+}
 //# sourceMappingURL=Drawing.d.ts.map

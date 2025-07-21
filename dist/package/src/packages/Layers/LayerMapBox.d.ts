@@ -116,5 +116,75 @@ export default LayerMapBox;
 * }
 *
 */
-declare var LayerMapBox: ol.layer.GeoportalMapBox;
+declare class LayerMapBox {
+    /**
+     * See {@link ol.layer.GeoportalMapBox}
+     * @module LayerMapBox
+     * @alias module:~layers/GeoportalMapBox
+     * @param {*} options - options
+     * @param {*} [settings] - other settings
+     * @example
+     * import LayerMapBox from "gpf-ext-ol/layers/LayerMapBox"
+     * ou
+     * import { LayerMapBox } from "gpf-ext-ol"
+    */
+    constructor(options: any, settings?: any);
+    name: any;
+    service: string;
+    protocol: string;
+    sourceId: any;
+    styleUrl: any;
+    styleName: any;
+    config: any;
+    /**
+     * Get Style MapBox
+     * @private
+     */
+    private setStyleMapBox;
+    /**
+     * Add Style
+     * @param {*} style - json style
+     */
+    onStyleMapBoxLoad(style: any): void;
+    /**
+     * Error
+     * @param {*} error - message
+     */
+    onStyleMapBoxError(error: any): void;
+    /**
+     * Get configuration
+     * @returns {Object} - configuration
+     */
+    getConfiguration(): Object;
+    /**
+     * Get legends
+     * @returns  {Array} - legends
+     */
+    getLegends(): any[];
+    /**
+     * Get metadata
+     * @returns  {Array} - metadata
+     */
+    getMetadata(): any[];
+    /**
+     * Get description
+     * @returns {String} - description
+     */
+    getDescription(): string;
+    /**
+     * Get title
+     * @returns {String} - title
+     */
+    getTitle(): string;
+    /**
+     * Get quicklook url
+     * @returns {String} - quicklook
+     */
+    getQuicklookUrl(): string;
+    /**
+     * Get originators
+     * @returns {Array} - originators
+     */
+    getOriginators(): any[];
+}
 //# sourceMappingURL=LayerMapBox.d.ts.map

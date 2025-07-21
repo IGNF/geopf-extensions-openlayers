@@ -24,5 +24,92 @@ export default MeasureAzimuth;
  *   geodesic : true
  * });
  */
-declare var MeasureAzimuth: ol.control.MeasureAzimuth;
+declare class MeasureAzimuth {
+    constructor(options: any);
+    /**
+     * Nom de la classe (heritage)
+     * @private
+     */
+    private CLASSNAME;
+    _uid: any;
+    _pictoContainer: any;
+    _container: DOMElement;
+    element: any;
+    /**
+     * Overwrite OpenLayers setMap method
+     *
+     * @param {ol.Map} map - Map.
+     */
+    setMap(map: ol.Map): void;
+    /**
+     * Setter for option Geodesic
+     *
+     * @param {Boolean} value - geodesic value
+     */
+    setGeodesic(value: boolean): void;
+    /**
+     * Getter for option Geodesic
+     *
+     * @returns {Boolean} geodesic value
+     */
+    isGeodesic(): boolean;
+    /**
+     * Get container
+     *
+     * @returns {DOMElement} container
+     */
+    getContainer(): DOMElement;
+    /**
+     * Initialize measure control (called by constructor)
+     *
+     * @param {Object} options - options
+     *
+     * @private
+     */
+    private _initialize;
+    options: {} | undefined;
+    /**
+     * initialize component container (DOM)
+     *
+     * @returns {DOMElement} DOM element
+     *
+     * @private
+     */
+    private _initializeContainer;
+    /**
+     * Add all events on map
+     *
+     * @private
+     */
+    private addMeasureEvents;
+    eventLayerRemove: any;
+    /**
+     * Remove all events on map
+     *
+     * @private
+     */
+    private removeMeasureEvents;
+    /**
+     * Format length output.
+     *
+     * @param {ol.geom.LineString} line - geometry line.
+     * @returns {String} The formatted output.
+     * @private
+     */
+    private format;
+    /**
+     * this method is called by event 'click' on picto
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onShowMeasureAzimuthClick;
+    /**
+     * Handle pointer click.
+     *
+     * @param {ol.MapBrowserEvent} e - The event.
+     * @private
+     */
+    private onPointerMoveAzimutHandler;
+}
 //# sourceMappingURL=MeasureAzimuth.d.ts.map

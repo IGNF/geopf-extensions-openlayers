@@ -307,7 +307,7 @@ var LayerUtils = {
      * @function intersects
      * @param {Array.<Float>} extent1 - First extent : [top, left, bottom, right] = [maxy, minx, miny, maxx]
      * @param {Array.<Float>} extent2 - Second extent : [top, left, bottom, right] = [maxy, minx, miny, maxx]
-     * @return {Boolean} intersects - True if the two extents intersect, false otherwise.
+     * @returns {Boolean} intersects - True if the two extents intersect, false otherwise.
      */
     intersects : function (extent1, extent2) {
         var intersectsX = (extent1[1] <= extent2[3]) && (extent2[1] <= extent1[3]);

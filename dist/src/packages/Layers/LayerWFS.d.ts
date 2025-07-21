@@ -34,5 +34,55 @@ export default LayerWFS;
  * layerWFS.getQuicklookUrl();
  * layerWFS.getOriginators();
  */
-declare var LayerWFS: ol.layer.GeoportalWFS;
+declare class LayerWFS {
+    /**
+     * See {@link ol.layer.GeoportalWFS}
+     * @module LayerWFS
+     * @alias module:~layers/GeoportalWFS
+     * @param {*} options - options
+     * @example
+     * import LayerWFS from "gpf-ext-ol/layers/LayerWFS"
+     * ou
+     * import { LayerWFS } from "gpf-ext-ol"
+     */
+    constructor(options: any);
+    name: any;
+    service: string;
+    config: any;
+    /**
+     * Get configuration
+     * @returns {Object} - configuration
+     */
+    getConfiguration(): Object;
+    /**
+     * Get legends
+     * @returns  {Array} - legends
+     */
+    getLegends(): any[];
+    /**
+     * Get metadata
+     * @returns  {Array} - metadata
+     */
+    getMetadata(): any[];
+    /**
+     * Get description
+     * @returns {String} - description
+     */
+    getDescription(): string;
+    /**
+     * Get title
+     * @returns {String} - title
+     */
+    getTitle(): string;
+    /**
+     * Get quicklook url
+     * @returns {String} - quicklook
+     */
+    getQuicklookUrl(): string;
+    /**
+     * Get originators
+     * @returns {Array} - originators
+     */
+    getOriginators(): any[];
+}
 //# sourceMappingURL=LayerWFS.d.ts.map
