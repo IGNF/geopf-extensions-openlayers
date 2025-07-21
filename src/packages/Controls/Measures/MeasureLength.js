@@ -259,7 +259,7 @@ class MeasureLength extends Control {
      * Format length output.
      *
      * @param {ol.geom.Line} line - geometry line.
-     * @return {String} The formatted output.
+     * @returns {String} The formatted output.
      * @private
      */
     format (line) {

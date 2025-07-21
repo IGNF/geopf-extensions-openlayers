@@ -77,7 +77,7 @@ class GPX extends olGPX {
      * @see ol.format.GPX.prototype.readFeatures
      * @param {Document|Node} source - Source.
      * @param {olx.format.ReadOptions=} options - options.
-     * @return {Array.<ol.Feature>} Features.
+     * @returns {Array.<ol.Feature>} Features.
      */
     readFeatures (source, options) {
         // INFO
@@ -126,7 +126,7 @@ class GPX extends olGPX {
      * @param {Object[]} features - Features.
      * @param {Object} options - Options.
      *
-     * @return {String} Result or null.
+     * @returns {String} Result or null.
      */
     writeFeatures (features, options) {
         // INFO

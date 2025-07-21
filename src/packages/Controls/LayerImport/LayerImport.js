@@ -2579,7 +2579,7 @@ class LayerImport extends Control {
      * this method is called by this._addGetCapWMSLayer
      * and gets service getMap request url
      *
-     * @return {String} getmapurl - service getMap request url
+     * @returns {String} getmapurl - service getMap request url
      * @private
      */
     _getWMSLayerGetMapUrl () {
@@ -2603,7 +2603,7 @@ class LayerImport extends Control {
      *
      * @param {Object} layerInfo - layer information from getCapabilities response
      * @param {String} mapProjCode - map projection code (e.g. "EPSG:4326")
-     * @return {String} projection - ol.proj projection alias (e.g. "EPSG:4326")
+     * @returns {String} projection - ol.proj projection alias (e.g. "EPSG:4326")
      * @private
      */
     _getWMSLayerProjection (layerInfo, mapProjCode) {
@@ -2959,7 +2959,7 @@ class LayerImport extends Control {
      * this method is called by this._addGetCapWMTSLayer
      * and gets service getTile request url
      *
-     * @return {String} gettileurl - service getTile request url
+     * @returns {String} gettileurl - service getTile request url
      * @private
      */
     _getWMTSLayerGetTileUrl () {
@@ -2979,7 +2979,7 @@ class LayerImport extends Control {
      *
      * @param {Object} layerInfo - layer information from getCapabilities response
      * @param {Object} getCapResponseWMTS - whole getCapabilities response
-     * @return {String} projection - ol.proj projection alias (e.g. "EPSG:4326")
+     * @returns {String} projection - ol.proj projection alias (e.g. "EPSG:4326")
      * @private
      */
     _getWMTSLayerProjection (layerInfo, getCapResponseWMTS) {
@@ -3024,7 +3024,7 @@ class LayerImport extends Control {
      * and get ol.tileGrid.WMTS parameters using getCapabilities response
      *
      * @param {Object} layerInfo - layer information from getCapabilities response
-     * @return {Object} tmsOptions - ol.tileGrid.WMTS options
+     * @returns {Object} tmsOptions - ol.tileGrid.WMTS options
      * @private
      */
     _getTMSParams (layerInfo) {
@@ -3133,7 +3133,7 @@ class LayerImport extends Control {
      * and sets extent for WMTS layer in map projection (if available in getCapabilities response)
      *
      * @param {Object} layerInfo - layer information from getCapabilities response
-     * @return {Array} extent - layer extent
+     * @returns {Array} extent - layer extent
      * @private
      */
     _getWMTSLayerExtent (layerInfo) {
@@ -3155,7 +3155,7 @@ class LayerImport extends Control {
     /**
      * gets control map projection code
      *
-     * @return {String} mapProjCode - control map projection code (e.g. "EPSG:3857")
+     * @returns {String} mapProjCode - control map projection code (e.g. "EPSG:3857")
      * @private
      */
     _getMapProjectionCode () {

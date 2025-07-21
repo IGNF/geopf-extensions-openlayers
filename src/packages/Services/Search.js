@@ -81,7 +81,7 @@ const target = new EventTarget();
  * Appel du service de recherche
  * @param {*} text - recherche
  * @returns {Object} json
- * @fire suggest
+ * @fires suggest
  * @example
  * {
  *   "attribution": {},

@@ -252,7 +252,7 @@ class GetFeatureInfo extends Control {
     /**
      * Tells if control is active or not
      * @private
-     * @return { Boolean } true if active false if not
+     * @returns { Boolean } true if active false if not
      */
     getFeatureInfoIsActive () {
         return this.buttonGetFeatureInfoShow.getAttribute("aria-pressed");
@@ -294,7 +294,7 @@ class GetFeatureInfo extends Control {
     /**
      * Main render function
      * @param { ol.Layer } layer layer openlayer
-     * @return { Object } gfiLayer
+     * @returns { Object } gfiLayer
      * {
      *      format : "wmts",
      *      layer: layer,
@@ -349,7 +349,7 @@ class GetFeatureInfo extends Control {
     /**
      * Main render function
      * @param { ol.Layer } layer layer openlayer
-     * @return { Array } Array of ol features
+     * @returns { Array } Array of ol features
      * @private
      */
     getFeaturesAtClick (layer) {
@@ -365,7 +365,7 @@ class GetFeatureInfo extends Control {
     /**
      * Main render function
      * @param { Object } gfiLayer layer openlayer
-     * @return { Object } gfi result
+     * @returns { Object } gfi result
      * {
      *      layername : "layername",
      *      content: "html"
@@ -506,7 +506,7 @@ class GetFeatureInfo extends Control {
      * Return layer format
      *
      * @param {ol.layer.Layer} l - layer openlayers
-     * @return {String} format - layer format can be wms, wmts, vector or unknown
+     * @returns {String} format - layer format can be wms, wmts, vector or unknown
      *
      */
     getLayerFormat (l) {

@@ -174,7 +174,7 @@ class MeasureAzimuth extends Control {
     /**
      * Getter for option Geodesic
      *
-     * @return {Boolean} geodesic value
+     * @returns {Boolean} geodesic value
      */
     isGeodesic () {
         return this.options.geodesic;
@@ -281,7 +281,7 @@ class MeasureAzimuth extends Control {
      * Format length output.
      *
      * @param {ol.geom.LineString} line - geometry line.
-     * @return {String} The formatted output.
+     * @returns {String} The formatted output.
      * @private
      */
     format (line) {

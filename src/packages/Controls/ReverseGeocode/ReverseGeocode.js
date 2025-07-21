@@ -469,7 +469,7 @@ class ReverseGeocode extends Control {
      * this method is called by this.initialize() and initialize popup div
      * (to display results information on marker click)
      *
-     * @return {Object} element - DOM element for popup
+     * @returns {Object} element - DOM element for popup
      * @private
      */
     _initPopupDiv () {

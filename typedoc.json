@@ -19,14 +19,21 @@
         "doc/Ioc.md"
     ],
     "blockTags": [
-        "@classdesc", 
         "@alias", 
-        "@fires",
-        "@todo",
+        "@classdesc", 
         "@constructor",
-        "@returns",
-        "@param",
+        "@description",
+        "@example",
+        "@extends",
+        "@fires",
+        "@fixme",
         "@function",
-        "@example"
+        "@mixin",
+        "@method",
+        "@module",
+        "@param",
+        "@returns",
+        "@todo",
+        "@type",
     ]
 }
