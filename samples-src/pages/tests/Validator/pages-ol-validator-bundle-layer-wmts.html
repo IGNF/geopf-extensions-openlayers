@@ -1,0 +1,66 @@
+{{#extend "ol-sample-bundle-layout"}}
+
+{{#content "vendor"}}
+        <script src="{{ baseurl }}/dist/bundle/GpfExtOL.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample Validator utils</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            #results-textarea {
+                max-height: 200px;
+                width: 100%;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Validation d'une config de type "layer wmts"</h2>
+            <!-- map -->
+            <div class="results">
+                <textarea id="results-textarea" name="textarea" rows="100" cols="30"></textarea>
+                <button id="validate">Valider</button>
+                <input id="result" type="text" disabled />
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var key = "layer-wmts";
+                var file = "layer-wmts.json";
+                async function getData (name) {
+                    var response = await fetch(`{{ resources }}/data/configuration/${name}`, {});
+                    var data = await response.json();
+                    if (response.status !== 200) {
+                        throw new Error("Erreur de récupération du JSON !");
+                    }
+                    return data;
+                }
+
+                const validator = new Gp.JsonValidatorUtils();
+
+                getData(file)
+                .then((configData) => {
+                    document.getElementById("results-textarea").value = JSON.stringify(configData, null, 2);;
+                });
+
+                document.getElementById("validate").addEventListener("click", (e) => {
+                    document.getElementById("result").value = "";
+                    var configData = JSON.parse(document.getElementById("results-textarea").value);
+                    
+                    const result = validator.validate(key, configData);
+                    if (result.valid) {
+                        console.log('✅ Config valide');
+                        document.getElementById("result").value = '✅ Config valide';
+                    } else {
+                        console.error('❌ Erreurs:', result.errors);
+                        document.getElementById("result").value = '❌ Erreurs (cf. console dev)';
+                    }
+                });
+           </script>
+{{/content}}
+
+{{/extend}}

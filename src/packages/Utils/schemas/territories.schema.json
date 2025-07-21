@@ -1,0 +1,59 @@
+{
+  "$id": "territories",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "title", "description", "zoom", "thumbnail", "icon"],
+    "oneOf": [
+        { "required": ["bbox"] },
+        { "required": ["point"] }
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Code du territoire"
+      },
+      "title": {
+        "type": "string",
+        "description": "Nom affiché du territoire"
+      },
+      "description": {
+        "type": "string"
+      },
+      "zoom": {
+        "type": ["integer", "null"],
+        "minimum": 0
+      },
+      "bbox": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": {
+          "type": "number"
+        },
+        "description": "Bounding box au format [minX, minY, maxX, maxY]"
+      },
+      "point": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": { "type": "number" },
+        "description": "Coordonnées"
+      },
+      "thumbnail": {
+        "anyOf": [
+          { "type": "string", "format": "uri" },
+          { "type": "string" }
+        ]
+      },
+      "icon": {
+        "anyOf": [
+          { "type": "string", "format": "uri" },
+          { "type": "string" }
+        ]
+      }
+    },
+    "additionalProperties": false
+  }
+}

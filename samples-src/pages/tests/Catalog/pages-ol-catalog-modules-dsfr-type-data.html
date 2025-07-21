@@ -36,7 +36,7 @@
                     Gp.Logger.enableAll();
                 }
                 async function getData () {
-                    var response = await fetch("{{ resources }}/data/configuration/sample.json", {});
+                    var response = await fetch("{{ resources }}/data/configuration/config-catalog.json", {});
                     var data = await response.json();
                     if (response.status !== 200) {
                         throw new Error("Erreur de récupération du JSON !");
@@ -75,7 +75,7 @@
                     })
                 };
                 Gp.Services.getConfig({
-                    customConfigFile : "{{ resources }}/data/configuration/sample.json",
+                    customConfigFile : "{{ resources }}/data/configuration/config-catalog.json",
                     callbackSuffix : "",
                     // apiKey: "{{ apikey }}",
                     timeOut : 20000,
