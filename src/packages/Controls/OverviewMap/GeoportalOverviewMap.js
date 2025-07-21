@@ -18,14 +18,14 @@ var logger = Logger.getLogger("overviewMap");
  * @alias ol.control.GeoportalOverviewMap
  * @type {ol.control.GeoportalOverviewMap}
  * @param {Object} options - ol.control.OverviewMap options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html ol.Control.OverviewMap})
- * @fire overviewmap:toggle
+ * @fires overviewmap:toggle
  * @example
  * var overviewmap = new ol.control.GeoportalOverviewMap({
  *   position: "top-left"
  * });
  * map.addControl(overviewmap);
  */
-var GeoportalOverviewMap = class GeoportalOverviewMap extends OverviewMap {
+class GeoportalOverviewMap extends OverviewMap {
 
     /**
      * See {@link ol.control.GeoportalOverviewMap}

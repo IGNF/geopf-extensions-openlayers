@@ -1,3 +1,39 @@
 {
-    "out": "./jsdoc_new"
+    "out": "./jsdoc_new",
+    "entryPointStrategy": "expand",
+    "entryPoints": [
+        "src/index.js", 
+        "src/packages/Controls",
+        "src/packages/Layers",
+        "src/packages/Formats",
+        "src/packages/Services"
+    ],
+    "projectDocuments": [
+        "README.md",
+        "LICENCE.md",
+        "COMPILE.md",
+        "CONTRIBUTING.md",
+        "CONTRIBUTORS.md",
+        "doc/README.md", 
+        "doc/DOCUMENTATION.md", 
+        "doc/Ioc.md"
+    ],
+    "blockTags": [
+        "@alias", 
+        "@classdesc", 
+        "@constructor",
+        "@description",
+        "@example",
+        "@extends",
+        "@fires",
+        "@fixme",
+        "@function",
+        "@mixin",
+        "@method",
+        "@module",
+        "@param",
+        "@returns",
+        "@todo",
+        "@type",
+    ]
 }

@@ -168,7 +168,7 @@ var logger = Logger.getLogger("Drawing");
  *      }
  * });
  */
-var Drawing = class Drawing extends Control {
+class Drawing extends Control {
 
     /**
      * See {@link ol.control.Drawing}

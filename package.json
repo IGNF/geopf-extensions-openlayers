@@ -19,7 +19,7 @@
     "sample:modules": "webpack serve --config build/webpack/modules.webpack.config --mode development",
     "generate-types": "npx tsc -p tsconfig.json",
     "generate-jsdoc": "jsdoc -c build/jsdoc/jsdoc.json",
-    "generate-tsdoc": "typedoc --entryPointStrategy Expand src",
+    "generate-tsdoc": "typedoc --options typedoc.json --useTsLinkResolution true --jsDocCompatibility true --suppressCommentWarningsInDeclarationFiles",
     "generate-themes": "echo \"Warning: target not yet implemented!\" && exit 0",
     "publish": "node build/release/package.js",
     "build": "npm run build:bundle && npm run build:modules",

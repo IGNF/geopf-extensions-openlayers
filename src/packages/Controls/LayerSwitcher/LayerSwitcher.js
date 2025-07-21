@@ -112,7 +112,7 @@ var logger = Logger.getLogger("layerswitcher");
  *    console.warn("layer", e.layer, e.name, e.url);
  * });
  */
-var LayerSwitcher = class LayerSwitcher extends Control {
+class LayerSwitcher extends Control {
 
     /**
      * See {@link ol.control.LayerSwitcher}
@@ -166,7 +166,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
     /**
      * Overload setMap function, that enables to catch map events, such as movend events.
-     *
+     * @inheritdoc {@link https://openlayers.org/en/latest/apidoc/module-ol_control_Control-Control.html#setMap}
      * @param {ol.Map} map - Map.
      */
     setMap (map) {
@@ -643,23 +643,58 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
         this.options.layers = layers;
 
-        // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
+        /** 
+         * identifiant du contrôle
+         * utile pour suffixer les identifiants CSS 
+         * (pour gérer le cas où il y en a plusieurs dans la même page)
+         * @type {String}
+         * @private
+         */
         this._uid = this.options.id || SelectorID.generate();
-        // {Object} control layers list. Each key is a layer id, and its value is an object of layers options (layer, id, opacity, visibility, title, description...)
+        /** 
+         * Control layers list.
+         * ach key is a layer id, and its value is an object of layers options (layer, id, opacity, visibility, title, description...)
+         * @type {Object}
+         * @private
+         */ 
         this._layers = {};
-        // [Array] array of ordered control layers
+        /** 
+         * array of ordered control layers
+         * @type {Array}
+         * @private
+         */ 
         this._layersOrder = [];
-        // [Object] associative array of layers ordered by zindex (keys are zindex values, and corresponding values are arrays of layers at this zindex)
+        /** 
+         * associative array of layers ordered by zindex (keys are zindex values, and corresponding values are arrays of layers at this zindex)
+         * @type {Object}
+         * @private
+         */ 
         this._layersIndex = {};
-        // {Number} layers max z index, to order layers using their z index
+        /** 
+         * layers max z index, to order layers using their z index
+         * @type {Number}
+         * @private
+         */
         this._lastZIndex = 0;
-        // {Number} layers max id, incremented when a new layer is added
+        /** 
+         * layers max id, incremented when a new layer is added
+         * @typr {Number}
+         * @private
+         */
         this._layerId = 0;
-        /** {Boolean} true if widget is collapsed, false otherwise */
+        /** true if widget is collapsed, false otherwise */
         this.collapsed = (this.options.collapsed !== undefined) ? this.options.collapsed : true;
-        // div qui contiendra les div des listes.
+        /**
+         * div qui contiendra les div des listes.
+         * @type {DOMElement}
+         * @private
+         */
         this._layerListContainer = null;
-        // [Object] listeners added to the layerSwitcher saved here in order to delete them if we remove the control from the map)
+        /** 
+         * listeners added to the layerSwitcher saved here in order to delete them if we remove the control from the map)
+         * @type {Object}
+         * @private
+         */
         this._listeners = {};
 
         // add options layers to layerlist.
@@ -701,6 +736,22 @@ var LayerSwitcher = class LayerSwitcher extends Control {
                 this._layers[id] = layerOptions;
             }
         }
+
+        /**
+         * div that will contain layers list
+         * @private
+         */
+        this._layerListContainer = null;
+        /**
+         * counter of layers in layerSwitcher control
+         * @private
+         */
+        this._layerSwitcherCounter = null;
+        /**
+         * button to show/hide layerSwitcher control
+         * @private
+         */
+        this._showLayerSwitcherButton = null;
     }
 
     /**
@@ -986,6 +1037,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
 
     /**
      * update layer counter
+     * @private
      */
     _updateLayerCounter () {
         if (this._layerSwitcherCounter) {
@@ -1493,6 +1545,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
     /**
      * togglegreyscale
      * @param {Event} e - Event
+     * @fires layerswitcher:change:grayscale
      * @private
      */
     _updateLayerGrayScale (e) {
@@ -1686,7 +1739,11 @@ var LayerSwitcher = class LayerSwitcher extends Control {
             layer : this._layers[id]
         });
     }
-
+    /**
+     * togglegreyscale
+     * @param {Event} e - Event
+     * @private
+     */
     _onToggleLayerGreyscaleClick (e) {
         console.trace(e);
         var divId = e.target.id; // ex GPvisibilityPicto_ID_26
@@ -1711,6 +1768,8 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      * zoom to extent
      * @fixme dot it for other user data
      * @param {PointerEvent} e - Event
+     * @fires layerswitcher:extent
+     * @private
      */
     _onZoomToExtentClick (e) {
         logger.debug(e);
@@ -1872,6 +1931,7 @@ var LayerSwitcher = class LayerSwitcher extends Control {
      *
      * @param {ol.layer.Layer} olLayer - ol layer object
      * @returns {String} - div container Id ; null if layer not found.
+     * @private
      */
     getLayerDOMId (olLayer) {
         var foundId = null;

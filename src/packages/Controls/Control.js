@@ -1,7 +1,7 @@
 import Control from "ol/control/Control";
 import checkDsfr from "./Utils/CheckDsfr";
 
-var ControlExtended = class ControlExtended extends Control {
+class ControlExtended extends Control {
 
     constructor (options) {
         options = options || {};

@@ -44,7 +44,7 @@ var logger = Logger.getLogger("extended KML format");
  * @param {Object} options - Options
  * @param {Object} [options.extensions] - Add properties to file root
  */
-var KML = class KML extends olKML {
+class KML extends olKML {
 
     /**
      * See {@link ol.format.KMLExtended}
@@ -348,7 +348,7 @@ var KML = class KML extends olKML {
      * @param {Object[]} features - Features.
      * @param {Object} options - Options.
      *
-     * @return {String} kml string formatted
+     * @returns {String} kml string formatted
      */
     writeFeatures (features, options) {
         logger.log("overload : ol.format.KML.writeFeatures");
@@ -773,7 +773,7 @@ var KML = class KML extends olKML {
      * @see ol.format.KML.prototype.readFeatures
      * @param {Document|Node} source - Source.
      * @param {olx.format.ReadOptions=} options - options.
-     * @return {Array.<ol.Feature>} Features.
+     * @returns {Array.<ol.Feature>} Features.
      */
     readFeatures (source, options) {
         logger.log("overload : ol.format.KML.readFeatures");

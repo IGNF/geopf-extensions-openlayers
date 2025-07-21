@@ -50,7 +50,7 @@ var logger = Logger.getLogger("contextMenu");
  * var contextMenu = new ol.control.ContextMenu();
  * map.addControl(contextMenu);
  */
-var ContextMenu = class ContextMenu extends Control {
+class ContextMenu extends Control {
 
     /**
      * See {@link ol.control.ContextMenu}

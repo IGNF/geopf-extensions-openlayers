@@ -58,7 +58,7 @@ var logger = Logger.getLogger("locationselector");
  *      autocompleteOptions : {}
  *  });
  */
-var LocationSelector = class LocationSelector extends Control {
+class LocationSelector extends Control {
 
     /**
      * See {@link ol.control.LocationSelector}

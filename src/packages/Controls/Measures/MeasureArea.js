@@ -47,7 +47,7 @@ var logger = Logger.getLogger("measurearea");
  *    geodesic : false
  * });
  */
-var MeasureArea = class MeasureArea extends Control {
+class MeasureArea extends Control {
 
     constructor (options) {
         /**
@@ -263,7 +263,7 @@ var MeasureArea = class MeasureArea extends Control {
      * Format length output.
      *
      * @param {ol.geom.Polygon} polygon - geometry polygon.
-     * @return {String} The formatted output.
+     * @returns {String} The formatted output.
      * @private
      */
     format (polygon) {

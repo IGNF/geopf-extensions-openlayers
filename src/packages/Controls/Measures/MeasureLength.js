@@ -48,7 +48,7 @@ var logger = Logger.getLogger("measurelength");
  *    geodesic : false
  * });
  */
-var MeasureLength = class MeasureLength extends Control {
+class MeasureLength extends Control {
 
     constructor (options) {
         // options
@@ -259,7 +259,7 @@ var MeasureLength = class MeasureLength extends Control {
      * Format length output.
      *
      * @param {ol.geom.Line} line - geometry line.
-     * @return {String} The formatted output.
+     * @returns {String} The formatted output.
      * @private
      */
     format (line) {
