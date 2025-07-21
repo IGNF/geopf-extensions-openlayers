@@ -1059,8 +1059,8 @@ var Route = class Route extends Control {
         if (points[0] && points[0].getCoordinate) {
             var startCoordinate = points[0].getCoordinate();
             start = {
-                x : startCoordinate[0],
-                y : startCoordinate[1]
+                x : startCoordinate[0].toFixed(5),
+                y : startCoordinate[1].toFixed(5)
             };
             logger.log("start", start);
         }
@@ -1071,8 +1071,8 @@ var Route = class Route extends Control {
         if (endPoint && endPoint.getCoordinate) {
             var endCoordinate = endPoint.getCoordinate();
             end = {
-                x : endCoordinate[0],
-                y : endCoordinate[1]
+                x : endCoordinate[0].toFixed(5),
+                y : endCoordinate[1].toFixed(5)
             };
             logger.log("end", end);
         }
@@ -1084,8 +1084,8 @@ var Route = class Route extends Control {
                 var iCoordinate = points[i].getCoordinate();
                 if (iCoordinate) {
                     var coordinate = {
-                        x : iCoordinate[0],
-                        y : iCoordinate[1]
+                        x : iCoordinate[0].toFixed(5),
+                        y : iCoordinate[1].toFixed(5)
                     };
                     logger.log("step", coordinate);
                     step.push(coordinate);

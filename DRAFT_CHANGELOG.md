@@ -15,11 +15,12 @@ __DATE__
 
 * ✨ [Added]
 
-- Territories : Ajout d'un menu option pour permettre de charger une configuration des territoires (#408)
+  - Territories : Ajout d'un menu option pour permettre de charger une configuration des territoires (#408)
 
 * 🔨 [Changed]
 
-- Zoom : changement des icones de zoom en mode DSFR (#412)
+  - Compute : réduction du nombre de chiffres significatifs des coordonnées envoyés pour les requêtes itinéraires et isochrones (#411)
+  - Zoom : changement des icones de zoom en mode DSFR (#412)
 
 * 🔥 [Deprecated]
 
