@@ -27,6 +27,8 @@ export default LayerSwitcher;
  * @param {Boolean} [options.options.allowGrayScale = true] - Specify if widget has to have an grayscale button (not available for vector layers). Default is true.
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
+ * @fires layerswitcher:lock
+ * @fires layerswitcher:active
  * @fires layerswitcher:extent
  * @fires layerswitcher:edit
  * @fires layerswitcher:change:opacity
@@ -118,7 +120,7 @@ declare class LayerSwitcher {
      * @param {Object} [config.legends] - layer legends (default is an empty array)
      * @param {Object} [config.metadata] - layer metadata (default is an empty array)
      * @param {Object} [config.quicklookUrl] - layer quicklookUrl (default is null)
-     * @fires layerswitcher:add
+     * @fires layerswitcher:add {@link LayerSwitcher#ADD_LAYER_EVENT}
      * @example
      *   layerSwitcher.addLayer(
      *       gpParcels,
@@ -140,10 +142,24 @@ declare class LayerSwitcher {
      * Remove a layer from control
      *
      * @param {ol.layer.Layer} layer - layer.
-     * @fires layerswitcher:remove
+     * @fires layerswitcher:remove {@link LayerSwitcher#REMOVE_LAYER_EVENT}
      * @deprecated on the future version ...
      */
     removeLayer(layer: ol.layer.Layer): void;
+    /**
+     * Lock a layer, so it cannot be removed or modified from layerSwitcher
+     * @param {ol.layer.Layer} layer - layer to be locked
+     * @fires layerswitcher:lock {@link LayerSwitcher#LOCK_LAYER_EVENT}
+     * @todo
+     */
+    lockLayer(layer: ol.layer.Layer): void;
+    /**
+     * Set a layer as active only layer, so it is the only one displayed in layerSwitcher
+     * @param {ol.layer.Layer} layer - layer to be set as active only layer
+     * @fires layerswitcher:active {@link LayerSwitcher#ACTIVE_ONLY_LAYER_EVENT}
+     * @todo
+     */
+    activeOnlyLayer(layer: ol.layer.Layer): void;
     /**
      * Collapse or display control main container
      *
@@ -258,6 +274,146 @@ declare class LayerSwitcher {
      */
     private _showLayerSwitcherButton;
     /**
+     * event triggered when a layer is added
+     * @event layerswitcher:add
+     * @defaultValue "layerswitcher:add"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:add", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    public ADD_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when a layer is removed
+     * @event layerswitcher:remove
+     * @defaultValue "layerswitcher:remove"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:remove", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    public REMOVE_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when a layer is locked
+     * @event layerswitcher:lock
+     * @defaultValue "layerswitcher:lock"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:lock", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    public LOCK_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when a layer is set as active only layer
+     * @event layerswitcher:active
+     * @defaultValue "layerswitcher:active"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:active", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    public ACTIVE_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when a layer extent is changed
+     * @event layerswitcher:extent
+     * @defaultValue "layerswitcher:extent"
+     * @group Events
+     * @param {Object} extent - extent (map projection)
+     * @param {Object} layer - layer
+     * @param {String} error - error
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:extent", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    public EXTENT_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when a layer is edited
+     * @event layerswitcher:edit
+     * @defaultValue "layerswitcher:edit"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} options - layer options
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:edit", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    public EDIT_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when a layer opacity is changed
+     * @event layerswitcher:change:opacity
+     * @defaultValue "layerswitcher:change:opacity"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} opacity - new opacity value
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
+     *   console.log(e.layer, e.opacity);
+     * })
+     */
+    public CHANGE_LAYER_OPACITY_EVENT: string | undefined;
+    /**
+     * event triggered when a layer visibility is changed
+     * @event layerswitcher:change:visibility
+     * @defaultValue "layerswitcher:change:visibility"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} visibility - new visibility value
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
+     *   console.log(e.layer, e.visibility);
+     * })
+     */
+    public CHANGE_LAYER_VISIBILITY_EVENT: string | undefined;
+    /**
+     * event triggered when a layer grayscale is changed
+     * @event layerswitcher:change:grayscale
+     * @defaultValue "layerswitcher:change:grayscale"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} grayscale - new grayscale value
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+     *   console.log(e.layer, e.grayscale);
+     * })
+     */
+    public CHANGE_LAYER_GRAYSCALE_EVENT: string | undefined;
+    /**
      * Create control main container (called by constructor)
      *
      * @returns {DOMElement} container - control container
@@ -305,7 +461,7 @@ declare class LayerSwitcher {
      * Update picto opacity value on layer opacity change
      *
      * @param {Object} e - event
-     * @fires layerswitcher:change:opacity
+     * @fires layerswitcher:change:opacity {@link LayerSwitcher#CHANGE_LAYER_OPACITY_EVENT}
      * @private
      */
     private _updateLayerOpacity;
@@ -320,7 +476,7 @@ declare class LayerSwitcher {
      * Change picto visibility on layer visibility change
      *
      * @param {Object} e - event
-     * @fires layerswitcher:change:visibility
+     * @fires layerswitcher:change:visibility {@link LayerSwitcher#CHANGE_LAYER_VISIBILITY_EVENT}
      * @private
      */
     private _updateLayerVisibility;
@@ -363,6 +519,7 @@ declare class LayerSwitcher {
      * edit layer
      *
      * @param {Event} e - MouseEvent
+     * @fires layerswitcher:edit {@link LayerSwitcher#EDIT_LAYER_EVENT}
      * @private
      */
     private _onEditLayerClick;
@@ -383,7 +540,7 @@ declare class LayerSwitcher {
     /**
      * togglegreyscale
      * @param {Event} e - Event
-     * @fires layerswitcher:change:grayscale
+     * @fires layerswitcher:change:grayscale {@link LayerSwitcher#CHANGE_LAYER_GRAYSCALE_EVENT}
      * @private
      */
     private _updateLayerGrayScale;
