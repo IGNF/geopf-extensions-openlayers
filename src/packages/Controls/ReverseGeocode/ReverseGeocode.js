@@ -1727,6 +1727,20 @@ var ReverseGeocode = class ReverseGeocode extends Control {
         f.setStyle(this._resultsDefaultStyle);
     }
 
+    /**
+     * this method is called by event 'click' on 'GPreverseGeocodedLocationResultCopy_' button
+     * (cf. ReverseGeocodeDOM._createReverseGeocodingResultElement),
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    onReverseGeocodingResultCopyButtonClick (e) {
+        // Copie dans le clipboard
+        navigator.clipboard.writeText(e.target.getAttribute("data-text-geolocate"))
+            .then(() => console.log("Texte copié !"))
+            .catch(err => console.error("Erreur de copie :", err));
+    }
+
     // ################################################################### //
     // ################################ clean ############################ //
     // ################################################################### //
