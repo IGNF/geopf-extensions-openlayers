@@ -108,6 +108,9 @@
                     layerSwitcher.on("layerswitcher:change:locked", function (e) {
                         console.warn("layer", e, e.layer, e.locked);
                     });
+                    maps.on("change:locked", (e) => {
+                        console.warn("layer", e, e.key, e.target.get("locked"));
+                    });
                     
 					// Ajout du LayerSwitcher à la carte
                     map.addControl(layerSwitcher);

@@ -65,6 +65,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @fires layerswitcher:change:position
  * @fires layerswitcher:change:grayscale
  * @fires layerswitcher:change:style
+ * @fires layerswitcher:change:locked
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -112,6 +113,9 @@ var logger = Logger.getLogger("layerswitcher");
  * });
  * LayerSwitcher.on("layerswitcher:change:style", function (e) {
  *    console.warn("layer", e.layer, e.name, e.url);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
+ *    console.warn("layer", e.layer, e.locked);
  * });
  */
 class LayerSwitcher extends Control {
@@ -503,7 +507,6 @@ class LayerSwitcher extends Control {
      * @param {ol.layer.Layer} layer - layer to be locked
      * @param {Boolean} locked - true if locked
      * @fires layerswitcher:lock {@link LayerSwitcher#LOCK_LAYER_EVENT}
-     * @todo
      */
     lockLayer (layer, locked) {
         if (!layer) {
@@ -517,7 +520,7 @@ class LayerSwitcher extends Control {
         }
 
         layer.set("locked", locked);
-        
+
         /**
          * event triggered when a layer is locked or unlocked
          * @event layerswitcher:lock
@@ -1902,6 +1905,7 @@ class LayerSwitcher extends Control {
             layer : this._layers[id]
         });
     }
+    
     /**
      * toggle greyscale layer
      * @param {Event} e - Event
