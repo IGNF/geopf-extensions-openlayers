@@ -16,7 +16,8 @@
         "CONTRIBUTORS.md",
         "doc/README.md", 
         "doc/DOCUMENTATION.md", 
-        "doc/Ioc.md"
+        "doc/NOTE-REPORTING.md",
+        "doc/NOTE-VALIDATOR.md"
     ],
     "blockTags": [
         "@alias", 

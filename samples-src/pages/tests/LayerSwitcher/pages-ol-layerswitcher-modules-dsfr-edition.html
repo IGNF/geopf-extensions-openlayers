@@ -61,6 +61,7 @@
                     });
                     map.addControl(layerSwitcher);
                     layerSwitcher.on("layerswitcher:edit", (e) => {
+                        console.warn("layer", e);
                         drawing.setCollapsed(false);
                         drawing.setLayer(e.layer);
                     });
