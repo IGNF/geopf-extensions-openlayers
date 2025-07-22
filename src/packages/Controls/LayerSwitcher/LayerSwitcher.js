@@ -57,7 +57,6 @@ var logger = Logger.getLogger("layerswitcher");
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:lock
- * @fires layerswitcher:active
  * @fires layerswitcher:extent
  * @fires layerswitcher:edit
  * @fires layerswitcher:change:opacity
@@ -533,14 +532,6 @@ class LayerSwitcher extends Control {
     }
 
     /**
-     * Set a layer as active only layer, so it is the only one displayed in layerSwitcher
-     * @param {ol.layer.Layer} layer - layer to be set as active only layer
-     * @fires layerswitcher:active {@link LayerSwitcher#ACTIVE_ONLY_LAYER_EVENT}
-     * @todo
-     */
-    activeOnlyLayer (layer) {}
-
-    /**
      * Collapse or display control main container
      *
      * @param {Boolean} collapsed - True to collapse control, False to display it
@@ -835,21 +826,6 @@ class LayerSwitcher extends Control {
          * })
          */
         this.LOCK_LAYER_EVENT = "layerswitcher:lock";
-        /**
-         * event triggered when a layer is set as active only layer
-         * @event layerswitcher:active
-         * @defaultValue "layerswitcher:active"
-         * @group Events
-         * @param {Object} type - event
-         * @param {Object} layer - layer
-         * @param {Object} target - instance LayerSwitcher
-         * @public
-         * @example
-         * LayerSwitcher.on("layerswitcher:active", function (e) {
-         *   console.log(e.layer);
-         * })
-         */
-        this.ACTIVE_LAYER_EVENT = "layerswitcher:active";
         /**
          * event triggered when a layer extent is changed
          * @event layerswitcher:extent
