@@ -589,10 +589,15 @@ var LayerSwitcherDOM = {
         button.setAttribute("tabindex", "0");
         button.setAttribute("type", "button");
 
-        // hack pour garder un emplacement vide
         if (!obj.editable || (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS" && obj.layer.config.styles.length === 1)) {
-            button.style.opacity = "0";
-            button.style.visibility = "hidden";
+            // hack pour garder un emplacement vide en mode desktop
+            // et cacher l'entrée en mode mobile
+            if (contextual) {
+                button.style.display = "none";
+            } else {
+                button.style.opacity = "0";
+                button.style.display = "hidden";
+            }
         }
 
         var context = this;
