@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - Territories : Ajout d'un menu option pour permettre de charger une configuration des territoires (#408)
+  - LayerSwitcher : Option pour verrouiller une couche (#414)
 
 * 🔨 [Changed]
 
