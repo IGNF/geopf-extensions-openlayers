@@ -713,7 +713,6 @@ var MousePositionDOM = {
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].readOnly = !editing;
             if (editing) {
-                inputs[i].value = "";
                 inputs[i].classList.remove("error");
             }
         }
