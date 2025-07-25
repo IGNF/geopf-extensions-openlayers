@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - Territories : Ajout d'un menu option pour permettre de charger une configuration des territoires (#408)
+  - LayerSwitcher : Possibilité d'ajouter des outils externes (#418)
 
 * 🔨 [Changed]
 
@@ -29,7 +30,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - MousePosition : Edition des coordonnées (#407 #416)
-  - Layerswitcher : Menu contextuel en mode mobile snas items vides (#417)
+  - Layerswitcher : Menu contextuel en mode mobile sans items vides (#417)
   
 * 🔒 [Security]
 
