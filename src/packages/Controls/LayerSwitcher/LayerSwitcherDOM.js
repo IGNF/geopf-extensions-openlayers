@@ -988,12 +988,12 @@ var LayerSwitcherDOM = {
             if (button.addEventListener) {
                 // button.addEventListener("click", opts.cb.bind(self));
                 button.addEventListener("click", (e) => {
-                    self._onClickAdvancedToolsMore(e, opts.cb);
+                    self._onClickAdvancedToolsMore(e, opts.label, opts.cb);
                 });
             } else if (button.attachEvent) {
                 // button.attachEvent("onclick", opts.cb.bind(self));
                 button.attachEvent("onclick", (e) => {
-                    self._onClickAdvancedToolsMore(e, opts.cb);
+                    self._onClickAdvancedToolsMore(e, opts.label, opts.cb);
                 });
             }
             list.push(button);

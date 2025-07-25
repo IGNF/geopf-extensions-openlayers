@@ -840,6 +840,22 @@ class LayerSwitcher extends Control {
          */
         this.EDIT_LAYER_EVENT = "layerswitcher:edit";
         /**
+         * event triggered when a custom action is called
+         * @event layerswitcher:custom
+         * @defaultValue "layerswitcher:custom"
+         * @group Events
+         * @param {Object} type - event
+         * @param {Object} layer - layer
+         * @param {Object} options - layer options
+         * @param {Object} target - instance LayerSwitcher
+         * @public
+         * @example
+         * LayerSwitcher.on("layerswitcher:custom", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.CUSTOM_LAYER_EVENT = "layerswitcher:custom";
+        /**
          * event triggered when a layer opacity is changed
          * @event layerswitcher:change:opacity
          * @defaultValue "layerswitcher:change:opacity"
@@ -1983,17 +1999,32 @@ class LayerSwitcher extends Control {
     /**
      * Action utilisateur
      * @param {PointerEvent} e - Event
+     * @param {String} action - le nom du bouton (label)
      * @param {Function} cb - callback definie par l'utilisateur
      * @private
      */
-    _onClickAdvancedToolsMore (e, cb) {
+    _onClickAdvancedToolsMore (e, action, cb) {
         var divId = e.target.id; // ex GPvisibilityPicto_ID_26
         var layerID = SelectorID.index(divId); // ex. 26
 
         var options = this._layers[layerID];
         var layer = this._layers[layerID].layer;
 
-        cb(e, this, layer, options);
+        if (cb) {
+            cb(e, this, layer, options);
+            return;
+        }
+
+        /**
+         * event triggered when an action is done
+         * @event layerswitcher:custom
+         */
+        this.dispatchEvent({
+            type : this.CUSTOM_LAYER_EVENT,
+            action : action,
+            layer : layer,
+            options : options
+        });
     }
 
     /**
