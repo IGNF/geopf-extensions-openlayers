@@ -22,13 +22,14 @@
     mask: url("img/dsfr/zoom-out.svg") center no-repeat;
 }
 
-.gpf-btn-icon-zoom-out::before {
-    display: block;
-    content: "";
-    height: 1px;
-    width: calc(100% - 8px);
-    background-color: var(--border-default-grey);
-    position: absolute;
-    top: 0px;
-    left: 4px;
+.gpf-btn-icon-zoom-out > span::before {
+  display: block;
+  content: "";
+  height: 1px;
+  width: 32px;
+  width: calc(100% - 8px);
+  background-color: var(--border-default-grey);
+  position: absolute;
+  top: 0px;
+  left: 4px;
 }
