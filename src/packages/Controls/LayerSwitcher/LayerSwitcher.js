@@ -845,6 +845,7 @@ class LayerSwitcher extends Control {
          * @defaultValue "layerswitcher:custom"
          * @group Events
          * @param {Object} type - event
+         * @param {String} action - label name
          * @param {Object} layer - layer
          * @param {Object} options - layer options
          * @param {Object} target - instance LayerSwitcher
