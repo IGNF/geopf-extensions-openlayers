@@ -64,6 +64,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @fires layerswitcher:change:position
  * @fires layerswitcher:change:grayscale
  * @fires layerswitcher:change:style
+ * @fires layerswitcher:change:locked
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -111,6 +112,9 @@ var logger = Logger.getLogger("layerswitcher");
  * });
  * LayerSwitcher.on("layerswitcher:change:style", function (e) {
  *    console.warn("layer", e.layer, e.name, e.url);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
+ *    console.warn("layer", e.layer, e.locked);
  * });
  */
 class LayerSwitcher extends Control {
@@ -308,6 +312,7 @@ class LayerSwitcher extends Control {
             var opacity = layer.getOpacity();
             var visibility = layer.getVisible();
             var grayscale = layer.get("grayscale");
+            var locked = layer.get("locked");
             var isInRange = this.isInRange(layer, map);
             var layerOptions = {
                 layer : layer,
@@ -318,6 +323,7 @@ class LayerSwitcher extends Control {
                 opacity : opacity != null ? opacity : 1,
                 visibility : visibility != null ? visibility : true,
                 grayscale : grayscale,
+                locked : locked,
                 inRange : isInRange != null ? isInRange : true,
                 title : config.title != null ? config.title : (layerInfos._title || id),
                 description : config.description || layerInfos._description || null,
@@ -363,6 +369,10 @@ class LayerSwitcher extends Control {
             this._listeners.updateLayerGrayScale = layer.on(
                 "change:grayscale",
                 (e) => this._updateLayerGrayScale(e)
+            );
+            this._listeners.updateLayerLocked = layer.on(
+                "change:locked",
+                (e) => this._updateLayerLocked(e)
             );
 
             if (this._layers[id].onZIndexChangeEvent == null) {
@@ -494,10 +504,32 @@ class LayerSwitcher extends Control {
     /**
      * Lock a layer, so it cannot be removed or modified from layerSwitcher
      * @param {ol.layer.Layer} layer - layer to be locked
+     * @param {Boolean} locked - true if locked
      * @fires layerswitcher:lock {@link LayerSwitcher#LOCK_LAYER_EVENT}
-     * @todo
      */
-    lockLayer (layer) {}
+    lockLayer (layer, locked) {
+        if (!layer) {
+            return;
+        }
+
+        var layerID = layer.gpLayerId;
+        var layerDiv = document.getElementById(this._addUID("GPlayerSwitcher_ID_" + layerID));
+        if (layerDiv) {
+            locked ? layerDiv.setAttribute("disabled", true) : layerDiv.removeAttribute("disabled");
+        }
+
+        layer.set("locked", locked);
+
+        /**
+         * event triggered when a layer is locked or unlocked
+         * @event layerswitcher:lock
+         */
+        this.dispatchEvent({
+            type : this.LOCK_LAYER_EVENT,
+            layer : this._layers[layerID],
+            locked : locked
+        });
+    }
 
     /**
      * Collapse or display control main container
@@ -675,10 +707,13 @@ class LayerSwitcher extends Control {
          * @private
          */
         this._layerId = 0;
-        /** true if widget is collapsed, false otherwise */
+        /** 
+         * collapse mode
+         * true if widget is collapsed, false otherwise
+         */
         this.collapsed = (this.options.collapsed !== undefined) ? this.options.collapsed : true;
         /**
-         * div qui contiendra les div des listes.
+         * Layer list (DOM).
          * @type {DOMElement}
          * @private
          */
@@ -871,6 +906,22 @@ class LayerSwitcher extends Control {
          * })
          */
         this.CHANGE_LAYER_GRAYSCALE_EVENT = "layerswitcher:change:grayscale";
+        /**
+         * event triggered when a layer is locked or unlocked
+         * @event layerswitcher:change:locked
+         * @defaultValue "layerswitcher:change:locked"
+         * @group Events
+         * @param {Object} type - event
+         * @param {Object} layer - layer
+         * @param {Object} locked - new locked value
+         * @param {Object} target - instance LayerSwitcher
+         * @public
+         * @example
+         * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
+         *   console.log(e.layer, e.locked);
+         * })
+         */
+        this.CHANGE_LAYER_LOCKED_EVENT = "layerswitcher:change:locked";
     }
 
     /**
@@ -995,6 +1046,7 @@ class LayerSwitcher extends Control {
                 var opacity = layer.getOpacity();
                 var visibility = layer.getVisible();
                 var grayscale = layer.get("grayscale");
+                var locked = layer.get("locked");
                 var isInRange = this.isInRange(layer, map);
                 var layerOptions = {
                     layer : layer,
@@ -1004,6 +1056,7 @@ class LayerSwitcher extends Control {
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
                     grayscale : grayscale,
+                    locked : locked,
                     inRange : isInRange != null ? isInRange : true,
                     title : layerInfos._title || id,
                     description : layerInfos._description || null,
@@ -1017,6 +1070,7 @@ class LayerSwitcher extends Control {
                 this._layers[id].opacity = layer.getOpacity();
                 this._layers[id].visibility = layer.getVisible();
                 this._layers[id].grayscale = layer.get("grayscale");
+                this._layers[id].locked = layer.get("locked");
                 this._layers[id].inRange = this.isInRange(layer, map);
             }
             // on met à jour le compteur
@@ -1034,6 +1088,10 @@ class LayerSwitcher extends Control {
             this._listeners.updateLayerGrayScale = layer.on(
                 "change:grayscale",
                 (e) => this._updateLayerGrayScale(e)
+            );
+            this._listeners.updateLayerLocked = layer.on(
+                "change:locked",
+                (e) => this._updateLayerLocked(e)
             );
 
             var self = this;
@@ -1636,7 +1694,7 @@ class LayerSwitcher extends Control {
     }
 
     /**
-     * togglegreyscale
+     * update greyscale
      * @param {Event} e - Event
      * @fires layerswitcher:change:grayscale {@link LayerSwitcher#CHANGE_LAYER_GRAYSCALE_EVENT}
      * @private
@@ -1823,8 +1881,9 @@ class LayerSwitcher extends Control {
             layer : this._layers[id]
         });
     }
+    
     /**
-     * togglegreyscale
+     * toggle greyscale layer
      * @param {Event} e - Event
      * @private
      */
@@ -1846,6 +1905,47 @@ class LayerSwitcher extends Control {
         }
 
         layer.set("grayscale", toGreyScale);
+    }
+
+    /**
+     * update locked layer
+     * @param {Event} e - Event
+     * @fires layerswitcher:change:locked {@link LayerSwitcher#CHANGE_LAYER_LOCKED_EVENT}
+     * @private
+     */
+    _updateLayerLocked (e) {
+        var id = e.target.gpLayerId;
+        var layer = this._layers[id].layer;
+        var locked = layer.get("locked");
+
+        var layerDiv = document.getElementById(this._addUID("GPlayerSwitcher_ID_" + id));
+        if (layerDiv) {
+            locked ? layerDiv.setAttribute("disabled", true) : layerDiv.removeAttribute("disabled");
+        }
+        
+        /**
+         * event triggered when an locked layer is changed
+         * @event layerswitcher:change:locked
+         */
+        this.dispatchEvent({
+            type : this.CHANGE_LAYER_LOCKED_EVENT,
+            locked : locked,
+            layer : this._layers[id]
+        });
+    }
+
+    /**
+     * toggle locked layer
+     * @param {Event} e - Event
+     * @private
+     */
+    _onToggleLayerLockedClick (e) {
+        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(divId); // ex. 26
+        var layer = this._layers[layerID].layer;
+
+        var locked = (e.target.ariaPressed === "true");
+        layer.set("locked", locked);
     }
 
     /**
