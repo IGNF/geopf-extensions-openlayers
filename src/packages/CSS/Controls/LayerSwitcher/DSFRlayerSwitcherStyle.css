@@ -134,7 +134,7 @@ div[id^=GPadvancedTools_ID_] {
     flex-wrap: nowrap;
     justify-content: space-around;
     height: inherit;
-    padding-right: 15px;
+    padding-right: 40px;
 }
 
 .gpf-btn-header {
@@ -300,7 +300,7 @@ div[id^=GPlayerStyleContent] {
     gap: 6px;
 }
 
-.GPlayerAdvancedToolsContextualMore + div > button,
+/* .GPlayerAdvancedToolsContextualMore + div > button, */
 .GPlayerAdvancedToolsContextual + div > button {
     padding-left: 2rem;
 }
@@ -310,7 +310,7 @@ div[id^=GPlayerStyleContent] {
     display: none;
 }
 
-.GPlayerAdvancedToolsContextualMore + div > button::after,
+/* .GPlayerAdvancedToolsContextualMore + div > button::after, */
 .GPlayerAdvancedToolsContextual + div > button::after {
     mask-position: left;
 }
