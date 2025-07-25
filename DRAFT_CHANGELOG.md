@@ -17,6 +17,7 @@ __DATE__
 
   - Territories : Ajout d'un menu option pour permettre de charger une configuration des territoires (#408)
   - LayerSwitcher : Possibilité d'ajouter des outils externes (#418)
+  - LayerSwitcher : Option pour verrouiller une couche (#414)
 
 * 🔨 [Changed]
 
