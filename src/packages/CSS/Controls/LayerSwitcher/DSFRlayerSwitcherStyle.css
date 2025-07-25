@@ -29,7 +29,7 @@ div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > 
 
 .GPlayerSwitcher_layer {
   background-color: var(--background-overlap-grey);
-  padding-right: 40px;
+  /* padding-right: 40px; */
 }
 
 .gpf-btn-icon-layerswitcher::after {
@@ -123,6 +123,7 @@ div[id^=GPbasicTools_ID_] {
     justify-content: flex-end;
     flex-wrap: nowrap;
     flex-direction: row-reverse;
+    padding-right: 40px;
 }
 
 div[id^=GPadvancedTools_ID_] {
@@ -133,6 +134,7 @@ div[id^=GPadvancedTools_ID_] {
     flex-wrap: nowrap;
     justify-content: space-around;
     height: inherit;
+    padding-right: 15px;
 }
 
 .gpf-btn-header {
@@ -199,6 +201,10 @@ div[id^=GPadvancedTools_ID_] {
     mask: url("img/dsfr/extent.svg") center no-repeat;
 }
 
+.gpf-btn-icon-ls-tools {
+  box-shadow: none;
+}
+
 [id^=GPlayerStylePanel],
 [id^=GPlayerInfoPanel] {
     position: absolute;
@@ -246,32 +252,41 @@ div[id^=GPlayerStyleContent] {
 }
 
 /* menu contextuel (mobile) */
+.GPlayerAdvancedToolsContextualMore {
+    display: inline-flex;
+}
 .GPlayerAdvancedToolsContextual {
     display: none;
 }
 
+.GPlayerAdvancedToolsContextualMore::after,
 .GPlayerAdvancedToolsContextual::after {
     -webkit-mask: url("./img/dsfr/context.svg") center no-repeat;
     mask: url("./img/dsfr/context.svg") center no-repeat;
 }
 
+.GPlayerAdvancedToolsContextualMore[aria-pressed="true"],
 .GPlayerAdvancedToolsContextual[aria-pressed="true"] {
     background-color: var(--hover-tint);
     overflow: visible;
 }
 
+.GPlayerSwitcher_layer:has(.GPlayerAdvancedToolsContextualMore[aria-pressed="true"]),
 .GPlayerSwitcher_layer:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
     overflow: visible;
 }
 
+[id^=GPlayersList-] .GPpanelBody:has(.GPlayerAdvancedToolsContextualMore[aria-pressed="true"]),
 [id^=GPlayersList-] .GPpanelBody:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
     overflow: visible;
 }
 
+.GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextualMore[aria-pressed="true"]),
 .GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
     position: relative;
 }
 
+.GPlayerAdvancedToolsContextualMore + div,
 .GPlayerAdvancedToolsContextual + div {
     display: none;
     flex-direction: column;
@@ -285,18 +300,22 @@ div[id^=GPlayerStyleContent] {
     gap: 6px;
 }
 
+.GPlayerAdvancedToolsContextualMore + div > button,
 .GPlayerAdvancedToolsContextual + div > button {
     padding-left: 2rem;
 }
 
+.GPlayerAdvancedToolsContextualMore + div > button[visibility="hidden"],
 .GPlayerAdvancedToolsContextual + div > button[visibility="hidden"] {
     display: none;
 }
 
+.GPlayerAdvancedToolsContextualMore + div > button::after,
 .GPlayerAdvancedToolsContextual + div > button::after {
     mask-position: left;
 }
 
+.GPlayerAdvancedToolsContextualMore[aria-pressed="true"] + div,
 .GPlayerAdvancedToolsContextual[aria-pressed="true"] + div {
     display: flex;
     position: absolute;
@@ -319,6 +338,10 @@ div[id^=GPlayerStyleContent] {
 
     .GPlayerAdvancedToolsContextual {
         display: inline-flex;
+    }
+
+    .GPlayerAdvancedToolsContextualMore {
+        display: none;
     }
 
     [id^=GPopacity_ID_] {
