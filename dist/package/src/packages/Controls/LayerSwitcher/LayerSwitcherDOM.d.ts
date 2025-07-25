@@ -31,12 +31,13 @@ declare namespace LayerSwitcherDOM {
     function _createBasicToolVisibilityElement(obj: Object): DOMElement[];
     function _createAdvancedToolShowElement(obj: Object): DOMElement[];
     function _createAdvancedToolElement(obj: Object): DOMElement;
-    function _createAdvancedToolDeleteElement(obj: Object, contextual?: boolean): DOMElement;
-    function _createAdvancedToolEditionElement(obj: Object, contextual?: boolean): DOMElement;
-    function _createAdvancedToolInformationElement(obj: Object, contextual?: boolean): DOMElement;
-    function _createAdvancedToolGreyscaleElement(obj: Object, contextual?: boolean): DOMElement;
-    function _createAdvancedToolOpacityElement(obj: Object): DOMElement[];
-    function _createAdvancedToolExtentElement(obj: Object, contextual?: boolean): DOMElement;
+    function _createAdvancedToolDeleteElement(id: string, contextual?: boolean): DOMElement;
+    function _createAdvancedToolEditionElement(id: string, editable: boolean, tms: boolean, styles: any[], contextual?: boolean): DOMElement;
+    function _createAdvancedToolInformationElement(id: string, title: string, description: string, contextual?: boolean): DOMElement;
+    function _createAdvancedToolGreyscaleElement(id: string, grayable: boolean, grayscale: boolean, contextual?: boolean): DOMElement;
+    function _createAdvancedToolOpacityElement(id: string, opacity: number): DOMElement[];
+    function _createAdvancedToolExtentElement(id: string, contextual?: boolean): DOMElement;
+    function _createAdvancedToolMoreElement(id: any, tools: any, contextual?: any): DOMElement;
     function _createContainerLayerInfoElement(obj: Object): DOMElement;
     function _createContainerLayerStyleElement(obj: Object): DOMElement;
 }

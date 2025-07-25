@@ -1273,6 +1273,10 @@
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:visibility"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:custom"> <a href="module-LayerSwitcher.html#~event:layerswitcher:custom">layerswitcher:custom</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:custom"> <a href="module-LayerSwitcher.html#~event:layerswitcher:custom">layerswitcher:custom</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:edit"> <a href="module-LayerSwitcher.html#~event:layerswitcher:edit">layerswitcher:edit</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:edit"> <a href="module-LayerSwitcher.html#~event:layerswitcher:edit">layerswitcher:edit</a> </div>
@@ -1318,6 +1322,10 @@
                 <li data-name="module:LayerSwitcher~layerswitcher:change:visibility"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:visibility"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:visibility">layerswitcher:change:visibility</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:custom"><a href="module-LayerSwitcher.html#~event:layerswitcher:custom">layerswitcher:custom</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:custom"><a href="module-LayerSwitcher.html#~event:layerswitcher:custom">layerswitcher:custom</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:edit"><a href="module-LayerSwitcher.html#~event:layerswitcher:edit">layerswitcher:edit</a></li>
             
@@ -6869,7 +6877,7 @@
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 120
+            Controls/LayerSwitcher/LayerSwitcher.js, line 133
         </div>
         
     </div>
@@ -7493,6 +7501,183 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name">advancedTools</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>...</p>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">label</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Specify the label name of the button</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">icon</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>icon (optionnal)</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">cb</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>callback (optionnal)</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">styles</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>styles (optionnal)</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+            </td>
+        </tr>
+	
+	
 	</tbody>
 </table>
 
@@ -7595,6 +7780,14 @@
      position : "top-left",
      allowEdit : true,
      allowGrayScale : true,
+     advancedTools : [
+         {
+             label = 'Bouton',
+             icon = "svg | http",
+             cb = (e, LayerSwitcher, layer, options) => {},
+             styles = {},
+         }
+     ]
  }
 ));
 
@@ -7718,7 +7911,7 @@ true if widget is collapsed, false otherwise</p>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 279
+            Controls/LayerSwitcher/LayerSwitcher.js, line 292
         </div>
         
     </div>
@@ -8063,7 +8256,7 @@ true if widget is collapsed, false otherwise</p>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 607
+            Controls/LayerSwitcher/LayerSwitcher.js, line 620
         </div>
         
     </div>
@@ -8134,7 +8327,7 @@ true if widget is collapsed, false otherwise</p>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 564
+            Controls/LayerSwitcher/LayerSwitcher.js, line 577
         </div>
         
     </div>
@@ -8215,7 +8408,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 600
+            Controls/LayerSwitcher/LayerSwitcher.js, line 613
         </div>
         
     </div>
@@ -8292,7 +8485,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 2169
+            Controls/LayerSwitcher/LayerSwitcher.js, line 2237
         </div>
         
     </div>
@@ -8419,7 +8612,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 2130
+            Controls/LayerSwitcher/LayerSwitcher.js, line 2198
         </div>
         
     </div>
@@ -8569,7 +8762,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 615
+            Controls/LayerSwitcher/LayerSwitcher.js, line 628
         </div>
         
     </div>
@@ -8640,7 +8833,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 510
+            Controls/LayerSwitcher/LayerSwitcher.js, line 523
         </div>
         
     </div>
@@ -8785,7 +8978,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 448
+            Controls/LayerSwitcher/LayerSwitcher.js, line 461
         </div>
         
     </div>
@@ -8909,7 +9102,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 539
+            Controls/LayerSwitcher/LayerSwitcher.js, line 552
         </div>
         
     </div>
@@ -9026,7 +9219,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 177
+            Controls/LayerSwitcher/LayerSwitcher.js, line 190
         </div>
         
     </div>
@@ -9143,7 +9336,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 574
+            Controls/LayerSwitcher/LayerSwitcher.js, line 587
         </div>
         
     </div>
@@ -9294,7 +9487,7 @@ collapsed
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Jul 25 2025 16:07:44 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Jul 25 2025 16:09:54 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

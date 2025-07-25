@@ -54,6 +54,11 @@ var logger = Logger.getLogger("layerswitcher");
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
  * @param {Boolean} [options.options.allowEdit = true] - Specify if widget has to have an edit button (available only for vector layers). Default is true.
  * @param {Boolean} [options.options.allowGrayScale = true] - Specify if widget has to have an grayscale button (not available for vector layers). Default is true.
+ * @param {Array} [options.options.advancedTools] - ...
+ * @param {String} [options.options.advancedTools.label] - Specify the label name of the button
+ * @param {String} [options.options.advancedTools.icon] - icon (optionnal)
+ * @param {Function} [options.options.advancedTools.cb] - callback (optionnal)
+ * @param {Object} [options.options.advancedTools.styles] - styles (optionnal)
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:lock
@@ -83,6 +88,14 @@ var logger = Logger.getLogger("layerswitcher");
  *      position : "top-left",
  *      allowEdit : true,
  *      allowGrayScale : true,
+ *      advancedTools : [
+ *          {
+ *              label = 'Bouton',
+ *              icon = "svg | http",
+ *              cb = (e, LayerSwitcher, layer, options) => {},
+ *              styles = {},
+ *          }
+ *      ]
  *  }
  * ));
  *
@@ -660,7 +673,8 @@ class LayerSwitcher extends Control {
             panel : false,
             gutter : false,
             allowEdit : true,
-            allowGrayScale : true
+            allowGrayScale : true,
+            advancedTools : []
         };
 
         // merge with user options
@@ -703,7 +717,7 @@ class LayerSwitcher extends Control {
         this._lastZIndex = 0;
         /** 
          * layers max id, incremented when a new layer is added
-         * @typr {Number}
+         * @type {Number}
          * @private
          */
         this._layerId = 0;
@@ -858,6 +872,23 @@ class LayerSwitcher extends Control {
          * })
          */
         this.EDIT_LAYER_EVENT = "layerswitcher:edit";
+        /**
+         * event triggered when a custom action is called
+         * @event layerswitcher:custom
+         * @defaultValue "layerswitcher:custom"
+         * @group Events
+         * @param {Object} type - event
+         * @param {String} action - label name
+         * @param {Object} layer - layer
+         * @param {Object} options - layer options
+         * @param {Object} target - instance LayerSwitcher
+         * @public
+         * @example
+         * LayerSwitcher.on("layerswitcher:custom", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.CUSTOM_LAYER_EVENT = "layerswitcher:custom";
         /**
          * event triggered when a layer opacity is changed
          * @event layerswitcher:change:opacity
@@ -1136,6 +1167,7 @@ class LayerSwitcher extends Control {
         for (var j = 0; j < this._layersOrder.length; j++) {
             var layerOptions = this._layersOrder[j];
             var layerDiv = this._createLayerDiv(layerOptions);
+            // on ajoute la div seulement si elle n'existe pas
             if (!this._layerListContainer.querySelector("#" + layerDiv.id)) {
                 this._layerListContainer.appendChild(layerDiv);
             }
@@ -1163,6 +1195,7 @@ class LayerSwitcher extends Control {
             layerOptions.displayInformationElement = true;
         }
 
+        // Couche editable ?
         layerOptions.editable = false;
         // information sur le type de couche : vecteur
         if (this.options.allowEdit) {
@@ -1170,6 +1203,7 @@ class LayerSwitcher extends Control {
                 layerOptions.editable = true;
             }
         }
+        // Couche grisable ?
         layerOptions.grayable = false;
         // information sur le type de couche : raster
         if (this.options.allowGrayScale) {
@@ -1177,6 +1211,9 @@ class LayerSwitcher extends Control {
                 layerOptions.grayable = true;
             }
         }
+        // Ajout de fonctionnalités utilisateurs sur la couche
+        layerOptions.advancedTools = this.options.advancedTools || [];
+
         // ajout d'une div pour cette layer dans le control
         var layerDiv = this._createContainerLayerElement(layerOptions);
 
@@ -2055,6 +2092,37 @@ class LayerSwitcher extends Control {
             extent : extent,
             layer : data,
             error : error
+        });
+    }
+
+    /**
+     * Action utilisateur
+     * @param {PointerEvent} e - Event
+     * @param {String} action - le nom du bouton (label)
+     * @param {Function} cb - callback definie par l'utilisateur
+     * @private
+     */
+    _onClickAdvancedToolsMore (e, action, cb) {
+        var divId = e.target.id; // ex GPvisibilityPicto_ID_26
+        var layerID = SelectorID.index(divId); // ex. 26
+
+        var options = this._layers[layerID];
+        var layer = this._layers[layerID].layer;
+
+        if (cb) {
+            cb(e, this, layer, options);
+            return;
+        }
+
+        /**
+         * event triggered when an action is done
+         * @event layerswitcher:custom
+         */
+        this.dispatchEvent({
+            type : this.CUSTOM_LAYER_EVENT,
+            action : action,
+            layer : layer,
+            options : options
         });
     }
 

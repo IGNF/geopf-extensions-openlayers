@@ -25,6 +25,11 @@ export default LayerSwitcher;
  * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
  * @param {Boolean} [options.options.allowEdit = true] - Specify if widget has to have an edit button (available only for vector layers). Default is true.
  * @param {Boolean} [options.options.allowGrayScale = true] - Specify if widget has to have an grayscale button (not available for vector layers). Default is true.
+ * @param {Array} [options.options.advancedTools] - ...
+ * @param {String} [options.options.advancedTools.label] - Specify the label name of the button
+ * @param {String} [options.options.advancedTools.icon] - icon (optionnal)
+ * @param {Function} [options.options.advancedTools.cb] - callback (optionnal)
+ * @param {Object} [options.options.advancedTools.styles] - styles (optionnal)
  * @fires layerswitcher:add
  * @fires layerswitcher:remove
  * @fires layerswitcher:lock
@@ -54,6 +59,14 @@ export default LayerSwitcher;
  *      position : "top-left",
  *      allowEdit : true,
  *      allowGrayScale : true,
+ *      advancedTools : [
+ *          {
+ *              label = 'Bouton',
+ *              icon = "svg | http",
+ *              cb = (e, LayerSwitcher, layer, options) => {},
+ *              styles = {},
+ *          }
+ *      ]
  *  }
  * ));
  *
@@ -205,6 +218,7 @@ declare class LayerSwitcher {
         gutter: boolean;
         allowEdit: boolean;
         allowGrayScale: boolean;
+        advancedTools: never[];
     } | undefined;
     /**
      * identifiant du contrôle
@@ -241,7 +255,7 @@ declare class LayerSwitcher {
     private _lastZIndex;
     /**
      * layers max id, incremented when a new layer is added
-     * @typr {Number}
+     * @type {Number}
      * @private
      */
     private _layerId;
@@ -349,6 +363,23 @@ declare class LayerSwitcher {
      * })
      */
     public EDIT_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when a custom action is called
+     * @event layerswitcher:custom
+     * @defaultValue "layerswitcher:custom"
+     * @group Events
+     * @param {Object} type - event
+     * @param {String} action - label name
+     * @param {Object} layer - layer
+     * @param {Object} options - layer options
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:custom", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    public CUSTOM_LAYER_EVENT: string | undefined;
     /**
      * event triggered when a layer opacity is changed
      * @event layerswitcher:change:opacity
@@ -571,6 +602,14 @@ declare class LayerSwitcher {
      * @private
      */
     private _onZoomToExtentClick;
+    /**
+     * Action utilisateur
+     * @param {PointerEvent} e - Event
+     * @param {String} action - le nom du bouton (label)
+     * @param {Function} cb - callback definie par l'utilisateur
+     * @private
+     */
+    private _onClickAdvancedToolsMore;
     /**
      * check layers range on map movement
      *

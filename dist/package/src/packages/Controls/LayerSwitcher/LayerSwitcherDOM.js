@@ -479,19 +479,44 @@ var LayerSwitcherDOM = {
         container.id = this._addUID("GPadvancedTools_ID_" + obj.id);
         container.className = "GPelementHidden GPlayerAdvancedTools gpf-hidden";
 
-        container.appendChild(this._createAdvancedToolDeleteElement(obj));
+        container.appendChild(this._createAdvancedToolDeleteElement(obj.id));
         if (checkDsfr()) {
-            container.appendChild(this._createAdvancedToolEditionElement(obj));
+            var tms = (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS");
+            var styles = tms ? obj.layer.config.styles : null;
+            container.appendChild(this._createAdvancedToolEditionElement(obj.id, obj.editable, tms, styles));
         }
-        container.appendChild(this._createAdvancedToolInformationElement(obj));
+        container.appendChild(this._createAdvancedToolInformationElement(obj.id, obj.title, obj.description));
 
-        var array = this._createAdvancedToolOpacityElement(obj);
+        var array = this._createAdvancedToolOpacityElement(obj.id, obj.opacity);
         for (var i = 0; i < array.length; i++) {
             container.appendChild(array[i]);
         }
 
-        container.appendChild(this._createAdvancedToolExtentElement(obj));
-        container.appendChild(this._createAdvancedToolGreyscaleElement(obj));
+        container.appendChild(this._createAdvancedToolExtentElement(obj.id));
+        container.appendChild(this._createAdvancedToolGreyscaleElement(obj.id, obj.grayable, obj.grayscale));
+        if (obj.advancedTools && obj.advancedTools.length) {
+            var btn = document.createElement("button");
+            btn.className = "GPlayerAdvancedToolsContextualMore fr-btn gpf-btn gpf-btn--tertiary fr-btn--tertiary-no-outline";
+            btn.setAttribute("aria-pressed", false);
+            if (btn.addEventListener) {
+                btn.addEventListener("click", function (e) {
+                    var status = (e.target.ariaPressed === "true");
+                    e.target.setAttribute("aria-pressed", !status);
+                });
+            } else if (btn.attachEvent) {
+                btn.attachEvent("onclick", function (e) {
+                    var status = (e.target.ariaPressed === "true");
+                    e.target.setAttribute("aria-pressed", !status);
+                });
+            }
+            var contextual = document.createElement("div");
+            var tools = this._createAdvancedToolMoreElement(obj.id, obj.advancedTools);
+            for (var j = 0; j < tools.length; j++) {
+                contextual.appendChild(tools[j]);
+            }
+            container.appendChild(btn);
+            container.appendChild(contextual);
+        }
 
         if (checkDsfr()) {
             var btn = document.createElement("button");
@@ -510,11 +535,19 @@ var LayerSwitcherDOM = {
             }
 
             var contextual = document.createElement("div");
-            contextual.appendChild(this._createAdvancedToolDeleteElement(obj, true));
-            contextual.appendChild(this._createAdvancedToolEditionElement(obj, true));
-            contextual.appendChild(this._createAdvancedToolInformationElement(obj, true));
-            contextual.appendChild(this._createAdvancedToolExtentElement(obj, true));
-            contextual.appendChild(this._createAdvancedToolGreyscaleElement(obj, true));
+            contextual.appendChild(this._createAdvancedToolDeleteElement(obj.id, true));
+            var tms = (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS");
+            var styles = tms ? obj.layer.config.styles : null;
+            contextual.appendChild(this._createAdvancedToolEditionElement(obj.id, obj.editable, tms, styles, true));
+            contextual.appendChild(this._createAdvancedToolInformationElement(obj.id, obj.title, obj.description, true));
+            contextual.appendChild(this._createAdvancedToolExtentElement(obj.id, true));
+            contextual.appendChild(this._createAdvancedToolGreyscaleElement(obj.id, obj.grayable, obj.grayscale, true));
+            if (obj.advancedTools && obj.advancedTools.length) {
+                var tools = this._createAdvancedToolMoreElement(obj.id, obj.advancedTools, true);
+                for (var k = 0; k < tools.length; k++) {
+                    contextual.appendChild(tools[k]);
+                }
+            }
 
             container.appendChild(btn);
             container.appendChild(contextual);
@@ -525,21 +558,21 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone de suppression du layer (DOM)
      *
-     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {String} id - ID de la couche à ajouter dans le layer switcher
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
      * @returns {DOMElement} container
      */
-    _createAdvancedToolDeleteElement : function (obj, contextual = false) {
+    _createAdvancedToolDeleteElement : function (id, contextual = false) {
         var button = document.createElement("button");
         if (!contextual) {
-            button.id = this._addUID("GPremove_ID_" + obj.id);
+            button.id = this._addUID("GPremove_ID_" + id);
         } else {
-            button.id = this._addUID("GPremoveContextual_ID_" + obj.id);
+            button.id = this._addUID("GPremoveContextual_ID_" + id);
         }
         button.className = "GPlayerRemove gpf-btn gpf-btn-icon gpf-btn-icon-ls-remove fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Supprimer la couche";
-        button.layerId = obj.id;
+        button.layerId = id;
         if (contextual) {
             button.innerText = "Supprimer";
         }
@@ -563,35 +596,39 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone d'edition du layer (DOM)
      *
-     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {String} id - ID de la couche à ajouter dans le layer switcher
+     * @param {Boolean} editable - mode editable
+     * @param {Boolean} tms - tms ou non
+     * @param {Array} styles - styles des tms
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     * 
      * @returns {DOMElement} container
      */
-    _createAdvancedToolEditionElement : function (obj, contextual = false) {
+    _createAdvancedToolEditionElement : function (id, editable, tms, styles, contextual = false) {
         var button = document.createElement("button");
         if (!contextual) {
-            button.id = this._addUID("GPedit_ID_" + obj.id);
+            button.id = this._addUID("GPedit_ID_" + id);
         } else {
-            button.id = this._addUID("GPeditContextual_ID_" + obj.id);
+            button.id = this._addUID("GPeditContextual_ID_" + id);
         }
         button.className = "GPlayerEdit gpf-btn gpf-btn-icon gpf-btn-icon-ls-edit fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Editer la couche";
-        if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
+        if (tms) {
             button.title = "Changer de style";
         }
-        button.layerId = obj.id;
+        button.layerId = id;
         if (contextual) {
             button.innerText = "Editer la couche";
-            if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
+            if (tms) {
                 button.innerText = "Changer de style";
             }
         }
         button.setAttribute("tabindex", "0");
         button.setAttribute("type", "button");
 
-        if (!obj.editable || (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS" && obj.layer.config.styles.length === 1)) {
-            // hack pour garder un emplacement vide en mode desktop
-            // et cacher l'entrée en mode mobile
+        // hack pour garder un emplacement vide en mode desktop
+        // et cacher l'entrée en mode mobile
+        if (!editable || (tms && styles.length === 1)) {
             if (contextual) {
                 button.style.display = "none";
             } else {
@@ -601,14 +638,14 @@ var LayerSwitcherDOM = {
         }
 
         var context = this;
-        if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS" && obj.layer.config.styles.length > 1) {
+        if (tms && styles.length > 1) {
             if (button.addEventListener) {
                 button.addEventListener("click", function (e) {
-                    context._onEditLayerStyleClick(e, obj.layer.config.styles);
+                    context._onEditLayerStyleClick(e, styles);
                 });
             } else if (button.attachEvent) {
                 button.attachEvent("onclick", function (e) {
-                    context._onEditLayerStyleClick(e, obj.layer.config.styles);
+                    context._onEditLayerStyleClick(e, styles);
                 });
             }
         } else {
@@ -629,24 +666,26 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone d'information du layer (DOM)
      *
-     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {String} id - ID de la couche à ajouter dans le layer switcher
+     * @param {String} title - titre
+     * @param {String} description - description
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
      * @returns {DOMElement} container
      */
-    _createAdvancedToolInformationElement : function (obj, contextual = false) {
+    _createAdvancedToolInformationElement : function (id, title, description, contextual = false) {
         // exemple :
         // <div id="GPinfo_ID_Layer1" class="GPlayerInfo" title="Informations/légende" onclick="GPopenLayerInfo(this);"></div>
 
         var btnInfo = document.createElement("button");
         if (!contextual) {
-            btnInfo.id = this._addUID("GPinfo_ID_" + obj.id);
+            btnInfo.id = this._addUID("GPinfo_ID_" + id);
         } else {
-            btnInfo.id = this._addUID("GPinfoContextual_ID_" + obj.id);
+            btnInfo.id = this._addUID("GPinfoContextual_ID_" + id);
         }
         btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary gpf-btn--tertiary";
         // hack pour garder un emplacement vide
-        if (!obj.title || !obj.description) {
+        if (!title || !description) {
             btnInfo.style.opacity = "0";
             btnInfo.style.visibility = "hidden";
             if (contextual) {
@@ -654,7 +693,7 @@ var LayerSwitcherDOM = {
             }
         }
         btnInfo.title = "Informations/légende";
-        btnInfo.layerId = obj.id;
+        btnInfo.layerId = id;
         if (contextual) {
             btnInfo.innerText = "Informations";
         }
@@ -686,37 +725,39 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone de n&b du layer (DOM)
      *
-     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {String} id - ID de la couche à ajouter dans le layer switcher
+     * @param {Boolean} grayable - le mode grisable est il  possible pour ce type de couche
+     * @param {Boolean} grayscale - option grisée de la couche
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
      * @returns {DOMElement} container
      */
-    _createAdvancedToolGreyscaleElement : function (obj, contextual = false) {
+    _createAdvancedToolGreyscaleElement : function (id, grayable, grayscale, contextual = false) {
         // exemple :
         // <div id="GPgreyscale_ID_Layer1" class="GPlayerBreyscale" title="Noir & blanc" onclick="GPtoggleGreyscale(this);"></div>
-        var grayscale = (typeof obj.grayscale !== "undefined") ? obj.grayscale : false;
+        var _grayscale = (typeof grayscale !== "undefined") ? grayscale : false;
 
         var btnGreyscale = document.createElement("button");
         if (!contextual) {
-            btnGreyscale.id = this._addUID("GPgreyscale_ID_" + obj.id);
+            btnGreyscale.id = this._addUID("GPgreyscale_ID_" + id);
         } else {
-            btnGreyscale.id = this._addUID("GPgreyscaleContextual_ID_" + obj.id);
+            btnGreyscale.id = this._addUID("GPgreyscaleContextual_ID_" + id);
         }
         btnGreyscale.className = "GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn-icon gpf-btn-icon-ls-greyscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
-        if (grayscale) {
+        if (_grayscale) {
             btnGreyscale.classList.replace("GPlayerGreyscaleOff", "GPlayerGreyscaleOn");
         }
         btnGreyscale.title = "Noir et blanc";
-        btnGreyscale.layerId = obj.id;
+        btnGreyscale.layerId = id;
         if (contextual) {
             btnGreyscale.innerText = "N&B";
         }
-        btnGreyscale.setAttribute("aria-pressed", grayscale);
+        btnGreyscale.setAttribute("aria-pressed", _grayscale);
         btnGreyscale.setAttribute("tabindex", "0");
         btnGreyscale.setAttribute("type", "button");
 
         // hack pour garder un emplacement vide
-        if (!obj.grayable) {
+        if (!grayable) {
             btnGreyscale.style.opacity = "0";
             btnGreyscale.style.visibility = "hidden";
         }
@@ -750,11 +791,12 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone de gestion de l'opacité du layer (DOM)
      *
-     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
-     *
-     * @returns {DOMElement[]} array of two containers
+     * @param {String} id - ID de la couche à ajouter dans le layer switcher
+     * @param {Number} opacity - Valeur de l'opacité
+     * 
+     * @returns {DOMElement[]} Tableau de 2 containers
      */
-    _createAdvancedToolOpacityElement : function (obj) {
+    _createAdvancedToolOpacityElement : function (id, opacity) {
         // exemple :
         // <div id="GPopacity_ID_Layer1" class="GPlayerOpacity" title="Opacité">
         //   <input id="GPopacityRange_ID_Layer1" type="range" value="100" oninput="GPchangeLayerOpacity(this);" onchange="GPchangeLayerOpacity(this);">
@@ -768,20 +810,20 @@ var LayerSwitcherDOM = {
 
         // curseur pour changer l'opacité
         var divO = document.createElement("div");
-        divO.id = this._addUID("GPopacity_ID_" + obj.id);
+        divO.id = this._addUID("GPopacity_ID_" + id);
         divO.className = "GPlayerOpacity fr-range fr-range--sm";
         // For DSFR
         divO.dataset.frJsRange = "true";
         divO.title = "Opacité";
 
-        var opacity = (typeof obj.opacity !== "undefined") ? obj.opacity : 1;
-        opacity = Math.round(opacity * 100);
-        divO.style.setProperty("--progress-right", opacity + "%");
+        var _opacity = (typeof opacity !== "undefined") ? opacity : 1;
+        _opacity = Math.round(_opacity * 100);
+        divO.style.setProperty("--progress-right", _opacity + "%");
 
         var input = document.createElement("input");
-        input.id = this._addUID("GPopacityValueDiv_ID_" + obj.id);
+        input.id = this._addUID("GPopacityValueDiv_ID_" + id);
         input.type = "range";
-        input.value = opacity;
+        input.value = _opacity;
         input.ariaLabel = "Opacité";
 
         // add event for opacity change
@@ -824,13 +866,13 @@ var LayerSwitcherDOM = {
 
         // Valeur d'opacité
         var divC = document.createElement("div");
-        divC.id = this._addUID("GPopacityValueDiv_ID_" + obj.id);
+        divC.id = this._addUID("GPopacityValueDiv_ID_" + id);
         divC.className = "GPlayerOpacityValue";
 
         var span = document.createElement("span");
-        span.id = this._addUID("GPopacityValue_ID_" + obj.id);
+        span.id = this._addUID("GPopacityValue_ID_" + id);
         span.className = "gpf-range__output fr-range__output gpf-visible";
-        span.innerHTML = opacity + "%";
+        span.innerHTML = _opacity + "%";
 
         divC.appendChild(span);
 
@@ -843,22 +885,22 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone de zoom sur extent (DOM)
      *
-     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {String} id - ID de la couche à ajouter dans le layer switcher
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
      * @returns {DOMElement} container
      */
-    _createAdvancedToolExtentElement : function (obj, contextual = false) {
+    _createAdvancedToolExtentElement : function (id, contextual = false) {
         // FIXME inactif en mode classique !
         var button = document.createElement("button");
         if (!contextual) {
-            button.id = this._addUID("GPextent_ID_" + obj.id);
+            button.id = this._addUID("GPextent_ID_" + id);
         } else {
-            button.id = this._addUID("GPextentContextual_ID_" + obj.id);
+            button.id = this._addUID("GPextentContextual_ID_" + id);
         }
         button.className = "GPelementHidden GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary gpf-btn--tertiary";
         button.title = "Zoomer dans l'étendue";
-        button.layerId = obj.id;
+        button.layerId = id;
         if (contextual) {
             button.innerText = "Zoomer";
         }
@@ -882,6 +924,91 @@ var LayerSwitcherDOM = {
         }
 
         return button;
+    },
+
+    /**
+     * Creation des icones pour des outils externes
+     * 
+     * @param {*} id - ID 
+     * @param {*} tools - autres outils 
+     * @param {*} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     *
+     * @returns {DOMElement} container
+     */
+    _createAdvancedToolMoreElement : function (id, tools, contextual = false) {
+        var list = [];
+        for (let i = 0; i < tools.length; i++) {
+            const opts = tools[i];
+            const className = `gpf-btn-icon-ls-tools-${opts.label}`;
+            const button = document.createElement("button");
+            if (!contextual) {
+                button.id = this._addUID("GPtools-" + opts.label.toLowerCase() + "_ID_" + id);
+            } else {
+                button.id = this._addUID("GPtoolsContextual-" + opts.label.toLowerCase() + "_ID_" + id);
+            }
+            button.className = `GPlayerTools gpf-btn gpf-btn-icon gpf-btn-icon-ls-tools ${className.toLowerCase()} fr-btn fr-btn--tertiary gpf-btn--tertiary`;
+            button.title = opts.label;
+            button.layerId = id;
+            button.setAttribute("tabindex", "0");
+            button.setAttribute("type", "button");
+
+            if (contextual) {
+                button.innerText = opts.label;
+            }
+
+            Object.assign(button.style, opts.styles);
+
+            if (opts.icon) {
+                if (opts.icon.startsWith("<svg")) {
+                    // FIXME 
+                    // width / height à definir si ces options ne sont pas renseignées inline
+                    opts.icon = "data:image/svg+xml;base64," + btoa(opts.icon);
+                } else if (opts.icon.startsWith("fr-icon")) {
+                    // FIXME
+                    // à optimiser, le texte est masqué (label) !?
+                    button.classList.add(opts.icon);
+                } else {
+                    // url...
+                }
+            } else {
+                var iconDefault = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12L15.9289 19.0711L14.5147 17.6569L20.1716 12L14.5147 6.34317L15.9289 4.92896L23 12ZM3.82843 12L9.48528 17.6569L8.07107 19.0711L1 12L8.07107 4.92896L9.48528 6.34317L3.82843 12Z"></path></svg>`;
+                opts.icon = "data:image/svg+xml;base64," + btoa(iconDefault);
+            }
+
+            if (!document.querySelector(`style[data-injected="${className.toLowerCase()}"]`)) {
+                const style = document.createElement("style");
+                style.dataset.injected = className.toLowerCase();
+                style.textContent = `
+                    .${className.toLowerCase()}::after {
+                        width: 100%;
+                        height: 100%;
+                        -webkit-mask-image: url('${opts.icon}');
+                        -webkit-mask-repeat: no-repeat;
+                        -webkit-mask-position: center;
+
+                        mask-image: url('${opts.icon}');
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            var self = this;
+            if (button.addEventListener) {
+                // button.addEventListener("click", opts.cb.bind(self));
+                button.addEventListener("click", (e) => {
+                    self._onClickAdvancedToolsMore(e, opts.label, opts.cb);
+                });
+            } else if (button.attachEvent) {
+                // button.attachEvent("onclick", opts.cb.bind(self));
+                button.attachEvent("onclick", (e) => {
+                    self._onClickAdvancedToolsMore(e, opts.label, opts.cb);
+                });
+            }
+            list.push(button);
+        }
+        return list;
     },
 
     // ################################################################### //
