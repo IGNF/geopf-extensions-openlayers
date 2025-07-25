@@ -626,10 +626,15 @@ var LayerSwitcherDOM = {
         button.setAttribute("tabindex", "0");
         button.setAttribute("type", "button");
 
-        // hack pour garder un emplacement vide
+        // hack pour garder un emplacement vide en mode desktop
+        // et cacher l'entrée en mode mobile
         if (!editable || (tms && styles.length === 1)) {
-            button.style.opacity = "0";
-            button.style.visibility = "hidden";
+            if (contextual) {
+                button.style.display = "none";
+            } else {
+                button.style.opacity = "0";
+                button.style.display = "hidden";
+            }
         }
 
         var context = this;

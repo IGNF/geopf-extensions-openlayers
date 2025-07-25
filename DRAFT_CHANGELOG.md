@@ -28,7 +28,8 @@ __DATE__
 
 * 🐛 [Fixed]
 
-  - MousePosition : Edition des coordonnées (#407)
+  - MousePosition : Edition des coordonnées (#407 #416)
+  - Layerswitcher : Menu contextuel en mode mobile snas items vides (#417)
   
 * 🔒 [Security]
 
