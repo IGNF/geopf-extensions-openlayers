@@ -1257,6 +1257,10 @@
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:grayscale"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:locked"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:locked">layerswitcher:change:locked</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:locked"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:locked">layerswitcher:change:locked</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
@@ -1279,6 +1283,8 @@
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:lock"> <a href="module-LayerSwitcher.html#~event:layerswitcher:lock">layerswitcher:lock</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:lock"> <a href="module-LayerSwitcher.html#~event:layerswitcher:lock">layerswitcher:lock</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:remove"> <a href="module-LayerSwitcher.html#~event:layerswitcher:remove">layerswitcher:remove</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:remove"> <a href="module-LayerSwitcher.html#~event:layerswitcher:remove">layerswitcher:remove</a> </div>
@@ -1296,6 +1302,10 @@
                 <li data-name="module:LayerSwitcher~layerswitcher:change:grayscale"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:grayscale"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:locked"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:locked">layerswitcher:change:locked</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:locked"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:locked">layerswitcher:change:locked</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:opacity"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a></li>
             
@@ -1316,6 +1326,8 @@
                 <li data-name="module:LayerSwitcher~layerswitcher:extent"><a href="module-LayerSwitcher.html#~event:layerswitcher:extent">layerswitcher:extent</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:extent"><a href="module-LayerSwitcher.html#~event:layerswitcher:extent">layerswitcher:extent</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:lock"><a href="module-LayerSwitcher.html#~event:layerswitcher:lock">layerswitcher:lock</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:lock"><a href="module-LayerSwitcher.html#~event:layerswitcher:lock">layerswitcher:lock</a></li>
             
@@ -6919,7 +6931,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 421
+            Controls/LayerSwitcher/LayerSwitcher.js, line 431
         </div>
         
     </div>
@@ -6990,7 +7002,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 749
+            Controls/LayerSwitcher/LayerSwitcher.js, line 784
         </div>
         
     </div>
@@ -7166,7 +7178,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 858
+            Controls/LayerSwitcher/LayerSwitcher.js, line 893
         </div>
         
     </div>
@@ -7365,7 +7377,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1816
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1874
         </div>
         
     </div>
@@ -7429,6 +7441,276 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="~event:layerswitcher:change:locked">
+            
+            layerswitcher:change:locked
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/LayerSwitcher/LayerSwitcher.js, line 909
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>event triggered when a layer is locked or unlocked</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name">type</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>event</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">layer</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>layer</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">locked</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>new locked value</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name">target</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>instance LayerSwitcher</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>"layerswitcher:change:locked"</li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>LayerSwitcher.on("layerswitcher:change:locked", function (e) {
+  console.log(e.layer, e.locked);
+})</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~event:layerswitcher:change:locked">
+            
+            layerswitcher:change:locked
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1926
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>event triggered when an locked layer is changed</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="~event:layerswitcher:change:opacity">
             
             layerswitcher:change:opacity
@@ -7436,7 +7718,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 826
+            Controls/LayerSwitcher/LayerSwitcher.js, line 861
         </div>
         
     </div>
@@ -7635,7 +7917,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1213
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1271
         </div>
         
     </div>
@@ -7706,7 +7988,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1285
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1343
         </div>
         
     </div>
@@ -7931,7 +8213,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 842
+            Controls/LayerSwitcher/LayerSwitcher.js, line 877
         </div>
         
     </div>
@@ -8130,7 +8412,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1252
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1310
         </div>
         
     </div>
@@ -8201,7 +8483,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1606
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1664
         </div>
         
     </div>
@@ -8426,7 +8708,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 810
+            Controls/LayerSwitcher/LayerSwitcher.js, line 845
         </div>
         
     </div>
@@ -8625,7 +8907,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1551
+            Controls/LayerSwitcher/LayerSwitcher.js, line 1609
         </div>
         
     </div>
@@ -8696,7 +8978,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 794
+            Controls/LayerSwitcher/LayerSwitcher.js, line 829
         </div>
         
     </div>
@@ -8895,7 +9177,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 1949
+            Controls/LayerSwitcher/LayerSwitcher.js, line 2049
         </div>
         
     </div>
@@ -8966,7 +9248,78 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 779
+            Controls/LayerSwitcher/LayerSwitcher.js, line 523
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>event triggered when a layer is locked or unlocked</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~event:layerswitcher:lock">
+            
+            layerswitcher:lock
+        </h4>
+    
+        
+        <div class="tag-source">
+            Controls/LayerSwitcher/LayerSwitcher.js, line 814
         </div>
         
     </div>
@@ -9142,7 +9495,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 478
+            Controls/LayerSwitcher/LayerSwitcher.js, line 488
         </div>
         
     </div>
@@ -9213,7 +9566,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 764
+            Controls/LayerSwitcher/LayerSwitcher.js, line 799
         </div>
         
     </div>
@@ -9396,7 +9749,7 @@ import { LayerSwitcher } from "gpf-ext-ol"</code></pre>
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Jul 24 2025 16:23:29 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Jul 25 2025 16:07:44 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

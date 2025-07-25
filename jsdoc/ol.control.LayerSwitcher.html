@@ -1257,6 +1257,10 @@
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:grayscale"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:locked"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:locked">layerswitcher:change:locked</a> </div>
+            
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:locked"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:locked">layerswitcher:change:locked</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:change:opacity"> <a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a> </div>
@@ -1279,6 +1283,8 @@
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:lock"> <a href="module-LayerSwitcher.html#~event:layerswitcher:lock">layerswitcher:lock</a> </div>
             
+                <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:lock"> <a href="module-LayerSwitcher.html#~event:layerswitcher:lock">layerswitcher:lock</a> </div>
+            
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:remove"> <a href="module-LayerSwitcher.html#~event:layerswitcher:remove">layerswitcher:remove</a> </div>
             
                 <div class="l3 itemMembers" data-name="module:LayerSwitcher~layerswitcher:remove"> <a href="module-LayerSwitcher.html#~event:layerswitcher:remove">layerswitcher:remove</a> </div>
@@ -1296,6 +1302,10 @@
                 <li data-name="module:LayerSwitcher~layerswitcher:change:grayscale"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:grayscale"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:grayscale">layerswitcher:change:grayscale</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:locked"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:locked">layerswitcher:change:locked</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:change:locked"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:locked">layerswitcher:change:locked</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:change:opacity"><a href="module-LayerSwitcher.html#~event:layerswitcher:change:opacity">layerswitcher:change:opacity</a></li>
             
@@ -1316,6 +1326,8 @@
                 <li data-name="module:LayerSwitcher~layerswitcher:extent"><a href="module-LayerSwitcher.html#~event:layerswitcher:extent">layerswitcher:extent</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:extent"><a href="module-LayerSwitcher.html#~event:layerswitcher:extent">layerswitcher:extent</a></li>
+            
+                <li data-name="module:LayerSwitcher~layerswitcher:lock"><a href="module-LayerSwitcher.html#~event:layerswitcher:lock">layerswitcher:lock</a></li>
             
                 <li data-name="module:LayerSwitcher~layerswitcher:lock"><a href="module-LayerSwitcher.html#~event:layerswitcher:lock">layerswitcher:lock</a></li>
             
@@ -6857,7 +6869,7 @@
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 116
+            Controls/LayerSwitcher/LayerSwitcher.js, line 120
         </div>
         
     </div>
@@ -7548,6 +7560,8 @@
         <li>layerswitcher:change:grayscale</li>
     
         <li>layerswitcher:change:style</li>
+    
+        <li>layerswitcher:change:locked</li>
     </ul>
     
 
@@ -7610,6 +7624,9 @@ LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
 });
 LayerSwitcher.on("layerswitcher:change:style", function (e) {
    console.warn("layer", e.layer, e.name, e.url);
+});
+LayerSwitcher.on("layerswitcher:change:locked", function (e) {
+   console.warn("layer", e.layer, e.locked);
 });</code></pre>
     
 
@@ -7650,7 +7667,8 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
 <dd>
     
     <div class="description">
-        <p>true if widget is collapsed, false otherwise</p>
+        <p>collapse mode<br>
+true if widget is collapsed, false otherwise</p>
     </div>
     
     
@@ -7700,7 +7718,7 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 275
+            Controls/LayerSwitcher/LayerSwitcher.js, line 279
         </div>
         
     </div>
@@ -8045,7 +8063,7 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 575
+            Controls/LayerSwitcher/LayerSwitcher.js, line 607
         </div>
         
     </div>
@@ -8116,7 +8134,7 @@ LayerSwitcher.on("layerswitcher:change:style", function (e) {
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 532
+            Controls/LayerSwitcher/LayerSwitcher.js, line 564
         </div>
         
     </div>
@@ -8197,7 +8215,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 568
+            Controls/LayerSwitcher/LayerSwitcher.js, line 600
         </div>
         
     </div>
@@ -8274,7 +8292,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 2069
+            Controls/LayerSwitcher/LayerSwitcher.js, line 2169
         </div>
         
     </div>
@@ -8401,7 +8419,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 2030
+            Controls/LayerSwitcher/LayerSwitcher.js, line 2130
         </div>
         
     </div>
@@ -8551,7 +8569,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 583
+            Controls/LayerSwitcher/LayerSwitcher.js, line 615
         </div>
         
     </div>
@@ -8617,12 +8635,12 @@ collapsed
     <div class="nameContainer">
         <h4 class="name" id="lockLayer">
             
-            lockLayer<span class="signature">(layer)</span>
+            lockLayer<span class="signature">(layer, locked)</span>
         </h4>
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 500
+            Controls/LayerSwitcher/LayerSwitcher.js, line 510
         </div>
         
     </div>
@@ -8684,6 +8702,29 @@ collapsed
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name">locked</td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>true if locked</p></td>
+        </tr>
+	
+	
 	</tbody>
 </table>
 
@@ -8711,13 +8752,6 @@ collapsed
     
     
     
-    
-    <dt class="tag-todo">TODO</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li></li>
-        </ul>
-    </dd>
     
 </dl>
 
@@ -8751,7 +8785,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 438
+            Controls/LayerSwitcher/LayerSwitcher.js, line 448
         </div>
         
     </div>
@@ -8875,7 +8909,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 507
+            Controls/LayerSwitcher/LayerSwitcher.js, line 539
         </div>
         
     </div>
@@ -8992,7 +9026,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 173
+            Controls/LayerSwitcher/LayerSwitcher.js, line 177
         </div>
         
     </div>
@@ -9109,7 +9143,7 @@ collapsed
     
         
         <div class="tag-source">
-            Controls/LayerSwitcher/LayerSwitcher.js, line 542
+            Controls/LayerSwitcher/LayerSwitcher.js, line 574
         </div>
         
     </div>
@@ -9260,7 +9294,7 @@ collapsed
     <footer>
         Geoportail - Copyright (c) IGN, released under the CECILL-B license
         </br>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Jul 24 2025 16:23:29 GMT+0000 (Coordinated Universal Time)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Jul 25 2025 16:07:44 GMT+0000 (Coordinated Universal Time)
     </footer>
 
 

@@ -35,6 +35,7 @@ export default LayerSwitcher;
  * @fires layerswitcher:change:position
  * @fires layerswitcher:change:grayscale
  * @fires layerswitcher:change:style
+ * @fires layerswitcher:change:locked
  * @example
  * map.addControl(new ol.control.LayerSwitcher(
  *  [
@@ -82,6 +83,9 @@ export default LayerSwitcher;
  * });
  * LayerSwitcher.on("layerswitcher:change:style", function (e) {
  *    console.warn("layer", e.layer, e.name, e.url);
+ * });
+ * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
+ *    console.warn("layer", e.layer, e.locked);
  * });
  */
 declare class LayerSwitcher {
@@ -148,10 +152,10 @@ declare class LayerSwitcher {
     /**
      * Lock a layer, so it cannot be removed or modified from layerSwitcher
      * @param {ol.layer.Layer} layer - layer to be locked
+     * @param {Boolean} locked - true if locked
      * @fires layerswitcher:lock {@link LayerSwitcher#LOCK_LAYER_EVENT}
-     * @todo
      */
-    lockLayer(layer: ol.layer.Layer): void;
+    lockLayer(layer: ol.layer.Layer, locked: boolean): void;
     /**
      * Collapse or display control main container
      *
@@ -241,10 +245,13 @@ declare class LayerSwitcher {
      * @private
      */
     private _layerId;
-    /** true if widget is collapsed, false otherwise */
+    /**
+     * collapse mode
+     * true if widget is collapsed, false otherwise
+     */
     collapsed: boolean | undefined;
     /**
-     * div qui contiendra les div des listes.
+     * Layer list (DOM).
      * @type {DOMElement}
      * @private
      */
@@ -391,6 +398,22 @@ declare class LayerSwitcher {
      */
     public CHANGE_LAYER_GRAYSCALE_EVENT: string | undefined;
     /**
+     * event triggered when a layer is locked or unlocked
+     * @event layerswitcher:change:locked
+     * @defaultValue "layerswitcher:change:locked"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} locked - new locked value
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
+     *   console.log(e.layer, e.locked);
+     * })
+     */
+    public CHANGE_LAYER_LOCKED_EVENT: string | undefined;
+    /**
      * Create control main container (called by constructor)
      *
      * @returns {DOMElement} container - control container
@@ -515,18 +538,31 @@ declare class LayerSwitcher {
      */
     private _onStartDragAndDropLayerClick;
     /**
-     * togglegreyscale
+     * update greyscale
      * @param {Event} e - Event
      * @fires layerswitcher:change:grayscale {@link LayerSwitcher#CHANGE_LAYER_GRAYSCALE_EVENT}
      * @private
      */
     private _updateLayerGrayScale;
     /**
-     * togglegreyscale
+     * toggle greyscale layer
      * @param {Event} e - Event
      * @private
      */
     private _onToggleLayerGreyscaleClick;
+    /**
+     * update locked layer
+     * @param {Event} e - Event
+     * @fires layerswitcher:change:locked {@link LayerSwitcher#CHANGE_LAYER_LOCKED_EVENT}
+     * @private
+     */
+    private _updateLayerLocked;
+    /**
+     * toggle locked layer
+     * @param {Event} e - Event
+     * @private
+     */
+    private _onToggleLayerLockedClick;
     /**
      * zoom to extent
      * @fixme dot it for other user data

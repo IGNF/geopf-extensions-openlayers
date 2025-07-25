@@ -15,6 +15,11 @@ div[id^=GPlayerSwitcher-] [draggable] {
   -webkit-user-drag: element;
 }
 
+div[id^=GPlayerSwitcher_ID_][disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 /* Manage opening of the components through hiden checkboxes */
 
 div[id^=GPlayerSwitcher-] input[type="checkbox"] + button + dialog {
