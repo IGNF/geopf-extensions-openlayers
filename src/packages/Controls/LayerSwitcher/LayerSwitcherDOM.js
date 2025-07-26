@@ -1,5 +1,6 @@
 import Sortable from "sortablejs";
 import checkDsfr from "../Utils/CheckDsfr";
+import ToolTips from "../../Utils/ToolTips";
 
 var LayerSwitcherDOM = {
 
@@ -268,10 +269,11 @@ var LayerSwitcherDOM = {
      * @param {Boolean} obj.visibility - visibilité de la couche dans la carte (true or false)
      * @param {Float} obj.opacity - opacité de la couche
      * @param {String} obj.type - feature or vector
+     * @param {Boolean} tooltips - active ou non les tooltips HTML
      *
      * @returns {DOMElement} container
      */
-    _createContainerLayerElement : function (obj) {
+    _createContainerLayerElement : function (obj, tooltips) {
         // exemple :
         // <div id="GPlayerSwitcher_ID_Layer1" class="GPlayerSwitcher_layer outOfRange">
         //     <!-- Basic toolbar : visibility / layer name
@@ -297,7 +299,7 @@ var LayerSwitcherDOM = {
         container.className = "GPlayerSwitcher_layer gpf-panel__content fr-modal__content draggable-layer";
 
         // ajout des outils basiques (visibility / layer name)
-        container.appendChild(this._createBasicToolElement(obj));
+        container.appendChild(this._createBasicToolElement(obj, tooltips));
 
         // ajout bouton des outils avancés
         container.appendChild(this._createAdvancedToolShowElement(obj));
@@ -316,10 +318,10 @@ var LayerSwitcherDOM = {
      * Creation du container des outils basiques du layer (DOM)
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
-     *
+     * @param {Boolean} tooltips - autoriser ou non les tooltips HTML
      * @returns {DOMElement} container
      */
-    _createBasicToolElement : function (obj) {
+    _createBasicToolElement : function (obj, tooltips) {
         // exemple :
         // <div id="GPbasicTools_ID_1" class="GPlayerBasicTools">
         //      <!-- _createBasicToolVisibilityElement -->
@@ -330,7 +332,7 @@ var LayerSwitcherDOM = {
         div.id = this._addUID("GPbasicTools_ID_" + obj.id);
         div.className = "GPlayerBasicTools";
 
-        div.appendChild(this._createBasicToolNameElement(obj));
+        div.appendChild(this._createBasicToolNameElement(obj, tooltips));
         div.appendChild(this._createBasicToolVisibilityElement(obj));
         div.appendChild(this._createBasicToolDragNDropElement(obj));
 
@@ -363,21 +365,25 @@ var LayerSwitcherDOM = {
      * Creation du nom du layer (DOM)
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
-     *
+     * @param {Boolean} tooltips - active ou non les tooltips
      * @returns {DOMElement} container
      */
-    _createBasicToolNameElement : function (obj) {
+    _createBasicToolNameElement : function (obj, tooltips) {
         // exemple :
         // <span id="GPname_ID_Layer1" class="GPlayerName" title="Quartiers prioritaires de la ville">Quartiers prioritaires de la ville</span>
         var label = document.createElement("label");
         label.id = this._addUID("GPname_ID_" + obj.id);
         label.className = "GPlayerName gpf-label gpf-label-name fr-label";
         label.title = obj.description || obj.title;
+        if (tooltips) {
+            label.dataset.tooltip = obj.description || obj.title;
+            ToolTips.active(label);
+            label.title = obj.name;
+        }
         label.innerHTML = obj.title;
         if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
             label.innerHTML = obj.description;
         }
-
         return label;
     },
 
