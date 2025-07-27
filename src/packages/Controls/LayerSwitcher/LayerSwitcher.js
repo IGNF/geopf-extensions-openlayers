@@ -90,6 +90,7 @@ var logger = Logger.getLogger("layerswitcher");
  *      position : "top-left",
  *      allowEdit : true,
  *      allowGrayScale : true,
+ *      allowTooltips : false,
  *      advancedTools : [
  *          {
  *              label = 'Bouton',

@@ -5,26 +5,15 @@ var ToolTips = {
     id : "gpf-tooltips-html",
     /** 
      * Initialisation du container de tooltips
+     * @param {Object} style - style css
      */
-    init : function () {
+    init : function (style = {}) {
         if (document.getElementById(this.id)) {
             return;
         }
         const tooltip = document.createElement("div");
         tooltip.id = this.id;
-        tooltip.style.cssText = `
-            position: fixed;
-            background: #333;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            max-width: 300px;
-            z-index: 99999;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.15s;
-        `;
+        Object.assign(tooltip.style, style);
         document.body.appendChild(tooltip);
     },
     /**
