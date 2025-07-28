@@ -1662,7 +1662,7 @@ class SearchEngine extends Control {
                 }
                 this._setPosition(coordinates, 15); // FIXME zoom fixe !
                 if (this._displayMarker) {
-                    var markerInfo = "<h6> Ma position </h6> longitude : " + coordinates_4326[0] + "<br/> latitude : " + coordinates_4326[1];
+                    var markerInfo = "<h6> Ma position </h6> latitude : " + coordinates_4326[1] + "<br/> longitude : " + coordinates_4326[0];
                     this._setMarker(coordinates, markerInfo);
                 }
                 /**
