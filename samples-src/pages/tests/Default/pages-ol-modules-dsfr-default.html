@@ -178,6 +178,7 @@
                   draggable: true,
                   position : "top-right",
                   listable: true,
+                  gutter: false,
                 });
                 map.addControl(reverse);
 
@@ -231,7 +232,8 @@
 
                 var controlList = new ol.control.ControlList({
                     draggable: false,
-                    position: "bottom-right",
+                    position: "top-right",
+                    gutter: false,
                     controlCatalogElement: document.getElementById("sampleLightDark"),
                 });
                 map.addControl(controlList);
