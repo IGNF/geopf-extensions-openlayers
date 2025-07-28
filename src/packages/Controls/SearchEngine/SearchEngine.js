@@ -901,19 +901,19 @@ class SearchEngine extends Control {
             div.appendChild(labelUnits);
             div.appendChild(units);
 
-            div = this._containerCoordinateLng = this.__createCoordinateSearchDivElement();
-            coordinateForm.appendChild(div);
-            var coordinateLng = this._setCoordinateSearchLngLabelElement(this._currentCoordinateSearchType);
-            var coordinateInputLng = this._coordinateSearchLngInput = this._setCoordinateSearchLngInputElement(this._currentCoordinateSearchUnits);
-            div.appendChild(coordinateLng);
-            div.appendChild(coordinateInputLng);
-
             div = this._containerCoordinateLat = this.__createCoordinateSearchDivElement();
             coordinateForm.appendChild(div);
             var coordinateLat = this._setCoordinateSearchLatLabelElement(this._currentCoordinateSearchType);
             var coordinateInputLat = this._coordinateSearchLatInput = this._setCoordinateSearchLatInputElement(this._currentCoordinateSearchUnits);
             div.appendChild(coordinateLat);
             div.appendChild(coordinateInputLat);
+
+            div = this._containerCoordinateLng = this.__createCoordinateSearchDivElement();
+            coordinateForm.appendChild(div);
+            var coordinateLng = this._setCoordinateSearchLngLabelElement(this._currentCoordinateSearchType);
+            var coordinateInputLng = this._coordinateSearchLngInput = this._setCoordinateSearchLngInputElement(this._currentCoordinateSearchUnits);
+            div.appendChild(coordinateLng);
+            div.appendChild(coordinateInputLng);
 
             var submit = this._createCoordinateSearchSubmitElement();
             coordinateForm.appendChild(submit);
@@ -1723,7 +1723,7 @@ class SearchEngine extends Control {
         }
         this._setPosition(coordinates, 10); // FIXME zoom fixe !
         if (this._displayMarker) {
-            this._setMarker(coordinates, "sans information");
+            this._setMarker(coordinates, lat + ", " + lng);
         }
 
         /**
