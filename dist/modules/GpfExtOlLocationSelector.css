@@ -8,7 +8,7 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.5-418
+ * @version 1.0.0-beta.5-419
  * @date 25/07/2025
  *
  */[class*=GPlocationPoint]{position:relative}div[id^=GPlocationAutoCompleteResult]{border-top:none;left:0;max-height:140px;overflow-y:auto;top:45px}div[id^=GPlocationAutoCompleteList]{position:absolute;z-index:2}

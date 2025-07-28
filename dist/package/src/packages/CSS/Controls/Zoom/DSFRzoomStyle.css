@@ -22,14 +22,15 @@
     mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJjdXJyZW50Q29sb3IiPjxwYXRoIGQ9Ik01IDExVjEzSDE5VjExSDVaIj48L3BhdGg+PC9zdmc+') center no-repeat;
 }
 
-.gpf-btn-icon-zoom-out::before {
-    display: block;
-    content: "";
-    height: 1px;
-    width: calc(100% - 8px);
-    background-color: var(--border-default-grey);
-    position: absolute;
-    top: 0px;
-    left: 4px;
+.gpf-btn-icon-zoom-out > span::before {
+  display: block;
+  content: "";
+  height: 1px;
+  width: 32px;
+  width: calc(100% - 8px);
+  background-color: var(--border-default-grey);
+  position: absolute;
+  top: 0px;
+  left: 4px;
 }
 
