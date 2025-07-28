@@ -17,7 +17,8 @@
         "doc/README.md", 
         "doc/DOCUMENTATION.md", 
         "doc/NOTE-REPORTING.md",
-        "doc/NOTE-VALIDATOR.md"
+        "doc/NOTE-VALIDATOR.md",
+        "doc/NOTE-LAYERSWITCHER.md"
     ],
     "blockTags": [
         "@alias", 
