@@ -4,6 +4,8 @@ import "../../CSS/Controls/Legends/GPFlegends.css";
 // import OpenLayers
 import Widget from "../Widget";
 import Control from "../Control";
+import Map from "ol/Map";
+import Layer from "ol/layer/Layer";
 
 // import local
 import Utils from "../../Utils/Helper";
@@ -17,34 +19,36 @@ import LegendsDOM from "./LegendsDOM";
 var logger = Logger.getLogger("legends");
 
 /**
- * @classdesc
- *
- * Legends button
- *
- * @constructor
- * @alias ol.control.Legends
- * @type {ol.control.Legends}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *
- * @fires legends:add
- * @fires legends:remove
- * @fires legends:modify
- * @example
- * var legends = new ol.control.Legends();
- * map.addControl(legends);
+ * @typedef {Object} LegendsOptions
+ * @property {boolean} [collapsed]
+ * @property {boolean} [draggable]
+ * @property {boolean} [auto]
+ * @property {boolean} [panel]
+ * @property {string} [position]
+ * @property {boolean} [gutter]
+ * @property {string} [id]
  */
-class Legends extends Control {
 
+/**
+* @classdesc
+*
+* Legends button
+*
+* @module Legends
+* @alias ol.control.Legends
+*/
+class Legends extends Control {
+    
     /**
-     * See {@link ol.control.Legends}
-     * @module Legends
-     * @alias module:~controls/Legends
-     * @param {Object} [options] - options
+     * @param {LegendsOptions} [options] - options
+     * @constructor
+     * @public
+     * @fires legends:add
+     * @fires legends:remove
+     * @fires legends:modify
      * @example
-     * import Legends from "gpf-ext-ol/controls/Legends"
-     * ou
-     * import { Legends } from "gpf-ext-ol"
+     * var legends = new ol.control.Legends();
+     * map.addControl(legends);
      */
     constructor (options) {
         options = options || {};
@@ -56,14 +60,17 @@ class Legends extends Control {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
         /**
-         * Nom de la classe (heritage)
          * @private
-         */
+         * Nom de la classe (heritage) */
         this.CLASSNAME = "Legends";
-        // initialisation du composant
+        /**
+         * @private 
+         * Initialisation du composant */
         this.initialize(options);
 
-        // Widget main DOM container
+        /**
+         * @private
+         * Widget main DOM container */
         this.container = this.initContainer();
 
         // ajout du container
@@ -79,7 +86,7 @@ class Legends extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -133,7 +140,7 @@ class Legends extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;
@@ -146,18 +153,18 @@ class Legends extends Control {
     /**
      * Get all meta informations of a IGN's layer
      *
-     * @param {*} layer - layer
+     * @param {Layer} layer - layer
      * @returns {*} informations
      * @public
      * @example
      * getLegends() :
      * "legends" : [
-     *         {
-     *             "format" : "image/jpeg",
-     *             "url" : "https:*data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
-     *             "minScaleDenominator" : "200"
-     *         }
-     *     ],
+     *  {
+     *     "format" : "image/jpeg",
+     *     "url" : "https:*data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+     *     "minScaleDenominator" : "200"
+     *   }
+     *  ],
      */
     getMetaInformations (layer) {
         // INFO
@@ -178,13 +185,13 @@ class Legends extends Control {
 
     /**
      * Add legends from layers
-     * @param {*} layers  - ...
+     * @param {Layer[]} layers - Array of layers
      * @public
      */
     adds (layers) {
         if (layers) {
             for (let index = 0; index < layers.length; index++) {
-                if (!this.add(layer)) {
+                if (!this.add(layers[index])) {
                     continue;
                 }
             }
@@ -193,7 +200,7 @@ class Legends extends Control {
 
     /**
      * Add a legend from a layer
-     * @param {*} layer  - ...
+     * @param {Layer} layer  - ...
      * @returns {Boolean} - true|false
      * @public
      */
@@ -217,7 +224,7 @@ class Legends extends Control {
 
     /**
      * Remove a legend from a layer
-     * @param {*} layer - ...
+     * @param {Layer} layer - ...
      * @returns  {Boolean} - true|false
      * @public
      */
@@ -243,7 +250,7 @@ class Legends extends Control {
 
     /**
      * Has already a DOM legend
-     * @param {*} dom  - ...
+     * @param {HTMLElement} dom  - ...
      * @returns {Boolean} - true|false
      * @public
      */
@@ -292,19 +299,25 @@ class Legends extends Control {
         /** {Boolean} specify if control add layers auto */
         this.auto = this.options.auto;
 
+        /** @private */
         this.buttonLegendsShow = null;
+        /** @private */
         this.panelLegendsContainer = null;
+        /** @private */
         this.panelLegendsEntriesContainer = null; // c'est là où on ajoute nos entrées legendes !
+        /** @private */
         this.panelLegendsHeaderContainer = null; // c'est pour le dragNdrop
+        /** @private */
         this.buttonLegendsClose = null; // utile ?
 
+        /** @private */
         this.eventsListeners = [];
 
         // tableau des entrées des legendes
         // ex.
         // {
         //   obj: layer openlayers,
-        //   dom: DOMElement
+        //   dom: HTMLElement
         // }
         this.legends = [];
     }
@@ -312,7 +325,7 @@ class Legends extends Control {
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     initContainer () {
@@ -356,7 +369,7 @@ class Legends extends Control {
     /**
      * Add events listeners on map (called by setMap)
      *
-     * @param {*} map - map
+     * @param {Map} map - map
      * @private
      * @todo listener on change:position
      */
@@ -470,7 +483,7 @@ class Legends extends Control {
     // ################################################################### //
     /**
      * ...
-     * @param {*} e - ...
+     * @param {PointerEvent} e - ...
      */
     onShowLegendsClick (e) {
         if (e.target.ariaPressed === "true") {

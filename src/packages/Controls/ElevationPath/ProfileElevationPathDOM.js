@@ -117,7 +117,7 @@ var ProfileElevationPathDOM = {
      * @param {HTMLElement} container - html container where to display profile
      * @param {Object} context - this control object
      * @param {Object} className - calling class (ie ElevationPath)
-     * @returns {DOMElement} profil container
+     * @returns {HTMLElement} profil container
      */
     displayProfileByDefault : function (data, container, context, className) {
         var self = context;
@@ -687,7 +687,7 @@ var ProfileElevationPathDOM = {
      * @param {HTMLElement} container - html container where to display profile
      * @param {Object} context - this control object
      * @param {Object} className - calling class (ie ElevationPath)
-     * @returns {DOMElement} profil container
+     * @returns {HTMLElement} profil container
      */
     displayProfileRaw : function (data, container, context, className) {
         if (!container) {
@@ -736,7 +736,7 @@ var ProfileElevationPathDOM = {
      * @param {HTMLElement} container - html container where to display profile
      * @param {Object} context - this control object
      * @param {Object} className - calling class (ie ElevationPath)
-     * @returns {DOMElement} profil container
+     * @returns {HTMLElement} profil container
      */
     displayProfileLibD3 : function (data, container, context, className) {
         var self = context;
@@ -983,7 +983,7 @@ var ProfileElevationPathDOM = {
      * @param {HTMLElement} container - html container where to display profile
      * @param {Object} context - this control object
      * @param {Object} className - calling class (ie ElevationPath)
-     * @returns {DOMElement} profil container
+     * @returns {HTMLElement} profil container
      */
     displayProfileLibAmCharts : function (data, container, context, className) {
         var self = context;

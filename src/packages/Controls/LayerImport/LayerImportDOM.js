@@ -16,7 +16,7 @@ var LayerImportDOM = {
     /**
      * Map loading
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createLoadingElement : function () {
         var div = document.createElement("div");
@@ -28,7 +28,7 @@ var LayerImportDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -45,7 +45,7 @@ var LayerImportDOM = {
     /**
      * Show Import
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowImportPictoElement : function () {
         // contexte d'execution
@@ -87,7 +87,7 @@ var LayerImportDOM = {
     /**
      * Create Container Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -106,7 +106,7 @@ var LayerImportDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportPanelHeaderElement : function () {
         var container = document.createElement("div");
@@ -117,7 +117,7 @@ var LayerImportDOM = {
     /**
      * Create Return PIcto into Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportPanelReturnPictoElement : function () {
         var self = this;
@@ -155,7 +155,7 @@ var LayerImportDOM = {
     /**
      * Create Header Title Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportPanelTitleElement : function () {
         var div = document.createElement("div");
@@ -168,7 +168,7 @@ var LayerImportDOM = {
     /**
      * Create Header close div
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportPanelCloseElement : function () {
         // contexte
@@ -207,7 +207,7 @@ var LayerImportDOM = {
      * Create Form
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportPanelFormElement : function () {
         // contexte d'execution
@@ -237,7 +237,7 @@ var LayerImportDOM = {
      * Create Container for import type choice
      *
      * @param {Array} importTypes - import types to be displayed (and used)
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportTypeLineElement : function (importTypes) {
         // contexte d'execution
@@ -315,7 +315,7 @@ var LayerImportDOM = {
     /**
      * Create Waiting Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportWaitingElement : function () {
         var div = document.createElement("div");
@@ -337,7 +337,7 @@ var LayerImportDOM = {
     /**
      * Create container for KML/GPX/GeoJSON parameters
      * @param {String} currentType - GeoJSON, GPX or KML value
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportStaticParamsContainer : function (currentType) {
         var div = document.createElement("div");
@@ -354,7 +354,7 @@ var LayerImportDOM = {
     /**
      * Create name label for KML/GPX/GeoJSON parameters
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticNameLabel : function () {
         var div = document.createElement("div");
@@ -379,7 +379,7 @@ var LayerImportDOM = {
     /**
      * Create import choice for KML/GPX/GeoJSON parameters (local or url)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticModeChoiceDiv : function () {
         var div = document.createElement("div");
@@ -391,7 +391,7 @@ var LayerImportDOM = {
     /**
      * Create local import choice for KML/GPX/GeoJSON parameters
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticLocalChoiceDiv : function () {
         var context = this;
@@ -433,7 +433,7 @@ var LayerImportDOM = {
     /**
      * Create url import choice for KML/GPX/GeoJSON parameters
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticUrlChoiceDiv : function () {
         var context = this;
@@ -475,7 +475,7 @@ var LayerImportDOM = {
     /**
      * Create input div for KML/GPX/GeoJSON parameters local import
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticLocalInputDiv : function () {
         var div = document.createElement("div");
@@ -487,7 +487,7 @@ var LayerImportDOM = {
     /**
      * Create input label for KML/GPX/GeoJSON parameters local import
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticLocalInputLabel : function () {
         var label = document.createElement("label");
@@ -501,7 +501,7 @@ var LayerImportDOM = {
     /**
      * Create file input for KML/GPX/GeoJSON parameters local import
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticLocalInput : function () {
         var input = document.createElement("input");
@@ -514,7 +514,7 @@ var LayerImportDOM = {
     /**
      * Create input div for KML/GPX/GeoJSON parameters url import
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticUrlInputDiv : function () {
         var div = document.createElement("div");
@@ -526,7 +526,7 @@ var LayerImportDOM = {
     /**
      * Create input label for KML/GPX/GeoJSON parameters url import
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticUrlInputLabel : function () {
         var label = document.createElement("label");
@@ -540,7 +540,7 @@ var LayerImportDOM = {
     /**
      * Create url input for KML/GPX/GeoJSON parameters url import
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createStaticUrlInput : function () {
         var input = document.createElement("input");
@@ -557,7 +557,7 @@ var LayerImportDOM = {
     /**
      * Create container for WMS/WMTS/WFS parameters
      * @param {String} currentType - WMS, WMTS or WFS value
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createServiceParamsContainer : function (currentType) {
         var div = document.createElement("div");
@@ -574,7 +574,7 @@ var LayerImportDOM = {
     /**
      * Create div for WMS/WMTS/WFS url
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createServiceUrlDiv : function () {
         var div = document.createElement("div");
@@ -585,7 +585,7 @@ var LayerImportDOM = {
     /**
      * Create input label for WMS/WMTS/WFS url
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createServiceUrlInputLabel : function () {
         var label = document.createElement("label");
@@ -599,7 +599,7 @@ var LayerImportDOM = {
     /**
      * Create input for WMS/WMTS/WFS parameters url
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createServiceUrlInput : function () {
         var input = document.createElement("input");
@@ -616,7 +616,7 @@ var LayerImportDOM = {
     /**
      * Create Submit Form Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportSubmitFormElement : function () {
         var input = document.createElement("input");
@@ -635,7 +635,7 @@ var LayerImportDOM = {
     /**
      * Create GetCap Panel Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportGetCapPanelElement : function () {
         var div = document.createElement("div");
@@ -647,7 +647,7 @@ var LayerImportDOM = {
     /**
      * Create GetCap Panel Header Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportGetCapPanelHeaderElement : function () {
         // contexte
@@ -698,7 +698,7 @@ var LayerImportDOM = {
     /**
      * Create GetCap Results List Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportGetCapResultsContainer : function () {
         var container = document.createElement("div");
@@ -777,7 +777,7 @@ var LayerImportDOM = {
     /**
      * Create MapBox Panel Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportMapBoxPanelElement : function () {
         var div = document.createElement("div");
@@ -789,7 +789,7 @@ var LayerImportDOM = {
     /**
      * Create MapBox Panel Header Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportMapBoxPanelHeaderElement : function () {
         // contexte
@@ -856,7 +856,7 @@ var LayerImportDOM = {
     /**
      * Create MapBox Results List Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createImportMapBoxResultsContainer : function () {
         var container = document.createElement("div");

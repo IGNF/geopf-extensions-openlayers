@@ -13,7 +13,7 @@ var MeasureAreaDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -30,7 +30,7 @@ var MeasureAreaDOM = {
      * Show control
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowMeasureAreaPictoElement : function () {
         // contexte d'execution

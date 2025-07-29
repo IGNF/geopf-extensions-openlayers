@@ -4,6 +4,8 @@ import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css";
 // import OpenLayers
 import Widget from "../Widget";
 import Control from "../Control";
+import Map from "ol/Map";
+import Layer from "ol/layer/Layer";
 import VectorTileSource from "ol/source/VectorTile";
 import VectorSource from "ol/source/Vector";
 import TileWMSSource from "ol/source/TileWMS";
@@ -26,28 +28,19 @@ var logger = Logger.getLogger("getFeatureInfo");
  *
  * GetFeatureInfo button
  *
- * @constructor
+ * @module GetFeatureInfo
  * @alias ol.control.GetFeatureInfo
- * @type {ol.control.GetFeatureInfo}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *
- * @example
- * var getFeatureInfo = new ol.control.GetFeatureInfo();
- * map.addControl(getFeatureInfo);
+ 
  */
 class GetFeatureInfo extends Control {
 
     /**
-     * See {@link ol.control.GetFeatureInfo}
-     * @module GetFeatureInfo
-     * @alias module:~controls/GetFeatureInfo
-     * @param {Object} [options] - options
-     * @example
-     * import GetFeatureInfo from "gpf-ext-ol/controls/GetFeatureInfo"
-     * ou
-     * import { GetFeatureInfo } from "gpf-ext-ol"
-     */
+     * @constructor
+    * @param {Object} options - options for function call.
+    * @example
+    * var getFeatureInfo = new ol.control.GetFeatureInfo();
+    * map.addControl(getFeatureInfo);
+    */
     constructor (options) {
         options = options || {};
         // call ol.control.Control constructor
@@ -162,28 +155,38 @@ class GetFeatureInfo extends Control {
         /** {Boolean} specify if control add some stuff auto */
         this.auto = this.options.auto;
 
+        /** @private */
         this.buttonGetFeatureInfoShow = null;
+        /** @private */
         this.panelGetFeatureInfoContainer = null;
+        /** @private */
         this.getFeatureInfoPanelDiv = null;
+        /** @private */
         this.panelGetFeatureInfoHeaderContainer = null; // usefull for the dragNdrop
+        /** @private */
         this.buttonGetFeatureInfoClose = null;
+        /** @private */
         this.getFeatureInfoAccordionGroup = null;
+        /** @private */
         this.panelGetFeatureInfoEntriesContainer = null;
 
         /** {Array} specify some events listeners */
         this.eventsListeners = [];
 
         /** GFI settings */
+        /** @private */
         this.pixel = [];
         this.coordinates = [];
+        /** @public */
         this.layers = [];
+        /** @private */
         this.res = null;
     }
 
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     initContainer () {
@@ -226,7 +229,7 @@ class GetFeatureInfo extends Control {
     /**
      * Add events listeners on map (called by setMap)
      *
-     * @param {*} map - map
+     * @param {Map} map - map
      * @private
      */
     addEventsListeners (map) {
@@ -293,7 +296,7 @@ class GetFeatureInfo extends Control {
 
     /**
      * Main render function
-     * @param { ol.Layer } layer layer openlayer
+     * @param { Layer } layer layer openlayer
      * @returns { Object } gfiLayer
      * {
      *      format : "wmts",
@@ -348,7 +351,7 @@ class GetFeatureInfo extends Control {
 
     /**
      * Main render function
-     * @param { ol.Layer } layer layer openlayer
+     * @param { Layer } layer layer openlayer
      * @returns { Array } Array of ol features
      * @private
      */
@@ -364,7 +367,7 @@ class GetFeatureInfo extends Control {
 
     /**
      * Main render function
-     * @param { Object } gfiLayer layer openlayer
+     * @param { Layer } gfiLayer layer openlayer
      * @returns { Object } gfi result
      * {
      *      layername : "layername",
@@ -420,7 +423,7 @@ class GetFeatureInfo extends Control {
     /**
      * Get layer title
      *
-     * @param {Object} gfiLayer - the layer object used by the gfi widget
+     * @param {Layer} gfiLayer - the layer object used by the gfi widget
      * @returns {String} layerTitle - layer title
      */
     getLayerTitle (gfiLayer) {
@@ -545,7 +548,7 @@ class GetFeatureInfo extends Control {
     /**
      * Gets HTML content from features array
      *
-     * @param {Array.<ol.Features>} features - openlayers features Array
+     * @param {Features[]} features - openlayers features Array
      * @returns {HTMLElement} HTML content.
      */
     features2html (features) {
@@ -648,7 +651,7 @@ class GetFeatureInfo extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      */
     onShowGetFeatureInfoClick (e) {
         if (e.target.ariaPressed === "true") {
@@ -664,7 +667,7 @@ class GetFeatureInfo extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      */
     onCloseGetFeatureInfoClick (e) {
         logger.trace(e);
@@ -672,7 +675,7 @@ class GetFeatureInfo extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      */
     onGetFeatureInfoComputationSubmit (e) {
         logger.trace(e);

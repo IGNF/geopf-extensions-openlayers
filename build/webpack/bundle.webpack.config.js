@@ -13,7 +13,6 @@ var BannerWebPackPlugin = webpack.BannerPlugin;
 var EnvWebPackPlugin = webpack.EnvironmentPlugin;
 var TerserJsWebPackPlugin = require("terser-webpack-plugin");
 var OptimizeCSSWebPackPlugin = require("css-minimizer-webpack-plugin");
-var JsDocWebPackPlugin = require("../scripts/webpackPlugins/jsdoc-plugin");
 
 // -- variables
 var rootdir = path.join(__dirname, "../..");
@@ -187,13 +186,7 @@ module.exports = (env, argv) => {
         },
         plugins : [
             /** EXECUTION DU LINTER */
-            new ESLintWebpackPlugin({
-
-            }),
-            /** GENERATION DE LA JSDOC */
-            new JsDocWebPackPlugin({
-                conf : path.join(rootdir, "build/jsdoc/jsdoc.json")
-            }),
+            new ESLintWebpackPlugin({}),
             /** CSS avec IMAGES en base64 */
             new MiniCssExtractPlugin({
                 filename : "[name].css"

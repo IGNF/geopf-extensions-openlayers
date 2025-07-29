@@ -5,6 +5,7 @@ import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 // import ol
 import FullScreen from "ol/control/FullScreen";
+import Map from "ol/Map";
 
 var logger = Logger.getLogger("fullscreen");
 
@@ -12,28 +13,19 @@ var logger = Logger.getLogger("fullscreen");
  * @classdesc
  * OpenLayers Control to manage full screen
  *
- * @constructor
- * @extends {ol.control.FullScreen}
  * @alias ol.control.GeoportalFullScreen
- * @type {ol.control.GeoportalFullScreen}
- * @param {Object} options - ol.control.FullScreen options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html ol.Control.FullScreen})
- * @example
- * var zoom = new ol.control.GeoportalFullScreen({
- *   position: "top-left"
- * });
- * map.addControl(zoom);
+ * @module GeoportalFullScreen
  */
 class GeoportalFullScreen extends FullScreen {
 
     /**
-     * See {@link ol.control.GeoportalFullScreen}
-     * @module GeoportalFullScreen
-     * @alias module:~controls/GeoportalFullScreen
-     * @param {*} options - options
-     * @example
-     * import GeoportalFullScreen from "gpf-ext-ol/controls/GeoportalFullScreen"
-     * ou
-     * import { GeoportalFullScreen } from "gpf-ext-ol"
+     * @constructor
+    * @param {Object} options - ol.control.FullScreen options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html ol.Control.FullScreen})
+    * @example
+    * var zoom = new ol.control.GeoportalFullScreen({
+    *   position: "top-left"
+    * });
+    * map.addControl(zoom);
      */
     constructor (options) {
         options = options || {};
@@ -56,6 +48,11 @@ class GeoportalFullScreen extends FullScreen {
         this.options = options;
     }
 
+    /**
+     * ...
+     * @param {Map} map - ...
+     * @private
+     */
     _createContainerPosition (map) {
         this.container = map.getOverlayContainerStopEvent();
         this.options.target = this.container;
@@ -73,8 +70,14 @@ class GeoportalFullScreen extends FullScreen {
         }
     }
 
+    /**
+     * ...
+     * @private
+     */
     _initContainer () {
-        // UID interne pour chaque controle
+        /**
+         * @private
+         * UID interne pour chaque controle */
         this._uid = this.options.id || SelectorID.generate();
 
         // Ajout / Suppression des attributs du DOM
@@ -119,7 +122,7 @@ class GeoportalFullScreen extends FullScreen {
     /**
      * Overload setMap function
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -144,7 +147,7 @@ class GeoportalFullScreen extends FullScreen {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;

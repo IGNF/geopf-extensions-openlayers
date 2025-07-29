@@ -15,7 +15,7 @@ var ControlListDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -32,7 +32,7 @@ var ControlListDOM = {
      * Show control
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowControlListPictoElement : function () {
         // contexte d'execution
@@ -76,7 +76,7 @@ var ControlListDOM = {
 
     /**
      * Create Container Panel
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createControlListPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -95,7 +95,7 @@ var ControlListDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createControlListPanelHeaderElement : function () {
         var self = this;
@@ -138,7 +138,7 @@ var ControlListDOM = {
     /**
      * Create Content Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createControlListPanelContentElement : function () {
         var container = document.createElement("div");
@@ -149,8 +149,8 @@ var ControlListDOM = {
     /**
      * Create Footer Panel
      *
-     * @param {DOMElement} controlCatalogelement - DOM element
-     * @returns {DOMElement} DOM element
+     * @param {HTMLElement} controlCatalogelement - DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createControlListPanelFooterElement : function (controlCatalogelement) {
         var container = document.createElement("div");
@@ -169,7 +169,7 @@ var ControlListDOM = {
      * Create div for control
      *
      * @param {ol.Control} control control to add in the panel
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createControlListPanelControl : function (control) {
         let controlContainer;

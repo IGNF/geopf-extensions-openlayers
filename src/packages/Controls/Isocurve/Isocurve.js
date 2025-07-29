@@ -5,6 +5,8 @@ import "../../CSS/Controls/Isochron/GPFisochron.css";
 // import Control from "ol/control/Control";
 import Widget from "../Widget";
 import Control from "../Control";
+import Map from "ol/Map";
+import Layer from "ol/layer/Layer";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
@@ -41,75 +43,66 @@ var logger = Logger.getLogger("isocurve");
  *
  * Isocurve Control.
  *
- * @constructor
+ * @module Isocurve
  * @alias ol.control.Isocurve
- * @type {ol.control.Isocurve}
- * @extends {ol.control.Control}
- * @param {Object} options - Isocurve control options
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {String} [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
- * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
- * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
- * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
- * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
- * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of graph resources to be used for isocurve calculation, by default : ["Voiture", "Pieton"]. Possible values are "Voiture" and "Pieton". The first element is selected.
- * @param {Array}   [options.methods = ["time", "distance"]] - list of methods, by default : ["time", "distance"]. Possible values are "time" and "distance". The first element is selected by default.
- * @param {Array}   [options.directions = ["departure", "arrival"]] - list of directions to be displayed, by default : ["departure", "arrival"]. The first element is selected by default. Possible values are "departure" and "arrival".
- *      Directions enable to specify if input location point will be used as a departure point ("departure") or as an arrival point ("arrival")
- * @param {Object} [options.isocurveOptions = {}] - isocurve service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~isoCurve Gp.Services.isoCurve()} to know all isocurve options.
- * @param {Object} [options.autocompleteOptions = {}] - autocomplete service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options
- * @param {Object} [options.markerOpts] - options to use your own marker. Default is a lightOrange marker.
- * @param {String} [options.markerOpts.url] - marker base64 encoded url (ex "data:image/png;base64,...""). Mandatory for a custom marker
- * @param {Array} [options.markerOpts.offset] - Offsets in pixels used when positioning the overlay. The first element in the array is the horizontal offset. A positive value shifts the overlay right. The second element in the array is the vertical offset. A positive value shifts the overlay down. Default is [0, 0]. (see http://openlayers.org/en/latest/apidoc/ol.Overlay.html)
- * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
- * @param {String} [options.layerDescription.title = "Isochrone/Isodistance"] - Layer title to be displayed in LayerSwitcher
- * @param {String} [options.layerDescription.description = "isochrone/isodistance basé sur un graphe"] - Layer description to be displayed in LayerSwitcher
- * @fires isocurve:drawstart
- * @fires isocurve:drawend
- * @fires isocurve:compute
- * @fires export:compute
- * @example
- *  var iso = ol.control.Isocurve({
- *      "collapsed" : false,
- *      "draggable" : true,
- *      "export"    : false,
- *      "methods" : ["time", "distance"],
- *      "exclusions" : {
- *         "toll" : true,
- *         "bridge" : false,
- *         "tunnel" : true
- *      },
- *      "graphs" : ["Pieton", "Voiture"],
- *      "markerOpts" : {
- *          "url" : "...",
- *          "offset" : [0,0]
- *      }
- *      "isocurveOptions" : {},
- *      "autocompleteOptions" : {}
- *  });
- *
- *  // if you want to pluggued the control Export with options :
- *  var iso = new ol.control.Isocurve({
- *    export : {
- *      name : "export",
- *      format : "geojson",
- *      title : "Exporter",
- *      menu : false
- *    }
- *  });
- */
+*/
 class Isocurve extends Control {
-
+    
     /**
-     * See {@link ol.control.Isocurve}
-     * @module Isocurve
-     * @alias module:~controls/Isocurve
-     * @param {*} options - options
-     * @example
-     * import Isocurve from from "gpf-ext-ol/controls/Isocurve"
-     * ou
-     * import { Isocurve } from "gpf-ext-ol"
+     * @constructor
+    * @param {Object} options - Isocurve control options
+    * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+    * @param {String} [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
+    * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+    * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
+    * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
+    * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
+    * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
+    * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of graph resources to be used for isocurve calculation, by default : ["Voiture", "Pieton"]. Possible values are "Voiture" and "Pieton". The first element is selected.
+    * @param {Array}   [options.methods = ["time", "distance"]] - list of methods, by default : ["time", "distance"]. Possible values are "time" and "distance". The first element is selected by default.
+    * @param {Array}   [options.directions = ["departure", "arrival"]] - list of directions to be displayed, by default : ["departure", "arrival"]. The first element is selected by default. Possible values are "departure" and "arrival".
+    *      Directions enable to specify if input location point will be used as a departure point ("departure") or as an arrival point ("arrival")
+    * @param {Object} [options.isocurveOptions = {}] - isocurve service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~isoCurve Gp.Services.isoCurve()} to know all isocurve options.
+    * @param {Object} [options.autocompleteOptions = {}] - autocomplete service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options
+    * @param {Object} [options.markerOpts] - options to use your own marker. Default is a lightOrange marker.
+    * @param {String} [options.markerOpts.url] - marker base64 encoded url (ex "data:image/png;base64,...""). Mandatory for a custom marker
+    * @param {Array} [options.markerOpts.offset] - Offsets in pixels used when positioning the overlay. The first element in the array is the horizontal offset. A positive value shifts the overlay right. The second element in the array is the vertical offset. A positive value shifts the overlay down. Default is [0, 0]. (see http://openlayers.org/en/latest/apidoc/ol.Overlay.html)
+    * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
+    * @param {String} [options.layerDescription.title = "Isochrone/Isodistance"] - Layer title to be displayed in LayerSwitcher
+    * @param {String} [options.layerDescription.description = "isochrone/isodistance basé sur un graphe"] - Layer description to be displayed in LayerSwitcher
+    * @fires isocurve:drawstart
+    * @fires isocurve:drawend
+    * @fires isocurve:compute
+    * @fires export:compute
+    * @example
+    *  var iso = ol.control.Isocurve({
+    *      "collapsed" : false,
+    *      "draggable" : true,
+    *      "export"    : false,
+    *      "methods" : ["time", "distance"],
+    *      "exclusions" : {
+    *         "toll" : true,
+    *         "bridge" : false,
+    *         "tunnel" : true
+    *      },
+    *      "graphs" : ["Pieton", "Voiture"],
+    *      "markerOpts" : {
+    *          "url" : "...",
+    *          "offset" : [0,0]
+    *      }
+    *      "isocurveOptions" : {},
+    *      "autocompleteOptions" : {}
+    *  });
+    *
+    *  // if you want to pluggued the control Export with options :
+    *  var iso = new ol.control.Isocurve({
+    *    export : {
+    *      name : "export",
+    *      format : "geojson",
+    *      title : "Exporter",
+    *      menu : false
+    *    }
+    *  });
      */
     constructor (options) {
         options = options || {};
@@ -140,11 +133,13 @@ class Isocurve extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
-            // enrichissement du DOM du container lors de l'ajout à la carte
+            /**
+             * @private
+             * enrichissement du DOM du container lors de l'ajout à la carte */
             this._container = this._initContainer(map);
 
             // ajout d'un bouton d'export
@@ -236,7 +231,7 @@ class Isocurve extends Control {
     /**
      * Set vector layer where Isocurve geometry is drawn
      *
-     * @param {Object} layer - ol.layer.Vector isocurve layer
+     * @param {Layer} layer - ol.layer.Vector isocurve layer
      */
     setLayer (layer) {
         if (!layer) {
@@ -330,7 +325,7 @@ class Isocurve extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this._container;
@@ -526,47 +521,72 @@ class Isocurve extends Control {
         /** {Boolean} specify if isocurve control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
-        // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
+        /** 
+         * @private
+         * identifiant du contrôle : 
+         * utile pour suffixer les identifiants CSS 
+         * (pour gérer le cas où il y en a plusieurs dans la même page) */
         this._uid = this.options.id || SelectorID.generate();
 
-        // Options du service paramétrables via l'interface (graph, method, exclusions)
-        // Mode de transport selectionné : 'Voiture' ou 'Pieton'
+        /** 
+         * @private
+         * Options du service paramétrables via l'interface (graph, method, exclusions)
+         * Mode de transport selectionné : 'Voiture' ou 'Pieton' */
         this._currentTransport = null;
         this._initTransport();
-        // Mode de calcul selectionné : 'time' (isochron) ou 'distance' (isodistance)
+        /** 
+         * @private
+         * Mode de calcul selectionné : 'time' (isochron) ou 'distance' (isodistance) */
         this._currentComputation = null;
         this._initComputation();
-        // Exclusions selectionnées : Tunnel, Toll et Bridge
+        /** 
+         * @private
+         * Exclusions selectionnées : Tunnel, Toll et Bridge */
         this._currentExclusions = [];
         this._initExclusions();
-        // sens de parcours : "departure" ou "arrival"
+        /** 
+         * @private
+         * sens de parcours : "departure" ou "arrival" */
         this._currentDirection = null;
         this._initDirection();
 
         // point de saisie
+        /** @private */
         this._originPoint = null;
 
         // containers principaux
+        /** @private */
         this._pictoIsoButton = null;
+        /** @private */
         this._waitingContainer = null;
+        /** @private */
         this._formContainer = null;
+        /** @private */
         this._resultsIsoContainer = null;
+        /** @private */
         this._IsoPanelContainer = null;
+        /** @private */
         this._IsoPanelHeaderContainer = null;
 
         // les résultats du calcul
+        /** @private */
         this._currentIsoResults = null;
 
         // la géométrie
+        /** @private */
         this._geojsonLayer = null;
+        /** @private */
         this._geojsonObject = null;
 
         // bouton export
+        /** @private */
         this.export = null;
 
         // si un calcul est en cours ou non
+        /** @private */
         this._waiting = false;
         // timer pour cacher la patience après un certain temps
+        /** @private */
         this._timer = null;
 
         // styles pour les sélections des features
@@ -580,16 +600,22 @@ class Isocurve extends Control {
             })
         });
 
-        // liste des ressources avec droits par service
-        // Ex. {
-        //   "Isocurve" : {
-        //       key : "ger4g456re45er456t4er5ge5",
-        //       resources : ["Pieton", "Voiture"]
-        //   }
-        // }
+
+        /**
+         * @private
+         * liste des ressources avec droits par service
+         * Ex. {
+         *  "Isocurve" : {
+         *       key : "ger4g456re45er456t4er5ge5",
+         *       resources : ["Pieton", "Voiture"]
+         *   }
+         * }
+         */
         this._resources = {};
 
-        // listener key for event click on map
+        /** 
+         * @private
+         * listener key for event click on map */
         this.listenerKey = null;
     }
 
@@ -685,7 +711,9 @@ class Isocurve extends Control {
      * @private
      */
     _initTransport () {
-        // Mode de transport selectionné
+        /**
+         * @private
+         * Mode de transport selectionné */
         this._currentTransport = "Piéton"; // par defaut
 
         // par defaut
@@ -716,7 +744,9 @@ class Isocurve extends Control {
      * @private
      */
     _initComputation () {
-        // Mode de calcul selectionné
+        /**
+         * @private
+         * Mode de calcul selectionné */
         this._currentComputation = "time"; // par defaut
 
         // par defaut
@@ -753,7 +783,9 @@ class Isocurve extends Control {
      * @private
      */
     _initDirection () {
-        // Mode de calcul selectionné
+        /**
+         * @private
+         * Mode de calcul selectionné */
         this._currentDirection = "departure"; // par defaut
 
         // par defaut
@@ -787,7 +819,9 @@ class Isocurve extends Control {
      * @private
      */
     _initExclusions () {
-        // Exclusions selectionnées : Tunnel, Toll et Bridge
+        /**
+         * @private
+         * Exclusions selectionnées : Tunnel, Toll et Bridge */
         this._currentExclusions = []; // par defaut
 
         // par defaut
@@ -827,7 +861,7 @@ class Isocurve extends Control {
      *
      * @param {Object} map - the map
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -1336,7 +1370,9 @@ class Isocurve extends Control {
         // 1. Affichage des distances et durées
         this._fillIsoResultsDetailsContainer(results, computeOptions);
 
-        // sauvegarde de l'etat des resultats
+        /**
+         * @private
+         * sauvegarde de l'etat des resultats */
         this._currentIsoInformations = results;
 
         /**
@@ -1371,6 +1407,7 @@ class Isocurve extends Control {
      * @private
      */
     _fillIsoResultsDetailsContainer (results, computeOptions) {
+        /** @private */
         this._resultsIsoValuesContainer = this._addIsoResultsValuesElement(results, computeOptions, MathUtils.convertSecondsToTime);
     }
 

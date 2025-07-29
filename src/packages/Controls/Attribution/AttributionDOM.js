@@ -18,7 +18,7 @@ var AttributionDOM = {
     /**
      * Creation du container principal (DOM)
      *
-     * @returns {DOMElement} div DOM
+     * @returns {HTMLElement} div DOM
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -31,7 +31,7 @@ var AttributionDOM = {
     /**
      * Creation du selecteur (caché) pour l'affichage/masquage des attributions (DOM)
      *
-     * @returns {DOMElement} checkbox DOM
+     * @returns {HTMLElement} checkbox DOM
      */
     _createMainAttributionsShowElement : function () {
         var input = document.createElement("input");
@@ -43,7 +43,7 @@ var AttributionDOM = {
     /**
      * Création de l'élément liste des attributions (DOM)
      *
-     * @returns {DOMElement} liste DOM
+     * @returns {HTMLElement} liste DOM
      */
     _createAttributionsList : function () {
         var ul = document.createElement("ul");
@@ -54,7 +54,7 @@ var AttributionDOM = {
     /**
      * Création du conteneur principal des attributions (DOM)
      *
-     * @returns {DOMElement} div DOM
+     * @returns {HTMLElement} div DOM
      */
     _createMainAttributionsListContainer : function () {
         var div = document.createElement("div");
@@ -66,7 +66,7 @@ var AttributionDOM = {
     /**
      * Création du container du picto du controle (DOM)
      * @param {Boolean} collapsed - collapsed
-     * @returns {DOMElement} label DOM
+     * @returns {HTMLElement} label DOM
      */
     _createMainPictoElement : function (collapsed) {
         var self = this;

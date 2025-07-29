@@ -22,7 +22,7 @@ var DrawingDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -38,7 +38,7 @@ var DrawingDOM = {
     /**
      * Show mouse position control
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowDrawingPictoElement : function () {
         var self = this;
@@ -79,7 +79,7 @@ var DrawingDOM = {
     /**
      * Drawing panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createDrawingPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -112,7 +112,7 @@ var DrawingDOM = {
 
     /**
     * Creates drawing Panel header DOM structure
-    * @returns {DOMElement} DOM element
+    * @returns {HTMLElement} DOM element
     */
     _createDrawingPanelHeaderElement : function () {
         /*
@@ -161,7 +161,7 @@ var DrawingDOM = {
     /**
      * Creates drawing tools section.
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createDrawingToolsSections : function () {
         var tools = [];
@@ -269,7 +269,7 @@ var DrawingDOM = {
      *
      * @param {String} sectionLabel - section title
      * @param {String} panelType - Drawing ("draw") or editing ("edit") tools panel
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createDrawingToolSection : function (sectionLabel, panelType) {
         /*
@@ -324,7 +324,7 @@ var DrawingDOM = {
      *
      * @param {String} buttonLabel - Button label
      * @param {String} buttonTitle - Button title
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createSavingSection : function (buttonLabel, buttonTitle) {
         /*
@@ -357,7 +357,7 @@ var DrawingDOM = {
      * @param {Object} options - options
      * @param {String} options.defaultValue - defaultValue
      * @param {String} options.className - input className
-     * @returns {DOMElement} - created li element
+     * @returns {HTMLElement} - created li element
      */
     _createMarkersChooser : function (options) {
         var li = document.createElement("div");
@@ -418,7 +418,7 @@ var DrawingDOM = {
      * @param {String} options.id - input id
      * @param {String} options.title - input title
      * @param {String} options.className - input className
-     * @returns {DOMElement} - created li element
+     * @returns {HTMLElement} - created li element
      */
     _createStylingElement : function (options) {
         var li = document.createElement("div");
@@ -476,7 +476,7 @@ var DrawingDOM = {
      * @param {Object} options.labels - values to title
      * @param {Object} options.initValues - values to init fields
      * @param {Function} options.applyFunc - function called when apply is selected
-     * @returns {DOMElement} DOM element created
+     * @returns {HTMLElement} DOM element created
      */
     _createStylingDiv : function (options) {
         var dialog = document.createElement("dialog");
@@ -724,7 +724,7 @@ var DrawingDOM = {
      * @param {String} options.placeholder - placeholder for text input.
      * @param {String} options.inputId - text input id.
      * @param {Function} options.applyFunc - function called when text is to be saved.
-     * @returns {DOMElement} DOM element created
+     * @returns {HTMLElement} DOM element created
      * @private
      */
     _createLabelDiv : function (options) {

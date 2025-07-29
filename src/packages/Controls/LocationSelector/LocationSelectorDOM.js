@@ -19,7 +19,7 @@ var LocationSelectorDOM = {
 
     /**
      * Main container (DOM)
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -34,7 +34,7 @@ var LocationSelectorDOM = {
      *
      * @param {Number} id - tag ID
      * @param {Number} display  - display
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationPointElement : function (id, display) {
         var div = document.createElement("div");
@@ -51,7 +51,7 @@ var LocationSelectorDOM = {
      *
      * @param {Number} id - tag ID
      * @param {String} text - label
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationPointLabelElement : function (id, text) {
         // contexte d'execution
@@ -93,7 +93,7 @@ var LocationSelectorDOM = {
      * Create Input AutoComplete Point tag
      *
      * @param {Number} id - tag ID
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationAutoCompleteteInputElement : function (id) {
         // contexte d'execution
@@ -199,7 +199,7 @@ var LocationSelectorDOM = {
      * Create Input Coordinate Point tag
      *
      * @param {Number} id - tag ID
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationCoordinateInputElement : function (id) {
         // contexte d'execution
@@ -221,7 +221,7 @@ var LocationSelectorDOM = {
      * Create Show Pointer tag
      *
      * @param {Number} id - tag ID
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationPointerShowInputElement : function (id) {
         var inputOriginPointer = document.createElement("input");
@@ -236,7 +236,7 @@ var LocationSelectorDOM = {
      * Create Input Pointer tag
      *
      * @param {Number} id - tag ID
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationPointerInputElement : function (id) {
         // contexte d'execution
@@ -319,7 +319,7 @@ var LocationSelectorDOM = {
      * see event !
      *
      * @param {Number} id - tag ID
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationRemovePointElement : function (id) {
         // contexte d'execution
@@ -369,7 +369,7 @@ var LocationSelectorDOM = {
      * Create Add Point tag
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationAddPointElement : function () {
         // contexte d'execution
@@ -440,7 +440,7 @@ var LocationSelectorDOM = {
      * see event!
      *
      * @param {Number} id - tag ID
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLocationAutoCompleteResultElement : function (id) {
         // contexte d'execution

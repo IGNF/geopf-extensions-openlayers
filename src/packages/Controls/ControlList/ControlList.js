@@ -3,9 +3,7 @@ import "../../CSS/Controls/ControlList/GPFcontrolList.css";
 // import OpenLayers
 import Widget from "../Widget";
 import Control from "../Control";
-
-// import geoportal library access
-import Gp from "geoportal-access-lib";
+import Map from "ol/Map";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
 import Utils from "../../Utils/Helper";
@@ -19,29 +17,30 @@ import checkDsfr from "../Utils/CheckDsfr";
 import ControlListDOM from "./ControlListDOM";
 
 var logger = Logger.getLogger("controlList");
+/**
+ * @typedef {Object} ControlListOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {string|number} [id] - Identifiant unique du widget.
+ * @property {HTMLElement} [controlCatalogElement] - Élément DOM à afficher en pied de panneau (ex : bouton catalogue).
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ */
 
 /**
  * @classdesc
  *
  * ControlList Control.
  *
- * @constructor
  * @alias ol.control.ControlList
- * @type {ol.control.ControlList}
- * @extends {ol.control.ControlList}
- * @param {Object} options - ControlList control options
+ * @module ControlList
+ * 
  */
 class ControlList extends Control {
 
     /**
-     * See {@link ol.control.ControlList}
-     * @module ControlList
-     * @alias module:~controls/ControlList
-     * @param {*} options - options
-     * @example
-     * import ControlList from from "gpf-ext-ol/controls/ControlList"
-     * ou
-     * import { ControlList } from "gpf-ext-ol"
+     * @constructor
+     * @param {ControlListOptions} options - ControlList control options
      */
     constructor (options) {
         options = options || {};
@@ -79,7 +78,7 @@ class ControlList extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -144,7 +143,7 @@ class ControlList extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this._container;
@@ -204,7 +203,11 @@ class ControlList extends Control {
         /** {Boolean} specify if control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
-        // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
+        /**
+         * @private
+         * identifiant du contrôle : 
+         * utile pour suffixer les identifiants CSS 
+         * (pour gérer le cas où il y en a plusieurs dans la même page) */
         this._uid = this.options.id || SelectorID.generate();
     }
 
@@ -214,7 +217,7 @@ class ControlList extends Control {
 
     /**
      * initialize component container (DOM)
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -256,7 +259,7 @@ class ControlList extends Control {
      * this method is called by event 'click' on 'GPshowControlListPicto' picto
      * (cf. this._createShowControlListPictoElement),
      *
-     * @param { event } e évènement associé au clic
+     * @param { Event } e évènement associé au clic
      * @private
      */
     onShowControlListPanelClick (e) {

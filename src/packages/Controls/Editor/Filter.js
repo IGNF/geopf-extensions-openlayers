@@ -221,7 +221,7 @@ class Filter {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     getContainer () {
         return this.container;

@@ -4,6 +4,7 @@ import "../../CSS/Controls/Reporting/GPFreporting.css";
 // import OpenLayers
 import Control from "../Control";
 import Widget from "../Widget";
+import Map from "ol/Map";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Overlay from "ol/Overlay";
 
@@ -32,8 +33,7 @@ class InputActionByDefaut {
      * to set coordinates for a reporting action.
      * @constructor
      * @alias InputActionByDefaut
-     * @type {InputActionByDefaut}
-     * @param {ol.Map} [map] - Optional OpenLayers map instance.
+     * @param {Map} [map] - Optional OpenLayers map instance.
      * @description
      * The constructor initializes the action with an optional map instance.
      * If no map is provided, it defaults to null.
@@ -54,7 +54,7 @@ class InputActionByDefaut {
     /**
      * Set the map for this action
      * @api
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         logger.info("InputActionByDefaut map");
@@ -243,7 +243,6 @@ class FormActionByDefaut {
      * This class handles form submission and captures data from the form fields.
      * @constructor
      * @alias FormActionByDefaut
-     * @type {FormActionByDefaut}
      * @param {HTMLFormElement} form - The form element to be managed by this action.
      * @description
      * The constructor initializes the action with a form element.
@@ -283,7 +282,7 @@ class FormActionByDefaut {
     /**
      * Set the form for this action
      * @api
-     * @param {*} form DOM element - The form element to be set for this action.
+     * @param {HTMLElement} form DOM element - The form element to be set for this action.
      */
     setForm (form) {
         logger.info("FormActionByDefaut form");
@@ -370,8 +369,7 @@ class DrawingActionByDefaut {
      * This class handles drawing actions on the map, allowing users to create and manage drawings.
      * @constructor
      * @alias DrawingActionByDefaut
-     * @type {DrawingActionByDefaut}
-     * @param {ol.Map} [map] - Optional OpenLayers map instance.
+     * @param {Map} [map] - Optional OpenLayers map instance.
      * @description
      * The constructor initializes the action with an optional map instance.
      * If no map is provided, it defaults to null.
@@ -482,7 +480,7 @@ class DrawingActionByDefaut {
     /**
      * Set the map for this action
      * @api
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      * @description
      * This method sets the map instance for the Drawing action.
      * It initializes the Drawing instance if it is not already created.
@@ -496,7 +494,7 @@ class DrawingActionByDefaut {
     /**
      * Set the target DOM element for the Drawing action
      * @api
-     * @param {DOMElement} dom - The DOM element to set as the target for the Drawing action.
+     * @param {HTMLElement} dom - The DOM element to set as the target for the Drawing action.
      */
     setTarget (dom) {
         logger.info("DrawingActionByDefaut target");
@@ -639,28 +637,33 @@ class ServiceActionByDefaut {
 // ################################################################### //
 
 /**
+ * @typedef {Object} ReportingOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
+ * @property {Array<string>} [thematics] - Liste des thématiques proposées dans le formulaire.
+ * @property {string} [format="geojson"] - Format d’export des dessins (ex : "geojson", "kml").
+ * @property {string} [icon] - Icône utilisée pour le point de signalement (URL ou base64).
+ * @property {HTMLElement} [element] - Élément DOM à utiliser comme conteneur principal.
+ * @property {string} [target] - Sélecteur ou identifiant du conteneur cible.
+ * @property {Function} [render] - Fonction de rendu personnalisée.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ */
+
+/**
  * @classdesc
  *
  * Reporting control.
  * This control allows users to report issues or provide feedback on the map.
  *
- * @constructor
  * @alias ol.control.Reporting
- * @type {ol.control.Reporting}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- * @fires reporting:sending
- * @fires reporting:opened
- * @example
- * var reporting = new ol.control.Reporting();
- * map.addControl(reporting);
- */
+ * @module Reporting
+*/
 class Reporting extends Control {
-
+    
     /**
-     * See {@link ol.control.Reporting}
-     * @module Reporting
-     * @alias module:~controls/Reporting
+     * @constructor
      * @param {Object} [options] - options
      * @param {Boolean} [options.collapsed=true] - specify if control is collapsed (true) or not (false)
      * @param {Boolean} [options.draggable=false] - specify if control is draggable (true) or not (false)
@@ -668,17 +671,18 @@ class Reporting extends Control {
      * @param {Array} [options.thematics] - specify the list of thematics
      * @param {String} [options.format="geojson"] - specify the format for export (default: "geojson")
      * @param {String} [options.icon] - specify the icon for point entry (default: base64 encoded SVG)
-     * @param {DOMElement} [options.element] - specify the DOM element to append the control
+     * @param {HTMLElement} [options.element] - specify the DOM element to append the control
      * @param {String} [options.target] - specify the target element to append the control
      * @param {Function} [options.render] - specify the render function
      * @description
      * The Reporting control is a custom OpenLayers control that allows users to report issues or provide
      * feedback on the map. It provides a user interface for inputting details about the report, including
      * the location, description, and thematic category of the issue.
+     * @fires reporting:sending
+     * @fires reporting:opened
      * @example
-     * import Reporting from "gpf-ext-ol/controls/Reporting"
-     * ou
-     * import { Reporting } from "gpf-ext-ol"
+     * var reporting = new ol.control.Reporting();
+     * map.addControl(reporting);
      */
     constructor (options) {
         options = options || {};
@@ -713,7 +717,7 @@ class Reporting extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -766,7 +770,7 @@ class Reporting extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;
@@ -807,7 +811,7 @@ class Reporting extends Control {
     /**
      * Set the components for the Reporting control.
      * @private
-     * @param {ol.Map} map - The OpenLayers map instance to set for the components.
+     * @param {Map} map - The OpenLayers map instance to set for the components.
      * @description
      * This method initializes the IoC (Inversion of Control) components for the Reporting control.
      * It sets up the input, form, service, and drawing actions by creating instances of the respective classes.
@@ -903,23 +907,38 @@ class Reporting extends Control {
         /** {Boolean} specify if control add some stuff auto */
         this.auto = this.options.auto;
 
+        /** @private */
         this.buttonReportingShow = null;
 
+        /** @private */
         this.panelReportingContainer = null;
+        /** @private */
         this.panelReportingHeaderContainer = null; // usefull for the dragNdrop
+        /** @private */
         this.panelReportingFooterContainer = null;
+        /** @private */
         this.reportingBtnAnnulerFooter = null;
+        /** @private */
         this.reportingBtnSuivantFooter = null;
+        /** @private */
         this.buttonReportingClose = null;
+        /** @private */
         this.divReportingTitle = null;
+        /** @private */
         this.labelReportingIcon = null;
 
+        /** @private */
         this.buttonReportingSubmit = null;
+        /** @private */
         this.spanReportingError = null;
 
+        /** @private */
         this.inputReportingContainer = null;
+        /** @private */
         this.formReportingContainer = null;
+        /** @private */
         this.sendReportingContainer = null;
+        /** @private */
         this.drawingReportingContainer = null;
 
         this.step = 0;
@@ -978,7 +997,7 @@ class Reporting extends Control {
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     #initContainer () {
@@ -1045,7 +1064,7 @@ class Reporting extends Control {
     /**
      * Add events listener on map (called by setMap)
      *
-     * @param {*} map - map
+     * @param {Map} map - map
      * @private
      */
     _addEventsListeners (map) {

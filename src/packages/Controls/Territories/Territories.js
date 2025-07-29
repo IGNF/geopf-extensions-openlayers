@@ -4,6 +4,7 @@ import "../../CSS/Controls/Territories/GPFterritories.css";
 // import OpenLayers
 import Control from "../Control";
 import Widget from "../Widget";
+import Map from "ol/Map";
 import { 
     transformExtent as olTransformExtentProj,
     transform as olTransformProj
@@ -23,43 +24,54 @@ import TerritoriesDOM from "./TerritoriesDOM";
 var logger = Logger.getLogger("territories");
 
 /**
+ * @typedef {Object} TerritoriesOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {boolean} [panel=true] - Affiche un en-tête (header) dans le panneau.
+ * @property {boolean} [auto=false] - Charge automatiquement la liste par défaut des territoires.
+ * @property {boolean} [thumbnail=false] - Affiche une imagette pour chaque territoire.
+ * @property {boolean} [reduce=false] - Affiche les tuiles en mode réduit (nom uniquement).
+ * @property {number} [tiles=3] - Nombre de tuiles affichées (0 = toutes).
+ * @property {Array<Object>} [territories=[]] - Liste personnalisée des territoires à afficher.
+ * @property {Object} [upload] - Options pour l’import de configuration.
+ * @property {boolean} [upload.active=false] - Active le menu d’import de fichier.
+ * @property {string} [upload.title="Ajouter un fichier de configuration"] - Titre du menu d’import.
+ * @property {string} [upload.description=""] - Description du menu d’import.
+ * @property {string} [title="Sélectionner un territoire"] - Titre affiché dans le panneau.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ * @property {string|number} [id] - Identifiant unique du widget.
+ */
+
+/**
  * @classdesc
  *
  * Territories map widget
  *
- * @constructor
  * @alias ol.control.Territories
- * @type {ol.control.Territories}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *
- * @fires territories:change
- * @example
- * var territories = new ol.control.Territories({
- *   collapsed: true,
- *   panel: true,
- *   auto: true
- * });
- * map.addControl(territories);
- *
- * or/and
- *
- * var territories = new ol.control.Territories({});
- * territories.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
- * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
- * map.addControl(territories);
- */
+ * @module Territories
+*/
 class Territories extends Control {
-
+    
     /**
-     * See {@link ol.control.Territories}
-     * @module Territories
-     * @alias module:~controls/Territories
-     * @param {Object} [options] - options
+     * @constructor
+     * @param {TerritoriesOptions} options - options for function call.
+     *
+     * @fires territories:change
      * @example
-     * import Territories from "gpf-ext-ol/controls/Territories"
-     * ou
-     * import { Territories } from "gpf-ext-ol"
+     * var territories = new ol.control.Territories({
+     *   collapsed: true,
+     *   panel: true,
+     *   auto: true
+     * });
+     * map.addControl(territories);
+     *
+     * or/and
+     *
+     * var territories = new ol.control.Territories({});
+     * territories.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
+     * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
+     * map.addControl(territories);
      */
     constructor (options) {
         options = options || {};
@@ -94,7 +106,7 @@ class Territories extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -258,7 +270,7 @@ class Territories extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;
@@ -327,10 +339,15 @@ class Territories extends Control {
         /** {Boolean} specify if a list of object territories must be appended or replaced */
         this.append = false;
 
+        /** @private */
         this.buttonTerritoriesShow = null;
+        /** @private */
         this.panelTerritoriesContainer = null;
+        /** @private */
         this.panelTerritoriesHeaderContainer = null; // usefull for the dragNdrop
+        /** @private */
         this.buttonTerritoriesClose = null;
+        /** @private */
         this.containerTerritoriesOptions = null;
 
         this.panelTerritoriesEntriesContainer = null;
@@ -339,7 +356,7 @@ class Territories extends Control {
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     initContainer () {
@@ -411,7 +428,7 @@ class Territories extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      */
     onShowTerritoriesClick (e) {
         if (e.target.ariaPressed === "true") {
@@ -423,7 +440,7 @@ class Territories extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      */
     onCloseTerritoriesClick (e) {
         logger.trace(e);
@@ -431,7 +448,7 @@ class Territories extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      * @param {*} id - ...
      * @todo ...
      */
@@ -484,7 +501,7 @@ class Territories extends Control {
 
     /**
      * ...
-     * @param {*} e  - ...
+     * @param {Event} e - ...
      */
     onUploadFileClick (e) {
         var file = e.target.files[0];
@@ -558,7 +575,7 @@ class Territories extends Control {
 
     /**
      * ...
-     * @param {*} e  - ...
+     * @param {Event} e - ...
      */
     onUploadToggleClick (e) {
         // INFO
