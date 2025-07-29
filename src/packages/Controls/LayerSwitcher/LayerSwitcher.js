@@ -43,12 +43,11 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {boolean} [allowTooltips=false] - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {Array<Object>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
- * @property {Array<Object>} [layers] - Liste des couches à configurer à l’initialisation.
  */
 
 /**
- * @typedef {Object} LayerConfig
- * @property {ol.layer.Layer} layer - Objet couche OpenLayers à gérer.
+ * @typedef {Object} LayerSwitcherLayersConfig
+ * @property {Layer} layer - Objet couche OpenLayers à gérer.
  * @property {Object} [config] - Métadonnées associées à la couche.
  * @property {string} [config.title] - Titre de la couche.
  * @property {string} [config.description] - Description de la couche.
@@ -67,10 +66,7 @@ var logger = Logger.getLogger("layerswitcher");
 */
 class LayerSwitcher extends Control {
     
-    /**
-    * @constructor
-    * @param {Object} options - control options
-    * @param {Array} [options.layers] - list of layers to be configured. Each array element is an object, with following properties :
+    /*
     * @param {Layer} [options.layers.layer] - ol.layer.Layer layer to be configured (that has been added to map)
     * @param {Object} [options.layers.config] - custom configuration object for layer information (title, description, legends, metadata, quicklook url), with following properties :
     * @param {String} [options.layers.config.title] - layer alias, to be displayed in widget layer list. E.g. : "Cartes IGN"
@@ -80,7 +76,9 @@ class LayerSwitcher extends Control {
     *      - url (String, mandatory) : link to a legend
     *      - minScaleDenominator (Number, optional) : min scale denominator for legend validity.
     * @param {Array} [options.layers.config.metadata] - array of layer metadata. Each array element is an object, with property url (String, mandatory) : link to a metadata
-    * @param {Object} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
+    */
+
+    /*
     * @param {Number} [options.options.id] - Ability to add an identifier on the widget (advanced option)
     * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
     * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
@@ -92,6 +90,12 @@ class LayerSwitcher extends Control {
     * @param {String} [options.options.advancedTools.icon] - icon (optionnal)
     * @param {Function} [options.options.advancedTools.cb] - callback (optionnal)
     * @param {Object} [options.options.advancedTools.styles] - styles (optionnal)
+    */
+    /**
+    * @constructor
+    * @param {Object} options - control options
+    * @param {Array<LayerSwitcherLayersConfig>} [options.layers] - list of layers to be configured. Each array element is an object, with following properties :
+    * @param {LayerSwitcherOptions} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
     * @fires layerswitcher:add
     * @fires layerswitcher:remove
     * @fires layerswitcher:lock

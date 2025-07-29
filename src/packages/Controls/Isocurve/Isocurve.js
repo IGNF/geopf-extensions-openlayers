@@ -617,6 +617,46 @@ class Isocurve extends Control {
          * @private
          * listener key for event click on map */
         this.listenerKey = null;
+
+        /**
+         * event triggered when the compute is finished
+         *
+         * @event isocurve:compute
+         * @defaultValue "isocurve:compute"
+         * @group Events
+         * @typedef {Object}
+         * @property {Object} type - event
+         * @property {Object} target - instance Isocurve
+         * @example
+         * Isocurve.on("isocurve:compute", function (e) {
+         *   console.log(e.target.getData());
+         * })
+         */
+        this.COMPUTE_ISOCURVE_EVENT = "isocurve:comput";
+        /**
+         * event triggered when user clear points to compute isochrone
+         *
+         * @event isocurve:newresults
+         * @defaultValue "isocurve:newresults"
+         * @group Events
+         */
+        this.RESULTS_ISOCURVE_EVENT = "isocurve:newresults";
+        /**
+         * event triggered at the start of drawing input
+         *
+         * @event isocurve:drawstart
+         * @defaultValue "isocurve:drawstart"
+         * @group Events
+        */
+        this.DRAW_START_ISOCURVE_EVENT = "isocurve:drawstart";
+        /**
+         * event triggered at the end of drawing input
+         *
+         * @event isocurve:drawend
+         * @defaultValue "isocurve:drawend"
+         * @group Events
+         */
+        this.DRAW_END_ISOCURVE_EVENT = "isocurve:drawend";
     }
 
     /**
@@ -996,7 +1036,7 @@ class Isocurve extends Control {
                     "click",
                     () => {
                         self._formContainer.className = "gpf-panel__content fr-modal__content";
-                        self.dispatchEvent("isocurve:drawend");
+                        self.dispatchEvent(self.DRAW_END_ISOCURVE_EVENT);
                     }
                 );
             } else {
@@ -1008,10 +1048,8 @@ class Isocurve extends Control {
             }
             /**
             * event triggered at the start of drawing input
-            *
-            * @event isocurve:drawstart
             */
-            self.dispatchEvent("isocurve:drawstart");
+            self.dispatchEvent(self.DRAW_START_ISOCURVE_EVENT);
         };
         // click sur le label
         document.getElementById("GPlocationOriginLabel_1-" + this._uid).onclick = function () {
@@ -1024,17 +1062,15 @@ class Isocurve extends Control {
                     self._formContainer.className = "gpf-panel__content fr-modal__content";
                 }
             );
-            self.dispatchEvent("isocurve:drawend");
+            self.dispatchEvent(self.DRAW_END_ISOCURVE_EVENT);
         };
         // click sur la zone de saisie
         document.getElementById("GPlocationOrigin_1-" + this._uid).onclick = function () {
             self._clearGeojsonLayer();
             /**
             * event triggered at the end of drawing input
-            *
-            * @event isocurve:drawend
             */
-            self.dispatchEvent("isocurve:drawend");
+            self.dispatchEvent(self.DRAW_END_ISOCURVE_EVENT);
         };
         return this._originPoint._container;
     }
@@ -1301,10 +1337,8 @@ class Isocurve extends Control {
         this._clearGeojsonLayer();
         /**
         * event triggered when user clear points to compute isochrone
-        *
-        * @event route:newresults
         */
-        this.dispatchEvent("iso:newresults");
+        this.dispatchEvent(this.RESULTS_ISOCURVE_EVENT);
     }
 
     /**
@@ -1377,17 +1411,9 @@ class Isocurve extends Control {
 
         /**
          * event triggered when the compute is finished
-         *
-         * @event iso:compute
-         * @property {Object} type - event
-         * @property {Object} target - instance Iso
-         * @example
-         * Iso.on("iso:compute", function (e) {
-         *   console.log(e.target.getData());
-         * })
          */
         this.dispatchEvent({
-            type : "iso:compute"
+            type : this.COMPUTE_ISOCURVE_EVENT
         });
 
         // mise à jour du controle !
@@ -1500,18 +1526,9 @@ class Isocurve extends Control {
 
         /**
          * event triggered when the compute is finished
-         *
-         * @event isocurve:compute
-         * @typedef {Object}
-         * @property {Object} type - event
-         * @property {Object} target - instance Isocurve
-         * @example
-         * Isocurve.on("isocurve:compute", function (e) {
-         *   console.log(e.target.getData());
-         * })
          */
         this.dispatchEvent({
-            type : "isocurve:compute"
+            type : this.COMPUTE_ISOCURVE_EVENT
         });
 
         // 3. Zoom sur l'emprise de la geometry

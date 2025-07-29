@@ -5,6 +5,7 @@ import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 // import ol
 import Zoom from "ol/control/Zoom";
+import Map from "ol/Map";
 
 var logger = Logger.getLogger("zoom");
 

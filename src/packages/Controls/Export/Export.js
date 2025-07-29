@@ -275,6 +275,27 @@ class ButtonExport extends Control {
 
         this.initOptions(options);
         this.initContainer();
+
+        /**
+         * event triggered when the export is finished
+         *
+         * @event button:clicked
+         * @defaultValue "button:clicked"
+         * @group Events
+         * @typedef {Object}
+         * @property {Object} type - event
+         * @property {Object} target - instance Export
+         * @property {String} content - export data
+         * @property {String} name - name
+         * @property {String} description - description
+         * @property {String} format - format : kml, geojson, ...
+         * @property {Object} layer - layer
+         * @example
+         * Export.on("button:clicked", function (e) {
+         *   console.log(e.target);
+         * })
+         */
+        this.BUTTON_EXPORT_CLICKED_EVENT = "button:clicked";
     }
 
     // ################################################################### //
@@ -762,23 +783,9 @@ class ButtonExport extends Control {
 
         /**
          * event triggered when the export is finished
-         *
-         * @event button:clicked
-         * @typedef {Object}
-         * @property {Object} type - event
-         * @property {Object} target - instance Export
-         * @property {String} content - export data
-         * @property {String} name - name
-         * @property {String} description - description
-         * @property {String} format - format : kml, geojson, ...
-         * @property {Object} layer - layer
-         * @example
-         * Export.on("button:clicked", function (e) {
-         *   console.log(e.target);
-         * })
          */
         this.dispatchEvent({
-            type : "button:clicked",
+            type : this.BUTTON_EXPORT_CLICKED_EVENT,
             content : content,
             name : this.options.name,
             description : this.options.description,

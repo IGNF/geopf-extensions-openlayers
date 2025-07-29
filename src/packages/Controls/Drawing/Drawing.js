@@ -551,18 +551,9 @@ class Drawing extends Control {
                 this.getMap().addLayer(vlayer);
                 /**
                  * event triggered after an layer is added
-                 *
-                 * @event drawing:add:after
-                 * @property {Object} type - event
-                 * @property {Object} layer - layer
-                 * @property {Object} target - instance Drawing
-                 * @example
-                 * Drawing.on("drawing:add:after", function (e) {
-                 *   console.log(e.layer);
-                 * })
                  */
                 this.dispatchEvent({
-                    type : "drawing:add:after",
+                    type : this.ADD_AFTER_DRAWING_LAYER_EVENT,
                     layer : vlayer
                 });
             }
@@ -830,6 +821,36 @@ class Drawing extends Control {
                 apply : null
             };
         }
+        /**
+         * event triggered after an layer is added
+         *
+         * @event drawing:add:after
+         * @defaultValue "drawing:add:after"
+         * @group Events
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} target - instance Drawing
+         * @example
+         * Drawing.on("drawing:add:after", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.ADD_AFTER_DRAWING_LAYER_EVENT = "drawing:add:after";
+        /**
+         * event triggered before an layer is added
+         *
+         * @event drawing:add:before
+         * @defaultValue "drawing:add:before"
+         * @group Events
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} target - instance Drawing
+         * @example
+         * Drawing.on("drawing:add:before", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.ADD_BEFORE_DRAWING_LAYER_EVENT = "drawing:add:before";
     }
 
     /**
@@ -851,18 +872,9 @@ class Drawing extends Control {
 
         /**
          * event triggered before an layer is added
-         *
-         * @event drawing:add:before
-         * @property {Object} type - event
-         * @property {Object} layer - layer
-         * @property {Object} target - instance Drawing
-         * @example
-         * Drawing.on("drawing:add:before", function (e) {
-         *   console.log(e.layer);
-         * })
          */
         this.dispatchEvent({
-            type : "drawing:add:before",
+            type : this.ADD_BEFORE_DRAWING_LAYER_EVENT,
             layer : layer
         });
 

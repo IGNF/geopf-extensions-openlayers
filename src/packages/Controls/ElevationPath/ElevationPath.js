@@ -820,6 +820,43 @@ class ElevationPath extends Control {
         // gestion des styles du marker
         this.options.stylesOptions.marker = _styles.marker || {};
         this._createStylingMarker();
+        /**
+         * event triggered when the compute is finished
+         *
+         * @event elevationpath:compute
+         * @defaultValue "elevationpath:compute"
+         * @group Events
+         * @typedef {Object}
+         * @property {Object} type - event
+         * @property {Object} target - instance ElevationPath
+         * @example
+         * ElevationPath.on("elevationpath:compute", function (e) {
+         *   console.log(e.target.getData());
+         * })
+         */
+        this.COMPUTE_ELEVATION_EVENT = "elevationpath:compute";
+        /**
+         * event triggered at the start of drawing input
+         * 
+         * @event elevationpath:drawstart
+         * @defaultValue "elevationpath:drawstart"
+         * @group Events
+         * @typedef {Object}
+         * @property {Object} type - event
+         * @property {Object} target - instance ElevationPath
+         */
+        this.DRAW_START_ELEVATION_EVENT = "elevationpath:drawstart";
+        /**
+         * event triggered at the end of drawing input
+         * 
+         * @event elevationpath:drawend
+         * @defaultValue "elevationpath:drawend"
+         * @group Events
+         * @typedef {Object}
+         * @property {Object} type - event
+         * @property {Object} target - instance ElevationPath
+        */
+        this.DRAW_END_ELEVATION_EVENT = "elevationpath:drawend";
     }
 
     /**
@@ -1079,9 +1116,8 @@ class ElevationPath extends Control {
             }
             /**
             * event triggered at the start of drawing input
-            * @event elevationpath:drawstart
             */
-            this.dispatchEvent("elevationpath:drawstart");
+            this.dispatchEvent(this.DRAW_START_ELEVATION_EVENT);
         });
 
         // Event end
@@ -1089,9 +1125,8 @@ class ElevationPath extends Control {
             logger.trace("drawend", evt);
             /**
             * event triggered at the end of drawing input
-            * @event elevationpath:drawend
             */
-            this.dispatchEvent("elevationpath:drawend");
+            this.dispatchEvent(this.DRAW_END_ELEVATION_EVENT);
 
             // set feature
             this._lastSketch = this._currentSketch;
@@ -1528,19 +1563,8 @@ class ElevationPath extends Control {
 
         /**
          * event triggered when the compute is finished
-         *
-         * @event elevationpath:compute
-         * @typedef {Object}
-         * @property {Object} type - event
-         * @property {Object} target - instance ElevationPath
-         * @example
-         * ElevationPath.on("elevationpath:compute", function (e) {
-         *   console.log(e.target.getData());
-         * })
          */
-        this.dispatchEvent({
-            type : "elevationpath:compute"
-        });
+        this.dispatchEvent(this.COMPUTE_ELEVATION_EVENT);
     }
 
     /**

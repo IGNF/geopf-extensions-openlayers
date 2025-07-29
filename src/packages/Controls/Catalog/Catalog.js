@@ -156,7 +156,7 @@ class Catalog extends Control {
                  * event triggered when data is loaded
                  */
                 this.dispatchEvent({
-                    type : "catalog:loaded",
+                    type : this.LOADED_CATALOG_EVENT,
                     data : data
                 });
             })
@@ -274,7 +274,7 @@ class Catalog extends Control {
                 layer = this.addLayer(name, service);
             }
             this.dispatchEvent({
-                type : "catalog:layer:add",
+                type : this.ADD_CATALOG_LAYER_EVENT,
                 name : name,
                 service : service,
                 layer : layer
@@ -289,7 +289,7 @@ class Catalog extends Control {
                 layer = this.removeLayer(name, service);
             }
             this.dispatchEvent({
-                type : "catalog:layer:remove",
+                type : this.REMOVE_CATALOG_LAYER_EVENT,
                 name : name,
                 service : service,
                 layer : layer
