@@ -21,3 +21,17 @@
 div[id^=GPreverseGeocodingResultsList-] {
   width: inherit;
 }
+
+div[id^=GPreverseGeocodedLocationResultDiv_] {
+  display: flex;
+}
+
+.gpf-btn-icon-copy-result {
+  margin: auto;
+  box-shadow: none;
+}
+
+.gpf-btn-icon-copy-result::after {
+  -webkit-mask: url("img/dsfr/copy.svg") center no-repeat;
+  mask: url("img/dsfr/copy.svg") center no-repeat;
+}
