@@ -39,6 +39,69 @@ import checkDsfr from "../Utils/CheckDsfr";
 var logger = Logger.getLogger("searchengine");
 
 /**
+ * @typedef {Object} SearchEngineOptions
+ * @property {number} [id] - Identifiant du widget (option avancée)
+ * @property {string} [apiKey] - Clé API. "calcul" par défaut.
+ * @property {boolean} [ssl=true] - Utilisation du protocole https (true par défaut)
+ * @property {boolean} [collapsed=true] - Mode réduit (true par défaut)
+ * @property {boolean} [collapsible=true] - Contrôle pliable ou non (true par défaut)
+ * @property {string} [direction="start"] - Position du picto (loupe), "start" par défaut
+ * @property {string} [placeholder="Rechercher un lieu, une adresse"] - Placeholder de la barre de recherche
+ * @property {boolean} [displayMarker=true] - Afficher un marqueur sur le résultat (true par défaut)
+ * @property {string} [markerStyle="lightOrange"] - Style du marqueur ("lightOrange", "darkOrange", "red", "turquoiseBlue")
+ * @property {string} [markerUrl=""] - URL du marqueur (prioritaire sur markerStyle)
+ * @property {boolean} [splitResults=false] - Désactiver la recherche par couches (false par défaut)
+ * @property {boolean} [displayButtonAdvancedSearch=false] - Afficher le bouton de recherche avancée (false par défaut)
+ * @property {boolean} [displayButtonGeolocate=false] - Afficher le bouton de géolocalisation (false par défaut)
+ * @property {boolean} [displayButtonCoordinateSearch=false] - Afficher le bouton de recherche par coordonnées (false par défaut)
+ * @property {boolean} [coordinateSearchInAdvancedSearch=false] - Afficher la recherche par coordonnées dans la recherche avancée
+ * @property {boolean} [displayButtonClose=true] - Afficher le bouton de fermeture (true par défaut)
+ * @property {Object} [coordinateSearch] - Options de recherche par coordonnées
+ * @property {HTMLElement} [coordinateSearch.target=null] - Cible d'affichage des résultats
+ * @property {Array} [coordinateSearch.units] - Unités de coordonnées à afficher ("DEC", "DMS", "M", "KM")
+ *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal) for geographical coordinates,
+ *      and "M" or "KM" for metric coordinates
+ * @property {Array} [coordinateSearch.systems] - Systèmes de projection à afficher (objet avec crs, label, type)
+ * @property {Object} [advancedSearch] - Options de recherche avancée (voir geocodeOptions.filterOptions)
+ * @property {HTMLElement} [advancedSearch.target=null] - Cible d'affichage des résultats
+ * @property {Object} [resources] - Ressources utilisées par les services
+ * @property {string|string[]} [resources.geocode="location"] - Ressources de géocodage
+ * @property {string[]} [resources.autocomplete] - Ressources d'autocomplétion
+ * @property {boolean} [resources.search=false] - Activer le service de recherche (false par défaut)
+ * @property {Object} [searchOptions={}] - Options du service de recherche
+ * @property {boolean} [searchOptions.addToMap=true] - Ajouter la couche automatiquement à la carte
+ * @property {string[]} [searchOptions.filterServices] - Filtrer sur une liste de services ("WMTS,TMS" par défaut)
+ * @property {string[]} [searchOptions.filterWMTSPriority] - Filtrer sur les couches WMTS prioritaires
+ * @property {string[]} [searchOptions.filterProjections] - Filtrer sur une liste de projections
+ * @property {boolean} [searchOptions.filterLayersPriority=false] - Filtrer sur les couches prioritaires
+ * @property {boolean} [searchOptions.filterLayers=true] - Activer le filtrage automatique des couches
+ * @property {Object} [searchOptions.filterLayersList] - Liste des couches à filtrer {"layerName": "service"}
+ * @property {boolean} [searchOptions.filterTMS=true] - Garder les TMS avec style dans les métadonnées
+ * @property {Object} [searchOptions.serviceOptions] - Options du service de recherche
+ * @property {string} [searchOptions.serviceOptions.url] - URL du service
+ * @property {string} [searchOptions.serviceOptions.index="standard"] - Index de recherche
+ * @property {string[]} [searchOptions.serviceOptions.fields=["title","layer_name"]] - Champs de recherche
+ * @property {number} [searchOptions.serviceOptions.size=1000] - Nombre de réponses du service
+ * @property {number} [searchOptions.serviceOptions.maximumResponses=10] - Nombre de résultats à afficher
+ * @property {number} [searchOptions.maximumEntries] - Nombre maximum de résultats à afficher
+ * @property {Object} [geocodeOptions={}] - Options du service de géocodage (voir Gp.Services.geocode {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode}))
+ * @property {Object} [geocodeOptions.serviceOptions] - Options du service de géocodage
+ * @property {Object} [autocompleteOptions={}] - Options du service d'autocomplétion (voir Gp.Services.autoComplete {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})
+ * @property {Object} [autocompleteOptions.serviceOptions] - Options du service d'autocomplétion
+ * @property {boolean} [autocompleteOptions.triggerGeocode=false] - Déclencher une requête de géocodage si aucune suggestion
+ * @property {number} [autocompleteOptions.triggerDelay=1000] - Délai avant la requête de géocodage (ms)
+ * @property {number} [autocompleteOptions.maximumEntries] - Nombre maximum de résultats d'autocomplétion à afficher
+ * @property {boolean} [autocompleteOptions.prettifyResults=false] - Nettoyer/embellir les résultats d'autocomplétion
+ * @property {string|number|Function} [zoomTo] - Niveau de zoom à appliquer sur le résultat ("auto", niveau, ou fonction)
+ *       Value possible : auto or zoom level.
+ *       Possible to overload it with a function :
+ *       zoomTo : function (info) {
+ *           // do some stuff...
+ *           return zoom;
+ *       }
+ */
+
+/**
  * @classdesc
  * SearchEngine control
  *
@@ -49,70 +112,7 @@ class SearchEngine extends Control {
     
     /**
      * @constructor
-     * @param {Object}  options - control options
-     * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
-     * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
-     * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
-     * @param {Boolean} [options.collapsed = true] - collapse mode, true by default
-     * @param {Boolean} [options.collapsible = true] - force control to be collapsed or not, true by default.
-     * @param {String}  [options.direction = "start"] - TODO : position of picto, by default : "start"
-     * @param {String}  [options.placeholder] - Placeholder in search bar. Default is "Rechercher un lieu, une adresse".
-     * @param {Boolean} [options.displayMarker = true] - set a marker on search result, defaults to true.
-     * @param {String}  [options.markerStyle = "lightOrange"] - Marker style. Currently possible values are "lightOrange" (default value), "darkOrange", "red" and "turquoiseBlue".
-     * @param {String}  [options.markerUrl = ""] - Marker url. By default, if not specified, use option markerStyle. Otherwise, you can added a http url or a base64 image.
-     * @param {Boolean} [options.splitResults = true] - False to disable layers search
-     * @param {Boolean} [options.displayButtonAdvancedSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
-     * @param {Boolean} [options.displayButtonGeolocate = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
-     * @param {Boolean} [options.displayButtonCoordinateSearch = false] - False to disable advanced search tools (it will not be displayed). Default is false (not displayed)
-     * @param {Boolean} [options.coordinateSearchInAdvancedSearch = false] -True to display coord search in advanced search
-     * @param {Boolean} [options.displayButtonClose = true] - False to disable advanced search tools (it will not be displayed). Default is true (displayed)
-     * @param {Object}  [options.coordinateSearch] - coordinates search options.
-     * @param {HTMLElement} [options.coordinateSearch.target = null] - TODO : target location of results window. By default under the search bar.
-     * @param {Array}   [options.coordinateSearch.units] - list of coordinates units, to be displayed in control units list.
-     *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal) for geographical coordinates,
-     *      and "M" or "KM" for metric coordinates
-     * @param {Array}   [options.coordinateSearch.systems] - list of projection systems, default are Geographical ("EPSG:4326"), Web Mercator ("EPSG:3857") and Lambert 93 ("EPSG:2154").
-     *      Each array element (=system) is an object with following properties :
-     * @param {String}  [options.coordinateSearch.systems.crs] - Proj4 crs alias (from proj4 defs). e.g. : "EPSG:4326". Required
-     * @param {String}  [options.coordinateSearch.systems.label] - CRS label to be displayed in control. Default is crs code (e.g. "EPSG:4326")
-     * @param {String}  [options.coordinateSearch.systems.type] - CRS units type for coordinates conversion : "Geographical" or "Metric". Default: "Geographical"
-     * @param {Object}  [options.advancedSearch] - advanced search options for geocoding (filters). Properties can be found among geocode options.filterOptions (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
-     * @param {HTMLElement} [options.advancedSearch.target = null] - TODO : target location of results window. By default under the search bar.
-     * @param {Object}  [options.resources] - resources to be used by geocode and autocompletion services :
-     * @param {String}  [options.resources.geocode = "location"] - resources geocoding, by default : "location"
-     * @param {Array}   [options.resources.autocomplete] - resources autocompletion, by default : ["PositionOfInterest", "StreetAddress"]
-     * @param {Boolean} [options.resources.search = false] - false to disable search service, by default : "false"
-     * @param {Object}  [options.searchOptions = {}] - options of search service
-     * @param {Boolean} [options.searchOptions.addToMap = true] - add layer automatically to map, defaults to true.
-     * @param {String[]}  [options.searchOptions.filterServices] - filter on a list of search services, each field is separated by a comma. "WMTS,TMS" by default
-     * @param {String[]}  [options.searchOptions.filterWMTSPriority] - filter on priority WMTS layer in search, each field is separated by a comma. "PLAN.IGN,ORTHOIMAGERY.ORTHOPHOTOS" by default
-     * @param {String[]}  [options.searchOptions.filterProjections] - filter on a list of projections : the searchEngine ignore the suggestions with one of the projections listed. Each field is separated by a comma.
-     * @param {Boolean}  [options.searchOptions.filterLayersPriority = false] - filter on priority layers in search, false by default
-     * @param {Boolean}  [options.searchOptions.filterLayers] - false to disable the automatic filter from Config or from the filterLayerList parameter. True by Default.
-     * @param {Object}  [options.searchOptions.filterLayersList] - filter on list of search layers list with a struture {"layerName" : "service"}. By Default, the layers available in Config.configuration.layers.
-     * @param {Boolean}  [options.searchOptions.filterTMS] - filter the results to keep TMS with at least a style (.json) into the metadata. True by Default.
-     * @param {Object}  [options.searchOptions.serviceOptions] - options of search service
-     * @param {String}   [options.searchOptions.serviceOptions.url] - url of service
-     * @param {String}  [options.searchOptions.serviceOptions.index] - index of search, "standard" by default
-     * @param {String[]}  [options.searchOptions.serviceOptions.fields] - list of search fields, each field is separated by a comma. "title,layer_name" by default
-     * @param {Number}  [options.searchOptions.serviceOptions.size] - number of response in the service. 1000 by default
-     * @param {Number}  [options.searchOptions.serviceOptions.maximumResponses] - number of results in the response. 10 by default
-     * @param {Number}  [options.searchOptions.maximumEntries] - maximum search results we want to display.
-     * @param {Object}  [options.geocodeOptions = {}] - options of geocode service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~geocode Gp.Services.geocode})
-     * @param {Object}  [options.geocodeOptions.serviceOptions] - options of geocode service
-     * @param {Object}  [options.autocompleteOptions = {}] - options of autocomplete service (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete})
-     * @param {Object}  [options.autocompleteOptions.serviceOptions] - options of autocomplete service
-     * @param {Boolean} [options.autocompleteOptions.triggerGeocode = false] - trigger a geocoding request if the autocompletion does not return any suggestions, false by default
-     * @param {Number}  [options.autocompleteOptions.triggerDelay = 1000] - waiting time before sending the geocoding request, 1000ms by default
-     * @param {Number}  [options.autocompleteOptions.maximumEntries] - maximum autocompletion results we want to display
-     * @param {Boolean} [options.autocompleteOptions.prettifyResults = false] - apply a filter/prettifier function to clean or prettify autocomplete entries
-     * @param {Sting|Numeric|Function} [options.zoomTo] - zoom to results, by default, current zoom.
-     *       Value possible : auto or zoom level.
-     *       Possible to overload it with a function :
-     *       zoomTo : function (info) {
-     *           // do some stuff...
-     *           return zoom;
-     *       }
+     * @param {SearchEngineOptions}  options - control options
      * @fires searchengine:autocomplete:click
      * @fires searchengine:geocode:click
      * @fires searchengine:search:click
