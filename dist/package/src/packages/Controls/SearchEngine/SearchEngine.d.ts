@@ -336,8 +336,8 @@ declare class SearchEngine {
     private _initContainer;
     _containerSystems: any;
     _containerUnits: any;
-    _containerCoordinateLng: any;
     _containerCoordinateLat: any;
+    _containerCoordinateLng: any;
     /**
      * this method is called by :
      * - this._initContainer() : ...
