@@ -301,7 +301,7 @@ var IsoDOM = {
 
         var divOrigin = document.createElement("div");
         divOrigin.id = this._addUID("GPisoResultsValueOrigin");
-        divOrigin.innerHTML = parseFloat(origin.x).toFixed(4) + ", " + parseFloat(origin.y).toFixed(4);
+        divOrigin.innerHTML = parseFloat(origin.y).toFixed(4) + ", " + parseFloat(origin.x).toFixed(4);
         containerOrigin.appendChild(divOrigin);
 
         isoResultsValueDiv.appendChild(containerOrigin);

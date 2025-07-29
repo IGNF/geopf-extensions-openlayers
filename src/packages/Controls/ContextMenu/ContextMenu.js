@@ -443,7 +443,7 @@ class ContextMenu extends Control {
         this.buttonPointInfoShow.click();
         this.buttonPointInfoShow.setAttribute("aria-pressed", true);
         var coordinate = document.createElement("div");
-        coordinate.innerHTML = clickedCoordinate[0].toFixed(6) + ", " + clickedCoordinate[1].toFixed(6);
+        coordinate.innerHTML = clickedCoordinate[1].toFixed(6) + ", " + clickedCoordinate[0].toFixed(6);
         var address = document.createElement("div");
         var parcel = document.createElement("div");
         var altitude = document.createElement("div");
@@ -462,7 +462,7 @@ class ContextMenu extends Control {
             },
             onFailure : function (error) {},
             // spécifique au service
-            positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
+            positions : [{lon : clickedCoordinate[1], lat : clickedCoordinate[0]}],
             outputFormat : "json" // json|xml
         };
         Gp.Services.getAltitude(altiOptions);
@@ -475,8 +475,8 @@ class ContextMenu extends Control {
             },
             onFailure : function (error) {},
             // spécifique au service
-            position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
-            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
+            position : {lon : clickedCoordinate[1], lat : clickedCoordinate[0]},
+            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[1], clickedCoordinate[0]], radius : 100 },
             index : "CadastralParcel",
             maximumResponses : 1
         };
