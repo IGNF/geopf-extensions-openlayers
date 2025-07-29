@@ -24,6 +24,17 @@ var logger = Logger.getLogger("reporting");
 // ########################## IoC actions ############################ //
 // ################################################################### //
 
+/**
+ * @typedef {InputActionByDefaut} IocInput
+ * @property {function(Map):void} setMap - Définit la carte.
+ * @property {function(string):void} setIcon - Définit l'icône.
+ * @property {function():Object} getData - Retourne les données.
+ * @property {function():void} clear - Réinitialise l'action.
+ * @property {function():void} active - Active l'action.
+ * @property {function():void} disable - Désactive l'action.
+ * @description Instance d'action d'entrée pour le contrôle Reporting (IoC).
+ */
+
 class InputActionByDefaut {
 
     /**
@@ -235,6 +246,15 @@ class InputActionByDefaut {
 
 }
 
+/**
+ * @typedef {FormActionByDefaut} IocForm
+ * @property {function(HTMLElement):void} setForm - Définit le formulaire.
+ * @property {function():Object} getData - Retourne les données du formulaire.
+ * @property {function():void} clear - Réinitialise le formulaire.
+ * @property {function():void} active - Active l'action.
+ * @property {function():void} disable - Désactive l'action.
+ * @description Instance d'action de formulaire pour le contrôle Reporting (IoC).
+ */
 class FormActionByDefaut {
 
     /**
@@ -361,6 +381,17 @@ class FormActionByDefaut {
 
 }
 
+/**
+ * @typedef {DrawingActionByDefaut} IocDrawing
+ * @property {function(Map):void} setMap - Définit la carte.
+ * @property {function(HTMLElement):void} setTarget - Définit le conteneur DOM.
+ * @property {function(String):void} setFormat - Définit le format d'export.
+ * @property {function():Object} getData - Retourne les données du dessin.
+ * @property {function():void} clear - Réinitialise le dessin.
+ * @property {function():void} active - Active l'action.
+ * @property {function():void} disable - Désactive l'action.
+ * @description Instance d'action de dessin pour le contrôle Reporting (IoC).
+ */
 class DrawingActionByDefaut {
 
     /**
@@ -570,6 +601,14 @@ class DrawingActionByDefaut {
 
 }
 
+/**
+ * @typedef {ServiceActionByDefaut} IocService
+ * @property {function(Object):Promise} send - Envoie les données au service.
+ * @property {function():void} clear - Réinitialise l'action.
+ * @property {function():void} active - Active l'action.
+ * @property {function():void} disable - Désactive l'action.
+ * @description Instance d'action de service pour le contrôle Reporting (IoC).
+ */
 class ServiceActionByDefaut {
 
     constructor () {
@@ -846,6 +885,10 @@ class Reporting extends Control {
         this.stepContainer[3].action = this.iocDrawing;
     }
 
+    /**
+     * Add ioc
+     * @param {IocInput} input - instance
+     */
     setComponentInput (input) {
         // TODO
         // verifier si l'input est une instance de InputActionByDefaut
@@ -853,14 +896,26 @@ class Reporting extends Control {
         this.iocInput = input;
     }
 
+    /**
+     * Add ioc
+     * @param {IocForm} form - instance
+     */
     setComponentForm (form) {
         this.iocForm = form;
     }
 
+    /**
+     * Add ioc
+     * @param {IocService} service - instance
+     */
     setComponentService (service) {
         this.iocService = service;
     }
 
+    /**
+     * Add ioc
+     * @param {IocDrawing} drawing - instance
+     */
     setComponentDrawing (drawing) {
         this.iocDrawing = drawing;
     }
@@ -982,9 +1037,13 @@ class Reporting extends Control {
         ];
 
         // will be set by the IoC
+        /** @type {IocInput} */
         this.iocInput = null;
+        /** @type {IocForm} */
         this.iocForm = null;
+        /** @type {IocService} */
         this.iocService = null;
+        /** @type {IocDrawing} */
         this.iocDrawing = null;
 
         /** {Object} raw data */
@@ -992,6 +1051,31 @@ class Reporting extends Control {
 
         /** {Array} specify some events listener */
         this.eventsListeners = [];
+
+        /**
+         * event triggered when the reporting panel is opened
+         * @event reporting:opened
+         * @defaultValue "reporting:opened"
+         * @group Events
+         * @description
+         * This event is dispatched when the reporting panel is opened.
+         * It indicates that the reporting process has started and the user can begin inputting data.
+         * This event can be used to perform additional actions when the reporting panel is opened,
+         * such as initializing the input fields or updating the UI to reflect the reporting state.
+         */
+        this.OPENED_REPORTING_EVENT = "reporting:opened";
+        /**
+         * event triggered at the end of the reporting process
+         * @event reporting:sending
+         * @defaultValue "reporting:sending"
+         * @group Events
+         * @description
+         * This event is dispatched when the reporting data is successfully sent.
+         * It contains the reporting data that was sent.
+         * This event can be used to perform additional actions after the reporting data is sent,
+         * such as updating the UI or notifying other components.
+         */
+        this.SEND_REPORTING_EVENT = "reporting:sending";
     }
 
     /**
@@ -1237,6 +1321,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Show Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onShowReportingClick (e) {
         logger.trace("onShowReportingClick", e);
@@ -1254,20 +1339,15 @@ class Reporting extends Control {
             this.setStep(0);
             /**
              * event triggered when the reporting panel is opened
-             * @event reporting:opened
-             * @description
-             * This event is dispatched when the reporting panel is opened.
-             * It indicates that the reporting process has started and the user can begin inputting data.
-             * This event can be used to perform additional actions when the reporting panel is opened,
-             * such as initializing the input fields or updating the UI to reflect the reporting state.
              */
-            this.dispatchEvent("reporting:opened");
+            this.dispatchEvent(this.OPENED_REPORTING_EVENT);
         }
     }
 
     /**
      * Handle the click event on the "Previous Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onPrevReportingClick (e) {
         logger.trace("onPrevReportingClick", e);
@@ -1277,6 +1357,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Next Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onNextReportingClick (e) {
         logger.trace("onNextReportingClick", e);
@@ -1286,6 +1367,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Close Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onCloseReportingClick (e) {
         logger.trace("onCloseReportingClick", e);
@@ -1295,6 +1377,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Cancel Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onCancelReportingClick (e) {
         logger.trace("onCancelReportingClick", e);
@@ -1308,6 +1391,7 @@ class Reporting extends Control {
     /**
      * Handle the form submission event for the reporting form.
      * @param {*} e - The form submission event object.
+     * @private
      */
     onReportingFormSubmit (e) {
         logger.trace("onReportingFormSubmit", e);
@@ -1316,6 +1400,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Show Form Drawing Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onShowFormDrawingReportingClick (e) {
         logger.trace("onShowFormDrawingReportingClick", e);
@@ -1325,6 +1410,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Show Form Input Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onEntryFormNameReportingChange (e) {
         logger.trace("onEntryFormNameReportingChange", e);
@@ -1333,6 +1419,7 @@ class Reporting extends Control {
     /**
      * Handle the change event on the "Form Theme Reporting" select element.
      * @param {*} e - The change event object.
+     * @private
      */
     onSelectFormThemeReportingChange (e) {
         logger.trace("onSelectFormThemeReportingChange", e);
@@ -1341,6 +1428,7 @@ class Reporting extends Control {
     /**
      * Handle the change event on the "Form Description Reporting" textarea element.
      * @param {*} e - The change event object.
+     * @private
      */
     onEntryFormDescReportingChange (e) {
         logger.trace("onEntryFormDescReportingChange", e);
@@ -1352,6 +1440,7 @@ class Reporting extends Control {
     /**
      * Handle the change event on the "Send Mail Reporting" input element.
      * @param {*} e - The change event object.
+     * @private
      */
     onEntrySendMailReportingChange (e) {
         logger.trace("onEntrySendMailReportingChange", e);
@@ -1368,6 +1457,7 @@ class Reporting extends Control {
      * and sends the reporting data to the server or processes it as needed.
      * If the sending is successful, it clears the data and resets the step to the first step.
      * If there is an error during the sending process, it displays an error message for a limited time.
+     * @private
      */
     onShowSendReportingClick (e) {
         logger.trace("onShowSendReportingClick", e);
@@ -1412,15 +1502,9 @@ class Reporting extends Control {
             .then(() => {
                 /**
                  * event triggered at the end of the reporting process
-                 * @event reporting:sending
-                 * @description
-                 * This event is dispatched when the reporting data is successfully sent.
-                 * It contains the reporting data that was sent.
-                 * This event can be used to perform additional actions after the reporting data is sent,
-                 * such as updating the UI or notifying other components.
                  */
                 this.dispatchEvent({
-                    type : "reporting:sending",
+                    type : this.SEND_REPORTING_EVENT,
                     data : this.data
                 });
             })
