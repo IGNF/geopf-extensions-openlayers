@@ -1,5 +1,6 @@
 // import openlayers
 import olGeoJSON from "ol/format/GeoJSON";
+import Feature from "ol/Feature";
 // import local
 import Styling from "./Styling";
 
@@ -13,25 +14,16 @@ import Styling from "./Styling";
  * cf. https://geojson.org/
  *
  *
- * @constructor
  * @alias ol.format.GeoJSONExtended
- * @extends {ol.format.GeoJSON}
- * @type {ol.format.GeoJSONExtended}
- * @param {Object} options - Options
- * @param {Object} [options.defaultStyle] - Styles by default
- * @param {Object} [options.extensions] - Add properties to file root
- */
+ * @module GeoJSONExtended
+*/
 class GeoJSON extends olGeoJSON {
-
+    
     /**
-     * See {@link ol.format.GeoJSONExtended}
-     * @module GeoJSONExtended
-     * @alias module:~formats/GeoJSONExtended
-     * @param {*} options - options
-     * @example
-     * import GeoJSONExtended from "gpf-ext-ol/formats/GeoJSONExtended"
-     * ou 
-     * import { GeoJSONExtended } from "gpf-ext-ol"
+     * @constructor
+     * @param {Object} options - Options
+     * @param {Object} [options.defaultStyle] - Styles by default
+     * @param {Object} [options.extensions] - Add properties to file root
      */
     constructor (options) {
         super(options);
@@ -57,10 +49,10 @@ class GeoJSON extends olGeoJSON {
      * Read Extend Styles for Features.
      * This function overloads ol.format.GeoJSON.readFeatures ...
      *
-     * @see ol.format.GeoJSON.prototype.readFeatures
+     * @see olGeoJSON#readFeatures
      * @param {Object|String} source - Source.
-     * @param {olx.format.ReadOptions} [options] - Options.
-     * @returns {Array.<ol.Feature>} Features.
+     * @param {Object} [options] - Options. see olx.format.ReadOptions
+     * @returns {Feature[]} Features.
      */
     readFeatures (source, options) {
         var features = super.readFeatures(source, options);
@@ -108,8 +100,8 @@ class GeoJSON extends olGeoJSON {
      * Write Extend Styles for Features.
      * This function overloads ol.format.GeoJSON.writeFeatures ...
      *
-     * @see ol.format.GeoJSON.prototype.writeFeatures
-     * @param {Array.<ol.Feature>} features - Features.
+     * @see olGeoJSON#writeFeatures
+     * @param {Feature[]} features - Features.
      * @param {Object} [options] - Options.
      *
      * @returns {String} Result.

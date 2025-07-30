@@ -5,6 +5,7 @@ import "../../CSS/Controls/ReverseGeocoding/GPFreverseGeocoding.css";
 // import Control from "ol/control/Control";
 import Widget from "../Widget";
 import Control from "../Control";
+import Map from "ol/Map";
 import Overlay from "ol/Overlay";
 import Collection from "ol/Collection";
 import Feature from "ol/Feature";
@@ -50,44 +51,35 @@ var logger = Logger.getLogger("reversegeocoding");
  *
  * ReverseGeocode Control.
  *
- * @constructor
  * @alias ol.control.ReverseGeocode
- * @type {ol.control.ReverseGeocode}
- * @extends {ol.control.Control}
- * @param {Object} options - ReverseGeocode control options
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {String}  [options.apiKey] - API key for services call (reverse geocode service). The key "calcul" is used by default.
- * @param {String}  [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
- * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
- * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Object}  [options.resources =  ["StreetAddress", "PositionOfInterest", "CadastralParcel"]] - resources for geocoding, by default : ["StreetAddress", "PositionOfInterest", "CadastralParcel"]. Possible values are : "StreetAddress", "PositionOfInterest", "CadastralParcel". Resources will be displayed in the same order in widget list.
- * @param {Object}  [options.delimitations = ["Point", "Circle", "Extent"]] - delimitations for reverse geocoding, by default : ["Point", "Circle", "Extent"]. Possible values are : "Point", "Circle", "Extent". Delimitations will be displayed in the same order in widget list.
- * @param {Object}  [options.reverseGeocodeOptions = {}] - reverse geocode service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~reverseGeocode Gp.Services.reverseGeocode()} to know all reverse geocode options.
- * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
- * @param {String} [options.layerDescription.title = "Saisie (recherche inverse)"] - Layer title to be displayed in LayerSwitcher
- * @param {String} [options.layerDescription.description = "Couche de saisie d'une zone de recherche pour la recherche inverse"] - Layer description to be displayed in LayerSwitcher
- * @fires reversegeocode:compute
- * @fires reversegeocode:onclickresult
- * @example
- *  var iso = ol.control.ReverseGeocode({
- *      "collapsed" : false,
- *      "draggable" : true,
- *      "resources" : ["StreetAddress", "PositionOfInterest"],
- *      "delimitations" : ["Point", "Circle"],
- *      "reverseGeocodeOptions" : {}
- *  });
- */
+ * @module ReverseGeocode
+*/
 class ReverseGeocode extends Control {
-
+    
     /**
-     * See {@link ol.control.ReverseGeocode}
-     * @module ReverseGeocode
-     * @alias module:~controls/ReverseGeocode
-     * @param {*} options - options
+     * @constructor
+     * @param {Object} options - ReverseGeocode control options
+     * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+     * @param {String}  [options.apiKey] - API key for services call (reverse geocode service). The key "calcul" is used by default.
+     * @param {String}  [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+     * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
+     * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
+     * @param {Object}  [options.resources =  ["StreetAddress", "PositionOfInterest", "CadastralParcel"]] - resources for geocoding, by default : ["StreetAddress", "PositionOfInterest", "CadastralParcel"]. Possible values are : "StreetAddress", "PositionOfInterest", "CadastralParcel". Resources will be displayed in the same order in widget list.
+     * @param {Object}  [options.delimitations = ["Point", "Circle", "Extent"]] - delimitations for reverse geocoding, by default : ["Point", "Circle", "Extent"]. Possible values are : "Point", "Circle", "Extent". Delimitations will be displayed in the same order in widget list.
+     * @param {Object}  [options.reverseGeocodeOptions = {}] - reverse geocode service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~reverseGeocode Gp.Services.reverseGeocode()} to know all reverse geocode options.
+     * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
+     * @param {String} [options.layerDescription.title = "Saisie (recherche inverse)"] - Layer title to be displayed in LayerSwitcher
+     * @param {String} [options.layerDescription.description = "Couche de saisie d'une zone de recherche pour la recherche inverse"] - Layer description to be displayed in LayerSwitcher
+     * @fires reversegeocode:compute
+     * @fires reversegeocode:onclickresult
      * @example
-     * import ReverseGeocode from "gpf-ext-ol/controls/ReverseGeocode"
-     * ou
-     * import { ReverseGeocode } from "gpf-ext-ol"
+     *  var iso = ol.control.ReverseGeocode({
+     *      "collapsed" : false,
+     *      "draggable" : true,
+     *      "resources" : ["StreetAddress", "PositionOfInterest"],
+     *      "delimitations" : ["Point", "Circle"],
+     *      "reverseGeocodeOptions" : {}
+     *  });
      */
     constructor (options) {
         options = options || {};
@@ -152,7 +144,7 @@ class ReverseGeocode extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -217,7 +209,7 @@ class ReverseGeocode extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;
@@ -268,10 +260,12 @@ class ReverseGeocode extends Control {
         // ################### informations sur les droits #################### //
 
         // Type de géocodage sélectionné (StreetAddress, PositionOfInterest, ...)
+        /** @private */
         this._currentGeocodingType = null;
         this._initGeocodingType();
 
         // Type de délimitation à utiliser pour la requête + pour sélection sur la containerDistance
+        /** @private */
         this._currentGeocodingDelimitation = null;
         this._initGeocodingDelimitation();
 
@@ -279,68 +273,97 @@ class ReverseGeocode extends Control {
         // ################### Elements principaux du DOM ################### //
 
         // containers principaux
+        /** @private */
         this._showReverseGeocodingButton = null;
         // panel
+        /** @private */
         this._panelContainer = null;
+        /** @private */
         this._panelHeaderContainer = null;
+        /** @private */
         this._panelTitleContainer = null;
+        /** @private */
         this._returnPictoContainer = null;
+        /** @private */
         this._panelCloseButton = null;
         // form
+        /** @private */
         this._formContainer = null;
         // results
+        /** @private */
         this._resultsContainer = null;
+        /** @private */
         this._resultsListContainer = null;
         // waiting
+        /** @private */
         this._waitingContainer = null;
 
         // ###################################################################### //
         // ################### informations des points saisis ################### //
 
         // collection des points saisis sur la carte
+        /** @private */
         this._inputFeatures = null;
         // source contenant les features ci-dessus
+        /** @private */
         this._inputFeaturesSource = null;
         // couche vectorielle dans laquelle seront saisis les points (features ci-dessus)
+        /** @private */
         this._inputFeaturesLayer = null;
         // interaction avec la carte (de type "Point", "Circle" ou "Polygon")
+        /** @private */
         this._mapInteraction = null;
 
         // #################################################################### //
         // ################### informations pour la requête ################### //
 
         // options pour la requête de géocodage inverse
+        /** @private */
         this._requestOptions = null;
         // geometrie de recherche du géocodage inverse qui sera envoyée dans la requête
+        /** @private */
         this._requestGeom = null;
+        /** @private */
         this._requestPosition = null;
         // pour savoir si un calcul est en cours ou non
+        /** @private */
         this._waiting = false;
         // timer pour cacher la patience après un certain temps
+        /** @private */
         this._timer = null;
 
         // #################################################################### //
         // #################### informations des résultats #################### //
 
+        /** @private */
         this._reverseGeocodingLocations = [];
+        /** @private */
         this._reverseGeocodingLocationsMarkers = [];
+        
+        /** @type {Style} */
         this._resultsDefaultStyle = new Style({
             image : new Icon({
                 src : Markers["lightOrange"],
                 anchor : [0.5, 1]
             })
         });
+        /** @type {Style} */
         this._resultsSelectedStyle = new Style({
             image : new Icon({
                 src : Markers["red"],
                 anchor : [0.5, 1]
             })
         });
+        /** @private */
         this._resultsHoverInteraction = null;
+        /** @private */
         this._resultsSelectInteraction = null;
         // container de la popup (affichage des infos au clic sur les markers)
+        /** @private */
         this._popupContent = null;
+        /** @private */
         this._popupDiv = this._initPopupDiv();
+        /** @private */
         this._popupOverlay = null;
     }
 
@@ -496,7 +519,7 @@ class ReverseGeocode extends Control {
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -565,7 +588,7 @@ class ReverseGeocode extends Control {
      * or by this.onShowReverseGeocodingClick,
      * and calls method corresponding to current delimitation, if widget is not collapsed.
      *
-     * @param {ol.Map} map - control map.
+     * @param {Map} map - control map.
      * @private
      */
     _activateMapInteraction (map) {
@@ -645,7 +668,7 @@ class ReverseGeocode extends Control {
      * this method is called by this._activateMapInteraction,
      * and creates map point drawing interaction.
      *
-     * @param {ol.Map} map - control map.
+     * @param {Map} map - control map.
      * @private
      */
     _activatePointInteraction (map) {
@@ -702,7 +725,7 @@ class ReverseGeocode extends Control {
      * this method is called by this._activateMapInteraction,
      * and creates map circle drawing interaction.
      *
-     * @param {ol.Map} map - control map.
+     * @param {Map} map - control map.
      * @private
      */
     _activateCircleInteraction (map) {
@@ -782,7 +805,7 @@ class ReverseGeocode extends Control {
      * this method is called by this._activateMapInteraction,
      * and creates map box drawing interaction.
      *
-     * @param {ol.Map} map - control map.
+     * @param {Map} map - control map.
      * @private
      */
     _activateBoxInteraction (map) {
@@ -859,7 +882,7 @@ class ReverseGeocode extends Control {
     /**
      * remove draw interaction from map (if exists)
      *
-     * @param {ol.Map} map - control map.
+     * @param {Map} map - control map.
      * @private
      */
     _removeMapInteraction (map) {

@@ -56,9 +56,9 @@ declare class Group {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * this method is called by event '' on '' tag form
      *

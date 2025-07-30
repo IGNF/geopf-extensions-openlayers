@@ -62,7 +62,7 @@ declare class Filter {
      * Add element into target DOM
      * @returns {Object} - Legend instance
      */
-    add(): Object;
+    add(): any;
     /**
      * Set display container or get
      *
@@ -73,9 +73,9 @@ declare class Filter {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * this method is called by event '' on '' tag form...
      *

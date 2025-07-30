@@ -3,28 +3,19 @@ export default GeoportalOverviewMap;
  * @classdesc
  * OpenLayers Control to manage overviewMap
  *
- * @constructor
- * @extends {ol.control.OverviewMap}
  * @alias ol.control.GeoportalOverviewMap
- * @type {ol.control.GeoportalOverviewMap}
- * @param {Object} options - ol.control.OverviewMap options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html ol.Control.OverviewMap})
- * @fires overviewmap:toggle
- * @example
- * var overviewmap = new ol.control.GeoportalOverviewMap({
- *   position: "top-left"
- * });
- * map.addControl(overviewmap);
- */
-declare class GeoportalOverviewMap {
+ * @module GeoportalOverviewMap
+*/
+declare class GeoportalOverviewMap extends OverviewMap {
     /**
-     * See {@link ol.control.GeoportalOverviewMap}
-     * @module GeoportalOverviewMap
-     * @alias module:~controls/GeoportalOverviewMap
-     * @param {*} options - options
+     * @constructor
+     * @param {Object} options - ol.control.OverviewMap options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html ol.Control.OverviewMap})
+     * @fires overviewmap:toggle
      * @example
-     * import GeoportalOverviewMap from "gpf-ext-ol/controls/GeoportalOverviewMap"
-     * ou
-     * import { GeoportalOverviewMap } from "gpf-ext-ol"
+     * var overviewmap = new ol.control.GeoportalOverviewMap({
+     *   position: "top-left"
+     * });
+     * map.addControl(overviewmap);
      */
     constructor(options: any);
     /**
@@ -32,22 +23,29 @@ declare class GeoportalOverviewMap {
      * @private
      */
     private CLASSNAME;
-    container: any;
+    container: HTMLElement | null;
     options: any;
-    _createContainerPosition(map: any): void;
-    _initContainer(): void;
+    /**
+     * ...
+     * @param {Map} map - ...
+     */
+    _createContainerPosition(map: Map): void;
+    /** @private */
+    private _initContainer;
     _uid: any;
     /**
      * Overload setMap function
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
 }
+import OverviewMap from "ol/control/OverviewMap";
+import Map from "ol/Map";
 //# sourceMappingURL=GeoportalOverviewMap.d.ts.map

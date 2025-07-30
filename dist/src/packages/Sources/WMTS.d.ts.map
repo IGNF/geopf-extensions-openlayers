@@ -1,1 +1,1 @@
-{"version":3,"file":"WMTS.d.ts","sourceRoot":"","sources":["../../../../src/packages/Sources/WMTS.js"],"names":[],"mappings":";AAaA;;;;;;;;;;GAUG;AACH;IAEI,0BAOC;IAED;;;;;;;;;;OAUG;IACH,8BAPW,EAAE,CAAC,UAAU,kCAEb,EAAE,CAAC,IAAI,CAAC,UAAU,UACjB,MAAM,GAEL,SAAO,SAAS,CAiF5B;CAEJ"}
+{"version":3,"file":"WMTS.d.ts","sourceRoot":"","sources":["../../../../src/packages/Sources/WMTS.js"],"names":[],"mappings":";AAaA;;;;;;;;;;GAUG;AACH;IAEI,0BAOC;IAED;;;;;;;;;;OAUG;IACH,8BAPW,EAAE,CAAC,UAAU,kCAEb,EAAE,CAAC,IAAI,CAAC,UAAU,UAClB,GAAO,GAEL,SAAO,SAAS,CAiF5B;CAEJ"}

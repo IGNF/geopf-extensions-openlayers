@@ -15,7 +15,7 @@ var IsoDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -32,7 +32,7 @@ var IsoDOM = {
      * Show iso control
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowIsoPictoElement : function () {
         // contexte d'execution
@@ -81,7 +81,7 @@ var IsoDOM = {
      * don't call this._createIsoPanelHeaderElement
      * don't call this._createIsoPanelFormElement
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -109,7 +109,7 @@ var IsoDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelHeaderElement : function () {
         var self = this;
@@ -176,7 +176,7 @@ var IsoDOM = {
      * Create Form
      * see evenement !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormElement : function () {
         // contexte d'execution
@@ -198,7 +198,7 @@ var IsoDOM = {
     /**
      * Create Results Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelResultsElement : function () {
         // contexte
@@ -230,7 +230,7 @@ var IsoDOM = {
      * @param {Object} computeOptions - options données au service d'isochrone
      * @param {Function} fconvert - fconvert
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _addIsoResultsValuesElement : function (results, computeOptions, fconvert) {
         var distance = results.distance;
@@ -381,7 +381,7 @@ var IsoDOM = {
     /**
      * Create Waiting Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoWaitingElement : function () {
         var div = document.createElement("div");
@@ -400,7 +400,7 @@ var IsoDOM = {
     /**
      * Create Footer Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFooterElement : function () {
         var container = document.createElement("div");
@@ -412,7 +412,7 @@ var IsoDOM = {
     /**
      * Create Point label
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormPointLabel : function () {
         var p = document.createElement("p");
@@ -434,7 +434,7 @@ var IsoDOM = {
      * don't call this._createIsoPanelFormTypeChoiceChronElement
      * don't call this._createIsoPanelFormTypeChoiceDistElement
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormTypeChoiceElement : function () {
         var div = document.createElement("div");
@@ -452,7 +452,7 @@ var IsoDOM = {
      * see event !
      * FIXME event not useful
      * @param {Boolean} checked - checked
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormTypeChoiceChronElement : function (checked) {
         var self = this;
@@ -518,7 +518,7 @@ var IsoDOM = {
      * see event !
      * FIXME event not useful
      * @param {Boolean} checked - checked
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormTypeChoiceDistElement : function (checked) {
         var self = this;
@@ -588,7 +588,7 @@ var IsoDOM = {
      * Create isochron inputs label
      * see event !
      * @param {Boolean} checked - checked
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormLabelIsochronElement : function (checked) {
         var context = this;
@@ -604,7 +604,7 @@ var IsoDOM = {
      * Create isochron inputs values
      * see event !
      * @param {Boolean} checked - checked
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormValueIsochronElement : function (checked) {
         // contexte
@@ -678,7 +678,7 @@ var IsoDOM = {
      * Create isodistance inputs label
      * see event !
      * @param {Boolean} checked - checked
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormLabelIsodistanceElement : function (checked) {
         var context = this;
@@ -694,7 +694,7 @@ var IsoDOM = {
      * Create isodistance inputs values
      * see event !
      * @param {Boolean} checked - checked
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormValueIsodistanceElement : function (checked) {
         // contexte
@@ -744,7 +744,7 @@ var IsoDOM = {
      * see event !
      * FIXME event not useful
      * @param {Array} transports - transports in a list
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormModeChoiceTransportElement : function (transports) {
         // contexte d'execution
@@ -843,7 +843,7 @@ var IsoDOM = {
      * see event!
      *
      * @param {Array} directions - directions to display in list ("Departure", "Arrival"). First element will be selected by default
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormModeChoiceDirectionElement : function (directions) {
         // contexte d'execution
@@ -902,7 +902,7 @@ var IsoDOM = {
     /**
      * Label to Exclusions Options
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowIsoExclusionsPictoElement : function () {
         var self = this;
@@ -942,7 +942,7 @@ var IsoDOM = {
     /**
      * Create Container to Exclusions
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormExclusionsElement : function () {
         var div = document.createElement("div");
@@ -963,7 +963,7 @@ var IsoDOM = {
      * see event !
      * FIXME event not useful
      * @param {Array} exclusions - exclusions to display in list
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormExclusionOptionsElement : function (exclusions) {
         // contexte d'execution
@@ -1078,7 +1078,7 @@ var IsoDOM = {
     /**
      * Create Submit Form Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoSubmitFormElement : function () {
         var input = document.createElement("input");
@@ -1097,7 +1097,7 @@ var IsoDOM = {
     /**
      * Create Reset Picto Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createIsoFormResetElement : function () {
         var self = this;

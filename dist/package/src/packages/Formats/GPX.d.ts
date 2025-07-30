@@ -8,65 +8,66 @@ export default GPX;
  * cf. https://www.topografix.com/gpx.asp
  *
  *
- * @constructor
  * @alias ol.format.GPXExtended
- * @extends {ol.format.GPX}
- * @type {ol.format.GPXExtended}
- * @param {Object} options - Options
- * @param {Object} [options.defaultStyle] - Styles by default
- * @param {String} [options.orderBy] - Sort by key the feature before writing. By default, no sorting
- * @param {Object} [options.extensions] - Add properties to file root
- * @param {function} [options.readExtensions] - Reading extensions (native)
- */
-declare class GPX {
+ * @module GPXExtended
+*/
+declare class GPX extends olGPX {
     /**
-     * See {@link ol.format.GPXExtended}
-     * @module GPXExtended
-     * @alias module:~formats/GPXExtended
-     * @param {*} options - options
-     * @example
-     * import GPXExtended from from "gpf-ext-ol/formats/GPXExtended"
-     * ou
-     * import { GPXExtended } from "gpf-ext-ol"
+     * @constructor
+     * @param {Object} options - Options
+     * @param {Object} [options.defaultStyle] - Styles by default
+     * @param {String} [options.orderBy] - Sort by key the feature before writing. By default, no sorting
+     * @param {Object} [options.extensions] - Add properties to file root
+     * @param {function} [options.readExtensions] - Reading extensions (native)
      */
-    constructor(options: any);
-    options: any;
-    source: any;
+    constructor(options: {
+        defaultStyle?: any;
+        orderBy?: string | undefined;
+        extensions?: any;
+        readExtensions?: Function | undefined;
+    });
+    options: {
+        defaultStyle?: any;
+        orderBy?: string | undefined;
+        extensions?: any;
+        readExtensions?: Function | undefined;
+    };
+    source: Document | Node | HTMLElement | null;
     /**
      * Read Extend Styles for Features.
      * This function overloads ol.format.GPX.readFeatures ...
      *
-     * @see ol.format.GPX.prototype.readFeatures
+     * @see olGPX#readFeatures
      * @param {Document|Node} source - Source.
-     * @param {olx.format.ReadOptions=} options - options.
-     * @returns {Array.<ol.Feature>} Features.
+     * @param {Object} options - options. see olx.format.ReadOptions
+     * @returns {Feature[]} Features.
      */
-    readFeatures(source: Document | Node, options?: olx.format.ReadOptions | undefined): Array<ol.Feature>;
+    readFeatures(source: Document | Node, options: any): Feature[];
     /**
      * Write Extend Styles for Features.
      * This function overloads ol.format.GPX.writeFeatures ...
      *
-     * @see ol.format.GPX.prototype.writeFeatures
-     * @param {Object[]} features - Features.
+     * @see olGPX#writeFeatures
+     * @param {Features[]} features - Features.
      * @param {Object} options - Options.
      *
      * @returns {String} Result or null.
      */
-    writeFeatures(features: Object[], options: Object): string;
+    writeFeatures(features: Features[], options: any): string;
     /**
      * Callback to read extensions from options : readExtensions
      *
-     * @param {*} feature - ...
+     * @param {Feature} feature - ...
      * @param {*} node - ...
      */
-    readExtensions(feature: any, node: any): void;
+    readExtensions(feature: Feature, node: any): void;
     /**
      * ...
      * @param {*} key ...
      * @returns {Object} json
      * @todo
      */
-    readRootExtensions(key: any): Object;
+    readRootExtensions(key: any): any;
     /**
      * ...
      *
@@ -78,19 +79,21 @@ declare class GPX {
     /**
      * ...
      *
-     * @param {Object} feature - ...
-     * @param {DOMElement} node - ...
+     * @param {Feature} feature - ...
+     * @param {HTMLElement} node - ...
      * @private
      */
     private writeExtensions_;
     /**
      * ...
      *
-     * @param {DOMElement} doc - ...
-     * @param {Object} features - ...
+     * @param {HTMLElement} doc - ...
+     * @param {Feature[]} features - ...
      * @param {Object} actions - ...
      * @private
      */
     private processExtensions_;
 }
+import olGPX from "ol/format/GPX";
+import Feature from "ol/Feature";
 //# sourceMappingURL=GPX.d.ts.map

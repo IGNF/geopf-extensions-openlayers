@@ -1,11 +1,11 @@
 export default TerritoriesDOM;
 declare namespace TerritoriesDOM {
     function _addUID(id: string): string;
-    function _createMainContainerElement(): DOMElement;
-    function _createShowTerritoriesPictoElement(): DOMElement;
-    function _createTerritoriesPanelElement(): DOMElement;
+    function _createMainContainerElement(): HTMLElement;
+    function _createShowTerritoriesPictoElement(): HTMLElement;
+    function _createTerritoriesPanelElement(): HTMLElement;
     function _createTerritoriesPanelDivElement(): HTMLDivElement;
-    function _createTerritoriesPanelHeaderElement(): DOMElement;
+    function _createTerritoriesPanelHeaderElement(): HTMLElement;
     function _createTerritoriesPanelIconElement(): HTMLLabelElement;
     function _createTerritoriesPanelTitleElement(title: any): HTMLDivElement;
     function _createTerritoriesPanelCloseElement(): HTMLButtonElement;

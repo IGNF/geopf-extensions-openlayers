@@ -4,78 +4,15 @@ export default ElevationPath;
  *
  * Elevation Path Control. Allows users to draw a path on a Openlayers map see the elevation profile computed with geoportal elevation path web service along that path.
  *
- * @constructor
  * @alias ol.control.ElevationPath
- * @type {ol.control.ElevationPath}
- * @extends ol.control.Control
- * @param {Object} options - options for function call.
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {String} [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
- * @param {Boolean} [options.active = false] - specify if control should be actived at startup. Default is false.
- * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
- * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
- * @param {Object} [options.elevationOptions = {}] - elevation path service options. See {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~getAltitude Gp.Services.getAltitude()} for available options
- * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
- * @param {String} [options.layerDescription.title = "Profil altimétrique"] - Layer title to be displayed in LayerSwitcher
- * @param {String} [options.layerDescription.description = "Mon profil altimétrique"] - Layer description to be displayed in LayerSwitcher
- * @param {Object} [options.stylesOptions] - styles management
- * @param {Object} [options.stylesOptions.marker = {}] - styles management of marker displayed on map when the user follows the elevation path. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object
- * @param {Object} [options.stylesOptions.draw = {}] - styles used when drawing. Specified with following properties.
- * @param {Object} [options.stylesOptions.draw.pointer = {}] - Style for mouse pointer when drawing the line. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
- * @param {Object} [options.stylesOptions.draw.start = {}] - Line Style when drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Stroke-Stroke.html ol.style.Stroke} object.
- * @param {Object} [options.stylesOptions.draw.finish = {}] - Line Style when finished drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Stroke-Stroke.html ol.style.Stroke} object.
- * @param {Object} [options.displayProfileOptions = {}] - profile options.
- * @param {Boolean} [options.displayProfileOptions.totalDistance = true] - display the total distance of the path
- * @param {Boolean} [options.displayProfileOptions.greaterSlope = true] - display the greater slope into the graph
- * @param {Boolean} [options.displayProfileOptions.meanSlope = true] -  display the mean slope into the graph
- * @param {Boolean} [options.displayProfileOptions.ascendingElevation = true] -  display the ascending elevation into the graph
- * @param {Boolean} [options.displayProfileOptions.descendingElevation = true] -  display the descending elevation into the graph
- * @param {Boolean} [options.displayProfileOptions.currentSlope = true] -  display current slope value on profile mouseover
- * @param {Function} [options.displayProfileOptions.apply] - function to display profile if you want to cutomise it. By default, ([DISPLAY_PROFILE_BY_DEFAULT()](./ol.control.ElevationPath.html#.DISPLAY_PROFILE_BY_DEFAULT)) is used. Helper functions to use with D3 ([DISPLAY_PROFILE_LIB_D3()](./ol.control.ElevationPath.html#.DISPLAY_PROFILE_LIB_D3)) or AmCharts ([DISPLAY_PROFILE_LIB_AMCHARTS()](./ol.control.ElevationPath.html#.DISPLAY_PROFILE_LIB_AMCHARTS)) frameworks are also provided. You may also provide your own function.
- * @param {Object} [options.displayProfileOptions.target] - DOM container to use to display the profile.
- * @fires elevationpath:drawstart
- * @fires elevationpath:drawend
- * @fires elevationpath:compute
- * @fires export:compute
- * @example
- *
- * var measure = new ol.control.ElevationPath({
- *    export : false,
- *    stylesOptions : {
- *     draw : {
- *       finish : new ol.style.Stroke({
- *            color : "rgba(0, 0, 0, 0.5)",
- *            width : 2
- *       })
- *     },
- *    }
- *    displayProfileOptions : {
- *       apply : ol.control.ElevationPath.DISPLAY_PROFILE_RAW,
- *    }
- * });
- *
- * // if you want to pluggued the control Export with options :
- * var measure = new ol.control.ElevationPath({
- *    export : {
- *      name : "export",
- *      format : "geojson",
- *      title : "Exporter",
- *      menu : false
- *    }
- * });
- *
- * Exemples :
- * - displayProfileOptions.apply : null
- * - displayProfileOptions.apply : function (elevations, container, context) {  // do some stuff... }
- * - displayProfileOptions.apply : ol.control.ElevationPath.DISPLAY_PROFILE_{LIB_AMCHARTS | LIB_D3 | RAW}
- *
+ * @module ElevationPath
  */
-declare class ElevationPath {
+declare class ElevationPath extends Control {
     /**
     * Styles applied by default if stylesOptions property is not set.
     */
     static DEFAULT_STYLES: {
-        MARKER: any;
+        MARKER: Icon;
         RESULTS: {
             imageRadius: number;
             imageFillColor: string;
@@ -134,7 +71,7 @@ declare class ElevationPath {
      * @param {HTMLElement} container - container
      * @param {Object} context - this control object
      */
-    static DISPLAY_PROFILE_LIB_AMCHARTS(data: Object, container: HTMLElement, context: Object): void;
+    static DISPLAY_PROFILE_LIB_AMCHARTS(data: any, container: HTMLElement, context: any): void;
     /**
      * display Profile using D3 javascript framework. This method needs D3 libraries to be loaded.
      *
@@ -142,7 +79,7 @@ declare class ElevationPath {
      * @param {HTMLElement} container - html container where to display profile
      * @param {Object} context - this control object
      */
-    static DISPLAY_PROFILE_LIB_D3(data: Object, container: HTMLElement, context: Object): void;
+    static DISPLAY_PROFILE_LIB_D3(data: any, container: HTMLElement, context: any): void;
     /**
      * display Profile without graphical rendering (raw service response)
      *
@@ -150,7 +87,7 @@ declare class ElevationPath {
      * @param {HTMLElement} container - html container where to display profile
      * @param {Object} context - this control object
      */
-    static DISPLAY_PROFILE_RAW(data: Object, container: HTMLElement, context: Object): void;
+    static DISPLAY_PROFILE_RAW(data: any, container: HTMLElement, context: any): void;
     /**
      * Display Profile function used by default : no additonal framework needed.
      *
@@ -158,24 +95,107 @@ declare class ElevationPath {
      * @param {HTMLElement} container - html container where to display profile
      * @param {Object} context - this control object
      */
-    static DISPLAY_PROFILE_BY_DEFAULT(data: Object, container: HTMLElement, context: Object): void;
+    static DISPLAY_PROFILE_BY_DEFAULT(data: any, container: HTMLElement, context: any): void;
     /**
-     * See {@link ol.control.ElevationPath}
-     * @module ElevationPath
-     * @alias module:~controls/ElevationPath
-     * @param {*} options - options
-     * @example
-     * import ElevationPath from "gpf-ext-ol/controls/ElevationPath"
-     * ou
-     * import { ElevationPath } from "gpf-ext-ol"
+     * @constructor
+    * @param {Object} options - options for function call.
+    * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+    * @param {String} [options.apiKey] - API key for services call (isocurve and autocomplete services). The key "calcul" is used by default.
+    * @param {Boolean} [options.active = false] - specify if control should be actived at startup. Default is false.
+    * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+    * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
+    * @param {Object} [options.elevationOptions = {}] - elevation path service options. See {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~getAltitude Gp.Services.getAltitude()} for available options
+    * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
+    * @param {String} [options.layerDescription.title = "Profil altimétrique"] - Layer title to be displayed in LayerSwitcher
+    * @param {String} [options.layerDescription.description = "Mon profil altimétrique"] - Layer description to be displayed in LayerSwitcher
+    * @param {Object} [options.stylesOptions] - styles management
+    * @param {Object} [options.stylesOptions.marker = {}] - styles management of marker displayed on map when the user follows the elevation path. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object
+    * @param {Object} [options.stylesOptions.draw = {}] - styles used when drawing. Specified with following properties.
+    * @param {Object} [options.stylesOptions.draw.pointer = {}] - Style for mouse pointer when drawing the line. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
+    * @param {Object} [options.stylesOptions.draw.start = {}] - Line Style when drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Stroke-Stroke.html ol.style.Stroke} object.
+    * @param {Object} [options.stylesOptions.draw.finish = {}] - Line Style when finished drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Stroke-Stroke.html ol.style.Stroke} object.
+    * @param {Object} [options.displayProfileOptions = {}] - profile options.
+    * @param {Boolean} [options.displayProfileOptions.totalDistance = true] - display the total distance of the path
+    * @param {Boolean} [options.displayProfileOptions.greaterSlope = true] - display the greater slope into the graph
+    * @param {Boolean} [options.displayProfileOptions.meanSlope = true] -  display the mean slope into the graph
+    * @param {Boolean} [options.displayProfileOptions.ascendingElevation = true] -  display the ascending elevation into the graph
+    * @param {Boolean} [options.displayProfileOptions.descendingElevation = true] -  display the descending elevation into the graph
+    * @param {Boolean} [options.displayProfileOptions.currentSlope = true] -  display current slope value on profile mouseover
+    * @param {Function} [options.displayProfileOptions.apply] - function to display profile if you want to cutomise it. By default, ([DISPLAY_PROFILE_BY_DEFAULT()](./ol.control.ElevationPath.html#.DISPLAY_PROFILE_BY_DEFAULT)) is used. Helper functions to use with D3 ([DISPLAY_PROFILE_LIB_D3()](./ol.control.ElevationPath.html#.DISPLAY_PROFILE_LIB_D3)) or AmCharts ([DISPLAY_PROFILE_LIB_AMCHARTS()](./ol.control.ElevationPath.html#.DISPLAY_PROFILE_LIB_AMCHARTS)) frameworks are also provided. You may also provide your own function.
+    * @param {Object} [options.displayProfileOptions.target] - DOM container to use to display the profile.
+    * @fires elevationpath:drawstart
+    * @fires elevationpath:drawend
+    * @fires elevationpath:compute
+    * @fires export:compute
+    * @example
+    *
+    * var measure = new ol.control.ElevationPath({
+    *    export : false,
+    *    stylesOptions : {
+    *     draw : {
+    *       finish : new ol.style.Stroke({
+    *            color : "rgba(0, 0, 0, 0.5)",
+    *            width : 2
+    *       })
+    *     },
+    *    }
+    *    displayProfileOptions : {
+    *       apply : ol.control.ElevationPath.DISPLAY_PROFILE_RAW,
+    *    }
+    * });
+    *
+    * // if you want to pluggued the control Export with options :
+    * var measure = new ol.control.ElevationPath({
+    *    export : {
+    *      name : "export",
+    *      format : "geojson",
+    *      title : "Exporter",
+    *      menu : false
+    *    }
+    * });
+    *
+    * Exemples :
+    * - displayProfileOptions.apply : null
+    * - displayProfileOptions.apply : function (elevations, container, context) {  // do some stuff... }
+    * - displayProfileOptions.apply : ol.control.ElevationPath.DISPLAY_PROFILE_{LIB_AMCHARTS | LIB_D3 | RAW}
+    *
      */
-    constructor(options: any);
+    constructor(options: {
+        id?: number | undefined;
+        apiKey?: string | undefined;
+        active?: boolean | undefined;
+        ssl?: boolean | undefined;
+        export?: boolean | any;
+        elevationOptions?: any;
+        layerDescription?: {
+            title?: string | undefined;
+            description?: string | undefined;
+        } | undefined;
+        stylesOptions?: {
+            marker?: any;
+            draw?: {
+                pointer?: any;
+                start?: any;
+                finish?: any;
+            } | undefined;
+        } | undefined;
+        displayProfileOptions?: {
+            totalDistance?: boolean | undefined;
+            greaterSlope?: boolean | undefined;
+            meanSlope?: boolean | undefined;
+            ascendingElevation?: boolean | undefined;
+            descendingElevation?: boolean | undefined;
+            currentSlope?: boolean | undefined;
+            apply?: Function | undefined;
+            target?: any;
+        } | undefined;
+    });
     /**
      * Nom de la classe (heritage)
      * @private
      */
     private CLASSNAME;
-    _uid: any;
+    _uid: number;
     _showContainer: any;
     _pictoButton: any;
     _panelContainer: any;
@@ -183,25 +203,24 @@ declare class ElevationPath {
     _waitingContainer: any;
     _infoContainer: any;
     _timerHdlr: NodeJS.Timeout | null;
-    _drawStyleStart: any;
-    _drawStyleFinish: any;
-    _markerStyle: any;
+    _drawStyleStart: Style | null;
+    _drawStyleFinish: Style | null;
+    _markerStyle: Style | null;
     _profile: any;
     _data: {};
-    _measureSource: any;
-    _measureVector: any;
-    _measureDraw: any;
-    _lastSketch: any;
-    _currentSketch: any;
+    _measureSource: VectorSource<any> | VectorSource<Feature<import("ol/geom").Geometry>> | null;
+    _measureVector: VectorLayer<VectorSource<any>, any> | VectorLayer<VectorSource<any> | VectorSource<Feature<import("ol/geom").Geometry>>, any> | null;
+    _measureDraw: DrawInteraction | null;
+    _lastSketch: Feature<import("ol/geom").Geometry> | null;
+    _currentSketch: Feature<import("ol/geom").Geometry> | null;
     _marker: any;
-    _container: DOMElement;
-    element: any;
+    _container: HTMLElement;
     /**
      * Attach control to map. Overloaded ol.control.Control.setMap() method.
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     export: ButtonExport | null | undefined;
     /**
      * Returns true if widget is actived (drawing),
@@ -236,7 +255,7 @@ declare class ElevationPath {
      *        points // elevations
      *   }
      */
-    getData(): Object;
+    getData(): any;
     /**
      * Set profile data
      *
@@ -260,21 +279,21 @@ declare class ElevationPath {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * Get layer
      *
-     * @returns {ol.layer.Vector} layer
+     * @returns {VectorLayer} layer
      */
-    getLayer(): ol.layer.Vector;
+    getLayer(): VectorLayer;
     /**
      * Set layer
      *
-     * @param {Object} layer - ol.layer.Vector profil layer
+     * @param {VectorLayer} layer - ol.layer.Vector profil layer
      */
-    setLayer(layer: Object): void;
+    setLayer(layer: VectorLayer): void;
     /**
      * Get vector layer
      *
@@ -284,9 +303,9 @@ declare class ElevationPath {
     /**
      * Get default style
      *
-     * @returns {ol.style} style
+     * @returns {Style} style
      */
-    getStyle(): ol.style;
+    getStyle(): Style;
     /**
      * clean
      * @param {Boolean} remove - remove layer
@@ -336,9 +355,46 @@ declare class ElevationPath {
         };
     } | undefined;
     /**
+     * event triggered when the compute is finished
+     *
+     * @event elevationpath:compute
+     * @defaultValue "elevationpath:compute"
+     * @group Events
+     * @typedef {Object}
+     * @property {Object} type - event
+     * @property {Object} target - instance ElevationPath
+     * @example
+     * ElevationPath.on("elevationpath:compute", function (e) {
+     *   console.log(e.target.getData());
+     * })
+     */
+    COMPUTE_ELEVATION_EVENT: string | undefined;
+    /**
+     * event triggered at the start of drawing input
+     *
+     * @event elevationpath:drawstart
+     * @defaultValue "elevationpath:drawstart"
+     * @group Events
+     * @typedef {Object}
+     * @property {Object} type - event
+     * @property {Object} target - instance ElevationPath
+     */
+    DRAW_START_ELEVATION_EVENT: string | undefined;
+    /**
+     * event triggered at the end of drawing input
+     *
+     * @event elevationpath:drawend
+     * @defaultValue "elevationpath:drawend"
+     * @group Events
+     * @typedef {Object}
+     * @property {Object} type - event
+     * @property {Object} target - instance ElevationPath
+    */
+    DRAW_END_ELEVATION_EVENT: string | undefined;
+    /**
      * initialize component container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -366,7 +422,7 @@ declare class ElevationPath {
      * this method is called by this.onShowElevationPathClick,
      * and initialize a vector layer, if widget is active.
      *
-     * @param {ol.Map} map - Map
+     * @param {Map} map - Map
      * @private
      */
     private _initMeasureInteraction;
@@ -374,7 +430,7 @@ declare class ElevationPath {
      * this method is called by this.onShowElevationPathClick,
      * and add draw interaction to map, if widget is not active.
      *
-     * @param {ol.Map} map - Map
+     * @param {Map} map - Map
      * @private
      */
     private _addMeasureInteraction;
@@ -383,7 +439,7 @@ declare class ElevationPath {
      * and removes draw interaction from map (if exists)
      * And removes layer too...
      *
-     * @param {ol.Map} map - Map
+     * @param {Map} map - Map
      * @param {Boolean} remove - Remove layer
      * @private
      */
@@ -455,7 +511,7 @@ declare class ElevationPath {
      * this method is called by event 'click' on '' picto
      * and enable or disable the entry of the path
      *
-     * @param {Object} e - event
+     * @param {Event} e - event
      * @private
      */
     private onShowElevationPathClick;
@@ -469,5 +525,13 @@ declare class ElevationPath {
      */
     private onOpenElevationPathInfoClick;
 }
+import Control from "../Control";
+import { Style } from "ol/style";
+import VectorSource from "ol/source/Vector";
+import Feature from "ol/Feature";
+import VectorLayer from "ol/layer/Vector";
+import { Draw as DrawInteraction } from "ol/interaction";
+import Map from "ol/Map";
 import ButtonExport from "../Export/Export";
+import { Icon } from "ol/style";
 //# sourceMappingURL=ElevationPath.d.ts.map

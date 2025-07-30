@@ -42,7 +42,7 @@ var ReportingDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -58,7 +58,7 @@ var ReportingDOM = {
     /**
      * Show Reporting
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowReportingPictoElement : function () {
         var self = this;
@@ -99,7 +99,7 @@ var ReportingDOM = {
     /**
      * Create Container Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReportingPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -118,7 +118,7 @@ var ReportingDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReportingPanelHeaderElement : function () {
         var container = document.createElement("div");
@@ -174,7 +174,7 @@ var ReportingDOM = {
 
     /**
      * Create Reporting Panel Footer
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @todo
      */
     _createReportingPanelFooterElement : function () {
@@ -246,7 +246,7 @@ var ReportingDOM = {
     /**
      * Create panel form
      * @param {Array} thematics - List of thematics for the reporting form
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReportingPanelFormElement : function (thematics) {
         // - header : titre
@@ -372,7 +372,7 @@ var ReportingDOM = {
     /**
      * Create the submit button
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @description Create the submit button for the reporting form.
      * This button is used to submit the reporting form.
      * It is hidden.

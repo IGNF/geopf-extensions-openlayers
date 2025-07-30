@@ -20,6 +20,6 @@ declare namespace SearchEngineUtils {
             description: string;
         }[];
     }
-    function zoomToResultsByDefault(info: Object): Integer;
+    function zoomToResultsByDefault(info: any): Integer;
 }
 //# sourceMappingURL=SearchEngineUtils.d.ts.map

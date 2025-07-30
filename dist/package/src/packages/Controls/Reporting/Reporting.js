@@ -4,6 +4,7 @@ import "../../CSS/Controls/Reporting/GPFreporting.css";
 // import OpenLayers
 import Control from "../Control";
 import Widget from "../Widget";
+import Map from "ol/Map";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Overlay from "ol/Overlay";
 
@@ -23,6 +24,17 @@ var logger = Logger.getLogger("reporting");
 // ########################## IoC actions ############################ //
 // ################################################################### //
 
+/**
+ * @typedef {InputActionByDefaut} IocInput
+ * @property {function(Map):void} setMap - Définit la carte.
+ * @property {function(string):void} setIcon - Définit l'icône.
+ * @property {function():Object} getData - Retourne les données.
+ * @property {function():void} clear - Réinitialise l'action.
+ * @property {function():void} active - Active l'action.
+ * @property {function():void} disable - Désactive l'action.
+ * @description Instance d'action d'entrée pour le contrôle Reporting (IoC).
+ */
+
 class InputActionByDefaut {
 
     /**
@@ -32,8 +44,7 @@ class InputActionByDefaut {
      * to set coordinates for a reporting action.
      * @constructor
      * @alias InputActionByDefaut
-     * @type {InputActionByDefaut}
-     * @param {ol.Map} [map] - Optional OpenLayers map instance.
+     * @param {Map} [map] - Optional OpenLayers map instance.
      * @description
      * The constructor initializes the action with an optional map instance.
      * If no map is provided, it defaults to null.
@@ -54,7 +65,7 @@ class InputActionByDefaut {
     /**
      * Set the map for this action
      * @api
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         logger.info("InputActionByDefaut map");
@@ -235,6 +246,15 @@ class InputActionByDefaut {
 
 }
 
+/**
+ * @typedef {FormActionByDefaut} IocForm
+ * @property {function(HTMLElement):void} setForm - Définit le formulaire.
+ * @property {function():Object} getData - Retourne les données du formulaire.
+ * @property {function():void} clear - Réinitialise le formulaire.
+ * @property {function():void} active - Active l'action.
+ * @property {function():void} disable - Désactive l'action.
+ * @description Instance d'action de formulaire pour le contrôle Reporting (IoC).
+ */
 class FormActionByDefaut {
 
     /**
@@ -243,7 +263,6 @@ class FormActionByDefaut {
      * This class handles form submission and captures data from the form fields.
      * @constructor
      * @alias FormActionByDefaut
-     * @type {FormActionByDefaut}
      * @param {HTMLFormElement} form - The form element to be managed by this action.
      * @description
      * The constructor initializes the action with a form element.
@@ -283,7 +302,7 @@ class FormActionByDefaut {
     /**
      * Set the form for this action
      * @api
-     * @param {*} form DOM element - The form element to be set for this action.
+     * @param {HTMLElement} form DOM element - The form element to be set for this action.
      */
     setForm (form) {
         logger.info("FormActionByDefaut form");
@@ -362,6 +381,17 @@ class FormActionByDefaut {
 
 }
 
+/**
+ * @typedef {DrawingActionByDefaut} IocDrawing
+ * @property {function(Map):void} setMap - Définit la carte.
+ * @property {function(HTMLElement):void} setTarget - Définit le conteneur DOM.
+ * @property {function(String):void} setFormat - Définit le format d'export.
+ * @property {function():Object} getData - Retourne les données du dessin.
+ * @property {function():void} clear - Réinitialise le dessin.
+ * @property {function():void} active - Active l'action.
+ * @property {function():void} disable - Désactive l'action.
+ * @description Instance d'action de dessin pour le contrôle Reporting (IoC).
+ */
 class DrawingActionByDefaut {
 
     /**
@@ -370,8 +400,7 @@ class DrawingActionByDefaut {
      * This class handles drawing actions on the map, allowing users to create and manage drawings.
      * @constructor
      * @alias DrawingActionByDefaut
-     * @type {DrawingActionByDefaut}
-     * @param {ol.Map} [map] - Optional OpenLayers map instance.
+     * @param {Map} [map] - Optional OpenLayers map instance.
      * @description
      * The constructor initializes the action with an optional map instance.
      * If no map is provided, it defaults to null.
@@ -482,7 +511,7 @@ class DrawingActionByDefaut {
     /**
      * Set the map for this action
      * @api
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      * @description
      * This method sets the map instance for the Drawing action.
      * It initializes the Drawing instance if it is not already created.
@@ -496,7 +525,7 @@ class DrawingActionByDefaut {
     /**
      * Set the target DOM element for the Drawing action
      * @api
-     * @param {DOMElement} dom - The DOM element to set as the target for the Drawing action.
+     * @param {HTMLElement} dom - The DOM element to set as the target for the Drawing action.
      */
     setTarget (dom) {
         logger.info("DrawingActionByDefaut target");
@@ -572,6 +601,14 @@ class DrawingActionByDefaut {
 
 }
 
+/**
+ * @typedef {ServiceActionByDefaut} IocService
+ * @property {function(Object):Promise} send - Envoie les données au service.
+ * @property {function():void} clear - Réinitialise l'action.
+ * @property {function():void} active - Active l'action.
+ * @property {function():void} disable - Désactive l'action.
+ * @description Instance d'action de service pour le contrôle Reporting (IoC).
+ */
 class ServiceActionByDefaut {
 
     constructor () {
@@ -639,28 +676,33 @@ class ServiceActionByDefaut {
 // ################################################################### //
 
 /**
+ * @typedef {Object} ReportingOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
+ * @property {Array<string>} [thematics] - Liste des thématiques proposées dans le formulaire.
+ * @property {string} [format="geojson"] - Format d’export des dessins (ex : "geojson", "kml").
+ * @property {string} [icon] - Icône utilisée pour le point de signalement (URL ou base64).
+ * @property {HTMLElement} [element] - Élément DOM à utiliser comme conteneur principal.
+ * @property {string} [target] - Sélecteur ou identifiant du conteneur cible.
+ * @property {Function} [render] - Fonction de rendu personnalisée.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ */
+
+/**
  * @classdesc
  *
  * Reporting control.
  * This control allows users to report issues or provide feedback on the map.
  *
- * @constructor
  * @alias ol.control.Reporting
- * @type {ol.control.Reporting}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- * @fires reporting:sending
- * @fires reporting:opened
- * @example
- * var reporting = new ol.control.Reporting();
- * map.addControl(reporting);
- */
+ * @module Reporting
+*/
 class Reporting extends Control {
-
+    
     /**
-     * See {@link ol.control.Reporting}
-     * @module Reporting
-     * @alias module:~controls/Reporting
+     * @constructor
      * @param {Object} [options] - options
      * @param {Boolean} [options.collapsed=true] - specify if control is collapsed (true) or not (false)
      * @param {Boolean} [options.draggable=false] - specify if control is draggable (true) or not (false)
@@ -668,17 +710,18 @@ class Reporting extends Control {
      * @param {Array} [options.thematics] - specify the list of thematics
      * @param {String} [options.format="geojson"] - specify the format for export (default: "geojson")
      * @param {String} [options.icon] - specify the icon for point entry (default: base64 encoded SVG)
-     * @param {DOMElement} [options.element] - specify the DOM element to append the control
+     * @param {HTMLElement} [options.element] - specify the DOM element to append the control
      * @param {String} [options.target] - specify the target element to append the control
      * @param {Function} [options.render] - specify the render function
      * @description
      * The Reporting control is a custom OpenLayers control that allows users to report issues or provide
      * feedback on the map. It provides a user interface for inputting details about the report, including
      * the location, description, and thematic category of the issue.
+     * @fires reporting:sending
+     * @fires reporting:opened
      * @example
-     * import Reporting from "gpf-ext-ol/controls/Reporting"
-     * ou
-     * import { Reporting } from "gpf-ext-ol"
+     * var reporting = new ol.control.Reporting();
+     * map.addControl(reporting);
      */
     constructor (options) {
         options = options || {};
@@ -713,7 +756,7 @@ class Reporting extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -766,7 +809,7 @@ class Reporting extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;
@@ -807,7 +850,7 @@ class Reporting extends Control {
     /**
      * Set the components for the Reporting control.
      * @private
-     * @param {ol.Map} map - The OpenLayers map instance to set for the components.
+     * @param {Map} map - The OpenLayers map instance to set for the components.
      * @description
      * This method initializes the IoC (Inversion of Control) components for the Reporting control.
      * It sets up the input, form, service, and drawing actions by creating instances of the respective classes.
@@ -842,6 +885,10 @@ class Reporting extends Control {
         this.stepContainer[3].action = this.iocDrawing;
     }
 
+    /**
+     * Add ioc
+     * @param {IocInput} input - instance
+     */
     setComponentInput (input) {
         // TODO
         // verifier si l'input est une instance de InputActionByDefaut
@@ -849,14 +896,26 @@ class Reporting extends Control {
         this.iocInput = input;
     }
 
+    /**
+     * Add ioc
+     * @param {IocForm} form - instance
+     */
     setComponentForm (form) {
         this.iocForm = form;
     }
 
+    /**
+     * Add ioc
+     * @param {IocService} service - instance
+     */
     setComponentService (service) {
         this.iocService = service;
     }
 
+    /**
+     * Add ioc
+     * @param {IocDrawing} drawing - instance
+     */
     setComponentDrawing (drawing) {
         this.iocDrawing = drawing;
     }
@@ -903,23 +962,38 @@ class Reporting extends Control {
         /** {Boolean} specify if control add some stuff auto */
         this.auto = this.options.auto;
 
+        /** @private */
         this.buttonReportingShow = null;
 
+        /** @private */
         this.panelReportingContainer = null;
+        /** @private */
         this.panelReportingHeaderContainer = null; // usefull for the dragNdrop
+        /** @private */
         this.panelReportingFooterContainer = null;
+        /** @private */
         this.reportingBtnAnnulerFooter = null;
+        /** @private */
         this.reportingBtnSuivantFooter = null;
+        /** @private */
         this.buttonReportingClose = null;
+        /** @private */
         this.divReportingTitle = null;
+        /** @private */
         this.labelReportingIcon = null;
 
+        /** @private */
         this.buttonReportingSubmit = null;
+        /** @private */
         this.spanReportingError = null;
 
+        /** @private */
         this.inputReportingContainer = null;
+        /** @private */
         this.formReportingContainer = null;
+        /** @private */
         this.sendReportingContainer = null;
+        /** @private */
         this.drawingReportingContainer = null;
 
         this.step = 0;
@@ -963,9 +1037,13 @@ class Reporting extends Control {
         ];
 
         // will be set by the IoC
+        /** @type {IocInput} */
         this.iocInput = null;
+        /** @type {IocForm} */
         this.iocForm = null;
+        /** @type {IocService} */
         this.iocService = null;
+        /** @type {IocDrawing} */
         this.iocDrawing = null;
 
         /** {Object} raw data */
@@ -973,12 +1051,37 @@ class Reporting extends Control {
 
         /** {Array} specify some events listener */
         this.eventsListeners = [];
+
+        /**
+         * event triggered when the reporting panel is opened
+         * @event reporting:opened
+         * @defaultValue "reporting:opened"
+         * @group Events
+         * @description
+         * This event is dispatched when the reporting panel is opened.
+         * It indicates that the reporting process has started and the user can begin inputting data.
+         * This event can be used to perform additional actions when the reporting panel is opened,
+         * such as initializing the input fields or updating the UI to reflect the reporting state.
+         */
+        this.OPENED_REPORTING_EVENT = "reporting:opened";
+        /**
+         * event triggered at the end of the reporting process
+         * @event reporting:sending
+         * @defaultValue "reporting:sending"
+         * @group Events
+         * @description
+         * This event is dispatched when the reporting data is successfully sent.
+         * It contains the reporting data that was sent.
+         * This event can be used to perform additional actions after the reporting data is sent,
+         * such as updating the UI or notifying other components.
+         */
+        this.SEND_REPORTING_EVENT = "reporting:sending";
     }
 
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     #initContainer () {
@@ -1045,7 +1148,7 @@ class Reporting extends Control {
     /**
      * Add events listener on map (called by setMap)
      *
-     * @param {*} map - map
+     * @param {Map} map - map
      * @private
      */
     _addEventsListeners (map) {
@@ -1218,6 +1321,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Show Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onShowReportingClick (e) {
         logger.trace("onShowReportingClick", e);
@@ -1235,20 +1339,15 @@ class Reporting extends Control {
             this.setStep(0);
             /**
              * event triggered when the reporting panel is opened
-             * @event reporting:opened
-             * @description
-             * This event is dispatched when the reporting panel is opened.
-             * It indicates that the reporting process has started and the user can begin inputting data.
-             * This event can be used to perform additional actions when the reporting panel is opened,
-             * such as initializing the input fields or updating the UI to reflect the reporting state.
              */
-            this.dispatchEvent("reporting:opened");
+            this.dispatchEvent(this.OPENED_REPORTING_EVENT);
         }
     }
 
     /**
      * Handle the click event on the "Previous Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onPrevReportingClick (e) {
         logger.trace("onPrevReportingClick", e);
@@ -1258,6 +1357,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Next Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onNextReportingClick (e) {
         logger.trace("onNextReportingClick", e);
@@ -1267,6 +1367,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Close Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onCloseReportingClick (e) {
         logger.trace("onCloseReportingClick", e);
@@ -1276,6 +1377,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Cancel Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onCancelReportingClick (e) {
         logger.trace("onCancelReportingClick", e);
@@ -1289,6 +1391,7 @@ class Reporting extends Control {
     /**
      * Handle the form submission event for the reporting form.
      * @param {*} e - The form submission event object.
+     * @private
      */
     onReportingFormSubmit (e) {
         logger.trace("onReportingFormSubmit", e);
@@ -1297,6 +1400,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Show Form Drawing Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onShowFormDrawingReportingClick (e) {
         logger.trace("onShowFormDrawingReportingClick", e);
@@ -1306,6 +1410,7 @@ class Reporting extends Control {
     /**
      * Handle the click event on the "Show Form Input Reporting" button.
      * @param {*} e - The click event object.
+     * @private
      */
     onEntryFormNameReportingChange (e) {
         logger.trace("onEntryFormNameReportingChange", e);
@@ -1314,6 +1419,7 @@ class Reporting extends Control {
     /**
      * Handle the change event on the "Form Theme Reporting" select element.
      * @param {*} e - The change event object.
+     * @private
      */
     onSelectFormThemeReportingChange (e) {
         logger.trace("onSelectFormThemeReportingChange", e);
@@ -1322,6 +1428,7 @@ class Reporting extends Control {
     /**
      * Handle the change event on the "Form Description Reporting" textarea element.
      * @param {*} e - The change event object.
+     * @private
      */
     onEntryFormDescReportingChange (e) {
         logger.trace("onEntryFormDescReportingChange", e);
@@ -1333,6 +1440,7 @@ class Reporting extends Control {
     /**
      * Handle the change event on the "Send Mail Reporting" input element.
      * @param {*} e - The change event object.
+     * @private
      */
     onEntrySendMailReportingChange (e) {
         logger.trace("onEntrySendMailReportingChange", e);
@@ -1349,6 +1457,7 @@ class Reporting extends Control {
      * and sends the reporting data to the server or processes it as needed.
      * If the sending is successful, it clears the data and resets the step to the first step.
      * If there is an error during the sending process, it displays an error message for a limited time.
+     * @private
      */
     onShowSendReportingClick (e) {
         logger.trace("onShowSendReportingClick", e);
@@ -1393,15 +1502,9 @@ class Reporting extends Control {
             .then(() => {
                 /**
                  * event triggered at the end of the reporting process
-                 * @event reporting:sending
-                 * @description
-                 * This event is dispatched when the reporting data is successfully sent.
-                 * It contains the reporting data that was sent.
-                 * This event can be used to perform additional actions after the reporting data is sent,
-                 * such as updating the UI or notifying other components.
                  */
                 this.dispatchEvent({
-                    type : "reporting:sending",
+                    type : this.SEND_REPORTING_EVENT,
                     data : this.data
                 });
             })

@@ -1,135 +1,214 @@
 export default LayerSwitcher;
+export type LayerSwitcherOptions = {
+    /**
+     * - Identifiant unique du widget.
+     */
+    id?: string | undefined;
+    /**
+     * - Définit si le widget est replié au chargement.
+     */
+    collapsed?: boolean | undefined;
+    /**
+     * - Permet de déplacer le panneau du LayerSwitcher.
+     */
+    draggable?: boolean | undefined;
+    /**
+     * - Affiche un compteur du nombre de couches visibles.
+     */
+    counter?: boolean | undefined;
+    /**
+     * - Affiche un en-tête (header) dans le panneau du LayerSwitcher.
+     */
+    panel?: boolean | undefined;
+    /**
+     * - Ajoute ou retire l’espace autour du panneau.
+     */
+    gutter?: boolean | undefined;
+    /**
+     * - Affiche le bouton d’édition pour les couches éditables (vecteur).
+     */
+    allowEdit?: boolean | undefined;
+    /**
+     * - Affiche le bouton N&B (niveaux de gris) pour les couches compatibles.
+     */
+    allowGrayScale?: boolean | undefined;
+    /**
+     * - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
+     */
+    allowTooltips?: boolean | undefined;
+    /**
+     * - Position CSS du widget sur la carte.
+     */
+    position?: string | undefined;
+    /**
+     * - Liste d’outils personnalisés à afficher pour chaque couche.
+     */
+    advancedTools?: any[] | undefined;
+};
+export type LayerSwitcherLayersConfig = {
+    /**
+     * - Objet couche OpenLayers à gérer.
+     */
+    layer: Layer;
+    /**
+     * - Métadonnées associées à la couche.
+     */
+    config?: {
+        /**
+         * - Titre de la couche.
+         */
+        title?: string | undefined;
+        /**
+         * - Description de la couche.
+         */
+        description?: string | undefined;
+        /**
+         * - URL d’aperçu rapide.
+         */
+        quicklookUrl?: string | undefined;
+        /**
+         * - Légendes associées à la couche.
+         */
+        legends?: any[] | undefined;
+        /**
+         * - Métadonnées associées à la couche.
+         */
+        metadata?: any[] | undefined;
+        /**
+         * - Indique si la couche est verrouillée.
+         */
+        locked?: boolean | undefined;
+    } | undefined;
+};
+/**
+ * @typedef {Object} LayerSwitcherOptions
+ * @property {string} [id] - Identifiant unique du widget.
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du LayerSwitcher.
+ * @property {boolean} [counter=false] - Affiche un compteur du nombre de couches visibles.
+ * @property {boolean} [panel=false] - Affiche un en-tête (header) dans le panneau du LayerSwitcher.
+ * @property {boolean} [gutter=false] - Ajoute ou retire l’espace autour du panneau.
+ * @property {boolean} [allowEdit=true] - Affiche le bouton d’édition pour les couches éditables (vecteur).
+ * @property {boolean} [allowGrayScale=true] - Affiche le bouton N&B (niveaux de gris) pour les couches compatibles.
+ * @property {boolean} [allowTooltips=false] - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {Array<Object>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ */
+/**
+ * @typedef {Object} LayerSwitcherLayersConfig
+ * @property {Layer} layer - Objet couche OpenLayers à gérer.
+ * @property {Object} [config] - Métadonnées associées à la couche.
+ * @property {string} [config.title] - Titre de la couche.
+ * @property {string} [config.description] - Description de la couche.
+ * @property {string} [config.quicklookUrl] - URL d’aperçu rapide.
+ * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
+ * @property {Array<Object>} [config.metadata] - Métadonnées associées à la couche.
+ * @property {boolean} [config.locked] - Indique si la couche est verrouillée.
+ */
 /**
  * @classdesc
  * OpenLayers Control to manage map layers : their order, visibility and opacity, and display their informations (title, description, legends, metadata...)
  *
- * @constructor
- * @extends {ol.control.Control}
+ * @module LayerSwitcher
  * @alias ol.control.LayerSwitcher
- * @type {ol.control.LayerSwitcher}
- * @param {Object} options - control options
- * @param {Array} [options.layers] - list of layers to be configured. Each array element is an object, with following properties :
- * @param {ol.layer.Layer} [options.layers.layer] - ol.layer.Layer layer to be configured (that has been added to map)
- * @param {Object} [options.layers.config] - custom configuration object for layer information (title, description, legends, metadata, quicklook url), with following properties :
- * @param {String} [options.layers.config.title] - layer alias, to be displayed in widget layer list. E.g. : "Cartes IGN"
- * @param {String} [options.layers.config.description] - layer description, to be displayed on title hover, or in layer information panel.
- * @param {String} [options.layers.config.quicklookUrl] - link to a quick look image for this layer.
- * @param {Array} [options.layers.config.legends] - array of layer legends. Each array element is an object, with following properties :
- *      - url (String, mandatory) : link to a legend
- *      - minScaleDenominator (Number, optional) : min scale denominator for legend validity.
- * @param {Array} [options.layers.config.metadata] - array of layer metadata. Each array element is an object, with property url (String, mandatory) : link to a metadata
- * @param {Object} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
- * @param {Number} [options.options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {Boolean} [options.options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
- * @param {Boolean} [options.options.panel = false] - Specify if widget has to have a panel header. Default is false.
- * @param {Boolean} [options.options.counter = false] - Specify if widget has to have a counter. Default is false.
- * @param {Boolean} [options.options.allowEdit = true] - Specify if widget has to have an edit button (available only for vector layers). Default is true.
- * @param {Boolean} [options.options.allowGrayScale = true] - Specify if widget has to have an grayscale button (not available for vector layers). Default is true.
- * @param {Array} [options.options.advancedTools] - ...
- * @param {String} [options.options.advancedTools.label] - Specify the label name of the button
- * @param {String} [options.options.advancedTools.icon] - icon (optionnal)
- * @param {Function} [options.options.advancedTools.cb] - callback (optionnal)
- * @param {Object} [options.options.advancedTools.styles] - styles (optionnal)
- * @fires layerswitcher:add
- * @fires layerswitcher:remove
- * @fires layerswitcher:lock
- * @fires layerswitcher:extent
- * @fires layerswitcher:edit
- * @fires layerswitcher:change:opacity
- * @fires layerswitcher:change:visibility
- * @fires layerswitcher:change:position
- * @fires layerswitcher:change:grayscale
- * @fires layerswitcher:change:style
- * @fires layerswitcher:change:locked
- * @example
- * map.addControl(new ol.control.LayerSwitcher(
- *  [
- *      {
- *          layer : wms1,
- *          config : {
- *              title : "test layer name 1",
- *              description : "test layer desc 1",
- *          }
- *      }
- *  ],
- *  {
- *      collapsed : true,
- *      panel : false,
- *      counter : false,
- *      position : "top-left",
- *      allowEdit : true,
- *      allowGrayScale : true,
- *      advancedTools : [
- *          {
- *              label = 'Bouton',
- *              icon = "svg | http",
- *              cb = (e, LayerSwitcher, layer, options) => {},
- *              styles = {},
- *          }
- *      ]
- *  }
- * ));
- *
- * LayerSwitcher.on("layerswitcher:add", function (e) {
- *    console.warn("layer", e.layer);
- * });
- * LayerSwitcher.on("layerswitcher:remove", function (e) {
- *    console.warn("layer", e.layer);
- * });
- * LayerSwitcher.on("layerswitcher:extent", function (e) {
- *    console.warn("layer", e.layer);
- * });
- * LayerSwitcher.on("layerswitcher:edit", function (e) {
- *    console.warn("layer", e.layer);
- * });
- * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
- *    console.warn("layer", e.layer, e.opacity);
- * });
- * LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
- *    console.warn("layer", e.layer, e.visibility);
- * });
- * LayerSwitcher.on("layerswitcher:change:position", function (e) {
- *    console.warn("layer", e.layer, e.position);
- * });
- * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
- *    console.warn("layer", e.layer, e.grayscale);
- * });
- * LayerSwitcher.on("layerswitcher:change:style", function (e) {
- *    console.warn("layer", e.layer, e.name, e.url);
- * });
- * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
- *    console.warn("layer", e.layer, e.locked);
- * });
- */
-declare class LayerSwitcher {
+*/
+declare class LayerSwitcher extends Control {
     /**
-     * See {@link ol.control.LayerSwitcher}
-     * @module LayerSwitcher
-     * @alias module:~controls/LayerSwitcher
-     * @param {*} options - options
-     * @example
-     * import LayerSwitcher from "gpf-ext-ol/controls/LayerSwitcher"
-     * ou
-     * import { LayerSwitcher } from "gpf-ext-ol"
-     */
-    constructor(options: any);
+    * @constructor
+    * @param {Object} options - control options
+    * @param {Array<LayerSwitcherLayersConfig>} [options.layers] - list of layers to be configured. Each array element is an object, with following properties :
+    * @param {LayerSwitcherOptions} [options.options] - ol.control.Control options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html ol.control.Control})
+    * @fires layerswitcher:add
+    * @fires layerswitcher:remove
+    * @fires layerswitcher:lock
+    * @fires layerswitcher:extent
+    * @fires layerswitcher:edit
+    * @fires layerswitcher:change:opacity
+    * @fires layerswitcher:change:visibility
+    * @fires layerswitcher:change:position
+    * @fires layerswitcher:change:grayscale
+    * @fires layerswitcher:change:style
+    * @fires layerswitcher:change:locked
+    * @example
+    * map.addControl(new ol.control.LayerSwitcher(
+    *  [
+    *      {
+    *          layer : wms1,
+    *          config : {
+    *              title : "test layer name 1",
+    *              description : "test layer desc 1",
+    *          }
+    *      }
+    *  ],
+    *  {
+    *      collapsed : true,
+    *      panel : false,
+    *      counter : false,
+    *      position : "top-left",
+    *      allowEdit : true,
+    *      allowGrayScale : true,
+    *      advancedTools : [
+    *          {
+    *              label = 'Bouton',
+    *              icon = "svg | http",
+    *              cb = (e, LayerSwitcher, layer, options) => {},
+    *              styles = {},
+    *          }
+    *      ]
+    *  }
+    * ));
+    *
+    * LayerSwitcher.on("layerswitcher:add", function (e) {
+    *    console.warn("layer", e.layer);
+    * });
+    * LayerSwitcher.on("layerswitcher:remove", function (e) {
+    *    console.warn("layer", e.layer);
+    * });
+    * LayerSwitcher.on("layerswitcher:extent", function (e) {
+    *    console.warn("layer", e.layer);
+    * });
+    * LayerSwitcher.on("layerswitcher:edit", function (e) {
+    *    console.warn("layer", e.layer);
+    * });
+    * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
+    *    console.warn("layer", e.layer, e.opacity);
+    * });
+    * LayerSwitcher.on("layerswitcher:change:visibility", function (e) {
+    *    console.warn("layer", e.layer, e.visibility);
+    * });
+    * LayerSwitcher.on("layerswitcher:change:position", function (e) {
+    *    console.warn("layer", e.layer, e.position);
+    * });
+    * LayerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+    *    console.warn("layer", e.layer, e.grayscale);
+    * });
+    * LayerSwitcher.on("layerswitcher:change:style", function (e) {
+    *    console.warn("layer", e.layer, e.name, e.url);
+    * });
+    * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
+    *    console.warn("layer", e.layer, e.locked);
+    * });
+    */
+    constructor(options: {
+        layers?: LayerSwitcherLayersConfig[] | undefined;
+        options?: LayerSwitcherOptions | undefined;
+    });
     /**
      * Nom de la classe
      * @private
      */
     private CLASSNAME;
-    container: DOMElement;
-    element: any;
+    container: HTMLElement;
     /**
      * Overload setMap function, that enables to catch map events, such as movend events.
      * @inheritdoc {@link https://openlayers.org/en/latest/apidoc/module-ol_control_Control-Control.html#setMap}
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Add a new layer to control (when added to map) or add new layer configuration
      *
-     * @param {ol.layer.Layer} layer - layer to add to layer switcher
+     * @param {Layer} layer - layer to add to layer switcher
      * @param {Object} [config] - additional options for layer configuration
      * @param {Object} [config.title] - layer title (default is layer identifier)
      * @param {Object} [config.description] - layer description (default is null)
@@ -147,28 +226,28 @@ declare class LayerSwitcher {
      *       }
      *   )
      */
-    addLayer(layer: ol.layer.Layer, config?: {
-        title?: Object | undefined;
-        description?: Object | undefined;
-        legends?: Object | undefined;
-        metadata?: Object | undefined;
-        quicklookUrl?: Object | undefined;
+    addLayer(layer: Layer, config?: {
+        title?: any;
+        description?: any;
+        legends?: any;
+        metadata?: any;
+        quicklookUrl?: any;
     }): void;
     /**
      * Remove a layer from control
      *
-     * @param {ol.layer.Layer} layer - layer.
+     * @param {Layer} layer - layer.
      * @fires layerswitcher:remove {@link LayerSwitcher#REMOVE_LAYER_EVENT}
      * @deprecated on the future version ...
      */
-    removeLayer(layer: ol.layer.Layer): void;
+    removeLayer(layer: Layer): void;
     /**
      * Lock a layer, so it cannot be removed or modified from layerSwitcher
-     * @param {ol.layer.Layer} layer - layer to be locked
+     * @param {Layer} layer - layer to be locked
      * @param {Boolean} locked - true if locked
      * @fires layerswitcher:lock {@link LayerSwitcher#LOCK_LAYER_EVENT}
      */
-    lockLayer(layer: ol.layer.Layer, locked: boolean): void;
+    lockLayer(layer: Layer, locked: boolean): void;
     /**
      * Collapse or display control main container
      *
@@ -183,16 +262,16 @@ declare class LayerSwitcher {
     /**
      * Display or hide removeLayerPicto from layerSwitcher for this layer
      *
-     * @param {ol.layer.Layer} layer - ol.layer to be configured
+     * @param {Layer} layer - ol.layer to be configured
      * @param {Boolean} removable - specify if layer can be remove from layerSwitcher (true) or not (false). Default is true
      */
-    setRemovable(layer: ol.layer.Layer, removable: boolean): void;
+    setRemovable(layer: Layer, removable: boolean): void;
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * Forget add listener added to the control
      */
@@ -266,7 +345,7 @@ declare class LayerSwitcher {
     collapsed: boolean | undefined;
     /**
      * Layer list (DOM).
-     * @type {DOMElement}
+     * @type {HTMLElement}
      * @private
      */
     private _layerListContainer;
@@ -447,14 +526,14 @@ declare class LayerSwitcher {
     /**
      * Create control main container (called by constructor)
      *
-     * @returns {DOMElement} container - control container
+     * @returns {HTMLElement} container - control container
      * @private
      */
     private _initContainer;
     /**
      * Add all map layers to control main container
      *
-     * @param {Object} map - ol.Map object, to which control is added
+     * @param {Map} map - Map object, to which control is added
      * @private
      */
     private _addMapLayers;
@@ -463,7 +542,7 @@ declare class LayerSwitcher {
      *
      * @param {Object} layerOptions - layer options (id, title, description, legends, metadata, quicklookUrl ...)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -613,14 +692,14 @@ declare class LayerSwitcher {
     /**
      * check layers range on map movement
      *
-     * @param {ol.Map} map - ol map on which event occured
+     * @param {Map} map - map on which event occured
      * @private
      */
     private _onMapMoveEnd;
     /**
      * Returns Layer Container Id associated with given olLayer
      *
-     * @param {ol.layer.Layer} olLayer - ol layer object
+     * @param {Layer} olLayer - ol layer object
      * @returns {String} - div container Id ; null if layer not found.
      * @private
      */
@@ -628,17 +707,20 @@ declare class LayerSwitcher {
     /**
      * Check if map view is out of layer range (in terms of extent and zoom)
      *
-     * @param {Object} layer - the ol.layer object
-     * @param {Object} map   - the ol.Map object
+     * @param {Layer} layer - the Layer object
+     * @param {Map} map   - the Map object
      * @returns {Boolean} outOfRange - false if map view is out of layer range
      */
-    isInRange(layer: Object, map: Object): boolean;
+    isInRange(layer: Layer, map: Map): boolean;
     /**
      * Get layer informations : title, description, quicklookurl, legends, metadata
      *
-     * @param {Object} layer - the ol.layer object
+     * @param {Layer} layer - the ol.layer object
      * @returns {Object} layerInfo - layer informations
      */
-    getLayerInfo(layer: Object): Object;
+    getLayerInfo(layer: Layer): any;
 }
+import Layer from "ol/layer/Layer";
+import Control from "../Control";
+import Map from "ol/Map";
 //# sourceMappingURL=LayerSwitcher.d.ts.map

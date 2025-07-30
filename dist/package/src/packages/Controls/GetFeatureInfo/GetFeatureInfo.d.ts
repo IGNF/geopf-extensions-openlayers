@@ -4,35 +4,25 @@ export default GetFeatureInfo;
  *
  * GetFeatureInfo button
  *
- * @constructor
+ * @module GetFeatureInfo
  * @alias ol.control.GetFeatureInfo
- * @type {ol.control.GetFeatureInfo}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *
- * @example
- * var getFeatureInfo = new ol.control.GetFeatureInfo();
- * map.addControl(getFeatureInfo);
+ 
  */
-declare class GetFeatureInfo {
+declare class GetFeatureInfo extends Control {
     /**
-     * See {@link ol.control.GetFeatureInfo}
-     * @module GetFeatureInfo
-     * @alias module:~controls/GetFeatureInfo
-     * @param {Object} [options] - options
-     * @example
-     * import GetFeatureInfo from "gpf-ext-ol/controls/GetFeatureInfo"
-     * ou
-     * import { GetFeatureInfo } from "gpf-ext-ol"
-     */
-    constructor(options?: Object);
+     * @constructor
+    * @param {Object} options - options for function call.
+    * @example
+    * var getFeatureInfo = new ol.control.GetFeatureInfo();
+    * map.addControl(getFeatureInfo);
+    */
+    constructor(options: any);
     /**
      * Nom de la classe (heritage)
      * @private
      */
     private CLASSNAME;
-    container: DOMElement;
-    element: any;
+    container: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *
@@ -52,37 +42,53 @@ declare class GetFeatureInfo {
         draggable: boolean;
         auto: boolean;
     } | undefined;
-    /** {Boolean} specify if control is collapsed (true) or not (false) */
+    /**
+     * @type {Boolean}
+     * specify if control is collapsed (true) or not (false) */
     collapsed: boolean | undefined;
-    /** {Boolean} specify if control is draggable (true) or not (false) */
+    /**
+     * @type {Boolean}
+     * specify if control is draggable (true) or not (false) */
     draggable: boolean | undefined;
-    /** {Boolean} specify if control add some stuff auto */
+    /**
+     * @type {Boolean}
+     * specify if control add some stuff auto */
     auto: boolean | undefined;
-    buttonGetFeatureInfoShow: any;
-    panelGetFeatureInfoContainer: any;
-    getFeatureInfoPanelDiv: any;
-    panelGetFeatureInfoHeaderContainer: any;
-    buttonGetFeatureInfoClose: any;
-    getFeatureInfoAccordionGroup: any;
-    panelGetFeatureInfoEntriesContainer: any;
+    /** @private */
+    private buttonGetFeatureInfoShow;
+    /** @private */
+    private panelGetFeatureInfoContainer;
+    /** @private */
+    private getFeatureInfoPanelDiv;
+    /** @private */
+    private panelGetFeatureInfoHeaderContainer;
+    /** @private */
+    private buttonGetFeatureInfoClose;
+    /** @private */
+    private getFeatureInfoAccordionGroup;
+    /** @private */
+    private panelGetFeatureInfoEntriesContainer;
     /** {Array} specify some events listeners */
     eventsListeners: any[] | undefined;
     /** GFI settings */
-    pixel: any;
+    /** @private */
+    private pixel;
     coordinates: any;
-    layers: any;
-    res: any;
+    /** @public */
+    public layers: any;
+    /** @private */
+    private res;
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     private initContainer;
     /**
      * Add events listeners on map (called by setMap)
      *
-     * @param {*} map - map
+     * @param {Map} map - map
      * @private
      */
     private addEventsListeners;
@@ -106,41 +112,38 @@ declare class GetFeatureInfo {
     map: any;
     /**
      * Main render function
-     * @param { ol.Layer } layer layer openlayer
+     * @param { Layer } layer layer openlayer
      * @returns { Object } gfiLayer
      * {
      *      format : "wmts",
      *      layer: layer,
      *      url :  url          pour wmts et wms
      * }
-     * @private
      */
-    private getGetFeatureInfoLayer;
+    getGetFeatureInfoLayer(layer: Layer): any;
     /**
      * Main render function
-     * @param { ol.Layer } layer layer openlayer
+     * @param { Layer } layer layer openlayer
      * @returns { Array } Array of ol features
-     * @private
      */
-    private getFeaturesAtClick;
+    getFeaturesAtClick(layer: Layer): any[];
     /**
      * Main render function
-     * @param { Object } gfiLayer layer openlayer
+     * @param { Layer } gfiLayer layer openlayer
      * @returns { Object } gfi result
      * {
      *      layername : "layername",
      *      content: "html"
      * }
-     * @private
      */
-    private getGetFeatureInfoContent;
+    getGetFeatureInfoContent(gfiLayer: Layer): any;
     /**
      * Get layer title
      *
-     * @param {Object} gfiLayer - the layer object used by the gfi widget
+     * @param {Layer} gfiLayer - the layer object used by the gfi widget
      * @returns {String} layerTitle - layer title
      */
-    getLayerTitle(gfiLayer: Object): string;
+    getLayerTitle(gfiLayer: Layer): string;
     /**
      * Main render function
      * @private
@@ -157,24 +160,29 @@ declare class GetFeatureInfo {
     /**
      * Gets HTML content from features array
      *
-     * @param {Array.<ol.Features>} features - openlayers features Array
+     * @param {Features[]} features - openlayers features Array
      * @returns {HTMLElement} HTML content.
      */
-    features2html(features: Array<ol.Features>): HTMLElement;
+    features2html(features: Features[]): HTMLElement;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onShowGetFeatureInfoClick(e: any): void;
+    private onShowGetFeatureInfoClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onCloseGetFeatureInfoClick(e: any): void;
+    private onCloseGetFeatureInfoClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onGetFeatureInfoComputationSubmit(e: any): void;
+    private onGetFeatureInfoComputationSubmit;
 }
+import Control from "../Control";
+import Layer from "ol/layer/Layer";
 //# sourceMappingURL=GetFeatureInfo.d.ts.map

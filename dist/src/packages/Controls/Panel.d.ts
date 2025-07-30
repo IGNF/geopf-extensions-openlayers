@@ -40,22 +40,22 @@ declare class PanelDOM {
      * @param {*} name -
      * @param {*} title -
      * @param {*} cb -
-     * @returns {DOMElement} -
+     * @returns {HTMLElement} -
      */
-    add(name: any, title: any, cb: any): DOMElement;
+    add(name: any, title: any, cb: any): HTMLElement;
     /**
      * ...
      * @param {*} name -
      * @param {*} cb -
      * @param {*} options -
-     * @returns {DOMElement} -
+     * @returns {HTMLElement} -
      */
-    insertBtn(name: any, cb: any, options: any): DOMElement;
+    insertBtn(name: any, cb: any, options: any): HTMLElement;
     /**
      * ...
-     * @returns {DOMElement} -
+     * @returns {HTMLElement} -
      */
-    insertIcon(): DOMElement;
+    insertIcon(): HTMLElement;
     #private;
 }
 //# sourceMappingURL=Panel.d.ts.map

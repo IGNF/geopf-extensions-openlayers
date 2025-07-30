@@ -3,115 +3,117 @@ export default MousePosition;
  * @classdesc
  * MousePosition Control.
  *
- * @constructor
  * @alias ol.control.GeoportalMousePosition
- * @type {ol.control.GeoportalMousePosition}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
- * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
- * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Boolean} [options.collapsed = true] - Specify if MousePosition control should be collapsed at startup. Default is true.
- * @param {Array}   [options.units] - list of coordinates units, to be displayed in control units list.
- *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal), "RAD" (radians) and "GON" (grades) for geographical coordinates,
- *      and "M" or "KM" for metric coordinates
- * @param {Boolean}   [options.displayAltitude = true] - activate (true) or deactivate (false) the altitude panel. True by default
- * @param {Boolean}   [options.displayCoordinates = true] - activate (true) or deactivate (false) the coordinates panel. True by default
- * @param {Boolean} [options.editCoordinates = false] - If true, coordinates from the MousePosition control can be edited by users to re-center the view. False by default.
- * @param {Function} [options.mapCenterCallback] - callback...
- * @param {Array}   [options.systems] - list of projection systems, default are Geographical ("EPSG:4326"), Web Mercator ("EPSG:3857"), Lambert 93 ("EPSG:2154") and extended Lambert 2 ("EPSG:27572").
- *      Each array element (=system) is an object with following properties :
- * @param {String}  options.systems.crs - Proj4 crs alias (from proj4 defs). e.g. : "EPSG:4326". Required
- * @param {String}  [options.systems.label] - CRS label to be displayed in control. Default is crs code (e.g. "EPSG:4326")
- * @param {String}  options.systems.type - CRS units type for coordinates conversion : "Geographical" or "Metric". Default: "Metric"
- * @param {Object}  [options.systems.geoBBox] - Aera covered by the system (WGS84 coordinates).
- * @param {Number}  options.systems.geoBBox.right - Right bound.
- * @param {Number}  options.systems.geoBBox.left - Left bound.
- * @param {Number}  options.systems.geoBBox.top - Top bound.
- * @param {Number}  options.systems.geoBBox.bottom - Bottom bound.
- * @param {Object} [options.positionMarker] - options for position marker
- * @param {String} options.positionMarker.url - Marker url (define in src/Openlayers/Controls/Utils/Markers.js)
- * @param {Array} options.positionMarker.offset - Offsets in pixels used when positioning the marker towards targeted point.
- *      The first element in the array is the horizontal offset. A positive value shifts the marker right.
- *      The second element in the array is the vertical offset. A positive value shifts the marker down. [0,0] value positions the top-left corner of the marker image to the targeted point.
- *      Default is offset associated to default marker image.
- * @param {Boolean} options.positionMarker.hide - if true, marker is not displayed, otherwise displayed (False by default.)
- * @param {Object}  [options.altitude] - elevation configuration
- * @param {Object}  [options.altitude.serviceOptions] - options of elevation service
- * @param {Number}  [options.altitude.responseDelay] - latency for altitude request, 500 ms by default
- * @param {Number}  [options.altitude.triggerDelay] - immobilisation time of movement on the map to trigger the elevation calculation, 200 ms by default
- * @param {Number}  [options.altitude.noDataValue] - value used for altitude service no data (default is -99999). In this case, "---m" will be displayed instead of "-99999m"
- * @param {Number}  [options.altitude.noDataValueTolerance] - tolerance for no data value :
- *                  values in [noDataValue + noDataValueTolerance ; noDataValue - noDataValueTolerance] interval will not be displayed, but "---m" will be displayed instead.
- *                  Default is 90000 (no data values = [-9999 ; -189999])
- *  @example
- *  var MousePosition = new ol.control.GeoportalMousePosition({
- *      "collapsed" : false,
- *      "graggable" : true,
- *      "displayCoordinates" : true,
- *      "displayAltitude" : true,
- *      "altitude" : {
- *           "triggerDelay" : 100,
- *           "responseDelay" : 500,
- *           "noDataValue" : -99999,
- *           "noDataValueTolerance" : 99000,
- *           "serviceOptions" : {}
- *      },
- *      "systems" : [
- *       {
- *          "crs" : "EPSG:3857",
- *          "label" : "Web Mercator",
- *          "type" : "Metric"
- *       },
- *       {
- *          "crs" : "EPSG:4326",
- *          "label" : "Géographiques",
- *          "type" : "Geographical"
- *       },
- *       {
- *           "label" : "Lambert 93",
- *           "crs" : "EPSG:2154",
- *           "type" : "Metric",
- *           "geoBBox" : {
- *               "left" : -9.86,
- *               "bottom" : 41.15,
- *               "right" : 10.38,
- *               "top" : 51.56
- *           }
- *        }
- *      ],
- *      "units" : ["DEC", "DMS"]
- * });
- */
-declare class MousePosition {
+ * @module GeoportalMousePosition
+*/
+declare class MousePosition extends Control {
     /**
-     * See {@link ol.control.GeoportalMousePosition}
-     * @module MousePosition
-     * @alias module:~controls/MousePosition
-     * @param {*} options - options
-     * @example
-     * import GeoportalMousePosition from "gpf-ext-ol/controls/MousePosition"
-     * ou
-     * import { GeoportalMousePosition } from "gpf-ext-ol"
+     * @constructor
+     * @param {Object} options - options for function call.
+     * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+     * @param {String}  [options.apiKey] - API key. The key "calcul" is used by default.
+     * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+     * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
+     * @param {Boolean} [options.collapsed = true] - Specify if MousePosition control should be collapsed at startup. Default is true.
+     * @param {Array}   [options.units] - list of coordinates units, to be displayed in control units list.
+     *      Values may be "DEC" (decimal degrees), "DMS" (sexagecimal), "RAD" (radians) and "GON" (grades) for geographical coordinates,
+     *      and "M" or "KM" for metric coordinates
+     * @param {Boolean}   [options.displayAltitude = true] - activate (true) or deactivate (false) the altitude panel. True by default
+     * @param {Boolean}   [options.displayCoordinates = true] - activate (true) or deactivate (false) the coordinates panel. True by default
+     * @param {Boolean} [options.editCoordinates = false] - If true, coordinates from the MousePosition control can be edited by users to re-center the view. False by default.
+     * @param {Function} [options.mapCenterCallback] - callback...
+     * @param {Array}   [options.systems] - list of projection systems, default are Geographical ("EPSG:4326"), Web Mercator ("EPSG:3857"), Lambert 93 ("EPSG:2154") and extended Lambert 2 ("EPSG:27572").
+     *      Each array element (=system) is an object with following properties :
+     * @param {String}  options.systems.crs - Proj4 crs alias (from proj4 defs). e.g. : "EPSG:4326". Required
+     * @param {String}  [options.systems.label] - CRS label to be displayed in control. Default is crs code (e.g. "EPSG:4326")
+     * @param {String}  options.systems.type - CRS units type for coordinates conversion : "Geographical" or "Metric". Default: "Metric"
+     * @param {Object}  [options.systems.geoBBox] - Aera covered by the system (WGS84 coordinates).
+     * @param {Number}  options.systems.geoBBox.right - Right bound.
+     * @param {Number}  options.systems.geoBBox.left - Left bound.
+     * @param {Number}  options.systems.geoBBox.top - Top bound.
+     * @param {Number}  options.systems.geoBBox.bottom - Bottom bound.
+     * @param {Object} [options.positionMarker] - options for position marker
+     * @param {String} options.positionMarker.url - Marker url (define in src/Openlayers/Controls/Utils/Markers.js)
+     * @param {Array} options.positionMarker.offset - Offsets in pixels used when positioning the marker towards targeted point.
+     *      The first element in the array is the horizontal offset. A positive value shifts the marker right.
+     *      The second element in the array is the vertical offset. A positive value shifts the marker down. [0,0] value positions the top-left corner of the marker image to the targeted point.
+     *      Default is offset associated to default marker image.
+     * @param {Boolean} options.positionMarker.hide - if true, marker is not displayed, otherwise displayed (False by default.)
+     * @param {Object}  [options.altitude] - elevation configuration
+     * @param {Object}  [options.altitude.serviceOptions] - options of elevation service
+     * @param {Number}  [options.altitude.responseDelay] - latency for altitude request, 500 ms by default
+     * @param {Number}  [options.altitude.triggerDelay] - immobilisation time of movement on the map to trigger the elevation calculation, 200 ms by default
+     * @param {Number}  [options.altitude.noDataValue] - value used for altitude service no data (default is -99999). In this case, "---m" will be displayed instead of "-99999m"
+     * @param {Number}  [options.altitude.noDataValueTolerance] - tolerance for no data value :
+     *                  values in [noDataValue + noDataValueTolerance ; noDataValue - noDataValueTolerance] interval will not be displayed, but "---m" will be displayed instead.
+     *                  Default is 90000 (no data values = [-9999 ; -189999])
+     *  @example
+     *  var MousePosition = new ol.control.GeoportalMousePosition({
+     *      "collapsed" : false,
+     *      "graggable" : true,
+     *      "displayCoordinates" : true,
+     *      "displayAltitude" : true,
+     *      "altitude" : {
+     *           "triggerDelay" : 100,
+     *           "responseDelay" : 500,
+     *           "noDataValue" : -99999,
+     *           "noDataValueTolerance" : 99000,
+     *           "serviceOptions" : {}
+     *      },
+     *      "systems" : [
+     *       {
+     *          "crs" : "EPSG:3857",
+     *          "label" : "Web Mercator",
+     *          "type" : "Metric"
+     *       },
+     *       {
+     *          "crs" : "EPSG:4326",
+     *          "label" : "Géographiques",
+     *          "type" : "Geographical"
+     *       },
+     *       {
+     *           "label" : "Lambert 93",
+     *           "crs" : "EPSG:2154",
+     *           "type" : "Metric",
+     *           "geoBBox" : {
+     *               "left" : -9.86,
+     *               "bottom" : 41.15,
+     *               "right" : 10.38,
+     *               "top" : 51.56
+     *           }
+     *        }
+     *      ],
+     *      "units" : ["DEC", "DMS"]
+     * });
      */
-    constructor(options: any);
+    constructor(options: {
+        id?: number | undefined;
+        apiKey?: string | undefined;
+        ssl?: boolean | undefined;
+        draggable?: boolean | undefined;
+        collapsed?: boolean | undefined;
+        units?: any[] | undefined;
+        displayAltitude?: boolean | undefined;
+        displayCoordinates?: boolean | undefined;
+        editCoordinates?: boolean | undefined;
+        mapCenterCallback?: Function | undefined;
+        systems?: any[] | undefined;
+    });
     /**
      * Nom de la classe (heritage)
      * @private
      */
     private CLASSNAME;
-    container: DOMElement;
-    element: any;
+    container: HTMLElement;
     /**
      * Overload ol.control.Control setMap method, called when
      *
-     * @param {Object} map - the map
+     * @param {Map} map - the map
      *
      */
-    setMap(map: Object): void;
-    listenerKey: any;
-    _markerOverlay: any;
+    setMap(map: Map): void;
+    listenerKey: import("ol/events").EventsKey | null | undefined;
+    _markerOverlay: Overlay | null | undefined;
     /**
      * Set additional projection system
      *
@@ -158,7 +160,7 @@ declare class MousePosition {
      * @param {Number}  [options.triggerDelay] - immobilisation time of movement on the map to trigger the elevation calculation, 200 ms by default
      */
     setAltitudeOptions(options: {
-        serviceOptions?: Object | undefined;
+        serviceOptions?: any;
         responseDelay?: number | undefined;
         triggerDelay?: number | undefined;
     }): void;
@@ -183,9 +185,9 @@ declare class MousePosition {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * Initialize control (called by MousePosition constructor)
      *
@@ -193,26 +195,40 @@ declare class MousePosition {
      * @private
      */
     private _initialize;
-    options: Object | undefined;
+    options: any;
     /** {Boolean} specify if MousePosition control is collapsed (true) or not (false) */
     collapsed: any;
     /** {Boolean} specify if MousePosition control is draggable (true) or not (false) */
     draggable: any;
-    _markerUrl: any;
-    _markerOffset: any;
-    _hideMarker: any;
+    /** @private */
+    private _markerUrl;
+    /** @private */
+    private _markerOffset;
+    /** @private */
+    private _hideMarker;
     editing: any;
-    _uid: any;
-    _projectionSystems: any[] | undefined;
-    _isDesktop: boolean | undefined;
-    _timer: any;
-    _currentProjectionSystems: any;
-    _currentProjectionType: any;
-    _currentProjectionUnits: any;
-    _projectionUnitsContainer: any;
-    _showMousePositionContainer: any;
-    _panelMousePositionContainer: any;
-    _panelHeaderMousePositionContainer: any;
+    /** @private */
+    private _uid;
+    /** @private */
+    private _projectionSystems;
+    /** @private */
+    private _isDesktop;
+    /** @private */
+    private _timer;
+    /** @private */
+    private _currentProjectionSystems;
+    /** @private */
+    private _currentProjectionType;
+    /** @private */
+    private _currentProjectionUnits;
+    /** @private */
+    private _projectionUnitsContainer;
+    /** @private */
+    private _showMousePositionContainer;
+    /** @private */
+    private _panelMousePositionContainer;
+    /** @private */
+    private _panelHeaderMousePositionContainer;
     /**
      *
      * @param {Object} option - positionMarker option
@@ -247,7 +263,7 @@ declare class MousePosition {
     /**
      * Create control main container (called by MousePosition constructor)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -363,8 +379,9 @@ declare class MousePosition {
      * this method is called by event 'click' on input coordinate
      *
      * @param {Boolean} editing - editing mode
+     * @private
      */
-    onMousePositionEditModeClick(editing: boolean): void;
+    private onMousePositionEditModeClick;
     /**
      * Get coordinate from inputs and select in decimal degrees
      *
@@ -442,4 +459,7 @@ declare class MousePosition {
      */
     private validateExtentCoordinate;
 }
+import Control from "../Control";
+import Map from "ol/Map";
+import Overlay from "ol/Overlay";
 //# sourceMappingURL=MousePosition.d.ts.map

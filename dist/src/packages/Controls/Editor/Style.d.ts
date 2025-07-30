@@ -74,7 +74,7 @@ declare class Style {
      * Graphical rendering of the scale tools
      *
      * @param {Object} scale - {min,max} or 0|21
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      * @example
@@ -84,7 +84,7 @@ declare class Style {
     /**
      * Graphical rendering of the edition tools
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      * @example
@@ -96,14 +96,14 @@ declare class Style {
      *
      * @private
      * @param {Object} json - json.
-     * @returns {DOMElement} dom element
+     * @returns {HTMLElement} dom element
      */
     private _syntaxHighlight;
     /**
      * Add element into target DOM
      * @returns {Object} - Legend instance
      */
-    add(): Object;
+    add(): any;
     /**
      * Set display container or get
      *
@@ -114,9 +114,9 @@ declare class Style {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * this method is called by event '' on '' tag form...
      *

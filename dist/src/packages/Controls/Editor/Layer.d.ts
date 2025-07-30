@@ -106,25 +106,25 @@ declare class Layer {
      * Add element into target DOM
      * @returns {Object} - Layer instance
      */
-    add(): Object;
+    add(): any;
     /**
      * Add style in the submenu
      *
      * @param {Object} style - style object
      */
-    addStyle(style: Object): void;
+    addStyle(style: any): void;
     /**
      * Add filter in the submenu
      *
      * @param {Object} filter - filter object
      */
-    addFilter(filter: Object): void;
+    addFilter(filter: any): void;
     /**
      * Add Legend in the submenu
      *
      * @param {Object} legend - legend object
      */
-    addLegend(legend: Object): void;
+    addLegend(legend: any): void;
     /**
      * Integrate Legend to the layer container
      */
@@ -161,9 +161,9 @@ declare class Layer {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * this method is called by event '' on '' tag form
      *

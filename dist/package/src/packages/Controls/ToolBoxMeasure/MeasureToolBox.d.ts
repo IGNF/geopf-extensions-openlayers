@@ -1,10 +1,8 @@
 export default MeasureToolBox;
-/**
- * @type {ol.control.MeasureToolBox}
- * MeasureToolBox - Boite à outils (ToolBox) pour les outils de mesures.
- * - distance
- * - aire
- * - azimut
- */
-declare var MeasureToolBox: ol.control.MeasureToolBox;
+declare namespace MeasureToolBox {
+    let _toolbox: {};
+    let add: (map: Map, ctrl: Control) => void;
+}
+import Map from "ol/Map";
+import Control from "ol/control/Control";
 //# sourceMappingURL=MeasureToolBox.d.ts.map

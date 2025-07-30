@@ -19,26 +19,20 @@ export default KML;
  * cf. https://github.com/openlayers/openlayers/issues/5229
  * cf. https://github.com/openlayers/openlayers/issues/3371
  *
- * @constructor
  * @alias ol.format.KMLExtended
- * @type {ol.format.KMLExtended}
- * @extends {ol.format.KML}
- * @param {Object} options - Options
- * @param {Object} [options.extensions] - Add properties to file root
- */
-declare class KML {
+ * @module KMLExtended
+ *
+*/
+declare class KML extends olKML {
     /**
-     * See {@link ol.format.KMLExtended}
-     * @module KMLExtended
-     * @alias module:~formats/KMLExtended
-     * @param {*} options - options
-     * @example
-     * import KMLExtended from "gpf-ext-ol/formats/KMLExtended"
-     * ou
-     * import { KMLExtended } from "gpf-ext-ol"
+     * @constructor
+     * @param {Object} options - Options
+     * @param {Object} [options.extensions] - Add properties to file root
      */
-    constructor(options: any);
-    source: any;
+    constructor(options: {
+        extensions?: any;
+    });
+    source: Document | Node | HTMLElement | null;
     extensions: any;
     /**
      *
@@ -74,8 +68,8 @@ declare class KML {
      *  - creation de styles étendus ou correctifs sur le KML
      *  - ajout de styles étendus sur les features
      *
-     * @param {DOMElement} kmlNode - kml nodes
-     * @param {Object[]} features - features
+     * @param {HTMLElement} kmlNode - kml nodes
+     * @param {Feature[]} features - features
      * @param {Object} process - process
      *
      * @example
@@ -92,23 +86,23 @@ declare class KML {
      *   extendedData : getExtendedData
      * });
      */
-    _processKml(kmlNode: DOMElement, features: Object[], process: Object): void;
+    _processKml(kmlNode: HTMLElement, features: Feature[], process: any): void;
     /**
      * Write Extend for Features.
      * This function overloads ol.format.KML.writeFeatures ...
      *
-     * @see ol.format.KML.prototype.writeFeatures
-     * @param {Object[]} features - Features.
+     * @see olKML#writeFeatures
+     * @param {Feature[]} features - Features.
      * @param {Object} options - Options.
      *
      * @returns {String} kml string formatted
      */
-    writeFeatures(features: Object[], options: Object): string;
+    writeFeatures(features: Feature[], options: any): string;
     /**
      * Write Extended Styles for each features
      *
-     * @param {DOMElement} kmlNode - kml nodes
-     * @param {Object[]} features - features
+     * @param {HTMLElement} kmlNode - kml nodes
+     * @param {Feature[]} features - features
      * @param {Object} options - options
      *
      * @returns {String} kml string extended
@@ -127,19 +121,19 @@ declare class KML {
      * Read Extend for Features.
      * This function overloads ol.format.KML.readFeatures ...
      *
-     * @see ol.format.KML.prototype.readFeatures
+     * @see olKML#readFeatures
      * @param {Document|Node} source - Source.
-     * @param {olx.format.ReadOptions=} options - options.
-     * @returns {Array.<ol.Feature>} Features.
+     * @param {Object} options - options. see olx.format.ReadOptions
+     * @returns {Feature[]} Features.
      */
-    readFeatures(source: Document | Node, options?: olx.format.ReadOptions | undefined): Array<ol.Feature>;
+    readFeatures(source: Document | Node, options: any): Feature[];
     /**
      * Read Extended Styles for each features
      *
      * @param {(Document|Node|ArrayBuffer|Object|String)} source - source
-     * @param {olx.format.ReadOptions=} options - options
+     * @param {Object} options - options see olx.format.ReadOptions
      *
-     * @returns {Object[]} features
+     * @returns {Feature[]} features
      *
      * @private
      */
@@ -149,6 +143,8 @@ declare class KML {
      * @param {*} key ...
      * @returns {Object} json
      */
-    readRootExtensions(key: any): Object;
+    readRootExtensions(key: any): any;
 }
+import olKML from "ol/format/KML";
+import Feature from "ol/Feature";
 //# sourceMappingURL=KML.d.ts.map

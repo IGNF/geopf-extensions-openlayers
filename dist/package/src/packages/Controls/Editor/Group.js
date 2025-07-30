@@ -139,7 +139,7 @@ class Group {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     getContainer () {
         var nodes = this.container.childNodes;

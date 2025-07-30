@@ -1,11 +1,11 @@
 export default Register;
 declare namespace Register {
     let isLoaded: boolean;
-    function get(name: string): Object;
+    function get(name: string): any;
     function exist(name: string): boolean;
-    function load(Proj4: Object): void;
-    function loadByDefault(Proj4: Object): void;
-    function loadByName(Proj4: Object, name: string): boolean;
+    function load(Proj4: any): void;
+    function loadByDefault(Proj4: any): void;
+    function loadByName(Proj4: any, name: string): boolean;
     let EPSG: {
         4978: string;
         3857: string;

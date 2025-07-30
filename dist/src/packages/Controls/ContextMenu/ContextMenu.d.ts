@@ -1,49 +1,99 @@
 export default ContextMenu;
+export type ContextMenuOptions = {
+    /**
+     * - Définit si le widget est replié au chargement.
+     */
+    collapsed?: boolean | undefined;
+    /**
+     * - Permet de déplacer le panneau du widget.
+     */
+    draggable?: boolean | undefined;
+    /**
+     * - Active l’ajout automatique des événements sur la carte.
+     */
+    auto?: boolean | undefined;
+    /**
+     * - Affiche un en-tête (header) dans le panneau.
+     */
+    panel?: boolean | undefined;
+    /**
+     * - Tableau d’items personnalisés pour le menu contextuel (format ol-contextmenu).
+     */
+    contextMenuItemsOptions?: any[] | undefined;
+    /**
+     * - Élément DOM à utiliser comme conteneur principal.
+     */
+    element?: HTMLElement | undefined;
+    /**
+     * - Sélecteur ou identifiant du conteneur cible.
+     */
+    target?: string | undefined;
+    /**
+     * - Fonction de rendu personnalisée.
+     */
+    render?: Function | undefined;
+    /**
+     * - Position CSS du widget sur la carte.
+     */
+    position?: string | undefined;
+    /**
+     * - Ajoute ou retire l’espace autour du panneau.
+     */
+    gutter?: boolean | undefined;
+    /**
+     * - Identifiant unique du widget.
+     */
+    id?: string | number | undefined;
+};
+/**
+ * @typedef {Object} ContextMenuOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
+ * @property {boolean} [panel=true] - Affiche un en-tête (header) dans le panneau.
+ * @property {Array<Object>} [contextMenuItemsOptions=[]] - Tableau d’items personnalisés pour le menu contextuel (format ol-contextmenu).
+ * @property {HTMLElement} [element] - Élément DOM à utiliser comme conteneur principal.
+ * @property {string} [target] - Sélecteur ou identifiant du conteneur cible.
+ * @property {Function} [render] - Fonction de rendu personnalisée.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ * @property {string|number} [id] - Identifiant unique du widget.
+ */
 /**
  * @classdesc
  *
  * ContextMenu button
  *
- * @constructor
  * @alias ol.control.ContextMenu
- * @type {ol.control.ContextMenu}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *    la clé contextMenuItemsOptions permet de paramétrer
- *    un tableau d'item dont le format est hérité de la librairie
- *    {@link https://www.npmjs.com/package/ol-contextmenu}
- *
- *    ex : { contextMenuItemsOptions : itemsOpt }
- *
- * @example
- * var contextMenu = new ol.control.ContextMenu();
- * map.addControl(contextMenu);
- */
-declare class ContextMenu {
+ * @module ContextMenu
+*/
+declare class ContextMenu extends Control {
     /**
-     * See {@link ol.control.ContextMenu}
-     * @module ContextMenu
-     * @alias module:~controls/ContextMenu
-     * @param {Object} [options] - options
+     * @constructor
+     * @param {ContextMenuOptions} options - options for function call.
+     *    la clé contextMenuItemsOptions permet de paramétrer
+     *    un tableau d'item dont le format est hérité de la librairie
+     *    {@link https://www.npmjs.com/package/ol-contextmenu}
+     *
+     *    ex : { contextMenuItemsOptions : itemsOpt }
+     *
      * @example
-     * import ContextMenu from "gpf-ext-ol/controls/ContextMenu"
-     * ou
-     * import { ContextMenu } from "gpf-ext-ol"
+     * var contextMenu = new ol.control.ContextMenu();
+     * map.addControl(contextMenu);
      */
-    constructor(options?: Object);
+    constructor(options: ContextMenuOptions);
     /**
     * Nom de la classe (heritage)
     * @private
     */
     private CLASSNAME;
-    container: DOMElement;
-    element: any;
+    container: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Initialize ContextMenu control (called by ContextMenu constructor)
      *
@@ -59,28 +109,45 @@ declare class ContextMenu {
         panel: boolean;
         contextMenuItemsOptions: never[];
     } | undefined;
-    /** {Boolean} specify if control is collapsed (true) or not (false) */
+    /**
+     * @type {Boolean}
+     * specify if control is collapsed (true) or not (false) */
     collapsed: boolean | undefined;
-    /** {Boolean} specify if control is draggable (true) or not (false) */
+    /**
+     * @type {Boolean}
+     * specify if control is draggable (true) or not (false) */
     draggable: boolean | undefined;
-    /** {Boolean} specify if control add some stuff auto */
+    /**
+     * @type {Boolean}
+     * specify if control add some stuff auto */
     auto: boolean | undefined;
-    buttonContextMenuShow: any;
-    panelContextMenuContainer: any;
-    panelContextMenuHeaderContainer: any;
-    buttonContextMenuClose: any;
-    panelContextMenuEntriesContainer: any;
+    /** @private */
+    private buttonContextMenuShow;
+    /** @private */
+    private panelContextMenuContainer;
+    /** @private */
+    private panelContextMenuHeaderContainer;
+    /** @private */
+    private buttonContextMenuClose;
+    /** @private */
+    private panelContextMenuEntriesContainer;
     /** {Array} specify some events listeners */
-    eventsListeners: any[] | undefined;
-    controlList: any[] | undefined;
-    itiPoints: any[] | undefined;
-    _marker: any;
-    contextMenuItemsOptions: any;
-    contextmenu: any;
+    /** @private */
+    private eventsListeners;
+    /** @private */
+    private controlList;
+    /** @private */
+    private itiPoints;
+    /** @private */
+    private _marker;
+    /** @private */
+    private contextMenuItemsOptions;
+    /** @type {olContextMenu} */
+    contextmenu: olContextMenu | undefined;
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     private initContainer;
@@ -161,23 +228,30 @@ declare class ContextMenu {
     displayAdressAndCoordinate(evt: any): void;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onShowPointInfoClick(e: any): void;
+    private onShowPointInfoClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onClosePointInfoClick(e: any): void;
+    private onClosePointInfoClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onCloseContextMenu(e: any): void;
+    private onCloseContextMenu;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onOpenContextMenu(e: any): void;
+    private onOpenContextMenu;
 }
+import Control from "../Control";
+import Map from "ol/Map";
+import olContextMenu from "ol-contextmenu";
 //# sourceMappingURL=ContextMenu.d.ts.map

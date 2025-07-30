@@ -1,56 +1,132 @@
 export default Territories;
+export type TerritoriesOptions = {
+    /**
+     * - Définit si le widget est replié au chargement.
+     */
+    collapsed?: boolean | undefined;
+    /**
+     * - Permet de déplacer le panneau du widget.
+     */
+    draggable?: boolean | undefined;
+    /**
+     * - Affiche un en-tête (header) dans le panneau.
+     */
+    panel?: boolean | undefined;
+    /**
+     * - Charge automatiquement la liste par défaut des territoires.
+     */
+    auto?: boolean | undefined;
+    /**
+     * - Affiche une imagette pour chaque territoire.
+     */
+    thumbnail?: boolean | undefined;
+    /**
+     * - Affiche les tuiles en mode réduit (nom uniquement).
+     */
+    reduce?: boolean | undefined;
+    /**
+     * - Nombre de tuiles affichées (0 = toutes).
+     */
+    tiles?: number | undefined;
+    /**
+     * - Liste personnalisée des territoires à afficher.
+     */
+    territories?: any[] | undefined;
+    /**
+     * - Options pour l’import de configuration.
+     */
+    upload?: {
+        /**
+         * - Active le menu d’import de fichier.
+         */
+        active?: boolean | undefined;
+        /**
+         * - Titre du menu d’import.
+         */
+        title?: string | undefined;
+        /**
+         * - Description du menu d’import.
+         */
+        description?: string | undefined;
+    } | undefined;
+    /**
+     * - Titre affiché dans le panneau.
+     */
+    title?: string | undefined;
+    /**
+     * - Position CSS du widget sur la carte.
+     */
+    position?: string | undefined;
+    /**
+     * - Ajoute ou retire l’espace autour du panneau.
+     */
+    gutter?: boolean | undefined;
+    /**
+     * - Identifiant unique du widget.
+     */
+    id?: string | number | undefined;
+};
+/**
+ * @typedef {Object} TerritoriesOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {boolean} [panel=true] - Affiche un en-tête (header) dans le panneau.
+ * @property {boolean} [auto=false] - Charge automatiquement la liste par défaut des territoires.
+ * @property {boolean} [thumbnail=false] - Affiche une imagette pour chaque territoire.
+ * @property {boolean} [reduce=false] - Affiche les tuiles en mode réduit (nom uniquement).
+ * @property {number} [tiles=3] - Nombre de tuiles affichées (0 = toutes).
+ * @property {Array<Object>} [territories=[]] - Liste personnalisée des territoires à afficher.
+ * @property {Object} [upload] - Options pour l’import de configuration.
+ * @property {boolean} [upload.active=false] - Active le menu d’import de fichier.
+ * @property {string} [upload.title="Ajouter un fichier de configuration"] - Titre du menu d’import.
+ * @property {string} [upload.description=""] - Description du menu d’import.
+ * @property {string} [title="Sélectionner un territoire"] - Titre affiché dans le panneau.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ * @property {string|number} [id] - Identifiant unique du widget.
+ */
 /**
  * @classdesc
  *
  * Territories map widget
  *
- * @constructor
  * @alias ol.control.Territories
- * @type {ol.control.Territories}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *
- * @fires territories:change
- * @example
- * var territories = new ol.control.Territories({
- *   collapsed: true,
- *   panel: true,
- *   auto: true
- * });
- * map.addControl(territories);
- *
- * or/and
- *
- * var territories = new ol.control.Territories({});
- * territories.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
- * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
- * map.addControl(territories);
- */
-declare class Territories {
+ * @module Territories
+*/
+declare class Territories extends Control {
     /**
-     * See {@link ol.control.Territories}
-     * @module Territories
-     * @alias module:~controls/Territories
-     * @param {Object} [options] - options
+     * @constructor
+     * @param {TerritoriesOptions} options - options for function call.
+     *
+     * @fires territories:change
      * @example
-     * import Territories from "gpf-ext-ol/controls/Territories"
-     * ou
-     * import { Territories } from "gpf-ext-ol"
+     * var territories = new ol.control.Territories({
+     *   collapsed: true,
+     *   panel: true,
+     *   auto: true
+     * });
+     * map.addControl(territories);
+     *
+     * or/and
+     *
+     * var territories = new ol.control.Territories({});
+     * territories.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
+     * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
+     * map.addControl(territories);
      */
-    constructor(options?: Object);
+    constructor(options: TerritoriesOptions);
     /**
      * Nom de la classe (heritage)
      * @private
      */
     private CLASSNAME;
-    container: DOMElement;
-    element: any;
+    container: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Add a territory
      *
@@ -66,13 +142,13 @@ declare class Territories {
      *  thumbnail: "data:image/png;base64,..."
      * });
      */
-    public setTerritory(territory: Object): boolean;
+    public setTerritory(territory: any): boolean;
     /**
      * Load a new configuration
      *
      * @param {Object} config - file config
      */
-    setTerritories(config: Object): void;
+    setTerritories(config: any): void;
     /**
      * Remove a territory
      *
@@ -96,7 +172,7 @@ declare class Territories {
      * @public
      */
     public setCollapse(collapsed: boolean): void;
-    collapsed: any;
+    collapsed: boolean | undefined;
     /**
      * Mode reduit des tuiles (uniquement le nom du territoire)
      *
@@ -107,9 +183,9 @@ declare class Territories {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * Initialize Territories control (called by Territories constructor)
      *
@@ -134,55 +210,75 @@ declare class Territories {
         tiles: number;
         territories: never[];
     } | undefined;
-    /** {Boolean} specify if control is draggable (true) or not (false) */
+    /**
+     * @type {Boolean}
+     * specify if control is draggable (true) or not (false)
+     * */
     draggable: boolean | undefined;
-    /** {Boolean} specify if we load the list of territories by default */
+    /**
+     * specify if we load the list of territories by default
+     * @type {Boolean} */
     auto: boolean | undefined;
-    /** {Boolean} specify if a list of object territories must be appended or replaced */
-    append: any;
-    buttonTerritoriesShow: any;
-    panelTerritoriesContainer: any;
-    panelTerritoriesHeaderContainer: any;
-    buttonTerritoriesClose: any;
-    containerTerritoriesOptions: any;
-    panelTerritoriesEntriesContainer: any;
+    /**
+     * @type {Boolean}
+     * specify if a list of object territories must be appended or replaced */
+    append: boolean | undefined;
+    /** @private */
+    private buttonTerritoriesShow;
+    /** @private */
+    private panelTerritoriesContainer;
+    /** @private */
+    private panelTerritoriesHeaderContainer;
+    /** @private */
+    private buttonTerritoriesClose;
+    /** @private */
+    private containerTerritoriesOptions;
+    /** @private */
+    private panelTerritoriesEntriesContainer;
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     private initContainer;
     /**
      * Close panel option
+     * @private
      */
-    closePanelUpLoad(): void;
+    private closePanelUpLoad;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onShowTerritoriesClick(e: any): void;
+    private onShowTerritoriesClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onCloseTerritoriesClick(e: any): void;
+    private onCloseTerritoriesClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      * @param {*} id - ...
-     * @todo ...
+     * @private
      */
-    onImageTerritoriesClick(e: any, id: any): void;
+    private onImageTerritoriesClick;
     /**
      * ...
-     * @param {*} e  - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onUploadFileClick(e: any): void;
+    private onUploadFileClick;
     /**
      * ...
-     * @param {*} e  - ...
+     * @param {Event} e - ...
+     * @private
      */
-    onUploadToggleClick(e: any): void;
+    private onUploadToggleClick;
 }
+import Control from "../Control";
+import Map from "ol/Map";
 //# sourceMappingURL=Territories.d.ts.map

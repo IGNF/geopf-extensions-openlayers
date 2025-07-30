@@ -540,7 +540,7 @@ class Legend {
     * @param {String} params.type - fill, line, circle, text, icon, ...
     * @param {String} params.values - {"color": "#2BB3E1", "width": 10, "opacity": 0.5, "stroke": "#2BB3E1"}
     * @param {Boolean} params.edit - editable with a colorPicker for only line, fill and circle legend !
-    * @returns {DOMElement} DOM element
+    * @returns {HTMLElement} DOM element
     *
     * @private
     * @example
@@ -613,7 +613,7 @@ class Legend {
     * @param {String} params.type - fill, line, (TODO : circle, icon or text)
     * @param {String} params.values - {"fill-color": "#2BB3E1"}
     * @param {Boolean} params.edit - editable with a colorPicker for only line and fill legend !
-    * @returns {DOMElement} DOM element
+    * @returns {HTMLElement} DOM element
     *
     * @private
     * @example
@@ -918,7 +918,7 @@ class Legend {
     /**
      * Get container Legend Render (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @see Layer.prototype.slotLegend()
      * @example
      *  <div class="GPEditorMapBoxLegendRender legend-(line|fill|background|text|icon|circle|unknow)" style="..."></div>
@@ -930,7 +930,7 @@ class Legend {
     /**
      * Get container Legend Tools (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @see Layer.prototype.slotLegend()
      * @example
      *  <div class="GPEditorMapBoxLegendToolsContainer">...</div>
@@ -942,7 +942,7 @@ class Legend {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     getContainer () {
         return this.container;

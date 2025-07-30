@@ -1,5 +1,5 @@
 export default Draggable;
 declare namespace Draggable {
-    function dragElement(element: DOMElement, header: DOMElement, container: DOMElement): void;
+    function dragElement(element: HTMLElement, header: HTMLElement, container: HTMLElement): void;
 }
 //# sourceMappingURL=Draggable.d.ts.map

@@ -1,7 +1,7 @@
 export default MathUtils;
 declare namespace MathUtils {
     function modulo(a: number, b: number): number;
-    function decimalToDMS(degrees: number, hemispheres: any[], numDigits: number): Object;
+    function decimalToDMS(degrees: number, hemispheres: any[], numDigits: number): any;
     /**
      * Transform decimal degrees form degrees, minutes, seconds
      *
@@ -20,7 +20,7 @@ declare namespace MathUtils {
      * @param {*} olCoordinate - see ol/coordinate.js
      * @returns {Object} - {lat, lng, unit:°}
      */
-    function coordinateToDecimal(olCoordinate: any): Object;
+    function coordinateToDecimal(olCoordinate: any): any;
     /**
      * ol coordinate to dms
      *
@@ -28,7 +28,7 @@ declare namespace MathUtils {
      * @param {*} olCoordinate - see ol/coordinate.js
      * @returns {Object} - {lat, lng, unit:dms}
      */
-    function coordinateToDMS(olCoordinate: any): Object;
+    function coordinateToDMS(olCoordinate: any): any;
     /**
      * ol coordinate to rad
      *
@@ -36,7 +36,7 @@ declare namespace MathUtils {
      * @param {*} olCoordinate - see ol/coordinate.js
      * @returns {Object} - {lat, lng, unit:rad}
      */
-    function coordinateToRad(olCoordinate: any): Object;
+    function coordinateToRad(olCoordinate: any): any;
     /**
      * ol coordinate to gon
      *
@@ -44,7 +44,7 @@ declare namespace MathUtils {
      * @param {*} olCoordinate - see ol/coordinate.js
      * @returns {Object} - {lat, lng, unit:gon}
      */
-    function coordinateToGon(olCoordinate: any): Object;
+    function coordinateToGon(olCoordinate: any): any;
     /**
      * ol coordinate to meter
      *
@@ -52,7 +52,7 @@ declare namespace MathUtils {
      * @param {*} olCoordinate - see ol/coordinate.js
      * @returns {Object} - {x, y, unit:m}
      */
-    function coordinateToMeter(olCoordinate: any): Object;
+    function coordinateToMeter(olCoordinate: any): any;
     /**
      * ol coordinate to kilometer
      *
@@ -60,7 +60,7 @@ declare namespace MathUtils {
      * @param {*} olCoordinate - see ol/coordinate.js
      * @returns {Object} - {x, lyng, unit:km}
      */
-    function coordinateToKMeter(olCoordinate: any): Object;
+    function coordinateToKMeter(olCoordinate: any): any;
     function toInteger(s: string, base: Numeric): null | Numeric;
     function isInteger(s: string): boolean;
     function toFloat(s: string): null | Numeric;

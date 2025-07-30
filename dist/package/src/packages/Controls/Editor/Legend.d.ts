@@ -57,18 +57,10 @@ declare class Legend {
     private _initialize;
     id: any;
     editable: any;
-    legendRender: Object | {
-        type: string;
-        values: {
-            width: number;
-            stroke: string;
-            color: string;
-            opacity: number;
-        };
-    } | undefined;
+    legendRender: any;
     container: HTMLDivElement | null | undefined;
     rendercontainer: HTMLDivElement | null | undefined;
-    toolscontainer: any;
+    toolscontainer: HTMLElement | null | undefined;
     name: {
         target: string;
         container: string;
@@ -204,7 +196,7 @@ declare class Legend {
     * @param {String} params.type - fill, line, circle, text, icon, ...
     * @param {String} params.values - {"color": "#2BB3E1", "width": 10, "opacity": 0.5, "stroke": "#2BB3E1"}
     * @param {Boolean} params.edit - editable with a colorPicker for only line, fill and circle legend !
-    * @returns {DOMElement} DOM element
+    * @returns {HTMLElement} DOM element
     *
     * @private
     * @example
@@ -223,7 +215,7 @@ declare class Legend {
     * @param {String} params.type - fill, line, (TODO : circle, icon or text)
     * @param {String} params.values - {"fill-color": "#2BB3E1"}
     * @param {Boolean} params.edit - editable with a colorPicker for only line and fill legend !
-    * @returns {DOMElement} DOM element
+    * @returns {HTMLElement} DOM element
     *
     * @private
     * @example
@@ -256,7 +248,7 @@ declare class Legend {
      *
      * @returns {Object} - Legend instance
      */
-    add(): Object;
+    add(): any;
     /**
      * Set display container or get
      *
@@ -273,27 +265,27 @@ declare class Legend {
     /**
      * Get container Legend Render (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @see Layer.prototype.slotLegend()
      * @example
      *  <div class="GPEditorMapBoxLegendRender legend-(line|fill|background|text|icon|circle|unknow)" style="..."></div>
      */
-    getRenderContainer(): DOMElement;
+    getRenderContainer(): HTMLElement;
     /**
      * Get container Legend Tools (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @see Layer.prototype.slotLegend()
      * @example
      *  <div class="GPEditorMapBoxLegendToolsContainer">...</div>
      */
-    getToolsContainer(): DOMElement;
+    getToolsContainer(): HTMLElement;
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * this method is called by event '' on '' tag form...
      *

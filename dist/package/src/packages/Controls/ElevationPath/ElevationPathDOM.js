@@ -15,7 +15,7 @@ var ElevationPathDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -32,7 +32,7 @@ var ElevationPathDOM = {
      * Show control
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowElevationPathPictoElement : function () {
         // contexte d'execution
@@ -81,7 +81,7 @@ var ElevationPathDOM = {
      * don't call this._createElevationPathPanelHeaderElement
      * don't call this._createElevationPathPanelProfilElement
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createElevationPathPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -109,7 +109,7 @@ var ElevationPathDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createElevationPathPanelHeaderElement : function () {
         var self = this;
@@ -197,7 +197,7 @@ var ElevationPathDOM = {
      * Create Form
      * see evenement !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createElevationPathPanelProfilElement : function () {
         var wrapper = document.createElement("div");
@@ -212,7 +212,7 @@ var ElevationPathDOM = {
     /**
      * Create Waiting Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createElevationPathWaitingElement : function () {
         var div = document.createElement("div");
@@ -231,7 +231,7 @@ var ElevationPathDOM = {
     /**
      * Create information Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createElevationPathInformationsElement : function () {
         var div = document.createElement("div");
@@ -253,7 +253,7 @@ var ElevationPathDOM = {
      *
      * @param {String} name - name of item
      * @param {String} value - value of item
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _addElevationPathInformationsItem : function (name, value) {
         var div = document.getElementById(this._addUID("GPelevationPathInformationsContainer"));

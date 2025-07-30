@@ -5,6 +5,7 @@ import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 import GeoportalWMTS from "../../Layers/LayerWMTS";
 // import ol
+import Map from "ol/Map";
 import OverviewMap from "ol/control/OverviewMap";
 
 var logger = Logger.getLogger("overviewMap");
@@ -13,29 +14,20 @@ var logger = Logger.getLogger("overviewMap");
  * @classdesc
  * OpenLayers Control to manage overviewMap
  *
- * @constructor
- * @extends {ol.control.OverviewMap}
  * @alias ol.control.GeoportalOverviewMap
- * @type {ol.control.GeoportalOverviewMap}
- * @param {Object} options - ol.control.OverviewMap options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html ol.Control.OverviewMap})
- * @fires overviewmap:toggle
- * @example
- * var overviewmap = new ol.control.GeoportalOverviewMap({
- *   position: "top-left"
- * });
- * map.addControl(overviewmap);
- */
+ * @module GeoportalOverviewMap
+*/
 class GeoportalOverviewMap extends OverviewMap {
-
+    
     /**
-     * See {@link ol.control.GeoportalOverviewMap}
-     * @module GeoportalOverviewMap
-     * @alias module:~controls/GeoportalOverviewMap
-     * @param {*} options - options
+     * @constructor
+     * @param {Object} options - ol.control.OverviewMap options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html ol.Control.OverviewMap})
+     * @fires overviewmap:toggle
      * @example
-     * import GeoportalOverviewMap from "gpf-ext-ol/controls/GeoportalOverviewMap"
-     * ou
-     * import { GeoportalOverviewMap } from "gpf-ext-ol"
+     * var overviewmap = new ol.control.GeoportalOverviewMap({
+     *   position: "top-left"
+     * });
+     * map.addControl(overviewmap);
      */
     constructor (options) {
         options = options || {};
@@ -277,6 +269,10 @@ class GeoportalOverviewMap extends OverviewMap {
         this.options = options;
     }
 
+    /**
+     * ...
+     * @param {Map} map - ...
+     */
     _createContainerPosition (map) {
         this.container = map.getOverlayContainerStopEvent();
         this.options.target = this.container;
@@ -294,6 +290,7 @@ class GeoportalOverviewMap extends OverviewMap {
         }
     }
 
+    /** @private */
     _initContainer () {
         // UID interne pour chaque controle
         this._uid = this.options.id || SelectorID.generate();
@@ -352,7 +349,7 @@ class GeoportalOverviewMap extends OverviewMap {
     /**
      * Overload setMap function
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -366,7 +363,7 @@ class GeoportalOverviewMap extends OverviewMap {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;

@@ -1,21 +1,21 @@
 export default ReverseGeocodeDOM;
 declare namespace ReverseGeocodeDOM {
     function _addUID(id: string): string;
-    function _createMainContainerElement(): DOMElement;
-    function _createShowReverseGeocodingPictoElement(): DOMElement;
-    function _createReverseGeocodingWaitingElement(): DOMElement;
-    function _createReverseGeocodingResultsPanelElement(): DOMElement;
-    function _createReverseGeocodingResultsListElement(): DOMElement;
+    function _createMainContainerElement(): HTMLElement;
+    function _createShowReverseGeocodingPictoElement(): HTMLElement;
+    function _createReverseGeocodingWaitingElement(): HTMLElement;
+    function _createReverseGeocodingResultsPanelElement(): HTMLElement;
+    function _createReverseGeocodingResultsListElement(): HTMLElement;
     function _createReverseGeocodingResultElement(locationDescription: string, id: number): void;
-    function _createReverseGeocodingPanelElement(): DOMElement;
+    function _createReverseGeocodingPanelElement(): HTMLElement;
     function _createReverseGeocodingPanelDivElement(): HTMLDivElement;
-    function _createReverseGeocodingPanelHeaderElement(): DOMElement;
-    function _createReverseGeocodingPanelReturnPictoElement(): DOMElement;
-    function _createReverseGeocodingPanelTitleElement(): DOMElement;
-    function _createReverseGeocodingPanelCloseElement(): DOMElement;
-    function _createReverseGeocodingPanelFormElement(): DOMElement;
-    function _createReverseGeocodingFormModeChoiceGeocodingTypeElement(resources: any[]): DOMElement;
-    function _createReverseGeocodingFormModeChoiceGeocodingDelimitationElement(delimitations: any[]): DOMElement;
-    function _createReverseGeocodingSubmitFormElement(): DOMElement;
+    function _createReverseGeocodingPanelHeaderElement(): HTMLElement;
+    function _createReverseGeocodingPanelReturnPictoElement(): HTMLElement;
+    function _createReverseGeocodingPanelTitleElement(): HTMLElement;
+    function _createReverseGeocodingPanelCloseElement(): HTMLElement;
+    function _createReverseGeocodingPanelFormElement(): HTMLElement;
+    function _createReverseGeocodingFormModeChoiceGeocodingTypeElement(resources: any[]): HTMLElement;
+    function _createReverseGeocodingFormModeChoiceGeocodingDelimitationElement(delimitations: any[]): HTMLElement;
+    function _createReverseGeocodingSubmitFormElement(): HTMLElement;
 }
 //# sourceMappingURL=ReverseGeocodeDOM.d.ts.map

@@ -7,7 +7,7 @@ declare namespace LayerUtils {
         crs: string;
         visibility: boolean;
         originators: Gp.Services.Config.Originator;
-    }): Object;
+    }): any;
     function intersects(extent1: Array<Float>, extent2: Array<Float>): boolean;
 }
 //# sourceMappingURL=LayerUtils.d.ts.map

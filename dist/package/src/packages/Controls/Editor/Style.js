@@ -220,7 +220,7 @@ class Style {
      * Graphical rendering of the scale tools
      *
      * @param {Object} scale - {min,max} or 0|21
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      * @example
@@ -307,7 +307,7 @@ class Style {
     /**
      * Graphical rendering of the edition tools
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      * @example
@@ -330,7 +330,7 @@ class Style {
      *
      * @private
      * @param {Object} json - json.
-     * @returns {DOMElement} dom element
+     * @returns {HTMLElement} dom element
      */
     _syntaxHighlight (json) {
         json = json.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -393,7 +393,7 @@ class Style {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     getContainer () {
         return this.container;

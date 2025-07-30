@@ -3,66 +3,75 @@ export default LocationSelector;
  * @classdesc
  *
  * LocationSelector component. Enables to select a location, using autocompletion or picking location on the map
- * @constructor
- * @extends {ol.control.Control}
+ *
  * @alias ol.control.LocationSelector
- * @type {ol.control.LocationSelector}
- * @param {Object} [options] - component options
- * @param {String} [options.apiKey] - API key for autocomplete service call. The key "calcul" is used by default.
- * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
- * @param {Boolean} [options.displayInfo = true] - whether to display info in a popup or not (not implemented yet) Default is true
- * @param {Object} [options.tag] - tag options
- * @param {Number} [options.tag.id = 1] - order id number in a locations group, in case several LocationSelector are used. For instance in route case : departure tag id should be 0, arrival tag id should be 1, and other ones : 2, 3, ...
- * @param {Number} [options.tag.groupId = null] - locationSelector global component id (in case locationSelector is called by another graphic component, e.g. route control)
- * @param {String} [options.tag.label] - text to display in component (e.g. "Departure"). Default is ">"
- * @param {Object} [options.tag.markerOpts] - options to use your own marker. Default is a lightOrange marker.
- * @param {String} [options.tag.markerOpts.url] - marker base64 encoded url (ex "data:image/png;base64,...""). Mandatory for a custom marker
- * @param {Array} [options.tag.markerOpts.offset] - Offsets in pixels used when positioning the overlay. The first element in the array is the horizontal offset. A positive value shifts the overlay right. The second element in the array is the vertical offset. A positive value shifts the overlay down. Default is [0, 0]. (see {@link http://openlayers.org/en/latest/apidoc/ol.Overlay.html ol.Overlay})
- * @param {Boolean} [options.tag.display = true] - whether to display or hide component. Default is true
- * @param {Boolean} [options.tag.addOption = false] - whether to display picto to add another LocationSelector (in case of route control)
- * @param {Boolean} [options.tag.removeOption = false] - whether to display picto to remove a LocationSelector (in case of route control)
- * @param {Object} [options.autocompleteOptions] - autocomplete service options (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options)
- * @example
- *  var locationselector = new LocationSelector({
- *      apiKey : "",
- *      tag : {
- *         id : 1,
- *         groupId : null,
- *         label : "Départ",
- *         markerOpts : {
- *              url : "...",
- *              offset : [0,0]
- *         },
- *         display : true
- *      },
- *      autocompleteOptions : {}
- *  });
- */
-declare class LocationSelector {
+ * @module LocationSelector
+*/
+declare class LocationSelector extends Control {
     /**
-     * See {@link ol.control.LocationSelector}
-     * @module LocationSelector
-     * @alias module:~controls/LocationSelector
-     * @param {*} options - options
+     * @constructor
+     * @param {Object} [options] - component options
+     * @param {String} [options.apiKey] - API key for autocomplete service call. The key "calcul" is used by default.
+     * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+     * @param {Boolean} [options.displayInfo = true] - whether to display info in a popup or not (not implemented yet) Default is true
+     * @param {Object} [options.tag] - tag options
+     * @param {Number} [options.tag.id = 1] - order id number in a locations group, in case several LocationSelector are used. For instance in route case : departure tag id should be 0, arrival tag id should be 1, and other ones : 2, 3, ...
+     * @param {Number} [options.tag.groupId = null] - locationSelector global component id (in case locationSelector is called by another graphic component, e.g. route control)
+     * @param {String} [options.tag.label] - text to display in component (e.g. "Departure"). Default is ">"
+     * @param {Object} [options.tag.markerOpts] - options to use your own marker. Default is a lightOrange marker.
+     * @param {String} [options.tag.markerOpts.url] - marker base64 encoded url (ex "data:image/png;base64,...""). Mandatory for a custom marker
+     * @param {Array} [options.tag.markerOpts.offset] - Offsets in pixels used when positioning the overlay. The first element in the array is the horizontal offset. A positive value shifts the overlay right. The second element in the array is the vertical offset. A positive value shifts the overlay down. Default is [0, 0]. (see {@link http://openlayers.org/en/latest/apidoc/ol.Overlay.html ol.Overlay})
+     * @param {Boolean} [options.tag.display = true] - whether to display or hide component. Default is true
+     * @param {Boolean} [options.tag.addOption = false] - whether to display picto to add another LocationSelector (in case of route control)
+     * @param {Boolean} [options.tag.removeOption = false] - whether to display picto to remove a LocationSelector (in case of route control)
+     * @param {Object} [options.autocompleteOptions] - autocomplete service options (see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options)
      * @example
-     * import LocationSelector from "gpf-ext-ol/controls/LocationSelector"
-     * ou
-     * import { LocationSelector } from "gpf-ext-ol"
+     *  var locationselector = new LocationSelector({
+     *      apiKey : "",
+     *      tag : {
+     *         id : 1,
+     *         groupId : null,
+     *         label : "Départ",
+     *         markerOpts : {
+     *              url : "...",
+     *              offset : [0,0]
+     *         },
+     *         display : true
+     *      },
+     *      autocompleteOptions : {}
+     *  });
      */
-    constructor(options: any);
+    constructor(options?: {
+        apiKey?: string | undefined;
+        ssl?: boolean | undefined;
+        displayInfo?: boolean | undefined;
+        tag?: {
+            id?: number | undefined;
+            groupId?: number | undefined;
+            label?: string | undefined;
+            markerOpts?: {
+                url?: string | undefined;
+                offset?: any[] | undefined;
+            } | undefined;
+            display?: boolean | undefined;
+            addOption?: boolean | undefined;
+            removeOption?: boolean | undefined;
+        } | undefined;
+        autocompleteOptions?: any;
+    });
     /**
      * Nom de la classe (heritage)
      * @private
      */
     private CLASSNAME;
-    _container: DOMElement;
-    element: any;
+    _container: HTMLElement;
     /**
      * initialize component
      *
      * @param {Object} options - options
+     * @private
      */
-    initialize(options: Object): void;
+    private initialize;
     options: {
         tag: {
             id: number;
@@ -77,44 +86,63 @@ declare class LocationSelector {
     } | undefined;
     /** uuid */
     _uid: number | undefined;
-    /** container map */
-    _map: any;
-    /** container principal des entrées  */
-    _inputsContainer: any;
-    /** container du label du point */
-    _buttonLabel: any;
-    /** container de la saisi de l'autocompletion */
-    _inputAutoComplete: any;
-    /** container du pointer de saisi sur la carte */
-    _inputShowPointerContainer: any;
-    /** label du pointer de saisi sur la carte (avec img) */
-    _inputShowPointer: any;
-    /** container des coordonnées */
-    _inputCoordinateContainer: any;
-    /** elements pour ajouter ou supprimer un nouveau point */
-    _addPointElement: any;
-    _removePointElement: any;
-    /** coordonnées du point selectionné, en EPSG:4326 */
-    _coordinate: any;
-    /** container des reponses de l'autocompletion */
-    _suggestedContainer: any;
-    _suggestedList: any;
-    /** listes des reponses de l'autocompletion */
-    _suggestedLocations: any[] | Object[] | undefined;
-    /** localisant */
-    _currentLocation: any;
-    /** ressources du services d'autocompletion (ayant droit!) */
-    _resources: {} | undefined;
-    listenerKey: any;
+    /** container map
+     * @private
+    */
+    private _map;
+    /** container principal des entrées
+     * @private */
+    private _inputsContainer;
+    /** container du label du point
+     * @private*/
+    private _buttonLabel;
+    /** container de la saisi de l'autocompletion
+     * @private */
+    private _inputAutoComplete;
+    /** container du pointer de saisi sur la carte
+     * @private */
+    private _inputShowPointerContainer;
+    /** label du pointer de saisi sur la carte (avec img)
+     * @private */
+    private _inputShowPointer;
+    /** container des coordonnées
+     * @private */
+    private _inputCoordinateContainer;
+    /** elements pour ajouter ou supprimer un nouveau point
+     * @private */
+    private _addPointElement;
+    /** @private */
+    private _removePointElement;
+    /** coordonnées du point selectionné, en EPSG:4326
+     * @private */
+    private _coordinate;
+    /** container des reponses de l'autocompletion
+     * @private */
+    private _suggestedContainer;
+    /** @private */
+    private _suggestedList;
+    /** listes des reponses de l'autocompletion
+     * @private */
+    private _suggestedLocations;
+    /** localisant
+     * @private */
+    private _currentLocation;
+    /** ressources du services d'autocompletion (ayant droit!)
+     * @private */
+    private _resources;
+    listenerKey: import("ol/events").EventsKey | null | undefined;
     /**
      * initialize marker : url and offset
      *
      * @private
      */
     private _initMarker;
-    _marker: any;
-    _markerUrl: any;
-    _markerOffset: any[] | number[] | undefined;
+    /** @private */
+    private _marker;
+    /** @private */
+    private _markerUrl;
+    /** @private */
+    private _markerOffset;
     /**
      * get coordinate
      *
@@ -126,7 +154,7 @@ declare class LocationSelector {
      * @param {Object} coordinate - Coordinate in the map projection by default, otherwise, the projection is entered in the following parameter
      * @param {String} crs - Coordinate projection
      */
-    setCoordinate(coordinate: Object, crs: string): void;
+    setCoordinate(coordinate: any, crs: string): void;
     /**
      * clean all and input
      */
@@ -138,9 +166,10 @@ declare class LocationSelector {
     /**
      * initialize component container
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
+     * @private
      */
-    _initContainer(): DOMElement;
+    private _initContainer;
     /**
      * this method is called by event 'click' on 'GPlocationOrigin' input
      *
@@ -197,8 +226,9 @@ declare class LocationSelector {
      * this point is added as a parameter for the service route.
      *
      * @param {Object} e - HTMLElement
+     * @private
      */
-    onLocationAddPointClick(e: Object): void;
+    private onLocationAddPointClick;
     /**
      * this method is called by event 'click' on map
      * (cf. this.onRouteMapPointClick), and it gets the coordinate of click on map.
@@ -294,4 +324,5 @@ declare class LocationSelector {
      */
     private _fillAutoCompletedLocationListContainer;
 }
+import Control from "ol/control/Control";
 //# sourceMappingURL=LocationSelector.d.ts.map

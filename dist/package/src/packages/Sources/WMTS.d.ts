@@ -23,6 +23,6 @@ declare class WMTS {
      *     be provided.
      * @returns {String|undefined} GetFeatureInfo URL.
      */
-    getFeatureInfoUrl(coordinate: ol.Coordinate, resolution: number, projection: ol.proj.Projection, params: Object): string | undefined;
+    getFeatureInfoUrl(coordinate: ol.Coordinate, resolution: number, projection: ol.proj.Projection, params: any): string | undefined;
 }
 //# sourceMappingURL=WMTS.d.ts.map

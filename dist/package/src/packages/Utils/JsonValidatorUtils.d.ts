@@ -16,15 +16,16 @@ export default JsonValidatorUtils;
  * }
  */
 declare class JsonValidatorUtils {
-    ajv: any;
+    ajv: Ajv;
     schemas: {};
     loadSchemas(): void;
     validate(type: any, data: any): {
         valid: boolean;
-        errors: any;
+        errors: import("ajv").ErrorObject<string, Record<string, any>, unknown>[] | null | undefined;
     } | {
         valid: boolean;
         errors?: undefined;
     };
 }
+import Ajv from "ajv";
 //# sourceMappingURL=JsonValidatorUtils.d.ts.map

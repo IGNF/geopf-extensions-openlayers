@@ -4,83 +4,93 @@ export default Route;
  *
  * Route Control.
  *
- * @constructor
  * @alias ol.control.Route
- * @type {ol.control.Route}
- * @extends {ol.control.Control}
- * @param {Object} options - route control options
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {String}  [options.apiKey] - API key for services call (route and autocomplete services). The key "calcul" is used by default.
- * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
- * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
- * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
- * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
- * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of resources, by default : ["Voiture", "Pieton"]. The first element is selected.
- * @param {Object} [options.routeOptions = {}] - route service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~route Gp.Services.route()} to know all route options.
- * @param {Object} [options.autocompleteOptions = {}] - autocomplete service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options
- * @param {Object} [options.markersOpts] - options to use your own markers. Object properties can be "departure", "stages" or "arrival". Corresponding value is an object with following properties :
- * @param {String} [options.markersOpts.url] - marker base64 encoded url (ex "data:image/png;base64,...""). Mandatory for a custom marker
- * @param {Array} [options.markersOpts.offset] - Offsets in pixels used when positioning the overlay. The first element in the array is the horizontal offset. A positive value shifts the overlay right. The second element in the array is the vertical offset. A positive value shifts the overlay down. Default is [0, 0]. (see http://openlayers.org/en/latest/apidoc/ol.Overlay.html)
- * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
- * @param {String} [options.layerDescription.title = "Itinéraire"] - Layer title to be displayed in LayerSwitcher
- * @param {String} [options.layerDescription.description = "Itinéraire basé sur un graphe"] - Layer description to be displayed in LayerSwitcher
- * @fires route:drawstart
- * @fires route:drawend
- * @fires route:compute
- * @fires route:compute
- * @fires route:newresults
- * @example
- *  var route = ol.control.Route({
- *      "collapsed" : true
- *      "draggable" : true,
- *      "export"    : false,
- *      "exclusions" : {
- *         "toll" : true,
- *         "bridge" : false,
- *         "tunnel" : true
- *      },
- *      "graphs" : ['Pieton', 'Voiture'],
- *      "markersOpts" : {
- *          "departure" : {
- *              "url" : "...",
- *              "offset" : [0,0]
- *          },
- *          "stages" : {
- *              "url" : "...",
- *              "offset" : [0,0]
- *          },
- *          "arrival" : {
- *              "url" : "...",
- *              "offset" : [0,0]
- *          }
- *      }
- *      "autocompleteOptions" : {},
- *      "routeOptions" : {}
- *  });
- *
- *  // if you want to pluggued the control Export with options :
- *  var route = new ol.control.Route({
- *    export : {
- *      name : "export",
- *      format : "geojson",
- *      title : "Exporter",
- *      menu : false
- *    }
- *  });
- */
-declare class Route {
+ * @module Route
+*/
+declare class Route extends Control {
     /**
-     * See {@link ol.control.Route}
-     * @module Route
-     * @alias module:~controls/Route
-     * @param {*} options - options
+     * @constructor
+     * @param {Object} options - route control options
+     * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+     * @param {String}  [options.apiKey] - API key for services call (route and autocomplete services). The key "calcul" is used by default.
+     * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
+     * @param {Boolean} [options.collapsed = true] - Specify if widget has to be collapsed (true) or not (false) on map loading. Default is true.
+     * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
+     * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
+     * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
+     * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of resources, by default : ["Voiture", "Pieton"]. The first element is selected.
+     * @param {Object} [options.routeOptions = {}] - route service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~route Gp.Services.route()} to know all route options.
+     * @param {Object} [options.autocompleteOptions = {}] - autocomplete service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options
+     * @param {Object} [options.markersOpts] - options to use your own markers. Object properties can be "departure", "stages" or "arrival". Corresponding value is an object with following properties :
+     * @param {String} [options.markersOpts.url] - marker base64 encoded url (ex "data:image/png;base64,...""). Mandatory for a custom marker
+     * @param {Array} [options.markersOpts.offset] - Offsets in pixels used when positioning the overlay. The first element in the array is the horizontal offset. A positive value shifts the overlay right. The second element in the array is the vertical offset. A positive value shifts the overlay down. Default is [0, 0]. (see http://openlayers.org/en/latest/apidoc/ol.Overlay.html)
+     * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
+     * @param {String} [options.layerDescription.title = "Itinéraire"] - Layer title to be displayed in LayerSwitcher
+     * @param {String} [options.layerDescription.description = "Itinéraire basé sur un graphe"] - Layer description to be displayed in LayerSwitcher
+     * @fires route:drawstart
+     * @fires route:drawend
+     * @fires route:compute
+     * @fires route:compute
+     * @fires route:newresults
      * @example
-     * import Route from "gpf-ext-ol/controls/Route"
-     * ou
-     * import { Route } from "gpf-ext-ol"
+     *  var route = ol.control.Route({
+     *      "collapsed" : true
+     *      "draggable" : true,
+     *      "export"    : false,
+     *      "exclusions" : {
+     *         "toll" : true,
+     *         "bridge" : false,
+     *         "tunnel" : true
+     *      },
+     *      "graphs" : ['Pieton', 'Voiture'],
+     *      "markersOpts" : {
+     *          "departure" : {
+     *              "url" : "...",
+     *              "offset" : [0,0]
+     *          },
+     *          "stages" : {
+     *              "url" : "...",
+     *              "offset" : [0,0]
+     *          },
+     *          "arrival" : {
+     *              "url" : "...",
+     *              "offset" : [0,0]
+     *          }
+     *      }
+     *      "autocompleteOptions" : {},
+     *      "routeOptions" : {}
+     *  });
+     *
+     *  // if you want to pluggued the control Export with options :
+     *  var route = new ol.control.Route({
+     *    export : {
+     *      name : "export",
+     *      format : "geojson",
+     *      title : "Exporter",
+     *      menu : false
+     *    }
+     *  });
      */
-    constructor(options: any);
+    constructor(options: {
+        id?: number | undefined;
+        apiKey?: string | undefined;
+        ssl?: boolean | undefined;
+        collapsed?: boolean | undefined;
+        draggable?: boolean | undefined;
+        export?: boolean | any;
+        exclusions?: any;
+        graphs?: any[] | undefined;
+        routeOptions?: any;
+        autocompleteOptions?: any;
+        markersOpts?: {
+            url?: string | undefined;
+            offset?: any[] | undefined;
+        } | undefined;
+        layerDescription?: {
+            title?: string | undefined;
+            description?: string | undefined;
+        } | undefined;
+    });
     /**
      * Nom de la classe (heritage)
      * @private
@@ -91,9 +101,9 @@ declare class Route {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     export: ButtonExport | null | undefined;
     /**
      * Returns true if widget is collapsed (minimized), false otherwise
@@ -111,16 +121,16 @@ declare class Route {
     /**
      * Get vector layer where geoJson route is drawn
      *
-     * @returns {Object} layer - ol.layer.Vector route layer
+     * @returns {VectorLayer} layer - ol.layer.Vector route layer
      */
-    getLayer(): Object;
+    getLayer(): VectorLayer;
     /**
      * Set vector layer where route geometry is drawn
      *
-     * @param {Object} layer - ol.layer.Vector route layer
+     * @param {VectorLayer} layer - ol.layer.Vector route layer
      */
-    setLayer(layer: Object): void;
-    _geojsonSections: any;
+    setLayer(layer: VectorLayer): void;
+    _geojsonSections: VectorLayer<VectorSource<any>, any> | VectorLayer<VectorSource<import("ol").Feature<import("ol/geom").Geometry>>, import("ol").Feature<import("ol/geom").Geometry>> | null | undefined;
     /**
      * Get vector layer
      *
@@ -139,7 +149,7 @@ declare class Route {
      *
      * @returns {Object} data - route informations
      */
-    getData(): Object;
+    getData(): any;
     /**
      * Set route data
      *
@@ -155,24 +165,24 @@ declare class Route {
         computation: string;
         exclusions: any[];
         points: any[];
-        results: Object;
+        results: any;
     }): void;
     _currentTransport: any;
     _currentComputation: any;
     _currentExclusions: any;
-    _currentRouteInformations: Object | null | undefined;
+    _currentRouteInformations: any;
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * Get default style
      *
-     * @returns {ol.style} style
+     * @returns {Style} style
      */
-    getStyle(): ol.style;
+    getStyle(): Style;
     /**
      * This method is public.
      * It allows to init the control.
@@ -206,29 +216,52 @@ declare class Route {
             description: string;
         };
     } | undefined;
-    /** {Boolean} specify if Route control is draggable (true) or not (false) */
+    /**
+     * @type {Boolean}
+     * specify if Route control is draggable (true) or not (false) */
     draggable: boolean | undefined;
-    _uid: any;
-    _showRouteButton: any;
-    _panelRouteContainer: any;
-    _panelHeaderRouteContainer: any;
-    _waitingContainer: any;
-    _formRouteContainer: any;
-    _resultsRouteContainer: any;
-    _showRouteExclusionsElement: any;
-    _currentPoints: any[] | undefined;
-    _waiting: boolean | undefined;
-    _timer: NodeJS.Timeout | null | undefined;
-    _geojsonRoute: any;
-    _popupContent: HTMLDivElement | null | undefined;
-    _popupDiv: Object | undefined;
-    _popupOverlay: any;
-    _resultsSelectInteraction: any;
-    _resultsHoverInteraction: any;
-    _defaultFeatureStyle: any;
-    _selectedFeatureStyle: any;
-    _resources: {} | undefined;
-    listenerKey: any;
+    /** @private */
+    private _uid;
+    /** @private */
+    private _showRouteButton;
+    /** @private */
+    private _panelRouteContainer;
+    /** @private */
+    private _panelHeaderRouteContainer;
+    /** @private */
+    private _waitingContainer;
+    /** @private */
+    private _formRouteContainer;
+    /** @private */
+    private _resultsRouteContainer;
+    /** @private */
+    private _showRouteExclusionsElement;
+    /** @private */
+    private _currentPoints;
+    /** @private */
+    private _waiting;
+    /** @private */
+    private _timer;
+    /** @private */
+    private _geojsonRoute;
+    /** @private */
+    private _popupContent;
+    /** @private */
+    private _popupDiv;
+    /** @private */
+    private _popupOverlay;
+    /** @private */
+    private _resultsSelectInteraction;
+    /** @private */
+    private _resultsHoverInteraction;
+    /** @type {Style} */
+    _defaultFeatureStyle: Style | undefined;
+    /** @type {Style} */
+    _selectedFeatureStyle: Style | undefined;
+    /** @private */
+    private _resources;
+    /** @private */
+    private listenerKey;
     /**
      * this method is called by this.initialize()
      *
@@ -242,7 +275,7 @@ declare class Route {
      *
      * @param {Object} map - the map
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -279,7 +312,7 @@ declare class Route {
      * Create List Points
      * Overwrite RouteDOM method !
      *
-     * @param {Object} map - the map
+     * @param {Map} map - the map
      *
      * @returns {Array} List DOM element
      * @private
@@ -322,7 +355,7 @@ declare class Route {
      * tag label (cf. this._createShowRoutePictoElement),
      * and it cleans all value of input.
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     private onShowRoutePanelClick;
@@ -331,7 +364,7 @@ declare class Route {
      * (cf. this._createRoutePanelFormModeChoiceComputeElement).
      * this value is saved as a parameter for the service route.
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     private onRouteModeComputationChange;
@@ -341,7 +374,7 @@ declare class Route {
      * this value is saved as a parameter for the service route,
      * and this launches the route request !
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     private onRouteModeComputationChangeAndRun;
@@ -350,7 +383,7 @@ declare class Route {
      * (cf. this._createRoutePanelFormModeChoiceTransportElement).
      * this value is saved as a parameter for the service route.
      *
-     * @param {Object} e - HTMLElement
+     * @param {ObjecEventt} e - HTMLElement
      * @private
      */
     private onRouteModeTransportChange;
@@ -358,7 +391,7 @@ declare class Route {
      * TODO this method is called by event 'click' on 'GPshowRouteExclusionsPicto' tag input
      * (cf. this._createShowRouteExclusionsPictoElement), and it displays the panel options of exclusions.
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     private onShowRouteExclusionsClick;
@@ -368,7 +401,7 @@ declare class Route {
      * (cf. this._createRoutePanelFormExclusionOptionsElement).
      * this value is saved as a parameter for the service route.
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     private onRouteExclusionsChange;
@@ -393,7 +426,7 @@ declare class Route {
      * tag label (cf. this._addRouteResultsDetailsElement),
      * and it makes a style on feature route.
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     private onRouteResultsDetailsMouseOver;
@@ -402,7 +435,7 @@ declare class Route {
      * tag label (cf. this._addRouteResultsDetailsElement),
      * and it deletes a style on feature route.
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     private onRouteResultsDetailsMouseOut;
@@ -438,8 +471,10 @@ declare class Route {
      * @private
      */
     private _fillRouteResultsDetailsContainer;
-    _resultsRouteValuesContainer: any;
-    _resultsRouteDetailsContainer: any;
+    /** @private */
+    private _resultsRouteValuesContainer;
+    /** @private */
+    private _resultsRouteDetailsContainer;
     /**
      * this method is called by this._fillRouteResultsDetails()
      * and constructs the geometry route.
@@ -462,7 +497,7 @@ declare class Route {
      * this method is called on route features hover
      * and highlight instruction label
      *
-     * @param {Object} e - event
+     * @param {Event} e - event
      *
      * @private
      */
@@ -471,7 +506,7 @@ declare class Route {
      * this method is called on route features select
      * and set a popup with feature information
      *
-     * @param {Object} e - on select event
+     * @param {Event} e - on select event
      * @private
      */
     private _onResultsFeatureSelect;
@@ -549,5 +584,10 @@ declare class Route {
      */
     private _simplifiedInstructions;
 }
+import Control from "../Control";
+import Map from "ol/Map";
 import ButtonExport from "../Export/Export";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import { Style } from "ol/style";
 //# sourceMappingURL=Route.d.ts.map

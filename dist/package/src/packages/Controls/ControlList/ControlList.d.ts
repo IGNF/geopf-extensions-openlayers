@@ -1,41 +1,67 @@
 export default ControlList;
+export type ControlListOptions = {
+    /**
+     * - Définit si le widget est replié au chargement.
+     */
+    collapsed?: boolean | undefined;
+    /**
+     * - Permet de déplacer le panneau du widget.
+     */
+    draggable?: boolean | undefined;
+    /**
+     * - Position CSS du widget sur la carte.
+     */
+    position?: string | undefined;
+    /**
+     * - Identifiant unique du widget.
+     */
+    id?: string | number | undefined;
+    /**
+     * - Élément DOM à afficher en pied de panneau (ex : bouton catalogue).
+     */
+    controlCatalogElement?: HTMLElement | undefined;
+    /**
+     * - Ajoute ou retire l’espace autour du panneau.
+     */
+    gutter?: boolean | undefined;
+};
+/**
+ * @typedef {Object} ControlListOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {string|number} [id] - Identifiant unique du widget.
+ * @property {HTMLElement} [controlCatalogElement] - Élément DOM à afficher en pied de panneau (ex : bouton catalogue).
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ */
 /**
  * @classdesc
  *
  * ControlList Control.
  *
- * @constructor
  * @alias ol.control.ControlList
- * @type {ol.control.ControlList}
- * @extends {ol.control.ControlList}
- * @param {Object} options - ControlList control options
+ * @module ControlList
+ *
  */
-declare class ControlList {
+declare class ControlList extends Control {
     /**
-     * See {@link ol.control.ControlList}
-     * @module ControlList
-     * @alias module:~controls/ControlList
-     * @param {*} options - options
-     * @example
-     * import ControlList from from "gpf-ext-ol/controls/ControlList"
-     * ou
-     * import { ControlList } from "gpf-ext-ol"
+     * @constructor
+     * @param {ControlListOptions} options - ControlList control options
      */
-    constructor(options: any);
-    controlCatalogElement: any;
+    constructor(options: ControlListOptions);
+    controlCatalogElement: HTMLElement | null;
     /**
      * Nom de la classe (heritage)
      * @private
      */
     private CLASSNAME;
-    _container: DOMElement;
-    element: any;
+    _container: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Returns true if widget is collapsed (minimized), false otherwise
      *
@@ -52,9 +78,9 @@ declare class ControlList {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * Clean UI : reinit control
      */
@@ -71,12 +97,19 @@ declare class ControlList {
         collapsed: boolean;
         draggable: boolean;
     } | undefined;
-    /** {Boolean} specify if control is draggable (true) or not (false) */
+    /**
+     * @type {Boolean}
+     * specify if control is draggable (true) or not (false) */
     draggable: boolean | undefined;
-    _uid: any;
+    /**
+     * @private
+     * identifiant du contrôle :
+     * utile pour suffixer les identifiants CSS
+     * (pour gérer le cas où il y en a plusieurs dans la même page) */
+    private _uid;
     /**
      * initialize component container (DOM)
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -89,9 +122,11 @@ declare class ControlList {
      * this method is called by event 'click' on 'GPshowControlListPicto' picto
      * (cf. this._createShowControlListPictoElement),
      *
-     * @param { event } e évènement associé au clic
+     * @param { Event } e évènement associé au clic
      * @private
      */
     private onShowControlListPanelClick;
 }
+import Control from "../Control";
+import Map from "ol/Map";
 //# sourceMappingURL=ControlList.d.ts.map

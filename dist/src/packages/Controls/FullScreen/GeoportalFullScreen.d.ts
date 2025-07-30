@@ -3,27 +3,18 @@ export default GeoportalFullScreen;
  * @classdesc
  * OpenLayers Control to manage full screen
  *
- * @constructor
- * @extends {ol.control.FullScreen}
  * @alias ol.control.GeoportalFullScreen
- * @type {ol.control.GeoportalFullScreen}
- * @param {Object} options - ol.control.FullScreen options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html ol.Control.FullScreen})
- * @example
- * var zoom = new ol.control.GeoportalFullScreen({
- *   position: "top-left"
- * });
- * map.addControl(zoom);
+ * @module GeoportalFullScreen
  */
-declare class GeoportalFullScreen {
+declare class GeoportalFullScreen extends FullScreen {
     /**
-     * See {@link ol.control.GeoportalFullScreen}
-     * @module GeoportalFullScreen
-     * @alias module:~controls/GeoportalFullScreen
-     * @param {*} options - options
-     * @example
-     * import GeoportalFullScreen from "gpf-ext-ol/controls/GeoportalFullScreen"
-     * ou
-     * import { GeoportalFullScreen } from "gpf-ext-ol"
+     * @constructor
+    * @param {Object} options - ol.control.FullScreen options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.FullScreen.html ol.Control.FullScreen})
+    * @example
+    * var zoom = new ol.control.GeoportalFullScreen({
+    *   position: "top-left"
+    * });
+    * map.addControl(zoom);
      */
     constructor(options: any);
     /**
@@ -31,22 +22,36 @@ declare class GeoportalFullScreen {
      * @private
      */
     private CLASSNAME;
-    container: any;
+    container: HTMLElement | null;
     options: any;
-    _createContainerPosition(map: any): void;
-    _initContainer(): void;
-    _uid: any;
+    /**
+     * ...
+     * @param {Map} map - ...
+     * @private
+     */
+    private _createContainerPosition;
+    /**
+     * ...
+     * @private
+     */
+    private _initContainer;
+    /**
+     * @private
+     * UID interne pour chaque controle */
+    private _uid;
     /**
      * Overload setMap function
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
 }
+import FullScreen from "ol/control/FullScreen";
+import Map from "ol/Map";
 //# sourceMappingURL=GeoportalFullScreen.d.ts.map

@@ -52,7 +52,7 @@ declare class Search {
      * Add element into target DOM
      * @returns {Object} - Search instance
      */
-    add(): Object;
+    add(): any;
     /**
      * Set display container or get
      *
@@ -63,9 +63,9 @@ declare class Search {
     /**
      * Get container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * this method is called by event '' on '' tag form...
      *

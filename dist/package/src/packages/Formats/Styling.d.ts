@@ -55,7 +55,7 @@ declare namespace Styling {
     }
     function getListTags(): any[];
     function defineStyleFromProperties(feature: any): any;
-    function defineStyleFunctionByDefault(defaultStyle: Object): Function;
+    function defineStyleFunctionByDefault(defaultStyle: any): Function;
     function definePropertiesFromStyleByType(feature: any): void;
     function definePropertiesFromStyle(feature: any): void;
     function defineTagFromStyle(style: any, format: string): string;

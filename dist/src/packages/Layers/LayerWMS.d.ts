@@ -1,51 +1,68 @@
 export default LayerWMS;
+export type LayerWMSOptions = {
+    /**
+     * - Nom de la couche (ex : "ORTHOIMAGERY.ORTHOPHOTOS")
+     */
+    layer: string;
+    /**
+     * - Configuration de la couche
+     */
+    configuration?: any;
+    /**
+     * - Forcer le protocole https (pour nodejs)
+     */
+    ssl?: boolean | undefined;
+    /**
+     * - Clé d'accès à la plateforme
+     */
+    apiKey?: string | undefined;
+    /**
+     * - Options supplémentaires pour ol.layer.Tile {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_Tile-TileLayer.html ol.layer.Tile options}
+     * et options supplémentaires pour ol.source.TileWMS dans olParams.sourceParams {@link https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html ol.source.TileWMS options}
+     */
+    olParams?: any;
+};
+/**
+ * @typedef {Object} LayerWMSOptions
+ * @property {string} layer - Nom de la couche (ex : "ORTHOIMAGERY.ORTHOPHOTOS")
+ * @property {Object} [configuration] - Configuration de la couche
+ * @property {boolean} [ssl] - Forcer le protocole https (pour nodejs)
+ * @property {string} [apiKey] - Clé d'accès à la plateforme
+ * @property {Object} [olParams] - Options supplémentaires pour ol.layer.Tile {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_Tile-TileLayer.html ol.layer.Tile options}
+ * et options supplémentaires pour ol.source.TileWMS dans olParams.sourceParams {@link https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html ol.source.TileWMS options}
+ */
 /**
  * @classdesc
  * Geoportal LayerWMS source creation (inherit from ol.layer.Tile)
  *
- * @constructor
- * @extends {ol.layer.Tile}
  * @alias ol.layer.GeoportalWMS
- * @type {ol.layer.GeoportalWMS}
- * @param {Object} options            - options for function call.
- * @param {String} options.layer      - Layer name (e.g. "ORTHOIMAGERY.ORTHOPHOTOS")
- * @param {Object} [options.configuration] - configuration (cf. example)
- * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
- * @param {String} [options.apiKey]   - Access key to Geoportal platform
- * @param {Object} [options.olParams] - other options for ol.layer.Tile function (see {@link http://openlayers.org/en/latest/apidoc/ol.layer.Tile.html ol.layer.Tile})
- * @param {Object} [options.olParams.sourceParams] - other options for ol.source.TileWMS function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.TileWMS.html ol.source.TileWMS})
- * @example
- * var layerWMS = new ol.layer.GeoportalWMS({
- *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
- * });
- *
- * layerWMS.getLegends();
- * layerWMS.getMetadata();
- * layerWMS.getTitle();
- * layerWMS.getDescription();
- * layerWMS.getQuicklookUrl();
- * layerWMS.getOriginators();
- */
-declare class LayerWMS {
+ * @module GeoportalWMS
+*/
+declare class LayerWMS extends TileLayer<import("ol/source").Tile<import("ol").Tile>> {
     /**
-     * See {@link ol.layer.GeoportalWMS}
-     * @module LayerWMS
-     * @alias module:~layers/GeoportalWMS
-     * @param {*} options - options
+     * @constructor
+     * @param {LayerWMSOptions} options - options for function call.
      * @example
-     * import LayerWMS from "gpf-ext-ol/layers/LayerWMS"
-     * ou
-     * import { LayerWMS } from "gpf-ext-ol"
+     * var layerWMS = new ol.layer.GeoportalWMS({
+     *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
+     * });
+     *
+     * layerWMS.getLegends();
+     * layerWMS.getMetadata();
+     * layerWMS.getTitle();
+     * layerWMS.getDescription();
+     * layerWMS.getQuicklookUrl();
+     * layerWMS.getOriginators();
      */
-    constructor(options: any);
-    name: any;
+    constructor(options: LayerWMSOptions);
+    name: string;
     service: string;
     config: any;
     /**
      * Get configuration
      * @returns {Object} - configuration
      */
-    getConfiguration(): Object;
+    getConfiguration(): any;
     /**
      * Get legends
      * @returns  {Array} - legends
@@ -77,4 +94,5 @@ declare class LayerWMS {
      */
     getOriginators(): any[];
 }
+import TileLayer from "ol/layer/Tile";
 //# sourceMappingURL=LayerWMS.d.ts.map

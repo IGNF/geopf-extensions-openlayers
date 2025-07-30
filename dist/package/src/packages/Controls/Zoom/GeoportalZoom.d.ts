@@ -3,47 +3,48 @@ export default GeoportalZoom;
  * @classdesc
  * OpenLayers Control to manage zoom
  *
- * @constructor
- * @extends {ol.control.Zoom}
  * @alias ol.control.GeoportalZoom
- * @type {ol.control.GeoportalZoom}
- * @param {Object} options - ol.control.Zoom options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html ol.Control.Zoom})
- * @fires zoom:in
- * @fires zoom:out
- * @example
- * var zoom = new ol.control.GeoportalZoom({
- *   position: "top-left"
- * });
- * map.addControl(zoom);
- */
-declare class GeoportalZoom {
+ * @module GeoportalZoom
+*/
+declare class GeoportalZoom extends Zoom {
     /**
-     * See {@link ol.control.GeoportalZoom}
-     * @module GeoportalZoom
-     * @alias module:~controls/GeoportalZoom
-     * @param {*} options - options
+     * @constructor
+     * @param {Object} options - ol.control.Zoom options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html ol.Control.Zoom})
+     * @fires zoom:in
+     * @fires zoom:out
      * @example
-     * import GeoportalZoom from "gpf-ext-ol/controls/GeoportalZoom"
-     * ou
-     * import { GeoportalZoom } from "gpf-ext-ol"
+     * var zoom = new ol.control.GeoportalZoom({
+     *   position: "top-left"
+     * });
+     * map.addControl(zoom);
      */
     constructor(options: any);
-    container: any;
+    container: HTMLElement | null;
     options: any;
-    _createContainerPosition(map: any): void;
-    _initContainer(): void;
+    /**
+     * ...
+     * @param {Map} map - ...
+     * @private
+     */
+    private _createContainerPosition;
+    /**
+     * @private
+     */
+    private _initContainer;
     _uid: any;
     /**
      * Overload setMap function
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
 }
+import Zoom from "ol/control/Zoom";
+import Map from "ol/Map";
 //# sourceMappingURL=GeoportalZoom.d.ts.map

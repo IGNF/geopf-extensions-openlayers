@@ -1,97 +1,108 @@
 export default Legends;
+export type LegendsOptions = {
+    collapsed?: boolean | undefined;
+    draggable?: boolean | undefined;
+    auto?: boolean | undefined;
+    panel?: boolean | undefined;
+    position?: string | undefined;
+    gutter?: boolean | undefined;
+    id?: string | undefined;
+};
 /**
- * @classdesc
- *
- * Legends button
- *
- * @constructor
- * @alias ol.control.Legends
- * @type {ol.control.Legends}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *
- * @fires legends:add
- * @fires legends:remove
- * @fires legends:modify
- * @example
- * var legends = new ol.control.Legends();
- * map.addControl(legends);
+ * @typedef {Object} LegendsOptions
+ * @property {boolean} [collapsed]
+ * @property {boolean} [draggable]
+ * @property {boolean} [auto]
+ * @property {boolean} [panel]
+ * @property {string} [position]
+ * @property {boolean} [gutter]
+ * @property {string} [id]
  */
-declare class Legends {
+/**
+* @classdesc
+*
+* Legends button
+*
+* @module Legends
+* @alias ol.control.Legends
+*/
+declare class Legends extends Control {
     /**
-     * See {@link ol.control.Legends}
-     * @module Legends
-     * @alias module:~controls/Legends
-     * @param {Object} [options] - options
+     * @param {LegendsOptions} [options] - options
+     * @constructor
+     * @public
+     * @fires legends:add
+     * @fires legends:remove
+     * @fires legends:modify
      * @example
-     * import Legends from "gpf-ext-ol/controls/Legends"
-     * ou
-     * import { Legends } from "gpf-ext-ol"
+     * var legends = new ol.control.Legends();
+     * map.addControl(legends);
      */
-    constructor(options?: Object);
+    constructor(options?: LegendsOptions);
     /**
-     * Nom de la classe (heritage)
      * @private
-     */
+     * Nom de la classe (heritage) */
     private CLASSNAME;
-    container: DOMElement;
-    element: any;
+    /**
+     * @private
+     * Widget main DOM container */
+    private container;
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * Get all meta informations of a IGN's layer
      *
-     * @param {*} layer - layer
+     * @param {Layer} layer - layer
      * @returns {*} informations
      * @public
      * @example
      * getLegends() :
      * "legends" : [
-     *         {
-     *             "format" : "image/jpeg",
-     *             "url" : "https:*data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
-     *             "minScaleDenominator" : "200"
-     *         }
-     *     ],
+     *  {
+     *     "format" : "image/jpeg",
+     *     "url" : "https:*data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+     *     "minScaleDenominator" : "200"
+     *   }
+     *  ],
      */
-    public getMetaInformations(layer: any): any;
+    public getMetaInformations(layer: Layer): any;
     /**
      * Add legends from layers
-     * @param {*} layers  - ...
+     * @param {Layer[]} layers - Array of layers
      * @public
      */
-    public adds(layers: any): void;
+    public adds(layers: Layer[]): void;
     /**
      * Add a legend from a layer
-     * @param {*} layer  - ...
+     * @param {Layer} layer  - ...
      * @returns {Boolean} - true|false
      * @public
      */
-    public add(layer: any): boolean;
+    public add(layer: Layer): boolean;
     /**
      * Remove a legend from a layer
-     * @param {*} layer - ...
+     * @param {Layer} layer - ...
      * @returns  {Boolean} - true|false
      * @public
      */
-    public remove(layer: any): boolean;
+    public remove(layer: Layer): boolean;
     /**
      * Has already a DOM legend
-     * @param {*} dom  - ...
+     * @param {HTMLElement} dom  - ...
      * @returns {Boolean} - true|false
      * @public
      */
-    public exist(dom: any): boolean;
+    public exist(dom: HTMLElement): boolean;
     /**
      * Initialize Legends control (called by Legends constructor)
      *
@@ -112,24 +123,30 @@ declare class Legends {
     draggable: boolean | undefined;
     /** {Boolean} specify if control add layers auto */
     auto: boolean | undefined;
-    buttonLegendsShow: any;
-    panelLegendsContainer: any;
-    panelLegendsEntriesContainer: any;
-    panelLegendsHeaderContainer: any;
-    buttonLegendsClose: any;
-    eventsListeners: any[] | undefined;
+    /** @private */
+    private buttonLegendsShow;
+    /** @private */
+    private panelLegendsContainer;
+    /** @private */
+    private panelLegendsEntriesContainer;
+    /** @private */
+    private panelLegendsHeaderContainer;
+    /** @private */
+    private buttonLegendsClose;
+    /** @private */
+    private eventsListeners;
     legends: any[] | undefined;
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     private initContainer;
     /**
      * Add events listeners on map (called by setMap)
      *
-     * @param {*} map - map
+     * @param {Map} map - map
      * @private
      * @todo listener on change:position
      */
@@ -141,8 +158,12 @@ declare class Legends {
     private removeEventsListeners;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {PointerEvent} e - ...
+     * @private
      */
-    onShowLegendsClick(e: any): void;
+    private onShowLegendsClick;
 }
+import Control from "../Control";
+import Map from "ol/Map";
+import Layer from "ol/layer/Layer";
 //# sourceMappingURL=Legends.d.ts.map

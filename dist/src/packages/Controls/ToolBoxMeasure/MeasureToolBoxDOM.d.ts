@@ -6,6 +6,6 @@ declare namespace MeasureToolBoxDOM {
     function getToolBoxID(uid: number): string;
     function getButtonID(uid: number): string;
     function getWidgetID(uid: number): string;
-    function _createToolBoxContainerElement(uid: number): DOMElement;
+    function _createToolBoxContainerElement(uid: number): HTMLElement;
 }
 //# sourceMappingURL=MeasureToolBoxDOM.d.ts.map

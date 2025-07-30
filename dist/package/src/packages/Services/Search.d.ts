@@ -72,7 +72,7 @@ declare const target: EventTarget;
  *   "url": "https://data.geopf.fr/tms/1.0.0/PLAN.IGN"
  * }
  */
-declare function suggest(text: any): Object;
+declare function suggest(text: any): any;
 /**
  * Clear
  */

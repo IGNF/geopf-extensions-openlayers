@@ -1,83 +1,121 @@
 export default Catalog;
+export type CatalogOptions = {
+    /**
+     * - Définit si le widget est replié au chargement.
+     */
+    collapsed?: boolean | undefined;
+    /**
+     * - Permet de déplacer le panneau du catalogue.
+     */
+    draggable?: boolean | undefined;
+    /**
+     * - Active l’ajout automatique des événements sur la carte.
+     */
+    auto?: boolean | undefined;
+    /**
+     * - Titre principal du panneau.
+     */
+    titlePrimary?: string | undefined;
+    /**
+     * - Titre secondaire du panneau.
+     */
+    titleSecondary?: string | undefined;
+    /**
+     * - Propriété utilisée comme label pour les couches.
+     */
+    layerLabel?: string | undefined;
+    /**
+     * - Options de recherche.
+     */
+    search?: {
+        /**
+         * - Affiche le champ de recherche.
+         */
+        display?: boolean | undefined;
+        /**
+         * - Critères de recherche.
+         */
+        criteria?: string[] | undefined;
+    } | undefined;
+    /**
+     * - Ajoute automatiquement la couche à la carte lors de la sélection.
+     */
+    addToMap?: boolean | undefined;
+    /**
+     * - Liste des catégories et sous-catégories.
+     */
+    categories?: any[] | undefined;
+    /**
+     * - Configuration des sources de données.
+     */
+    configuration?: {
+        /**
+         * - Type de configuration ("json" ou "service").
+         */
+        type?: string | undefined;
+        /**
+         * - URLs des fichiers de configuration JSON.
+         */
+        urls?: string[] | undefined;
+        /**
+         * - Données de configuration déjà chargées.
+         */
+        data?: any;
+    } | undefined;
+    /**
+     * - Identifiant unique du widget.
+     */
+    id?: string | undefined;
+    /**
+     * - Position CSS du widget sur la carte.
+     */
+    position?: string | undefined;
+    /**
+     * - Ajoute ou retire l’espace autour du panneau.
+     */
+    gutter?: boolean | undefined;
+};
+/**
+ * @typedef {Object} CatalogOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
+ * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
+ * @property {string} [titlePrimary="Gérer vos couches de données"] - Titre principal du panneau.
+ * @property {string} [titleSecondary=""] - Titre secondaire du panneau.
+ * @property {string} [layerLabel="title"] - Propriété utilisée comme label pour les couches.
+ * @property {Object} [search] - Options de recherche.
+ * @property {boolean} [search.display=true] - Affiche le champ de recherche.
+ * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
+ * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
+ * @property {Array<Object>} [categories] - Liste des catégories et sous-catégories.
+ * @property {Object} [configuration] - Configuration des sources de données.
+ * @property {string} [configuration.type="json"] - Type de configuration ("json" ou "service").
+ * @property {Array<string>} [configuration.urls] - URLs des fichiers de configuration JSON.
+ * @property {Object} [configuration.data] - Données de configuration déjà chargées.
+ * @property {string} [id] - Identifiant unique du widget.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ */
 /**
  * @classdesc
  *
  * Catalog Data
  *
- * @constructor
  * @alias ol.control.Catalog
- * @type {ol.control.Catalog}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *
- * @fires catalog:loaded
- * @fires catalog:layer:add
- * @fires catalog:layer:remove
- * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
- * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
- * @example
- * var widget = new ol.control.Catalog({
- *           collapsed : true,
- *           draggable : false,
- *           titlePrimary : "",
- *           titleSecondary : "Gérer vos couches de données",
- *           layerLabel : "title",
- *           search : {
- *               display : true,
- *               criteria : [
- *                   "name",
- *                   "title",
- *                   "description"
- *               ]
- *           },
- *           addToMap : true,
- *           categories : [
- *               {
- *                   title : "Données",
- *                   id : "data",
- *                   default : true,
- *                   filter : null
- *                   // sous categories
- *                   // items : [
- *                   //     {
- *                   //         title : "",
- *                   //         default : true,
- *                   //         filter : {
- *                   //             field : "",
- *                   //             value : ""
- *                   //         }
- *                   //     }
- *                   // ]
- *               }
- *           ],
- *           configuration : {
- *               type : "json",
- *               urls : [ // data:{}
- *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
- *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
- *               ]
- *           }
- * });
- * widget.on("catalog:loaded", (e) => { console.log(e.data); });
- * widget.on("catalog:layer:add", (e) => { console.log(e); });
- * widget.on("catalog:layer:remove", (e) => { console.log(e); });
- * map.addControl(widget);
- *
- * @todo filtrage des couches
- * @todo validation du schema
- */
-declare class Catalog {
+ * @module Catalog
+*/
+declare class Catalog extends Control {
     /**
-     * See {@link ol.control.Catalog}
-     * @module Catalog
-     * @alias module:~controls/Catalog
-     * @param {Object} [options] - options
-     * @example
-     * import Catalog from "gpf-ext-ol/controls/Catalog"
-     * ou
-     * import { Catalog } from "gpf-ext-ol"
+     * @constructor
+     * @param {CatalogOptions} options - options for function call.
      *
-     * var widget = new Catalog({
+     * @fires catalog:loaded
+     * @fires catalog:layer:add
+     * @fires catalog:layer:remove
+     * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
+     * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
+     * @example
+     * var widget = new ol.control.Catalog({
      *           collapsed : true,
      *           draggable : false,
      *           titlePrimary : "",
@@ -112,7 +150,7 @@ declare class Catalog {
      *               }
      *           ],
      *           configuration : {
-     *               type : "json", // type:"service"
+     *               type : "json",
      *               urls : [ // data:{}
      *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
      *                   "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
@@ -123,21 +161,22 @@ declare class Catalog {
      * widget.on("catalog:layer:add", (e) => { console.log(e); });
      * widget.on("catalog:layer:remove", (e) => { console.log(e); });
      * map.addControl(widget);
+     *
+     * @todo validation du schema
      */
-    constructor(options?: Object);
+    constructor(options: CatalogOptions);
     /**
      * Nom de la classe (heritage)
      * @private
      */
     private CLASSNAME;
-    container: DOMElement;
-    element: any;
+    container: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
-    setMap(map: ol.Map): void;
+    setMap(map: Map): void;
     /**
      * Add a layer config
      * @param {*} conf conf
@@ -150,9 +189,9 @@ declare class Catalog {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
-    getContainer(): DOMElement;
+    getContainer(): HTMLElement;
     /**
      * Get long layer ID
      * @param {*} name  nom de la couche
@@ -167,7 +206,8 @@ declare class Catalog {
      * @private
      */
     private initialize;
-    uid: any;
+    /** @private */
+    private uid;
     options: {
         collapsed: boolean;
         draggable: boolean;
@@ -211,19 +251,25 @@ declare class Catalog {
      * @type {Array}
      */
     eventsListeners: any[] | undefined;
-    buttonCatalogShow: any;
-    panelCatalogContainer: any;
-    panelCatalogHeaderContainer: any;
-    buttonCatalogClose: any;
-    contentCatalogContainer: any;
-    waitingContainer: any;
+    /** @private */
+    private buttonCatalogShow;
+    /** @private */
+    private panelCatalogContainer;
+    /** @private */
+    private panelCatalogHeaderContainer;
+    /** @private */
+    private buttonCatalogClose;
+    /** @private */
+    private contentCatalogContainer;
+    /** @private */
+    private waitingContainer;
     /**
      * specify all list of layers (configuration service)
      * @type {Object}
      * @see [schema](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json)
      * @see [jsdoc](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc)
      */
-    layersList: Object | undefined;
+    layersList: any;
     /**
      * specify all categories
      * @type {Array}
@@ -243,11 +289,60 @@ declare class Catalog {
      *    "PLAN.IGN$GEOPORTAIL:TMS" : ol/layer/VectorTile
      * }
      */
-    layersListOnMap: Object | undefined;
+    layersListOnMap: any;
+    /**
+     * event triggered when layer is added
+     *
+     * @event catalog:layer:add
+     * @defaultValue "catalog:layer:add"
+     * @group Events
+     * @property {Object} type - event
+     * @property {String} name - layer name
+     * @property {String} service - service name
+     * @property {Object} layer - layer conf
+     * @property {Object} target - instance Catalog
+     * @example
+     * Catalog.on("catalog:layer:add", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    ADD_CATALOG_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when layer is removed
+     *
+     * @event catalog:layer:remove
+     * @defaultValue "catalog:layer:remove"
+     * @group Events
+     * @property {Object} type - event
+     * @property {String} name - layer name
+     * @property {String} service - service name
+     * @property {Object} layer - layer conf
+     * @property {Object} target - instance Catalog
+     * @example
+     * Catalog.on("catalog:layer:remove", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    REMOVE_CATALOG_LAYER_EVENT: string | undefined;
+    /**
+     * event triggered when data is loaded
+     *
+     * @event catalog:loaded
+     * @defaultValue "catalog:loaded"
+     * @group Events
+     * @property {Object} type - event
+     * @property {Object} data - data
+     * @property {Object} target - instance Catalog
+     * @example
+     * Catalog.on("catalog:loaded", function (e) {
+     *   console.log(e.data);
+     * })
+     */
+    LOADED_CATALOG_EVENT: string | undefined;
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     private initContainer;
@@ -282,7 +377,7 @@ declare class Catalog {
     /**
      * Add events listeners on map (called by setMap)
      *
-     * @param {*} map - map
+     * @param {Map} map - map
      * @private
      */
     private addEventsListeners;
@@ -341,37 +436,39 @@ declare class Catalog {
     private updateVisibilitySectionsDOM;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      * @private
      */
     private onShowCatalogClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      * @private
      */
     private onCloseCatalogClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      * @private
      */
     private onSelectCatalogTabClick;
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
      * @private
      */
     private onSelectCatalogEntryClick;
     /**
-     *
+     * ...
      * @private
      */
     private onSearchCatalogButtonClick;
     /**
-     *
+     * ...
      * @private
      */
     private onSearchCatalogInputChange;
 }
+import Control from "../Control";
+import Map from "ol/Map";
 //# sourceMappingURL=Catalog.d.ts.map

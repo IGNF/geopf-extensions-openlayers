@@ -5,6 +5,6 @@ declare namespace Interactions {
         let current: null;
         let clean: null;
     }
-    function unset(map: Object, options: Object): void;
+    function unset(map: any, options: any): void;
 }
 //# sourceMappingURL=Interactions.d.ts.map
