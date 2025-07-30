@@ -13,7 +13,7 @@ var MeasureAzimuthDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -30,7 +30,7 @@ var MeasureAzimuthDOM = {
      * Show control
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowMeasureAzimuthPictoElement : function () {
         // contexte d'execution

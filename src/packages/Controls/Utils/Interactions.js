@@ -12,7 +12,6 @@ import Utils from "../../Utils/Helper";
 var logger = Logger.getLogger("interactions");
 
 /**
- * @private
  * @description
  * Pourquoi et comment l'utiliser ?
  * Cette classe permet de gérer les interactions entre chaque extension.

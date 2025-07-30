@@ -13,7 +13,7 @@ var MousePositionDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -30,7 +30,7 @@ var MousePositionDOM = {
      * Show mouse position control
      * @param {Boolean} isDesktop - specifies if the support is desktop or tactile
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowMousePositionPictoElement : function (isDesktop) {
         // contexte d'execution
@@ -68,7 +68,7 @@ var MousePositionDOM = {
     /**
      * Create Container Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMousePositionPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -86,7 +86,7 @@ var MousePositionDOM = {
     /**
      * Map center localisation (tactile use)
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createMapCenter : function () {
         var div = document.createElement("div");
@@ -100,13 +100,13 @@ var MousePositionDOM = {
     // ################################################################### //
 
     /**
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
 
     /**
      * Create Header Title Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMousePositionPanelTitleElement : function () {
         var div = document.createElement("div");
@@ -119,7 +119,7 @@ var MousePositionDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMousePositionPanelHeaderElement : function () {
         var container = document.createElement("div");
@@ -132,7 +132,7 @@ var MousePositionDOM = {
     /**
      * Create Header close div
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMousePositionPanelCloseElement : function () {
         // contexte
@@ -184,7 +184,7 @@ var MousePositionDOM = {
      * call this._createMousePositionPanelBasicCoordinateElement
      * call this._createMousePositionPanelBasicAltitudeElement
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMousePositionPanelBasicElement : function (displayAltitude, displayCoordinates, editCoordinates, currentProjectionUnits) {
         // default Values
@@ -361,7 +361,7 @@ var MousePositionDOM = {
      * @param {Boolean} [editCoordinates] - specifies if the coordinates edition is allowed
      * @param {Boolean} [currentProjectionUnits] - specifies if the current projection units
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createMousePositionPanelBasicCoordinateElement : function (display, editCoordinates, currentProjectionUnits) {
         var div = document.createElement("div");
@@ -422,7 +422,7 @@ var MousePositionDOM = {
     /**
      * @param {Boolean} [display=false] - specifies if the altitude panel must be displayed
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createMousePositionPanelBasicAltitudeElement : function (display) {
         var div = document.createElement("div");
@@ -451,7 +451,7 @@ var MousePositionDOM = {
     /**
      * @param {Boolean} [editCoordinates=false] - specifies if the coordinates edition is allowed
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createMousePositionPanelEditToolsElement : function (editCoordinates) {
         var context = this;
@@ -496,7 +496,7 @@ var MousePositionDOM = {
     /**
      * @param {Boolean} [display=false] - specifies if the settings panel must be displayed
      *
-     * @returns {DOMElement[]} array containing input and label elements
+     * @returns {HTMLElement[]} array containing input and label elements
      */
     _createShowMousePositionSettingsElement : function (display) {
         // contexte d'execution
@@ -536,7 +536,7 @@ var MousePositionDOM = {
      * don't call this._createMousePositionSettingsSystemsElement
      * don't call this._createMousePositionSettingsUnitsElement
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMousePositionSettingsElement : function (display) {
         var container = document.createElement("div");
@@ -555,7 +555,7 @@ var MousePositionDOM = {
     /**
      * @param {Object[]} systems - list of systems
      *
-     * @returns {DOMElement} DOM element select
+     * @returns {HTMLElement} DOM element select
      */
     _createMousePositionSettingsSystemsElement : function (systems) {
         // contexte d'execution
@@ -591,7 +591,7 @@ var MousePositionDOM = {
     /**
      * @param {Object[]} units - list of units
      *
-     * @returns {DOMElement} DOM element select
+     * @returns {HTMLElement} DOM element select
      */
     _createMousePositionSettingsUnitsElement : function (units) {
         // contexte d'execution
@@ -724,7 +724,7 @@ var MousePositionDOM = {
 
     /**
      *
-     * @param {DOMElement} input - input element
+     * @param {HTMLElement} input - input element
      * @param {Boolean} isFloat - check for float value
      *
      * @returns {Boolean} true if input value is within bounds
@@ -752,7 +752,7 @@ var MousePositionDOM = {
 
     /**
      * @param {String} coordType - "Lon" or "Lat"
-     * @param {DOMElement} input - input element
+     * @param {HTMLElement} input - input element
      *
      * @returns {Boolean} true if input value is within bounds
      */

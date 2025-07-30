@@ -18,9 +18,9 @@ var Draggable = {
     * A draggable HTML element with JavaScript and CSS.
     *
     * @function dragElement
-    * @param {DOMElement} element - element
-    * @param {DOMElement} header - header (optional)
-    * @param {DOMElement} container - container (optional)
+    * @param {HTMLElement} element - element
+    * @param {HTMLElement} header - header (optional)
+    * @param {HTMLElement} container - container (optional)
     * @see https://gist.github.com/stephanbogner/75de4e84687ae6065fb0a4d81917543e
     * @see https://stackoverflow.com/questions/48097791/how-to-keep-a-draggable-element-from-being-moved-outside-a-boundary
     * @example

@@ -1,5 +1,5 @@
 {
-    "out": "./jsdoc_new",
+    "out": "./jsdoc",
     "entryPointStrategy": "expand",
     "entryPoints": [
         "src/index.js", 
@@ -37,5 +37,10 @@
         "@returns",
         "@todo",
         "@type",
-    ]
+    ],
+    "sidebarLinks": {
+        "cartes.gouv.fr": "https://cartes.gouv.fr/cartes",
+        "geoportail": "https://geoportail.gouv.fr/",
+        "github": "https://github.com/IGNF/geopf-extensions-openlayers"
+    }
 }

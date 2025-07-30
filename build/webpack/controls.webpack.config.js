@@ -43,7 +43,7 @@ module.exports = (env, argv) => {
                 break;
             case "Reporting":
                 // ras
-                break
+                break;
             case "GetFeatureInfo":
                 // ras
                 break;

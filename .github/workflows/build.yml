@@ -34,6 +34,9 @@ jobs:
 
       - name: Build package
         run: npm run publish
+      
+      - name: Build jsdoc
+        run: npm run generate-tsdoc
   
       - name: Upload Binary artifacts
         uses: actions/upload-artifact@v4

@@ -5,6 +5,7 @@ import "../../CSS/Controls/Export/GPFexport.css";
 // import OpenLayers
 import Widget from "../Widget";
 import Control from "ol/control/Control";
+import Layer from "ol/layer/Layer";
 
 // import local
 import ID from "../../Utils/SelectorID";
@@ -26,108 +27,101 @@ var logger = Logger.getLogger("export");
  *
  * button that will plug into a widget and export the contents of the calculation
  *
- * @constructor
  * @alias ol.control.Export
- * @param {Object} options - options for function call.
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {String} [options.download = "true"] - triggering the download of the file
- * @param {String} [options.format = "geojson"] - geojson / kml / gpx
- * @param {String} [options.name = "export"] - export name file
- * @param {String} [options.description = "export"] - export description put into file
- * @param {String} [options.title = "Exporter"] - button name
- * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
- * @param {Boolean} [options.menu = false] - displays the menu
- * @param {Object} [options.menuOptions] - options of the menu.
- * @param {Boolean} [options.menuOptions.outside = false] - displays all element outside of menu
- * @param {Boolean} [options.menuOptions.above = false] - displays menu above or not of the button
- * @param {Boolean} [options.menuOptions.labelName = true] - displays the label name
- * @param {Boolean} [options.menuOptions.labelDesc = true] - displays the label description
- * @param {Boolean} [options.menuOptions.selectFormat = true] - displays the select format
- * @param {String} [options.direction = "row"] - buttons and menus layout
- * @param {Object} [options.icons] - icons
- * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
- * @param {String} [options.icons.button = "export"] - displays the button icon : save or export icon, or otherwise left blank if you don't want it
- * @param {Function} [options.callback] - with a callback, the implementation is your responsibility
- * @param {DOMElement} [options.target] - target where the button will plug in. By default, the target is 'container-buttons-plugin' into the wikdget
- * @param {Object} [options.control] - instance of control
- * @param {Object} [options.layer] - the layer instance is retrieved from the control, but you can defined it
- * @fires button:clicked 
- * @example
- * // pluggued widget Export into control Isocurve
- * var iso = new ol.control.Isocurve();
- * map.addControl(iso);
- *
- * // method : call render()
- * var export = new ButtonExport();
- * export.setDownload(true);
- * export.setControl(iso);
- * export.setTarget(<!-- DOMElement -->);
- * export.setName("export");
- * export.setFormat("geojson");
- * export.setDescription("Export Isochrone");
- * export.setTitle("Exporter");
- * export.setMenu(true);
- * export.setMenuOptions({
- *   outside : false,
- *   labelName : true,
- *   labelDesc : true,
- *   selectFormat : true
- * });
- * export.render(); // <-- direct call to render function !
- * export.on("button:clicked", (data) => { console.log(data); });
- *
- * // method : call map.addControl()
- * var export = new ButtonExport();
- * export.setDownload(true);
- * export.setControl(iso);
- * export.setTarget(<!-- DOMElement -->);
- * export.setName("export");
- * export.setFormat("geojson");
- * export.setDescription("Export Isochrone");
- * export.setTitle("Exporter");
- * export.setKind("secondary");
- * export.setMenu(false);
- * export.on("button:clicked", (data) => { console.log(data); });
- * map.addControl(export); // <-- using the OpenLayers mechanism, don't call to render function !
- *
- * // use control options instead of setters
- * var export = new ButtonExport({
- *   download : true,
- *   control : iso,
- *   target : <!-- DOMElement -->,
- *   name : "export",
- *   description : "Export Isochrone",
- *   format : "geojson",
- *   title : "Exporter",
- *   menu : false,
- *   callback : (content, layer) => {
- *      console.log(content, layer);
- *   }
- * });
- * map.addControl(export);
- *
- * // method with passing option into the control Isocurve
- * var iso = new ol.control.Isocurve({ export : true });
- * // with control options :
- * var iso = new ol.control.Isocurve({ export : {
- *   download : false,
- *   name : "save-iso",
- *   format : "geojson",
- *   title : "Sauvegarde",
- *   menu : true
- * }});
+ * @module Export
  */
 class ButtonExport extends Control {
 
     /**
-     * See {@link ol.control.Export}
-     * @module ButtonExport
-     * @alias module:~controls/ButtonExport
-     * @param {Object} [options] - options
-     * @example
-     * import ButtonExport from "gpf-ext-ol/controls/ButtonExport"
-     * ou 
-     * import { ButtonExport } from "gpf-ext-ol"
+     * @constructor
+    * @param {Object} options - options for function call.
+    * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+    * @param {String} [options.download = "true"] - triggering the download of the file
+    * @param {String} [options.format = "geojson"] - geojson / kml / gpx
+    * @param {String} [options.name = "export"] - export name file
+    * @param {String} [options.description = "export"] - export description put into file
+    * @param {String} [options.title = "Exporter"] - button name
+    * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
+    * @param {Boolean} [options.menu = false] - displays the menu
+    * @param {Object} [options.menuOptions] - options of the menu.
+    * @param {Boolean} [options.menuOptions.outside = false] - displays all element outside of menu
+    * @param {Boolean} [options.menuOptions.above = false] - displays menu above or not of the button
+    * @param {Boolean} [options.menuOptions.labelName = true] - displays the label name
+    * @param {Boolean} [options.menuOptions.labelDesc = true] - displays the label description
+    * @param {Boolean} [options.menuOptions.selectFormat = true] - displays the select format
+    * @param {String} [options.direction = "row"] - buttons and menus layout
+    * @param {Object} [options.icons] - icons
+    * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
+    * @param {String} [options.icons.button = "export"] - displays the button icon : save or export icon, or otherwise left blank if you don't want it
+    * @param {Function} [options.callback] - with a callback, the implementation is your responsibility
+    * @param {HTMLElement} [options.target] - target where the button will plug in. By default, the target is 'container-buttons-plugin' into the wikdget
+    * @param {Object} [options.control] - instance of control
+    * @param {Object} [options.layer] - the layer instance is retrieved from the control, but you can defined it
+    * @fires button:clicked 
+    * @example
+    * // pluggued widget Export into control Isocurve
+    * var iso = new ol.control.Isocurve();
+    * map.addControl(iso);
+    *
+    * // method : call render()
+    * var export = new ButtonExport();
+    * export.setDownload(true);
+    * export.setControl(iso);
+    * export.setTarget(<!-- HTMLElement -->);
+    * export.setName("export");
+    * export.setFormat("geojson");
+    * export.setDescription("Export Isochrone");
+    * export.setTitle("Exporter");
+    * export.setMenu(true);
+    * export.setMenuOptions({
+    *   outside : false,
+    *   labelName : true,
+    *   labelDesc : true,
+    *   selectFormat : true
+    * });
+    * export.render(); // <-- direct call to render function !
+    * export.on("button:clicked", (data) => { console.log(data); });
+    *
+    * // method : call map.addControl()
+    * var export = new ButtonExport();
+    * export.setDownload(true);
+    * export.setControl(iso);
+    * export.setTarget(<!-- HTMLElement -->);
+    * export.setName("export");
+    * export.setFormat("geojson");
+    * export.setDescription("Export Isochrone");
+    * export.setTitle("Exporter");
+    * export.setKind("secondary");
+    * export.setMenu(false);
+    * export.on("button:clicked", (data) => { console.log(data); });
+    * map.addControl(export); // <-- using the OpenLayers mechanism, don't call to render function !
+    *
+    * // use control options instead of setters
+    * var export = new ButtonExport({
+    *   download : true,
+    *   control : iso,
+    *   target : <!-- HTMLElement -->,
+    *   name : "export",
+    *   description : "Export Isochrone",
+    *   format : "geojson",
+    *   title : "Exporter",
+    *   menu : false,
+    *   callback : (content, layer) => {
+    *      console.log(content, layer);
+    *   }
+    * });
+    * map.addControl(export);
+    *
+    * // method with passing option into the control Isocurve
+    * var iso = new ol.control.Isocurve({ export : true });
+    * // with control options :
+    * var iso = new ol.control.Isocurve({ export : {
+    *   download : false,
+    *   name : "save-iso",
+    *   format : "geojson",
+    *   title : "Sauvegarde",
+    *   menu : true
+    * }});
      */
     constructor (options) {
         options = options || {
@@ -267,20 +261,50 @@ class ButtonExport extends Control {
         this.uid = options.id || ID.generate();
 
         // export
+        /** @private */
         this.extension = null;
+        /** @private */
         this.mimeType = null;
 
         // dom
+        /** @private */
         this.container = null;
+        /** @private */
         this.button = null;
+        /** @private */
         this.buttonOptions = null;
+        /** @private */
         this.inputName = null;
+        /** @private */
         this.inputDesc = null;
+        /** @private */
         this.menu = null;
+        /** @private */
         this.menuClassHidden = "GPelementHidden gpf-hidden";
 
         this.initOptions(options);
         this.initContainer();
+
+        /**
+         * event triggered when the export is finished
+         *
+         * @event button:clicked
+         * @defaultValue "button:clicked"
+         * @group Events
+         * @typedef {Object}
+         * @property {Object} type - event
+         * @property {Object} target - instance Export
+         * @property {String} content - export data
+         * @property {String} name - name
+         * @property {String} description - description
+         * @property {String} format - format : kml, geojson, ...
+         * @property {Object} layer - layer
+         * @example
+         * Export.on("button:clicked", function (e) {
+         *   console.log(e.target);
+         * })
+         */
+        this.BUTTON_EXPORT_CLICKED_EVENT = "button:clicked";
     }
 
     // ################################################################### //
@@ -604,7 +628,7 @@ class ButtonExport extends Control {
      * ...
      *
      * @param {String} str - ...
-     * @returns {DOMElement} - ...
+     * @returns {HTMLElement} - ...
      * @private
      */
     stringToHTML (str) {
@@ -653,7 +677,7 @@ class ButtonExport extends Control {
 
     /**
      * ...
-     * @param {Object} layer - ...
+     * @param {Layer} layer - ...
      * @param {Object} [data] - ...
      * @param {Object} [style] - ...
      * @returns {String} - ...
@@ -749,7 +773,8 @@ class ButtonExport extends Control {
 
     /**
      * ...
-     * @param {*} e - Click
+     * @param {Event} e - Click
+     * @private
      */
     onClickButtonExport (e) {
         if (!this.isPluggableControl()) {
@@ -768,23 +793,9 @@ class ButtonExport extends Control {
 
         /**
          * event triggered when the export is finished
-         *
-         * @event button:clicked
-         * @typedef {Object}
-         * @property {Object} type - event
-         * @property {Object} target - instance Export
-         * @property {String} content - export data
-         * @property {String} name - name
-         * @property {String} description - description
-         * @property {String} format - format : kml, geojson, ...
-         * @property {Object} layer - layer
-         * @example
-         * Export.on("button:clicked", function (e) {
-         *   console.log(e.target);
-         * })
          */
         this.dispatchEvent({
-            type : "button:clicked",
+            type : this.BUTTON_EXPORT_CLICKED_EVENT,
             content : content,
             name : this.options.name,
             description : this.options.description,
@@ -814,7 +825,8 @@ class ButtonExport extends Control {
 
     /**
      * 
-     * @param {*} e - Click
+     * @param {Event} e - Click
+     * @private
      */
     onChangeRadioFormat (e) {
         this.setFormat(e.target.value);
@@ -822,12 +834,18 @@ class ButtonExport extends Control {
 
     /**
      * 
-     * @param {*} e - Click
+     * @param {Event} e - Click
+     * @private
      */
     onChangeInputName (e) {
         this.setName(e.target.value);
     }
 
+    /**
+     * 
+     * @param {Event} e - Focus
+     * @private
+     */
     onFocusInputName (e) {
         var map = this.getMap();
         if (!map) {
@@ -840,12 +858,18 @@ class ButtonExport extends Control {
 
     /**
      * 
-     * @param {*} e - Click
+     * @param {Event} e - Click
+     * @private
      */
     onChangeInputDesc (e) {
         this.setDescription(e.target.value);
     }
 
+    /**
+     * 
+     * @param {Event} e - Focus
+     * @private
+     */
     onFocusInputDesc (e) {
         var map = this.getMap();
         if (!map) {
@@ -858,7 +882,8 @@ class ButtonExport extends Control {
 
     /**
      * 
-     * @param {*} e - Click
+     * @param {Event} e - Click
+     * @private
      */
     onClickButtonToggleOptions (e) {
         e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
@@ -879,12 +904,22 @@ class ButtonExport extends Control {
         }
     }
 
+    /**
+     * 
+     * @param {Event} e - Click
+     * @private
+     */
     onClickButtonValidate (e) {
         this.setName(this.inputName.value);
         this.setDescription(this.inputDesc.value);
         this.buttonOptions.click();
     }
 
+    /**
+     * 
+     * @param {Event} e - Click
+     * @private
+     */
     onClickButtonCancel (e) {
         this.inputName.value = "";
         this.inputDesc.value = "";
@@ -897,7 +932,7 @@ class ButtonExport extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;
@@ -914,7 +949,7 @@ class ButtonExport extends Control {
 
     /**
      * ...
-     * @param {DOMElement} target - ...
+     * @param {HTMLElement} target - ...
      * @public
      */
     setTarget (target) {
