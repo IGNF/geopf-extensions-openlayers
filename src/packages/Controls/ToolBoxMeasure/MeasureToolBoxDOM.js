@@ -34,7 +34,7 @@ var MeasureToolBoxDOM = {
     /**
      * Main container (DOM)
      * @param {Number} uid - uid
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createToolBoxContainerElement : function (uid) {
         // <div id="GPtoolbox-measure-main">

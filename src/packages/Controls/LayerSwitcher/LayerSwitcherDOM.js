@@ -63,7 +63,7 @@ var LayerSwitcherDOM = {
     /**
      * Creation du container principal (DOM)
      *
-     * @returns {DOMElement} container - layer switcher DOM element
+     * @returns {HTMLElement} container - layer switcher DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -75,7 +75,7 @@ var LayerSwitcherDOM = {
     /**
      * Creation du container principal d"affichage des layers (DOM)
      *
-     * @returns {DOMElement} input - element for minimizing/maximizing the layer switcher
+     * @returns {HTMLElement} input - element for minimizing/maximizing the layer switcher
      */
     _createMainLayersShowElement : function () {
         // <!-- Hidden checkbox for minimizing/maximizing -->
@@ -88,7 +88,7 @@ var LayerSwitcherDOM = {
     /**
      * Creation du container principal des layers (DOM)
      *
-     * @returns {DOMElement} container - layers list container
+     * @returns {HTMLElement} container - layers list container
      */
     _createMainLayersElement : function () {
         // ajout de la liste des layers dans le container principal
@@ -110,7 +110,7 @@ var LayerSwitcherDOM = {
     /**
      * Creation du container du picto du controle (DOM)
      *
-     * @returns {DOMElement} label
+     * @returns {HTMLElement} label
      */
     _createMainPictoElement : function () {
         var self = this;
@@ -168,7 +168,7 @@ var LayerSwitcherDOM = {
     /**
      * Creation du container du panneau d"information (DOM)
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createMainInfoElement : function () {
         // gestion du panneau d"information dans le container principal
@@ -188,7 +188,7 @@ var LayerSwitcherDOM = {
     /**
      * Creation du container du panneau des styles (DOM)
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createMainStyleElement : function () {
         // gestion du panneau d"information dans le container principal
@@ -271,7 +271,7 @@ var LayerSwitcherDOM = {
      * @param {String} obj.type - feature or vector
      * @param {Boolean} tooltips - active ou non les tooltips HTML
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createContainerLayerElement : function (obj, tooltips) {
         // exemple :
@@ -319,7 +319,7 @@ var LayerSwitcherDOM = {
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
      * @param {Boolean} tooltips - autoriser ou non les tooltips HTML
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createBasicToolElement : function (obj, tooltips) {
         // exemple :
@@ -366,7 +366,7 @@ var LayerSwitcherDOM = {
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
      * @param {Boolean} tooltips - active ou non les tooltips
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createBasicToolNameElement : function (obj, tooltips) {
         // exemple :
@@ -392,7 +392,7 @@ var LayerSwitcherDOM = {
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
 
-     * @returns {DOMElement[]} array containing input and label elements
+     * @returns {HTMLElement[]} array containing input and label elements
      */
     _createBasicToolVisibilityElement : function (obj) {
         var visible = (typeof obj.visibility !== "undefined") ? obj.visibility : true;
@@ -428,7 +428,7 @@ var LayerSwitcherDOM = {
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
      *
-     * @returns {DOMElement[]} array containing input and label elements
+     * @returns {HTMLElement[]} array containing input and label elements
      */
     _createAdvancedToolShowElement : function (obj) {
         var button = document.createElement("button");
@@ -471,7 +471,7 @@ var LayerSwitcherDOM = {
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createAdvancedToolElement : function (obj) {
         // exemple :
@@ -567,7 +567,7 @@ var LayerSwitcherDOM = {
      * @param {String} id - ID de la couche à ajouter dans le layer switcher
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createAdvancedToolDeleteElement : function (id, contextual = false) {
         var button = document.createElement("button");
@@ -608,7 +608,7 @@ var LayerSwitcherDOM = {
      * @param {Array} styles - styles des tms
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      * 
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createAdvancedToolEditionElement : function (id, editable, tms, styles, contextual = false) {
         var button = document.createElement("button");
@@ -677,7 +677,7 @@ var LayerSwitcherDOM = {
      * @param {String} description - description
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createAdvancedToolInformationElement : function (id, title, description, contextual = false) {
         // exemple :
@@ -736,7 +736,7 @@ var LayerSwitcherDOM = {
      * @param {Boolean} grayscale - option grisée de la couche
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createAdvancedToolGreyscaleElement : function (id, grayable, grayscale, contextual = false) {
         // exemple :
@@ -800,7 +800,7 @@ var LayerSwitcherDOM = {
      * @param {String} id - ID de la couche à ajouter dans le layer switcher
      * @param {Number} opacity - Valeur de l'opacité
      * 
-     * @returns {DOMElement[]} Tableau de 2 containers
+     * @returns {HTMLElement[]} Tableau de 2 containers
      */
     _createAdvancedToolOpacityElement : function (id, opacity) {
         // exemple :
@@ -894,7 +894,7 @@ var LayerSwitcherDOM = {
      * @param {String} id - ID de la couche à ajouter dans le layer switcher
      * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createAdvancedToolExtentElement : function (id, contextual = false) {
         // FIXME inactif en mode classique !
@@ -939,7 +939,7 @@ var LayerSwitcherDOM = {
      * @param {*} tools - autres outils 
      * @param {*} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createAdvancedToolMoreElement : function (id, tools, contextual = false) {
         var list = [];
@@ -1029,7 +1029,7 @@ var LayerSwitcherDOM = {
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createContainerLayerInfoElement : function (obj) {
         var container = document.createElement("div");
@@ -1191,7 +1191,7 @@ var LayerSwitcherDOM = {
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     _createContainerLayerStyleElement : function (obj) {
         var container = document.createElement("div");

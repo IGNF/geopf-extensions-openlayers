@@ -5,6 +5,7 @@ import "../../CSS/Controls/Measures/GPFmeasureLength.css";
 // import Control from "ol/control/Control";
 import Widget from "../Widget";
 import Control from "../Control";
+import Map from "ol/Map";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
@@ -27,29 +28,30 @@ var logger = Logger.getLogger("measurelength");
  *
  * Length measurement Control. Allows users to draw a path on Openlayers map and have its length computed and displayed.
  *
- * @constructor
  * @alias ol.control.MeasureLength
- * @type {ol.control.MeasureLength}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {Boolean} [options.geodesic = true] - If true, length will be computed on the global sphere using the {@link https://openlayers.org/en/latest/apidoc/module-ol_sphere.html#haversineDistance ol.Sphere.haversineDistance()} function. Otherwise, length will be computed on the projected plane.
- * @param {String} [options.unit] - If not specified, the measure will be displayed in m until 999m, then in km. Values possible : m or km.
- * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
- * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the path. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
- * @param {Object} [options.styles.start = {}] - Line Style when drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
- * @param {Object} [options.styles.finish = {}] - Line Style when finished drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
- * <!-- @param {Object} [options.tooltip = {}] - NOT YET IMPLEMENTED ! -->
- * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
- * @param {String} [options.layerDescription.title = "Mesures de distance"] - Layer title to be displayed in LayerSwitcher
- * @param {String} [options.layerDescription.description = "Mes mesures"] - Layer description to be displayed in LayerSwitcher
- * @example
- * var measureLength = new ol.control.MeasureLength({
- *    geodesic : false
- * });
- */
+ * @module MeasureLength
+*/
 class MeasureLength extends Control {
-
+    
+    /**
+     * @constructor
+     * @param {Object} options - options for function call.
+     * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+     * @param {Boolean} [options.geodesic = true] - If true, length will be computed on the global sphere using the {@link https://openlayers.org/en/latest/apidoc/module-ol_sphere.html#haversineDistance ol.Sphere.haversineDistance()} function. Otherwise, length will be computed on the projected plane.
+     * @param {String} [options.unit] - If not specified, the measure will be displayed in m until 999m, then in km. Values possible : m or km.
+     * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
+     * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the path. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
+     * @param {Object} [options.styles.start = {}] - Line Style when drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
+     * @param {Object} [options.styles.finish = {}] - Line Style when finished drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
+     * <!-- @param {Object} [options.tooltip = {}] - NOT YET IMPLEMENTED ! -->
+     * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
+     * @param {String} [options.layerDescription.title = "Mesures de distance"] - Layer title to be displayed in LayerSwitcher
+     * @param {String} [options.layerDescription.description = "Mes mesures"] - Layer description to be displayed in LayerSwitcher
+     * @example
+     * var measureLength = new ol.control.MeasureLength({
+     *    geodesic : false
+     * });
+     */
     constructor (options) {
         // options
         options = options || {};
@@ -89,7 +91,7 @@ class MeasureLength extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         logger.trace("setMap()");
@@ -160,7 +162,7 @@ class MeasureLength extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this._container;
@@ -200,7 +202,7 @@ class MeasureLength extends Control {
     /**
      * initialize component container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */

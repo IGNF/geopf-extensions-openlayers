@@ -17,7 +17,7 @@ var ContextMenuDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -33,7 +33,7 @@ var ContextMenuDOM = {
     /**
  * Show PointInfo
  *
- * @returns {DOMElement} DOM element
+ * @returns {HTMLElement} DOM element
  */
     _createShowPointInfoPictoElement : function () {
         var self = this;
@@ -71,7 +71,7 @@ var ContextMenuDOM = {
     /**
  * Create Container Panel
  *
- * @returns {DOMElement} DOM element
+ * @returns {HTMLElement} DOM element
  */
     _createPointInfoPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -90,7 +90,7 @@ var ContextMenuDOM = {
     /**
  * Create Header Panel
  *
- * @returns {DOMElement} DOM element
+ * @returns {HTMLElement} DOM element
  */
     _createPointInfoPanelHeaderElement : function () {
         var container = document.createElement("div");

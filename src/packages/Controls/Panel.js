@@ -43,7 +43,7 @@ class PanelDOM {
      * @param {*} name -
      * @param {*} title -
      * @param {*} cb -
-     * @returns {DOMElement} -
+     * @returns {HTMLElement} -
      */
     add (name, title, cb) {
         this.name = name;
@@ -67,7 +67,7 @@ class PanelDOM {
      * @param {*} name -
      * @param {*} cb -
      * @param {*} options -
-     * @returns {DOMElement} -
+     * @returns {HTMLElement} -
      */
     insertBtn (name, cb, options) {
         if (!this.container) {
@@ -79,7 +79,7 @@ class PanelDOM {
 
     /**
      * ...
-     * @returns {DOMElement} -
+     * @returns {HTMLElement} -
      */
     insertIcon () {
         if (!this.container) {

@@ -34,7 +34,8 @@ __DATE__
   - MousePosition : Edition des coordonnées (#407 #416)
   - Layerswitcher : Menu contextuel en mode mobile snas items vides (#417)
   - ControlList et ZoomOut : Tooltips cassées (#419)
-  
+  - Coordinates : homogénéisation de l'affichage des coordonnées dans l'ordre lat,lon (#421)
+   
 * 🔒 [Security]
 
 

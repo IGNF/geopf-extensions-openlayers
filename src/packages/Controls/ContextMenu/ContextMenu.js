@@ -7,6 +7,7 @@ import "../../CSS/Controls/ContextMenu/GPFcontextMenu.css";
 // import OpenLayers
 import Control from "../Control";
 import Overlay from "ol/Overlay";
+import Map from "ol/Map";
 import {
     transform as olTransformProj,
     fromLonLat as olFromLonLat
@@ -25,42 +26,46 @@ import Logger from "../../Utils/LoggerByDefault";
 // DOM
 import ContextMenuDOM from "./ContextMenuDOM";
 import olContextMenu from "ol-contextmenu";
-import Route from "../Route/Route";
 import Widget from "../Widget";
 
 var logger = Logger.getLogger("contextMenu");
 
 /**
+ * @typedef {Object} ContextMenuOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
+ * @property {boolean} [panel=true] - Affiche un en-tête (header) dans le panneau.
+ * @property {Array<Object>} [contextMenuItemsOptions=[]] - Tableau d’items personnalisés pour le menu contextuel (format ol-contextmenu).
+ * @property {HTMLElement} [element] - Élément DOM à utiliser comme conteneur principal.
+ * @property {string} [target] - Sélecteur ou identifiant du conteneur cible.
+ * @property {Function} [render] - Fonction de rendu personnalisée.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ * @property {string|number} [id] - Identifiant unique du widget.
+ */
+/**
  * @classdesc
  *
  * ContextMenu button
  *
- * @constructor
  * @alias ol.control.ContextMenu
- * @type {ol.control.ContextMenu}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- *    la clé contextMenuItemsOptions permet de paramétrer 
- *    un tableau d'item dont le format est hérité de la librairie
- *    {@link https://www.npmjs.com/package/ol-contextmenu}
- * 
- *    ex : { contextMenuItemsOptions : itemsOpt }
- * 
- * @example
- * var contextMenu = new ol.control.ContextMenu();
- * map.addControl(contextMenu);
- */
+ * @module ContextMenu
+*/
 class ContextMenu extends Control {
-
+    
     /**
-     * See {@link ol.control.ContextMenu}
-     * @module ContextMenu
-     * @alias module:~controls/ContextMenu
-     * @param {Object} [options] - options
+     * @constructor
+     * @param {ContextMenuOptions} options - options for function call.
+     *    la clé contextMenuItemsOptions permet de paramétrer 
+     *    un tableau d'item dont le format est hérité de la librairie
+     *    {@link https://www.npmjs.com/package/ol-contextmenu}
+     * 
+     *    ex : { contextMenuItemsOptions : itemsOpt }
+     * 
      * @example
-     * import ContextMenu from "gpf-ext-ol/controls/ContextMenu"
-     * ou 
-     * import { ContextMenu } from "gpf-ext-ol"
+     * var contextMenu = new ol.control.ContextMenu();
+     * map.addControl(contextMenu);
      */
     constructor (options) {
         options = options || {};
@@ -101,7 +106,7 @@ class ContextMenu extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -155,29 +160,44 @@ class ContextMenu extends Control {
         // merge with user options
         Utils.assign(this.options, options);
 
-        /** {Boolean} specify if control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
-        /** {Boolean} specify if control add some stuff auto */
+        /** 
+         * @type {Boolean} 
+         * specify if control add some stuff auto */
         this.auto = this.options.auto;
 
+        /** @private */
         this.buttonContextMenuShow = null;
+        /** @private */
         this.panelContextMenuContainer = null;
+        /** @private */
         this.panelContextMenuHeaderContainer = null; // usefull for the dragNdrop
+        /** @private */
         this.buttonContextMenuClose = null;
 
+        /** @private */
         this.panelContextMenuEntriesContainer = null;
 
         /** {Array} specify some events listeners */
+        /** @private */
         this.eventsListeners = [];
+        /** @private */
         this.controlList = []; 
 
         // Point pour le calcul d'itinéraire
+        /** @private */
         this.itiPoints =  new Array(7);
 
+        /** @private */
         this._marker = new Overlay({
             element : this._createPinDOMOverlay(Markers["lightOrange"]),
             stopEvent : false,
@@ -185,12 +205,14 @@ class ContextMenu extends Control {
         });;
 
         var contextMenuItems = this.getAvailableContextMenuControls.call(this);
+        /** @private */
         this.contextMenuItemsOptions = [];
         if (options.contextMenuItemsOptions instanceof Array 
             && options.contextMenuItemsOptions
             && options.contextMenuItemsOptions.length > 0) {
             this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : "ol-context-menu-custom fr-text--md"}));
         }
+        /** @type {olContextMenu} */
         this.contextmenu = new olContextMenu(
             {
                 defaultItems : false, // defaultItems are (for now) Zoom In/Zoom Out
@@ -203,7 +225,7 @@ class ContextMenu extends Control {
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     initContainer () {
@@ -428,7 +450,7 @@ class ContextMenu extends Control {
         this.buttonPointInfoShow.click();
         this.buttonPointInfoShow.setAttribute("aria-pressed", true);
         var coordinate = document.createElement("div");
-        coordinate.innerHTML = clickedCoordinate[0].toFixed(6) + ", " + clickedCoordinate[1].toFixed(6);
+        coordinate.innerHTML = clickedCoordinate[1].toFixed(6) + ", " + clickedCoordinate[0].toFixed(6);
         var address = document.createElement("div");
         var parcel = document.createElement("div");
         var altitude = document.createElement("div");
@@ -447,7 +469,7 @@ class ContextMenu extends Control {
             },
             onFailure : function (error) {},
             // spécifique au service
-            positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
+            positions : [{lon : clickedCoordinate[1], lat : clickedCoordinate[0]}],
             outputFormat : "json" // json|xml
         };
         Gp.Services.getAltitude(altiOptions);
@@ -460,8 +482,8 @@ class ContextMenu extends Control {
             },
             onFailure : function (error) {},
             // spécifique au service
-            position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
-            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
+            position : {lon : clickedCoordinate[1], lat : clickedCoordinate[0]},
+            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[1], clickedCoordinate[0]], radius : 100 },
             index : "CadastralParcel",
             maximumResponses : 1
         };
@@ -517,7 +539,8 @@ class ContextMenu extends Control {
     
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
     onShowPointInfoClick (e) {
         if (e.target.ariaPressed === "true") {
@@ -535,7 +558,8 @@ class ContextMenu extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
     onClosePointInfoClick (e) {
         logger.trace(e);
@@ -544,7 +568,8 @@ class ContextMenu extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
     onCloseContextMenu (e) {
         e.target.clear();
@@ -552,7 +577,8 @@ class ContextMenu extends Control {
 
     /**
      * ...
-     * @param {*} e - ...
+     * @param {Event} e - ...
+     * @private
      */
     onOpenContextMenu (e) {
         var addMenuToolsEventListeners = () => {
