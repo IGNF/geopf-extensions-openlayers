@@ -111,7 +111,7 @@ export type LayerSwitcherLayersConfig = {
  *
  * @module LayerSwitcher
  * @alias ol.control.LayerSwitcher
-*/
+ */
 declare class LayerSwitcher extends Control {
     /**
     * @constructor
@@ -297,6 +297,7 @@ declare class LayerSwitcher extends Control {
         gutter: boolean;
         allowEdit: boolean;
         allowGrayScale: boolean;
+        allowTooltips: boolean;
         advancedTools: never[];
     } | undefined;
     /**

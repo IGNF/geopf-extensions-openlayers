@@ -24,10 +24,10 @@ declare namespace LayerSwitcherDOM {
         visibility: boolean;
         opacity: Float;
         type: string;
-    }): HTMLElement;
-    function _createBasicToolElement(obj: any): HTMLElement;
+    }, tooltips: boolean): HTMLElement;
+    function _createBasicToolElement(obj: any, tooltips: boolean): HTMLElement;
     function _createBasicToolDragNDropElement(obj: any): HTMLDivElement;
-    function _createBasicToolNameElement(obj: any): HTMLElement;
+    function _createBasicToolNameElement(obj: any, tooltips: boolean): HTMLElement;
     function _createBasicToolVisibilityElement(obj: any): HTMLElement[];
     function _createAdvancedToolShowElement(obj: any): HTMLElement[];
     function _createAdvancedToolElement(obj: any): HTMLElement;
