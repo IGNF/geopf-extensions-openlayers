@@ -457,6 +457,21 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   left: 8px;
 }
 
+/* tooltips */
+#gpf-tooltips-html {
+  position: fixed;
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  max-width: 300px;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
 /**********************/
 /* Feature info popup */
 /**********************/

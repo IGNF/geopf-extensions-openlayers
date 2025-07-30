@@ -25,6 +25,7 @@ import Utils from "../../Utils/Helper";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Config from "../../Utils/Config";
+import ToolTips from "../../Utils/ToolTips";
 // DOM
 import LayerSwitcherDOM from "./LayerSwitcherDOM";
 
@@ -63,7 +64,7 @@ var logger = Logger.getLogger("layerswitcher");
  *
  * @module LayerSwitcher
  * @alias ol.control.LayerSwitcher
-*/
+ */
 class LayerSwitcher extends Control {
     
     /*
@@ -213,7 +214,9 @@ class LayerSwitcher extends Control {
      * @param {Map} map - Map.
      */
     setMap (map) {
-        // info : cette méthode est appelée (entre autres?) après un map.addControl() ou map.removeControl()
+        // INFO
+        // cette méthode est appelée
+        // après un map.addControl() ou map.removeControl()
 
         if (map) { // dans le cas de l'ajout du contrôle à la map
             // on ajoute les couches
@@ -271,25 +274,30 @@ class LayerSwitcher extends Control {
             olObservableUnByKey(this._listeners.onMoveListener);
             olObservableUnByKey(this._listeners.onAddListener);
             olObservableUnByKey(this._listeners.onRemoveListener);
-
+            
             // we put all the layers at Zindex = 0, without changing the visual order
             // in order that the next added layers are not hidden by layers with Zindex > 0
             for (var i = this._layersOrder.length - 1; i >= 0; i--) {
                 // this._layersOrder[i].layer.setZIndex(0);
             }
         }
-
+        
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
-
+        
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
         }
-
+        
         // reunion du bouton avec le précédent
         if (this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
+        }
+
+        // initialize tooltips
+        if (this.options.allowTooltips) {
+            ToolTips.init();
         }
     }
 
@@ -699,6 +707,7 @@ class LayerSwitcher extends Control {
             gutter : false,
             allowEdit : true,
             allowGrayScale : true,
+            allowTooltips : false,
             advancedTools : []
         };
 
@@ -1240,7 +1249,7 @@ class LayerSwitcher extends Control {
         layerOptions.advancedTools = this.options.advancedTools || [];
 
         // ajout d'une div pour cette layer dans le control
-        var layerDiv = this._createContainerLayerElement(layerOptions);
+        var layerDiv = this._createContainerLayerElement(layerOptions, this.options.allowTooltips);
 
         if (!layerOptions.inRange) {
             layerDiv.classList.add("outOfRange");
