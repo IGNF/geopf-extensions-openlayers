@@ -95,6 +95,7 @@ class LocationSelector extends Control {
      * initialize component
      *
      * @param {Object} options - options
+     * @private
      */
     initialize (options) {
         // set default options
@@ -120,48 +121,64 @@ class LocationSelector extends Control {
         // (par ex si ce composant est appélé par un autre composant graphique)
         // alors on le récupère, sinon c'est qu'il est indépendant : on génère donc un uuid
 
-        /** container map */
+        /** container map 
+         * @private
+        */
         this._map = null;
 
-        /** container principal des entrées  */
+        /** container principal des entrées 
+         * @private */
         this._inputsContainer = null;
 
-        /** container du label du point */
+        /** container du label du point 
+         * @private*/
         this._buttonLabel = null;
 
-        /** container de la saisi de l'autocompletion */
+        /** container de la saisi de l'autocompletion  
+         * @private */
         this._inputAutoComplete = null;
 
-        /** container du pointer de saisi sur la carte */
+        /** container du pointer de saisi sur la carte 
+         * @private */
         this._inputShowPointerContainer = null;
 
-        /** label du pointer de saisi sur la carte (avec img) */
+        /** label du pointer de saisi sur la carte (avec img) 
+         * @private */
         this._inputShowPointer = null;
 
-        /** container des coordonnées */
+        /** container des coordonnées 
+         * @private */
         this._inputCoordinateContainer = null;
 
-        /** elements pour ajouter ou supprimer un nouveau point */
+        /** elements pour ajouter ou supprimer un nouveau point 
+         * @private */
         this._addPointElement = null;
+        /** @private */
         this._removePointElement = null;
 
-        /** coordonnées du point selectionné, en EPSG:4326 */
+        /** coordonnées du point selectionné, en EPSG:4326 
+         * @private */
         this._coordinate = null;
 
-        /** container des reponses de l'autocompletion */
+        /** container des reponses de l'autocompletion 
+         * @private */
         this._suggestedContainer = null;
+        /** @private */
         this._suggestedList = null;
 
-        /** listes des reponses de l'autocompletion */
+        /** listes des reponses de l'autocompletion 
+         * @private */
         this._suggestedLocations = [];
 
-        /** localisant */
+        /** localisant 
+         * @private */
         this._currentLocation = null;
 
         /** marker */
         this._initMarker();
 
-        /** ressources du services d'autocompletion (ayant droit!) */
+        /** ressources du services d'autocompletion (ayant droit!) 
+         * @private */
         this._resources = {};
 
         // listener key for event click on map
@@ -175,8 +192,11 @@ class LocationSelector extends Control {
      */
     _initMarker () {
         // init marker properties
+        /** @private */
         this._marker = null;
+        /** @private */
         this._markerUrl = "";
+        /** @private */
         this._markerOffset = [0, 0];
 
         if (this.options.tag.markerOpts && this.options.tag.markerOpts.url) {
@@ -264,6 +284,7 @@ class LocationSelector extends Control {
      * initialize component container
      *
      * @returns {HTMLElement} DOM element
+     * @private
      */
     _initContainer () {
         var id = this.options.tag.id;
@@ -499,6 +520,7 @@ class LocationSelector extends Control {
      * this point is added as a parameter for the service route.
      *
      * @param {Object} e - HTMLElement
+     * @private
      */
     onLocationAddPointClick (e) {
         logger.log("onRouteAddPointClick", e);

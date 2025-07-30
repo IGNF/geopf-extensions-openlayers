@@ -692,6 +692,7 @@ class Drawing extends Control {
      */
     _initialize (options) {
         // determination d'un uid
+        /** @private */
         this._uid = options.id || SelectorID.generate();
 
         // export name / format / ...
@@ -732,11 +733,15 @@ class Drawing extends Control {
         });
 
         this.options.collapsed = (options.collapsed !== undefined) ? options.collapsed : true;
-        /** {Boolean} specify if Drawing control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if Drawing control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
         this.options.draggable = (options.draggable !== undefined) ? options.draggable : false;
-        /** {Boolean} specify if Drawing control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if Drawing control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
         this.options.markersList = options.markersList || MarkersOther["drawing_api"];

@@ -533,10 +533,14 @@ class Route extends Control {
         // on récupère les options de chaque type de marker si spécifié
         this.options.markersOpts = Utils.assign(defaultMarkersOpts, options.markersOpts);
 
-        /** {Boolean} specify if Route control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if Route control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if Route control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if Route control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
         /** @private */
@@ -616,12 +620,14 @@ class Route extends Control {
         this._resultsHoverInteraction = null;
 
         // styles pour les sélections des features
+        /** @type {Style} */
         this._defaultFeatureStyle = new Style({
             stroke : new Stroke({
                 color : "rgba(0,183,152,0.9)",
                 width : 12
             })
         });
+        /** @type {Style} */
         this._selectedFeatureStyle = new Style({
             stroke : new Stroke({
                 color : "rgba(255,102,0,0.9)",
@@ -1629,9 +1635,11 @@ class Route extends Control {
      */
     _fillRouteResultsDetailsContainer (distance, duration, instructions) {
         // Distance et Durée
+        /** @private */
         this._resultsRouteValuesContainer = this._addRouteResultsValuesElement(distance, duration, MathUtils.convertSecondsToTime);
 
         // Détails
+        /** @private */
         this._resultsRouteDetailsContainer = this._addRouteResultsDetailsElement(instructions, MathUtils.convertSecondsToTime);
     }
 

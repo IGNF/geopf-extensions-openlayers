@@ -230,6 +230,7 @@ class Territories extends Control {
         }
         this.territories = [];
     }
+
     /**
      * Set collapse
      *
@@ -312,16 +313,24 @@ class Territories extends Control {
         Utils.assign(this.options, options);
         Utils.assign(this.options.upload, uploadOpts);
 
-        /** {Boolean} specify if control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is draggable (true) or not (false) 
+         * */
         this.draggable = this.options.draggable;
 
-        /** {Boolean} specify if we load the list of territories by default */
+        /** 
+         * specify if we load the list of territories by default
+         * @type {Boolean} */
         this.auto = this.options.auto;
         /**
-         * {Array} list of object territories
+         * list of object territories
+         * @type {Array} 
          * @example
          * {
          *   dom : { HTMLelment },
@@ -336,7 +345,9 @@ class Territories extends Control {
          */
         this.territories = [];
 
-        /** {Boolean} specify if a list of object territories must be appended or replaced */
+        /** 
+         * @type {Boolean} 
+         * specify if a list of object territories must be appended or replaced */
         this.append = false;
 
         /** @private */
@@ -349,7 +360,7 @@ class Territories extends Control {
         this.buttonTerritoriesClose = null;
         /** @private */
         this.containerTerritoriesOptions = null;
-
+        /** @private */
         this.panelTerritoriesEntriesContainer = null;
     }
 
@@ -417,6 +428,7 @@ class Territories extends Control {
 
     /**
      * Close panel option
+     * @private
      */
     closePanelUpLoad () {
         this.containerTerritoriesOptions.children[0].click();
@@ -429,6 +441,7 @@ class Territories extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onShowTerritoriesClick (e) {
         if (e.target.ariaPressed === "true") {
@@ -441,6 +454,7 @@ class Territories extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onCloseTerritoriesClick (e) {
         logger.trace(e);
@@ -450,7 +464,7 @@ class Territories extends Control {
      * ...
      * @param {Event} e - ...
      * @param {*} id - ...
-     * @todo ...
+     * @private
      */
     onImageTerritoriesClick (e, id) {
         logger.trace(e, id);
@@ -502,6 +516,7 @@ class Territories extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onUploadFileClick (e) {
         var file = e.target.files[0];
@@ -576,6 +591,7 @@ class Territories extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onUploadToggleClick (e) {
         // INFO

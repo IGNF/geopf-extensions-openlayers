@@ -484,6 +484,7 @@ class Legends extends Control {
     /**
      * ...
      * @param {PointerEvent} e - ...
+     * @private
      */
     onShowLegendsClick (e) {
         if (e.target.ariaPressed === "true") {

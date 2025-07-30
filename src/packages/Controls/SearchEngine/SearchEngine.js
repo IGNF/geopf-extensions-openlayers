@@ -476,7 +476,6 @@ class SearchEngine extends Control {
             this._currentCoordinateSearchUnits = this._coordinateSearchUnits[this._currentCoordinateSearchType][0].code; // decimal
         }
 
-
         /** @private */
         this._coordinateSearchLngInput = null;
         /** @private */

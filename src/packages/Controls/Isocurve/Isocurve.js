@@ -515,10 +515,14 @@ class Isocurve extends Control {
         // merge with user options
         Utils.assign(this.options, options);
 
-        /** {Boolean} specify if isocurve control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if isocurve control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if isocurve control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if isocurve control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
         /** 

@@ -1323,6 +1323,7 @@ class MousePosition extends Control {
      * this method is called by event 'click' on input coordinate
      *
      * @param {Boolean} editing - editing mode
+     * @private
      */
     onMousePositionEditModeClick (editing) {
         if (!this.options.editCoordinates) {

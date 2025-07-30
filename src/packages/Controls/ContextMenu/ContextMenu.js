@@ -160,13 +160,19 @@ class ContextMenu extends Control {
         // merge with user options
         Utils.assign(this.options, options);
 
-        /** {Boolean} specify if control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
-        /** {Boolean} specify if control add some stuff auto */
+        /** 
+         * @type {Boolean} 
+         * specify if control add some stuff auto */
         this.auto = this.options.auto;
 
         /** @private */
@@ -206,6 +212,7 @@ class ContextMenu extends Control {
             && options.contextMenuItemsOptions.length > 0) {
             this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : "ol-context-menu-custom fr-text--md"}));
         }
+        /** @type {olContextMenu} */
         this.contextmenu = new olContextMenu(
             {
                 defaultItems : false, // defaultItems are (for now) Zoom In/Zoom Out
@@ -533,6 +540,7 @@ class ContextMenu extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onShowPointInfoClick (e) {
         if (e.target.ariaPressed === "true") {
@@ -551,6 +559,7 @@ class ContextMenu extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onClosePointInfoClick (e) {
         logger.trace(e);
@@ -560,6 +569,7 @@ class ContextMenu extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onCloseContextMenu (e) {
         e.target.clear();
@@ -568,6 +578,7 @@ class ContextMenu extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onOpenContextMenu (e) {
         var addMenuToolsEventListeners = () => {

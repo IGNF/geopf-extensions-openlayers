@@ -340,12 +340,14 @@ class ReverseGeocode extends Control {
         /** @private */
         this._reverseGeocodingLocationsMarkers = [];
         
+        /** @type {Style} */
         this._resultsDefaultStyle = new Style({
             image : new Icon({
                 src : Markers["lightOrange"],
                 anchor : [0.5, 1]
             })
         });
+        /** @type {Style} */
         this._resultsSelectedStyle = new Style({
             image : new Icon({
                 src : Markers["red"],

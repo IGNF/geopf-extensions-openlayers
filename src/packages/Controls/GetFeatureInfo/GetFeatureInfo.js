@@ -146,13 +146,19 @@ class GetFeatureInfo extends Control {
         // merge with user options
         Utils.assign(this.options, options);
 
-        /** {Boolean} specify if control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
-        /** {Boolean} specify if control add some stuff auto */
+        /** 
+         * @type {Boolean} 
+         * specify if control add some stuff auto */
         this.auto = this.options.auto;
 
         /** @private */
@@ -303,7 +309,6 @@ class GetFeatureInfo extends Control {
      *      layer: layer,
      *      url :  url          pour wmts et wms
      * }
-     * @private
      */
     getGetFeatureInfoLayer (layer) {
         var gfiLayer =  {};
@@ -353,7 +358,6 @@ class GetFeatureInfo extends Control {
      * Main render function
      * @param { Layer } layer layer openlayer
      * @returns { Array } Array of ol features
-     * @private
      */
     getFeaturesAtClick (layer) {
         var features = [];
@@ -373,7 +377,6 @@ class GetFeatureInfo extends Control {
      *      layername : "layername",
      *      content: "html"
      * }
-     * @private
      */
     async getGetFeatureInfoContent (gfiLayer) {
         var content = null;
@@ -652,6 +655,7 @@ class GetFeatureInfo extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onShowGetFeatureInfoClick (e) {
         if (e.target.ariaPressed === "true") {
@@ -668,6 +672,7 @@ class GetFeatureInfo extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onCloseGetFeatureInfoClick (e) {
         logger.trace(e);
@@ -676,6 +681,7 @@ class GetFeatureInfo extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @private
      */
     onGetFeatureInfoComputationSubmit (e) {
         logger.trace(e);

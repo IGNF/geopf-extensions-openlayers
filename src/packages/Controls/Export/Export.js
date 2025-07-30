@@ -261,16 +261,25 @@ class ButtonExport extends Control {
         this.uid = options.id || ID.generate();
 
         // export
+        /** @private */
         this.extension = null;
+        /** @private */
         this.mimeType = null;
 
         // dom
+        /** @private */
         this.container = null;
+        /** @private */
         this.button = null;
+        /** @private */
         this.buttonOptions = null;
+        /** @private */
         this.inputName = null;
+        /** @private */
         this.inputDesc = null;
+        /** @private */
         this.menu = null;
+        /** @private */
         this.menuClassHidden = "GPelementHidden gpf-hidden";
 
         this.initOptions(options);
@@ -765,6 +774,7 @@ class ButtonExport extends Control {
     /**
      * ...
      * @param {Event} e - Click
+     * @private
      */
     onClickButtonExport (e) {
         if (!this.isPluggableControl()) {
@@ -816,6 +826,7 @@ class ButtonExport extends Control {
     /**
      * 
      * @param {Event} e - Click
+     * @private
      */
     onChangeRadioFormat (e) {
         this.setFormat(e.target.value);
@@ -824,6 +835,7 @@ class ButtonExport extends Control {
     /**
      * 
      * @param {Event} e - Click
+     * @private
      */
     onChangeInputName (e) {
         this.setName(e.target.value);
@@ -832,6 +844,7 @@ class ButtonExport extends Control {
     /**
      * 
      * @param {Event} e - Focus
+     * @private
      */
     onFocusInputName (e) {
         var map = this.getMap();
@@ -846,6 +859,7 @@ class ButtonExport extends Control {
     /**
      * 
      * @param {Event} e - Click
+     * @private
      */
     onChangeInputDesc (e) {
         this.setDescription(e.target.value);
@@ -854,6 +868,7 @@ class ButtonExport extends Control {
     /**
      * 
      * @param {Event} e - Focus
+     * @private
      */
     onFocusInputDesc (e) {
         var map = this.getMap();
@@ -868,6 +883,7 @@ class ButtonExport extends Control {
     /**
      * 
      * @param {Event} e - Click
+     * @private
      */
     onClickButtonToggleOptions (e) {
         e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
@@ -888,12 +904,22 @@ class ButtonExport extends Control {
         }
     }
 
+    /**
+     * 
+     * @param {Event} e - Click
+     * @private
+     */
     onClickButtonValidate (e) {
         this.setName(this.inputName.value);
         this.setDescription(this.inputDesc.value);
         this.buttonOptions.click();
     }
 
+    /**
+     * 
+     * @param {Event} e - Click
+     * @private
+     */
     onClickButtonCancel (e) {
         this.inputName.value = "";
         this.inputDesc.value = "";

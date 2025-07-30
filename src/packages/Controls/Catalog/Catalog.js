@@ -343,6 +343,7 @@ class Catalog extends Control {
      * @private
      */
     initialize (options) {
+        /** @private */
         this.uid = options.id || SelectorID.generate();
 
         // set default options
@@ -429,11 +430,17 @@ class Catalog extends Control {
         this.eventsListeners = [];
 
         // DOM
+        /** @private */
         this.buttonCatalogShow = null;
+        /** @private */
         this.panelCatalogContainer = null;
+        /** @private */
         this.panelCatalogHeaderContainer = null; // usefull for the dragNdrop
+        /** @private */
         this.buttonCatalogClose = null;
+        /** @private */
         this.contentCatalogContainer = null;
+        /** @private */
         this.waitingContainer = null;
 
         /**

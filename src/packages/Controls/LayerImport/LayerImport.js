@@ -498,10 +498,14 @@ class LayerImport extends Control {
         // merge with user options
         Utils.mergeParams(this.options, options);
 
-        /** {Boolean} specify if LayerImport control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if LayerImport control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if LayerImport control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if LayerImport control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)

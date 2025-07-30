@@ -16,32 +16,35 @@ import WidgetDOM from "./WidgetDOM";
 var logger = Logger.getLogger("widget");
 
 /**
+ * @typedef {Object} WidgetOptions
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
+ * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
+ * @property {boolean} [panel=true] - Affiche un en-tête (header) dans le panneau.
+ * @property {string} [id] - Identifiant unique du widget.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ */
+
+/**
  * @classdesc
  *
  * Widget button
  *
- * @constructor
  * @alias ol.control.Widget
- * @type {ol.control.Widget}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
+ * @module Widget
  * 
- * @fires custom:action
- * @example
- * var widget = new ol.control.Widget();
- * map.addControl(widget);
- */
+*/
 var Widget = class Widget extends Control {
-
+    
     /**
-     * See {@link ol.control.Widget}
-     * @module Widget
-     * @alias module:~controls/Widget
-     * @param {Object} [options] - options
+     * @constructor
+     * @param {WidgetOptions} options - options for function call.
+     * 
+     * @fires custom:action
      * @example
-     * import Widget from "gpf-ext-ol/controls/Widget"
-     * ou 
-     * import { Widget } from "gpf-ext-ol"
+     * var widget = new ol.control.Widget();
+     * map.addControl(widget);
      */
     constructor (options) {
         options = options || {};
@@ -82,7 +85,7 @@ var Widget = class Widget extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -139,7 +142,7 @@ var Widget = class Widget extends Control {
     /**
      * Initialize Widget control (called by Widget constructor)
      *
-     * @param {Object} options - constructor options
+     * @param {WidgetOptions} options - constructor options
      * @private
      */
     initialize (options) {
@@ -156,30 +159,43 @@ var Widget = class Widget extends Control {
         // merge with user options
         Utils.assign(this.options, options);
 
-        /** {Boolean} specify if control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
-        /** {Boolean} specify if control add some stuff auto */
+        /** 
+         * @type {Boolean} 
+         * specify if control add some stuff auto */
         this.auto = this.options.auto;
 
+        /** @private */
         this.buttonWidgetShow = null;
+        /** @private */
         this.panelWidgetContainer = null;
+        /** @private */
         this.panelWidgetHeaderContainer = null; // usefull for the dragNdrop
+        /** @private */
         this.buttonWidgetClose = null;
 
+        /** @private */
         this.panelWidgetEntriesContainer = null;
 
-        /** {Array} specify some events listeners */
+        /** 
+         * @type {Array} 
+         * specify some events listeners */
         this.eventsListeners = [];
     }
 
     /**
      * Create control main container (DOM initialize)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     initContainer () {
@@ -224,7 +240,7 @@ var Widget = class Widget extends Control {
     /**
      * Add events listeners on map (called by setMap)
      * 
-     * @param {*} map - map
+     * @param {Map} map - map
      * @private
      */
     addEventsListeners (map) {
@@ -253,6 +269,7 @@ var Widget = class Widget extends Control {
     /**
      * ...
      * @param {*} e - ...
+     * @private
      */
     onShowWidgetClick (e) {
         logger.trace(e);
@@ -261,6 +278,7 @@ var Widget = class Widget extends Control {
     /**
      * ...
      * @param {*} e - ...
+     * @private
      */
     onCloseWidgetClick (e) {
         logger.trace(e);
