@@ -253,6 +253,18 @@ var CatalogDOM = {
 
         return div;
     },
+    /**
+     * Create Catalog Content Categories Tabs
+     * 
+     * @param {*} categories - categories to create tabs
+     * @returns {HTMLElement} DOM element
+     * @description
+     * - create the tabs for categories
+     * - each tab has a button to select the category
+     * - each tab has a panel with subcategories (if any)
+     * - each subcategory has a radio button to select it
+     * - each subcategory has a panel with layers
+     */
     _createCatalogContentCategoriesTabs : function (categories) {
         var strCategoriesTabButtons = "";
         var tmplCategoryTabButton = (i, id, title, selected) => {
@@ -363,6 +375,9 @@ var CatalogDOM = {
         if (radios) {
             radios.forEach((radio) => {
                 radio.addEventListener("change", (e) => {
+                    // FIXME
+                    // une selection d'une sous categorie (radio) d'une categorie (onglet)
+                    // ne doit pas impacter les autres boutons radios des autres onglet !
                     for (let j = 0; j < panelSections.length; j++) {
                         const section = panelSections[j];
                         section.classList.add("gpf-hidden");
@@ -423,9 +438,21 @@ var CatalogDOM = {
 
         return shadow;
     },
-    _createCatalogContentCategoryTabContent : function (category, layersFiltered) {
+    /**
+     * Create Catalog Content Category Tab Content (layers)
+     *
+     * @param {*} category - category to create tab content
+     * @param {*} layersFiltered - filtered layers for the category
+     * @returns {HTMLElement} DOM element
+     * @fixme optimisation possible sur la création de la rubrique "En savoir plus"
+     * @description
+     * - create the content for a category tab
+     * - each layer has a checkbox to select it
+     * - each layer has a panel with information
+     */
+    _createCatalogContentCategoryTabContent : async function (category, layersFiltered) {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
-
+        const batchSize = 10; // nombre d'éléments à traiter par lot
         var strElements = "";
         // FIXME doit on utiliser le champ description avec parsing HTML ou string ?
         var tmplElement = (i, name, title, service, description, informations, categoryId) => {
@@ -539,6 +566,7 @@ var CatalogDOM = {
                                 <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-more-${i}-${categoryId}"></span>En savoir plus
                             </button>
                         </h5>
+                        <!-- optimisation : lazy-loading -->
                         <div class="fr-collapse GPelementHidden" id="accordion-more-${i}-${categoryId}">
                             ${description}
                             <p>
@@ -574,7 +602,7 @@ var CatalogDOM = {
 
         // INFO
         // les couches par catégorie sont filtrées au préalable
-        // on ajoute la repartition par section des couches (regroupement) !
+        // on ajoute la repartition des couches par section (regroupement) !
         var isSection = category.section;
         if (isSection) {
             // on procède à un tri
@@ -585,34 +613,38 @@ var CatalogDOM = {
         }
 
         var sections = {};
-        // regroupement ou pas des couches par sections
-        for (let i = 0; i < layers.length; i++) {
-            const layer = layers[i];
-            const infos = {
-                producers : layer.producer_urls, // tableau d'objets [{name,url}]
-                thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
-                metadatas : layer.metadata_urls  // tableau
-            };
-            // INFO
-            // a t on des sections (regroupements) ?
-            // - oui, si elle correspond au filtre, on ajoute la couche dans la section
-            //   sinon, on ecarte cette couche (normalement, dans la section "Autres")
-            // - non, on ajoute directement la couche dans la sous categorie
-            var element = tmplElement(i, layer.name, layer.title, layer.service, layer.description, infos, category.id);
-            if (isSection) {
-                var title = layer[category.filter.field][0];
-                if (title) {
-                    if (!sections.hasOwnProperty(title)) {
-                        sections[title] = "";
+        // regroupement par sections (ou pas) sur les couches
+        for (let i = 0; i < layers.length; i += batchSize) {
+            for (let j = i; j < Math.min(i + batchSize, layers.length); j++) {
+                const layer = layers[j];
+                const infos = {
+                    producers : layer.producer_urls, // tableau d'objets [{name,url}]
+                    thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
+                    metadatas : layer.metadata_urls  // tableau
+                };
+                // INFO
+                // a t on des sections (regroupements) ?
+                // - oui, si elle correspond au filtre, on ajoute la couche dans la section
+                //   sinon, on ecarte cette couche (normalement, dans la section "Autres")
+                // - non, on ajoute directement la couche dans la sous categorie
+                var element = tmplElement(j, layer.name, layer.title, layer.service, layer.description, infos, category.id);
+                if (isSection) {
+                    var title = layer[category.filter.field][0];
+                    if (title) {
+                        if (!sections.hasOwnProperty(title)) {
+                            sections[title] = "";
+                        }
+                        sections[title] += element;
+                    } else {
+                        // au cas où...
+                        sections["Autres"] += element;
                     }
-                    sections[title] += element;
                 } else {
-                    // au cas où...
-                    sections["Autres"] += element;
+                    strElements += element;
                 }
-            } else {
-                strElements += element;
             }
+            // Pause pour laisser respirer l'UI
+            await new Promise(resolve => setTimeout(resolve, 0));
         }
 
         if (isSection) {
@@ -696,7 +728,7 @@ var CatalogDOM = {
             });
         }
         var spanName = `button-icon-collapse-${category.id}`;
-        var spans = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
+        var spans = shadow.querySelectorAll("[role=" + "\"" + spanName + "\"]");
         if (spans) {
             spans.forEach((span) => {
                 span.addEventListener("click", (e) => {

@@ -559,8 +559,6 @@ L’option `advancedTools` du LayerSwitcher permet d’ajouter facilement des bo
 
 ## Voici une explication détaillée du fonctionnement des **tooltips** dans le LayerSwitcher
 
----
-
 ### Fonctionnement des tooltips dans le LayerSwitcher
 
 Le LayerSwitcher propose une option `allowTooltips` qui permet d’afficher des info-bulles (tooltips) sur les éléments de l’interface, afin d’améliorer l’ergonomie et l’accessibilité.
