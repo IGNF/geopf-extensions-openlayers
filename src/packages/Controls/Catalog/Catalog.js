@@ -117,6 +117,7 @@ class Catalog extends Control {
      * map.addControl(widget);
      *
      * @todo validation du schema
+     * @todo optimisation de la rubrique "En savoir plus"
      */
     constructor (options) {
         options = options || {};
@@ -175,14 +176,17 @@ class Catalog extends Control {
 
     /**
      * Overwrite OpenLayers setMap method
-     *
-     * @param {Map} map - Map.
+     * This method sets the map for the Catalog control.
+     * It initializes event listeners for the map and sets up the control's draggable and collapsed states.
+     * It also checks for existing layers on the map and updates the control accordingly.
+     * 
+     * @param {Map} map - Map instance to set for the control.
      */
     setMap (map) {
         if (map) {
             // INFO
             // on verifie les couches déjà présentes sur la cartes
-            this.on("catalog:loaded", this.initMapLayers);
+            this.on("catalog:loaded", this.checkLayersOnMap);
 
             // mode "draggable"
             if (this.draggable) {
@@ -203,7 +207,7 @@ class Catalog extends Control {
                 this.addEventsListeners(map);
             }
         } else {
-            this.un("catalog:loaded", this.initMapLayers);
+            this.un("catalog:loaded", this.checkLayersOnMap);
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
             if (this.auto) {
@@ -227,6 +231,8 @@ class Catalog extends Control {
 
     /**
      * Add a layer config
+     * This method processes a configuration object containing layer definitions.
+     * 
      * @param {*} conf conf
      */
     addLayerConfig (conf) {
@@ -255,16 +261,52 @@ class Catalog extends Control {
         this.createCatalogContentEntries(this.layersList);
     }
 
+    /**
+     * Activate a layer by its ID
+     * This method activates a layer based on its ID, which is expected to be in the format "name$service".
+     * It splits the ID to extract the layer name and service, then calls the `activeLayer` method.
+     * 
+     * @param {*} id - Layer ID in the format "name$service".
+     * @example
+     * activeLayerByID("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$WMTS");
+     * activeLayerByID("PLAN.IGN$GEOPORTAIL:TMS");
+     */
     activeLayerByID (id) {
         var name = id.split("$")[0];
         var service = id.split(":").slice(-1)[0];
         this.activeLayer(name, service);
     }
+
+    /**
+     * Disable a layer by its ID
+     * This method disables a layer based on its ID, which is expected to be in the format "name$service".
+     * It splits the ID to extract the layer name and service, then calls the `disableLayer` method.
+     * @param {*} id - Layer ID in the format "name$service".
+     * @example
+     * disableLayerByID("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$WMTS");
+     * disableLayerByID("PLAN.IGN$GEOPORTAIL:TMS");
+     * @todo
+     * - ajouter un test pour vérifier si l'ID est valide
+     * - ajouter un test pour vérifier si la couche est déjà active
+     * - ajouter un test pour vérifier si la couche est déjà désactivée
+     */
     disableLayerByID (id) {
         var name = id.split("$")[0];
         var service = id.split(":").slice(-1)[0];
         this.disableLayer(name, service);
     }
+
+    /**
+     * Activate a layer
+     * This method activates a layer by its name and service.
+     * It checks if the layer exists in the `layersList` and if it does, it adds the layer to the map if `addToMap` is true.
+     * It then dispatches an event indicating that the layer has been added to the catalog.
+     * @param {String} name - Layer name.
+     * @param {String} service - Layer service.
+     * @example
+     * activeLayer("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * activeLayer("PLAN.IGN", "GEOPORTAIL:TMS");
+     */
     activeLayer (name, service) {
         // cf. this.onSelectCatalogEntryClick
         var id = this.getLayerId(name, service);
@@ -281,6 +323,18 @@ class Catalog extends Control {
             });
         }
     }
+
+    /**
+     * Disable a layer
+     * This method disables a layer by its name and service.
+     * It checks if the layer exists in the `layersList` and if it does, it removes the layer from the map if `addToMap` is true.
+     * It then dispatches an event indicating that the layer has been removed from the catalog.
+     * @param {String} name - Layer name.
+     * @param {String} service - Layer service.
+     * @example
+     * disableLayer("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * disableLayer("PLAN.IGN", "GEOPORTAIL:TMS");
+     */
     disableLayer (name, service) {
         var id = this.getLayerId(name, service);
         if (id) {
@@ -296,6 +350,7 @@ class Catalog extends Control {
             });
         }
     }
+
     // ################################################################### //
     // ################### getters / setters ############################# //
     // ################################################################### //
@@ -311,9 +366,17 @@ class Catalog extends Control {
 
     /**
      * Get long layer ID
-     * @param {*} name  nom de la couche
-     * @param {*} service service de la couche
-     * @returns {String} - long layer ID
+     * 
+     * @param {*} name - nom de la couche
+     * @param {*} service - service de la couche
+     * @return {String|null} - long layer ID or null if not found
+     * @description
+     * This method retrieves the long layer ID based on the provided name and service.
+     * It searches through the `layersList` object for a key that matches the pattern of "name.*service".
+     * If a match is found, it returns the key; otherwise, it returns null.
+     * @example
+     * getLayerId("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * getLayerId("PLAN.IGN", "GEOPORTAIL:TMS");
      */
     getLayerId (name, service) {
         if (!this.layersList || typeof this.layersList !== "object") {
@@ -330,6 +393,44 @@ class Catalog extends Control {
         }
 
         return null;
+    }
+
+    /**
+     * Get layers by category
+     * This method filters the layers based on the provided category.
+     * It checks if the category has a filter defined and applies it to the layers.
+     * If the filter matches, the layer is added to the `layersCategorised` object.
+     * It also updates the `categories` property of each layer to include the category ID.
+     * 
+     * @param {*} category - Category object containing the filter.
+     * @param {*} layers - Object containing all layers.
+     * @return {Object} - Filtered layers categorized by the provided category.
+     */
+    getLayersByCategory (category, layers) {
+        // INFO
+        // comment gerer les listes de layers filtrées pour chaque categorie ?
+        // on doit les stocker si l'on souhaite faire des requêtes
+        // avec l'outil de recherche par la suite
+        var layersCategorised = layers;
+        var filter = category.filter;
+        if (filter) {
+            layersCategorised = {};
+            for (const key in layers) {
+                if (Object.prototype.hasOwnProperty.call(layers, key)) {
+                    const layer = layers[key];
+                    if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
+                        var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
+                        if (condition) {
+                            layersCategorised[key] = layer;
+                            // on ajoute l'appartenance de la couche à une categorie
+                            this.layersList[key].categories.push(category.id);
+                        }
+                    }
+                }
+            }
+        }
+
+        return layersCategorised;
     }
 
     // ################################################################### //
@@ -454,6 +555,25 @@ class Catalog extends Control {
         /**
          * specify all categories
          * @type {Array}
+         * @example
+         * [
+         *     {
+         *        title : "Données",   // title of the category
+         *        id : "data",          // id of the category
+         *        default : true,      // if true, this category is selected by default
+         *        filter : null,        // filter to apply on the category
+         *        items : [              // list of subcategories
+         *            {
+         *               title : "Toutes les données", // title of the subcategory
+         *               id : "all",                   // id of the subcategory
+         *               default : true,               // if true, this subcategory is selected by default
+         *               section : false,              // if true, this subcategory has a section
+         *               sections : [],                // list of sections (filled later)
+         *               filter : null,                // filter to apply on the subcategory
+         *            }
+         *        ]
+         *     }
+         * ]
          */
         this.categories = this.options.categories.map((cat) => {
             // INFO
@@ -507,6 +627,9 @@ class Catalog extends Control {
          * }
          */
         this.layersListOnMap = {};
+
+        /** @private */
+        this._searchTimeout = null; // timeout for search input
 
         /**
          * event triggered when layer is added
@@ -608,10 +731,12 @@ class Catalog extends Control {
     }
 
     /**
-     * ...
+     * Check layers already present on the map
+     * This method checks the layers already present on the map
+     * and marks them as checked in the catalog.
      * @private
      */
-    initMapLayers () {
+    checkLayersOnMap () {
         var map = this.getMap();
         if (!map) {
             return;
@@ -633,7 +758,11 @@ class Catalog extends Control {
     }
 
     /**
-     * Configuration loading
+     * Initialize layers list
+     * This method initializes the layers list from the configuration data.
+     * It can load data from a local object or fetch it from URLs.
+     * It processes the layers to add additional properties such as `service`, `categories`, and URLs for producers and thematics.
+     * It also creates the catalog content entries based on the layers.
      *
      * @returns {Promise} - promise
      * @private
@@ -764,44 +893,25 @@ class Catalog extends Control {
     /**
      * Create DOM content categories and entries
      * @param {*} layers couches
+     * @private
      */
     createCatalogContentEntries (layers) {
-        // traitement du contenu (liste de couches) d'une categorie
-        // en fonction d'un filtre
-        var self = this;
-        const getLayersByCategory = (category, layers) => {
-            // INFO
-            // comment gerer les listes de layers filtrées pour chaque categorie ?
-            // on doit les stocker si l'on souhaite faire des requêtes
-            // avec l'outil de recherche par la suite
-            var layersCategorised = layers;
-            var filter = category.filter;
-            if (filter) {
-                layersCategorised = {};
-                for (const key in layers) {
-                    if (Object.prototype.hasOwnProperty.call(layers, key)) {
-                        const layer = layers[key];
-                        if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
-                            var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
-                            if (condition) {
-                                layersCategorised[key] = layer;
-                                // on ajoute l'appartenance de la couche à une categorie
-                                self.layersList[key].categories.push(category.id);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return layersCategorised;
-        };
-
         var container = this.contentCatalogContainer;
 
         var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories);
         container.appendChild(widgetContentEntryTabs);
 
-        var categories = []; // remise à plat des catégories / sous-categories
+        // INFO 
+        // Remise à plat des catégories / sous-categories sur le même niveau
+        // pour simplifier la gestion des couches
+        // et la création des onglets de contenu
+        // on a autant de catégories / sous-catégories que de containers
+        // dans le DOM, on ne peut pas faire autrement
+        // on va donc créer un tableau de catégories / sous-catégories
+        // qui contiendra toutes les couches
+        // et on va créer le contenu de chaque catégorie / sous-catégorie
+        // dans le DOM, dans l'ordre des catégories / sous-catégories
+        var categories = []; 
         this.categories.forEach((category) => {
             if (category.items) {
                 for (let i = 0; i < category.items.length; i++) {
@@ -812,6 +922,11 @@ class Catalog extends Control {
                 categories.push(category);
             }
         });
+        // Crée uniquement le contenu de la catégorie active
+        var activeIndex = categories.findIndex(cat => cat.id === this.categoryId);
+        if (activeIndex === -1) {
+            activeIndex = 0;
+        }
         // INFO
         // les containers de contenu sont definis à partir
         // de l'ordre des catégories / sous-categories
@@ -819,8 +934,22 @@ class Catalog extends Control {
         var contents = container.querySelectorAll(".tabcontent");
         for (let i = 0; i < contents.length; i++) {
             const content = contents[i];
-            var layersCategorised = getLayersByCategory(categories[i], layers);
-            content.appendChild(this._createCatalogContentCategoryTabContent(categories[i], layersCategorised));
+            if (i === activeIndex) {
+                // TODO
+                // on peut faire un lazy-load des autres catégories
+                // pour ne pas charger toutes les couches d'un coup
+                // on affiche le contenu de la catégorie active
+                // et on charge les autres au fur et à mesure
+            }
+            var layersCategorised = this.getLayersByCategory(categories[i], layers);
+            this._createCatalogContentCategoryTabContent(categories[i], layersCategorised)
+                .then((dom) => {
+                    // Utilisation d'un DocumentFragment pour optimiser l'insertion DOM
+                    const fragment = document.createDocumentFragment();
+                    fragment.appendChild(dom);
+                    content.appendChild(fragment);
+                    console.log(`Content for category ${categories[i].title} created.`);
+                });
         }
     }
 
@@ -832,7 +961,11 @@ class Catalog extends Control {
      * @returns {Object} fiche d'information
      * @todo récuperer l'url du service du catalogue selon l'environnement !
      * @example
-     * // OUTPUT ?
+     * // pour les producteurs
+     * getInformationsCatalog("producer", ["IGN", "IGNF", "Autres"]);
+     * // pour les thématiques
+     * getInformationsCatalog("thematic", ["farming", "transportation"]);
+     * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
      */
     getInformationsCatalog (key, value) {
         if (!value) {
@@ -882,6 +1015,7 @@ class Catalog extends Control {
         }
         return data;
     }
+
     // ################################################################### //
     // ######################## methods on listeners ##################### //
     // ################################################################### //
@@ -1286,7 +1420,10 @@ class Catalog extends Control {
      * @private
      */
     onSearchCatalogInputChange () {
-        this.onSearchCatalogButtonClick();
+        clearTimeout(this._searchTimeout);
+        this._searchTimeout = setTimeout(() => {
+            this.onSearchCatalogButtonClick();
+        }, 200); // 200ms de délai
     }
 
 };

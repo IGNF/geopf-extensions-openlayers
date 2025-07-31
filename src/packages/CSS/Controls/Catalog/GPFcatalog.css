@@ -34,3 +34,7 @@ form[id^=GPcatalogForm] {
 .catalog-container-tabs .fr-accordion .fr-collapse--expanded {
     padding-bottom: 0;
 }
+
+.GPcatalogButtonSection {
+    display: block;
+}
