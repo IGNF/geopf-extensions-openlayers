@@ -1,3 +1,30 @@
+const stringToHTML = (str) => {
+    var support = function () {
+        if (!window.DOMParser) {
+            return false;
+        }
+        var parser = new DOMParser();
+        try {
+            parser.parseFromString("x", "text/html");
+        } catch (err) {
+            return false;
+        }
+        return true;
+    };
+
+    // If DOMParser is supported, use it
+    if (support()) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(str, "text/html");
+        return doc.body;
+    }
+
+    // Otherwise, fallback to old-school method
+    var dom = document.createElement("div");
+    dom.innerHTML = str;
+    return dom;
+};
+
 var MousePositionDOM = {
 
     /**
@@ -546,10 +573,45 @@ var MousePositionDOM = {
 
         var span = document.createElement("span");
         span.className = "GPmousePositionSettingsLabel";
-        span.innerHTML = "Système de référence";
         container.appendChild(span);
 
         return container;
+    },
+
+    /**
+     * settings accordion
+     * @param { [HTMLElement] } htmlContent - array of DOM elements to append
+     *
+     * @returns {HTMLElement} DOM element
+     */
+    _createMousePositionSettingsAccordion : function (htmlContent) {
+        var div = stringToHTML(
+            `
+                <section class="fr-accordion">
+                               <h5 class="fr-accordion__title">
+                                   <button type="button" class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-more-settings-1">
+                                       <span class="GPshowMousePositionAdvancedTools gpf-hidden"></span>Système de référence
+                                   </button>
+                               </h5>
+                               <div class="fr-collapse GPelementHidden" id="accordion-more-settings-1">
+                               </div>
+                    </section>
+           `
+        );
+        htmlContent.map(content => div.getElementsByClassName("fr-collapse")[0].append(content));
+        div.getElementsByTagName("button")[0].addEventListener("click", function (e) {
+            var status = (e.target.ariaExpanded === "true");
+            e.target.setAttribute("aria-expanded", !status);
+            if (!status) {
+                div.getElementsByClassName("fr-collapse")[0].classList.add("fr-collapse--expanded");
+                div.getElementsByClassName("fr-collapse")[0].classList.remove("GPelementHidden");
+            }
+            else {
+                div.getElementsByClassName("fr-collapse")[0].classList.remove("fr-collapse--expanded");
+                div.getElementsByClassName("fr-collapse")[0].classList.add("GPelementHidden");
+            }
+        });
+        return div;
     },
 
     /**

@@ -868,8 +868,8 @@ class MousePosition extends Control {
         var settings = this._createMousePositionSettingsElement();
         var systems = this._projectionSystemsContainer = this._createMousePositionSettingsSystemsElement(this._projectionSystems);
         var units = this._projectionUnitsContainer = this._createMousePositionSettingsUnitsElement(this._projectionUnits[this._currentProjectionType]);
-        settings.appendChild(systems);
-        settings.appendChild(units);
+        var settingsAccordion = this._createMousePositionSettingsAccordion([systems, units]);
+        settings.appendChild(settingsAccordion);
         mousePositionPanelDiv.appendChild(settings);
 
         container.appendChild(mousePositionPanel);
