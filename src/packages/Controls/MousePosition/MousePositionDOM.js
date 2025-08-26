@@ -588,11 +588,11 @@ var MousePositionDOM = {
         var div = stringToHTML(
             `
                 <section class="fr-accordion">
-                               <h5 class="fr-accordion__title">
+                               <div class="fr-accordion__title GPmousePositionSettingsLabel">
                                    <button type="button" class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-more-settings-1">
                                        <span class="GPshowMousePositionAdvancedTools gpf-hidden"></span>Système de référence
                                    </button>
-                               </h5>
+                               </div>
                                <div class="fr-collapse GPelementHidden" id="accordion-more-settings-1">
                                </div>
                     </section>
