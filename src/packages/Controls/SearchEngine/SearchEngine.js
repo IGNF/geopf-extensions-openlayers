@@ -12,6 +12,7 @@ import {
     get as olProjGet,
     transformExtent as olProjTransformExtent
 } from "ol/proj";
+import GeoJSON from "ol/format/GeoJSON";
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
@@ -35,6 +36,7 @@ import Search from "../../Services/Search";
 // DOM
 import SearchEngineDOM from "./SearchEngineDOM";
 import checkDsfr from "../Utils/CheckDsfr";
+import { log } from "loglevel";
 
 var logger = Logger.getLogger("searchengine");
 
@@ -109,7 +111,7 @@ var logger = Logger.getLogger("searchengine");
  * @module SearchEngine
 */
 class SearchEngine extends Control {
-    
+
     /**
      * @constructor
      * @param {SearchEngineOptions}  options - control options
@@ -1369,6 +1371,17 @@ class SearchEngine extends Control {
 
     /**
      * this method is called by this.on*ResultsItemClick()
+     *
+     * @param {*} extent - ol.Extent
+     * @private
+     */
+    _setPositionFromExtent (extent) {
+        var view = this.getMap().getView();
+        view.fit(extent);
+    }
+
+    /**
+     * this method is called by this.on*ResultsItemClick()
      * and displays a marker.
      * FIXME
      *
@@ -2039,42 +2052,104 @@ class SearchEngine extends Control {
             position = olProjTransform(position, "EPSG:4326", mapProj);
         }
         // on centre la vue et positionne le marker, à la position reprojetée dans la projection de la carte
-        var zoom = this._getZoom(info);
-        this._setPosition(position, zoom);
-        if (this._displayMarker) {
-            this._setMarker(position, info);
-        }
+        this._requestGeocoding({
+            index : "address,poi",
+            limit : 1,
+            returnTrueGeometry : true,
+            location : label,
+            onSuccess : (results) => {
+                if (results.locations[0].placeAttributes.truegeometry) {
+                    var geom = JSON.parse(results.locations[0].placeAttributes.truegeometry);
+                    if (geom.type === "Point") {
+                        this._setPosition(position, 15);
+                    } else {
+                        var format = new GeoJSON();
+                        var geometry = format.readGeometry(geom, {
+                            dataProjection : "EPSG:4326",   // incoming data
+                            featureProjection : "EPSG:3857" // map projection
+                        });
+                        var extent = geometry.getExtent();
+                        this._setPositionFromExtent(extent);
+                    }
+                } else {
+                    this._setPosition(position, 15);
+                }
+                if (this._displayMarker) {
+                    this._setMarker(position, info);
+                }
 
-        var container = document.getElementById(this._addUID("GPautocompleteResults"));
-        // si aucun container !?
-        if (!container) {
-            return;
-        }
-        // on reinitialise l'ancienne proposition courrante d'autocompletion
-        var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine");
-        for (let index = 0; index < list.length; index++) {
-            const element = list[index];
-            element.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
-        }
-        // et, on definie la nouvelle selection de proposition d'autocompletion
-        var current = list[idx];
-        current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
+                var container = document.getElementById(this._addUID("GPautocompleteResults"));
+                // si aucun container !?
+                if (!container) {
+                    return;
+                }
+                // on reinitialise l'ancienne proposition courrante d'autocompletion
+                var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine");
+                for (let index = 0; index < list.length; index++) {
+                    const element = list[index];
+                    element.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
+                }
+                // et, on definie la nouvelle selection de proposition d'autocompletion
+                var current = list[idx];
+                current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
 
-        /**
-         * event triggered when an element of the results is clicked for autocompletion
-         *
-         * @event searchengine:autocomplete:click
-         * @property {Object} type - event
-         * @property {Object} location - location
-         * @property {Object} target - instance SearchEngine
-         * @example
-         * SearchEngine.on("searchengine:autocomplete:click", function (e) {
-         *   console.log(e.location);
-         * })
-         */
-        this.dispatchEvent({
-            type : "searchengine:autocomplete:click",
-            location : this._locationsToBeDisplayed[idx]
+                /**
+                 * event triggered when an element of the results is clicked for autocompletion
+                 *
+                 * @event searchengine:autocomplete:click
+                 * @property {Object} type - event
+                 * @property {Object} location - location
+                 * @property {Object} target - instance SearchEngine
+                 * @example
+                 * SearchEngine.on("searchengine:autocomplete:click", function (e) {
+                 *   console.log(e.location);
+                 * })
+                 */
+                this.dispatchEvent({
+                    type : "searchengine:autocomplete:click",
+                    location : this._locationsToBeDisplayed[idx]
+                });
+            },
+            onFailure : (error) => {
+                logger.warn(error);
+                var zoom = this._getZoom(info);
+                this._setPosition(position, zoom);
+                if (this._displayMarker) {
+                    this._setMarker(position, info);
+                }
+
+                var container = document.getElementById(this._addUID("GPautocompleteResults"));
+                // si aucun container !?
+                if (!container) {
+                    return;
+                }
+                // on reinitialise l'ancienne proposition courrante d'autocompletion
+                var list = container.getElementsByClassName("GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine");
+                for (let index = 0; index < list.length; index++) {
+                    const element = list[index];
+                    element.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine";
+                }
+                // et, on definie la nouvelle selection de proposition d'autocompletion
+                var current = list[idx];
+                current.className = "GPautoCompleteProposal gpf-panel__items gpf-panel__items_searchengine current";
+
+                /**
+                 * event triggered when an element of the results is clicked for autocompletion
+                 *
+                 * @event searchengine:autocomplete:click
+                 * @property {Object} type - event
+                 * @property {Object} location - location
+                 * @property {Object} target - instance SearchEngine
+                 * @example
+                 * SearchEngine.on("searchengine:autocomplete:click", function (e) {
+                 *   console.log(e.location);
+                 * })
+                 */
+                this.dispatchEvent({
+                    type : "searchengine:autocomplete:click",
+                    location : this._locationsToBeDisplayed[idx]
+                });
+            },
         });
     }
 
