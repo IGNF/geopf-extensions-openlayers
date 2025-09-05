@@ -36,7 +36,6 @@ import Search from "../../Services/Search";
 // DOM
 import SearchEngineDOM from "./SearchEngineDOM";
 import checkDsfr from "../Utils/CheckDsfr";
-import { log } from "loglevel";
 
 var logger = Logger.getLogger("searchengine");
 
