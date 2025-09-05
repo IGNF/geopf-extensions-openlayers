@@ -650,6 +650,13 @@ declare class SearchEngine extends Control {
     private _setPosition;
     /**
      * this method is called by this.on*ResultsItemClick()
+     *
+     * @param {*} extent - ol.Extent
+     * @private
+     */
+    private _setPositionFromExtent;
+    /**
+     * this method is called by this.on*ResultsItemClick()
      * and displays a marker.
      * FIXME
      *
