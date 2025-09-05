@@ -1,12 +1,76 @@
+.gpf-btn-header-catalog {
+    z-index: 2;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+}
+
+.gpf-btn-icon-header-catalog {
+    background-image: url("img/dsfr/header-catalog.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+.gpf-panel__title_catalog {
+    color: #101092;
+    padding: 12px 15px;
+    position: relative;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    right: -16px;
+}
+.gpf-panel__header_catalog {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    background: #E3E3FD;
+    height: 48px;
+}
+
 .gpf-btn-icon-catalog::after {
     -webkit-mask: url("img/dsfr/catalog.svg") center no-repeat;
     mask: url("img/dsfr/catalog.svg") center no-repeat;
+}
+
+.gpf-btn-icon-catalog-collapse {
+    box-shadow: none;
+}
+
+.gpf-btn-icon-catalog-collapse::after {
+    -webkit-mask: url("img/dsfr/collapse.svg") center no-repeat;
+    mask: url("img/dsfr/collapse.svg") center no-repeat;
+    transition: transform 0.2s ease-out 0s;
+}
+
+.gpf-btn-icon-catalog-collapse[aria-pressed="true"]::after {
+    box-shadow: none;
+    transform: rotate(180deg);
+}
+
+.gpf-align-items-center {
+    justify-content: space-between;
+}
+
+.gpf-accordion__btn::after {
+    position: absolute;
+    right: 0.5rem;
 }
 
 .informations-more {
     display: flex;
     flex-direction: column;
 }
+
+.catalog-thumbnail-default {
+    background-image: url("img/dsfr/image-light.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
 /* Mode mobile doit prendre le dessus */
 @media (max-width: 576px) {
     .gpf-mobile-fullscreen .GPtabContent {

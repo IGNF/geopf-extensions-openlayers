@@ -36,5 +36,5 @@ form[id^=GPcatalogForm] {
 }
 
 .GPcatalogButtonSection {
-    display: block;
+    display: flex;
 }

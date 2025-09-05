@@ -136,21 +136,29 @@ var CatalogDOM = {
      */
     _createCatalogPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        // on n'utilise pas le dsfr !
+        container.className = "GPpanelHeader gpf-panel__header_catalog";
         return container;
     },
     _createCatalogPanelTitleElement : function (title) {
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+        // on n'utilise pas le dsfr !
+        div.className = "GPpanelTitle gpf-panel__title_catalog";
         div.innerHTML = title;
         return div;
+    },
+    _createCatalogPanelIconElement : function () {
+        var label = document.createElement("label");
+        label.className = "gpf-btn-header-catalog gpf-btn-icon-header-catalog";
+        label.title = "Catalogue des couches";
+        return label;
     },
     _createCatalogPanelCloseElement : function () {
         var self = this;
 
         var btnClose = document.createElement("button");
         btnClose.id = this._addUID("GPcatalogPanelClose");
-        btnClose.className = "GPpanelClose GPcatalogPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.className = "GPpanelClose GPcatalogPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
@@ -256,7 +264,7 @@ var CatalogDOM = {
     /**
      * Create Catalog Content Categories Tabs
      * 
-     * @param {*} categories - categories to create tabs
+     * @param {Categories} categories - categories to create tabs
      * @returns {HTMLElement} DOM element
      * @description
      * - create the tabs for categories
@@ -286,13 +294,18 @@ var CatalogDOM = {
             `;
         };
         
-        var tmplSubCategoryRadio = (subcategory) => {
+        var tmplSubCategoryRadio = (id, subcategory) => {
             var checked = (subcategory.default) ? "checked" : "";
             return `
-            <!-- sous categorie -->
             <div class="fr-fieldset__element fr-fieldset__element--inline">
                 <div class="fr-radio-group fr-radio-group--sm">
-                    <input type="radio" id="radio-inline_${subcategory.id}" name="radio-inline" ${checked} aria-controls="tabcontent-${subcategory.id}">
+                    <input 
+                        type="radio" 
+                        ${checked} 
+                        id="radio-inline_${subcategory.id}" 
+                        name="radio-inline-${id}" 
+                        role="radio-inline-section"
+                        aria-controls="tabcontent-${subcategory.id}">
                     <label class="fr-label" for="radio-inline_${subcategory.id}">
                         ${subcategory.title}
                     </label>
@@ -307,19 +320,20 @@ var CatalogDOM = {
             var strSubCategoriesRadios = "";
             for (let j = 0; j < subcategories.length; j++) {
                 const subcategory = subcategories[j];
-                strSubCategoriesRadios += tmplSubCategoryRadio(subcategory);
+                strSubCategoriesRadios += tmplSubCategoryRadio(id, subcategory);
                 var hidden = "";
                 if (!subcategory.default) {
                     hidden = "GPelementHidden gpf-hidden";
                 }
-                strTabContents += `<div class="tabcontent ${hidden}" role="tabpanel-section" id="tabcontent-${subcategory.id}"></div>`;
+                strTabContents += `<div class="tabcontent ${hidden}" data-category="${id}" role="tabpanel-section" id="tabcontent-${subcategory.id}"></div>`;
             }
             return `
-            <!-- sous categories -->
+            <!-- boutons radio des sous categories -->
             <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend radio-inline-messages">
                 ${strSubCategoriesRadios}
                 <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive"></div>
             </fieldset>
+            <!-- panneaux des sous categories -->
             ${strTabContents}
             `;
         };
@@ -332,7 +346,7 @@ var CatalogDOM = {
                 className = "GPtabContent GPtabContentSelected fr-tabs__panel fr-tabs__panel--selected";
                 tabindex = 0;
             }
-            var strTabContent = "<div class=\"tabcontent\"></div>";
+            var strTabContent = "<div class=\"tabcontent\" style=\"content-visibility: auto;contain-intrinsic-size:50px;\"></div>";
             if (subcategories) {
                 strTabContent = tmplSubCategoriesRadios(id, subcategories);
             }
@@ -340,7 +354,12 @@ var CatalogDOM = {
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
             return `
             <!-- panneaux -->
-            <div id="tabpanel-${i}-panel_${id}" class="${className}" role="tabpanel" aria-labelledby="tabbutton-${i}_${id}" tabindex="${tabindex}" style="max-height: 250px;overflow-y: auto; padding: 1em;">
+            <div id="tabpanel-${i}-panel_${id}" 
+                class="${className}" 
+                role="tabpanel" 
+                aria-labelledby="tabbutton-${i}_${id}" 
+                tabindex="${tabindex}" 
+                style="max-height: 250px;overflow-y: auto; padding: 1em; contain: content;">
                 ${strTabContent}
             </div>
             `;
@@ -356,7 +375,7 @@ var CatalogDOM = {
         <!-- onglets -->
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
             <div class="GPtabs fr-tabs" style="--tabs-height: 294px;">
-                <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
+                <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="presentation">
                     ${strCategoriesTabButtons}
                 </ul>
                 ${strCategoriesTabPanelContents}
@@ -371,17 +390,21 @@ var CatalogDOM = {
 
         // event listener sur le DOM
         var panelSections = shadow.querySelectorAll("[role=\"tabpanel-section\"]");
-        var radios = shadow.querySelectorAll("[name=\"radio-inline\"]");
+        var radios = shadow.querySelectorAll("[role=\"radio-inline-section\"]");
         if (radios) {
             radios.forEach((radio) => {
+                var checked = radio.getAttribute("checked");
+                if (checked !== null) {
+                    radio.click();
+                }
                 radio.addEventListener("change", (e) => {
-                    // FIXME
-                    // une selection d'une sous categorie (radio) d'une categorie (onglet)
-                    // ne doit pas impacter les autres boutons radios des autres onglet !
                     for (let j = 0; j < panelSections.length; j++) {
                         const section = panelSections[j];
-                        section.classList.add("gpf-hidden");
-                        section.classList.add("GPelementHidden");
+                        var category = section.getAttribute("data-category");
+                        if (category === e.target.name.split("-")[2]) {
+                            section.classList.add("gpf-hidden");
+                            section.classList.add("GPelementHidden");
+                        }
                     }
                     var panel = document.getElementById(e.target.getAttribute("aria-controls"));
                     panel.classList.remove("gpf-hidden");
@@ -441,10 +464,9 @@ var CatalogDOM = {
     /**
      * Create Catalog Content Category Tab Content (layers)
      *
-     * @param {*} category - category to create tab content
+     * @param {Categories} category - category to create tab content
      * @param {*} layersFiltered - filtered layers for the category
      * @returns {HTMLElement} DOM element
-     * @fixme optimisation possible sur la création de la rubrique "En savoir plus"
      * @description
      * - create the content for a category tab
      * - each layer has a checkbox to select it
@@ -454,9 +476,16 @@ var CatalogDOM = {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
         const batchSize = 10; // nombre d'éléments à traiter par lot
         var strElements = "";
-        // FIXME doit on utiliser le champ description avec parsing HTML ou string ?
-        var tmplElement = (i, name, title, service, description, informations, categoryId) => {
-            // ajout des meta informations
+        // TODO 
+        // doit on utiliser le champ description avec parsing HTML ou string ?
+        var tmplElement = (i, name, title, service, description, informations, thumbnail, categoryId) => {
+            // ajout des meta informations sur la couche
+            // ex. producteurs, thèmes, metadatas
+            // les liens sont dans des tableaux
+            // ex. producers : [{name,url},{name,url},...]
+            // ex. thematics : [{name,url},{name,url},...]
+            // ex. metadatas : [url,url,...]
+            // on affiche les liens s'ils existent
             var tmplInfos = (informations) => {
                 // les informations sont des tableaux !
                 if (!informations.producers && !informations.thematics && !informations.metadatas) {
@@ -466,9 +495,11 @@ var CatalogDOM = {
                 if (informations.producers) {
                     if (informations.producers.length === 1) {
                         strProducers = `
-                        <a href="${informations.producers[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
-                            Informations sur le producteur - ${informations.producers[0].name}
-                        </a>
+                        <li>
+                            <a href="${informations.producers[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                Informations sur le producteur - ${informations.producers[0].name}
+                            </a>
+                        </li>
                         `;
                     } else {
                         var lst = [];
@@ -494,9 +525,12 @@ var CatalogDOM = {
                 if (informations.thematics) {
                     if (informations.thematics.length === 1) {
                         strThematics = `
-                        <a href="${informations.thematics[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
-                            Informations sur le thème - ${informations.thematics[0].name}
-                        </a>`;
+                        <li>
+                            <a href="${informations.thematics[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                Informations sur le thème - ${informations.thematics[0].name}
+                            </a>
+                        </li>
+                        `;
                     } else {
                         var lst = [];
                         for (let i = 0; i < informations.thematics.length; i++) {
@@ -538,43 +572,94 @@ var CatalogDOM = {
                     `;
                 }
                 return `
-                    <div class="informations-more">
-                        ${strProducers}
-                        ${strThematics}
-                        ${strMetadatas}
-                    </div>
+                    <fieldset>
+                    <legend class="fr-message">Fiche(s) détaillée(s)</legend>
+                    <ul>
+                    ${strProducers}
+                    ${strThematics}
+                    ${strMetadatas}
+                    </ul>
+                    </fieldset>
                 `;
             };
+            // ajout de la vignette si elle existe
+            // le thumbnail est optionnel
+            var tmplThumbnail = (thumbnail) => {
+                if (thumbnail) {
+                    // si thumbnail est une URL ou une data URI
+                    // ex. data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA...
+                    // ex. https://...
+                    // on utilise la vignette fournie
+                    if (thumbnail.startsWith("data:") || thumbnail.startsWith("http")) {
+                        return `
+                        <div class="catalog-thumbnail" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                            <img src="${thumbnail}" alt="Aperçu de la couche" style="width:100%;"/>
+                        </div>
+                        `;
+                    } else {
+                        // TODO
+                        // sinon, on considère que c'est une URL relative
+                        // ex. img/thumbnail.png
+                        thumbnail = "default";
+                    }
+                    // si thumbnail = "default", on utilise l'icone par defaut
+                    if (thumbnail === "default") {
+                        return `<div class="catalog-thumbnail-default" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>`;
+                    }
+                }
+                return "";
+            };
+
+            var producer = informations.producers ? informations.producers[0].name : ""; // par defaut
             // le listener sur l'input permet de récuperer à partir de l'ID
             // la paire name/service pour identifier la couche:
             // > "checkboxes-${categoryId}-${i}_${name}-${service}".split('_')[1]
             return `
-            <div class="fr-fieldset__element" id="fieldset-${categoryId}_${name}-${service}">
-                <div class="fr-checkbox-group">
+            <div 
+                class="fr-fieldset__element" 
+                id="fieldset-${categoryId}_${name}-${service}"
+                style="contain: content;">
+                <div class="fr-checkbox-group gpf-flex" style="justify-content: flex-start;">
                     <input
+                        class="fr-input"
                         name="checkboxes-${categoryId}"
                         id="checkboxes-${categoryId}-${i}_${name}-${service}"
                         type="checkbox"
-                        data-layer="${name}:${service}"
-                        aria-describedby="checkboxes-messages-${categoryId}-${i}_${name}-${service}">
-                    <label class="GPlabelActive fr-label" for="checkboxes-${categoryId}-${i}_${name}-${service}" title="nom technique : ${name}">
-                        ${title} (${service})
+                        data-layer="${name}:${service}"/>
+                    <label 
+                        for="checkboxes-${categoryId}-${i}_${name}-${service}"
+                        style="position: relative; bottom: 12px;">
                     </label>
-                    <section class="fr-accordion">
-                        <h5 class="fr-accordion__title">
-                            <button class="GPcatalogButtonMoreInfo fr-accordion__btn" role="button-collapse-more-${categoryId}" aria-expanded="false" aria-controls="accordion-more-${i}-${categoryId}">
-                                <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-more-${i}-${categoryId}"></span>En savoir plus
-                            </button>
-                        </h5>
-                        <!-- optimisation : lazy-loading -->
-                        <div class="fr-collapse GPelementHidden" id="accordion-more-${i}-${categoryId}">
-                            ${description}
-                            <p>
-                                ${tmplInfos(informations)}
-                            </p>
-                        </div>
-                    </section>
-                    <div class="fr-messages-group" id="checkboxes-messages-${categoryId}-${i}_${name}-${service}" aria-live="assertive"></div>
+                    <div class="catalog-thumbnail-container" style="">
+                        ${tmplThumbnail(thumbnail)}
+                    </div>
+                    <label 
+                        class="GPlabelActive fr-label"  
+                        title="nom technique : ${name}"
+                        style="width: 100%;">
+                        ${title}
+                        <span class="GPlabelActive fr-label fr-hint-text">${producer}</span>
+                    </label>
+                    <button 
+                        id="catalog-collapse-more-${i}-${categoryId}"
+                        role="button-collapse-more-${categoryId}"
+                        class="catalog-collapse-show gpf-btn gpf-btn-icon gpf-btn-icon-catalog-collapse fr-btn fr-btn--tertiary gpf-btn--tertiary" 
+                        type="button" 
+                        title="En savoir plus sur la couche" 
+                        tabindex="0" 
+                        aria-pressed="false"
+                        aria-controls="catalog-info-more-${i}-${categoryId}"
+                        style="">
+                    </button>
+                </div>
+                <div class="gpf-hidden" id="catalog-info-more-${i}-${categoryId}">
+                    <span class="fr-label fr-message">${name} - ${service}</span>
+                    <span class="fr-label fr-hint-text">${producer}</span>
+                    <hr>
+                    <p class="fr-label fr-message">
+                        ${description}
+                    </p>
+                    ${tmplInfos(informations)}
                 </div>
             </div>
             `;
@@ -582,15 +667,21 @@ var CatalogDOM = {
 
         var tmplSection = (id, categoryId, title, count, data) => {
             // INFO
-            // - la maquette ne possède pas de compteur de couches
-            // - hack pour le thème dsfr, on masque l'icone collapse du thème classic
+            // - on propose un compteur de couches
+            // - on ajoute un bouton pour ouvrir/fermer la section
+            // - par defaut, les sections sont fermées
+            // - on n'utilise pas le composant DSFR "fr-accordion"
+            // TODO
+            // - ajouter un icone avant le titre de la section
+            // - placer le compteur de couches à droite
             return `
             <!-- section -->
-            <section id="section-${categoryId}-${id}" class="fr-accordion" style="">
+            <section id="section-${categoryId}-${id}" class="fr-accordion" style="contain: content;">
                 <h3 class="fr-accordion__title">
-                    <button class="GPcatalogButtonSection fr-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
+                    <button class="GPcatalogButtonSection fr-accordion__btn gpf-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
                         <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>
-                        ${title} (<span id="section-count-${categoryId}-${id}">${count}</span>)
+                        ${title} 
+                        <span class="section-count" id="section-count-${categoryId}-${id}" style="position: absolute; right: 30px;">${count}</span>
                     </button>
                 </h3>
                 <div class="fr-collapse GPelementHidden" id="accordion-${categoryId}-${id}">
@@ -627,7 +718,7 @@ var CatalogDOM = {
                 // - oui, si elle correspond au filtre, on ajoute la couche dans la section
                 //   sinon, on ecarte cette couche (normalement, dans la section "Autres")
                 // - non, on ajoute directement la couche dans la sous categorie
-                var element = tmplElement(j, layer.name, layer.title, layer.service, layer.description, infos, category.id);
+                var element = tmplElement(j, layer.name, layer.title, layer.service, layer.description, infos, layer.thumbnail, category.id);
                 if (isSection) {
                     var title = layer[category.filter.field][0];
                     if (title) {
@@ -664,7 +755,10 @@ var CatalogDOM = {
         }
         var strContainer = `
             <!-- liste de couches -->
-            <div class="fr-accordions-group" id="checkboxes-${category.id}" aria-labelledby="checkboxes-legend checkboxes-messages">
+            <div class="fr-accordions-group" 
+                id="checkboxes-${category.id}" 
+                aria-labelledby="checkboxes-legend checkboxes-messages"
+                style="contain: content;">
                 ${strElements}
             </fieldset>
         `;
@@ -675,6 +769,7 @@ var CatalogDOM = {
         shadow.innerHTML = strContainer.trim();
 
         // event listener sur le DOM
+        // selection d'une couche
         var inputName = `checkboxes-${category.id}`;
         var inputs = shadow.querySelectorAll("[name=" + "\"" + inputName + "\"]");
         if (inputs) {
@@ -687,6 +782,7 @@ var CatalogDOM = {
                 });
             });
         }
+        // ouverture d'une sous section ex. theme routier
         var buttonName = `button-collapse-${category.id}`;
         var buttons = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
         if (buttons) {
@@ -707,26 +803,31 @@ var CatalogDOM = {
                 }, false);
             });
         }
+        // ouverture du menu "En savoir plus"
         var buttonNameMore = `button-collapse-more-${category.id}`;
         var buttonsMore = shadow.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
         if (buttonsMore) {
             buttonsMore.forEach((button) => {
                 button.addEventListener("click", (e) => {
-                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                    e.target.ariaPressed = !(e.target.ariaPressed === "true");
                     var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
                     if (!collapse) {
                         return;
                     }
-                    if (e.target.ariaExpanded === "true") {
-                        collapse.classList.add("fr-collapse--expanded");
-                        collapse.classList.remove("GPelementHidden");
+                    if (e.target.ariaPressed === "true") {
+                        collapse.classList.add("gpf-visible");
+                        collapse.classList.remove("gpf-hidden");
                     } else {
-                        collapse.classList.remove("fr-collapse--expanded");
-                        collapse.classList.add("GPelementHidden");
+                        collapse.classList.remove("gpf-visible");
+                        collapse.classList.add("gpf-hidden");
                     }
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - afficher les infos de la rubrique "En savoir plus"
+                    this.onToggleCatalogMoreLearnClick(e);
                 }, false);
             });
         }
+        // ouverture d'une sous section ex. theme routier
         var spanName = `button-icon-collapse-${category.id}`;
         var spans = shadow.querySelectorAll("[role=" + "\"" + spanName + "\"]");
         if (spans) {

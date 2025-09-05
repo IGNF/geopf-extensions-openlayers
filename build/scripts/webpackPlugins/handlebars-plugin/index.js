@@ -2,7 +2,7 @@ var handlebars = require("handlebars");
 var glob = require("glob");
 var fs = require("fs");
 var path = require("path");
-var mkdirp = require("mkdirp");
+var {mkdirp} = require("mkdirp");
 
 const PLUGIN_NAME = "handlebars-webpack-plugin";
 

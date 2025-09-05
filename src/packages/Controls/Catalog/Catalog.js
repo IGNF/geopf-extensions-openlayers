@@ -36,11 +36,13 @@ var logger = Logger.getLogger("widget");
  * @property {string} [titlePrimary="Gérer vos couches de données"] - Titre principal du panneau.
  * @property {string} [titleSecondary=""] - Titre secondaire du panneau.
  * @property {string} [layerLabel="title"] - Propriété utilisée comme label pour les couches.
+ * @property {Boolean} [layerThumbnail=false] - Affiche les miniatures des couches si disponibles.
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
+ * @property {boolean} [search.global=true] - Affiche une barre de recherche globale.
  * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
  * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
- * @property {Array<Object>} [categories] - Liste des catégories et sous-catégories.
+ * @property {Array<Categories>} [categories] - Liste des catégories et sous-catégories.
  * @property {Object} [configuration] - Configuration des sources de données.
  * @property {string} [configuration.type="json"] - Type de configuration ("json" ou "service").
  * @property {Array<string>} [configuration.urls] - URLs des fichiers de configuration JSON.
@@ -49,6 +51,30 @@ var logger = Logger.getLogger("widget");
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
  */
+
+/**
+ * @typedef {Object} Categories
+ * @property {string} title - Titre de la catégorie.
+ * @property {string} id - Identifiant unique de la catégorie.
+ * @property {boolean} default - Indique si c'est la catégorie par défaut.
+ * @property {Object|null} filter - Filtre appliqué à la catégorie.
+ * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
+ * @property {string} filter.field - Champ utilisé pour le filtre.
+ * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
+ */
+
+/**
+ * @typedef {Object} SubCategories
+ * @property {string} title - Titre de la sous-catégorie.
+ * @property {string} id - Identifiant unique de la sous-catégorie.
+ * @property {boolean} section - Indique si la sous-catégorie utilise des sections.
+ * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
+ * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
+ * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
+ * @property {string} filter.field - Champ utilisé pour le filtre.
+ * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
+ */
+
 /**
  * @classdesc
  *
@@ -455,8 +481,10 @@ class Catalog extends Control {
             titlePrimary : "Gérer vos couches de données",
             titleSecondary : "",
             layerLabel : "title",
+            layerThumbnail : false,
             search : {
                 display : true,
+                global : true, // barre de recherche globale
                 criteria : [
                     "name",
                     "title",
@@ -702,6 +730,9 @@ class Catalog extends Control {
 
         // header
         var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createCatalogPanelHeaderElement();
+        // icone
+        var widgetPanelIcon = this._createCatalogPanelIconElement();
+        widgetPanelHeader.appendChild(widgetPanelIcon);
         // title
         var widgetPanelTitle = this._createCatalogPanelTitleElement(this.options.titlePrimary);
         widgetPanelHeader.appendChild(widgetPanelTitle);
@@ -715,7 +746,8 @@ class Catalog extends Control {
         // container for the custom dynamic code (cf. initLayersList())
         var widgetContentElementDiv = this.contentCatalogContainer = this._createCatalogContentDivElement();
         widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
-        if (this.options.search.display) {
+        // search bar (global)
+        if (this.options.search.display && this.options.search.global) {
             widgetContentElementDiv.appendChild(this._createCatalogContentSearchElement());
         }
         // waiting
@@ -726,6 +758,7 @@ class Catalog extends Control {
         widgetPanelDiv.appendChild(widgetContentDiv);
 
         container.appendChild(widgetPanel);
+
 
         return container;
     }
@@ -793,6 +826,21 @@ class Catalog extends Control {
                         layer.categories = []; // new property ! vide pour le moment
                         layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
                         layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
+                        if (this.options.layerThumbnail) {
+                            // si on souhaite afficher une vignette
+                            // et que la couche n'en a pas
+                            // on met une vignette par défaut
+                            if (!layer.thumbnail) {
+                                layer.thumbnail = "default";
+                            }
+                        } else {
+                            // sinon pas de vignette
+                            if (layer.thumbnail) {
+                                // FIXME 
+                                // suppression !?
+                                delete layer.thumbnail;
+                            }
+                        }
                     } else {
                         // sinon on supprime l'entrée car pas de configuration valide
                         delete data.layers[key];
@@ -868,6 +916,21 @@ class Catalog extends Control {
                             layer.categories = []; // new property ! vide pour le moment
                             layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
                             layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
+                            if (this.options.layerThumbnail) {
+                                // si on souhaite afficher une vignette
+                                // et que la couche n'en a pas
+                                // on met une vignette par défaut
+                                if (!layer.thumbnail) {
+                                    layer.thumbnail = "default";
+                                }
+                            } else {
+                                // sinon pas de vignette
+                                if (layer.thumbnail) {
+                                    // FIXME 
+                                    // suppression !?
+                                    delete layer.thumbnail;
+                                }
+                            }
                         } else {
                             // sinon on supprime l'entrée car pas de configuration valide
                             delete data.layers[key];
@@ -1398,6 +1461,15 @@ class Catalog extends Control {
                 layer : layer
             });
         }
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onToggleCatalogMoreLearnClick (e) {
+        logger.trace(e);
     }
 
     /**
