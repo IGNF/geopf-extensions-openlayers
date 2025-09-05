@@ -19,7 +19,7 @@ __DATE__
   - LayerSwitcher : Possibilité d'ajouter des outils externes (#418)
   - LayerSwitcher : Option pour verrouiller une couche (#414)
   - LayerSwitcher : Tooltips avancés en HTML sur le survol des couches (#420)
-  - SearchEngine : la sélection du résultat entraîne désormais un zoom par rapport à son emprise
+  - SearchEngine : la sélection du résultat entraîne désormais un zoom par rapport à son emprise (#432)
 
 * 🔨 [Changed]
 
