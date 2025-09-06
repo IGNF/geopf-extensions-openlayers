@@ -665,23 +665,23 @@ var CatalogDOM = {
             `;
         };
 
-        var tmplSection = (id, categoryId, title, count, data) => {
+        var tmplSection = (id, categoryId, title, icon, count, data) => {
             // INFO
             // - on propose un compteur de couches
             // - on ajoute un bouton pour ouvrir/fermer la section
+            // - on ajoute un icone avant le titre de la section (optionnel)
             // - par defaut, les sections sont fermées
             // - on n'utilise pas le composant DSFR "fr-accordion"
-            // TODO
-            // - ajouter un icone avant le titre de la section
-            // - placer le compteur de couches à droite
+            // - ...
+            var classNameIcon = (icon && icon.startsWith("fr-icon")) ? icon : "";
             return `
             <!-- section -->
             <section id="section-${categoryId}-${id}" class="fr-accordion" style="contain: content;">
                 <h3 class="fr-accordion__title">
                     <button class="GPcatalogButtonSection fr-accordion__btn gpf-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
                         <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>
-                        ${title} 
-                        <span class="section-count" id="section-count-${categoryId}-${id}" style="position: absolute; right: 30px;">${count}</span>
+                        <span class="catalog-section-icon ${classNameIcon}">${title}</span>
+                        <span class="catalog-section-count" id="section-count-${categoryId}-${id}" style="position: absolute; right: 30px;">${count}</span>
                     </button>
                 </h3>
                 <div class="fr-collapse GPelementHidden" id="accordion-${categoryId}-${id}">
@@ -747,7 +747,7 @@ var CatalogDOM = {
                     const data = sections[title];
                     var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
                     var id = this.generateID(title);
-                    strElements += tmplSection(id, category.id, title, count, data);
+                    strElements += tmplSection(id, category.id, title, category.icon, count, data);
                     // HACK on enregistre les valeurs des sections dans l'objet category
                     category.sections.push(title);
                 }

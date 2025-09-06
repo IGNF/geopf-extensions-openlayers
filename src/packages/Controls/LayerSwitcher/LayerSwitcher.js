@@ -43,7 +43,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {boolean} [allowGrayScale=true] - Affiche le bouton N&B (niveaux de gris) pour les couches compatibles.
  * @property {boolean} [allowTooltips=false] - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
- * @property {Array<Object>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * @property {Array<AdvancedToolOptions>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
  */
 
 /**
@@ -56,6 +56,14 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
  * @property {Array<Object>} [config.metadata] - Métadonnées associées à la couche.
  * @property {boolean} [config.locked] - Indique si la couche est verrouillée.
+ */
+
+/**
+ * @typedef {Object} AdvancedToolOptions
+ * @property {string} label - Label of the button
+ * @property {string} [icon] - Icon (svg or http link or dsfr class)
+ * @property {Function} [cb] - Callback function called on click
+ * @property {Object} [styles] - styles to apply to the button
  */
 
 /**

@@ -64,6 +64,9 @@
     flex-direction: column;
 }
 
+.catalog-section-icon::before {
+    margin-right: 15px;
+}
 .catalog-thumbnail-default {
     background-image: url("img/dsfr/image-light.svg");
     background-repeat: no-repeat;

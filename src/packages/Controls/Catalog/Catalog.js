@@ -29,7 +29,7 @@ import Topics from "./topics.json";
 var logger = Logger.getLogger("widget");
 
 /**
- * @typedef {Object} CatalogOptions
+ * @typedef {Object} CatalogOptions - Liste des options du widget Catalog
  * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
  * @property {boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
  * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
@@ -53,7 +53,7 @@ var logger = Logger.getLogger("widget");
  */
 
 /**
- * @typedef {Object} Categories
+ * @typedef {Object} Categories - Catégories principales du catalogue sous forme d'onglets
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} default - Indique si c'est la catégorie par défaut.
@@ -64,10 +64,13 @@ var logger = Logger.getLogger("widget");
  */
 
 /**
- * @typedef {Object} SubCategories
+ * @typedef {Object} SubCategories - Sous-catégories du catalogue sous forme de boutons radio 
+ * avec ou sans sections. Une section, c'est un regroupement thématique des couches.
+ * ex. : regrouper les couches par "thématique" (voir propriété "thematic" dans la conf. des couches)
  * @property {string} title - Titre de la sous-catégorie.
  * @property {string} id - Identifiant unique de la sous-catégorie.
  * @property {boolean} section - Indique si la sous-catégorie utilise des sections.
+ * @property {string} [icon] - Ajoute un icone de type dsfr classe pour les sections de la sous-catégorie (ex. fr-icon-bug-line).
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
  * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
@@ -507,6 +510,7 @@ class Catalog extends Control {
                     //         title : "",
                     //         default : true,
                     //         section : true, // avec section (ex. regroupement par themes)
+                    //         icon : "fr-icon-bug-fill", // icone pour les sections (svg ou lien http ou dsfr classe)  
                     //         filter : {
                     //             field : "thematic",
                     //             value : ""
@@ -615,6 +619,7 @@ class Catalog extends Control {
                         id : i.id || this.generateID(i.title),
                         section : i.hasOwnProperty("section") ? i.section : false,
                         sections : [], // liste des valeurs des sections remplie ulterieurement !
+                        icon : i.icon || null,
                         default : i.hasOwnProperty("default") ? i.default : false,
                         filter : i.filter || null,
                     };
