@@ -57,8 +57,9 @@ var logger = Logger.getLogger("widget");
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} default - Indique si c'est la catégorie par défaut.
- * @property {Object|null} filter - Filtre appliqué à la catégorie.
+ * @property {boolean} [search=false] - **TODO** Affiche une barre de recherche spécifique à la catégorie.
  * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
+ * @property {Object|null} filter - Filtre appliqué à la catégorie.
  * @property {string} filter.field - Champ utilisé pour le filtre.
  * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
  */
@@ -104,6 +105,7 @@ class Catalog extends Control {
      *           titlePrimary : "",
      *           titleSecondary : "Gérer vos couches de données",
      *           layerLabel : "title",
+     *           layerThumbnail : true,
      *           search : {
      *               display : true,
      *               criteria : [
@@ -124,6 +126,8 @@ class Catalog extends Control {
      *                   //     {
      *                   //         title : "",
      *                   //         default : true,
+     *                   //         section : true, // avec section (ex. regroupement par themes)
+     *                   //         icon : "fr-icon-bug-fill", // icone pour les sections (svg ou lien http ou dsfr classe)
      *                   //         filter : {
      *                   //             field : "",
      *                   //             value : ""
@@ -535,8 +539,10 @@ class Catalog extends Control {
             }
         };
 
-        // merge with user options
+        // merge with user optionssearch
+        var searchOptions = Utils.assign(this.options.search, options.search);
         Utils.assign(this.options, options);
+        Utils.assign(this.options.search, searchOptions);
 
         /**
          * specify if control is collapsed (true) or not (false)
@@ -586,19 +592,20 @@ class Catalog extends Control {
 
         /**
          * specify all categories
-         * @type {Array}
+         * @type {Array<Categories}
          * @example
          * [
          *     {
          *        title : "Données",   // title of the category
-         *        id : "data",          // id of the category
+         *        id : "data",         // id of the category
          *        default : true,      // if true, this category is selected by default
-         *        filter : null,        // filter to apply on the category
-         *        items : [              // list of subcategories
+         *        filter : null,       // filter to apply on the category
+         *        items : [            // list of subcategories
          *            {
          *               title : "Toutes les données", // title of the subcategory
          *               id : "all",                   // id of the subcategory
          *               default : true,               // if true, this subcategory is selected by default
+         *               icon : null,                  // icon for the subcategory (svg or http link or dsfr class)
          *               section : false,              // if true, this subcategory has a section
          *               sections : [],                // list of sections (filled later)
          *               filter : null,                // filter to apply on the subcategory
@@ -629,6 +636,7 @@ class Catalog extends Control {
                 title : cat.title,
                 id : cat.id || this.generateID(cat.title),
                 default : cat.hasOwnProperty("default") ? cat.default : false,
+                search : cat.hasOwnProperty("search") ? cat.search : false,
                 filter : cat.filter || null,
                 items : items || null
             };
@@ -753,7 +761,7 @@ class Catalog extends Control {
         widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
         // search bar (global)
         if (this.options.search.display && this.options.search.global) {
-            widgetContentElementDiv.appendChild(this._createCatalogContentSearchElement());
+            widgetContentElementDiv.appendChild(this._createCatalogContentSearchGlobalElement());
         }
         // waiting
         var waiting = this.waitingContainer = this._createCatalogWaitingElement();
@@ -821,6 +829,11 @@ class Catalog extends Control {
             // de manière unique : name + service
             // - categories : utile pour definir l'appartenance d'une couche
             // à une ou plusieurs categories
+            // on en profite aussi pour nettoyer la liste
+            // des couches qui n'ont pas de configuration valide
+            // cf. serviceParams obligatoire
+            // on en profite aussi pour ajouter une vignette par défaut
+            // si la couche n'en a pas et que l'option est activée
             for (const key in data.layers) {
                 if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
                     const layer = data.layers[key];
@@ -831,6 +844,8 @@ class Catalog extends Control {
                         layer.categories = []; // new property ! vide pour le moment
                         layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
                         layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
+                        // label de la couche
+                        layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
                         if (this.options.layerThumbnail) {
                             // si on souhaite afficher une vignette
                             // et que la couche n'en a pas
@@ -921,6 +936,8 @@ class Catalog extends Control {
                             layer.categories = []; // new property ! vide pour le moment
                             layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
                             layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
+                            // label de la couche
+                            layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
                             if (this.options.layerThumbnail) {
                                 // si on souhaite afficher une vignette
                                 // et que la couche n'en a pas
@@ -1479,27 +1496,29 @@ class Catalog extends Control {
 
     /**
      * ...
+     * @param {Event} e - ...
      * @private
      */
-    onSearchCatalogButtonClick () {
+    onSearchGlobalCatalogButtonClick (e) {
         // INFO
         // la saisie du critère de recherche doit filtrer la liste des couches affichée
         // dans l'onglet courant.
         // on masque les entrées non conforme
         // - en ajoutant la classe 'gpf-hidden' dans le DOM
         // - en sauvegardant l'état avec la property 'hidden:true'
-        var value = document.getElementById("search-input").value;
+        var value = e.target.value;
         this.setFilteredLayersList(value);
     }
 
     /**
      * ...
+     * @param {Event} e - ...
      * @private
      */
-    onSearchCatalogInputChange () {
+    onSearchGlobalCatalogInputChange (e) {
         clearTimeout(this._searchTimeout);
         this._searchTimeout = setTimeout(() => {
-            this.onSearchCatalogButtonClick();
+            this.onSearchGlobalCatalogButtonClick(e);
         }, 200); // 200ms de délai
     }
 

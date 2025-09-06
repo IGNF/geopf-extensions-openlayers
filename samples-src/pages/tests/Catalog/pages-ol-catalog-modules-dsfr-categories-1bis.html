@@ -62,7 +62,13 @@
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
                         titlePrimary : "Catalogue des cartes",
+                        layerLabel : "title",
                         layerThumbnail : true,
+                        search : {
+                            display : true,
+                            global : true,
+                            // criteria : ["name","title","description"]
+                        },
                         categories : [
                             {
                                 title : "Cartes de références",
@@ -75,6 +81,7 @@
                             {
                                 title : "Toutes les cartes",
                                 id : "data",
+                                search : true,
                                 items : [
                                     {
                                         title : "Thème",

@@ -202,17 +202,17 @@ var CatalogDOM = {
         `);
         return container.firstChild;
     },
-    _createCatalogContentSearchElement : function () {
+    _createCatalogContentSearchGlobalElement : function () {
         var strContainer = `
-        <!-- barre de recherche -->
+        <!-- barre de recherche globale -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
-        <div class="catalog-container-search" style="padding-top:10px;padding-bottom:20px">
-            <div class="fr-search-bar" id="header-search" role="search">
-                <label class="fr-label" for="search-input">
+        <div class="catalog-container-search-global" style="padding-top:10px;padding-bottom:20px">
+            <div class="fr-search-bar" id="catalog-header-search-global" role="search">
+                <label class="fr-label" for="catalog-input-search-global">
                     Recherche
                 </label>
-                <input class="fr-input" placeholder="Rechercher une donnée" type="search" id="search-input" name="search-input" incremental>
-                <button id="search-button" class="fr-btn" title="Rechercher">
+                <input class="fr-input" placeholder="Rechercher une donnée" type="search" id="catalog-input-search-global" name="search-input" incremental>
+                <button id="catalog-button-search-global" class="fr-btn" title="Rechercher">
                     Rechercher
                 </button>
             </div>
@@ -225,17 +225,18 @@ var CatalogDOM = {
         shadow.innerHTML = strContainer.trim();
 
         // event listener sur le DOM
-        var button = shadow.getElementById("search-button");
+        var button = shadow.getElementById("catalog-button-search-global");
         if (button) {
-            button.addEventListener("click", () => {
-                this.onSearchCatalogButtonClick();
+            button.addEventListener("click", (e) => {
+                e.target.value = input.value; // synchronisation
+                this.onSearchGlobalCatalogButtonClick(e);
             });
         }
 
-        var input = shadow.getElementById("search-input");
+        var input = shadow.getElementById("catalog-input-search-global");
         if (input) {
-            input.addEventListener("search", () => {
-                this.onSearchCatalogInputChange();
+            input.addEventListener("search", (e) => { 
+                this.onSearchGlobalCatalogInputChange(e);
             });
         }
 
@@ -339,16 +340,24 @@ var CatalogDOM = {
         };
 
         var strCategoriesTabPanelContents = "";
-        var tmplCategoryTabPanelContent = (i, id, selected, subcategories) => {
+        var tmplCategoryTabPanelContent = (i, id, selected, subcategories, search) => {
             var className = "GPtabContent fr-tabs__panel";
             var tabindex = -1;
             if (selected) {
                 className = "GPtabContent GPtabContentSelected fr-tabs__panel fr-tabs__panel--selected";
                 tabindex = 0;
             }
-            var strTabContent = "<div class=\"tabcontent\" style=\"content-visibility: auto;contain-intrinsic-size:50px;\"></div>";
+            var strTabContent = "";
+            if (search) {
+                // si la catégorie a une barre de recherche spécifique
+                strTabContent = "<!-- ici : barre de recherche spécifique à la catégorie -->";
+            }
             if (subcategories) {
-                strTabContent = tmplSubCategoriesRadios(id, subcategories);
+                // si la catégorie a des sous catégories
+                strTabContent += tmplSubCategoriesRadios(id, subcategories);
+            } else {
+                // sinon, on crée un panneau vide
+                strTabContent += "<div class=\"tabcontent\" style=\"content-visibility: auto;contain-intrinsic-size:50px;\"></div>";
             }
             // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) :
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
@@ -368,7 +377,7 @@ var CatalogDOM = {
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
             strCategoriesTabButtons += tmplCategoryTabButton(i, category.id, category.title, category.default);
-            strCategoriesTabPanelContents += tmplCategoryTabPanelContent(i, category.id, category.default, category.items);
+            strCategoriesTabPanelContents += tmplCategoryTabPanelContent(i, category.id, category.default, category.items, category.search);
         }
         /* FIXME style="--tabs-height: 294px;" ajouté à la main pour pallier le manque de JS DSFR */
         var strContainer = `
@@ -713,12 +722,12 @@ var CatalogDOM = {
                     thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
                     metadatas : layer.metadata_urls  // tableau
                 };
+                var element = tmplElement(j, layer.name, layer.label, layer.service, layer.description, infos, layer.thumbnail, category.id);
                 // INFO
                 // a t on des sections (regroupements) ?
                 // - oui, si elle correspond au filtre, on ajoute la couche dans la section
                 //   sinon, on ecarte cette couche (normalement, dans la section "Autres")
                 // - non, on ajoute directement la couche dans la sous categorie
-                var element = tmplElement(j, layer.name, layer.title, layer.service, layer.description, infos, layer.thumbnail, category.id);
                 if (isSection) {
                     var title = layer[category.filter.field][0];
                     if (title) {
