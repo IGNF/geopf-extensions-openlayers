@@ -25,6 +25,7 @@ __DATE__
 
   - Compute : réduction du nombre de chiffres significatifs des coordonnées envoyés pour les requêtes itinéraires et isochrones (#411)
   - Zoom : changement des icones de zoom en mode DSFR (#412)
+  - Catalog : refonte et optimisation du widget (#423)
 
 * 🔥 [Deprecated]
 
