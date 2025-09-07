@@ -275,6 +275,7 @@ var CatalogDOM = {
      * - each subcategory has a panel with layers
      */
     _createCatalogContentCategoriesTabs : function (categories) {
+        // les onglets
         var strCategoriesTabButtons = "";
         var tmplCategoryTabButton = (i, id, title, selected) => {
             var className = "GPtabButton fr-tabs__tab";
@@ -294,7 +295,33 @@ var CatalogDOM = {
             </li>
             `;
         };
-        
+        // TODO
+        // on crée une barre de recherche spécifique à la catégorie
+        //   - activée (add('fr-tabs__panel--selected') si la catégorie a l'option search=true,
+        //   - sinon cachée par defaut (remove('fr-tabs__panel--selected'))
+        // l'activation/désactivation est gérée dans le listener de l'onglet
+        // cf. this.onSelectCatalogTabClick
+        var tmplSearchSpecificBar = (active) => {
+            var className = "gpf-hidden";
+            if (active) {
+                className = "fr-tabs__panel--selected";
+            }                
+            return `
+            <!-- barre de recherche spécifique à la catégorie -->
+            <div id="catalog-container-search-specific" class="fr-tabs__list ${className}" style="padding-top:10px;padding-bottom:20px;justify-content:center;">
+                <div class="fr-search-bar" id="catalog-header-search-specific" role="search">
+                    <label class="fr-label" for="catalog-input-search-specific">
+                        Recherche dans la catégorie
+                    </label>
+                    <input class="fr-input" placeholder="Rechercher une donnée dans la catégorie" type="search" id="catalog-input-search-specific" name="search-input-specific" incremental>
+                    <button id="catalog-button-search-specific" class="fr-btn" title="Rechercher">
+                        Rechercher
+                    </button>
+                </div>
+            </div>
+            `;
+        };
+        // une sous catégorie
         var tmplSubCategoryRadio = (id, subcategory) => {
             var checked = (subcategory.default) ? "checked" : "";
             return `
@@ -314,6 +341,7 @@ var CatalogDOM = {
             </div>
             `;
         };
+        // les sous catégories
         var tmplSubCategoriesRadios = (id, subcategories) => {
             // chaque sous categories à son propre container de couches
             // et son bouton radio de groupe
@@ -338,26 +366,20 @@ var CatalogDOM = {
             ${strTabContents}
             `;
         };
-
+        // le panneau de chaque catégorie
         var strCategoriesTabPanelContents = "";
-        var tmplCategoryTabPanelContent = (i, id, selected, subcategories, search) => {
+        var tmplCategoryTabPanelContent = (i, id, selected, subcategories) => {
             var className = "GPtabContent fr-tabs__panel";
             var tabindex = -1;
             if (selected) {
                 className = "GPtabContent GPtabContentSelected fr-tabs__panel fr-tabs__panel--selected";
                 tabindex = 0;
             }
-            var strTabContent = "";
-            if (search) {
-                // si la catégorie a une barre de recherche spécifique
-                strTabContent = "<!-- ici : barre de recherche spécifique à la catégorie -->";
-            }
+            // on crée un panneau vide
+            var strTabContent = "<div class=\"tabcontent\" style=\"content-visibility: auto;contain-intrinsic-size:50px;\"></div>";
             if (subcategories) {
-                // si la catégorie a des sous catégories
-                strTabContent += tmplSubCategoriesRadios(id, subcategories);
-            } else {
-                // sinon, on crée un panneau vide
-                strTabContent += "<div class=\"tabcontent\" style=\"content-visibility: auto;contain-intrinsic-size:50px;\"></div>";
+                // sauf si la catégorie a des sous catégories
+                strTabContent = tmplSubCategoriesRadios(id, subcategories);
             }
             // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) :
             // > "tabpanel-${i}-panel_${id}}".split('_')[1]
@@ -373,13 +395,28 @@ var CatalogDOM = {
             </div>
             `;
         };
-
+        // INFO
+        // création des onglets
+        // un barre de recherche spécifique à la catégorie est positionnée par défaut
+        // et elle sera activée si la catégorie a l'option search=true
+        // chaque catégorie a son propre onglet
+        // et son propre panneau de contenu
+        // chaque panneau de contenu a des sous catégories (ou pas)
+        var active = false;
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
             strCategoriesTabButtons += tmplCategoryTabButton(i, category.id, category.title, category.default);
-            strCategoriesTabPanelContents += tmplCategoryTabPanelContent(i, category.id, category.default, category.items, category.search);
+            strCategoriesTabPanelContents += tmplCategoryTabPanelContent(i, category.id, category.default, category.items);
+            if (category.default && category.search) {
+                // si la catégorie par defaut a l'option search=true, on doit activer la barre de recherche spécifique
+                // à l'ouverture du contrôle
+                active = true;
+            }
         }
-        /* FIXME style="--tabs-height: 294px;" ajouté à la main pour pallier le manque de JS DSFR */
+        // on ajoute la barre de recherche spécifique à la catégorie
+        var strSearchSpecificBar = tmplSearchSpecificBar(active);
+        // FIXME 
+        // style="--tabs-height: 294px;" ajouté à la main pour pallier le manque de JS DSFR (?)
         var strContainer = `
         <!-- onglets -->
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
@@ -387,6 +424,7 @@ var CatalogDOM = {
                 <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="presentation">
                     ${strCategoriesTabButtons}
                 </ul>
+                ${strSearchSpecificBar}
                 ${strCategoriesTabPanelContents}
             </div>
         </div>
@@ -465,6 +503,20 @@ var CatalogDOM = {
                     // appel
                     this.onSelectCatalogTabClick(e);
                 });
+            });
+        }
+        var searchBtn = shadow.getElementById("catalog-button-search-specific");
+        if (searchBtn) {
+            searchBtn.addEventListener("click", (e) => {
+                e.target.value = input.value; // synchronisation
+                this.onSearchSpecificCatalogButtonClick(e);
+            });
+        }
+
+        var searchInput = shadow.getElementById("catalog-input-search-specific");
+        if (searchInput) {
+            searchInput.addEventListener("search", (e) => { 
+                this.onSearchSpecificCatalogInputChange(e);
             });
         }
 

@@ -39,7 +39,6 @@ var logger = Logger.getLogger("widget");
  * @property {Boolean} [layerThumbnail=false] - Affiche les miniatures des couches si disponibles.
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
- * @property {boolean} [search.global=true] - Affiche une barre de recherche globale.
  * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
  * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
  * @property {Array<Categories>} [categories] - Liste des catégories et sous-catégories.
@@ -71,6 +70,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} title - Titre de la sous-catégorie.
  * @property {string} id - Identifiant unique de la sous-catégorie.
  * @property {boolean} section - Indique si la sous-catégorie utilise des sections.
+ * @property {boolean} [collapsible] - **TODO** Indique si les sections sont repliables.
  * @property {string} [icon] - Ajoute un icone de type dsfr classe pour les sections de la sous-catégorie (ex. fr-icon-bug-line).
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
@@ -120,6 +120,7 @@ class Catalog extends Control {
      *                   title : "Données",
      *                   id : "data",
      *                   default : true,
+     *                   search : false,
      *                   filter : null
      *                   // sous categories
      *                   // items : [
@@ -490,8 +491,7 @@ class Catalog extends Control {
             layerLabel : "title",
             layerThumbnail : false,
             search : {
-                display : true,
-                global : true, // barre de recherche globale
+                display : true, // barre de recherche globale
                 criteria : [
                     "name",
                     "title",
@@ -760,7 +760,7 @@ class Catalog extends Control {
         var widgetContentElementDiv = this.contentCatalogContainer = this._createCatalogContentDivElement();
         widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
         // search bar (global)
-        if (this.options.search.display && this.options.search.global) {
+        if (this.options.search.display) {
             widgetContentElementDiv.appendChild(this._createCatalogContentSearchGlobalElement());
         }
         // waiting
@@ -1438,6 +1438,38 @@ class Catalog extends Control {
         var id = e.target.id;
         var category = id.split("_")[1];
         this.categoryId = category;
+
+        // TODO
+        // on peut faire un lazy-load des autres catégories
+        // pour ne pas charger toutes les couches d'un coup
+        // on affiche le contenu de la catégorie active
+        // et on charge les autres au fur et à mesure
+
+        // on affiche la barre de recherche spécifique
+        // si l'option search=true est activée pour la categorie courante
+        // on recherche dans la liste des categories, la catégorie courante
+        var o = this.categories.find(c => c.id === category);
+        var searchSpecific = document.getElementById("catalog-container-search-specific");
+        if (searchSpecific) {
+            if (o && o.search) {
+                searchSpecific.classList.remove("gpf-hidden");
+                searchSpecific.classList.add("fr-tabs__panel--selected");
+            } else {
+                searchSpecific.classList.add("gpf-hidden");
+                searchSpecific.classList.remove("fr-tabs__panel--selected");
+            }
+        }
+        // INFO
+        // on remet à zéro l'outil de recherche specifique
+        // et on remet à zéro la liste des couches
+        // pour afficher toutes les couches de la catégorie
+        var inputSpecific = document.getElementById("catalog-input-search-specific");
+        if (inputSpecific) {
+            if (inputSpecific.value !== "") {
+                inputSpecific.value = "";
+                this.setFilteredLayersList("");
+            }
+        }
     }
 
     /**
@@ -1519,6 +1551,34 @@ class Catalog extends Control {
         clearTimeout(this._searchTimeout);
         this._searchTimeout = setTimeout(() => {
             this.onSearchGlobalCatalogButtonClick(e);
+        }, 200); // 200ms de délai
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onSearchSpecificCatalogButtonClick (e) {
+        // INFO
+        // la saisie du critère de recherche doit filtrer la liste des couches affichée
+        // dans l'onglet courant.
+        // on masque les entrées non conforme
+        // - en ajoutant la classe 'gpf-hidden' dans le DOM
+        // - en sauvegardant l'état avec la property 'hidden:true'
+        var value = e.target.value;
+        this.setFilteredLayersList(value);
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onSearchSpecificCatalogInputChange (e) {
+        clearTimeout(this._searchTimeout);
+        this._searchTimeout = setTimeout(() => {
+            this.onSearchSpecificCatalogButtonClick(e);
         }, 200); // 200ms de délai
     }
 
