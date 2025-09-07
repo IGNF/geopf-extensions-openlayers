@@ -19,6 +19,7 @@ __DATE__
   - LayerSwitcher : Possibilité d'ajouter des outils externes (#418)
   - LayerSwitcher : Option pour verrouiller une couche (#414)
   - LayerSwitcher : Tooltips avancés en HTML sur le survol des couches (#420)
+  - SearchEngine : la sélection du résultat entraîne désormais un zoom par rapport à son emprise (#432)
 
 * 🔨 [Changed]
 
@@ -35,7 +36,7 @@ __DATE__
   - Layerswitcher : Menu contextuel en mode mobile snas items vides (#417)
   - ControlList et ZoomOut : Tooltips cassées (#419)
   - Coordinates : homogénéisation de l'affichage des coordonnées dans l'ordre lat,lon (#421)
-   
+
 * 🔒 [Security]
 
 
