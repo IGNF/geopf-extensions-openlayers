@@ -23,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de catalogue avec options sur les categories avec sections</h2>
+            <h2>Ajout du gestionnaire de catalogue avec option sur la configuration (download)</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -57,25 +57,17 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        titlePrimary : "",
-                        size : "md",
                         categories : [
-                            {
-                                title : "Fonds de carte",
-                                id : "base",
-                                filter : {
-                                    field : "base",
-                                    value : "true"
-                                }
-                            },
                             {
                                 title : "Données",
                                 id : "data",
+                                search : true,
                                 items : [
                                     {
                                         title : "Thème",
                                         default : true,
                                         section : true,
+                                        icon : true,
                                         filter : {
                                             field : "thematic",
                                             value : "*"
@@ -85,32 +77,55 @@
                                     {
                                         title : "Producteur",
                                         section : true,
+                                        icon : true,
                                         filter : {
                                             field : "producer",
                                             value : "*"
                                         }
                                     },
                                     {
-                                        title : "Tout",
-                                        section : false,
-                                        filter : null
+                                        title : "Service",
+                                        section : true,
+                                        icon : true,
+                                        filter : {
+                                            field : "service",
+                                            value : "*"
+                                        }
                                     }
                                 ]
-                            }
-                        ]
+                            },
+                        ],
+                        configuration : {
+                            type : "json",
+                            urls : [
+                                // INFO facultatif si la config est déjà chargée
+                                // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
+                                // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json"
+                                // "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/entreeCarto.json"
+                                "{{ resources }}/data/configuration/topics-thematics.json",
+                                "{{ resources }}/data/configuration/topics-services.json",
+                                "{{ resources }}/data/configuration/topics-producers.json",
+                                "{{ resources }}/data/configuration/config-catalog.json"
+                            ]
+                        }
+                    });
+                    catalog.on("catalog:loaded", (e) => {
+                        console.log(e);
                     });
                     map.addControl(catalog);
                 };
-                Gp.Services.getConfig({
-                    customConfigFile : "{{ configurl }}",
-                    callbackSuffix : "",
-                    // apiKey: "{{ apikey }}",
-                    timeOut : 20000,
-                    onSuccess : createMap,
-                    onFailure : (e) => {
-                        console.error(e);
-                    }
-                });
+                createMap();
+                // INFO facultatif
+                // Gp.Services.getConfig({
+                //     customConfigFile : "{{ configurl }}",
+                //     callbackSuffix : "",
+                //     // apiKey: "{{ apikey }}",
+                //     timeOut : 20000,
+                //     onSuccess : createMap,
+                //     onFailure : (e) => {
+                //         console.error(e);
+                //     }
+                // });
            </script>
 {{/content}}
 

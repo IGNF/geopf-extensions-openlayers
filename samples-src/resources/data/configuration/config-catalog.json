@@ -177,6 +177,12 @@
             "name": "image/png",
             "current": true
           }
+        ],
+        "thematic": ["Carte de référence de la couverture terrestre"],
+        "producer": ["IGN"],
+        "metadata_urls": [
+          "https://data.geopf.fr/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&OUTPUTSCHEMA=http://standards.iso.org/iso/19115/-3/mdb/2.0&elementSetName=full&ID=IGNF_PLAN-IGN",
+          "https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN"
         ]
       },
       "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMS": {
@@ -236,6 +242,12 @@
             "name": "image/x-bil;bits=32",
             "current": false
           }
+        ],
+        "thematic": ["Carte de référence de la couverture terrestre"],
+        "producer": ["IGN"],
+        "metadata_urls": [
+          "https://data.geopf.fr/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&OUTPUTSCHEMA=http://standards.iso.org/iso/19115/-3/mdb/2.0&elementSetName=full&ID=IGNF_PLAN-IGN",
+          "https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN"
         ]
       },
       "PLAN.IGN$GEOPORTAIL:GPP:TMS": {
@@ -319,7 +331,13 @@
           "maxScaleDenominator": null
         },
         "layerId": "PLAN.IGN$GEOPORTAIL:GPP:TMS",
-        "defaultProjection": "EPSG:3857"
+        "defaultProjection": "EPSG:3857",
+        "thematic": ["Carte de référence de la couverture terrestre"],
+        "producer": ["IGN"],
+        "metadata_urls": [
+          "https://data.geopf.fr/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&OUTPUTSCHEMA=http://standards.iso.org/iso/19115/-3/mdb/2.0&elementSetName=full&ID=IGNF_PLAN-IGN",
+          "https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN"
+        ]
       },
       "BDTOPO_V3:batiment$GEOPORTAIL:OGC:WFS": {
         "name": "BDTOPO_V3:batiment",
@@ -347,7 +365,13 @@
         "metadata": [],
         "styles": [],
         "legends": [],
-        "formats": []
+        "formats": [],
+        "thematic": ["Cadastre, aménagement"],
+        "producer": ["IGN"],
+        "metadata_urls": [
+          "https://data.geopf.fr/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&OUTPUTSCHEMA=http://standards.iso.org/iso/19115/-3/mdb/2.0&elementSetName=full&ID=IGNF_BD-TOPO",
+          "https://cartes.gouv.fr/catalogue/dataset/IGNF_BD-TOPO"
+        ]
       }
     },
     "tileMatrixSets": {

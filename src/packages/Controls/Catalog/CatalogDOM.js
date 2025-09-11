@@ -1,3 +1,6 @@
+import { marked as Marked } from "marked";
+import sanitizeHtml from "sanitize-html";
+
 const stringToHTML = (str) => {
     var support = function () {
         if (!window.DOMParser) {
@@ -117,6 +120,44 @@ var CatalogDOM = {
         return dialog;
     },
 
+    /**
+     * Container Panel Size
+     * @param {*} size - sm, md, lg
+     * @returns  {HTMLElement} DOM element
+     * @fixme revoir le fonctionnement des tailles !?
+     * @description
+     * - sm : small (default)
+     * - md : medium
+     * - lg : large
+     * - xl : extra large
+     * cf. https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/modale#taille
+     */
+    _createCatalogPanelDivSizeElement : function (size) {
+        if (!size) {
+            size = "md";
+        }
+        var className = "";
+        switch (size) {
+            case "sm":
+                className = "fr-col-sm-4 fr-col-md-6 fr-col-lg-8";
+                break;
+            case "md":
+                className = "fr-col-sm-6 fr-col-md-8 fr-col-lg-10";
+                break;
+            case "lg":
+                className = "fr-col-sm-8 fr-col-md-10 fr-col-lg-12";
+                break;
+            case "xl":
+                className = "fr-col-sm-8 fr-col-md-10 fr-col-lg-12 fr-col-xl-14";
+                break;
+            default:
+                break;
+        }
+        var div = document.createElement("div");
+        div.className = "fr-col-12 " + className;
+        return div;
+    },
+
     _createCatalogPanelDivElement : function () {
         var div = document.createElement("div");
         div.className = "gpf-panel__body fr-modal__body";
@@ -175,7 +216,7 @@ var CatalogDOM = {
         }
 
         var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.className = "GPelementHidden gpf-hidden";
         span.innerText = "Fermer";
 
         btnClose.appendChild(span);
@@ -295,7 +336,7 @@ var CatalogDOM = {
             </li>
             `;
         };
-        // TODO
+        // INFO
         // on crée une barre de recherche spécifique à la catégorie
         //   - activée (add('fr-tabs__panel--selected') si la catégorie a l'option search=true,
         //   - sinon cachée par defaut (remove('fr-tabs__panel--selected'))
@@ -366,9 +407,10 @@ var CatalogDOM = {
             ${strTabContents}
             `;
         };
-        // le panneau de chaque catégorie
+        // le panneau de chaque catégorie 
+        // avec calcul de la hauteur en fonction de la barre de recherche specifique
         var strCategoriesTabPanelContents = "";
-        var tmplCategoryTabPanelContent = (i, id, selected, subcategories) => {
+        var tmplCategoryTabPanelContent = (i, id, selected, search, subcategories, active) => {
             var className = "GPtabContent fr-tabs__panel";
             var tabindex = -1;
             if (selected) {
@@ -381,8 +423,15 @@ var CatalogDOM = {
                 // sauf si la catégorie a des sous catégories
                 strTabContent = tmplSubCategoriesRadios(id, subcategories);
             }
-            // le listener sur le panneau permet de récuperer à partir de l'ID la catégorie (id) :
-            // > "tabpanel-${i}-panel_${id}}".split('_')[1]
+            // INFO
+            // le max height est fixé à 250px pour éviter que le panneau soit trop grand
+            // mais il faudrait pouvoir le configurer dynamiquement en fonction de la presence
+            // ou non de la barre de recherche spécifique qui decale le panneau vers le bas
+            // cf. var tabHeight dans le main container
+            var height = "250px";
+            if (active && !search) {
+                height = "310px";
+            }
             return `
             <!-- panneaux -->
             <div id="tabpanel-${i}-panel_${id}" 
@@ -390,37 +439,52 @@ var CatalogDOM = {
                 role="tabpanel" 
                 aria-labelledby="tabbutton-${i}_${id}" 
                 tabindex="${tabindex}" 
-                style="max-height: 250px;overflow-y: auto; padding: 1em; contain: content;">
+                style="max-height: ${height};overflow-y: auto; padding: 1em; contain: content;">
                 ${strTabContent}
             </div>
             `;
         };
         // INFO
+        // il faut determiner si la barre de recherche est active ou non
+        var currentActiveBar = false;
+        var hasActiveBar = false;
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            // on vérifie si une catégorie a l'option search=true
+            if (category.search) {
+                hasActiveBar = true;
+            }
+            if (category.default && category.search) {
+                // si la catégorie par defaut a l'option search=true, on doit activer la barre de recherche spécifique
+                // à l'ouverture du contrôle
+                currentActiveBar = true;
+            }
+        }
+        // INFO
         // création des onglets
-        // un barre de recherche spécifique à la catégorie est positionnée par défaut
+        // un barre de recherche spécifique à la catégorie est positionnée par défaut (hidden)
         // et elle sera activée si la catégorie a l'option search=true
         // chaque catégorie a son propre onglet
         // et son propre panneau de contenu
         // chaque panneau de contenu a des sous catégories (ou pas)
-        var active = false;
-        for (let i = 0; i < categories.length; i++) {
-            const category = categories[i];
-            strCategoriesTabButtons += tmplCategoryTabButton(i, category.id, category.title, category.default);
-            strCategoriesTabPanelContents += tmplCategoryTabPanelContent(i, category.id, category.default, category.items);
-            if (category.default && category.search) {
-                // si la catégorie par defaut a l'option search=true, on doit activer la barre de recherche spécifique
-                // à l'ouverture du contrôle
-                active = true;
-            }
+        for (let j = 0; j < categories.length; j++) {
+            const category = categories[j];
+            strCategoriesTabButtons += tmplCategoryTabButton(j, category.id, category.title, category.default);
+            strCategoriesTabPanelContents += tmplCategoryTabPanelContent(j, category.id, category.default, category.search, category.items, hasActiveBar);
         }
         // on ajoute la barre de recherche spécifique à la catégorie
-        var strSearchSpecificBar = tmplSearchSpecificBar(active);
+        var strSearchSpecificBar = tmplSearchSpecificBar(currentActiveBar);
         // FIXME 
-        // style="--tabs-height: 294px;" ajouté à la main pour pallier le manque de JS DSFR (?)
+        // le calcul de la hauteur est realisé à la main pour pallier le manque de JS DSFR (?)
+        // style="--tabs-height: 294px;"
+        var tabHeight = "294px"; // par defaut
+        if (hasActiveBar) {
+            tabHeight = "354px"; // si la barre de recherche spécifique est active
+        }
         var strContainer = `
         <!-- onglets -->
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
-            <div class="GPtabs fr-tabs" style="--tabs-height: 294px;">
+            <div class="GPtabs fr-tabs" style="--tabs-height: ${tabHeight};">
                 <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="presentation">
                     ${strCategoriesTabButtons}
                 </ul>
@@ -537,8 +601,7 @@ var CatalogDOM = {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
         const batchSize = 10; // nombre d'éléments à traiter par lot
         var strElements = "";
-        // TODO 
-        // doit on utiliser le champ description avec parsing HTML ou string ?
+        // le champ description en Markdown est transformé vers HTML
         var tmplElement = (i, name, title, service, description, informations, thumbnail, categoryId) => {
             // ajout des meta informations sur la couche
             // ex. producteurs, thèmes, metadatas
@@ -557,29 +620,24 @@ var CatalogDOM = {
                     if (informations.producers.length === 1) {
                         strProducers = `
                         <li>
-                            <a href="${informations.producers[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
-                                Informations sur le producteur - ${informations.producers[0].name}
+                            <a  href="${informations.producers[0].url}" 
+                                target="_blank" 
+                                class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
+                                ${informations.producers[0].name}
                             </a>
                         </li>
                         `;
                     } else {
-                        var lst = [];
                         for (let i = 0; i < informations.producers.length; i++) {
                             const element = informations.producers[i];
-                            lst.push(`
+                            strProducers += `
                                 <li>
-                                    <a href="${element.url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                    <a href="${element.url}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
                                         ${element.name}
                                     </a>
                                 </li>
-                            `);
+                            `;
                         }
-                        strProducers = `
-                        <label class="fr-label">Informations sur les producteurs</label>
-                        <ul>
-                            ${lst.join()}
-                        </ul>
-                        `;
                     }
                 }
                 var strThematics = "";
@@ -587,50 +645,46 @@ var CatalogDOM = {
                     if (informations.thematics.length === 1) {
                         strThematics = `
                         <li>
-                            <a href="${informations.thematics[0].url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
-                                Informations sur le thème - ${informations.thematics[0].name}
+                            <a 
+                                href="${informations.thematics[0].url}" 
+                                target="_blank" 
+                                class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
+                                ${informations.thematics[0].name}
                             </a>
                         </li>
                         `;
                     } else {
-                        var lst = [];
                         for (let i = 0; i < informations.thematics.length; i++) {
                             const element = informations.thematics[i];
-                            lst.push(`
+                            strThematics += `
                                 <li>
-                                    <a href="${element.url}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                    <a href="${element.url}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
                                         ${element.name}
                                     </a>
                                 </li>
-                            `);
+                            `;
                         }
-                        strThematics = `
-                        <label class="fr-label">Informations sur les thèmes</label>
-                        <ul>
-                            ${lst.join()}
-                        </ul>
-                        `;
                     }
                 }
                 var strMetadatas = "";
                 if (informations.metadatas) {
-                    var lst = [];
                     for (let i = 0; i < informations.metadatas.length; i++) {
                         const element = informations.metadatas[i];
-                        lst.push(`
+                        var title = element;
+                        if (element.includes("dataset")) {
+                            title = "Fiche de la donnée";
+                        }
+                        if (element.includes("csw")) {
+                            title = "Catalogue CSW";
+                        }
+                        strMetadatas += `
                             <li>
-                                <a href="${element}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
-                                    ${element}
+                                <a href="${element}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
+                                    ${title}
                                 </a>
                             </li>
-                        `);
+                        `;
                     }
-                    strMetadatas = `
-                    <label class="fr-label">Liste des meta données disponibles</label>
-                    <ul>
-                        ${lst.join()}
-                    </ul>
-                    `;
                 }
                 return `
                     <fieldset>
@@ -672,9 +726,12 @@ var CatalogDOM = {
             };
 
             var producer = informations.producers ? informations.producers[0].name : ""; // par defaut
-            // le listener sur l'input permet de récuperer à partir de l'ID
-            // la paire name/service pour identifier la couche:
-            // > "checkboxes-${categoryId}-${i}_${name}-${service}".split('_')[1]
+            // INFO
+            // On transforme le markdown en HTML
+            // et on nettoie le HTML pour éviter les injections XSS
+            // cf. https://marked.js.org/
+            // cf. https://github.com/apostrophecms/sanitize-html
+            var descriptionHtml = sanitizeHtml(Marked.parse(description));
             return `
             <div 
                 class="fr-fieldset__element" 
@@ -697,7 +754,7 @@ var CatalogDOM = {
                     <label 
                         class="GPlabelActive fr-label"  
                         title="nom technique : ${name}"
-                        style="width: 100%;">
+                        style="display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; cursor: pointer;">
                         ${title}
                         <span class="GPlabelActive fr-label fr-hint-text">${producer}</span>
                     </label>
@@ -718,7 +775,7 @@ var CatalogDOM = {
                     <span class="fr-label fr-hint-text">${producer}</span>
                     <hr>
                     <p class="fr-label fr-message">
-                        ${description}
+                        ${descriptionHtml}
                     </p>
                     ${tmplInfos(informations)}
                 </div>
@@ -741,8 +798,8 @@ var CatalogDOM = {
                 <h3 class="fr-accordion__title">
                     <button class="GPcatalogButtonSection fr-accordion__btn gpf-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
                         <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>
-                        <span class="catalog-section-icon ${classNameIcon}">${title}</span>
-                        <span class="catalog-section-count" id="section-count-${categoryId}-${id}" style="position: absolute; right: 30px;">${count}</span>
+                        <span class="catalog-section-icon ${classNameIcon}" style="width: calc(100% - 2rem);">${title}</span>
+                        <span class="catalog-section-count" id="section-count-${categoryId}-${id}" style="position: absolute; right: 1.25rem;">${count}</span>
                     </button>
                 </h3>
                 <div class="fr-collapse GPelementHidden" id="accordion-${categoryId}-${id}">
@@ -781,12 +838,17 @@ var CatalogDOM = {
                 //   sinon, on ecarte cette couche (normalement, dans la section "Autres")
                 // - non, on ajoute directement la couche dans la sous categorie
                 if (isSection) {
-                    var title = layer[category.filter.field][0];
-                    if (title) {
-                        if (!sections.hasOwnProperty(title)) {
-                            sections[title] = "";
+                    var value = layer[category.filter.field];
+                    if (Array.isArray(value)) {
+                        // FIXME on ne gère que le premier élément du tableau
+                        // ex. thematics : ["Réseau routier", "Transport"]
+                        value = value[0];
+                    }
+                    if (value) {
+                        if (!sections.hasOwnProperty(value)) {
+                            sections[value] = "";
                         }
-                        sections[title] += element;
+                        sections[value] += element;
                     } else {
                         // au cas où...
                         sections["Autres"] += element;
@@ -808,7 +870,17 @@ var CatalogDOM = {
                     const data = sections[title];
                     var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
                     var id = this.generateID(title);
-                    strElements += tmplSection(id, category.id, title, category.icon, count, data);
+                    var icon = "";
+                    if (category.icon && category.iconJson) {
+                        // on cherche l'icone dans le json
+                        const found = category.iconJson.find(obj => obj.name === title);
+                        if (found) {
+                            icon = found.icon;
+                        } else {
+                            icon = "fr-icon-arrow-right-s-line"; // icone par defaut !
+                        }
+                    }
+                    strElements += tmplSection(id, category.id, title, icon, count, data);
                     // HACK on enregistre les valeurs des sections dans l'objet category
                     category.sections.push(title);
                 }

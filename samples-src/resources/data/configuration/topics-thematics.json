@@ -95,14 +95,5 @@
             "name" : "Télécommunication, approvisionnement et énergie",
             "icon" : "fr-icon-radar-fill"
         }
-    ],
-    "service" : [
-        { "id" : "wmts", "name" : "WMTS", "icon" : "fr-icon-earth-line" },
-        { "id" : "wfs", "name" : "WFS", "icon" : "fr-icon-earth-fill" },
-        { "id" : "wms", "name" : "WMS", "icon" : "fr-icon-earth-line" },
-        { "id" : "tms", "name" : "TMS", "icon" : "fr-icon-earth-fill" }
-    ],
-    "producer" : [
-        { "id" : "ign", "name" : "IGN", "icon" : "fr-icon-government-fill" }
     ]
 }

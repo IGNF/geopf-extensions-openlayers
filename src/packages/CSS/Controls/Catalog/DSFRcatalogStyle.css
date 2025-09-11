@@ -56,7 +56,7 @@
 
 .gpf-accordion__btn::after {
     position: absolute;
-    right: 0.5rem;
+    right: 0;
 }
 
 .informations-more {
@@ -64,6 +64,13 @@
     flex-direction: column;
 }
 
+.catalog-container-tabs {
+    padding: 0.75rem;
+}
+.catalog-collapse-show {
+    position: absolute;
+    right: 0;
+}
 .catalog-section-icon::before {
     margin-right: 15px;
 }
@@ -77,7 +84,7 @@
 /* Mode mobile doit prendre le dessus */
 @media (max-width: 576px) {
     .gpf-mobile-fullscreen .GPtabContent {
-        max-height: unset !important;
+        /* max-height: unset !important; */
         height: 100vh;
     }
 }

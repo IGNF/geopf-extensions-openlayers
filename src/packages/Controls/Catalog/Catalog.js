@@ -37,6 +37,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} [titleSecondary=""] - Titre secondaire du panneau.
  * @property {string} [layerLabel="title"] - Propriété utilisée comme label pour les couches.
  * @property {Boolean} [layerThumbnail=false] - Affiche les miniatures des couches si disponibles.
+ * @property {string} [size="sm"] - **TODO** Taille de la fenêtre : sm, md ou lg
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
  * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
@@ -56,7 +57,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} default - Indique si c'est la catégorie par défaut.
- * @property {boolean} [search=false] - **TODO** Affiche une barre de recherche spécifique à la catégorie.
+ * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
  * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
  * @property {Object|null} filter - Filtre appliqué à la catégorie.
  * @property {string} filter.field - Champ utilisé pour le filtre.
@@ -71,7 +72,8 @@ var logger = Logger.getLogger("widget");
  * @property {string} id - Identifiant unique de la sous-catégorie.
  * @property {boolean} section - Indique si la sous-catégorie utilise des sections.
  * @property {boolean} [collapsible] - **TODO** Indique si les sections sont repliables.
- * @property {string} [icon] - Ajoute un icone de type dsfr classe pour les sections de la sous-catégorie (ex. fr-icon-bug-line).
+ * @property {boolean} [icon] - Indique que l'on souhaite un icone de type dsfr classe pour les sections de la sous-catégorie.
+ * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
  * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
@@ -128,7 +130,7 @@ class Catalog extends Control {
      *                   //         title : "",
      *                   //         default : true,
      *                   //         section : true, // avec section (ex. regroupement par themes)
-     *                   //         icon : "fr-icon-bug-fill", // icone pour les sections (svg ou lien http ou dsfr classe)
+     *                   //         icon : true, // icone pour les sections (svg ou lien http ou dsfr classe)
      *                   //         filter : {
      *                   //             field : "",
      *                   //             value : ""
@@ -183,10 +185,12 @@ class Catalog extends Control {
         // car l'opération peut être async si un download est demandé.
         // une patience permet d'attendre que la liste soit récupérée.
         this.showWaiting();
-        this.initLayersList()
+        this.initConfigData()
             .then((data) => {
                 logger.trace(this, data);
                 this.hideWaiting();
+                // sauvegarde de la configuration
+                this.configData = data;
                 /**
                  * event triggered when data is loaded
                  */
@@ -490,6 +494,7 @@ class Catalog extends Control {
             titleSecondary : "",
             layerLabel : "title",
             layerThumbnail : false,
+            size : "md",
             search : {
                 display : true, // barre de recherche globale
                 criteria : [
@@ -514,7 +519,7 @@ class Catalog extends Control {
                     //         title : "",
                     //         default : true,
                     //         section : true, // avec section (ex. regroupement par themes)
-                    //         icon : "fr-icon-bug-fill", // icone pour les sections (svg ou lien http ou dsfr classe)  
+                    //         icon : true, // icone pour les sections (svg ou lien http ou dsfr classe)  
                     //         filter : {
                     //             field : "thematic",
                     //             value : ""
@@ -532,6 +537,7 @@ class Catalog extends Control {
             configuration : {
                 type : "json", // TODO type:"service"
                 urls : [ // data:{}
+                    // ex.
                     // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
                     // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json",
                     "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/entreeCarto.json"
@@ -583,6 +589,11 @@ class Catalog extends Control {
         this.waitingContainer = null;
 
         /**
+         * specify configuration data (configuration service)
+         */
+        this.configData = {};
+
+        /**
          * specify all list of layers (configuration service)
          * @type {Object}
          * @see [schema](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json)
@@ -605,7 +616,7 @@ class Catalog extends Control {
          *               title : "Toutes les données", // title of the subcategory
          *               id : "all",                   // id of the subcategory
          *               default : true,               // if true, this subcategory is selected by default
-         *               icon : null,                  // icon for the subcategory (svg or http link or dsfr class)
+         *               icon : true,                  // icon for the subcategory (svg or http link or dsfr class)
          *               section : false,              // if true, this subcategory has a section
          *               sections : [],                // list of sections (filled later)
          *               filter : null,                // filter to apply on the subcategory
@@ -626,7 +637,8 @@ class Catalog extends Control {
                         id : i.id || this.generateID(i.title),
                         section : i.hasOwnProperty("section") ? i.section : false,
                         sections : [], // liste des valeurs des sections remplie ulterieurement !
-                        icon : i.icon || null,
+                        icon : i.hasOwnProperty("icon") ? i.icon : false,
+                        iconJson : i.iconJson || [], // liste des icones (json) pour les sections
                         default : i.hasOwnProperty("default") ? i.default : false,
                         filter : i.filter || null,
                     };
@@ -738,8 +750,10 @@ class Catalog extends Control {
 
         // panel
         var widgetPanel = this.panelCatalogContainer = this._createCatalogPanelElement();
+        var widgetPanelSize = this._createCatalogPanelDivSizeElement(this.options.size);
+        widgetPanel.appendChild(widgetPanelSize);
         var widgetPanelDiv = this._createCatalogPanelDivElement();
-        widgetPanel.appendChild(widgetPanelDiv);
+        widgetPanelSize.appendChild(widgetPanelDiv);
 
         // header
         var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createCatalogPanelHeaderElement();
@@ -756,7 +770,7 @@ class Catalog extends Control {
 
         var widgetContentDiv = this._createCatalogPanelContentDivElement();
 
-        // container for the custom dynamic code (cf. initLayersList())
+        // container for the custom dynamic code (cf. initConfigData())
         var widgetContentElementDiv = this.contentCatalogContainer = this._createCatalogContentDivElement();
         widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
         // search bar (global)
@@ -804,7 +818,7 @@ class Catalog extends Control {
     }
 
     /**
-     * Initialize layers list
+     * Initialize layers list and other properties
      * This method initializes the layers list from the configuration data.
      * It can load data from a local object or fetch it from URLs.
      * It processes the layers to add additional properties such as `service`, `categories`, and URLs for producers and thematics.
@@ -813,7 +827,7 @@ class Catalog extends Control {
      * @returns {Promise} - promise
      * @private
      */
-    async initLayersList () {
+    async initConfigData () {
         var data = null; // reponse brute du service
 
         if (this.options.configuration.data) {
@@ -868,10 +882,10 @@ class Catalog extends Control {
                 }
             }
 
-            // sauvegarde de la liste des couches
+            // sauvegarde des couches de données
             this.layersList = data.layers;
 
-            this.createCatalogContentEntries(data.layers);
+            this.createCatalogContentEntries(data);
             return new Promise((resolve, reject) => {
                 resolve(data);
             });
@@ -963,7 +977,7 @@ class Catalog extends Control {
                 // sauvegarde de la liste des couches
                 this.layersList = data.layers;
 
-                this.createCatalogContentEntries(data.layers);
+                this.createCatalogContentEntries(data);
                 return await new Promise((resolve, reject) => {
                     resolve(data);
                 });
@@ -977,10 +991,10 @@ class Catalog extends Control {
 
     /**
      * Create DOM content categories and entries
-     * @param {*} layers couches
+     * @param {*} data - data
      * @private
      */
-    createCatalogContentEntries (layers) {
+    createCatalogContentEntries (data) {
         var container = this.contentCatalogContainer;
 
         var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories);
@@ -996,11 +1010,23 @@ class Catalog extends Control {
         // qui contiendra toutes les couches
         // et on va créer le contenu de chaque catégorie / sous-catégorie
         // dans le DOM, dans l'ordre des catégories / sous-catégories
-        var categories = []; 
+        var categories = [];
         this.categories.forEach((category) => {
             if (category.items) {
                 for (let i = 0; i < category.items.length; i++) {
                     const element = category.items[i];
+                    // INFO
+                    // on recherche la liste des icones pour les sections
+                    // si l'élément est une section et qu'il n'a pas d'icones
+                    // on va chercher les icones dans les données
+                    // en fonction du filtre de la section
+                    // ex. filter.field = "thematic"
+                    // on va chercher toutes les valeurs de "thematic"
+                    // dans les couches
+                    if (element.icon && element.iconJson.length === 0 && element.section && element.filter) {
+                        const tag = element.filter.field;
+                        element.iconJson = data[tag] || Topics[tag] || [];
+                    }
                     categories.push(element);
                 }
             } else {
@@ -1026,7 +1052,7 @@ class Catalog extends Control {
                 // on affiche le contenu de la catégorie active
                 // et on charge les autres au fur et à mesure
             }
-            var layersCategorised = this.getLayersByCategory(categories[i], layers);
+            var layersCategorised = this.getLayersByCategory(categories[i], data.layers);
             this._createCatalogContentCategoryTabContent(categories[i], layersCategorised)
                 .then((dom) => {
                     // Utilisation d'un DocumentFragment pour optimiser l'insertion DOM
@@ -1049,7 +1075,7 @@ class Catalog extends Control {
      * // pour les producteurs
      * getInformationsCatalog("producer", ["IGN", "IGNF", "Autres"]);
      * // pour les thématiques
-     * getInformationsCatalog("thematic", ["farming", "transportation"]);
+     * getInformationsCatalog("thematic", ["Agriculture", "Transports", "Autres"]);
      * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
      */
     getInformationsCatalog (key, value) {
@@ -1088,11 +1114,13 @@ class Catalog extends Control {
                 if (element === "Autres") {
                     continue;
                 }
-                var mapping = Object.keys(Topics).find((key) => Topics[key] === element);
-                data.push({
-                    name : element,
-                    url : url + "topic=" + mapping
-                });
+                var mapping = Topics.thematic.find((o) => o.name === element);
+                if (mapping) {
+                    data.push({
+                        name : element,
+                        url : url + "topic=" + mapping.id
+                    });
+                }
             }
         }
         if (data.length === 0) {
@@ -1352,7 +1380,6 @@ class Catalog extends Control {
     /**
      * Update DOM sections visibility if no layers are visible
      *
-     * @todo cacher les section si elles sont vides
      * @private
      */
     updateVisibilitySectionsDOM () {
