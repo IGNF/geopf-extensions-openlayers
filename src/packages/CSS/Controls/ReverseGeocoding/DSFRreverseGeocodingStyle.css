@@ -23,7 +23,10 @@ div[id^=GPreverseGeocodingResultsList-] {
 }
 
 div[id^=GPreverseGeocodedLocationResultDiv_] {
-  display: flex;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 80% 20%;
+  margin-left: 10px;
 }
 
 .gpf-btn-icon-copy-result {
@@ -34,4 +37,9 @@ div[id^=GPreverseGeocodedLocationResultDiv_] {
 .gpf-btn-icon-copy-result::after {
   -webkit-mask: url("img/dsfr/copy.svg") center no-repeat;
   mask: url("img/dsfr/copy.svg") center no-repeat;
+}
+
+.GPautoCompleteProposal {
+  line-height: initial;
+  height: inherit;
 }

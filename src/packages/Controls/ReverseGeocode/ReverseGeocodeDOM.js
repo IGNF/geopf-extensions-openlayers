@@ -128,7 +128,7 @@ var ReverseGeocodeDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GPreverseGeocodedLocation_" + id);
         div.setAttribute("tabindex", "0");
-        div.className = "GPautoCompleteProposal gpf-panel__items";
+        div.className = "GPautoCompleteProposal";
         div.innerHTML = locationDescription;
         div.title = locationDescription;
 
