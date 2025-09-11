@@ -15,7 +15,7 @@ var ReverseGeocodeDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -31,7 +31,7 @@ var ReverseGeocodeDOM = {
     /**
      * Show ReverseGeocoding
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowReverseGeocodingPictoElement : function () {
         // contexte d'execution
@@ -69,7 +69,7 @@ var ReverseGeocodeDOM = {
     /**
      * Create Waiting Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingWaitingElement : function () {
         var div = document.createElement("div");
@@ -88,7 +88,7 @@ var ReverseGeocodeDOM = {
     /**
      * Reverse geocoding results panel element.
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingResultsPanelElement : function () {
         var resultsPanelDiv = document.createElement("div");
@@ -100,7 +100,7 @@ var ReverseGeocodeDOM = {
     /**
      * Reverse geocoding results list.
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingResultsListElement : function () {
         var container = document.createElement("div");
@@ -197,7 +197,7 @@ var ReverseGeocodeDOM = {
     /**
      * Create Container Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -216,7 +216,7 @@ var ReverseGeocodeDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingPanelHeaderElement : function () {
         var container = document.createElement("div");
@@ -229,7 +229,7 @@ var ReverseGeocodeDOM = {
     /**
      * Create return picto in panel header
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingPanelReturnPictoElement : function () {
         // contexte
@@ -275,7 +275,7 @@ var ReverseGeocodeDOM = {
     /**
      * Create Header Title Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingPanelTitleElement : function () {
         var div = document.createElement("div");
@@ -288,7 +288,7 @@ var ReverseGeocodeDOM = {
     /**
      * Create Header close div
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingPanelCloseElement : function () {
         // contexte
@@ -333,7 +333,7 @@ var ReverseGeocodeDOM = {
      * Create Form
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingPanelFormElement : function () {
         // contexte d'execution
@@ -366,7 +366,7 @@ var ReverseGeocodeDOM = {
      * Create Container to Mode choice geocoding type
      *
      * @param {Array} resources - geocoding resources to be displayed (and used)
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingFormModeChoiceGeocodingTypeElement : function (resources) {
         // contexte d'execution
@@ -435,7 +435,7 @@ var ReverseGeocodeDOM = {
      * Create Container to Mode choice geocoding delimitation
      *
      * @param {Array} delimitations - geocoding delimitations to be displayed (and used)
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingFormModeChoiceGeocodingDelimitationElement : function (delimitations) {
         // contexte d'execution
@@ -507,7 +507,7 @@ var ReverseGeocodeDOM = {
     /**
      * Create Submit Form Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createReverseGeocodingSubmitFormElement : function () {
         var input = document.createElement("input");

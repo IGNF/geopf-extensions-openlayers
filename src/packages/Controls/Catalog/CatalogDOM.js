@@ -50,7 +50,7 @@ var CatalogDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -66,7 +66,7 @@ var CatalogDOM = {
     /**
      * Show Catalog
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowCatalogPictoElement : function () {
         var self = this;
@@ -107,7 +107,7 @@ var CatalogDOM = {
     /**
      * Create Container Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createCatalogPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -132,7 +132,7 @@ var CatalogDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createCatalogPanelHeaderElement : function () {
         var container = document.createElement("div");
@@ -236,7 +236,7 @@ var CatalogDOM = {
     /**
      * Create Waiting Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createCatalogWaitingElement : function () {
         var div = document.createElement("div");

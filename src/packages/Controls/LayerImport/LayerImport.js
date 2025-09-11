@@ -5,6 +5,7 @@ import "../../CSS/Controls/LayerImport/GPFlayerImport.css";
 // import Control from "ol/control/Control";
 import Widget from "../Widget";
 import Control from "../Control";
+import Map from "ol/Map";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
 import Feature from "ol/Feature";
@@ -67,102 +68,95 @@ var logger = Logger.getLogger("layerimport");
 /**
  * @classdesc
  *
- * LayerImport Control. Allows users to add geographical data in standards formats from their own sources to the map.
+ * LayerImport Control. 
+ * Allows users to add geographical data in standards formats 
+ * from their own sources to the map.
  *
- * @constructor
  * @alias ol.control.LayerImport
- * @extends {ol.control.Control}
- * @type {ol.control.LayerImport}
- * @fires layerimport:mapbox:added
- * @fires layerimport:vector:added
- * @fires layerimport:service:added
- * @fires editor:loaded
- * @fires render:success
- * @fires render:failure
- * @param {Object} options - options for function call.
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {Boolean} [options.collapsed = true] - Specify if LayerImport control should be collapsed at startup. Default is true.
- * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Array} [options.layerTypes = ["KML", "GPX", "GeoJSON", "WMS", "WMTS", "MAPBOX"]] - data types that could be imported : "KML", "GPX", "GeoJSON", "WMS", "WMTS" and "MAPBOX". Values will be displayed in the same order in widget list.
- * @param {Object} [options.webServicesOptions = {}] - Options to import WMS or WMTS layers
- * @param {String} [options.webServicesOptions.proxyUrl] - Proxy URL to avoid cross-domain problems. Mandatory to import WMS and WMTS layer.
- * @param {Array.<String>} [options.webServicesOptions.noProxyDomains] - Proxy will not be used for this list of domain names. Only use if you know what you're doing.
- * @param {Object} [options.vectorStyleOptions] - Options for imported vector layer styling (KML, GPX, GeoJSON)
- * @param {Object} [options.vectorStyleOptions.KML] - Options for KML layer styling
- * @param {Boolean} [options.vectorStyleOptions.KML.extractStyles = true] - Extract styles from the KML. Default is true.
- * @param {Boolean} [options.vectorStyleOptions.KML.showPointNames = true] - Show names as labels for KML placemarks which contain points. Default is true.
- * @param {Object} [options.vectorStyleOptions.KML.defaultStyle] - default style to be applied to KML imports in case no style is defined. defaultStyle is an {@link http://openlayers.org/en/latest/apidoc/ol.style.Style.html ol.style.Style} object.
- * @param {Object} [options.vectorStyleOptions.GPX] - Options for GPX layer styling
- * @param {Object} [options.vectorStyleOptions.GPX.defaultStyle] - default style to be applied to GPX imports in case no style is defined. defaultStyle is an {@link http://openlayers.org/en/latest/apidoc/ol.style.Style.html ol.style.Style} object.
- * @param {Object} [options.vectorStyleOptions.GeoJSON] - Options for GeoJSON layer styling
- * @param {Object} [options.vectorStyleOptions.GeoJSON.defaultStyle] - default style to be applied to GeoJSON imports in case no style is defined. defaultStyle is an {@link http://openlayers.org/en/latest/apidoc/ol.style.Style.html ol.style.Style} object.
- * @param {Object} [options.vectorStyleOptions.MapBox] - Options for MapBox layer styling
- * @param {Object} [options.vectorStyleOptions.MapBox.defaultStyle] - default style to be applied to MapBox imports in case no style is defined. defaultStyle is an {@link http://openlayers.org/en/latest/apidoc/ol.style.Style.html ol.style.Style} object.
- * @param {Object} [options.vectorStyleOptions.MapBox.editor] - options for tools editor
- * @param {Boolean} [options.vectorStyleOptions.MapBox.display = true] - display tools editor
- * @example
- *  var LayerImport = new ol.control.LayerImport({
- *      "collapsed" : false,
- *      "draggable" : true,
- *      "layerTypes" : ["KML", "GPX"],
- *      "webServicesOptions" : {
- *          "proxyUrl" : "http://localhost/proxy/php/proxy.php?url=",
- *          "noProxyDomains" : []
- *      },
- *      "vectorStyleOptions" : {
- *          "KML" : {
- *              extractStyles : true,
- *              defaultStyle : new ol.style.Style({
- *                  image : new ol.style.Icon({
- *                       src : "data:image/png;base64....",
- *                       size : [51, 38],
- *                  }),
- *                  stroke : new ol.style.Stroke({
- *                       color : "#ffffff",
- *                       width : 7
- *                  }),
- *                  fill : new ol.style.Fill({
- *                       color : "rgba(255, 183, 152, 0.2)"
- *                  }),
- *                  text : new ol.style.Text({
- *                      font : "16px Sans",
- *                      textAlign : "left",
- *                      fill : new ol.style.Fill({
- *                          color : "rgba(255, 255, 255, 1)"
- *                      }),
- *                      stroke : new ol.style.Stroke({
- *                          color : "rgba(0, 0, 0, 1)",
- *                          width : 2
- *                      })
- *                  })
- *              })
- *          },
- *          "GPX" : {
- *              defaultStyle : new ol.style.Style({
- *                  image : new ol.style.Icon({
- *                       src : "path/to/my/icon.png",
- *                       size : [51, 38],
- *                  }),
- *                  stroke : new ol.style.Stroke({
- *                       color : "#ffffff",
- *                       width : 7
- *                  })
- *              })
- *          }
- *      }
- *  });
+ * @module LayerImport
  */
-var LayerImport = class LayerImport extends Control {
+class LayerImport extends Control {
 
     /**
-     * See {@link ol.control.LayerImport}
-     * @module LayerImport
-     * @alias module:~controls/LayerImport
-     * @param {*} options - options
-     * @example
-     * import LayerImport from "gpf-ext-ol/controls/LayerImport"
-     * ou
-     * import { LayerImport } from "gpf-ext-ol"
+    * @constructor
+    * @fires layerimport:mapbox:added
+    * @fires layerimport:vector:added
+    * @fires layerimport:service:added
+    * @fires editor:loaded
+    * @fires render:success
+    * @fires render:failure
+    * @param {Object} options - options for function call.
+    * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+    * @param {Boolean} [options.collapsed = true] - Specify if LayerImport control should be collapsed at startup. Default is true.
+    * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
+    * @param {Array} [options.layerTypes = ["KML", "GPX", "GeoJSON", "WMS", "WMTS", "MAPBOX"]] - data types that could be imported : "KML", "GPX", "GeoJSON", "WMS", "WMTS" and "MAPBOX". Values will be displayed in the same order in widget list.
+    * @param {Object} [options.webServicesOptions = {}] - Options to import WMS or WMTS layers
+    * @param {String} [options.webServicesOptions.proxyUrl] - Proxy URL to avoid cross-domain problems. Mandatory to import WMS and WMTS layer.
+    * @param {Array.<String>} [options.webServicesOptions.noProxyDomains] - Proxy will not be used for this list of domain names. Only use if you know what you're doing.
+    * @param {Object} [options.vectorStyleOptions] - Options for imported vector layer styling (KML, GPX, GeoJSON)
+    * @param {Object} [options.vectorStyleOptions.KML] - Options for KML layer styling
+    * @param {Boolean} [options.vectorStyleOptions.KML.extractStyles = true] - Extract styles from the KML. Default is true.
+    * @param {Boolean} [options.vectorStyleOptions.KML.showPointNames = true] - Show names as labels for KML placemarks which contain points. Default is true.
+    * @param {Object} [options.vectorStyleOptions.KML.defaultStyle] - default style to be applied to KML imports in case no style is defined. defaultStyle is an {@link http://openlayers.org/en/latest/apidoc/ol.style.Style.html ol.style.Style} object.
+    * @param {Object} [options.vectorStyleOptions.GPX] - Options for GPX layer styling
+    * @param {Object} [options.vectorStyleOptions.GPX.defaultStyle] - default style to be applied to GPX imports in case no style is defined. defaultStyle is an {@link http://openlayers.org/en/latest/apidoc/ol.style.Style.html ol.style.Style} object.
+    * @param {Object} [options.vectorStyleOptions.GeoJSON] - Options for GeoJSON layer styling
+    * @param {Object} [options.vectorStyleOptions.GeoJSON.defaultStyle] - default style to be applied to GeoJSON imports in case no style is defined. defaultStyle is an {@link http://openlayers.org/en/latest/apidoc/ol.style.Style.html ol.style.Style} object.
+    * @param {Object} [options.vectorStyleOptions.MapBox] - Options for MapBox layer styling
+    * @param {Object} [options.vectorStyleOptions.MapBox.defaultStyle] - default style to be applied to MapBox imports in case no style is defined. defaultStyle is an {@link http://openlayers.org/en/latest/apidoc/ol.style.Style.html ol.style.Style} object.
+    * @param {Object} [options.vectorStyleOptions.MapBox.editor] - options for tools editor
+    * @param {Boolean} [options.vectorStyleOptions.MapBox.display = true] - display tools editor
+    * @example
+    *  var LayerImport = new ol.control.LayerImport({
+    *      "collapsed" : false,
+    *      "draggable" : true,
+    *      "layerTypes" : ["KML", "GPX"],
+    *      "webServicesOptions" : {
+    *          "proxyUrl" : "http://localhost/proxy/php/proxy.php?url=",
+    *          "noProxyDomains" : []
+    *      },
+    *      "vectorStyleOptions" : {
+    *          "KML" : {
+    *              extractStyles : true,
+    *              defaultStyle : new ol.style.Style({
+    *                  image : new ol.style.Icon({
+    *                       src : "data:image/png;base64....",
+    *                       size : [51, 38],
+    *                  }),
+    *                  stroke : new ol.style.Stroke({
+    *                       color : "#ffffff",
+    *                       width : 7
+    *                  }),
+    *                  fill : new ol.style.Fill({
+    *                       color : "rgba(255, 183, 152, 0.2)"
+    *                  }),
+    *                  text : new ol.style.Text({
+    *                      font : "16px Sans",
+    *                      textAlign : "left",
+    *                      fill : new ol.style.Fill({
+    *                          color : "rgba(255, 255, 255, 1)"
+    *                      }),
+    *                      stroke : new ol.style.Stroke({
+    *                          color : "rgba(0, 0, 0, 1)",
+    *                          width : 2
+    *                      })
+    *                  })
+    *              })
+    *          },
+    *          "GPX" : {
+    *              defaultStyle : new ol.style.Style({
+    *                  image : new ol.style.Icon({
+    *                       src : "path/to/my/icon.png",
+    *                       size : [51, 38],
+    *                  }),
+    *                  stroke : new ol.style.Stroke({
+    *                       color : "#ffffff",
+    *                       width : 7
+    *                  })
+    *              })
+    *          }
+    *      }
+    *  });
      */
     constructor (options) {
         options = options || {};
@@ -231,7 +225,7 @@ var LayerImport = class LayerImport extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         // ajout de la patience pour le chargement des tuiles
@@ -361,7 +355,7 @@ var LayerImport = class LayerImport extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this._container;
@@ -504,18 +498,26 @@ var LayerImport = class LayerImport extends Control {
         // merge with user options
         Utils.mergeParams(this.options, options);
 
-        /** {Boolean} specify if LayerImport control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if LayerImport control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
-        /** {Boolean} specify if LayerImport control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if LayerImport control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
         // identifiant du contrôle : utile pour suffixer les identifiants CSS (pour gérer le cas où il y en a plusieurs dans la même page)
         this._uid = this.options.id || SelectorID.generate();
 
-        // si une requête est en cours ou non
-        this._waiting = false;
-        // timer pour cacher la patience après un certain temps
+        /**
+         * @private 
+         * si une requête est en cours ou non */
+        this._waiting = false; 
+        /**
+         * @private 
+         * timer pour cacher la patience après un certain temps */
         this._timer = null;
 
         // initialisation des types d'import
@@ -527,44 +529,73 @@ var LayerImport = class LayerImport extends Control {
         // ################### Elements principaux du DOM ################### //
 
         // containers principaux (FIXME : tous utiles ?)
+        /** @private */
         this._showImportButton = null;
+        /** @private */
         this._importPanel = null;
+        /** @private */
         this._panelCloseButton = null;
+        /** @private */
         this._importPanelHeader = null;
+        /** @private */
         this._importPanelTitle = null;
+        /** @private */
         this._importPanelReturnPicto = null;
+        /** @private */
         this._formContainer = null;
+        /** @private */
         this._staticLocalImportInput = null;
+        /** @private */
         this._staticUrlImportInput = null;
+        /** @private */
         this._serviceUrlImportInput = null;
+        /** @private */
         this._getCapPanel = null;
+        /** @private */
         this._getCapPanelHeader = null;
+        /** @private */
         this._getCapResultsListContainer = null;
+        /** @private */
         this._mapBoxPanel = null;
+        /** @private */
         this._mapBoxPanelHeader = null;
+        /** @private */
         this._mapBoxResultsListContainer = null;
 
+        /** @private */
         this._waitingContainer = null;
+        /** @private */
         this._loadingContainer = null;
 
         // ################################################################## //
         // ################ Interrogation du GetCapabilities ################ //
+        /** @private */
         this._hasGetCapResults = false;
+        /** @private */
         this._getCapRequestUrl = null;
+        /** @private */
         this._getCapResponseWMS = null;
+        /** @private */
         this._getCapResponseWMSLayers = [];
+        /** @private */
         this._getCapResponseWMTS = null;
+        /** @private */
         this._getCapResponseWMTSLayers = [];
 
         // ################################################################## //
         // ########################### MapBox ############################### //
+        /** @private */
         this._hasMapBoxResults = false;
 
         // ################################################################## //
         // ########################### file or url ########################## //
+        /** @private */
         this.contentStatic = null;
+        /** @private */
         this._url = null;
+        /** @private */
         this._file = null;
+        /** @private */
         this._name = null;
     }
 
@@ -690,7 +721,7 @@ var LayerImport = class LayerImport extends Control {
      * Create control main container (DOM initialize)
      *
      * @private
-     * @returns {DOMElement} container - control main container
+     * @returns {HTMLElement} container - control main container
      */
     _initContainer () {
         // create main container
@@ -757,7 +788,7 @@ var LayerImport = class LayerImport extends Control {
      * Create control main container (DOM initialize)
      *
      * @private
-     * @returns {DOMElement} importForm - form main container
+     * @returns {HTMLElement} importForm - form main container
      */
     _initInputFormElement () {
         // form main container
@@ -836,7 +867,7 @@ var LayerImport = class LayerImport extends Control {
      * (cf. LayerImportDOM._createShowImportPictoElement),
      * and dispatch event change:collapsed (for tools listening this property)
      *
-     * @param { event } e évènement associé au clic
+     * @param { Event } e évènement associé au clic
      * @private
      */
     _onShowImportClick (e) {
@@ -879,7 +910,7 @@ var LayerImport = class LayerImport extends Control {
      * (cf. LayerImportDOM._createImportTypeLineElement),
      * and change current import type
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onImportTypeChange (e) {
@@ -896,7 +927,7 @@ var LayerImport = class LayerImport extends Control {
      * (cf. LayerImportDOM._createImportTypeLineElement),
      * and change current import type
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onStaticImportTypeChange (e) {
@@ -940,7 +971,7 @@ var LayerImport = class LayerImport extends Control {
      * (cf. LayerImportDOM._createImportMapBoxPanelHeaderElement),
      * and return to information
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onReturnPictoClick (e) {
@@ -1920,6 +1951,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called when the editor is loaded
      *
      * @param {Object} e - editor
+     * @private
      */
     _onLoadedMapBox (e) {
         // var data = e.target.data.obj;
@@ -1933,7 +1965,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called on '_addImportMapBoxVisibilitySource' input click
      * and change visibility source to map
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onChangeVisibilitySourceMapBox (e) {
@@ -1976,7 +2008,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called on '_addImportMapBoxScaleSource' input slide
      * and change zoom source to map
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onChangeScaleMinSourceMapBox (e) {
@@ -2012,7 +2044,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called on '_addImportMapBoxScaleSource' input slide
      * and change zoom source to map
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onChangeScaleMaxSourceMapBox (e) {
@@ -2049,7 +2081,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called on ''
      * and change zoom source to map
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onChangeLegendValueSourceMapBox (e) {
@@ -2088,7 +2120,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called on ''
      * and change zoom source to map
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onDisplayLayerSourceMapBox (e) {
@@ -2406,7 +2438,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called on 'GPimportGetCapProposal' div click
      * and add corresponding layer to map
      *
-     * @param {Object} e - HTMLElement
+     * @param {Event} e - HTMLElement
      * @private
      */
     _onGetCapResponseLayerClick (e) {
@@ -2579,7 +2611,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called by this._addGetCapWMSLayer
      * and gets service getMap request url
      *
-     * @return {String} getmapurl - service getMap request url
+     * @returns {String} getmapurl - service getMap request url
      * @private
      */
     _getWMSLayerGetMapUrl () {
@@ -2603,7 +2635,7 @@ var LayerImport = class LayerImport extends Control {
      *
      * @param {Object} layerInfo - layer information from getCapabilities response
      * @param {String} mapProjCode - map projection code (e.g. "EPSG:4326")
-     * @return {String} projection - ol.proj projection alias (e.g. "EPSG:4326")
+     * @returns {String} projection - ol.proj projection alias (e.g. "EPSG:4326")
      * @private
      */
     _getWMSLayerProjection (layerInfo, mapProjCode) {
@@ -2959,7 +2991,7 @@ var LayerImport = class LayerImport extends Control {
      * this method is called by this._addGetCapWMTSLayer
      * and gets service getTile request url
      *
-     * @return {String} gettileurl - service getTile request url
+     * @returns {String} gettileurl - service getTile request url
      * @private
      */
     _getWMTSLayerGetTileUrl () {
@@ -2979,7 +3011,7 @@ var LayerImport = class LayerImport extends Control {
      *
      * @param {Object} layerInfo - layer information from getCapabilities response
      * @param {Object} getCapResponseWMTS - whole getCapabilities response
-     * @return {String} projection - ol.proj projection alias (e.g. "EPSG:4326")
+     * @returns {String} projection - ol.proj projection alias (e.g. "EPSG:4326")
      * @private
      */
     _getWMTSLayerProjection (layerInfo, getCapResponseWMTS) {
@@ -3024,7 +3056,7 @@ var LayerImport = class LayerImport extends Control {
      * and get ol.tileGrid.WMTS parameters using getCapabilities response
      *
      * @param {Object} layerInfo - layer information from getCapabilities response
-     * @return {Object} tmsOptions - ol.tileGrid.WMTS options
+     * @returns {Object} tmsOptions - ol.tileGrid.WMTS options
      * @private
      */
     _getTMSParams (layerInfo) {
@@ -3133,7 +3165,7 @@ var LayerImport = class LayerImport extends Control {
      * and sets extent for WMTS layer in map projection (if available in getCapabilities response)
      *
      * @param {Object} layerInfo - layer information from getCapabilities response
-     * @return {Array} extent - layer extent
+     * @returns {Array} extent - layer extent
      * @private
      */
     _getWMTSLayerExtent (layerInfo) {
@@ -3155,7 +3187,7 @@ var LayerImport = class LayerImport extends Control {
     /**
      * gets control map projection code
      *
-     * @return {String} mapProjCode - control map projection code (e.g. "EPSG:3857")
+     * @returns {String} mapProjCode - control map projection code (e.g. "EPSG:3857")
      * @private
      */
     _getMapProjectionCode () {
@@ -3213,6 +3245,9 @@ var LayerImport = class LayerImport extends Control {
         }
     }
 
+    /**
+     * @private
+     */
     _displayFormContainer () {
         this._formContainer.classList.replace("GPelementHidden", "GPelementVisible");
         this._formContainer.classList.replace("gpf-hidden", "gpf-visible");
@@ -3220,6 +3255,9 @@ var LayerImport = class LayerImport extends Control {
         // this._importPanelHeader.classList.replace("GPelementHidden", "GPelementVisible");
         // this._importPanelHeader.classList.replace("gpf-hidden", "gpf-visible");
     }
+    /**
+     * @private
+     */
     _hideFormContainer () {
         this._formContainer.classList.replace("GPelementVisible", "GPelementHidden");
         this._formContainer.classList.replace("gpf-visible", "gpf-hidden");

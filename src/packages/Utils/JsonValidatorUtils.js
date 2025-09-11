@@ -26,7 +26,7 @@ import LayerTmsSchema from "./schemas/layer-tms.schema.json";
  *   console.error('❌ Erreurs:', result.errors);
  * }
  */
-var JsonValidatorUtils = class JsonValidatorUtils {
+class JsonValidatorUtils {
 
     constructor () {
         this.ajv = new Ajv({ strict : false, allErrors : true });

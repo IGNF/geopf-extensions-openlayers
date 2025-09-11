@@ -40,7 +40,7 @@ var TerritoriesDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -56,7 +56,7 @@ var TerritoriesDOM = {
     /**
      * Show Territories
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowTerritoriesPictoElement : function () {
         var self = this;
@@ -97,7 +97,7 @@ var TerritoriesDOM = {
     /**
      * Create Container Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createTerritoriesPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -116,7 +116,7 @@ var TerritoriesDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createTerritoriesPanelHeaderElement : function () {
         var container = document.createElement("div");

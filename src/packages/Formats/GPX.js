@@ -3,6 +3,7 @@ import olGPX from "ol/format/GPX";
 // import Geometry
 import MultiLineString from "ol/geom/MultiLineString";
 import LineString from "ol/geom/LineString";
+import Feature from "ol/Feature";
 // import local
 import Styling from "./Styling";
 import Parser from "../Utils/Parser";
@@ -16,27 +17,18 @@ import Parser from "../Utils/Parser";
  * cf. https://www.topografix.com/gpx.asp
  *
  *
- * @constructor
  * @alias ol.format.GPXExtended
- * @extends {ol.format.GPX}
- * @type {ol.format.GPXExtended}
- * @param {Object} options - Options
- * @param {Object} [options.defaultStyle] - Styles by default
- * @param {String} [options.orderBy] - Sort by key the feature before writing. By default, no sorting
- * @param {Object} [options.extensions] - Add properties to file root
- * @param {function} [options.readExtensions] - Reading extensions (native)
- */
-var GPX = class GPX extends olGPX {
-
+ * @module GPXExtended
+*/
+class GPX extends olGPX {
+    
     /**
-     * See {@link ol.format.GPXExtended}
-     * @module GPXExtended
-     * @alias module:~formats/GPXExtended
-     * @param {*} options - options
-     * @example
-     * import GPXExtended from from "gpf-ext-ol/formats/GPXExtended"
-     * ou 
-     * import { GPXExtended } from "gpf-ext-ol"
+     * @constructor
+     * @param {Object} options - Options
+     * @param {Object} [options.defaultStyle] - Styles by default
+     * @param {String} [options.orderBy] - Sort by key the feature before writing. By default, no sorting
+     * @param {Object} [options.extensions] - Add properties to file root
+     * @param {function} [options.readExtensions] - Reading extensions (native)
      */
     constructor (options) {
         super(options);
@@ -74,10 +66,10 @@ var GPX = class GPX extends olGPX {
      * Read Extend Styles for Features.
      * This function overloads ol.format.GPX.readFeatures ...
      *
-     * @see ol.format.GPX.prototype.readFeatures
+     * @see olGPX#readFeatures
      * @param {Document|Node} source - Source.
-     * @param {olx.format.ReadOptions=} options - options.
-     * @return {Array.<ol.Feature>} Features.
+     * @param {Object} options - options. see olx.format.ReadOptions
+     * @returns {Feature[]} Features.
      */
     readFeatures (source, options) {
         // INFO
@@ -122,11 +114,11 @@ var GPX = class GPX extends olGPX {
      * Write Extend Styles for Features.
      * This function overloads ol.format.GPX.writeFeatures ...
      *
-     * @see ol.format.GPX.prototype.writeFeatures
-     * @param {Object[]} features - Features.
+     * @see olGPX#writeFeatures
+     * @param {Features[]} features - Features.
      * @param {Object} options - Options.
      *
-     * @return {String} Result or null.
+     * @returns {String} Result or null.
      */
     writeFeatures (features, options) {
         // INFO
@@ -220,7 +212,7 @@ var GPX = class GPX extends olGPX {
     /**
      * Callback to read extensions from options : readExtensions
      *
-     * @param {*} feature - ...
+     * @param {Feature} feature - ...
      * @param {*} node - ...
      */
     readExtensions (feature, node) {
@@ -440,8 +432,8 @@ var GPX = class GPX extends olGPX {
     /**
      * ...
      *
-     * @param {Object} feature - ...
-     * @param {DOMElement} node - ...
+     * @param {Feature} feature - ...
+     * @param {HTMLElement} node - ...
      * @private
      */
     writeExtensions_ (feature, node) {
@@ -460,8 +452,8 @@ var GPX = class GPX extends olGPX {
     /**
      * ...
      *
-     * @param {DOMElement} doc - ...
-     * @param {Object} features - ...
+     * @param {HTMLElement} doc - ...
+     * @param {Feature[]} features - ...
      * @param {Object} actions - ...
      * @private
      */

@@ -26,7 +26,7 @@ var Gfi = {
      *
      * @param {ol.layer.Layer} l - layer openlayers
      *
-     * @return {String} format - layer format can be wms, wmts, vector or unknown
+     * @returns {String} format - layer format can be wms, wmts, vector or unknown
      *
      */
     getLayerFormat : function (l) {
@@ -73,7 +73,7 @@ var Gfi = {
      * @param {Boolean|Object} [autoPanOptions.autoPan] - Specifies whether the map should auto-pan if the pop-up is rendered outside of the canvas (See {@link https://openlayers.org/en/latest/apidoc/module-ol_Overlay.html#~PanIntoViewOptions PanIntoViewOptions})
      * @param {Object} [autoPanOptions.autoPanAnimation] - Used to customize the auto-pan animation. See {@link https://openlayers.org/en/latest/apidoc/module-ol_Overlay.html#~PanOptions PanOptions}.
      * @param {Number} [autoPanOptions.autoPanMargin] - Margin (in pixels) between the pop-up and the border of the map when autopanning. Default is 20.
-     * @return {Boolean} displayed - indicates if something has been displayed
+     * @returns {Boolean} displayed - indicates if something has been displayed
      */
     displayInfo : function (map, coords, content, contentType, autoPanOptions) {
         logger.trace("[Gfi] : displayInfo...");
@@ -285,7 +285,7 @@ var Gfi = {
      * @param {ol.layer.Layer} olLayer - vector layer openlayers
      * @param {ol.Coordinate} olCoordinate - coordinates pointed by user
      *
-     * @return {Boolean} has feature
+     * @returns {Boolean} has feature
      *
      */
     layerGetFeatureAtCoordinates : function (map, olLayer, olCoordinate) {

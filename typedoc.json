@@ -1,3 +1,46 @@
 {
-    "out": "./jsdoc_new"
+    "out": "./jsdoc",
+    "entryPointStrategy": "expand",
+    "entryPoints": [
+        "src/index.js", 
+        "src/packages/Controls",
+        "src/packages/Layers",
+        "src/packages/Formats",
+        "src/packages/Services"
+    ],
+    "projectDocuments": [
+        "README.md",
+        "LICENCE.md",
+        "COMPILE.md",
+        "CONTRIBUTING.md",
+        "CONTRIBUTORS.md",
+        "doc/README.md", 
+        "doc/DOCUMENTATION.md", 
+        "doc/NOTE-REPORTING.md",
+        "doc/NOTE-VALIDATOR.md",
+        "doc/NOTE-LAYERSWITCHER.md"
+    ],
+    "blockTags": [
+        "@alias", 
+        "@classdesc", 
+        "@constructor",
+        "@description",
+        "@example",
+        "@extends",
+        "@fires",
+        "@fixme",
+        "@function",
+        "@mixin",
+        "@method",
+        "@module",
+        "@param",
+        "@returns",
+        "@todo",
+        "@type",
+    ],
+    "sidebarLinks": {
+        "cartes.gouv.fr": "https://cartes.gouv.fr/cartes",
+        "geoportail": "https://geoportail.gouv.fr/",
+        "github": "https://github.com/IGNF/geopf-extensions-openlayers"
+    }
 }

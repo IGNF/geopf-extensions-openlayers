@@ -9,8 +9,10 @@ import { unByKey as olObservableUnByKey } from "ol/Observable";
 import Collection from "ol/Collection";
 import Overlay from "ol/Overlay";
 import { transform as olTransformProj } from "ol/proj";
+import Map from "ol/Map";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
+import Feature from "ol/Feature";
 import {
     Fill,
     Icon,
@@ -59,126 +61,150 @@ import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 var logger = Logger.getLogger("Drawing");
 
 /**
+ * @typedef {Object} DrawingOptions
+ * @property {string|number} [id] - Identifiant unique du widget.
+ * @property {boolean} [collapsed=true] - Définit si le widget est replié au démarrage.
+ * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {ol.layer.Vector} [layer] - Couche vecteur OpenLayers pour héberger les objets dessinés.
+ * @property {Object} [popup] - Options de la popup d’édition.
+ * @property {boolean} [popup.display=true] - Affiche la popup à la création d’un dessin.
+ * @property {Function} [popup.function] - Fonction personnalisée pour afficher la popup.
+ * @property {Object} [layerDescription] - Métadonnées pour le LayerSwitcher.
+ * @property {string} [layerDescription.title="Croquis"] - Titre de la couche de dessin.
+ * @property {string} [layerDescription.description="Mon croquis"] - Description de la couche de dessin.
+ * @property {Object} [tools] - Outils à afficher dans la barre d’outils.
+ * @property {boolean} [tools.points=true] - Outil point.
+ * @property {boolean} [tools.lines=true] - Outil ligne.
+ * @property {boolean} [tools.polygons=true] - Outil polygone.
+ * @property {boolean} [tools.holes=false] - Outil polygone avec trous.
+ * @property {boolean} [tools.text=true] - Outil texte.
+ * @property {boolean} [tools.remove=true] - Outil suppression.
+ * @property {boolean} [tools.display=true] - Outil style.
+ * @property {boolean} [tools.tooltip=true] - Outil info-bulle.
+ * @property {boolean} [tools.edit=true] - Outil édition.
+ * @property {boolean} [tools.export=true] - Outil export.
+ * @property {boolean} [tools.measure=false] - Outil mesure.
+ * @property {Object} [labels] - Libellés personnalisés pour les outils et le contrôle.
+ * @property {Array<Object>} [markersList] - Liste des marqueurs personnalisés (src, anchor, etc.).
+ * @property {Object} [defaultStyles] - Styles par défaut pour les objets dessinés.
+ * @property {Object} [cursorStyle] - Style du curseur lors du dessin.
+ * @property {string} [position] - Position CSS du widget sur la carte.
+ * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ */
+
+/**
  * @classdesc
  *
  * Drawing Control.
  *
- * @constructor
  * @alias ol.control.Drawing
- * @type {ol.control.Drawing}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {Boolean} [options.collapsed = true] - Specify if Drawing control should be collapsed at startup. Default is true.
- * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
- * @param {Object} [options.layer = {}] - Openlayers layer that will hosts created features. If none, an empty vector layer will be created.
- * @param {Object} [options.popup = {}] - Popup informations
- * @param {Boolean} [options.popup.display = true] - Specify if popup is displayed when create a drawing
- * @param {Function} [options.popup.function] - Function to display popup informations if you want to cutomise it. You may also provide your own function with params : {geomType / feature / saveFunc(message) / closeFunc()}. This function must return the DOM object of the popup content.
- * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
- * @param {String} [options.layerDescription.title = "Croquis"] - Layer title to be displayed in LayerSwitcher
- * @param {String} [options.layerDescription.description = "Mon croquis"] - Layer description to be displayed in LayerSwitcher
- * @param {Object} options.tools - Tools to display in the drawing toolbox. All by default.
- * @param {Boolean} [options.tools.points = true] - Display points drawing tool
- * @param {Boolean} [options.tools.lines = true] - Display lines drawing tool
- * @param {Boolean} [options.tools.polygons = true] - Display polygons drawing tool
- * @param {Boolean} [options.tools.holes = false] - Display polygons with holes drawing tool
- * @param {Boolean} [options.tools.text = true] - Display text drawing tool
- * @param {Boolean} [options.tools.remove = true] - Display feature removing tool
- * @param {Boolean} [options.tools.display = true] - Display style editing tool
- * @param {Boolean} [options.tools.tooltip = true] - Display text editing tool
- * @param {Boolean} [options.tools.edit = true] - Display editing tool
- * @param {Boolean} [options.tools.export = true] - Display exporting tool
- * @param {Boolean} [options.tools.measure = false] - Display measure drawing into popup info
- * @param {String} [options.labels] - Labels for Control
- * @param {String} [options.labels.control] - Label for Control
- * @param {String} [options.labels.points] - Label for points drawing tool
- * @param {String} [options.labels.lines] - Label for lines drawing tool
- * @param {String} [options.labels.polygons] - Label for polygons drawing tool
- * @param {String} [options.labels.holes] - Label for polygons with holes drawing tool
- * @param {String} [options.labels.text] - Label for text drawing tool
- * @param {String} [options.labels.edit] - Label for editing tool
- * @param {String} [options.labels.display] - Label for style editing tool
- * @param {String} [options.labels.tooltip] - Label for text editing tool
- * @param {String} [options.labels.remove] - Label for feature removing tool
- * @param {String} [options.labels.export] - Label for exporting tool.
- * @param {String} [options.labels.exportTitle] - Title for exporting tool.
- * @param {String} [options.labels.applyToObject] - Label for apply to object button.
- * @param {String} [options.labels.saveDescription] - Label for save description button.
- * @param {String} [options.labels.setAsDefault] - Label for set as default style button.
- * @param {String} [options.labels.strokeColor] - Label for stroke color.
- * @param {String} [options.labels.strokeWidth] - Label for stroke width.
- * @param {String} [options.labels.fillColor] - Label for fill color.
- * @param {String} [options.labels.fillOpacity] - Label for fillOpacity.
- * @param {String} [options.labels.markerSize] - Label for markerSize.
- * @param {Array.<Object>} [options.markersList = [{"src" : "data:image/png;base64,xxxx", "anchor" : [0.5,1]}]] - List of markers src to be used for points with their anchor offsets See {@link http://openlayers.org/en/latest/apidoc/ol.style.Icon.html OpenLayers params} for anchor offset options.
- * @param {Object} options.defaultStyles - Default styles applying to geometries (labels, lines and polygons).
- * @param {String} [options.defaultStyles.textFillColor = "#000000"] - Text fill color for labels (RGB hex value).
- * @param {String} [options.defaultStyles.textStrokeColor = "#ffffff"] - Text surrounding color for labels (RGB hex value).
- * @param {String} [options.defaultStyles.strokeColor = "#ffcc33"] - Stroke color (RGB hex value).
- * @param {Number} [options.defaultStyles.strokeWidth = 2] - Stroke width in pixels.
- * @param {String} [options.defaultStyles.polyStrokeColor = "#ffcc33"] - Stroke color (RGB hex value) for polygons.
- * @param {Number} [options.defaultStyles.polyStrokeWidth = 2] - Stroke width in pixels for polygons.
- * @param {String} [options.defaultStyles.polyFillColor = "#ffffff"] - Polygons fill color (RGB hex value).
- * @param {Number} [options.defaultStyles.polyFillOpacity = 0.2] - Polygon fill opacity (alpha value between 0:transparent and 1:opaque).
- * @param {Object} options.cursorStyle - cursor (circle) style when drawing or editing.
- * @param {String} [options.cursorStyle.fillColor = "rgba(0, 153, 255, 1)"] - Cursor fill color.
- * @param {String} [options.cursorStyle.strokeColor = "#ffffff"] - Cursor stroke color.
- * @param {String} [options.cursorStyle.strokeWidth = 1] - Cursor surrounding stroke width.
- * @param {String} [options.cursorStyle.radius = 6] - Cursor radius.
- * @fires drawing:add:before - event triggered before an layer is added
- * @fires drawing:add:after - event triggered after an layer is added
- * @example
- * var drawing = new ol.control.Drawing({
- *   collapsed : false,
- *   draggable : true,
- *   layerswitcher : {
- *      title : "Dessins",
- *      description : "Mes dessins..."
- *   },
- *   markersList : [{
- *      src : "http://api.ign.fr/api/images/api/markers/marker_01.png",
- *      anchor : [0.5, 1]
- *   }],
- *   defaultStyles : {},
- *   cursorStyle : {},
- *   tools : {
- *      points : true,
- *      lines : true,
- *      polygons :true,
- *      holes : true,
- *      text : false,
- *      remove : true,
- *      display : true,
- *      tooltip : true,
- *      export : true,
- *      measure : true
- *   },
- *   popup : {
- *      display : true,
- *      function : function (params) {
- *          var container = document.createElement("div");
- *          // - params.geomType;
- *          // - params.feature;
- *          // Les 2 fonctions ferment la popup avec ou sans sauvegarde des informations
- *          // dans les properties de la feature (key : description)
- *          // - params.saveFunc(message);
- *          // - params.closeFunc();
- *          return container;
- *      }
- * });
+ * @module Drawing
+ * 
  */
-var Drawing = class Drawing extends Control {
+class Drawing extends Control {
 
     /**
-     * See {@link ol.control.Drawing}
-     * @module Drawing
-     * @alias module:~controls/Drawing
-     * @param {*} options - options
-     * @example
-     * import Drawing from "gpf-ext-ol/controls/Drawing"
-     * ou
-     * import { Drawing } from "gpf-ext-ol"
+     * @constructor
+    * @param {Object} options - options for function call.
+    * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+    * @param {Boolean} [options.collapsed = true] - Specify if Drawing control should be collapsed at startup. Default is true.
+    * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
+    * @param {Object} [options.layer = {}] - Openlayers layer that will hosts created features. If none, an empty vector layer will be created.
+    * @param {Object} [options.popup = {}] - Popup informations
+    * @param {Boolean} [options.popup.display = true] - Specify if popup is displayed when create a drawing
+    * @param {Function} [options.popup.function] - Function to display popup informations if you want to cutomise it. You may also provide your own function with params : {geomType / feature / saveFunc(message) / closeFunc()}. This function must return the DOM object of the popup content.
+    * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
+    * @param {String} [options.layerDescription.title = "Croquis"] - Layer title to be displayed in LayerSwitcher
+    * @param {String} [options.layerDescription.description = "Mon croquis"] - Layer description to be displayed in LayerSwitcher
+    * @param {Object} options.tools - Tools to display in the drawing toolbox. All by default.
+    * @param {Boolean} [options.tools.points = true] - Display points drawing tool
+    * @param {Boolean} [options.tools.lines = true] - Display lines drawing tool
+    * @param {Boolean} [options.tools.polygons = true] - Display polygons drawing tool
+    * @param {Boolean} [options.tools.holes = false] - Display polygons with holes drawing tool
+    * @param {Boolean} [options.tools.text = true] - Display text drawing tool
+    * @param {Boolean} [options.tools.remove = true] - Display feature removing tool
+    * @param {Boolean} [options.tools.display = true] - Display style editing tool
+    * @param {Boolean} [options.tools.tooltip = true] - Display text editing tool
+    * @param {Boolean} [options.tools.edit = true] - Display editing tool
+    * @param {Boolean} [options.tools.export = true] - Display exporting tool
+    * @param {Boolean} [options.tools.measure = false] - Display measure drawing into popup info
+    * @param {String} [options.labels] - Labels for Control
+    * @param {String} [options.labels.control] - Label for Control
+    * @param {String} [options.labels.points] - Label for points drawing tool
+    * @param {String} [options.labels.lines] - Label for lines drawing tool
+    * @param {String} [options.labels.polygons] - Label for polygons drawing tool
+    * @param {String} [options.labels.holes] - Label for polygons with holes drawing tool
+    * @param {String} [options.labels.text] - Label for text drawing tool
+    * @param {String} [options.labels.edit] - Label for editing tool
+    * @param {String} [options.labels.display] - Label for style editing tool
+    * @param {String} [options.labels.tooltip] - Label for text editing tool
+    * @param {String} [options.labels.remove] - Label for feature removing tool
+    * @param {String} [options.labels.export] - Label for exporting tool.
+    * @param {String} [options.labels.exportTitle] - Title for exporting tool.
+    * @param {String} [options.labels.applyToObject] - Label for apply to object button.
+    * @param {String} [options.labels.saveDescription] - Label for save description button.
+    * @param {String} [options.labels.setAsDefault] - Label for set as default style button.
+    * @param {String} [options.labels.strokeColor] - Label for stroke color.
+    * @param {String} [options.labels.strokeWidth] - Label for stroke width.
+    * @param {String} [options.labels.fillColor] - Label for fill color.
+    * @param {String} [options.labels.fillOpacity] - Label for fillOpacity.
+    * @param {String} [options.labels.markerSize] - Label for markerSize.
+    * @param {Array.<Object>} [options.markersList = [{"src" : "data:image/png;base64,xxxx", "anchor" : [0.5,1]}]] - List of markers src to be used for points with their anchor offsets See {@link http://openlayers.org/en/latest/apidoc/ol.style.Icon.html OpenLayers params} for anchor offset options.
+    * @param {Object} options.defaultStyles - Default styles applying to geometries (labels, lines and polygons).
+    * @param {String} [options.defaultStyles.textFillColor = "#000000"] - Text fill color for labels (RGB hex value).
+    * @param {String} [options.defaultStyles.textStrokeColor = "#ffffff"] - Text surrounding color for labels (RGB hex value).
+    * @param {String} [options.defaultStyles.strokeColor = "#ffcc33"] - Stroke color (RGB hex value).
+    * @param {Number} [options.defaultStyles.strokeWidth = 2] - Stroke width in pixels.
+    * @param {String} [options.defaultStyles.polyStrokeColor = "#ffcc33"] - Stroke color (RGB hex value) for polygons.
+    * @param {Number} [options.defaultStyles.polyStrokeWidth = 2] - Stroke width in pixels for polygons.
+    * @param {String} [options.defaultStyles.polyFillColor = "#ffffff"] - Polygons fill color (RGB hex value).
+    * @param {Number} [options.defaultStyles.polyFillOpacity = 0.2] - Polygon fill opacity (alpha value between 0:transparent and 1:opaque).
+    * @param {Object} options.cursorStyle - cursor (circle) style when drawing or editing.
+    * @param {String} [options.cursorStyle.fillColor = "rgba(0, 153, 255, 1)"] - Cursor fill color.
+    * @param {String} [options.cursorStyle.strokeColor = "#ffffff"] - Cursor stroke color.
+    * @param {String} [options.cursorStyle.strokeWidth = 1] - Cursor surrounding stroke width.
+    * @param {String} [options.cursorStyle.radius = 6] - Cursor radius.
+    * @fires drawing:add:before - event triggered before an layer is added
+    * @fires drawing:add:after - event triggered after an layer is added
+    * @example
+    * var drawing = new ol.control.Drawing({
+    *   collapsed : false,
+    *   draggable : true,
+    *   layerswitcher : {
+    *      title : "Dessins",
+    *      description : "Mes dessins..."
+    *   },
+    *   markersList : [{
+    *      src : "http://api.ign.fr/api/images/api/markers/marker_01.png",
+    *      anchor : [0.5, 1]
+    *   }],
+    *   defaultStyles : {},
+    *   cursorStyle : {},
+    *   tools : {
+    *      points : true,
+    *      lines : true,
+    *      polygons :true,
+    *      holes : true,
+    *      text : false,
+    *      remove : true,
+    *      display : true,
+    *      tooltip : true,
+    *      export : true,
+    *      measure : true
+    *   },
+    *   popup : {
+    *      display : true,
+    *      function : function (params) {
+    *          var container = document.createElement("div");
+    *          // - params.geomType;
+    *          // - params.feature;
+    *          // Les 2 fonctions ferment la popup avec ou sans sauvegarde des informations
+    *          // dans les properties de la feature (key : description)
+    *          // - params.saveFunc(message);
+    *          // - params.closeFunc();
+    *          return container;
+    *      }
+    * });
      */
     constructor (options) {
         options = options || {};
@@ -298,7 +324,7 @@ var Drawing = class Drawing extends Control {
     /**
      * Overload of {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html#setMap ol.control.Control.setMap()} method, called when control is added to or removed from map.
      *
-     * @param {Object} map - {@link http://openlayers.org/en/latest/apidoc/ol.Map.html ol.Map} object.
+     * @param {Map} map - {@link http://openlayers.org/en/latest/apidoc/ol.Map.html ol.Map} object.
      */
     setMap (map) {
         // call original setMap method
@@ -497,7 +523,7 @@ var Drawing = class Drawing extends Control {
     /**
      * Sets vector layer to hosts feature.
      *
-     * @param {ol.layer.Vector} vlayer - vector layer
+     * @param {VectorLayer} vlayer - vector layer
      */
     setLayer (vlayer) {
         if (!vlayer) {
@@ -525,18 +551,9 @@ var Drawing = class Drawing extends Control {
                 this.getMap().addLayer(vlayer);
                 /**
                  * event triggered after an layer is added
-                 *
-                 * @event drawing:add:after
-                 * @property {Object} type - event
-                 * @property {Object} layer - layer
-                 * @property {Object} target - instance Drawing
-                 * @example
-                 * Drawing.on("drawing:add:after", function (e) {
-                 *   console.log(e.layer);
-                 * })
                  */
                 this.dispatchEvent({
-                    type : "drawing:add:after",
+                    type : this.ADD_AFTER_DRAWING_LAYER_EVENT,
                     layer : vlayer
                 });
             }
@@ -585,7 +602,7 @@ var Drawing = class Drawing extends Control {
     /**
      * Get vector layer
      *
-     * @returns {Object} layer - isocurve layer
+     * @returns {VectorLayer} layer - isocurve layer
      */
     getLayer () {
         return this.layer;
@@ -594,7 +611,7 @@ var Drawing = class Drawing extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this._container;
@@ -675,12 +692,17 @@ var Drawing = class Drawing extends Control {
      */
     _initialize (options) {
         // determination d'un uid
+        /** @private */
         this._uid = options.id || SelectorID.generate();
 
         // export name / format / ...
+        /** @private */
         this._exportName = "Croquis";
+        /** @private */
         this._exportFormat = "KML";
+        /** @private */
         this._exportMimeType = "application/vnd.google-earth.kml+xml";
+        /** @private */
         this._exportExt = ".kml";
 
         options = options || {};
@@ -711,11 +733,15 @@ var Drawing = class Drawing extends Control {
         });
 
         this.options.collapsed = (options.collapsed !== undefined) ? options.collapsed : true;
-        /** {Boolean} specify if Drawing control is collapsed (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if Drawing control is collapsed (true) or not (false) */
         this.collapsed = this.options.collapsed;
 
         this.options.draggable = (options.draggable !== undefined) ? options.draggable : false;
-        /** {Boolean} specify if Drawing control is draggable (true) or not (false) */
+        /** 
+         * @type {Boolean} 
+         * specify if Drawing control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
 
         this.options.markersList = options.markersList || MarkersOther["drawing_api"];
@@ -766,14 +792,21 @@ var Drawing = class Drawing extends Control {
             }
         });
 
+        /** @private */
         this.interactionCurrent = null;
+        /** @private */
         this.interactionSelectEdit = null;
+        /** @private */
         this.featuresCollectionSelected = null;
 
+        /** @private */
         this.stylingOvl = null;
+        /** @private */
         this.popupOvl = null;
 
+        /** @private */
         this.tooltipOvl = null;
+        /** @private */
         this.tooltipElem = null;
 
         this.layer = null;
@@ -783,6 +816,7 @@ var Drawing = class Drawing extends Control {
 
         // detection du support : desktop ou tactile
         // FIXME : utile ?
+        /** @private */
         this._isDesktop = this._detectSupport();
 
         // applying default popup
@@ -792,6 +826,36 @@ var Drawing = class Drawing extends Control {
                 apply : null
             };
         }
+        /**
+         * event triggered after an layer is added
+         *
+         * @event drawing:add:after
+         * @defaultValue "drawing:add:after"
+         * @group Events
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} target - instance Drawing
+         * @example
+         * Drawing.on("drawing:add:after", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.ADD_AFTER_DRAWING_LAYER_EVENT = "drawing:add:after";
+        /**
+         * event triggered before an layer is added
+         *
+         * @event drawing:add:before
+         * @defaultValue "drawing:add:before"
+         * @group Events
+         * @property {Object} type - event
+         * @property {Object} layer - layer
+         * @property {Object} target - instance Drawing
+         * @example
+         * Drawing.on("drawing:add:before", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.ADD_BEFORE_DRAWING_LAYER_EVENT = "drawing:add:before";
     }
 
     /**
@@ -813,18 +877,9 @@ var Drawing = class Drawing extends Control {
 
         /**
          * event triggered before an layer is added
-         *
-         * @event drawing:add:before
-         * @property {Object} type - event
-         * @property {Object} layer - layer
-         * @property {Object} target - instance Drawing
-         * @example
-         * Drawing.on("drawing:add:before", function (e) {
-         *   console.log(e.layer);
-         * })
          */
         this.dispatchEvent({
-            type : "drawing:add:before",
+            type : this.ADD_BEFORE_DRAWING_LAYER_EVENT,
             layer : layer
         });
 
@@ -880,7 +935,7 @@ var Drawing = class Drawing extends Control {
      *
      * @method _initContainer
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      * @private
      */
     _initContainer () {
@@ -919,7 +974,7 @@ var Drawing = class Drawing extends Control {
 
     /**
      * Callback de fin de dessin de geometrie
-     * @param {Object} feature - ol feature
+     * @param {Feature} feature - ol feature
      * @param {String} geomType - geometry type
      * @param {Boolean} clean - clean last feature
      *
@@ -1077,7 +1132,7 @@ var Drawing = class Drawing extends Control {
     /**
      * Creates Interaction for features style definition.
      *
-     * @returns {ol.interaction.Select} created interaction.
+     * @returns {SelectInteraction} created interaction.
      * @private
      */
     _createStylingInteraction () {
@@ -1570,7 +1625,7 @@ var Drawing = class Drawing extends Control {
     /**
      * Callback de fin de modification du dessin afin de mettre à jour la mesure
      * TODO
-     * @param {Object} feature - ol feature
+     * @param {Feature} feature - ol feature
      * @param {String} geomType - geometry type
      *
      * @private
@@ -2060,7 +2115,7 @@ var Drawing = class Drawing extends Control {
      * and toggles event 'mousemove' on map.
      *
      * @method onShowDrawingClick
-     * @param { event } e évènement associé au clic
+     * @param { Event } e évènement associé au clic
      * @private
      */
     onShowDrawingClick (e) {

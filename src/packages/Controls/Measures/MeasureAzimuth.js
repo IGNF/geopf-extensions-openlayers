@@ -5,6 +5,7 @@ import "../../CSS/Controls/Measures/GPFmeasureAzimuth.css";
 // import Control from "ol/control/Control";
 import Widget from "../Widget";
 import Control from "../Control";
+import Map from "ol/Map";
 import { getDistance as olGetDistanceSphere } from "ol/sphere";
 import { transform as olTransformProj } from "ol/proj";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
@@ -27,28 +28,31 @@ var logger = Logger.getLogger("measureazimut");
  *
  * Azimuth measurement Control. Allows users to draw a line on an Openlayers map and have its angle in decimal degrees clockwise from the geographical north.
  *
- * @constructor
  * @alias ol.control.MeasureAzimuth
- * @type {ol.control.MeasureAzimuth}
- * @extends {ol.control.Control}
- * @param {Object} options - options for function call.
- * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
- * @param {Boolean} [options.geodesic = false] - If true, azimuth will be computed on the global sphere. Otherwise, it will be computed on the projected plane.
- * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
- * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the line. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
- * @param {Object} [options.styles.start = {}] - Line Style when drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
- * @param {Object} [options.styles.finish = {}] - Line Style when finished drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
- * <!-- @param {Object} [options.tooltip = {}] - NOT YET IMPLEMENTED ! -->
- * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
- * @param {String} [options.layerDescription.title = "Mesures d'azimuth"] - Layer title to be displayed in LayerSwitcher
- * @param {String} [options.layerDescription.description = "Mes mesures"] - Layer description to be displayed in LayerSwitcher
- * @example
- * var measure = new ol.control.MeasureAzimuth({
- *   geodesic : true
- * });
- */
-var MeasureAzimuth = class MeasureAzimuth extends Control {
-
+ * @module MeasureAzimuth
+ * 
+*/
+class MeasureAzimuth extends Control {
+    
+    /**
+     * @constructor
+     * @param {Object} options - options for function call.
+     * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+     * @param {Boolean} [options.geodesic = false] - If true, azimuth will be computed on the global sphere. Otherwise, it will be computed on the projected plane.
+     * @param {Object} [options.styles = {}] - styles used when drawing. Specified with following properties.
+     * @param {Object} [options.styles.pointer = {}] - Style for mouse pointer when drawing the line. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Image-ImageStyle.html ol.style.Image} subclass object.
+     * @param {Object} [options.styles.start = {}] - Line Style when drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
+     * @param {Object} [options.styles.finish = {}] - Line Style when finished drawing. Specified with an {@link https://openlayers.org/en/latest/apidoc/module-ol_style_Style-Style.htmll ol.style.Style} object.
+     * <!-- @param {Object} [options.tooltip = {}] - NOT YET IMPLEMENTED ! -->
+     * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
+     * @param {String} [options.layerDescription.title = "Mesures d'azimuth"] - Layer title to be displayed in LayerSwitcher
+     * @param {String} [options.layerDescription.description = "Mes mesures"] - Layer description to be displayed in LayerSwitcher
+     * @example
+     * var measure = new ol.control.MeasureAzimuth({
+     *   geodesic : true
+     * });
+     * 
+     */
     constructor (options) {
         /**
          * options
@@ -94,7 +98,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         logger.trace("setMap()");
@@ -174,7 +178,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
     /**
      * Getter for option Geodesic
      *
-     * @return {Boolean} geodesic value
+     * @returns {Boolean} geodesic value
      */
     isGeodesic () {
         return this.options.geodesic;
@@ -183,7 +187,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this._container;
@@ -222,7 +226,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
     /**
      * initialize component container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      *
      * @private
      */
@@ -281,7 +285,7 @@ var MeasureAzimuth = class MeasureAzimuth extends Control {
      * Format length output.
      *
      * @param {ol.geom.LineString} line - geometry line.
-     * @return {String} The formatted output.
+     * @returns {String} The formatted output.
      * @private
      */
     format (line) {

@@ -24,51 +24,46 @@ const STYLEBYDEFAULT = new Style({
 });
 
 /**
+ * @typedef {Object} LayerWFSOptions
+ * @property {string} layer - Nom de la couche (ex : "ORTHOIMAGERY.ORTHOPHOTOS")
+ * @property {Number} [maxFeatures] - Maximum features (max: 5000) 
+ * @property {Object} [configuration] - Configuration de la couche
+ * @property {boolean} [ssl] - Forcer le protocole https (pour nodejs)
+ * @property {string} [apiKey] - Clé d'accès à la plateforme
+ * @property {Object} [olParams] - Options supplémentaires pour ol.layer.Vector {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_Vector-VectorLayer.html ol.layer.Vector options}
+ * et options supplémentaires pour ol.source.Vector dans olParams.sourceParams {@link https://openlayers.org/en/latest/apidoc/module-ol_source_Vector-VectorSource.html ol.source.Vector options}
+ */
+
+/**
  * @classdesc
  * Geoportal LayerWMS source creation (inherit from ol.layer.Tile)
  *
- * @constructor
- * @extends {ol.layer.Vector}
  * @alias ol.layer.GeoportalWFS
- * @type {ol.layer.GeoportalWFS}
- * @param {Object} options            - options for function call.
- * @param {String} options.layer      - Layer name (e.g. "")
- * @param {Number} [options.maxFeatures] - maximum features (max: 5000) 
- * @param {Object} [options.configuration] - configuration (cf. example) 
- * @param {Boolean} [options.ssl]     - if set true, enforce protocol https (only for nodejs)
- * @param {String} [options.apiKey]   - Access key to Geoportal platform
- * @param {Object} [options.olParams] - other options for ol.layer.Vector function (see {@link http://openlayers.org/en/latest/apidoc/ol.layer.Vector.html ol.layer.Vector})
- * @param {Object} [options.olParams.sourceParams] - other options for ol.source.Vector function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.Vector.html ol.source.Vector})
- * @example
- * var layerWFS = new ol.layer.GeoportalWFS({
- *      layer  : "BDTOPO_V3:batiment",
- *      maxFeatures: 500,
- *      olParams : {
- *          minZoom: 15,
- *          maxZoom: 21,
- *          style: new ol.style.Style(...),
- *          sourceParams: {}
- *      }
- * });
- * 
- * layerWFS.getLegends();
- * layerWFS.getMetadata();
- * layerWFS.getTitle();
- * layerWFS.getDescription();
- * layerWFS.getQuicklookUrl();
- * layerWFS.getOriginators();
- */
-var LayerWFS = class LayerWFS extends VectorLayer {
-
+ * @module GeoportalWFS
+*/
+class LayerWFS extends VectorLayer {
+    
     /**
-     * See {@link ol.layer.GeoportalWFS}
-     * @module LayerWFS
-     * @alias module:~layers/GeoportalWFS
-     * @param {*} options - options
+     * @constructor
+     * @param {LayerWFSOptions} options            - options for function call.
      * @example
-     * import LayerWFS from "gpf-ext-ol/layers/LayerWFS"
-     * ou 
-     * import { LayerWFS } from "gpf-ext-ol"
+     * var layerWFS = new ol.layer.GeoportalWFS({
+     *      layer  : "BDTOPO_V3:batiment",
+     *      maxFeatures: 500,
+     *      olParams : {
+     *          minZoom: 15,
+     *          maxZoom: 21,
+     *          style: new ol.style.Style(...),
+     *          sourceParams: {}
+     *      }
+     * });
+     * 
+     * layerWFS.getLegends();
+     * layerWFS.getMetadata();
+     * layerWFS.getTitle();
+     * layerWFS.getDescription();
+     * layerWFS.getQuicklookUrl();
+     * layerWFS.getOriginators();
      */
     constructor (options) {
         if (!options.layer) {

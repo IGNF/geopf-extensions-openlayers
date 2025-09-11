@@ -116,3 +116,17 @@ select.GPmousePositionDirection:disabled::-ms-value {
 .GPmousePositionEditTool {
   background-image: url("img/GPmousePositionEditCoordinates.png");
 }
+
+button[aria-expanded="true"] span.GPshowMousePositionAdvancedTools {
+  -webkit-transform: rotateX(180deg);
+  transform: rotateX(180deg);
+}
+
+.GPshowMousePositionAdvancedTools {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  background-image: url("img/GPMousePositionTools.png");
+  background-position: -26px 0;
+}

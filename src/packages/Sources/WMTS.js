@@ -22,7 +22,7 @@ import Utils from "../Utils/Helper";
  * @extends {ol.source.WMTS}
  * @param {Object} options - Options
  */
-var WMTS = class WMTS extends WMTSSource {
+class WMTS extends WMTSSource {
 
     constructor (options) {
         // if (!(this instanceof WMTS)) {
@@ -42,7 +42,7 @@ var WMTS = class WMTS extends WMTSSource {
      * @param {ol.proj.Projection} projection - Projection.
      * @param {!Object} params - GetFeatureInfo params. `INFOFORMAT` at least should
      *     be provided.
-     * @return {String|undefined} GetFeatureInfo URL.
+     * @returns {String|undefined} GetFeatureInfo URL.
      */
     getFeatureInfoUrl (coordinate, resolution, projection, params) {
         // INFO

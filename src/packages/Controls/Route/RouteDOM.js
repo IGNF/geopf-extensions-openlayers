@@ -20,7 +20,7 @@ var RouteDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -37,7 +37,7 @@ var RouteDOM = {
      * Show route control
      * see event !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowRoutePictoElement : function () {
         // contexte d'execution
@@ -87,7 +87,7 @@ var RouteDOM = {
      * don't call this._createRoutePanelFormElement
      * don't call this._createRoutePanelResultsElement
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -116,7 +116,7 @@ var RouteDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelHeaderElement : function () {
         // contexte d'execution
@@ -160,7 +160,7 @@ var RouteDOM = {
     /**
      * Create Footer Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFooterElement : function () {
         var container = document.createElement("div");
@@ -174,7 +174,7 @@ var RouteDOM = {
      *
      * @param {String} innerHTML text to display
      * @param {Boolean} display should the label be dsiplayed?
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormPointLabel : function (innerHTML, display = true) {
         var p = document.createElement("p");
@@ -189,7 +189,7 @@ var RouteDOM = {
      * Create Form
      * see evenement !
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormElement : function () {
         // contexte d'execution
@@ -291,7 +291,7 @@ var RouteDOM = {
     /**
      * Create Results Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelResultsElement : function () {
         var container = document.createElement("div");
@@ -309,7 +309,7 @@ var RouteDOM = {
     /**
      * Create Waiting Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRouteWaitingElement : function () {
         var div = document.createElement("div");
@@ -333,7 +333,7 @@ var RouteDOM = {
      * Create Results Stages
      * (results dynamically generate !)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRouteResultsStagesElement : function () {
         var div = document.createElement("div");
@@ -344,7 +344,7 @@ var RouteDOM = {
     /**
      * Add Stages Results
      *
-     * @param {DOMElement} points - list of points
+     * @param {HTMLElement} points - list of points
      */
     _addRouteResultsStagesValuesElement : function (points) {
         document.getElementById(this._addUID("GProuteResultsStages")).innerHTML = "";
@@ -379,7 +379,7 @@ var RouteDOM = {
      * Create Show Results
      * see event!
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRouteResultsElement : function () {
         // contexte
@@ -444,7 +444,7 @@ var RouteDOM = {
      * @param {Number} duration - duration
      * @param {Function} fconvert - fconvert
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _addRouteResultsValuesElement : function (distance, duration, fconvert) {
         var div = document.getElementById(this._addUID("GProuteResultsValues"));
@@ -503,7 +503,7 @@ var RouteDOM = {
     /**
      * Create Show Results Details
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRouteShowResultsDetailsElement : function () {
         var div = document.createElement("div");
@@ -537,7 +537,7 @@ var RouteDOM = {
     /**
      *  Create Results Details
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRouteResultsDetailsElement : function () {
         // <!-- Route results details are dynamically filled in Javascript by route service -->
@@ -552,7 +552,7 @@ var RouteDOM = {
      * @param {Object[]} instructions - instructions
      * @param {Function} fconvert - fconvert
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _addRouteResultsDetailsElement : function (instructions, fconvert) {
         // contexte
@@ -632,7 +632,7 @@ var RouteDOM = {
      * @param {String} text - text
      * @param {Boolean} visibility - visibility
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormPointElement : function (n, text, visibility) {
         // contexte d'execution
@@ -757,7 +757,7 @@ var RouteDOM = {
      * (version initial without LOCATIONSELECTOR PLUGIN)
      * @param {Integer} n - n
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormRemoveStageElement : function (n) {
         // contexte d'execution
@@ -793,7 +793,7 @@ var RouteDOM = {
      * OVERWRITTEN BY LOCATIONSELECTOR !
      * (version initial without LOCATIONSELECTOR PLUGIN)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormAddStageElement : function () {
         // contexte d'execution
@@ -838,7 +838,7 @@ var RouteDOM = {
      * (version initial without LOCATIONSELECTOR PLUGIN)
      * @param {Integer} n - n
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormAutoCompleteListElement : function (n) {
         // contexte d'execution
@@ -898,7 +898,7 @@ var RouteDOM = {
      * FIXME event not useful
      * @param {String[]} transports - transports
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormModeChoiceTransportElement : function (transports) {
         // contexte d'execution
@@ -994,7 +994,7 @@ var RouteDOM = {
      * Create Mode choice computation
      * see event!
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormModeChoiceComputeElement : function () {
         // contexte d'execution
@@ -1085,7 +1085,7 @@ var RouteDOM = {
      * see event !
      * FIXME event not useful
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowRouteExclusionsPictoElement : function () {
         // contexte d'execution
@@ -1127,7 +1127,7 @@ var RouteDOM = {
     /**
      * Create Container to Exclusions
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormExclusionsElement : function () {
         var div = document.createElement("div");
@@ -1150,7 +1150,7 @@ var RouteDOM = {
      * FIXME event not useful
      * @param {Object[]} exclusions - exclusions
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRoutePanelFormExclusionOptionsElement : function (exclusions) {
         // contexte d'execution
@@ -1261,7 +1261,7 @@ var RouteDOM = {
     /**
      * Create Submit Form Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRouteSubmitFormElement : function () {
         var input = document.createElement("input");
@@ -1280,7 +1280,7 @@ var RouteDOM = {
     /**
      * Create Reset Picto Element
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createRouteFormResetElement : function () {
         var self = this;

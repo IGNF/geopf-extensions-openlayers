@@ -13,7 +13,7 @@ var GetFeatureInfoDOM = {
     /**
     * String to html
     * @param {String} str -string to convert
-    * @returns {DOMElement} return dom element
+    * @returns {HTMLElement} return dom element
     */
     stringToHTML : function (str) {
         var support = function () {
@@ -45,7 +45,7 @@ var GetFeatureInfoDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -61,7 +61,7 @@ var GetFeatureInfoDOM = {
     /**
      * Show GetFeatureInfo
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowGetFeatureInfoPictoElement : function () {
         var self = this;
@@ -102,7 +102,7 @@ var GetFeatureInfoDOM = {
     /**
      * Create Container Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createGetFeatureInfoPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -121,7 +121,7 @@ var GetFeatureInfoDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createGetFeatureInfoPanelHeaderElement : function () {
         var container = document.createElement("div");
@@ -165,7 +165,7 @@ var GetFeatureInfoDOM = {
 
     /**
      * Create loader
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createGetFeatureInfoWaitingDiv : function () {
         var waitingDivString = `
@@ -180,7 +180,7 @@ var GetFeatureInfoDOM = {
 
     /**
      * Create group d'accodeon
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createGetFeatureInfoAccordionGroup : function () {
         // contexte d'execution
@@ -198,7 +198,7 @@ var GetFeatureInfoDOM = {
      * see evenement !
      * @param { String } layername nom du layer
      * @param { String } content contenu du gfi
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createGetFeatureInfoLayerAccordion : function (layername) {
         var dsfrTemplate = this.stringToHTML(`

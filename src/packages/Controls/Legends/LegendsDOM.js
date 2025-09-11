@@ -13,7 +13,7 @@ var LegendsDOM = {
     /**
      * Main container (DOM)
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
@@ -29,7 +29,7 @@ var LegendsDOM = {
     /**
      * Show Legends
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createShowLegendsPictoElement : function () {
         // contexte d'execution
@@ -71,7 +71,7 @@ var LegendsDOM = {
     /**
      * Create Container Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLegendsPanelElement : function () {
         var dialog = document.createElement("dialog");
@@ -90,7 +90,7 @@ var LegendsDOM = {
     /**
      * Create Header Panel
      *
-     * @returns {DOMElement} DOM element
+     * @returns {HTMLElement} DOM element
      */
     _createLegendsPanelHeaderElement : function () {
         var container = document.createElement("div");

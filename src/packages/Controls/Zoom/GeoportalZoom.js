@@ -5,6 +5,7 @@ import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 // import ol
 import Zoom from "ol/control/Zoom";
+import Map from "ol/Map";
 
 var logger = Logger.getLogger("zoom");
 
@@ -12,30 +13,21 @@ var logger = Logger.getLogger("zoom");
  * @classdesc
  * OpenLayers Control to manage zoom
  *
- * @constructor
- * @extends {ol.control.Zoom}
  * @alias ol.control.GeoportalZoom
- * @type {ol.control.GeoportalZoom}
- * @param {Object} options - ol.control.Zoom options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html ol.Control.Zoom})
- * @fire zoom:in
- * @fire zoom:out
- * @example
- * var zoom = new ol.control.GeoportalZoom({
- *   position: "top-left"
- * });
- * map.addControl(zoom);
- */
-var GeoportalZoom = class GeoportalZoom extends Zoom {
-
+ * @module GeoportalZoom
+*/
+class GeoportalZoom extends Zoom {
+    
     /**
-     * See {@link ol.control.GeoportalZoom}
-     * @module GeoportalZoom
-     * @alias module:~controls/GeoportalZoom
-     * @param {*} options - options
+     * @constructor
+     * @param {Object} options - ol.control.Zoom options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.Zoom.html ol.Control.Zoom})
+     * @fires zoom:in
+     * @fires zoom:out
      * @example
-     * import GeoportalZoom from "gpf-ext-ol/controls/GeoportalZoom"
-     * ou
-     * import { GeoportalZoom } from "gpf-ext-ol"
+     * var zoom = new ol.control.GeoportalZoom({
+     *   position: "top-left"
+     * });
+     * map.addControl(zoom);
      */
     constructor (options) {
         options = options || {};
@@ -54,6 +46,11 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         this.options = options;
     }
 
+    /**
+     * ...
+     * @param {Map} map - ...
+     * @private
+     */
     _createContainerPosition (map) {
         this.container = map.getOverlayContainerStopEvent();
         this.options.target = this.container;
@@ -71,6 +68,9 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
         }
     }
 
+    /**
+     * @private
+     */
     _initContainer () {
         // UID interne pour chaque controle
         this._uid = this.options.id || SelectorID.generate();
@@ -149,7 +149,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
     /**
      * Overload setMap function
      *
-     * @param {ol.Map} map - Map.
+     * @param {Map} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -174,7 +174,7 @@ var GeoportalZoom = class GeoportalZoom extends Zoom {
     /**
      * Get container
      *
-     * @returns {DOMElement} container
+     * @returns {HTMLElement} container
      */
     getContainer () {
         return this.container;

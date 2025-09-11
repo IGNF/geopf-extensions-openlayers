@@ -18,7 +18,7 @@ var Parser = {
      * ...
      *
      * @param {String} xml - XML string
-     * @returns {DOMElement} doc
+     * @returns {HTMLElement} doc
      */
     parse : function (xml) {
         var doc = null;
@@ -58,7 +58,7 @@ var Parser = {
     /**
      * ...
      *
-     * @param {DOMElement} doc - doc
+     * @param {HTMLElement} doc - doc
      * @returns {String} XML string
      */
     toString : function (doc) {

@@ -8,10 +8,12 @@ import ID from "../../Utils/SelectorID";
 // DOM
 import MeasureToolBoxDOM from "./MeasureToolBoxDOM";
 
+import Map from "ol/Map";
+import Control from "ol/control/Control";
+
 var logger = Logger.getLogger("toolbox");
 
 /**
- * @type {ol.control.MeasureToolBox}
  * MeasureToolBox - Boite à outils (ToolBox) pour les outils de mesures.
  * - distance
  * - aire
@@ -30,10 +32,10 @@ var MeasureToolBox = {
      * Ajout d'un controle dans la ToolBox.
      * Creation de la toolbox si besoin...
      *
-     * @param {ol.Map} map - map
-     * @param {ol.control.Control} ctrl - objet à ajouter
+     * @param {Map} map - map
+     * @param {Control} ctrl - objet à ajouter de type ol.control.Control
      */
-    add : function (map, ctrl) {
+    add : /** @type {(map: Map, ctrl: Control) => void} */ function (map, ctrl) {
         logger.trace("ToolBox.add()", ctrl);
 
         if (!map) {
