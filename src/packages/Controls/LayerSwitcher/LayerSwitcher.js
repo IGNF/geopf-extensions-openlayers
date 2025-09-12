@@ -43,7 +43,41 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {boolean} [allowGrayScale=true] - Affiche le bouton N&B (niveaux de gris) pour les couches compatibles.
  * @property {boolean} [allowTooltips=false] - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
- * @property {Array<Object>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * @property {Array<HeaderButton>} [headerButtons] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * @property {Array<AdvancedToolOption>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ */
+
+/**
+ * Option d'un outil personnalisé
+ * @typedef {Object} AdvancedToolOption
+ * @property {String} label - Specify the label name of the button
+ * @property {String} [icon] - Optionnel. Icône de l'outil. Peut être un lien html, svg ou une classe.
+ * @property {AdvancedToolCallback} [cb] - Optionnel. Callback au click sur l'outil.
+ * @property {Object} [styles] - Optionnel. Styles à appliquer.
+ */
+
+/**
+ * Callback au clic sur un outil personnalisé.
+ * @callback AdvancedToolCallback
+ * @param {PointerEvent} e Événement générique au clic sur l'outil
+ * @param {LayerSwitcher} layerSwitcher instance du gestionnaire de couche
+ * @param {import('ol/layer').Layer} layer Couche associée à l'outil
+ * @param {Object} options Options de la couche associée
+ */
+
+/**
+ * Bouton pour le gestionnaire de couche
+ * @typedef {Object} HeaderButton
+ * @property {String} label - Specify the label name of the button
+ * @property {String} [icon] - Optionnel. Icône de l'outil. Classe à ajouter au bouton.
+ * @property {HeaderButtonCallback} [cb] - Optionnel. Callback au click sur l'outil.
+ */
+
+/**
+ * Callback au clic sur un bouton du header.
+ * @callback HeaderButtonCallback
+ * @param {PointerEvent} e Événement générique au clic sur l'outil
+ * @param {LayerSwitcher} layerSwitcher instance du gestionnaire de couche
  */
 
 /**
@@ -108,6 +142,8 @@ class LayerSwitcher extends Control {
     * @fires layerswitcher:change:grayscale
     * @fires layerswitcher:change:style
     * @fires layerswitcher:change:locked
+    * @fires layerswitcher:custom
+    * @fires layerswitcher:header:button
     * @example
     * map.addControl(new ol.control.LayerSwitcher(
     *  [
@@ -126,6 +162,14 @@ class LayerSwitcher extends Control {
     *      position : "top-left",
     *      allowEdit : true,
     *      allowGrayScale : true,
+    *      headerButtons : [
+    *          {
+    *              label: 'Ajouter',
+    *              title: 'Ajouter une couche',
+    *              icon: "svg | http",
+    *              cb: (e, switcher) => {},
+    *          },
+    *      ],
     *      advancedTools : [
     *          {
     *              label = 'Bouton',
@@ -167,6 +211,12 @@ class LayerSwitcher extends Control {
     * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
     *    console.warn("layer", e.layer, e.locked);
     * });
+    * LayerSwitcher.on("layerswitcher:custom", function (e) {
+    *   console.warn("layer", e.action, e.layer);
+    * })
+    * LayerSwitcher.on("layerswitcher:header:button", function (e) {
+    *   console.warn("Action", e.action, e.target);
+    * })
     */
     constructor (options) {
         options = options || {};
@@ -708,7 +758,8 @@ class LayerSwitcher extends Control {
             allowEdit : true,
             allowGrayScale : true,
             allowTooltips : false,
-            advancedTools : []
+            headerButtons : [],
+            advancedTools : [],
         };
 
         // merge with user options
@@ -807,7 +858,9 @@ class LayerSwitcher extends Control {
                     description : conf.description || null,
                     legends : conf.legends || [],
                     metadata : conf.metadata || [],
-                    quicklookUrl : conf.quicklookUrl || null
+                    quicklookUrl : conf.quicklookUrl || null,
+                    picto : conf.picto || null,
+                    producer : conf.producer || null
                 };
                 this._layers[id] = layerOptions;
             }
@@ -923,6 +976,21 @@ class LayerSwitcher extends Control {
          * })
          */
         this.CUSTOM_LAYER_EVENT = "layerswitcher:custom";
+        /**
+         * event triggered when an header button is clicked
+         * @event layerswitcher:header:button
+         * @defaultValue "layerswitcher:header:button"
+         * @group Events
+         * @param {Object} type - event
+         * @param {String} action - label name
+         * @param {Object} target - instance LayerSwitcher
+         * @public
+         * @example
+         * LayerSwitcher.on("layerswitcher:header:button", function (e) {
+         *   console.log(e.action, e.target);
+         * })
+         */
+        this.HEADER_BUTTON_EVENT = "layerswitcher:header:button";
         /**
          * event triggered when a layer opacity is changed
          * @event layerswitcher:change:opacity
@@ -1061,11 +1129,31 @@ class LayerSwitcher extends Control {
             panelHeader.appendChild(panelClose);
         }
 
-        var div = this._layerListContainer = this._createMainLayersDivElement();
+        var div = this._createMainLayersDivElement();
         divL.appendChild(div);
 
         // creation du mode draggable
         this._createDraggableElement(div, this);
+
+        // Bouton de header
+
+        if (this.options.headerButtons.length) {
+            let bodyHeader = this._createHeaderButtonsDivElement();
+
+            let btnsGroup = this._createButtonsGroupElement({
+                className : "GPbodyHeaderBtnsGroup"
+            });
+            this.options.headerButtons.forEach(opt => {
+                let btn = this._createButtonElement(opt);
+                btnsGroup.appendChild(btn);
+            });
+
+            bodyHeader.appendChild(btnsGroup);
+            div.appendChild(bodyHeader);
+        }
+
+        var layerList = this._layerListContainer = this._createMainLayerListElement();
+        div.appendChild(layerList);
 
         // ajout dans le container principal du panneau d'information
         var divI = this._createMainInfoElement();
@@ -2157,6 +2245,22 @@ class LayerSwitcher extends Control {
             action : action,
             layer : layer,
             options : options
+        });
+    }
+
+    _onClickHeaderButtons (e, action, cb) {
+        if (cb) {
+            cb(e, this);
+            return;
+        }
+
+        /**
+         * event triggered when an action is done
+         * @event layerswitcher:header:button
+         */
+        this.dispatchEvent({
+            type : this.HEADER_BUTTON_EVENT,
+            action : action,
         });
     }
 

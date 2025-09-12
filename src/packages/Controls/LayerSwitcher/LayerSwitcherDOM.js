@@ -107,6 +107,12 @@ var LayerSwitcherDOM = {
         return div;
     },
 
+    _createMainLayerListElement : function () {
+        var div = document.createElement("div");
+        div.className = "GPLayerListBody";
+        return div;
+    },
+
     /**
      * Creation du container du picto du controle (DOM)
      *
@@ -256,6 +262,55 @@ var LayerSwitcherDOM = {
         }
 
         return btnClose;
+    },
+
+    _createHeaderButtonsDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "GPbodyHeader";
+        div.id = this._addUID("GPbodyHeader");
+        return div;
+    },
+
+    _createButtonsGroupElement : function (options) {
+        /**
+
+        <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline fr-btns-group--sm fr-btns-group--icon-left">
+            <button type="button" class="fr-btn fr-btn--tertiary fr-icon-checkbox-circle-line">libellé du bouton 1</button>
+            <button type="button" class="fr-btn fr-icon-checkbox-circle-line fr-btn--tertiary">libellé du bouton 2</button>
+            <button type="button" class="fr-btn fr-icon-checkbox-circle-line fr-btn--tertiary">libellé du bouton 3</button>
+        </div>
+         */
+        let customClass = options.className ? options.className : "";
+
+        var div = document.createElement("div");
+        div.className = `${customClass} GPbtnsGroup GPbtnsGroup--right fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline fr-btns-group--sm fr-btns-group--icon-left`;
+        div.id = this._addUID(customClass);
+        return div;
+    },
+
+    _createButtonElement : function (options) {
+        let btn = document.createElement("button");
+        btn.className = "fr-btn fr-btn--tertiary gpf-btn ";
+        if (options.icon) {
+            btn.className += options.icon;
+        }
+        if (options.label) {
+            btn.innerHTML = options.label;
+        }
+        let title = options.title ? options.title : options.label;
+
+        btn.title = title;
+        btn.ariaLabel = title;
+
+        btn.id = this._addUID("GPtools-" + options.label.toLowerCase());
+
+        let self = this;
+
+        btn.addEventListener("click", (e) => {
+            self._onClickHeaderButtons(e, options.label, options.cb);
+        });
+
+        return btn;
     },
 
     /**

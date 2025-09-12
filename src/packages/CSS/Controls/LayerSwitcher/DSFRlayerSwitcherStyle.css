@@ -348,3 +348,14 @@ div[id^=GPlayerStyleContent] {
         flex-grow: 0.6;
     }
 }
+
+/* Ajout layer switcher */
+
+/* Bouton header */
+div[id^=GPbodyHeader-] {
+    padding: 0.5rem;
+}
+
+div[id^=GPbodyHeader-] button.gpf-btn {
+    margin-bottom: 0;
+}
