@@ -86,6 +86,24 @@ var logger = Logger.getLogger("widget");
  */
 
 /**
+ * @typedef {Object} Config - Configuration des sources de données
+ * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
+ * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
+ */
+
+/**
+ * @typedef {Object} ConfigLayer - Configuration d'une couche
+ * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
+ * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
+ * @description
+ * Un objet de type ConfigLayer est un objet qui contient la configuration d'une couche.
+ * Il est issu de la configuration globale (Config) et enrichi de propriétés supplémentaires
+ * pour le bon fonctionnement du catalogue.
+ * ex. : service, categories, producer_urls, thematic_urls, etc.
+ * Les types de services supportés sont : WMTS, WMS, WFS, TMS.
+ */
+
+/**
  * @classdesc
  *
  * Catalog Data
@@ -275,7 +293,7 @@ class Catalog extends Control {
      * Add a layer config
      * This method processes a configuration object containing layer definitions.
      * 
-     * @param {*} conf conf
+     * @param {Config} conf conf
      */
     addLayerConfig (conf) {
         for (const key in conf) {
@@ -599,9 +617,7 @@ class Catalog extends Control {
 
         /**
          * specify all list of layers (configuration service)
-         * @type {Object}
-         * @see [schema](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json)
-         * @see [jsdoc](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc)
+         * @type {Array<Object>}
          */
         this.layersList = {};
 
@@ -920,7 +936,7 @@ class Catalog extends Control {
      * It also adds additional properties to each layer, such as `service`, `categories`, and URLs for producers and thematics.
      * It cleans the list of layers by removing those without valid configuration and adds a default thumbnail if enabled and not present.
      * 
-     * @param {*} layers - list of layers
+     * @param {Array<ConfigLayer>} layers - list of layers
      * @private
      */
     checkConfigLayers (layers) {
@@ -981,7 +997,7 @@ class Catalog extends Control {
 
     /**
      * Create DOM content categories and entries
-     * @param {*} data - data
+     * @param {Config} data - data
      * @private
      */
     createCatalogContentEntries (data) {
@@ -1059,13 +1075,25 @@ class Catalog extends Control {
      * @param {*} key type de catégorisation 'producer' ou 'thematic'
      * @param {*} value tableau de couches
      * @private
-     * @returns {Object} fiche d'information
+     * @returns {Array<Object>} fiche d'information
      * @todo récuperer l'url du service du catalogue selon l'environnement !
      * @example
      * // pour les producteurs
      * getInformationsCatalog("producer", ["IGN", "IGNF", "Autres"]);
      * // pour les thématiques
      * getInformationsCatalog("thematic", ["Agriculture", "Transports", "Autres"]);
+     * // OUTPUT
+     * [
+     *   {
+     *      name : "IGN",
+     *      url : "https://cartes.gouv.fr/catalogue/search?organization=IGN"
+     *   },
+     * 
+     *   {
+     *     name : "Agriculture",
+     *     url : "https://cartes.gouv.fr/catalogue/search?topic=farming"
+     *   }
+     * ]
      * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
      */
     getInformationsCatalog (key, value) {
@@ -1074,12 +1102,11 @@ class Catalog extends Control {
         }
         var url = "https://cartes.gouv.fr/catalogue/search?";
         var data = [];
-        // INFO liens vers le catalogue
-        //
+        // INFO
         // - comment recuperer la fiche si pas renseigné dans metadata_urls ?
         // ex. https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN
         // > la conf nous fournit une liste via le champ 'metada_urls'
-        //
+        
         // - comment avoir l'info sur le producteur à partir de la liste des acronymes ?
         // ex. https://cartes.gouv.fr/catalogue/search?organization=IGN
         // > la conf nous fournit une liste via le champ 'producer'
@@ -1097,6 +1124,7 @@ class Catalog extends Control {
         }
         // - comment faire le lien entre les noms pour obtenir les données du theme ?
         // ex. pour Agriculture, l'url est https://cartes.gouv.fr/catalogue/search?topic=farming
+        // pour les thématiques, un mapping est nécessaire entre le nom et l'id
         // > un fichier de mapping est disponible
         if (key === "thematic") {
             for (let j = 0; j < value.length; j++) {

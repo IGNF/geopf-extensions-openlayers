@@ -600,100 +600,6 @@ var CatalogDOM = {
         var strElements = "";
         // le champ description en Markdown est transformé vers HTML
         var tmplElement = (i, name, title, service, description, informations, thumbnail, categoryId) => {
-            // ajout des meta informations sur la couche
-            // ex. producteurs, thèmes, metadatas
-            // les liens sont dans des tableaux
-            // ex. producers : [{name,url},{name,url},...]
-            // ex. thematics : [{name,url},{name,url},...]
-            // ex. metadatas : [url,url,...]
-            // on affiche les liens s'ils existent
-            var tmplInfos = (informations) => {
-                // les informations sont des tableaux !
-                if (!informations.producers && !informations.thematics && !informations.metadatas) {
-                    return "";
-                }
-                var strProducers = "";
-                if (informations.producers) {
-                    if (informations.producers.length === 1) {
-                        strProducers = `
-                        <li>
-                            <a  href="${informations.producers[0].url}" 
-                                target="_blank" 
-                                class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
-                                ${informations.producers[0].name}
-                            </a>
-                        </li>
-                        `;
-                    } else {
-                        for (let i = 0; i < informations.producers.length; i++) {
-                            const element = informations.producers[i];
-                            strProducers += `
-                                <li>
-                                    <a href="${element.url}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
-                                        ${element.name}
-                                    </a>
-                                </li>
-                            `;
-                        }
-                    }
-                }
-                var strThematics = "";
-                if (informations.thematics) {
-                    if (informations.thematics.length === 1) {
-                        strThematics = `
-                        <li>
-                            <a 
-                                href="${informations.thematics[0].url}" 
-                                target="_blank" 
-                                class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
-                                ${informations.thematics[0].name}
-                            </a>
-                        </li>
-                        `;
-                    } else {
-                        for (let i = 0; i < informations.thematics.length; i++) {
-                            const element = informations.thematics[i];
-                            strThematics += `
-                                <li>
-                                    <a href="${element.url}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
-                                        ${element.name}
-                                    </a>
-                                </li>
-                            `;
-                        }
-                    }
-                }
-                var strMetadatas = "";
-                if (informations.metadatas) {
-                    for (let i = 0; i < informations.metadatas.length; i++) {
-                        const element = informations.metadatas[i];
-                        var title = element;
-                        if (element.includes("dataset")) {
-                            title = "Fiche de la donnée";
-                        }
-                        if (element.includes("csw")) {
-                            title = "Catalogue CSW";
-                        }
-                        strMetadatas += `
-                            <li>
-                                <a href="${element}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
-                                    ${title}
-                                </a>
-                            </li>
-                        `;
-                    }
-                }
-                return `
-                    <fieldset>
-                    <legend class="fr-message">Fiche(s) détaillée(s)</legend>
-                    <ul>
-                    ${strProducers}
-                    ${strThematics}
-                    ${strMetadatas}
-                    </ul>
-                    </fieldset>
-                `;
-            };
             // ajout de la vignette si elle existe
             // le thumbnail est optionnel
             var tmplThumbnail = (thumbnail) => {
@@ -721,9 +627,64 @@ var CatalogDOM = {
                 }
                 return "";
             };
+            // par defaut, on prend le 1er producteur
+            var producerName = informations.producers ? informations.producers[0].name : "";
+            // on affiche tous les producteurs sous forme de tag
+            // ex. producers : [{name,url},{name,url},...]
+            var tmplProducers = (producers) => {
+                if (!producers) {
+                    return ``;
+                }
+                var data = "";
+                for (let i = 0; i < producers.length; i++) {
+                    const producer = producers[i];
+                    data += `
+                        <a href="${producer.url}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
+                            ${producer.name}
+                        </a>
+                    `;
+                }
+                return data;
+            };
+            // on a une liste de metadonnées, mais on affiche uniquement
+            // la métadonnée de donnée
+            // ex. metadatas : [url,url,...]
+            var tmplMetadatas = (metadatas) => {
+                if (!metadatas) {
+                    return ``;
+                }
+                var data = "";
+                for (let i = 0; i < metadatas.length; i++) {
+                    const metadata = metadatas[i];
+                    if (metadata.includes("catalogue/dataset")) {
+                        return `
+                            <a href="${metadata}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                Voir la fiche détaillée
+                            </a>
+                        `;
+                    }
+                }
+                return data;
+            };
+            // INFO
+            // informations non utilisées
+            // ex. thematics : [{name,url},{name,url},...]
+            var tmplThematics = (thematics) => {
+                if (!thematics) {
+                    return ``;
+                }
+                var data = "";
+                for (let i = 0; i < thematics.length; i++) {
+                    const thematic = thematics[i];
+                    data += `
+                        <a href="${thematic.url}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
+                            ${thematic.name}
+                        </a>
+                    `;
+                }
+                return data;
+            };
 
-            var producer = informations.producers ? informations.producers[0].name : ""; // par defaut
-            
             return `
             <div 
                 class="fr-fieldset__element" 
@@ -748,7 +709,7 @@ var CatalogDOM = {
                         title="nom technique : ${name}"
                         style="display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; cursor: pointer;">
                         ${title}
-                        <span class="GPlabelActive fr-label fr-hint-text">${producer}</span>
+                        <span class="GPlabelActive fr-label fr-hint-text">${producerName}</span>
                     </label>
                     <button 
                         id="catalog-collapse-more-${i}-${categoryId}"
@@ -763,13 +724,14 @@ var CatalogDOM = {
                     </button>
                 </div>
                 <div class="gpf-hidden" id="catalog-info-more-${i}-${categoryId}">
-                    <span class="fr-label fr-message">${name} - ${service}</span>
-                    <span class="fr-label fr-hint-text">${producer}</span>
-                    <hr>
+                    <p>
+                        <span class="fr-label fr-message">${name} - ${service}</span>
+                        ${tmplProducers(informations.producers)}
+                    </p>
                     <p class="fr-label fr-hint-text" style="">
                         ${description}
                     </p>
-                    ${tmplInfos(informations)}
+                    ${tmplMetadatas(informations.metadatas)}
                 </div>
             </div>
             `;
