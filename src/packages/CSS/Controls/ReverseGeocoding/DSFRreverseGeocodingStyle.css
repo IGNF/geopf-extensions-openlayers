@@ -42,6 +42,7 @@ div[id^=GPreverseGeocodedLocationResultDiv_] {
 .GPcopiedLocation::after {
   -webkit-mask: url("img/dsfr/check-fill.svg") center no-repeat;
   mask: url("img/dsfr/check-fill.svg") center no-repeat;
+  mask-size: 70%;
 }
 
 .GPautoCompleteProposal {
