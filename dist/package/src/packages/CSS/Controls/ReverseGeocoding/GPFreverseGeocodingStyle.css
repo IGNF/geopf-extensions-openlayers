@@ -25,3 +25,32 @@
     background-color: rgba(255,200,0,0.25);
     color: #222;
 }
+
+
+.GPcopiedLocation {
+  -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iY3VycmVudENvbG9yIj48cGF0aCBkPSJNOS45OTk3IDE1LjE3MDlMMTkuMTkyMSA1Ljk3ODUyTDIwLjYwNjMgNy4zOTI3M0w5Ljk5OTcgMTcuOTk5M0wzLjYzNTc0IDExLjYzNTRMNS4wNDk5NiAxMC4yMjEyTDkuOTk5NyAxNS4xNzA5WiI+PC9wYXRoPjwvc3ZnPg==') center no-repeat;
+  mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iY3VycmVudENvbG9yIj48cGF0aCBkPSJNOS45OTk3IDE1LjE3MDlMMTkuMTkyMSA1Ljk3ODUyTDIwLjYwNjMgNy4zOTI3M0w5Ljk5OTcgMTcuOTk5M0wzLjYzNTc0IDExLjYzNTRMNS4wNDk5NiAxMC4yMjEyTDkuOTk5NyAxNS4xNzA5WiI+PC9wYXRoPjwvc3ZnPg==') center no-repeat;
+  mask-size: 66%;
+  height: 20px;
+  width: 20px;
+}
+
+[id^="GPreverseGeocodedLocationResultCopy_"]:not(.GPcopiedLocation) {
+  -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiBmaWxsPSJjdXJyZW50Q29sb3IiPjxwYXRoIGQ9Ik02Ljk5OTggNlYzQzYuOTk5OCAyLjQ0NzcyIDcuNDQ3NTIgMiA3Ljk5OTggMkgxOS45OTk4QzIwLjU1MjEgMiAyMC45OTk4IDIuNDQ3NzIgMjAuOTk5OCAzVjE3QzIwLjk5OTggMTcuNTUyMyAyMC41NTIxIDE4IDE5Ljk5OTggMThIMTYuOTk5OFYyMC45OTkxQzE2Ljk5OTggMjEuNTUxOSAxNi41NDk5IDIyIDE1Ljk5MyAyMkg0LjAwNjY2QzMuNDUwNTkgMjIgMyAyMS41NTU0IDMgMjAuOTk5MUwzLjAwMjYgNy4wMDA4N0MzLjAwMjcgNi40NDgxMSAzLjQ1MjY0IDYgNC4wMDk0MiA2SDYuOTk5OFpNNS4wMDI0MiA4TDUuMDAwMTkgMjBIMTQuOTk5OFY4SDUuMDAyNDJaTTguOTk5OCA2SDE2Ljk5OThWMTZIMTguOTk5OFY0SDguOTk5OFY2WiI+PC9wYXRoPjwvc3ZnPg==') center no-repeat;
+  mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiBmaWxsPSJjdXJyZW50Q29sb3IiPjxwYXRoIGQ9Ik02Ljk5OTggNlYzQzYuOTk5OCAyLjQ0NzcyIDcuNDQ3NTIgMiA3Ljk5OTggMkgxOS45OTk4QzIwLjU1MjEgMiAyMC45OTk4IDIuNDQ3NzIgMjAuOTk5OCAzVjE3QzIwLjk5OTggMTcuNTUyMyAyMC41NTIxIDE4IDE5Ljk5OTggMThIMTYuOTk5OFYyMC45OTkxQzE2Ljk5OTggMjEuNTUxOSAxNi41NDk5IDIyIDE1Ljk5MyAyMkg0LjAwNjY2QzMuNDUwNTkgMjIgMyAyMS41NTU0IDMgMjAuOTk5MUwzLjAwMjYgNy4wMDA4N0MzLjAwMjcgNi40NDgxMSAzLjQ1MjY0IDYgNC4wMDk0MiA2SDYuOTk5OFpNNS4wMDI0MiA4TDUuMDAwMTkgMjBIMTQuOTk5OFY4SDUuMDAyNDJaTTguOTk5OCA2SDE2Ljk5OThWMTZIMTguOTk5OFY0SDguOTk5OFY2WiI+PC9wYXRoPjwvc3ZnPg==') center no-repeat;
+  mask-size: 66%;
+  height: 20px;
+  width: 20px;
+}
+
+[id^="GPreverseGeocodedLocationResultCopy_"] {
+  margin: auto;
+  box-shadow: none;
+  background-color: #5E5E5E;
+  cursor: pointer;
+}
+
+div[id^=GPreverseGeocodedLocationResultDiv_] {
+  display: flex;
+  align-items: center;
+}

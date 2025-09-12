@@ -437,6 +437,14 @@ declare class ReverseGeocode extends Control {
      */
     private onReverseGeocodingResultMouseOut;
     /**
+     * this method is called by event 'click' on 'GPreverseGeocodedLocationResultCopy_' button
+     * (cf. ReverseGeocodeDOM._createReverseGeocodingResultElement),
+     *
+     * @param {Object} e - HTMLElement
+     * @private
+     */
+    private onReverseGeocodingResultCopyButtonClick;
+    /**
      * this method clears previous location results
      *
      * @private
