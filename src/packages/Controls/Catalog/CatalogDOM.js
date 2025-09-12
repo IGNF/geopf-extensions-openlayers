@@ -1,6 +1,3 @@
-import { marked as Marked } from "marked";
-import sanitizeHtml from "sanitize-html";
-
 const stringToHTML = (str) => {
     var support = function () {
         if (!window.DOMParser) {
@@ -726,12 +723,7 @@ var CatalogDOM = {
             };
 
             var producer = informations.producers ? informations.producers[0].name : ""; // par defaut
-            // INFO
-            // On transforme le markdown en HTML
-            // et on nettoie le HTML pour éviter les injections XSS
-            // cf. https://marked.js.org/
-            // cf. https://github.com/apostrophecms/sanitize-html
-            var descriptionHtml = sanitizeHtml(Marked.parse(description));
+            
             return `
             <div 
                 class="fr-fieldset__element" 
@@ -774,8 +766,8 @@ var CatalogDOM = {
                     <span class="fr-label fr-message">${name} - ${service}</span>
                     <span class="fr-label fr-hint-text">${producer}</span>
                     <hr>
-                    <p class="fr-label fr-message">
-                        ${descriptionHtml}
+                    <p class="fr-label fr-hint-text" style="">
+                        ${description}
                     </p>
                     ${tmplInfos(informations)}
                 </div>

@@ -26,6 +26,10 @@ import CatalogDOM from "./CatalogDOM";
 // Mapping de themes anglais -> français
 import Topics from "./topics.json";
 
+// import externe
+import { marked as Marked } from "marked";
+import sanitizeHtml from "sanitize-html";
+
 var logger = Logger.getLogger("widget");
 
 /**
@@ -837,50 +841,8 @@ class Catalog extends Control {
                 Utils.mergeParams(data, Config.configuration);
             }
 
-            // INFO
-            // on en profite pour ajouter des properties :
-            // - service : utile pour identifier la couche
-            // de manière unique : name + service
-            // - categories : utile pour definir l'appartenance d'une couche
-            // à une ou plusieurs categories
-            // on en profite aussi pour nettoyer la liste
-            // des couches qui n'ont pas de configuration valide
-            // cf. serviceParams obligatoire
-            // on en profite aussi pour ajouter une vignette par défaut
-            // si la couche n'en a pas et que l'option est activée
-            for (const key in data.layers) {
-                if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
-                    const layer = data.layers[key];
-                    if (layer.serviceParams) {
-                        // si la couche a bien une configuration valide liée au service
-                        var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                        layer.service = service; // new proprerty !
-                        layer.categories = []; // new property ! vide pour le moment
-                        layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
-                        layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
-                        // label de la couche
-                        layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
-                        if (this.options.layerThumbnail) {
-                            // si on souhaite afficher une vignette
-                            // et que la couche n'en a pas
-                            // on met une vignette par défaut
-                            if (!layer.thumbnail) {
-                                layer.thumbnail = "default";
-                            }
-                        } else {
-                            // sinon pas de vignette
-                            if (layer.thumbnail) {
-                                // FIXME 
-                                // suppression !?
-                                delete layer.thumbnail;
-                            }
-                        }
-                    } else {
-                        // sinon on supprime l'entrée car pas de configuration valide
-                        delete data.layers[key];
-                    }
-                }
-            }
+            // contrôle des couches
+            this.checkConfigLayers(data.layers);
 
             // sauvegarde des couches de données
             this.layersList = data.layers;
@@ -934,45 +896,8 @@ class Catalog extends Control {
                     Utils.mergeParams(data, Config.configuration);
                 }
 
-                // INFO
-                // on en profite pour ajouter des properties :
-                // - service : utile pour identifier la couche
-                // de manière unique : name + service
-                // - categories : utile pour definir l'appartenance d'une couche
-                // à une ou plusieurs categories
-                for (const key in data.layers) {
-                    if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
-                        const layer = data.layers[key];
-                        if (layer.serviceParams) {
-                            // si la couche a bien une configuration valide liée au service
-                            var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                            layer.service = service; // new proprerty !
-                            layer.categories = []; // new property ! vide pour le moment
-                            layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
-                            layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
-                            // label de la couche
-                            layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
-                            if (this.options.layerThumbnail) {
-                                // si on souhaite afficher une vignette
-                                // et que la couche n'en a pas
-                                // on met une vignette par défaut
-                                if (!layer.thumbnail) {
-                                    layer.thumbnail = "default";
-                                }
-                            } else {
-                                // sinon pas de vignette
-                                if (layer.thumbnail) {
-                                    // FIXME 
-                                    // suppression !?
-                                    delete layer.thumbnail;
-                                }
-                            }
-                        } else {
-                            // sinon on supprime l'entrée car pas de configuration valide
-                            delete data.layers[key];
-                        }
-                    }
-                }
+                // contrôle des couches
+                this.checkConfigLayers(data.layers);
 
                 // sauvegarde de la liste des couches
                 this.layersList = data.layers;
@@ -985,6 +910,71 @@ class Catalog extends Control {
                 return await new Promise((resolve, reject) => {
                     reject(e);
                 });
+            }
+        }
+    }
+
+    /**
+     * Check configuration layers
+     * This method checks the configuration of layers to ensure they have valid service parameters.
+     * It also adds additional properties to each layer, such as `service`, `categories`, and URLs for producers and thematics.
+     * It cleans the list of layers by removing those without valid configuration and adds a default thumbnail if enabled and not present.
+     * 
+     * @param {*} layers - list of layers
+     * @private
+     */
+    checkConfigLayers (layers) {
+        // INFO
+        // on en profite pour ajouter des properties :
+        // - service : utile pour identifier la couche
+        // de manière unique : name + service
+        // - categories : utile pour definir l'appartenance d'une couche
+        // à une ou plusieurs categories
+        // on en profite aussi pour nettoyer la liste
+        // des couches qui n'ont pas de configuration valide
+        // cf. serviceParams obligatoire
+        // on en profite aussi pour ajouter une vignette par défaut
+        // si la couche n'en a pas et que l'option est activée
+        for (const key in layers) {
+            if (Object.prototype.hasOwnProperty.call(layers, key)) {
+                const layer = layers[key];
+                if (layer.serviceParams) {
+                    // si la couche a bien une configuration valide liée au service
+                    var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
+                    layer.service = service; // new proprerty !
+                    layer.categories = []; // new property ! vide pour le moment
+                    layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
+                    layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
+                    // label de la couche
+                    layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
+                    // INFO
+                    // On transforme le markdown en HTML
+                    // et on nettoie le HTML pour éviter les injections XSS
+                    // cf. https://marked.js.org/
+                    // cf. https://github.com/apostrophecms/sanitize-html
+                    // Le sanitize est trop strict avec les images, les svg... !
+                    // Le markdown ne doit pas être échappé pour realiser une transformation !
+                    layer.description = sanitizeHtml(Marked.parse(layer.description));
+                    // les vignettes !
+                    if (this.options.layerThumbnail) {
+                        // si on souhaite afficher une vignette
+                        // et que la couche n'en a pas
+                        // on met une vignette par défaut
+                        if (!layer.thumbnail) {
+                            layer.thumbnail = "default";
+                        }
+                    } else {
+                        // sinon pas de vignette
+                        if (layer.thumbnail) {
+                            // FIXME 
+                            // suppression !?
+                            delete layer.thumbnail;
+                        }
+                    }
+                } else {
+                    // sinon on supprime l'entrée car pas de configuration valide
+                    delete layers[key];
+                }
             }
         }
     }
