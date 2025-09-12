@@ -26,14 +26,26 @@
     color: #222;
 }
 
-[id^="GPreverseGeocodedLocationResultCopy_"] {
-  margin: auto;
-  box-shadow: none;
+
+.GPcopiedLocation {
+  -webkit-mask: url("img/dsfr/check-fill.svg") center no-repeat;
+  mask: url("img/dsfr/check-fill.svg") center no-repeat;
+  mask-size: 66%;
+  height: 20px;
+  width: 20px;
+}
+
+[id^="GPreverseGeocodedLocationResultCopy_"]:not(.GPcopiedLocation) {
   -webkit-mask: url("img/dsfr/copy.svg") center no-repeat;
   mask: url("img/dsfr/copy.svg") center no-repeat;
   mask-size: 66%;
   height: 20px;
   width: 20px;
+}
+
+[id^="GPreverseGeocodedLocationResultCopy_"] {
+  margin: auto;
+  box-shadow: none;
   background-color: #5E5E5E;
   cursor: pointer;
 }

@@ -128,7 +128,7 @@ var ReverseGeocodeDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GPreverseGeocodedLocation_" + id);
         div.setAttribute("tabindex", "0");
-        div.className = "GPautoCompleteProposal";
+        div.className = "GPautoCompleteProposal gpf-panel__items";
         div.innerHTML = locationDescription;
         div.title = locationDescription;
 
@@ -176,6 +176,10 @@ var ReverseGeocodeDOM = {
             copyResultButton.addEventListener("click", function (e) {
                 if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
                     context.onReverseGeocodingResultCopyButtonClick(e);
+                    copyResultButton.classList.add("GPcopiedLocation");
+                    setTimeout(() => {
+                        copyResultButton.classList.remove("GPcopiedLocation");
+                    }, 1000); 
                 }
             });
         } else if (copyResultButton.attachEvent) {

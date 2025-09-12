@@ -34,9 +34,14 @@ div[id^=GPreverseGeocodedLocationResultDiv_] {
   box-shadow: none;
 }
 
-.gpf-btn-icon-copy-result::after {
+.gpf-btn-icon-copy-result:not(.GPcopiedLocation)::after {
   -webkit-mask: url("img/dsfr/copy.svg") center no-repeat;
   mask: url("img/dsfr/copy.svg") center no-repeat;
+}
+
+.GPcopiedLocation::after {
+  -webkit-mask: url("img/dsfr/check-fill.svg") center no-repeat;
+  mask: url("img/dsfr/check-fill.svg") center no-repeat;
 }
 
 .GPautoCompleteProposal {
