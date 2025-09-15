@@ -20,6 +20,7 @@ __DATE__
   - LayerSwitcher : Option pour verrouiller une couche (#414)
   - LayerSwitcher : Tooltips avancés en HTML sur le survol des couches (#420)
   - SearchEngine : la sélection du résultat entraîne désormais un zoom par rapport à son emprise (#432)
+  - Reverse Geocode : ajout d'un bouton pour copier un résultat dans le presse-papier (#415)
 
 * 🔨 [Changed]
 
