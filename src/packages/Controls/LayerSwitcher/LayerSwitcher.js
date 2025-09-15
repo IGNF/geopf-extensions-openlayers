@@ -498,6 +498,15 @@ class LayerSwitcher extends Control {
                     nameDiv.title = config.description || config.title;
                 }
             }
+            // set new title in layer div
+            if (config.producer) {
+                let producerDiv = document.getElementById(this._addUID("GPlayerProducer_ID_" + id));
+                if (producerDiv) {
+                    producerDiv.innerHTML = config.producer;
+                } else {
+                    this.setLayerProducer(id, config.producer);
+                }
+            }
             // add layer info picto if necessary
             var infodiv = document.getElementById(this._addUID("GPinfo_ID_" + id));
             if (!document.getElementById(this._addUID("GPinfo_ID_" + id)) && config.description) {
@@ -1547,7 +1556,6 @@ class LayerSwitcher extends Control {
      * @private
      */
     _updateLayersOrder () {
-        logger.log("update layer orders");
         // info :
         // 1. on récupère les zindex et les couches associées dans un tableau associatif (objet)
         // 2. on réordonne les couche selon leur index : on leur attribue de nouveaux zindex uniques
@@ -2409,6 +2417,30 @@ class LayerSwitcher extends Control {
             }
         }
         return layerInfo;
+    }
+
+    /**
+     * Modifie le nom du producteur de donnée
+     * @param {Layer} layer Couche à modifier
+     * @param {String} producer Nom du producteur. Vide si le producteur doit être enlevé
+     */
+    setLayerProducer (layer, producer) {
+        // Récupère les options de la couche
+        let id = layer.gpLayerId;
+        let layerDiv = this._layers[id].div;
+        if (layerDiv) {
+            let layerTitleDiv = layerDiv.querySelector(".GPlayerTitle");
+            // Producteur déjà ajouté : on le supprime
+            if (layerTitleDiv.childElementCount === 2) {
+                layerTitleDiv.querySelector(".GPlayerProducer").remove();
+            }
+            if (producer) {
+                let div = this._createLayerProducerElement({
+                    producer : producer
+                }, this.options.allowTooltips);
+                layerTitleDiv.appendChild(div);
+            }
+        }
     }
 
 };

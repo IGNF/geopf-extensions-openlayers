@@ -406,7 +406,6 @@ var LayerSwitcherDOM = {
         if (obj.draggable) {
             div.appendChild(this._createDragNDropElement(obj));
         }
-        // ajout bouton des outils avancés
 
         return div;
     },
@@ -444,7 +443,7 @@ var LayerSwitcherDOM = {
         let div = document.createElement("div");
         div.id = this._addUID("GPtitle_ID_" + obj.id);
         div.className = "GPtitle";
-        
+
         div.appendChild(this._createLayerPictoElement(obj, tooltips));
 
         div.appendChild(this._createLayerNameDivElement(obj, tooltips));
@@ -465,7 +464,7 @@ var LayerSwitcherDOM = {
         let div = document.createElement("div");
         div.id = this._addUID("GPlayerTitle_ID_" + obj.id);
         div.className = "GPlayerTitle";
-        
+
         div.appendChild(this._createLayerNameElement(obj, tooltips));
 
         if (obj.producer) {
