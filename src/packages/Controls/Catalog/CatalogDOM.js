@@ -249,7 +249,7 @@ var CatalogDOM = {
                 <label class="fr-label" for="catalog-input-search-global">
                     Recherche
                 </label>
-                <input class="fr-input" placeholder="${label}" type="search" id="catalog-input-search-global" name="search-input" incremental>
+                <input class="fr-input" placeholder="${label}" type="text" id="catalog-input-search-global" name="search-input" incremental>
                 <button id="catalog-button-search-global" class="fr-btn" title="${label}">
                     Rechercher
                 </button>
@@ -273,7 +273,11 @@ var CatalogDOM = {
 
         var input = shadow.getElementById("catalog-input-search-global");
         if (input) {
-            input.addEventListener("search", (e) => { 
+            input.addEventListener("input", (e) => {
+                // on n'active la recherche que si le texte fait plus de 2 caractères
+                if (e.target.value.length < 3) {
+                    return;
+                }
                 this.onSearchGlobalCatalogInputChange(e);
             });
         }
@@ -339,7 +343,7 @@ var CatalogDOM = {
         //   - sinon cachée par defaut (remove('fr-tabs__panel--selected'))
         // l'activation/désactivation est gérée dans le listener de l'onglet
         // cf. this.onSelectCatalogTabClick
-        var tmplSearchSpecificBar = (active) => {
+        var tmplSearchSpecificBar = (active, title) => {
             var className = "gpf-hidden";
             if (active) {
                 className = "fr-tabs__panel--selected";
@@ -351,8 +355,8 @@ var CatalogDOM = {
                     <label class="fr-label" for="catalog-input-search-specific">
                         Recherche dans la catégorie
                     </label>
-                    <input class="fr-input" placeholder="Rechercher une donnée dans la catégorie" type="search" id="catalog-input-search-specific" name="search-input-specific" incremental>
-                    <button id="catalog-button-search-specific" class="fr-btn" title="Rechercher">
+                    <input class="fr-input" placeholder="${title}" type="text" id="catalog-input-search-specific" name="search-input-specific" incremental>
+                    <button id="catalog-button-search-specific" class="fr-btn" title="${title}">
                         Rechercher
                     </button>
                 </div>
@@ -470,7 +474,8 @@ var CatalogDOM = {
             strCategoriesTabPanelContents += tmplCategoryTabPanelContent(j, category.id, category.default, category.search, category.items, hasActiveBar);
         }
         // on ajoute la barre de recherche spécifique à la catégorie
-        var strSearchSpecificBar = tmplSearchSpecificBar(currentActiveBar);
+        const titleSpecifBar = "Rechercher une donnée dans la catégorie";
+        var strSearchSpecificBar = tmplSearchSpecificBar(currentActiveBar, titleSpecifBar);
         // FIXME 
         // le calcul de la hauteur est realisé à la main pour pallier le manque de JS DSFR (?)
         // style="--tabs-height: 294px;"
@@ -576,7 +581,11 @@ var CatalogDOM = {
 
         var searchInput = shadow.getElementById("catalog-input-search-specific");
         if (searchInput) {
-            searchInput.addEventListener("search", (e) => { 
+            searchInput.addEventListener("input", (e) => {
+                // on n'active la recherche que si le texte fait plus de 2 caractères
+                if (e.target.value.length < 3) {
+                    return;
+                }
                 this.onSearchSpecificCatalogInputChange(e);
             });
         }
