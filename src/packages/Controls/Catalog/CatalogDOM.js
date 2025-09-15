@@ -136,22 +136,22 @@ var CatalogDOM = {
         var className = "";
         switch (size) {
             case "sm":
-                className = "fr-col-sm-4 fr-col-md-6 fr-col-lg-8";
+                className = "fr-col-8";
                 break;
             case "md":
-                className = "fr-col-sm-6 fr-col-md-8 fr-col-lg-10";
+                className = "fr-col-10";
                 break;
             case "lg":
-                className = "fr-col-sm-8 fr-col-md-10 fr-col-lg-12";
+                className = "fr-col-12";
                 break;
             case "xl":
-                className = "fr-col-sm-8 fr-col-md-10 fr-col-lg-12 fr-col-xl-14";
+                className = "fr-col-14";
                 break;
             default:
                 break;
         }
         var div = document.createElement("div");
-        div.className = "fr-col-12 " + className;
+        div.className = className;
         return div;
     },
 
@@ -346,7 +346,7 @@ var CatalogDOM = {
             }                
             return `
             <!-- barre de recherche spécifique à la catégorie -->
-            <div id="catalog-container-search-specific" class="fr-tabs__list ${className}" style="padding-top:10px;padding-bottom:20px;justify-content:center;">
+            <div id="catalog-container-search-specific" class="fr-tabs__list ${className}" style="padding-top:20px;padding-bottom:10px;justify-content:center;">
                 <div class="fr-search-bar" id="catalog-header-search-specific" role="search">
                     <label class="fr-label" for="catalog-input-search-specific">
                         Recherche dans la catégorie
@@ -396,7 +396,7 @@ var CatalogDOM = {
             }
             return `
             <!-- boutons radio des sous categories -->
-            <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend radio-inline-messages">
+            <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend radio-inline-messages" style="margin:unset;">
                 ${strSubCategoriesRadios}
                 <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive"></div>
             </fieldset>
@@ -746,17 +746,18 @@ var CatalogDOM = {
             // - on n'utilise pas le composant DSFR "fr-accordion"
             // - ...
             var classNameIcon = (icon && icon.startsWith("fr-icon")) ? icon : "";
+            var idCollapseSection = `accordion-${categoryId}-${id}`;
             return `
             <!-- section -->
             <section id="section-${categoryId}-${id}" class="fr-accordion" style="contain: content;">
                 <h3 class="fr-accordion__title">
-                    <button class="GPcatalogButtonSection fr-accordion__btn gpf-accordion__btn" role="button-collapse-${categoryId}" aria-expanded="false" aria-controls="accordion-${categoryId}-${id}">
-                        <span class="GPshowCatalogAdvancedTools gpf-hidden" role="button-icon-collapse-${categoryId}"></span>
-                        <span class="catalog-section-icon ${classNameIcon}" style="width: calc(100% - 2rem);">${title}</span>
-                        <span class="catalog-section-count" id="section-count-${categoryId}-${id}" style="position: absolute; right: 1.25rem;">${count}</span>
+                    <button class="GPcatalogButtonSection fr-accordion__btn gpf-accordion__btn" role="section-collapse-${categoryId}" aria-expanded="false" aria-controls="${idCollapseSection}">
+                        <span class="GPshowCatalogAdvancedTools gpf-hidden"></span>
+                        <span class="catalog-section-icon ${classNameIcon}" role="section-icon-collapse-${categoryId}" style="width: calc(100% - 2rem);">${title}</span>
+                        <span class="catalog-section-count" role="section-count-collapse-${categoryId}" id="section-count-${categoryId}-${id}" style="position: absolute; right: 1.25rem;">${count}</span>
                     </button>
                 </h3>
-                <div class="fr-collapse GPelementHidden" id="accordion-${categoryId}-${id}">
+                <div class="fr-collapse GPelementHidden" id="${idCollapseSection}">
                     ${data}
                 </div>
             </section>
@@ -870,7 +871,7 @@ var CatalogDOM = {
             });
         }
         // ouverture d'une sous section ex. theme routier
-        var buttonName = `button-collapse-${category.id}`;
+        var buttonName = `section-collapse-${category.id}`;
         var buttons = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
         if (buttons) {
             buttons.forEach((button) => {
@@ -890,7 +891,7 @@ var CatalogDOM = {
                 }, false);
             });
         }
-        // ouverture du menu "En savoir plus"
+        // ouverture du menu "En savoir plus" d'une couche
         var buttonNameMore = `button-collapse-more-${category.id}`;
         var buttonsMore = shadow.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
         if (buttonsMore) {
@@ -915,10 +916,24 @@ var CatalogDOM = {
             });
         }
         // ouverture d'une sous section ex. theme routier
-        var spanName = `button-icon-collapse-${category.id}`;
-        var spans = shadow.querySelectorAll("[role=" + "\"" + spanName + "\"]");
-        if (spans) {
-            spans.forEach((span) => {
+        // sur le clic de l'icone
+        // pour faciliter l'ouverture de la section
+        var spanIconName = `section-icon-collapse-${category.id}`;
+        var spanIcons = shadow.querySelectorAll("[role=" + "\"" + spanIconName + "\"]");
+        if (spanIcons) {
+            spanIcons.forEach((span) => {
+                span.addEventListener("click", (e) => {
+                    e.target.parentElement.click();
+                });
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        // sur le clic du compteur de couches
+        // pour faciliter l'ouverture de la section
+        var spanCountName = `section-count-collapse-${category.id}`;
+        var spanCounts = shadow.querySelectorAll("[role=" + "\"" + spanCountName + "\"]");
+        if (spanCounts) {
+            spanCounts.forEach((span) => {
                 span.addEventListener("click", (e) => {
                     e.target.parentElement.click();
                 });

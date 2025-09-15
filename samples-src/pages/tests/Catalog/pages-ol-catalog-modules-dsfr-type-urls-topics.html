@@ -57,11 +57,13 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
+                        size : "md",
+                        layerThumbnail : true,
                         categories : [
                             {
                                 title : "Données",
                                 id : "data",
-                                search : true,
+                                search : false,
                                 items : [
                                     {
                                         title : "Thème",

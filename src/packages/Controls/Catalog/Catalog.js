@@ -23,7 +23,7 @@ import GeoportalMapBox from "../../Layers/LayerMapBox";
 // DOM
 import CatalogDOM from "./CatalogDOM";
 
-// Mapping de themes anglais -> français
+// Gestion des topics en local : themes et services et producteurs
 import Topics from "./topics.json";
 
 // import externe
@@ -41,7 +41,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} [titleSecondary=""] - Titre secondaire du panneau.
  * @property {string} [layerLabel="title"] - Propriété utilisée comme label pour les couches.
  * @property {Boolean} [layerThumbnail=false] - Affiche les miniatures des couches si disponibles.
- * @property {string} [size="sm"] - **TODO** Taille de la fenêtre : sm, md ou lg
+ * @property {string} [size="md"] - Taille de la fenêtre : sm, md, lg ou xl.
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
  * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
@@ -1031,7 +1031,20 @@ class Catalog extends Control {
                     // dans les couches
                     if (element.icon && element.iconJson.length === 0 && element.section && element.filter) {
                         const tag = element.filter.field;
-                        element.iconJson = data[tag] || Topics[tag] || [];
+                        // recherche si on a un mapping des topics
+                        if (data.topics && data.topics[tag]) {
+                            // dans la configuration avec un tag 'topics' (ex. edisto.json)
+                            element.iconJson = data.topics[tag];
+                        } else if (data[tag]) {
+                            // dans la configuration avec directement la cléf
+                            element.iconJson = data[tag];
+                        } else if (Topics[tag]) {
+                            // dans le fichier de mapping local
+                            element.iconJson = Topics[tag];
+                        } else {
+                            // pas d'icones
+                            element.iconJson = [];
+                        }
                     }
                     categories.push(element);
                 }

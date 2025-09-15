@@ -183,7 +183,8 @@
         "metadata_urls": [
           "https://data.geopf.fr/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&OUTPUTSCHEMA=http://standards.iso.org/iso/19115/-3/mdb/2.0&elementSetName=full&ID=IGNF_PLAN-IGN",
           "https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN"
-        ]
+        ],
+        "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/thumbnail/f6876c32-f294-43fc-bd20-00a5a66a1882.png"
       },
       "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMS": {
         "name": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
@@ -642,5 +643,286 @@
           }
         }
       }
+    },
+
+  "territories": [
+    {
+      "id": "FXX",
+      "title": "France métropolitaine",
+      "description": "",
+      "zoom": null,
+      "bbox": [
+        -9.86,
+        41.15,
+        10.38,
+        51.56
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/fxx.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/fxx.svg"
+    },
+    {
+      "id": "GLP",
+      "title": "Guadeloupe",
+      "description": "",
+      "zoom": null,
+      "bbox": [
+        -61.97,
+        15.72,
+        -60.93,
+        16.66
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/glp.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/glp.svg"
+    },
+    {
+      "id": "GUF",
+      "title": "Guyane",
+      "description": "",
+      "zoom": null,
+      "bbox": [
+        -55.65,
+        1.49,
+        -51.20,
+        6.21
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/guf.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/guf.svg"
+    },
+    {
+      "id": "MTQ",
+      "title": "Martinique",
+      "description": "",
+      "zoom": null,
+      "bbox": [
+        -61.40,
+        14.25,
+        -60.67,
+        15.04
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/mtq.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/mtq.svg"
+    },
+    {
+      "id": "REU",
+      "title": "Réunion",
+      "description": "",
+      "zoom": 10,
+      "bbox": [
+        55.07,
+        -21.46,
+        55.86,
+        -20.79
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/reu.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/reu.svg"
+    },
+    {
+      "id": "SPM",
+      "title": "Saint-Pierre-et-Miquelon",
+      "description": "",
+      "zoom": null,
+      "bbox": [
+        -56.48,
+        46.69,
+        -56.07,
+        47.19
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/spm.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/spm.svg"
+    },
+    {
+      "id": "IDF",
+      "title": "Paris petite couronne",
+      "description": "",
+      "zoom": 12,
+      "bbox": [
+        2.18,
+        48.77,
+        2.52,
+        48.95
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/idf.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/idf.svg"
+    },
+    {
+      "id": "MYT",
+      "title": "Mayotte",
+      "description": "",
+      "zoom": null,
+      "bbox": [
+        44.95,
+        -13.049,
+        45.32,
+        -12.57
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/myt.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/myt.svg"
+    },
+    {
+      "id": "NCL",
+      "title": "Nouvelle Calédonie",
+      "description": "",
+      "zoom": null,
+      "bbox": [
+        163.02,
+        -23.08,
+        167.86,
+        -19.50
+      ],
+      "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/ncl.png",
+      "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/ncl.svg"
     }
+  ],
+  "contacts": {
+    "mail": "",
+    "networks": {
+      "facebook": "https://www.facebook.com/sharer.php",
+      "twitter": "https://twitter.com/intent/tweet",
+      "linkedin": "https://www.linkedin.com/shareArticle",
+      "instagram": "https://www.instagram.com/ign_france/?hl=fr"
+    }
+  },
+  "thematics": [
+    "Biologie, faune et flore",
+    "Limites politiques et administratives",
+    "Climatologie, météorologie, atmosphère",
+    "Économie",
+    "Altimétrie",
+    "Environnement",
+    "Agriculture",
+    "Sciences de la terre, géosciences",
+    "Santé",
+    "Carte de référence de la couverture terrestre",
+    "Infrastructures militaires",
+    "Eaux intérieures, Hydrographie",
+    "Localisation",
+    "Océans",
+    "Cadastre, aménagement",
+    "Société",
+    "Constructions et ouvrages",
+    "Infrastructures de transport",
+    "Télécommunication, approvisionnement et énergie"
+  ],
+  "informations": {
+    "title": "Intervention technique",
+    "description": "Une opération de maintenance aura lieu le lundi 15 juillet à partir de 19h. Elle entraînera une coupure des données et services de l’application pendant 30 minutes. Nous mettrons tout en œuvre pour rétablir les services dans les plus brefs délais.",
+    "type": "warning",
+    "opened": false,
+    "version": 1
+  },
+  "featured": [
+    "CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+    "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+    "PLAN.IGN",
+    "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST",
+    "ORTHOIMAGERY.ORTHOPHOTOS"
+  ],
+  "topics": {
+    "thematic" : [
+        {
+            "id" : "biota",
+            "name" : "Biologie, faune et flore",
+            "icon" : "fr-icon-leaf-file"
+        },
+        { 
+            "id" : "boundaries",
+            "name" : "Limites politiques et administratives",
+            "icon" : "fr-icon-france-line"
+        },
+        { 
+            "id" : "climatologyMeteorologyAtmosphere",
+            "name" : "Climatologie, météorologie, atmosphère",
+            "icon" : "fr-icon-heavy-showers-fill"
+        },
+        { 
+            "id" : "economy",
+            "name" : "Économie",
+            "icon" : "fr-icon-line-chart-fill"
+        },
+        { 
+            "id" : "elevation",
+            "name" : "Altimétrie",
+            "icon" : "fr-icon-map-pin-2-fill"
+        },
+        { 
+            "id" : "environment",
+            "name" : "Environnement",
+            "icon" : "fr-icon-seedling-fill"
+        },
+        { 
+            "id" : "farming",
+            "name" : "Agriculture",
+            "icon" : "fr-icon-plant-fill"
+        },
+        { 
+            "id" : "geoscientificInformation",
+            "name" : "Sciences de la terre, géosciences",
+            "icon" : "fr-icon-earth-fill"
+        },
+        { 
+            "id" : "health",
+            "name" : "Santé",
+            "icon" : "fr-icon-capsule-fill"
+        },
+        { 
+            "id" : "imageryBaseMapsEarthCover",
+            "name" : "Carte de référence de la couverture terrestre",
+            "icon" : "fr-icon-france-fill"
+        },
+        {
+            "id" : "intelligenceMilitary", 
+            "name" : "Infrastructures militaires",
+            "icon" : "fr-icon-medal-fill"
+        },
+        { 
+            "id" : "inlandWaters",
+            "name" : "Eaux intérieures, Hydrographie",
+            "icon" : "fr-icon-flood-fill"
+        },
+        { 
+            "id" : "location",
+            "name" : "Localisation",
+            "icon" : "fr-icon-road-map-fill"
+        },
+        { 
+            "id" : "oceans",
+            "name" : "Océans",
+            "icon" : "fr-icon-fr--submersion-fill"
+        },
+        { 
+            "id" : "planningCadastre",
+            "name" : "Cadastre, aménagement",
+            "icon" : "fr-icon-community-fill"
+        },
+        { 
+            "id" : "society",
+            "name" : "Société",
+            "icon" : "fr-icon-group-fill"
+        },
+        { 
+            "id" : "structure",
+            "name" : "Constructions et ouvrages",
+            "icon" : "fr-icon-compasses-2-fill"
+        },
+        { 
+            "id" : "transportation",
+            "name" : "Infrastructures de transport",
+            "icon" : "fr-icon-bus-fill"
+        },
+        {
+            "id" : "utilitiesCommunication",
+            "name" : "Télécommunication, approvisionnement et énergie",
+            "icon" : "fr-icon-radar-fill"
+        }
+    ],
+    "service" : [
+        { "id" : "wmts", "name" : "WMTS", "icon" : "fr-icon-earth-line" },
+        { "id" : "wfs", "name" : "WFS", "icon" : "fr-icon-earth-fill" },
+        { "id" : "wms", "name" : "WMS", "icon" : "fr-icon-earth-line" },
+        { "id" : "tms", "name" : "TMS", "icon" : "fr-icon-earth-fill" }
+    ],
+    "producer" : [
+        { "id" : "ign", "name" : "IGN", "icon" : "fr-icon-government-fill" }
+    ]
+  }
 }
