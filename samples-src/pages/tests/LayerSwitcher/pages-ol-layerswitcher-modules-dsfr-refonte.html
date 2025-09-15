@@ -51,7 +51,8 @@
 
         osm = new ol.layer.Tile({
             source: new ol.source.OSM(),
-            opacity: 0.8
+            opacity: 0.8,
+            producer: '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
         });
         ortho = new ol.layer.GeoportalWMTS({
             layer: "ORTHOIMAGERY.ORTHOPHOTOS",
@@ -76,12 +77,30 @@
         });
 
         // Appel du LayerSwitcher
-        layerSwitcher = new ol.control.LayerSwitcher({
+        layerSwitcher = new ol.control.LayerSwitcher(
+        {
+            layers: [
+            {
+                layer: osm,
+                config: {
+                    title: 'open street',
+                }
+            },
+            {
+                layer: ortho,
+                config: {
+                    producer : 'IGN',
+                }
+            }
+        ],
             options: {
                 position: "top-right",
                 collapsed: false,
                 panel: true,
                 counter: true,
+                // allowDraggable: false,
+                // allowTooltips: true,
+                allowDelete: true,
                 headerButtons: [
                     {
                         label: 'Ajouter',
@@ -93,7 +112,7 @@
                         label: 'Créer un groupe',
                         icon: "fr-icon-folder-2-line",
                         cb: (e, switcher) => { console.log(e, switcher); },
-                    }
+                    },
                 ],
                 advancedTools: [
                     // cas nominal : SVG inline
@@ -219,10 +238,12 @@
     });
 
     addVectorLayer = function () {
-        vector = new ol.layer.Vector({
+        let vector = new ol.layer.Vector({
             source: new ol.source.Vector(),
+            title: 'Dessin',
+            producer: 'Moi'
         });
-        map.addLayer(vector); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
+        map.addLayer(vector);
     };
 
     addMapsLayer = function () {
@@ -239,7 +260,8 @@
         osm = new ol.layer.Tile({
             source: new ol.source.OSM(),
             // zIndex : 4,
-            opacity: 0.5
+            opacity: 0.5,
+            producer: 'Open Street Map'
         });
         map.addLayer(osm); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
     };

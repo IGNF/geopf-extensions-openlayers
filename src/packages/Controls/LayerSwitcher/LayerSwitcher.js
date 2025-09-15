@@ -41,6 +41,8 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {boolean} [gutter=false] - Ajoute ou retire l’espace autour du panneau.
  * @property {boolean} [allowEdit=true] - Affiche le bouton d’édition pour les couches éditables (vecteur).
  * @property {boolean} [allowGrayScale=true] - Affiche le bouton N&B (niveaux de gris) pour les couches compatibles.
+ * @property {boolean} [allowDraggable=true] - Permet de déplacer les couches.
+ * @property {boolean} [allowDelete=true] - Affiche le bouton de suppression de la couche.
  * @property {boolean} [allowTooltips=false] - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {Array<HeaderButton>} [headerButtons] - Liste d’outils personnalisés à afficher pour chaque couche.
@@ -69,8 +71,8 @@ var logger = Logger.getLogger("layerswitcher");
  * Bouton pour le gestionnaire de couche
  * @typedef {Object} HeaderButton
  * @property {String} label - Specify the label name of the button
+ * @property {HeaderButtonCallback} cb - Callback au click sur l'outil.
  * @property {String} [icon] - Optionnel. Icône de l'outil. Classe à ajouter au bouton.
- * @property {HeaderButtonCallback} [cb] - Optionnel. Callback au click sur l'outil.
  */
 
 /**
@@ -85,6 +87,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {Layer} layer - Objet couche OpenLayers à gérer.
  * @property {Object} [config] - Métadonnées associées à la couche.
  * @property {string} [config.title] - Titre de la couche.
+ * @property {string} [config.producer] - Producteur de la couche.
  * @property {string} [config.description] - Description de la couche.
  * @property {string} [config.quicklookUrl] - URL d’aperçu rapide.
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
@@ -421,6 +424,7 @@ class LayerSwitcher extends Control {
                 grayscale : grayscale,
                 locked : locked,
                 inRange : isInRange != null ? isInRange : true,
+                producer : config.producer != null ? config.producer : (layerInfos._producer || null),
                 title : config.title != null ? config.title : (layerInfos._title || id),
                 description : config.description || layerInfos._description || null,
                 legends : config.legends || layerInfos._legends || [],
@@ -757,6 +761,8 @@ class LayerSwitcher extends Control {
             gutter : false,
             allowEdit : true,
             allowGrayScale : true,
+            allowDraggable : true,
+            allowDelete : true,
             allowTooltips : false,
             headerButtons : [],
             advancedTools : [],
@@ -843,6 +849,7 @@ class LayerSwitcher extends Control {
 
                 // et les infos de la conf si elles existent (title, description, legends, quicklook, metadata)
                 var conf = layers[i].config || {};
+                var layerInfo = this.getLayerInfo(layer);
                 var opacity = layer.getOpacity();
                 var visibility = layer.getVisible();
                 var grayscale = layer.get("grayscale");
@@ -854,13 +861,13 @@ class LayerSwitcher extends Control {
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
                     grayscale : grayscale,
-                    title : conf.title != null ? conf.title : conf.id ? conf.id : id,
-                    description : conf.description || null,
-                    legends : conf.legends || [],
-                    metadata : conf.metadata || [],
-                    quicklookUrl : conf.quicklookUrl || null,
-                    picto : conf.picto || null,
-                    producer : conf.producer || null
+                    title : conf.title || layerInfo._title,
+                    description : conf.description || layerInfo._description,
+                    legends : conf.legends || layerInfo._legends,
+                    metadata : conf.metadata || layerInfo._metadata,
+                    quicklookUrl : conf.quicklookUrl || layerInfo._quicklookUrl,
+                    picto : conf.picto || layerInfo._picto,
+                    producer : conf.producer || layerInfo._producer
                 };
                 this._layers[id] = layerOptions;
             }
@@ -1132,9 +1139,6 @@ class LayerSwitcher extends Control {
         var div = this._createMainLayersDivElement();
         divL.appendChild(div);
 
-        // creation du mode draggable
-        this._createDraggableElement(div, this);
-
         // Bouton de header
 
         if (this.options.headerButtons.length) {
@@ -1154,6 +1158,8 @@ class LayerSwitcher extends Control {
 
         var layerList = this._layerListContainer = this._createMainLayerListElement();
         div.appendChild(layerList);
+        // creation du mode draggable
+        this._createDraggableElement(layerList, this);
 
         // ajout dans le container principal du panneau d'information
         var divI = this._createMainInfoElement();
@@ -1211,6 +1217,8 @@ class LayerSwitcher extends Control {
                     grayscale : grayscale,
                     locked : locked,
                     inRange : isInRange != null ? isInRange : true,
+                    producer : layerInfos._producer || null,
+                    picto : layerInfos._picto || null,
                     title : layerInfos._title || id,
                     description : layerInfos._description || null,
                     legends : layerInfos._legends || [],
@@ -1325,6 +1333,7 @@ class LayerSwitcher extends Control {
                 layerOptions.editable = true;
             }
         }
+
         // Couche grisable ?
         layerOptions.grayable = false;
         // information sur le type de couche : raster
@@ -1332,6 +1341,17 @@ class LayerSwitcher extends Control {
             if (layerOptions.layer instanceof TileLayer || layerOptions.layer instanceof VectorTileLayer) {
                 layerOptions.grayable = true;
             }
+        }
+
+        // Déplacement couche
+        layerOptions.draggable = false;
+        if (this.options.allowDraggable) {
+            layerOptions.draggable = true;
+        }
+        // Suppression autorisée
+        layerOptions.deletable = false;
+        if (this.options.allowDelete) {
+            layerOptions.deletable = true;
         }
         // Ajout de fonctionnalités utilisateurs sur la couche
         layerOptions.advancedTools = this.options.advancedTools || [];
@@ -1527,6 +1547,7 @@ class LayerSwitcher extends Control {
      * @private
      */
     _updateLayersOrder () {
+        logger.log("update layer orders");
         // info :
         // 1. on récupère les zindex et les couches associées dans un tableau associatif (objet)
         // 2. on réordonne les couche selon leur index : on leur attribue de nouveaux zindex uniques
@@ -1823,7 +1844,7 @@ class LayerSwitcher extends Control {
         /**
          * event triggered when an position layer is changed
          *
-         * @event layerswitcher:change:visibility
+         * @event layerswitcher:change:position
          * @property {Object} type - event
          * @property {Object} position - position
          * @property {Object} layer - layer
@@ -2380,6 +2401,8 @@ class LayerSwitcher extends Control {
             if (src) {
                 layerInfo._title = src._title || layerProperties.title || layerProperties.id || "";
                 layerInfo._description = src._description || layerProperties.description || "";
+                layerInfo._producer = src._producer || layerProperties.producer || "";
+                layerInfo._picto = src._picto || layerProperties.picto || "";
                 layerInfo._quicklookUrl = src._quicklookUrl || layerProperties.quicklookUrl || "";
                 layerInfo._metadata = src._metadata || layerProperties.metadata || [];
                 layerInfo._legends = src._legends || layerProperties.legends || [];
