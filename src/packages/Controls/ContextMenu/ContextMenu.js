@@ -493,13 +493,13 @@ class ContextMenu extends Control {
             let config = {
                 id : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
                 layer : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
-                attributes : ["nom"]
+                attributes : ["code_postal","nom_officiel"]
             };
             const result = await OGCRequest.computeGenericGPFWFS(
                 config.layer,
                 config.attributes,
                 config.around || 0,
-                config.geom_name || "geom",
+                config.geom_name || "geometrie",
                 config.additional_cql || "",
                 config.epsg || 4326,
                 config.get_geom || false,
@@ -507,7 +507,7 @@ class ContextMenu extends Control {
                 clickedCoordinate[1]
             );
             if (result.length) {
-                address.innerHTML = result[0];
+                address.innerHTML = result[0].join(", ");
             }
         };
 
