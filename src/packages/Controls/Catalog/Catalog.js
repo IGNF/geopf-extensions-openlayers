@@ -44,6 +44,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} [size="md"] - Taille de la fenêtre : sm, md, lg ou xl.
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
+ * @property {string} [search.label="Rechercher une donnée"] - Label du champ de recherche.
  * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
  * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
  * @property {Array<Categories>} [categories] - Liste des catégories et sous-catégories.
@@ -132,6 +133,7 @@ class Catalog extends Control {
      *           layerThumbnail : true,
      *           search : {
      *               display : true,
+     *               label : "Rechercher une donnée",
      *               criteria : [
      *                   "name",
      *                   "title",
@@ -519,6 +521,7 @@ class Catalog extends Control {
             size : "md",
             search : {
                 display : true, // barre de recherche globale
+                label : "Rechercher une donnée",
                 criteria : [
                     "name",
                     "title",
@@ -778,7 +781,7 @@ class Catalog extends Control {
         // header
         var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createCatalogPanelHeaderElement();
         // icone
-        var widgetPanelIcon = this._createCatalogPanelIconElement();
+        var widgetPanelIcon = this._createCatalogPanelIconElement(this.options.titlePrimary);
         widgetPanelHeader.appendChild(widgetPanelIcon);
         // title
         var widgetPanelTitle = this._createCatalogPanelTitleElement(this.options.titlePrimary);
@@ -795,7 +798,7 @@ class Catalog extends Control {
         widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
         // search bar (global)
         if (this.options.search.display) {
-            widgetContentElementDiv.appendChild(this._createCatalogContentSearchGlobalElement());
+            widgetContentElementDiv.appendChild(this._createCatalogContentSearchGlobalElement(this.options.search.label));
         }
         // waiting
         var waiting = this.waitingContainer = this._createCatalogWaitingElement();

@@ -185,10 +185,10 @@ var CatalogDOM = {
         div.innerHTML = title;
         return div;
     },
-    _createCatalogPanelIconElement : function () {
+    _createCatalogPanelIconElement : function (title) {
         var label = document.createElement("label");
         label.className = "gpf-btn-header-catalog gpf-btn-icon-header-catalog";
-        label.title = "Catalogue des couches";
+        label.title = title;
         return label;
     },
     _createCatalogPanelCloseElement : function () {
@@ -240,7 +240,7 @@ var CatalogDOM = {
         `);
         return container.firstChild;
     },
-    _createCatalogContentSearchGlobalElement : function () {
+    _createCatalogContentSearchGlobalElement : function (label) {
         var strContainer = `
         <!-- barre de recherche globale -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
@@ -249,8 +249,8 @@ var CatalogDOM = {
                 <label class="fr-label" for="catalog-input-search-global">
                     Recherche
                 </label>
-                <input class="fr-input" placeholder="Rechercher une donnée" type="search" id="catalog-input-search-global" name="search-input" incremental>
-                <button id="catalog-button-search-global" class="fr-btn" title="Rechercher">
+                <input class="fr-input" placeholder="${label}" type="search" id="catalog-input-search-global" name="search-input" incremental>
+                <button id="catalog-button-search-global" class="fr-btn" title="${label}">
                     Rechercher
                 </button>
             </div>
@@ -569,7 +569,7 @@ var CatalogDOM = {
         var searchBtn = shadow.getElementById("catalog-button-search-specific");
         if (searchBtn) {
             searchBtn.addEventListener("click", (e) => {
-                e.target.value = input.value; // synchronisation
+                e.target.value = searchInput.value; // synchronisation
                 this.onSearchSpecificCatalogButtonClick(e);
             });
         }
@@ -706,7 +706,7 @@ var CatalogDOM = {
                     </div>
                     <label 
                         class="GPlabelActive fr-label"  
-                        title="nom technique : ${name}"
+                        title="${name}"
                         style="display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; cursor: pointer;">
                         ${title}
                         <span class="GPlabelActive fr-label fr-hint-text">${producerName}</span>
