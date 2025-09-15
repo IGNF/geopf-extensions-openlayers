@@ -469,7 +469,7 @@ class ContextMenu extends Control {
             },
             onFailure : function (error) {},
             // spécifique au service
-            positions : [{lon : clickedCoordinate[1], lat : clickedCoordinate[0]}],
+            positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
             outputFormat : "json" // json|xml
         };
         Gp.Services.getAltitude(altiOptions);
