@@ -6,6 +6,8 @@
 
 <https://web.dev/articles/dom-size-and-interactivity?hl=fr>
 
+<https://learn.microsoft.com/en-us/microsoft-edge/devtools/performance/selector-stats>
+
 ### 1. **Chargement asynchrone et lazy loading**
 
 - ✔️ **Chargement différé des couches** : Ne charge que la configuration ou les couches visibles à l’ouverture du panneau, ou lors d’un changement d’onglet/catégorie.

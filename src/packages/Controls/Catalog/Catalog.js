@@ -177,7 +177,6 @@ class Catalog extends Control {
      * map.addControl(widget);
      *
      * @todo validation du schema
-     * @todo optimisation de la rubrique "En savoir plus"
      */
     constructor (options) {
         options = options || {};
