@@ -120,33 +120,16 @@
                 advancedTools: [
                     // cas nominal : SVG inline
                     {
-                        label: 'One',
-                        icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#000091"><path d="M7.24264 17.9967H3V13.754L14.435 2.319C14.8256 1.92848 15.4587 1.92848 15.8492 2.319L18.6777 5.14743C19.0682 5.53795 19.0682 6.17112 18.6777 6.56164L7.24264 17.9967ZM3 19.9967H21V21.9967H3V19.9967Z"></path></svg>',
-                        cb: (e, instance, layer, options) => {
-                            console.log(e, instance, layer, options);
-                        }
-                    },
-                    // icone par defaut
-                    {
-                        label: 'Two',
-                        cb: (e, instance, layer, options) => {
-                            console.log(e, instance, layer, options);
-                        }
-                    },
-                    // cas nominal : URL
-                    {
-                        label: 'Three',
-                        icon: '{{ resources }}/data/recherche-avancee.svg',
-                        cb: () => window.history.back()
-                    },
-                    // notification via abonnement
-                    {
-                        label: 'Four',
-                        icon: '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66667 15.3333L6 12.6667H11.3333L8.66667 15.3333ZM8.66667 2L11.3333 4.66667H6L8.66667 2ZM8.66667 10C7.93027 10 7.33333 9.40307 7.33333 8.66667C7.33333 7.93027 7.93027 7.33333 8.66667 7.33333C9.40307 7.33333 10 7.93027 10 8.66667C10 9.40307 9.40307 10 8.66667 10ZM2 8.66667L4.66667 6V11.3333L2 8.66667ZM15.3333 8.66667L12.6667 11.3333V6L15.3333 8.66667Z" fill="#000091"/></svg>',
+                        key: ol.control.LayerSwitcher.switcherButtons.INFO,
                     },
                     {
-                        label: 'Five',
-                        icon: 'fr-icon-bug-fill'
+                        key: ol.control.LayerSwitcher.switcherButtons.EDIT,
+                    },
+                    {
+                        key: ol.control.LayerSwitcher.switcherButtons.GREYSCALE,
+                    },
+                    {
+                        key: ol.control.LayerSwitcher.switcherButtons.EXTENT,
                     },
                 ]
             }

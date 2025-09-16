@@ -468,7 +468,7 @@ div[id^=GPopacityContainer_ID_] > .GPlayerOpacity {
 div[id^=GPAdvancedToolBtnsGroup_ID_] {
     margin: 4px 0 0;
     width: 100%;
-    gap: 16px;
+    gap: 4px 16px;
 }
 
 div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn {

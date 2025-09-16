@@ -1,6 +1,7 @@
 import Sortable from "sortablejs";
 import checkDsfr from "../Utils/CheckDsfr";
 import ToolTips from "../../Utils/ToolTips";
+import Utils from "../../Utils/Helper";
 
 var LayerSwitcherDOM = {
 
@@ -312,7 +313,7 @@ var LayerSwitcherDOM = {
      * @param {import("./LayerSwitcher.js").HeaderButton} options Options du bouton
      * @returns {HTMLButtonElement} Bouton
      */
-    _createButtonElement : function (options) {
+    _createButtonHeaderElement : function (options) {
         let btn = document.createElement("button");
         btn.className = "fr-btn fr-btn--tertiary gpf-btn ";
         if (options.className) {
@@ -800,34 +801,104 @@ var LayerSwitcherDOM = {
         container.appendChild(opacity);
 
         // Boutons d'actions
-        let btnGroups = this._createButtonsGroupElement({
-            className : "GPAdvancedToolBtnsGroup",
-            id : obj.id,
-            left : true,
-            size : "sm",
-        });
+        if (obj.advancedTools && obj.advancedTools instanceof Array) {
+            // Récupère les boutons préconfigurés
+            const switcherButtons = this.constructor.switcherButtons;
 
-        container.appendChild(btnGroups);
+            // N'ajoute aucun élément si un objet vide a été mis
+            // Diffère de l'action par défaut (bouton d'info)
+            if (!obj.advancedTools.length) {
+                return;
+            }
 
-        btnGroups.appendChild(this._createInformationElement(obj.id, obj.title, obj.description));
-        var tms = (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS");
-        var styles = tms ? obj.layer.config.styles : null;
-        btnGroups.appendChild(this._createEditionElement(obj.id, obj.editable, tms, styles));
-        btnGroups.appendChild(this._createExtentElement(obj.id));
-        // btnGroups.appendChild(this._createGreyscaleElement(obj.id, obj.grayable, obj.grayscale));
+            let btnGroups = this._createButtonsGroupElement({
+                className : "GPAdvancedToolBtnsGroup",
+                id : obj.id,
+                left : true,
+                size : "sm",
+            });
+            obj.advancedTools.forEach(tool => {
+                const key = tool.key;
+                if (key && Object.values(switcherButtons).includes(key)) {
+                    let fn;
+                    // TODO : mettre cela dans une variable statique privée ?
+                    switch (key) {
+                        case switcherButtons.INFO:
+                            fn = this._createInformationElement;
+                            break;
+                        case switcherButtons.EDIT:
+                            fn = this._createEditionElement;
+                            break;
+                        case switcherButtons.GREYSCALE:
+                            fn = this._createGreyscaleElement;
+                            break;
+                        case switcherButtons.EXTENT:
+                            fn = this._createExtentElement;
+                            break;
+                    }
+                    // Si une fonction a bien été trouvée, on créé le bouton qui va avec
+                    if (typeof fn === "function") {
+                        btnGroups.appendChild(fn.call(this, obj, tool));
+                    }
+                }
+            });
+
+            container.appendChild(btnGroups);
+
+            // btnGroups.appendChild(this._createInformationElement(obj.id, obj.title, obj.description));
+            // btnGroups.appendChild(this._createEditionElement(obj.id, obj.editable, tms, styles));
+            // btnGroups.appendChild(this._createExtentElement(obj.id));
+            // btnGroups.appendChild(this._createGreyscaleElement(obj.id, obj.grayable, obj.grayscale));
+        }
         
         return container;
+    },
+
+    /**
+     * 
+     * @param {HTMLButtonElement} button Bouton à configurer
+     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
+     * @param {boolean} [setClick] Optionnel. Indique si une fonction au clic doit être ajoutée.
+     * Vrai par défaut.
+     * @returns 
+     */
+    _setAdvancedToolOptions (button, tool, setClick = true) {
+        if (tool.className) {
+            button.className += ` ${tool.className} `;
+        }
+        if (tool.icon) {
+            button.className += ` ${tool.icon} `;
+        }
+        if (tool.label) {
+            button.innerHTML = tool.label;
+        }
+        if (tool.title) {
+            button.title = tool.title;
+            button.ariaLabel = tool.title;
+        }
+
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("type", "button");
+
+        let self = this;
+
+        if (setClick) {
+            button.addEventListener("click", (e) => {
+                self._onClickAdvancedToolsMore(e, tool.label, tool.cb);
+            });
+        }
+
+        return button;
     },
 
     /**
      * Creation de l'icone de suppression du layer (DOM)
      *
      * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
      * @returns {HTMLElement} container
      */
-    _createDeleteElement : function (id, contextual = false) {
+    _createDeleteElement : function (id) {
         var button = document.createElement("button");
         button.id = this._addUID("GPremove_ID_" + id);
         
@@ -860,30 +931,46 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone d'edition du layer (DOM)
      *
-     * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {Boolean} editable - mode editable
-     * @param {Boolean} tms - tms ou non
-     * @param {Array} styles - styles des tms
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {Boolean} obj.editable - mode editable
+     * @param {Boolean} obj.tms - tms ou non
+     * @param {Array} obj.styles - styles des tms
+     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
      * 
      * @returns {HTMLElement} container
      */
-    _createEditionElement : function (id, editable, tms, styles, contextual = false) {
+    _createEditionElement : function (obj, tool) {
+        let id = obj.id;
+        let editable = obj.editable;
+        let tms = (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS");
+        let styles = tms ? obj.layer.config.styles : null;
+
         let button = document.createElement("button");
         button.id = this._addUID("GPedit_ID_" + id);
-
-        // Icône et type de bouton
-        let className = "gpf-btn-icon-ls-edit gpf-btn--tertiary";
-        if (checkDsfr()) {
-            className = "fr-icon-pencil-line";
-            button.textContent = tms ? "Style" : "Éditer";
-        }
-        button.className = `GPlayerEdit ${className} gpf-btn fr-btn fr-btn--tertiary-no-outline`;
-
         button.layerId = id;
 
-        button.setAttribute("tabindex", "0");
-        button.setAttribute("type", "button");
+        // Options du bouton
+        let icon = "gpf-btn-icon-ls-edit gpf-btn--tertiary";
+        let label;
+        if (checkDsfr()) {
+            icon = "fr-icon-pencil-line";
+            label = tms ? "Style" : "Éditer";
+        }
+        let className = `GPlayerEdit gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        // Override les fonctions par défaut
+        const toolOptions = Utils.assign(options, tool);
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        toolOptions.className = `${className} ${tool.className}`;
+        
+        // Mets les attributs du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
 
         // hack pour garder un emplacement vide en mode desktop
         // et cacher l'entrée en mode mobile
@@ -920,48 +1007,63 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone d'information du layer (DOM)
      *
-     * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {String} title - titre
-     * @param {String} description - description
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
-     *
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {String} obj.title - titre
+     * @param {String} obj.description - description
+     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
+     * 
      * @returns {HTMLElement} container
      */
-    _createInformationElement : function (id, title, description, contextual = false) {
+    _createInformationElement : function (obj, tool) {
         // exemple :
         // <div id="GPinfo_ID_Layer1" class="GPlayerInfo" title="Informations/légende" onclick="GPopenLayerInfo(this);"></div>
+        let id = obj.id;
+        let title = obj.title;
+        let description = obj.description;
 
-        let btnInfo = document.createElement("button");
-        btnInfo.id = this._addUID("GPinfo_ID_" + id);
+        let button = document.createElement("button");
+        button.id = this._addUID("GPinfo_ID_" + id);
+        button.layerId = id;
 
-        // Icône et type de bouton
-        let className = "gpf-btn-icon-ls-info gpf-btn--tertiary";
+        // Options du bouton
+        let icon = "gpf-btn-icon-ls-info gpf-btn--tertiary";
+        let label;
         if (checkDsfr()) {
-            className = "fr-icon-information-line";
-            btnInfo.textContent = "Infos";
+            icon = "fr-icon-information-line";
+            label = "Infos";
         }
-        btnInfo.className = `GPlayerInfo GPlayerInfoClosed ${className} gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+        let className = `GPlayerInfo GPlayerInfoClosed gpf-btn fr-btn fr-btn--tertiary-no-outline`;
 
-        // btnInfo.title = "Informations/légende";
-        btnInfo.layerId = id;
-        btnInfo.setAttribute("tabindex", "0");
-        btnInfo.setAttribute("type", "button");
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        const toolOptions = Utils.assign(options, tool);
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        toolOptions.className = `${className} ${tool.className}`;
+        
+        // Permet d'override les valeurs par défaut du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
+
+        // button.title = "Informations/légende";
 
         if (!title || !description) {
-            btnInfo.disabled = true;
+            button.disabled = true;
         }
         // add event on click
         var context = this;
-        if (btnInfo.addEventListener) {
-            btnInfo.addEventListener(
+        if (button.addEventListener) {
+            button.addEventListener(
                 "click",
                 function (e) {
                     context._onOpenLayerInfoClick(e);
                 }
             );
-        } else if (btnInfo.attachEvent) {
+        } else if (button.attachEvent) {
             // internet explorer
-            btnInfo.attachEvent(
+            button.attachEvent(
                 "onclick",
                 function (e) {
                     context._onOpenLayerInfoClick(e);
@@ -969,52 +1071,69 @@ var LayerSwitcherDOM = {
             );
         }
 
-        return btnInfo;
+        return button;
     },
 
     /**
      * Creation de l'icone de n&b du layer (DOM)
      *
-     * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {Boolean} grayable - le mode grisable est il  possible pour ce type de couche
-     * @param {Boolean} grayscale - option grisée de la couche
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {Boolean} obj.grayable - le mode grisable est il  possible pour ce type de couche
+     * @param {Boolean} obj.grayscale - option grisée de la couche
+     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
      *
      * @returns {HTMLElement} container
      */
-    _createGreyscaleElement : function (id, grayable, grayscale, contextual = false) {
+    _createGreyscaleElement : function (obj, tool) {
         // exemple :
         // <div id="GPgreyscale_ID_Layer1" class="GPlayerBreyscale" title="Noir & blanc" onclick="GPtoggleGreyscale(this);"></div>
+        let id = obj.id;
+        let grayable = obj.grayable;
+        let grayscale = obj.grayscale;
+
         var _grayscale = (typeof grayscale !== "undefined") ? grayscale : false;
 
-        var btnGreyscale = document.createElement("button");
-        btnGreyscale.id = this._addUID("GPgreyscale_ID_" + id);
+        var button = document.createElement("button");
+        button.id = this._addUID("GPgreyscale_ID_" + id);
+        button.layerId = id;
 
-        let className = "gpf-btn-icon-ls-greyscale gpf-btn--tertiary";
+        // Options du bouton
+        let icon = "gpf-btn-icon-ls-greyscale gpf-btn--tertiary";
+        let label;
         if (checkDsfr()) {
-            className = "fr-icon-contrast-line";
-            btnGreyscale.textContent = "Noir et blanc";
+            icon = "fr-icon-contrast-line";
+            label = "Noir et blanc";
         }
+        let className = `GPlayerGreyscale GPlayerGreyscaleOff gpf-btn fr-btn fr-btn--tertiary-no-outline`;
 
-        btnGreyscale.className = `GPlayerGreyscale GPlayerGreyscaleOff ${className} gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        const toolOptions = Utils.assign(options, tool);
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        toolOptions.className = `${className} ${tool.className}`;
+        
+        // Permet d'override les valeurs par défaut du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
+
         if (_grayscale) {
-            btnGreyscale.classList.replace("GPlayerGreyscaleOff", "GPlayerGreyscaleOn");
+            button.classList.replace("GPlayerGreyscaleOff", "GPlayerGreyscaleOn");
         }
-        btnGreyscale.layerId = id;
 
-        btnGreyscale.setAttribute("aria-pressed", _grayscale);
-        btnGreyscale.setAttribute("tabindex", "0");
-        btnGreyscale.setAttribute("type", "button");
+        button.setAttribute("aria-pressed", _grayscale);
 
         // hack pour garder un emplacement vide
         if (!grayable) {
-            btnGreyscale.disabled = true;
+            button.disabled = true;
         }
 
         // add event on click
         var context = this;
-        if (btnGreyscale.addEventListener) {
-            btnGreyscale.addEventListener(
+        if (button.addEventListener) {
+            button.addEventListener(
                 "click",
                 function (e) {
                     var status = (e.target.ariaPressed === "true");
@@ -1022,9 +1141,9 @@ var LayerSwitcherDOM = {
                     context._onToggleLayerGreyscaleClick(e);
                 }
             );
-        } else if (btnGreyscale.attachEvent) {
+        } else if (button.attachEvent) {
             // internet explorer
-            btnGreyscale.attachEvent(
+            button.attachEvent(
                 "onclick",
                 function (e) {
                     var status = (e.target.ariaPressed === "true");
@@ -1034,7 +1153,7 @@ var LayerSwitcherDOM = {
             );
         }
 
-        return btnGreyscale;
+        return button;
     },
 
     /**
@@ -1133,29 +1252,42 @@ var LayerSwitcherDOM = {
 
     /**
      * Creation de l'icone de zoom sur extent (DOM)
-     *
-     * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     * 
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
      *
      * @returns {HTMLElement} container
      */
-    _createExtentElement : function (id, contextual = false) {
+    _createExtentElement : function (obj, tool) {
+        let id = obj.id;
         // FIXME inactif en mode classique !
         var button = document.createElement("button");
         button.id = this._addUID("GPextent_ID_" + id);
-
-        let className = "gpf-btn-icon-ls-extent gpf-btn--tertiary";
-        if (checkDsfr()) {
-            className = "fr-icon-zoom-in-line";
-            button.textContent = "Recentrer";
-        }
-
-        button.className = `GPelementHidden GPlayerExtent ${className} gpf-btn fr-btn fr-btn--tertiary-no-outline`;
         button.layerId = id;
 
-        button.setAttribute("tabindex", "0");
+        // Options du bouton
+        let icon = "gpf-btn-icon-ls-extent gpf-btn--tertiary";
+        let label;
+        if (checkDsfr()) {
+            icon = "fr-icon-zoom-in-line";
+            label = "Recentrer";
+        }
+        let className = `GPelementHidden GPlayerExtent gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        const toolOptions = Utils.assign(options, tool);
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        toolOptions.className = `${className} ${tool.className}`;
+        
+        // Permet d'override les valeurs par défaut du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
+
         button.setAttribute("aria-pressed", true);
-        button.setAttribute("type", "button");
 
         var context = this;
         if (button.addEventListener) {

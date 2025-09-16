@@ -47,12 +47,14 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {Array<HeaderButton>} [headerButtons] - Liste d’outils personnalisés à afficher pour chaque couche.
  * @property {Array<AdvancedToolOption>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * Par défaut, seul le bouton d'information est ajouté.
  */
 
 /**
  * Option d'un outil personnalisé
  * @typedef {Object} AdvancedToolOption
  * @property {String} label - Label du bouton
+ * @property {String} [key] - Optionnel. Mot clé indiquant qu'il s'agit d'une fonctionnalité native du layer switcher
  * @property {String} [icon] - Optionnel. Icône de l'outil. Peut être un lien html, svg ou une classe.
  * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
  * @property {AdvancedToolCallback} [cb] - Optionnel. Callback au click sur l'outil.
@@ -259,6 +261,13 @@ class LayerSwitcher extends Control {
 
         return this;
     }
+
+    static switcherButtons = {
+        INFO : "info",
+        EDIT : "edition",
+        GREYSCALE : "greyscale",
+        EXTENT : "extent",
+    };
 
     // ################################################################### //
     // ############## public methods (getters, setters) ################## //
@@ -1161,7 +1170,7 @@ class LayerSwitcher extends Control {
                 size : "sm",
             });
             this.options.headerButtons.forEach(opt => {
-                let btn = this._createButtonElement(opt);
+                let btn = this._createButtonHeaderElement(opt);
                 btnsGroup.appendChild(btn);
             });
 
