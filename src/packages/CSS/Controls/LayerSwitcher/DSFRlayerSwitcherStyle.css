@@ -7,7 +7,7 @@ button[id^=GPshowLayersListPicto] {
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
-    width: 350px;
+    width: 380px;
 }
 
 dialog[id^=GPlayersList] > .GPpanelBody {
@@ -51,7 +51,7 @@ div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > 
     mask: url("img/dsfr/visible-open.svg") center no-repeat;
 }
 
-button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
+button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]:has(.gpf-btn-icon-ls-visibility)::after {
     -webkit-mask: url("img/dsfr/visible-close-blanc.svg") center no-repeat;
     mask: url("img/dsfr/visible-close-blanc.svg") center no-repeat;
 }
@@ -111,9 +111,11 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
 
 .GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools * {
     display: inherit;
+    transition: display 0.5s ease-out 0;
 }
 .GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"]) > .GPlayerAdvancedTools * {
     display: none;
+    transition: display 0.5s ease-out 0;
 }
 
 /* Surchargé en inline avec "hidden" pour les couches n'ayant pas de description ou de titre */
@@ -453,8 +455,22 @@ div[id^=GPopacityContainer_ID_] {
     padding: 0 8px;
 }
 
+.GPlayerOpacityValue {
+    color: var(--text-mention-grey)
+}
+
 div[id^=GPopacityContainer_ID_] > .GPlayerOpacity {
     flex: auto;
 }
 
 /* Bouton d'actions */
+
+div[id^=GPAdvancedToolBtnsGroup_ID_] {
+    margin: 4px 0 0;
+    width: 100%;
+    gap: 16px;
+}
+
+div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn {
+    margin: 0;
+}

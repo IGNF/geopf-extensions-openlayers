@@ -1157,7 +1157,8 @@ class LayerSwitcher extends Control {
             let bodyHeader = this._createHeaderButtonsDivElement();
 
             let btnsGroup = this._createButtonsGroupElement({
-                className : "GPbodyHeaderBtnsGroup"
+                className : "GPbodyHeaderBtnsGroup",
+                size : "sm",
             });
             this.options.headerButtons.forEach(opt => {
                 let btn = this._createButtonElement(opt);
@@ -1524,8 +1525,10 @@ class LayerSwitcher extends Control {
         var divId = e.target.id; // ex GPvisibilityPicto_ID_26
         var layerID = SelectorID.index(divId); // ex. 26
         var greyscaleBtn = document.getElementById(this._addUID("GPgreyscale_ID_" + layerID));
-        greyscaleBtn.classList.add("GPlayerGreyscaleOff");
-        greyscaleBtn.classList.remove("GPlayerGreyscaleOn");
+        if (greyscaleBtn) {
+            greyscaleBtn.classList.add("GPlayerGreyscaleOff");
+            greyscaleBtn.classList.remove("GPlayerGreyscaleOn");
+        }
 
         layer.styleUrl = e.target.value;
         layer.styleName = e.target.dataset.name;

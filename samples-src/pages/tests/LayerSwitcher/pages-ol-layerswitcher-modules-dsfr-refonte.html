@@ -310,9 +310,15 @@
         let input = document.getElementById("producerTextOsm");
         let text = input.value;
 
-        console.log(osm);
+        console.log(ortho);
+        ortho.set('title', text)
+        ortho.getSource()._title = text
+        ortho.config.title = text
 
-        layerSwitcher.setLayerProducer(osm, text);
+        osm.set('title', text)
+        osm.getSource()._title = text
+        if (osm.config) osm.config.title = text
+        // layerSwitcher.setLayerProducer(osm, text);
     }
 </script>
 {{/content}}

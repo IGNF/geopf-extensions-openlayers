@@ -279,17 +279,30 @@ var LayerSwitcherDOM = {
      * Créé le conteneur des boutons du header
      * @param {Object} options Options
      * @param {String} [options.className] ClassName de l'élément
+     * @param {Boolean} [options.left] Optionnel. Place les boutons à gauche si vrai.
+     * @param {Boolean} [options.size] Optionnel. Taille des boutons. Par défaut, 'md'.
      * @param {String} [options.id] ClassName de l'élément (utilisé pour l'id aussi)
      * @returns {HTMLDivElement} Contenur de bouton
      */
     _createButtonsGroupElement : function (options) {
         options = options ? options : {};
         let customClass = options.className ? options.className : "";
+        let position = options.left ? "left" : "right";
+        let classSize = "";
+        options.size = options.size ? options.size : "";
+        switch (options.size.toLowerCase()) {
+            case "sm":
+                classSize = "fr-btns-group--sm";
+                break;
+            case "lg":
+                classSize = "fr-btns-group--lg";
+                break;
+        }
 
         var div = document.createElement("div");
-        div.className = `${customClass} GPbtnsGroup GPbtnsGroup--right fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline fr-btns-group--sm fr-btns-group--icon-left`;
+        div.className = `${customClass} GPbtnsGroup GPbtnsGroup--${position} fr-btns-group fr-btns-group--${position} fr-btns-group--inline-reverse fr-btns-group--inline ${classSize} fr-btns-group--icon-left`;
 
-        let id = options.id ? `${customClass}_ID_${options.id}` : customClass;
+        let id = options.id !== null ? `${customClass}_ID_${options.id}` : customClass;
         div.id = this._addUID(id);
         return div;
     },
@@ -582,25 +595,36 @@ var LayerSwitcherDOM = {
 
         var button = document.createElement("button");
         button.id = this._addUID("GPvisibilityPicto_ID_" + obj.id);
-        button.className = "GPlayerVisibility gpf-btn gpf-btn-icon gpf-btn-icon-ls-visibility fr-btn fr-btn--sm fr-btn--tertiary-no-outline gpf-btn--tertiary";
+
+        let className = "gpf-btn-icon-ls-visibility gpf-btn-icon";
+        if (checkDsfr()) {
+            className = visible ? "fr-icon-eye-line" : "fr-icon-eye-off-line";
+        }
+        button.className = `GPlayerVisibility gpf-btn ${className} fr-btn fr-btn--sm gpf-btn--tertiary fr-btn--tertiary-no-outline`;
+
         button.title = "Afficher/masquer la couche";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", visible);
         button.setAttribute("type","button");
 
         var context = this;
+
+        let onClick = function (e) {
+            var status = (e.target.ariaPressed === "true");
+            e.target.setAttribute("aria-pressed", !status);
+
+            if (checkDsfr()) {
+                button.classList.toggle("fr-icon-eye-off-line", status);
+                button.classList.toggle("fr-icon-eye-line", !status);
+            }
+
+            context._onVisibilityLayerClick(e);
+        };
+
         if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                context._onVisibilityLayerClick(e);
-            });
+            button.addEventListener("click", onClick);
         } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                context._onVisibilityLayerClick(e);
-            });
+            button.attachEvent("onclick", onClick);
         }
 
         return button;
@@ -775,6 +799,23 @@ var LayerSwitcherDOM = {
 
         container.appendChild(opacity);
 
+        // Boutons d'actions
+        let btnGroups = this._createButtonsGroupElement({
+            className : "GPAdvancedToolBtnsGroup",
+            id : obj.id,
+            left : true,
+            size : "sm",
+        });
+
+        container.appendChild(btnGroups);
+
+        btnGroups.appendChild(this._createInformationElement(obj.id, obj.title, obj.description));
+        var tms = (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS");
+        var styles = tms ? obj.layer.config.styles : null;
+        btnGroups.appendChild(this._createEditionElement(obj.id, obj.editable, tms, styles));
+        btnGroups.appendChild(this._createExtentElement(obj.id));
+        // btnGroups.appendChild(this._createGreyscaleElement(obj.id, obj.grayable, obj.grayscale));
+        
         return container;
     },
 
@@ -788,17 +829,17 @@ var LayerSwitcherDOM = {
      */
     _createDeleteElement : function (id, contextual = false) {
         var button = document.createElement("button");
-        if (!contextual) {
-            button.id = this._addUID("GPremove_ID_" + id);
-        } else {
-            button.id = this._addUID("GPremoveContextual_ID_" + id);
+        button.id = this._addUID("GPremove_ID_" + id);
+        
+        // Icône et type de bouton
+        let className = "gpf-btn-icon-ls-remove gpf-btn-icon";
+        if (checkDsfr()) {
+            className = "fr-icon-delete-line";
         }
-        button.className = "GPlayerRemove gpf-btn gpf-btn-icon gpf-btn-icon-ls-remove fr-btn fr-btn--tertiary gpf-btn--tertiary";
+        button.className = `GPlayerRemove gpf-btn ${className} fr-btn fr-btn--sm gpf-btn--tertiary fr-btn--tertiary-no-outline`;
         button.title = "Supprimer la couche";
         button.layerId = id;
-        if (contextual) {
-            button.innerText = "Supprimer";
-        }
+
         button.setAttribute("tabindex", "0");
         button.setAttribute("type", "button");
 
@@ -828,39 +869,29 @@ var LayerSwitcherDOM = {
      * @returns {HTMLElement} container
      */
     _createEditionElement : function (id, editable, tms, styles, contextual = false) {
-        var button = document.createElement("button");
-        if (!contextual) {
-            button.id = this._addUID("GPedit_ID_" + id);
-        } else {
-            button.id = this._addUID("GPeditContextual_ID_" + id);
+        let button = document.createElement("button");
+        button.id = this._addUID("GPedit_ID_" + id);
+
+        // Icône et type de bouton
+        let className = "gpf-btn-icon-ls-edit gpf-btn--tertiary";
+        if (checkDsfr()) {
+            className = "fr-icon-pencil-line";
+            button.textContent = tms ? "Style" : "Éditer";
         }
-        button.className = "GPlayerEdit gpf-btn gpf-btn-icon gpf-btn-icon-ls-edit fr-btn fr-btn--tertiary gpf-btn--tertiary";
-        button.title = "Editer la couche";
-        if (tms) {
-            button.title = "Changer de style";
-        }
+        button.className = `GPlayerEdit ${className} gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+
         button.layerId = id;
-        if (contextual) {
-            button.innerText = "Editer la couche";
-            if (tms) {
-                button.innerText = "Changer de style";
-            }
-        }
+
         button.setAttribute("tabindex", "0");
         button.setAttribute("type", "button");
 
         // hack pour garder un emplacement vide en mode desktop
         // et cacher l'entrée en mode mobile
         if (!editable || (tms && styles.length === 1)) {
-            if (contextual) {
-                button.style.display = "none";
-            } else {
-                button.style.opacity = "0";
-                button.style.display = "hidden";
-            }
+            button.disabled = true;
         }
 
-        var context = this;
+        let context = this;
         if (tms && styles.length > 1) {
             if (button.addEventListener) {
                 button.addEventListener("click", function (e) {
@@ -900,29 +931,25 @@ var LayerSwitcherDOM = {
         // exemple :
         // <div id="GPinfo_ID_Layer1" class="GPlayerInfo" title="Informations/légende" onclick="GPopenLayerInfo(this);"></div>
 
-        var btnInfo = document.createElement("button");
-        if (!contextual) {
-            btnInfo.id = this._addUID("GPinfo_ID_" + id);
-        } else {
-            btnInfo.id = this._addUID("GPinfoContextual_ID_" + id);
+        let btnInfo = document.createElement("button");
+        btnInfo.id = this._addUID("GPinfo_ID_" + id);
+
+        // Icône et type de bouton
+        let className = "gpf-btn-icon-ls-info gpf-btn--tertiary";
+        if (checkDsfr()) {
+            className = "fr-icon-information-line";
+            btnInfo.textContent = "Infos";
         }
-        btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary gpf-btn--tertiary";
-        // hack pour garder un emplacement vide
-        if (!title || !description) {
-            btnInfo.style.opacity = "0";
-            btnInfo.style.visibility = "hidden";
-            if (contextual) {
-                btnInfo.style.display = "none";
-            }
-        }
-        btnInfo.title = "Informations/légende";
+        btnInfo.className = `GPlayerInfo GPlayerInfoClosed ${className} gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+
+        // btnInfo.title = "Informations/légende";
         btnInfo.layerId = id;
-        if (contextual) {
-            btnInfo.innerText = "Informations";
-        }
         btnInfo.setAttribute("tabindex", "0");
         btnInfo.setAttribute("type", "button");
 
+        if (!title || !description) {
+            btnInfo.disabled = true;
+        }
         // add event on click
         var context = this;
         if (btnInfo.addEventListener) {
@@ -961,28 +988,27 @@ var LayerSwitcherDOM = {
         var _grayscale = (typeof grayscale !== "undefined") ? grayscale : false;
 
         var btnGreyscale = document.createElement("button");
-        if (!contextual) {
-            btnGreyscale.id = this._addUID("GPgreyscale_ID_" + id);
-        } else {
-            btnGreyscale.id = this._addUID("GPgreyscaleContextual_ID_" + id);
+        btnGreyscale.id = this._addUID("GPgreyscale_ID_" + id);
+
+        let className = "gpf-btn-icon-ls-greyscale gpf-btn--tertiary";
+        if (checkDsfr()) {
+            className = "fr-icon-contrast-line";
+            btnGreyscale.textContent = "Noir et blanc";
         }
-        btnGreyscale.className = "GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn-icon gpf-btn-icon-ls-greyscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
+
+        btnGreyscale.className = `GPlayerGreyscale GPlayerGreyscaleOff ${className} gpf-btn fr-btn fr-btn--tertiary-no-outline`;
         if (_grayscale) {
             btnGreyscale.classList.replace("GPlayerGreyscaleOff", "GPlayerGreyscaleOn");
         }
-        btnGreyscale.title = "Noir et blanc";
         btnGreyscale.layerId = id;
-        if (contextual) {
-            btnGreyscale.innerText = "N&B";
-        }
+
         btnGreyscale.setAttribute("aria-pressed", _grayscale);
         btnGreyscale.setAttribute("tabindex", "0");
         btnGreyscale.setAttribute("type", "button");
 
         // hack pour garder un emplacement vide
         if (!grayable) {
-            btnGreyscale.style.opacity = "0";
-            btnGreyscale.style.visibility = "hidden";
+            btnGreyscale.disabled = true;
         }
 
         // add event on click
@@ -1116,17 +1142,17 @@ var LayerSwitcherDOM = {
     _createExtentElement : function (id, contextual = false) {
         // FIXME inactif en mode classique !
         var button = document.createElement("button");
-        if (!contextual) {
-            button.id = this._addUID("GPextent_ID_" + id);
-        } else {
-            button.id = this._addUID("GPextentContextual_ID_" + id);
+        button.id = this._addUID("GPextent_ID_" + id);
+
+        let className = "gpf-btn-icon-ls-extent gpf-btn--tertiary";
+        if (checkDsfr()) {
+            className = "fr-icon-zoom-in-line";
+            button.textContent = "Recentrer";
         }
-        button.className = "GPelementHidden GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary gpf-btn--tertiary";
-        button.title = "Zoomer dans l'étendue";
+
+        button.className = `GPelementHidden GPlayerExtent ${className} gpf-btn fr-btn fr-btn--tertiary-no-outline`;
         button.layerId = id;
-        if (contextual) {
-            button.innerText = "Zoomer";
-        }
+
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", true);
         button.setAttribute("type", "button");
