@@ -620,7 +620,7 @@ var CatalogDOM = {
                     if (thumbnail.startsWith("data:") || thumbnail.startsWith("http")) {
                         return `
                         <div class="catalog-thumbnail" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                            <img src="${thumbnail}" alt="Aperçu de la couche" style="width:100%;"/>
+                            <img src="${thumbnail}" alt="Aperçu de la couche" style="min-width:100%;min-height:100%;object-fit:cover;"/>
                         </div>
                         `;
                     } else {

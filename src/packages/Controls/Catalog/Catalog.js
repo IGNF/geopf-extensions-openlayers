@@ -88,14 +88,14 @@ var logger = Logger.getLogger("widget");
 
 /**
  * @typedef {Object} Config - Configuration des sources de données
- * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
- * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
  */
 
 /**
  * @typedef {Object} ConfigLayer - Configuration d'une couche
- * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
- * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
  * @description
  * Un objet de type ConfigLayer est un objet qui contient la configuration d'une couche.
  * Il est issu de la configuration globale (Config) et enrichi de propriétés supplémentaires
@@ -121,8 +121,8 @@ class Catalog extends Control {
      * @fires catalog:loaded
      * @fires catalog:layer:add
      * @fires catalog:layer:remove
-     * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
-     * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
+     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
      * @example
      * var widget = new ol.control.Catalog({
      *           collapsed : true,

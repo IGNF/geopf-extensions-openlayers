@@ -1,126 +1,119 @@
-{{#extend "ol-sample-modules-dsfr-layout"}}
+{{#extend "ol-sample-modules-dsfr-layout"}} {{#content "vendor"}}
 
-{{#content "vendor"}}
+<link
+  rel="stylesheet"
+  href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css"
+/>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+{{/content}} {{#content "head"}}
+<title>Sample openlayers LayerSwitcher</title>
+{{/content}} {{#content "style"}}
+<style>
+  div#map {
+    width: 100%;
+    height: 100vh;
+  }
+</style>
+{{/content}} {{#content "body"}}
+<h2>Ajout du gestionnaire de couches avec les options avancées</h2>
+<!-- map -->
+<div id="map"></div>
+{{/content}} {{#content "js"}}
+<script type="text/javascript">
+  var map;
+  var createMap = function () {
+    // on cache l'image de chargement du Géoportail.
+    document.getElementById("map").style.backgroundImage = "none";
 
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
-{{/content}}
+    map = new ol.Map({
+      target: "map",
+      view: new ol.View({
+        center: [288074.8449901076, 6247982.515792289],
+        zoom: 16,
+      }),
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM(),
+          opacity: 0.5,
+        }),
+        new ol.layer.GeoportalWMTS({
+          layer: "ORTHOIMAGERY.ORTHOPHOTOS",
+        }),
+      ],
+    });
 
-{{#content "head"}}
-        <title>Sample openlayers LayerSwitcher</title>
-{{/content}}
+    var layerSwitcher = new ol.control.LayerSwitcher({
+      options: {
+        panel: true,
+        counter: true,
+        advancedTools: [
+          // cas nominal : SVG inline
+          {
+            label: "One",
+            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#000091"><path d="M7.24264 17.9967H3V13.754L14.435 2.319C14.8256 1.92848 15.4587 1.92848 15.8492 2.319L18.6777 5.14743C19.0682 5.53795 19.0682 6.17112 18.6777 6.56164L7.24264 17.9967ZM3 19.9967H21V21.9967H3V19.9967Z"></path></svg>',
+            cb: (e, instance, layer, options) => {
+              console.log(e, instance, layer, options);
+              instance.addLayer(layer, {
+                title: "test"
+              })
+            },
+          },
+          // icone par defaut
+          {
+            label: "Two",
+            cb: (e, instance, layer, options) => {
+              console.log(e, instance, layer, options);
+            },
+          },
+          // cas nominal : URL
+          {
+            label: "Three",
+            icon: "{{ resources }}/data/recherche-avancee.svg",
+            cb: () => window.history.back(),
+          },
+          // notification via abonnement
+          {
+            label: "Four",
+            icon: '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66667 15.3333L6 12.6667H11.3333L8.66667 15.3333ZM8.66667 2L11.3333 4.66667H6L8.66667 2ZM8.66667 10C7.93027 10 7.33333 9.40307 7.33333 8.66667C7.33333 7.93027 7.93027 7.33333 8.66667 7.33333C9.40307 7.33333 10 7.93027 10 8.66667C10 9.40307 9.40307 10 8.66667 10ZM2 8.66667L4.66667 6V11.3333L2 8.66667ZM15.3333 8.66667L12.6667 11.3333V6L15.3333 8.66667Z" fill="#000091"/></svg>',
+          },
+          {
+            label: "Five",
+            icon: "fr-icon-bug-fill",
+          },
+        ],
+      },
+    });
+    map.addControl(layerSwitcher);
+    layerSwitcher.on("layerswitcher:custom", (e) => {
+      console.log(e);
+    });
 
-{{#content "style"}}
-        <style>
-            div#map {
-                width: 100%;
-                height: 100vh;
-            }
-        </style>
-{{/content}}
-
-{{#content "body"}}
-            <h2>Ajout du gestionnaire de couches avec les options avancées</h2>
-            <!-- map -->
-            <div id="map">
-            </div>
-{{/content}}
-
-{{#content "js"}}
-            <script type="text/javascript">
-                var map;
-                var createMap = function () {
-                    // on cache l'image de chargement du Géoportail.
-                    document.getElementById('map').style.backgroundImage = 'none';
-                    
-                    map = new ol.Map({
-                        target : "map",
-                        view : new ol.View({
-                            center : [288074.8449901076, 6247982.515792289],
-                            zoom : 16
-                        }),
-                        layers : [
-                            new ol.layer.Tile({
-                                source: new ol.source.OSM(),
-                                opacity: 0.5
-                            }),
-                            new ol.layer.GeoportalWMTS({
-                                layer : "ORTHOIMAGERY.ORTHOPHOTOS"
-                            })
-                        ]
-                    });
-
-                    var layerSwitcher = new ol.control.LayerSwitcher({
-                        options :{
-                            panel: true,
-                            counter : true,
-                            advancedTools : [
-                                // cas nominal : SVG inline
-                                {
-                                    label: 'One',
-                                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#000091"><path d="M7.24264 17.9967H3V13.754L14.435 2.319C14.8256 1.92848 15.4587 1.92848 15.8492 2.319L18.6777 5.14743C19.0682 5.53795 19.0682 6.17112 18.6777 6.56164L7.24264 17.9967ZM3 19.9967H21V21.9967H3V19.9967Z"></path></svg>',
-                                    cb: (e, instance, layer, options) => {
-                                        console.log(e, instance, layer, options);
-                                    }
-                                },
-                                // icone par defaut
-                                {
-                                    label: 'Two',
-                                    cb: (e, instance, layer, options) => {
-                                        console.log(e, instance, layer, options);
-                                    }
-                                },
-                                // cas nominal : URL
-                                {
-                                    label: 'Three',
-                                    icon: '{{ resources }}/data/recherche-avancee.svg',
-                                    cb: () => window.history.back()
-                                },
-                                // notification via abonnement
-                                {
-                                    label: 'Four',
-                                    icon: '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66667 15.3333L6 12.6667H11.3333L8.66667 15.3333ZM8.66667 2L11.3333 4.66667H6L8.66667 2ZM8.66667 10C7.93027 10 7.33333 9.40307 7.33333 8.66667C7.33333 7.93027 7.93027 7.33333 8.66667 7.33333C9.40307 7.33333 10 7.93027 10 8.66667C10 9.40307 9.40307 10 8.66667 10ZM2 8.66667L4.66667 6V11.3333L2 8.66667ZM15.3333 8.66667L12.6667 11.3333V6L15.3333 8.66667Z" fill="#000091"/></svg>',
-                                },
-                                {
-                                    label: 'Five',
-                                    icon: 'fr-icon-bug-fill'
-                                },
-                            ]
-                        }
-                    });
-                    map.addControl(layerSwitcher);
-                    layerSwitcher.on("layerswitcher:custom", (e) => {
-                        console.log(e);
-                    })
-
-                    // Couches TMS
-                    var plan = new ol.layer.GeoportalMapBox({
-                        layer : "PLAN.IGN"
-                    });
-                    plan.on("mapbox:style:loaded", (e) => {
-                        console.log(e);
-                    });
-                    map.addLayer(plan);
-                    var bdtopo = new ol.layer.GeoportalMapBox({
-                        layer : "BDTOPO"
-                    });
-                    bdtopo.on("mapbox:style:loaded", (e) => {
-                        console.log(e);
-                    });
-                    map.addLayer(bdtopo);
-                };
-                Gp.Services.getConfig({
-                    customConfigFile : "{{ configurl }}",
-                    callbackSuffix : "",
-                    // apiKey: "{{ apikey }}",
-                    timeOut : 20000,
-                    onSuccess : createMap,
-                    onFailure : (e) => {
-                        console.error(e);
-                    }
-                });
-           </script>
-{{/content}}
-
-{{/extend}}
+    // Couches TMS
+    var plan = new ol.layer.GeoportalMapBox({
+      layer: "PLAN.IGN",
+    });
+    plan.on("mapbox:style:loaded", (e) => {
+      console.log(e);
+    });
+    map.addLayer(plan);
+    var bdtopo = new ol.layer.GeoportalMapBox({
+      layer: "BDTOPO",
+    });
+    bdtopo.on("mapbox:style:loaded", (e) => {
+      console.log(e);
+    });
+    map.addLayer(bdtopo);
+  };
+  Gp.Services.getConfig({
+    customConfigFile: "{{ configurl }}",
+    callbackSuffix: "",
+    // apiKey: "{{ apikey }}",
+    timeOut: 20000,
+    onSuccess: createMap,
+    onFailure: (e) => {
+      console.error(e);
+    },
+  });
+</script>
+{{/content}} {{/extend}}

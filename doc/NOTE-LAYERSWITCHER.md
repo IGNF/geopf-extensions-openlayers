@@ -600,3 +600,62 @@ const layerSwitcher = new LayerSwitcher({
 
 **Résumé :**  
 Les tooltips dans le LayerSwitcher sont des info-bulles contextuelles qui s’affichent au survol des éléments, facilitant la compréhension et l’utilisation du gestionnaire de couches, notamment pour les utilisateurs novices ou en situation de handicap.
+
+## Comment modifier le titre d'une couche dans le gestionnaire de couches ?
+
+Pour modifier le **titre d’une couche** dans le gestionnaire de couches (LayerSwitcher), il existe deux méthodes :
+
+---
+
+### 1. **Au moment de l’ajout de la couche**
+
+Lorsque tu ajoutes une couche via `layerSwitcher.addLayer(layer, config)`, tu peux passer une option `title` dans l’objet `config` :
+
+````javascript
+layerSwitcher.addLayer(
+    maCouche,
+    {
+        title: "Nouveau titre de la couche"
+    }
+);
+````
+
+---
+
+### 2. **Après l’ajout (mise à jour du titre)**
+
+Tu peux rappeler `addLayer` avec la même couche et une nouvelle option `title` :
+
+````javascript
+layerSwitcher.addLayer(
+    maCouche,
+    {
+        title: "Titre modifié"
+    }
+);
+````
+
+Le LayerSwitcher mettra à jour le titre dans l’interface (voir la partie :
+
+```javascript
+// set new title in layer div
+if (config.title) {
+    var nameDiv = document.getElementById(this._addUID("GPname_ID_" + id));
+    if (nameDiv) {
+        nameDiv.innerHTML = config.title;
+        nameDiv.title = config.description || config.title;
+    }
+}
+```
+)
+
+---
+
+### 3. **Directement dans le DOM (déconseillé)**
+
+Tu pourrais aussi modifier le titre directement dans le DOM, mais il est préférable d’utiliser la méthode ci-dessus pour garder la cohérence interne du widget.
+
+---
+
+**Résumé :**  
+Utilise `layerSwitcher.addLayer(maCouche, { title: "Nouveau titre" })` pour modifier dynamiquement le titre d’une couche dans le LayerSwitcher.
