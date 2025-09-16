@@ -52,8 +52,9 @@ var logger = Logger.getLogger("layerswitcher");
 /**
  * Option d'un outil personnalisé
  * @typedef {Object} AdvancedToolOption
- * @property {String} label - Specify the label name of the button
+ * @property {String} label - Label du bouton
  * @property {String} [icon] - Optionnel. Icône de l'outil. Peut être un lien html, svg ou une classe.
+ * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
  * @property {AdvancedToolCallback} [cb] - Optionnel. Callback au click sur l'outil.
  * @property {Object} [styles] - Optionnel. Styles à appliquer.
  */
@@ -70,8 +71,10 @@ var logger = Logger.getLogger("layerswitcher");
 /**
  * Bouton pour le gestionnaire de couche
  * @typedef {Object} HeaderButton
- * @property {String} label - Specify the label name of the button
+ * @property {String} label - Label du bouton.
  * @property {HeaderButtonCallback} cb - Callback au click sur l'outil.
+ * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
+ * @property {String} [title] - Optionnel. Titre du bouton. Aucun par défaut.
  * @property {String} [icon] - Optionnel. Icône de l'outil. Classe à ajouter au bouton.
  */
 

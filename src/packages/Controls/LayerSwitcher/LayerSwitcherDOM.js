@@ -278,15 +278,19 @@ var LayerSwitcherDOM = {
     /**
      * Créé le conteneur des boutons du header
      * @param {Object} options Options
-     * @param {String} options.className ClassName de l'élément (utilisé pour l'id aussi)
+     * @param {String} [options.className] ClassName de l'élément
+     * @param {String} [options.id] ClassName de l'élément (utilisé pour l'id aussi)
      * @returns {HTMLDivElement} Contenur de bouton
      */
     _createButtonsGroupElement : function (options) {
+        options = options ? options : {};
         let customClass = options.className ? options.className : "";
 
         var div = document.createElement("div");
         div.className = `${customClass} GPbtnsGroup GPbtnsGroup--right fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline fr-btns-group--sm fr-btns-group--icon-left`;
-        div.id = this._addUID(customClass);
+
+        let id = options.id ? `${customClass}_ID_${options.id}` : customClass;
+        div.id = this._addUID(id);
         return div;
     },
 
@@ -298,16 +302,19 @@ var LayerSwitcherDOM = {
     _createButtonElement : function (options) {
         let btn = document.createElement("button");
         btn.className = "fr-btn fr-btn--tertiary gpf-btn ";
+        if (options.className) {
+            btn.className += options.className;
+        }
         if (options.icon) {
             btn.className += options.icon;
         }
         if (options.label) {
             btn.innerHTML = options.label;
         }
-        let title = options.title ? options.title : options.label;
-
-        btn.title = title;
-        btn.ariaLabel = title;
+        if (options.title) {
+            btn.title = options.title;
+            btn.ariaLabel = options.title;
+        }
 
         btn.id = this._addUID("GPtools-" + options.label.toLowerCase());
 
@@ -649,7 +656,7 @@ var LayerSwitcherDOM = {
      *
      * @returns {HTMLElement} container
      */
-    _createAdvancedToolElement : function (obj) {
+    _oldcreateAdvancedToolElement : function (obj) {
         // exemple :
         // <div id="GPadvancedTools_ID_Layer1" class="GPlayerAdvancedTools">
         //     <!-- _createDeleteElement -->
@@ -734,6 +741,40 @@ var LayerSwitcherDOM = {
             container.appendChild(btn);
             container.appendChild(contextual);
         }
+        return container;
+    },
+
+    /**
+     * Creation du container des outils avancés du layer (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     *
+     * @returns {HTMLElement} container
+     */
+    _createAdvancedToolElement : function (obj) {
+        // exemple :
+        // <div id="GPadvancedTools_ID_Layer1" class="GPlayerAdvancedTools">
+        //     <!-- _createDeleteElement -->
+        //     <!-- _createInformationElement -->
+        //     <!-- _createOpacityElement -->
+        // </div>
+
+        let container = document.createElement("div");
+        container.id = this._addUID("GPadvancedTools_ID_" + obj.id);
+        container.className = "GPelementHidden GPlayerAdvancedTools gpf-hidden";
+
+        // Opacité
+        let opacity = document.createElement("div");
+        opacity.id = this._addUID("GPopacityContainer_ID_" + obj.id);
+        opacity.className = "GPopacityContainer";
+
+        let array = this._createOpacityElement(obj.id, obj.opacity);
+        for (let i = 0; i < array.length; i++) {
+            opacity.appendChild(array[i]);
+        }
+
+        container.appendChild(opacity);
+
         return container;
     },
 

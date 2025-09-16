@@ -104,8 +104,16 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
 }
 
 .GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools {
-    height: 56px;
-    max-height: 56px;
+    /* height: 56px; */
+    max-height: unset;
+    padding: 0 12px 12px 12px;
+}
+
+.GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools * {
+    display: inherit;
+}
+.GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"]) > .GPlayerAdvancedTools * {
+    display: none;
 }
 
 /* Surchargé en inline avec "hidden" pour les couches n'ayant pas de description ou de titre */
@@ -134,13 +142,12 @@ div[id^=GPbasicTools_ID_] {
 
 div[id^=GPadvancedTools_ID_] {
     display: flex;
+    flex-direction: column;
     align-content: center;
-    align-items: center;
-    flex-direction: row;
+    align-items: flex-start;
     flex-wrap: nowrap;
-    justify-content: space-around;
-    height: inherit;
-    padding-right: 40px;
+    justify-content: center;
+    padding: 0;
 }
 
 .gpf-btn-header {
@@ -432,3 +439,22 @@ div[id^="GPbasicToolButtons_ID_"] > button.gpf-btn-icon {
     width: 2rem;
     flex: 0 0 2rem;
 }
+
+/* Opacité */
+
+div[id^=GPopacityContainer_ID_] {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height:40px;
+    gap: 8px;
+    width: 100%;
+    padding: 0 8px;
+}
+
+div[id^=GPopacityContainer_ID_] > .GPlayerOpacity {
+    flex: auto;
+}
+
+/* Bouton d'actions */
