@@ -43,7 +43,7 @@ export type LayerSwitcherOptions = {
     /**
      * - Liste d’outils personnalisés à afficher pour chaque couche.
      */
-    advancedTools?: any[] | undefined;
+    advancedTools?: AdvancedToolOptions[] | undefined;
 };
 export type LayerSwitcherLayersConfig = {
     /**
@@ -80,6 +80,24 @@ export type LayerSwitcherLayersConfig = {
         locked?: boolean | undefined;
     } | undefined;
 };
+export type AdvancedToolOptions = {
+    /**
+     * - Label of the button
+     */
+    label: string;
+    /**
+     * - Icon (svg or http link or dsfr class)
+     */
+    icon?: string | undefined;
+    /**
+     * - Callback function called on click
+     */
+    cb?: Function | undefined;
+    /**
+     * - styles to apply to the button
+     */
+    styles?: any;
+};
 /**
  * @typedef {Object} LayerSwitcherOptions
  * @property {string} [id] - Identifiant unique du widget.
@@ -92,7 +110,7 @@ export type LayerSwitcherLayersConfig = {
  * @property {boolean} [allowGrayScale=true] - Affiche le bouton N&B (niveaux de gris) pour les couches compatibles.
  * @property {boolean} [allowTooltips=false] - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
- * @property {Array<Object>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * @property {Array<AdvancedToolOptions>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
  */
 /**
  * @typedef {Object} LayerSwitcherLayersConfig
@@ -104,6 +122,13 @@ export type LayerSwitcherLayersConfig = {
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
  * @property {Array<Object>} [config.metadata] - Métadonnées associées à la couche.
  * @property {boolean} [config.locked] - Indique si la couche est verrouillée.
+ */
+/**
+ * @typedef {Object} AdvancedToolOptions
+ * @property {string} label - Label of the button
+ * @property {string} [icon] - Icon (svg or http link or dsfr class)
+ * @property {Function} [cb] - Callback function called on click
+ * @property {Object} [styles] - styles to apply to the button
  */
 /**
  * @classdesc
@@ -123,6 +148,7 @@ declare class LayerSwitcher extends Control {
     * @fires layerswitcher:lock
     * @fires layerswitcher:extent
     * @fires layerswitcher:edit
+    * @fires layerswitcher:changeproperty
     * @fires layerswitcher:change:opacity
     * @fires layerswitcher:change:visibility
     * @fires layerswitcher:change:position
@@ -187,6 +213,9 @@ declare class LayerSwitcher extends Control {
     * });
     * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
     *    console.warn("layer", e.layer, e.locked);
+    * });
+    * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
+    *    console.warn("layer", e.layer, e.key, e.value);
     * });
     */
     constructor(options: {
@@ -366,6 +395,21 @@ declare class LayerSwitcher extends Control {
      * @private
      */
     private _showLayerSwitcherButton;
+    /**
+     * event triggered when a property is modified
+     * @event layerswitcher:propertychange
+     * @defaultValue "layerswitcher:propertychange"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - layer
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
+     *   console.log(e.layer);
+     * })
+     */
+    public PROPERTY_CHANGE_EVENT: string | undefined;
     /**
      * event triggered when a layer is added
      * @event layerswitcher:add
@@ -668,6 +712,13 @@ declare class LayerSwitcher extends Control {
      * @private
      */
     private _updateLayerLocked;
+    /**
+     * generic update property
+     * @param {Event} e - Event
+     * @fires layerswitcher:changeproperty {@link LayerSwitcher#PROPERTY_CHANGE_EVENT}
+     * @private
+     */
+    private _updateGenericProperty;
     /**
      * toggle locked layer
      * @param {Event} e - Event
