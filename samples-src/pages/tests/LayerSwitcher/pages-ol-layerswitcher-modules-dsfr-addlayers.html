@@ -30,6 +30,8 @@
                 <button type="button" class="fr-btn" id="addOSMLayer">Ajouter une couche OSM</button>
                 <button type="button" class="fr-btn" id="addVTLayer">Ajouter une couche Tuiles Vecteur</button>
                 <br>
+                <button type="button" class="fr-btn" id="modifyTitleOSMLayer">Nom de la couche OSM</button>
+                <button type="button" class="fr-btn" id="modifyDescriptionOSMLayer">Description de la couche OSM</button>
                 <button type="button" class="fr-btn" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
                 <button type="button" class="fr-btn" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
                 <button type="button" class="fr-btn" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
@@ -103,7 +105,9 @@
                     layerSwitcher.on("layerswitcher:extent", function (e) {
                         console.warn("layer", e);
                     });
-
+                    layerSwitcher.on("layerswitcher:propertychange", function (e) {
+                        console.warn(e);
+                    });
 					// Ajout du LayerSwitcher à la carte
                     map.addControl(layerSwitcher);
 
@@ -196,9 +200,17 @@
                     var cidx = osm.getZIndex();
                     osm.setZIndex(++cidx);
                 };
+                modifyTitleOSMLayer = function () {
+                    osm.set('title', "Osm");
+                }
+                modifyDescriptionOSMLayer = function () {
+                    osm.set('description', "Couche Osm");
+                }
                 document.getElementById("addMapsLayer").onclick = addMapsLayer;
                 document.getElementById("addOSMLayer").onclick = addOSMLayer;
                 document.getElementById("addVTLayer").onclick = addVTLayer;
+                document.getElementById("modifyTitleOSMLayer").onclick = modifyTitleOSMLayer;
+                document.getElementById("modifyDescriptionOSMLayer").onclick = modifyDescriptionOSMLayer;
                 document.getElementById("modifyVisibilityOSMLayer").onclick = modifyVisibilityOSMLayer;
                 document.getElementById("modifyOpacityOSMLayer").onclick = modifyOpacityOSMLayer;
                 document.getElementById("modifyIndexOSMLayerMin").onclick = modifyIndexOSMLayerMin;

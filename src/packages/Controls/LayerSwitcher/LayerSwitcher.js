@@ -110,6 +110,7 @@ class LayerSwitcher extends Control {
     * @fires layerswitcher:lock
     * @fires layerswitcher:extent
     * @fires layerswitcher:edit
+    * @fires layerswitcher:changeproperty
     * @fires layerswitcher:change:opacity
     * @fires layerswitcher:change:visibility
     * @fires layerswitcher:change:position
@@ -174,6 +175,9 @@ class LayerSwitcher extends Control {
     * });
     * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
     *    console.warn("layer", e.layer, e.locked);
+    * });
+    * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
+    *    console.warn("layer", e.layer, e.key, e.value);
     * });
     */
     constructor (options) {
@@ -428,7 +432,10 @@ class LayerSwitcher extends Control {
                 "change:locked",
                 (e) => this._updateLayerLocked(e)
             );
-
+            this._listeners.updateProperties = layer.on(
+                "propertychange",
+                (e) => this._updateGenericProperty(e)
+            );
             if (this._layers[id].onZIndexChangeEvent == null) {
                 this._layers[id].onZIndexChangeEvent = layer.on(
                     "change:zIndex",
@@ -507,6 +514,8 @@ class LayerSwitcher extends Control {
         olObservableUnByKey(this._listeners.updateLayerOpacity);
         olObservableUnByKey(this._listeners.updateLayerVisibility);
         olObservableUnByKey(this._listeners.updateLayerGrayScale);
+        olObservableUnByKey(this._listeners.updateLayerLocked);
+        olObservableUnByKey(this._listeners.updateProperties);
         // olObservableUnByKey(this._listeners.updateLayersOrder);
 
         logger.trace(layer);
@@ -837,6 +846,22 @@ class LayerSwitcher extends Control {
          */
         this._showLayerSwitcherButton = null;
 
+
+        /**
+         * event triggered when a property is modified
+         * @event layerswitcher:propertychange
+         * @defaultValue "layerswitcher:propertychange"
+         * @group Events
+         * @param {Object} type - event
+         * @param {Object} layer - layer
+         * @param {Object} target - instance LayerSwitcher
+         * @public
+         * @example
+         * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
+         *   console.log(e.layer);
+         * })
+         */
+        this.PROPERTY_CHANGE_EVENT = "layerswitcher:propertychange";
         /**
          * event triggered when a layer is added
          * @event layerswitcher:add
@@ -1166,7 +1191,10 @@ class LayerSwitcher extends Control {
                 "change:locked",
                 (e) => this._updateLayerLocked(e)
             );
-
+            this._listeners.updateProperties = layer.on(
+                "propertychange",
+                (e) => this._updateGenericProperty(e)
+            );
             var self = this;
             setTimeout(() => {
                 self._updateLayerGrayScale({
@@ -2009,6 +2037,46 @@ class LayerSwitcher extends Control {
         this.dispatchEvent({
             type : this.CHANGE_LAYER_LOCKED_EVENT,
             locked : locked,
+            layer : this._layers[id]
+        });
+    }
+
+    /**
+     * generic update property
+     * @param {Event} e - Event
+     * @fires layerswitcher:changeproperty {@link LayerSwitcher#PROPERTY_CHANGE_EVENT}
+     * @private
+     */
+    _updateGenericProperty (e) {
+        var id = e.target.gpLayerId;
+        var layer = this._layers[id].layer;
+        var value = layer.get(e.key);
+
+        switch (e.key) {
+            case "title":
+                this._layers[id].title = value;
+                var nameDiv = document.getElementById(this._addUID("GPname_ID_" + id));
+                if (nameDiv) {
+                    nameDiv.innerHTML = value;
+                }
+                break;
+            case "description":
+                this._layers[id].description = value;
+                var nameDiv = document.getElementById(this._addUID("GPname_ID_" + id));
+                if (nameDiv) {
+                    nameDiv.title = value;
+                }
+            default:
+                break;
+        }
+        /**
+         * event triggered when an property layer is changed
+         * @event layerswitcher:changeproperty
+         */
+        this.dispatchEvent({
+            type : this.PROPERTY_CHANGE_EVENT,
+            key : e.key,
+            value : value,
             layer : this._layers[id]
         });
     }
