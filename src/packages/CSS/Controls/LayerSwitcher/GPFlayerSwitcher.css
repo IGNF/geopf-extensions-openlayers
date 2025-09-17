@@ -119,7 +119,7 @@ dialog[id^=GPlayersList] .GPlayerSwitcher_layer:last-child {
   transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
 }
 
-button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
+.GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools {
   opacity: 1;
 }
 
