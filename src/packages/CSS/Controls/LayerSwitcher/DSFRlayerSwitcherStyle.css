@@ -474,3 +474,21 @@ div[id^=GPAdvancedToolBtnsGroup_ID_] {
 div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn {
     margin: 0;
 }
+
+div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn[class*=" gpf-btn-icon-ls-tools-"] {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    white-space: nowrap;
+}
+
+div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn[class*=" gpf-btn-icon-ls-tools-"]::before {
+    content: "";
+    margin-left: -0.125rem;
+    margin-right: 0.5rem;
+    flex: 0 0 auto;
+    vertical-align: calc((0.75em - var(--icon-size)) * 0.5);
+    background-color: currentColor;
+    width: 1rem;
+    height: 1rem;
+    mask-size: 100% 100%;
+}

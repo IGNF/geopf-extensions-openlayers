@@ -37,7 +37,7 @@
     <button type="button" class="fr-btn" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
     <label for="producerTextOsm" class="fr-label">Nom producteur couche OSM</label>
     <input type="text" class="fr-input" id="producerTextOsm"></input>
-    <button type="button" class="fr-btn" id="validateProducerTextOsm">Valider produceur</button>
+    <button type="button" class="fr-btn" id="validateProducerTextOsm">Valider producer</button>
 </div>
 {{/content}}
 
@@ -47,6 +47,27 @@
     var layerSwitcher;
     var addMapsLayer, addOSMLayer;
     var osm, maps, ortho;
+
+    // Récupère une alerte
+    var callBackBtn = function (e, layerSwitcher, layer, options) {
+        console.log(e, layerSwitcher, layer, options)
+        alert(options.title);
+    }
+
+    // Renomme la couche
+    var rename = function (e, layerSwitcher, layer, options) {
+        let infos = layerSwitcher.getLayerInfo(layer);
+        let rename = prompt("Renommer la couche", infos._title);
+        if (rename && rename.trim()) {
+            layerSwitcher.addLayer(layer, {title: rename});
+        } else {
+            console.log("empty string")
+        }
+    }
+
+    var getLayer = function (e, layerSwitcher, layer, options) {
+        console.log(layer)
+    }
 
     var createMap = function () {
         // on cache l'image de chargement du Géoportail.
@@ -117,21 +138,63 @@
                         cb: (e, switcher) => { console.log(e, switcher); },
                     },
                 ],
-                advancedTools: [
-                    // cas nominal : SVG inline
-                    {
-                        key: ol.control.LayerSwitcher.switcherButtons.INFO,
-                    },
-                    {
-                        key: ol.control.LayerSwitcher.switcherButtons.EDIT,
-                    },
-                    {
-                        key: ol.control.LayerSwitcher.switcherButtons.GREYSCALE,
-                    },
-                    {
-                        key: ol.control.LayerSwitcher.switcherButtons.EXTENT,
-                    },
-                ]
+                // advancedTool: [
+                //     // Bouton de base
+                //     {
+                //         key: ol.control.LayerSwitcher.switcherButtons.INFO,
+                //     },
+                //     // Surcharge bouton existant
+                //     {
+                //         key: ol.control.LayerSwitcher.switcherButtons.GREYSCALE,
+                //         label : 'Tiles (N&B)',
+                //         icon : 'fr-icon-france-fill',
+                //         className : 'style-action',
+                //         accepted : ["Tile"],
+                //         cb : callBackBtn,
+                //         attributes : {
+                //             'data-action' : 'grey-scale'
+                //         }
+                //     },
+                //     // Classe DSFR
+                //     {
+                //         label : 'Vecteur et Géoportal WMTS',
+                //         icon : 'fr-icon-fire-fill',
+                //         accepted : [ol.layer.Vector, ol.layer.GeoportalWMTS],
+                //         cb : callBackBtn,
+                //         attributes : {
+                //             'disabled' : true
+                //         }
+                //     },
+                //     // Fichier svg
+                //     {
+                //         label : 'Get layer',
+                //         icon: '{{ resources }}/data/recherche-avancee.svg',
+                //         cb : getLayer,
+                //         attributes : {
+                //             'data-action' : 'get-layer'
+                //         }
+                //     },
+                //     // Icône svg
+                //     {
+                //         label : 'Édition',
+                //         icon: '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66667 15.3333L6 12.6667H11.3333L8.66667 15.3333ZM8.66667 2L11.3333 4.66667H6L8.66667 2ZM8.66667 10C7.93027 10 7.33333 9.40307 7.33333 8.66667C7.33333 7.93027 7.93027 7.33333 8.66667 7.33333C9.40307 7.33333 10 7.93027 10 8.66667C10 9.40307 9.40307 10 8.66667 10ZM2 8.66667L4.66667 6V11.3333L2 8.66667ZM15.3333 8.66667L12.6667 11.3333V6L15.3333 8.66667Z" fill="#000091"/></svg>',
+                //         className : 'edit-action',
+                //         cb : callBackBtn,
+                //         attributes : {
+                //             'data-action' : 'edit'
+                //         }
+                //     },
+                //     // URL en ligne
+                //     {
+                //         label : 'Renommer',
+                //         icon : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/1200px-How_to_use_icon.svg.png',
+                //         className : 'style-action',
+                //         cb : rename,
+                //         attributes : {
+                //             'data-action' : 'rename'
+                //         }
+                //     },
+                // ]
             }
         });
 

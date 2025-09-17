@@ -47,16 +47,22 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {Array<HeaderButton>} [headerButtons] - Liste d’outils personnalisés à afficher pour chaque couche.
  * @property {Array<AdvancedToolOption>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
- * Par défaut, seul le bouton d'information est ajouté.
+ * Par défaut, les boutons d'info, de style, noir et blanc et recentrer sont ajoutés.
  */
 
 /**
  * Option d'un outil personnalisé
  * @typedef {Object} AdvancedToolOption
- * @property {String} label - Label du bouton
+ * @property {String} [label] - Optionnel. Label du bouton
  * @property {String} [key] - Optionnel. Mot clé indiquant qu'il s'agit d'une fonctionnalité native du layer switcher
  * @property {String} [icon] - Optionnel. Icône de l'outil. Peut être un lien html, svg ou une classe.
  * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
+ * @property {Object} [attributes] - Optionnel. Attributs additionnels à ajouter au bouton.
+ * Attributs ajoutés avec la méthode `setAttribute`.
+ * @property {Array<import("ol/layer/Base").default|String>} [accepted] - Optionnel. Définit les types de couche pour lesquelles l'outil fonctionne.
+ * Par défaut, ne filtre pas sur le type de couche.
+ * Le constructeur ou le nom du constructeur peut être donné en argument.
+ * Ne fonctionne pas pour les fonctionnalités déjà existantes.
  * @property {AdvancedToolCallback} [cb] - Optionnel. Callback au click sur l'outil.
  * @property {Object} [styles] - Optionnel. Styles à appliquer.
  */
@@ -525,7 +531,7 @@ class LayerSwitcher extends Control {
                 var advancedTools = document.getElementById(this._addUID("GPadvancedTools_ID_" + id));
                 if (advancedTools) {
                     advancedTools.appendChild(
-                        this._createAdvancedToolInformationElement({
+                        this._createInformationElement({
                             id : id
                         })
                     );
@@ -786,7 +792,7 @@ class LayerSwitcher extends Control {
             allowDelete : true,
             allowTooltips : false,
             headerButtons : [],
-            advancedTools : [],
+            advancedTools : null,
         };
 
         // merge with user options
@@ -1376,7 +1382,7 @@ class LayerSwitcher extends Control {
             layerOptions.deletable = true;
         }
         // Ajout de fonctionnalités utilisateurs sur la couche
-        layerOptions.advancedTools = this.options.advancedTools || [];
+        layerOptions.advancedTools = this.options.advancedTools;
 
         // ajout d'une div pour cette layer dans le control
         var layerDiv = this._createContainerLayerElement(layerOptions, this.options.allowTooltips);
