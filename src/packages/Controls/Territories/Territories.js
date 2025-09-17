@@ -32,7 +32,7 @@ var logger = Logger.getLogger("territories");
  * @property {boolean} [thumbnail=false] - Affiche une imagette pour chaque territoire.
  * @property {boolean} [reduce=false] - Affiche les tuiles en mode réduit (nom uniquement).
  * @property {number} [tiles=3] - Nombre de tuiles affichées (0 = toutes).
- * @property {Array<Object>} [territories=[]] - Liste personnalisée des territoires à afficher.
+ * @property {Array<Territory>} [territories=[]] - Liste personnalisée des territoires à afficher.
  * @property {Object} [upload] - Options pour l’import de configuration.
  * @property {boolean} [upload.active=false] - Active le menu d’import de fichier.
  * @property {string} [upload.title="Ajouter un fichier de configuration"] - Titre du menu d’import.
@@ -44,6 +44,17 @@ var logger = Logger.getLogger("territories");
  */
 
 /**
+ * @typedef {Object} Territory
+ * @property {string} id - IdenObjecttifiant unique du territoire (ex: FRA, MTQ, GLP, ...).
+ * @property {string} title - Titre du territoire.
+ * @property {string} description - Description du territoire.
+ * @property {Array<number>} bbox - Bbox du territoire au format [minx, miny, maxx, maxy] en EPSG:4326.
+ * @property {Array<number>} [point] - Point central du territoire au format [lon, lat] en EPSG:4326.
+ * @property {number} [zoom] - Niveau de zoom à appliquer lors de la sélection du territoire.
+ * @property {string} [thumbnail] - URL ou data URI de l’imagette du territoire.    
+ */
+
+/**Object
  * @classdesc
  *
  * Territories map widget
@@ -154,7 +165,7 @@ class Territories extends Control {
     /**
      * Add a territory
      *
-     * @param {Object} territory  - territory
+     * @param {Territory} territory  - territory
      * @returns {Boolean} - true|false
      * @public
      * @example
@@ -186,12 +197,12 @@ class Territories extends Control {
     /**
      * Load a new configuration
      * 
-     * @param {Object} config - file config
+     * @param {Array<Territory>} territories - file config
      */
-    setTerritories (config) {
-        for (let j = 0; j < config.length; j++) {
-            const element = config[j];
-            this.setTerritory(element);
+    setTerritories (territories) {
+        for (let j = 0; j < territories.length; j++) {
+            const territory = territories[j];
+            this.setTerritory(territory);
         }
     }
 

@@ -53,8 +53,8 @@ class GeoportalZoom extends Zoom {
      */
     _createContainerPosition (map) {
         this.container = map.getOverlayContainerStopEvent();
-        this.options.target = this.container;
         if (this.options.position) {
+            this.options.target = this.container;
             var id = "position-container-" + this.options.position;
             if (!document.getElementById(id)) {
                 // Creation manuelle du container de position

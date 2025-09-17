@@ -373,7 +373,6 @@ Cette fonctionnalité permet de désaturer l’affichage d’une couche pour la 
 
 - Un bouton ou une option « N&B » (grayscale) est disponible pour chaque couche compatible (principalement les couches raster, comme WMS ou WMTS).
 - Lorsque l’utilisateur active ce mode, la couche est affichée en niveaux de gris sur la carte.
-- Techniquement, cela peut être réalisé via un filtre CSS appliqué au rendu de la couche, ou via une modification du style côté serveur ou client.
 - L’état N&B est conservé tant que l’utilisateur ne le désactive pas.
 
 ### Utilité
@@ -397,6 +396,35 @@ const layerSwitcher = new LayerSwitcher({
     options: {
         allowGrayScale: true // Active le bouton N&B pour les couches compatibles
     }
+});
+```
+
+### Programmatiquement
+
+Il est possible de modifier un statut de la couche avec ou sans modification de l'interface du gestionnaire de couche.
+
+Toute modification d'une properties de la couche va déclencher une action du gestionnaire de couche (ex. visibilité de la couche avec modification de l'icone).
+
+Ex. avec l'option `grayscale`
+```js
+layer.set('grayscale', true)
+```
+
+Ceci déclenche une mise à jour de la couche en gris.
+
+Il est possible de s'abonner à l'evenement spécifique ou générique afin de procéder à d'autres modifications customisées :
+
+```js
+layerSwitcher.on("layerswitcher:propertychange", function (e) {
+   console.warn(e);
+});
+```
+
+ou
+
+```js
+layerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+   console.warn(e);
 });
 ```
 
@@ -559,8 +587,6 @@ L’option `advancedTools` du LayerSwitcher permet d’ajouter facilement des bo
 
 ## Voici une explication détaillée du fonctionnement des **tooltips** dans le LayerSwitcher
 
----
-
 ### Fonctionnement des tooltips dans le LayerSwitcher
 
 Le LayerSwitcher propose une option `allowTooltips` qui permet d’afficher des info-bulles (tooltips) sur les éléments de l’interface, afin d’améliorer l’ergonomie et l’accessibilité.
@@ -602,3 +628,85 @@ const layerSwitcher = new LayerSwitcher({
 
 **Résumé :**  
 Les tooltips dans le LayerSwitcher sont des info-bulles contextuelles qui s’affichent au survol des éléments, facilitant la compréhension et l’utilisation du gestionnaire de couches, notamment pour les utilisateurs novices ou en situation de handicap.
+
+## Comment modifier le titre d'une couche dans le gestionnaire de couches ?
+
+Pour modifier le **titre d’une couche** dans le gestionnaire de couches (LayerSwitcher), il existe deux méthodes :
+
+---
+
+### 1. **Au moment de l’ajout de la couche**
+
+Lorsque tu ajoutes une couche via `layerSwitcher.addLayer(layer, config)`, tu peux passer une option `title` dans l’objet `config` :
+
+````javascript
+layerSwitcher.addLayer(
+    maCouche,
+    {
+        title: "Nouveau titre de la couche"
+    }
+);
+````
+
+---
+
+### 2. **Après l’ajout (mise à jour du titre)**
+
+Tu peux rappeler `addLayer` avec la même couche et une nouvelle option `title` :
+
+````javascript
+layerSwitcher.addLayer(
+    maCouche,
+    {
+        title: "Titre modifié"
+    }
+);
+````
+
+Le LayerSwitcher mettra à jour le titre dans l’interface (voir la partie :
+
+```javascript
+// set new title in layer div
+if (config.title) {
+    var nameDiv = document.getElementById(this._addUID("GPname_ID_" + id));
+    if (nameDiv) {
+        nameDiv.innerHTML = config.title;
+        nameDiv.title = config.description || config.title;
+    }
+}
+```
+)
+
+---
+
+### 3. **Directement dans le DOM (déconseillé)**
+
+Tu pourrais aussi modifier le titre directement dans le DOM, mais il est préférable d’utiliser la méthode ci-dessus pour garder la cohérence interne du widget.
+
+---
+
+### 4. **Via les evenements**
+
+Il est possible de modifier un statut de la couche avec ou sans modification de l'interface du gestionnaire de couche.
+
+Toute modification d'une properties de la couche va déclencher une action du gestionnaire de couche (ex. visibilité de la couche avec modification de l'icone).
+
+Ex. avec l'option `title`
+```js
+layer.set('title', "Mon titre")
+```
+
+Ceci déclenche une mise à jour du titre de la couche.
+
+Il est possible de s'abonner à l'evenement spécifique ou générique afin de procéder à d'autres modifications customisées :
+
+```js
+layerSwitcher.on("layerswitcher:propertychange", function (e) {
+   console.warn(e);
+});
+```
+
+---
+
+**Résumé :**  
+Utilise `layerSwitcher.addLayer(maCouche, { title: "Nouveau titre" })` pour modifier dynamiquement le titre d’une couche dans le LayerSwitcher ou `layer.set("title", "Nouveau titre")`.
