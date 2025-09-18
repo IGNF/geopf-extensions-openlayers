@@ -38,6 +38,7 @@ __DATE__
   - Layerswitcher : Menu contextuel en mode mobile snas items vides (#417)
   - ControlList et ZoomOut : Tooltips cassées (#419)
   - Coordinates : homogénéisation de l'affichage des coordonnées dans l'ordre lat,lon (#421)
+  - ContextMenu : correction recherche commune par wfs et interrogation service alti (#438)
 
 * 🔒 [Security]
 
