@@ -18,7 +18,11 @@
         "doc/DOCUMENTATION.md", 
         "doc/NOTE-REPORTING.md",
         "doc/NOTE-VALIDATOR.md",
-        "doc/NOTE-LAYERSWITCHER.md"
+        "doc/NOTE-LAYERSWITCHER.md",
+        "doc/NOTE-POSITION.md",
+        "doc/NOTE-CATALOG.md",
+        "doc/NOTE-CATALOG-PERF.md",
+        "doc/NOTE-CATALOG-ICON.md",
     ],
     "blockTags": [
         "@alias", 

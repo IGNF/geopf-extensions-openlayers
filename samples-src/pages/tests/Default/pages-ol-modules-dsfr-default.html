@@ -69,6 +69,7 @@
             <!-- map -->
             <div id="map">
             </div>
+            <div id="zoomer"></div>
 {{/content}}
 
 {{#content "js"}}
@@ -111,7 +112,8 @@
                 map.addControl(reporting);
 
                 var zoom = new ol.control.GeoportalZoom({
-                  position : "top-right"
+                  position : "top-right",
+                  target : "zoomer"
                 });
                 map.addControl(zoom);
 

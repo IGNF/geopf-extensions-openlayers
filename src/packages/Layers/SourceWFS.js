@@ -105,7 +105,7 @@ class SourceWFS extends VectorSource {
 
         var loadFeatures = (self, url, extent, success, failure) => {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", url);
+            xhr.open("POST", url);
             const onError = function () {
                 self.removeLoadedExtent(extent);
                 failure();

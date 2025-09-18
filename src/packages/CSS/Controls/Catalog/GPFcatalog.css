@@ -16,7 +16,7 @@ button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
     flex-direction: column;
     visibility: visible;
     opacity: 100%;
-    width: 370px;
+    max-width: 450px;
     height: initial;
     /* max-height: inherit; */
 }
@@ -33,4 +33,8 @@ form[id^=GPcatalogForm] {
 
 .catalog-container-tabs .fr-accordion .fr-collapse--expanded {
     padding-bottom: 0;
+}
+
+.GPcatalogButtonSection {
+    display: flex;
 }

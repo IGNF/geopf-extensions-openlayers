@@ -1,0 +1,5 @@
+{
+    "producer" : [
+        { "id" : "ign", "name" : "IGN", "icon" : "fr-icon-government-fill" }
+    ]
+}
