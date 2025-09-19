@@ -582,6 +582,7 @@ class LayerSwitcher extends Control {
         olObservableUnByKey(this._listeners.updateLayerOpacity);
         olObservableUnByKey(this._listeners.updateLayerVisibility);
         olObservableUnByKey(this._listeners.updateLayerGrayScale);
+        olObservableUnByKey(this._listeners.updateLayerLocked);
         // olObservableUnByKey(this._listeners.updateLayersOrder);
 
         logger.trace(layer);

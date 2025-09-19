@@ -69,6 +69,10 @@
         console.log(layer)
     }
 
+    var lockLayer = function (e, layerSwitcher, layer, options) {
+        layerSwitcher.lockLayer(layer, !layer.get('locked'))
+    }
+
     var createMap = function () {
         // on cache l'image de chargement du Géoportail.
         document.getElementById('map').style.backgroundImage = 'none';
@@ -114,6 +118,7 @@
             {
                 layer: ortho,
                 config: {
+                    locked: true,
                     producer : 'IGN',
                     thumbnail : 'https://upload.wikimedia.org/wikipedia/commons/a/a0/IGN_logo_2012.svg'
                 }
@@ -159,10 +164,10 @@
                     },
                     // Classe DSFR
                     {
-                        label : 'Vecteur et Géoportal WMTS',
-                        // icon : 'fr-icon-fire-fill',
+                        label : 'Verrouiler Tiles',
+                        icon : 'fr-icon-lock-fill',
                         accepted : [ol.layer.Vector, ol.layer.GeoportalWMTS],
-                        cb : callBackBtn,
+                        cb : lockLayer,
                         attributes : {
                             'disabled' : true
                         }
@@ -218,6 +223,13 @@
         });
         layerSwitcher.on("layerswitcher:extent", function (e) {
             console.warn("layer", e);
+        });
+
+        layerSwitcher.on("layerswitcher:lock", function (e) {
+            console.warn("layer", e, e.layer, e.locked);
+        });
+        layerSwitcher.on("layerswitcher:change:locked", function (e) {
+            console.warn("layer", e, e.layer, e.locked);
         });
 
         // Ajout du LayerSwitcher à la carte
