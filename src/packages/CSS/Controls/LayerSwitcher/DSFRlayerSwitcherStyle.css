@@ -33,8 +33,18 @@ div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel]
 
 div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerStylePanel] > .gpf-panel__body,
 div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > .gpf-panel__body
- {
+{
     max-height: unset !important;
+}
+
+.GPlayerSwitcher_layer:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background-color: var(--border-default-grey);
 }
 
 .gpf-btn-icon-layerswitcher::after {
@@ -104,8 +114,6 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]:has(.gpf-btn-icon-ls-vis
 }
 
 .GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools {
-    /* height: 56px; */
-    max-height: unset;
     padding: 0 12px 12px 12px;
 }
 
@@ -133,22 +141,10 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] + .GPlayerAdvancedTool
 
 
 div[id^=GPbasicTools_ID_] {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    flex-direction: row-reverse;
     padding: 12px 8px;
-    width: 100%;
 }
 
 div[id^=GPadvancedTools_ID_] {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-    justify-content: center;
     padding: 0;
 }
 
@@ -378,39 +374,13 @@ div[id^=GPbodyHeader-] button.gpf-btn {
 /* Titre de la couche */
 
 div[id^=GPtitle_ID_] {
-    display: flex;
     min-height: 44px;
     min-width: 184px;
-    align-self: stretch;
-    align-items: center;
-    flex: 1;
 }
-
-.GPtitleImage {
-    border-radius: 4px;
-    margin-right: 8px;
-}
-
-div[id^=GPlayerTitle_ID_] {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: calc(100% - 52px);
-
-    flex: 1 1 auto;
-}
-
 
 div[id^=GPlayerTitle_ID_] > * {
-    overflow: hidden;
     font-weight: 400;
-    text-overflow: ellipsis;
-    display: block;
-    white-space: nowrap;
-    width: 100%;
 }
-
 
 .GPlayerName {
     font-size: 16px;
@@ -427,14 +397,6 @@ div[id^=GPlayerTitle_ID_] > * {
 }
 
 /* Groupe bouton */
-
-div[id^="GPbasicToolButtons_ID_"] {
-    display: flex;
-    flex-direction: row-reverse;
-    flex: 0 0 auto;
-    align-items: center;
-
-}
 
 div[id^="GPbasicToolButtons_ID_"] > button.gpf-btn-icon {
     height: 2rem;

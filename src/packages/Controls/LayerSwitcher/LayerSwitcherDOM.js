@@ -17,7 +17,8 @@ var LayerSwitcherDOM = {
         // FIXME retirer cette détection user-agent pour solution propre
         // option forcefallback pour réparer sortable sous Chrome 97
         // option forcefallback casse le layerswitcher du portail sous firefox
-        let handleClass = ".GPlayerName";
+        // let handleClass = ".GPlayerName";
+        let handleClass = ".GPtitle";
         if (checkDsfr()) {
             handleClass = ".GPlayerDragNDrop";
         }
@@ -312,7 +313,7 @@ var LayerSwitcherDOM = {
 
     /**
      * Créé un bouton
-     * @param {import("./LayerSwitcher.js").HeaderButton} options Options du bouton
+     * @param {Object} options Options du bouton (de type LayerSwitcher.HeaderButton)
      * @returns {HTMLButtonElement} Bouton
      */
     _createButtonHeaderElement : function (options) {
@@ -508,11 +509,19 @@ var LayerSwitcherDOM = {
         let img = document.createElement("img");
         img.id = this._addUID("GPtitleImage_ID_" + obj.id);
         img.className = "GPtitleImage";
-        img.width = "44";
-        img.height = "44";
+        img.width = "40";
+        img.height = "40";
         img.alt = "";
 
-        img.src = obj.picto ? obj.picto : "../../../src/packages/CSS/Controls/LayerSwitcher/img/alt-image.png";
+        let defaultSrc = "";
+
+        if (checkDsfr()) {
+            defaultSrc = "../../../src/packages/CSS/Controls/LayerSwitcher/img/alt-image.png";
+            img.width = "44";
+            img.height = "44";
+        }
+
+        img.src = obj.picto ? obj.picto : defaultSrc;
 
         return img;
     },
@@ -754,10 +763,15 @@ var LayerSwitcherDOM = {
 
             container.appendChild(btnGroups);
         } else {
-            btnGroups.appendChild(this._createInformationElement(obj, {}));
-            btnGroups.appendChild(this._createEditionElement(obj, {}));
-            btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
-            btnGroups.appendChild(this._createExtentElement(obj, {}));
+            if (checkDsfr()) {
+                btnGroups.appendChild(this._createInformationElement(obj, {}));
+                btnGroups.appendChild(this._createEditionElement(obj, {}));
+                btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+                btnGroups.appendChild(this._createExtentElement(obj, {}));
+            } else {
+                btnGroups.appendChild(this._createInformationElement(obj, {}));
+                btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+            }
             container.appendChild(btnGroups);
         }
         
@@ -768,12 +782,17 @@ var LayerSwitcherDOM = {
      * Configure le bouton selon les options du bouton.
      * 
      * @param {HTMLButtonElement} button Bouton à configurer
-     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
-     * @param {boolean} [setClick] Optionnel. Indique si une fonction au clic doit être ajoutée.
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
+     * @param {Boolean} [setClick] Optionnel. Indique si une fonction au clic doit être ajoutée.
      * Vrai par défaut.
-     * @returns 
+     * @returns {HTMLButtonElement} Bouton donné en paramètre
      */
     _setAdvancedToolOptions : function (button, tool, setClick = true) {
+        if (!button) {
+            return;
+        }
+
         let label;
         if (tool.label) {
             label = tool.label.toLowerCase().replaceAll(" ", "-");
@@ -916,7 +935,8 @@ var LayerSwitcherDOM = {
      * @param {Boolean} obj.editable - mode editable
      * @param {Boolean} obj.tms - tms ou non
      * @param {Array} obj.styles - styles des tms
-     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      * 
      * @returns {HTMLElement} container
      */
@@ -995,7 +1015,8 @@ var LayerSwitcherDOM = {
      * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
      * @param {String} obj.title - titre
      * @param {String} obj.description - description
-     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      * 
      * @returns {HTMLElement} container
      */
@@ -1068,7 +1089,8 @@ var LayerSwitcherDOM = {
      * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
      * @param {Boolean} obj.grayable - le mode grisable est il  possible pour ce type de couche
      * @param {Boolean} obj.grayscale - option grisée de la couche
-     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      *
      * @returns {HTMLElement} container
      */
@@ -1246,7 +1268,8 @@ var LayerSwitcherDOM = {
      * 
      * @param {Object} obj - Objet de la couche à configurer
      * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
-     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      *
      * @returns {HTMLElement} container
      */
@@ -1308,7 +1331,8 @@ var LayerSwitcherDOM = {
      * 
      * @param {Object} obj - Objet de la couche à configurer
      * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
-     * @param {import("./LayerSwitcher.js").AdvancedToolOption} tool Option du bouton (override les valeurs par défaut)
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      *
      * @returns {HTMLElement} container
      */
@@ -1326,7 +1350,6 @@ var LayerSwitcherDOM = {
         let icon = tool.icon;
         let label;
         if (checkDsfr()) {
-            icon = tool.icon;
             label = tool.label;
         }
         let className = `GPlayerTools gpf-btn gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline`;
