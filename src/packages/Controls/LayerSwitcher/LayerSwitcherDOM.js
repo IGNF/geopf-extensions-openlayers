@@ -412,7 +412,7 @@ var LayerSwitcherDOM = {
         //          <!-- _createVisibilityElement -->
         //          <!-- _createDeleteElement -->
         //      <!-- _createBasicToolTitleElement -->
-        //          <!-- _createLayerPictoElement -->
+        //          <!-- _createLayerThumbnailElement -->
         //          <!-- _createLayerNameDivElement -->
         //              <!-- _createLayerNameElement -->
         //              <!-- _createLayerProducerElement -->
@@ -468,7 +468,7 @@ var LayerSwitcherDOM = {
         div.id = this._addUID("GPtitle_ID_" + obj.id);
         div.className = "GPtitle";
 
-        div.appendChild(this._createLayerPictoElement(obj, tooltips));
+        div.appendChild(this._createLayerThumbnailElement(obj));
 
         div.appendChild(this._createLayerNameDivElement(obj, tooltips));
 
@@ -502,10 +502,10 @@ var LayerSwitcherDOM = {
      * Creation du container des outils basiques du layer (DOM)
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
-     * @param {Boolean} tooltips - autoriser ou non les tooltips HTML
+     * @param {String} obj.thumbnail - Pictogramme de la couche (url ou fichier statique)
      * @returns {HTMLElement} container
      */
-    _createLayerPictoElement : function (obj, tooltips) {
+    _createLayerThumbnailElement : function (obj) {
         let img = document.createElement("img");
         img.id = this._addUID("GPtitleImage_ID_" + obj.id);
         img.className = "GPtitleImage";
@@ -521,7 +521,7 @@ var LayerSwitcherDOM = {
             img.height = "44";
         }
 
-        img.src = obj.picto ? obj.picto : defaultSrc;
+        img.src = obj.thumbnail ? obj.thumbnail : defaultSrc;
 
         return img;
     },

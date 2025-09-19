@@ -99,6 +99,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {Object} [config] - Métadonnées associées à la couche.
  * @property {string} [config.title] - Titre de la couche.
  * @property {string} [config.producer] - Producteur de la couche.
+ * @property {string} [config.thumbnail] - Pictogramme de la couche.
  * @property {string} [config.description] - Description de la couche.
  * @property {string} [config.quicklookUrl] - URL d’aperçu rapide.
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
@@ -444,6 +445,7 @@ class LayerSwitcher extends Control {
                 inRange : isInRange != null ? isInRange : true,
                 producer : config.producer != null ? config.producer : (layerInfos._producer || null),
                 title : config.title != null ? config.title : (layerInfos._title || id),
+                thumbnail : config.thumbnail != null ? config.thumbnail : (layerInfos._thumbnail || null),
                 description : config.description || layerInfos._description || null,
                 legends : config.legends || layerInfos._legends || [],
                 metadata : config.metadata || layerInfos._metadata || [],
@@ -893,7 +895,7 @@ class LayerSwitcher extends Control {
                     legends : conf.legends || layerInfo._legends,
                     metadata : conf.metadata || layerInfo._metadata,
                     quicklookUrl : conf.quicklookUrl || layerInfo._quicklookUrl,
-                    picto : conf.picto || layerInfo._picto,
+                    thumbnail : conf.thumbnail || layerInfo._thumbnail,
                     producer : conf.producer || layerInfo._producer
                 };
                 this._layers[id] = layerOptions;
@@ -1246,7 +1248,7 @@ class LayerSwitcher extends Control {
                     locked : locked,
                     inRange : isInRange != null ? isInRange : true,
                     producer : layerInfos._producer || null,
-                    picto : layerInfos._picto || null,
+                    thumbnail : layerInfos._thumbnail || null,
                     title : layerInfos._title || id,
                     description : layerInfos._description || null,
                     legends : layerInfos._legends || [],
@@ -2431,7 +2433,7 @@ class LayerSwitcher extends Control {
                 layerInfo._title = src._title || layerProperties.title || layerProperties.id || "";
                 layerInfo._description = src._description || layerProperties.description || "";
                 layerInfo._producer = src._producer || layerProperties.producer || "";
-                layerInfo._picto = src._picto || layerProperties.picto || "";
+                layerInfo._thumbnail = src._thumbnail || layerProperties.thumbnail || "";
                 layerInfo._quicklookUrl = src._quicklookUrl || layerProperties.quicklookUrl || "";
                 layerInfo._metadata = src._metadata || layerProperties.metadata || [];
                 layerInfo._legends = src._legends || layerProperties.legends || [];
