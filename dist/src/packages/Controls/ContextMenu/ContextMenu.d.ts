@@ -209,6 +209,13 @@ declare class ContextMenu extends Control {
      */
     computeIsochrone(evt: any): void;
     /**
+     * Fonction qui lance le GFI
+     * pour les coordonnées sous le clic
+     *
+     * @param {*} evt event
+     */
+    getFeatureInfo(evt: any): void;
+    /**
      * Fonction qui ouvre le widget des légendes
      *
      * @param {*} evt event
