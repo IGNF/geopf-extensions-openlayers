@@ -292,6 +292,12 @@ class ContextMenu extends Control {
     getAvailableContextMenuControls () {
         var allItems = [
             {
+                text : "Obtenir informations",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : this.getFeatureInfo.bind(this),
+                control_CLASSNAME : "GetFeatureInfo"
+            },
+            {
                 text : "Adresse / Coordonnées",
                 classname : "ol-context-menu-custom fr-text--md",
                 callback : this.displayAdressAndCoordinate.bind(this),
@@ -412,6 +418,25 @@ class ContextMenu extends Control {
         var data = isocurve.getData();
         data.point = clickedCoordinate;
         isocurve.setData(data);
+    }
+
+    /**
+     * Fonction qui lance le GFI 
+     * pour les coordonnées sous le clic
+     * 
+     * @param {*} evt event
+     */
+    getFeatureInfo (evt) {
+        var gfi = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "GetFeatureInfo")[0];
+        gfi.buttonGetFeatureInfoShow.click();
+        gfi.buttonGetFeatureInfoShow.setAttribute("aria-pressed", true);
+        let pixel = this.getMap().getPixelFromCoordinate(evt.coordinate);
+        let fakeEvent = {
+            pixel : pixel,
+            map: this.getMap(),
+            coordinate: evt.coordinate
+        }
+        this.getMap().dispatchEvent({ type: 'singleclick', ...fakeEvent })
     }
 
     /**
