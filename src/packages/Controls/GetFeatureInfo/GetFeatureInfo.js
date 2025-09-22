@@ -274,11 +274,8 @@ class GetFeatureInfo extends Control {
      * @private
      */
     onMapClick (e) {
-        console.log("mapclicked")
-        console.log(e)
         if (this.getFeatureInfoIsActive() === "true") {
-        console.log("gfi active")
-        this.getFeatureInfoAccordionGroup.remove();
+            this.getFeatureInfoAccordionGroup.remove();
             this.layers = e.map.getLayers().getArray().filter((l) => {
                 // On ne passe au GFI que les layers visibles
                 if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){

@@ -3,6 +3,7 @@
 button[id^="GPshowControlListPicto-"]::after {
   -webkit-mask: url("img/more-line.svg") center no-repeat;
   mask: url("img/more-line.svg") center no-repeat;
+  mask-size: 70%;
 }
 
 button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {

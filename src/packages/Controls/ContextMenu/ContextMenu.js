@@ -433,10 +433,10 @@ class ContextMenu extends Control {
         let pixel = this.getMap().getPixelFromCoordinate(evt.coordinate);
         let fakeEvent = {
             pixel : pixel,
-            map: this.getMap(),
-            coordinate: evt.coordinate
-        }
-        this.getMap().dispatchEvent({ type: 'singleclick', ...fakeEvent })
+            map : this.getMap(),
+            coordinate : evt.coordinate
+        };
+        this.getMap().dispatchEvent({ type : "singleclick", ...fakeEvent });
     }
 
     /**
