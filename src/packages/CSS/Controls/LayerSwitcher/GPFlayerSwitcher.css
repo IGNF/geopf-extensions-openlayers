@@ -43,6 +43,7 @@ button[id^="GPshowLayersListPicto-"][aria-pressed="true"] + dialog {
   display: flex;
   flex-direction: column;
   visibility: visible;
+  justify-content: flex-start;
   opacity: 100%;
 }
 
@@ -67,18 +68,11 @@ button[id^=GPshowLayersListPicto-] {
 dialog[id^=GPlayersList] {
   border-bottom-right-radius: 0;
   opacity: 0;
-  /* overflow: auto; */
-  /* transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0.25s; */
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
-  height: initial;
   max-height: inherit;
   opacity: 1;
-}
-
-button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersList] {
-  /* transition: max-height 0.5s ease-in 0s, opacity 0.25s ease-in 0s; */
 }
 
 .GPlayerCounter {
