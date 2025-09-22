@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - Contextual Menu : Ajout du getFeatureInfo dans les entrées du menu contextuel (#442)
+
 * 🔨 [Changed]
 
 * 🔥 [Deprecated]
