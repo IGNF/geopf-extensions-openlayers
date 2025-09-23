@@ -19,6 +19,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - LayerSwitcher : refonte complète de l'outil (#434)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
