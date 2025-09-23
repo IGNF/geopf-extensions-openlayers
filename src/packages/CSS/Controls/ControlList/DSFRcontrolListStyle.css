@@ -1,3 +1,11 @@
+/* GET FEATURE INFO */
+
+button[id^="GPshowControlListPicto-"]::after {
+  -webkit-mask: url("img/more-line.svg") center no-repeat;
+  mask: url("img/more-line.svg") center no-repeat;
+  mask-size: 70%;
+}
+
 button[id^="GPshowControlListPicto-"][aria-pressed="true"] + dialog {
   width: 370px;
 }
@@ -9,7 +17,7 @@ div[id^="GPcontrolList-"] {
 div[id^="GPcontrolList-"] .GPshowOpen > span {
   font-size: 32px;
   position: absolute;
-  transform: translate(-5px, -2px);
+  /* transform: translate(-5px, -2px); */
 }
 
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__content {
@@ -75,5 +83,5 @@ dialog[id^="GPcontrolListPanel-"] .gpf-panel__footer > button {
     width: 32px;
     background-color: var(--border-default-grey);
     position: absolute;
-    transform: translate(-7px, -7px);
+    /* transform: translate(-7px, -7px); */
 }

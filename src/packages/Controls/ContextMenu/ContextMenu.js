@@ -292,6 +292,12 @@ class ContextMenu extends Control {
     getAvailableContextMenuControls () {
         var allItems = [
             {
+                text : "Obtenir informations",
+                classname : "ol-context-menu-custom fr-text--md",
+                callback : this.getFeatureInfo.bind(this),
+                control_CLASSNAME : "GetFeatureInfo"
+            },
+            {
                 text : "Adresse / Coordonnées",
                 classname : "ol-context-menu-custom fr-text--md",
                 callback : this.displayAdressAndCoordinate.bind(this),
@@ -415,6 +421,25 @@ class ContextMenu extends Control {
     }
 
     /**
+     * Fonction qui lance le GFI 
+     * pour les coordonnées sous le clic
+     * 
+     * @param {*} evt event
+     */
+    getFeatureInfo (evt) {
+        var gfi = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "GetFeatureInfo")[0];
+        gfi.buttonGetFeatureInfoShow.click();
+        gfi.buttonGetFeatureInfoShow.setAttribute("aria-pressed", true);
+        let pixel = this.getMap().getPixelFromCoordinate(evt.coordinate);
+        let fakeEvent = {
+            pixel : pixel,
+            map : this.getMap(),
+            coordinate : evt.coordinate
+        };
+        this.getMap().dispatchEvent({ type : "singleclick", ...fakeEvent });
+    }
+
+    /**
      * Fonction qui ouvre le widget des légendes
      * 
      * @param {*} evt event
@@ -469,7 +494,7 @@ class ContextMenu extends Control {
             },
             onFailure : function (error) {},
             // spécifique au service
-            positions : [{lon : clickedCoordinate[1], lat : clickedCoordinate[0]}],
+            positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
             outputFormat : "json" // json|xml
         };
         Gp.Services.getAltitude(altiOptions);
@@ -493,13 +518,13 @@ class ContextMenu extends Control {
             let config = {
                 id : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
                 layer : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
-                attributes : ["nom"]
+                attributes : ["code_postal","nom_officiel"]
             };
             const result = await OGCRequest.computeGenericGPFWFS(
                 config.layer,
                 config.attributes,
                 config.around || 0,
-                config.geom_name || "geom",
+                config.geom_name || "geometrie",
                 config.additional_cql || "",
                 config.epsg || 4326,
                 config.get_geom || false,
@@ -507,7 +532,7 @@ class ContextMenu extends Control {
                 clickedCoordinate[1]
             );
             if (result.length) {
-                address.innerHTML = result[0];
+                address.innerHTML = result[0].join(", ");
             }
         };
 

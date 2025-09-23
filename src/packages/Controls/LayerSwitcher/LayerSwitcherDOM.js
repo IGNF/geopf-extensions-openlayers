@@ -221,7 +221,7 @@ var LayerSwitcherDOM = {
 
     _createLayersPanelHeaderElement : function () {
         var container = document.createElement("div");
-        // FIXME on n'utilise pas le dsfr !
+        // on n'utilise pas le dsfr !
         // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
         container.className = "GPpanelHeader gpf-panel__header_ls";
         return container;
@@ -234,6 +234,7 @@ var LayerSwitcherDOM = {
     },
     _createLayersPanelTitleElement : function () {
         var div = document.createElement("div");
+        // on n'utilise pas le dsfr !
         div.className = "GPpanelTitle gpf-panel__title_ls";
         div.id = this._addUID("GPlayersHeaderTitle");
         div.innerHTML = "Couches de données";

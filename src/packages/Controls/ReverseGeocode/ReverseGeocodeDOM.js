@@ -123,7 +123,8 @@ var ReverseGeocodeDOM = {
         var context = this;
 
         var container = document.getElementById(this._addUID("GPreverseGeocodingResultsList"));
-
+        var resultDiv = document.createElement("div");
+        resultDiv.id = this._addUID("GPreverseGeocodedLocationResultDiv_" + id);
         var div = document.createElement("div");
         div.id = this._addUID("GPreverseGeocodedLocation_" + id);
         div.setAttribute("tabindex", "0");
@@ -163,7 +164,34 @@ var ReverseGeocodeDOM = {
             });
         }
 
-        container.appendChild(div);
+        // Copy result button
+        var copyResultButton = document.createElement("button");
+        copyResultButton.type = "button";
+        copyResultButton.id = this._addUID("GPreverseGeocodedLocationResultCopy_" + id);
+        copyResultButton.setAttribute("data-text-geolocate", div.innerHTML);
+        copyResultButton.setAttribute("title", "Copier le résultat");
+        copyResultButton.classList.add("gpf-btn-icon-copy-result", "fr-btn", "fr-btn--tertiary", "gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
+
+        if (copyResultButton.addEventListener) {
+            copyResultButton.addEventListener("click", function (e) {
+                if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
+                    context.onReverseGeocodingResultCopyButtonClick(e);
+                    copyResultButton.classList.add("GPcopiedLocation");
+                    setTimeout(() => {
+                        copyResultButton.classList.remove("GPcopiedLocation");
+                    }, 1000); 
+                }
+            });
+        } else if (copyResultButton.attachEvent) {
+            copyResultButton.attachEvent("onclick", function (e) {
+                if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
+                    context.onReverseGeocodingResultCopyButtonClick(e);
+                }
+            });
+        }
+        resultDiv.appendChild(div);
+        resultDiv.appendChild(copyResultButton);
+        container.appendChild(resultDiv);
     },
 
     // ################################################################### //
