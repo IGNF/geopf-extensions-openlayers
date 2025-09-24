@@ -201,6 +201,10 @@ div[id^=GPlayerTitle_ID_] > * {
   margin-right: 8px;
 }
 
+div[id^=GPlayerProducer_ID_]:empty {
+  display: none;
+}
+
 /* Opacité */
 
 div[id^=GPopacityContainer_ID_] {

@@ -130,9 +130,15 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]:has(.gpf-btn-icon-ls-vis
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools > .GPlayerInfo {
     visibility: visible;
 }
-
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
     box-shadow: none;
+}
+
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]::before {
+    transform: rotate(-180deg);
+}
+button[id^=GPshowAdvancedTools_ID_]::before {
+    transition: transform .3s;
 }
 
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] + .GPlayerAdvancedTools > .GPlayerInfo {
@@ -238,6 +244,7 @@ div:not(.position) > div[id^="GPlayerSwitcher-"] > dialog[id^="GPlayersList"] .g
 
 .GPlayerDragNDrop {
     cursor: move;
+    width: 40px;
 }
 
 .gpf-range__output {
@@ -297,6 +304,16 @@ div[id^=GPlayerStyleContent] {
     overflow: visible;
 }
 
+div[id^=GPlayerSwitcher_ID_]:hover {
+    background-color: var(--background-default-grey-hover);
+}
+div[id^=GPlayerSwitcher_ID_].sortable-chosen {
+    background-color: var(--background-default-grey-active);
+}
+div[id^=GPlayerSwitcher_ID_][aria-current=true] {
+    background-color: var(--background-alt-blue-france);
+}
+
 .GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextualMore[aria-pressed="true"]),
 .GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
     position: relative;
@@ -341,28 +358,6 @@ div[id^=GPlayerStyleContent] {
 
 .outOfRange .GPlayerName {
   color: var(--text-disabled-grey);
-}
-
-@media (max-width: 576px) {
-    .GPlayerAdvancedTools {
-        width: calc(100% + 40px);
-    }
-
-    .GPlayerAdvancedTools > .GPlayerEdit, .GPlayerAdvancedTools > .GPlayerRemove, .GPlayerAdvancedTools > .GPlayerGreyscale, .GPlayerAdvancedTools > .GPlayerInfo, .GPlayerAdvancedTools > .GPlayerExtent {
-        display: none;
-    }
-
-    .GPlayerAdvancedToolsContextual {
-        display: inline-flex;
-    }
-
-    .GPlayerAdvancedToolsContextualMore {
-        display: none;
-    }
-
-    [id^=GPopacity_ID_] {
-        flex-grow: 0.6;
-    }
 }
 
 /* Ajout layer switcher */
@@ -420,10 +415,6 @@ div[id^=GPopacityContainer_ID_] {
     gap: 8px;
     width: 100%;
     padding: 0 8px;
-}
-
-.GPlayerOpacityValue {
-    color: var(--text-mention-grey)
 }
 
 div[id^=GPopacityContainer_ID_] > .GPlayerOpacity {

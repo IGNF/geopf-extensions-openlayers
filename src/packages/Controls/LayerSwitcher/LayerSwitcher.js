@@ -108,14 +108,6 @@ var logger = Logger.getLogger("layerswitcher");
  */
 
 /**
- * @typedef {Object} AdvancedToolOptions
- * @property {string} label - Label of the button
- * @property {string} [icon] - Icon (svg or http link or dsfr class)
- * @property {Function} [cb] - Callback function called on click
- * @property {Object} [styles] - styles to apply to the button
- */
-
-/**
  * @classdesc
  * OpenLayers Control to manage map layers : their order, visibility and opacity, and display their informations (title, description, legends, metadata...)
  *
@@ -160,6 +152,7 @@ class LayerSwitcher extends Control {
     * @fires layerswitcher:extent
     * @fires layerswitcher:edit
     * @fires layerswitcher:changeproperty
+    * @fires layerswitcher:change:selected
     * @fires layerswitcher:change:opacity
     * @fires layerswitcher:change:visibility
     * @fires layerswitcher:change:position
@@ -216,6 +209,9 @@ class LayerSwitcher extends Control {
     * });
     * LayerSwitcher.on("layerswitcher:edit", function (e) {
     *    console.warn("layer", e.layer);
+    * });
+    * LayerSwitcher.on("layerswitcher:change:selected", function (e) {
+    *    console.warn("layer", e.layer, e.previous);
     * });
     * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
     *    console.warn("layer", e.layer, e.opacity);
@@ -639,6 +635,11 @@ class LayerSwitcher extends Control {
             type : this.REMOVE_LAYER_EVENT,
             layer : this._layers[layerID]
         });
+
+        if (layer === this.getSelectedLayer()) {
+            // Réinitialise la couche sélectionnée
+            this.setSelectedLayer();
+        }
 
         // on retire la couche de la liste des layers
         delete this._layers[layerID];
@@ -1124,6 +1125,22 @@ class LayerSwitcher extends Control {
          * })
          */
         this.CHANGE_LAYER_LOCKED_EVENT = "layerswitcher:change:locked";
+        /**
+         * event triggered when a layer is selected
+         * @event layerswitcher:change:selected
+         * @defaultValue "layerswitcher:change:selected"
+         * @group Events
+         * @param {Object} type - event
+         * @param {Object} layer - new selected layer
+         * @param {Object} previous - old selected layer (null if there was no selected layer before)
+         * @param {Object} target - instance LayerSwitcher
+         * @public
+         * @example
+         * LayerSwitcher.on("layerswitcher:change:selected", function (e) {
+         *   console.log(e, e.layer, e.previous);
+         * })
+         */
+        this.CHANGE_LAYER_SELECTED_EVENT = "layerswitcher:change:selected";
     }
 
     /**
@@ -2198,6 +2215,7 @@ class LayerSwitcher extends Control {
                 var nameDiv = document.getElementById(this._addUID("GPname_ID_" + id));
                 if (nameDiv) {
                     nameDiv.innerHTML = value;
+                    nameDiv.title = value;
                 }
                 break;
             case "description":
@@ -2206,6 +2224,14 @@ class LayerSwitcher extends Control {
                 if (nameDiv) {
                     nameDiv.title = value;
                 }
+                break;
+            case "producer":
+                this._layers[id].producer = value;
+                var producerDiv = document.getElementById(this._addUID("GPlayerProducer_ID_" + id));
+                if (producerDiv) {
+                    producerDiv.innerHTML = value;
+                }
+                break;
             default:
                 break;
         }
@@ -2346,10 +2372,11 @@ class LayerSwitcher extends Control {
     }
 
     /**
-     * Action utilisateur
+     * Action utilisateur pour un outil avancé
      * @param {PointerEvent} e - Event
      * @param {String} action - le nom du bouton (label)
      * @param {Function} cb - callback definie par l'utilisateur
+     * @fires layerswitcher:custom
      * @private
      */
     _onClickAdvancedToolsMore (e, action, cb) {
@@ -2376,6 +2403,14 @@ class LayerSwitcher extends Control {
         });
     }
 
+    /**
+     * Action utilisateur pour un clic sur un bouton du header
+     * @param {PointerEvent} e - Event
+     * @param {String} action - le nom du bouton (label)
+     * @param {Function} cb - callback definie par l'utilisateur
+     * @fires layerswitcher:header:button
+     * @private
+     */
     _onClickHeaderButtons (e, action, cb) {
         if (cb) {
             cb(e, this);
@@ -2389,6 +2424,89 @@ class LayerSwitcher extends Control {
         this.dispatchEvent({
             type : this.HEADER_BUTTON_EVENT,
             action : action,
+        });
+    }
+
+    /**
+     * Sélectionne une couche et envoie un événement
+     * @param {PointerEvent|KeyboardEvent} e - Event
+     * @fires layerswitcher:change:selected
+     * @private
+     */
+    _onSelectLayer (e) {
+        // Keydown event : seulement si c'est sur la div LayerSwitcher
+        if (e.type !== "keydown" || (["Enter", "Space"].includes(e.code) && e.target.id.startsWith("GPlayerSwitcher_ID_"))) {
+            const target = e.target;
+            
+            const divId = target.id; // ex GPvisibilityPicto_ID_26
+            const layerID = SelectorID.index(divId); // ex. 26
+            const options = this._layers[layerID];
+
+            // Options est nul si la couche est supprimée par exemple
+            if (options) {
+                const layer = this._layers[layerID].layer;
+        
+                if (layer !== this.getSelectedLayer()) {
+                    this.setSelectedLayer(layer, true);
+                }
+            }
+        }
+    }
+
+    /**
+     * Sélectionne une couche et envoie un événement
+     * @param {PointerEvent} e - Event
+     * @returns {Layer|null} Couche sélectionnée.
+     * @public
+     */
+    getSelectedLayer () {
+        return this.selectedLayer;
+    }
+
+
+    /**
+     * Sélectionne une couche et envoie un événement
+     * et déselectionne la couche déjà sélectionné (si elle existe).
+     * @param {Layer} layer - Couche à sélectionner.
+     * @param {Boolean} selected - Vrai si la couche doit être sélectionnée.
+     * @public
+     */
+    setSelectedLayer (layer, selected) {
+        let selectedLayer = this.getSelectedLayer();
+        if (layer === selectedLayer && selectedLayer && selectedLayer.get("selected") !== selected) {
+            // selected est faux car selectedLayer.get("selected") est vrai
+            // puisque la couche était déjà sélectionnée
+            layer.set("selected", selected);
+            this.selectedLayer = null;
+        } else if (!layer && selectedLayer) {
+            // Déselectionne la couche courante
+            selectedLayer.set("selected", false);
+            this.selectedLayer = null;
+        } else {
+            layer.set("selected", !!selected);
+            if (selected) {
+                this.selectedLayer = layer;
+            } else {
+                this.selectedLayer = null;
+            }
+            if (selectedLayer) {
+                selectedLayer.set("selected", false);
+            }
+        }
+
+        if (this.getSelectedLayer()) {
+            const div = this._layers[this.getSelectedLayer().gpLayerId].div;
+            div.ariaCurrent = true;
+        }
+        if (selectedLayer) {
+            const div = this._layers[selectedLayer.gpLayerId].div;
+            div.ariaCurrent = false;
+        }
+
+        this.dispatchEvent({
+            type : this.CHANGE_LAYER_SELECTED_EVENT,
+            layer : this.getSelectedLayer(),
+            previous : selectedLayer
         });
     }
 

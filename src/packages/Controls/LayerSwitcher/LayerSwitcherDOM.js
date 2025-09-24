@@ -18,36 +18,38 @@ var LayerSwitcherDOM = {
         // option forcefallback pour réparer sortable sous Chrome 97
         // option forcefallback casse le layerswitcher du portail sous firefox
         // let handleClass = ".GPlayerName";
-        let handleClass = ".GPtitle";
+        let handleClass = [".GPtitle"];
         if (checkDsfr()) {
-            handleClass = ".GPlayerDragNDrop";
+            handleClass.push(".GPlayerDragNDrop");
         }
-        if (navigator.userAgent.match(/chrome|chromium|crios/i)) {
-            Sortable.create(elementDraggable, {
-                handle : handleClass,
-                draggable : ".draggable-layer",
-                ghostClass : "GPghostLayer",
-                animation : 200,
-                forceFallback : true,
-                // Call event function on drag and drop
-                onEnd : function (e) {
-                    // FIXME pas terrrible, mais il faut bien passer ce contexte...
-                    context._onEndDragAndDropLayerClick(e);
-                }
-            });
-        } else {
-            Sortable.create(elementDraggable, {
-                handle : handleClass,
-                draggable : ".draggable-layer",
-                ghostClass : "GPghostLayer",
-                animation : 200,
-                // Call event function on drag and drop
-                onEnd : function (e) {
-                    // FIXME pas terrrible, mais il faut bien passer ce contexte...
-                    context._onEndDragAndDropLayerClick(e);
-                }
-            });
-        }
+        handleClass.forEach(handle => {
+            if (navigator.userAgent.match(/chrome|chromium|crios/i)) {
+                Sortable.create(elementDraggable, {
+                    handle : handle,
+                    draggable : ".draggable-layer",
+                    ghostClass : "GPghostLayer",
+                    animation : 200,
+                    forceFallback : true,
+                    // Call event function on drag and drop
+                    onEnd : function (e) {
+                        // FIXME pas terrrible, mais il faut bien passer ce contexte...
+                        context._onEndDragAndDropLayerClick(e);
+                    }
+                });
+            } else {
+                Sortable.create(elementDraggable, {
+                    handle : handle,
+                    draggable : ".draggable-layer",
+                    ghostClass : "GPghostLayer",
+                    animation : 200,
+                    // Call event function on drag and drop
+                    onEnd : function (e) {
+                        // FIXME pas terrrible, mais il faut bien passer ce contexte...
+                        context._onEndDragAndDropLayerClick(e);
+                    }
+                });
+            }
+        });
     },
 
     // ################################################################### //
@@ -114,6 +116,7 @@ var LayerSwitcherDOM = {
     _createMainLayerListElement : function () {
         var div = document.createElement("div");
         div.className = "GPLayerListBody";
+        div.setAttribute("role", "list");
         return div;
     },
 
@@ -391,6 +394,14 @@ var LayerSwitcherDOM = {
         // liste des outils avancés (layer info / opacity slider / opacity value / removal)
         container.appendChild(this._createAdvancedToolDivElement(obj));
 
+        container.setAttribute("tabindex", 0);
+        container.setAttribute("role", "listitem");
+        ["click", "keydown"].forEach(type => {
+            container.addEventListener(type, (e) => {
+                this._onSelectLayer(e);
+            });
+        });
+
         return container;
     },
 
@@ -492,9 +503,7 @@ var LayerSwitcherDOM = {
 
         div.appendChild(this._createLayerNameElement(obj, tooltips));
 
-        if (obj.producer) {
-            div.appendChild(this._createLayerProducerElement(obj, tooltips));
-        }
+        div.appendChild(this._createLayerProducerElement(obj, tooltips));
 
         return div;
     },
@@ -578,7 +587,7 @@ var LayerSwitcherDOM = {
         // INFO inactif en mode classique !
         let button = document.createElement("div");
         button.id = this._addUID("GPdragndropPicto_ID_" + obj.id);
-        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon gpf-btn-icon-ls-draggable gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline";
+        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon-ls-draggable gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline";
         button.title = "Deplacer la couche";
         button.setAttribute("tabindex", "0");
 
@@ -654,33 +663,30 @@ var LayerSwitcherDOM = {
         let button = document.createElement("button");
         button.id = this._addUID("GPshowAdvancedTools_ID_" + obj.id);
 
-        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowLayerAdvancedTools gpf-btn gpf-btn-icon gpf-btn-icon-ls-collapse fr-btn--sm fr-btn--tertiary gpf-btn--tertiary";
+        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowLayerAdvancedTools gpf-btn fr-icon-arrow-down-s-line fr-btn--sm fr-btn--tertiary-no-outline";
         button.title = "Plus d'outils";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
-        button.setAttribute("type","button");
+        button.setAttribute("type", "button");
 
-        var self = this;
-        if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                var element = document.getElementById(self._addUID("GPadvancedTools_ID_" + obj.id));
-                if (status) {
-                    element.classList.replace("GPelementVisible", "GPelementHidden");
-                    element.classList.replace("gpf-visible", "gpf-hidden");
-                } else {
-                    element.classList.replace("GPelementHidden", "GPelementVisible");
-                    element.classList.replace("gpf-hidden", "gpf-visible");
-                }
-            });
-        } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
+        let self = this;
+        const fn = (e) => {
+            let status = (e.target.ariaPressed === "true");
+            e.target.setAttribute("aria-pressed", !status);
+            let element = document.getElementById(self._addUID("GPadvancedTools_ID_" + obj.id));
+            if (status) {
                 element.classList.replace("GPelementVisible", "GPelementHidden");
                 element.classList.replace("gpf-visible", "gpf-hidden");
-            });
+            } else {
+                element.classList.replace("GPelementHidden", "GPelementVisible");
+                element.classList.replace("gpf-hidden", "gpf-visible");
+            }
+        };
+
+        if (button.addEventListener) {
+            button.addEventListener("click", fn);
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", fn);
         }
 
         return button;

@@ -87,6 +87,10 @@ div[id^=GPlayerInfoTitle] {
   opacity: 0;
 }
 
+div[id^=GPlayerSwitcher_ID_].selected-layer > .GPlayerBasicTools {
+    background-color: #FFFFFF88;
+}
+
 /* Layer basic tools */
 
 .GPlayerBasicTools {
@@ -440,6 +444,10 @@ div[id^="GPtitle_ID_"] {
   border:none;
   margin-top: 2px;
   margin-bottom: 2px;
+}
+
+div[id^=GPlayerProducer_ID_] {
+  color: #353535;
 }
 
 .GPAdvancedToolBtnsGroup {
