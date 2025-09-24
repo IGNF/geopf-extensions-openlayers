@@ -399,6 +399,17 @@ var LayerSwitcherDOM = {
 
         btn.id = options.id ? options.id : this._addUID("GPtools-" + options.label.toLowerCase());
 
+        if (options.attributes) {
+            // Attributs supplémentaires sur le bouton
+            for (const attribute in options.attributes) {
+                if (!Object.hasOwn(options.attributes, attribute)) {
+                    continue;
+                }
+                const element = options.attributes[attribute];
+                btn.setAttribute(attribute, element);
+            }
+        }
+
         let self = this;
 
         btn.addEventListener("click", (e) => {

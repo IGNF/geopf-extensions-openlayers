@@ -83,6 +83,8 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {HeaderButtonCallback} cb - Callback au click sur l'outil.
  * @property {String} [id] - Id à ajouter sur le bouton.
  * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
+ * @property {Object} [attributes] - Optionnel. Attributs additionnels à ajouter au bouton.
+ * Attributs ajoutés avec la méthode `setAttribute`.
  * @property {String} [title] - Optionnel. Titre du bouton. Aucun par défaut.
  * @property {String} [icon] - Optionnel. Icône de l'outil. Classe à ajouter au bouton.
  */

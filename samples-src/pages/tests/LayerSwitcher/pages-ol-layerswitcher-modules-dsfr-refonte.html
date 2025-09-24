@@ -150,6 +150,10 @@
                     {
                         label: 'Ajouter',
                         id: 'add-layer-layerswitcher',
+                        attributes: {
+                            "data-action" : "add-layer",
+                            "aria-controls" : "my-modal"
+                        },
                         title: 'Ajouter une couche',
                         icon: "fr-icon-add-line",
                         cb: (e, switcher) => { console.log(e, switcher); },
