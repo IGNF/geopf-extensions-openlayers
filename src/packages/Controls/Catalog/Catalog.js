@@ -28,7 +28,6 @@ import Topics from "./topics.json";
 
 // import externe
 import { marked as Marked } from "marked";
-import sanitizeHtml from "sanitize-html";
 
 var logger = Logger.getLogger("widget");
 
@@ -969,10 +968,8 @@ class Catalog extends Control {
                     // On transforme le markdown en HTML
                     // et on nettoie le HTML pour éviter les injections XSS
                     // cf. https://marked.js.org/
-                    // cf. https://github.com/apostrophecms/sanitize-html
-                    // Le sanitize est trop strict avec les images, les svg... !
                     // Le markdown ne doit pas être échappé pour realiser une transformation !
-                    layer.description = sanitizeHtml(Marked.parse(layer.description));
+                    layer.description = Marked.parse(layer.description);
                     // les vignettes !
                     if (this.options.layerThumbnail) {
                         // si on souhaite afficher une vignette
