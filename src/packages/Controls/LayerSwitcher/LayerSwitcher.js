@@ -81,6 +81,7 @@ var logger = Logger.getLogger("layerswitcher");
  * @typedef {Object} HeaderButton
  * @property {String} label - Label du bouton.
  * @property {HeaderButtonCallback} cb - Callback au click sur l'outil.
+ * @property {String} [id] - Id à ajouter sur le bouton.
  * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
  * @property {String} [title] - Optionnel. Titre du bouton. Aucun par défaut.
  * @property {String} [icon] - Optionnel. Icône de l'outil. Classe à ajouter au bouton.

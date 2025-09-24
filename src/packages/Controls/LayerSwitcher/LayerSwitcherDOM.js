@@ -397,7 +397,7 @@ var LayerSwitcherDOM = {
             btn.ariaLabel = options.title;
         }
 
-        btn.id = this._addUID("GPtools-" + options.label.toLowerCase());
+        btn.id = options.id ? options.id : this._addUID("GPtools-" + options.label.toLowerCase());
 
         let self = this;
 
