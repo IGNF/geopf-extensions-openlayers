@@ -479,6 +479,7 @@ class LayerSwitcher extends Control {
                 this._layersOrder.unshift(layerOptions);
                 this._lastZIndex++;
                 layer.setZIndex(this._lastZIndex);
+                layerDiv.dataset.sortableId = this._layerId;
                 this._layerListContainer.insertBefore(layerDiv, this._layerListContainer.firstChild);
                 // this._layerListContainer.insertBefore(layerDiv,
                 //     (this.options.panel) ?
@@ -1380,6 +1381,7 @@ class LayerSwitcher extends Control {
         for (var j = 0; j < this._layersOrder.length; j++) {
             var layerOptions = this._layersOrder[j];
             var layerDiv = this._createLayerDiv(layerOptions);
+            layerDiv.dataset.sortableId = layerOptions.id;
             // on ajoute la div seulement si elle n'existe pas
             if (!this._layerListContainer.querySelector("#" + layerDiv.id)) {
                 this._layerListContainer.appendChild(layerDiv);
@@ -2437,7 +2439,7 @@ class LayerSwitcher extends Control {
         // Keydown event : seulement si c'est sur la div LayerSwitcher
         if (e.type !== "keydown" || (["Enter", "Space"].includes(e.code) && e.target.id.startsWith("GPlayerSwitcher_ID_"))) {
             const target = e.target;
-            
+
             const divId = target.id; // ex GPvisibilityPicto_ID_26
             const layerID = SelectorID.index(divId); // ex. 26
             const options = this._layers[layerID];
@@ -2445,7 +2447,7 @@ class LayerSwitcher extends Control {
             // Options est nul si la couche est supprimée par exemple
             if (options) {
                 const layer = this._layers[layerID].layer;
-        
+
                 if (layer !== this.getSelectedLayer()) {
                     this.setSelectedLayer(layer, true);
                 }

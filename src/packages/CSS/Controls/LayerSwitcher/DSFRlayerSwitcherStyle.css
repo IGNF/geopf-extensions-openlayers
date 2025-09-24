@@ -245,6 +245,7 @@ div:not(.position) > div[id^="GPlayerSwitcher-"] > dialog[id^="GPlayersList"] .g
 .GPlayerDragNDrop {
     cursor: move;
     width: 40px;
+    height: 40px;
 }
 
 .gpf-range__output {
@@ -449,4 +450,51 @@ div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn[class*=" gpf-btn-icon-ls-t
     width: 1rem;
     height: 1rem;
     mask-size: 100% 100%;
+}
+
+/* Drag and drop */
+
+div.keyboard-navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    gap:4px;
+    width: 100%;
+    height: 100%;
+}
+
+div.keyboard-navigation > span {
+    width: auto;
+    color: var(--text-action-high-blue-france);
+}
+
+div.keyboard-navigation > span::before {
+    visibility: hidden;
+}
+
+div.keyboard-navigation:focus-within > span {
+    display: inline-flex;
+}
+div.keyboard-navigation:focus-within > span::before {
+    visibility: visible;
+}
+
+div.GPlayerDragNDrop:focus-within::after {
+    visibility: hidden;
+}
+
+/* Cache les options de drag and drop */
+div[id^="GPlayerSwitcher_ID_"]:first-child [data-direction="up"],
+div[id^="GPlayerSwitcher_ID_"]:first-child [data-direction="up"]::before {
+    visibility: hidden;
+}
+
+div[id^="GPlayerSwitcher_ID_"]:last-child [data-direction="down"],
+div[id^="GPlayerSwitcher_ID_"]:last-child [data-direction="down"]::before {
+    visibility: hidden;
+}
+
+div[id^="GPlayerSwitcher_ID_"]:only-child .GPlayerDragNDrop {
+    display: none;
 }

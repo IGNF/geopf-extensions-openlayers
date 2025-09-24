@@ -25,19 +25,33 @@
 <!-- map -->
 <div id="map">
 </div>
-<div style="display: flex;flex-direction: column;align-items: center;width: 210px;">
-    <button type="button" class="fr-btn" id="addVectorLayer">Ajouter une couche de dessin</button>
-    <button type="button" class="fr-btn" id="addMapsLayer">Ajouter une couche Map</button>
-    <button type="button" class="fr-btn" id="addOSMLayer">Ajouter une couche OSM</button>
-    <button type="button" class="fr-btn" id="addVTLayer">Ajouter une couche Tuiles Vecteur</button>
-    <br>
-    <button type="button" class="fr-btn" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
-    <button type="button" class="fr-btn" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
-    <button type="button" class="fr-btn" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
-    <button type="button" class="fr-btn" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
-    <label for="producerTextOsm" class="fr-label">Nom producteur couche OSM</label>
-    <input type="text" class="fr-input" id="producerTextOsm"></input>
-    <button type="button" class="fr-btn" id="validateProducerTextOsm">Valider producer</button>
+<div style="margin: 4px 12px 0">
+    <div style="display: flex;flex-direction: row;align-items: center;gap:24px;">
+        <div class="fr-select-group">
+            <label class="fr-label" for="property"> Propriété à modifier </label>
+            <select class="fr-select" id="property" name="property">
+                <option value="title" selected>Titre</option>
+                <option value="description">Description</option>
+                <option value="producer">Producteur</option>
+            </select>
+        </div>
+        <div class="fr-input-group" id="input-group-16">
+            <label for="propertyValue" class="fr-label">Valeur</label>
+            <input type="text" class="fr-input" id="propertyValue"></input>
+        </div>
+        <button type="button" class="fr-btn" id="validateProperty">Valider</button>
+    </div>
+    <div class="fr-btns-group fr-btns-group--inline">
+        <button type="button" class="fr-btn" id="addVectorLayer">Ajouter une couche de dessin</button>
+        <button type="button" class="fr-btn" id="addMapsLayer">Ajouter une couche Map</button>
+        <button type="button" class="fr-btn" id="addOSMLayer">Ajouter une couche OSM</button>
+        <button type="button" class="fr-btn" id="addVTLayer">Ajouter une couche Tuiles Vecteur</button>
+        <br>
+        <button type="button" class="fr-btn" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
+        <button type="button" class="fr-btn" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
+        <button type="button" class="fr-btn" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
+        <button type="button" class="fr-btn" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
+    </div>
 </div>
 {{/content}}
 
@@ -162,15 +176,12 @@
                         }
                     },
                     // // Classe DSFR
-                    // {
-                    //     label : 'Verrouiler Tiles',
-                    //     icon : 'fr-icon-lock-fill',
-                    //     accepted : [ol.layer.Vector, ol.layer.GeoportalWMTS],
-                    //     cb : lockLayer,
-                    //     attributes : {
-                    //         'disabled' : true
-                    //     }
-                    // },
+                    {
+                        label : 'Verrouiler',
+                        icon : 'fr-icon-lock-fill',
+                        accepted : [ol.layer.Vector, ol.layer.GeoportalWMTS],
+                        cb : lockLayer,
+                    },
                     // // Fichier svg
                     // {
                     //     label : 'Get layer',
@@ -230,6 +241,14 @@
         layerSwitcher.on("layerswitcher:change:locked", function (e) {
             console.warn("layer", e, e.layer, e.locked);
         });
+        layerSwitcher.on("layerswitcher:change:selected", function (e) {
+            console.warn("layer", e, e.layer, e.previous);
+        });
+        layerSwitcher.on("layerswitcher:change:position", function (e) {
+            console.warn("layer", e, e.position, e.layer, e.layers);
+        });
+
+        window.layerSwitcher = layerSwitcher;
 
         // Ajout du LayerSwitcher à la carte
         map.addControl(layerSwitcher);
@@ -314,19 +333,22 @@
     document.getElementById("modifyOpacityOSMLayer").onclick = modifyOpacityOSMLayer;
     document.getElementById("modifyIndexOSMLayerMin").onclick = modifyIndexOSMLayerMin;
     document.getElementById("modifyIndexOSMLayerMax").onclick = modifyIndexOSMLayerMax;
-    document.getElementById("validateProducerTextOsm").onclick = (e) => {
-        let input = document.getElementById("producerTextOsm");
+    document.getElementById("validateProperty").onclick = (e) => {
+        let input = document.getElementById("propertyValue");
         let text = input.value;
 
-        console.log(ortho);
-        ortho.set('title', text)
-        ortho.getSource()._title = text
-        ortho.config.title = text
+        let select = document.getElementById("property");
+        let prop = select.value;
 
-        osm.set('title', text)
-        osm.getSource()._title = text
-        if (osm.config) osm.config.title = text
-        // layerSwitcher.setLayerProducer(osm, text);
+        console.log(select, prop)
+
+        let layer = layerSwitcher.getSelectedLayer();
+        if (!layer) {
+            alert("Pas de couche sélectionnée");
+            return
+        }
+
+        layer.set(prop, text);
     }
 </script>
 {{/content}}

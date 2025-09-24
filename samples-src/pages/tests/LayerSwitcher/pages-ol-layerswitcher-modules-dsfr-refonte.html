@@ -245,6 +245,9 @@
         layerSwitcher.on("layerswitcher:change:selected", function (e) {
             console.warn("layer", e, e.layer, e.previous);
         });
+        layerSwitcher.on("layerswitcher:change:position", function (e) {
+            console.warn("layer", e, e.position, e.layer, e.layers);
+        });
 
         window.layerSwitcher = layerSwitcher;
 

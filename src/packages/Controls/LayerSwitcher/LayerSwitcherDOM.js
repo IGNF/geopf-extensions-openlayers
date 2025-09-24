@@ -9,47 +9,107 @@ var LayerSwitcherDOM = {
 
     /**
      * Creation du drag and drop
-     *
+     *so
      * @param {Object} elementDraggable - Element HTML (DOM) Container
      * @param {Object} context - this
      */
     _createDraggableElement : function (elementDraggable, context) {
-        // FIXME retirer cette détection user-agent pour solution propre
-        // option forcefallback pour réparer sortable sous Chrome 97
-        // option forcefallback casse le layerswitcher du portail sous firefox
-        // let handleClass = ".GPlayerName";
         let handleClass = [".GPtitle"];
         if (checkDsfr()) {
             handleClass.push(".GPlayerDragNDrop");
         }
+
+        // FIXME retirer cette détection user-agent pour solution propre
+        // option forcefallback pour réparer sortable sous Chrome 97
+        // option forcefallback casse le layerswitcher du portail sous firefox
+        // let handleClass = ".GPlayerName";
+        const forceFallback = !!navigator.userAgent.match(/chrome|chromium|crios/i);
+
+        // Voir lien suivant pour dragndrop avec tab
+        // https://robbymacdonell.medium.com/refactoring-a-sortable-list-for-keyboard-accessibility-2176b34a07f4
+
+        context._sortables = [];
         handleClass.forEach(handle => {
-            if (navigator.userAgent.match(/chrome|chromium|crios/i)) {
-                Sortable.create(elementDraggable, {
-                    handle : handle,
-                    draggable : ".draggable-layer",
-                    ghostClass : "GPghostLayer",
-                    animation : 200,
-                    forceFallback : true,
-                    // Call event function on drag and drop
-                    onEnd : function (e) {
-                        // FIXME pas terrrible, mais il faut bien passer ce contexte...
-                        context._onEndDragAndDropLayerClick(e);
-                    }
-                });
-            } else {
-                Sortable.create(elementDraggable, {
-                    handle : handle,
-                    draggable : ".draggable-layer",
-                    ghostClass : "GPghostLayer",
-                    animation : 200,
-                    // Call event function on drag and drop
-                    onEnd : function (e) {
-                        // FIXME pas terrrible, mais il faut bien passer ce contexte...
-                        context._onEndDragAndDropLayerClick(e);
-                    }
-                });
-            }
+            const sortable = Sortable.create(elementDraggable, {
+                handle : handle,
+                dataIdAttr : "data-sortable-id", // required to calculate the custom sort
+                draggable : ".draggable-layer",
+                ghostClass : "GPghostLayer",
+                animation : 200,
+                forceFallback : forceFallback,
+                // Call event function on drag and drop
+                onEnd : function (e) {
+                    // FIXME pas terrrible, mais il faut bien passer ce contexte...
+                    context._onEndDragAndDropLayerClick(e);
+                }
+            });
+            context._sortables.push(sortable);
         });
+    },
+
+    /**
+     * Fonction permettant de bouger une couche au clavier
+     * @param {HTMLElement} element Élément à bouger
+     * @param {up|down} direction Direction dans laquelle déplacer la couche
+     * @returns {Boolean} Vrai si l'opération a fonctionnée.
+     */
+    _moveElement : function (element, direction) {
+        const sortable_list = this._sortables[0];
+        if (["up", "down"].includes(direction) == false) {
+            return false;
+        }
+        if (typeof element.dataset.sortableId == "undefined") {
+            return false;
+        }
+
+        // Attribut pour réorganiser après
+        let sortableId = element.dataset.sortableId;
+        let order = sortable_list.toArray();
+        let index = order.indexOf(sortableId);
+
+        // Retrait de l'objet à déplacer
+        order.splice(index, 1);
+
+        // Déplace la couche à la bonne position
+        if (direction == "down") {
+            order.splice(index + 1, 0, sortableId);
+        } else if (direction == "up") {
+            order.splice(index - 1, 0, sortableId);
+        }
+
+        // Applique l'opéaration de tri
+        sortable_list.sort(order, true);
+        // Change le zindex et envoie l'événement
+        this._onEndDragAndDropLayerClick({
+            newIndex : order.indexOf(sortableId),
+        });
+        return true;
+    },
+
+    /**
+     * Écouteur d'événement pour modifier le z-index
+     * @param {Boolean} up Vrai si c'est up. Faux si down.
+     * @param {KeyboardEvent} event Événement du clavier
+     */
+    _onMoveElement : function (up, event) {
+        if (["Enter", "Space"].includes(event.code)) {
+            // Choisit la bonne direction
+            const direction = up ? "up" : "down";
+            const oppositeDirection = up ? "down" : "up";
+
+            event.stopPropagation();
+            event.preventDefault();
+
+            // Déplace l'élément dans la bonne direction
+            this._moveElement(event.currentTarget.closest(".draggable-layer"), direction);
+
+            // Change le focus dans le cas où c'est le premier / dernier élément
+            if (window.getComputedStyle(event.currentTarget).visibility == "hidden") {
+                event.currentTarget.parentNode.querySelector(`[data-direction=${oppositeDirection}]`).focus();
+            } else {
+                event.currentTarget.focus();
+            }
+        }
     },
 
     // ################################################################### //
@@ -587,11 +647,35 @@ var LayerSwitcherDOM = {
         // INFO inactif en mode classique !
         let button = document.createElement("div");
         button.id = this._addUID("GPdragndropPicto_ID_" + obj.id);
-        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon-ls-draggable gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline";
+        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon-ls-draggable gpf-btn--tertiary";
         button.title = "Deplacer la couche";
-        button.setAttribute("tabindex", "0");
+        // button.setAttribute("tabindex", "0");
 
-        var self = this;
+        let self = this;
+
+        // Boutons pour déplacer la couche au clavier
+        let divKeyboard = document.createElement("div");
+        divKeyboard.className = "keyboard-navigation";
+
+        let spanUp = document.createElement("span");
+        spanUp.tabIndex = 0;
+        spanUp.dataset.direction = "up";
+        spanUp.title = spanUp.ariaLabel = "Déplacer la couche vers le haut";
+        spanUp.className = "fr-icon-arrow-up-line fr-icon--sm";
+        spanUp.onkeydown = this._onMoveElement.bind(this, true);
+
+        let spanDown = document.createElement("span");
+        spanDown.tabIndex = 0;
+        spanDown.dataset.direction = "down";
+        spanDown.title = spanDown.ariaLabel = "Déplacer la couche vers le bas";
+        spanDown.className = "fr-icon-arrow-down-line fr-icon--sm";
+        spanDown.onkeydown = this._onMoveElement.bind(this, false);
+
+        divKeyboard.appendChild(spanDown);
+        divKeyboard.appendChild(spanUp);
+
+        button.appendChild(divKeyboard);
+
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
                 self._onStartDragAndDropLayerClick(e);
