@@ -10,7 +10,7 @@
 
 ### 1. **Chargement asynchrone et lazy loading**
 
-- ✔️ **Chargement différé des couches** : Ne charge que la configuration ou les couches visibles à l’ouverture du panneau, ou lors d’un changement d’onglet/catégorie.
+- ✅ **Chargement différé des couches** : Ne charge que la configuration ou les couches visibles à l’ouverture du panneau, ou lors d’un changement d’onglet/catégorie.
 - ✔️ **Pagination ou virtualisation** : Si le catalogue contient beaucoup de couches, affiche-les par pages ou utilise une liste virtuelle (DOM limité aux éléments visibles).
 
 ---

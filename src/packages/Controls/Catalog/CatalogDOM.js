@@ -304,6 +304,7 @@ var CatalogDOM = {
 
         return div;
     },
+    // ################################################################### //
     /**
      * Create Catalog Content Categories Tabs
      * 
@@ -316,7 +317,7 @@ var CatalogDOM = {
      * - each subcategory has a radio button to select it
      * - each subcategory has a panel with layers
      */
-    _createCatalogContentCategoriesTabs : function (categories) {
+    __createCatalogContentCategoriesTabs : function (categories) {
         // les onglets
         var strCategoriesTabButtons = "";
         var tmplCategoryTabButton = (i, id, title, selected) => {
@@ -522,6 +523,8 @@ var CatalogDOM = {
                     var panel = document.getElementById(e.target.getAttribute("aria-controls"));
                     panel.classList.remove("gpf-hidden");
                     panel.classList.remove("GPelementHidden");
+                    // appel
+                    this.onSelectCatalogRadioChange(e);
                 });
             });
         }
@@ -603,9 +606,9 @@ var CatalogDOM = {
      * - each layer has a checkbox to select it
      * - each layer has a panel with information
      */
-    _createCatalogContentCategoryTabContent : async function (category, layersFiltered) {
+    __createCatalogContentCategoryTabContent : async function (category, layersFiltered) {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
-        const batchSize = 10; // nombre d'éléments à traiter par lot
+        const batchSize = 100; // nombre d'éléments à traiter par lot
         var strElements = "";
         // le champ description en Markdown est transformé vers HTML
         var tmplElement = (i, name, title, service, description, informations, thumbnail, categoryId) => {
@@ -822,7 +825,9 @@ var CatalogDOM = {
                 }
             }
             // Pause pour laisser respirer l'UI
-            await new Promise(resolve => setTimeout(resolve, 0));
+            await new Promise(resolve => setTimeout(function () {
+                resolve();
+            }, 0));
         }
 
         if (isSection) {
@@ -851,7 +856,7 @@ var CatalogDOM = {
             }
         }
         var strContainer = `
-            <!-- liste de couches -->
+            <!-- liste des couches -->
             <div class="fr-accordions-group" 
                 id="checkboxes-${category.id}" 
                 aria-labelledby="checkboxes-legend checkboxes-messages"
@@ -946,6 +951,640 @@ var CatalogDOM = {
                 span.addEventListener("click", (e) => {
                     e.target.parentElement.click();
                 });
+            });
+        }
+        return shadow;
+    },
+    // ################################################################### //
+    _createCatalogContentCategories : function (categories) {
+        // un onglet
+        var tmplCategoryTabButton = (id, title, selected) => {
+            // TODO aria-controls doit pointer sur le panneau du contenu
+            // le panneau est unique
+            // cf. id="catalog-tabpanel"
+            var className = "GPtabButton fr-tabs__tab";
+            var value = "false";
+            var tabindex = -1;
+            if (selected) {
+                className = "GPtabButton GPtabButtonActive fr-tabs__tab";
+                value = "true";
+                tabindex = 0;
+            }
+            return `
+            <li class="GPtabList" role="presentation">
+                <button 
+                    id="catalog-tabbutton_${id}" 
+                    class="${className}" 
+                    tabindex="${tabindex}" 
+                    role="tabbutton" 
+                    aria-selected="${value}" 
+                    aria-controls="catalog-tabpanel"
+                    data-category="${id}">
+                    ${title}
+                </button>
+            </li>
+            `;
+        };
+        // une barre de recherche spécifique
+        var tmplSearchSpecificBar = (active) => {
+            const title = "Rechercher une donnée dans la catégorie";
+            // INFO
+            // on crée une barre de recherche spécifique à la catégorie
+            //   - activée (add('fr-tabs__panel--selected') si la catégorie a l'option search=true,
+            //   - sinon cachée par defaut (remove('fr-tabs__panel--selected'))
+            // l'activation/désactivation est gérée dans le listener de l'onglet
+            // cf. this.onSelectCatalogCategoryClick
+            var className = "gpf-hidden";
+            if (active) {
+                className = "fr-tabs__panel--selected";
+            }                
+            return `
+            <div 
+                id="catalog-container-search-specific" 
+                class="fr-tabs__list ${className}" 
+                style="padding-top:20px;padding-bottom:10px;justify-content:center;">
+                <div 
+                    id="catalog-header-search-specific" 
+                    class="fr-search-bar" 
+                    role="search">
+                    <label class="fr-label" for="catalog-input-search-specific">
+                        Recherche dans la catégorie
+                    </label>
+                    <input 
+                        id="catalog-input-search-specific" 
+                        class="fr-input" 
+                        placeholder="${title}" 
+                        type="text" 
+                        name="search-input-specific" 
+                        incremental>
+                    <button 
+                        id="catalog-button-search-specific" 
+                        class="fr-btn" 
+                        title="${title}">
+                        Rechercher
+                    </button>
+                </div>
+            </div>
+            `;
+        };
+        // INFO
+        // il faut determiner si la barre de recherche est active ou non
+        var currentActiveBar = false;
+        var hasActiveBar = false;
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            // on vérifie si une catégorie a l'option search=true
+            if (category.search) {
+                hasActiveBar = true;
+            }
+            if (category.default && category.search) {
+                // si la catégorie par defaut a l'option search=true, 
+                // on doit activer la barre de recherche spécifique
+                // à l'ouverture du contrôle
+                currentActiveBar = true;
+            }
+        }
+        // on ajoute les onglets
+        var strCategoriesTabButtons = "";
+        for (let j = 0; j < categories.length; j++) {
+            const category = categories[j];
+            strCategoriesTabButtons += tmplCategoryTabButton(
+                category.id, 
+                category.title, 
+                category.default);
+        }
+        // on ajoute la barre de recherche spécifique à la catégorie
+        var strSearchSpecificBar = tmplSearchSpecificBar(currentActiveBar);
+        // INFO 
+        // le calcul de la hauteur est realisé à la main pour pallier le manque de JS DSFR (?)
+        // style="--tabs-height: 294px;"
+        var tabHeight = "380px"; // par defaut
+        if (hasActiveBar) {
+            tabHeight = "310px"; // si la barre de recherche spécifique est active
+        }
+        var strContainer = `
+        <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
+            <div class="GPtabs fr-tabs" style="--tabs-height: ${tabHeight};">
+                <!-- onglets -->
+                <div id="catalog-container-categories">
+                    <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="presentation">
+                        ${strCategoriesTabButtons}
+                    </ul>
+                    <!-- barre de recherche spécifique à la catégorie -->
+                    ${strSearchSpecificBar}
+                </div>
+                <!-- boutons radio des sous categories -->
+                <div id="catalog-container-subcategories" class="gpf-hidden fr-tabs__list fr-tabs__panel--selected"></div>
+                <!-- liste des sections -->
+                <div id="catalog-container-sections" class="gpf-hidden fr-tabs__list fr-tabs__panel--selected"></div>
+                <!-- liste des couches -->
+                <div id="catalog-container-layers" class="gpf-hidden fr-tabs__list fr-tabs__panel--selected"></div>
+            </div>
+        </div>
+        `;
+        var container = stringToHTML(strContainer.trim());
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+
+        var panelContent = shadow.querySelector("[role=\"tabpanel\"]");
+        var buttons = shadow.querySelectorAll("[role=\"tabbutton\"]");
+        if (buttons) {
+            buttons.forEach((btn) => {
+                btn.addEventListener("click", (e) => {
+                    // gestion de l'affichage
+
+                    // modifier les autres buttons :
+                    //   tabindex=-1
+                    //   aria-selected=false
+                    for (let i = 0; i < buttons.length; i++) {
+                        const button = buttons[i];
+                        button.setAttribute("tabindex", -1);
+                        button.ariaSelected = false;
+                        button.classList.remove("GPtabButtonActive");
+                    }
+                    // modif tabindex=0
+                    e.target.setAttribute("tabindex", 0);
+                    // modif aria-selected=true
+                    e.target.ariaSelected = true;
+                    e.target.classList.add("GPtabButtonActive");
+                    // appel
+                    this.onSelectCatalogCategoryClick(e);
+                });
+            });
+        }
+        // barre de recherche spécifique à la catégorie
+        var searchBtn = shadow.getElementById("catalog-button-search-specific");
+        if (searchBtn) {
+            searchBtn.addEventListener("click", (e) => {
+                e.target.value = searchInput.value; // synchronisation
+                this.onSearchSpecificCatalogButtonClick(e);
+            });
+        }
+        var searchInput = shadow.getElementById("catalog-input-search-specific");
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+                // on n'active la recherche que si le texte fait plus de 2 caractères
+                if (e.target.value.length < 3) {
+                    return;
+                }
+                this.onSearchSpecificCatalogInputChange(e);
+            });
+        }
+
+        return shadow;
+    },
+    _createCatalogContentSubCategories : function (categories) {
+        // TODO
+        // les boutons radio des sous-catégories doivent ouvrir la liste des sections
+        // si la sous-catégorie a des sections
+        // sinon, ouvrir la liste des couches
+        // donc definir le bon aria-controls !
+        
+        // une sous-catégorie
+        var tmplSubCategoryRadio = (id, subcategory) => {
+            var checked = (subcategory.default) ? "checked" : "";
+            return `
+            <div class="fr-fieldset__element fr-fieldset__element--inline">
+                <div class="fr-radio-group fr-radio-group--sm">
+                    <input 
+                        id="radio-inline_${subcategory.id}" 
+                        type="radio" 
+                        ${checked} 
+                        name="radio-inline-${id}" 
+                        role="radio-inline-section"
+                        aria-controls="catalog-tabpanel"
+                        data-category="${id}"/>
+                        data-subcategory="${subcategory.id}"/>
+                    <label class="fr-label" for="radio-inline_${subcategory.id}">
+                        ${subcategory.title}
+                    </label>
+                </div>
+            </div>
+            `;
+        };
+        // toutes les sous-catégories
+        var tmplSubCategoriesRadios = (id, subcategories) => {
+            var strSubCategoriesRadios = "";
+            for (let j = 0; j < subcategories.length; j++) {
+                const subcategory = subcategories[j];
+                strSubCategoriesRadios += tmplSubCategoryRadio(id, subcategory);
+            }
+            return `
+            <fieldset 
+                id="radio-inline_${id}" 
+                class="fr-fieldset fr-tabs__list" 
+                aria-labelledby="radio-inline-legend radio-inline-messages" 
+                data-category="${id}"
+                style="margin:unset;justify-content: center;">
+                ${strSubCategoriesRadios}
+                <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive"></div>
+            </fieldset>
+            `;
+        };
+        // on ajoute les boutons radio des sous-catégories (ou pas)
+        var strSubCategoriesRadios = "";
+        for (let j = 0; j < categories.length; j++) {
+            const category = categories[j];
+            if (category.items && category.items.length > 0) {
+                strSubCategoriesRadios += tmplSubCategoriesRadios(category.id, category.items);
+            }
+        }
+
+        var container = stringToHTML(strSubCategoriesRadios.trim());
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strSubCategoriesRadios.trim();
+
+        // event listener sur le DOM
+        var radios = shadow.querySelectorAll("[role=\"radio-inline-section\"]");
+        if (radios) {
+            radios.forEach((radio) => {
+                var checked = radio.getAttribute("checked");
+                if (checked !== null) {
+                    radio.click();
+                }
+                radio.addEventListener("change", (e) => {
+                    var panel = document.getElementById(e.target.getAttribute("aria-controls"));
+                    panel.classList.remove("gpf-hidden");
+                    panel.classList.remove("GPelementHidden");
+                    // appel
+                    this.onSelectCatalogSubCategoryChange(e);
+                });
+            });
+        }
+
+        return shadow;
+    },
+    _createCatalogContentSections : function (categories) {
+        // TODO 
+        // les sections doivent être regroupées par sous-catégorie
+        // on ajoute un container avec l'id de la sous-catégorie
+
+        // une section
+        var tmplSection = (sectionId, categoryId, title, icon, count) => {
+            // INFO
+            // - on propose un compteur de couches
+            // - on ajoute un bouton pour ouvrir/fermer la section
+            // - on ajoute un icone avant le titre de la section (optionnel)
+            // - par defaut, les sections sont fermées
+            // - on n'utilise pas le composant DSFR "fr-accordion"
+            // - ...
+            var classNameIcon = (icon && icon.startsWith("fr-icon")) ? icon : "";
+            var idCollapseSection = `section-accordion_${categoryId}-${sectionId}`;
+            return `
+            <section 
+                id="section_${categoryId}-${sectionId}" 
+                class="fr-accordion fr-fieldset__element" 
+                style="contain: content;">
+                <h3 class="fr-accordion__title">
+                    <button 
+                        class="GPcatalogButtonSection fr-accordion__btn gpf-accordion__btn" 
+                        role="section-collapse" 
+                        aria-expanded="false" 
+                        aria-controls="${idCollapseSection}"
+                        data-category="${categoryId}"
+                        data-section="${sectionId}">
+                        <span class="GPshowCatalogAdvancedTools gpf-hidden"></span>
+                        <span 
+                            id="section-icon_${categoryId}-${sectionId}"
+                            class="catalog-section-icon ${classNameIcon}" 
+                            role="section-icon-collapse" 
+                            style="width: calc(100% - 2rem);">${title}</span>
+                        <span 
+                            id="section-count_${categoryId}-${sectionId}" 
+                            class="catalog-section-count" 
+                            role="section-count-collapse" 
+                            style="position: absolute; right: 1.25rem;">${count}</span>
+                    </button>
+                </h3>
+                <div class="fr-collapse GPelementHidden" id="${idCollapseSection}"></div>
+            </section>
+            `;
+        };
+
+        var strSections = "";
+        for (let j = 0; j < categories.length; j++) {
+            const category = categories[j];
+            if (!category.items || category.items.length === 0) {
+                continue;
+            }
+            for (let i = 0; i < category.items.length; i++) {
+                const subcategory = category.items[i];
+                if (!subcategory.section) {
+                    continue;
+                }
+                if (!subcategory.sections || subcategory.sections.length === 0) {
+                    continue;
+                }
+                // on ajoute les sections de la sous-catégorie
+                for (let k = 0; k < subcategory.sections.length; k++) {
+                    const name = subcategory.sections[k];
+                    // TODO nombre de couches dans la section
+                    var count = 0;
+                    var id = this.generateID(name);
+                    var icon = "";
+                    if (subcategory.icon && subcategory.iconJson) {
+                        // on cherche l'icone dans le json
+                        const found = subcategory.iconJson.find(obj => obj.name === name);
+                        if (found) {
+                            icon = found.icon;
+                        } else {
+                            icon = "fr-icon-arrow-right-s-line"; // icone par defaut !
+                        }
+                    }
+                    strSections += tmplSection(id, subcategory.id, name, icon, count);
+                }
+            }
+        }
+        var strContainer = `
+            <fieldset class="fr-fieldset fr-tabs__list" 
+                id="catalog-sections" 
+                aria-labelledby="catalog-sections-legend catalog-sections-messages"
+                style="contain: content;">
+                ${strSections}
+            </fieldset>
+        `;
+        var container = stringToHTML(strContainer);
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+        // event listener sur le DOM
+        // ouverture d'une sous section ex. theme routier
+        var buttonName = `section-collapse`;
+        var buttons = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
+        if (buttons) {
+            buttons.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaExpanded === "true") {
+                        collapse.classList.add("fr-collapse--expanded");
+                        collapse.classList.remove("GPelementHidden");
+                    } else {
+                        collapse.classList.remove("fr-collapse--expanded");
+                        collapse.classList.add("GPelementHidden");
+                    }
+                    this.onToggleCatalogSectionClick(e);
+                }, false);
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        // sur le clic de l'icone
+        // pour faciliter l'ouverture de la section
+        var spanIconName = `section-icon-collapse`;
+        var spanIcons = shadow.querySelectorAll("[role=" + "\"" + spanIconName + "\"]");
+        if (spanIcons) {
+            spanIcons.forEach((span) => {
+                span.addEventListener("click", (e) => {
+                    e.target.parentElement.click();
+                });
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        // sur le clic du compteur de couches
+        // pour faciliter l'ouverture de la section
+        var spanCountName = `section-count-collapse`;
+        var spanCounts = shadow.querySelectorAll("[role=" + "\"" + spanCountName + "\"]");
+        if (spanCounts) {
+            spanCounts.forEach((span) => {
+                span.addEventListener("click", (e) => {
+                    e.target.parentElement.click();
+                });
+            });
+        }
+        return shadow;
+    },
+    _createCatalogContentLayers : async function (layers) {
+        // toutes les couches sont triées par ordre alphabetique
+        var layersOrder = Object.values(layers).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
+        
+        // le champ description en Markdown est transformé vers HTML
+        var tmplElement = (id, name, title, service, description, informations, thumbnail) => {
+            // ajout de la vignette si elle existe
+            // le thumbnail est optionnel
+            var tmplThumbnail = (thumbnail) => {
+                if (thumbnail) {
+                    // si thumbnail est une URL ou une data URI
+                    // ex. data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA...
+                    // ex. https://...
+                    // on utilise la vignette fournie
+                    if (thumbnail.startsWith("data:") || thumbnail.startsWith("http")) {
+                        return `
+                        <div class="catalog-thumbnail" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                        <img src="${thumbnail}" alt="Aperçu de la couche" style="min-width:100%;min-height:100%;object-fit:cover;"/>
+                        </div>
+                        `;
+                    } else {
+                        // TODO
+                        // sinon, on considère que c'est une URL relative
+                        // ex. img/thumbnail.png
+                        thumbnail = "default";
+                    }
+                    // si thumbnail = "default", on utilise l'icone par defaut
+                    if (thumbnail === "default") {
+                        return `<div class="catalog-thumbnail-default" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>`;
+                    }
+                }
+                return "";
+            };
+            // on affiche tous les producteurs sous forme de tag
+            // ex. producers : [{name,url},{name,url},...]
+            var tmplProducers = (producers) => {
+                if (!producers) {
+                    return ``;
+                }
+                var data = "";
+                for (let i = 0; i < producers.length; i++) {
+                    const producer = producers[i];
+                    data += `
+                        <a href="${producer.url}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
+                            ${producer.name}
+                        </a>
+                    `;
+                }
+                return data;
+            };
+            // on a une liste de metadonnées, mais on affiche uniquement
+            // la métadonnée de donnée
+            // ex. metadatas : [url,url,...]
+            var tmplMetadatas = (metadatas) => {
+                if (!metadatas) {
+                    return ``;
+                }
+                var data = "";
+                for (let i = 0; i < metadatas.length; i++) {
+                    const metadata = metadatas[i];
+                    if (metadata.includes("catalogue/dataset")) {
+                        return `
+                            <a href="${metadata}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                                Voir la fiche détaillée
+                            </a>
+                        `;
+                    }
+                }
+                return data;
+            };
+            // informations non utilisées
+            // ex. thematics : [{name,url},{name,url},...]
+            var tmplThematics = (thematics) => {
+                if (!thematics) {
+                    return ``;
+                }
+                var data = "";
+                for (let i = 0; i < thematics.length; i++) {
+                    const thematic = thematics[i];
+                    data += `
+                        <a href="${thematic.url}" target="_blank" class="fr-tag fr-tag--sm fr-icon-arrow-right-line fr-tag--icon-left">
+                            ${thematic.name}
+                        </a>
+                    `;
+                }
+                return data;
+            };
+
+            // par defaut, on prend le 1er producteur de la liste
+            var producerName = informations.producers ? informations.producers[0].name : "";
+            return `
+            <div 
+                id="catalog-fieldset_${name}-${service}"
+                class="fr-fieldset__element" 
+                style="contain: content;">
+                <div class="fr-checkbox-group gpf-flex" style="justify-content: flex-start;">
+                    <input
+                        id="catalog-checkboxes_${name}-${service}"
+                        class="fr-input"
+                        name="catalog-checkboxes-layers"
+                        type="checkbox"
+                        data-index="${id}"
+                        data-layer="${name}:${service}"/>
+                    <label 
+                        for="catalog-checkboxes_${name}-${service}"
+                        style="position: relative; bottom: 12px;">
+                    </label>
+                    <div class="catalog-thumbnail-container" style="">
+                        ${tmplThumbnail(thumbnail)}
+                    </div>
+                    <label 
+                        class="GPlabelActive fr-label"  
+                        title="${name}"
+                        style="display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; cursor: pointer;">
+                        ${title}
+                        <span class="GPlabelActive fr-label fr-hint-text">${producerName}</span>
+                    </label>
+                    <button 
+                        id="catalog-collapse-more_${name}-${service}"
+                        role="button-collapse-more
+                        class="catalog-collapse-show gpf-btn gpf-btn-icon gpf-btn-icon-catalog-collapse fr-btn fr-btn--tertiary gpf-btn--tertiary" 
+                        type="button" 
+                        title="En savoir plus sur la couche" 
+                        tabindex="0" 
+                        aria-pressed="false"
+                        aria-controls="catalog-info-more_${name}-${service}"
+                        style="">
+                    </button>
+                </div>
+                <div class="gpf-hidden" id="catalog-info-more_${name}-${service}">
+                    <p>
+                        <span class="fr-label fr-message">${name} - ${service}</span>
+                        ${tmplProducers(informations.producers)}
+                    </p>
+                    <p class="fr-label fr-hint-text" style="">
+                        ${description}
+                    </p>
+                    ${tmplMetadatas(informations.metadatas)}
+                </div>
+            </div>
+            `;
+        };
+
+        // INFO
+        // on traite les couches par lot pour ne pas bloquer l'UI
+        // et permettre l'affichage progressif des couches
+        // on utilise un await avec une promesse qui se résout après un setTimeout de 0ms
+        // ce qui permet de libérer la boucle d'événements
+        // et de laisser le temps à l'UI de se mettre à jour
+        const batchSize = 100; // nombre d'éléments à traiter par lot
+        var strLayers = "";
+        for (let i = 0; i < layersOrder.length; i += batchSize) {
+            for (let j = i; j < Math.min(i + batchSize, layersOrder.length); j++) {
+                const layer = layersOrder[j];
+                const infos = {
+                    producers : layer.producer_urls, // tableau d'objets [{name,url}]
+                    thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
+                    metadatas : layer.metadata_urls  // tableau
+                };
+                strLayers += tmplElement(
+                    j, // index maintenance
+                    layer.name, 
+                    layer.label, 
+                    layer.service, 
+                    layer.description, 
+                    infos, 
+                    layer.thumbnail);
+            }
+            
+            // Pause pour laisser respirer l'UI
+            await new Promise(resolve => setTimeout(function () {
+                resolve();
+            }, 0));
+        }
+        var strContainer = `
+            <fieldset 
+                class="fr-fieldset fr-fieldset--inline" 
+                id="catalog-checkboxes-layers" 
+                aria-labelledby="catalog-checkboxes-legend catalog-checkboxes-messages"
+                style="margin:unset; contain: content;">
+                ${strLayers}
+            </fieldset>
+        `;
+        var container = stringToHTML(strContainer.trim());
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+
+        // selection d'une couche
+        var inputName = `catalog-checkboxes-layers`;
+        var inputs = shadow.querySelectorAll("[name=" + "\"" + inputName + "\"]");
+        if (inputs) {
+            inputs.forEach((input) => {
+                input.addEventListener("click", (e) => {
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - ajout ou pas de la couche à la carte
+                    // - envoi d'un evenement avec la conf tech
+                    this.onSelectCatalogLayerClick(e);
+                });
+            });
+        }
+        // ouverture du menu "En savoir plus" d'une couche
+        var buttonNameMore = `button-collapse-more`;
+        var buttonsMore = shadow.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
+        if (buttonsMore) {
+            buttonsMore.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaPressed = !(e.target.ariaPressed === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaPressed === "true") {
+                        collapse.classList.add("gpf-visible");
+                        collapse.classList.remove("gpf-hidden");
+                    } else {
+                        collapse.classList.remove("gpf-visible");
+                        collapse.classList.add("gpf-hidden");
+                    }
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - afficher les infos de la rubrique "En savoir plus"
+                    this.onToggleCatalogLayerMoreLearnClick(e);
+                }, false);
             });
         }
         return shadow;

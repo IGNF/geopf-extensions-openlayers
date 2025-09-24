@@ -28,7 +28,6 @@ import Topics from "./topics.json";
 
 // import externe
 import { marked as Marked } from "marked";
-import sanitizeHtml from "sanitize-html";
 
 var logger = Logger.getLogger("widget");
 
@@ -60,11 +59,11 @@ var logger = Logger.getLogger("widget");
 /**
  * @typedef {Object} Categories - Catégories principales du catalogue sous forme d'onglets
  * @property {string} title - Titre de la catégorie.
- * @property {string} id - Identifiant unique de la catégorie.
- * @property {boolean} default - Indique si c'est la catégorie par défaut.
+ * @property {string} [id] - Identifiant unique de la catégorie.
+ * @property {boolean} [default] - Indique si c'est la catégorie par défaut.
  * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
  * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
- * @property {Object|null} filter - Filtre appliqué à la catégorie.
+ * @property {Object|null} [filter] - Filtre appliqué à la catégorie.
  * @property {string} filter.field - Champ utilisé pour le filtre.
  * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
  */
@@ -74,14 +73,14 @@ var logger = Logger.getLogger("widget");
  * avec ou sans sections. Une section, c'est un regroupement thématique des couches.
  * ex. : regrouper les couches par "thématique" (voir propriété "thematic" dans la conf. des couches)
  * @property {string} title - Titre de la sous-catégorie.
- * @property {string} id - Identifiant unique de la sous-catégorie.
- * @property {boolean} section - Indique si la sous-catégorie utilise des sections.
+ * @property {string} [id] - Identifiant unique de la sous-catégorie.
+ * @property {boolean} [section] - Indique si la sous-catégorie utilise des sections.
  * @property {boolean} [collapsible] - **TODO** Indique si les sections sont repliables.
  * @property {boolean} [icon] - Indique que l'on souhaite un icone de type dsfr classe pour les sections de la sous-catégorie.
  * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
- * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
- * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
+ * @property {boolean} [default] - Indique si c'est la sous-catégorie par défaut.
+ * @property {Object|null} [filter] - Filtre appliqué à la sous-catégorie.
  * @property {string} filter.field - Champ utilisé pour le filtre.
  * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
  */
@@ -369,7 +368,7 @@ class Catalog extends Control {
      * activeLayer("PLAN.IGN", "GEOPORTAIL:TMS");
      */
     activeLayer (name, service) {
-        // cf. this.onSelectCatalogEntryClick
+        // cf. this.onSelectCatalogLayerClick
         var id = this.getLayerId(name, service);
         if (id) {
             var layer = {}; // conf tech
@@ -454,44 +453,6 @@ class Catalog extends Control {
         }
 
         return null;
-    }
-
-    /**
-     * Get layers by category
-     * This method filters the layers based on the provided category.
-     * It checks if the category has a filter defined and applies it to the layers.
-     * If the filter matches, the layer is added to the `layersCategorised` object.
-     * It also updates the `categories` property of each layer to include the category ID.
-     * 
-     * @param {*} category - Category object containing the filter.
-     * @param {*} layers - Object containing all layers.
-     * @return {Object} - Filtered layers categorized by the provided category.
-     */
-    getLayersByCategory (category, layers) {
-        // INFO
-        // comment gerer les listes de layers filtrées pour chaque categorie ?
-        // on doit les stocker si l'on souhaite faire des requêtes
-        // avec l'outil de recherche par la suite
-        var layersCategorised = layers;
-        var filter = category.filter;
-        if (filter) {
-            layersCategorised = {};
-            for (const key in layers) {
-                if (Object.prototype.hasOwnProperty.call(layers, key)) {
-                    const layer = layers[key];
-                    if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
-                        var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
-                        if (condition) {
-                            layersCategorised[key] = layer;
-                            // on ajoute l'appartenance de la couche à une categorie
-                            this.layersList[key].categories.push(category.id);
-                        }
-                    }
-                }
-            }
-        }
-
-        return layersCategorised;
     }
 
     // ################################################################### //
@@ -860,12 +821,13 @@ class Catalog extends Control {
             }
 
             // contrôle des couches
-            this.checkConfigLayers(data.layers);
-
-            // sauvegarde des couches de données
-            this.layersList = data.layers;
-
-            this.createCatalogContentEntries(data);
+            this.layersList = this.checkConfigLayers(data.layers);
+            // contrôle des topics
+            this.checkConfigTopics(data);
+            // ajout d'informations complémentaires sur les categories / couches
+            this.setLayersByCategory();
+            // création du DOM
+            this.createCatalogContentEntries();
             return new Promise((resolve, reject) => {
                 resolve(data);
             });
@@ -915,12 +877,13 @@ class Catalog extends Control {
                 }
 
                 // contrôle des couches
-                this.checkConfigLayers(data.layers);
-
-                // sauvegarde de la liste des couches
-                this.layersList = data.layers;
-
-                this.createCatalogContentEntries(data);
+                this.layersList = this.checkConfigLayers(data.layers);
+                // contrôle des topics
+                this.checkConfigTopics(data);
+                // ajout d'informations complémentaires sur les categories / couches
+                this.setLayersByCategory();
+                // création du DOM
+                this.createCatalogContentEntries();
                 return await new Promise((resolve, reject) => {
                     resolve(data);
                 });
@@ -939,6 +902,7 @@ class Catalog extends Control {
      * It cleans the list of layers by removing those without valid configuration and adds a default thumbnail if enabled and not present.
      * 
      * @param {Array<ConfigLayer>} layers - list of layers
+     * @returns {Array<ConfigLayer>} - cleaned list of layers
      * @private
      */
     checkConfigLayers (layers) {
@@ -967,12 +931,9 @@ class Catalog extends Control {
                     layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
                     // INFO
                     // On transforme le markdown en HTML
-                    // et on nettoie le HTML pour éviter les injections XSS
                     // cf. https://marked.js.org/
-                    // cf. https://github.com/apostrophecms/sanitize-html
-                    // Le sanitize est trop strict avec les images, les svg... !
                     // Le markdown ne doit pas être échappé pour realiser une transformation !
-                    layer.description = sanitizeHtml(Marked.parse(layer.description));
+                    layer.description = Marked.parse(layer.description);
                     // les vignettes !
                     if (this.options.layerThumbnail) {
                         // si on souhaite afficher une vignette
@@ -995,48 +956,37 @@ class Catalog extends Control {
                 }
             }
         }
+        return layers;
     }
 
     /**
-     * Create DOM content categories and entries
-     * @param {Config} data - data
+     * Check configuration topics
+     * This method checks the configuration of topics to ensure that sections in categories have the appropriate icons.
+     * It searches for icons based on the filter field of each section and populates the `iconJson` property with the corresponding icons.
+     * It looks for mappings in the configuration data, local topics mapping, or sets it to an empty array if no icons are found.
+     * @param {*} data - configuration data
      * @private
      */
-    createCatalogContentEntries (data) {
-        var container = this.contentCatalogContainer;
-
-        var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories);
-        container.appendChild(widgetContentEntryTabs);
-
-        // INFO 
-        // Remise à plat des catégories / sous-categories sur le même niveau
-        // pour simplifier la gestion des couches
-        // et la création des onglets de contenu
-        // on a autant de catégories / sous-catégories que de containers
-        // dans le DOM, on ne peut pas faire autrement
-        // on va donc créer un tableau de catégories / sous-catégories
-        // qui contiendra toutes les couches
-        // et on va créer le contenu de chaque catégorie / sous-catégorie
-        // dans le DOM, dans l'ordre des catégories / sous-catégories
-        var categories = [];
+    checkConfigTopics (data) {
+        // INFO
+        // on recherche la liste des icones pour les sections
+        // si l'élément est une section et qu'il n'a pas d'icones
+        // on va chercher les icones dans les données
+        // en fonction du filtre de la section
+        // ex. filter.field = "thematic"
+        // on va chercher toutes les valeurs de "thematic"
+        // dans les couches
+        var topics = data.topics;
         this.categories.forEach((category) => {
             if (category.items) {
                 for (let i = 0; i < category.items.length; i++) {
                     const element = category.items[i];
-                    // INFO
-                    // on recherche la liste des icones pour les sections
-                    // si l'élément est une section et qu'il n'a pas d'icones
-                    // on va chercher les icones dans les données
-                    // en fonction du filtre de la section
-                    // ex. filter.field = "thematic"
-                    // on va chercher toutes les valeurs de "thematic"
-                    // dans les couches
                     if (element.icon && element.iconJson.length === 0 && element.section && element.filter) {
                         const tag = element.filter.field;
                         // recherche si on a un mapping des topics
-                        if (data.topics && data.topics[tag]) {
+                        if (topics && topics[tag]) {
                             // dans la configuration avec un tag 'topics' (ex. edisto.json)
-                            element.iconJson = data.topics[tag];
+                            element.iconJson = topics[tag];
                         } else if (data[tag]) {
                             // dans la configuration avec directement la cléf
                             element.iconJson = data[tag];
@@ -1048,41 +998,109 @@ class Catalog extends Control {
                             element.iconJson = [];
                         }
                     }
-                    categories.push(element);
                 }
-            } else {
-                categories.push(category);
             }
         });
-        // Crée uniquement le contenu de la catégorie active
-        var activeIndex = categories.findIndex(cat => cat.id === this.categoryId);
-        if (activeIndex === -1) {
-            activeIndex = 0;
-        }
-        // INFO
-        // les containers de contenu sont definis à partir
-        // de l'ordre des catégories / sous-categories
-        // il y'a autant de catégories / sous-categories que de containers
-        var contents = container.querySelectorAll(".tabcontent");
-        for (let i = 0; i < contents.length; i++) {
-            const content = contents[i];
-            if (i === activeIndex) {
-                // TODO
-                // on peut faire un lazy-load des autres catégories
-                // pour ne pas charger toutes les couches d'un coup
-                // on affiche le contenu de la catégorie active
-                // et on charge les autres au fur et à mesure
+    }
+
+    /**
+     * Set layers by category
+     * This method filters the layers based on the provided category.
+     * It checks if the category has a filter defined and applies it to the layers.
+     * If the filter matches, the category is added to the `layers` object.
+     */
+    setLayersByCategory () {
+        var layers = this.layersList;
+        for (let i = 0; i < this.categories.length; i++) {
+            const category = this.categories[i];
+            var filter = category.filter;
+            if (filter) {
+                for (const key in layers) {
+                    if (Object.prototype.hasOwnProperty.call(layers, key)) {
+                        const layer = layers[key];
+                        if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
+                            var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
+                            if (condition) {
+                                // on ajoute l'appartenance de la couche à une categorie
+                                this.layersList[key].categories.push(category.id);
+                            }
+                        }
+                    }
+                }
             }
-            var layersCategorised = this.getLayersByCategory(categories[i], data.layers);
-            this._createCatalogContentCategoryTabContent(categories[i], layersCategorised)
-                .then((dom) => {
-                    // Utilisation d'un DocumentFragment pour optimiser l'insertion DOM
-                    const fragment = document.createDocumentFragment();
-                    fragment.appendChild(dom);
-                    content.appendChild(fragment);
-                    console.log(`Content for category ${categories[i].title} created.`);
-                });
         }
+    }
+
+    /**
+     * Create DOM content categories and entries (layers)
+     * @private
+     */
+    createCatalogContentEntries () {
+        var container = this.contentCatalogContainer;
+        if (!container) {
+            return;
+        }
+
+        // creation des onglets : categories
+        var entryCategories = this._createCatalogContentCategories(this.categories);
+        container.appendChild(entryCategories);
+
+        // creation des sous-categories
+        const hasSubCategories = this.categories.some((cat) => cat.items && cat.items.length > 0);
+        if (hasSubCategories) {
+            // si au moins une catégorie a des sous-catégories
+            var entrySubCategories = this._createCatalogContentSubCategories(this.categories);
+            container.querySelector("#catalog-container-subcategories").appendChild(entrySubCategories);
+            container.querySelector("#catalog-container-subcategories").classList.remove("gpf-hidden");
+        }
+
+        // creation des sections
+        // on remplit la liste des sections pour chaque sous-catégorie
+        // si la sous-catégorie a l'attribut 'section' à true
+        // et si au moins une catégorie a des sous-catégories avec sections
+        // TODO compteur de couches par section ?
+        const hasSections = this.categories.some((cat) => cat.items && cat.items.some((item) => item.section));
+        if (hasSections) {
+            // si au moins une catégorie a des sous-catégories avec sections
+            this.categories.forEach((cat) => {
+                if (cat.items) {
+                    cat.items.forEach((item) => {
+                        if (item.section) {
+                            // on remplit la liste des sections pour chaque sous-catégorie
+                            var sections = new Set();
+                            for (const key in this.layersList) {
+                                if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
+                                    const layer = this.layersList[key];
+                                    if (layer[item.filter.field]) { // FIXME impl. clef multiple : property.property !
+                                        var value = layer[item.filter.field];
+                                        if (Array.isArray(value)) {
+                                            value.forEach((v) => sections.add(v));
+                                        } else {
+                                            sections.add(value);
+                                        }
+                                    }
+                                }
+                            }
+                            // on trie la liste
+                            item.sections = Array.from(sections).sort((a, b) => a.localeCompare(b, "fr", { sensitivity : "base" }));
+                        }
+                    });
+                }
+            });
+
+            var entrySections = this._createCatalogContentSections(this.categories);
+            container.querySelector("#catalog-container-sections").appendChild(entrySections);
+            container.querySelector("#catalog-container-sections").classList.remove("gpf-hidden");
+        }
+
+        // creation des données
+        // (couches)
+        this._createCatalogContentLayers(this.layersList).then((dom) => {
+            const fragment = document.createDocumentFragment();
+            fragment.appendChild(dom);
+            container.querySelector("#catalog-container-layers").appendChild(fragment);
+            container.querySelector("#catalog-container-layers").classList.remove("gpf-hidden");
+        });
     }
 
     /**
@@ -1382,20 +1400,20 @@ class Catalog extends Control {
      * @private
      */
     updateVisibilityFilteredLayersDOM (id, service, hidden) {
-        var categories = []; // remise à plat des catégories / sous-categories pour obtenir leur id
+        var categoriesFlat = []; // remise à plat des catégories / sous-categories pour obtenir leur id
         this.categories.forEach((category) => {
             if (category.items) {
                 for (let i = 0; i < category.items.length; i++) {
                     const element = category.items[i];
-                    categories.push(element.id);
+                    categoriesFlat.push(element.id);
                 }
             } else {
-                categories.push(category.id);
+                categoriesFlat.push(category.id);
             }
         });
 
-        for (let i = 0; i < categories.length; i++) {
-            const category = categories[i];
+        for (let i = 0; i < categoriesFlat.length; i++) {
+            const category = categoriesFlat[i];
             // on modifie la visibilité du container pour chaque couche
             var container = document.getElementById(`fieldset-${category}_${id}-${service}`);
             if (container) {
@@ -1491,24 +1509,20 @@ class Catalog extends Control {
      * @param {Event} e - ...
      * @private
      */
-    onSelectCatalogTabClick (e) {
+    onSelectCatalogCategoryClick (e) {
         logger.trace(e);
         // sauvegarde de la categorie courrante pour la gestion de la recherche
         // de couches dans la liste associée à la categorie
         var id = e.target.id;
-        var category = id.split("_")[1];
-        this.categoryId = category;
+        var newCategory = id.split("_")[1];
 
-        // TODO
-        // on peut faire un lazy-load des autres catégories
-        // pour ne pas charger toutes les couches d'un coup
-        // on affiche le contenu de la catégorie active
-        // et on charge les autres au fur et à mesure
+        // on sauvegerde la categorie courrante
+        this.categoryId = newCategory;
 
         // on affiche la barre de recherche spécifique
         // si l'option search=true est activée pour la categorie courante
         // on recherche dans la liste des categories, la catégorie courante
-        var o = this.categories.find(c => c.id === category);
+        var o = this.categories.find(c => c.id === this.categoryId);
         var searchSpecific = document.getElementById("catalog-container-search-specific");
         if (searchSpecific) {
             if (o && o.search) {
@@ -1534,10 +1548,27 @@ class Catalog extends Control {
 
     /**
      * ...
+     * @param {Event} e  - ...
+     * @private
+     */
+    onSelectCatalogSubCategoryChange (e) {
+        logger.trace(e);
+
+        var id = e.target.id;
+        var categoryId = id.split("_")[1];
+
+        // on sauvegerde la categorie courante
+        this.categoryId = categoryId;
+    }
+
+    onToggleCatalogSectionClick (e) {}
+
+    /**
+     * ...
      * @param {Event} e - ...
      * @private
      */
-    onSelectCatalogEntryClick (e) {
+    onSelectCatalogLayerClick (e) {
         logger.trace(e);
         // appel gestionnaire d'evenement pour traitement :
         // - ajout ou pas de la couche à la carte
@@ -1582,7 +1613,7 @@ class Catalog extends Control {
      * @param {Event} e - ...
      * @private
      */
-    onToggleCatalogMoreLearnClick (e) {
+    onToggleCatalogLayerMoreLearnClick (e) {
         logger.trace(e);
     }
 
