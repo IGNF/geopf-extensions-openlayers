@@ -292,7 +292,7 @@ class ContextMenu extends Control {
     getAvailableContextMenuControls () {
         var allItems = [
             {
-                text : "Obtenir informations",
+                text : "Informations sur des couches",
                 classname : "ol-context-menu-custom fr-text--md",
                 callback : this.getFeatureInfo.bind(this),
                 control_CLASSNAME : "GetFeatureInfo"
