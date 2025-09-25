@@ -857,7 +857,7 @@ var CatalogDOM = {
                 aria-labelledby="checkboxes-legend checkboxes-messages"
                 style="contain: content;">
                 ${strElements}
-            </fieldset>
+            </div>
         `;
         var container = stringToHTML(strContainer);
 
