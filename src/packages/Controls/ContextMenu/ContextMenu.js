@@ -428,6 +428,10 @@ class ContextMenu extends Control {
      */
     getFeatureInfo (evt) {
         var gfi = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "GetFeatureInfo")[0];
+        // Enregistrement de l'état actif ou non du GFI
+        if (gfi.buttonGetFeatureInfoShow.getAttribute("aria-pressed") === "false") {
+            var activatedGFI = false;
+        }
         gfi.buttonGetFeatureInfoShow.click();
         gfi.buttonGetFeatureInfoShow.setAttribute("aria-pressed", true);
         let pixel = this.getMap().getPixelFromCoordinate(evt.coordinate);
@@ -437,6 +441,10 @@ class ContextMenu extends Control {
             coordinate : evt.coordinate
         };
         this.getMap().dispatchEvent({ type : "singleclick", ...fakeEvent });
+        // on re-désactive le bouton GFI s'il était désactivé
+        if (activatedGFI === false) {
+            gfi.buttonGetFeatureInfoShow.setAttribute("aria-pressed", false);
+        }
     }
 
     /**
