@@ -11,9 +11,7 @@ var LayerSwitcherDOM = {
      * @param {Object} context - this
      */
     _createDraggableElement : function (elementDraggable, context) {
-        // FIXME retirer cette détection user-agent pour solution propre
-        // option forcefallback pour réparer sortable sous Chrome 97
-        // option forcefallback casse le layerswitcher du portail sous firefox
+
         let handleClass = ".GPlayerName";
         if (checkDsfr()) {
             handleClass = ".GPlayerDragNDrop";
