@@ -24,6 +24,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - LayerSwitcher : Drag & drop sous Chrome (#444)
   
 * 🔒 [Security]
 
