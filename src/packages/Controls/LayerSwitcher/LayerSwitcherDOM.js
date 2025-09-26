@@ -11,7 +11,6 @@ var LayerSwitcherDOM = {
      * @param {Object} context - this
      */
     _createDraggableElement : function (elementDraggable, context) {
-
         let handleClass = ".GPlayerName";
         if (checkDsfr()) {
             handleClass = ".GPlayerDragNDrop";
