@@ -26,6 +26,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - LayerSwitcher : Drag & drop sous Chrome (#444)
+  - ContextMenu : GetFeatureInfo via menu contextuel conserve état du widget associé (#445)
   
 * 🔒 [Security]
 
