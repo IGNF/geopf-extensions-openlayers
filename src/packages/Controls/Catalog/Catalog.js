@@ -28,7 +28,8 @@ import Topics from "./topics.json";
 
 // import externe
 import { marked as Marked } from "marked";
-
+import Clusterize from "clusterize.js";
+const Test = Clusterize.default;
 var logger = Logger.getLogger("widget");
 
 /**
@@ -565,6 +566,10 @@ class Catalog extends Control {
         /** @private */
         this.panelCatalogContainer = null;
         /** @private */
+        this.titleCatalogContainer = null;
+        /** @private */
+        this.searchCatalogContainer = null;
+        /** @private */
         this.panelCatalogHeaderContainer = null; // usefull for the dragNdrop
         /** @private */
         this.buttonCatalogClose = null;
@@ -583,6 +588,7 @@ class Catalog extends Control {
          * @type {Array<Object>}
          */
         this.layersList = {};
+        this.layersIDByCategory = {}; // liste des couches par catégorie
 
         /**
          * specify all categories
@@ -652,6 +658,16 @@ class Catalog extends Control {
             }
             return this.categories[index].id;
         })();
+
+        /**
+         * specify the current subcategory selected
+         */
+        this.subCategoryId = null;
+
+        /**
+         * specify the current section selected
+         */ 
+        this.sectionId = null;
 
         /**
          * list of layers added on map by key pair : name/service
@@ -755,10 +771,13 @@ class Catalog extends Control {
 
         // container for the custom dynamic code (cf. initConfigData())
         var widgetContentElementDiv = this.contentCatalogContainer = this._createCatalogContentDivElement();
-        widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
+        // title secondary
+        this.titleCatalogContainer = this._createCatalogContentTitleElement(this.options.titleSecondary);
+        widgetContentElementDiv.appendChild(this.titleCatalogContainer);
         // search bar (global)
         if (this.options.search.display) {
-            widgetContentElementDiv.appendChild(this._createCatalogContentSearchGlobalElement(this.options.search.label));
+            this.searchCatalogContainer = this._createCatalogContentSearchGlobalElement(this.options.search.label);
+            widgetContentElementDiv.appendChild(this.searchCatalogContainer);
         }
         // waiting
         var waiting = this.waitingContainer = this._createCatalogWaitingElement();
@@ -960,150 +979,6 @@ class Catalog extends Control {
     }
 
     /**
-     * Check configuration topics
-     * This method checks the configuration of topics to ensure that sections in categories have the appropriate icons.
-     * It searches for icons based on the filter field of each section and populates the `iconJson` property with the corresponding icons.
-     * It looks for mappings in the configuration data, local topics mapping, or sets it to an empty array if no icons are found.
-     * @param {*} data - configuration data
-     * @private
-     */
-    checkConfigTopics (data) {
-        // INFO
-        // on recherche la liste des icones pour les sections
-        // si l'élément est une section et qu'il n'a pas d'icones
-        // on va chercher les icones dans les données
-        // en fonction du filtre de la section
-        // ex. filter.field = "thematic"
-        // on va chercher toutes les valeurs de "thematic"
-        // dans les couches
-        var topics = data.topics;
-        this.categories.forEach((category) => {
-            if (category.items) {
-                for (let i = 0; i < category.items.length; i++) {
-                    const element = category.items[i];
-                    if (element.icon && element.iconJson.length === 0 && element.section && element.filter) {
-                        const tag = element.filter.field;
-                        // recherche si on a un mapping des topics
-                        if (topics && topics[tag]) {
-                            // dans la configuration avec un tag 'topics' (ex. edisto.json)
-                            element.iconJson = topics[tag];
-                        } else if (data[tag]) {
-                            // dans la configuration avec directement la cléf
-                            element.iconJson = data[tag];
-                        } else if (Topics[tag]) {
-                            // dans le fichier de mapping local
-                            element.iconJson = Topics[tag];
-                        } else {
-                            // pas d'icones
-                            element.iconJson = [];
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * Set layers by category
-     * This method filters the layers based on the provided category.
-     * It checks if the category has a filter defined and applies it to the layers.
-     * If the filter matches, the category is added to the `layers` object.
-     */
-    setLayersByCategory () {
-        var layers = this.layersList;
-        for (let i = 0; i < this.categories.length; i++) {
-            const category = this.categories[i];
-            var filter = category.filter;
-            if (filter) {
-                for (const key in layers) {
-                    if (Object.prototype.hasOwnProperty.call(layers, key)) {
-                        const layer = layers[key];
-                        if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
-                            var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
-                            if (condition) {
-                                // on ajoute l'appartenance de la couche à une categorie
-                                this.layersList[key].categories.push(category.id);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Create DOM content categories and entries (layers)
-     * @private
-     */
-    createCatalogContentEntries () {
-        var container = this.contentCatalogContainer;
-        if (!container) {
-            return;
-        }
-
-        // creation des onglets : categories
-        var entryCategories = this._createCatalogContentCategories(this.categories);
-        container.appendChild(entryCategories);
-
-        // creation des sous-categories
-        const hasSubCategories = this.categories.some((cat) => cat.items && cat.items.length > 0);
-        if (hasSubCategories) {
-            // si au moins une catégorie a des sous-catégories
-            var entrySubCategories = this._createCatalogContentSubCategories(this.categories);
-            container.querySelector("#catalog-container-subcategories").appendChild(entrySubCategories);
-            container.querySelector("#catalog-container-subcategories").classList.remove("gpf-hidden");
-        }
-
-        // creation des sections
-        // on remplit la liste des sections pour chaque sous-catégorie
-        // si la sous-catégorie a l'attribut 'section' à true
-        // et si au moins une catégorie a des sous-catégories avec sections
-        // TODO compteur de couches par section ?
-        const hasSections = this.categories.some((cat) => cat.items && cat.items.some((item) => item.section));
-        if (hasSections) {
-            // si au moins une catégorie a des sous-catégories avec sections
-            this.categories.forEach((cat) => {
-                if (cat.items) {
-                    cat.items.forEach((item) => {
-                        if (item.section) {
-                            // on remplit la liste des sections pour chaque sous-catégorie
-                            var sections = new Set();
-                            for (const key in this.layersList) {
-                                if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
-                                    const layer = this.layersList[key];
-                                    if (layer[item.filter.field]) { // FIXME impl. clef multiple : property.property !
-                                        var value = layer[item.filter.field];
-                                        if (Array.isArray(value)) {
-                                            value.forEach((v) => sections.add(v));
-                                        } else {
-                                            sections.add(value);
-                                        }
-                                    }
-                                }
-                            }
-                            // on trie la liste
-                            item.sections = Array.from(sections).sort((a, b) => a.localeCompare(b, "fr", { sensitivity : "base" }));
-                        }
-                    });
-                }
-            });
-
-            var entrySections = this._createCatalogContentSections(this.categories);
-            container.querySelector("#catalog-container-sections").appendChild(entrySections);
-            container.querySelector("#catalog-container-sections").classList.remove("gpf-hidden");
-        }
-
-        // creation des données
-        // (couches)
-        this._createCatalogContentLayers(this.layersList).then((dom) => {
-            const fragment = document.createDocumentFragment();
-            fragment.appendChild(dom);
-            container.querySelector("#catalog-container-layers").appendChild(fragment);
-            container.querySelector("#catalog-container-layers").classList.remove("gpf-hidden");
-        });
-    }
-
-    /**
      * Get information in the catalog
      * @param {*} key type de catégorisation 'producer' ou 'thematic'
      * @param {*} value tableau de couches
@@ -1178,6 +1053,261 @@ class Catalog extends Control {
             data = null;
         }
         return data;
+    }
+
+    /**
+     * Check configuration topics
+     * This method checks the configuration of topics to ensure that sections in categories have the appropriate icons.
+     * It searches for icons based on the filter field of each section and populates the `iconJson` property with the corresponding icons.
+     * It looks for mappings in the configuration data, local topics mapping, or sets it to an empty array if no icons are found.
+     * @param {*} data - configuration data
+     * @private
+     */
+    checkConfigTopics (data) {
+        // INFO
+        // on recherche la liste des icones pour les sections
+        // si l'élément est une section et qu'il n'a pas d'icones
+        // on va chercher les icones dans les données
+        // en fonction du filtre de la section
+        // ex. filter.field = "thematic"
+        // on va chercher toutes les valeurs de "thematic"
+        // dans les couches
+        var topics = data.topics;
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    if (element.icon && element.iconJson.length === 0 && element.section && element.filter) {
+                        const tag = element.filter.field;
+                        // recherche si on a un mapping des topics
+                        if (topics && topics[tag]) {
+                            // dans la configuration avec un tag 'topics' (ex. edisto.json)
+                            element.iconJson = topics[tag];
+                        } else if (data[tag]) {
+                            // dans la configuration avec directement la cléf
+                            element.iconJson = data[tag];
+                        } else if (Topics[tag]) {
+                            // dans le fichier de mapping local
+                            element.iconJson = Topics[tag];
+                        } else {
+                            // pas d'icones
+                            element.iconJson = [];
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Set layers by category
+     * This method organizes layers into categories, subcategories, and sections based on the defined filters.
+     * It flattens the categories and iterates through the layers to assign them to the appropriate categories or sections.
+     * It updates the `layersIDByCategory` property to keep track of layer IDs associated with each category or section.
+     */
+    setLayersByCategory () {
+        // remise à plat des catégories / sous-categories /sections
+        var categoriesFlat = [];
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categoriesFlat.push(element);
+                }
+            } else {
+                categoriesFlat.push(category);
+            }
+        });
+        var layers = this.layersList;
+        for (let i = 0; i < categoriesFlat.length; i++) {
+            const category = categoriesFlat[i];
+            var filter = category.filter;
+            var hasSection = category.section;
+            var index = 0; // index de la couche
+            for (const key in layers) {
+                if (Object.prototype.hasOwnProperty.call(layers, key)) {
+                    const layer = layers[key];
+                    if (filter) {
+                        if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
+                            var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
+                            if (condition) {
+                                if (hasSection) {
+                                    // on ajoute l'appartenance de la couche à une section
+                                    var value = layer[filter.field];
+                                    if (value) {
+                                        if (Array.isArray(value)) {
+                                            value = value[0]; // on prend la 1ere valeur
+                                        }
+                                        var id = this.generateID(value);
+                                        this.layersIDByCategory[id] = this.layersIDByCategory[id] || [];
+                                        this.layersIDByCategory[id].push(index + "_" + value);
+                                    }
+                                } else {
+                                    // pas de section
+                                    // on ajoute l'appartenance de la couche à une categorie
+                                    this.layersList[key].categories.push(category.id);
+                                    this.layersIDByCategory[category.id] = this.layersIDByCategory[category.id] || [];
+                                    this.layersIDByCategory[category.id].push(index);
+                                }
+                            }
+                        }
+                    } else {
+                        // pas de filtre, on ajoute toutes les couches
+                        this.layersList[key].categories.push(category.id);
+                        this.layersIDByCategory[category.id] = this.layersIDByCategory[category.id] || [];
+                        this.layersIDByCategory[category.id].push(index);
+                    }
+                    index++;
+                }
+            }
+        }
+    }
+
+    // ################################################################### //
+    // ############################# create DOM ########################## //
+    // ################################################################### //
+
+    /**
+     * Create DOM content categories and entries (layers)
+     * @private
+     */
+    createCatalogContentEntries () {
+        var container = this.contentCatalogContainer;
+        if (!container) {
+            return;
+        }
+
+        // creation des onglets : categories
+        var titleDom = container.querySelector("#catalog-container-title");
+        var searchDom = container.querySelector("#catalog-container-search-global");
+        var entryCategories = this._createCatalogContentCategories(this.categories, {
+            titleSize : titleDom ? titleDom.offsetHeight : 0,
+            searchSize : searchDom ? searchDom.offsetHeight : 0
+        });
+        container.appendChild(entryCategories);
+
+        // creation des sous-categories
+        const hasSubCategories = this.categories.some((cat) => cat.items && cat.items.length > 0);
+        if (hasSubCategories) {
+            // si au moins une catégorie a des sous-catégories
+            var entrySubCategories = this._createCatalogContentSubCategories(this.categories);
+            container.querySelector("#catalog-container-subcategories").appendChild(entrySubCategories);
+            container.querySelector("#catalog-container-subcategories").classList.remove("gpf-hidden");
+        }
+
+        // creation des sections
+        // on remplit la liste des sections pour chaque sous-catégorie
+        // si la sous-catégorie a l'attribut 'section' à true
+        // et si au moins une catégorie a des sous-catégories avec sections
+        // TODO compteur de couches par section ?
+        const hasSections = this.categories.some((cat) => cat.items && cat.items.some((item) => item.section));
+        if (hasSections) {
+            // si au moins une catégorie a des sous-catégories avec sections
+            this.categories.forEach((cat) => {
+                if (cat.items) {
+                    cat.items.forEach((item) => {
+                        if (item.section) {
+                            // on remplit la liste des sections pour chaque sous-catégorie
+                            var sections = new Set();
+                            for (const key in this.layersList) {
+                                if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
+                                    const layer = this.layersList[key];
+                                    if (layer[item.filter.field]) { // FIXME impl. clef multiple : property.property !
+                                        var value = layer[item.filter.field];
+                                        if (Array.isArray(value)) {
+                                            value.forEach((v) => sections.add(v));
+                                        } else {
+                                            sections.add(value);
+                                        }
+                                    }
+                                }
+                            }
+                            // on trie la liste
+                            item.sections = Array.from(sections).sort((a, b) => a.localeCompare(b, "fr", { sensitivity : "base" }));
+                        }
+                    });
+                }
+            });
+
+            var entrySections = this._createCatalogContentSections(this.categories);
+            container.querySelector("#catalog-container-sections").appendChild(entrySections);
+            container.querySelector("#catalog-container-sections").classList.remove("gpf-hidden");
+        }
+
+        // creation des données
+        // (couches)
+        this._createCatalogContentLayers(this.layersList).then((dom) => {
+            container.querySelector("#catalog-container-layers").appendChild(dom);
+            container.querySelector("#catalog-container-layers").classList.remove("gpf-hidden");
+            // https://clusterize.js.org/
+            this.clusterize = new Clusterize({
+                scrollId : "catalog-container-layers",
+                contentId : "catalog-main-layers",
+                callbacks : {
+                    clusterChanged : () => {
+                        logger.trace("cluster changed");
+                        this.updateListenersLayersDOM();
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Update listeners for layers DOM elements
+     * This method adds event listeners to the dynamically created DOM elements for layers.
+     * It handles events for selecting layers and toggling the "Learn More" section.
+     * @private
+     */
+    updateListenersLayersDOM () {
+        logger.trace("update listeners layers DOM");
+        var container = this.contentCatalogContainer;
+        if (!container) {
+            return;
+        }
+
+        var containerLayers = container.querySelector("#catalog-container-layers");
+        if (!containerLayers) {
+            return;
+        }
+
+        // selection d'une couche
+        var inputName = `catalog-checkboxes-layers`;
+        var inputs = containerLayers.querySelectorAll("[name=" + "\"" + inputName + "\"]");
+        if (inputs) {
+            inputs.forEach((input) => {
+                input.addEventListener("click", (e) => {
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - ajout ou pas de la couche à la carte
+                    // - envoi d'un evenement avec la conf tech
+                    this.onSelectCatalogLayerClick(e);
+                });
+            });
+        }
+        // ouverture du menu "En savoir plus" d'une couche
+        var buttonNameMore = `button-collapse-more`;
+        var buttonsMore = containerLayers.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
+        if (buttonsMore) {
+            buttonsMore.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaPressed = !(e.target.ariaPressed === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaPressed === "true") {
+                        collapse.classList.add("gpf-visible");
+                        collapse.classList.remove("gpf-hidden");
+                    } else {
+                        collapse.classList.remove("gpf-visible");
+                        collapse.classList.add("gpf-hidden");
+                    }
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - afficher les infos de la rubrique "En savoir plus"
+                    this.onToggleCatalogLayerMoreLearnClick(e);
+                }, false);
+            });
+        }
     }
 
     // ################################################################### //
@@ -1511,18 +1641,13 @@ class Catalog extends Control {
      */
     onSelectCatalogCategoryClick (e) {
         logger.trace(e);
-        // sauvegarde de la categorie courrante pour la gestion de la recherche
-        // de couches dans la liste associée à la categorie
-        var id = e.target.id;
-        var newCategory = id.split("_")[1];
-
         // on sauvegerde la categorie courrante
-        this.categoryId = newCategory;
+        this.categoryId = e.target.dataset.category;
 
+        var o = this.categories.find(c => c.id === this.categoryId);
         // on affiche la barre de recherche spécifique
         // si l'option search=true est activée pour la categorie courante
         // on recherche dans la liste des categories, la catégorie courante
-        var o = this.categories.find(c => c.id === this.categoryId);
         var searchSpecific = document.getElementById("catalog-container-search-specific");
         if (searchSpecific) {
             if (o && o.search) {
@@ -1544,6 +1669,43 @@ class Catalog extends Control {
                 this.setFilteredLayersList("");
             }
         }
+
+        // on masque les sous-catégories
+        var subCategoriesContainer = document.querySelectorAll("[name=\"catalog-radios-subcategories\"]");
+        for (let i = 0; i < subCategoriesContainer.length; i++) {
+            const element = subCategoriesContainer[i];
+            element.classList.add("gpf-hidden");
+            element.classList.remove("fr-tabs__panel--selected");
+        }
+
+        var subCategoryContainer = document.getElementById(`catalog-radios-subcategories_${this.categoryId}`);
+        if (e.target.dataset.subcategories.toLowerCase() === "true") {
+            // on affiche les sous-catégories associées à la categorie
+            if (subCategoryContainer) {
+                subCategoryContainer.classList.remove("gpf-hidden");
+                subCategoryContainer.classList.add("fr-tabs__panel--selected");
+            }
+            // la sous-categorie active déclenche l'affichage 
+            // - soit la liste des sections si disponible
+            // - soit la liste des couches associée à la sous-categorie
+        } else {
+            // on affiche la liste des couches associée à la catégorie courante
+            var divId = `catalog-container-layer`;
+            var divs = this.getContainer().querySelectorAll("[name=" + "\"" + divId + "\"]");
+            if (divs) {
+                var self = this;
+                divs.forEach(function (div) {
+                    var index = div.dataset.index;
+                    if (self.layersIDByCategory[self.categoryId] && self.layersIDByCategory[self.categoryId].includes(index)) {
+                        div.classList.remove("gpf-hidden");
+                        div.classList.add("fr-tabs__panel--selected");
+                    } else {
+                        div.classList.add("gpf-hidden");
+                        div.classList.remove("fr-tabs__panel--selected");
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -1553,15 +1715,31 @@ class Catalog extends Control {
      */
     onSelectCatalogSubCategoryChange (e) {
         logger.trace(e);
-
-        var id = e.target.id;
-        var categoryId = id.split("_")[1];
-
         // on sauvegerde la categorie courante
-        this.categoryId = categoryId;
+        this.categoryId = e.target.dataset.category;
+        // et la sous categorie
+        this.subCategoryId = e.target.dataset.subcategory;
+
+        // TODO
+        if (e.target.dataset.sections) {
+            // on affiche la liste des sections si disponible
+            // par défaut, les sections sont toutes pliées.
+        } else {
+            // on affiche la liste des couches associée à la sous-catégorie courante
+        }
     }
 
-    onToggleCatalogSectionClick (e) {}
+    onToggleCatalogSectionClick (e) {
+        logger.trace(e);
+        // on sauvegerde la categorie courante
+        this.categoryId = e.target.dataset.category;
+        // et la section
+        this.sectionId = e.target.dataset.section;
+
+        // TODO
+        // on affiche la liste des couches associée à la section courante
+        // comment ?
+    }
 
     /**
      * ...

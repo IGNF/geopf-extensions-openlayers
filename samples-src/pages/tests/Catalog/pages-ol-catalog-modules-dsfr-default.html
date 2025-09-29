@@ -64,7 +64,11 @@
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
                         collapsed : false,
-                        draggable : true
+                        draggable : true,
+                        titleSecondary : "",
+                        search : {
+                            display : false
+                        }
                     });
                     catalog.on("catalog:loaded", (e) => {
                         console.log(e);

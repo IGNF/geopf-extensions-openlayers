@@ -226,13 +226,13 @@ var CatalogDOM = {
     // ################################################################### //
 
     _createCatalogContentDivElement : function () {
-        var container = stringToHTML(`<div class="catalog-container-content" style="padding:10px"></div>`);
+        var container = stringToHTML(`<div id="catalog-container-content" style="padding:10px"></div>`);
         return container.firstChild;
     },
     _createCatalogContentTitleElement : function (title) {
         var container = stringToHTML(`
         <!-- titre -->
-        <div class="catalog-container-title">
+        <div id="catalog-container-title">
             <div class="fr-title">
                 <h5 style="margin:unset">${title}</h5>
             </div>
@@ -244,7 +244,7 @@ var CatalogDOM = {
         var strContainer = `
         <!-- barre de recherche globale -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
-        <div class="catalog-container-search-global" style="padding-top:10px;padding-bottom:20px">
+        <div id="catalog-container-search-global" style="padding-top:10px;padding-bottom:20px">
             <div class="fr-search-bar" id="catalog-header-search-global" role="search">
                 <label class="fr-label" for="catalog-input-search-global">
                     Recherche
@@ -956,19 +956,24 @@ var CatalogDOM = {
         return shadow;
     },
     // ################################################################### //
-    _createCatalogContentCategories : function (categories) {
+    _createCatalogContentCategories : function (categories, size) {
+        console.warn("size", size);
         // un onglet
-        var tmplCategoryTabButton = (id, title, selected) => {
+        var tmplCategoryTabButton = (id, title, isActive, subcategories) => {
             // TODO aria-controls doit pointer sur le panneau du contenu
             // le panneau est unique
             // cf. id="catalog-tabpanel"
             var className = "GPtabButton fr-tabs__tab";
             var value = "false";
             var tabindex = -1;
-            if (selected) {
+            if (isActive) {
                 className = "GPtabButton GPtabButtonActive fr-tabs__tab";
                 value = "true";
                 tabindex = 0;
+            };
+            var hasSubCategories = false;
+            if (subcategories && subcategories.length > 0) {
+                hasSubCategories = true;
             }
             return `
             <li class="GPtabList" role="presentation">
@@ -976,10 +981,11 @@ var CatalogDOM = {
                     id="catalog-tabbutton_${id}" 
                     class="${className}" 
                     tabindex="${tabindex}" 
-                    role="tabbutton" 
+                    role="tabbutton"
                     aria-selected="${value}" 
                     aria-controls="catalog-tabpanel"
-                    data-category="${id}">
+                    data-category="${id}"
+                    data-subcategories=${hasSubCategories}>
                     ${title}
                 </button>
             </li>
@@ -1051,20 +1057,24 @@ var CatalogDOM = {
             strCategoriesTabButtons += tmplCategoryTabButton(
                 category.id, 
                 category.title, 
-                category.default);
+                category.default,
+                category.items);
         }
         // on ajoute la barre de recherche spécifique à la catégorie
         var strSearchSpecificBar = tmplSearchSpecificBar(currentActiveBar);
-        // INFO 
+        // FIXME 
         // le calcul de la hauteur est realisé à la main pour pallier le manque de JS DSFR (?)
-        // style="--tabs-height: 294px;"
-        var tabHeight = "380px"; // par defaut
+        // la hauteur est à ajuster en fonction de la presence
+        // ou non de la barre de recherche spécifique
+        var titleHeight = size.titleSize;
+        var searchHeight = size.searchSize; // hauteur de la barre de recherche globale
+        var tabHeight = 380 - titleHeight - searchHeight; // par defaut
         if (hasActiveBar) {
-            tabHeight = "310px"; // si la barre de recherche spécifique est active
+            tabHeight = tabHeight - 70; // si la barre de recherche spécifique est active
         }
         var strContainer = `
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
-            <div class="GPtabs fr-tabs" style="--tabs-height: ${tabHeight};">
+            <div class="GPtabs fr-tabs" style="--tabs-height: ${tabHeight}px;">
                 <!-- onglets -->
                 <div id="catalog-container-categories">
                     <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="presentation">
@@ -1073,12 +1083,23 @@ var CatalogDOM = {
                     <!-- barre de recherche spécifique à la catégorie -->
                     ${strSearchSpecificBar}
                 </div>
-                <!-- boutons radio des sous categories -->
-                <div id="catalog-container-subcategories" class="gpf-hidden fr-tabs__list fr-tabs__panel--selected"></div>
-                <!-- liste des sections -->
-                <div id="catalog-container-sections" class="gpf-hidden fr-tabs__list fr-tabs__panel--selected"></div>
-                <!-- liste des couches -->
-                <div id="catalog-container-layers" class="gpf-hidden fr-tabs__list fr-tabs__panel--selected"></div>
+                <!-- <div id="catalog-tabpanel" role="tabpanel" tabindex="0" aria-labelledby="catalog-tabbutton" style=""> -->
+                    <!-- boutons radio des sous categories -->
+                    <div 
+                        id="catalog-container-subcategories" 
+                        class="gpf-hidden fr-tabs__list fr-tabs__panel--selected"
+                        style=""></div>
+                    <!-- liste des sections -->
+                    <div 
+                        id="catalog-container-sections" 
+                        class="gpf-hidden fr-tabs__list fr-tabs__panel--selected"
+                        style="max-height:${tabHeight - 40}px;overflow:scroll;"></div>
+                    <!-- liste des couches -->
+                    <div 
+                        id="catalog-container-layers" 
+                        class="gpf-hidden fr-tabs__list fr-tabs__panel--selected" 
+                        style="max-height:${tabHeight - 40}px;overflow:scroll;"></div>
+                <!-- </div> -->
             </div>
         </div>
         `;
@@ -1088,6 +1109,7 @@ var CatalogDOM = {
         const shadow = container.attachShadow({ mode : "open" });
         shadow.innerHTML = strContainer.trim();
 
+        // FIXME doit on initialiser un ou des panneaux ?
         var panelContent = shadow.querySelector("[role=\"tabpanel\"]");
         var buttons = shadow.querySelectorAll("[role=\"tabbutton\"]");
         if (buttons) {
@@ -1144,20 +1166,23 @@ var CatalogDOM = {
         
         // une sous-catégorie
         var tmplSubCategoryRadio = (id, subcategory) => {
+            // checked si sous-catégorie par defaut
+            // une seule sous-catégorie peut être cochée par catégorie
             var checked = (subcategory.default) ? "checked" : "";
             return `
             <div class="fr-fieldset__element fr-fieldset__element--inline">
                 <div class="fr-radio-group fr-radio-group--sm">
                     <input 
-                        id="radio-inline_${subcategory.id}" 
+                        id="catalog-radio-subcategory_${subcategory.id}" 
                         type="radio" 
                         ${checked} 
-                        name="radio-inline-${id}" 
-                        role="radio-inline-section"
+                        name="catalog-radio-subcategory" 
+                        role="catalog-radio-subcategory"
                         aria-controls="catalog-tabpanel"
-                        data-category="${id}"/>
-                        data-subcategory="${subcategory.id}"/>
-                    <label class="fr-label" for="radio-inline_${subcategory.id}">
+                        data-category="${id}"
+                        data-subcategory="${subcategory.id}"
+                        data-sections="${subcategory.id}"/>
+                    <label class="fr-label" for="catalog-radio-subcategory_${subcategory.id}">
                         ${subcategory.title}
                     </label>
                 </div>
@@ -1165,16 +1190,19 @@ var CatalogDOM = {
             `;
         };
         // toutes les sous-catégories
-        var tmplSubCategoriesRadios = (id, subcategories) => {
+        var tmplSubCategoriesRadios = (id, subcategories, isActive) => {
             var strSubCategoriesRadios = "";
             for (let j = 0; j < subcategories.length; j++) {
                 const subcategory = subcategories[j];
                 strSubCategoriesRadios += tmplSubCategoryRadio(id, subcategory);
             }
+            // on affiche les boutons radio sur la categorie active
+            var status = (isActive) ? "" : "gpf-hidden";
             return `
             <fieldset 
-                id="radio-inline_${id}" 
-                class="fr-fieldset fr-tabs__list" 
+                id="catalog-radios-subcategories_${id}" 
+                class="fr-fieldset fr-tabs__list ${status}" 
+                name="catalog-radios-subcategories"
                 aria-labelledby="radio-inline-legend radio-inline-messages" 
                 data-category="${id}"
                 style="margin:unset;justify-content: center;">
@@ -1188,7 +1216,7 @@ var CatalogDOM = {
         for (let j = 0; j < categories.length; j++) {
             const category = categories[j];
             if (category.items && category.items.length > 0) {
-                strSubCategoriesRadios += tmplSubCategoriesRadios(category.id, category.items);
+                strSubCategoriesRadios += tmplSubCategoriesRadios(category.id, category.items, category.default);
             }
         }
 
@@ -1199,7 +1227,7 @@ var CatalogDOM = {
         shadow.innerHTML = strSubCategoriesRadios.trim();
 
         // event listener sur le DOM
-        var radios = shadow.querySelectorAll("[role=\"radio-inline-section\"]");
+        var radios = shadow.querySelectorAll("[role=\"catalog-radio-subcategory\"]");
         if (radios) {
             radios.forEach((radio) => {
                 var checked = radio.getAttribute("checked");
@@ -1207,10 +1235,6 @@ var CatalogDOM = {
                     radio.click();
                 }
                 radio.addEventListener("change", (e) => {
-                    var panel = document.getElementById(e.target.getAttribute("aria-controls"));
-                    panel.classList.remove("gpf-hidden");
-                    panel.classList.remove("GPelementHidden");
-                    // appel
                     this.onSelectCatalogSubCategoryChange(e);
                 });
             });
@@ -1219,8 +1243,8 @@ var CatalogDOM = {
         return shadow;
     },
     _createCatalogContentSections : function (categories) {
-        // TODO 
-        // les sections doivent être regroupées par sous-catégorie
+        // INFO
+        // les sections sont regroupées par sous-catégorie
         // on ajoute un container avec l'id de la sous-catégorie
 
         // une section
@@ -1265,7 +1289,7 @@ var CatalogDOM = {
             `;
         };
 
-        var strSections = "";
+        var strSectionsBySubCategory = "";
         for (let j = 0; j < categories.length; j++) {
             const category = categories[j];
             if (!category.items || category.items.length === 0) {
@@ -1279,6 +1303,7 @@ var CatalogDOM = {
                 if (!subcategory.sections || subcategory.sections.length === 0) {
                     continue;
                 }
+                var strSections = "";
                 // on ajoute les sections de la sous-catégorie
                 for (let k = 0; k < subcategory.sections.length; k++) {
                     const name = subcategory.sections[k];
@@ -1297,6 +1322,15 @@ var CatalogDOM = {
                     }
                     strSections += tmplSection(id, subcategory.id, name, icon, count);
                 }
+                if (strSections) {
+                    strSectionsBySubCategory += `
+                    <div 
+                        id="sections_${subcategory.id}" 
+                        class="fr-fieldset__element" 
+                        style="margin:unset;justify-content: center;">
+                        ${strSections}
+                    </div>`;
+                }
             }
         }
         var strContainer = `
@@ -1304,7 +1338,7 @@ var CatalogDOM = {
                 id="catalog-sections" 
                 aria-labelledby="catalog-sections-legend catalog-sections-messages"
                 style="contain: content;">
-                ${strSections}
+                ${strSectionsBySubCategory}
             </fieldset>
         `;
         var container = stringToHTML(strContainer);
@@ -1455,12 +1489,14 @@ var CatalogDOM = {
             <div 
                 id="catalog-fieldset_${name}-${service}"
                 class="fr-fieldset__element" 
+                name="catalog-container-layer"
+                data-index="${id}"
                 style="contain: content;">
                 <div class="fr-checkbox-group gpf-flex" style="justify-content: flex-start;">
                     <input
-                        id="catalog-checkboxes_${name}-${service}"
+                        id="catalog-checkbox_${name}-${service}"
                         class="fr-input"
-                        name="catalog-checkboxes-layers"
+                        name="catalog-checkbox-layer"
                         type="checkbox"
                         data-index="${id}"
                         data-layer="${name}:${service}"/>
@@ -1480,7 +1516,7 @@ var CatalogDOM = {
                     </label>
                     <button 
                         id="catalog-collapse-more_${name}-${service}"
-                        role="button-collapse-more
+                        role="button-collapse-more"
                         class="catalog-collapse-show gpf-btn gpf-btn-icon gpf-btn-icon-catalog-collapse fr-btn fr-btn--tertiary gpf-btn--tertiary" 
                         type="button" 
                         title="En savoir plus sur la couche" 
@@ -1536,13 +1572,13 @@ var CatalogDOM = {
             }, 0));
         }
         var strContainer = `
-            <fieldset 
+            <div 
                 class="fr-fieldset fr-fieldset--inline" 
-                id="catalog-checkboxes-layers" 
-                aria-labelledby="catalog-checkboxes-legend catalog-checkboxes-messages"
-                style="margin:unset; contain: content;">
+                id="catalog-main-layers" 
+                aria-labelledby="catalog-container-legend catalog-container-messages"
+                style="margin:unset; contain: content;height: 100%;">
                 ${strLayers}
-            </fieldset>
+            </div>
         `;
         var container = stringToHTML(strContainer.trim());
 
@@ -1551,7 +1587,7 @@ var CatalogDOM = {
         shadow.innerHTML = strContainer.trim();
 
         // selection d'une couche
-        var inputName = `catalog-checkboxes-layers`;
+        var inputName = `catalog-checkbox-layer`;
         var inputs = shadow.querySelectorAll("[name=" + "\"" + inputName + "\"]");
         if (inputs) {
             inputs.forEach((input) => {
