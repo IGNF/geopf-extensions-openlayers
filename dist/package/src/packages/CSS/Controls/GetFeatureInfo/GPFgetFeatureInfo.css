@@ -2,6 +2,10 @@ div[id^=GPgetFeatureInfo-] {
     top: 260px;
     left: 10px;
   }
+  
+div[id^=GPgetFeatureInfoAccordionGroup-] {
+  user-select: text;
+}
 
 /* Showing/hiding */
 
