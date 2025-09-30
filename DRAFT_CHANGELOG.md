@@ -27,7 +27,8 @@ __DATE__
 
   - LayerSwitcher : Drag & drop sous Chrome (#444)
   - ContextMenu : GetFeatureInfo via menu contextuel conserve état du widget associé (#445)
-  
+  - GetFeatureInfo : Possibilité de sélectionner à la souris le contenu renvoyer par le GFI 
+
 * 🔒 [Security]
 
 
