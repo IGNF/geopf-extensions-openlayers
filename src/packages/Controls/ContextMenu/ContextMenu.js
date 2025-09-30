@@ -429,8 +429,9 @@ class ContextMenu extends Control {
     getFeatureInfo (evt) {
         var gfi = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "GetFeatureInfo")[0];
         // Enregistrement de l'état actif ou non du GFI
+        var activatedGFI;
         if (gfi.buttonGetFeatureInfoShow.getAttribute("aria-pressed") === "false") {
-            var activatedGFI = false;
+            activatedGFI = false;
         }
         gfi.buttonGetFeatureInfoShow.click();
         gfi.buttonGetFeatureInfoShow.setAttribute("aria-pressed", true);
