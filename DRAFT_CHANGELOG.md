@@ -19,6 +19,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - Contextual Menu : Changement nom de l'entrée isochrone (3d228a692c8d51155bbdf8c8c32bb51629b6a03f)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
@@ -26,7 +28,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - LayerSwitcher : Drag & drop sous Chrome (#444)
-  - ContextMenu : GetFeatureInfo via menu contextuel conserve état du widget associé (#445)
+  - Contextual Menu : GetFeatureInfo via menu contextuel conserve état du widget associé (#445)
   - GetFeatureInfo : Possibilité de sélectionner à la souris le contenu renvoyer par le GFI (#446)
 
 * 🔒 [Security]
