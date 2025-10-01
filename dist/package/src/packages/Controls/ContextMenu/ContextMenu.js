@@ -316,7 +316,7 @@ class ContextMenu extends Control {
                 control_CLASSNAME : "Route"
             },
             {
-                text : "Isochrone - à proximité",
+                text : "Zone selon temps de trajet",
                 classname : "ol-context-menu-custom fr-text--md",
                 callback : this.computeIsochrone.bind(this),
                 control_CLASSNAME : "Isocurve"
