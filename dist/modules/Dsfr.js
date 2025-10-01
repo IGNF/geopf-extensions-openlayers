@@ -9,6 +9,6 @@
  * @license AGPL-3.0
  * @author IGN
  * @version 1.0.0-beta.6-446
- * @date 30/09/2025
+ * @date 01/10/2025
  *
  */Dsfr={}.default;
