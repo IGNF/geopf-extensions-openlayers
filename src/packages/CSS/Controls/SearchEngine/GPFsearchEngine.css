@@ -196,10 +196,12 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
   box-shadow: 0 0 6px #000;
   list-style: none;
   padding: 0;
+  overflow: hidden;
 }
 [id^="GPsearchEngine"] ul li {
   padding: 6px 10px;
   color: #5E5E5E;
+  white-space: nowrap;
 }
 [id^="GPsearchEngine"] ul li.active,
 [id^="GPsearchEngine"] ul li:hover {

@@ -3,6 +3,7 @@ import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 // import "../../CSS/Controls/SearchEngine/GPFsearchEngineStyle.css";
 // import OpenLayers
 // import Control from "ol/control/Control";
+import OlObject from "ol/Object";
 import Control from "../Control";
 import Widget from "../Widget";
 import Map from "ol/Map";
@@ -33,10 +34,12 @@ import GeoportalWFS from "../../Layers/LayerWFS";
 import GeoportalMapBox from "../../Layers/LayerMapBox";
 // Service
 import Search from "../../Services/Search";
+import DefaultSearchService from "../../Services/SearchServiceBase"; 
 // DOM
 import SearchEngineDOM from "./SearchEngineDOM";
 import checkDsfr from "../Utils/CheckDsfr";
 import { getUid } from "ol";
+
 
 var logger = Logger.getLogger("searchengine");
 
@@ -103,6 +106,7 @@ var logger = Logger.getLogger("searchengine");
  *       }
  */
 
+
 /**
  * @classdesc
  * SearchEngine Base control
@@ -122,6 +126,11 @@ class SearchEngineBase extends Control {
          * @private
          */
         this.CLASSNAME = "SearchEngineBase";
+
+        this.searchService = options.searchService || new DefaultSearchService();
+        this.searchService.on("search", function (e) {
+            this.onSearch(e);
+        }.bind(this));
 
         // initialisation du composant
         this.initialize(options);
@@ -171,14 +180,16 @@ class SearchEngineBase extends Control {
             }
         }.bind(this));
         this.input.addEventListener("keyup", function (e) {
+            // autocomplete list
+            const list = Array.from(this.autocompleteList.querySelectorAll("li"));
+            let idx = list.findIndex(li => li.classList.contains("active"));
+            // Handle key events
             if (/ArrowDown|ArrowUp/.test(e.key)) {
                 e.preventDefault();
                 // Navigation in autocomplete list
-                const list = Array.from(this.autocompleteList.querySelectorAll("li"));
                 if (list.length === 0) {
                     return;
                 }
-                let idx = list.findIndex(li => li.classList.contains("active"));
                 list.forEach(li => li.classList.remove("active"));
                 if (e.key === "ArrowDown") {
                     idx++;
@@ -201,12 +212,20 @@ class SearchEngineBase extends Control {
                 (e.target.value.length && e.target.value.length >= (options.minChars || 0)) 
                 || (e.key === "Enter")
             ) {
-                // Autocomplete
-                this.autocomplete(e.target.value, e.key === "Enter");
+                if (idx >= 0) {
+                    // An item has been selected    
+                    list[idx].click();
+                } else {
+                    // Autocomplete
+                    if (e.target.value !== this._currentValue) {
+                        this.autocomplete(e.target.value, e.key === "Enter");
+                    }
+                }
             } else {
                 // Show historic
                 this.showHistoric();
             }
+            this._currentValue = e.target.value;
         }.bind(this), false);
     }
     /**
@@ -296,16 +315,46 @@ class SearchEngineBase extends Control {
      * @api
      */
     autocomplete (value, force) {
-        if (force && value) {
-            this._updateHistoric(value);
-        }
+        clearTimeout(this._completeDelay);
+        this._completeDelay = setTimeout(function () {
+            this.searchService.autocomplete(value, { force : force });
+        }.bind(this), this.get("triggerDelay") || 300);
+    }
+    /** Do something on search ready
+     * @param {Object} e event
+     *  @param {string} e.search search string
+     *  @param {Object|boolean} e.options options given to autocomplete
+     *  @param {Array<*>} e.result result of autocomplete
+     * @api
+     */
+    onSearch (e) {
+        clearTimeout(this._completeDelay);
+        // Update list}
+        this._updateList(e.result);
+    }
+    /** An item has been selected
+     * @param {*} item selected item
+     * @api
+     */
+    select (item) {
+        clearTimeout(this._completeDelay);
+        const title = this.getItemTitle(item);
+        this.input.value = title;
+        this._currentValue = title;
+        this._updateHistoric(title);
         this._updateList();
+        this.dispatchEvent({ 
+            type : "select", 
+            title : this.getItemTitle(item),
+            item : item
+        });
     }
     /**
      * Show historic list
      * @api
      */
     showHistoric () {
+        clearTimeout(this._completeDelay);
         if (this._historic) {
             this._updateList(this._historic.length ? this._historic : []);
         }
@@ -315,7 +364,7 @@ class SearchEngineBase extends Control {
      * @param {Array<*>} tab list of autocomplete items
      */
     _updateList (tab) {
-        tab = tab || [];
+        tab = (tab || []).slice(0, this.get("maximumEntries") || 10);
         // Accessibility
         this.autocompleteList.querySelectorAll("li").forEach(li => li.classList.remove("active"));
         this.input.setAttribute("aria-activedescendant", "");
@@ -332,18 +381,17 @@ class SearchEngineBase extends Control {
             this.autocompleteList.appendChild(li);
             li.addEventListener("click", function (e) {
                 const idx = Number(e.target.getAttribute("data-idx"));
-                this.input.value = this.getItemTitle(tab[idx]);
-                this._updateHistoric(this.input.value);
-                this._updateList();
+                this.select(tab[idx]);
             }.bind(this));
         });    
     }
-    /**
-     * * @param {*} item 
-     * @returns 
+    /** Get item title given an item object
+     * @param {*} item 
+     * @returns {string} title
+     * @api
      */
     getItemTitle (item) {
-        return item;
+        return this.searchService.getItemTitle(item);
     }
     /**
      * Add or replace value in historic list
@@ -357,9 +405,12 @@ class SearchEngineBase extends Control {
                 this._historic.splice(idx, 1);
             }
             this._historic.unshift(value);
-            if (this._historic.length > 10) {
+            // Remove last if > 10
+            if (this._historic.length > (this.get("maximumEntries") || 10)) {
                 this._historic.pop();
             }
+
+            // Save in localStorage
             localStorage.setItem(this._historicName, JSON.stringify(this._historic));
         }
     }
@@ -370,9 +421,5 @@ export default SearchEngineBase;
 
 // Expose SearchEngine as ol.control.SearchEngine (for a build bundle)
 if (window.ol && window.ol.control) {
-    /**/
-    window.ol.control.SearchEngine = SearchEngineBase;
-    /*/
-    window.ol.control.SearchEngine = SearchEngine;
-    /**/
+    window.ol.control.SearchEngineBase = SearchEngineBase;
 }
