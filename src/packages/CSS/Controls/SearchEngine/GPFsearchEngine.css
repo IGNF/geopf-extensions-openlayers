@@ -187,3 +187,29 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
   }
 
 }
+
+[id^="GPsearchEngine"] ul {
+  position: absolute;
+  background-color: white;
+  width: 100%;
+  margin: 3px 0;
+  box-shadow: 0 0 6px #000;
+  list-style: none;
+  padding: 0;
+}
+[id^="GPsearchEngine"] ul li {
+  padding: 6px 10px;
+  color: #5E5E5E;
+}
+[id^="GPsearchEngine"] ul li.active,
+[id^="GPsearchEngine"] ul li:hover {
+    color: #000000;
+    background-color: #CEDBEF;
+}
+
+[id^=GPsearchEngine-].ol-collapsed form[id^=GPsearchInput-Base-] {
+  overflow: hidden;
+}
+[id^=GPsearchEngine-] form[id^=GPsearchInput-Base-] {
+  overflow: visible;
+}

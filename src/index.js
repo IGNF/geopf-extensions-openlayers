@@ -24,6 +24,7 @@ export { default as LayerMapBox } from "./packages/Layers/LayerMapBox";
 export { default as LayerSwitcher } from "./packages/Controls/LayerSwitcher/LayerSwitcher";
 export { default as GetFeatureInfo } from "./packages/Controls/GetFeatureInfo/GetFeatureInfo";
 export { default as SearchEngine } from "./packages/Controls/SearchEngine/SearchEngine";
+export { default as SearchEngineBase } from "./packages/Controls/SearchEngine/SearchEngineBase";
 export { default as MousePosition } from "./packages/Controls/MousePosition/MousePosition";
 export { default as Drawing } from "./packages/Controls/Drawing/Drawing";
 export { default as Route } from "./packages/Controls/Route/Route";

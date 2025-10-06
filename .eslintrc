@@ -47,7 +47,7 @@
         "no-prototype-builtins": "off",
         "linebreak-style": [
             "error",
-            "unix"
+            "windows"
         ],
         "padded-blocks": [
             "error",

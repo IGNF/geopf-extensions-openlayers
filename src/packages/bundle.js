@@ -79,6 +79,7 @@ import LayerMapBox from "./Layers/LayerMapBox";
 import LayerSwitcher from "./Controls/LayerSwitcher/LayerSwitcher";
 import GetFeatureInfo from "./Controls/GetFeatureInfo/GetFeatureInfo";
 import SearchEngine from "./Controls/SearchEngine/SearchEngine";
+import SearchEngineBase from "./Controls/SearchEngine/SearchEngineBase";
 import MousePosition from "./Controls/MousePosition/MousePosition";
 import Drawing from "./Controls/Drawing/Drawing";
 import Route from "./Controls/Route/Route";
@@ -268,6 +269,7 @@ Ol.control.LayerSwitcher = LayerSwitcher;
 Ol.control.GeoportalAttribution = GeoportalAttribution;
 Ol.control.GetFeatureInfo = GetFeatureInfo;
 Ol.control.SearchEngine = SearchEngine;
+Ol.control.SearchEngineBase = SearchEngineBase;
 Ol.control.Route = Route;
 Ol.control.Isocurve = Isocurve;
 Ol.control.GeoportalMousePosition = MousePosition;
@@ -298,6 +300,7 @@ export {
      * @see ol.control.GeoportalAttribution
      * @see ol.control.GetFeatureInfo
      * @see ol.control.SearchEngine
+     * @see ol.control.SearchEngineBase
      * @see ol.control.Route
      * @see ol.control.Isocurve
      * @see ol.control.GeoportalMousePosition
