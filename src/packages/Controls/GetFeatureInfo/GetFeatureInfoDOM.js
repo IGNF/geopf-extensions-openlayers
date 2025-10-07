@@ -114,7 +114,7 @@ var GetFeatureInfoDOM = {
 
     _createGetFeatureInfoPanelDivElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelBody gpf-panel__body fr-modal__body";
+        div.className = "GPpanelBody gpf-panel__body_gfi fr-modal__body";
         return div;
     },
 
@@ -125,12 +125,18 @@ var GetFeatureInfoDOM = {
      */
     _createGetFeatureInfoPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header_gfi";
         return container;
+    },
+    _createGetFeatureInfoPanelIconElement : function () {
+        var label = document.createElement("label");
+        label.className = "GPpanelIcon gpf-btn-header_gfi gpf-btn-icon-header_gfi";
+        label.title = "Get Feature Info";
+        return label;
     },
     _createGetFeatureInfoPanelTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+        div.className = "GPpanelTitle gpf-panel__title_gfi fr-modal__title";
         div.innerHTML = "GetFeatureInfo";
         return div;
     },
@@ -138,7 +144,7 @@ var GetFeatureInfoDOM = {
         var self = this;
 
         var btnClose = document.createElement("button");
-        btnClose.className = "GPpanelClose GPcloseGetFeatureInfo gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnClose.className = "GPpanelClose GPcloseGetFeatureInfo gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox

@@ -217,8 +217,8 @@ class GetFeatureInfo extends Control {
         // header
         var getFeatureInfoPanelHeader = this.panelGetFeatureInfoHeaderContainer = this._createGetFeatureInfoPanelHeaderElement();
         // icone
-        // var getFeatureInfoPanelIcon = this._createGetFeatureInfoPanelIconElement();
-        // getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelIcon);
+        var getFeatureInfoPanelIcon = this._createGetFeatureInfoPanelIconElement();
+        getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelIcon);
         // title
         var getFeatureInfoPanelTitle = this._createGetFeatureInfoPanelTitleElement();
         getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelTitle);

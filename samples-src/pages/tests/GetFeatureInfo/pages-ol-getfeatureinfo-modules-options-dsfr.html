@@ -196,7 +196,8 @@
             // 5. Ajout du contrôle de gestion de l'empilement des couches (layerSwitcher)
             var layerSwitcher = new ol.control.LayerSwitcher({
                 options : {
-                    collapsed: false
+                    collapsed: false,
+                    panel: true
                 }
             });
             map.addControl(layerSwitcher);
