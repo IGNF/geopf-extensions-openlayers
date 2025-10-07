@@ -174,6 +174,21 @@ var GetFeatureInfoDOM = {
         return waitingDivString;
     },
 
+    /**
+     * String to html
+     * @param {String} noDataMessage - string à afficher en message de noData du GFI
+     * @returns {DOMElement} DOM element
+     */
+    _createGetFeatureInfoNoData : function (noDataMessage) {
+        // contexte d'execution
+        // var self = this;
+        var div = document.createElement("div");
+        div.className = "GPgetFeatureInfoNoData fr-py-2w fr-px-2w";
+        console.log(this.stringToHTML(noDataMessage));
+        div.insertAdjacentHTML("beforeend", noDataMessage);
+        return div;
+    },
+
     // ################################################################### //
     // ####################### Methods for Layer GFI ####################### //
     // ################################################################### //
