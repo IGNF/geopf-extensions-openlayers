@@ -245,11 +245,14 @@ var CatalogDOM = {
         <!-- barre de recherche globale -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
         <div class="catalog-container-search-global" style="padding-top:10px;padding-bottom:20px">
-            <div class="fr-search-bar" id="catalog-header-search-global" role="search">
+            <div class="fr-search-bar" id="catalog-header-search-global" role="search" style="justify-content: center;">
                 <label class="fr-label" for="catalog-input-search-global">
                     Recherche
                 </label>
-                <input class="fr-input" placeholder="${label}" type="text" id="catalog-input-search-global" name="search-input" incremental>
+                <div class="input-wrapper">
+                    <input class="fr-input" placeholder="${label}" type="text" id="catalog-input-search-global" name="search-input" incremental>
+                    <button type="button" id="catalog-button-reset-search-global" class="clear-btn" aria-label="Effacer le texte">✖</button>
+                </div>
                 <button id="catalog-button-search-global" class="fr-btn" title="${label}">
                     Rechercher
                 </button>
@@ -268,6 +271,14 @@ var CatalogDOM = {
             button.addEventListener("click", (e) => {
                 e.target.value = input.value; // synchronisation
                 this.onSearchGlobalCatalogButtonClick(e);
+            });
+        }
+
+        var reset = shadow.getElementById("catalog-button-reset-search-global");
+        if (reset) {
+            reset.addEventListener("click", (e) => {
+                input.value = ""; // synchronisation
+                this.onSearchGlobalCatalogButtonResetClick(e);
             });
         }
 
@@ -355,7 +366,10 @@ var CatalogDOM = {
                     <label class="fr-label" for="catalog-input-search-specific">
                         Recherche dans la catégorie
                     </label>
-                    <input class="fr-input" placeholder="${title}" type="text" id="catalog-input-search-specific" name="search-input-specific" incremental>
+                    <div class="input-wrapper">
+                        <input class="fr-input" placeholder="${title}" type="text" id="catalog-input-search-specific" name="search-input-specific" incremental>
+                        <button type="button" id="catalog-button-reset-search-specific" class="clear-btn" aria-label="Effacer le texte">✖</button>
+                    </div>
                     <button id="catalog-button-search-specific" class="fr-btn" title="${title}">
                         Rechercher
                     </button>
@@ -578,6 +592,13 @@ var CatalogDOM = {
                 this.onSearchSpecificCatalogButtonClick(e);
             });
         }
+        var resetBtn = shadow.getElementById("catalog-button-reset-search-specific");
+        if (resetBtn) {
+            resetBtn.addEventListener("click", (e) => {
+                searchInput.value = ""; // synchronisation
+                this.onSearchSpecificCatalogButtonResetClick(e);
+            });
+        }
 
         var searchInput = shadow.getElementById("catalog-input-search-specific");
         if (searchInput) {
@@ -606,8 +627,8 @@ var CatalogDOM = {
     _createCatalogContentCategoryTabContent : async function (category, layersFiltered) {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
         const batchSize = 10; // nombre d'éléments à traiter par lot
+
         var strElements = "";
-        // le champ description en Markdown est transformé vers HTML
         var tmplElement = (i, name, title, service, description, informations, thumbnail, categoryId) => {
             // ajout de la vignette si elle existe
             // le thumbnail est optionnel
@@ -911,6 +932,98 @@ var CatalogDOM = {
             dom : shadow,
             blocks : lstData
         };
+    },
+
+    /**
+     * Update DOM listeners
+     * @param {HTMLElement} content - ...
+     * @param {String} id  - ...
+     */
+    _updateListenersLayersDOM : function (content, id) {
+        // on met à jour les listeners sur les couches
+    
+        // selection d'une couche
+        var inputName = `checkboxes-${id}`;
+        var inputs = content.querySelectorAll("[name=" + "\"" + inputName + "\"]");
+        if (inputs) {
+            inputs.forEach((input) => {
+                input.addEventListener("click", (e) => {
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - ajout ou pas de la couche à la carte
+                    // - envoi d'un evenement avec la conf tech
+                    this.onSelectCatalogEntryClick(e);
+                });
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        var buttonName = `section-collapse-${id}`;
+        var buttons = content.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
+        if (buttons) {
+            buttons.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaExpanded === "true") {
+                        collapse.classList.add("fr-collapse--expanded");
+                        collapse.classList.remove("GPelementHidden");
+                    } else {
+                        collapse.classList.remove("fr-collapse--expanded");
+                        collapse.classList.add("GPelementHidden");
+                    }
+                }, false);
+            });
+        }
+        // ouverture du menu "En savoir plus" d'une couche
+        var buttonNameMore = `button-collapse-more-${id}`;
+        var buttonsMore = content.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
+        if (buttonsMore) {
+            buttonsMore.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaPressed = !(e.target.ariaPressed === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaPressed === "true") {
+                        collapse.classList.add("gpf-visible");
+                        collapse.classList.remove("gpf-hidden");
+                    } else {
+                        collapse.classList.remove("gpf-visible");
+                        collapse.classList.add("gpf-hidden");
+                    }
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - afficher les infos de la rubrique "En savoir plus"
+                    this.onToggleCatalogMoreLearnClick(e);
+                }, false);
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        // sur le clic de l'icone
+        // pour faciliter l'ouverture de la section
+        var spanIconName = `section-icon-collapse-${id}`;
+        var spanIcons = content.querySelectorAll("[role=" + "\"" + spanIconName + "\"]");
+        if (spanIcons) {
+            spanIcons.forEach((span) => {
+                span.addEventListener("click", (e) => {
+                    e.target.parentElement.click();
+                });
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        // sur le clic du compteur de couches
+        // pour faciliter l'ouverture de la section
+        var spanCountName = `section-count-collapse-${id}`;
+        var spanCounts = content.querySelectorAll("[role=" + "\"" + spanCountName + "\"]");
+        if (spanCounts) {
+            spanCounts.forEach((span) => {
+                span.addEventListener("click", (e) => {
+                    e.target.parentElement.click();
+                });
+            });
+        }
     }
 
 };

@@ -81,6 +81,29 @@
     background-position: center center;
 }
 
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.input-wrapper input {
+  padding-right: 25px; /* espace pour la croix */
+}
+.clear-btn {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  display: none; /* masqué par défaut */
+}
+
+.input-wrapper input:not(:placeholder-shown) + .clear-btn {
+  display: block;
+}
+
 .fr-tabs {
   box-shadow : unset;
 }

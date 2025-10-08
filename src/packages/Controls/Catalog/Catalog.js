@@ -237,10 +237,6 @@ class Catalog extends Control {
         return this;
     }
 
-    // ################################################################### //
-    // ##################### public methods ############################## //
-    // ################################################################### //
-
     /**
      * Overwrite OpenLayers setMap method
      * This method sets the map for the Catalog control.
@@ -296,6 +292,10 @@ class Catalog extends Control {
         }
     }
 
+    // ################################################################### //
+    // ##################### public methods ############################## //
+    // ################################################################### //
+
     /**
      * Add a layer config
      * This method processes a configuration object containing layer definitions.
@@ -311,8 +311,8 @@ class Catalog extends Control {
                     var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                     layer.service = service; // new proprerty !
                     layer.categories = []; // new property ! vide pour le moment
-                    layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
-                    layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
+                    layer.producer_urls = this.createCatalogLinks("producer", layer.producer); // plus d'info
+                    layer.thematic_urls = this.createCatalogLinks("thematic", layer.thematic); // plus d'info
                     this.layersList[key] = layer;
                 }
             }
@@ -418,19 +418,6 @@ class Catalog extends Control {
         }
     }
 
-    // ################################################################### //
-    // ################### getters / setters ############################# //
-    // ################################################################### //
-
-    /**
-     * Get container
-     *
-     * @returns {HTMLElement} container
-     */
-    getContainer () {
-        return this.container;
-    }
-
     /**
      * Get long layer ID
      * 
@@ -498,6 +485,19 @@ class Catalog extends Control {
         }
 
         return layersCategorised;
+    }
+
+    // ################################################################### //
+    // ################### getters / setters ############################# //
+    // ################################################################### //
+
+    /**
+     * Get container
+     *
+     * @returns {HTMLElement} container
+     */
+    getContainer () {
+        return this.container;
     }
 
     // ################################################################### //
@@ -990,8 +990,8 @@ class Catalog extends Control {
                     var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                     layer.service = service; // new proprerty !
                     layer.categories = []; // new property ! vide pour le moment
-                    layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
-                    layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
+                    layer.producer_urls = this.createCatalogProducerLinks(layer.producer); // plus d'info
+                    layer.thematic_urls = this.createCatalogThematicLinks(layer.thematic); // plus d'info
                     // label de la couche
                     layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
                     // INFO
@@ -1145,13 +1145,13 @@ class Catalog extends Control {
                                 callbacks : {
                                     clusterChanged : () => {
                                         logger.trace("cluster changed");
-                                        this.updateListenersLayersDOM(content, categories[i].id);
+                                        this._updateListenersLayersDOM(content, categories[i].id);
                                         this.checkLayersOnMap();
                                     }
                                 }
                             });
                         } else {
-                            this.updateListenersLayersDOM(content, categories[i].id);
+                            this._updateListenersLayersDOM(content, categories[i].id);
                             this.checkLayersOnMap();
                         }
                     }
@@ -1160,117 +1160,16 @@ class Catalog extends Control {
     }
 
     /**
-     * Update DOM listeners
-     * @param {HTMLElement} content - ...
-     * @param {String} id  - ...
-     */
-    updateListenersLayersDOM (content, id) {
-        // on met à jour les listeners sur les couches
-
-        // selection d'une couche
-        var inputName = `checkboxes-${id}`;
-        var inputs = content.querySelectorAll("[name=" + "\"" + inputName + "\"]");
-        if (inputs) {
-            inputs.forEach((input) => {
-                input.addEventListener("click", (e) => {
-                    // appel gestionnaire d'evenement pour traitement :
-                    // - ajout ou pas de la couche à la carte
-                    // - envoi d'un evenement avec la conf tech
-                    this.onSelectCatalogEntryClick(e);
-                });
-            });
-        }
-        // ouverture d'une sous section ex. theme routier
-        var buttonName = `section-collapse-${id}`;
-        var buttons = content.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
-        if (buttons) {
-            buttons.forEach((button) => {
-                button.addEventListener("click", (e) => {
-                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
-                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
-                    if (!collapse) {
-                        return;
-                    }
-                    if (e.target.ariaExpanded === "true") {
-                        collapse.classList.add("fr-collapse--expanded");
-                        collapse.classList.remove("GPelementHidden");
-                    } else {
-                        collapse.classList.remove("fr-collapse--expanded");
-                        collapse.classList.add("GPelementHidden");
-                    }
-                }, false);
-            });
-        }
-        // ouverture du menu "En savoir plus" d'une couche
-        var buttonNameMore = `button-collapse-more-${id}`;
-        var buttonsMore = content.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
-        if (buttonsMore) {
-            buttonsMore.forEach((button) => {
-                button.addEventListener("click", (e) => {
-                    e.target.ariaPressed = !(e.target.ariaPressed === "true");
-                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
-                    if (!collapse) {
-                        return;
-                    }
-                    if (e.target.ariaPressed === "true") {
-                        collapse.classList.add("gpf-visible");
-                        collapse.classList.remove("gpf-hidden");
-                    } else {
-                        collapse.classList.remove("gpf-visible");
-                        collapse.classList.add("gpf-hidden");
-                    }
-                    // appel gestionnaire d'evenement pour traitement :
-                    // - afficher les infos de la rubrique "En savoir plus"
-                    this.onToggleCatalogMoreLearnClick(e);
-                }, false);
-            });
-        }
-        // ouverture d'une sous section ex. theme routier
-        // sur le clic de l'icone
-        // pour faciliter l'ouverture de la section
-        var spanIconName = `section-icon-collapse-${id}`;
-        var spanIcons = content.querySelectorAll("[role=" + "\"" + spanIconName + "\"]");
-        if (spanIcons) {
-            spanIcons.forEach((span) => {
-                span.addEventListener("click", (e) => {
-                    e.target.parentElement.click();
-                });
-            });
-        }
-        // ouverture d'une sous section ex. theme routier
-        // sur le clic du compteur de couches
-        // pour faciliter l'ouverture de la section
-        var spanCountName = `section-count-collapse-${id}`;
-        var spanCounts = content.querySelectorAll("[role=" + "\"" + spanCountName + "\"]");
-        if (spanCounts) {
-            spanCounts.forEach((span) => {
-                span.addEventListener("click", (e) => {
-                    e.target.parentElement.click();
-                });
-            });
-        }
-    }
-
-
-    /**
-     * Get information in the catalog
-     * @param {*} key type de catégorisation 'producer' ou 'thematic'
-     * @param {*} value tableau de couches
+     * Create links information to the catalog for thematic
+     * @param {*} value - ...
      * @private
      * @returns {Array<Object>} fiche d'information
      * @todo récuperer l'url du service du catalogue selon l'environnement !
      * @example
-     * // pour les producteurs
-     * getInformationsCatalog("producer", ["IGN", "IGNF", "Autres"]);
      * // pour les thématiques
-     * getInformationsCatalog("thematic", ["Agriculture", "Transports", "Autres"]);
+     * createCatalogThematicLinks(["Agriculture", "Transports", "Autres"]);
      * // OUTPUT
      * [
-     *   {
-     *      name : "IGN",
-     *      url : "https://cartes.gouv.fr/catalogue/search?organization=IGN"
-     *   },
-     * 
      *   {
      *     name : "Agriculture",
      *     url : "https://cartes.gouv.fr/catalogue/search?topic=farming"
@@ -1278,7 +1177,60 @@ class Catalog extends Control {
      * ]
      * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
      */
-    getInformationsCatalog (key, value) {
+    createCatalogThematicLinks (value) {
+        if (!value) {
+            return null;
+        }
+        var url = "https://cartes.gouv.fr/catalogue/search?";
+        var data = [];
+        // INFO
+        // - comment recuperer la fiche si pas renseigné dans metadata_urls ?
+        // ex. https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN
+        // > la conf nous fournit une liste via le champ 'metada_urls'
+        
+        // - comment faire le lien entre les noms pour obtenir les données du theme ?
+        // ex. pour Agriculture, l'url est https://cartes.gouv.fr/catalogue/search?topic=farming
+        // pour les thématiques, un mapping est nécessaire entre le nom et l'id
+        // > un fichier de mapping est disponible
+        for (let j = 0; j < value.length; j++) {
+            const element = value[j];
+            if (element === "Autres") {
+                continue;
+            }
+            var mapping = Topics.thematic.find((o) => o.name === element);
+            if (mapping) {
+                data.push({
+                    name : element,
+                    url : url + "topic=" + mapping.id
+                });
+            }
+        }
+        if (data.length === 0) {
+            data = null;
+        }
+        return data;
+    }
+
+    /**
+     * Create links information to the catalog for producer
+     * @param {*} value - ...
+     * @private
+     * @returns {Array<Object>} fiche d'information
+     * @todo récuperer l'url du service du catalogue selon l'environnement !
+     * @example
+     * // pour les producteurs
+     * createCatalogProducerLinks(["IGN", "IGNF", "Autres"]);
+     * 
+     * // OUTPUT
+     * [
+     *   {
+     *      name : "IGN",
+     *      url : "https://cartes.gouv.fr/catalogue/search?organization=IGN"
+     *   }
+     * ]
+     * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
+     */
+    createCatalogProducerLinks (value) {
         if (!value) {
             return null;
         }
@@ -1292,36 +1244,15 @@ class Catalog extends Control {
         // - comment avoir l'info sur le producteur à partir de la liste des acronymes ?
         // ex. https://cartes.gouv.fr/catalogue/search?organization=IGN
         // > la conf nous fournit une liste via le champ 'producer'
-        if (key === "producer") {
-            for (let i = 0; i < value.length; i++) {
-                const element = value[i];
-                if (element === "Autres") {
-                    continue;
-                }
-                data.push({
-                    name : element,
-                    url : url + "organization=" + element
-                });
+        for (let i = 0; i < value.length; i++) {
+            const element = value[i];
+            if (element === "Autres") {
+                continue;
             }
-        }
-        // - comment faire le lien entre les noms pour obtenir les données du theme ?
-        // ex. pour Agriculture, l'url est https://cartes.gouv.fr/catalogue/search?topic=farming
-        // pour les thématiques, un mapping est nécessaire entre le nom et l'id
-        // > un fichier de mapping est disponible
-        if (key === "thematic") {
-            for (let j = 0; j < value.length; j++) {
-                const element = value[j];
-                if (element === "Autres") {
-                    continue;
-                }
-                var mapping = Topics.thematic.find((o) => o.name === element);
-                if (mapping) {
-                    data.push({
-                        name : element,
-                        url : url + "topic=" + mapping.id
-                    });
-                }
-            }
+            data.push({
+                name : element,
+                url : url + "organization=" + element
+            });
         }
         if (data.length === 0) {
             data = null;
@@ -1537,7 +1468,7 @@ class Catalog extends Control {
             }
         }
         // on rend invisible les sections qui ne possède plus de couches visibles
-        this.updateVisibilitySectionsDOM();
+        this.updateVisibilityFilteredSectionsDOM();
     }
 
     /**
@@ -1582,7 +1513,7 @@ class Catalog extends Control {
      *
      * @private
      */
-    updateVisibilitySectionsDOM () {
+    updateVisibilityFilteredSectionsDOM () {
         // il faut savoir si les couches d'une section sont toutes à hidden
         // si oui, on cache la section
         // si non, on met à jour le compteur des couches visibles
@@ -1628,6 +1559,7 @@ class Catalog extends Control {
             }
         }
     }
+
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
@@ -1781,6 +1713,11 @@ class Catalog extends Control {
         }, 200); // 200ms de délai
     }
 
+    onSearchGlobalCatalogButtonResetClick (e) {
+        this.resetFilteredLayersList();
+        this.updateVisibilityFilteredSectionsDOM();
+    }
+
     /**
      * ...
      * @param {Event} e - ...
@@ -1807,6 +1744,11 @@ class Catalog extends Control {
         this._searchTimeout = setTimeout(() => {
             this.onSearchSpecificCatalogButtonClick(e);
         }, 200); // 200ms de délai
+    }
+
+    onSearchSpecificCatalogButtonResetClick (e) {
+        this.resetFilteredLayersList();
+        this.updateVisibilityFilteredSectionsDOM();
     }
 
 };
