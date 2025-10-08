@@ -16,9 +16,9 @@ class SearchServiceBase extends OlObject {
     /** Autocomplete function
      * Dispatchs "searchstart" event when search starts
      * Dispatchs "search" event when search is finished
-     * @param {string} search 
+     * @param {String} search 
      * @param {Object} [options] 
-     * @param {string} options.force force search even if search string is less than minChars / enter is pressed
+     * @param {String} options.force force search even if search string is less than minChars / enter is pressed
      * @api
      */
     autocomplete (search, options) {
@@ -48,7 +48,7 @@ class SearchServiceBase extends OlObject {
     }
     /** Get title of an item
      * @param {*} item 
-     * @returns {string} title
+     * @returns {String} title
      */
     getItemTitle (item) {
         return item;

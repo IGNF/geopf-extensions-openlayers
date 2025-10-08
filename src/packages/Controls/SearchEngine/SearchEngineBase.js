@@ -128,6 +128,10 @@ class SearchEngineBase extends Control {
         this.CLASSNAME = "SearchEngineBase";
 
         this.searchService = options.searchService || new DefaultSearchService();
+        this.searchService.on("autocomplete", function (e) {
+            this.onAutocomplete(e);
+        }.bind(this));
+
         this.searchService.on("search", function (e) {
             this.onSearch(e);
         }.bind(this));
@@ -162,14 +166,14 @@ class SearchEngineBase extends Control {
      * Initialize SearchEngine control (called by SearchEngine constructor)
      *
      * @param {Object} options - constructor options
-     * @private
+     * @protected
      */
     initialize (options) {
 
     }
     /** Add event listeners
      * @param {Object} options - constructor options
-     * @private
+     * @protected
      */
     _initEvents (options) {
         this.input.addEventListener("input", function (e) {
@@ -213,7 +217,7 @@ class SearchEngineBase extends Control {
                 || (e.key === "Enter")
             ) {
                 if (idx >= 0) {
-                    // An item has been selected    
+                    // An item has been selected
                     list[idx].click();
                 } else {
                     // Autocomplete
@@ -310,27 +314,45 @@ class SearchEngineBase extends Control {
         }.bind(this));
     }
     /** Autocomplete and update list
-     * @param {string} [value] input value
-     * @param {boolean} [force=false] force to add in historic
+     * @param {String} [value] input value
+     * @param {Boolean} [force=false] force to add in historic
      * @api
      */
     autocomplete (value, force) {
         clearTimeout(this._completeDelay);
         this._completeDelay = setTimeout(function () {
             this.searchService.autocomplete(value, { force : force });
-        }.bind(this), this.get("triggerDelay") || 300);
+        }.bind(this), this.get("triggerDelay") || 100);
+    }
+
+    onAutocomplete (e) {
+        clearTimeout(this._completeDelay);
+        // Update list}
+        this._updateList(e.result);
+    }
+
+    /** Effectue la recherche de géocodage
+     * @param {String} [value] input value
+     * @api
+     */
+    search (idx) {
+        clearTimeout(this._completeDelay);
+        console.log(idx);
+        this._completeDelay = setTimeout(function () {
+            this.searchService.search(idx);
+        }.bind(this), this.get("triggerDelay") || 100);
     }
     /** Do something on search ready
      * @param {Object} e event
-     *  @param {string} e.search search string
-     *  @param {Object|boolean} e.options options given to autocomplete
+     *  @param {String} e.search search string
+     *  @param {Object|Boolean} e.options options given to autocomplete
      *  @param {Array<*>} e.result result of autocomplete
      * @api
      */
     onSearch (e) {
         clearTimeout(this._completeDelay);
         // Update list}
-        this._updateList(e.result);
+        this.dispatchEvent(e);
     }
     /** An item has been selected
      * @param {*} item selected item
@@ -341,7 +363,7 @@ class SearchEngineBase extends Control {
         const title = this.getItemTitle(item);
         this.input.value = title;
         this._currentValue = title;
-        this._updateHistoric(title);
+        this._updateHistoric(item);
         this._updateList();
         this.dispatchEvent({ 
             type : "select", 
@@ -356,6 +378,7 @@ class SearchEngineBase extends Control {
     showHistoric () {
         clearTimeout(this._completeDelay);
         if (this._historic) {
+            console.log(this._historic);
             this._updateList(this._historic.length ? this._historic : []);
         }
     }
@@ -382,12 +405,13 @@ class SearchEngineBase extends Control {
             li.addEventListener("click", function (e) {
                 const idx = Number(e.target.getAttribute("data-idx"));
                 this.select(tab[idx]);
+                this.search(idx);
             }.bind(this));
         });    
     }
     /** Get item title given an item object
      * @param {*} item 
-     * @returns {string} title
+     * @returns {String} title
      * @api
      */
     getItemTitle (item) {
