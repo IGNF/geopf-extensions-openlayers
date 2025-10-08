@@ -20,6 +20,7 @@ __DATE__
 * 🔨 [Changed]
 
   - Contextual Menu : Changement nom de l'entrée isochrone (3d228a692c8d51155bbdf8c8c32bb51629b6a03f)
+  - GetFeatureInfo : corrections diverse sur l'UI du panel de résultats (#448)
 
 * 🔥 [Deprecated]
 
