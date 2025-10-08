@@ -243,6 +243,14 @@ var GetFeatureInfoDOM = {
             if (e.currentTarget.ariaExpanded === "true") {
                 collapse.classList.add("fr-collapse--expanded");
                 collapse.classList.remove("GPelementHidden");
+                // on centre la vue dans le dialog sur le bouton cliqué
+                requestAnimationFrame(() => {
+                    button.scrollIntoView({
+                        behavior : "smooth",
+                        block : "start",
+                        inline : "nearest"
+                    });
+                });
             } else {
                 collapse.classList.remove("fr-collapse--expanded");
                 collapse.classList.add("GPelementHidden");
