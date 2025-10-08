@@ -137,7 +137,7 @@ var GetFeatureInfoDOM = {
     _createGetFeatureInfoPanelTitleElement : function () {
         var div = document.createElement("div");
         div.className = "GPpanelTitle gpf-panel__title_gfi fr-modal__title";
-        div.innerHTML = "GetFeatureInfo";
+        div.innerHTML = "Infos sur les couches";
         return div;
     },
     _createGetFeatureInfoPanelCloseElement : function () {
