@@ -498,3 +498,8 @@ div[id^="GPlayerSwitcher_ID_"]:last-child [data-direction="down"]::before {
 div[id^="GPlayerSwitcher_ID_"]:only-child .GPlayerDragNDrop {
     display: none;
 }
+
+img[id^=GPtitleImage] {
+    width: 44px;
+    height: 44px;
+}

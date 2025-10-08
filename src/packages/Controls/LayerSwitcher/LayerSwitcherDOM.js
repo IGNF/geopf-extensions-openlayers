@@ -589,20 +589,13 @@ var LayerSwitcherDOM = {
     _createLayerThumbnailElement : function (obj) {
         let img = document.createElement("img");
         img.id = this._addUID("GPtitleImage_ID_" + obj.id);
-        img.className = "GPtitleImage";
-        img.width = "40";
-        img.height = "40";
+        img.className = "GPtitleImage GPtitleDefaultImage";
         img.alt = "";
 
-        let defaultSrc = "";
-
-        if (checkDsfr()) {
-            defaultSrc = "../../../src/packages/CSS/Controls/LayerSwitcher/img/alt-image.png";
-            img.width = "44";
-            img.height = "44";
+        if (obj.thumbnail) {
+            img.classList.remove("GPtitleDefaultImage");
+            img.src = obj.thumbnail;
         }
-
-        img.src = obj.thumbnail ? obj.thumbnail : defaultSrc;
 
         return img;
     },

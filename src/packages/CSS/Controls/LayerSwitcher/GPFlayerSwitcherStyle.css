@@ -440,10 +440,12 @@ div[id^="GPtitle_ID_"] {
   margin-left: 8px;
 }
 
-.GPtitleImage[src=""] {
+.GPtitleImage {
   border:none;
   margin-top: 2px;
   margin-bottom: 2px;
+  height: 30px;
+  width: 30px;
 }
 
 div[id^=GPlayerProducer_ID_] {

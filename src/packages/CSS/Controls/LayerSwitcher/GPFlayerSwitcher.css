@@ -201,6 +201,10 @@ div[id^=GPlayerTitle_ID_] > * {
   margin-right: 8px;
 }
 
+.GPtitleDefaultImage {
+  content: url("img/alt-image.png");
+}
+
 div[id^=GPlayerProducer_ID_]:empty {
   display: none;
 }
