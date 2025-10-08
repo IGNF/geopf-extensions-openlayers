@@ -29,6 +29,9 @@ import Topics from "./topics.json";
 // import externe
 import { marked as Marked } from "marked";
 
+import Clusterize from "clusterize.js";
+const Test = Clusterize.default;
+
 var logger = Logger.getLogger("widget");
 
 /**
@@ -61,6 +64,8 @@ var logger = Logger.getLogger("widget");
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} default - Indique si c'est la catégorie par défaut.
+ * @property {boolean} [cluster=false] - Clusterisation de la liste des couches.
+ * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
  * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
  * @property {Object|null} filter - Filtre appliqué à la catégorie.
@@ -80,6 +85,8 @@ var logger = Logger.getLogger("widget");
  * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
+ * @property {boolean} [cluster=false] - Clusterisation de la liste des couches.
+ * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
  * @property {string} filter.field - Champ utilisé pour le filtre.
  * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
@@ -508,6 +515,10 @@ class Catalog extends Control {
         this.uid = options.id || SelectorID.generate();
 
         // set default options
+        this.clusterOptions = {
+            rows_in_block : 50,
+            blocks_in_cluster : 4
+        };
         this.options = {
             collapsed : true,
             draggable : false,
@@ -533,6 +544,8 @@ class Catalog extends Control {
                     // categories : sous forme d'un onglet par categorie
                     title : "Données",
                     id : "data",
+                    cluster : true,
+                    clusterOptions : this.clusterOptions,
                     default : true,
                     filter : null
                     // INFO
@@ -541,6 +554,7 @@ class Catalog extends Control {
                     //     {
                     //         title : "",
                     //         default : true,
+                    //         cluster : false,
                     //         section : true, // avec section (ex. regroupement par themes)
                     //         icon : true, // icone pour les sections (svg ou lien http ou dsfr classe)  
                     //         filter : {
@@ -552,6 +566,7 @@ class Catalog extends Control {
                     //         title : "Toutes les données",
                     //         default : false,
                     //         section : false, // sans section
+                    //         cluster : false,
                     //         filter : null // sans filtre, on prend toutes les données
                     //     }
                     // ]
@@ -622,6 +637,7 @@ class Catalog extends Control {
          */
         this.layersList = {};
 
+        this.clusterize = {};
         /**
          * specify all categories
          * @type {Array<Categories}
@@ -631,6 +647,8 @@ class Catalog extends Control {
          *        title : "Données",   // title of the category
          *        id : "data",         // id of the category
          *        default : true,      // if true, this category is selected by default
+         *        search : false,      // if true, a search bar is displayed for this category
+         *        cluster : false,     // if true, clustering is activated for this category
          *        filter : null,       // filter to apply on the category
          *        items : [            // list of subcategories
          *            {
@@ -638,6 +656,8 @@ class Catalog extends Control {
          *               id : "all",                   // id of the subcategory
          *               default : true,               // if true, this subcategory is selected by default
          *               icon : true,                  // icon for the subcategory (svg or http link or dsfr class)
+         *               iconJson : [],                // list of icons (json) for the sections
+         *               cluster : false,              // if true, clustering is activated for this subcategory
          *               section : false,              // if true, this subcategory has a section
          *               sections : [],                // list of sections (filled later)
          *               filter : null,                // filter to apply on the subcategory
@@ -653,6 +673,12 @@ class Catalog extends Control {
             var items = cat.items;
             if (cat.items) {
                 items = cat.items.map((i) => {
+                    var cluster = i.hasOwnProperty("cluster") ? i.cluster : false;
+                    // INFO
+                    // on desactive le clustering si on a des sections
+                    if (i.hasOwnProperty("section") && i.section) {
+                        cluster = false;
+                    }
                     return {
                         title : i.title,
                         id : i.id || this.generateID(i.title),
@@ -661,6 +687,8 @@ class Catalog extends Control {
                         icon : i.hasOwnProperty("icon") ? i.icon : false,
                         iconJson : i.iconJson || [], // liste des icones (json) pour les sections
                         default : i.hasOwnProperty("default") ? i.default : false,
+                        cluster : cluster,
+                        clusterOptions : i.hasOwnProperty("clusterOptions") ? i.clusterOptions : this.clusterOptions,
                         filter : i.filter || null,
                     };
                 });
@@ -670,6 +698,8 @@ class Catalog extends Control {
                 id : cat.id || this.generateID(cat.title),
                 default : cat.hasOwnProperty("default") ? cat.default : false,
                 search : cat.hasOwnProperty("search") ? cat.search : false,
+                cluster : cat.hasOwnProperty("cluster") ? cat.cluster : false,
+                clusterOptions : cat.hasOwnProperty("clusterOptions") ? cat.clusterOptions : this.clusterOptions,
                 filter : cat.filter || null,
                 items : items || null
             };
@@ -1045,6 +1075,7 @@ class Catalog extends Control {
                             element.iconJson = [];
                         }
                     }
+                    element.subcategory = true; // new property !
                     categories.push(element);
                 }
             } else {
@@ -1072,15 +1103,154 @@ class Catalog extends Control {
             }
             var layersCategorised = this.getLayersByCategory(categories[i], data.layers);
             this._createCatalogContentCategoryTabContent(categories[i], layersCategorised)
-                .then((dom) => {
+                .then((data) => {
                     // Utilisation d'un DocumentFragment pour optimiser l'insertion DOM
                     const fragment = document.createDocumentFragment();
-                    fragment.appendChild(dom);
-                    content.appendChild(fragment);
-                    console.log(`Content for category ${categories[i].title} created.`);
+                    // TEST 
+                    // par blocks (categories / sous-categories avec sections)
+                    // mais à priori pas d'intérêt car trop de DOM à gérer
+                    if (data.blocks && false) {
+                        for (let j = 0; j < data.blocks.length; j++) {
+                            const element = data.blocks[j];
+                            fragment.appendChild(element.dom);
+                            content.appendChild(fragment);
+                            console.log(`Content for category ${categories[i].title} with type ${element.type} / value ${element.value}.`);
+                            if (categories[i].cluster) {
+                                this.clusterize[element.id] = new Clusterize({
+                                    scrollId : content.parentElement.id,
+                                    contentId : (element.type === "layer") ? content.children[0].id : content.children[0].id.replace("sections", "accordion"),
+                                    rows_in_block : categories[i].clusterOptions.rows_in_block,
+                                    blocks_in_cluster : categories[i].clusterOptions.blocks_in_cluster,
+                                    callbacks : {
+                                        clusterChanged : () => {
+                                            logger.trace("cluster changed");
+                                            this.updateListenersLayersDOM();
+                                        }
+                                    }
+                                });             
+                            }
+                        }
+                    }
+
+                    if (data.dom && true) {
+                        fragment.appendChild(data.dom);
+                        content.appendChild(fragment);
+                        console.log(`Content for category ${categories[i].title} created.`);
+                        if (categories[i].cluster) {
+                            this.clusterize[categories[i].id] = new Clusterize({
+                                scrollId : content.parentElement.id,
+                                contentId : content.children[0].id,
+                                rows_in_block : categories[i].clusterOptions.rows_in_block,
+                                blocks_in_cluster : categories[i].clusterOptions.blocks_in_cluster,
+                                callbacks : {
+                                    clusterChanged : () => {
+                                        logger.trace("cluster changed");
+                                        this.updateListenersLayersDOM(content, categories[i].id);
+                                        this.checkLayersOnMap();
+                                    }
+                                }
+                            });
+                        } else {
+                            this.updateListenersLayersDOM(content, categories[i].id);
+                            this.checkLayersOnMap();
+                        }
+                    }
                 });
         }
     }
+
+    /**
+     * Update DOM listeners
+     * @param {HTMLElement} content - ...
+     * @param {String} id  - ...
+     */
+    updateListenersLayersDOM (content, id) {
+        // on met à jour les listeners sur les couches
+
+        // selection d'une couche
+        var inputName = `checkboxes-${id}`;
+        var inputs = content.querySelectorAll("[name=" + "\"" + inputName + "\"]");
+        if (inputs) {
+            inputs.forEach((input) => {
+                input.addEventListener("click", (e) => {
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - ajout ou pas de la couche à la carte
+                    // - envoi d'un evenement avec la conf tech
+                    this.onSelectCatalogEntryClick(e);
+                });
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        var buttonName = `section-collapse-${id}`;
+        var buttons = content.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
+        if (buttons) {
+            buttons.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaExpanded === "true") {
+                        collapse.classList.add("fr-collapse--expanded");
+                        collapse.classList.remove("GPelementHidden");
+                    } else {
+                        collapse.classList.remove("fr-collapse--expanded");
+                        collapse.classList.add("GPelementHidden");
+                    }
+                }, false);
+            });
+        }
+        // ouverture du menu "En savoir plus" d'une couche
+        var buttonNameMore = `button-collapse-more-${id}`;
+        var buttonsMore = content.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
+        if (buttonsMore) {
+            buttonsMore.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.target.ariaPressed = !(e.target.ariaPressed === "true");
+                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!collapse) {
+                        return;
+                    }
+                    if (e.target.ariaPressed === "true") {
+                        collapse.classList.add("gpf-visible");
+                        collapse.classList.remove("gpf-hidden");
+                    } else {
+                        collapse.classList.remove("gpf-visible");
+                        collapse.classList.add("gpf-hidden");
+                    }
+                    // appel gestionnaire d'evenement pour traitement :
+                    // - afficher les infos de la rubrique "En savoir plus"
+                    this.onToggleCatalogMoreLearnClick(e);
+                }, false);
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        // sur le clic de l'icone
+        // pour faciliter l'ouverture de la section
+        var spanIconName = `section-icon-collapse-${id}`;
+        var spanIcons = content.querySelectorAll("[role=" + "\"" + spanIconName + "\"]");
+        if (spanIcons) {
+            spanIcons.forEach((span) => {
+                span.addEventListener("click", (e) => {
+                    e.target.parentElement.click();
+                });
+            });
+        }
+        // ouverture d'une sous section ex. theme routier
+        // sur le clic du compteur de couches
+        // pour faciliter l'ouverture de la section
+        var spanCountName = `section-count-collapse-${id}`;
+        var spanCounts = content.querySelectorAll("[role=" + "\"" + spanCountName + "\"]");
+        if (spanCounts) {
+            spanCounts.forEach((span) => {
+                span.addEventListener("click", (e) => {
+                    e.target.parentElement.click();
+                });
+            });
+        }
+    }
+
 
     /**
      * Get information in the catalog

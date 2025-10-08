@@ -95,6 +95,7 @@
                                     {
                                         title : "Producteur",
                                         section : true,
+                                        cluster : true, // pas de cluster pour des sections !
                                         filter : {
                                             field : "producer",
                                             value : "*"
@@ -103,6 +104,11 @@
                                     {
                                         title : "Tout",
                                         section : false,
+                                        cluster : true,
+                                        clusterOptions : {
+                                            rows_in_block : 10,
+                                            blocks_in_cluster : 4,
+                                        },
                                         filter : null
                                     }
                                 ]

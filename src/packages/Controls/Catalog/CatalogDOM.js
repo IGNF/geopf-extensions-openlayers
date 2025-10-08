@@ -746,6 +746,7 @@ var CatalogDOM = {
             `;
         };
 
+        var strSections = "";
         var tmplSection = (id, categoryId, title, icon, count, data) => {
             // INFO
             // - on propose un compteur de couches
@@ -825,6 +826,26 @@ var CatalogDOM = {
             await new Promise(resolve => setTimeout(resolve, 0));
         }
 
+        var lstData = [];
+        if (strElements !== "") {
+            var strContainer = `
+            <!-- liste de couches -->
+            <div class="fr-accordions-group" 
+                id="layers-${category.id}"
+                aria-labelledby="checkboxes-legend checkboxes-messages"
+                style="contain: content;">
+                ${strElements}
+            </div>
+            `;
+            var container = stringToHTML(strContainer);
+            lstData.push({
+                id : category.id,
+                dom : container.firstChild,
+                type : "layers",
+                value : null
+            });
+        }
+
         if (isSection) {
             category.sections = [];
             // creation des sections de regroupement
@@ -845,18 +866,39 @@ var CatalogDOM = {
                         }
                     }
                     strElements += tmplSection(id, category.id, title, icon, count, data);
+                    strSections += strElements;
                     // HACK on enregistre les valeurs des sections dans l'objet category
                     category.sections.push(title);
+                    if (strElements !== "") {
+                        var strSectionsContainer = `
+                        <!-- liste de couches -->
+                        <div class="fr-accordions-group" 
+                            id="sections-${category.id}-${id}"
+                            aria-labelledby="checkboxes-legend checkboxes-messages"
+                            style="contain: content;">
+                            ${strElements}
+                        </div>
+                        `;
+                        var container = stringToHTML(strSectionsContainer);
+                        lstData.push({
+                            id : `${category.id}-${id}`,
+                            dom : container.firstChild,
+                            type : "sections",
+                            value : title
+                        });
+                        strElements = ""; // reset
+                    }
                 }
             }
         }
+
         var strContainer = `
             <!-- liste de couches -->
             <div class="fr-accordions-group" 
                 id="checkboxes-${category.id}" 
                 aria-labelledby="checkboxes-legend checkboxes-messages"
                 style="contain: content;">
-                ${strElements}
+                ${strSections || strElements}
             </div>
         `;
         var container = stringToHTML(strContainer);
@@ -865,90 +907,10 @@ var CatalogDOM = {
         const shadow = container.attachShadow({ mode : "open" });
         shadow.innerHTML = strContainer.trim();
 
-        // event listener sur le DOM
-        // selection d'une couche
-        var inputName = `checkboxes-${category.id}`;
-        var inputs = shadow.querySelectorAll("[name=" + "\"" + inputName + "\"]");
-        if (inputs) {
-            inputs.forEach((input) => {
-                input.addEventListener("click", (e) => {
-                    // appel gestionnaire d'evenement pour traitement :
-                    // - ajout ou pas de la couche à la carte
-                    // - envoi d'un evenement avec la conf tech
-                    this.onSelectCatalogEntryClick(e);
-                });
-            });
-        }
-        // ouverture d'une sous section ex. theme routier
-        var buttonName = `section-collapse-${category.id}`;
-        var buttons = shadow.querySelectorAll("[role=" + "\"" + buttonName + "\"]");
-        if (buttons) {
-            buttons.forEach((button) => {
-                button.addEventListener("click", (e) => {
-                    e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
-                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
-                    if (!collapse) {
-                        return;
-                    }
-                    if (e.target.ariaExpanded === "true") {
-                        collapse.classList.add("fr-collapse--expanded");
-                        collapse.classList.remove("GPelementHidden");
-                    } else {
-                        collapse.classList.remove("fr-collapse--expanded");
-                        collapse.classList.add("GPelementHidden");
-                    }
-                }, false);
-            });
-        }
-        // ouverture du menu "En savoir plus" d'une couche
-        var buttonNameMore = `button-collapse-more-${category.id}`;
-        var buttonsMore = shadow.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
-        if (buttonsMore) {
-            buttonsMore.forEach((button) => {
-                button.addEventListener("click", (e) => {
-                    e.target.ariaPressed = !(e.target.ariaPressed === "true");
-                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
-                    if (!collapse) {
-                        return;
-                    }
-                    if (e.target.ariaPressed === "true") {
-                        collapse.classList.add("gpf-visible");
-                        collapse.classList.remove("gpf-hidden");
-                    } else {
-                        collapse.classList.remove("gpf-visible");
-                        collapse.classList.add("gpf-hidden");
-                    }
-                    // appel gestionnaire d'evenement pour traitement :
-                    // - afficher les infos de la rubrique "En savoir plus"
-                    this.onToggleCatalogMoreLearnClick(e);
-                }, false);
-            });
-        }
-        // ouverture d'une sous section ex. theme routier
-        // sur le clic de l'icone
-        // pour faciliter l'ouverture de la section
-        var spanIconName = `section-icon-collapse-${category.id}`;
-        var spanIcons = shadow.querySelectorAll("[role=" + "\"" + spanIconName + "\"]");
-        if (spanIcons) {
-            spanIcons.forEach((span) => {
-                span.addEventListener("click", (e) => {
-                    e.target.parentElement.click();
-                });
-            });
-        }
-        // ouverture d'une sous section ex. theme routier
-        // sur le clic du compteur de couches
-        // pour faciliter l'ouverture de la section
-        var spanCountName = `section-count-collapse-${category.id}`;
-        var spanCounts = shadow.querySelectorAll("[role=" + "\"" + spanCountName + "\"]");
-        if (spanCounts) {
-            spanCounts.forEach((span) => {
-                span.addEventListener("click", (e) => {
-                    e.target.parentElement.click();
-                });
-            });
-        }
-        return shadow;
+        return {
+            dom : shadow,
+            blocks : lstData
+        };
     }
 
 };
