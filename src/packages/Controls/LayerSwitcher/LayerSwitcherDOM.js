@@ -286,7 +286,7 @@ var LayerSwitcherDOM = {
     _createLayersPanelIconElement : function () {
         var label = document.createElement("label");
         label.className = "GPpanelIcon gpf-btn-header gpf-btn-icon-layers";
-        label.title = "Couches de données";
+        label.title = "Couches";
         return label;
     },
     _createLayersPanelTitleElement : function () {
@@ -294,7 +294,7 @@ var LayerSwitcherDOM = {
         // on n'utilise pas le dsfr !
         div.className = "GPpanelTitle gpf-panel__title_ls";
         div.id = this._addUID("GPlayersHeaderTitle");
-        div.innerHTML = "Couches de données";
+        div.innerHTML = "Couches";
         return div;
     },
     _createLayersPanelCloseElement : function () {
