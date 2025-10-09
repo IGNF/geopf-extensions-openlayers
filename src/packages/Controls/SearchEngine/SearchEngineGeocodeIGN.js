@@ -222,12 +222,12 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
         if (e.extent !== null) {
             this.extent.getSource().addFeature(e.extent);
             extent = e.extent.getGeometry().getExtent();
-            zoom = null;
         }
         if (extent) {
             view.fit(extent);
-            if (zoom) {
-                view.setZoom(zoom);
+            view.getZoom();
+            if (view.getZoom() > 15) {
+                view.setZoom(15);
             }
         }
     }

@@ -308,20 +308,27 @@ class SearchEngineBase extends Control {
         input.setAttribute("aria-autocomplete", "list");
         input.setAttribute("aria-haspopup", "listbox");
 
-        input.addEventListener("focus", function () {
+        input.addEventListener("focus", () => {
             input.setAttribute("aria-expanded", "true");
             autocompleteList.classList.add("gpf-visible");
             autocompleteList.classList.remove("gpf-hidden");
             autocompleteList.classList.add("GPelementVisible");
             autocompleteList.classList.remove("GPelementHidden");
-        }.bind(this));
-        input.addEventListener("blur", function () {
-            input.setAttribute("aria-expanded", "false");
-            autocompleteList.classList.remove("gpf-visible");
-            autocompleteList.classList.add("gpf-hidden");
-            autocompleteList.classList.remove("GPelementVisible");
-            autocompleteList.classList.add("GPelementHidden");
-        }.bind(this));
+        });
+        input.addEventListener("blur", (e) => {
+            // N'agit que si le focus est hors de l'élément
+            if (e.relatedTarget && autocompleteList.contains(e.relatedTarget)) {
+                input.focus();
+            } else {
+                setTimeout(() => {
+                    input.setAttribute("aria-expanded", "false");
+                    autocompleteList.classList.remove("gpf-visible");
+                    autocompleteList.classList.add("gpf-hidden");
+                    autocompleteList.classList.remove("GPelementVisible");
+                    autocompleteList.classList.add("GPelementHidden");
+                }, 100);
+            }
+        });
     }
     /** Autocomplete and update list
      * @param {String} [value] input value
@@ -410,8 +417,7 @@ class SearchEngineBase extends Control {
             li.setAttribute("data-idx", idx);
             li.innerHTML = this.getItemTitle(item);
             this.autocompleteList.appendChild(li);
-            li.addEventListener("click", function (e) {
-                console.log("click", e);
+            li.addEventListener("mouseup", function (e) {
                 const idx = Number(e.target.getAttribute("data-idx"));
                 this.select(tab[idx]);
                 this.search(tab[idx], idx);
