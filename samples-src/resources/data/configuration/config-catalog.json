@@ -177,7 +177,8 @@
             "name": "image/png",
             "current": true
           }
-        ]
+        ],
+        "thumbnail": "https://www.geoportail.gouv.fr/depot/layers/GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2/vignettes/GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2-quickViewSMLL.jpg"
       },
       "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$GEOPORTAIL:OGC:WMS": {
         "name": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",

@@ -407,7 +407,7 @@ class LayerSwitcher extends Control {
      */
     addLayer (layer, config) {
         var map = this.getMap();
-        config = config || {};
+        config = config || layer.config || {};
 
         if (!layer) {
             logger.log("[ERROR] LayerSwitcher:addLayer - missing layer parameter");
