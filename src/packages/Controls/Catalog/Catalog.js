@@ -1713,6 +1713,11 @@ class Catalog extends Control {
         }, 200); // 200ms de délai
     }
 
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
     onSearchGlobalCatalogButtonResetClick (e) {
         this.resetFilteredLayersList();
         this.updateVisibilityFilteredSectionsDOM();

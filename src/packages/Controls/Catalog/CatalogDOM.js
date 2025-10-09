@@ -251,7 +251,13 @@ var CatalogDOM = {
                 </label>
                 <div class="input-wrapper">
                     <input class="fr-input" placeholder="${label}" type="text" id="catalog-input-search-global" name="search-input" incremental>
-                    <button type="button" id="catalog-button-reset-search-global" class="clear-btn" aria-label="Effacer le texte">✖</button>
+                    <button type="button" id="catalog-button-reset-search-global" class="clear-btn" aria-label="Effacer le texte">
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-opacity="0.8"/>
+                            <line x1="6" y1="6" x2="14" y2="14"/>
+                            <line x1="14" y1="6" x2="6" y2="14"/>
+                        </svg>
+                    </button>
                 </div>
                 <button id="catalog-button-search-global" class="fr-btn" title="${label}">
                     Rechercher
@@ -368,7 +374,13 @@ var CatalogDOM = {
                     </label>
                     <div class="input-wrapper">
                         <input class="fr-input" placeholder="${title}" type="text" id="catalog-input-search-specific" name="search-input-specific" incremental>
-                        <button type="button" id="catalog-button-reset-search-specific" class="clear-btn" aria-label="Effacer le texte">✖</button>
+                        <button type="button" id="catalog-button-reset-search-specific" class="clear-btn" aria-label="Effacer le texte">
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-opacity="0.8"/>
+                                <line x1="6" y1="6" x2="14" y2="14"/>
+                                <line x1="14" y1="6" x2="6" y2="14"/>
+                            </svg>
+                        </button>
                     </div>
                     <button id="catalog-button-search-specific" class="fr-btn" title="${title}">
                         Rechercher
@@ -433,7 +445,7 @@ var CatalogDOM = {
                 tabindex = 0;
             }
             // on crée un panneau vide
-            var strTabContent = "<div class=\"tabcontent\" style=\"content-visibility: auto;contain-intrinsic-size:50px;\"></div>";
+            var strTabContent = `<div class=\"tabcontent\" data-category="${id}" style=\"content-visibility: auto;contain-intrinsic-size:50px;\"></div>`;
             if (subcategories) {
                 // sauf si la catégorie a des sous catégories
                 strTabContent = tmplSubCategoriesRadios(id, subcategories);
@@ -627,7 +639,9 @@ var CatalogDOM = {
     _createCatalogContentCategoryTabContent : async function (category, layersFiltered) {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
         const batchSize = 10; // nombre d'éléments à traiter par lot
+        var blocks = [];
 
+        var lstElements = [];
         var strElements = "";
         var tmplElement = (i, name, title, service, description, informations, thumbnail, categoryId) => {
             // ajout de la vignette si elle existe
@@ -767,6 +781,7 @@ var CatalogDOM = {
             `;
         };
 
+        var lstSections = [];
         var strSections = "";
         var tmplSection = (id, categoryId, title, icon, count, data) => {
             // INFO
@@ -841,29 +856,33 @@ var CatalogDOM = {
                     }
                 } else {
                     strElements += element;
+                    lstElements.push(element);
                 }
             }
             // Pause pour laisser respirer l'UI
             await new Promise(resolve => setTimeout(resolve, 0));
         }
 
-        var lstData = [];
         if (strElements !== "") {
             var strContainer = `
             <!-- liste de couches -->
             <div class="fr-accordions-group" 
                 id="layers-${category.id}"
+                data-category="${category.id}"
+                data-sections="false"
                 aria-labelledby="checkboxes-legend checkboxes-messages"
                 style="contain: content;">
                 ${strElements}
             </div>
             `;
             var container = stringToHTML(strContainer);
-            lstData.push({
+            blocks.push({
                 id : category.id,
                 dom : container.firstChild,
                 type : "layers",
-                value : null
+                desc : "liste des couches pour une categorie",
+                rows : lstElements,
+                title : category.title
             });
         }
 
@@ -874,7 +893,13 @@ var CatalogDOM = {
             for (const title in sections) {
                 if (Object.prototype.hasOwnProperty.call(sections, title)) {
                     const data = sections[title];
-                    var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                    var rows = [];
+                    var array = [...data.matchAll(/"fr-fieldset__element"/g)];
+                    for (let index = 0; index < array.length; index++) {
+                        const el = array[index];
+                        rows.push(el.input);
+                    }
+                    var count = array.length;
                     var id = this.generateID(title);
                     var icon = "";
                     if (category.icon && category.iconJson) {
@@ -886,26 +911,34 @@ var CatalogDOM = {
                             icon = "fr-icon-arrow-right-s-line"; // icone par defaut !
                         }
                     }
-                    strElements += tmplSection(id, category.id, title, icon, count, data);
+                    strElements = tmplSection(id, category.id, title, icon, count, data);
                     strSections += strElements;
-                    // HACK on enregistre les valeurs des sections dans l'objet category
+
+                    // HACK 
+                    // on enregistre les valeurs des sections dans l'objet category
                     category.sections.push(title);
                     if (strElements !== "") {
                         var strSectionsContainer = `
-                        <!-- liste de couches -->
+                        <!-- liste de sections -->
                         <div class="fr-accordions-group" 
                             id="sections-${category.id}-${id}"
+                            data-category="${category.id}"
+                            data-section="true"
+                            data-id="${id}"
+                            data-title="${title}"
                             aria-labelledby="checkboxes-legend checkboxes-messages"
                             style="contain: content;">
                             ${strElements}
                         </div>
                         `;
                         var container = stringToHTML(strSectionsContainer);
-                        lstData.push({
+                        blocks.push({
                             id : `${category.id}-${id}`,
                             dom : container.firstChild,
                             type : "sections",
-                            value : title
+                            rows : rows,
+                            desc : "liste des couches pour une section",
+                            title : title
                         });
                         strElements = ""; // reset
                     }
@@ -914,9 +947,11 @@ var CatalogDOM = {
         }
 
         var strContainer = `
-            <!-- liste de couches -->
+            <!-- liste de données -->
             <div class="fr-accordions-group" 
                 id="checkboxes-${category.id}" 
+                data-category="${category.id}"
+                data-sections="${strSections ? true : false}"
                 aria-labelledby="checkboxes-legend checkboxes-messages"
                 style="contain: content;">
                 ${strSections || strElements}
@@ -930,7 +965,7 @@ var CatalogDOM = {
 
         return {
             dom : shadow,
-            blocks : lstData
+            blocks : blocks
         };
     },
 

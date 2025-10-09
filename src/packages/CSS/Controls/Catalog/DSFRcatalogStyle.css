@@ -90,14 +90,27 @@
 }
 .clear-btn {
   position: absolute;
-  right: 5px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
-  font-size: 14px;
   cursor: pointer;
+  color: #000091;
   display: none; /* masqué par défaut */
+  padding: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.clear-btn:hover {
+  color: #1212FF;
+}
+
+.clear-btn svg {
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
 }
 
 .input-wrapper input:not(:placeholder-shown) + .clear-btn {
