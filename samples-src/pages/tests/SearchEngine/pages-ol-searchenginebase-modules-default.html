@@ -52,7 +52,7 @@
 
 					// 2. Appel du SearchEngine
                     var search = new ol.control.SearchEngineBase({
-                        searchService: new ol.service.SearchServiceBase({
+                        searchService: new ol.service.DefaultSearchService({
                             searchTab : [
                                 "Paris", "Joinville-le-Pont",
                                 "Créteil", "Maisons-Alfort", "Alfortville", "Ivry-sur-Seine", "Charenton-le-Pont",
@@ -73,9 +73,13 @@
                     map.addControl(search);
 
                     // Get search info
-                    search.on('select', e => {
-                        console.log("Select", e)
-                        document.getElementById("selection").innerHTML = e.title;
+                    search.on('search', e => {
+                        console.log("search", e);
+                        document.getElementById("selection").innerHTML = e.result;
+                    })
+                    // Get search info
+                    search.on('autocomplete', e => {
+                        console.log("autocomplete", e);
                     })
                 };
            </script>

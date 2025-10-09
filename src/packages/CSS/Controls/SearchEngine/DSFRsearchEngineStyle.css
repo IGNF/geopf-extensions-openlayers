@@ -127,13 +127,16 @@ div.GPbuttonsContainer > button {
 }
 
 form[id^=GPsearchInput-] {
-  margin-left: 8px;
-  width: 300px;
+  width: 312px;
 }
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
-  max-width: 300px;
+  max-width: 0px;
   border: none;
+}
+
+button[id^="GPshowSearchEnginePicto-"][aria-pressed="true"] + form[id^=GPsearchInput-] {
+  max-width: 312px;
 }
 
 button[id^="GPshowSearchEnginePicto-"] {
@@ -262,4 +265,54 @@ div[id^=GPgeocodeResults-] {
   [id^="GPsearchEngine-"]:hover > .GPsearchRadioContainer {
     max-height: 4rem;
   }
+}
+
+[id^="GPsearchEngine"] {
+  display: flex;
+  flex-direction: row-reverse;
+  max-width: 360px;
+  padding: 0;
+}
+
+[id^="GPsearchEngine"] ul {
+  padding: 12px;
+  padding-bottom: 0px;
+  margin: 0;
+  /* Temporaire */
+  width: calc(100% + 48px);
+}
+
+[id^="GPsearchEngine"] ul:empty {
+  padding: unset;
+}
+
+[id^="GPsearchEngine"] ul li {
+  padding: 0.75rem 0.5rem;
+  color: var(--text-action-high-grey);
+}
+
+[id^="GPsearchEngine"] ul li::before {
+  margin-right: 0.5rem;
+}
+
+[id^="GPsearchEngine"] ul li.active,
+[id^="GPsearchEngine"] ul li:hover {
+  color: #000000;
+  background-color: var(--background-default-grey-hover);
+}
+
+[id^="GPsearchEngine"] ul li:active {
+  color: #000000;
+  background-color: var(--background-default-grey-active);
+}
+
+.fr-icon-history-line::before,
+.fr-icon-history-line::after {
+  -webkit-mask-image: url("./img/dsfr/history-line.svg");
+  mask-image: url("./img/dsfr/history-line.svg");
+}
+
+form[id^=GPsearchInput] > input[id^=GPsearchInputText] {
+  height: 3rem;
+  max-height: 3rem;
 }

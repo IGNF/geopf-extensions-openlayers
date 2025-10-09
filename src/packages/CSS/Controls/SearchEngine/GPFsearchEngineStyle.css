@@ -213,3 +213,20 @@ div[id^=GPgeocodeResults-] {
 [id^="GPautocompleteResultsLocation"] {
   padding: 0;
 }
+
+[id^="GPsearchEngine"] ul {
+  margin: 3px 0;
+  width: 100%;
+  padding: 0;
+}
+
+[id^="GPsearchEngine"] ul li {
+  color: #5E5E5E;
+  padding: 6px 10px;
+}
+
+[id^="GPsearchEngine"] ul li.active,
+[id^="GPsearchEngine"] ul li:hover {
+    color: #000000;
+    background-color: #CEDBEF;
+}

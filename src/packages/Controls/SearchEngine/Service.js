@@ -17,7 +17,7 @@ var logger = Logger.getLogger("searchengine");
 
 /**
  * Options de construction d'un service
- * @typedef AbstractServiceOptions
+ * @typedef AbstractSearchServiceOptions
  */
 
 /**
@@ -43,17 +43,17 @@ var logger = Logger.getLogger("searchengine");
 
 /**
  * @classdesc
- * SearchEngine control
+ * AbstractSearchService control
  *
- * @alias ol.control.SearchEngine
+ * @alias ol.control.AbstractSearchService
  * @abstract
- * @module SearchEngine
+ * @module SearchService
 */
-class AbstractService extends BaseObject {
+class AbstractSearchService extends BaseObject {
 
     /**
      * @constructor
-     * @param {AbstractServiceOptions} options 
+     * @param {AbstractSearchServiceOptions} options 
      */
     constructor (options) {
         options = options || {};
@@ -61,14 +61,14 @@ class AbstractService extends BaseObject {
         // call ol.control.Control constructor
         super(options);
 
-        if ((this.constructor == AbstractService)) {
-            throw new TypeError("AbstractService cannot be instantiate");
+        if ((this.constructor == AbstractSearchService)) {
+            throw new TypeError("AbstractSearchService cannot be instantiate");
         }
         /**
          * Nom de la classe (heritage)
          * @private
          */
-        this.CLASSNAME = "AbstractService";
+        this.CLASSNAME = "AbstractSearchService";
 
         // initialisation du composant
         this.initialize(options);
@@ -77,7 +77,7 @@ class AbstractService extends BaseObject {
     }
 
     /**=
-     * @param {AbstractServiceOptions} options 
+     * @param {AbstractSearchServiceOptions} options 
      */
     initialize (options) {
         this.AUTOCOMPLETE_EVENT = "autocomplete";
@@ -141,17 +141,70 @@ class AbstractService extends BaseObject {
 
 /**
  * @classdesc
- * SearchEngine control
+ * DefaultSearchService control
  *
- * @alias ol.control.SearchEngine
- * @abstract
- * @module SearchEngine
+ * @alias ol.control.DefaultSearchService
+ * @module SearchService
 */
-class GeocodeIGNService extends AbstractService {
+class DefaultSearchService extends AbstractSearchService {
+
+    constructor (options) {
+        super();
+        options = options || {};
+        if (options.searchTab) {
+            this._searchTab = options.searchTab || [];
+        };
+    }
+
+    /** Autocomplete function
+     * Dispatchs "searchstart" event when search starts
+     * Dispatchs "search" event when search is finished
+     * @param {String} search 
+     * @param {Object} [options] 
+     * @param {String} options.force force search even if search string is less than minChars / enter is pressed
+     * @api
+     */
+    autocomplete (value) {
+        // Simulate asynchronous behavior
+        this._autocompleteLocations = [];
+        const rex = new RegExp(value, "i");
+        (this._searchTab || []).forEach((city) => {
+            if (rex.test(city.toLowerCase())) {
+                this._autocompleteLocations.push(city);
+            }
+        });
+        // When search is finished
+        this.dispatchEvent({ 
+            type : this.AUTOCOMPLETE_EVENT,
+            result : this._autocompleteLocations
+        });
+    }
+
+    /**
+     * @param {SearchOptions} obj 
+     */
+    search (obj) {
+        this.dispatchEvent({ 
+            type : this.SEARCH_EVENT, 
+            result : obj
+        });
+    }
+
+}
+
+
+/**
+ * @classdesc
+ * IGNSearchService control
+ *
+ * @alias ol.control.IGNSearchService
+ * @module SearchService
+*/
+class IGNSearchService extends AbstractSearchService {
 
     /**
      * @constructor
-     * @param {AbstractServiceOptions} options 
+     * @param {AbstractSearchServiceOptions} options 
      */
     constructor (options) {
         options = options || {};
@@ -159,14 +212,14 @@ class GeocodeIGNService extends AbstractService {
         // call ol.control.Control constructor
         super(options);
 
-        if (!(this instanceof GeocodeIGNService)) {
+        if (!(this instanceof IGNSearchService)) {
             throw new TypeError("ERROR CLASS_CONSTRUCTOR");
         }
         /**
          * Nom de la classe (heritage)
          * @private
          */
-        this.CLASSNAME = "GeocodeIGNService";
+        this.CLASSNAME = "IGNSearchService";
 
         return this;
     }
@@ -261,11 +314,11 @@ class GeocodeIGNService extends AbstractService {
         // on sauvegarde le localisant
         this._currentGeocodingLocation = value;
 
-        // on limite les requêtes à partir de 3 car. saisie !
-        if (value.length < 3) {
-            this._clearResults();
-            return;
-        }
+        // // on limite les requêtes à partir de 3 car. saisie !
+        // if (value.length < 3) {
+        //     this._clearResults();
+        //     return;
+        // }
 
         // INFORMATION
         // on effectue la requête au service d'autocompletion.
@@ -689,9 +742,14 @@ class GeocodeIGNService extends AbstractService {
 
 }
 
-export { AbstractService, GeocodeIGNService };
+export { AbstractSearchService, DefaultSearchService, IGNSearchService };
+
 // Expose SearchEngine as ol.control.SearchEngine (for a build bundle)
 if (window.ol) {
-    window.ol.service = window.ol.service ? window.ol.service : {};
-    window.ol.service.GeocodeIGNService = GeocodeIGNService;
+    if (!window.ol.service) {
+        window.ol.service = {};
+    }
+    window.ol.service.AbstractSearchService = AbstractSearchService;
+    window.ol.service.DefaultSearchService = DefaultSearchService;
+    window.ol.service.IGNSearchService = IGNSearchService;
 }

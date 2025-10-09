@@ -164,6 +164,7 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 
 [id^="GPautoCompleteList"] {
   margin-left: 33px;
+  z-index: 2;
 }
 
 [id^="GPautoCompleteList"] {
@@ -191,22 +192,14 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 [id^="GPsearchEngine"] ul {
   position: absolute;
   background-color: white;
-  width: 100%;
-  margin: 3px 0;
-  box-shadow: 0 0 6px #000;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 18, 0.16);
   list-style: none;
-  padding: 0;
   overflow: hidden;
 }
 [id^="GPsearchEngine"] ul li {
-  padding: 6px 10px;
-  color: #5E5E5E;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
-}
-[id^="GPsearchEngine"] ul li.active,
-[id^="GPsearchEngine"] ul li:hover {
-    color: #000000;
-    background-color: #CEDBEF;
 }
 
 [id^=GPsearchEngine-].ol-collapsed form[id^=GPsearchInput-Base-] {
