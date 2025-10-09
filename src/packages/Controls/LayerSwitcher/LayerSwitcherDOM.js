@@ -9,7 +9,7 @@ var LayerSwitcherDOM = {
 
     /**
      * Creation du drag and drop
-     *so
+     *
      * @param {Object} elementDraggable - Element HTML (DOM) Container
      * @param {Object} context - this
      */
@@ -18,11 +18,6 @@ var LayerSwitcherDOM = {
         if (checkDsfr()) {
             handleClass.push(".GPlayerDragNDrop");
         }
-
-        // FIXME retirer cette détection user-agent pour solution propre
-        // option forcefallback pour réparer sortable sous Chrome 97
-        // option forcefallback casse le layerswitcher du portail sous firefox
-        // let handleClass = ".GPlayerName";
         const forceFallback = !!navigator.userAgent.match(/chrome|chromium|crios/i);
 
         // Voir lien suivant pour dragndrop avec tab
@@ -36,7 +31,6 @@ var LayerSwitcherDOM = {
                 draggable : ".draggable-layer",
                 ghostClass : "GPghostLayer",
                 animation : 200,
-                forceFallback : forceFallback,
                 // Call event function on drag and drop
                 onEnd : function (e) {
                     // FIXME pas terrrible, mais il faut bien passer ce contexte...
