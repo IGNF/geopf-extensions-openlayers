@@ -15,13 +15,13 @@ class SearchServiceBase extends OlObject {
 
     /** Autocomplete function
      * Dispatchs "searchstart" event when search starts
-     * Dispatchs "search" event when search is finished
+     * Dispatchs "autocomplete" event when finished
      * @param {String} search 
      * @param {Object} [options] 
      * @param {String} options.force force search even if search string is less than minChars / enter is pressed
      * @api
      */
-    autocomplete (search, options) {
+    _search (search, options, what) {
         // Search has started
         this.dispatchEvent({ 
             type : "searchstart", 
@@ -39,13 +39,20 @@ class SearchServiceBase extends OlObject {
             });
             // When search is finished
             this.dispatchEvent({ 
-                type : "search", 
+                type : what, 
                 search : search, 
                 options : options, 
                 result : result
             });
         }.bind(this), 200);
     }
+    autocomplete (search, options) {
+        this._search(search, options, "autocomplete");
+    }
+    search (search, options) {
+        this._search(search, options, "search");
+    }
+
     /** Get title of an item
      * @param {*} item 
      * @returns {String} title

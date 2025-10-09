@@ -176,11 +176,19 @@ class SearchEngineBase extends Control {
      * @protected
      */
     _initEvents (options) {
+        // Empty input
+        this.input.addEventListener("input", function (e) {
+            if (!e.target.value) {
+                this.showHistoric();
+            }
+        }.bind(this));
+        // Prevent cursor to go to the end of input on keydown
         this.input.addEventListener("keydown", function (e) {
             if (/ArrowDown|ArrowUp/.test(e.key)) {
                 e.preventDefault();
             }
         }.bind(this));
+        // Keyboard navigation
         this.input.addEventListener("keyup", function (e) {
             // autocomplete list
             const list = Array.from(this.autocompleteList.querySelectorAll("li"));
@@ -229,16 +237,14 @@ class SearchEngineBase extends Control {
                         item = list[0];
                     }
                     if (item) {
-                        item.click();
+                        // Simule un clic sur l'élément sélectionné
+                        item.dispatchEvent(new Event("mouseup"));
                     }
                     break;
                 default:
                     if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
                         this.autocomplete(e.target.value, e.key === "Enter");
-                    } else if (e.target.value.length === 0) {
-                        // Show historic
-                        this.showHistoric();
-                    }
+                    } 
                     break;
             }
             this._currentValue = e.target.value;
