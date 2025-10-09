@@ -510,10 +510,10 @@ class GeocodeIGNService extends AbstractService {
      * this method is called by event 'click' on 'GPautoCompleteResultsList' tag div
      * (cf. this._createAutoCompleteListElement), and it selects the location.
      * this location displays a marker on the map.
-     * @param {SearchOptions} obj 
+     * @param {Object} location Objet de la recherche
      * @abstract
      */
-    search (idx) {
+    search (location) {
         // TODO on souhaite un comportement different pour la selection des reponses
         // de l'autocompletion :
         // - liste deroulante des reponses,
@@ -525,9 +525,7 @@ class GeocodeIGNService extends AbstractService {
 
         // var idx = SelectorID.index(e.target.id);
 
-        const location = this._autocompleteLocations[idx];
-
-        if (idx === undefined) {
+        if (location === undefined) {
             return;
         }
 

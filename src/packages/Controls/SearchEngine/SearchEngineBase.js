@@ -169,15 +169,13 @@ class SearchEngineBase extends Control {
      * @protected
      */
     initialize (options) {
-
+        options.minChars = options.minChars ? options.minChars : 0;
     }
     /** Add event listeners
      * @param {Object} options - constructor options
      * @protected
      */
     _initEvents (options) {
-        this.input.addEventListener("input", function (e) {
-        }.bind(this));
         this.input.addEventListener("keydown", function (e) {
             if (/ArrowDown|ArrowUp/.test(e.key)) {
                 e.preventDefault();
@@ -187,47 +185,61 @@ class SearchEngineBase extends Control {
             // autocomplete list
             const list = Array.from(this.autocompleteList.querySelectorAll("li"));
             let idx = list.findIndex(li => li.classList.contains("active"));
-            // Handle key events
-            if (/ArrowDown|ArrowUp/.test(e.key)) {
-                e.preventDefault();
-                // Navigation in autocomplete list
-                if (list.length === 0) {
-                    return;
-                }
-                list.forEach(li => li.classList.remove("active"));
-                if (e.key === "ArrowDown") {
-                    idx++;
-                    if (idx >= list.length) {
-                        idx = 0;
+            if (idx === -1) {
+                // Ancienne valeur
+                this._previousValue = e.target.value;
+            }
+            switch (e.key) {
+                case "ArrowDown":
+                case "ArrowUp":
+                    e.preventDefault();
+                    // Navigation in autocomplete list
+                    if (list.length === 0) {
+                        return;
                     }
-                } else if (e.key === "ArrowUp") {
-                    idx--;
+                    list.forEach(li => li.classList.remove("active"));
+                    if (e.key === "ArrowDown") {
+                        idx++;
+                        if (idx >= list.length) {
+                            idx = -1;
+                        }
+                    } else if (e.key === "ArrowUp") {
+                        idx--;
+                        if (idx < -1) {
+                            idx = list.length - 1;
+                        }
+                    }
+                    if (idx !== -1) {
+                        // Set active
+                        const current = list[idx];
+                        current.classList.add("active");
+                        this.input.value = current.innerText;
+                        this.input.setAttribute("aria-activedescendant", current.id);
+                        this.input.setAttribute("data-active-option", current.id);
+                    } else {
+                        // Réaffiche la valeur précédente de l'utilisateur
+                        e.target.value = this._previousValue;
+                    }
+                    break;
+                case "Enter":
+                    // Lance la recherche
+                    let item = list[idx];
                     if (idx < 0) {
-                        idx = list.length - 1;
+                        // Pas d'item sélectionné : on prend le premier de la liste
+                        item = list[0];
                     }
-                }
-                // Set active
-                const current = list[idx];
-                current.classList.add("active");
-                this.input.value = current.innerText;
-                this.input.setAttribute("aria-activedescendant", current.id);
-                this.input.setAttribute("data-active-option", current.id);
-            } else if (
-                (e.target.value.length && e.target.value.length >= (options.minChars || 0)) 
-                || (e.key === "Enter")
-            ) {
-                if (idx >= 0) {
-                    // An item has been selected
-                    list[idx].click();
-                } else {
-                    // Autocomplete
-                    if (e.target.value !== this._currentValue) {
+                    if (item) {
+                        item.click();
+                    }
+                    break;
+                default:
+                    if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
                         this.autocomplete(e.target.value, e.key === "Enter");
+                    } else if (e.target.value.length === 0) {
+                        // Show historic
+                        this.showHistoric();
                     }
-                }
-            } else {
-                // Show historic
-                this.showHistoric();
+                    break;
             }
             this._currentValue = e.target.value;
         }.bind(this), false);
@@ -272,7 +284,7 @@ class SearchEngineBase extends Control {
 
         // Input
         const input = this.input = document.createElement("input");
-        input.type = "text";
+        input.type = "search";
         input.className = "GPsearchInputText gpf-input fr-input";
         input.id = "GPsearchInputText-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
         input.placeholder = options.placeholder || "Rechercher...";
@@ -303,14 +315,12 @@ class SearchEngineBase extends Control {
             autocompleteList.classList.add("GPelementVisible");
             autocompleteList.classList.remove("GPelementHidden");
         }.bind(this));
-        input.addEventListener("focusout", function () {
-            setTimeout(function () {
-                input.setAttribute("aria-expanded", "false");
-                autocompleteList.classList.remove("gpf-visible");
-                autocompleteList.classList.add("gpf-hidden");
-                autocompleteList.classList.remove("GPelementVisible");
-                autocompleteList.classList.add("GPelementHidden");
-            }, 100);
+        input.addEventListener("blur", function () {
+            input.setAttribute("aria-expanded", "false");
+            autocompleteList.classList.remove("gpf-visible");
+            autocompleteList.classList.add("gpf-hidden");
+            autocompleteList.classList.remove("GPelementVisible");
+            autocompleteList.classList.add("GPelementHidden");
         }.bind(this));
     }
     /** Autocomplete and update list
@@ -335,11 +345,10 @@ class SearchEngineBase extends Control {
      * @param {String} [value] input value
      * @api
      */
-    search (idx) {
+    search (item) {
         clearTimeout(this._completeDelay);
-        console.log(idx);
         this._completeDelay = setTimeout(function () {
-            this.searchService.search(idx);
+            this.searchService.search(item);
         }.bind(this), this.get("triggerDelay") || 100);
     }
     /** Do something on search ready
@@ -378,7 +387,6 @@ class SearchEngineBase extends Control {
     showHistoric () {
         clearTimeout(this._completeDelay);
         if (this._historic) {
-            console.log(this._historic);
             this._updateList(this._historic.length ? this._historic : []);
         }
     }
@@ -403,9 +411,10 @@ class SearchEngineBase extends Control {
             li.innerHTML = this.getItemTitle(item);
             this.autocompleteList.appendChild(li);
             li.addEventListener("click", function (e) {
+                console.log("click", e);
                 const idx = Number(e.target.getAttribute("data-idx"));
                 this.select(tab[idx]);
-                this.search(idx);
+                this.search(tab[idx], idx);
             }.bind(this));
         });    
     }
