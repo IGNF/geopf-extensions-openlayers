@@ -308,3 +308,54 @@ form[id^=GPsearchInput] > input[id^=GPsearchInputText] {
   height: 3rem;
   max-height: 3rem;
 }
+
+.GPSearchPopup {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 12px;
+  width: 288px;
+
+  bottom: 17px;
+  padding: 0.75rem;
+  border: 1px solid var(--border-default-grey);
+  box-shadow: var(--overlap-shadow);
+  background-color: var(--background-default-grey);
+  font-size: 0.75em;
+}
+/* Border layer (slightly larger triangle) */
+.GPSearchPopup::before {
+  content: "";
+  position: absolute;
+  border-top: 16px solid var(--border-default-grey);     /* Border color */
+  border-right: 15px solid transparent;
+  border-left: 15px solid transparent;
+  bottom: -17px;
+  margin-left: -15px;
+  left: 50%;
+}
+
+/* Inner layer (actual background triangle) */
+.GPSearchPopup::after {
+  content: "";
+  position: absolute;
+  border-top: 15px solid var(--background-default-grey); /* Same as popup bg */
+  border-right: 14px solid transparent;
+  border-left: 14px solid transparent;
+  bottom: -15px;
+  margin-left: -14px;
+  left: 50%;
+}
+
+.GPPopupContent {
+  line-height: 1.25rem;
+}
+
+.GPButtonGroups {
+  display: flex;
+  flex-direction: row-reverse;
+  flex: 0 0 auto;
+  align-items: center;
+}

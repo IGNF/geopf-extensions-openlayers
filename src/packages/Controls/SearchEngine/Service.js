@@ -687,9 +687,12 @@ class IGNSearchService extends AbstractSearchService {
                 extent = null;
                 f = new Feature({ geometry : geometry });
             }
-        } else {
-
         }
+
+        if (extent) {
+            extent.set("infoPopup", this._currentGeocodingLocation);
+        }
+        f.set("infoPopup", this._currentGeocodingLocation);
 
         /**
          * event triggered when an element of the results is clicked for autocompletion
@@ -733,6 +736,7 @@ class IGNSearchService extends AbstractSearchService {
 
         const geom = new Point(position);
         let f = new Feature({ geometry : geom });
+        f.set("infoPopup", this._currentGeocodingLocation);
 
         this.dispatchEvent({
             type : this.SEARCH_EVENT,

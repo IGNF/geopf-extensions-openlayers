@@ -205,7 +205,7 @@ class SearchEngineBase extends Control {
         this.container.addEventListener("submit", function (e) {
             e.preventDefault();
             const list = Array.from(this.autocompleteList.querySelectorAll("li"));
-            
+
             if (e.submitter && e.submitter.type === "submit") {
                 // Si on appuie sur le bouton, on vérifie que l'input ne soit pas vide
                 let input = e.target.querySelector("input");
@@ -242,7 +242,7 @@ class SearchEngineBase extends Control {
         if (!options.target && options.collapsible) {
             this.button = document.createElement("button");
             this.button.id = "GPshowSearchEnginePicto-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
-            this.button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn gpf-btn-icon-search fr-btn fr-btn--lg";
+            this.button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn fr-icon-search-line fr-btn fr-btn--lg";
             this.button.setAttribute("aria-pressed", "true");
             // this.button.setAttribute("type", "submit");
             // this.button.setAttribute("form", container.id);
@@ -287,10 +287,11 @@ class SearchEngineBase extends Control {
 
         // Submit button
         const submit = document.createElement("button");
-        submit.className = "GPsearchInputSubmit gpf-btn gpf-btn-icon-search fr-btn";
+        submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn";
         submit.id = "GPshowSearchEnginePicto-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
         submit.type = "submit";
         if (options.title) {
+            submit.textContent = options.title;
             submit.setAttribute("title", options.title);
         }
         search.appendChild(submit);
