@@ -14,30 +14,62 @@ import BaseObject from "ol/Object";
 import Point from "ol/geom/Point.js";
 
 var logger = Logger.getLogger("searchengine");
-
 /**
  * Options de construction d'un service
- * @typedef AbstractSearchServiceOptions
+ * @typedef {Object} AbstractSearchServiceOptions
+ * @property {String} [apiKey] - Clé API utilisée pour les requêtes vers les services IGN
+ * @property {Boolean} [ssl=true] - Force l'utilisation du protocole HTTPS si défini à true
+ * @property {AutocompleteOptions} [autocompleteOptions] - Options spécifiques à l'autocomplétion
+ * @property {SearchOptions} [searchOptions] - Options spécifiques à la recherche finale
+ * @property {GeocodeOptions} [geocodeOptions] - Options spécifiques au géocodage
  */
 
 /**
  * Options pour l'autocomplétion
- * @typedef AutocompleteOptions
+ * @typedef {Object} AutocompleteOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.autoComplete
+ * @property {Number} [maximumResponses] - Nombre maximal de réponses retournées
+ * @property {Boolean} [triggerGeocode=false] - Si vrai, déclenche une requête de géocodage lorsque l'autocomplétion échoue
+ * @property {Number} [triggerDelay=1000] - Délai (ms) avant déclenchement du géocodage automatique
+ * @property {Boolean} [prettifyResults=false] - Si vrai, embellit/filtre les résultats
  */
 
 /**
- * Options pour la recherche
- * @typedef SearchOptions
+ * Options pour la recherche finale (géocodage)
+ * @typedef {Object} SearchOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.geocode
+ * @property {Number} [maximumResponses] - Nombre maximal de réponses
+ * @property {Boolean} [filterLayers] - Active le filtrage des résultats par couche
+ * @property {String|Array<String>} [index] - Indexs utilisés (e.g. "address,poi")
+ * @property {Number} [limit] - Limite de résultats
  */
 
 /**
- * Options pour l'autocomplétion
- * @typedef AutocompleteResult
+ * Options pour le géocodage (appel manuel de coordonnées via texte)
+ * @typedef {Object} GeocodeOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.geocode
+ * @property {String} [location] - Texte à géocoder
+ * @property {Function} [onSuccess] - Callback exécuté en cas de succès
+ * @property {Function} [onFailure] - Callback exécuté en cas d'échec
  */
 
 /**
- * Options pour la recherche
- * @typedef SearchResult
+ * Résultat d'une autocomplétion
+ * @typedef {Object} AutocompleteResult
+ * @property {String} fullText - Libellé affichable du lieu
+ * @property {Object} position - Coordonnées
+ * @property {Number} position.x - Longitude
+ * @property {Number} position.y - Latitude
+ * @property {String} [type] - Type de résultat (e.g. "StreetAddress", "PositionOfInterest")
+ * @property {Array<String>} [poiType] - Types détaillés (e.g. ["administratif","région"])
+ */
+
+/**
+ * Résultat d'une recherche (géocodage final)
+ * @typedef {Object} SearchResult
+ * @property {import("ol/Feature").default} feature - Feature OL contenant la géométrie
+ * @property {import("ol/Feature").default|undefined} [extent] - Étendue si zone géographique
+ * @property {String} [infoPopup] - Texte à afficher dans un popup
  */
 
 

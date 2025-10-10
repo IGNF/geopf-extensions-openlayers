@@ -55,6 +55,17 @@ const createStyle = (feature) => {
 
 var logger = Logger.getLogger("searchengine");
 
+/**
+ * Options spécifiques au contrôle IGN
+ *
+ * Cette définition combine (hérite) de SearchEngineBaseOptions
+ * et ajoute une propriété `serviceOptions` qui contient
+ * les options propres au service (IGNSearchService).
+ *
+ * @typedef {import("./SearchEngineBase.js").SearchEngineBaseOptions & {
+ *   serviceOptions: import("./Service.js").AbstractSearchServiceOptions
+ * }} SearchEngineGeocodeIGNOptions
+ */
 
 /**
  * @classdesc
@@ -65,13 +76,12 @@ var logger = Logger.getLogger("searchengine");
 */
 class SearchEngineGeocodeIGN extends SearchEngineBase {
 
+    /**
+     * @constructor
+     * @param {SearchEngineGeocodeIGNOptions} options Options du constructeur
+     */
     constructor (options) {
         options = options || {};
-
-        // Gère le service
-        if (!options.searchService || !(options.searchService instanceof AbstractSearchService)) {
-            options.searchService = new IGNSearchService(options.serviceOptions);
-        }
 
         // call ol.control.Control constructor
         super(options);
@@ -100,9 +110,9 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
     }
 
     /**
-     * Fonction appellée lors de l'ajout du contrôle à une carte
+     * Fonction d'ajout du contrôle.
      * @override
-     * @param {import("ol/Map.js").default|null} map Map
+     * @param {import("ol/Map.js").default|null} map - Carte à laquelle ajouter le contrôle.
      */
     setMap (map) {
         super.setMap(map);
@@ -115,16 +125,34 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
         }
     }
 
+    /**
+     * Initialise les options du contrôle.
+     *
+     * @override
+     * @param {SearchEngineGeocodeIGNOptions} options - Options du constructeur.
+     */
     initialize (options) {
         /**
          * Nom de la classe (heritage)
          * @private
         */
         this.CLASSNAME = "SearchEngineGeocodeIGN";
-        super.initialize(options);
         this.REMOVE_FEATURE_EVENT = "remove:feature";
+
+        // Créé le serbice de géocodage IGN
+        if (!options.searchService || !(options.searchService instanceof AbstractSearchService)) {
+            options.searchService = new IGNSearchService(options.serviceOptions);
+        }
+
+        super.initialize(options);
     }
 
+    /**
+     * Initialise les événements du contrôle.
+     *
+     * @override
+     * @param {SearchEngineGeocodeIGNOptions} options - Options du constructeur.
+     */
     _initEvents (options) {
         super._initEvents(options);
         this.on("search", this.addResultToMap);
@@ -161,10 +189,14 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
      * @param {import("ol/interaction/Select").SelectEvent} e Événement de séléction
      */
     _onSelectElement (e) {
-        const position = e.mapBrowserEvent.coordinate;
+        let position = e.mapBrowserEvent.coordinate;
         if (e.selected.length) {
             // Ajoute le popup
             const feature = e.selected[0];
+            if (feature.getGeometry().getType() === "Point") {
+                // Place le popup sur le point
+                position = feature.getGeometry().getCoordinates();
+            }
             this.popup.setPosition(position);
             this.setPopupContent(feature.get("infoPopup"));
             this.popup.set("feature", feature);
