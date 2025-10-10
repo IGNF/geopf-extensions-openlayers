@@ -33,6 +33,14 @@ export type LayerSwitcherOptions = {
      */
     allowGrayScale?: boolean | undefined;
     /**
+     * - Permet de déplacer les couches.
+     */
+    allowDraggable?: boolean | undefined;
+    /**
+     * - Affiche le bouton de suppression de la couche.
+     */
+    allowDelete?: boolean | undefined;
+    /**
      * - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
      */
     allowTooltips?: boolean | undefined;
@@ -43,8 +51,96 @@ export type LayerSwitcherOptions = {
     /**
      * - Liste d’outils personnalisés à afficher pour chaque couche.
      */
-    advancedTools?: AdvancedToolOptions[] | undefined;
+    headerButtons?: HeaderButton[] | undefined;
+    /**
+     * - Liste d’outils personnalisés à afficher pour chaque couche.
+     * Par défaut, les boutons d'info, de style, noir et blanc et recentrer sont ajoutés.
+     */
+    advancedTools?: AdvancedToolOption[] | undefined;
 };
+/**
+ * Option d'un outil personnalisé
+ */
+export type AdvancedToolOption = {
+    /**
+     * - Optionnel. Label du bouton
+     */
+    label?: string | undefined;
+    /**
+     * - Optionnel. Mot clé indiquant qu'il s'agit d'une fonctionnalité native du layer switcher
+     */
+    key?: string | undefined;
+    /**
+     * - Optionnel. Icône de l'outil. Peut être un lien html, svg ou une classe.
+     */
+    icon?: string | undefined;
+    /**
+     * - Optionnel. Classes à appliquer en plus sur le bouton.
+     */
+    className?: string | undefined;
+    /**
+     * - Optionnel. Attributs additionnels à ajouter au bouton.
+     * Attributs ajoutés avec la méthode `setAttribute`.
+     */
+    attributes?: any;
+    /**
+     * - Optionnel. Définit les types de couche pour lesquelles l'outil fonctionne.
+     * Par défaut, ne filtre pas sur le type de couche.
+     * Le constructeur ou le nom du constructeur peut être donné en argument.
+     * Ne fonctionne pas pour les fonctionnalités déjà existantes.
+     */
+    accepted?: (string | import("ol/layer/Base").default)[] | undefined;
+    /**
+     * - Optionnel. Callback au click sur l'outil.
+     */
+    cb?: AdvancedToolCallback | undefined;
+    /**
+     * - Optionnel. Styles à appliquer.
+     */
+    styles?: any;
+};
+/**
+ * Callback au clic sur un outil personnalisé.
+ */
+export type AdvancedToolCallback = (e: PointerEvent, layerSwitcher: LayerSwitcher, layer: import("ol/layer").Layer, options: any) => any;
+/**
+ * Bouton pour le gestionnaire de couche
+ */
+export type HeaderButton = {
+    /**
+     * - Label du bouton.
+     */
+    label: string;
+    /**
+     * - Callback au click sur l'outil.
+     */
+    cb: HeaderButtonCallback;
+    /**
+     * - Id à ajouter sur le bouton.
+     */
+    id?: string | undefined;
+    /**
+     * - Optionnel. Classes à appliquer en plus sur le bouton.
+     */
+    className?: string | undefined;
+    /**
+     * - Optionnel. Attributs additionnels à ajouter au bouton.
+     * Attributs ajoutés avec la méthode `setAttribute`.
+     */
+    attributes?: any;
+    /**
+     * - Optionnel. Titre du bouton. Aucun par défaut.
+     */
+    title?: string | undefined;
+    /**
+     * - Optionnel. Icône de l'outil. Classe à ajouter au bouton.
+     */
+    icon?: string | undefined;
+};
+/**
+ * Callback au clic sur un bouton du header.
+ */
+export type HeaderButtonCallback = (e: PointerEvent, layerSwitcher: LayerSwitcher) => any;
 export type LayerSwitcherLayersConfig = {
     /**
      * - Objet couche OpenLayers à gérer.
@@ -58,6 +154,14 @@ export type LayerSwitcherLayersConfig = {
          * - Titre de la couche.
          */
         title?: string | undefined;
+        /**
+         * - Producteur de la couche.
+         */
+        producer?: string | undefined;
+        /**
+         * - Pictogramme de la couche.
+         */
+        thumbnail?: string | undefined;
         /**
          * - Description de la couche.
          */
@@ -80,24 +184,6 @@ export type LayerSwitcherLayersConfig = {
         locked?: boolean | undefined;
     } | undefined;
 };
-export type AdvancedToolOptions = {
-    /**
-     * - Label of the button
-     */
-    label: string;
-    /**
-     * - Icon (svg or http link or dsfr class)
-     */
-    icon?: string | undefined;
-    /**
-     * - Callback function called on click
-     */
-    cb?: Function | undefined;
-    /**
-     * - styles to apply to the button
-     */
-    styles?: any;
-};
 /**
  * @typedef {Object} LayerSwitcherOptions
  * @property {string} [id] - Identifiant unique du widget.
@@ -108,27 +194,68 @@ export type AdvancedToolOptions = {
  * @property {boolean} [gutter=false] - Ajoute ou retire l’espace autour du panneau.
  * @property {boolean} [allowEdit=true] - Affiche le bouton d’édition pour les couches éditables (vecteur).
  * @property {boolean} [allowGrayScale=true] - Affiche le bouton N&B (niveaux de gris) pour les couches compatibles.
+ * @property {boolean} [allowDraggable=true] - Permet de déplacer les couches.
+ * @property {boolean} [allowDelete=true] - Affiche le bouton de suppression de la couche.
  * @property {boolean} [allowTooltips=false] - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
- * @property {Array<AdvancedToolOptions>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * @property {Array<HeaderButton>} [headerButtons] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * @property {Array<AdvancedToolOption>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * Par défaut, les boutons d'info, de style, noir et blanc et recentrer sont ajoutés.
+ */
+/**
+ * Option d'un outil personnalisé
+ * @typedef {Object} AdvancedToolOption
+ * @property {String} [label] - Optionnel. Label du bouton
+ * @property {String} [key] - Optionnel. Mot clé indiquant qu'il s'agit d'une fonctionnalité native du layer switcher
+ * @property {String} [icon] - Optionnel. Icône de l'outil. Peut être un lien html, svg ou une classe.
+ * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
+ * @property {Object} [attributes] - Optionnel. Attributs additionnels à ajouter au bouton.
+ * Attributs ajoutés avec la méthode `setAttribute`.
+ * @property {Array<import("ol/layer/Base").default|String>} [accepted] - Optionnel. Définit les types de couche pour lesquelles l'outil fonctionne.
+ * Par défaut, ne filtre pas sur le type de couche.
+ * Le constructeur ou le nom du constructeur peut être donné en argument.
+ * Ne fonctionne pas pour les fonctionnalités déjà existantes.
+ * @property {AdvancedToolCallback} [cb] - Optionnel. Callback au click sur l'outil.
+ * @property {Object} [styles] - Optionnel. Styles à appliquer.
+ */
+/**
+ * Callback au clic sur un outil personnalisé.
+ * @callback AdvancedToolCallback
+ * @param {PointerEvent} e Événement générique au clic sur l'outil
+ * @param {LayerSwitcher} layerSwitcher instance du gestionnaire de couche
+ * @param {import('ol/layer').Layer} layer Couche associée à l'outil
+ * @param {Object} options Options de la couche associée
+ */
+/**
+ * Bouton pour le gestionnaire de couche
+ * @typedef {Object} HeaderButton
+ * @property {String} label - Label du bouton.
+ * @property {HeaderButtonCallback} cb - Callback au click sur l'outil.
+ * @property {String} [id] - Id à ajouter sur le bouton.
+ * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
+ * @property {Object} [attributes] - Optionnel. Attributs additionnels à ajouter au bouton.
+ * Attributs ajoutés avec la méthode `setAttribute`.
+ * @property {String} [title] - Optionnel. Titre du bouton. Aucun par défaut.
+ * @property {String} [icon] - Optionnel. Icône de l'outil. Classe à ajouter au bouton.
+ */
+/**
+ * Callback au clic sur un bouton du header.
+ * @callback HeaderButtonCallback
+ * @param {PointerEvent} e Événement générique au clic sur l'outil
+ * @param {LayerSwitcher} layerSwitcher instance du gestionnaire de couche
  */
 /**
  * @typedef {Object} LayerSwitcherLayersConfig
  * @property {Layer} layer - Objet couche OpenLayers à gérer.
  * @property {Object} [config] - Métadonnées associées à la couche.
  * @property {string} [config.title] - Titre de la couche.
+ * @property {string} [config.producer] - Producteur de la couche.
+ * @property {string} [config.thumbnail] - Pictogramme de la couche.
  * @property {string} [config.description] - Description de la couche.
  * @property {string} [config.quicklookUrl] - URL d’aperçu rapide.
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
  * @property {Array<Object>} [config.metadata] - Métadonnées associées à la couche.
  * @property {boolean} [config.locked] - Indique si la couche est verrouillée.
- */
-/**
- * @typedef {Object} AdvancedToolOptions
- * @property {string} label - Label of the button
- * @property {string} [icon] - Icon (svg or http link or dsfr class)
- * @property {Function} [cb] - Callback function called on click
- * @property {Object} [styles] - styles to apply to the button
  */
 /**
  * @classdesc
@@ -138,6 +265,12 @@ export type AdvancedToolOptions = {
  * @alias ol.control.LayerSwitcher
  */
 declare class LayerSwitcher extends Control {
+    static switcherButtons: {
+        INFO: string;
+        EDIT: string;
+        GREYSCALE: string;
+        EXTENT: string;
+    };
     /**
     * @constructor
     * @param {Object} options - control options
@@ -149,12 +282,15 @@ declare class LayerSwitcher extends Control {
     * @fires layerswitcher:extent
     * @fires layerswitcher:edit
     * @fires layerswitcher:changeproperty
+    * @fires layerswitcher:change:selected
     * @fires layerswitcher:change:opacity
     * @fires layerswitcher:change:visibility
     * @fires layerswitcher:change:position
     * @fires layerswitcher:change:grayscale
     * @fires layerswitcher:change:style
     * @fires layerswitcher:change:locked
+    * @fires layerswitcher:custom
+    * @fires layerswitcher:header:button
     * @example
     * map.addControl(new ol.control.LayerSwitcher(
     *  [
@@ -173,6 +309,14 @@ declare class LayerSwitcher extends Control {
     *      position : "top-left",
     *      allowEdit : true,
     *      allowGrayScale : true,
+    *      headerButtons : [
+    *          {
+    *              label: 'Ajouter',
+    *              title: 'Ajouter une couche',
+    *              icon: "svg | http",
+    *              cb: (e, switcher) => {},
+    *          },
+    *      ],
     *      advancedTools : [
     *          {
     *              label = 'Bouton',
@@ -196,6 +340,9 @@ declare class LayerSwitcher extends Control {
     * LayerSwitcher.on("layerswitcher:edit", function (e) {
     *    console.warn("layer", e.layer);
     * });
+    * LayerSwitcher.on("layerswitcher:change:selected", function (e) {
+    *    console.warn("layer", e.layer, e.previous);
+    * });
     * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
     *    console.warn("layer", e.layer, e.opacity);
     * });
@@ -214,6 +361,12 @@ declare class LayerSwitcher extends Control {
     * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
     *    console.warn("layer", e.layer, e.locked);
     * });
+    * LayerSwitcher.on("layerswitcher:custom", function (e) {
+    *   console.warn("layer", e.action, e.layer);
+    * })
+    * LayerSwitcher.on("layerswitcher:header:button", function (e) {
+    *   console.warn("Action", e.action, e.target);
+    * })
     * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
     *    console.warn("layer", e.layer, e.key, e.value);
     * });
@@ -326,8 +479,11 @@ declare class LayerSwitcher extends Control {
         gutter: boolean;
         allowEdit: boolean;
         allowGrayScale: boolean;
+        allowDraggable: boolean;
+        allowDelete: boolean;
         allowTooltips: boolean;
-        advancedTools: never[];
+        headerButtons: never[];
+        advancedTools: null;
     } | undefined;
     /**
      * identifiant du contrôle
@@ -505,6 +661,21 @@ declare class LayerSwitcher extends Control {
      */
     public CUSTOM_LAYER_EVENT: string | undefined;
     /**
+     * event triggered when an header button is clicked
+     * @event layerswitcher:header:button
+     * @defaultValue "layerswitcher:header:button"
+     * @group Events
+     * @param {Object} type - event
+     * @param {String} action - label name
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:header:button", function (e) {
+     *   console.log(e.action, e.target);
+     * })
+     */
+    public HEADER_BUTTON_EVENT: string | undefined;
+    /**
      * event triggered when a layer opacity is changed
      * @event layerswitcher:change:opacity
      * @defaultValue "layerswitcher:change:opacity"
@@ -568,6 +739,22 @@ declare class LayerSwitcher extends Control {
      * })
      */
     public CHANGE_LAYER_LOCKED_EVENT: string | undefined;
+    /**
+     * event triggered when a layer is selected
+     * @event layerswitcher:change:selected
+     * @defaultValue "layerswitcher:change:selected"
+     * @group Events
+     * @param {Object} type - event
+     * @param {Object} layer - new selected layer
+     * @param {Object} previous - old selected layer (null if there was no selected layer before)
+     * @param {Object} target - instance LayerSwitcher
+     * @public
+     * @example
+     * LayerSwitcher.on("layerswitcher:change:selected", function (e) {
+     *   console.log(e, e.layer, e.previous);
+     * })
+     */
+    public CHANGE_LAYER_SELECTED_EVENT: string | undefined;
     /**
      * Create control main container (called by constructor)
      *
@@ -734,13 +921,46 @@ declare class LayerSwitcher extends Control {
      */
     private _onZoomToExtentClick;
     /**
-     * Action utilisateur
+     * Action utilisateur pour un outil avancé
      * @param {PointerEvent} e - Event
      * @param {String} action - le nom du bouton (label)
      * @param {Function} cb - callback definie par l'utilisateur
+     * @fires layerswitcher:custom
      * @private
      */
     private _onClickAdvancedToolsMore;
+    /**
+     * Action utilisateur pour un clic sur un bouton du header
+     * @param {PointerEvent} e - Event
+     * @param {String} action - le nom du bouton (label)
+     * @param {Function} cb - callback definie par l'utilisateur
+     * @fires layerswitcher:header:button
+     * @private
+     */
+    private _onClickHeaderButtons;
+    /**
+     * Sélectionne une couche et envoie un événement
+     * @param {PointerEvent|KeyboardEvent} e - Event
+     * @fires layerswitcher:change:selected
+     * @private
+     */
+    private _onSelectLayer;
+    /**
+     * Sélectionne une couche et envoie un événement
+     * @param {PointerEvent} e - Event
+     * @returns {Layer|null} Couche sélectionnée.
+     * @public
+     */
+    public getSelectedLayer(): Layer | null;
+    /**
+     * Sélectionne une couche et envoie un événement
+     * et déselectionne la couche déjà sélectionné (si elle existe).
+     * @param {Layer} layer - Couche à sélectionner.
+     * @param {Boolean} selected - Vrai si la couche doit être sélectionnée.
+     * @public
+     */
+    public setSelectedLayer(layer: Layer, selected: boolean): void;
+    selectedLayer: Layer<import("ol/source").Source, import("ol/renderer/Layer").default<any>> | null | undefined;
     /**
      * check layers range on map movement
      *
@@ -771,6 +991,12 @@ declare class LayerSwitcher extends Control {
      * @returns {Object} layerInfo - layer informations
      */
     getLayerInfo(layer: Layer): any;
+    /**
+     * Modifie le nom du producteur de donnée
+     * @param {Layer} layer Couche à modifier
+     * @param {String} producer Nom du producteur. Vide si le producteur doit être enlevé
+     */
+    setLayerProducer(layer: Layer, producer: string): void;
 }
 import Layer from "ol/layer/Layer";
 import Control from "../Control";
