@@ -189,7 +189,7 @@ class SearchEngineBase extends Control {
                     }
                     if (item) {
                         // Simule un clic sur l'élément sélectionné
-                        item.dispatchEvent(new Event("mouseup"));
+                        item.click();
                     }
                     break;
                 default:
