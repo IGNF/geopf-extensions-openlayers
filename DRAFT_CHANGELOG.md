@@ -19,6 +19,7 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - LayerSwitcher : refonte complète de l'outil (#434)
   - Contextual Menu : Changement nom de l'entrée isochrone (3d228a692c8d51155bbdf8c8c32bb51629b6a03f)
 
 * 🔥 [Deprecated]

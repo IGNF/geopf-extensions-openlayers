@@ -1,0 +1,325 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+        
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+{{/content}}
+
+{{#content "head"}}
+<title>Sample openlayers LayerSwitcher</title>
+{{/content}}
+
+{{#content "style"}}
+<style>
+    div#map {
+        width: 100%;
+        height: 500px;
+    }
+
+    .red-button {
+        background-color: red;
+    }
+</style>
+{{/content}}
+
+{{#content "body"}}
+<h2>Ajout du gestionnaire de couches avec formulaire d'ajout de couche</h2>
+<!-- map -->
+<div id="map">
+</div>
+<div style="display: flex;flex-direction: column;align-items: center;width: 210px;">
+    <button type="button" class="fr-btn" id="addVectorLayer">Ajouter une couche de dessin</button>
+    <button type="button" class="fr-btn" id="addMapsLayer">Ajouter une couche Map</button>
+    <button type="button" class="fr-btn" id="addOSMLayer">Ajouter une couche OSM</button>
+    <button type="button" class="fr-btn" id="addVTLayer">Ajouter une couche Tuiles Vecteur</button>
+    <br>
+    <button type="button" class="fr-btn" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
+    <button type="button" class="fr-btn" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
+    <button type="button" class="fr-btn" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
+    <button type="button" class="fr-btn" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
+    <label for="producerTextOsm" class="fr-label">Nom producteur couche OSM</label>
+    <input type="text" class="fr-input" id="producerTextOsm"></input>
+    <button type="button" class="fr-btn" id="validateProducerTextOsm">Valider producer</button>
+</div>
+{{/content}}
+
+{{#content "js"}}
+<script type="text/javascript">
+    var map;
+    var layerSwitcher;
+    var addMapsLayer, addOSMLayer;
+    var osm, maps, ortho;
+
+    // Récupère une alerte
+    var callBackBtn = function (e, layerSwitcher, layer, options) {
+        console.log(e, layerSwitcher, layer, options)
+        alert(options.title);
+    }
+
+    // Renomme la couche
+    var rename = function (e, layerSwitcher, layer, options) {
+        let infos = layerSwitcher.getLayerInfo(layer);
+        let rename = prompt("Renommer la couche", infos._title);
+        if (rename && rename.trim()) {
+            layerSwitcher.addLayer(layer, {title: rename});
+        } else {
+            console.log("empty string")
+        }
+    }
+
+    var getLayer = function (e, layerSwitcher, layer, options) {
+        console.log(layer)
+    }
+
+    var createMap = function () {
+        // on cache l'image de chargement du Géoportail.
+        document.getElementById('map').style.backgroundImage = 'none';
+
+        osm = new ol.layer.Tile({
+            source: new ol.source.OSM(),
+            opacity: 0.8,
+            producer: '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+        });
+        ortho = new ol.layer.GeoportalWMTS({
+            layer: "ORTHOIMAGERY.ORTHOPHOTOS",
+            olParams: {
+                visible: true,
+                opacity: 0.8,
+                grayscale: true
+            }
+        });
+
+        // Création de la map
+        map = new ol.Map({
+            target: "map",
+            view: new ol.View({
+                center: [288074.8449901076, 6247982.515792289],
+                zoom: 6
+            }),
+            layers: [
+                osm,
+                ortho
+            ]
+        });
+
+        // Appel du LayerSwitcher
+        layerSwitcher = new ol.control.LayerSwitcher(
+        {
+            layers: [
+            {
+                layer: osm,
+                config: {
+                    title: 'open street',
+                }
+            },
+            {
+                layer: ortho,
+                config: {
+                    producer : 'IGN',
+                }
+            }
+        ],
+            options: {
+                position: "top-right",
+                collapsed: false,
+                panel: true,
+                counter: true,
+                // allowDraggable: false,
+                // allowTooltips: true,
+                allowDelete: true,
+                headerButtons: [
+                    {
+                        label: 'Ajouter',
+                        title: 'Ajouter une couche',
+                        icon: "fr-icon-add-line",
+                        cb: (e, switcher) => { console.log(e, switcher); },
+                    },
+                    {
+                        label: 'Créer un groupe',
+                        icon: "fr-icon-folder-2-line",
+                        cb: (e, switcher) => { console.log(e, switcher); },
+                    },
+                ],
+                advancedTools: [
+                    // Bouton de base
+                    {
+                        key: ol.control.LayerSwitcher.switcherButtons.INFO,
+                        
+                    },
+                    // Surcharge bouton existant
+                    {
+                        key: ol.control.LayerSwitcher.switcherButtons.GREYSCALE,
+                        label : 'Tiles (N&B)',
+                        icon : 'fr-icon-france-fill',
+                        className : 'style-action',
+                        accepted : ["Tile"],
+                        cb : callBackBtn,
+                        attributes : {
+                            'data-action' : 'grey-scale'
+                        }
+                    },
+                    // Classe DSFR
+                    {
+                        label : 'Vecteur et Géoportal WMTS',
+                        // icon : 'fr-icon-fire-fill',
+                        accepted : [ol.layer.Vector, ol.layer.GeoportalWMTS],
+                        cb : callBackBtn,
+                        attributes : {
+                            'disabled' : true
+                        }
+                    },
+                    // Fichier svg
+                    {
+                        label : 'Get layer',
+                        icon: '{{ resources }}/data/recherche-avancee.svg',
+                        cb : getLayer,
+                        attributes : {
+                            'data-action' : 'get-layer'
+                        }
+                    },
+                    // Icône svg
+                    {
+                        label : 'Édition',
+                        icon: '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66667 15.3333L6 12.6667H11.3333L8.66667 15.3333ZM8.66667 2L11.3333 4.66667H6L8.66667 2ZM8.66667 10C7.93027 10 7.33333 9.40307 7.33333 8.66667C7.33333 7.93027 7.93027 7.33333 8.66667 7.33333C9.40307 7.33333 10 7.93027 10 8.66667C10 9.40307 9.40307 10 8.66667 10ZM2 8.66667L4.66667 6V11.3333L2 8.66667ZM15.3333 8.66667L12.6667 11.3333V6L15.3333 8.66667Z" fill="#000091"/></svg>',
+                        className : 'edit-action',
+                        cb : callBackBtn,
+                        attributes : {
+                            'data-action' : 'edit'
+                        }
+                    },
+                    // URL en ligne
+                    {
+                        label : 'Renommer',
+                        icon : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/1200px-How_to_use_icon.svg.png',
+                        className : 'style-action red-button',
+                        cb : rename,
+                        attributes : {
+                            'data-action' : 'rename'
+                        }
+                    },
+                ]
+            }
+        });
+
+        // Evenement
+        layerSwitcher.on("layerswitcher:add", function (e) {
+            console.warn("layer", e, e.layer);
+        });
+        layerSwitcher.on("layerswitcher:remove", function (e) {
+            console.warn("layer", e, e.layer);
+        });
+        layerSwitcher.on("layerswitcher:change:opacity", function (e) {
+            console.warn("layer", e, e.layer, e.opacity);
+        });
+        layerSwitcher.on("layerswitcher:change:visibility", function (e) {
+            console.warn("layer", e, e.layer, e.visibility);
+        });
+        layerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+            console.warn("layer", e, e.layer, e.grayscale);
+        });
+        layerSwitcher.on("layerswitcher:extent", function (e) {
+            console.warn("layer", e);
+        });
+
+        // Ajout du LayerSwitcher à la carte
+        map.addControl(layerSwitcher);
+    };
+
+    Gp.Services.getConfig({
+        customConfigFile: "{{ configurl }}",
+        callbackSuffix: "",
+        // apiKey: "{{ apikey }}",
+        timeOut: 20000,
+        onSuccess: createMap,
+        onFailure: (e) => {
+            console.log(e)
+            console.error(e.stack)
+        }
+    });
+
+    addVectorLayer = function () {
+        let vector = new ol.layer.Vector({
+            source: new ol.source.Vector(),
+            title: 'Dessin',
+            producer: 'Moi'
+        });
+        map.addLayer(vector);
+    };
+
+    addMapsLayer = function () {
+        maps = new ol.layer.Tile({
+            source: new ol.source.GeoportalWMTS({
+                layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+            }), // , zIndex : 0
+            grayscale: true
+        });
+        map.addLayer(maps);
+    };
+
+    addOSMLayer = function () {
+        osm = new ol.layer.Tile({
+            source: new ol.source.OSM(),
+            // zIndex : 4,
+            opacity: 0.5,
+            producer: 'Open Street Map'
+        });
+        map.addLayer(osm); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
+    };
+    addVTLayer = function () {
+        layer = new ol.layer.GeoportalMapBox({
+            layer: "PLAN.IGN",
+            style: "standard"
+        }, {
+            visible: true,
+            opacity: 0.8,
+            grayscale: true
+        });
+        map.addLayer(layer); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
+    };
+    modifyVisibilityOSMLayer = function () {
+        var visibility = osm.getVisible();
+        osm.setVisible(!visibility);
+    };
+    modifyOpacityOSMLayer = function () {
+        var opacity = (osm.getOpacity() === 1.0) ? 0.5 : 1.0;
+        osm.setOpacity(opacity);
+    };
+    modifyIndexOSMLayerMin = function () {
+        var cidx = osm.getZIndex();
+        if (cidx === 0) {
+            return;
+        }
+        osm.setZIndex(--cidx);
+    };
+    modifyIndexOSMLayerMax = function () {
+        var cidx = osm.getZIndex();
+        osm.setZIndex(++cidx);
+    };
+    document.getElementById("addVectorLayer").onclick = addVectorLayer;
+    document.getElementById("addMapsLayer").onclick = addMapsLayer;
+    document.getElementById("addOSMLayer").onclick = addOSMLayer;
+    document.getElementById("addVTLayer").onclick = addVTLayer;
+    document.getElementById("modifyVisibilityOSMLayer").onclick = modifyVisibilityOSMLayer;
+    document.getElementById("modifyOpacityOSMLayer").onclick = modifyOpacityOSMLayer;
+    document.getElementById("modifyIndexOSMLayerMin").onclick = modifyIndexOSMLayerMin;
+    document.getElementById("modifyIndexOSMLayerMax").onclick = modifyIndexOSMLayerMax;
+    document.getElementById("validateProducerTextOsm").onclick = (e) => {
+        let input = document.getElementById("producerTextOsm");
+        let text = input.value;
+
+        console.log(ortho);
+        ortho.set('title', text)
+        ortho.getSource()._title = text
+        ortho.config.title = text
+
+        osm.set('title', text)
+        osm.getSource()._title = text
+        if (osm.config) osm.config.title = text
+        // layerSwitcher.setLayerProducer(osm, text);
+    }
+</script>
+{{/content}}
+
+{{/extend}}
