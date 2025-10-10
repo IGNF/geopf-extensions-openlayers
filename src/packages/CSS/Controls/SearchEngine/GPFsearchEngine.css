@@ -208,3 +208,28 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 [id^=GPsearchEngine-] form[id^=GPsearchInput-Base-] {
   overflow: visible;
 }
+
+[id^="GPsearchEngine"] {
+    display: flex;
+    flex-direction: row;
+    max-width: 360px;
+    padding: 0;
+    max-height: 32px;
+}
+[id^="GPsearchEngine"] form {
+    display: flex;
+    flex-direction: column;
+}
+[id^="GPsearchEngine"] form > * {
+    display: flex;
+    flex-direction: row;
+}
+[id^="GPsearchEngine"] form .GPInputGroup {
+    padding: 0;
+}
+[id^="GPsearchEngine"] form .GPOptionsContainer {
+    display: flex;
+    height: calc(100% - 2px);
+}
+
+

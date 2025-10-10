@@ -267,19 +267,11 @@ div[id^=GPgeocodeResults-] {
   }
 }
 
-[id^="GPsearchEngine"] {
-  display: flex;
-  flex-direction: row-reverse;
-  max-width: 360px;
-  padding: 0;
-}
-
 [id^="GPsearchEngine"] ul {
   padding: 12px;
   padding-bottom: 0px;
   margin: 0;
-  /* Temporaire */
-  width: calc(100% + 48px);
+  width: 100%;
 }
 
 [id^="GPsearchEngine"] ul:empty {

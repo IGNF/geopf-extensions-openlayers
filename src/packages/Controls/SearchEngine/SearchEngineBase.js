@@ -233,18 +233,19 @@ class SearchEngineBase extends Control {
         const element = this.element = document.createElement("div");
         element.className = "GPwidget gpf-widget";
         element.id = "GPsearchEngine-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
+        // Main container
         const container = this.container = document.createElement("form");
         container.className = "fr-search-bar";
         container.id = "GPsearchInput-Base-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
 
         // Création du bouton
-        if (!options.target) {
+        if (!options.target && options.collapsible) {
             this.button = document.createElement("button");
             this.button.id = "GPshowSearchEnginePicto-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
             this.button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn gpf-btn-icon-search fr-btn fr-btn--lg";
             this.button.setAttribute("aria-pressed", "true");
-            this.button.setAttribute("type", "submit");
-            this.button.setAttribute("form", container.id);
+            // this.button.setAttribute("type", "submit");
+            // this.button.setAttribute("form", container.id);
             if (options.title) {
                 this.button.setAttribute("title", options.title);
             }
@@ -264,6 +265,11 @@ class SearchEngineBase extends Control {
         }
         
         element.appendChild(container);
+
+        const search = document.createElement("div");
+        search.className = "GPInputGroup fr-input";
+        container.appendChild(search);
+
         // Input
         const input = this.input = document.createElement("input");
         input.type = "text";
@@ -272,16 +278,44 @@ class SearchEngineBase extends Control {
         input.placeholder = options.placeholder;
         input.autocomplete = "off";
         input.setAttribute("aria-label", options.ariaLabel);
-        container.appendChild(input);
+        search.appendChild(input);
+
+        // Options container
+        this.optionscontainer = document.createElement("div");
+        this.optionscontainer.className = "GPOptionsContainer";
+        search.appendChild(this.optionscontainer);
+
+        // Submit button
+        const submit = document.createElement("button");
+        submit.className = "GPsearchInputSubmit gpf-btn gpf-btn-icon-search fr-btn";
+        submit.id = "GPshowSearchEnginePicto-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
+        submit.type = "submit";
+        if (options.title) {
+            submit.setAttribute("title", options.title);
+        }
+        search.appendChild(submit);
 
         // Autocomplete container
+        const acContainer = document.createElement("div");
+        acContainer.className = "GPautoCompleteContainer";
+        container.appendChild(acContainer);
+
+        // Autocomplete list
+        const autocompleteHeader = this.autocompleteHeader = document.createElement("div");
+        autocompleteHeader.className = "GPautoCompleteHeader";
+        acContainer.appendChild(autocompleteHeader);
+
         const autocompleteList = this.autocompleteList = document.createElement("ul");
         autocompleteList.className = "GPautoCompleteList GPelementHidden gpf-hidden";
         autocompleteList.id = "GPautoCompleteList-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
         autocompleteList.setAttribute("role", "listbox");
         autocompleteList.setAttribute("tabindex", "-1");
         autocompleteList.setAttribute("aria-label", "Propositions");
-        container.appendChild(autocompleteList);
+        acContainer.appendChild(autocompleteList);
+
+        const autocompleteFooter = this.autocompleteFooter = document.createElement("div");
+        autocompleteFooter.className = "GPautoCompleteFooter";
+        acContainer.appendChild(autocompleteFooter);
 
         // Input controller for accessibility
         input.setAttribute("role", "combobox");
