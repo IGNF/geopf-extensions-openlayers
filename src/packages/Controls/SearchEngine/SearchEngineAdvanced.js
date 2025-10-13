@@ -33,6 +33,8 @@ class SearchEngineAdvanced extends Control {
             projection : "EPSG:4326",
         });
 
+        this._searchForms = ["form1", "form2", "form3"];
+
         // Initialize
         this.initialize(options);
         this._initContainer(options);
@@ -96,7 +98,7 @@ class SearchEngineAdvanced extends Control {
             };
         }
         if (info) {
-            evt.result.set(info);
+            evt.result.set("infoPopup", info);
         }
         evt.type = "search";
         this.baseSearchEngine.addResultToMap(evt);
@@ -124,14 +126,7 @@ class SearchEngineAdvanced extends Control {
         });
 
         // Geolocation
-        const locationBtn = document.createElement("button");
-        locationBtn.innerText = "Me géolocaliser";
-        locationBtn.className = "GPSearchEngine-locate fr-btn fr-icon-arrow-up-s-line fr-btn--icon-left fr-btn--tertiary-no-outline";
-        this.baseSearchEngine.autocompleteHeader.appendChild(locationBtn);
-        locationBtn.addEventListener("click", () => {
-            this.geolocation.setTracking(true);
-            console.log("tracking", this.geolocation);
-        });
+        this.baseSearchEngine.autocompleteHeader.appendChild(this._getGeolocButton());
 
         // Ajout des options avancées
         const advancedBtn = document.createElement("button");
@@ -150,7 +145,57 @@ class SearchEngineAdvanced extends Control {
         advancedContainer.id = Helper.getUid("GPsearchEngine-AdvancedContainer-");
         advancedContainer.setAttribute("aria-labelledby", advancedBtn.id);
         this.element.appendChild(advancedContainer);
-        this.advancedContainer.innerHTML = "<i>Formulaires spécifiques</i>";
+
+        // Geolocation
+        advancedContainer.appendChild(this._getGeolocButton());
+
+        // Formulaires specifiques
+        this._searchForms.forEach(form => {
+            const section = document.createElement("section");
+            section.className = "fr-accordion";
+            advancedContainer.appendChild(section);
+            const title = document.createElement("h3");
+            title.className = "fr-accordion__title";
+            section.appendChild(title);
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "fr-accordion__btn";
+            button.setAttribute("aria-expanded", "false");
+            button.innerText = form;
+            section.appendChild(button);
+            // Accordion
+            const accordion = document.createElement("div");
+            accordion.className = "fr-collapse";
+            accordion.id = Helper.getUid("accordion-");
+            button.setAttribute("aria-controls", accordion.id);
+            section.appendChild(accordion);
+            // Content
+            const atitle = document.createElement("h4");
+            atitle.className = "fr-h4";
+            accordion.appendChild(atitle);
+            const aform = document.createElement("p");
+            aform.innerText = "Lorem ipsum dolor sit amet";
+            accordion.appendChild(aform);
+            // Handle collapsing
+            button.addEventListener("click", () => {
+                const expanded = button.getAttribute("aria-expanded") === "true";
+                advancedContainer.querySelectorAll("section").forEach(sec => {
+                    sec.querySelector(".fr-collapse").classList.remove("fr-collapse--expanded");
+                    sec.querySelector("button").setAttribute("aria-expanded", "false");
+                    advancedContainer.dataset.open = !expanded;
+                    if (!expanded) {
+                        sec.classList.add("fr-hidden");
+                    } else {
+                        sec.classList.remove("fr-hidden");
+                    }
+                });
+                if (!expanded) {
+                    button.setAttribute("aria-expanded", "true");
+                    accordion.classList.add("fr-collapse--expanded");
+                    section.classList.remove("fr-hidden");
+                }
+            });
+        });
 
         // Gestion du bouton avancé
         advancedBtn.setAttribute("aria-controls", advancedContainer.id);
@@ -160,6 +205,17 @@ class SearchEngineAdvanced extends Control {
             advancedBtn.setAttribute("aria-expanded", isHidden);
             this.baseSearchEngine.setActive(isHidden);
         });
+    }
+
+    _getGeolocButton () {
+        const locationBtn = document.createElement("button");
+        locationBtn.innerText = "Me géolocaliser";
+        locationBtn.className = "GPSearchEngine-locate fr-btn fr-btn--sm  fr-btn--icon-left fr-btn--tertiary-no-outline gpf-btn-icon-search-geolocate";
+        locationBtn.addEventListener("click", () => {
+            this.geolocation.setTracking(true);
+            console.log("tracking", this.geolocation);
+        });
+        return locationBtn;
     }
 
 }
