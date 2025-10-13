@@ -163,6 +163,7 @@ class AbstractSearchService extends BaseObject {
     /**
      * @param {SearchOptions} obj 
      * @abstract
+     * @returns {String}
      */
     getItemTitle (obj) { 
         return obj;
@@ -191,7 +192,7 @@ class DefaultSearchService extends AbstractSearchService {
     /** Autocomplete function
      * Dispatchs "searchstart" event when search starts
      * Dispatchs "search" event when search is finished
-     * @param {String} search 
+     * @param {String} value Valeur de l'autocomplete 
      * @param {Object} [options] 
      * @param {String} options.force force search even if search string is less than minChars / enter is pressed
      * @api
@@ -213,7 +214,7 @@ class DefaultSearchService extends AbstractSearchService {
     }
 
     /**
-     * @param {SearchOptions} obj 
+     * @param {SearchOptions} obj Search options
      */
     search (obj) {
         this.dispatchEvent({ 
@@ -236,7 +237,7 @@ class IGNSearchService extends AbstractSearchService {
 
     /**
      * @constructor
-     * @param {AbstractSearchServiceOptions} options 
+     * @param {AbstractSearchServiceOptions} options options
      */
     constructor (options) {
         options = options || {};
@@ -334,11 +335,10 @@ class IGNSearchService extends AbstractSearchService {
 
 
     /**
-     * @param {AutocompleteOptions} obj 
-     * @param {String} obj.value Valeur de l'autocomplete
+     * @param {String} value Valeur de l'autocomplete
      * @abstract
      */
-    autocomplete (value, obj) { 
+    autocomplete (value) { 
         if (!value) {
             return;
         }

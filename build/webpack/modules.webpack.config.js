@@ -47,6 +47,7 @@ module.exports = (env, argv) => {
             "GpfExtOlSearchEngine" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "SearchEngine.js"),
             "GpfExtOlSearchEngineBase" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "SearchEngineBase.js"),
             "GpfExtOlSearchEngineGeocodeIGN" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "SearchEngineGeocodeIGN.js"),
+            "GpfExtOlSearchEngineAdvanced" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "SearchEngineAdvanced.js"),
             "GpfExtOlExport" : path.join(rootdir, "src", "packages", "Controls/Export", "Export.js"),
             "GpfExtOlMeasureArea" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureArea.js"),
             "GpfExtOlMeasureAzimuth" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureAzimuth.js"),

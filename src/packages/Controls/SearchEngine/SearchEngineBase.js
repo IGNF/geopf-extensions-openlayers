@@ -3,7 +3,7 @@ import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 import Control from "../Control";
 import Logger from "../../Utils/LoggerByDefault";
 import { DefaultSearchService } from "./Service";
-import { getUid } from "ol";
+import Helper from "../../Utils/Helper";
 
 const typeClasses = {
     "history" : "fr-icon-history-line",
@@ -11,6 +11,7 @@ const typeClasses = {
 };
 
 var logger = Logger.getLogger("searchengine");
+
 /**
  * @typedef {Object} SearchEngineBaseOptions Options du constructeur pour le contrôle de recherche.
  *
@@ -232,16 +233,16 @@ class SearchEngineBase extends Control {
     _initContainer (options) {
         const element = this.element = document.createElement("div");
         element.className = "GPwidget gpf-widget";
-        element.id = "GPsearchEngine-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
+        element.id = Helper.getUid("GPsearchEngine-");
         // Main container
         const container = this.container = document.createElement("form");
         container.className = "fr-search-bar";
-        container.id = "GPsearchInput-Base-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
+        container.id = Helper.getUid("GPsearchInput-Base-");
 
         // Création du bouton
         if (!options.target && options.collapsible) {
             this.button = document.createElement("button");
-            this.button.id = "GPshowSearchEnginePicto-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
+            this.button.id = Helper.getUid("GPshowSearchEnginePicto-");
             this.button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn fr-icon-search-line fr-btn fr-btn--lg";
             this.button.setAttribute("aria-pressed", "true");
             // this.button.setAttribute("type", "submit");
@@ -274,7 +275,7 @@ class SearchEngineBase extends Control {
         const input = this.input = document.createElement("input");
         input.type = "text";
         input.className = "GPsearchInputText fr-input";
-        input.id = "GPsearchInputText-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
+        input.id = Helper.getUid("GPsearchInputText-");
         input.placeholder = options.placeholder;
         input.autocomplete = "off";
         input.setAttribute("aria-label", options.ariaLabel);
@@ -286,9 +287,9 @@ class SearchEngineBase extends Control {
         search.appendChild(this.optionscontainer);
 
         // Submit button
-        const submit = document.createElement("button");
+        const submit = this.subimtBt = document.createElement("button");
         submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn";
-        submit.id = "GPshowSearchEnginePicto-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
+        submit.id = Helper.getUid("GPshowSearchEnginePicto-");
         submit.type = "submit";
         if (options.title) {
             submit.textContent = options.title;
@@ -298,7 +299,7 @@ class SearchEngineBase extends Control {
 
         // Autocomplete container
         const acContainer = document.createElement("div");
-        acContainer.className = "GPautoCompleteContainer";
+        acContainer.className = "GPautoCompleteContainer GPelementHidden gpf-hidden";
         container.appendChild(acContainer);
 
         // Autocomplete list
@@ -307,8 +308,8 @@ class SearchEngineBase extends Control {
         acContainer.appendChild(autocompleteHeader);
 
         const autocompleteList = this.autocompleteList = document.createElement("ul");
-        autocompleteList.className = "GPautoCompleteList GPelementHidden gpf-hidden";
-        autocompleteList.id = "GPautoCompleteList-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this));
+        autocompleteList.className = "GPautoCompleteList";
+        autocompleteList.id = Helper.getUid("GPautoCompleteList-");
         autocompleteList.setAttribute("role", "listbox");
         autocompleteList.setAttribute("tabindex", "-1");
         autocompleteList.setAttribute("aria-label", "Propositions");
@@ -320,17 +321,17 @@ class SearchEngineBase extends Control {
 
         // Input controller for accessibility
         input.setAttribute("role", "combobox");
-        input.setAttribute("aria-controls", autocompleteList.id);
+        input.setAttribute("aria-controls", acContainer.id);
         input.setAttribute("aria-expanded", "false");
         input.setAttribute("aria-autocomplete", "list");
         input.setAttribute("aria-haspopup", "listbox");
 
         input.addEventListener("focus", () => {
             input.setAttribute("aria-expanded", "true");
-            autocompleteList.classList.add("gpf-visible");
-            autocompleteList.classList.remove("gpf-hidden");
-            autocompleteList.classList.add("GPelementVisible");
-            autocompleteList.classList.remove("GPelementHidden");
+            acContainer.classList.add("gpf-visible");
+            acContainer.classList.remove("gpf-hidden");
+            acContainer.classList.add("GPelementVisible");
+            acContainer.classList.remove("GPelementHidden");
         });
         input.addEventListener("blur", (e) => {
             // N'agit que si le focus est hors de l'élément
@@ -339,14 +340,20 @@ class SearchEngineBase extends Control {
             } else {
                 setTimeout(() => {
                     input.setAttribute("aria-expanded", "false");
-                    autocompleteList.classList.remove("gpf-visible");
-                    autocompleteList.classList.add("gpf-hidden");
-                    autocompleteList.classList.remove("GPelementVisible");
-                    autocompleteList.classList.add("GPelementHidden");
+                    acContainer.classList.remove("gpf-visible");
+                    acContainer.classList.add("gpf-hidden");
+                    acContainer.classList.remove("GPelementVisible");
+                    acContainer.classList.add("GPelementHidden");
                 }, 100);
             }
         });
     }
+
+    setActive (active) {
+        this.input.disabled = !!active;
+        this.subimtBt.disabled = !!active;
+    }
+
     /** Autocomplete and update list
      * @param {String} [value] input value
      * @param {Boolean} [force=false] force to add in historic
@@ -421,6 +428,8 @@ class SearchEngineBase extends Control {
      * @param {string} [type="search"] Optionnel. Type à inclure. Valeur autorisée : "history", "search"
      */
     _updateList (tab, type = "search") {
+        this.autocompleteList.parentNode.dataset.type = type;
+        //
         tab = (tab || []).slice(0, this.get("maximumEntries") || 10);
         // Accessibility
         this.autocompleteList.querySelectorAll("li").forEach(li => li.classList.remove("active"));
@@ -431,7 +440,7 @@ class SearchEngineBase extends Control {
         const iconClass = typeClasses[type] || typeClasses["search"];
         tab.forEach((item, idx) => {
             const li = document.createElement("li");
-            li.id = "GPsearchHistoric-" + (window.ol.getUid ? window.ol.getUid(this) : getUid(this)) + "-" + idx;
+            li.id = Helper.getUid("GPsearchHistoric-");
             li.className = `GPsearchHistoric gpf-panel__item gpf-panel__item-searchengine ${iconClass} fr-icon--sm`;
             li.setAttribute("role", "option");
             li.setAttribute("data-idx", idx);

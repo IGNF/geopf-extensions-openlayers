@@ -115,7 +115,16 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
      * @param {import("ol/Map.js").default|null} map - Carte à laquelle ajouter le contrôle.
      */
     setMap (map) {
+        // Remove controls from the current map
+        if (this.getMap()) {
+            this.getMap().removeLayer(this.extent);
+            this.getMap().removeLayer(this.layer);
+            this.getMap().removeInteraction(this.selectInteraction);
+            this.getMap().removeOverlay(this.popup);
+        }
+        // Init map
         super.setMap(map);
+        // Add the control to the new map
         if (map) {            
             map.addLayer(this.extent);
             map.addLayer(this.layer);
