@@ -335,7 +335,7 @@ class SearchEngineBase extends Control {
         });
         input.addEventListener("blur", (e) => {
             // N'agit que si le focus est hors de l'élément
-            if (e.relatedTarget && autocompleteList.contains(e.relatedTarget)) {
+            if (e.relatedTarget && acContainer.contains(e.relatedTarget)) {
                 input.focus();
             } else {
                 setTimeout(() => {

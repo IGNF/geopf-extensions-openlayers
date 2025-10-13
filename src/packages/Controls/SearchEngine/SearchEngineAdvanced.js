@@ -1,4 +1,7 @@
 import Control from "ol/control/Control";
+import Geolocation from "ol/Geolocation";
+import OlFeature from "ol/Feature";
+import Point from "ol/geom/Point";
 import SearchEngineGeocodeIGN from "./SearchEngineGeocodeIGN";
 import Helper from "../../Utils/Helper";
 
@@ -20,9 +23,20 @@ class SearchEngineAdvanced extends Control {
         // call ol.control.Control constructor
 
         super(options);
+
+        // Geolocation
+        this.geolocation = new Geolocation({
+            // enableHighAccuracy must be set to true to have the heading value.
+            trackingOptions : {
+                enableHighAccuracy : true,
+            },
+            projection : "EPSG:4326",
+        });
+
+        // Initialize
         this.initialize(options);
         this._initContainer(options);
-        // this._initEvents(options);
+        this._initEvents(options);
     }
 
     /**
@@ -54,6 +68,41 @@ class SearchEngineAdvanced extends Control {
         }
     }
 
+    _initEvents (options) {
+        this.geolocation.on("change:position", () => {
+            const pt = new Point(this.geolocation.getPosition());
+            pt.transform("EPSG:4326", this.getMap().getView().getProjection());
+            const evt = this.addResultToMap (pt, "Ma localisation");
+            this.dispatchEvent(evt);
+            this.geolocation.setTracking(false);
+        });
+    }
+
+    /** Display result on map
+     * @param {Object|Point|OlFeature} e objet a afficher
+     * @param {String} [info] Popup info
+     */
+    addResultToMap (obj, info) {
+        let evt = obj;
+        if (obj instanceof OlFeature) {
+            evt = {
+                result : obj,
+                extent : null
+            };
+        } else if (obj instanceof Point) {
+            evt = {
+                result : new OlFeature(obj),
+                extent : null
+            };
+        }
+        if (info) {
+            evt.result.set(info);
+        }
+        evt.type = "search";
+        this.baseSearchEngine.addResultToMap(evt);
+        return evt;
+    }
+
     /**
      * Ajoute le contrôle à la carte.
      * @override
@@ -79,6 +128,10 @@ class SearchEngineAdvanced extends Control {
         locationBtn.innerText = "Me géolocaliser";
         locationBtn.className = "GPSearchEngine-locate fr-btn fr-icon-arrow-up-s-line fr-btn--icon-left fr-btn--tertiary-no-outline";
         this.baseSearchEngine.autocompleteHeader.appendChild(locationBtn);
+        locationBtn.addEventListener("click", () => {
+            this.geolocation.setTracking(true);
+            console.log("tracking", this.geolocation);
+        });
 
         // Ajout des options avancées
         const advancedBtn = document.createElement("button");

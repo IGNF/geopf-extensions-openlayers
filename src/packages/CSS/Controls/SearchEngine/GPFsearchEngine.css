@@ -196,6 +196,7 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
   list-style: none;
   overflow: hidden;
   flex-direction: column;
+  width: 100%;
 }
 [id^="GPsearchEngine"] ul li {
   overflow: hidden;
