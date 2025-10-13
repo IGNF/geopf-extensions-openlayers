@@ -43,6 +43,7 @@ button[id^="GPshowLayersListPicto-"][aria-pressed="true"] + dialog {
   display: flex;
   flex-direction: column;
   visibility: visible;
+  justify-content: flex-start;
   opacity: 100%;
 }
 
@@ -67,33 +68,26 @@ button[id^=GPshowLayersListPicto-] {
 dialog[id^=GPlayersList] {
   border-bottom-right-radius: 0;
   opacity: 0;
-  /* overflow: auto; */
-  /* transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0.25s; */
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
-  height: initial;
   max-height: inherit;
   opacity: 1;
 }
 
-button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersList] {
-  /* transition: max-height 0.5s ease-in 0s, opacity 0.25s ease-in 0s; */
-}
-
 .GPlayerCounter {
-    position: relative;
-    background: #fff;
-    color: #000;
-    padding: 2px 0px 1px;
-    border-radius: 100px;
-    min-width: 15px;
-    text-align: center;
-    font-size: 12px;
-    line-height: 1;
-    top: -15px;
-    left: 15px;
-    display: inline-block;
+  position: relative;
+  background: #fff;
+  color: #000;
+  padding: 2px 0px 1px;
+  border-radius: 100px;
+  min-width: 15px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1;
+  top: -15px;
+  left: 15px;
+  display: inline-block;
 }
 
 /* Layer : general */
@@ -101,7 +95,6 @@ button[id^=GPshowLayersListPicto][aria-pressed="false"] + dialog[id^=GPlayersLis
 .GPlayerSwitcher_layer {
   position: relative;
   top: 0;
-  border-bottom: 1px dotted #CCC;
   overflow: hidden;
 }
 
@@ -119,8 +112,9 @@ dialog[id^=GPlayersList] .GPlayerSwitcher_layer:last-child {
   transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
 }
 
-button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
+.GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools {
   opacity: 1;
+  max-height: unset;
 }
 
 [id^="GPlayerStylePanel"],
@@ -147,3 +141,91 @@ div[id^=GPlayerStyleContent] {
   max-height: 500px;
 }
 
+/* Refonte */
+
+div[id^=GPbasicTools_ID_] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  flex-direction: row-reverse;
+  width: 100%;
+}
+
+div[id^=GPadvancedTools_ID_] {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+
+div[id^="GPbasicToolButtons_ID_"] {
+  display: flex;
+  flex-direction: row-reverse;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+div[id^=GPtitle_ID_] {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  min-width: 150px;
+  flex: 1;
+}
+
+div[id^=GPlayerTitle_ID_] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: calc(100% - 52px);
+
+  flex: 1 1 auto;
+}
+
+
+div[id^=GPlayerTitle_ID_] > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.GPtitleImage {
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.GPtitleDefaultImage {
+  content: url("img/alt-image.png");
+}
+
+div[id^=GPlayerProducer_ID_]:empty {
+  display: none;
+}
+
+/* Opacité */
+
+div[id^=GPopacityContainer_ID_] {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height:40px;
+  gap: 8px;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.GPlayerOpacityValue {
+  color: var(--text-mention-grey)
+}
+
+div[id^=GPopacityContainer_ID_] > .GPlayerOpacity {
+  flex: auto;
+}

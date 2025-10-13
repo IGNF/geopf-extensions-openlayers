@@ -4,6 +4,9 @@
 
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -73,6 +76,24 @@
                         });
                         map.addControl(catalog);
                     })
+
+                    layerSwitcher = new ol.control.LayerSwitcher({
+                        options : {
+                            position : "bottom-right",
+                            collapsed : false,
+                            panel : true,
+                            counter : true
+                        }
+                    });
+
+                    layerSwitcher.on("layerswitcher:add", function (e) {
+                        console.warn("layer", e, e.layer);
+                    });
+                    layerSwitcher.on("layerswitcher:remove", function (e) {
+                        console.warn("layer", e, e.layer);
+                    });
+
+                    map.addControl(layerSwitcher);
                 };
                 Gp.Services.getConfig({
                     customConfigFile : "{{ resources }}/data/configuration/config-catalog.json",
