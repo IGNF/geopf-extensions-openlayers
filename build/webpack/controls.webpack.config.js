@@ -77,6 +77,8 @@ module.exports = (env, argv) => {
             case "SearchEngineBase":
             case "SearchEngineGeocodeIGN":
             case "SearchEngineAdvanced":
+            case "AbstractAdvancedResearch":
+            case "InseeAdvancedResearch":
                 // crs
                 break;
             case "MeasureArea":

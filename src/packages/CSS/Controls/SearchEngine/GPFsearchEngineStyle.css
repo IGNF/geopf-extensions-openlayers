@@ -214,6 +214,10 @@ div[id^=GPgeocodeResults-] {
   padding: 0;
 }
 
+[id^="GPsearchEngine"] .GPautoCompleteContainer {
+  background-color: white;
+}
+
 [id^="GPsearchEngine"] ul {
   margin: 3px 0;
   width: 100%;

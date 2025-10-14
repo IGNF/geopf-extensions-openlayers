@@ -1,0 +1,6 @@
+/** STYLE COMMUN RECHERCHE AVANCEE **/
+
+form[id^=GPAdvancedForm-] > .GPFormFooter {
+  display: flex;
+  flex-wrap: wrap;
+}

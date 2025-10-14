@@ -1,0 +1,5 @@
+/** STYLE DSFR RECHERCHE AVANCEE **/
+
+form[id^=GPAdvancedForm-] > .GPFormFooter {
+  justify-content: center;
+}

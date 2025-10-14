@@ -191,7 +191,6 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 
 [id^="GPsearchEngine"] .GPautoCompleteContainer {
   position: absolute;
-  background-color: white;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 18, 0.16);
   list-style: none;
   overflow: hidden;
@@ -219,34 +218,34 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
     max-height: 32px;
 }
 
-[id^="GPsearchEngine"] form > * {
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] > * {
     display: flex;
     flex-direction: row;
 }
-[id^="GPsearchEngine"] form .GPInputGroup {
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPInputGroup {
     padding: 0;
 }
-[id^="GPsearchEngine"] form .GPOptionsContainer {
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer {
     display: flex;
     height: calc(100% - 2px);
 }
 
-[id^="GPsearchEngine"] form .GPOptionsContainer button {
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer button {
     max-width: unset;
     min-height: 1rem;
     line-height: 1rem;
     margin: 0.25rem 0.5rem;
     border-radius: 0;
 }
-[id^="GPsearchEngine"] form .GPOptionsContainer button:before {
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer button:before {
     display: none;
 }
 
-[id^="GPsearchEngine"] form .GPautoCompleteHeader button {
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPautoCompleteHeader button {
   margin: 12px 12px 0;
   max-width: unset;
 }
-[id^="GPsearchEngine"] form .GPautoCompleteFooter button {
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPautoCompleteFooter button {
   margin: 0 12px 12px;
   max-width: unset;
 }

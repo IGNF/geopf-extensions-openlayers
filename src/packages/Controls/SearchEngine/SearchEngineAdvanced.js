@@ -33,7 +33,6 @@ class SearchEngineAdvanced extends Control {
             projection : "EPSG:4326",
         });
 
-        this._searchForms = ["form1", "form2", "form3"];
 
         // Initialize
         this.initialize(options);
@@ -53,6 +52,13 @@ class SearchEngineAdvanced extends Control {
          * @private
         */
         this.CLASSNAME = "SearchEngineAdvanced";
+
+        if (options.advancedResearch && options.advancedResearch instanceof Array) {
+            this._searchForms = options.advancedResearch;
+        } else {
+            this._searchForms = [];
+        }
+        console.log(this._searchForms);
     }
 
     /**
@@ -61,6 +67,7 @@ class SearchEngineAdvanced extends Control {
      * @param {import("ol/Map.js").default|null} map - Carte à laquelle ajouter le contrôle.
      */
     setMap (map) {
+        console.log("set map");
         if (this.getMap() && this.baseSearchEngine) {
             this.getMap().removeControl(this.baseSearchEngine);
         }
@@ -68,6 +75,9 @@ class SearchEngineAdvanced extends Control {
         if (this.baseSearchEngine) {
             this.baseSearchEngine.setMap(map);
         }
+        this._searchForms.forEach(research => {
+            research.setMap(map);
+        });
     }
 
     _initEvents (options) {
@@ -150,7 +160,7 @@ class SearchEngineAdvanced extends Control {
         advancedContainer.appendChild(this._getGeolocButton());
 
         // Formulaires specifiques
-        this._searchForms.forEach(form => {
+        this._searchForms.forEach(research => {
             const section = document.createElement("section");
             section.className = "fr-accordion";
             advancedContainer.appendChild(section);
@@ -161,7 +171,7 @@ class SearchEngineAdvanced extends Control {
             button.type = "button";
             button.className = "fr-accordion__btn";
             button.setAttribute("aria-expanded", "false");
-            button.innerText = form;
+            button.innerText = research.getName();
             section.appendChild(button);
             // Accordion
             const accordion = document.createElement("div");
@@ -173,10 +183,10 @@ class SearchEngineAdvanced extends Control {
             const atitle = document.createElement("h4");
             atitle.className = "fr-h4";
             accordion.appendChild(atitle);
-            const aform = document.createElement("p");
-            aform.innerText = "Lorem ipsum dolor sit amet";
-            accordion.appendChild(aform);
-            // Handle collapsing
+
+            // Contenu recherche avancée
+            research.setTarget(accordion);
+
             button.addEventListener("click", () => {
                 const expanded = button.getAttribute("aria-expanded") === "true";
                 advancedContainer.querySelectorAll("section").forEach(sec => {

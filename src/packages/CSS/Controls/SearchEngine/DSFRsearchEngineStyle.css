@@ -267,6 +267,10 @@ div[id^=GPgeocodeResults-] {
   }
 }
 
+[id^="GPsearchEngine"] .GPautoCompleteContainer {
+  background-color: var(--background-default-grey);
+}
+
 [id^="GPsearchEngine"] ul {
   padding: 12px;
   padding-bottom: 0px;
@@ -289,12 +293,12 @@ div[id^=GPgeocodeResults-] {
 
 [id^="GPsearchEngine"] ul li.active,
 [id^="GPsearchEngine"] ul li:hover {
-  color: #000000;
+  /* color: #000000; */
   background-color: var(--background-default-grey-hover);
 }
 
 [id^="GPsearchEngine"] ul li:active {
-  color: #000000;
+  /* color: #000000; */
   background-color: var(--background-default-grey-active);
 }
 
