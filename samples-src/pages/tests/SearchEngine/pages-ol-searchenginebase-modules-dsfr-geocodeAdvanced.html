@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlAbstractAdvancedResearch.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlSearchEngineAdvanced.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlInseeAdvancedResearch.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLocationAdvancedSearch.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -64,10 +65,12 @@
                     var insee2 = new ol.control.InseeAdvancedResearch({
                         name : "Code insee 2",
                     });
+                    var location = new ol.control.LocationAdvancedSearch({
+                    })
 
 					// 2. Appel du SearchEngine
                     var search = new ol.control.SearchEngineAdvanced({
-                        advancedResearch : [insee, insee2]
+                        advancedResearch : [insee, insee2, location]
                     });
 
 					// 3. Ajout du SearchEngine à la carte

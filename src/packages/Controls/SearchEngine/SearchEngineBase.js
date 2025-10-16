@@ -113,7 +113,7 @@ class SearchEngineBase extends Control {
     initialize (options) {
         // Valeurs par défaut des options
         options.minChars = options.minChars ? options.minChars : 3;
-        options.maximumEntries = options.maximumEntries ? options.maximumEntries : 5;
+        options.maximumEntries = (typeof options.maximumEntries === "number")  ? options.maximumEntries : 5;
         options.historic = (typeof options.historic === "string" ? options.historic : this.CLASSNAME);
         options.title = options.title ? options.title : "Rechercher";
         options.ariaLabel = options.ariaLabel ? options.ariaLabel : "Rechercher";
@@ -207,7 +207,7 @@ class SearchEngineBase extends Control {
             e.preventDefault();
             const list = Array.from(this.autocompleteList.querySelectorAll("li"));
 
-            if (e.submitter && e.submitter.type === "submit") {
+            if (e && e.submitter && e.submitter.type === "submit") {
                 // Si on appuie sur le bouton, on vérifie que l'input ne soit pas vide
                 let input = e.target.querySelector("input");
                 const value = input.value;
@@ -430,7 +430,7 @@ class SearchEngineBase extends Control {
     _updateList (tab, type = "search") {
         this.autocompleteList.parentNode.dataset.type = type;
         //
-        tab = (tab || []).slice(0, this.get("maximumEntries") || 10);
+        tab = (tab || []).slice(0, this.get("maximumEntries"));
         // Accessibility
         this.autocompleteList.querySelectorAll("li").forEach(li => li.classList.remove("active"));
         this.input.setAttribute("aria-activedescendant", "");

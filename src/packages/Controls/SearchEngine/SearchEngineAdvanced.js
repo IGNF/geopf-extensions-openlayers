@@ -67,7 +67,6 @@ class SearchEngineAdvanced extends Control {
      * @param {import("ol/Map.js").default|null} map - Carte à laquelle ajouter le contrôle.
      */
     setMap (map) {
-        console.log("set map");
         if (this.getMap() && this.baseSearchEngine) {
             this.getMap().removeControl(this.baseSearchEngine);
         }
