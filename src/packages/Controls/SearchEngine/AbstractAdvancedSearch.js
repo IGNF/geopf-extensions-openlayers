@@ -89,11 +89,11 @@ class AbstractAdvancedSearch extends Control {
     _initContainer (options) {
         let element = document.createElement("form");
         element.className = "GPForm gpf-advanced-search-form";
-        element.id = helper.getUid("GPAdvancedForm-" + this.CLASSNAME + "-");
+        element.id = Helper.getUid("GPAdvancedForm-" + this.CLASSNAME + "-");
 
         let fieldset = document.createElement("fieldset");
         fieldset.className = "GPFieldset fr-fieldset gpf-advanced-search-fieldset";
-        fieldset.id = helper.getUid("GPAdvancedFieldset-");
+        fieldset.id = Helper.getUid("GPAdvancedFieldset-");
 
         this.addInputs();
         this.inputs.forEach((elem) => {
@@ -112,12 +112,12 @@ class AbstractAdvancedSearch extends Control {
         const eraseBtn = this.eraseBtn = document.createElement("button");
         eraseBtn.type = "reset";
         eraseBtn.className = "GPBtn gpf-btn fr-btn fr-btn--tertiary";
-        eraseBtn.id = helper.getUid("GPEraseBtn-");
+        eraseBtn.id = Helper.getUid("GPEraseBtn-");
         eraseBtn.textContent = "Effacer";
 
         const searchBtn = this.searchBtn = document.createElement("button");
         searchBtn.className = "GPBtn gpf-btn fr-btn";
-        searchBtn.id = helper.getUid("GPSearchBtn-");
+        searchBtn.id = Helper.getUid("GPSearchBtn-");
         searchBtn.type = "submit";
         searchBtn.textContent = "Rechercher";
         searchBtn.setAttribute("form", element.id);

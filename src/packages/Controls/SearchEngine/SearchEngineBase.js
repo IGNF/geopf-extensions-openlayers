@@ -247,17 +247,17 @@ class SearchEngineBase extends Control {
     _initContainer (options) {
         const element = this.element = document.createElement("div");
         element.className = "GPwidget gpf-widget";
-        element.id = helper.getUid("GPsearchEngine-");
+        element.id = Helper.getUid("GPsearchEngine-");
         // Main container
         const container = this.container = document.createElement("form");
         container.className = options.search ? "GPSearchBar fr-search-bar" : "";
         // container.className = "fr-search-bar";
-        container.id = helper.getUid("GPsearchInput-Base-");
+        container.id = Helper.getUid("GPsearchInput-Base-");
 
         // Création du bouton
         if (!options.target && options.collapsible) {
             this.button = document.createElement("button");
-            this.button.id = helper.getUid("GPshowSearchEnginePicto-");
+            this.button.id = Helper.getUid("GPshowSearchEnginePicto-");
             this.button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn fr-icon-search-line fr-btn fr-btn--lg";
             this.button.setAttribute("aria-pressed", "true");
             // this.button.setAttribute("type", "submit");
@@ -293,7 +293,7 @@ class SearchEngineBase extends Control {
         const input = this.input = document.createElement("input");
         input.type = "text";
         input.className = "GPsearchInputText fr-input";
-        input.id = helper.getUid("GPsearchInputText-");
+        input.id = Helper.getUid("GPsearchInputText-");
         input.placeholder = options.placeholder;
         input.autocomplete = "off";
         input.setAttribute("aria-label", options.ariaLabel);
@@ -316,7 +316,7 @@ class SearchEngineBase extends Control {
         const messages = document.createElement("div");
         messages.className = "GPMessagesGroup fr-messages-group";
         messages.ariaLive = "polite";
-        messages.id = helper.getUid("GPMessagesGroup-");
+        messages.id = Helper.getUid("GPMessagesGroup-");
         input.setAttribute("aria-describedby", messages.id);
         search.appendChild(messages);
         
@@ -329,7 +329,7 @@ class SearchEngineBase extends Control {
         if (options.searchButton) {
             const submit = this.subimtBt = document.createElement("button");
             submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn";
-            submit.id = helper.getUid("GPshowSearchEnginePicto-");
+            submit.id = Helper.getUid("GPshowSearchEnginePicto-");
             submit.type = "submit";
             if (options.title) {
                 submit.setAttribute("title", options.title);
@@ -350,7 +350,7 @@ class SearchEngineBase extends Control {
 
         const autocompleteList = this.autocompleteList = document.createElement("ul");
         autocompleteList.className = "GPautoCompleteList";
-        autocompleteList.id = helper.getUid("GPautoCompleteList-");
+        autocompleteList.id = Helper.getUid("GPautoCompleteList-");
         autocompleteList.setAttribute("role", "listbox");
         autocompleteList.setAttribute("tabindex", "-1");
         autocompleteList.setAttribute("aria-label", "Propositions");
@@ -484,7 +484,7 @@ class SearchEngineBase extends Control {
         const iconClass = typeClasses[type] || typeClasses["search"];
         tab.forEach((item, idx) => {
             const li = document.createElement("li");
-            li.id = helper.getUid("GPsearchHistoric-");
+            li.id = Helper.getUid("GPsearchHistoric-");
             li.className = `GPsearchHistoric gpf-panel__item gpf-panel__item-searchengine ${iconClass} fr-icon--sm`;
             li.setAttribute("role", "option");
             li.setAttribute("data-idx", idx);
@@ -540,7 +540,7 @@ class SearchEngineBase extends Control {
             const p = document.createElement("p");
             const messageType = type === "error" ? "error" : "valid";
             p.className = `GPMessage GPMessage--${messageType} fr-message fr-message--${messageType}`;
-            p.id = helper.getUid("GPMessage-");
+            p.id = Helper.getUid("GPMessage-");
             p.textContent = message;
     
             messageElement.replaceChildren(p);

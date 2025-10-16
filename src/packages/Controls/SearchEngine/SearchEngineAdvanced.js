@@ -338,7 +338,7 @@ class SearchEngineAdvanced extends Control {
         // Gestion de l'affichage des options avancées
         const element = this.element = document.createElement("div");
         element.className = "GPwidget gpf-widget";
-        element.id = helper.getUid("GPsearchEngine-Advanced-");
+        element.id = Helper.getUid("GPsearchEngine-Advanced-");
 
         // Default base search engine
         const baseContainer = this.advancedContainer = document.createElement("div");
@@ -357,7 +357,7 @@ class SearchEngineAdvanced extends Control {
         // Ajout des options avancées
         const advancedBtn = document.createElement("button");
         advancedBtn.className = "GPSearchEngine-advanced-btn fr-btn fr-icon-arrow-up-s-line fr-btn--icon-right fr-btn--tertiary-no-outline";
-        advancedBtn.id = helper.getUid("GPSearchEngine-advanced-btn-");
+        advancedBtn.id = Helper.getUid("GPSearchEngine-advanced-btn-");
         advancedBtn.type = "button";
         advancedBtn.title = "Avancée";
         advancedBtn.innerHTML = "Avancée";
@@ -368,7 +368,7 @@ class SearchEngineAdvanced extends Control {
         // Gestion de l'affichage des options avancées
         const advancedContainer = this.advancedContainer = document.createElement("div");
         advancedContainer.className = "GPAdvancedContainer";
-        advancedContainer.id = helper.getUid("GPsearchEngine-AdvancedContainer-");
+        advancedContainer.id = Helper.getUid("GPsearchEngine-AdvancedContainer-");
         advancedContainer.setAttribute("aria-labelledby", advancedBtn.id);
         this.element.appendChild(advancedContainer);
 
@@ -392,7 +392,7 @@ class SearchEngineAdvanced extends Control {
             // Accordion
             const accordion = document.createElement("div");
             accordion.className = "fr-collapse";
-            accordion.id = helper.getUid("accordion-");
+            accordion.id = Helper.getUid("accordion-");
             button.setAttribute("aria-controls", accordion.id);
             section.appendChild(accordion);
 
