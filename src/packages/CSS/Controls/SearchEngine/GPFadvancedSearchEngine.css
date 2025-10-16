@@ -1,6 +1,34 @@
 /** STYLE COMMUN RECHERCHE AVANCEE **/
 
+div[id^=GPsearchEngine-Advanced] {
+  width: 312px;
+}
+
+div[id^=GPsearchEngine-Advanced] div[id^=GPsearchEngine-] {
+  width: 100%;
+}
+
+form[id^=GPAdvancedForm-], form[id^=GPAdvancedForm-] * {
+  height : 100%;
+  width: 100%;
+}
+
 form[id^=GPAdvancedForm-] > .GPFormFooter {
+  margin-top: 0.75rem;
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 16px;
+}
+
+[id^="GPsearchEngine-Advanced"] form[id^="GPsearchInput-Base-"]:first-child {
+  display: flex;
+  flex-direction: row;
+}
+
+form[id^=GPAdvancedForm-] > .GPFormFooter > button {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

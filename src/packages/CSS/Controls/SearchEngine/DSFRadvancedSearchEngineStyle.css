@@ -1,5 +1,16 @@
 /** STYLE DSFR RECHERCHE AVANCEE **/
 
-form[id^=GPAdvancedForm-] > .GPFormFooter {
-  justify-content: center;
+div[data-open="true"] > section.fr-accordion::before {
+  box-shadow: inset 0 1px 0 0 var(--border-default-grey);
+}
+
+div[id^=GPsearchEngine-AdvancedContainer] > button.GPSearchEngine-locate {
+  margin-bottom : 0.75rem;
+}
+
+[id^="GPsearchEngine"] form[id^="GPsearchInput-Base-"] .GPOptionsContainer button {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
 }

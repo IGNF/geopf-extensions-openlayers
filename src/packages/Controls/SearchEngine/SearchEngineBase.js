@@ -18,11 +18,15 @@ var logger = Logger.getLogger("searchengine");
  * @property {HTMLElement|string} [target] - Élément DOM ou sélecteur dans lequel insérer le contrôle.
  * Si non défini, le contrôle crée un bouton permettant d’ouvrir/fermer le champ de recherche.
  * @property {string} [title="Rechercher"] - Texte du titre (attribut `title`) du bouton principal.
+ * @property {string} [label=""] - Label à ajouter. Aucun par défaut.
+ * @property {string} [hint=""] - Texte additionnel à ajouter sous le label. Aucun par défaut.
+ * @property {Boolean} [search=false] - Si vrai, définit le composant comme une barre de recherche (classes CSS et attributs HTML).
  * @property {string} [collapsible=false] - Si vrai, permet de fermer le contrôle.
  * @property {string} [ariaLabel="Rechercher"] - Libellé accessible (ARIA) pour le champ de recherche.
  * @property {string} [placeholder=""] - Texte d’indication affiché dans le champ de saisie.
  * @property {number} [minChars=0] - Nombre minimum de caractères à saisir avant de lancer l’autocomplétion.
  * @property {number} [maximumEntries=5] - Nombre maximum d’entrées affichées dans la liste d’autocomplétion.
+ * @property {number} [searchButton=false] - Affiche un bouton de recherche. Faux par défaut.
  * @property {number} [triggerDelay=100] - Délai (en millisecondes) avant le déclenchement de l’autocomplétion
  * après la saisie de l’utilisateur.
  * @property {boolean|string} [historic=true] - Active ou non l’historique local des recherches. Valeur acceptées :
@@ -75,9 +79,12 @@ class SearchEngineBase extends Control {
         this.initialize(options);
 
         this.searchService = options.searchService;
-        this.searchService.on("autocomplete", function (e) {
-            this.onAutocomplete(e);
-        }.bind(this));
+        // Permet l'autocomplétion
+        if (this.searchService.get("autocomplete") !== false) {
+            this.searchService.on("autocomplete", function (e) {
+                this.onAutocomplete(e);
+            }.bind(this));
+        }
 
         this.searchService.on("search", function (e) {
             this.onSearch(e);
@@ -91,16 +98,16 @@ class SearchEngineBase extends Control {
         // Get historic in localStorage
         this._historic = false;
         this._historicName = "GPsearch-" + options.historic;
-        if (options.historic !== false) {
+        if (options.historic !== false && this.searchService.get("autocomplete") !== false) {
             this._historic = [];
-            try { 
+            try {
                 const stor = window.localStorage.getItem(this._historicName);
                 if (stor) {
                     this._historic = JSON.parse(stor);
-                }   
+                }
             } catch (e) {
                 // logger.warn("LocalStorage not available");
-            }   
+            }
         }
         this.showHistoric();
     }
@@ -119,88 +126,95 @@ class SearchEngineBase extends Control {
         options.ariaLabel = options.ariaLabel ? options.ariaLabel : "Rechercher";
         options.placeholder = options.placeholder ? options.placeholder : "";
         options.searchService = options.searchService ? options.searchService : new DefaultSearchService();
+        options.label = options.label ? options.label : "";
+        options.hint = options.hint ? options.hint : "";
+        options.search = options.search === true ? true : false;
+        options.searchButton = options.searchButton === true ? true : false;
         options.collapsible = options.collapsible === true ? true : false;
 
         this.set("maximumEntries", options.maximumEntries);
     }
+
     /** Add event listeners
      * @param {SearchEngineBaseOptions} options - constructor options
      * @protected
      */
     _initEvents (options) {
-        // Empty input
-        this.input.addEventListener("input", function (e) {
-            if (!e.target.value) {
-                this.showHistoric();
-            }
-        }.bind(this));
-        // Prevent cursor to go to the end of input on keydown
-        this.input.addEventListener("keydown", function (e) {
-            if (/ArrowDown|ArrowUp/.test(e.key)) {
-                e.preventDefault();
-            }
-        }.bind(this));
-        // Keyboard navigation
-        this.input.addEventListener("keyup", function (e) {
-            // autocomplete list
-            const list = Array.from(this.autocompleteList.querySelectorAll("li"));
-            let idx = list.findIndex(li => li.classList.contains("active"));
-            if (idx === -1) {
-                // Ancienne valeur
-                this._previousValue = e.target.value;
-            }
-            switch (e.key) {
-                case "ArrowDown":
-                case "ArrowUp":
+        if (this.searchService.get("autocomplete") !== false) {
+            // Empty input
+            this.input.addEventListener("input", function (e) {
+                if (!e.target.value) {
+                    this.showHistoric();
+                }
+            }.bind(this));
+            // Prevent cursor to go to the end of input on keydown
+            this.input.addEventListener("keydown", function (e) {
+                if (/ArrowDown|ArrowUp/.test(e.key)) {
                     e.preventDefault();
-                    // Navigation in autocomplete list
-                    if (list.length === 0) {
-                        return;
-                    }
-                    list.forEach(li => li.classList.remove("active"));
-                    if (e.key === "ArrowDown") {
-                        idx++;
-                        if (idx >= list.length) {
-                            idx = -1;
+                }
+            }.bind(this));
+            // Keyboard navigation
+            this.input.addEventListener("keyup", function (e) {
+                // autocomplete list
+                const list = Array.from(this.autocompleteList.querySelectorAll("li"));
+                let idx = list.findIndex(li => li.classList.contains("active"));
+                if (idx === -1) {
+                    // Ancienne valeur
+                    this._previousValue = e.target.value;
+                }
+                switch (e.key) {
+                    case "ArrowDown":
+                    case "ArrowUp":
+                        e.preventDefault();
+                        // Navigation in autocomplete list
+                        if (list.length === 0) {
+                            return;
                         }
-                    } else if (e.key === "ArrowUp") {
-                        idx--;
-                        if (idx < -1) {
-                            idx = list.length - 1;
+                        list.forEach(li => li.classList.remove("active"));
+                        if (e.key === "ArrowDown") {
+                            idx++;
+                            if (idx >= list.length) {
+                                idx = -1;
+                            }
+                        } else if (e.key === "ArrowUp") {
+                            idx--;
+                            if (idx < -1) {
+                                idx = list.length - 1;
+                            }
                         }
-                    }
-                    if (idx !== -1) {
-                        // Set active
-                        const current = list[idx];
-                        current.classList.add("active");
-                        this.input.value = current.innerText;
-                        this.input.setAttribute("aria-activedescendant", current.id);
-                        this.input.setAttribute("data-active-option", current.id);
-                    } else {
-                        // Réaffiche la valeur précédente de l'utilisateur
-                        e.target.value = this._previousValue;
-                    }
-                    break;
-                case "Enter":
-                    // Lance la recherche
-                    let item = list[idx];
-                    if (idx < 0) {
-                        // Pas d'item sélectionné : on prend le premier de la liste
-                        item = list[0];
-                    }
-                    if (item) {
-                        // Simule un clic sur l'élément sélectionné
-                        item.click();
-                    }
-                    break;
-                default:
-                    if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
-                        this.autocomplete(e.target.value, e.key === "Enter");
-                    } 
-                    break;
-            }
-            this._currentValue = e.target.value;
-        }.bind(this), false);
+                        if (idx !== -1) {
+                            // Set active
+                            const current = list[idx];
+                            current.classList.add("active");
+                            this.input.value = current.innerText;
+                            this.input.setAttribute("aria-activedescendant", current.id);
+                            this.input.setAttribute("data-active-option", current.id);
+                        } else {
+                            // Réaffiche la valeur précédente de l'utilisateur
+                            e.target.value = this._previousValue;
+                        }
+                        break;
+                    case "Enter":
+                        // Lance la recherche
+                        let item = list[idx];
+                        if (idx < 0) {
+                            // Pas d'item sélectionné : on prend le premier de la liste
+                            item = list[0];
+                        }
+                        if (item) {
+                            // Simule un clic sur l'élément sélectionné
+                            item.click();
+                        }
+                        break;
+                    default:
+                        if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
+                            this.autocomplete(e.target.value, e.key === "Enter");
+                        } 
+                        break;
+                }
+                this._currentValue = e.target.value;
+            }.bind(this), false);
+        }
 
         // Événement d'envoi du formulaire
         this.container.addEventListener("submit", function (e) {
@@ -233,16 +247,17 @@ class SearchEngineBase extends Control {
     _initContainer (options) {
         const element = this.element = document.createElement("div");
         element.className = "GPwidget gpf-widget";
-        element.id = Helper.getUid("GPsearchEngine-");
+        element.id = helper.getUid("GPsearchEngine-");
         // Main container
         const container = this.container = document.createElement("form");
-        container.className = "fr-search-bar";
-        container.id = Helper.getUid("GPsearchInput-Base-");
+        container.className = options.search ? "GPSearchBar fr-search-bar" : "";
+        // container.className = "fr-search-bar";
+        container.id = helper.getUid("GPsearchInput-Base-");
 
         // Création du bouton
         if (!options.target && options.collapsible) {
             this.button = document.createElement("button");
-            this.button.id = Helper.getUid("GPshowSearchEnginePicto-");
+            this.button.id = helper.getUid("GPshowSearchEnginePicto-");
             this.button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowSearchEnginePicto gpf-btn fr-icon-search-line fr-btn fr-btn--lg";
             this.button.setAttribute("aria-pressed", "true");
             // this.button.setAttribute("type", "submit");
@@ -268,39 +283,65 @@ class SearchEngineBase extends Control {
         element.appendChild(container);
 
         const search = document.createElement("div");
-        search.className = "GPInputGroup fr-input";
+        // search.className = "GPInputGroup fr-input";
+        search.className = "GPInputGroup";
+        search.classList.add(options.search ? "fr-input" : "fr-input-group");
         container.appendChild(search);
 
+        
         // Input
         const input = this.input = document.createElement("input");
         input.type = "text";
         input.className = "GPsearchInputText fr-input";
-        input.id = Helper.getUid("GPsearchInputText-");
+        input.id = helper.getUid("GPsearchInputText-");
         input.placeholder = options.placeholder;
         input.autocomplete = "off";
         input.setAttribute("aria-label", options.ariaLabel);
+
+        if (options.label) {
+            const label = document.createElement("label");
+            label.className = "GPLabel fr-label";
+            label.textContent = options.label;
+            label.htmlFor = input.id;
+            if (options.hint) {
+                const hint = document.createElement("span");
+                hint.className = "GPLabelHint fr-hint-text";
+                hint.textContent = options.hint;
+                label.appendChild(hint);
+            }
+            search.appendChild(label);
+        }
         search.appendChild(input);
 
+        const messages = document.createElement("div");
+        messages.className = "GPMessagesGroup fr-messages-group";
+        messages.ariaLive = "polite";
+        messages.id = helper.getUid("GPMessagesGroup-");
+        input.setAttribute("aria-describedby", messages.id);
+        search.appendChild(messages);
+        
         // Options container
         this.optionscontainer = document.createElement("div");
         this.optionscontainer.className = "GPOptionsContainer";
         search.appendChild(this.optionscontainer);
 
         // Submit button
-        const submit = this.subimtBt = document.createElement("button");
-        submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn";
-        submit.id = Helper.getUid("GPshowSearchEnginePicto-");
-        submit.type = "submit";
-        if (options.title) {
-            submit.textContent = options.title;
-            submit.setAttribute("title", options.title);
+        if (options.searchButton) {
+            const submit = this.subimtBt = document.createElement("button");
+            submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn";
+            submit.id = helper.getUid("GPshowSearchEnginePicto-");
+            submit.type = "submit";
+            if (options.title) {
+                submit.setAttribute("title", options.title);
+            }
+            container.appendChild(submit);
         }
-        search.appendChild(submit);
 
         // Autocomplete container
         const acContainer = document.createElement("div");
         acContainer.className = "GPautoCompleteContainer GPelementHidden gpf-hidden";
-        container.appendChild(acContainer);
+        element.appendChild(acContainer);
+        // element.appendChild(acContainer);
 
         // Autocomplete list
         const autocompleteHeader = this.autocompleteHeader = document.createElement("div");
@@ -309,7 +350,7 @@ class SearchEngineBase extends Control {
 
         const autocompleteList = this.autocompleteList = document.createElement("ul");
         autocompleteList.className = "GPautoCompleteList";
-        autocompleteList.id = Helper.getUid("GPautoCompleteList-");
+        autocompleteList.id = helper.getUid("GPautoCompleteList-");
         autocompleteList.setAttribute("role", "listbox");
         autocompleteList.setAttribute("tabindex", "-1");
         autocompleteList.setAttribute("aria-label", "Propositions");
@@ -326,27 +367,29 @@ class SearchEngineBase extends Control {
         input.setAttribute("aria-autocomplete", "list");
         input.setAttribute("aria-haspopup", "listbox");
 
-        input.addEventListener("focus", () => {
-            input.setAttribute("aria-expanded", "true");
-            acContainer.classList.add("gpf-visible");
-            acContainer.classList.remove("gpf-hidden");
-            acContainer.classList.add("GPelementVisible");
-            acContainer.classList.remove("GPelementHidden");
-        });
-        input.addEventListener("blur", (e) => {
-            // N'agit que si le focus est hors de l'élément
-            if (e.relatedTarget && acContainer.contains(e.relatedTarget)) {
-                input.focus();
-            } else {
-                setTimeout(() => {
-                    input.setAttribute("aria-expanded", "false");
-                    acContainer.classList.remove("gpf-visible");
-                    acContainer.classList.add("gpf-hidden");
-                    acContainer.classList.remove("GPelementVisible");
-                    acContainer.classList.add("GPelementHidden");
-                }, 100);
-            }
-        });
+        if (this.searchService.get("autocomplete") !== false) {
+            input.addEventListener("focus", () => {
+                input.setAttribute("aria-expanded", "true");
+                acContainer.classList.add("gpf-visible");
+                acContainer.classList.remove("gpf-hidden");
+                acContainer.classList.add("GPelementVisible");
+                acContainer.classList.remove("GPelementHidden");
+            });
+            input.addEventListener("blur", (e) => {
+                // N'agit que si le focus est hors de l'élément
+                if (e.relatedTarget && acContainer.contains(e.relatedTarget)) {
+                    input.focus();
+                } else {
+                    setTimeout(() => {
+                        input.setAttribute("aria-expanded", "false");
+                        acContainer.classList.remove("gpf-visible");
+                        acContainer.classList.add("gpf-hidden");
+                        acContainer.classList.remove("GPelementVisible");
+                        acContainer.classList.add("GPelementHidden");
+                    }, 100);
+                }
+            });
+        }
     }
 
     setActive (active) {
@@ -378,6 +421,7 @@ class SearchEngineBase extends Control {
      * @api
      */
     search (item) {
+        console.log(item);
         clearTimeout(this._completeDelay);
         this._completeDelay = setTimeout(function () {
             this.searchService.search(item);
@@ -440,7 +484,7 @@ class SearchEngineBase extends Control {
         const iconClass = typeClasses[type] || typeClasses["search"];
         tab.forEach((item, idx) => {
             const li = document.createElement("li");
-            li.id = Helper.getUid("GPsearchHistoric-");
+            li.id = helper.getUid("GPsearchHistoric-");
             li.className = `GPsearchHistoric gpf-panel__item gpf-panel__item-searchengine ${iconClass} fr-icon--sm`;
             li.setAttribute("role", "option");
             li.setAttribute("data-idx", idx);
@@ -480,6 +524,38 @@ class SearchEngineBase extends Control {
 
             // Save in localStorage
             localStorage.setItem(this._historicName, JSON.stringify(this._historic));
+        }
+    }
+
+    /**
+     * Ajoute un message à un champs de saisie
+     * @param {HTMLInputElement|HTMLSelectElement} input Champs de saisie
+     * @param {String} message Message à afficher
+     * @param {String} [type="error"] Type du message. Message d'erreur par défaut
+     * @api
+     */
+    addMessage (message, type = "error") {
+        let messageElement = this.input.ariaDescribedByElements[0];
+        if (messageElement) {
+            const p = document.createElement("p");
+            const messageType = type === "error" ? "error" : "valid";
+            p.className = `GPMessage GPMessage--${messageType} fr-message fr-message--${messageType}`;
+            p.id = helper.getUid("GPMessage-");
+            p.textContent = message;
+    
+            messageElement.replaceChildren(p);
+        }
+    }
+
+    /**
+     * Enlève un message d'erreur
+     * @param {HTMLInputElement|HTMLSelectElement} input Champs de saisie
+     * @api
+     */
+    removeMessages () {
+        let messageElement = this.input.ariaDescribedByElements[0];
+        if (messageElement) {
+            messageElement.replaceChildren();
         }
     }
 

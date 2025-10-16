@@ -117,6 +117,10 @@ class AbstractSearchService extends BaseObject {
 
         this._autocompleteLocations = [];
         this._locations = [];
+
+        if (options.autocomplete === false) {
+            this.set("autocomplete", false);
+        }
     }
 
     /**
@@ -182,8 +186,13 @@ class AbstractSearchService extends BaseObject {
 class DefaultSearchService extends AbstractSearchService {
 
     constructor (options) {
-        super();
         options = options || {};
+        super(options);
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "DefaultSearchService";
         if (options.searchTab) {
             this._searchTab = options.searchTab || [];
         };
@@ -221,6 +230,99 @@ class DefaultSearchService extends AbstractSearchService {
             type : this.SEARCH_EVENT, 
             result : obj
         });
+    }
+
+}
+
+
+/**
+ * @classdesc
+ * DefaultSearchService control
+ *
+ * @alias ol.control.DefaultSearchService
+ * @module SearchService
+*/
+class InseeSearchService extends AbstractSearchService {
+
+    constructor (options) {
+        options = options || {};
+        // Aucune autocomplétion
+        options.autocomplete = false;
+        super(options);
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "InseeSearchService";
+
+        this.ignService = new IGNSearchService({
+            autocomplete : false,
+        });
+
+        this.ignService.on(this.SEARCH_EVENT, this._onSearch.bind(this));
+    }
+
+    /**
+     * Pas de service d'autocomplétion pour l'API géo
+     */
+    autocomplete () {
+        return;
+    }
+
+    /**
+     * @param {Object} object Code insee
+     * @param {String} object.location Code insee
+     */
+    search (object) {
+        const insee = object.location;
+        // Envoi la requête si le chiffre est compris entre 0 et 99999
+        const response = this._requestGeoAPI({ value : insee });
+        response.then(r => {
+            if (r instanceof Array && r.length) {
+                const result = r[0];
+
+                let location = {
+                    fullText : result.nom,
+                };
+
+                let filters =  {
+                    citycode : result.code
+                };
+
+                this.ignService.search(location, filters);
+            }
+        });
+    }
+
+    _onSearch (e) {
+        this.dispatchEvent(e);
+    }
+
+    /**
+     * 
+     * @param {Object} settings 
+     */
+    async _requestGeoAPI (settings) {
+        const baseURL = "https://geo.api.gouv.fr/communes";
+        const format = "json";
+        const fields = ["nom", "code"];
+        const url = `${baseURL}?code=${settings.value}&format=${format}&fields=${fields}`;
+
+        try {
+            const response = await fetch(url, {
+                headers : {
+                    "Content-Type" : "application/json",
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 
 }
@@ -272,6 +374,7 @@ class IGNSearchService extends AbstractSearchService {
             geocodeOptions : {
                 serviceOptions : {}
             },
+            autocomplete : true,
             autocompleteOptions : {
                 serviceOptions : {
                     maximumResponses : 5,
@@ -331,6 +434,8 @@ class IGNSearchService extends AbstractSearchService {
 
         this._currentGeocodingLocation = null;
         this._suggestedLocations = [];
+
+        console.log(this.options);
     }
 
 
@@ -338,7 +443,7 @@ class IGNSearchService extends AbstractSearchService {
      * @param {String} value Valeur de l'autocomplete
      * @abstract
      */
-    autocomplete (value) { 
+    autocomplete (value) {
         if (!value) {
             return;
         }
@@ -588,8 +693,6 @@ class IGNSearchService extends AbstractSearchService {
         this._autocompleteLocations = [];
         this._locations = [];
     }
-  
-
 
     /**
      * this method is called by event 'click' on 'GPautoCompleteResultsList' tag div
@@ -598,7 +701,7 @@ class IGNSearchService extends AbstractSearchService {
      * @param {Object} location Objet de la recherche
      * @abstract
      */
-    search (location) {
+    search (location, filters = {}) {
         // TODO on souhaite un comportement different pour la selection des reponses
         // de l'autocompletion :
         // - liste deroulante des reponses,
@@ -626,6 +729,7 @@ class IGNSearchService extends AbstractSearchService {
             limit : 1,
             returnTrueGeometry : true,
             location : label,
+            filters : filters,
             onSuccess : this._onSuccessSearch.bind(this),
             onFailure : this._onFailureSearch.bind(this, location),
         });
@@ -778,7 +882,7 @@ class IGNSearchService extends AbstractSearchService {
 
 }
 
-export { AbstractSearchService, DefaultSearchService, IGNSearchService };
+export { AbstractSearchService, DefaultSearchService, InseeSearchService, IGNSearchService };
 
 // Expose SearchEngine as ol.control.SearchEngine (for a build bundle)
 if (window.ol) {
@@ -787,5 +891,6 @@ if (window.ol) {
     }
     window.ol.service.AbstractSearchService = AbstractSearchService;
     window.ol.service.DefaultSearchService = DefaultSearchService;
+    window.ol.service.InseeSearchService = InseeSearchService;
     window.ol.service.IGNSearchService = IGNSearchService;
 }

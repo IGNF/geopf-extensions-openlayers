@@ -3,9 +3,9 @@
 {{#content "vendor"}}
         
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSearchEngine.css" />
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlAbstractAdvancedResearch.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlAbstractAdvancedSearch.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlSearchEngineAdvanced.js"></script>
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlInseeAdvancedResearch.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlInseeAdvancedSearch.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLocationAdvancedSearch.js"></script>
 {{/content}}
 
@@ -59,18 +59,15 @@
                         ]
                     });
 
-                    var insee = new ol.control.InseeAdvancedResearch({
-                        name : "Code insee",
-                    });
-                    var insee2 = new ol.control.InseeAdvancedResearch({
-                        name : "Code insee 2",
-                    });
+                    var insee = new ol.control.InseeAdvancedSearch({
+                    })
+
                     var location = new ol.control.LocationAdvancedSearch({
                     })
 
 					// 2. Appel du SearchEngine
                     var search = new ol.control.SearchEngineAdvanced({
-                        advancedResearch : [insee, insee2, location]
+                        advancedSearch : [insee, location]
                     });
 
 					// 3. Ajout du SearchEngine à la carte

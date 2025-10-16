@@ -4,27 +4,26 @@ import Control from "../Control";
 import Logger from "../../Utils/LoggerByDefault";
 import { Collection } from "ol";
 import Helper from "../../Utils/Helper";
-
-var logger = Logger.getLogger("abstractAdvancedResearch");
+var logger = Logger.getLogger("abstractAdvancedSearch");
 
 /**
- * @typedef {Object} AbstractAdvancedResearchOptions Options du constructeur pour le contrôle de recherche.
+ * @typedef {Object} AbstractAdvancedSearchOptions Options du constructeur pour le contrôle de recherche.
  *
  * @property {string} name - Nom de la recherche avancée.
  */
 
 /**
  * @classdesc
- * AbstractAdvancedResearch Base control
+ * AbstractAdvancedSearch Base control
  *
- * @alias ol.control.AbstractAdvancedResearch
- * @module AbstractAdvancedResearch
+ * @alias ol.control.AbstractAdvancedSearch
+ * @module AbstractAdvancedSearch
 */
-class AbstractAdvancedResearch extends Control {
+class AbstractAdvancedSearch extends Control {
 
     /**
     * @constructor
-    * @param {AbstractAdvancedResearchOptions} options Options du constructeur
+    * @param {AbstractAdvancedSearchOptions} options Options du constructeur
     * 
     * @example
     */
@@ -37,7 +36,7 @@ class AbstractAdvancedResearch extends Control {
          * Nom de la classe (heritage)
          * @private
          */
-        this.CLASSNAME = "AbstractAdvancedResearch";
+        this.CLASSNAME = "AbstractAdvancedSearch";
 
         // initialisation du composant
         this.initialize(options);
@@ -45,10 +44,22 @@ class AbstractAdvancedResearch extends Control {
         this.element = this._initContainer(options);
         this._initEvents(options);
     }
+
+    setMap (map) {
+        super.setMap(map);
+        this.inputs.forEach(input => {
+            if (input.setMap) {
+                input.setMap(map);
+            }
+        });
+        // Replace les boutons à la fin
+        this.element.appendChild(this.btnGroup);
+    }
+
     /**
      * Initialize SearchEngine control (called by SearchEngine constructor)
      *
-     * @param {AbstractAdvancedResearchOptions} options - constructor options
+     * @param {AbstractAdvancedSearchOptions} options - constructor options
      * @protected
      */
     initialize (options) {
@@ -66,36 +77,47 @@ class AbstractAdvancedResearch extends Control {
     }
 
     getContent () {
-        return this.containerthis.name;   
+        return this.element;   
     }
 
     /**
      * 
-     * @param {AbstractAdvancedResearchOptions} options 
+     * @param {AbstractAdvancedSearchOptions} options 
      * @returns {HTMLFormElement} Élément du formulaire
      * @protected
      */
     _initContainer (options) {
         let element = document.createElement("form");
         element.className = "GPForm gpf-advanced-search-form";
-        element.id = Helper.getUid("GPAdvancedForm-");
+        element.id = helper.getUid("GPAdvancedForm-" + this.CLASSNAME + "-");
+
+        let fieldset = document.createElement("fieldset");
+        fieldset.className = "GPFieldset fr-fieldset gpf-advanced-search-fieldset";
+        fieldset.id = helper.getUid("GPAdvancedFieldset-");
 
         this.addInputs();
         this.inputs.forEach((elem) => {
-            element.appendChild(elem);
+            if (elem instanceof Control) {
+                elem.setTarget(element);
+            } else {
+                element.appendChild(elem);
+            }
         });
 
-        const btnGroup = document.createElement("div");
+        // element.appendChild(fieldset);
+
+        const btnGroup = this.btnGroup = document.createElement("div");
         btnGroup.className = "GPFormFooter";
         
         const eraseBtn = this.eraseBtn = document.createElement("button");
+        eraseBtn.type = "reset";
         eraseBtn.className = "GPBtn gpf-btn fr-btn fr-btn--tertiary";
-        eraseBtn.id = Helper.getUid("GPEraseBtn-");
+        eraseBtn.id = helper.getUid("GPEraseBtn-");
         eraseBtn.textContent = "Effacer";
 
         const searchBtn = this.searchBtn = document.createElement("button");
         searchBtn.className = "GPBtn gpf-btn fr-btn";
-        searchBtn.id = Helper.getUid("GPSearchBtn-");
+        searchBtn.id = helper.getUid("GPSearchBtn-");
         searchBtn.type = "submit";
         searchBtn.textContent = "Rechercher";
         searchBtn.setAttribute("form", element.id);
@@ -120,21 +142,12 @@ class AbstractAdvancedResearch extends Control {
 
 
     /** Add event listeners
-     * @param {AbstractAdvancedResearchOptions} options - constructor options
+     * @param {AbstractAdvancedSearchOptions} options - constructor options
      * @protected
      */
     _initEvents (options) {
         this.eraseBtn.onclick = this._onErase.bind(this);
-        /**
-         * Fonction de recherche
-         * @param {PointerEvent} e 
-         */
-        const onSearch = function (e) {
-            e.preventDefault();
-            this._onSearch(e);
-            // TODO : AJOUTER ÉVÉNEMENT ONSEARCH ?
-        };
-        this.searchBtn.onclick = onSearch.bind(this);
+        this.element.onsubmit = this._onSearch.bind(this);
     }
 
     /**
@@ -143,29 +156,27 @@ class AbstractAdvancedResearch extends Control {
      * @protected
      */
     _onErase (e) {
-        this.inputs.forEach(input => {
-            if (input.value !== undefined) {
-                input.value = null;
-            }
+        e.preventDefault();
+        this.getContent().querySelectorAll("input").forEach(input => {
+            input.value = "";
         });
     }
 
-
     /**
      * 
-     * @param {PointerEvent} e
+     * @param {SubmitEvent} e
      * @abstract
      * @protected
      */
     _onSearch (e) {
-        
+        e.preventDefault();
     }
 
 }
 
-export default AbstractAdvancedResearch;
+export default AbstractAdvancedSearch;
 
-// Expose AbstractAdvancedResearch as ol.control.AbstractAdvancedResearch (for a build bundle)
+// Expose AbstractAdvancedSearch as ol.control.AbstractAdvancedSearch (for a build bundle)
 if (window.ol && window.ol.control) {
-    window.ol.control.AbstractAdvancedResearch = AbstractAdvancedResearch;
+    window.ol.control.AbstractAdvancedSearch = AbstractAdvancedSearch;
 }

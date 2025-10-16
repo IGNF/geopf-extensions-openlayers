@@ -1,12 +1,12 @@
 import Helper from "../../Utils/Helper";
-import AbstractAdvancedResearch from "./AbstractAdvancedResearch";
+import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
 import SearchEngineGeocodeIGN from "./SearchEngineGeocodeIGN";
 
-class LocationAdvancedSearch extends AbstractAdvancedResearch {
+class LocationAdvancedSearch extends AbstractAdvancedSearch {
 
     /**
     * @constructor
-    * @param {AbstractAdvancedResearchOptions} options Options du constructeur
+    * @param {AbstractAdvancedSearchOptions} options Options du constructeur
     * 
     * @example
     */
@@ -18,16 +18,18 @@ class LocationAdvancedSearch extends AbstractAdvancedResearch {
         // call ol.control.Control constructor
         super(options);
 
+        this.search.on("search", function (e) {
+            this.dispatchEvent(e);
+        }.bind(this));
+    }
+
+    initialize (options) {
+        super.initialize(options);
         /**
          * Nom de la classe (heritage)
          * @private
          */
         this.CLASSNAME = "LocationAdvancedSearch";
-
-        this.element.addEventListener("submit", e => {
-            e.preventDefault();
-            console.log(e);
-        });
     }
 
     setMap (map) {
@@ -74,27 +76,24 @@ class LocationAdvancedSearch extends AbstractAdvancedResearch {
             typeOption.innerText = k;
             typeSelect.appendChild(typeOption);
         });
-        typeSelect.addEventListener("change", (e) => {
+        typeSelect.addEventListener("change", () => {
             this.filter.category = typeSelect.value;
         });
 
         // Search input
         const searchContainer = this._getLabelContainer("Renseigner un lieu", "fr-input-group");
         this.search = new SearchEngineGeocodeIGN({
+            autocomplete : false,
             target : searchContainer,
             historic : "GPAdvancedLocation",
             maximumEntries : 0
         });
-        this.search.container.addEventListener("submit", e => {
-            e.stopPropagation();
-            e.preventDefault();
-            this._onSearch();
-        }, true);
 
         // Code postal
         const postalInput = document.createElement("input");
         postalInput.className = "fr-input";
         postalInput.type = "text";
+        postalInput.name = "postalCode";
         postalInput.id = Helper.getUid("LocationAdvancedSearch-postal-");
         this._getLabelContainer("Code postal", "fr-input-group", postalInput);
         postalInput.addEventListener("change", () => {
@@ -104,6 +103,7 @@ class LocationAdvancedSearch extends AbstractAdvancedResearch {
         // Code INSEE
         const inseeInput = document.createElement("input");
         inseeInput.className = "fr-input";
+        inseeInput.name = "cityCode";
         inseeInput.type = "text";
         inseeInput.id = Helper.getUid("LocationAdvancedSearch-insee-");
         this._getLabelContainer("Code INSEE", "fr-input-group", inseeInput);
@@ -118,6 +118,7 @@ class LocationAdvancedSearch extends AbstractAdvancedResearch {
         };
     }
     _onErase (e) {
+        super._onErase(e);
         this.element.querySelectorAll("select").forEach(input => {
             input.value = "";
         });
@@ -133,8 +134,8 @@ class LocationAdvancedSearch extends AbstractAdvancedResearch {
     /** Lancer une recheche
      * 
      */
-    _onSearch () {
-        console.log("search", this);
+    _onSearch (e) {
+        super._onSearch(e);
         const value = this.search.input.value;
         if (value) {
             this.search.searchService._requestGeocoding({
@@ -145,7 +146,7 @@ class LocationAdvancedSearch extends AbstractAdvancedResearch {
                 "returnTrueGeometry" : true,
                 "location" : value,
                 onSuccess : e => this.search.searchService._onSuccessSearch(e),
-                onFailure : e => console.log("ERROR")
+                onFailure : e => console.log("ERROR", e)
             });
         }
     }
