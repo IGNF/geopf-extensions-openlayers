@@ -7,7 +7,17 @@ button[id^=GPshowLayersListPicto] {
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
-    width: 350px;
+    width: 380px;
+}
+
+dialog[id^=GPlayersList] > .GPpanelBody {
+    background-color: var(--background-default-grey);
+}
+
+div[id^=GPlayerSwitcher-] .gpf-btn-icon {
+    height: 40px;
+    width: 40px;
+    box-shadow: none;
 }
 
 div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayersList]{
@@ -23,13 +33,18 @@ div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel]
 
 div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerStylePanel] > .gpf-panel__body,
 div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > .gpf-panel__body
- {
+{
     max-height: unset !important;
 }
 
-.GPlayerSwitcher_layer {
-  background-color: var(--background-overlap-grey);
-  /* padding-right: 40px; */
+.GPlayerSwitcher_layer:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background-color: var(--border-default-grey);
 }
 
 .gpf-btn-icon-layerswitcher::after {
@@ -38,7 +53,7 @@ div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > 
 }
 
 .gpf-btn-icon-ls-visibility {
-  box-shadow: none;
+    box-shadow: none;
 }
 
 .gpf-btn-icon-ls-visibility::after {
@@ -46,7 +61,7 @@ div:not(.position) > div[id^=GPlayerSwitcher-] > dialog[id^=GPlayerInfoPanel] > 
     mask: url("img/dsfr/visible-open.svg") center no-repeat;
 }
 
-button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
+button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]:has(.gpf-btn-icon-ls-visibility)::after {
     -webkit-mask: url("img/dsfr/visible-close-blanc.svg") center no-repeat;
     mask: url("img/dsfr/visible-close-blanc.svg") center no-repeat;
 }
@@ -93,48 +108,50 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="false"]::after {
     mask: url("img/dsfr/dragndrop.svg") center no-repeat;
 }
 
-button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
-    height: 56px;
-    max-height: 56px;
+.gpf-btn-icon-ls-draggable::after {
+    -webkit-mask: url("img/dsfr/draggable.svg") center no-repeat;
+    mask: url("img/dsfr/draggable.svg") center no-repeat;
+}
+
+.GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools {
+    padding: 0 12px 12px 12px;
+}
+
+.GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools * {
+    display: inherit;
+    transition: display 0.5s ease-out 0;
+}
+.GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"]) > .GPlayerAdvancedTools * {
+    display: none;
+    transition: display 0.5s ease-out 0;
 }
 
 /* Surchargé en inline avec "hidden" pour les couches n'ayant pas de description ou de titre */
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools > .GPlayerInfo {
     visibility: visible;
 }
-
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] {
     box-shadow: none;
+}
+
+button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]::before {
+    transform: rotate(-180deg);
+}
+button[id^=GPshowAdvancedTools_ID_]::before {
+    transition: transform .3s;
 }
 
 button[id^=GPshowAdvancedTools_ID_][aria-pressed="false"] + .GPlayerAdvancedTools > .GPlayerInfo {
     visibility: hidden;
 }
 
-button[id^=GPshowAdvancedTools_ID_] {
-    position: absolute;
-    top: 12px;
-    right: 16px;
-}
 
 div[id^=GPbasicTools_ID_] {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-    flex-direction: row-reverse;
-    padding-right: 40px;
+    padding: 12px 8px;
 }
 
 div[id^=GPadvancedTools_ID_] {
-    display: flex;
-    align-content: center;
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-around;
-    height: inherit;
-    padding-right: 40px;
+    padding: 0;
 }
 
 .gpf-btn-header {
@@ -153,7 +170,12 @@ div[id^=GPadvancedTools_ID_] {
 
 .gpf-panel__body_ls {
     overflow: auto;
-    max-height: 300px !important;
+    flex: 0 1 auto;
+}
+
+div:not(.position) > div[id^="GPlayerSwitcher-"] > dialog[id^="GPlayersList"] .gpf-panel__body_ls {
+    flex: 1 0 auto;
+    max-height: 450px;
 }
 
 .gpf-panel__title_ls {
@@ -222,6 +244,8 @@ div[id^=GPadvancedTools_ID_] {
 
 .GPlayerDragNDrop {
     cursor: move;
+    width: 40px;
+    height: 40px;
 }
 
 .gpf-range__output {
@@ -281,6 +305,16 @@ div[id^=GPlayerStyleContent] {
     overflow: visible;
 }
 
+div[id^=GPlayerSwitcher_ID_]:hover {
+    background-color: var(--background-default-grey-hover);
+}
+div[id^=GPlayerSwitcher_ID_].sortable-chosen {
+    background-color: var(--background-default-grey-active);
+}
+div[id^=GPlayerSwitcher_ID_][aria-current=true] {
+    background-color: var(--background-alt-blue-france);
+}
+
 .GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextualMore[aria-pressed="true"]),
 .GPlayerAdvancedTools:has(.GPlayerAdvancedToolsContextual[aria-pressed="true"]) {
     position: relative;
@@ -293,7 +327,7 @@ div[id^=GPlayerStyleContent] {
     flex-wrap: wrap;
     font-size: 13px;
     z-index: 12;
-    background-color: var(--background-overlap-grey);
+    background-color: var(--background-default-grey);
     border-radius: 6px;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
     padding: 14px 6px;
@@ -327,24 +361,145 @@ div[id^=GPlayerStyleContent] {
   color: var(--text-disabled-grey);
 }
 
-@media (max-width: 576px) {
-    .GPlayerAdvancedTools {
-        width: calc(100% + 40px);
-    }
+/* Ajout layer switcher */
 
-    .GPlayerAdvancedTools > .GPlayerEdit, .GPlayerAdvancedTools > .GPlayerRemove, .GPlayerAdvancedTools > .GPlayerGreyscale, .GPlayerAdvancedTools > .GPlayerInfo, .GPlayerAdvancedTools > .GPlayerExtent {
-        display: none;
-    }
+/* Bouton header */
+div[id^=GPbodyHeader-] {
+    padding: 0.5rem;
+}
 
-    .GPlayerAdvancedToolsContextual {
-        display: inline-flex;
-    }
+div[id^=GPbodyHeader-] button.gpf-btn {
+    margin-bottom: 0;
+}
 
-    .GPlayerAdvancedToolsContextualMore {
-        display: none;
-    }
+/* Titre de la couche */
 
-    [id^=GPopacity_ID_] {
-        flex-grow: 0.6;
-    }
+div[id^=GPtitle_ID_] {
+    min-height: 44px;
+    min-width: 184px;
+}
+
+div[id^=GPlayerTitle_ID_] > * {
+    font-weight: 400;
+}
+
+.GPlayerName {
+    font-size: 16px;
+    line-height: 24px;
+    max-height: 48px;
+    color: var(--text-label-grey);
+}
+
+.GPlayerProducer {
+    font-size: 12px;
+    line-height: 20px;
+    height: 20px;
+    color: var(--text-mention-grey);
+}
+
+/* Groupe bouton */
+
+div[id^="GPbasicToolButtons_ID_"] > button.gpf-btn-icon {
+    height: 2rem;
+    width: 2rem;
+    flex: 0 0 2rem;
+}
+
+/* Opacité */
+
+div[id^=GPopacityContainer_ID_] {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height:40px;
+    gap: 8px;
+    width: 100%;
+    padding: 0 8px;
+}
+
+div[id^=GPopacityContainer_ID_] > .GPlayerOpacity {
+    flex: auto;
+}
+
+/* Bouton d'actions */
+
+div[id^=GPAdvancedToolBtnsGroup_ID_] {
+    margin: 4px 0 0;
+    width: 100%;
+    gap: 4px 16px;
+}
+
+div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn {
+    margin: 0;
+}
+
+div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn[class*=" gpf-btn-icon-ls-tools-"] {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    white-space: nowrap;
+}
+
+div[id^=GPAdvancedToolBtnsGroup_ID_] > button.gpf-btn[class*=" gpf-btn-icon-ls-tools-"]::before {
+    content: "";
+    margin-left: -0.125rem;
+    margin-right: 0.5rem;
+    flex: 0 0 auto;
+    vertical-align: calc((0.75em - var(--icon-size)) * 0.5);
+    background-color: currentColor;
+    width: 1rem;
+    height: 1rem;
+    mask-size: 100% 100%;
+}
+
+/* Drag and drop */
+
+div.keyboard-navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    gap:4px;
+    width: 100%;
+    height: 100%;
+}
+
+div.keyboard-navigation > span {
+    width: auto;
+    color: var(--text-action-high-blue-france);
+}
+
+div.keyboard-navigation > span::before {
+    visibility: hidden;
+}
+
+div.keyboard-navigation:focus-within > span {
+    display: inline-flex;
+}
+div.keyboard-navigation:focus-within > span::before {
+    visibility: visible;
+}
+
+div.GPlayerDragNDrop:focus-within::after {
+    visibility: hidden;
+}
+
+/* Cache les options de drag and drop */
+div[id^="GPlayerSwitcher_ID_"]:first-child [data-direction="up"],
+div[id^="GPlayerSwitcher_ID_"]:first-child [data-direction="up"]::before {
+    visibility: hidden;
+}
+
+div[id^="GPlayerSwitcher_ID_"]:last-child [data-direction="down"],
+div[id^="GPlayerSwitcher_ID_"]:last-child [data-direction="down"]::before {
+    visibility: hidden;
+}
+
+div[id^="GPlayerSwitcher_ID_"]:only-child .GPlayerDragNDrop {
+    display: none;
+}
+
+img[id^=GPtitleImage] {
+    width: 44px;
+    height: 44px;
 }

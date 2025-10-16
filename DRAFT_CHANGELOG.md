@@ -15,18 +15,13 @@ __DATE__
 
 * ✨ [Added]
 
-  - Territories : Ajout d'un menu option pour permettre de charger une configuration des territoires (#408)
-  - LayerSwitcher : Possibilité d'ajouter des outils externes (#418)
-  - LayerSwitcher : Option pour verrouiller une couche (#414)
-  - LayerSwitcher : Tooltips avancés en HTML sur le survol des couches (#420)
-  - SearchEngine : la sélection du résultat entraîne désormais un zoom par rapport à son emprise (#432)
-  - Reverse Geocode : ajout d'un bouton pour copier un résultat dans le presse-papier (#415)
+  - Contextual Menu : Ajout du getFeatureInfo dans les entrées du menu contextuel (#442)
 
 * 🔨 [Changed]
 
-  - Compute : réduction du nombre de chiffres significatifs des coordonnées envoyés pour les requêtes itinéraires et isochrones (#411)
-  - Zoom : changement des icones de zoom en mode DSFR (#412)
   - Catalog : refonte et optimisation du widget (#423)
+  - LayerSwitcher : refonte complète de l'outil (#434)
+  - Contextual Menu : Changement nom de l'entrée isochrone (3d228a692c8d51155bbdf8c8c32bb51629b6a03f)
 
 * 🔥 [Deprecated]
 
@@ -34,11 +29,9 @@ __DATE__
 
 * 🐛 [Fixed]
 
-  - MousePosition : Edition des coordonnées (#407 #416)
-  - Layerswitcher : Menu contextuel en mode mobile snas items vides (#417)
-  - ControlList et ZoomOut : Tooltips cassées (#419)
-  - Coordinates : homogénéisation de l'affichage des coordonnées dans l'ordre lat,lon (#421)
-  - ContextMenu : correction recherche commune par wfs et interrogation service alti (#438)
+  - LayerSwitcher : Drag & drop sous Chrome (#444)
+  - Contextual Menu : GetFeatureInfo via menu contextuel conserve état du widget associé (#445)
+  - GetFeatureInfo : Possibilité de sélectionner à la souris le contenu renvoyer par le GFI (#446)
 
 * 🔒 [Security]
 
