@@ -292,6 +292,36 @@ class Catalog extends Control {
         }
     }
 
+    /**
+     * Returns true if widget is collapsed (minimized), false otherwise
+     *
+     * @returns {Boolean} collapsed - true if widget is collapsed
+     */
+    getCollapsed () {
+        return this.collapsed;
+    }
+
+    /**
+     * Collapse or display widget main container
+     *
+     * @param {Boolean} collapsed - True to collapse widget, False to display it
+     */
+    setCollapsed (collapsed) {
+        if (collapsed === undefined) {
+            logger.error("[ERROR] Catalog:setCollapsed - missing collapsed parameter");
+            return;
+        }
+        if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
+            return;
+        }
+        if (collapsed) {
+            this.buttonCatalogClose.click();
+        } else {
+            this.buttonCatalogShow.click();
+        }
+        this.collapsed = collapsed;
+    }
+
     // ################################################################### //
     // ##################### public methods ############################## //
     // ################################################################### //
@@ -1570,9 +1600,13 @@ class Catalog extends Control {
      * @private
      */
     onShowCatalogClick (e) {
-        if (e.target.ariaPressed === "true") {
+        var opened = e.target.ariaPressed;
+        if (opened === "true") {
             this.onPanelOpen();
         }
+        this.collapsed = !(opened === "true");
+        this.dispatchEvent("change:collapsed");
+        
         logger.trace(e);
     }
 

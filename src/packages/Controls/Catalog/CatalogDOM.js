@@ -226,7 +226,7 @@ var CatalogDOM = {
     // ################################################################### //
 
     _createCatalogContentDivElement : function () {
-        var container = stringToHTML(`<div class="catalog-container-content" style="padding:10px"></div>`);
+        var container = stringToHTML(`<div class="catalog-container-content" style=""></div>`);
         return container.firstChild;
     },
     _createCatalogContentTitleElement : function (title) {
@@ -244,12 +244,12 @@ var CatalogDOM = {
         var strContainer = `
         <!-- barre de recherche globale -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
-        <div class="catalog-container-search-global" style="padding-top:10px;padding-bottom:20px">
+        <div class="catalog-container-search-global" style="padding:10px;">
             <div class="fr-search-bar" id="catalog-header-search-global" role="search" style="justify-content: center;">
                 <label class="fr-label" for="catalog-input-search-global">
                     Recherche
                 </label>
-                <div class="input-wrapper">
+                <div class="input-wrapper" style="width:100%;">
                     <input class="fr-input" placeholder="${label}" type="text" id="catalog-input-search-global" name="search-input" incremental>
                     <button type="button" id="catalog-button-reset-search-global" class="clear-btn" aria-label="Effacer le texte">
                         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
@@ -367,12 +367,12 @@ var CatalogDOM = {
             }                
             return `
             <!-- barre de recherche spécifique à la catégorie -->
-            <div id="catalog-container-search-specific" class="fr-tabs__list ${className}" style="padding-top:20px;padding-bottom:10px;justify-content:center;">
-                <div class="fr-search-bar" id="catalog-header-search-specific" role="search">
+            <div id="catalog-container-search-specific" class="fr-tabs__list ${className}" style="padding:10px;justify-content:center;">
+                <div class="fr-search-bar" id="catalog-header-search-specific" role="search" style="width:100%;">
                     <label class="fr-label" for="catalog-input-search-specific">
                         Recherche dans la catégorie
                     </label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper" style="width:100%">
                         <input class="fr-input" placeholder="${title}" type="text" id="catalog-input-search-specific" name="search-input-specific" incremental>
                         <button type="button" id="catalog-button-reset-search-specific" class="clear-btn" aria-label="Effacer le texte">
                             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
@@ -734,7 +734,7 @@ var CatalogDOM = {
                 class="fr-fieldset__element" 
                 id="fieldset-${categoryId}_${name}-${service}"
                 style="contain: content;">
-                <div class="fr-checkbox-group gpf-flex" style="justify-content: flex-start;">
+                <div class="fr-checkbox-group gpf-flex" style="justify-content:flex-start;padding-top:5px;padding-bottom:5px;box-shadow: inset 0 1px 0 0 var(--border-default-grey),0 0 0 0 var(--border-default-grey);">
                     <input
                         class="fr-input"
                         name="checkboxes-${categoryId}"
@@ -749,7 +749,9 @@ var CatalogDOM = {
                         ${tmplThumbnail(thumbnail)}
                     </div>
                     <label 
-                        class="GPlabelActive fr-label"  
+                        class="GPlabelActive fr-label"
+                        role="label-collapse-more-${categoryId}"
+                        aria-controls="catalog-collapse-more-${i}-${categoryId}"
                         title="${name}"
                         style="display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; cursor: pointer;">
                         ${title}
@@ -772,9 +774,7 @@ var CatalogDOM = {
                         <span class="fr-label fr-message">${name} - ${service}</span>
                         ${tmplProducers(informations.producers)}
                     </p>
-                    <p class="fr-label fr-hint-text" style="">
-                        ${description}
-                    </p>
+                    ${description}
                     ${tmplMetadatas(informations.metadatas)}
                 </div>
             </div>
@@ -1011,6 +1011,7 @@ var CatalogDOM = {
                 }, false);
             });
         }
+
         // ouverture du menu "En savoir plus" d'une couche
         var buttonNameMore = `button-collapse-more-${id}`;
         var buttonsMore = content.querySelectorAll("[role=" + "\"" + buttonNameMore + "\"]");
@@ -1035,6 +1036,21 @@ var CatalogDOM = {
                 }, false);
             });
         }
+
+        var labelNameMore = `label-collapse-more-${id}`;
+        var labelsMore = content.querySelectorAll("[role=" + "\"" + labelNameMore + "\"]");
+        if (labelsMore) {
+            labelsMore.forEach((label) => {
+                label.addEventListener("click", (e) => {
+                    var button = document.getElementById(e.target.getAttribute("aria-controls"));
+                    if (!button) {
+                        return;
+                    }
+                    button.click();
+                }, false);
+            });
+        }
+
         // ouverture d'une sous section ex. theme routier
         // sur le clic de l'icone
         // pour faciliter l'ouverture de la section
