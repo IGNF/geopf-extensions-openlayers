@@ -14,3 +14,57 @@ div[id^=GPsearchEngine-AdvancedContainer] > button.GPSearchEngine-locate {
   min-height: 2rem;
   padding: 0.25rem 0.75rem;
 }
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch] > .GPLonLatInputs {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch][data-unit="DMS"] > .GPLonLatInputs {
+  flex-direction: column;
+}
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch] > .GPLonLatInputs .display-mask {
+  display: none;
+}
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch][data-unit="DMS"] > .GPLonLatInputs .display-mask {
+  display: unset;
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch][data-unit="DMS"] > .GPLonLatInputs input[id^=CoordinateAdvancedSearch-] {
+  color: transparent;
+  caret-color: var(--text-default-grey);
+  letter-spacing: 2px;
+}
+
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch] > .GPLonLatInputs select {
+  display: none;
+}
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch][data-unit="DMS"] > .GPLonLatInputs select {
+  display: unset;
+}
+
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch] > .GPLonLatInputs .GPCoordinateInputs {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+
+form[id^=GPAdvancedForm-CoordinateAdvancedSearch] > .GPLonLatInputs .GPCoordinateInputs select {
+  width:auto;
+}
+
+.GPCoordinateInputs > div {
+  position: relative;
+}

@@ -80,6 +80,7 @@ module.exports = (env, argv) => {
             case "LocationAdvancedSearch":
             case "AbstractAdvancedSearch":
             case "InseeAdvancedSearch":
+            case "CoordinateAdancedSearch":
                 // crs
                 break;
             case "MeasureArea":

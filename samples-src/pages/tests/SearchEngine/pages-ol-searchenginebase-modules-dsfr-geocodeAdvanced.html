@@ -7,6 +7,7 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlSearchEngineAdvanced.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlInseeAdvancedSearch.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLocationAdvancedSearch.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCoordinateAdvancedSearch.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -65,9 +66,12 @@
                     var location = new ol.control.LocationAdvancedSearch({
                     })
 
+                    var coordinates = new ol.control.CoordinateAdvancedSearch({
+                    })
+
 					// 2. Appel du SearchEngine
                     var search = new ol.control.SearchEngineAdvanced({
-                        advancedSearch : [insee, location]
+                        advancedSearch : [insee, location, coordinates]
                     });
 
 					// 3. Ajout du SearchEngine à la carte

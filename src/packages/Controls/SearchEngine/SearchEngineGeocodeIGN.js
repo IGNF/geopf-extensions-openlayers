@@ -65,7 +65,6 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
             options.searchService = new IGNSearchService(options.serviceOptions);
         }
 
-
         super.initialize(options);
     }
 

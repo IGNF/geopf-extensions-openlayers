@@ -201,12 +201,12 @@ class SearchEngineAdvanced extends Control {
         this.layer.getSource().clear();
         this.extent.getSource().clear();
         let extent, zoom;
-        if (e.result !== null) {
+        if (!!e.result) {
             this.layer.getSource().addFeature(e.result);
             extent = e.result.getGeometry().getExtent();
             zoom = 15;
         }
-        if (e.extent !== null) {
+        if (!!e.extent) {
             this.extent.getSource().addFeature(e.extent);
             extent = e.extent.getGeometry().getExtent();
         }
@@ -214,7 +214,6 @@ class SearchEngineAdvanced extends Control {
             let view = this.getMap().getView();
             if (extent) {
                 view.fit(extent);
-                view.getZoom();
                 if (view.getZoom() > 15) {
                     view.setZoom(15);
                 }
