@@ -124,73 +124,78 @@ var ReverseGeocodeDOM = {
 
         var container = document.getElementById(this._addUID("GPreverseGeocodingResultsList"));
         var resultDiv = document.createElement("div");
-        resultDiv.id = this._addUID("GPreverseGeocodedLocationResultDiv_" + id);
-        var div = document.createElement("div");
-        div.id = this._addUID("GPreverseGeocodedLocation_" + id);
-        div.setAttribute("tabindex", "0");
-        div.className = "GPautoCompleteProposal gpf-panel__items";
-        div.innerHTML = locationDescription;
-        div.title = locationDescription;
 
-        if (div.addEventListener) {
-            div.addEventListener("mouseover", function (e) {
-                context.onReverseGeocodingResultMouseOver(e);
-            });
-            div.addEventListener("focus", function (e) {
-                context.onReverseGeocodingResultMouseOver(e);
-            });
-            div.addEventListener("mouseout", function (e) {
-                context.onReverseGeocodingResultMouseOut(e);
-            });
-            div.addEventListener("blur", function (e) {
-                context.onReverseGeocodingResultMouseOut(e);
-            });
-            div.addEventListener("click", function (e) {
-                if (typeof context.onReverseGeocodingResultClick === "function") {
-                    context.onReverseGeocodingResultClick(e);
-                }
-            });
-        } else if (div.attachEvent) {
-            div.attachEvent("onmouseover", function (e) {
-                context.onReverseGeocodingResultMouseOver(e);
-            });
-            div.attachEvent("onmouseout", function (e) {
-                context.onReverseGeocodingResultMouseOut(e);
-            });
-            div.attachEvent("onclick", function (e) {
-                if (typeof context.onReverseGeocodingResultClick === "function") {
-                    context.onReverseGeocodingResultClick(e);
-                }
-            });
+        if (!locationDescription) {
+            resultDiv.innerHTML = "Aucun résultat trouvé";
+        } else {
+            resultDiv.id = this._addUID("GPreverseGeocodedLocationResultDiv_" + id);
+            var div = document.createElement("div");
+            div.id = this._addUID("GPreverseGeocodedLocation_" + id);
+            div.setAttribute("tabindex", "0");
+            div.className = "GPautoCompleteProposal gpf-panel__items";
+            div.innerHTML = locationDescription;
+            div.title = locationDescription;
+    
+            if (div.addEventListener) {
+                div.addEventListener("mouseover", function (e) {
+                    context.onReverseGeocodingResultMouseOver(e);
+                });
+                div.addEventListener("focus", function (e) {
+                    context.onReverseGeocodingResultMouseOver(e);
+                });
+                div.addEventListener("mouseout", function (e) {
+                    context.onReverseGeocodingResultMouseOut(e);
+                });
+                div.addEventListener("blur", function (e) {
+                    context.onReverseGeocodingResultMouseOut(e);
+                });
+                div.addEventListener("click", function (e) {
+                    if (typeof context.onReverseGeocodingResultClick === "function") {
+                        context.onReverseGeocodingResultClick(e);
+                    }
+                });
+            } else if (div.attachEvent) {
+                div.attachEvent("onmouseover", function (e) {
+                    context.onReverseGeocodingResultMouseOver(e);
+                });
+                div.attachEvent("onmouseout", function (e) {
+                    context.onReverseGeocodingResultMouseOut(e);
+                });
+                div.attachEvent("onclick", function (e) {
+                    if (typeof context.onReverseGeocodingResultClick === "function") {
+                        context.onReverseGeocodingResultClick(e);
+                    }
+                });
+            }
+    
+            // Copy result button
+            var copyResultButton = document.createElement("button");
+            copyResultButton.type = "button";
+            copyResultButton.id = this._addUID("GPreverseGeocodedLocationResultCopy_" + id);
+            copyResultButton.setAttribute("data-text-geolocate", div.innerHTML);
+            copyResultButton.setAttribute("title", "Copier le résultat");
+            copyResultButton.classList.add("gpf-btn-icon-copy-result", "fr-btn", "fr-btn--tertiary", "gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
+    
+            if (copyResultButton.addEventListener) {
+                copyResultButton.addEventListener("click", function (e) {
+                    if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
+                        context.onReverseGeocodingResultCopyButtonClick(e);
+                        copyResultButton.classList.add("GPcopiedLocation");
+                        setTimeout(() => {
+                            copyResultButton.classList.remove("GPcopiedLocation");
+                        }, 1000); 
+                    }
+                });
+            } else if (copyResultButton.attachEvent) {
+                copyResultButton.attachEvent("onclick", function (e) {
+                    if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
+                        context.onReverseGeocodingResultCopyButtonClick(e);
+                    }
+                });
+            }
+            resultDiv.appendChild(div);
+            resultDiv.appendChild(copyResultButton);
         }
-
-        // Copy result button
-        var copyResultButton = document.createElement("button");
-        copyResultButton.type = "button";
-        copyResultButton.id = this._addUID("GPreverseGeocodedLocationResultCopy_" + id);
-        copyResultButton.setAttribute("data-text-geolocate", div.innerHTML);
-        copyResultButton.setAttribute("title", "Copier le résultat");
-        copyResultButton.classList.add("gpf-btn-icon-copy-result", "fr-btn", "fr-btn--tertiary", "gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
-
-        if (copyResultButton.addEventListener) {
-            copyResultButton.addEventListener("click", function (e) {
-                if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
-                    context.onReverseGeocodingResultCopyButtonClick(e);
-                    copyResultButton.classList.add("GPcopiedLocation");
-                    setTimeout(() => {
-                        copyResultButton.classList.remove("GPcopiedLocation");
-                    }, 1000); 
-                }
-            });
-        } else if (copyResultButton.attachEvent) {
-            copyResultButton.attachEvent("onclick", function (e) {
-                if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
-                    context.onReverseGeocodingResultCopyButtonClick(e);
-                }
-            });
-        }
-        resultDiv.appendChild(div);
-        resultDiv.appendChild(copyResultButton);
         container.appendChild(resultDiv);
     },
 
