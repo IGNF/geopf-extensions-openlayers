@@ -126,7 +126,14 @@ var ReverseGeocodeDOM = {
         var resultDiv = document.createElement("div");
 
         if (!locationDescription) {
-            resultDiv.innerHTML = "Aucun résultat trouvé";
+            resultDiv.id = this._addUID("GPreverseGeocodedLocationNoResultDiv");
+            var div = document.createElement("div");
+            div.id = this._addUID("GPreverseGeocodedNoResult");
+            div.setAttribute("tabindex", "0");
+            div.className = "GPautoCompleteProposal gpf-panel__items";
+            div.innerHTML = "Aucun résultat trouvé";
+            div.title = "Aucun résultat trouvé";
+            resultDiv.appendChild(div);
         } else {
             resultDiv.id = this._addUID("GPreverseGeocodedLocationResultDiv_" + id);
             var div = document.createElement("div");

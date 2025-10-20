@@ -1200,7 +1200,7 @@ class ReverseGeocode extends Control {
      */
     _fillGeocodedLocationListContainer (locations) {
         // si pas de résultats renvoyés, on appelle la fonction sans paramètres pour créer la div de résultat vide
-        if (!locations) {
+        if (locations.length === 0) {
             this._createReverseGeocodingResultElement();
         }
         //  ajout de la liste des résultats dans le container des resultats
