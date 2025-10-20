@@ -43,7 +43,7 @@ var ReverseGeocodeDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowReverseGeocodingPicto");
         button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowReverseGeocodingPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-reverse fr-btn fr-btn--tertiary";
-        button.setAttribute("aria-label", "Ouvrir la recherche inverse");
+        button.setAttribute("aria-label", "Ouvrir la recherche d'adresses");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -270,7 +270,7 @@ var ReverseGeocodeDOM = {
             buttonNew.addEventListener("click", function (e) {
                 document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
                 document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "GPform gpf-panel__content fr-modal__content";
-                document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Recherche inverse";
+                document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Trouver une adresse";
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPelementHidden");
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-hidden");
                 self.onGPreverseGeocodingReturnPictoClick(e);
@@ -279,7 +279,7 @@ var ReverseGeocodeDOM = {
             buttonNew.attachEvent("onclick", function (e) {
                 document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
                 document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "GPform gpf-panel__content fr-modal__content";
-                document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Recherche inverse";
+                document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Trouver une adresse";
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPelementHidden");
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-hidden");
                 self.onGPreverseGeocodingReturnPictoClick(e);
@@ -297,7 +297,7 @@ var ReverseGeocodeDOM = {
         var div = document.createElement("div");
         div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         div.id = this._addUID("GPreverseGeocodingHeaderTitle");
-        div.innerHTML = "Recherche inverse";
+        div.innerHTML = "Trouver une adresse";
         return div;
     },
 
