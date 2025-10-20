@@ -1,4 +1,42 @@
 /* GET FEATURE INFO */
+.gpf-btn-header_gfi {
+    z-index: 2;
+    position: absolute;
+}
+
+.gpf-btn-icon-header_gfi {
+    color: var(--text-action-high-blue-france); /* ou inherit */
+    background-color: currentColor;
+    mask: url('img/GFI.svg') no-repeat center / contain;
+    -webkit-mask: url('img/GFI.svg') no-repeat center / contain;
+    margin-left: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.gpf-panel__body_gfi {
+    overflow: auto;
+    max-height: 300px !important;
+}
+
+.gpf-panel__title_gfi {
+    color: #101092;
+    padding: 12px 15px;
+    position: relative;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    right: -16px;
+}
+.gpf-panel__header_gfi {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    background: #E3E3FD;
+    height: 48px;
+}
+
 .gpf-btn-icon-getfeatureinfo::after {
     -webkit-mask: url("img/NoGFI.svg") center no-repeat;
     mask: url("img/NoGFI.svg") center no-repeat;
