@@ -50,7 +50,7 @@
   cursor: pointer;
 }
 
-div[id^=GPreverseGeocodedLocationResultDiv_] {
+#GPreverseGeocodedLocationNoResultDiv, div[id^="GPreverseGeocodedLocationResultDiv_"] {
   display: flex;
   align-items: center;
 }

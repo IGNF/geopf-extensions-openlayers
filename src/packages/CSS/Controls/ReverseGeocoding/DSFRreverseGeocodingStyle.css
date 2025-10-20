@@ -22,7 +22,7 @@ div[id^=GPreverseGeocodingResultsList-] {
   width: inherit;
 }
 
-div[id^=GPreverseGeocodedLocationResultDiv_] {
+#GPreverseGeocodedLocationNoResultDiv, div[id^=GPreverseGeocodedLocationResultDiv_] {
   display: grid;
   gap: 10px;
   grid-template-columns: 80% 20%;
