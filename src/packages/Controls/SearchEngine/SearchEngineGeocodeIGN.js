@@ -59,6 +59,7 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
             options.serviceOptions = options.serviceOptions ? options.serviceOptions : {};
             options.serviceOptions.autocomplete = false;
         }
+        options.returnTrueGeometry = true;
 
         // Créé le serbice de géocodage IGN
         if (!options.searchService || !(options.searchService instanceof AbstractSearchService)) {

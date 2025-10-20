@@ -22,6 +22,10 @@ var logger = Logger.getLogger("searchengine");
  * @property {AutocompleteOptions} [autocompleteOptions] - Options spécifiques à l'autocomplétion
  * @property {SearchOptions} [searchOptions] - Options spécifiques à la recherche finale
  * @property {GeocodeOptions} [geocodeOptions] - Options spécifiques au géocodage
+ * @property {boolean} [autocomplete=true]
+ * @property {String} [index="address,poi"]
+ * @property {Number} [limit=1]
+ * @property {boolean} [returnTrueGeometry=false]
  */
 
 /**
@@ -121,6 +125,9 @@ class AbstractSearchService extends BaseObject {
         if (options.autocomplete === false) {
             this.set("autocomplete", false);
         }
+        this.set("index", options.index || "address,poi");
+        this.set("limit", typeof options.limit === "number" ? options.limit : 1);
+        this.set("returnTrueGeometry", !!options.returnTrueGeometry);
     }
 
     /**
@@ -716,18 +723,22 @@ class IGNSearchService extends AbstractSearchService {
         if (location === undefined) {
             return;
         }
-
         // on ajoute le texte de l'autocomplétion dans l'input
-        let label = GeocodeUtils.getSuggestedLocationFreeform(location);
+        let label;
+        if (typeof location === "string") {
+            label = location;
+        } else {
+            label = GeocodeUtils.getSuggestedLocationFreeform(location);
+        }
 
         // on sauvegarde le localisant
         this._currentGeocodingLocation = label;
 
         // on centre la vue et positionne le marker, à la position reprojetée dans la projection de la carte
         this._requestGeocoding({
-            index : "address,poi",
-            limit : 1,
-            returnTrueGeometry : true,
+            index : this.get("index") || "address,poi",
+            limit : this.get("limit") || 1,
+            returnTrueGeometry : this.get("returnTrueGeometry"),
             location : label,
             filters : filters,
             onSuccess : this._onSuccessSearch.bind(this),

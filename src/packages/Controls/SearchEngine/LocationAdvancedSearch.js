@@ -1,6 +1,6 @@
 import Helper from "../../Utils/Helper";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
-import SearchEngineGeocodeIGN from "./SearchEngineGeocodeIGN";
+import { IGNSearchService } from "./Service";
 
 class LocationAdvancedSearch extends AbstractAdvancedSearch {
 
@@ -18,7 +18,14 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         // call ol.control.Control constructor
         super(options);
 
-        this.search.on("search", function (e) {
+        // Search service
+        this.searchService = new IGNSearchService({
+            index : "poi",
+            limit : 1,
+            returnTrueGeometry : true
+        });
+        // Do something on search
+        this.searchService.on("search", function (e) {
             this.dispatchEvent(e);
         }.bind(this));
     }
@@ -31,11 +38,12 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
          */
         this.CLASSNAME = "LocationAdvancedSearch";
     }
-
+    /*
     setMap (map) {
         super.setMap(map);
         this.search.setMap(map);
     }
+    */
     _getLabelContainer (text, type, input) {
         const container = document.createElement("div");
         container.className = type;
@@ -81,19 +89,20 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         });
 
         // Search input
-        const searchContainer = this._getLabelContainer("Renseigner un lieu", "fr-input-group");
-        this.search = new SearchEngineGeocodeIGN({
-            autocomplete : false,
-            target : searchContainer,
-            historic : "GPAdvancedLocation",
-            maximumEntries : 0
-        });
+        const searchInput = this.searchInput = document.createElement("input");
+        searchInput.className = "fr-input";
+        searchInput.type = "text";
+        searchInput.name = "search";
+        searchInput.id = Helper.getUid("LocationAdvancedSearch-search-");
+        this._getLabelContainer("Renseigner un lieu", "fr-input-group", searchInput);
 
         // Code postal
         const postalInput = document.createElement("input");
         postalInput.className = "fr-input";
         postalInput.type = "text";
         postalInput.name = "postalCode";
+        postalInput.pattern = "(\\d{5}";
+        postalInput.title = "Code postal à 5 chiffres";
         postalInput.id = Helper.getUid("LocationAdvancedSearch-postal-");
         this._getLabelContainer("Code postal", "fr-input-group", postalInput);
         postalInput.addEventListener("change", () => {
@@ -105,6 +114,8 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         inseeInput.className = "fr-input";
         inseeInput.name = "cityCode";
         inseeInput.type = "text";
+        postalInput.pattern = "(\\d\\d|2[A,B,a,b])\\d{3}";
+        postalInput.title = "Code INSEE sur 5 caractères";
         inseeInput.id = Helper.getUid("LocationAdvancedSearch-insee-");
         this._getLabelContainer("Code INSEE", "fr-input-group", inseeInput);
         inseeInput.addEventListener("change", () => {
@@ -125,7 +136,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         this.element.querySelectorAll("input").forEach(input => {
             input.value = "";
         });
-        this.filters = {
+        this.filter = {
             category : "",
             postcode : "",
             citycode : ""
@@ -136,18 +147,9 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
      */
     _onSearch (e) {
         super._onSearch(e);
-        const value = this.search.input.value;
+        const value = this.searchInput.value;
         if (value) {
-            this.search.searchService._requestGeocoding({
-                "index" : "poi",
-                "limit" : 1,
-                maximumResponses : 1,
-                filters : this.filter,
-                "returnTrueGeometry" : true,
-                "location" : value,
-                onSuccess : e => this.search.searchService._onSuccessSearch(e),
-                onFailure : e => console.log("ERROR", e)
-            });
+            this.searchService.search(value, this.filter);
         }
     }
 

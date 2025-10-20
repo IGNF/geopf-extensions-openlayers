@@ -2,10 +2,13 @@
 
 div[id^=GPsearchEngine-Advanced] {
   width: 312px;
+  padding: 5px;
+  margin: -5px;
 }
 
 div[id^=GPsearchEngine-Advanced] div[id^=GPsearchEngine-] {
   width: 100%;
+  margin: 0 5px;
 }
 
 form[id^=GPAdvancedForm-], form[id^=GPAdvancedForm-] * {
