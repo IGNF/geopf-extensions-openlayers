@@ -51,6 +51,10 @@ declare class GetFeatureInfo extends Control {
      * specify if control is draggable (true) or not (false) */
     draggable: boolean | undefined;
     /**
+     * @type {String}
+     * if specified, the given html string will be displayed if no data are returned by the gfi */
+    noDataMessage: string | undefined;
+    /**
      * @type {Boolean}
      * specify if control add some stuff auto */
     auto: boolean | undefined;
@@ -68,6 +72,8 @@ declare class GetFeatureInfo extends Control {
     private getFeatureInfoAccordionGroup;
     /** @private */
     private panelGetFeatureInfoEntriesContainer;
+    /** @private */
+    private noDataMessageDiv;
     /** {Array} specify some events listeners */
     eventsListeners: any[] | undefined;
     /** GFI settings */

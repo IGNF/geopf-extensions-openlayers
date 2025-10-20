@@ -7,9 +7,11 @@ declare namespace GetFeatureInfoDOM {
     function _createGetFeatureInfoPanelElement(): HTMLElement;
     function _createGetFeatureInfoPanelDivElement(): HTMLDivElement;
     function _createGetFeatureInfoPanelHeaderElement(): HTMLElement;
+    function _createGetFeatureInfoPanelIconElement(): HTMLLabelElement;
     function _createGetFeatureInfoPanelTitleElement(): HTMLDivElement;
     function _createGetFeatureInfoPanelCloseElement(): HTMLButtonElement;
     function _createGetFeatureInfoWaitingDiv(): HTMLElement;
+    function _createGetFeatureInfoNoData(noDataMessage: string): DOMElement;
     function _createGetFeatureInfoAccordionGroup(): HTMLElement;
     function _createGetFeatureInfoLayerAccordion(layername: string): HTMLElement;
 }
