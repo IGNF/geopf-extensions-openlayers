@@ -66,7 +66,6 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @private
      */
     _initCoordinateSearchSystems (options) {
-        console.log("init coord");
         this._coordinateSearchSystems = [];
         // on donne la possibilité à l'utilisateur de modifier
         // la liste des systèmes à afficher
@@ -112,7 +111,6 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @private
      */
     _initCoordinateSearchUnits (options) {
-        console.log("init search units");
         this._coordinateSearchUnits = [];
         // on donne la possibilité à l'utilisateur de modifier
         // la liste des unités à afficher
@@ -266,7 +264,6 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     addInputs () {
         super.addInputs();
-        console.log("add inputs");
 
         // Indication champs obligatoire
         const div = document.createElement("div");
@@ -284,7 +281,6 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         this.inputs.push(systemContainer);
 
         this._coordinateSearchSystems.forEach((elem, index) => {
-            console.log(elem);
             const option = document.createElement("option");
             option.value = index;
             option.selected = !index;
@@ -397,8 +393,6 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
 
         this.unit.addEventListener("change", this._updateUnits.bind(this));
 
-        console.log(this);
-
         this.on("change:unitType", this._updateInputsLabel.bind(this));
 
         this.on("change:unit", this._updateInputs.bind(this));
@@ -441,11 +435,19 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         };
         this._updateLabel(labels.lon, this.lon, true);
         this._updateLabel(labels.lat, this.lat, true);
+
+        // Reset la valeur
+        this.lon.querySelector("input").value = "";
+        this.lat.querySelector("input").value = "";
     }
 
     _updateInputs () {
-        console.log("update inputs");
-        if (this.get("unit") === "DMS") {
+        const unit = this.get("unit");
+        let factor = 1;
+        if (this.get("unitType") === "Metric") {
+            factor = unit === "KM" ? 0.001 : 1000;
+        }
+        if (unit === "DMS") {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
                 input.value = "";
                 input.minLength = "6";
@@ -455,9 +457,9 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             });
         } else {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
-                input.value = "";
-                delete input.minLength;
-                delete input.maxLength;
+                input.value = input.value === "" || isNaN(input.value) ? "" : parseFloat(input.value) * factor;
+                input.removeAttribute("minLength");
+                input.removeAttribute("maxLength");
                 input.removeEventListener("beforeinput", this._onlonLatBeforeInput);
                 input.removeEventListener("input", this._onlonLatInput);
             });
@@ -503,21 +505,19 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         // Récupère les valeurs des inputs
         let lon = this.lon.querySelector("input").value;
         let lat = this.lat.querySelector("input").value;
-        const hemispheres = this.lon.querySelector("select").value + this.lat.querySelector("select").value;
-        console.log(lon, lat, hemispheres);
         if (this.get("unit") === "DMS") {
             // Transforme les DMS en degrés décimaux
             lon = MathUtils.dmsToDecimal(
                 parseInt(lon.substring(0, 2)),
                 parseInt(lon.substring(2, 4)),
                 parseInt(lon.substring(4, 6)),
-                hemispheres
+                this.lon.querySelector("select").value
             );
             lat = MathUtils.dmsToDecimal(
                 parseInt(lat.substring(0, 2)),
                 parseInt(lat.substring(2, 4)),
                 parseInt(lat.substring(4, 6)),
-                hemispheres
+                this.lat.querySelector("select").value
             );
         } else if (this.get("unit") === "KM") {
             // Transforme les kilomètres en mètre
@@ -532,7 +532,6 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         // Projette les coordonnées dans les coordonnées de la carte
         let coords = [lon, lat];
         const mapProj = this.getMap().getView().getProjection().getCode();
-        console.log(this._currentCoordinateSystem);
         const currentProj = this._currentCoordinateSystem.crs;
         if (mapProj !== currentProj) {
             coords = olProjTransform(coords, currentProj, mapProj);
@@ -540,11 +539,41 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
 
         const geom = new Point(coords);
         const f = new Feature({ geometry : geom });
-        
+        // Ajout des coordonnées pour le popup
+        f.set("infoPopup", this._createInfoPopup(lon, lat));
+
         this.dispatchEvent({
             type : "search",
             result : f,
         });
+    }
+
+    _createInfoPopup (lon, lat) {
+        let x, y, valueX, valueY;
+        if (this.get("unitType") === "Geographical") {
+            x = "Longitude";
+            y = "Latitude";
+
+            if (this.get("unit") === "DMS") {
+                const lon = this.lon.querySelector("input").value;
+                const lonCardinal = this.lon.querySelector("select").value;
+                valueX = `${parseInt(lon.substring(0, 2))}°${parseInt(lon.substring(2, 4))}'${parseInt(lon.substring(4, 6))}" ${lonCardinal}`;
+
+                const lat = this.lat.querySelector("input").value;
+                const latCardinal = this.lat.querySelector("select").value;
+                valueY = `${parseInt(lat.substring(0, 2))}°${parseInt(lat.substring(2, 4))}'${parseInt(lat.substring(4, 6))}" ${latCardinal}`;
+            } else {
+                valueX = `${lon} °`;
+                valueY = `${lat} °`;
+            }
+        } else {
+            x = "X";
+            y = "Y";
+            valueX = `${lon} ${this.get("unit").toLowerCase()}`;
+            valueY = `${lat} ${this.get("unit").toLowerCase()}`;
+        }
+        const infoPopup = `<b>${x} : </b>${valueX}<br><b>${y} : </b>${valueY}`;
+        return infoPopup;
     }
 
 }

@@ -834,6 +834,10 @@ class IGNSearchService extends AbstractSearchService {
                 extent = null;
                 f = new Feature({ geometry : geometry });
             }
+        } else {
+            const geom = new Point(position);
+            geom.transform("EPSG:4326", "EPSG:3857");
+            f = new Feature({ geometry : geom });
         }
 
         if (extent) {
