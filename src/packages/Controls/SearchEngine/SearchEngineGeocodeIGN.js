@@ -55,12 +55,13 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
         this.CLASSNAME = "SearchEngineGeocodeIGN";
         this.REMOVE_FEATURE_EVENT = "remove:feature";
 
+        options.serviceOptions = options.serviceOptions ? options.serviceOptions : {};
         if (options.autocomplete === false) {
             this.set("autocomplete", false);
-            options.serviceOptions = options.serviceOptions ? options.serviceOptions : {};
             options.serviceOptions.autocomplete = false;
         }
-        options.returnTrueGeometry = true;
+
+        options.serviceOptions.returnTrueGeometry = !!options.returnTrueGeometry;
 
         // Créé le serbice de géocodage IGN
         if (!options.searchService || !(options.searchService instanceof AbstractSearchService)) {

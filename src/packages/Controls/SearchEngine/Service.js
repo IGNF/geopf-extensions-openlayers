@@ -264,6 +264,7 @@ class InseeSearchService extends AbstractSearchService {
 
         this.ignService = new IGNSearchService({
             autocomplete : false,
+            returnTrueGeometry : true,
         });
 
         this.ignService.on(this.SEARCH_EVENT, this._onSearch.bind(this));
