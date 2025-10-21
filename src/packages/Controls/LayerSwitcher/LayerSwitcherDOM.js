@@ -1,6 +1,9 @@
 import Sortable from "sortablejs";
 import checkDsfr from "../Utils/CheckDsfr";
 import ToolTips from "../../Utils/ToolTips";
+import Utils from "../../Utils/Helper";
+import BaseLayer from "ol/layer/Base";
+import { log } from "loglevel";
 
 var LayerSwitcherDOM = {
 
@@ -11,21 +14,96 @@ var LayerSwitcherDOM = {
      * @param {Object} context - this
      */
     _createDraggableElement : function (elementDraggable, context) {
-        let handleClass = ".GPlayerName";
+        let handleClass = [".GPtitle"];
         if (checkDsfr()) {
-            handleClass = ".GPlayerDragNDrop";
+            handleClass.push(".GPlayerDragNDrop");
         }
-        Sortable.create(elementDraggable, {
-            handle : handleClass,
-            draggable : ".draggable-layer",
-            ghostClass : "GPghostLayer",
-            animation : 200,
-            // Call event function on drag and drop
-            onEnd : function (e) {
-                // FIXME pas terrrible, mais il faut bien passer ce contexte...
-                context._onEndDragAndDropLayerClick(e);
-            }
+        const forceFallback = !!navigator.userAgent.match(/chrome|chromium|crios/i);
+
+        // Voir lien suivant pour dragndrop avec tab
+        // https://robbymacdonell.medium.com/refactoring-a-sortable-list-for-keyboard-accessibility-2176b34a07f4
+
+        context._sortables = [];
+        handleClass.forEach(handle => {
+            const sortable = Sortable.create(elementDraggable, {
+                handle : handle,
+                dataIdAttr : "data-sortable-id", // required to calculate the custom sort
+                draggable : ".draggable-layer",
+                ghostClass : "GPghostLayer",
+                animation : 200,
+                // Call event function on drag and drop
+                onEnd : function (e) {
+                    // FIXME pas terrrible, mais il faut bien passer ce contexte...
+                    context._onEndDragAndDropLayerClick(e);
+                }
+            });
+            context._sortables.push(sortable);
         });
+    },
+
+    /**
+     * Fonction permettant de bouger une couche au clavier
+     * @param {HTMLElement} element Élément à bouger
+     * @param {up|down} direction Direction dans laquelle déplacer la couche
+     * @returns {Boolean} Vrai si l'opération a fonctionnée.
+     */
+    _moveElement : function (element, direction) {
+        const sortable_list = this._sortables[0];
+        if (["up", "down"].includes(direction) == false) {
+            return false;
+        }
+        if (typeof element.dataset.sortableId == "undefined") {
+            return false;
+        }
+
+        // Attribut pour réorganiser après
+        let sortableId = element.dataset.sortableId;
+        let order = sortable_list.toArray();
+        let index = order.indexOf(sortableId);
+
+        // Retrait de l'objet à déplacer
+        order.splice(index, 1);
+
+        // Déplace la couche à la bonne position
+        if (direction == "down") {
+            order.splice(index + 1, 0, sortableId);
+        } else if (direction == "up") {
+            order.splice(index - 1, 0, sortableId);
+        }
+
+        // Applique l'opéaration de tri
+        sortable_list.sort(order, true);
+        // Change le zindex et envoie l'événement
+        this._onEndDragAndDropLayerClick({
+            newIndex : order.indexOf(sortableId),
+        });
+        return true;
+    },
+
+    /**
+     * Écouteur d'événement pour modifier le z-index
+     * @param {Boolean} up Vrai si c'est up. Faux si down.
+     * @param {KeyboardEvent} event Événement du clavier
+     */
+    _onMoveElement : function (up, event) {
+        if (["Enter", "Space"].includes(event.code)) {
+            // Choisit la bonne direction
+            const direction = up ? "up" : "down";
+            const oppositeDirection = up ? "down" : "up";
+
+            event.stopPropagation();
+            event.preventDefault();
+
+            // Déplace l'élément dans la bonne direction
+            this._moveElement(event.currentTarget.closest(".draggable-layer"), direction);
+
+            // Change le focus dans le cas où c'est le premier / dernier élément
+            if (window.getComputedStyle(event.currentTarget).visibility == "hidden") {
+                event.currentTarget.parentNode.querySelector(`[data-direction=${oppositeDirection}]`).focus();
+            } else {
+                event.currentTarget.focus();
+            }
+        }
     },
 
     // ################################################################### //
@@ -86,6 +164,13 @@ var LayerSwitcherDOM = {
     _createMainLayersDivElement : function () {
         var div = document.createElement("div");
         div.className = "GPpanelBody gpf-panel__body_ls fr-modal__body";
+        return div;
+    },
+
+    _createMainLayerListElement : function () {
+        var div = document.createElement("div");
+        div.className = "GPLayerListBody";
+        div.setAttribute("role", "list");
         return div;
     },
 
@@ -201,7 +286,7 @@ var LayerSwitcherDOM = {
     _createLayersPanelIconElement : function () {
         var label = document.createElement("label");
         label.className = "GPpanelIcon gpf-btn-header gpf-btn-icon-layers";
-        label.title = "Couches de données";
+        label.title = "Couches";
         return label;
     },
     _createLayersPanelTitleElement : function () {
@@ -209,7 +294,7 @@ var LayerSwitcherDOM = {
         // on n'utilise pas le dsfr !
         div.className = "GPpanelTitle gpf-panel__title_ls";
         div.id = this._addUID("GPlayersHeaderTitle");
-        div.innerHTML = "Couches de données";
+        div.innerHTML = "Couches";
         return div;
     },
     _createLayersPanelCloseElement : function () {
@@ -242,6 +327,93 @@ var LayerSwitcherDOM = {
     },
 
     /**
+     * Créé le conteneur du header
+     * @returns {HTMLDivElement} Conteneur
+     */
+    _createHeaderButtonsDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "GPbodyHeader";
+        div.id = this._addUID("GPbodyHeader");
+        return div;
+    },
+
+    /**
+     * Créé le conteneur des boutons du header
+     * @param {Object} options Options
+     * @param {String} [options.className] ClassName de l'élément
+     * @param {Boolean} [options.left] Optionnel. Place les boutons à gauche si vrai.
+     * @param {Boolean} [options.size] Optionnel. Taille des boutons. Par défaut, 'md'.
+     * @param {String} [options.id] ClassName de l'élément (utilisé pour l'id aussi)
+     * @returns {HTMLDivElement} Contenur de bouton
+     */
+    _createButtonsGroupElement : function (options) {
+        options = options ? options : {};
+        let customClass = options.className ? options.className : "";
+        let position = options.left ? "left" : "right";
+        let classSize = "";
+        options.size = options.size ? options.size : "";
+        switch (options.size.toLowerCase()) {
+            case "sm":
+                classSize = "fr-btns-group--sm";
+                break;
+            case "lg":
+                classSize = "fr-btns-group--lg";
+                break;
+        }
+
+        var div = document.createElement("div");
+        div.className = `${customClass} GPbtnsGroup GPbtnsGroup--${position} fr-btns-group fr-btns-group--${position} fr-btns-group--inline-reverse fr-btns-group--inline ${classSize} fr-btns-group--icon-left`;
+
+        let id = options.id !== null ? `${customClass}_ID_${options.id}` : customClass;
+        div.id = this._addUID(id);
+        return div;
+    },
+
+    /**
+     * Créé un bouton
+     * @param {Object} options Options du bouton (de type LayerSwitcher.HeaderButton)
+     * @returns {HTMLButtonElement} Bouton
+     */
+    _createButtonHeaderElement : function (options) {
+        let btn = document.createElement("button");
+        btn.className = "fr-btn fr-btn--tertiary gpf-btn ";
+        if (options.className) {
+            btn.className += options.className;
+        }
+        if (options.icon) {
+            btn.className += options.icon;
+        }
+        if (options.label) {
+            btn.innerHTML = options.label;
+        }
+        if (options.title) {
+            btn.title = options.title;
+            btn.ariaLabel = options.title;
+        }
+
+        btn.id = options.id ? options.id : this._addUID("GPtools-" + options.label.toLowerCase());
+
+        if (options.attributes) {
+            // Attributs supplémentaires sur le bouton
+            for (const attribute in options.attributes) {
+                if (!Object.hasOwn(options.attributes, attribute)) {
+                    continue;
+                }
+                const element = options.attributes[attribute];
+                btn.setAttribute(attribute, element);
+            }
+        }
+
+        let self = this;
+
+        btn.addEventListener("click", (e) => {
+            self._onClickHeaderButtons(e, options.label, options.cb);
+        });
+
+        return btn;
+    },
+
+    /**
      * Creation du container du layer (DOM)
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
@@ -261,17 +433,17 @@ var LayerSwitcherDOM = {
         // <div id="GPlayerSwitcher_ID_Layer1" class="GPlayerSwitcher_layer outOfRange">
         //     <!-- Basic toolbar : visibility / layer name
         //     _createBasicToolElement
-        //           _createBasicToolVisibilityElement
-        //           _createBasicToolNameElement
+        //           _createVisibilityElement
+        //           _createLayerNameElement
         //     -->
         //     <!-- Hidden checkbox + label for showing advanced toolbar
         //     _createAdvancedToolShowElement
         //     -->
         //     <!-- Advanced toolbar : layer info / opacity slider / opacity value / removal
-        //     _createAdvancedToolElement
-        //           _createAdvancedToolDeleteElement
-        //           _createAdvancedToolInformationElement
-        //           _createAdvancedToolOpacityElement
+        //     _createAdvancedToolDivElement
+        //           _createDeleteElement
+        //           _createInformationElement
+        //           _createOpacityElement
         //     -->
         // </div>
 
@@ -284,11 +456,16 @@ var LayerSwitcherDOM = {
         // ajout des outils basiques (visibility / layer name)
         container.appendChild(this._createBasicToolElement(obj, tooltips));
 
-        // ajout bouton des outils avancés
-        container.appendChild(this._createAdvancedToolShowElement(obj));
-
         // liste des outils avancés (layer info / opacity slider / opacity value / removal)
-        container.appendChild(this._createAdvancedToolElement(obj));
+        container.appendChild(this._createAdvancedToolDivElement(obj));
+
+        container.setAttribute("tabindex", 0);
+        container.setAttribute("role", "listitem");
+        ["click", "keydown"].forEach(type => {
+            container.addEventListener(type, (e) => {
+                this._onSelectLayer(e);
+            });
+        });
 
         return container;
     },
@@ -307,41 +484,114 @@ var LayerSwitcherDOM = {
     _createBasicToolElement : function (obj, tooltips) {
         // exemple :
         // <div id="GPbasicTools_ID_1" class="GPlayerBasicTools">
-        //      <!-- _createBasicToolVisibilityElement -->
-        //      <!-- _createBasicToolNameElement -->
+        //      <!-- _createBasicToolButtons -->
+        //          <!-- _createAdvancedToolShowElement -->
+        //          <!-- _createVisibilityElement -->
+        //          <!-- _createDeleteElement -->
+        //      <!-- _createBasicToolTitleElement -->
+        //          <!-- _createLayerThumbnailElement -->
+        //          <!-- _createLayerNameDivElement -->
+        //              <!-- _createLayerNameElement -->
+        //              <!-- _createLayerProducerElement -->
+        //      <!-- _createDragNDropElement -->
         // </div>
 
         var div = document.createElement("div");
         div.id = this._addUID("GPbasicTools_ID_" + obj.id);
         div.className = "GPlayerBasicTools";
 
-        div.appendChild(this._createBasicToolNameElement(obj, tooltips));
-        div.appendChild(this._createBasicToolVisibilityElement(obj));
-        div.appendChild(this._createBasicToolDragNDropElement(obj));
+        div.appendChild(this._createBasicToolButtons(obj));
+
+        div.appendChild(this._createBasicToolTitleElement(obj, tooltips));
+
+        if (obj.draggable) {
+            div.appendChild(this._createDragNDropElement(obj));
+        }
 
         return div;
     },
 
-    _createBasicToolDragNDropElement : function (obj) {
-        // INFO inactif en mode classique !
-        var button = document.createElement("div");
-        button.id = this._addUID("GPdragndropPicto_ID_" + obj.id);
-        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon gpf-btn-icon-ls-dragndrop gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        button.title = "Deplacer la couche";
-        button.setAttribute("tabindex", "0");
+    /**
+     * Creation du groupe de bouton basiques
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @returns {HTMLElement} container
+     */
+    _createBasicToolButtons : function (obj) {
+        let div = document.createElement("div");
+        div.id = this._addUID("GPbasicToolButtons_ID_" + obj.id);
+        div.className = "GPbasicToolButtons";
 
-        var self = this;
-        if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                self._onStartDragAndDropLayerClick(e);
-            });
-        } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                self._onStartDragAndDropLayerClick(e);
-            });
+        div.appendChild(this._createAdvancedToolShowElement(obj));
+        div.appendChild(this._createVisibilityElement(obj));
+
+        if (obj.deletable) {
+            div.appendChild(this._createDeleteElement(obj.id));
         }
 
-        return button;
+        return div;
+    },
+
+
+    /**
+     * Creation du container des outils basiques du layer (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} tooltips - autoriser ou non les tooltips HTML
+     * @returns {HTMLElement} container
+     */
+    _createBasicToolTitleElement : function (obj, tooltips) {
+        let div = document.createElement("div");
+        div.id = this._addUID("GPtitle_ID_" + obj.id);
+        div.className = "GPtitle";
+
+        div.appendChild(this._createLayerThumbnailElement(obj));
+
+        div.appendChild(this._createLayerNameDivElement(obj, tooltips));
+
+        return div;
+    },
+
+
+    /**
+     * Creation du container du nom de la couche.
+     * Ajoute le nom du producteur de donnée s'il y'en a un.
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} tooltips - autoriser ou non les tooltips HTML
+     * @returns {HTMLElement} container
+     */
+    _createLayerNameDivElement : function (obj, tooltips) {
+        let div = document.createElement("div");
+        div.id = this._addUID("GPlayerTitle_ID_" + obj.id);
+        div.className = "GPlayerTitle";
+
+        div.appendChild(this._createLayerNameElement(obj, tooltips));
+
+        div.appendChild(this._createLayerProducerElement(obj, tooltips));
+
+        return div;
+    },
+
+    /**
+     * Creation du container des outils basiques du layer (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {String} obj.thumbnail - Pictogramme de la couche (url ou fichier statique)
+     * @returns {HTMLElement} container
+     */
+    _createLayerThumbnailElement : function (obj) {
+        let img = document.createElement("img");
+        img.id = this._addUID("GPtitleImage_ID_" + obj.id);
+        img.className = "GPtitleImage GPtitleDefaultImage";
+        img.alt = "";
+
+        if (obj.thumbnail) {
+            img.classList.remove("GPtitleDefaultImage");
+            img.src = obj.thumbnail;
+        }
+
+        return img;
     },
 
     /**
@@ -351,12 +601,12 @@ var LayerSwitcherDOM = {
      * @param {Boolean} tooltips - active ou non les tooltips
      * @returns {HTMLElement} container
      */
-    _createBasicToolNameElement : function (obj, tooltips) {
+    _createLayerNameElement : function (obj, tooltips) {
         // exemple :
         // <span id="GPname_ID_Layer1" class="GPlayerName" title="Quartiers prioritaires de la ville">Quartiers prioritaires de la ville</span>
-        var label = document.createElement("label");
+        var label = document.createElement("div");
         label.id = this._addUID("GPname_ID_" + obj.id);
-        label.className = "GPlayerName gpf-label gpf-label-name fr-label";
+        label.className = "GPlayerName";
         label.title = obj.description || obj.title;
         if (tooltips) {
             label.dataset.tooltip = obj.description || obj.title;
@@ -371,36 +621,114 @@ var LayerSwitcherDOM = {
     },
 
     /**
+     * Creation du container des outils basiques du layer (DOM)
+     *
+     * @param {Object} obj - options de la couche à ajouter dans le layer switcher
+     * @param {Boolean} tooltips - autoriser ou non les tooltips HTML
+     * @returns {HTMLElement} container
+     */
+    _createLayerProducerElement : function (obj, tooltips) {
+        let div = document.createElement("div");
+        div.id = this._addUID("GPlayerProducer_ID_" + obj.id);
+        div.className = "GPlayerProducer";
+
+        div.innerHTML = obj.producer;
+        if (tooltips) {
+            div.dataset.tooltip = obj.producer;
+            ToolTips.active(div);
+        }
+
+        return div;
+    },
+
+    _createDragNDropElement : function (obj) {
+        // INFO inactif en mode classique !
+        let button = document.createElement("div");
+        button.id = this._addUID("GPdragndropPicto_ID_" + obj.id);
+        button.className = "GPelementHidden GPlayerDragNDrop gpf-btn gpf-btn-icon-ls-draggable gpf-btn--tertiary";
+        button.title = "Deplacer la couche";
+        // button.setAttribute("tabindex", "0");
+
+        let self = this;
+
+        // Boutons pour déplacer la couche au clavier
+        let divKeyboard = document.createElement("div");
+        divKeyboard.className = "keyboard-navigation";
+
+        let spanUp = document.createElement("span");
+        spanUp.tabIndex = 0;
+        spanUp.dataset.direction = "up";
+        spanUp.title = spanUp.ariaLabel = "Déplacer la couche vers le haut";
+        spanUp.className = "fr-icon-arrow-up-line fr-icon--sm";
+        spanUp.onkeydown = this._onMoveElement.bind(this, true);
+
+        let spanDown = document.createElement("span");
+        spanDown.tabIndex = 0;
+        spanDown.dataset.direction = "down";
+        spanDown.title = spanDown.ariaLabel = "Déplacer la couche vers le bas";
+        spanDown.className = "fr-icon-arrow-down-line fr-icon--sm";
+        spanDown.onkeydown = this._onMoveElement.bind(this, false);
+
+        divKeyboard.appendChild(spanDown);
+        divKeyboard.appendChild(spanUp);
+
+        button.appendChild(divKeyboard);
+
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                self._onStartDragAndDropLayerClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                self._onStartDragAndDropLayerClick(e);
+            });
+        }
+
+        return button;
+    },
+
+    /**
      * Creation de l'icone de visibilité du layer (DOM)
      *
      * @param {Object} obj - options de la couche à ajouter dans le layer switcher
 
      * @returns {HTMLElement[]} array containing input and label elements
      */
-    _createBasicToolVisibilityElement : function (obj) {
+    _createVisibilityElement : function (obj) {
         var visible = (typeof obj.visibility !== "undefined") ? obj.visibility : true;
 
-        var button = document.createElement("button");
+        let button = document.createElement("button");
         button.id = this._addUID("GPvisibilityPicto_ID_" + obj.id);
-        button.className = "GPlayerVisibility gpf-btn gpf-btn-icon gpf-btn-icon-ls-visibility fr-btn fr-btn--tertiary gpf-btn--tertiary";
+
+        let className = "gpf-btn-icon-ls-visibility gpf-btn-icon";
+        if (checkDsfr()) {
+            className = visible ? "fr-icon-eye-line" : "fr-icon-eye-off-line";
+        }
+        button.className = `GPlayerVisibility gpf-btn ${className} fr-btn fr-btn--sm gpf-btn--tertiary fr-btn--tertiary-no-outline`;
+
         button.title = "Afficher/masquer la couche";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", visible);
         button.setAttribute("type","button");
 
         var context = this;
+
+        let onClick = function (e) {
+            var status = (e.target.ariaPressed === "true");
+            e.target.setAttribute("aria-pressed", !status);
+
+            if (checkDsfr()) {
+                button.classList.toggle("fr-icon-eye-off-line", status);
+                button.classList.toggle("fr-icon-eye-line", !status);
+            }
+
+            context._onVisibilityLayerClick(e);
+        };
+
         if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                context._onVisibilityLayerClick(e);
-            });
+            button.addEventListener("click", onClick);
         } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                context._onVisibilityLayerClick(e);
-            });
+            button.attachEvent("onclick", onClick);
         }
 
         return button;
@@ -414,36 +742,33 @@ var LayerSwitcherDOM = {
      * @returns {HTMLElement[]} array containing input and label elements
      */
     _createAdvancedToolShowElement : function (obj) {
-        var button = document.createElement("button");
+        let button = document.createElement("button");
         button.id = this._addUID("GPshowAdvancedTools_ID_" + obj.id);
 
-        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowLayerAdvancedTools gpf-btn gpf-btn-icon gpf-btn-icon-ls-collapse fr-btn--sm fr-btn--tertiary gpf-btn--tertiary";
+        button.className = "GPshowAdvancedToolPicto GPshowMoreOptionsImage GPshowMoreOptions GPshowLayerAdvancedTools gpf-btn fr-icon-arrow-down-s-line fr-btn--sm fr-btn--tertiary-no-outline";
         button.title = "Plus d'outils";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
-        button.setAttribute("type","button");
+        button.setAttribute("type", "button");
 
-        var self = this;
-        if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                var element = document.getElementById(self._addUID("GPadvancedTools_ID_" + obj.id));
-                if (status) {
-                    element.classList.replace("GPelementVisible", "GPelementHidden");
-                    element.classList.replace("gpf-visible", "gpf-hidden");
-                } else {
-                    element.classList.replace("GPelementHidden", "GPelementVisible");
-                    element.classList.replace("gpf-hidden", "gpf-visible");
-                }
-            });
-        } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
+        let self = this;
+        const fn = (e) => {
+            let status = (e.target.ariaPressed === "true");
+            e.target.setAttribute("aria-pressed", !status);
+            let element = document.getElementById(self._addUID("GPadvancedTools_ID_" + obj.id));
+            if (status) {
                 element.classList.replace("GPelementVisible", "GPelementHidden");
                 element.classList.replace("gpf-visible", "gpf-hidden");
-            });
+            } else {
+                element.classList.replace("GPelementHidden", "GPelementVisible");
+                element.classList.replace("gpf-hidden", "gpf-visible");
+            }
+        };
+
+        if (button.addEventListener) {
+            button.addEventListener("click", fn);
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", fn);
         }
 
         return button;
@@ -456,115 +781,224 @@ var LayerSwitcherDOM = {
      *
      * @returns {HTMLElement} container
      */
-    _createAdvancedToolElement : function (obj) {
+    _createAdvancedToolDivElement : function (obj) {
         // exemple :
         // <div id="GPadvancedTools_ID_Layer1" class="GPlayerAdvancedTools">
-        //     <!-- _createAdvancedToolDeleteElement -->
-        //     <!-- _createAdvancedToolInformationElement -->
-        //     <!-- _createAdvancedToolOpacityElement -->
+        //     <!-- _createDeleteElement -->
+        //     <!-- _createInformationElement -->
+        //     <!-- _createOpacityElement -->
         // </div>
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.id = this._addUID("GPadvancedTools_ID_" + obj.id);
         container.className = "GPelementHidden GPlayerAdvancedTools gpf-hidden";
 
-        container.appendChild(this._createAdvancedToolDeleteElement(obj.id));
-        if (checkDsfr()) {
-            var tms = (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS");
-            var styles = tms ? obj.layer.config.styles : null;
-            container.appendChild(this._createAdvancedToolEditionElement(obj.id, obj.editable, tms, styles));
-        }
-        container.appendChild(this._createAdvancedToolInformationElement(obj.id, obj.title, obj.description));
+        // Opacité
+        let opacity = document.createElement("div");
+        opacity.id = this._addUID("GPopacityContainer_ID_" + obj.id);
+        opacity.className = "GPopacityContainer";
 
-        var array = this._createAdvancedToolOpacityElement(obj.id, obj.opacity);
-        for (var i = 0; i < array.length; i++) {
-            container.appendChild(array[i]);
+        let array = this._createOpacityElement(obj.id, obj.opacity);
+        for (let i = 0; i < array.length; i++) {
+            opacity.appendChild(array[i]);
         }
 
-        container.appendChild(this._createAdvancedToolExtentElement(obj.id));
-        container.appendChild(this._createAdvancedToolGreyscaleElement(obj.id, obj.grayable, obj.grayscale));
-        if (obj.advancedTools && obj.advancedTools.length) {
-            var btn = document.createElement("button");
-            btn.className = "GPlayerAdvancedToolsContextualMore fr-btn gpf-btn gpf-btn--tertiary fr-btn--tertiary-no-outline";
-            btn.setAttribute("aria-pressed", false);
-            if (btn.addEventListener) {
-                btn.addEventListener("click", function (e) {
-                    var status = (e.target.ariaPressed === "true");
-                    e.target.setAttribute("aria-pressed", !status);
-                });
-            } else if (btn.attachEvent) {
-                btn.attachEvent("onclick", function (e) {
-                    var status = (e.target.ariaPressed === "true");
-                    e.target.setAttribute("aria-pressed", !status);
-                });
-            }
-            var contextual = document.createElement("div");
-            var tools = this._createAdvancedToolMoreElement(obj.id, obj.advancedTools);
-            for (var j = 0; j < tools.length; j++) {
-                contextual.appendChild(tools[j]);
-            }
-            container.appendChild(btn);
-            container.appendChild(contextual);
-        }
+        container.appendChild(opacity);
 
-        if (checkDsfr()) {
-            var btn = document.createElement("button");
-            btn.className = "GPlayerAdvancedToolsContextual fr-btn gpf-btn gpf-btn--tertiary fr-btn--tertiary-no-outline";
-            btn.setAttribute("aria-pressed", false);
-            if (btn.addEventListener) {
-                btn.addEventListener("click", function (e) {
-                    var status = (e.target.ariaPressed === "true");
-                    e.target.setAttribute("aria-pressed", !status);
-                });
-            } else if (btn.attachEvent) {
-                btn.attachEvent("onclick", function (e) {
-                    var status = (e.target.ariaPressed === "true");
-                    e.target.setAttribute("aria-pressed", !status);
-                });
-            }
+        let btnGroups = this._createButtonsGroupElement({
+            className : "GPAdvancedToolBtnsGroup",
+            id : obj.id,
+            left : true,
+            size : "sm",
+        });
 
-            var contextual = document.createElement("div");
-            contextual.appendChild(this._createAdvancedToolDeleteElement(obj.id, true));
-            var tms = (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS");
-            var styles = tms ? obj.layer.config.styles : null;
-            contextual.appendChild(this._createAdvancedToolEditionElement(obj.id, obj.editable, tms, styles, true));
-            contextual.appendChild(this._createAdvancedToolInformationElement(obj.id, obj.title, obj.description, true));
-            contextual.appendChild(this._createAdvancedToolExtentElement(obj.id, true));
-            contextual.appendChild(this._createAdvancedToolGreyscaleElement(obj.id, obj.grayable, obj.grayscale, true));
-            if (obj.advancedTools && obj.advancedTools.length) {
-                var tools = this._createAdvancedToolMoreElement(obj.id, obj.advancedTools, true);
-                for (var k = 0; k < tools.length; k++) {
-                    contextual.appendChild(tools[k]);
+        // Boutons d'actions
+        if (obj.advancedTools && obj.advancedTools instanceof Array) {
+            // Récupère les boutons préconfigurés
+            const switcherButtons = this.constructor.switcherButtons;
+
+            // N'ajoute aucun élément si un objet vide a été mis
+            // Diffère de l'action par défaut (bouton d'info)
+            if (!obj.advancedTools.length) {
+                return;
+            }
+            obj.advancedTools.forEach(tool => {
+                const key = tool.key;
+                if (key && Object.values(switcherButtons).includes(key)) {
+                    let fn;
+                    // TODO : mettre cela dans une variable statique privée ?
+                    switch (key) {
+                        case switcherButtons.INFO:
+                            fn = this._createInformationElement;
+                            break;
+                        case switcherButtons.EDIT:
+                            fn = this._createEditionElement;
+                            break;
+                        case switcherButtons.GREYSCALE:
+                            fn = this._createGreyscaleElement;
+                            break;
+                        case switcherButtons.EXTENT:
+                            fn = this._createExtentElement;
+                            break;
+                    }
+                    // Si une fonction a bien été trouvée, on créé le bouton qui va avec
+                    if (typeof fn === "function") {
+                        btnGroups.appendChild(fn.call(this, obj, tool));
+                    }
+                } else if (tool) {
+                    btnGroups.appendChild(this._createAdvancedToolElement(obj, tool));
                 }
-            }
+            });
 
-            container.appendChild(btn);
-            container.appendChild(contextual);
+            container.appendChild(btnGroups);
+        } else {
+            if (checkDsfr()) {
+                btnGroups.appendChild(this._createInformationElement(obj, {}));
+                btnGroups.appendChild(this._createEditionElement(obj, {}));
+                btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+                btnGroups.appendChild(this._createExtentElement(obj, {}));
+            } else {
+                btnGroups.appendChild(this._createInformationElement(obj, {}));
+                btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+            }
+            container.appendChild(btnGroups);
         }
+        
         return container;
+    },
+
+    /**
+     * Configure le bouton selon les options du bouton.
+     * 
+     * @param {HTMLButtonElement} button Bouton à configurer
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
+     * @param {Boolean} [setClick] Optionnel. Indique si une fonction au clic doit être ajoutée.
+     * Vrai par défaut.
+     * @returns {HTMLButtonElement} Bouton donné en paramètre
+     */
+    _setAdvancedToolOptions : function (button, tool, setClick = true) {
+        if (!button) {
+            return;
+        }
+
+        let label;
+        if (tool.label) {
+            label = tool.label.toLowerCase().replaceAll(" ", "-");
+        } else {
+            label = tool.icon;
+        }
+        const iconClass = `gpf-btn-icon-ls-tools-${label}`;
+        if (tool.className) {
+            button.className += ` ${tool.className} `;
+        }
+        if (tool.icon) {
+            this._setButtonIconStyle(button, iconClass, tool.icon);
+        }
+        if (tool.label) {
+            button.innerHTML = tool.label;
+        }
+        if (tool.title) {
+            button.title = tool.title;
+            button.ariaLabel = tool.title;
+        }
+
+        if (tool.attributes) {
+            // Attributs supplémentaires sur le bouton
+            for (const attribute in tool.attributes) {
+                if (!Object.hasOwn(tool.attributes, attribute)) {
+                    continue;
+                }
+                const element = tool.attributes[attribute];
+                button.setAttribute(attribute, element);
+            }
+        }
+
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("type", "button");
+
+        let self = this;
+
+        if (setClick) {
+            button.addEventListener("click", (e) => {
+                self._onClickAdvancedToolsMore(e, tool.label, tool.cb);
+            });
+        }
+
+        return button;
+    },
+
+    /**
+     * Ajoute une icône personnalisée au bouton
+     * 
+     * @param {HTMLButtonElement} button Bouton à modifier
+     * @param {String} iconClass Classe de l'icône. Peut être une balise svg ou une classe.
+     * @param {String} icon Icône en paramètre de l'option avancée
+     */
+    _setButtonIconStyle : function (button, iconClass, icon) {
+        let svg = false;
+        const regex = /(\.|\\)/;
+        if (icon) {
+            if (icon.startsWith("<svg")) {
+                // FIXME
+                // width / height à definir si ces options ne sont pas renseignées inline
+                icon = "data:image/svg+xml;base64," + btoa(icon);
+                svg = true;
+            } else if (!regex.test(icon)) {
+                // L'icône n'est pas une URL
+                button.className += icon;
+            } else {
+                // On ajoute l'URL en style après
+                svg = true;
+            }
+        }
+
+        // Ajoute le style SVG
+        if (svg) {
+            // Ajoute la classe au bouton
+            button.classList.add(iconClass);
+            if (!document.querySelector(`style[data-injected="${iconClass.toLowerCase()}"]`)) {
+                // Ajoute le style au document s'il n'existe pas encore
+                const style = document.createElement("style");
+                style.dataset.injected = iconClass.toLowerCase();
+                style.textContent = `
+                    .${iconClass.toLowerCase()}::before {
+                        width: 100%;
+                        height: 100%;
+                        -webkit-mask-image: url('${icon}');
+                        -webkit-mask-repeat: no-repeat;
+                        -webkit-mask-position: center;
+
+                        mask-image: url('${icon}');
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
     },
 
     /**
      * Creation de l'icone de suppression du layer (DOM)
      *
      * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
      *
      * @returns {HTMLElement} container
      */
-    _createAdvancedToolDeleteElement : function (id, contextual = false) {
-        var button = document.createElement("button");
-        if (!contextual) {
-            button.id = this._addUID("GPremove_ID_" + id);
-        } else {
-            button.id = this._addUID("GPremoveContextual_ID_" + id);
+    _createDeleteElement : function (id) {
+        let button = document.createElement("button");
+        button.id = this._addUID("GPremove_ID_" + id);
+        
+        // Icône et type de bouton
+        let className = "gpf-btn-icon-ls-remove gpf-btn-icon";
+        if (checkDsfr()) {
+            className = "fr-icon-delete-line";
         }
-        button.className = "GPlayerRemove gpf-btn gpf-btn-icon gpf-btn-icon-ls-remove fr-btn fr-btn--tertiary gpf-btn--tertiary";
+        button.className = `GPlayerRemove gpf-btn ${className} fr-btn fr-btn--sm gpf-btn--tertiary fr-btn--tertiary-no-outline`;
         button.title = "Supprimer la couche";
         button.layerId = id;
-        if (contextual) {
-            button.innerText = "Supprimer";
-        }
+
         button.setAttribute("tabindex", "0");
         button.setAttribute("type", "button");
 
@@ -585,48 +1019,59 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone d'edition du layer (DOM)
      *
-     * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {Boolean} editable - mode editable
-     * @param {Boolean} tms - tms ou non
-     * @param {Array} styles - styles des tms
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {Boolean} obj.editable - mode editable
+     * @param {Boolean} obj.tms - tms ou non
+     * @param {Array} obj.styles - styles des tms
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      * 
      * @returns {HTMLElement} container
      */
-    _createAdvancedToolEditionElement : function (id, editable, tms, styles, contextual = false) {
-        var button = document.createElement("button");
-        if (!contextual) {
-            button.id = this._addUID("GPedit_ID_" + id);
-        } else {
-            button.id = this._addUID("GPeditContextual_ID_" + id);
-        }
-        button.className = "GPlayerEdit gpf-btn gpf-btn-icon gpf-btn-icon-ls-edit fr-btn fr-btn--tertiary gpf-btn--tertiary";
-        button.title = "Editer la couche";
-        if (tms) {
-            button.title = "Changer de style";
-        }
+    _createEditionElement : function (obj, tool) {
+        let id = obj.id;
+        let editable = obj.editable;
+        let tms = (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS");
+        let styles = tms ? obj.layer.config.styles : null;
+
+        let button = document.createElement("button");
+        button.id = this._addUID("GPedit_ID_" + id);
         button.layerId = id;
-        if (contextual) {
-            button.innerText = "Editer la couche";
-            if (tms) {
-                button.innerText = "Changer de style";
-            }
+
+        // Options du bouton
+        let icon = "gpf-btn-icon-ls-edit gpf-btn-icon";
+        let label;
+        if (checkDsfr()) {
+            icon = "fr-icon-pencil-line";
+            label = "Style";
         }
-        button.setAttribute("tabindex", "0");
-        button.setAttribute("type", "button");
+        let className = `GPlayerEdit gpf-btn gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline`;
+
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        // Override les fonctions par défaut
+        const toolOptions = Utils.assign(options, tool);
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        toolOptions.className = className;
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        if (tool && tool.className) {
+            toolOptions.className += ` ${tool.className}`;
+        }
+        
+        // Mets les attributs du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
 
         // hack pour garder un emplacement vide en mode desktop
         // et cacher l'entrée en mode mobile
         if (!editable || (tms && styles.length === 1)) {
-            if (contextual) {
-                button.style.display = "none";
-            } else {
-                button.style.opacity = "0";
-                button.style.display = "hidden";
-            }
+            button.disabled = true;
         }
 
-        var context = this;
+        let context = this;
         if (tms && styles.length > 1) {
             if (button.addEventListener) {
                 button.addEventListener("click", function (e) {
@@ -655,52 +1100,67 @@ var LayerSwitcherDOM = {
     /**
      * Creation de l'icone d'information du layer (DOM)
      *
-     * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {String} title - titre
-     * @param {String} description - description
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
-     *
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {String} obj.title - titre
+     * @param {String} obj.description - description
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
+     * 
      * @returns {HTMLElement} container
      */
-    _createAdvancedToolInformationElement : function (id, title, description, contextual = false) {
+    _createInformationElement : function (obj, tool) {
         // exemple :
         // <div id="GPinfo_ID_Layer1" class="GPlayerInfo" title="Informations/légende" onclick="GPopenLayerInfo(this);"></div>
+        let id = obj.id;
+        let title = obj.title;
+        let description = obj.description;
 
-        var btnInfo = document.createElement("button");
-        if (!contextual) {
-            btnInfo.id = this._addUID("GPinfo_ID_" + id);
-        } else {
-            btnInfo.id = this._addUID("GPinfoContextual_ID_" + id);
+        let button = document.createElement("button");
+        button.id = this._addUID("GPinfo_ID_" + id);
+        button.layerId = id;
+
+        // Options du bouton
+        let icon = "gpf-btn-icon-ls-info gpf-btn-icon";
+        let label;
+        if (checkDsfr()) {
+            icon = "fr-icon-information-line";
+            label = "Infos";
         }
-        btnInfo.className = "GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn-icon gpf-btn-icon-ls-info fr-btn fr-btn--tertiary gpf-btn--tertiary";
-        // hack pour garder un emplacement vide
+        let className = `GPlayerInfo GPlayerInfoClosed gpf-btn gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline`;
+
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        const toolOptions = Utils.assign(options, tool);
+        toolOptions.className = className;
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        if (tool && tool.className) {
+            toolOptions.className += ` ${tool.className}`;
+        }
+        
+        // Permet d'override les valeurs par défaut du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
+
+        // button.title = "Informations/légende";
+
         if (!title || !description) {
-            btnInfo.style.opacity = "0";
-            btnInfo.style.visibility = "hidden";
-            if (contextual) {
-                btnInfo.style.display = "none";
-            }
+            button.disabled = true;
         }
-        btnInfo.title = "Informations/légende";
-        btnInfo.layerId = id;
-        if (contextual) {
-            btnInfo.innerText = "Informations";
-        }
-        btnInfo.setAttribute("tabindex", "0");
-        btnInfo.setAttribute("type", "button");
-
         // add event on click
         var context = this;
-        if (btnInfo.addEventListener) {
-            btnInfo.addEventListener(
+        if (button.addEventListener) {
+            button.addEventListener(
                 "click",
                 function (e) {
                     context._onOpenLayerInfoClick(e);
                 }
             );
-        } else if (btnInfo.attachEvent) {
+        } else if (button.attachEvent) {
             // internet explorer
-            btnInfo.attachEvent(
+            button.attachEvent(
                 "onclick",
                 function (e) {
                     context._onOpenLayerInfoClick(e);
@@ -708,53 +1168,74 @@ var LayerSwitcherDOM = {
             );
         }
 
-        return btnInfo;
+        return button;
     },
 
     /**
      * Creation de l'icone de n&b du layer (DOM)
      *
-     * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {Boolean} grayable - le mode grisable est il  possible pour ce type de couche
-     * @param {Boolean} grayscale - option grisée de la couche
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {Boolean} obj.grayable - le mode grisable est il  possible pour ce type de couche
+     * @param {Boolean} obj.grayscale - option grisée de la couche
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      *
      * @returns {HTMLElement} container
      */
-    _createAdvancedToolGreyscaleElement : function (id, grayable, grayscale, contextual = false) {
+    _createGreyscaleElement : function (obj, tool) {
         // exemple :
         // <div id="GPgreyscale_ID_Layer1" class="GPlayerBreyscale" title="Noir & blanc" onclick="GPtoggleGreyscale(this);"></div>
+        let id = obj.id;
+        let grayable = obj.grayable;
+        let grayscale = obj.grayscale;
+        tool = tool ? tool : {};
+
         var _grayscale = (typeof grayscale !== "undefined") ? grayscale : false;
 
-        var btnGreyscale = document.createElement("button");
-        if (!contextual) {
-            btnGreyscale.id = this._addUID("GPgreyscale_ID_" + id);
-        } else {
-            btnGreyscale.id = this._addUID("GPgreyscaleContextual_ID_" + id);
+        let button = document.createElement("button");
+        button.id = this._addUID("GPgreyscale_ID_" + id);
+        button.layerId = id;
+
+        // Options du bouton
+        let icon = "gpf-btn-icon-ls-greyscale gpf-btn-icon";
+        let label;
+        if (checkDsfr()) {
+            icon = "fr-icon-contrast-line";
+            label = "Noir et blanc";
         }
-        btnGreyscale.className = "GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn-icon gpf-btn-icon-ls-greyscale fr-btn fr-btn--tertiary gpf-btn--tertiary";
+        let className = `GPlayerGreyscale GPlayerGreyscaleOff gpf-btn gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline`;
+
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        const toolOptions = Utils.assign(options, tool);
+        toolOptions.className = className;
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        if (tool && tool.className) {
+            toolOptions.className += ` ${tool.className}`;
+        }
+        
+        // Permet d'override les valeurs par défaut du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
+
         if (_grayscale) {
-            btnGreyscale.classList.replace("GPlayerGreyscaleOff", "GPlayerGreyscaleOn");
+            button.classList.replace("GPlayerGreyscaleOff", "GPlayerGreyscaleOn");
         }
-        btnGreyscale.title = "Noir et blanc";
-        btnGreyscale.layerId = id;
-        if (contextual) {
-            btnGreyscale.innerText = "N&B";
-        }
-        btnGreyscale.setAttribute("aria-pressed", _grayscale);
-        btnGreyscale.setAttribute("tabindex", "0");
-        btnGreyscale.setAttribute("type", "button");
+
+        button.setAttribute("aria-pressed", _grayscale);
 
         // hack pour garder un emplacement vide
         if (!grayable) {
-            btnGreyscale.style.opacity = "0";
-            btnGreyscale.style.visibility = "hidden";
+            button.disabled = true;
         }
 
         // add event on click
         var context = this;
-        if (btnGreyscale.addEventListener) {
-            btnGreyscale.addEventListener(
+        if (button.addEventListener) {
+            button.addEventListener(
                 "click",
                 function (e) {
                     var status = (e.target.ariaPressed === "true");
@@ -762,9 +1243,9 @@ var LayerSwitcherDOM = {
                     context._onToggleLayerGreyscaleClick(e);
                 }
             );
-        } else if (btnGreyscale.attachEvent) {
+        } else if (button.attachEvent) {
             // internet explorer
-            btnGreyscale.attachEvent(
+            button.attachEvent(
                 "onclick",
                 function (e) {
                     var status = (e.target.ariaPressed === "true");
@@ -774,7 +1255,7 @@ var LayerSwitcherDOM = {
             );
         }
 
-        return btnGreyscale;
+        return button;
     },
 
     /**
@@ -785,7 +1266,7 @@ var LayerSwitcherDOM = {
      * 
      * @returns {HTMLElement[]} Tableau de 2 containers
      */
-    _createAdvancedToolOpacityElement : function (id, opacity) {
+    _createOpacityElement : function (id, opacity) {
         // exemple :
         // <div id="GPopacity_ID_Layer1" class="GPlayerOpacity" title="Opacité">
         //   <input id="GPopacityRange_ID_Layer1" type="range" value="100" oninput="GPchangeLayerOpacity(this);" onchange="GPchangeLayerOpacity(this);">
@@ -873,29 +1354,48 @@ var LayerSwitcherDOM = {
 
     /**
      * Creation de l'icone de zoom sur extent (DOM)
-     *
-     * @param {String} id - ID de la couche à ajouter dans le layer switcher
-     * @param {Boolean} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     * 
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      *
      * @returns {HTMLElement} container
      */
-    _createAdvancedToolExtentElement : function (id, contextual = false) {
+    _createExtentElement : function (obj, tool) {
+        let id = obj.id;
         // FIXME inactif en mode classique !
-        var button = document.createElement("button");
-        if (!contextual) {
-            button.id = this._addUID("GPextent_ID_" + id);
-        } else {
-            button.id = this._addUID("GPextentContextual_ID_" + id);
-        }
-        button.className = "GPelementHidden GPlayerExtent gpf-btn gpf-btn-icon gpf-btn-icon-ls-extent fr-btn fr-btn--tertiary gpf-btn--tertiary";
-        button.title = "Zoomer dans l'étendue";
+        let button = document.createElement("button");
+        button.id = this._addUID("GPextent_ID_" + id);
         button.layerId = id;
-        if (contextual) {
-            button.innerText = "Zoomer";
+
+        tool = tool ? tool : {};
+
+        // Options du bouton
+        let icon = "gpf-btn-icon-ls-extent gpf-btn-icon";
+        let label;
+        if (checkDsfr()) {
+            icon = "fr-icon-zoom-in-line";
+            label = "Recentrer";
         }
-        button.setAttribute("tabindex", "0");
+        let className = `GPelementHidden GPlayerExtent gpf-btn--tertiary gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        const toolOptions = Utils.assign(options, tool);
+        toolOptions.className = className;
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        if (tool && tool.className) {
+            toolOptions.className += ` ${tool.className}`;
+        }
+        
+        // Permet d'override les valeurs par défaut du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
+
         button.setAttribute("aria-pressed", true);
-        button.setAttribute("type", "button");
 
         var context = this;
         if (button.addEventListener) {
@@ -916,88 +1416,78 @@ var LayerSwitcherDOM = {
     },
 
     /**
-     * Creation des icones pour des outils externes
+     * Création d'un bouton d'outil externe
      * 
-     * @param {*} id - ID 
-     * @param {*} tools - autres outils 
-     * @param {*} contextual - est-ce que le bouton est dans le menu contextuel ? Default false
+     * @param {Object} obj - Objet de la couche à configurer
+     * @param {String} obj.id - ID de la couche à ajouter dans le layer switcher
+     * @param {Object} tool Option du bouton (override les valeurs par défaut)
+     * (Objet de type AdvancedToolOption)
      *
      * @returns {HTMLElement} container
      */
-    _createAdvancedToolMoreElement : function (id, tools, contextual = false) {
-        var list = [];
-        for (let i = 0; i < tools.length; i++) {
-            const opts = tools[i];
-            const className = `gpf-btn-icon-ls-tools-${opts.label}`;
-            const button = document.createElement("button");
-            if (!contextual) {
-                button.id = this._addUID("GPtools-" + opts.label.toLowerCase() + "_ID_" + id);
-            } else {
-                button.id = this._addUID("GPtoolsContextual-" + opts.label.toLowerCase() + "_ID_" + id);
-            }
-            button.className = `GPlayerTools gpf-btn gpf-btn-icon gpf-btn-icon-ls-tools ${className.toLowerCase()} fr-btn fr-btn--tertiary gpf-btn--tertiary`;
-            button.title = opts.label;
-            button.layerId = id;
-            button.setAttribute("tabindex", "0");
-            button.setAttribute("type", "button");
+    _createAdvancedToolElement : function (obj, tool) {
+        let id = obj.id;
+        // FIXME inactif en mode classique !
+        let button = document.createElement("button");
+        const idLabel = tool.label.toLowerCase().replaceAll(" ", "-");
+        button.id = this._addUID("GPtools-" + idLabel + "_ID_" + id);
+        button.layerId = id;
 
-            if (contextual) {
-                button.innerText = opts.label;
-            }
+        tool = tool ? tool : {};
 
-            Object.assign(button.style, opts.styles);
-
-            if (opts.icon) {
-                if (opts.icon.startsWith("<svg")) {
-                    // FIXME 
-                    // width / height à definir si ces options ne sont pas renseignées inline
-                    opts.icon = "data:image/svg+xml;base64," + btoa(opts.icon);
-                } else if (opts.icon.startsWith("fr-icon")) {
-                    // FIXME
-                    // à optimiser, le texte est masqué (label) !?
-                    button.classList.add(opts.icon);
-                } else {
-                    // url...
-                }
-            } else {
-                var iconDefault = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12L15.9289 19.0711L14.5147 17.6569L20.1716 12L14.5147 6.34317L15.9289 4.92896L23 12ZM3.82843 12L9.48528 17.6569L8.07107 19.0711L1 12L8.07107 4.92896L9.48528 6.34317L3.82843 12Z"></path></svg>`;
-                opts.icon = "data:image/svg+xml;base64," + btoa(iconDefault);
-            }
-
-            if (!document.querySelector(`style[data-injected="${className.toLowerCase()}"]`)) {
-                const style = document.createElement("style");
-                style.dataset.injected = className.toLowerCase();
-                style.textContent = `
-                    .${className.toLowerCase()}::after {
-                        width: 100%;
-                        height: 100%;
-                        -webkit-mask-image: url('${opts.icon}');
-                        -webkit-mask-repeat: no-repeat;
-                        -webkit-mask-position: center;
-
-                        mask-image: url('${opts.icon}');
-                        mask-repeat: no-repeat;
-                        mask-position: center;
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-
-            var self = this;
-            if (button.addEventListener) {
-                // button.addEventListener("click", opts.cb.bind(self));
-                button.addEventListener("click", (e) => {
-                    self._onClickAdvancedToolsMore(e, opts.label, opts.cb);
-                });
-            } else if (button.attachEvent) {
-                // button.attachEvent("onclick", opts.cb.bind(self));
-                button.attachEvent("onclick", (e) => {
-                    self._onClickAdvancedToolsMore(e, opts.label, opts.cb);
-                });
-            }
-            list.push(button);
+        // Options du bouton
+        let icon = tool.icon;
+        let label;
+        if (checkDsfr()) {
+            label = tool.label;
         }
-        return list;
+        let className = `GPlayerTools gpf-btn gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline`;
+
+        const options = {
+            icon : icon,
+            label : label,
+        };
+
+        const toolOptions = Utils.assign(options, tool);
+        toolOptions.className = className;
+        // Ajoute la classe et n'écrase pas les classes nécessaires
+        if (tool && tool.className) {
+            toolOptions.className += ` ${tool.className}`;
+        }
+
+        // Permet d'override les valeurs par défaut du bouton
+        this._setAdvancedToolOptions(button, toolOptions, false);
+
+        Object.assign(button.style, tool.styles);
+
+        // Désactive le bouton si le type de couche n'est pas supporté
+        if (tool.accepted && tool.accepted.length) {
+            const layer = obj.layer;
+            const layerTypeName = layer.constructor.name;
+            let disabled = true;
+            for (const type of tool.accepted) {
+                // Vérifie si le type est accepté
+                if ((typeof type === "string" && type === layerTypeName) || (type.prototype instanceof BaseLayer && layer instanceof type)) {
+                    disabled = false;
+                    break;
+                }
+            }
+            button.disabled = disabled;
+        }
+
+        var self = this;
+        if (button.addEventListener) {
+            // button.addEventListener("click", tool.cb.bind(self));
+            button.addEventListener("click", (e) => {
+                self._onClickAdvancedToolsMore(e, tool.label, tool.cb);
+            });
+        } else if (button.attachEvent) {
+            // button.attachEvent("onclick", tool.cb.bind(self));
+            button.attachEvent("onclick", (e) => {
+                self._onClickAdvancedToolsMore(e, tool.label, tool.cb);
+            });
+        }
+        return button;
     },
 
     // ################################################################### //

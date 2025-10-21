@@ -1,7 +1,9 @@
 /* LAYER SWITCHER */
 
 .GPlayerSwitcher_layer {
+  height: auto;
   background-color: #FFF;
+  border-bottom: 1px dotted #CCC;
 }
 
 div[id^=GPlayerSwitcher-] {
@@ -9,7 +11,8 @@ div[id^=GPlayerSwitcher-] {
 }
 
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
-  width: 218px;
+  /* width: 218px; */
+  width: 300px;
 }
 
 button[id^=GPshowLayersListPicto] {
@@ -66,13 +69,12 @@ div[id^=GPlayerInfoTitle] {
 .GPlayerAdvancedTools {
   position: relative;
   width: 100%;
-  height: 28px;
+  /* height: 28px; */
 }
 
 .GPlayerExtent,
 .GPlayerVisibility,
 .GPlayerInfo,
-.GPlayerGreyscale,
 .GPlayerInfoOpened,
 .GPlayerRemove,
 .GPlayerEdit {
@@ -81,22 +83,12 @@ div[id^=GPlayerInfoTitle] {
   cursor: pointer;
 }
 
-.GPlayerExtent,
-.GPlayerVisibility,
-.GPlayerName,
-.GPlayerInfo,
-.GPlayerGreyscale,
-.GPlayerInfoOpened,
-.GPlayerRemove,
-.GPlayerEdit,
-.GPlayerOpacity,
-.GPlayerOpacityValue {
-  position: absolute;
-  top: 0;
-}
-
 .GPghostLayer {
   opacity: 0;
+}
+
+div[id^=GPlayerSwitcher_ID_].selected-layer > .GPlayerBasicTools {
+    background-color: #FFFFFF88;
 }
 
 /* Layer basic tools */
@@ -110,35 +102,47 @@ div[id^=GPlayerInfoTitle] {
 
 .GPlayerExtent,
 .GPlayerVisibility,
-.GPshowLayerAdvancedTools,
-.GPlayerInfo,
-.GPlayerGreyscale,
-.GPlayerInfoOpened,
 .GPlayerRemove,
-.GPlayerEdit {
+.GPshowLayerAdvancedTools {
   background-image: url("img/GPlayerTools.png");
 }
 
-.GPlayerGreyscale {
+.GPlayerInfo::before,
+.GPlayerInfoOpened::before,
+.GPlayerEdit::before {
+  background-image: url("img/GPlayerTools.png");
+}
+
+.GPlayerGreyscale:empty {
+  cursor: pointer;
+}
+
+.GPlayerGreyscale::before {
   background-image: url("img/GPgreyscale.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* Opacity slider : Chrome, Safari, Opera */
 
 .GPlayerOpacity input[type="range"]::-webkit-slider-runnable-track {
   background: url("img/GPopacitySlider.png");
+  background-size: 100%;
 }
 
 /* Opacity slider : Firefox */
 
 .GPlayerOpacity input[type="range"]::-moz-range-track {
   background: url("img/GPopacitySlider.png");
+  background-size: 100%;
 }
 
 /* Opacity slider : IE */
 
 .GPlayerOpacity input[type="range"]::-ms-track {
   background: url("img/GPopacitySlider.png");
+  background-size: 100%;
 }
 
 
@@ -155,16 +159,17 @@ div[id^=GPlayerInfoClose] {
   background-image: url("img/GPlayerInfo.png");
 }
 
-button[id^=GPinfo_ID_],
-button[id^=GPremove_ID_],
-button[id^=GPgreyscale_ID],
-button[id^=GPvisibilityPicto_ID_] {
+button[id^=GPinfo_ID_]:empty,
+button[id^=GPedit_ID_]:empty,
+button[id^=GPextent_ID_]:empty,
+button[id^=GPvisibilityPicto_ID_]:empty,
+button[id^=GPremove_ID]:empty,
+button[id^=GPgreyscale_ID]:empty {
   border: none;
   background-color: transparent;
 }
 
 button[id^=GPvisibilityPicto_ID_][aria-pressed="false"] {
-  left: 0;
   background-position: -28px 0;
 }
 
@@ -172,39 +177,34 @@ button[id^=GPvisibilityPicto_ID_][aria-pressed="true"] {
   background-position: 0 0;
 }
 
-button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools {
+
+.GPlayerSwitcher_layer:has(button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"]) > .GPlayerAdvancedTools {
   max-height: 28px;
 }
 
 .GPshowLayerAdvancedTools {
-  top: 0;
-  right: 0;
+  /* top: 0;
+  right: 0; */
   background-position: -112px 0;
 }
 
-.GPlayerInfo {
-  left: 0;
-  background-position: -55px 0;
+.GPlayerInfo::before {
+  /* left: 0; */
+  background-position: -62px 0;
 }
 
-.GPlayerGreyscale {
-  right: 28px;
-  background-position: center;
-  background-size: 17px;
+.GPlayerInfoOpened::before {
+  /* left: 0; */
+  background-position: -90px 0;
 }
 
-.GPlayerInfoOpened {
-  left: 0;
-  background-position: -83px 0;
-}
-
-.GPlayerEdit {
-  left: 0;
+.GPlayerEdit::before {
+  /* left: 0; */
   background-position: -83px 0;
 }
 
 .GPlayerOpacity {
-  left: 28px;
+  /* left: 28px; */
   width: calc(100% - 128px);
   height: 28px;
   padding-left: 8px;
@@ -227,6 +227,7 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
 /* Opacity slider : general */
 
 .GPlayerOpacity input {
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background: none;
@@ -273,7 +274,7 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
 /* Opacity slider : Firefox */
 
 .GPlayerOpacity input[type="range"]::-moz-range-track {
-  width: 80px;
+  /* width: 80px; */
   height: 3px;
 }
 
@@ -333,15 +334,6 @@ button[id^=GPshowAdvancedTools_ID_][aria-pressed="true"] + .GPlayerAdvancedTools
 .GPlayerInfoPanelClosed {
   display: none;
 }
-
-/* div[id^=GPlayerInfoContent] {
-  position: relative;
-  width: 280px;
-  max-height: 200px;
-  overflow-y: auto;
-  padding-left: 10px;
-  padding-right: 10px;
-} */
 
 div[id^=GPlayerInfoTitle] {
   width: calc(100% - 52px);
@@ -421,13 +413,10 @@ div[id^=GPlayerInfoMetadata] {
 
 
 .GPlayerName {
-  left: 28px;
-  width: calc(100% - 56px);
   line-height: 28px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  padding-left: 4px;
   cursor: move;
 }
 
@@ -437,4 +426,84 @@ div[id^=GPlayerInfoMetadata] {
 
 div[id^=GPlayerInfoContent] {
   width: 280px;
+}
+
+.GPbodyHeader {
+  padding: 4px 8px;
+}
+
+.GPbasicToolButtons button {
+  position: relative;
+}
+
+div[id^="GPtitle_ID_"] {
+  margin-left: 8px;
+}
+
+.GPtitleImage {
+  border:none;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  height: 30px;
+  width: 30px;
+}
+
+div[id^=GPlayerProducer_ID_] {
+  color: #353535;
+}
+
+.GPAdvancedToolBtnsGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 4px 8px;
+  padding: 0 8px 4px;
+}
+
+.GPAdvancedToolBtnsGroup > button {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.GPAdvancedToolBtnsGroup > button:disabled {
+  cursor: not-allowed;
+}
+
+.GPAdvancedToolBtnsGroup > button:not(:empty) {
+  width: auto;
+}
+
+.GPAdvancedToolBtnsGroup > button:empty {
+  width: 28px;
+  height: 28px;
+}
+
+.GPAdvancedToolBtnsGroup > button:empty::before {
+  width: 1rem;
+  height: inherit;
+}
+
+.GPAdvancedToolBtnsGroup > button::before {
+  content: "";
+  flex: 0 0 auto;
+}
+
+.GPAdvancedToolBtnsGroup > button[class*=" gpf-btn-icon-ls-tools-"]::before,
+.GPAdvancedToolBtnsGroup > button[id^=GPinfo_ID_]:not(:empty)::before,
+.GPAdvancedToolBtnsGroup > button[id^=GPremove_ID_]:not(:empty)::before,
+.GPAdvancedToolBtnsGroup > button[id^=GPgreyscale_ID]:not(:empty)::before,
+.GPAdvancedToolBtnsGroup > button[id^=GPvisibilityPicto_ID_]:not(:empty)::before {
+  margin-left: -0.125rem;
+  margin-right: 0.5rem;
+  mask-size: 100% 100%;
+  width: 1rem;
+  height: 1rem;
+}
+
+.GPAdvancedToolBtnsGroup > button[class*=" gpf-btn-icon-ls-tools-"]::before {
+  background-color: #909090;
 }

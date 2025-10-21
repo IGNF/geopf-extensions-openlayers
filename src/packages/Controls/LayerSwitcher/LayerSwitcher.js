@@ -41,9 +41,59 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {boolean} [gutter=false] - Ajoute ou retire l’espace autour du panneau.
  * @property {boolean} [allowEdit=true] - Affiche le bouton d’édition pour les couches éditables (vecteur).
  * @property {boolean} [allowGrayScale=true] - Affiche le bouton N&B (niveaux de gris) pour les couches compatibles.
+ * @property {boolean} [allowDraggable=true] - Permet de déplacer les couches.
+ * @property {boolean} [allowDelete=true] - Affiche le bouton de suppression de la couche.
  * @property {boolean} [allowTooltips=false] - Active l’affichage des info-bulles (tooltips) sur les éléments du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
- * @property {Array<AdvancedToolOptions>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * @property {Array<HeaderButton>} [headerButtons] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * @property {Array<AdvancedToolOption>} [advancedTools] - Liste d’outils personnalisés à afficher pour chaque couche.
+ * Par défaut, les boutons d'info, de style, noir et blanc et recentrer sont ajoutés.
+ */
+
+/**
+ * Option d'un outil personnalisé
+ * @typedef {Object} AdvancedToolOption
+ * @property {String} [label] - Optionnel. Label du bouton
+ * @property {String} [key] - Optionnel. Mot clé indiquant qu'il s'agit d'une fonctionnalité native du layer switcher
+ * @property {String} [icon] - Optionnel. Icône de l'outil. Peut être un lien html, svg ou une classe.
+ * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
+ * @property {Object} [attributes] - Optionnel. Attributs additionnels à ajouter au bouton.
+ * Attributs ajoutés avec la méthode `setAttribute`.
+ * @property {Array<import("ol/layer/Base").default|String>} [accepted] - Optionnel. Définit les types de couche pour lesquelles l'outil fonctionne.
+ * Par défaut, ne filtre pas sur le type de couche.
+ * Le constructeur ou le nom du constructeur peut être donné en argument.
+ * Ne fonctionne pas pour les fonctionnalités déjà existantes.
+ * @property {AdvancedToolCallback} [cb] - Optionnel. Callback au click sur l'outil.
+ * @property {Object} [styles] - Optionnel. Styles à appliquer.
+ */
+
+/**
+ * Callback au clic sur un outil personnalisé.
+ * @callback AdvancedToolCallback
+ * @param {PointerEvent} e Événement générique au clic sur l'outil
+ * @param {LayerSwitcher} layerSwitcher instance du gestionnaire de couche
+ * @param {import('ol/layer').Layer} layer Couche associée à l'outil
+ * @param {Object} options Options de la couche associée
+ */
+
+/**
+ * Bouton pour le gestionnaire de couche
+ * @typedef {Object} HeaderButton
+ * @property {String} label - Label du bouton.
+ * @property {HeaderButtonCallback} cb - Callback au click sur l'outil.
+ * @property {String} [id] - Id à ajouter sur le bouton.
+ * @property {String} [className] - Optionnel. Classes à appliquer en plus sur le bouton.
+ * @property {Object} [attributes] - Optionnel. Attributs additionnels à ajouter au bouton.
+ * Attributs ajoutés avec la méthode `setAttribute`.
+ * @property {String} [title] - Optionnel. Titre du bouton. Aucun par défaut.
+ * @property {String} [icon] - Optionnel. Icône de l'outil. Classe à ajouter au bouton.
+ */
+
+/**
+ * Callback au clic sur un bouton du header.
+ * @callback HeaderButtonCallback
+ * @param {PointerEvent} e Événement générique au clic sur l'outil
+ * @param {LayerSwitcher} layerSwitcher instance du gestionnaire de couche
  */
 
 /**
@@ -51,19 +101,13 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {Layer} layer - Objet couche OpenLayers à gérer.
  * @property {Object} [config] - Métadonnées associées à la couche.
  * @property {string} [config.title] - Titre de la couche.
+ * @property {string} [config.producer] - Producteur de la couche.
+ * @property {string} [config.thumbnail] - Pictogramme de la couche.
  * @property {string} [config.description] - Description de la couche.
  * @property {string} [config.quicklookUrl] - URL d’aperçu rapide.
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
  * @property {Array<Object>} [config.metadata] - Métadonnées associées à la couche.
  * @property {boolean} [config.locked] - Indique si la couche est verrouillée.
- */
-
-/**
- * @typedef {Object} AdvancedToolOptions
- * @property {string} label - Label of the button
- * @property {string} [icon] - Icon (svg or http link or dsfr class)
- * @property {Function} [cb] - Callback function called on click
- * @property {Object} [styles] - styles to apply to the button
  */
 
 /**
@@ -111,12 +155,15 @@ class LayerSwitcher extends Control {
     * @fires layerswitcher:extent
     * @fires layerswitcher:edit
     * @fires layerswitcher:changeproperty
+    * @fires layerswitcher:change:selected
     * @fires layerswitcher:change:opacity
     * @fires layerswitcher:change:visibility
     * @fires layerswitcher:change:position
     * @fires layerswitcher:change:grayscale
     * @fires layerswitcher:change:style
     * @fires layerswitcher:change:locked
+    * @fires layerswitcher:custom
+    * @fires layerswitcher:header:button
     * @example
     * map.addControl(new ol.control.LayerSwitcher(
     *  [
@@ -135,6 +182,14 @@ class LayerSwitcher extends Control {
     *      position : "top-left",
     *      allowEdit : true,
     *      allowGrayScale : true,
+    *      headerButtons : [
+    *          {
+    *              label: 'Ajouter',
+    *              title: 'Ajouter une couche',
+    *              icon: "svg | http",
+    *              cb: (e, switcher) => {},
+    *          },
+    *      ],
     *      advancedTools : [
     *          {
     *              label = 'Bouton',
@@ -158,6 +213,9 @@ class LayerSwitcher extends Control {
     * LayerSwitcher.on("layerswitcher:edit", function (e) {
     *    console.warn("layer", e.layer);
     * });
+    * LayerSwitcher.on("layerswitcher:change:selected", function (e) {
+    *    console.warn("layer", e.layer, e.previous);
+    * });
     * LayerSwitcher.on("layerswitcher:change:opacity", function (e) {
     *    console.warn("layer", e.layer, e.opacity);
     * });
@@ -176,6 +234,12 @@ class LayerSwitcher extends Control {
     * LayerSwitcher.on("layerswitcher:change:locked", function (e) {
     *    console.warn("layer", e.layer, e.locked);
     * });
+    * LayerSwitcher.on("layerswitcher:custom", function (e) {
+    *   console.warn("layer", e.action, e.layer);
+    * })
+    * LayerSwitcher.on("layerswitcher:header:button", function (e) {
+    *   console.warn("Action", e.action, e.target);
+    * })
     * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
     *    console.warn("layer", e.layer, e.key, e.value);
     * });
@@ -215,6 +279,13 @@ class LayerSwitcher extends Control {
 
         return this;
     }
+
+    static switcherButtons = {
+        INFO : "info",
+        EDIT : "edition",
+        GREYSCALE : "greyscale",
+        EXTENT : "extent",
+    };
 
     // ################################################################### //
     // ############## public methods (getters, setters) ################## //
@@ -336,7 +407,7 @@ class LayerSwitcher extends Control {
      */
     addLayer (layer, config) {
         var map = this.getMap();
-        config = config || {};
+        config = config || layer.config || {};
 
         if (!layer) {
             logger.log("[ERROR] LayerSwitcher:addLayer - missing layer parameter");
@@ -383,7 +454,9 @@ class LayerSwitcher extends Control {
                 grayscale : grayscale,
                 locked : locked,
                 inRange : isInRange != null ? isInRange : true,
+                producer : config.producer != null ? config.producer : (layerInfos._producer || null),
                 title : config.title != null ? config.title : (layerInfos._title || id),
+                thumbnail : config.thumbnail != null ? config.thumbnail : (layerInfos._thumbnail || null),
                 description : config.description || layerInfos._description || null,
                 legends : config.legends || layerInfos._legends || [],
                 metadata : config.metadata || layerInfos._metadata || [],
@@ -409,6 +482,7 @@ class LayerSwitcher extends Control {
                 this._layersOrder.unshift(layerOptions);
                 this._lastZIndex++;
                 layer.setZIndex(this._lastZIndex);
+                layerDiv.dataset.sortableId = this._layerId;
                 this._layerListContainer.insertBefore(layerDiv, this._layerListContainer.firstChild);
                 // this._layerListContainer.insertBefore(layerDiv,
                 //     (this.options.panel) ?
@@ -459,13 +533,22 @@ class LayerSwitcher extends Control {
                     nameDiv.title = config.description || config.title;
                 }
             }
+            // set new title in layer div
+            if (config.producer) {
+                let producerDiv = document.getElementById(this._addUID("GPlayerProducer_ID_" + id));
+                if (producerDiv) {
+                    producerDiv.innerHTML = config.producer;
+                } else {
+                    this.setLayerProducer(id, config.producer);
+                }
+            }
             // add layer info picto if necessary
             var infodiv = document.getElementById(this._addUID("GPinfo_ID_" + id));
             if (!document.getElementById(this._addUID("GPinfo_ID_" + id)) && config.description) {
                 var advancedTools = document.getElementById(this._addUID("GPadvancedTools_ID_" + id));
                 if (advancedTools) {
                     advancedTools.appendChild(
-                        this._createAdvancedToolInformationElement({
+                        this._createInformationElement({
                             id : id
                         })
                     );
@@ -556,6 +639,11 @@ class LayerSwitcher extends Control {
             type : this.REMOVE_LAYER_EVENT,
             layer : this._layers[layerID]
         });
+
+        if (layer === this.getSelectedLayer()) {
+            // Réinitialise la couche sélectionnée
+            this.setSelectedLayer();
+        }
 
         // on retire la couche de la liste des layers
         delete this._layers[layerID];
@@ -724,8 +812,11 @@ class LayerSwitcher extends Control {
             gutter : false,
             allowEdit : true,
             allowGrayScale : true,
+            allowDraggable : true,
+            allowDelete : true,
             allowTooltips : false,
-            advancedTools : []
+            headerButtons : [],
+            advancedTools : null,
         };
 
         // merge with user options
@@ -809,6 +900,7 @@ class LayerSwitcher extends Control {
 
                 // et les infos de la conf si elles existent (title, description, legends, quicklook, metadata)
                 var conf = layers[i].config || {};
+                var layerInfo = this.getLayerInfo(layer);
                 var opacity = layer.getOpacity();
                 var visibility = layer.getVisible();
                 var grayscale = layer.get("grayscale");
@@ -820,11 +912,13 @@ class LayerSwitcher extends Control {
                     opacity : opacity != null ? opacity : 1,
                     visibility : visibility != null ? visibility : true,
                     grayscale : grayscale,
-                    title : conf.title != null ? conf.title : conf.id ? conf.id : id,
-                    description : conf.description || null,
-                    legends : conf.legends || [],
-                    metadata : conf.metadata || [],
-                    quicklookUrl : conf.quicklookUrl || null
+                    title : conf.title || layerInfo._title,
+                    description : conf.description || layerInfo._description,
+                    legends : conf.legends || layerInfo._legends,
+                    metadata : conf.metadata || layerInfo._metadata,
+                    quicklookUrl : conf.quicklookUrl || layerInfo._quicklookUrl,
+                    thumbnail : conf.thumbnail || layerInfo._thumbnail,
+                    producer : conf.producer || layerInfo._producer
                 };
                 this._layers[id] = layerOptions;
             }
@@ -957,6 +1051,21 @@ class LayerSwitcher extends Control {
          */
         this.CUSTOM_LAYER_EVENT = "layerswitcher:custom";
         /**
+         * event triggered when an header button is clicked
+         * @event layerswitcher:header:button
+         * @defaultValue "layerswitcher:header:button"
+         * @group Events
+         * @param {Object} type - event
+         * @param {String} action - label name
+         * @param {Object} target - instance LayerSwitcher
+         * @public
+         * @example
+         * LayerSwitcher.on("layerswitcher:header:button", function (e) {
+         *   console.log(e.action, e.target);
+         * })
+         */
+        this.HEADER_BUTTON_EVENT = "layerswitcher:header:button";
+        /**
          * event triggered when a layer opacity is changed
          * @event layerswitcher:change:opacity
          * @defaultValue "layerswitcher:change:opacity"
@@ -1020,6 +1129,22 @@ class LayerSwitcher extends Control {
          * })
          */
         this.CHANGE_LAYER_LOCKED_EVENT = "layerswitcher:change:locked";
+        /**
+         * event triggered when a layer is selected
+         * @event layerswitcher:change:selected
+         * @defaultValue "layerswitcher:change:selected"
+         * @group Events
+         * @param {Object} type - event
+         * @param {Object} layer - new selected layer
+         * @param {Object} previous - old selected layer (null if there was no selected layer before)
+         * @param {Object} target - instance LayerSwitcher
+         * @public
+         * @example
+         * LayerSwitcher.on("layerswitcher:change:selected", function (e) {
+         *   console.log(e, e.layer, e.previous);
+         * })
+         */
+        this.CHANGE_LAYER_SELECTED_EVENT = "layerswitcher:change:selected";
     }
 
     /**
@@ -1094,11 +1219,31 @@ class LayerSwitcher extends Control {
             panelHeader.appendChild(panelClose);
         }
 
-        var div = this._layerListContainer = this._createMainLayersDivElement();
+        var div = this._createMainLayersDivElement();
         divL.appendChild(div);
 
+        // Bouton de header
+
+        if (this.options.headerButtons.length) {
+            let bodyHeader = this._createHeaderButtonsDivElement();
+
+            let btnsGroup = this._createButtonsGroupElement({
+                className : "GPbodyHeaderBtnsGroup",
+                size : "sm",
+            });
+            this.options.headerButtons.forEach(opt => {
+                let btn = this._createButtonHeaderElement(opt);
+                btnsGroup.appendChild(btn);
+            });
+
+            bodyHeader.appendChild(btnsGroup);
+            div.appendChild(bodyHeader);
+        }
+
+        var layerList = this._layerListContainer = this._createMainLayerListElement();
+        div.appendChild(layerList);
         // creation du mode draggable
-        this._createDraggableElement(div, this);
+        this._createDraggableElement(layerList, this);
 
         // ajout dans le container principal du panneau d'information
         var divI = this._createMainInfoElement();
@@ -1156,6 +1301,8 @@ class LayerSwitcher extends Control {
                     grayscale : grayscale,
                     locked : locked,
                     inRange : isInRange != null ? isInRange : true,
+                    producer : layerInfos._producer || null,
+                    thumbnail : layerInfos._thumbnail || null,
                     title : layerInfos._title || id,
                     description : layerInfos._description || null,
                     legends : layerInfos._legends || [],
@@ -1237,6 +1384,7 @@ class LayerSwitcher extends Control {
         for (var j = 0; j < this._layersOrder.length; j++) {
             var layerOptions = this._layersOrder[j];
             var layerDiv = this._createLayerDiv(layerOptions);
+            layerDiv.dataset.sortableId = layerOptions.id;
             // on ajoute la div seulement si elle n'existe pas
             if (!this._layerListContainer.querySelector("#" + layerDiv.id)) {
                 this._layerListContainer.appendChild(layerDiv);
@@ -1273,6 +1421,7 @@ class LayerSwitcher extends Control {
                 layerOptions.editable = true;
             }
         }
+
         // Couche grisable ?
         layerOptions.grayable = false;
         // information sur le type de couche : raster
@@ -1281,8 +1430,19 @@ class LayerSwitcher extends Control {
                 layerOptions.grayable = true;
             }
         }
+
+        // Déplacement couche
+        layerOptions.draggable = false;
+        if (this.options.allowDraggable) {
+            layerOptions.draggable = true;
+        }
+        // Suppression autorisée
+        layerOptions.deletable = false;
+        if (this.options.allowDelete) {
+            layerOptions.deletable = true;
+        }
         // Ajout de fonctionnalités utilisateurs sur la couche
-        layerOptions.advancedTools = this.options.advancedTools || [];
+        layerOptions.advancedTools = this.options.advancedTools;
 
         // ajout d'une div pour cette layer dans le control
         var layerDiv = this._createContainerLayerElement(layerOptions, this.options.allowTooltips);
@@ -1440,8 +1600,10 @@ class LayerSwitcher extends Control {
         var divId = e.target.id; // ex GPvisibilityPicto_ID_26
         var layerID = SelectorID.index(divId); // ex. 26
         var greyscaleBtn = document.getElementById(this._addUID("GPgreyscale_ID_" + layerID));
-        greyscaleBtn.classList.add("GPlayerGreyscaleOff");
-        greyscaleBtn.classList.remove("GPlayerGreyscaleOn");
+        if (greyscaleBtn) {
+            greyscaleBtn.classList.add("GPlayerGreyscaleOff");
+            greyscaleBtn.classList.remove("GPlayerGreyscaleOn");
+        }
 
         layer.styleUrl = e.target.value;
         layer.styleName = e.target.dataset.name;
@@ -1771,7 +1933,7 @@ class LayerSwitcher extends Control {
         /**
          * event triggered when an position layer is changed
          *
-         * @event layerswitcher:change:visibility
+         * @event layerswitcher:change:position
          * @property {Object} type - event
          * @property {Object} position - position
          * @property {Object} layer - layer
@@ -2058,6 +2220,7 @@ class LayerSwitcher extends Control {
                 var nameDiv = document.getElementById(this._addUID("GPname_ID_" + id));
                 if (nameDiv) {
                     nameDiv.innerHTML = value;
+                    nameDiv.title = value;
                 }
                 break;
             case "description":
@@ -2066,6 +2229,14 @@ class LayerSwitcher extends Control {
                 if (nameDiv) {
                     nameDiv.title = value;
                 }
+                break;
+            case "producer":
+                this._layers[id].producer = value;
+                var producerDiv = document.getElementById(this._addUID("GPlayerProducer_ID_" + id));
+                if (producerDiv) {
+                    producerDiv.innerHTML = value;
+                }
+                break;
             default:
                 break;
         }
@@ -2206,10 +2377,11 @@ class LayerSwitcher extends Control {
     }
 
     /**
-     * Action utilisateur
+     * Action utilisateur pour un outil avancé
      * @param {PointerEvent} e - Event
      * @param {String} action - le nom du bouton (label)
      * @param {Function} cb - callback definie par l'utilisateur
+     * @fires layerswitcher:custom
      * @private
      */
     _onClickAdvancedToolsMore (e, action, cb) {
@@ -2233,6 +2405,113 @@ class LayerSwitcher extends Control {
             action : action,
             layer : layer,
             options : options
+        });
+    }
+
+    /**
+     * Action utilisateur pour un clic sur un bouton du header
+     * @param {PointerEvent} e - Event
+     * @param {String} action - le nom du bouton (label)
+     * @param {Function} cb - callback definie par l'utilisateur
+     * @fires layerswitcher:header:button
+     * @private
+     */
+    _onClickHeaderButtons (e, action, cb) {
+        if (cb) {
+            cb(e, this);
+            return;
+        }
+
+        /**
+         * event triggered when an action is done
+         * @event layerswitcher:header:button
+         */
+        this.dispatchEvent({
+            type : this.HEADER_BUTTON_EVENT,
+            action : action,
+        });
+    }
+
+    /**
+     * Sélectionne une couche et envoie un événement
+     * @param {PointerEvent|KeyboardEvent} e - Event
+     * @fires layerswitcher:change:selected
+     * @private
+     */
+    _onSelectLayer (e) {
+        // Keydown event : seulement si c'est sur la div LayerSwitcher
+        if (e.type !== "keydown" || (["Enter", "Space"].includes(e.code) && e.target.id.startsWith("GPlayerSwitcher_ID_"))) {
+            const target = e.target;
+
+            const divId = target.id; // ex GPvisibilityPicto_ID_26
+            const layerID = SelectorID.index(divId); // ex. 26
+            const options = this._layers[layerID];
+
+            // Options est nul si la couche est supprimée par exemple
+            if (options) {
+                const layer = this._layers[layerID].layer;
+
+                if (layer !== this.getSelectedLayer()) {
+                    this.setSelectedLayer(layer, true);
+                }
+            }
+        }
+    }
+
+    /**
+     * Sélectionne une couche et envoie un événement
+     * @param {PointerEvent} e - Event
+     * @returns {Layer|null} Couche sélectionnée.
+     * @public
+     */
+    getSelectedLayer () {
+        return this.selectedLayer;
+    }
+
+
+    /**
+     * Sélectionne une couche et envoie un événement
+     * et déselectionne la couche déjà sélectionné (si elle existe).
+     * @param {Layer} layer - Couche à sélectionner.
+     * @param {Boolean} selected - Vrai si la couche doit être sélectionnée.
+     * @public
+     */
+    setSelectedLayer (layer, selected) {
+        let selectedLayer = this.getSelectedLayer();
+        if (layer === selectedLayer && selectedLayer && selectedLayer.get("selected") !== selected) {
+            // selected est faux car selectedLayer.get("selected") est vrai
+            // puisque la couche était déjà sélectionnée
+            layer.set("selected", selected);
+            this.selectedLayer = null;
+        } else if (!layer && selectedLayer) {
+            // Déselectionne la couche courante
+            selectedLayer.set("selected", false);
+            this.selectedLayer = null;
+        } else {
+            layer.set("selected", !!selected);
+            if (selected) {
+                this.selectedLayer = layer;
+            } else {
+                this.selectedLayer = null;
+            }
+            if (selectedLayer) {
+                selectedLayer.set("selected", false);
+            }
+        }
+
+        if (this.getSelectedLayer()) {
+            const div = this._layers[this.getSelectedLayer().gpLayerId].div;
+            div.ariaCurrent = true;
+        }
+        if (selectedLayer) {
+            const div = this._layers[selectedLayer.gpLayerId].div;
+            div.ariaCurrent = false;
+        }
+
+        this.dispatchEvent({
+            type : this.CHANGE_LAYER_SELECTED_EVENT,
+            layer : this.getSelectedLayer(),
+            previous : selectedLayer
         });
     }
 
@@ -2352,12 +2631,38 @@ class LayerSwitcher extends Control {
             if (src) {
                 layerInfo._title = src._title || layerProperties.title || layerProperties.id || "";
                 layerInfo._description = src._description || layerProperties.description || "";
+                layerInfo._producer = src._producer || layerProperties.producer || "";
+                layerInfo._thumbnail = src._thumbnail || layerProperties.thumbnail || "";
                 layerInfo._quicklookUrl = src._quicklookUrl || layerProperties.quicklookUrl || "";
                 layerInfo._metadata = src._metadata || layerProperties.metadata || [];
                 layerInfo._legends = src._legends || layerProperties.legends || [];
             }
         }
         return layerInfo;
+    }
+
+    /**
+     * Modifie le nom du producteur de donnée
+     * @param {Layer} layer Couche à modifier
+     * @param {String} producer Nom du producteur. Vide si le producteur doit être enlevé
+     */
+    setLayerProducer (layer, producer) {
+        // Récupère les options de la couche
+        let id = layer.gpLayerId;
+        let layerDiv = this._layers[id].div;
+        if (layerDiv) {
+            let layerTitleDiv = layerDiv.querySelector(".GPlayerTitle");
+            // Producteur déjà ajouté : on le supprime
+            if (layerTitleDiv.childElementCount === 2) {
+                layerTitleDiv.querySelector(".GPlayerProducer").remove();
+            }
+            if (producer) {
+                let div = this._createLayerProducerElement({
+                    producer : producer
+                }, this.options.allowTooltips);
+                layerTitleDiv.appendChild(div);
+            }
+        }
     }
 
 };

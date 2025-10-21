@@ -34,7 +34,6 @@ dialog[id^="GPgetFeatureInfoPanel-"] {
 .GPgetFeatureInfoAccordionGroup {
   overflow-y: scroll;
   scrollbar-width: thin;
-  max-height: calc(52vh - 92px);
 }
 
 .GPgetFeatureInfoAccordionContent {

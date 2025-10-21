@@ -157,6 +157,11 @@ class GetFeatureInfo extends Control {
         this.draggable = this.options.draggable;
 
         /** 
+         * @type {String} 
+         * if specified, the given html string will be displayed if no data are returned by the gfi */
+        this.noDataMessage = this.options.noDataMessage;
+
+        /** 
          * @type {Boolean} 
          * specify if control add some stuff auto */
         this.auto = this.options.auto;
@@ -175,6 +180,8 @@ class GetFeatureInfo extends Control {
         this.getFeatureInfoAccordionGroup = null;
         /** @private */
         this.panelGetFeatureInfoEntriesContainer = null;
+        /** @private */
+        this.noDataMessageDiv = null;
 
         /** {Array} specify some events listeners */
         this.eventsListeners = [];
@@ -210,8 +217,8 @@ class GetFeatureInfo extends Control {
         // header
         var getFeatureInfoPanelHeader = this.panelGetFeatureInfoHeaderContainer = this._createGetFeatureInfoPanelHeaderElement();
         // icone
-        // var getFeatureInfoPanelIcon = this._createGetFeatureInfoPanelIconElement();
-        // getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelIcon);
+        var getFeatureInfoPanelIcon = this._createGetFeatureInfoPanelIconElement();
+        getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelIcon);
         // title
         var getFeatureInfoPanelTitle = this._createGetFeatureInfoPanelTitleElement();
         getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelTitle);
@@ -224,7 +231,9 @@ class GetFeatureInfo extends Control {
         // container for the custom code
         var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
         getFeatureInfoPanelDiv.appendChild(accordionGroup);
-
+        if (this.noDataMessage) {
+            this.noDataMessageDiv = this._createGetFeatureInfoNoData(this.noDataMessage);
+        }
         container.appendChild(getFeatureInfoPanel);
 
         logger.log(container);
@@ -276,6 +285,10 @@ class GetFeatureInfo extends Control {
     onMapClick (e) {
         if (this.getFeatureInfoIsActive() === "true") {
             this.getFeatureInfoAccordionGroup.remove();
+            if (this.noDataMessage) {
+                this.noDataMessageDiv.remove();
+            }
+            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
             this.layers = e.map.getLayers().getArray().filter((l) => {
                 // On ne passe au GFI que les layers visibles
                 if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
@@ -294,6 +307,10 @@ class GetFeatureInfo extends Control {
             }
             // Aucun layer visible sur la carte
             else {
+                if (this.noDataMessage) {
+                    // affichage du message no Data donné en option
+                    this.getFeatureInfoPanelDiv.append(this.noDataMessageDiv);
+                }
                 // rien à afficher car pas de couches visibles sur la carte, on s'arrête là.
                 return;
             }
@@ -492,8 +509,13 @@ class GetFeatureInfo extends Control {
                     // s'il n'y a aucun contenu renvoyé par le GFI
                     if (gfiContent.filter(gfi => gfi.get("pending") === true).length == 0
                         && gfiContent.filter(gfi => gfi.get("content")).length == 0) {
-                        // on n'affiche pas la pop-up car pas de données
-                        this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
+                        if (this.noDataMessage) {
+                            // on affiche le message noData donné en option
+                            this.getFeatureInfoPanelDiv.append(this.noDataMessageDiv);
+                        } else {
+                            // on n'affiche pas la pop-up car pas de données
+                            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
+                        }
                     }
                 }
             });

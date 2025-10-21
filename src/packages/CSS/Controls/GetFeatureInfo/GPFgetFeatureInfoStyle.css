@@ -37,3 +37,7 @@ button[aria-expanded="true"].GPgfiLayerButton span.GPshowGfiLayerFeature {
     background-image: url("img/GPgfiDetails.png");
     background-position: -26px 0;
 }
+
+.GPgetFeatureInfoAccordionGroup {
+  max-height: calc(52vh - 92px);
+}
