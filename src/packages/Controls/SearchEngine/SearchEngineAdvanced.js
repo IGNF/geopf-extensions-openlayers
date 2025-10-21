@@ -12,6 +12,7 @@ import VectorSource from "ol/source/Vector";
 import Overlay from "ol/Overlay.js";
 
 import { Style, Icon, Stroke, Fill } from "ol/style";
+import mapPinIcon from "./map-pin-2-fill.svg";
 import Feature from "ol/Feature";
 const color = "rgba(0, 0, 145, 1)";
 
@@ -23,7 +24,7 @@ const createStyle = (feature) => {
         case "MultiPoint":
             return new Style({
                 image : new Icon({
-                    src : "/src/packages/Controls/SearchEngine/map-pin-2-fill.svg",
+                    src : mapPinIcon,
                     color : [0, 0, 145, 1],
                 }),
             });
