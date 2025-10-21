@@ -25,6 +25,13 @@ export { default as LayerSwitcher } from "./packages/Controls/LayerSwitcher/Laye
 export { default as GetFeatureInfo } from "./packages/Controls/GetFeatureInfo/GetFeatureInfo";
 export { default as SearchEngine } from "./packages/Controls/SearchEngine/SearchEngine";
 export { default as SearchEngineBase } from "./packages/Controls/SearchEngine/SearchEngineBase";
+export { default as SearchEngineAdvanced } from "./packages/Controls/SearchEngine/SearchEngineAdvanced";
+export { default as SearchEngineGeocodeIGN } from "./packages/Controls/SearchEngine/SearchEngineGeocodeIGN";
+export { default as AbstractAdvancedSearch } from "./packages/Controls/SearchEngine/AbstractAdvancedSearch";
+export { default as CoordinateAdvancedSearch } from "./packages/Controls/SearchEngine/CoordinateAdvancedSearch";
+export { default as InseeAdvancedSearch } from "./packages/Controls/SearchEngine/InseeAdvancedSearch";
+export { default as LocationAdvancedSearch } from "./packages/Controls/SearchEngine/LocationAdvancedSearch";
+export { default as IGNSearchService } from "./packages/Controls/SearchEngine/Service";
 export { default as MousePosition } from "./packages/Controls/MousePosition/MousePosition";
 export { default as Drawing } from "./packages/Controls/Drawing/Drawing";
 export { default as Route } from "./packages/Controls/Route/Route";

@@ -2,7 +2,8 @@
 import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 import Logger from "../../Utils/LoggerByDefault";
 import SearchEngineBase from "./SearchEngineBase";
-import { AbstractSearchService, IGNSearchService } from "./Service";
+import { AbstractSearchService } from "./Service";
+import IGNSearchService from "./Service";
 
 var logger = Logger.getLogger("searchengine");
 
@@ -54,12 +55,13 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
         this.CLASSNAME = "SearchEngineGeocodeIGN";
         this.REMOVE_FEATURE_EVENT = "remove:feature";
 
+        options.serviceOptions = options.serviceOptions ? options.serviceOptions : {};
         if (options.autocomplete === false) {
             this.set("autocomplete", false);
-            options.serviceOptions = options.serviceOptions ? options.serviceOptions : {};
             options.serviceOptions.autocomplete = false;
         }
-        options.returnTrueGeometry = true;
+
+        options.serviceOptions.returnTrueGeometry = !!options.returnTrueGeometry;
 
         // Créé le serbice de géocodage IGN
         if (!options.searchService || !(options.searchService instanceof AbstractSearchService)) {

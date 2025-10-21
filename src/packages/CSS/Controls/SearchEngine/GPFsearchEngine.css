@@ -1,11 +1,6 @@
 /* SEARCH ENGINE */
 
 [id^="GPsearchEngine-"] {
-  top: 8px;
-  left: 46px;
-}
-
-[id^="GPsearchEngine-"] {
   /* dsfr */
   display: flex;
 }
@@ -231,7 +226,6 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 [id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer button {
     max-width: unset;
     min-height: 1rem;
-    line-height: 1rem;
     margin: 0.25rem 0.5rem;
     border-radius: 0;
 }
@@ -240,6 +234,7 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 }
 
 .GPautoCompleteHeader {
+  margin-bottom: 0.75rem;
   padding: 0.75rem 0.75rem 0;
 }
 
@@ -280,7 +275,6 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 }
 [id^="GPsearchEngine-Advanced"] > .GPAdvancedContainer  {
     display: none;
-    background-color: var(--background-default-grey);
     box-sizing: content-box;
     max-width: 100%;
     max-height: unset;
@@ -289,18 +283,10 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 }
 [id^="GPsearchEngine-Advanced"]:has(.GPSearchEngine-advanced-btn[aria-expanded="true"]) > .GPAdvancedContainer  {
     display: flex;
+    z-index: 1;
 }
 [id^="GPsearchEngine-Advanced"] .GPSearchEngine-advanced-btn[aria-expanded="false"]::after {
     transform: rotate(180deg);
-}
-
-[id^="GPsearchEngine-Advanced"] .GPsearchInputSubmit:disabled {
-    background-color: var(--background-action-high-blue-france);
-}
-[id^="GPsearchEngine-Advanced"] .GPsearchInputSubmit:disabled,
-[id^="GPsearchEngine-Advanced"] .GPsearchInputText:disabled {
-    cursor: default;
-    user-select: none;
 }
 
 /* [id^="GPsearchEngine-Advanced"] .GPAdvancedContainer[data-open="true"] > button {

@@ -264,6 +264,7 @@ class InseeSearchService extends AbstractSearchService {
 
         this.ignService = new IGNSearchService({
             autocomplete : false,
+            returnTrueGeometry : true,
         });
 
         this.ignService.on(this.SEARCH_EVENT, this._onSearch.bind(this));
@@ -917,7 +918,9 @@ class IGNSearchService extends AbstractSearchService {
 
 }
 
-export { AbstractSearchService, DefaultSearchService, InseeSearchService, IGNSearchService };
+export { AbstractSearchService, DefaultSearchService, InseeSearchService };
+
+export default IGNSearchService;
 
 // Expose SearchEngine as ol.control.SearchEngine (for a build bundle)
 if (window.ol) {

@@ -328,7 +328,7 @@ class SearchEngineBase extends Control {
         // Submit button
         if (options.searchButton) {
             const submit = this.subimtBt = document.createElement("button");
-            submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn";
+            submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn fr-btn--lg";
             submit.id = Helper.getUid("GPshowSearchEnginePicto-");
             submit.type = "submit";
             if (options.title) {
@@ -511,25 +511,28 @@ class SearchEngineBase extends Control {
      */
     _updateHistoric (value) {
         if (this._historic) {
-            let isPresent = false;
+            let index = -1;
             for (let i = 0; i < this._historic.length; i++) {
                 const elem = this._historic[i];
                 if (this._isEqual(elem, value)) {
                     // L'élément est déjà dans l'historique
-                    isPresent = true;
+                    index = i;
                     break;
                 }
             }
-            if (!isPresent) {
-                const length = this._historic.unshift(value);
-                // Retire le dernier élément si le nombre maximal est atteint
-                if (length > (this.get("maximumEntries"))) {
-                    this._historic.pop();
-                }
-
-                // Save in localStorage
-                localStorage.setItem(this._historicName, JSON.stringify(this._historic));
+            if (index !== -1) {
+                // Enlève de l'historique pour le remettre en première position;
+                this._historic.splice(index, 1);
             }
+
+            const length = this._historic.unshift(value);
+            // Retire le dernier élément si le nombre maximal est atteint
+            if (length > (this.get("maximumEntries"))) {
+                this._historic.pop();
+            }
+
+            // Enregistre dans le localStorage
+            localStorage.setItem(this._historicName, JSON.stringify(this._historic));
         }
     }
 
