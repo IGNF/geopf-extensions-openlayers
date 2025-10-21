@@ -153,6 +153,8 @@ class SearchEngineAdvanced extends Control {
             search.setMap(map);
         });
 
+        this.element.appendChild(this.advancedContainer);
+
         if (map) {            
             map.addLayer(this.extent);
             map.addLayer(this.layer);
@@ -211,9 +213,9 @@ class SearchEngineAdvanced extends Control {
         element.id = Helper.getUid("GPsearchEngine-Advanced-");
 
         // Default base search engine
-        const baseContainer = this.advancedContainer = document.createElement("div");
-        this.element.appendChild(baseContainer);
-        options.target = baseContainer;
+        // const baseContainer = this.baseContainer = document.createElement("div");
+        // this.element.appendChild(baseContainer);
+        options.target = this.element;
         options.searchButton = true;
         options.search = true;
         this.baseSearchEngine = new SearchEngineGeocodeIGN(options);
@@ -240,7 +242,7 @@ class SearchEngineAdvanced extends Control {
         advancedContainer.className = "GPAdvancedContainer";
         advancedContainer.id = Helper.getUid("GPsearchEngine-AdvancedContainer-");
         advancedContainer.setAttribute("aria-labelledby", advancedBtn.id);
-        this.element.appendChild(advancedContainer);
+        // baseContainer.appendChild(advancedContainer);
 
         // Geolocation
         advancedContainer.appendChild(this._getGeolocButton());

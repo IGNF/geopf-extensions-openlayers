@@ -1,1 +1,5 @@
 /** STYLE NON DSFR RECHERCHE AVANCEE **/
+
+div[id^=GPsearchEngine-Advanced] {
+  width:312px;
+}

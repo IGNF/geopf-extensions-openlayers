@@ -4,6 +4,17 @@ div[data-open="true"] > section.fr-accordion::before {
   box-shadow: inset 0 1px 0 0 var(--border-default-grey);
 }
 
+
+div[id^=GPsearchEngine-Advanced] {
+  width: 100%;
+}
+
+@media (min-width: 569px) {
+  div[id^=GPsearchEngine-Advanced] {
+    width: 360px;
+  }
+}
+
 div[id^=GPsearchEngine-AdvancedContainer] > button.GPSearchEngine-locate {
   margin-bottom : 0.75rem;
 }
@@ -53,7 +64,6 @@ form[id^=GPAdvancedForm-CoordinateAdvancedSearch][data-unit="DMS"] > .GPLonLatIn
   display: unset;
 }
 
-
 form[id^=GPAdvancedForm-CoordinateAdvancedSearch] > .GPLonLatInputs .GPCoordinateInputs {
   display: flex;
   flex-direction: row;
@@ -67,4 +77,20 @@ form[id^=GPAdvancedForm-CoordinateAdvancedSearch] > .GPLonLatInputs .GPCoordinat
 
 .GPCoordinateInputs > div {
   position: relative;
+}
+
+
+[id^="GPsearchEngine-Advanced"] > .GPAdvancedContainer  {
+  background-color: var(--background-default-grey);
+}
+
+[id^="GPsearchEngine-Advanced"] .GPsearchInputSubmit:disabled {
+  background-color: var(--background-action-high-blue-france);
+}
+
+/* Surcharge DSFR */
+div[id^=GPsearchEngine-AdvancedContainer-] .fr-accordion .fr-collapse {
+  margin: 0 -0.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }

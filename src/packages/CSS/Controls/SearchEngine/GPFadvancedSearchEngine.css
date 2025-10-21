@@ -1,7 +1,6 @@
 /** STYLE COMMUN RECHERCHE AVANCEE **/
 
 div[id^=GPsearchEngine-Advanced] {
-  width: 312px;
   padding: 5px;
   margin: -5px;
 }

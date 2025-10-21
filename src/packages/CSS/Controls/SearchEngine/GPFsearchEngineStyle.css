@@ -3,6 +3,8 @@
 [id^="GPsearchEngine-"] {
   flex-direction: row;
   align-items: center;
+  top: 8px;
+  left: 46px;
 }
 
 .position-container-top-left [id^="GPsearchEngine-"],
@@ -159,9 +161,13 @@ dialog[id^=GPgeocodeResultsList] {
   width: 280px;
   position: absolute;
   max-height: 140px;
-  background-color: var(--background-default-grey);
+  background-color: #ffffff;
 }
 
+
+[id^="GPsearchEngine-Advanced"] > .GPAdvancedContainer  {
+  background-color: #ffffff;
+}
 
 div[id^=GPautoCompleteList] {
   top: 35px;
