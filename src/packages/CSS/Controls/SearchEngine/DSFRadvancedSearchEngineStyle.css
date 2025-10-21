@@ -19,13 +19,6 @@ div[id^=GPsearchEngine-AdvancedContainer] > button.GPSearchEngine-locate {
   margin-bottom : 0.75rem;
 }
 
-[id^="GPsearchEngine"] form[id^="GPsearchInput-Base-"] .GPOptionsContainer button {
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  min-height: 2rem;
-  padding: 0.25rem 0.75rem;
-}
-
 form[id^=GPAdvancedForm-CoordinateAdvancedSearch] > .GPLonLatInputs {
   display: flex;
   flex-direction: row;

@@ -897,7 +897,9 @@ class IGNSearchService extends AbstractSearchService {
 
 }
 
-export { AbstractSearchService, DefaultSearchService, InseeSearchService, IGNSearchService };
+export { AbstractSearchService, DefaultSearchService, InseeSearchService };
+
+export default IGNSearchService;
 
 // Expose SearchEngine as ol.control.SearchEngine (for a build bundle)
 if (window.ol) {
