@@ -283,6 +283,7 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 }
 [id^="GPsearchEngine-Advanced"]:has(.GPSearchEngine-advanced-btn[aria-expanded="true"]) > .GPAdvancedContainer  {
     display: flex;
+    z-index: 1;
 }
 [id^="GPsearchEngine-Advanced"] .GPSearchEngine-advanced-btn[aria-expanded="false"]::after {
     transform: rotate(180deg);
