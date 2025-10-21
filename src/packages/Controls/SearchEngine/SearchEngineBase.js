@@ -511,20 +511,40 @@ class SearchEngineBase extends Control {
      */
     _updateHistoric (value) {
         if (this._historic) {
-            // Update historic
-            const idx = this._historic.indexOf(value);
-            if (idx !== -1) {
-                this._historic.splice(idx, 1);
+            let isPresent = false;
+            for (let i = 0; i < this._historic.length; i++) {
+                const elem = this._historic[i];
+                if (this._isEqual(elem, value)) {
+                    // L'élément est déjà dans l'historique
+                    isPresent = true;
+                    break;
+                }
             }
-            this._historic.unshift(value);
-            // Remove last if > 10
-            if (this._historic.length > (this.get("maximumEntries") || 10)) {
-                this._historic.pop();
-            }
+            if (!isPresent) {
+                const length = this._historic.unshift(value);
+                // Retire le dernier élément si le nombre maximal est atteint
+                if (length > (this.get("maximumEntries"))) {
+                    this._historic.pop();
+                }
 
-            // Save in localStorage
-            localStorage.setItem(this._historicName, JSON.stringify(this._historic));
+                // Save in localStorage
+                localStorage.setItem(this._historicName, JSON.stringify(this._historic));
+            }
         }
+    }
+
+    /**
+     * Vérifie si deux éléments (objets) sont égaux.
+     *
+     * @param {Array<Object>} a Premier objet
+     * @param {Object} b Objet de comparaison
+     */
+    _isEqual (a, b) {
+        // TODO : Améliorer comparaison ?
+        const jsonA = JSON.stringify(a);
+        const jsonB = JSON.stringify(b);
+
+        return jsonA === jsonB;
     }
 
     /**
