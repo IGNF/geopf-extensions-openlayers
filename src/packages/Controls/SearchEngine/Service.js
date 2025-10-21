@@ -770,10 +770,11 @@ class IGNSearchService extends AbstractSearchService {
         Utils.assign(options, this.options.geocodeOptions.serviceOptions);
         // ainsi que la recherche et les callbacks
         Utils.assign(options, settings);
+        options.maximumResponses = settings.limit;
         // on redefinie les callbacks si les callbacks de service existent
         var bOnSuccess = !!(this.options.geocodeOptions.serviceOptions.onSuccess !== null && typeof this.options.geocodeOptions.serviceOptions.onSuccess === "function");
         if (bOnSuccess) {
-            console.log("bonsuccess");
+            console.log("bonSuccess");
             var cbOnSuccess = function (e) {
                 settings.onSuccess.bind(this, e);
                 this.options.geocodeOptions.serviceOptions.onSuccess.bind(this, e);
@@ -783,7 +784,7 @@ class IGNSearchService extends AbstractSearchService {
 
         var bOnFailure = !!(this.options.geocodeOptions.serviceOptions.onFailure !== null && typeof this.options.geocodeOptions.serviceOptions.onFailure === "function");
         if (bOnFailure) {
-            console.log("bonFailrure");
+            console.log("bonFailure");
             var cbOnFailure = function (e) {
                 settings.onFailure.bind(this, e);
                 this.options.geocodeOptions.serviceOptions.onFailure.bind(this, e);
@@ -810,14 +811,22 @@ class IGNSearchService extends AbstractSearchService {
         Gp.Services.geocode(options);
     }
 
-    _onSuccessSearch (results) {
+    /** Get features based on current search result
+     * @param {Number} index Index of the result
+     * @returns {Object} Object containing feature and extent (if any)
+     */
+    getResultFeatures (index) {
+        let location = this.getResult(index);
+        if (!location) {
+            return { featureFilter : null, extent : null  };
+        }
         let position = [
-            results.locations[0].position.lon,
-            results.locations[0].position.lat
+            location.position.lon,
+            location.position.lat
         ];
         let f, extent;
-        if (results.locations[0].placeAttributes.truegeometry) {
-            let geom = JSON.parse(results.locations[0].placeAttributes.truegeometry);
+        if (location.placeAttributes.truegeometry) {
+            let geom = JSON.parse(location.placeAttributes.truegeometry);
 
             let format = new GeoJSON();
             let geometry = format.readGeometry(geom, {
@@ -844,6 +853,16 @@ class IGNSearchService extends AbstractSearchService {
             extent.set("infoPopup", this._currentGeocodingLocation);
         }
         f.set("infoPopup", this._currentGeocodingLocation);
+        return { feature : f, extent : extent  };
+    }
+    
+    /** Do something on search
+     * @private
+     */
+    _onSuccessSearch (results) {
+        this._locations = results.locations;
+
+        const features = this.getResultFeatures(0);
 
         /**
          * event triggered when an element of the results is clicked for autocompletion
@@ -859,18 +878,19 @@ class IGNSearchService extends AbstractSearchService {
          */
         this.dispatchEvent({
             type : this.SEARCH_EVENT,
-            result : f,
-            extent : extent,
+            result : features.feature,
+            extent : features.extent,
+            nbResults : results.locations.length,
         });
     }
 
     _onFailureSearch (location, error) {
+        logger.warn(error);
+
         let position = [
             location.position.x,
             location.position.y
         ];
-
-        logger.warn(error);
 
         /**
          * event triggered when an element of the results is clicked for autocompletion

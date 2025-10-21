@@ -35,3 +35,7 @@ form[id^=GPAdvancedForm-] > .GPFormFooter > button {
   justify-content: center;
   align-items: center;
 }
+
+form[id^=GPAdvancedForm-] input:invalid {
+  border-color: #d93025;
+}

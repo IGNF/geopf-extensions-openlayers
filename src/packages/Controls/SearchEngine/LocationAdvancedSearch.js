@@ -21,12 +21,20 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         // Search service
         this.searchService = new IGNSearchService({
             index : "poi",
-            limit : 1,
+            limit : 5,
             returnTrueGeometry : true
         });
         // Do something on search
         this.searchService.on("search", function (e) {
-            this.dispatchEvent(e);
+            // Format output
+            if (e.nbResults === 0) {
+                console.log("No result");
+            } else if (e.nbResults === 1) {
+                console.log(e);
+                this.dispatchEvent(e);
+            } else {
+                this.handleMultipleResults(e);
+            }
         }.bind(this));
     }
 
@@ -44,6 +52,14 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         this.search.setMap(map);
     }
     */
+    /** Handle multiresults: display list for selct/search
+     * @param {Object} e Event
+     */
+    handleMultipleResults (e) {
+        // Par defaut on selectionne le premier resultat
+        this.dispatchEvent(e);
+    }
+
     _getLabelContainer (text, type, input) {
         const container = document.createElement("div");
         container.className = type;
@@ -63,6 +79,14 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
      */
     addInputs () {
         super.addInputs();
+
+        // Legend
+        const legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend";
+        legend.id = Helper.getUid("LocationAdvancedSearch-legend-");
+        legend.innerText = "* champs obligatoires";
+        this.inputs.push(legend);
+
         // Type
         const typeSelect = document.createElement("select");
         typeSelect.className = "fr-select";
@@ -93,8 +117,10 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         searchInput.className = "fr-input";
         searchInput.type = "text";
         searchInput.name = "search";
+        searchInput.setAttribute("minlength", "3");
+        searchInput.required = true;
         searchInput.id = Helper.getUid("LocationAdvancedSearch-search-");
-        this._getLabelContainer("Renseigner un lieu", "fr-input-group", searchInput);
+        this._getLabelContainer("Renseigner un lieu *", "fr-input-group", searchInput);
 
         // Code postal
         const postalInput = document.createElement("input");
