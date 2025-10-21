@@ -16,7 +16,6 @@ button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
     flex-direction: column;
     visibility: visible;
     opacity: 100%;
-    max-width: 450px;
     height: initial;
     /* max-height: inherit; */
 }

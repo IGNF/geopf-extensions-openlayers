@@ -139,10 +139,22 @@
     --active: unset;
 }
 
+button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
+    max-width: 450px;
+}
+
 /* Mode mobile doit prendre le dessus */
 @media (max-width: 576px) {
     .gpf-mobile-fullscreen .GPtabContent {
         /* max-height: unset !important; */
         height: 100vh;
+    }
+    dialog[id^="GPcatalogPanel-"] > div:first-of-type {
+        width: unset;
+        max-width: unset;
+      }
+
+    button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
+        max-width: unset;  
     }
 }
