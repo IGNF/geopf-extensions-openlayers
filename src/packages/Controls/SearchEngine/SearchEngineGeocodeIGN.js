@@ -2,7 +2,8 @@
 import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 import Logger from "../../Utils/LoggerByDefault";
 import SearchEngineBase from "./SearchEngineBase";
-import { AbstractSearchService, IGNSearchService } from "./Service";
+import { AbstractSearchService } from "./Service";
+import IGNSearchService from "./Service";
 
 var logger = Logger.getLogger("searchengine");
 

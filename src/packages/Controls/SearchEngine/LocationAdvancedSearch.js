@@ -1,6 +1,6 @@
 import Helper from "../../Utils/Helper";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
-import { IGNSearchService } from "./Service";
+import IGNSearchService from "./Service";
 
 class LocationAdvancedSearch extends AbstractAdvancedSearch {
 
