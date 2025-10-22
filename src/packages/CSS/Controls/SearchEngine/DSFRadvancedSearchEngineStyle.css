@@ -9,7 +9,7 @@ div[id^=GPsearchEngine-Advanced] {
   width: 100%;
 }
 
-@media (min-width: 569px) {
+@media (min-width: 36em) {
   div[id^=GPsearchEngine-Advanced] {
     width: 360px;
   }
