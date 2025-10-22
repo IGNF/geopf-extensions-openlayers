@@ -38,3 +38,28 @@ form[id^=GPAdvancedForm-] > .GPFormFooter > button {
 form[id^=GPAdvancedForm-] input:invalid {
   border-color: #d93025;
 }
+
+form[id^=GPAdvancedForm-] ul.search-result {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+form[id^=GPAdvancedForm-] ul.search-result .hidden {
+  display: none;
+}
+form[id^=GPAdvancedForm-] ul.search-result button {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+form[id^=GPAdvancedForm-] ul.search-result .search-result-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-direction: column;
+  text-align: center;
+}
+form[id^=GPAdvancedForm-] ul.search-result .search-result-actions:hover {
+  background-color: transparent;
+}

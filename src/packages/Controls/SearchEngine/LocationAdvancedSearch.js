@@ -21,19 +21,49 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         // Search service
         this.searchService = new IGNSearchService({
             index : "poi",
-            limit : 5,
+            limit : 10,
             returnTrueGeometry : true
         });
         // Do something on search
         this.searchService.on("search", function (e) {
+            if (!e.multi) {
+                this.searchResult.innerHTML = "";
+            }
             // Format output
-            if (e.nbResults === 0) {
-                console.log("No result");
-            } else if (e.nbResults === 1) {
-                console.log(e);
+            if (e.nbResults === 1) {
+                const attr = e.attr || this.searchService.getResult(0).placeAttributes;
+                ["postcode","citycode","city","category"].forEach(field => {
+                    attr[field] = attr[field] || [];
+                });
+                const into = {
+                    infoPopup : "<strong>" + attr.toponym + "</strong><br/>" +
+                    (attr.category ? ("<em>" + (attr.category || []).join(", ") + "</em><br/>") : "") +
+                    (attr.postcode ? ("Code postal : " + (attr.postcode || []).join(", ") + "<br/>") : "") ,
+                    toponyme : attr.toponym,
+                    postcode : attr.postcode[0],
+                    postcodes : attr.postcode.join(" - "),
+                    insee : attr.citycode[0],
+                    citycodes : attr.citycode.join(" - "),
+                    city : attr.city[0],
+                    citys : attr.city.join(" - "),
+                    category : attr.category[0],
+                    categories : attr.category.join(" - ")
+                };
+
+                if (e.result) {
+                    e.result.setProperties(into);
+                }
+                if (e.extent) {
+                    e.extent.setProperties(into);
+                }
                 this.dispatchEvent(e);
             } else {
-                this.handleMultipleResults(e);
+                this.element.parentElement.parentElement.scrollTop = 0;
+                if (e.nbResults === 0) {
+                    this.searchResult.innerHTML = "<li>Aucun résultat</li>" ;
+                } else {
+                    this.handleMultipleResults(e);
+                }
             }
         }.bind(this));
     }
@@ -56,8 +86,54 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
      * @param {Object} e Event
      */
     handleMultipleResults (e) {
+        const results = this.searchService.getResult();
+        results.forEach((result, i) => {
+            const attr = result.placeAttributes;
+            const li = document.createElement("li");
+            li.className = "search-result-item" + (i>=5 ? " hidden" : "");
+            li.title = li.innerText = attr.toponym + " (" + (attr.category || []).join(", ") + ") - " +  (attr.city || []).join(", ");
+            this.searchResult.appendChild(li);
+            li.addEventListener("click", () => {
+                const features = this.searchService.getResultFeatures(i);
+                const event = {
+                    type : "search",
+                    multi : true,
+                    attr : attr,
+                    extent : features.extent,
+                    result : features.feature,
+                    nbResults : 1
+                };
+                this.searchService.dispatchEvent(event);
+            });
+        });
+        // Actions
+        const li = document.createElement("li");
+        this.searchResult.appendChild(li);
+        // more options
+        if (results.length > 5) {
+            const plusBtn = document.createElement("button");
+            plusBtn.className = "fr-btn fr-btn--sm fr-btn--tertiary";
+            plusBtn.innerText = "Afficher plus de résultats";
+            plusBtn.addEventListener("click", () => {
+                plusBtn.remove();
+                this.searchResult.querySelectorAll(".hidden").forEach(el => {
+                    el.classList.remove("hidden");
+                });
+            });
+            li.appendChild(plusBtn);
+        }
+        // clear button
+        li.className = "search-result-actions";
+        const okBtn = document.createElement("button");
+        okBtn.className = "fr-btn fr-btn--sm fr-btn--tertiary";
+        okBtn.innerText = "OK";
+        okBtn.addEventListener("click", () => {
+            this.searchResult.innerHTML = "";
+        });
+        li.appendChild(okBtn);
+
         // Par defaut on selectionne le premier resultat
-        this.dispatchEvent(e);
+        // this.dispatchEvent(e);
     }
 
     _getLabelContainer (text, type, input) {
@@ -79,6 +155,10 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
      */
     addInputs () {
         super.addInputs();
+
+        this.searchResult = document.createElement("ul");
+        this.searchResult.className = "search-result";
+        this.inputs.push(this.searchResult);
 
         // Legend
         const legend = document.createElement("legend");
@@ -140,8 +220,8 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         inseeInput.className = "fr-input";
         inseeInput.name = "cityCode";
         inseeInput.type = "text";
-        postalInput.pattern = "(\\d\\d|2[A,B,a,b])\\d{3}";
-        postalInput.title = "Code INSEE sur 5 caractères";
+        inseeInput.pattern = "(\\d\\d|2[A,B,a,b])\\d{3}";
+        inseeInput.title = "Code INSEE sur 5 caractères";
         inseeInput.id = Helper.getUid("LocationAdvancedSearch-insee-");
         this._getLabelContainer("Code INSEE", "fr-input-group", inseeInput);
         inseeInput.addEventListener("change", () => {
@@ -162,6 +242,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         this.element.querySelectorAll("input").forEach(input => {
             input.value = "";
         });
+        this.searchResult.innerHTML = "";
         this.filter = {
             category : "",
             postcode : "",
