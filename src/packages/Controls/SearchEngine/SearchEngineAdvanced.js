@@ -156,9 +156,10 @@ class SearchEngineAdvanced extends Control {
 
         this.element.appendChild(this.advancedContainer);
 
-        if (map) {            
-            map.addLayer(this.extent);
-            map.addLayer(this.layer);
+        if (map) {
+            // Place les couches au dessus des autres
+            this.extent.setMap(map);
+            this.layer.setMap(map);
             map.addInteraction(this.selectInteraction);
             map.addOverlay(this.popup);
         }
