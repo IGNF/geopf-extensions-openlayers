@@ -14,6 +14,7 @@ import Overlay from "ol/Overlay.js";
 import { Style, Icon, Stroke, Fill } from "ol/style";
 import mapPinIcon from "./map-pin-2-fill.svg";
 import Feature from "ol/Feature";
+import { Layer } from "ol/layer";
 const color = "rgba(0, 0, 145, 1)";
 
 const createStyle = (feature) => {
@@ -103,7 +104,6 @@ class SearchEngineAdvanced extends Control {
         });
 
         this.selectInteraction.on("select", this._onSelectElement.bind(this));
-
         this.popup = this._createPopup();
 
 
@@ -125,6 +125,11 @@ class SearchEngineAdvanced extends Control {
          * @private
         */
         this.CLASSNAME = "SearchEngineAdvanced";
+
+        /**
+         * @type {Object<Feature, Layer>}
+         */
+        this._layerFeatureAssociation = {};
 
         if (options.advancedSearch && options.advancedSearch instanceof Array) {
             this._searchForms = options.advancedSearch;
@@ -312,10 +317,14 @@ class SearchEngineAdvanced extends Control {
         let extent;
         if (!!e.result) {
             this.layer.getSource().addFeature(e.result);
+            // Ajout de la couche pour la retrouver plus tard
+            this._layerFeatureAssociation[e.result.ol_uid] = this.layer;
             extent = e.result.getGeometry().getExtent();
         }
         if (!!e.extent) {
             this.extent.getSource().addFeature(e.extent);
+            // Ajout de la couche pour la retrouver plus tard
+            this._layerFeatureAssociation[e.extent.ol_uid] = this.extent;
             extent = e.extent.getGeometry().getExtent();
         }
         if (this.getMap()) {
@@ -348,7 +357,9 @@ class SearchEngineAdvanced extends Control {
             this.popup.setPosition(position);
             this.setPopupContent(feature.get("infoPopup") || "");
             this.popup.set("feature", feature);
-            this.popup.set("layer", e.target.getLayer(feature));
+            // Récupère la couche liée;
+            const layer = this._layerFeatureAssociation[feature.ol_uid];
+            this.popup.set("layer", layer);
         } else {
             this.popup.setPosition(undefined);
             this.setPopupContent("");

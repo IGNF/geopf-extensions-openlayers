@@ -41,11 +41,6 @@
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
 
-                    let source = new ol.source.Vector({})
-                    let layer = new ol.layer.Vector({
-                        source : source,
-                    })
-
 					// 1. Création de la map
                     map = new ol.Map({
                         target : "map",
@@ -58,8 +53,7 @@
                                 source: new ol.source.OSM(),
                                 // zIndex : 4,
                                 opacity: 0.5
-                            }),
-                            layer
+                            })
                         ]
                     });
 
