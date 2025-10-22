@@ -455,9 +455,9 @@ var CatalogDOM = {
             // mais il faudrait pouvoir le configurer dynamiquement en fonction de la presence
             // ou non de la barre de recherche spécifique qui decale le panneau vers le bas
             // cf. var tabHeight dans le main container
-            var height = "250px";
+            var height = "330px";
             if (active && !search) {
-                height = "310px";
+                height = "390px";
             }
             return `
             <!-- panneaux -->
@@ -505,9 +505,9 @@ var CatalogDOM = {
         // FIXME 
         // le calcul de la hauteur est realisé à la main pour pallier le manque de JS DSFR (?)
         // style="--tabs-height: 294px;"
-        var tabHeight = "294px"; // par defaut
+        var tabHeight = "369px"; // par defaut
         if (hasActiveBar) {
-            tabHeight = "354px"; // si la barre de recherche spécifique est active
+            tabHeight = "434px"; // si la barre de recherche spécifique est active
         }
         var strContainer = `
         <!-- onglets -->
@@ -1004,6 +1004,16 @@ var CatalogDOM = {
                     if (e.target.ariaExpanded === "true") {
                         collapse.classList.add("fr-collapse--expanded");
                         collapse.classList.remove("GPelementHidden");
+                        // scroll auto sur le bouton cliqué (dsfr oblige de passer par scrollTop sur le container au lieu de scrollIntoView)
+                        const container = button.closest("div[id^=\"tabpanel-\"]");
+                        const buttonRect = button.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
+                        const offset = buttonRect.top - containerRect.top;
+
+                        container.scrollTo({
+                            top : container.scrollTop + offset,
+                            behavior : "smooth"
+                        });
                     } else {
                         collapse.classList.remove("fr-collapse--expanded");
                         collapse.classList.add("GPelementHidden");
@@ -1026,6 +1036,17 @@ var CatalogDOM = {
                     if (e.target.ariaPressed === "true") {
                         collapse.classList.add("gpf-visible");
                         collapse.classList.remove("gpf-hidden");
+                        // scroll auto sur le bouton cliqué (dsfr oblige de passer par scrollTop sur le container au lieu de scrollIntoView)
+                        button.closest("div[id^=\"tabpanel-\"]");
+                        const container = button.closest("div[id^=\"tabpanel-\"]");
+                        const buttonRect = button.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
+                        const offset = buttonRect.top - containerRect.top;
+
+                        container.scrollTo({
+                            top : container.scrollTop + offset,
+                            behavior : "smooth"
+                        });
                     } else {
                         collapse.classList.remove("gpf-visible");
                         collapse.classList.add("gpf-hidden");
