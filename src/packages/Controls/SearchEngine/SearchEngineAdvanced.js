@@ -289,6 +289,7 @@ class SearchEngineAdvanced extends Control {
                     accordion.classList.add("fr-collapse--expanded");
                     section.classList.remove("fr-hidden");
                 }
+                Search.dispatchEvent({ type : "expand", expanded : !expanded });
             });
         });
 

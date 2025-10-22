@@ -24,48 +24,62 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
             limit : 10,
             returnTrueGeometry : true
         });
-        // Do something on search
-        this.searchService.on("search", function (e) {
-            if (!e.multi) {
-                this.searchResult.innerHTML = "";
-            }
-            // Format output
-            if (e.nbResults === 1) {
-                const attr = e.attr || this.searchService.getResult(0).placeAttributes;
-                ["postcode","citycode","city","category"].forEach(field => {
-                    attr[field] = attr[field] || [];
-                });
-                const into = {
-                    infoPopup : "<strong>" + attr.toponym + "</strong><br/>" +
-                    (attr.category ? ("<em>" + (attr.category || []).join(", ") + "</em><br/>") : "") +
-                    (attr.postcode ? ("Code postal : " + (attr.postcode || []).join(", ") + "<br/>") : "") ,
-                    toponyme : attr.toponym,
-                    postcode : attr.postcode[0],
-                    postcodes : attr.postcode.join(" - "),
-                    insee : attr.citycode[0],
-                    citycodes : attr.citycode.join(" - "),
-                    city : attr.city[0],
-                    citys : attr.city.join(" - "),
-                    category : attr.category[0],
-                    categories : attr.category.join(" - ")
-                };
+    }
 
-                if (e.result) {
-                    e.result.setProperties(into);
-                }
-                if (e.extent) {
-                    e.extent.setProperties(into);
-                }
-                this.dispatchEvent(e);
-            } else {
-                this.element.parentElement.parentElement.scrollTop = 0;
-                if (e.nbResults === 0) {
-                    this.searchResult.innerHTML = "<li>Aucun résultat</li>" ;
-                } else {
-                    this.handleMultipleResults(e);
-                }
+    _initEvents (options) {
+        super._initEvents(options);
+
+        this.on("expand", e => {
+            if (e.expanded) {
+                setTimeout(() => this.searchInput.focus(), 300);
             }
-        }.bind(this));
+            this.searchResult.innerHTML = "";
+        });
+
+        // Do something on search (when ready)
+        setTimeout(() => {
+            this.searchService.on("search", e => {
+                if (!e.multi) {
+                    this.searchResult.innerHTML = "";
+                }
+                // Format output
+                if (e.nbResults === 1) {
+                    const attr = e.attr || this.searchService.getResult(0).placeAttributes;
+                    ["postcode","citycode","city","category"].forEach(field => {
+                        attr[field] = attr[field] || [];
+                    });
+                    const into = {
+                        infoPopup : "<strong>" + attr.toponym + "</strong><br/>" +
+                        (attr.category ? ("<em>" + (attr.category || []).join(", ") + "</em><br/>") : "") +
+                        (attr.postcode ? ("Code postal : " + (attr.postcode || []).join(", ") + "<br/>") : "") ,
+                        toponyme : attr.toponym,
+                        postcode : attr.postcode[0],
+                        postcodes : attr.postcode.join(" - "),
+                        insee : attr.citycode[0],
+                        citycodes : attr.citycode.join(" - "),
+                        city : attr.city[0],
+                        citys : attr.city.join(" - "),
+                        category : attr.category[0],
+                        categories : attr.category.join(" - ")
+                    };
+
+                    if (e.result) {
+                        e.result.setProperties(into);
+                    }
+                    if (e.extent) {
+                        e.extent.setProperties(into);
+                    }
+                    this.dispatchEvent(e);
+                } else {
+                    this.element.parentElement.parentElement.scrollTop = 0;
+                    if (e.nbResults === 0) {
+                        this.searchResult.innerHTML = "<li>Aucun résultat</li>" ;
+                    } else {
+                        this.handleMultipleResults(e);
+                    }
+                }
+            });
+        });
     }
 
     initialize (options) {
