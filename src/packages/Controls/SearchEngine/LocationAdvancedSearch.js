@@ -105,9 +105,16 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
             const attr = result.placeAttributes;
             const li = document.createElement("li");
             li.className = "search-result-item" + (i>=5 ? " hidden" : "");
-            li.title = li.innerText = attr.toponym + " (" + (attr.category || []).join(", ") + ") - " +  (attr.city || []).join(", ");
             this.searchResult.appendChild(li);
-            li.addEventListener("click", () => {
+            // link for accessibility
+            const a = document.createElement("a");
+            li.appendChild(a);
+            a.className = "fr-icon-map-pin-2-line";
+            a.href = "#";
+            a.title = a.innerText = attr.toponym + " (" + (attr.category || []).join(", ") + ") - " +  (attr.city || []).join(", ");
+            li.addEventListener("click", () => a.click());
+            a.addEventListener("click", e => {
+                e.preventDefault();
                 const features = this.searchService.getResultFeatures(i);
                 const event = {
                     type : "search",
@@ -143,6 +150,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         okBtn.innerText = "OK";
         okBtn.addEventListener("click", () => {
             this.searchResult.innerHTML = "";
+            this.element.parentElement.parentElement.scrollTop = 0;
         });
         li.appendChild(okBtn);
 
