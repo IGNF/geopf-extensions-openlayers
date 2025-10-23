@@ -5,16 +5,19 @@ declare namespace CatalogDOM {
     function _createMainContainerElement(): HTMLElement;
     function _createShowCatalogPictoElement(): HTMLElement;
     function _createCatalogPanelElement(): HTMLElement;
+    function _createCatalogPanelDivSizeElement(size: any): HTMLElement;
     function _createCatalogPanelDivElement(): HTMLDivElement;
     function _createCatalogPanelContentDivElement(): HTMLDivElement;
     function _createCatalogPanelHeaderElement(): HTMLElement;
     function _createCatalogPanelTitleElement(title: any): HTMLDivElement;
+    function _createCatalogPanelIconElement(title: any): HTMLLabelElement;
     function _createCatalogPanelCloseElement(): HTMLButtonElement;
     function _createCatalogContentDivElement(): ChildNode | null;
     function _createCatalogContentTitleElement(title: any): ChildNode | null;
-    function _createCatalogContentSearchElement(): ShadowRoot;
+    function _createCatalogContentSearchGlobalElement(label: any): ShadowRoot;
     function _createCatalogWaitingElement(): HTMLElement;
-    function _createCatalogContentCategoriesTabs(categories: any): ShadowRoot;
-    function _createCatalogContentCategoryTabContent(category: any, layersFiltered: any): ShadowRoot;
+    function _createCatalogContentCategoriesTabs(categories: Categories): HTMLElement;
+    function _createCatalogContentCategoryTabContent(category: Categories, layersFiltered: any): HTMLElement;
+    function _updateListenersLayersDOM(content: HTMLElement, id: string): void;
 }
 //# sourceMappingURL=CatalogDOM.d.ts.map

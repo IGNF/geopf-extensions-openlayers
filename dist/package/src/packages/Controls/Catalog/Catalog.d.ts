@@ -1,4 +1,7 @@
 export default Catalog;
+/**
+ * - Liste des options du widget Catalog
+ */
 export type CatalogOptions = {
     /**
      * - Définit si le widget est replié au chargement.
@@ -25,6 +28,14 @@ export type CatalogOptions = {
      */
     layerLabel?: string | undefined;
     /**
+     * - Affiche les miniatures des couches si disponibles.
+     */
+    layerThumbnail?: boolean | undefined;
+    /**
+     * - Taille de la fenêtre : sm, md, lg ou xl.
+     */
+    size?: string | undefined;
+    /**
      * - Options de recherche.
      */
     search?: {
@@ -32,6 +43,10 @@ export type CatalogOptions = {
          * - Affiche le champ de recherche.
          */
         display?: boolean | undefined;
+        /**
+         * - Label du champ de recherche.
+         */
+        label?: string | undefined;
         /**
          * - Critères de recherche.
          */
@@ -44,7 +59,7 @@ export type CatalogOptions = {
     /**
      * - Liste des catégories et sous-catégories.
      */
-    categories?: any[] | undefined;
+    categories?: Categories[] | undefined;
     /**
      * - Configuration des sources de données.
      */
@@ -76,18 +91,137 @@ export type CatalogOptions = {
     gutter?: boolean | undefined;
 };
 /**
- * @typedef {Object} CatalogOptions
+ * - Catégories principales du catalogue sous forme d'onglets
+ */
+export type Categories = {
+    /**
+     * - Titre de la catégorie.
+     */
+    title: string;
+    /**
+     * - Identifiant unique de la catégorie.
+     */
+    id: string;
+    /**
+     * - Indique si c'est la catégorie par défaut.
+     */
+    default: boolean;
+    /**
+     * - Clusterisation de la liste des couches.
+     */
+    cluster?: boolean | undefined;
+    /**
+     * - Options de la librairie Clusterize.
+     */
+    clusterOptions: any | null;
+    /**
+     * - Affiche une barre de recherche spécifique à la catégorie.
+     */
+    search?: boolean | undefined;
+    /**
+     * - Liste des sous-catégories.
+     */
+    items?: SubCategories[] | undefined;
+    /**
+     * - Filtre appliqué à la catégorie.
+     */
+    filter: any | null;
+    /**
+     * - Champ utilisé pour le filtre.
+     */
+    field: string;
+    /**
+     * - Valeur ou liste de valeurs pour le filtre.
+     */
+    value: string | Array<string>;
+};
+/**
+ * - Sous-catégories du catalogue sous forme de boutons radio
+ * avec ou sans sections. Une section, c'est un regroupement thématique des couches.
+ * ex. : regrouper les couches par "thématique" (voir propriété "thematic" dans la conf. des couches)
+ */
+export type SubCategories = {
+    /**
+     * - Titre de la sous-catégorie.
+     */
+    title: string;
+    /**
+     * - Identifiant unique de la sous-catégorie.
+     */
+    id: string;
+    /**
+     * - Indique si la sous-catégorie utilise des sections.
+     */
+    section: boolean;
+    /**
+     * - **TODO** Indique si les sections sont repliables.
+     */
+    collapsible?: boolean | undefined;
+    /**
+     * - Indique que l'on souhaite un icone de type dsfr classe pour les sections de la sous-catégorie.
+     */
+    icon?: boolean | undefined;
+    /**
+     * - Liste d'icones (json) pour les sections de la sous-catégorie.
+     */
+    iconJson?: any[] | undefined;
+    /**
+     * - Liste des sections (remplie ultérieurement).
+     */
+    sections: Array<string>;
+    /**
+     * - Indique si c'est la sous-catégorie par défaut.
+     */
+    default: boolean;
+    /**
+     * - Clusterisation de la liste des couches.
+     */
+    cluster?: boolean | undefined;
+    /**
+     * - Options de la librairie Clusterize.
+     */
+    clusterOptions: any | null;
+    /**
+     * - Filtre appliqué à la sous-catégorie.
+     */
+    filter: any | null;
+    /**
+     * - Champ utilisé pour le filtre.
+     */
+    field: string;
+    /**
+     * - Valeur ou liste de valeurs pour le filtre.
+     */
+    value: string | Array<string>;
+};
+/**
+ * - Configuration des sources de données
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ */
+export type Config = any;
+/**
+ * - Configuration d'une couche
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ */
+export type ConfigLayer = any;
+/**
+ * @typedef {Object} CatalogOptions - Liste des options du widget Catalog
  * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
  * @property {boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
  * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
  * @property {string} [titlePrimary="Gérer vos couches de données"] - Titre principal du panneau.
  * @property {string} [titleSecondary=""] - Titre secondaire du panneau.
  * @property {string} [layerLabel="title"] - Propriété utilisée comme label pour les couches.
+ * @property {Boolean} [layerThumbnail=false] - Affiche les miniatures des couches si disponibles.
+ * @property {string} [size="md"] - Taille de la fenêtre : sm, md, lg ou xl.
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
+ * @property {string} [search.label="Rechercher une donnée"] - Label du champ de recherche.
  * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
  * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
- * @property {Array<Object>} [categories] - Liste des catégories et sous-catégories.
+ * @property {Array<Categories>} [categories] - Liste des catégories et sous-catégories.
  * @property {Object} [configuration] - Configuration des sources de données.
  * @property {string} [configuration.type="json"] - Type de configuration ("json" ou "service").
  * @property {Array<string>} [configuration.urls] - URLs des fichiers de configuration JSON.
@@ -95,6 +229,53 @@ export type CatalogOptions = {
  * @property {string} [id] - Identifiant unique du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ */
+/**
+ * @typedef {Object} Categories - Catégories principales du catalogue sous forme d'onglets
+ * @property {string} title - Titre de la catégorie.
+ * @property {string} id - Identifiant unique de la catégorie.
+ * @property {boolean} default - Indique si c'est la catégorie par défaut.
+ * @property {boolean} [cluster=false] - Clusterisation de la liste des couches.
+ * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
+ * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
+ * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
+ * @property {Object|null} filter - Filtre appliqué à la catégorie.
+ * @property {string} filter.field - Champ utilisé pour le filtre.
+ * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
+ */
+/**
+ * @typedef {Object} SubCategories - Sous-catégories du catalogue sous forme de boutons radio
+ * avec ou sans sections. Une section, c'est un regroupement thématique des couches.
+ * ex. : regrouper les couches par "thématique" (voir propriété "thematic" dans la conf. des couches)
+ * @property {string} title - Titre de la sous-catégorie.
+ * @property {string} id - Identifiant unique de la sous-catégorie.
+ * @property {boolean} section - Indique si la sous-catégorie utilise des sections.
+ * @property {boolean} [collapsible] - **TODO** Indique si les sections sont repliables.
+ * @property {boolean} [icon] - Indique que l'on souhaite un icone de type dsfr classe pour les sections de la sous-catégorie.
+ * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
+ * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
+ * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
+ * @property {boolean} [cluster=false] - Clusterisation de la liste des couches.
+ * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
+ * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
+ * @property {string} filter.field - Champ utilisé pour le filtre.
+ * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
+ */
+/**
+ * @typedef {Object} Config - Configuration des sources de données
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ */
+/**
+ * @typedef {Object} ConfigLayer - Configuration d'une couche
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * @description
+ * Un objet de type ConfigLayer est un objet qui contient la configuration d'une couche.
+ * Il est issu de la configuration globale (Config) et enrichi de propriétés supplémentaires
+ * pour le bon fonctionnement du catalogue.
+ * ex. : service, categories, producer_urls, thematic_urls, etc.
+ * Les types de services supportés sont : WMTS, WMS, WFS, TMS.
  */
 /**
  * @classdesc
@@ -112,8 +293,8 @@ declare class Catalog extends Control {
      * @fires catalog:loaded
      * @fires catalog:layer:add
      * @fires catalog:layer:remove
-     * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
-     * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
+     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
      * @example
      * var widget = new ol.control.Catalog({
      *           collapsed : true,
@@ -121,8 +302,10 @@ declare class Catalog extends Control {
      *           titlePrimary : "",
      *           titleSecondary : "Gérer vos couches de données",
      *           layerLabel : "title",
+     *           layerThumbnail : true,
      *           search : {
      *               display : true,
+     *               label : "Rechercher une donnée",
      *               criteria : [
      *                   "name",
      *                   "title",
@@ -135,12 +318,15 @@ declare class Catalog extends Control {
      *                   title : "Données",
      *                   id : "data",
      *                   default : true,
+     *                   search : false,
      *                   filter : null
      *                   // sous categories
      *                   // items : [
      *                   //     {
      *                   //         title : "",
      *                   //         default : true,
+     *                   //         section : true, // avec section (ex. regroupement par themes)
+     *                   //         icon : true, // icone pour les sections (svg ou lien http ou dsfr classe)
      *                   //         filter : {
      *                   //             field : "",
      *                   //             value : ""
@@ -171,34 +357,118 @@ declare class Catalog extends Control {
      */
     private CLASSNAME;
     container: HTMLElement;
+    configData: any;
     /**
      * Overwrite OpenLayers setMap method
+     * This method sets the map for the Catalog control.
+     * It initializes event listeners for the map and sets up the control's draggable and collapsed states.
+     * It also checks for existing layers on the map and updates the control accordingly.
      *
-     * @param {Map} map - Map.
+     * @param {Map} map - Map instance to set for the control.
      */
     setMap(map: Map): void;
     /**
-     * Add a layer config
-     * @param {*} conf conf
+     * Returns true if widget is collapsed (minimized), false otherwise
+     *
+     * @returns {Boolean} collapsed - true if widget is collapsed
      */
-    addLayerConfig(conf: any): void;
+    getCollapsed(): boolean;
+    /**
+     * Collapse or display widget main container
+     *
+     * @param {Boolean} collapsed - True to collapse widget, False to display it
+     */
+    setCollapsed(collapsed: boolean): void;
+    collapsed: boolean | undefined;
+    /**
+     * Add a layer config
+     * This method processes a configuration object containing layer definitions.
+     *
+     * @param {Config} conf conf
+     */
+    addLayerConfig(conf: Config): void;
+    /**
+     * Activate a layer by its ID
+     * This method activates a layer based on its ID, which is expected to be in the format "name$service".
+     * It splits the ID to extract the layer name and service, then calls the `activeLayer` method.
+     *
+     * @param {*} id - Layer ID in the format "name$service".
+     * @example
+     * activeLayerByID("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$WMTS");
+     * activeLayerByID("PLAN.IGN$GEOPORTAIL:TMS");
+     */
     activeLayerByID(id: any): void;
+    /**
+     * Disable a layer by its ID
+     * This method disables a layer based on its ID, which is expected to be in the format "name$service".
+     * It splits the ID to extract the layer name and service, then calls the `disableLayer` method.
+     * @param {*} id - Layer ID in the format "name$service".
+     * @example
+     * disableLayerByID("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$WMTS");
+     * disableLayerByID("PLAN.IGN$GEOPORTAIL:TMS");
+     * @todo
+     * - ajouter un test pour vérifier si l'ID est valide
+     * - ajouter un test pour vérifier si la couche est déjà active
+     * - ajouter un test pour vérifier si la couche est déjà désactivée
+     */
     disableLayerByID(id: any): void;
-    activeLayer(name: any, service: any): void;
-    disableLayer(name: any, service: any): void;
+    /**
+     * Activate a layer
+     * This method activates a layer by its name and service.
+     * It checks if the layer exists in the `layersList` and if it does, it adds the layer to the map if `addToMap` is true.
+     * It then dispatches an event indicating that the layer has been added to the catalog.
+     * @param {String} name - Layer name.
+     * @param {String} service - Layer service.
+     * @example
+     * activeLayer("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * activeLayer("PLAN.IGN", "GEOPORTAIL:TMS");
+     */
+    activeLayer(name: string, service: string): void;
+    /**
+     * Disable a layer
+     * This method disables a layer by its name and service.
+     * It checks if the layer exists in the `layersList` and if it does, it removes the layer from the map if `addToMap` is true.
+     * It then dispatches an event indicating that the layer has been removed from the catalog.
+     * @param {String} name - Layer name.
+     * @param {String} service - Layer service.
+     * @example
+     * disableLayer("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * disableLayer("PLAN.IGN", "GEOPORTAIL:TMS");
+     */
+    disableLayer(name: string, service: string): void;
+    /**
+     * Get long layer ID
+     *
+     * @param {*} name - nom de la couche
+     * @param {*} service - service de la couche
+     * @return {String|null} - long layer ID or null if not found
+     * @description
+     * This method retrieves the long layer ID based on the provided name and service.
+     * It searches through the `layersList` object for a key that matches the pattern of "name.*service".
+     * If a match is found, it returns the key; otherwise, it returns null.
+     * @example
+     * getLayerId("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * getLayerId("PLAN.IGN", "GEOPORTAIL:TMS");
+     */
+    getLayerId(name: any, service: any): string | null;
+    /**
+     * Get layers by category
+     * This method filters the layers based on the provided category.
+     * It checks if the category has a filter defined and applies it to the layers.
+     * If the filter matches, the layer is added to the `layersCategorised` object.
+     * It also updates the `categories` property of each layer to include the category ID.
+     *
+     * @param {*} category - Category object containing the filter.
+     * @param {*} layers - Object containing all layers.
+     * @return {Object} - Filtered layers categorized by the provided category.
+     */
+    getLayersByCategory(category: any, layers: any): any;
     /**
      * Get container
      *
      * @returns {HTMLElement} container
      */
     getContainer(): HTMLElement;
-    /**
-     * Get long layer ID
-     * @param {*} name  nom de la couche
-     * @param {*} service service de la couche
-     * @returns {String} - long layer ID
-     */
-    getLayerId(name: any, service: any): string;
     /**
      * Initialize Catalog control (called by Catalog constructor)
      *
@@ -208,6 +478,10 @@ declare class Catalog extends Control {
     private initialize;
     /** @private */
     private uid;
+    clusterOptions: {
+        rows_in_block: number;
+        blocks_in_cluster: number;
+    } | undefined;
     options: {
         collapsed: boolean;
         draggable: boolean;
@@ -215,14 +489,22 @@ declare class Catalog extends Control {
         titlePrimary: string;
         titleSecondary: string;
         layerLabel: string;
+        layerThumbnail: boolean;
+        size: string;
         search: {
             display: boolean;
+            label: string;
             criteria: string[];
         };
         addToMap: boolean;
         categories: {
             title: string;
             id: string;
+            cluster: boolean;
+            clusterOptions: {
+                rows_in_block: number;
+                blocks_in_cluster: number;
+            };
             default: boolean;
             filter: null;
         }[];
@@ -231,11 +513,6 @@ declare class Catalog extends Control {
             urls: string[];
         };
     } | undefined;
-    /**
-     * specify if control is collapsed (true) or not (false)
-     * @type {Boolean}
-     */
-    collapsed: boolean | undefined;
     /**
      * specify if control is draggable (true) or not (false)
      * @type {Boolean}
@@ -265,16 +542,39 @@ declare class Catalog extends Control {
     private waitingContainer;
     /**
      * specify all list of layers (configuration service)
-     * @type {Object}
-     * @see [schema](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json)
-     * @see [jsdoc](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc)
+     * @type {Array<Object>}
      */
-    layersList: any;
+    layersList: any[] | undefined;
+    clusterize: {} | undefined;
     /**
      * specify all categories
-     * @type {Array}
+     * @type {Array<Categories}
+     * @example
+     * [
+     *     {
+     *        title : "Données",   // title of the category
+     *        id : "data",         // id of the category
+     *        default : true,      // if true, this category is selected by default
+     *        search : false,      // if true, a search bar is displayed for this category
+     *        cluster : false,     // if true, clustering is activated for this category
+     *        filter : null,       // filter to apply on the category
+     *        items : [            // list of subcategories
+     *            {
+     *               title : "Toutes les données", // title of the subcategory
+     *               id : "all",                   // id of the subcategory
+     *               default : true,               // if true, this subcategory is selected by default
+     *               icon : true,                  // icon for the subcategory (svg or http link or dsfr class)
+     *               iconJson : [],                // list of icons (json) for the sections
+     *               cluster : false,              // if true, clustering is activated for this subcategory
+     *               section : false,              // if true, this subcategory has a section
+     *               sections : [],                // list of sections (filled later)
+     *               filter : null,                // filter to apply on the subcategory
+     *            }
+     *        ]
+     *     }
+     * ]
      */
-    categories: any[] | undefined;
+    categories: Categories[] | undefined;
     /**
      * specify the current category selected
      * @type {String}
@@ -290,6 +590,8 @@ declare class Catalog extends Control {
      * }
      */
     layersListOnMap: any;
+    /** @private */
+    private _searchTimeout;
     /**
      * event triggered when layer is added
      *
@@ -347,33 +649,78 @@ declare class Catalog extends Control {
      */
     private initContainer;
     /**
-     * ...
+     * Check layers already present on the map
+     * This method checks the layers already present on the map
+     * and marks them as checked in the catalog.
      * @private
      */
-    private initMapLayers;
+    private checkLayersOnMap;
     /**
-     * Configuration loading
+     * Initialize layers list and other properties
+     * This method initializes the layers list from the configuration data.
+     * It can load data from a local object or fetch it from URLs.
+     * It processes the layers to add additional properties such as `service`, `categories`, and URLs for producers and thematics.
+     * It also creates the catalog content entries based on the layers.
      *
      * @returns {Promise} - promise
      * @private
      */
-    private initLayersList;
+    private initConfigData;
+    /**
+     * Check configuration layers
+     * This method checks the configuration of layers to ensure they have valid service parameters.
+     * It also adds additional properties to each layer, such as `service`, `categories`, and URLs for producers and thematics.
+     * It cleans the list of layers by removing those without valid configuration and adds a default thumbnail if enabled and not present.
+     *
+     * @param {Array<ConfigLayer>} layers - list of layers
+     * @private
+     */
+    private checkConfigLayers;
     /**
      * Create DOM content categories and entries
-     * @param {*} layers couches
-     */
-    createCatalogContentEntries(layers: any): void;
-    /**
-     * Get information in the catalog
-     * @param {*} key type de catégorisation 'producer' ou 'thematic'
-     * @param {*} value tableau de couches
+     * @param {Config} data - data
      * @private
-     * @returns {Object} fiche d'information
+     */
+    private createCatalogContentEntries;
+    /**
+     * Create links information to the catalog for thematic
+     * @param {*} value - ...
+     * @private
+     * @returns {Array<Object>} fiche d'information
      * @todo récuperer l'url du service du catalogue selon l'environnement !
      * @example
-     * // OUTPUT ?
+     * // pour les thématiques
+     * createCatalogThematicLinks(["Agriculture", "Transports", "Autres"]);
+     * // OUTPUT
+     * [
+     *   {
+     *     name : "Agriculture",
+     *     url : "https://cartes.gouv.fr/catalogue/search?topic=farming"
+     *   }
+     * ]
+     * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
      */
-    private getInformationsCatalog;
+    private createCatalogThematicLinks;
+    /**
+     * Create links information to the catalog for producer
+     * @param {*} value - ...
+     * @private
+     * @returns {Array<Object>} fiche d'information
+     * @todo récuperer l'url du service du catalogue selon l'environnement !
+     * @example
+     * // pour les producteurs
+     * createCatalogProducerLinks(["IGN", "IGNF", "Autres"]);
+     *
+     * // OUTPUT
+     * [
+     *   {
+     *      name : "IGN",
+     *      url : "https://cartes.gouv.fr/catalogue/search?organization=IGN"
+     *   }
+     * ]
+     * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
+     */
+    private createCatalogProducerLinks;
     /**
      * Add events listeners on map (called by setMap)
      *
@@ -430,10 +777,9 @@ declare class Catalog extends Control {
     /**
      * Update DOM sections visibility if no layers are visible
      *
-     * @todo cacher les section si elles sont vides
      * @private
      */
-    private updateVisibilitySectionsDOM;
+    private updateVisibilityFilteredSectionsDOM;
     /**
      * ...
      * @param {Event} e - ...
@@ -460,14 +806,41 @@ declare class Catalog extends Control {
     private onSelectCatalogEntryClick;
     /**
      * ...
+     * @param {Event} e - ...
      * @private
      */
-    private onSearchCatalogButtonClick;
+    private onToggleCatalogMoreLearnClick;
     /**
      * ...
+     * @param {Event} e - ...
      * @private
      */
-    private onSearchCatalogInputChange;
+    private onSearchGlobalCatalogButtonClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onSearchGlobalCatalogInputChange;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onSearchGlobalCatalogButtonResetClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onSearchSpecificCatalogButtonClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onSearchSpecificCatalogInputChange;
+    onSearchSpecificCatalogButtonResetClick(e: any): void;
 }
 import Control from "../Control";
 import Map from "ol/Map";
