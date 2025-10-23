@@ -64,6 +64,9 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
             })
         });
 
+        this.inseeInput.input.pattern = "(\\d\\d|2[A,B,a,b])\\d{3}";
+        this.inseeInput.input.title = "Code INSEE sur 5 caractères";
+
         this.inputs.push(inseeInput);
     }
 
@@ -84,11 +87,10 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
      */
     _onSearch (e) {
         super._onSearch(e);
+        const pattern = this.inseeInput.input.pattern;
         const insee = this.inseeInput.input.value;
 
-        const count = insee.length;
-        const number = parseInt(insee, 10);
-        if (!isNaN(number) && 0 <= number <= 99999 && count === 5) {
+        if (RegExp(pattern).test(insee)) {
             this.inseeInput.removeMessages();
             this.inseeInput.search({
                 location : insee,
@@ -97,7 +99,7 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
                 }
             });
         } else {
-            this.inseeInput.addMessage("Le champs INSEE doit être un texte de 5 chiffres exactement");
+            this.inseeInput.addMessage("Le champs INSEE n'est pas valide (texte de 5 chiffres).");
         }
     }
 

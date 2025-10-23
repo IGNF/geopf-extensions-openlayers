@@ -508,7 +508,7 @@ class SearchEngineBase extends Control {
             li.className = `GPsearchHistoric gpf-panel__item gpf-panel__item-searchengine ${iconClass} fr-icon--sm`;
             li.setAttribute("role", "option");
             li.setAttribute("data-idx", idx);
-            li.innerHTML = this.getItemTitle(item);
+            li.innerHTML = li.title = this.getItemTitle(item);
             this.autocompleteList.appendChild(li);
             li.addEventListener("click", function (e) {
                 const idx = Number(e.target.getAttribute("data-idx"));

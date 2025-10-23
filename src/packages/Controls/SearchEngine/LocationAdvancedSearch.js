@@ -158,13 +158,17 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         // this.dispatchEvent(e);
     }
 
-    _getLabelContainer (text, type, input) {
+    _getLabelContainer (text, type, input, hint = "") {
         const container = document.createElement("div");
         container.className = type;
         this.inputs.push(container);
         const label = document.createElement("label");
         label.className = "fr-label";
-        label.innerText = text;
+        let labelText = text;
+        if (hint) {
+            labelText = `${text} <span class="fr-hint-text">${hint}</span>`;
+        }
+        label.innerHTML = labelText;
         container.appendChild(label);
         if (input) {
             label.setAttribute("for", input.id);
@@ -184,10 +188,15 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
 
         // Legend
         const legend = document.createElement("legend");
-        legend.className = "fr-fieldset__legend";
+        legend.className = "fr-fieldset__legend fr-fieldset__legend--regular";
         legend.id = Helper.getUid("LocationAdvancedSearch-legend-");
-        legend.innerText = "* champs obligatoires";
+        const hint = document.createElement("span");
+        hint.className = "fr-hint-text";
+        hint.textContent = "* Champs obligatoires";
+        legend.appendChild(hint);
         this.inputs.push(legend);
+
+        // <span class="fr-hint-text">^pkp^*k</span>
 
         // Type
         const typeSelect = document.createElement("select");
@@ -229,7 +238,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         postalInput.className = "fr-input";
         postalInput.type = "text";
         postalInput.name = "postalCode";
-        postalInput.pattern = "(\\d{5}";
+        postalInput.pattern = "(\\d{5})";
         postalInput.title = "Code postal à 5 chiffres";
         postalInput.id = Helper.getUid("LocationAdvancedSearch-postal-");
         this._getLabelContainer("Code postal", "fr-input-group", postalInput);
@@ -245,7 +254,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         inseeInput.pattern = "(\\d\\d|2[A,B,a,b])\\d{3}";
         inseeInput.title = "Code INSEE sur 5 caractères";
         inseeInput.id = Helper.getUid("LocationAdvancedSearch-insee-");
-        this._getLabelContainer("Code INSEE", "fr-input-group", inseeInput);
+        this._getLabelContainer("Code INSEE", "fr-input-group", inseeInput, "Format attendu INSEE : 5 chiffres, selon le code officiel géographique (COG)");
         inseeInput.addEventListener("change", () => {
             this.filter.citycode = inseeInput.value;
         });

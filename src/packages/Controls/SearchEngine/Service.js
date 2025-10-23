@@ -265,6 +265,7 @@ class InseeSearchService extends AbstractSearchService {
         this.ignService = new IGNSearchService({
             autocomplete : false,
             returnTrueGeometry : true,
+            index : "poi",
         });
 
         this.ignService.on(this.SEARCH_EVENT, this._onSearch.bind(this));
@@ -289,11 +290,14 @@ class InseeSearchService extends AbstractSearchService {
             if (r instanceof Array && r.length) {
                 const result = r[0];
 
-                let location = {
-                    fullText : result.nom,
-                };
+                let location = result.nom;
+                // Sinon la requête ne se lancera pas
+                if (result.nom.length < 3) {
+                    location = `${result.nom}, ${result.codesPostaux[0]}`;
+                }
 
-                let filters =  {
+                let filters = {
+                    category : "administratif",
                     citycode : result.code
                 };
 
@@ -313,7 +317,7 @@ class InseeSearchService extends AbstractSearchService {
     async _requestGeoAPI (settings) {
         const baseURL = "https://geo.api.gouv.fr/communes";
         const format = "json";
-        const fields = ["nom", "code"];
+        const fields = ["nom", "code", "codesPostaux"];
         const url = `${baseURL}?code=${settings.value}&format=${format}&fields=${fields}`;
 
         try {
