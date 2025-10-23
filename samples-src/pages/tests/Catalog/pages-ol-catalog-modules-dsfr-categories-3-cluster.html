@@ -23,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de catalogue avec option sur la recherche de couches</h2>
+            <h2>Ajout du gestionnaire de catalogue avec options sur les categories</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -57,15 +57,48 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        layerLabel : "name",
-                        layerFilter : [],
-                        search : { 
-                            display : true,
-                            label : "Rechercher une donnée sur un service",
-                            criteria : [
-                                "service"
-                            ]
-                        },
+                        categories : [
+                            {
+                                title : "Données",
+                                id : "data",
+                                cluster : true
+                            },
+                            {
+                                title : "WMTS",
+                                default : false,
+                                cluster : true,
+                                filter : {
+                                    field : "service",
+                                    value : "WMTS"
+                                }
+                            },
+                            {
+                                title : "WMS",
+                                cluster : true,
+                                filter : {
+                                    field : "service",
+                                    value : "WMS"
+                                }
+                            },
+                            {
+                                title : "TMS",
+                                default : true,
+                                cluster : true,
+                                filter : {
+                                    field : "service",
+                                    value : "TMS"
+                                }
+                            },
+                            {
+                                title : "WFS",
+                                default : false,
+                                cluster : true,
+                                filter : {
+                                    field : "service",
+                                    value : "WFS"
+                                }
+                            }
+                        ],
                     });
                     map.addControl(catalog);
                 };
