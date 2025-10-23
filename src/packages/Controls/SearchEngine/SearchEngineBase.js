@@ -375,10 +375,30 @@ class SearchEngineBase extends Control {
                 acContainer.classList.add("GPelementVisible");
                 acContainer.classList.remove("GPelementHidden");
             });
+
+            // Gère le focus pour la sélection d'éléments dans la liste
             input.addEventListener("blur", (e) => {
                 // N'agit que si le focus est hors de l'élément
                 if (e.relatedTarget && acContainer.contains(e.relatedTarget)) {
-                    input.focus();
+                    // N'empêche pas le focus sur un bouton
+                    if (!(e.relatedTarget.tagName === "BUTTON")) {
+                        input.focus();
+                    } else {
+                        // Ajout d'un event listener pour retourner sur l'input en cas de besoin
+                        e.relatedTarget.addEventListener("blur", (e) => {
+                            if (e.relatedTarget && acContainer.contains(e.relatedTarget) || e.relatedTarget === input) {
+                                input.focus();
+                            } else {
+                                setTimeout(() => {
+                                    input.setAttribute("aria-expanded", "false");
+                                    acContainer.classList.remove("gpf-visible");
+                                    acContainer.classList.add("gpf-hidden");
+                                    acContainer.classList.remove("GPelementVisible");
+                                    acContainer.classList.add("GPelementHidden");
+                                }, 100);
+                            }
+                        }, { once : true });
+                    }
                 } else {
                     setTimeout(() => {
                         input.setAttribute("aria-expanded", "false");

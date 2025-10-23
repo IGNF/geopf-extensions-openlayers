@@ -180,6 +180,26 @@ class SearchEngineAdvanced extends Control {
             this.geolocation.setTracking(false);
         });
 
+        this.baseSearchEngine.input.addEventListener("keydown", function (/** @type {KeyboardEvent} */ e) {
+            if (e.key === "Tab" && !e.shiftKey && this.locationBtn.checkVisibility()) {
+                e.preventDefault();
+                this.locationBtn.focus();
+            }
+        }.bind(this));
+
+        this.locationBtn.addEventListener("keydown", function (/** @type {KeyboardEvent} */ e) {
+            if (e.key === "Tab") {
+                e.preventDefault();
+                if (e.shiftKey) {
+                    // Retourne sur l'input
+                    this.baseSearchEngine.input.focus();
+                } else {
+                    // Focus sur le bouton de recherche avancée
+                    this.advancedBtn.focus();
+                }
+            }
+        }.bind(this));
+
         this.on("search", this.addResultToMap.bind(this));
     }
 
@@ -231,10 +251,11 @@ class SearchEngineAdvanced extends Control {
         });
 
         // Geolocation
-        this.baseSearchEngine.autocompleteHeader.appendChild(this._getGeolocButton());
+        this.locationBtn = this._getGeolocButton();
+        this.baseSearchEngine.autocompleteHeader.appendChild(this.locationBtn);
 
         // Ajout des options avancées
-        const advancedBtn = document.createElement("button");
+        const advancedBtn = this.advancedBtn = document.createElement("button");
         advancedBtn.className = "GPSearchEngine-advanced-btn fr-btn fr-icon-arrow-up-s-line fr-btn--icon-right fr-btn--tertiary-no-outline";
         advancedBtn.id = Helper.getUid("GPSearchEngine-advanced-btn-");
         advancedBtn.type = "button";
