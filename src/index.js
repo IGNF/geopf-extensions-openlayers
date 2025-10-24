@@ -31,7 +31,6 @@ export { default as AbstractAdvancedSearch } from "./packages/Controls/SearchEng
 export { default as CoordinateAdvancedSearch } from "./packages/Controls/SearchEngine/CoordinateAdvancedSearch";
 export { default as InseeAdvancedSearch } from "./packages/Controls/SearchEngine/InseeAdvancedSearch";
 export { default as LocationAdvancedSearch } from "./packages/Controls/SearchEngine/LocationAdvancedSearch";
-export { default as IGNSearchService } from "./packages/Controls/SearchEngine/Service";
 export { default as MousePosition } from "./packages/Controls/MousePosition/MousePosition";
 export { default as Drawing } from "./packages/Controls/Drawing/Drawing";
 export { default as Route } from "./packages/Controls/Route/Route";
@@ -55,6 +54,12 @@ export { default as Territories } from "./packages/Controls/Territories/Territor
 export { default as ControlList } from "./packages/Controls/ControlList/ControlList";
 export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextMenu";
 export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
+
+// Services
+export { default as AbstractSearchService } from "./packages/Services/AbstractSearchService";
+export { default as DefaultSearchService } from "./packages/Services/DefaultSearchService";
+export { default as IGNSearchService } from "./packages/Services/IGNSearchService";
+export { default as InseeSearchService } from "./packages/Services/InseeSearchService";
 
 // proj4
 export { default as Proj4 } from "proj4";
