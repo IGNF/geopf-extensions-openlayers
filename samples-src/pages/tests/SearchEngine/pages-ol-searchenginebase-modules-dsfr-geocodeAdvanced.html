@@ -41,6 +41,10 @@
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
 
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
 					// 1. Création de la map
                     map = new ol.Map({
                         target : "map",
@@ -53,7 +57,8 @@
                                 source: new ol.source.OSM(),
                                 // zIndex : 4,
                                 opacity: 0.5
-                            })
+                            }),
+                            layer
                         ]
                     });
 
@@ -66,10 +71,24 @@
                     var coordinates = new ol.control.CoordinateAdvancedSearch({
                     })
 
+                    let addFeatureToLayer = function (feature) {
+                        console.log(this, feature);
+                        source.addFeature(feature.clone());
+                    }
+
 					// 2. Appel du SearchEngine
                     var search = new ol.control.SearchEngineAdvanced({
                         advancedSearch : [insee, location, coordinates],
                         returnTrueGeometry : true,
+                        popupButtons : [{
+                            label : "Ajouter l'objet à la couche",
+                            className : "custom-button",
+                            icon : "fr-icon-map-pin-add-line",
+                            attributes : {
+                                "data-action" : "add-feature",
+                            },
+                            onClick : addFeatureToLayer
+                        }]
                     });
 
 					// 3. Ajout du SearchEngine à la carte

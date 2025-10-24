@@ -127,3 +127,39 @@
  * Étend SearchEngineBaseOptions et ajoute les options spécifiques du service IGN.
  * @typedef {AbstractAdvancedSearchOptions & {coordinateSearch?: CoordinateSearchOptions}} CoordinateAdvancedSearchOptions
  */
+
+/**
+ * Options pour ajouter un bouton de popup
+ * @typedef {Object} PopupButton
+ * @property {string} label - Attribut title du bouton.
+ * @property {string} [className] - Classe(s) CSS à appliquer au bouton.
+ * @property {string} [icon] - Classe d'icône à ajouter (ex: "fr-icon-delete-line").
+ * @property {Object.<string, string>} [attributes] - Attributs HTML supplémentaires (clé/valeur).
+ * @property {PopupButtonClickCallback} onClick - Fonction appelée au clic sur le bouton.
+ */
+
+/**
+ * Callback appelé lors du clic sur un bouton personnalisé du popup.
+ * @callback PopupButtonClickCallback
+ * @param {Feature} feature - La feature associée au popup.
+ * @this SearchEngineAdvanced
+ */
+
+/**
+ * Options pour le contrôle SearchEngineAdvanced.
+ * @typedef {Object} SearchEngineAdvancedOptions
+ * @property {import("./AbstractAdvancedSearch").default[]} [advancedSearch] - Liste des recherches avancées à intégrer.
+ * @property {PopupButton[]} [popupButtons] - Boutons personnalisés à ajouter dans le popup.
+ * @property {SearchEngineGeocodeIGNOptions} [baseSearchOptions] - Options pour le moteur de recherche de base.
+ * @property {HTMLElement|String} [target] - Élément DOM ou sélecteur cible.
+ * @property {String} [title] - Titre du contrôle.
+ * @property {String} [label] - Label affiché.
+ * @property {String} [hint] - Texte d'aide.
+ * @property {Boolean} [search] - Comportement en tant que barre de recherche.
+ * @property {String} [ariaLabel] - Libellé ARIA.
+ * @property {String} [placeholder] - Placeholder de l'input.
+ * @property {Number} [minChars] - Nombre minimal de caractères pour autocomplétion.
+ * @property {Number} [maximumEntries] - Nombre maximal d'entrées affichées.
+ * @property {Boolean|String} [historic] - Gestion historique local (false|true|string).
+ * @property {import("../../Services/AbstractSearchService").default} [searchService] - Service de recherche.
+ */

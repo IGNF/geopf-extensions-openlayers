@@ -115,6 +115,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
     handleMultipleResults (e) {
         const results = this.searchService.getResult();
         results.forEach((result, i) => {
+            console.log(result);
             const attr = result.placeAttributes;
             const li = document.createElement("li");
             li.className = "search-result-item" + (i>=5 ? " hidden" : "");
@@ -124,7 +125,9 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
             li.appendChild(a);
             a.className = "fr-icon-map-pin-2-line";
             a.href = "#";
-            a.title = a.innerText = attr.toponym + " (" + (attr.category || []).join(", ") + ") - " +  (attr.city || []).join(", ");
+            const postCode = attr.postcode[0] ? `, ${attr.postcode[0]}` : "";
+            const text = attr.toponym + postCode + " (" + (attr.category || []).join(", ") + ") - " +  (attr.city || []).join(", ");
+            a.title = a.innerText = text;
             li.addEventListener("click", () => a.click());
             a.addEventListener("click", e => {
                 e.preventDefault();

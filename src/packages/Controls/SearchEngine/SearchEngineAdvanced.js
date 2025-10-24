@@ -72,8 +72,7 @@ class SearchEngineAdvanced extends Control {
 
     /**
      * Constructeur du contrôle de recherche avancée.
-     * @param {SearchEngineGeocodeIGNOptions} options - Options du constructeur.
-     * @param {AbstractAdvancedSearch[]} options.advancedSearch - Recherches avancées.
+     * @param {SearchEngineAdvancedOptions} options - Options du constructeur.
      */
     constructor (options) {
         options = options || {};
@@ -107,20 +106,20 @@ class SearchEngineAdvanced extends Control {
             style : createStyle,
         });
 
-        this.selectInteraction.on("select", this._onSelectElement.bind(this));
-        this.popup = this._createPopup();
-
-
         // Initialize
         this.initialize(options);
         this._initContainer(options);
         this._initEvents(options);
+
+        options.popupButtons = options.popupButtons ? options.popupButtons : [];
+
+        this.selectInteraction.on("select", this._onSelectElement.bind(this));
+        this.popup = this._createPopup(options.popupButtons);
     }
 
     /**
      * Initialise les options du contrôle.
-     * @param {SearchEngineGeocodeIGNOptions} options - Options du constructeur.
-     * @param {AbstractAdvancedSearch[]} options.advancedSearch - Recherches avancées.
+     * @param {SearchEngineAdvancedOptions} options - Options du constructeur.
      * @private
      */
     initialize (options) {
@@ -180,7 +179,7 @@ class SearchEngineAdvanced extends Control {
 
     /**
      * Initialise les événements du contrôle (géolocalisation, navigation clavier, recherche).
-     * @param {SearchEngineGeocodeIGNOptions} options Options du constructeur.
+     * @param {SearchEngineAdvancedOptions} options Options du constructeur.
      * @private
      */
     _initEvents (options) {
@@ -206,9 +205,11 @@ class SearchEngineAdvanced extends Control {
                 if (e.shiftKey) {
                     // Retourne sur l'input
                     this.baseSearchEngine.input.focus();
-                } else {
+                } else if (this.advancedBtn.checkVisibility()) {
                     // Focus sur le bouton de recherche avancée
                     this.advancedBtn.focus();
+                } else {
+                    this.baseSearchEngine.subimtBt.focus();
                 }
             }
         }.bind(this));
@@ -244,7 +245,7 @@ class SearchEngineAdvanced extends Control {
 
     /**
      * Initialise le conteneur principal du contrôle et les sous-composants.
-     * @param {SearchEngineGeocodeIGNOptions} options Options du constructeur
+     * @param {SearchEngineAdvancedOptions} options Options du constructeur
      * @private
      */
     _initContainer (options) {
@@ -277,7 +278,6 @@ class SearchEngineAdvanced extends Control {
         advancedBtn.innerHTML = "Avancée";
         advancedBtn.setAttribute("aria-label", "Afficher les options avancées");
         advancedBtn.setAttribute("aria-expanded", "false");
-        this.baseSearchEngine.optionscontainer.appendChild(advancedBtn);
 
         // Gestion de l'affichage des options avancées
         const advancedContainer = this.advancedContainer = document.createElement("div");
@@ -342,6 +342,11 @@ class SearchEngineAdvanced extends Control {
             advancedBtn.setAttribute("aria-expanded", isHidden);
             this.baseSearchEngine.setActive(isHidden);
         });
+
+        // N'ajoute pas le bouton s'il n'y a pas d'options avancées
+        if (this._searchForms.length) {
+            this.baseSearchEngine.optionscontainer.appendChild(advancedBtn);
+        }
     }
 
     /**
@@ -409,9 +414,10 @@ class SearchEngineAdvanced extends Control {
     /**
      * Crée et retourne l'overlay popup pour afficher les infos de feature.
      * @private
+     * @param {PopupButton[]} popupButtons - Bouton à ajouter dans le popup (en plus de la suppression / fermeture).
      * @returns {Overlay} Overlay du popups
      */
-    _createPopup () {
+    _createPopup (popupButtons) {
         // Popup global
         let element = this._popupDiv = document.createElement("div");
         // TODO : ajouter gp-feature-info-div lorsque les deux seront pareils
@@ -427,6 +433,10 @@ class SearchEngineAdvanced extends Control {
 
         popupBtns.appendChild(this._addCloseButton());
         popupBtns.appendChild(this._addRemoveButton());
+
+        popupButtons.forEach(popupBtn => {
+            popupBtns.appendChild(this._createCustomPopupButton(popupBtn));
+        });
 
         element.appendChild(popupContent);
         element.appendChild(popupBtns);
@@ -513,6 +523,35 @@ class SearchEngineAdvanced extends Control {
             // Ferme le popup
             this._closePopup();
         }
+    }
+
+    /**
+     * Crée un bouton personnalisé pour le popup.
+     * @param {PopupButton} popupButton - Configuration du bouton.
+     * @returns {HTMLButtonElement} Bouton HTML
+     */
+    _createCustomPopupButton (popupButton) {
+        const btn = document.createElement("button");
+        btn.title = btn.ariaLabel = popupButton.label;
+        btn.className = "GPButton fr-btn fr-btn--sm fr-btn--tertiary-no-outline ";
+        if (popupButton.className) {
+            btn.className += popupButton.className;
+        }
+        if (popupButton.icon) {
+            btn.classList.add(popupButton.icon);
+        }
+        if (popupButton.attributes) {
+            Object.entries(popupButton.attributes).forEach(([key, value]) => {
+                btn.setAttribute(key, value);
+            });
+        }
+        btn.onclick = () => {
+            const feature = this.popup.get("feature");
+            if (feature && typeof popupButton.onClick === "function") {
+                popupButton.onClick.call(this, feature);
+            }
+        };
+        return btn;
     }
 
     /**
