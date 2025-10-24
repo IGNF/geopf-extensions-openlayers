@@ -2,8 +2,10 @@
 import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 import Control from "../Control";
 import Logger from "../../Utils/LoggerByDefault";
-import { DefaultSearchService } from "./Service";
+import DefaultSearchService from "../../Services/DefaultSearchService";
 import Helper from "../../Utils/Helper";
+
+// Voir les typedefs partagés dans ./typedefs.js (SearchEngineBaseOptions, SearchServiceOptions, ...)
 
 const typeClasses = {
     "history" : "fr-icon-history-line",
@@ -13,57 +15,31 @@ const typeClasses = {
 var logger = Logger.getLogger("searchengine");
 
 /**
- * @typedef {Object} SearchEngineBaseOptions Options du constructeur pour le contrôle de recherche.
- *
- * @property {HTMLElement|string} [target] - Élément DOM ou sélecteur dans lequel insérer le contrôle.
- * Si non défini, le contrôle crée un bouton permettant d’ouvrir/fermer le champ de recherche.
- * @property {string} [title="Rechercher"] - Texte du titre (attribut `title`) du bouton principal.
- * @property {string} [label=""] - Label à ajouter. Aucun par défaut.
- * @property {string} [hint=""] - Texte additionnel à ajouter sous le label. Aucun par défaut.
- * @property {Boolean} [search=false] - Si vrai, définit le composant comme une barre de recherche (classes CSS et attributs HTML).
- * @property {string} [collapsible=false] - Si vrai, permet de fermer le contrôle.
- * @property {string} [ariaLabel="Rechercher"] - Libellé accessible (ARIA) pour le champ de recherche.
- * @property {string} [placeholder=""] - Texte d’indication affiché dans le champ de saisie.
- * @property {number} [minChars=0] - Nombre minimum de caractères à saisir avant de lancer l’autocomplétion.
- * @property {number} [maximumEntries=5] - Nombre maximum d’entrées affichées dans la liste d’autocomplétion.
- * @property {number} [searchButton=false] - Affiche un bouton de recherche. Faux par défaut.
- * @property {number} [triggerDelay=100] - Délai (en millisecondes) avant le déclenchement de l’autocomplétion
- * après la saisie de l’utilisateur.
- * @property {boolean|string} [historic=true] - Active ou non l’historique local des recherches. Valeur acceptées :
- * - `false` : désactive complètement l’historique ;
- * - `true` : active l’historique sous le nom par défaut `GPsearch-SearchEngineBase` ;
- * - `string` : active l’historique sous un nom personnalisé (ex. `"monHistoriquePerso"`).
- * @property {import("./Service.js").AbstractSearchService} [searchService] - Service de recherche à utiliser. Créera un service par défaut si non donné.
- */
-
-
-/**
  * @classdesc
- * SearchEngine Base control
+ * Contrôle de base pour la recherche (barre de recherche, autocomplétion, historique).
  *
  * @alias ol.control.SearchEngineBase
  * @module SearchEngine
-*/
+ */
 class SearchEngineBase extends Control {
 
     /**
-    * @constructor
-    * @param {SearchEngineBaseOptions} options Options du constructeur
-    * @fires autocomplete
-    * @fires search
-    * @fires select
-    * 
-    * @example
-    * const search = new ol.control.SearchEngineBase({
-    *   placeholder: "Rechercher une adresse...",
-    *   minChars: 3,
-    *   maximumEntries: 10,
-    *   historic: "mesRecherches",
-    *   searchService: new CustomSearchService()
-    * });
-    * 
-    * map.addControl(search)
-    */
+     * Constructeur du contrôle SearchEngineBase.
+     * @constructor
+     * @param {SearchEngineBaseOptions} options Options du constructeur
+     * @fires autocomplete
+     * @fires search
+     * @fires select
+     * @example
+     * const search = new ol.control.SearchEngineBase({
+     *   placeholder: "Rechercher une adresse...",
+     *   minChars: 3,
+     *   maximumEntries: 10,
+     *   historic: "mesRecherches",
+     *   searchService: new CustomSearchService()
+     * });
+     * map.addControl(search)
+     */
     constructor (options) {
         options = options || {};
         // call ol.control.Control constructor
@@ -112,10 +88,9 @@ class SearchEngineBase extends Control {
         this.showHistoric();
     }
     /**
-     * Initialize SearchEngine control (called by SearchEngine constructor)
-     *
-     * @param {SearchEngineBaseOptions} options - constructor options
+     * Initialise le contrôle SearchEngineBase (appelé par le constructeur).
      * @protected
+     * @param {SearchEngineBaseOptions} options Options du constructeur
      */
     initialize (options) {
         // Valeurs par défaut des options
@@ -135,9 +110,10 @@ class SearchEngineBase extends Control {
         this.set("maximumEntries", options.maximumEntries);
     }
 
-    /** Add event listeners
-     * @param {SearchEngineBaseOptions} options - constructor options
+    /**
+     * Ajoute les écouteurs d'événements sur les éléments du contrôle.
      * @protected
+     * @param {SearchEngineBaseOptions} options Options du constructeur
      */
     _initEvents (options) {
         if (this.searchService.get("autocomplete") !== false) {
@@ -208,7 +184,7 @@ class SearchEngineBase extends Control {
                         break;
                     default:
                         if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
-                            this.autocomplete(e.target.value, e.key === "Enter");
+                            this.autocomplete(e.target.value);
                         } 
                         break;
                 }
@@ -241,8 +217,10 @@ class SearchEngineBase extends Control {
         }.bind(this));
     }
     /**
-     * 
-     * @param {*} options 
+     * Initialise le conteneur DOM principal du contrôle.
+     * @private
+     * @param {SearchEngineBaseOptions} options Options du constructeur
+     * @returns {void}
      */
     _initContainer (options) {
         const element = this.element = document.createElement("div");
@@ -412,23 +390,33 @@ class SearchEngineBase extends Control {
         }
     }
 
+    /**
+     * Active ou désactive le contrôle (désactive l'input / bouton).
+     * @param {Boolean} active Indique si le contrôle doit être désactivé
+     * @returns {void}
+     */
     setActive (active) {
         this.input.disabled = !!active;
         this.subimtBt.disabled = !!active;
     }
 
-    /** Autocomplete and update list
-     * @param {String} [value] input value
-     * @param {Boolean} [force=false] force to add in historic
+    /**
+     * Lance l'autocomplétion et met à jour la liste.
+     * @param {String} [value] Valeur de l'input
      * @api
      */
-    autocomplete (value, force) {
+    autocomplete (value) {
         clearTimeout(this._completeDelay);
         this._completeDelay = setTimeout(function () {
-            this.searchService.autocomplete(value, { force : force });
+            this.searchService.autocomplete(value);
         }.bind(this), this.get("triggerDelay") || 100);
     }
 
+    /**
+     * Callback sur événement d'autocomplétion.
+     * @param {Object} e Événement d'autocomplétion
+     * @private
+     */
     onAutocomplete (e) {
         clearTimeout(this._completeDelay);
         // Update list}
@@ -436,22 +424,21 @@ class SearchEngineBase extends Control {
         this.dispatchEvent(e);
     }
 
-    /** Effectue la recherche de géocodage
-     * @param {String} [value] input value
+    /**
+     * Lance la recherche de géocodage.
+     * @param {IGNSearchObject} item Valeur ou objet à rechercher
      * @api
      */
     search (item) {
-        console.log(item);
         clearTimeout(this._completeDelay);
         this._completeDelay = setTimeout(function () {
             this.searchService.search(item);
         }.bind(this), this.get("triggerDelay") || 100);
     }
-    /** Do something on search ready
-     * @param {Object} e event
-     *  @param {String} e.search search string
-     *  @param {Object|Boolean} e.options options given to autocomplete
-     *  @param {Array<*>} e.result result of autocomplete
+
+    /**
+     * Callback sur événement de recherche.
+     * @param {Object} e Événement de recherche
      * @api
      */
     onSearch (e) {
@@ -459,8 +446,10 @@ class SearchEngineBase extends Control {
         // Update list}
         this.dispatchEvent(e);
     }
-    /** An item has been selected
-     * @param {*} item selected item
+
+    /**
+     * Callback sur sélection d'un item.
+     * @param {Object} item Élément sélectionné
      * @api
      */
     select (item) {
@@ -476,8 +465,9 @@ class SearchEngineBase extends Control {
             item : item
         });
     }
+
     /**
-     * Show historic list
+     * Affiche la liste de l'historique.
      * @api
      */
     showHistoric () {
@@ -486,10 +476,12 @@ class SearchEngineBase extends Control {
             this._updateList(this._historic.length ? this._historic : [], "history");
         }
     }
+
     /**
-     * Update autocomplete list
-     * @param {Array<*>} tab list of autocomplete items
-     * @param {string} [type="search"] Optionnel. Type à inclure. Valeur autorisée : "history", "search"
+     * Met à jour la liste d'autocomplétion.
+     * @private
+     * @param {Array<Object>} tab Liste des items d'autocomplétion
+     * @param {String} [type="search"] Type d'affichage ("history" ou "search")
      */
     _updateList (tab, type = "search") {
         this.autocompleteList.parentNode.dataset.type = type;
@@ -513,21 +505,27 @@ class SearchEngineBase extends Control {
             li.addEventListener("click", function (e) {
                 const idx = Number(e.target.getAttribute("data-idx"));
                 this.select(tab[idx]);
-                this.search(tab[idx], idx);
+                this.search({
+                    location : tab[idx]
+                });
             }.bind(this));
         });    
     }
-    /** Get item title given an item object
-     * @param {*} item 
-     * @returns {String} title
+
+    /**
+     * Retourne le titre à afficher pour un item.
+     * @param {Object} item Élément à afficher
+     * @returns {String} Titre
      * @api
      */
     getItemTitle (item) {
         return this.searchService.getItemTitle(item);
     }
+
     /**
-     * Add or replace value in historic list
-     * @param {*} value 
+     * Ajoute ou remplace une valeur dans l'historique.
+     * @private
+     * @param {Object} value Valeur à ajouter
      */
     _updateHistoric (value) {
         if (this._historic) {
@@ -558,9 +556,10 @@ class SearchEngineBase extends Control {
 
     /**
      * Vérifie si deux éléments (objets) sont égaux.
-     *
-     * @param {Array<Object>} a Premier objet
+     * @private
+     * @param {Object} a Premier objet
      * @param {Object} b Objet de comparaison
+     * @returns {Boolean} true si égal, false sinon
      */
     _isEqual (a, b) {
         // TODO : Améliorer comparaison ?
@@ -571,10 +570,9 @@ class SearchEngineBase extends Control {
     }
 
     /**
-     * Ajoute un message à un champs de saisie
-     * @param {HTMLInputElement|HTMLSelectElement} input Champs de saisie
+     * Ajoute un message à un champ de saisie.
      * @param {String} message Message à afficher
-     * @param {String} [type="error"] Type du message. Message d'erreur par défaut
+     * @param {String} [type="error"] Type du message ("error" ou "valid")
      * @api
      */
     addMessage (message, type = "error") {
@@ -591,8 +589,8 @@ class SearchEngineBase extends Control {
     }
 
     /**
-     * Enlève un message d'erreur
-     * @param {HTMLInputElement|HTMLSelectElement} input Champs de saisie
+     * Enlève les messages d'erreur du champ de saisie.
+     * @param {HTMLInputElement|HTMLSelectElement} input Champ de saisie
      * @api
      */
     removeMessages () {

@@ -1,26 +1,27 @@
 // import CSS
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
 import Logger from "../../Utils/LoggerByDefault";
-import Collection from "ol/Collection";
 import SearchEngineGeocodeIGN from "./SearchEngineGeocodeIGN";
-import { InseeSearchService } from "./Service";
+import InseeSearchService from "../../Services/InseeSearchService";
 
 var logger = Logger.getLogger("abstractAdvancedSearch");
 
+// Voir les typedefs réutilisables (types partagés) dans le dossier SearchEngine si nécessaire.
 
 /**
  * @classdesc
- * AbstractAdvancedSearch Base control
+ * Contrôle de recherche avancée pour les codes INSEE.
  *
  * @alias ol.control.InseeAdvancedSearch
  * @module InseeAdvancedSearch
-*/
+ * @extends AbstractAdvancedSearch
+ */
 class InseeAdvancedSearch extends AbstractAdvancedSearch {
 
     /**
-    * @constructor
-    * @example
-    */
+     * @constructor
+     * @param {AbstractAdvancedSearchOptions} [options] - Options du contrôle.
+     */
     constructor (options) {
         super(options);
 
@@ -29,6 +30,12 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
         }.bind(this));
     }
 
+    /**
+     * 
+     * @param {AbstractAdvancedSearchOptions} options Options de recherche avancée
+     * @override
+     * @protected
+     */
     initialize (options) {
         if (!options.name) {
             options.name = "Code INSEE";
@@ -43,10 +50,10 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * Ajoute des éléments d'input dans la collection `this.inputs`;
-     * Cette méthode est abstraite et doit être surchargée dans les autres classes.
+     * Ajoute les inputs spécifiques au contrôle (surcouche du parent).
+     * Crée et configure l'input INSEE.
      * @protected
-     * @abstract
+     * @returns {void}
      */
     addInputs () {
         super.addInputs();
@@ -70,6 +77,12 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
         this.inputs.push(inseeInput);
     }
 
+    /**
+     * Initialise les événements DOM spécifiques.
+     * @protected
+     * @param {AbstractAdvancedSearchOptions} options - Options d'initialisation (transmises depuis le parent).
+     * @override
+     */
     _initEvents (options) {
         super._initEvents(options);
 
@@ -81,9 +94,10 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * 
-     * @param {PointerEvent} e
+     * Handler de la recherche déclenchée (bouton / submit).
+     * Valide le code INSEE puis lance la recherche via le SearchEngine associé.
      * @protected
+     * @param {PointerEvent|Event} e - Événement de recherche.
      */
     _onSearch (e) {
         super._onSearch(e);

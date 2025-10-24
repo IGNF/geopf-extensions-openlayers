@@ -1,357 +1,34 @@
-// import CSS
-import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 import GeoJSON from "ol/format/GeoJSON";
-import Logger from "../../Utils/LoggerByDefault";
+import Logger from "../Utils/LoggerByDefault";
+import AbstractSearchService from "./AbstractSearchService";
 // import geoportal library access
 import Gp from "geoportal-access-lib";
 // import local
-import Utils from "../../Utils/Helper";
-import GeocodeUtils from "../../Utils/GeocodeUtils";
+import Utils from "../Utils/Helper";
+import GeocodeUtils from "../Utils/GeocodeUtils";
 // Service
-import Search from "../../Services/Search";
+import Search from "./Search";
 import Feature from "ol/Feature.js";
-import BaseObject from "ol/Object";
 import Point from "ol/geom/Point.js";
+import { canvasPool } from "ol/renderer/canvas/Layer";
 
 var logger = Logger.getLogger("searchengine");
-/**
- * Options de construction d'un service
- * @typedef {Object} AbstractSearchServiceOptions
- * @property {String} [apiKey] - Clé API utilisée pour les requêtes vers les services IGN
- * @property {Boolean} [ssl=true] - Force l'utilisation du protocole HTTPS si défini à true
- * @property {AutocompleteOptions} [autocompleteOptions] - Options spécifiques à l'autocomplétion
- * @property {SearchOptions} [searchOptions] - Options spécifiques à la recherche finale
- * @property {GeocodeOptions} [geocodeOptions] - Options spécifiques au géocodage
- * @property {boolean} [autocomplete=true]
- * @property {String} [index="address,poi"]
- * @property {Number} [limit=1]
- * @property {boolean} [returnTrueGeometry=false]
- */
-
-/**
- * Options pour l'autocomplétion
- * @typedef {Object} AutocompleteOptions
- * @property {Object} [serviceOptions] - Options passées à Gp.Services.autoComplete
- * @property {Number} [maximumResponses] - Nombre maximal de réponses retournées
- * @property {Boolean} [triggerGeocode=false] - Si vrai, déclenche une requête de géocodage lorsque l'autocomplétion échoue
- * @property {Number} [triggerDelay=1000] - Délai (ms) avant déclenchement du géocodage automatique
- * @property {Boolean} [prettifyResults=false] - Si vrai, embellit/filtre les résultats
- */
-
-/**
- * Options pour la recherche finale (géocodage)
- * @typedef {Object} SearchOptions
- * @property {Object} [serviceOptions] - Options passées à Gp.Services.geocode
- * @property {Number} [maximumResponses] - Nombre maximal de réponses
- * @property {Boolean} [filterLayers] - Active le filtrage des résultats par couche
- * @property {String|Array<String>} [index] - Indexs utilisés (e.g. "address,poi")
- * @property {Number} [limit] - Limite de résultats
- */
-
-/**
- * Options pour le géocodage (appel manuel de coordonnées via texte)
- * @typedef {Object} GeocodeOptions
- * @property {Object} [serviceOptions] - Options passées à Gp.Services.geocode
- * @property {String} [location] - Texte à géocoder
- * @property {Function} [onSuccess] - Callback exécuté en cas de succès
- * @property {Function} [onFailure] - Callback exécuté en cas d'échec
- */
-
-/**
- * Résultat d'une autocomplétion
- * @typedef {Object} AutocompleteResult
- * @property {String} fullText - Libellé affichable du lieu
- * @property {Object} position - Coordonnées
- * @property {Number} position.x - Longitude
- * @property {Number} position.y - Latitude
- * @property {String} [type] - Type de résultat (e.g. "StreetAddress", "PositionOfInterest")
- * @property {Array<String>} [poiType] - Types détaillés (e.g. ["administratif","région"])
- */
-
-/**
- * Résultat d'une recherche (géocodage final)
- * @typedef {Object} SearchResult
- * @property {import("ol/Feature").default} feature - Feature OL contenant la géométrie
- * @property {import("ol/Feature").default|undefined} [extent] - Étendue si zone géographique
- * @property {String} [infoPopup] - Texte à afficher dans un popup
- */
 
 
 /**
  * @classdesc
- * AbstractSearchService control
+ * Service de recherche IGN (utilise les services IGN / Search wrapper).
  *
- * @alias ol.control.AbstractSearchService
- * @abstract
+ * @alias ol.service.IGNSearchService
  * @module SearchService
-*/
-class AbstractSearchService extends BaseObject {
-
-    /**
-     * @constructor
-     * @param {AbstractSearchServiceOptions} options 
-     */
-    constructor (options) {
-        options = options || {};
-
-        // call ol.control.Control constructor
-        super(options);
-
-        if ((this.constructor == AbstractSearchService)) {
-            throw new TypeError("AbstractSearchService cannot be instantiate");
-        }
-        /**
-         * Nom de la classe (heritage)
-         * @private
-         */
-        this.CLASSNAME = "AbstractSearchService";
-
-        // initialisation du composant
-        this.initialize(options);
-
-        return this;
-    }
-
-    /**=
-     * @param {AbstractSearchServiceOptions} options 
-     */
-    initialize (options) {
-        this.AUTOCOMPLETE_EVENT = "autocomplete";
-        this.SEARCH_EVENT = "search";
-
-        this._autocompleteLocations = [];
-        this._locations = [];
-
-        if (options.autocomplete === false) {
-            this.set("autocomplete", false);
-        }
-        this.set("index", options.index || "address,poi");
-        this.set("limit", typeof options.limit === "number" ? options.limit : 1);
-        this.set("returnTrueGeometry", !!options.returnTrueGeometry);
-    }
-
-    /**
-     * Récupère le résultat d'une recherche d'autocomplétion.
-     * @param {Number} [index] Optionnel. Index du résultat. Si nul, renvoie tous les résultats
-     * @returns {Array|AutocompleteResult}
-     */
-    getAutocompleteLocations (index) {
-        if (index === undefined) {
-            return this._autocompleteLocations;
-        } else {
-            return this._autocompleteLocations[index];
-        }
-    }
-
-    /**
-     * Récupère le résultat d'une recherche de kieu (recherche finale).
-     * @param {Number} [index] Optionnel. Index du résultat. Si nul, renvoie tous les résultats
-     * @returns {Array|SearchResult}
-     */
-    getResult (index) {
-        if (index === undefined) {
-            return this._locations;
-        } else {
-            return this._locations[index];
-        }
-    }
-
-
-    /**
-     * @param {AutocompleteOptions} obj 
-     * @abstract
-     */
-    autocomplete (obj) { }
-
-
-    /**
-     * @param {SearchOptions} obj 
-     * @abstract
-     */
-    search (obj) { }
-
-
-    /**
-     * @param {SearchOptions} obj 
-     * @abstract
-     * @returns {String}
-     */
-    getItemTitle (obj) { 
-        return obj;
-    }
-
-}
-
-
-/**
- * @classdesc
- * DefaultSearchService control
- *
- * @alias ol.control.DefaultSearchService
- * @module SearchService
-*/
-class DefaultSearchService extends AbstractSearchService {
-
-    constructor (options) {
-        options = options || {};
-        super(options);
-        /**
-         * Nom de la classe (heritage)
-         * @private
-         */
-        this.CLASSNAME = "DefaultSearchService";
-        if (options.searchTab) {
-            this._searchTab = options.searchTab || [];
-        };
-    }
-
-    /** Autocomplete function
-     * Dispatchs "searchstart" event when search starts
-     * Dispatchs "search" event when search is finished
-     * @param {String} value Valeur de l'autocomplete 
-     * @param {Object} [options] 
-     * @param {String} options.force force search even if search string is less than minChars / enter is pressed
-     * @api
-     */
-    autocomplete (value) {
-        // Simulate asynchronous behavior
-        this._autocompleteLocations = [];
-        const rex = new RegExp(value, "i");
-        (this._searchTab || []).forEach((city) => {
-            if (rex.test(city.toLowerCase())) {
-                this._autocompleteLocations.push(city);
-            }
-        });
-        // When search is finished
-        this.dispatchEvent({ 
-            type : this.AUTOCOMPLETE_EVENT,
-            result : this._autocompleteLocations
-        });
-    }
-
-    /**
-     * @param {SearchOptions} obj Search options
-     */
-    search (obj) {
-        this.dispatchEvent({ 
-            type : this.SEARCH_EVENT, 
-            result : obj
-        });
-    }
-
-}
-
-
-/**
- * @classdesc
- * DefaultSearchService control
- *
- * @alias ol.control.DefaultSearchService
- * @module SearchService
-*/
-class InseeSearchService extends AbstractSearchService {
-
-    constructor (options) {
-        options = options || {};
-        // Aucune autocomplétion
-        options.autocomplete = false;
-        super(options);
-        /**
-         * Nom de la classe (heritage)
-         * @private
-         */
-        this.CLASSNAME = "InseeSearchService";
-
-        this.ignService = new IGNSearchService({
-            autocomplete : false,
-            returnTrueGeometry : true,
-            index : "poi",
-        });
-
-        this.ignService.on(this.SEARCH_EVENT, this._onSearch.bind(this));
-    }
-
-    /**
-     * Pas de service d'autocomplétion pour l'API géo
-     */
-    autocomplete () {
-        return;
-    }
-
-    /**
-     * @param {Object} object Code insee
-     * @param {String} object.location Code insee
-     */
-    search (object) {
-        const insee = object.location;
-        // Envoi la requête si le chiffre est compris entre 0 et 99999
-        const response = this._requestGeoAPI({ value : insee });
-        response.then(r => {
-            if (r instanceof Array && r.length) {
-                const result = r[0];
-
-                let location = result.nom;
-                // Sinon la requête ne se lancera pas
-                if (result.nom.length < 3) {
-                    location = `${result.nom}, ${result.codesPostaux[0]}`;
-                }
-
-                let filters = {
-                    category : "administratif",
-                    citycode : result.code
-                };
-
-                this.ignService.search(location, filters);
-            }
-        });
-    }
-
-    _onSearch (e) {
-        this.dispatchEvent(e);
-    }
-
-    /**
-     * 
-     * @param {Object} settings 
-     */
-    async _requestGeoAPI (settings) {
-        const baseURL = "https://geo.api.gouv.fr/communes";
-        const format = "json";
-        const fields = ["nom", "code", "codesPostaux"];
-        const url = `${baseURL}?code=${settings.value}&format=${format}&fields=${fields}`;
-
-        try {
-            const response = await fetch(url, {
-                headers : {
-                    "Content-Type" : "application/json",
-                },
-            });
-            if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
-
-}
-
-
-/**
- * @classdesc
- * IGNSearchService control
- *
- * @alias ol.control.IGNSearchService
- * @module SearchService
-*/
+ * @extends AbstractSearchService
+ */
 class IGNSearchService extends AbstractSearchService {
 
     /**
+     * Constructeur du service IGN.
      * @constructor
-     * @param {AbstractSearchServiceOptions} options options
+     * @param {AbstractSearchServiceOptions} options Options du service IGN (clé API, index, etc.)
      */
     constructor (options) {
         options = options || {};
@@ -371,6 +48,12 @@ class IGNSearchService extends AbstractSearchService {
         return this;
     }
 
+    /**
+     * Initialise le service avec les options fournies.
+     * @protected
+     * @override
+     * @param {AbstractSearchServiceOptions} options Options de configuration du service
+     */
     initialize (options) {
         super.initialize(options);
 
@@ -444,16 +127,25 @@ class IGNSearchService extends AbstractSearchService {
             this._fillSearchedSuggestListContainer(suggestResults);
         });
 
-        this._currentGeocodingLocation = null;
-        this._suggestedLocations = [];
+        /**
+         * Label du géocodage / de la recherche
+         * @type {String}
+         */
+        this._currentGeocodingLocation;
+        /**
+         * Liste de résultats d'autocomplétion
+         * @type {Array<AutocompleteResult>}
+         */
+        this._suggestedLocations;
 
         console.log(this.options);
     }
 
 
     /**
-     * @param {String} value Valeur de l'autocomplete
-     * @abstract
+     * Lance une autocomplétion via le service IGN.
+     * @override
+     * @param {String} value Texte à envoyer
      */
     autocomplete (value) {
         if (!value) {
@@ -463,38 +155,30 @@ class IGNSearchService extends AbstractSearchService {
         // on sauvegarde le localisant
         this._currentGeocodingLocation = value;
 
-        // // on limite les requêtes à partir de 3 car. saisie !
-        // if (value.length < 3) {
-        //     this._clearResults();
-        //     return;
-        // }
-
-        // INFORMATION
-        // on effectue la requête au service d'autocompletion.
-        // on met en place des callbacks afin de recuperer les resultats ou
-        // les messages d'erreurs du service.
-        // les resultats sont affichés dans une liste deroulante.
+        // On effectue la requête au service d'autocompletion.
         this._requestAutoComplete({
             text : value,
-            // callback onSuccess
             onSuccess : this._onSuccessAutoComplete.bind(this),
-            // callback onFailure
             onFailure : this._onFailureAutoComplete.bind(this)
         });
     }
 
+    /**
+     * @override
+     * @param {AutocompleteResult} obj Objet dont le titre dérive
+     * @returns {String} Titre à afficher
+     */
     getItemTitle (obj) {
         return obj.fullText;
     }
 
     /**
-     * Éxécute une requête au service.
-     *
-     * @param {Object} settings - service settings
-     * @param {String} settings.text - text
-     * @param {Function} settings.onSuccess - callback
-     * @param {Function} settings.onFailure - callback
+     * Exécute une requête d'autocomplétion auprès du service IGN.
      * @private
+     * @param {Object} settings Paramètres de la requête (texte, callbacks, etc.)
+     * @param {String} settings.text Texte à compléter
+     * @param {Function} settings.onSuccess Callback en cas de succès
+     * @param {Function} settings.onFailure Callback en cas d'échec
      */
     _requestAutoComplete (settings) {
         // on ne fait pas de requête si on n'a pas renseigné de parametres !
@@ -533,8 +217,12 @@ class IGNSearchService extends AbstractSearchService {
         Gp.Services.autoComplete(options);
     }
 
+    /**
+     * Fonction appelée en cas de succès de l'autocomplétion.
+     * @param {Object} results Résultats de la requête.
+     * @param {Array<AutocompleteResult>} results.suggestedLocations Tableau de suggestions.
+     */
     _onSuccessAutoComplete (results) {
-        console.log("_onSuccessAutoComplete");
         let _maximumEntries = this.options.autocompleteOptions.maximumEntries;
         let _prettifyResults = this.options.autocompleteOptions.prettifyResults;
 
@@ -577,8 +265,11 @@ class IGNSearchService extends AbstractSearchService {
         }
     }
 
+    /**
+     * Fonction appelée en cas d'erreur sur le service d'autocomplétion
+     * @param {ErrorService} error Erreur renvoyée par le service
+     */
     _onFailureAutoComplete (error) {
-        console.log("_onFailureAutoComplete");
         let _triggerGeocode = this.options.autocompleteOptions.triggerGeocode;
         let _triggerDelay = this.options.autocompleteOptions.triggerDelay;
 
@@ -587,7 +278,7 @@ class IGNSearchService extends AbstractSearchService {
             if (results) {
                 this._clearResults();
                 // on modifie la structure des reponses pour être
-                // compatible avec l'autocompletion !
+                // compatible avec l'autocomplétion !
                 let locations = results.locations;
                 for (let i = 0; i < locations.length; i++) {
                     let location = locations[i];
@@ -609,7 +300,7 @@ class IGNSearchService extends AbstractSearchService {
         // où affiche t on les messages : ex. 'No suggestion matching the search' ?
         this._clearResults();
         logger.log(error.message);
-        // on envoie une requete de geocodage si aucun resultat d'autocompletion
+        // on envoie une requete de geocodage si aucun resultat d'autocomplétion
         // n'a été trouvé ! Et on n'oublie pas d'annuler celle qui est en cours !
         if (error.message === "No suggestion matching the search" && _triggerGeocode /* && value.length === 5 */) {
             if (this._triggerHandler) {
@@ -707,23 +398,14 @@ class IGNSearchService extends AbstractSearchService {
     }
 
     /**
-     * this method is called by event 'click' on 'GPautoCompleteResultsList' tag div
-     * (cf. this._createAutoCompleteListElement), and it selects the location.
-     * this location displays a marker on the map.
-     * @param {Object} location Objet de la recherche
+     * Lance une recherche sur les services de géocodage de l'IGN
+     * @see {@link https://data.geopf.fr/geocodage/search}
+     * @param {IGNSearchObject} object Recherche 
      * @abstract
      */
-    search (location, filters = {}) {
-        // TODO on souhaite un comportement different pour la selection des reponses
-        // de l'autocompletion :
-        // - liste deroulante des reponses,
-        // - puis possibilité de cliquer sur une suggestion
-        // - mais aussi de la choisir avec le clavier (arrow up/down), puis valider
-        // par un return
-        // cette selection avec les fleches doit mettre à jour le input !
-        // (comme un moteur de recherche de navigateur)
-
-        // var idx = SelectorID.index(e.target.id);
+    search (object) {
+        const location = object.location;
+        const filters = object.filters;
 
         if (location === undefined) {
             return;
@@ -741,8 +423,8 @@ class IGNSearchService extends AbstractSearchService {
 
         // on centre la vue et positionne le marker, à la position reprojetée dans la projection de la carte
         this._requestGeocoding({
-            index : this.get("index") || "address,poi",
-            limit : this.get("limit") || 1,
+            index : this.get("index"),
+            limit : this.get("limit"),
             returnTrueGeometry : this.get("returnTrueGeometry"),
             location : label,
             filters : filters,
@@ -779,7 +461,6 @@ class IGNSearchService extends AbstractSearchService {
         // on redefinie les callbacks si les callbacks de service existent
         var bOnSuccess = !!(this.options.geocodeOptions.serviceOptions.onSuccess !== null && typeof this.options.geocodeOptions.serviceOptions.onSuccess === "function");
         if (bOnSuccess) {
-            console.log("bonSuccess");
             var cbOnSuccess = function (e) {
                 settings.onSuccess.bind(this, e);
                 this.options.geocodeOptions.serviceOptions.onSuccess.bind(this, e);
@@ -789,7 +470,6 @@ class IGNSearchService extends AbstractSearchService {
 
         var bOnFailure = !!(this.options.geocodeOptions.serviceOptions.onFailure !== null && typeof this.options.geocodeOptions.serviceOptions.onFailure === "function");
         if (bOnFailure) {
-            console.log("bonFailure");
             var cbOnFailure = function (e) {
                 settings.onFailure.bind(this, e);
                 this.options.geocodeOptions.serviceOptions.onFailure.bind(this, e);
@@ -861,7 +541,10 @@ class IGNSearchService extends AbstractSearchService {
         return { feature : f, extent : extent  };
     }
     
-    /** Do something on search
+    /**
+     * Fonction appelée en cas de succès du géocodage
+     * 
+     * @param {Object} results Résultats de la recherche
      * @private
      */
     _onSuccessSearch (results) {
@@ -889,6 +572,11 @@ class IGNSearchService extends AbstractSearchService {
         });
     }
 
+    /**
+     * Fonction appelée en cas d'erreur renvoyée par le service de géocodage.
+     * @param {AutocompleteResult} location Localisation de l'autocomplétion.
+     * @param {ErrorService} error Erreur renvoyée par le service.
+     */
     _onFailureSearch (location, error) {
         logger.warn(error);
 
@@ -897,19 +585,7 @@ class IGNSearchService extends AbstractSearchService {
             location.position.y
         ];
 
-        /**
-         * event triggered when an element of the results is clicked for autocompletion
-         *
-         * @event searchengine:autocomplete:click
-         * @property {Object} type - event
-         * @property {Object} location - location
-         * @property {Object} target - instance SearchEngine
-         * @example
-         * SearchEngine.on("searchengine:autocomplete:click", function (e) {
-         *   console.log(e.location);
-         * })
-         */
-
+        // Créé le point
         const geom = new Point(position);
         let f = new Feature({ geometry : geom });
         f.set("infoPopup", this._currentGeocodingLocation);
@@ -922,17 +598,12 @@ class IGNSearchService extends AbstractSearchService {
 
 }
 
-export { AbstractSearchService, DefaultSearchService, InseeSearchService };
-
 export default IGNSearchService;
 
-// Expose SearchEngine as ol.control.SearchEngine (for a build bundle)
+// Expose IGNSearchService as ol.service.IGNSearchService (for a build bundle)
 if (window.ol) {
     if (!window.ol.service) {
         window.ol.service = {};
     }
-    window.ol.service.AbstractSearchService = AbstractSearchService;
-    window.ol.service.DefaultSearchService = DefaultSearchService;
-    window.ol.service.InseeSearchService = InseeSearchService;
     window.ol.service.IGNSearchService = IGNSearchService;
 }

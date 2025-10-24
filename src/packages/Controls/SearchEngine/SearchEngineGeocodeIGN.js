@@ -1,36 +1,41 @@
 // import CSS
-import "../../CSS/Controls/SearchEngine/GPFsearchEngine.css";
 import Logger from "../../Utils/LoggerByDefault";
 import SearchEngineBase from "./SearchEngineBase";
-import { AbstractSearchService } from "./Service";
-import IGNSearchService from "./Service";
+import AbstractSearchService from "../../Services/AbstractSearchService";
+import IGNSearchService from "../../Services/IGNSearchService";
 
 var logger = Logger.getLogger("searchengine");
 
 /**
- * Options spécifiques au contrôle IGN
+ * @file
+ * Contrôle de recherche spécialisé pour le géocodage IGN.
+ * Ce contrôle hérite de SearchEngineBase et ajoute la gestion des options spécifiques IGN via la propriété `serviceOptions`.
+ * Utilisez le typedef {@link SearchEngineGeocodeIGNOptions} pour bénéficier de l'autocomplétion et de la documentation dans VSCode/TypeDoc.
  *
- * Cette définition combine (hérite) de SearchEngineBaseOptions
- * et ajoute une propriété `serviceOptions` qui contient
- * les options propres au service (IGNSearchService).
- *
- * @typedef {import("./SearchEngineBase.js").SearchEngineBaseOptions & {
- *   serviceOptions: import("./Service.js").AbstractSearchServiceOptions
- * }} SearchEngineGeocodeIGNOptions
+ * @see SearchEngineBaseOptions
+ * @see AbstractSearchServiceOptions
  */
 
 /**
  * @classdesc
- * SearchEngine Base control
+ * Moteur de recherche spécialisé pour le géocodage IGN (implémentation de SearchEngineBase).
  *
  * @alias ol.control.SearchEngineGeocodeIGN
  * @module SearchEngine
-*/
+ * @extends SearchEngineBase
+ */
 class SearchEngineGeocodeIGN extends SearchEngineBase {
 
     /**
+     * Constructeur du contrôle SearchEngineGeocodeIGN.
+     *
      * @constructor
-     * @param {SearchEngineGeocodeIGNOptions} options Options du constructeur
+     * @param {SearchEngineGeocodeIGNOptions} [options] Options du contrôle.
+     * @example
+     * const ctrl = new SearchEngineGeocodeIGN({
+     *   placeholder: "Rechercher...",
+     *   serviceOptions: { apiKey: "votre-cle", returnTrueGeometry: true }
+     * });
      */
     constructor (options) {
         options = options || {};
@@ -79,7 +84,6 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
      */
     _initEvents (options) {
         super._initEvents(options);
-        // this.on("search", this.addResultToMap);
     }
 
 }

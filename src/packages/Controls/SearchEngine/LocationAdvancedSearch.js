@@ -1,15 +1,21 @@
 import Helper from "../../Utils/Helper";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
-import IGNSearchService from "./Service";
+import IGNSearchService from "../../Services/IGNSearchService";
 
+/**
+ * @classdesc
+ * Recherche avancée par lieu / toponyme (formulaire pour filtrer par type, code postal, INSEE).
+ *
+ * @alias ol.control.LocationAdvancedSearch
+ * @module LocationAdvancedSearch
+ */
 class LocationAdvancedSearch extends AbstractAdvancedSearch {
 
     /**
-    * @constructor
-    * @param {AbstractAdvancedSearchOptions} options Options du constructeur
-    * 
-    * @example
-    */
+     * Constructeur du contrôle LocationAdvancedSearch.
+     * @constructor
+     * @param {AbstractAdvancedSearchOptions} options Options du constructeur
+     */
     constructor (options) {
         options = options || {};
 
@@ -26,6 +32,11 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         });
     }
 
+    /**
+     * @override
+     * @protected
+     * @param {AbstractAdvancedSearchOptions} options Options du constructeur
+     */
     _initEvents (options) {
         super._initEvents(options);
 
@@ -82,6 +93,11 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         });
     }
 
+    /**
+     * @override
+     * @protected
+     * @param {AbstractAdvancedSearchOptions} options Options du constructeur
+     */
     initialize (options) {
         super.initialize(options);
         /**
@@ -90,14 +106,11 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
          */
         this.CLASSNAME = "LocationAdvancedSearch";
     }
-    /*
-    setMap (map) {
-        super.setMap(map);
-        this.search.setMap(map);
-    }
-    */
-    /** Handle multiresults: display list for selct/search
-     * @param {Object} e Event
+
+    /**
+     * Affiche la liste des résultats multiples et permet la sélection.
+     * @private
+     * @param {Event} e Événement de recherche contenant les résultats
      */
     handleMultipleResults (e) {
         const results = this.searchService.getResult();
@@ -158,6 +171,15 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         // this.dispatchEvent(e);
     }
 
+    /**
+     * Crée un conteneur label + input pour le formulaire.
+     * @private
+     * @param {String} text Texte du label
+     * @param {String} type Classe CSS du conteneur
+     * @param {HTMLElement} input Élément input à rattacher
+     * @param {String} [hint] Texte d'aide optionnel
+     * @returns {HTMLElement} Conteneur HTML
+     */
     _getLabelContainer (text, type, input, hint = "") {
         const container = document.createElement("div");
         container.className = type;
@@ -176,8 +198,10 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         }
         return container;
     }
-    /** Add inputs
-     * 
+
+    /**
+     * @override
+     * @protected
      */
     addInputs () {
         super.addInputs();
@@ -195,8 +219,6 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         hint.textContent = "* Champs obligatoires";
         legend.appendChild(hint);
         this.inputs.push(legend);
-
-        // <span class="fr-hint-text">^pkp^*k</span>
 
         // Type
         const typeSelect = document.createElement("select");
@@ -265,6 +287,12 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
             citycode : inseeInput.value
         };
     }
+
+    /**
+     * @protected
+     * @override
+     * @param {PointerEvent} e Événement d'effacement
+     */
     _onErase (e) {
         super._onErase(e);
         this.element.querySelectorAll("select").forEach(input => {
@@ -280,14 +308,21 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
             citycode : ""
         };
     }
-    /** Lancer une recheche
-     * 
+
+    /**
+     * @protected
+     * @override
+     * @param {PointerEvent} e Événement de soumission
      */
     _onSearch (e) {
         super._onSearch(e);
         const value = this.searchInput.value;
         if (value) {
-            this.searchService.search(value, this.filter);
+            const obj = {
+                location : value,
+                filters : this.filter
+            };
+            this.searchService.search(obj);
         }
     }
 

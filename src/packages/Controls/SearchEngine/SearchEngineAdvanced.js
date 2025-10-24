@@ -1,10 +1,11 @@
-import Control from "ol/control/Control";
+import Control from "../Control";
 import Geolocation from "ol/Geolocation";
 import OlFeature from "ol/Feature";
 import Point from "ol/geom/Point";
 import SearchEngineGeocodeIGN from "./SearchEngineGeocodeIGN";
 import Helper from "../../Utils/Helper";
-import Select from "ol/interaction/Select";
+import Select, { SelectEvent } from "ol/interaction/Select";
+import Map from "ol/Map";
 
 import Vector from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
@@ -15,6 +16,7 @@ import { Style, Icon, Stroke, Fill } from "ol/style";
 import mapPinIcon from "./map-pin-2-fill.svg";
 import Feature from "ol/Feature";
 import { Layer } from "ol/layer";
+import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
 const color = "rgba(0, 0, 145, 1)";
 
 const createStyle = (feature) => {
@@ -59,17 +61,19 @@ const createStyle = (feature) => {
 };
 
 /**
- * Classe représentant un moteur de recherche avancée utilisant le service de géocodage de l'IGN.
- * 
- * @extends {SearchEngineGeocodeIGN}
- * @example
- * import SearchEngineAdvanced from "geopf-controls/Controls/SearchEngine/SearchEngineAdvanced";  
+ * @classdesc
+ * Contrôle de recherche avancée permettant de rechercher via d'autres manières.
+ * Gère aussi l'ajout des élements sur la carte etc.
+ *
+ * @extends {Control}
+ * @module SearchEngineAdvanced
  */
 class SearchEngineAdvanced extends Control {
 
     /**
-     * Constructeur.
+     * Constructeur du contrôle de recherche avancée.
      * @param {SearchEngineGeocodeIGNOptions} options - Options du constructeur.
+     * @param {AbstractAdvancedSearch[]} options.advancedSearch - Recherches avancées.
      */
     constructor (options) {
         options = options || {};
@@ -115,9 +119,9 @@ class SearchEngineAdvanced extends Control {
 
     /**
      * Initialise les options du contrôle.
-     *
-     * @override
      * @param {SearchEngineGeocodeIGNOptions} options - Options du constructeur.
+     * @param {AbstractAdvancedSearch[]} options.advancedSearch - Recherches avancées.
+     * @private
      */
     initialize (options) {
         /**
@@ -131,6 +135,11 @@ class SearchEngineAdvanced extends Control {
          */
         this._layerFeatureAssociation = {};
 
+        /**
+         * @type {Array<AbstractAdvancedSearch>}
+         */
+        this._searchForms;
+
         if (options.advancedSearch && options.advancedSearch instanceof Array) {
             this._searchForms = options.advancedSearch;
         } else {
@@ -143,9 +152,8 @@ class SearchEngineAdvanced extends Control {
     }
 
     /**
-     * Fonction d'ajout du contrôle.
      * @override
-     * @param {import("ol/Map.js").default|null} map - Carte à laquelle ajouter le contrôle.
+     * @param {Map|null} map Carte cible
      */
     setMap (map) {
         if (this.getMap() && this.baseSearchEngine) {
@@ -170,6 +178,11 @@ class SearchEngineAdvanced extends Control {
         }
     }
 
+    /**
+     * Initialise les événements du contrôle (géolocalisation, navigation clavier, recherche).
+     * @param {SearchEngineGeocodeIGNOptions} options Options du constructeur.
+     * @private
+     */
     _initEvents (options) {
         this.geolocation.on("change:position", () => {
             const pt = new Point(this.geolocation.getPosition());
@@ -203,9 +216,11 @@ class SearchEngineAdvanced extends Control {
         this.on("search", this.addResultToMap.bind(this));
     }
 
-    /** Display result on map
-     * @param {Object|Point|OlFeature} obj objet a afficher
-     * @param {String} [info] Popup info
+    /**
+     * Crée un événement de recherche à partir d'un objet (Feature ou Point).
+     * @param {Object|Point|OlFeature} obj Objet à afficher (Feature ou Point)
+     * @param {String} [info] Texte affiché dans la popup
+     * @returns {Object} Événement normalisé de type "search"
      */
     createEvent (obj, info) {
         let evt = obj;
@@ -227,11 +242,10 @@ class SearchEngineAdvanced extends Control {
         return evt;
     }
 
-
     /**
-     * Créé le conteneur
-     * 
-     * @param {Object} options Options du constructeur
+     * Initialise le conteneur principal du contrôle et les sous-composants.
+     * @param {SearchEngineGeocodeIGNOptions} options Options du constructeur
+     * @private
      */
     _initContainer (options) {
         // Gestion de l'affichage des options avancées
@@ -330,7 +344,10 @@ class SearchEngineAdvanced extends Control {
         });
     }
 
-
+    /**
+     * Ajoute les résultats (features) sur la carte et ajuste la vue.
+     * @param {Object} e Événement de recherche contenant result/extent
+     */
     addResultToMap (e) {
         this._closePopup();
         this.layer.getSource().clear();
@@ -359,10 +376,10 @@ class SearchEngineAdvanced extends Control {
         }
     }
 
-
     /**
-     * 
-     * @param {import("ol/interaction/Select").SelectEvent} e Événement de séléction
+     * Callback lors de la sélection d'une feature (affiche le popup).
+     * @param {SelectEvent} e Événement de sélection
+     * @private
      */
     _onSelectElement (e) {
         let position = e.mapBrowserEvent.coordinate;
@@ -389,6 +406,11 @@ class SearchEngineAdvanced extends Control {
         }
     }
 
+    /**
+     * Crée et retourne l'overlay popup pour afficher les infos de feature.
+     * @private
+     * @returns {Overlay} Overlay du popups
+     */
     _createPopup () {
         // Popup global
         let element = this._popupDiv = document.createElement("div");
@@ -417,10 +439,19 @@ class SearchEngineAdvanced extends Control {
         return overlay;
     }
 
+    /**
+     * Définit le contenu HTML du popup.
+     * @param {String} content Contenu HTML à afficher
+     */
     setPopupContent (content) {
         this._popupContent.innerHTML = content;
     }
 
+    /**
+     * Crée le bouton de fermeture du popup.
+     * @returns {HTMLButtonElement} Bouton de fermeture
+     * @private
+     */
     _addCloseButton () {
         let closer = document.createElement("button");
         closer.title = closer.ariaLabel = "Fermer la pop-up";
@@ -432,6 +463,11 @@ class SearchEngineAdvanced extends Control {
         return closer;
     }
 
+    /**
+     * Ferme le popup et désélectionne la feature.
+     * @returns {Boolean} false
+     * @private
+     */
     _closePopup () {
         this.selectInteraction.getFeatures().clear();
         if (this.popup !== null) {
@@ -440,6 +476,11 @@ class SearchEngineAdvanced extends Control {
         return false;
     }
 
+    /**
+     * Crée le bouton de suppression du marqueur.
+     * @returns {HTMLButtonElement} Bouton de suppression
+     * @private
+     */
     _addRemoveButton () {
         let remove = document.createElement("button");
         remove.title = remove.ariaLabel = "Supprimer le marqueur";
@@ -452,6 +493,10 @@ class SearchEngineAdvanced extends Control {
         return remove;
     }
 
+    /**
+     * Supprime la feature sélectionnée de la couche et ferme le popup.
+     * @private
+     */
     _removeFeature () {
         const f = this.popup.get("feature");
         const layer = this.popup.get("layer");
@@ -470,6 +515,11 @@ class SearchEngineAdvanced extends Control {
         }
     }
 
+    /**
+     * Crée le bouton de géolocalisation.
+     * @returns {HTMLButtonElement} Bouton de géolocalisation
+     * @private
+     */
     _getGeolocButton () {
         const locationBtn = document.createElement("button");
         locationBtn.innerText = "Me géolocaliser";
@@ -481,6 +531,11 @@ class SearchEngineAdvanced extends Control {
         return locationBtn;
     }
 
+    /**
+     * Callback lors d'un résultat de recherche avancée.
+     * @param {Object} e Événement de recherche avancée
+     * @private
+     */
     onAdvancedSearchResult (e) {
         if (e.result instanceof Array) {
             // TODO : GÉRER MULTIPLE RÉSULTATS

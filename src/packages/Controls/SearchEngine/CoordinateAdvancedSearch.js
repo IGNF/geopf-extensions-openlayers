@@ -15,17 +15,20 @@ let logger = Logger.getLogger("abstractAdvancedSearch");
 
 /**
  * @classdesc
- * CoordinateAdvancedSearch Base control
+ * Contrôle de recherche avancée par coordonnées
+ * (saisie pour différents systèmes de coordonnées et unités correspondantes).
  *
  * @alias ol.control.CoordinateAdvancedSearch
  * @module CoordinateAdvancedSearch
-*/
+ */
 class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
 
     /**
-    * @constructor
-    * @example
-    */
+     * Constructeur.
+     *
+     * @constructor
+     * @param {CoordinateAdvancedSearchOptions} [options] Options du contrôle
+     */
     constructor (options) {
         super(options);
 
@@ -33,6 +36,11 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         this.element.dataset.unit = this.unit.value;
     }
 
+    /**
+     * @override
+     * @protected
+     * @param {CoordinateAdvancedSearchOptions} options Options d'initialisation
+     */
     initialize (options) {
         if (!options.name) {
             options.name = "Coordonnées";
@@ -55,15 +63,9 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         this.CLASSNAME = "CoordinateAdvancedSearch";
     }
 
-
-
     /**
-     * this method is called by the constructor and initialize the projection
-     * systems.
-     * getting coordinates in the requested projection :
-     * see this.onCoordinateSearchSystemChange()
-     *
      * @private
+     * @param {CoordinateAdvancedSearchOptions} [options] Options d'initialisation possibles (options.coordinateSearch.systems)
      */
     _initCoordinateSearchSystems (options) {
         this._coordinateSearchSystems = [];
@@ -104,11 +106,8 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * this method is called by the constructor and initialize the units.
-     * getting coordinates in the requested units :
-     * see this.onCoordinateSearchUnitsChange()
-     *
      * @private
+     * @param {CoordinateAdvancedSearchOptions} [options] Options d'initialisation possibles (options.coordinateSearch.units)
      */
     _initCoordinateSearchUnits (options) {
         this._coordinateSearchUnits = [];
@@ -170,24 +169,12 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         }
     }
 
-
     /**
-     * Set additional projection system
+     * Définit un système de projection supplémentaire et charge sa définition CRS si nécessaire.
      *
-     * @param {Object} system - projection system
-     * @param {String} system.crs - Proj4 crs alias (from proj4 defs) e.g. "EPSG:4326"
-     * @param {String} [system.label] - CRS label to be displayed in control. Default is system.crs alias
-     * @param {String} [system.type] - CRS units type for coordinates conversion (one of control options.units). Default is "Metric"
      * @private
-     */
-    /**
-     * Définit un système de projection supplémentaire
-     *
-     * @param {Object} system - système de projection
-     * @param {String} system.crs - Alias CRS Proj4 (depuis les définitions proj4), ex. "EPSG:4326"
-     * @param {String} [system.label] - Libellé du CRS affiché dans le contrôle. Par défaut, l’alias system.crs
-     * @param {String} [system.type] - Type d’unités du CRS pour la conversion des coordonnées. Par défaut : "Metric"
-     * @private
+     * @param {CoordinateSearchSystem} system Description du système de projection
+     * @returns {void}
      */
     _setSystem (system) {
         if (typeof system !== "object") {
@@ -228,7 +215,16 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         this._coordinateSearchSystems.push(system);
     }
 
-
+    /**
+     * Crée un conteneur d'étiquette pour un élément d'input.
+     *
+     * @private
+     * @param {String} text Texte de l'étiquette
+     * @param {String} type Classe CSS du conteneur
+     * @param {HTMLElement} [input] Élément input à rattacher
+     * @param {Boolean} [mandatory=false] Indique si le champ est obligatoire
+     * @returns {HTMLElement} Élément conteneur (div)
+     */
     _getLabelContainer (text, type, input, mandatory = false) {
         const container = document.createElement("div");
         container.className = type;
@@ -241,6 +237,14 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         return container;
     }
 
+    /**
+     * Crée un élément label.
+     *
+     * @private
+     * @param {String} text Texte du label
+     * @param {Boolean} [mandatory=false] Ajoute un astérisque si vrai
+     * @returns {HTMLLabelElement} Élément label créé
+     */
     _createLabel (text, mandatory = false) {
         const label = document.createElement("label");
         label.className = "fr-label";
@@ -249,7 +253,14 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         return label;
     }
 
-
+    /**
+     * Met à jour le texte d'un label existant.
+     *
+     * @private
+     * @param {String} text Nouveau texte
+     * @param {HTMLElement} container Conteneur contenant le label à mettre à jour
+     * @param {Boolean} [mandatory=false] Indique si le champ est obligatoire
+     */
     _updateLabel (text, container, mandatory = false) {
         const label = container.querySelector("label");
         const star = mandatory ? "*" : "";
@@ -257,10 +268,8 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * Ajoute des éléments d'input dans la collection `this.inputs`;
-     * Cette méthode est abstraite et doit être surchargée dans les autres classes.
+     * @override
      * @protected
-     * @abstract
      */
     addInputs () {
         super.addInputs();
@@ -318,6 +327,13 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         this.inputs.push(values);
     }
 
+    /**
+     * Crée le wrapper (label + input + masques) pour une composante de coordonnées (lon/lat).
+     *
+     * @private
+     * @param {"lon"|"lat"} type Type de composante ("lon" ou "lat")
+     * @returns {HTMLElement} Wrapper contenant l'input et éléments associés
+     */
     createCoordinateInput (type) {
         // type = "lon" or "lat"
         const wrapper = document.createElement("div");
@@ -362,7 +378,13 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         return wrapper;
     }
 
-
+    /**
+     * Crée la liste des points cardinaux (N/S ou O/E) pour un champ de coordonnées.
+     *
+     * @private
+     * @param {String} baseName "lon" ou "lat"
+     * @returns {HTMLSelectElement|undefined} Élément select des cardinaux ou undefined si non applicable
+     */
     _createSelectCardinals (baseName) {
         const options = {
             lon : ["O", "E"],
@@ -386,6 +408,11 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         }
     }
 
+    /**
+     * @override
+     * @protected
+     * @param {CoordinateAdvancedSearchOptions} options Options d'initialisation
+     */
     _initEvents (options) {
         super._initEvents(options);
 
@@ -398,6 +425,12 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         this.on("change:unit", this._updateInputs.bind(this));
     }
 
+    /**
+     * Met à jour le système de référence sélectionné et réinitialise les unités disponibles.
+     *
+     * @private
+     * @param {Event} e Événement change provenant du select système
+     */
     _updateSystem (e) {
         const crs = this._coordinateSearchSystems[e.target.value].crs;
         if (crs !== this._currentCoordinateSystem.crs) {
@@ -418,6 +451,12 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         }
     }
 
+    /**
+     * Met à jour l'unité sélectionnée et stocke la valeur dans le dataset du formulaire.
+     *
+     * @private
+     * @param {Event} e Événement change provenant du select unité
+     */
     _updateUnits (e) {
         const value = e.target.value;
         if (this.get("unit") !== value) {
@@ -426,6 +465,11 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         }
     }
 
+    /**
+     * Met à jour les labels des inputs en fonction du type d'unités (géographique vs métrique).
+     *
+     * @private
+     */
     _updateInputsLabel () {
         const unitType = this.get("unitType");
         const degree = unitType === "Geographical";
@@ -441,6 +485,11 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         this.lat.querySelector("input").value = "";
     }
 
+    /**
+     * Met à jour les inputs lorsque l'unité change (conversion ou activation du masquage pour DMS).
+     *
+     * @private
+     */
     _updateInputs () {
         const unit = this.get("unit");
         let factor = 1;
@@ -467,9 +516,10 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * 
-     * @param {InputEvent} e 
-     * @returns 
+     * Validation avant saisie pour les formats DMS : n'autorise que les chiffres (évite les lettres).
+     *
+     * @private
+     * @param {InputEvent} e Événement beforeinput
      */
     _onlonLatBeforeInput (e) {
         // const regex = /^(?:\d{2}°\d{2}'\d{2}(?:"|''))$|^\d{6}$/;
@@ -480,14 +530,23 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         }
     }
 
+    /**
+     * Formate une chaîne de 6 caractères en DMS (DD°MM'SS").
+     *
+     * @private
+     * @param {String} value Valeur brute (6 caractères numériques)
+     * @returns {String} Chaîne formatée (ex. "12°34'56\"")
+     */
     _format (value) {
         const v = value.padEnd(6, "_");
         return `${v.slice(0,2)}°${v.slice(2,4)}'${v.slice(4,6)}"`;
     }
 
     /**
-     * 
-     * @param {InputEvent} e 
+     * Met à jour l'affichage du masque pendant la saisie DMS.
+     *
+     * @private
+     * @param {InputEvent} e Événement input
      */
     _onlonLatInput (e) {
         const value = e.target.value;
@@ -496,9 +555,9 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * 
-     * @param {PointerEvent} e
+     * @override
      * @protected
+     * @param {PointerEvent} e Événement de soumission
      */
     _onSearch (e) {
         super._onSearch(e);
@@ -548,6 +607,14 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         });
     }
 
+    /**
+     * Construit le contenu HTML à afficher dans la popup à partir des coordonnées fournies.
+     *
+     * @private
+     * @param {Number|String} lon Valeur X / longitude
+     * @param {Number|String} lat Valeur Y / latitude
+     * @returns {String} Contenu HTML (string) à injecter dans la popup
+     */
     _createInfoPopup (lon, lat) {
         let x, y, valueX, valueY;
         if (this.get("unitType") === "Geographical") {

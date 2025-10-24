@@ -2,19 +2,19 @@
 import "../../CSS/Controls/SearchEngine/GPFadvancedSearchEngine.css";
 import Control from "../Control";
 import Logger from "../../Utils/LoggerByDefault";
-import { Collection } from "ol";
 import Helper from "../../Utils/Helper";
+import Map from "ol/Map";
 var logger = Logger.getLogger("abstractAdvancedSearch");
 
-/**
- * @typedef {Object} AbstractAdvancedSearchOptions Options du constructeur pour le contrôle de recherche.
- *
- * @property {string} name - Nom de la recherche avancée.
- */
+// Typedefs partagés disponibles dans ./typedefs.js (AbstractAdvancedSearchOptions, ...)
 
-/**
+/** 
  * @classdesc
- * AbstractAdvancedSearch Base control
+ * Contrôle de base pour les recherches avancées (formulaires spécialisés).
+ *
+ * Fournit la structure HTML du formulaire, la gestion des inputs et
+ * les événements d'effacement et de soumission. Les contrôles spécialisés
+ * doivent surcharger addInputs() et _onSearch().
  *
  * @alias ol.control.AbstractAdvancedSearch
  * @module AbstractAdvancedSearch
@@ -25,7 +25,6 @@ class AbstractAdvancedSearch extends Control {
     * @constructor
     * @param {AbstractAdvancedSearchOptions} options Options du constructeur
     * 
-    * @example
     */
     constructor (options) {
         options = options || {};
@@ -57,9 +56,8 @@ class AbstractAdvancedSearch extends Control {
     }
 
     /**
-     * Initialize SearchEngine control (called by SearchEngine constructor)
-     *
-     * @param {AbstractAdvancedSearchOptions} options - constructor options
+     * Initialise le contrôle (appelé par le constructeur).
+     * @param {AbstractAdvancedSearchOptions} options Options d'initialisation
      * @protected
      */
     initialize (options) {
@@ -72,17 +70,26 @@ class AbstractAdvancedSearch extends Control {
         this.inputs = [];
     }
 
+    /**
+     * Retourne le nom du la recherche avancée
+     * @returns {String} Nom de la recherche avancée
+     */
     getName () {
         return this.name;   
     }
 
+    /**
+     * Retourne le formulaire de la recherche avancée
+     * @returns {HTMLFormElement} Formulaire de la recherche
+     */
     getContent () {
         return this.element;   
     }
 
     /**
-     * 
-     * @param {AbstractAdvancedSearchOptions} options 
+     * Crée le conteneur DOM du formulaire.
+     *
+     * @param {AbstractAdvancedSearchOptions} options Options d'initialisation
      * @returns {HTMLFormElement} Élément du formulaire
      * @protected
      */
@@ -131,8 +138,8 @@ class AbstractAdvancedSearch extends Control {
     }
 
     /**
-     * Ajoute des éléments d'input dans la collection `this.inputs`;
-     * Cette méthode est abstraite et doit être surchargée dans les autres classes.
+     * Ajoute des éléments d'input dans la collection `this.inputs`.
+     * Cette méthode est abstraite et doit être surchargée par les implémentations spécifiques.
      * @protected
      * @abstract
      */
@@ -151,8 +158,8 @@ class AbstractAdvancedSearch extends Control {
     }
 
     /**
-     * 
-     * @param {PointerEvent} e 
+     * Réinitialise les champs du formulaire.
+     * @param {PointerEvent} e Événement d'effacement
      * @protected
      */
     _onErase (e) {
@@ -163,9 +170,9 @@ class AbstractAdvancedSearch extends Control {
     }
 
     /**
-     * 
-     * @param {SubmitEvent} e
-     * @abstract
+     * Traitement lors de la soumission du formulaire (recherche).
+     * Doit être surchargé par les contrôles spécifiques pour lancer la recherche.
+     * @param {SubmitEvent|PointerEvent} e Évènement de soumission / recherche
      * @protected
      */
     _onSearch (e) {
