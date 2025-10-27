@@ -6,6 +6,7 @@ import SelectorID from "../../Utils/SelectorID";
 import GeoportalWMTS from "../../Layers/LayerWMTS";
 // import ol
 import Map from "ol/Map";
+import View from "ol/View";
 import OverviewMap from "ol/control/OverviewMap";
 
 var logger = Logger.getLogger("overviewMap");
@@ -258,6 +259,11 @@ class GeoportalOverviewMap extends OverviewMap {
                 configuration : LAYER_CONFIG
             })
         ];
+        options.view = options.view || new View({
+            minZoom : 1,
+            maxZoom : 8
+        });
+
 
         super(options);
         /**
