@@ -1,0 +1,199 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+          
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample OpenLayers LayerCatalog</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+                background-image:url("{{ resources }}/geoportail-waiting.gif");
+                background-position:center center;
+                background-repeat:no-repeat;
+            }
+            button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
+                width: 440px;
+            }
+ 
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du gestionnaire de catalogue avec options sur les categories avec sections</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                if (window.Gp) {
+                    // activation des loggers
+                    Gp.Logger.enableAll();
+                }
+                var map;
+                var createMap = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    //Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                opacity: 0.5
+                            })
+                        ],
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 8
+                        })
+                    });
+
+                    var catalog = new ol.control.Catalog({
+                        position: "top-left",
+                        titlePrimary : "Catalogue des cartes",
+                        layerLabel : "title",
+                        layerThumbnail : true,
+                        size : "lg",
+                        search : {
+                            display : false,
+                            // criteria : ["name","title","description"]
+                        },
+                        categories : [
+                            {
+                                title : "Cartes de références",
+                                id : "base",
+                                filter : {
+                                    field : "base",
+                                    value : "true"
+                                }
+                            },
+                            {
+                                title : "Toutes les cartes",
+                                id : "data",
+                                search : true,
+                                items : [
+                                    {
+                                        title : "Thème",
+                                        default : true,
+                                        section : true,
+                                        icon : true,
+                                        iconJson : [
+                                            {"id":"biota","name":"Biologie, faune et flore","icon":"fr-icon-leaf-fill"},
+                                            {"id":"boundaries","name":"Limites politiques et administratives","icon":"fr-icon-france-line"},
+                                            {"id":"climatologyMeteorologyAtmosphere","name":"Climatologie, météorologie, atmosphère","icon":"fr-icon-heavy-showers-fill"},
+                                            {"id":"economy","name":"Économie","icon":"fr-icon-line-chart-fill"},
+                                            {"id":"elevation","name":"Altimétrie","icon":"fr-icon-map-pin-2-fill"},
+                                            {"id":"environment","name":"Environnement","icon":"fr-icon-seedling-fill"},
+                                            {"id":"farming","name":"Agriculture","icon":"fr-icon-plant-fill"},
+                                            {"id":"geoscientificInformation","name":"Sciences de la terre, géosciences","icon":"fr-icon-earth-fill"},
+                                            {"id":"health","name":"Santé","icon":"fr-icon-capsule-fill"},
+                                            {"id":"imageryBaseMapsEarthCover","name":"Carte de référence de la couverture terrestre","icon":"fr-icon-france-fill"},
+                                            {"id":"intelligenceMilitary","name":"Infrastructures militaires","icon":"fr-icon-medal-fill"},
+                                            {"id":"inlandWaters","name":"Eaux intérieures, Hydrographie","icon":"fr-icon-flood-fill"},
+                                            {"id":"location","name":"Localisation","icon":"fr-icon-road-map-fill"},
+                                            {"id":"oceans","name":"Océans","icon":"fr-icon-fr--submersion-fill"},
+                                            {"id":"planningCadastre","name":"Cadastre, aménagement","icon":"fr-icon-community-fill"},
+                                            {"id":"society","name":"Société","icon":"fr-icon-group-fill"},
+                                            {"id":"structure","name":"Constructions et ouvrages","icon":"fr-icon-compasses-2-fill"},
+                                            {"id":"transportation","name":"Infrastructures de transport","icon":"fr-icon-bus-fill"},
+                                            {"id":"utilitiesCommunication","name":"Télécommunication, approvisionnement et énergie","icon":"fr-icon-radar-fill"}],
+                                        filter : {
+                                            field : "thematic",
+                                            value : "*"
+                                            // value : ["Hydrologie", "Agriculture", "Transports"] // all : "*"
+                                        }
+                                    },
+                                    {
+                                        title : "Producteur",
+                                        section : true,
+                                        icon : true,
+                                        iconJson : [
+                                            { "id" : "ign", "name" : "IGN", "icon" : "fr-icon-government-fill" }
+                                        ],
+                                        filter : {
+                                            field : "producer",
+                                            value : "*"
+                                        }
+                                    },
+                                    {
+                                        title : "Service",
+                                        section : true,
+                                        icon : true,
+                                        iconJson : [
+                                            { id : "wmts", name : "WMTS", icon : "fr-icon-earth-line" },
+                                            { id : "wfs", name : "WFS", icon : "fr-icon-earth-fill" },
+                                            { id : "wms", name : "WMS", icon : "fr-icon-earth-line" },
+                                            { id : "tms", name : "TMS", icon : "fr-icon-earth-fill" }
+                                        ],
+                                        filter : {
+                                            field : "service",
+                                            value : "*"
+                                        }
+                                    }
+                                ]
+                            },
+                            // {
+                            //     title : "Services",
+                            //     id : "service",
+                            //     items : [
+                            //         {
+                            //             title : "WMTS",
+                            //             default : true,
+                            //             filter : {
+                            //                 field : "service",
+                            //                 value : "WMTS"
+                            //             }
+                            //         },
+                            //         {
+                            //             title : "WMS",
+                            //             filter : {
+                            //                 field : "service",
+                            //                 value : "WMS"
+                            //             }
+                            //         },
+                            //         {
+                            //             title : "TMS",
+                            //             filter : {
+                            //                 field : "service",
+                            //                 value : "TMS"
+                            //             }
+                            //         },
+                            //         {
+                            //             title : "WFS",
+                            //             filter : {
+                            //                 field : "service",
+                            //                 value : "WFS"
+                            //             }
+                            //         }
+                            //     ]
+                            // }
+                        ]
+                    });
+                    map.addControl(catalog);
+                };
+                // Gp.Services.getConfig({
+                //     customConfigFile : "{{ configurl }}",
+                //     callbackSuffix : "",
+                //     // apiKey: "{{ apikey }}",
+                //     timeOut : 20000,
+                //     onSuccess : createMap,
+                //     onFailure : (e) => {
+                //         console.error(e);
+                //     }
+                // });
+                createMap();
+           </script>
+{{/content}}
+
+{{/extend}}

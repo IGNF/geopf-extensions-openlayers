@@ -55,7 +55,7 @@ var logger = Logger.getLogger("reversegeocoding");
  * @module ReverseGeocode
 */
 class ReverseGeocode extends Control {
-    
+
     /**
      * @constructor
      * @param {Object} options - ReverseGeocode control options
@@ -339,7 +339,7 @@ class ReverseGeocode extends Control {
         this._reverseGeocodingLocations = [];
         /** @private */
         this._reverseGeocodingLocationsMarkers = [];
-        
+
         /** @type {Style} */
         this._resultsDefaultStyle = new Style({
             image : new Icon({
@@ -1178,7 +1178,7 @@ class ReverseGeocode extends Control {
         this._panelTitleContainer.innerHTML = "Résultats de la recherche";
         this._returnPictoContainer.classList.remove("GPelementHidden");
         this._returnPictoContainer.classList.remove("gpf-hidden");
-        this._resultsContainer.className = "GPpanel gpf-panel gpf-panel-reverse";
+        this._resultsContainer.className = "GPform gpf-panel__content fr-modal__content";
 
         // 3. ajout de la liste des résultats dans le container des resultats
         this._fillGeocodedLocationListContainer(locations);
