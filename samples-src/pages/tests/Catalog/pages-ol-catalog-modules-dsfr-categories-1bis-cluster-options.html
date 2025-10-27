@@ -19,6 +19,10 @@
                 background-position:center center;
                 background-repeat:no-repeat;
             }
+            button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
+                width: 440px;
+            }
+ 
         </style>
 {{/content}}
 
@@ -57,11 +61,16 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        titlePrimary : "",
-                        size : "md",
+                        titlePrimary : "Catalogue des cartes",
+                        layerLabel : "title",
+                        layerThumbnail : true,
+                        search : {
+                            display : false,
+                            // criteria : ["name","title","description"]
+                        },
                         categories : [
                             {
-                                title : "Fonds de carte",
+                                title : "Cartes de références",
                                 id : "base",
                                 filter : {
                                     field : "base",
@@ -69,8 +78,9 @@
                                 }
                             },
                             {
-                                title : "Données",
+                                title : "Toutes les cartes",
                                 id : "data",
+                                search : true,
                                 items : [
                                     {
                                         title : "Thème",
@@ -85,6 +95,7 @@
                                     {
                                         title : "Producteur",
                                         section : true,
+                                        cluster : true, // pas de cluster pour des sections !
                                         filter : {
                                             field : "producer",
                                             value : "*"
@@ -93,10 +104,50 @@
                                     {
                                         title : "Tout",
                                         section : false,
+                                        cluster : true,
+                                        clusterOptions : {
+                                            rows_in_block : 10,
+                                            blocks_in_cluster : 4,
+                                        },
                                         filter : null
                                     }
                                 ]
-                            }
+                            },
+                            // {
+                            //     title : "Services",
+                            //     id : "service",
+                            //     items : [
+                            //         {
+                            //             title : "WMTS",
+                            //             default : true,
+                            //             filter : {
+                            //                 field : "service",
+                            //                 value : "WMTS"
+                            //             }
+                            //         },
+                            //         {
+                            //             title : "WMS",
+                            //             filter : {
+                            //                 field : "service",
+                            //                 value : "WMS"
+                            //             }
+                            //         },
+                            //         {
+                            //             title : "TMS",
+                            //             filter : {
+                            //                 field : "service",
+                            //                 value : "TMS"
+                            //             }
+                            //         },
+                            //         {
+                            //             title : "WFS",
+                            //             filter : {
+                            //                 field : "service",
+                            //                 value : "WFS"
+                            //             }
+                            //         }
+                            //     ]
+                            // }
                         ]
                     });
                     map.addControl(catalog);
