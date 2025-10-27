@@ -586,7 +586,7 @@ var LayerSwitcherDOM = {
         img.className = "GPtitleImage GPtitleDefaultImage";
         img.alt = "";
 
-        if (obj.thumbnail) {
+        if (obj.thumbnail && typeof obj.thumbnail === "string" && obj.thumbnail !== "default") {
             img.classList.remove("GPtitleDefaultImage");
             img.src = obj.thumbnail;
         }
