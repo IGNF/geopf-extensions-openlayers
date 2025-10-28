@@ -56,7 +56,16 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         // Do something on search (when ready)
         setTimeout(() => {
             this.searchService.on("search", e => this.handleSearch(e));
+            this.searchService.on("error", e => this.handleError(e));
         });
+    }
+
+    /** Gère les erreurs de recherche.
+     * @private
+     * @param {Event} e Événement d'erreur
+     */
+    handleError (e) {
+        this.handleSearch({ nbResults : 0 });
     }
 
     /**
@@ -442,7 +451,9 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
                 return;
             }
         }
+        // Get value from code if needed
         if (!value && this.filter.citycode) {
+            // Search commune name as search string
             fetch(`https://geo.api.gouv.fr/communes?code=${this.filter.citycode}&format=json&fields=nom`).then(response => {
                 return response.json();
             }).then (json => {
@@ -450,17 +461,36 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
                     const commune = json[0].nom;
                     if (commune) {
                         this._onSearch(e, commune);
+                    } else {
+                        this.handleSearch({ nbResults : 0 });
                     }
                 }
             }).catch(() => {
-                console.log("error");
+                this.handleSearch({ nbResults : 0 });
             });
-        } else {
-            if (value.length < 3) {
-                this._showMessage("search", "Veuillez saisir au moins 3 caractères pour lancer la recherche.");
-                return;
-            }
+            return;
+        } else if (!value && this.filter.postcode) {
+            // Search commune name as search string
+            fetch(`https://apicarto.ign.fr/api/codes-postaux/communes/${this.filter.postcode}`).then(response => {
+                return response.json();
+            }).then (json => {
+                if (json && json.length) {
+                    const commune = json[0].nomCommune;
+                    if (commune) {
+                        this._onSearch(e, commune);
+                    } else {
+                        this.handleSearch({ nbResults : 0 });
+                    }
+                }
+            }).catch(() => {
+                this.handleSearch({ nbResults : 0 });
+            });
+            return;
+        } else if (value.length < 3) {
+            this._showMessage("search", "Veuillez saisir au moins 3 caractères pour lancer la recherche.");
+            return;
         }
+
         // Search
         this.searchService.search({
             location : value,

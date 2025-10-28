@@ -579,6 +579,14 @@ class IGNSearchService extends AbstractSearchService {
      */
     _onFailureSearch (location, error) {
         logger.warn(error);
+        if (!location || !location.position) {
+            this.dispatchEvent({
+                type : this.ERROR_EVENT,
+                location : location,
+                error : error
+            });
+            return;
+        }
 
         let position = [
             location.position.x,

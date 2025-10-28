@@ -48,6 +48,7 @@ class AbstractSearchService extends BaseObject {
     initialize (options) {
         this.AUTOCOMPLETE_EVENT = "autocomplete";
         this.SEARCH_EVENT = "search";
+        this.ERROR_EVENT = "error";
 
         this._autocompleteLocations = [];
         this._locations = [];
