@@ -35,10 +35,6 @@ form[id^=GPAdvancedForm-] > .GPFormFooter > button {
     align-items: center;
 }
 
-form[id^=GPAdvancedForm-] input:invalid {
-    border-color: #d93025;
-}
-
 form[id^=GPAdvancedForm-] ul.search-result {
     list-style-type: none;
     padding: 0;
@@ -74,4 +70,11 @@ form[id^=GPAdvancedForm-] ul.search-result .search-result-actions {
 }
 form[id^=GPAdvancedForm-] ul.search-result .search-result-actions:hover {
     background-color: transparent;
+}
+form[id^=GPAdvancedForm-] ul.search-result .fr-message--error {
+    color: var(--background-flat-warning);
+}
+
+form[id^=GPAdvancedForm-] select option.option {
+    background-color: var(--background-action-low-blue-france);
 }
