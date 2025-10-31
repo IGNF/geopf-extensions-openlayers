@@ -17,48 +17,29 @@ import mapPinIcon from "./map-pin-2-fill.svg";
 import Feature from "ol/Feature";
 import { Layer } from "ol/layer";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
-const color = "rgba(0, 0, 145, 1)";
 
-const createStyle = (feature) => {
-    const geometryType = feature.getGeometry().getType();
-
-    switch (geometryType) {
-        case "Point":
-        case "MultiPoint":
-            return new Style({
-                image : new Icon({
-                    src : mapPinIcon,
-                    color : [0, 0, 145, 1],
-                }),
-            });
-
-        case "LineString":
-        case "MultiLineString":
-            return new Style({
-                stroke : new Stroke({
-                    color : color,
-                    width : 3,
-                }),
-            });
-
-        case "Polygon":
-        case "MultiPolygon":
-            return new Style({
-                stroke : new Stroke({
-                    color : color,
-                    lineDash : [8, 8], 
-                    width : 2,
-                }),
-                fill : new Fill({
-                    color : "rgba(0, 0, 0, 0.1)",
-                    opacity : 0.8
-                }),
-            });
-
-        default:
-            return new Style();
-    }
-};
+/** Get style for features 
+ * @param {String|Array<Number>} color - Couleur du contour
+ * @param {String|Array<Number>} [fillColor] - Couleur de remplissage
+ * @returns {Style} Style OpenLayers
+ */
+function getStyle (color, fillColor) {
+    return new Style({
+        image : new Icon({
+            src : mapPinIcon,
+            color : color,
+            anchor : [0.5, 1],
+        }),
+        stroke : new Stroke({
+            color : color,
+            lineDash : [8, 8], 
+            width : 2,
+        }),
+        fill : new Fill({
+            color : fillColor || "rgba(0, 0, 0, 0.1)",
+        }),
+    });
+}
 
 /**
  * @classdesc
@@ -93,17 +74,12 @@ class SearchEngineAdvanced extends Control {
         this.layer = new Vector({
             source : new VectorSource({}),
             zIndex : Infinity,
-            style : createStyle,
-        });
-        this.extent = new Vector({
-            source : new VectorSource({}),
-            zIndex : Infinity,
-            style : createStyle,
+            style : getStyle([0, 0, 145, 1]),
         });
 
         this.selectInteraction = new Select({
-            layers : [this.layer, this.extent],
-            style : createStyle,
+            layers : [this.layer],
+            style : getStyle([145, 0, 0, 1], [145, 0, 0, 0.2]),
         });
 
         // Initialize
@@ -128,11 +104,6 @@ class SearchEngineAdvanced extends Control {
          * @private
         */
         this.CLASSNAME = "SearchEngineAdvanced";
-
-        /**
-         * @type {Object<Feature, Layer>}
-         */
-        this._layerFeatureAssociation = {};
 
         /**
          * @type {Array<AbstractAdvancedSearch>}
@@ -170,11 +141,18 @@ class SearchEngineAdvanced extends Control {
 
         if (map) {
             // Place les couches au dessus des autres
-            this.extent.setMap(map);
             this.layer.setMap(map);
             map.addInteraction(this.selectInteraction);
             map.addOverlay(this.popup);
         }
+    }
+
+    /**
+     * Retourne la couche utilisée pour afficher les résultats.
+     * @returns {Layer} Couche des résultats
+     */
+    getLayer () {
+        return this.layer;
     }
 
     /**
@@ -356,18 +334,13 @@ class SearchEngineAdvanced extends Control {
     addResultToMap (e) {
         this._closePopup();
         this.layer.getSource().clear();
-        this.extent.getSource().clear();
         let extent;
         if (!!e.result) {
             this.layer.getSource().addFeature(e.result);
-            // Ajout de la couche pour la retrouver plus tard
-            this._layerFeatureAssociation[e.result.ol_uid] = this.layer;
             extent = e.result.getGeometry().getExtent();
         }
         if (!!e.extent) {
-            this.extent.getSource().addFeature(e.extent);
-            // Ajout de la couche pour la retrouver plus tard
-            this._layerFeatureAssociation[e.extent.ol_uid] = this.extent;
+            this.layer.getSource().addFeature(e.extent);
             extent = e.extent.getGeometry().getExtent();
         }
         if (this.getMap()) {
@@ -400,9 +373,7 @@ class SearchEngineAdvanced extends Control {
             this.popup.setPosition(position);
             this.setPopupContent(feature.get("infoPopup") || "");
             this.popup.set("feature", feature);
-            // Récupère la couche liée;
-            const layer = this._layerFeatureAssociation[feature.ol_uid];
-            this.popup.set("layer", layer);
+            this.popup.set("layer", this.layer);
         } else {
             this.popup.setPosition(undefined);
             this.setPopupContent("");
@@ -548,7 +519,16 @@ class SearchEngineAdvanced extends Control {
         btn.onclick = () => {
             const feature = this.popup.get("feature");
             if (feature && typeof popupButton.onClick === "function") {
-                popupButton.onClick.call(this, feature);
+                // New feature sans style
+                const newFeature = feature.clone();
+                newFeature.setStyle(undefined);
+                // Appel du callback
+                if (popupButton.onClick.call(this, newFeature)) {
+                    // Feature traitée => supprimer de la sélection
+                    this._closePopup();
+                    this.selectInteraction.getFeatures().clear();
+                    this.layer.getSource().removeFeature(feature);
+                };
             }
         };
         return btn;

@@ -113,6 +113,9 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
                 const li = document.createElement("li");
                 li.className = "fr-message--error";
                 li.innerText = "Aucun résultat";
+                if (!this.searchInput.value) {
+                    li.innerText += " : précisez votre recherche en renseignant le lieu.";
+                }
                 this.searchResult.appendChild(li);
                 li.addEventListener("click", () => {
                     li.remove();
@@ -390,7 +393,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         this.searchResult.innerHTML = "";
         this._clearMessages();
         this.filter = {
-            category : "",
+            category : this.element.querySelector("select[name='category']").value,
             postcode : "",
             citycode : ""
         };
@@ -483,6 +486,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
                     }
                 }
             }).catch(() => {
+                this._showMessage("postalCode", "Aucune commune trouvée pour ce code postal.");
                 this.handleSearch({ nbResults : 0 });
             });
             return;

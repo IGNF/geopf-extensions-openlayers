@@ -72,8 +72,13 @@
                     })
 
                     let addFeatureToLayer = function (feature) {
-                        console.log(this, feature);
-                        source.addFeature(feature.clone());
+                        source.addFeature(feature);
+                        // Feature traitée => supprimer de la recherche
+                        return true;
+                        /*
+                        // Feature non traitée => conserver la recherche
+                        return false;
+                        */
                     }
 
 					// 2. Appel du SearchEngine

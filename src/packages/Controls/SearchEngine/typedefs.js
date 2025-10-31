@@ -142,6 +142,7 @@
  * Callback appelé lors du clic sur un bouton personnalisé du popup.
  * @callback PopupButtonClickCallback
  * @param {Feature} feature - La feature associée au popup.
+ * @returns {Boolean} Retourne true si la feature doit être supprimée de la sélection, default (false).
  * @this SearchEngineAdvanced
  */
 

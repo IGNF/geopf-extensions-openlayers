@@ -73,6 +73,7 @@ form[id^=GPAdvancedForm-] ul.search-result .search-result-actions:hover {
 }
 form[id^=GPAdvancedForm-] ul.search-result .fr-message--error {
     color: var(--background-flat-warning);
+    white-space: normal;
 }
 
 form[id^=GPAdvancedForm-] select option.option {
