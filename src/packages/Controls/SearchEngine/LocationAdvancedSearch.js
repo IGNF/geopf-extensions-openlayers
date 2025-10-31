@@ -349,7 +349,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         postalInput.className = "fr-input";
         postalInput.type = "text";
         postalInput.name = "postalCode";
-        postalInput.pattern = "(\\d{5})";
+        postalInput.pattern = "^(\\d{5})$";
         postalInput.title = "Code postal à 5 chiffres";
         postalInput.id = Helper.getUid("LocationAdvancedSearch-postal-");
         this._getLabelContainer("Code postal", "fr-input-group", postalInput);
@@ -362,7 +362,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         inseeInput.className = "fr-input";
         inseeInput.name = "cityCode";
         inseeInput.type = "text";
-        inseeInput.pattern = "(\\d\\d|2[A,B,a,b])\\d{3}";
+        inseeInput.pattern = "^(\\d\\d|2[A,B,a,b])\\d{3}$";
         inseeInput.title = "Code INSEE sur 5 caractères";
         inseeInput.id = Helper.getUid("LocationAdvancedSearch-insee-");
         this._getLabelContainer("Code INSEE", "fr-input-group", inseeInput, "Format attendu INSEE : 5 chiffres, selon le code officiel géographique (COG)");
@@ -441,6 +441,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         }
         */
         if (this.filter.postcode) {
+            console.log("testcode");
             const postalRegex = new RegExp(this.element.querySelector("input[name='postalCode']").pattern);
             if (!postalRegex.test(this.filter.postcode)) {
                 this._showMessage("postalCode", "Le code postal doit être composé de 5 chiffres.");
