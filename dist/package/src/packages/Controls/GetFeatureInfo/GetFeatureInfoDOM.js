@@ -114,7 +114,7 @@ var GetFeatureInfoDOM = {
 
     _createGetFeatureInfoPanelDivElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelBody gpf-panel__body_gfi fr-modal__body";
+        div.className = "GPpanelBody fr-modal__body";
         return div;
     },
 
