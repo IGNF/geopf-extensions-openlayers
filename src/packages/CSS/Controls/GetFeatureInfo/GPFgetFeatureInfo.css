@@ -5,6 +5,7 @@ div[id^=GPgetFeatureInfo-] {
   
 div[id^=GPgetFeatureInfoAccordionGroup-] {
   user-select: text;
+  max-height: 300px;
 }
 
 /* Showing/hiding */
@@ -32,7 +33,7 @@ dialog[id^="GPgetFeatureInfoPanel-"] {
 }
 
 .GPgetFeatureInfoAccordionGroup {
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: thin;
 }
 
