@@ -1016,6 +1016,21 @@ class Catalog extends Control {
             if (Object.prototype.hasOwnProperty.call(layers, key)) {
                 const layer = layers[key];
                 if (layer.serviceParams) {
+                    // TEST
+                    const isHTML = (str) => {
+                        const doc = document.createElement("div");
+                        doc.innerHTML = str.trim();
+                        // Si le premier enfant est un élément HTML, c'est du HTML
+                        return doc.childNodes.length > 0 && doc.firstChild.nodeType === 1;
+                    };
+
+                    if (isHTML(layer.description)) {
+                        logger.error(`layer description contains HTML code, which is not allowed. Layer: ${key}`);
+                        logger.error("Please use Markdown syntax for layer descriptions instead.");
+                        logger.error(layer.description);
+                        delete layers[key];
+                        continue;
+                    }
                     // si la couche a bien une configuration valide liée au service
                     var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                     layer.service = service; // new proprerty !
@@ -1493,6 +1508,9 @@ class Catalog extends Control {
                     }
                 }
                 layer.hidden = !words.includes(value.toLowerCase());
+                if (!layer.hidden) {
+                    logger.info(`Filtering layer ${layer.name} with words : ${words}`);
+                }
                 // on met à jour pour chaque couche la visibilité
                 this.updateVisibilityFilteredLayersDOM(layer.name, layer.service, layer.hidden);
             }
@@ -1533,6 +1551,7 @@ class Catalog extends Control {
                 } else {
                     container.classList.remove("gpf-hidden");
                     container.classList.remove("GPelementHidden");
+                    logger.info(`Layer ${id}:${service} visibility updated to hidden=${hidden} in category ${category} (${container.id}).`);
                 }
             }
         }
