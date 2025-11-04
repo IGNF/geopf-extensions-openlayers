@@ -292,7 +292,7 @@ var CatalogDOM = {
         if (input) {
             input.addEventListener("input", (e) => {
                 // on n'active la recherche que si le texte fait plus de 2 caractères
-                if (e.target.value.length < 3) {
+                if (e.target.value.length < 3 && e.target.value.length > 0) {
                     return;
                 }
                 this.onSearchGlobalCatalogInputChange(e);
@@ -616,7 +616,7 @@ var CatalogDOM = {
         if (searchInput) {
             searchInput.addEventListener("input", (e) => {
                 // on n'active la recherche que si le texte fait plus de 2 caractères
-                if (e.target.value.length < 3) {
+                if (e.target.value.length < 3 && e.target.value.length > 0) {
                     return;
                 }
                 this.onSearchSpecificCatalogInputChange(e);
@@ -752,7 +752,7 @@ var CatalogDOM = {
                         class="GPlabelActive fr-label"
                         role="label-collapse-more-${categoryId}"
                         aria-controls="catalog-collapse-more-${i}-${categoryId}"
-                        title="${name}"
+                        title="${title}"
                         style="display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; cursor: pointer;">
                         ${title}
                         <span class="GPlabelActive fr-label fr-hint-text">${producerName}</span>
@@ -771,10 +771,12 @@ var CatalogDOM = {
                 </div>
                 <div class="gpf-hidden" id="catalog-info-more-${i}-${categoryId}">
                     <p>
-                        <span class="fr-label fr-message">${name} - ${service}</span>
+                        <span class="fr-label fr-message" style="word-break: break-all;">${name} - ${service}</span>
                         ${tmplProducers(informations.producers)}
                     </p>
-                    ${description}
+                    <p>
+                        ${description}
+                    </p>
                     ${tmplMetadatas(informations.metadatas)}
                 </div>
             </div>
