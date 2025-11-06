@@ -119,6 +119,11 @@ class SearchEngineBase extends Control {
         if (this.searchService.get("autocomplete") !== false) {
             // Empty input
             this.input.addEventListener("input", function (e) {
+                if (e.target.value.length != 0) {
+                    e.target.dataset.empty = true;
+                } else {
+                    delete e.target.dataset.empty;
+                }
                 if (!e.target.value) {
                     this.showHistoric();
                 }
@@ -228,7 +233,8 @@ class SearchEngineBase extends Control {
         element.id = Helper.getUid("GPsearchEngine-");
         // Main container
         const container = this.container = document.createElement("form");
-        container.className = options.search ? "GPSearchBar fr-search-bar" : "";
+        // container.className = options.search ? "GPSearchBar fr-search-bar" : "";
+        container.className = options.search ? "GPSearchBar" : "";
         // container.className = "fr-search-bar";
         container.id = Helper.getUid("GPsearchInput-Base-");
 
@@ -306,7 +312,7 @@ class SearchEngineBase extends Control {
         // Submit button
         if (options.searchButton) {
             const submit = this.subimtBt = document.createElement("button");
-            submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn fr-btn--lg";
+            submit.className = "GPsearchInputSubmit gpf-btn fr-icon-search-line fr-btn";
             submit.id = Helper.getUid("GPshowSearchEnginePicto-");
             submit.type = "submit";
             if (options.title) {

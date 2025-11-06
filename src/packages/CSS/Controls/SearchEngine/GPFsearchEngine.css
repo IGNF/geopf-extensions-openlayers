@@ -215,22 +215,14 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
     flex-direction: row;
     padding: 0;
 }
-/* [id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPInputGroup {
-    padding: 0;
-} */
+
 [id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer {
     display: flex;
     height: calc(100% - 2px);
 }
 
 [id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer button {
-    max-width: unset;
-    min-height: 1rem;
-    margin: 0.25rem 0.5rem;
-    border-radius: 0;
-}
-[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer button:before {
-    display: none;
+    margin: 0.5rem;
 }
 
 .GPautoCompleteHeader {

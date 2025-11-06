@@ -249,7 +249,7 @@ class SearchEngineAdvanced extends Control {
 
         // Ajout des options avancées
         const advancedBtn = this.advancedBtn = document.createElement("button");
-        advancedBtn.className = "GPSearchEngine-advanced-btn fr-btn fr-icon-arrow-up-s-line fr-btn--icon-right fr-btn--tertiary-no-outline";
+        advancedBtn.className = "GPSearchEngine-advanced-btn fr-btn fr-btn--sm fr-icon-arrow-up-s-line fr-btn--icon-right fr-btn--tertiary-no-outline";
         advancedBtn.id = Helper.getUid("GPSearchEngine-advanced-btn-");
         advancedBtn.type = "button";
         advancedBtn.title = "Avancée";
@@ -325,6 +325,20 @@ class SearchEngineAdvanced extends Control {
         if (this._searchForms.length) {
             this.baseSearchEngine.optionscontainer.appendChild(advancedBtn);
         }
+
+        // Ajout des options avancées
+        const eraseBtn = this.eraseBtn = document.createElement("button");
+        eraseBtn.className = "GPSearchEngine-erase-btn fr-btn fr-btn--sm fr-icon-close-circle-line fr-btn--tertiary-no-outline";
+        eraseBtn.id = Helper.getUid("GPSearchEngine-erase-btn-");
+        eraseBtn.type = "button";
+        eraseBtn.title = "Effacer la saisie";
+        eraseBtn.setAttribute("aria-label", "Effacer la saisie");
+        // Gestion du bouton avancé
+        eraseBtn.addEventListener("click", function () {
+            this.baseSearchEngine.input.value = "";
+            delete this.baseSearchEngine.input.dataset.empty;
+        }.bind(this));
+        this.baseSearchEngine.optionscontainer.appendChild(eraseBtn);
     }
 
     /**

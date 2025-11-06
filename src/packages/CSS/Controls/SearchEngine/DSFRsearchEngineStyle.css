@@ -240,6 +240,10 @@ div[id^=GPgeocodeResults-] {
   border-bottom: 1px solid var(--grey-900-175);
 }
 
+.GPSearchBar > div.GPInputGroup, .GPSearchBar > div.GPInputGroup > input {
+  box-shadow: inset 0 -2px 0 0 var(--border-action-high-blue-france);
+}
+
 /* Mode Mobile */
 @media (max-width: 576px) {
 
@@ -286,12 +290,12 @@ div[id^=GPgeocodeResults-] {
   width: 100%;
 }
 
-[id^="GPsearchEngine"] form[id^="GPsearchInput-Base-"] .GPOptionsContainer button {
+/* [id^="GPsearchEngine"] form[id^="GPsearchInput-Base-"] .GPOptionsContainer button {
   font-size: 0.875rem;
   line-height: 1.5rem;
   min-height: 2rem;
   padding: 0.25rem 0.75rem;
-}
+} */
 
 [id^="GPsearchEngine"] ul:empty {
   padding: unset;
@@ -394,4 +398,16 @@ form.GPSearchBar > .GPInputGroup,form.GPSearchBar > button[id^=GPshowSearchEngin
 form.GPSearchBar > button[id^=GPshowSearchEnginePicto-].fr-btn {
   width: 48px;
   max-width: unset;
+}
+
+button[id^="GPSearchEngine-erase-btn"] {
+  display: none;
+}
+
+form.GPSearchBar > .GPInputGroup > input[data-empty] ~ .GPOptionsContainer > button[id^="GPSearchEngine-erase-btn"] {
+  display:block;
+}
+
+form.GPSearchBar > .GPInputGroup > input[data-empty] ~ .GPOptionsContainer > button[id^="GPSearchEngine-advanced-btn"] {
+  display:none;
 }
