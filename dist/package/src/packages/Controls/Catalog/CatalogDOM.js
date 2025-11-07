@@ -748,15 +748,17 @@ var CatalogDOM = {
                     <div class="catalog-thumbnail-container" style="">
                         ${tmplThumbnail(thumbnail)}
                     </div>
-                    <label 
-                        class="GPlabelActive fr-label"
-                        role="label-collapse-more-${categoryId}"
-                        aria-controls="catalog-collapse-more-${i}-${categoryId}"
-                        title="${title}"
-                        style="display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; cursor: pointer;">
-                        ${title}
+                    <div style="width: 100%;">
+                        <label 
+                            class="GPlabelActive fr-label"
+                            role="label-collapse-more-${categoryId}"
+                            aria-controls="catalog-collapse-more-${i}-${categoryId}"
+                            title="${title}"
+                            style="display: -webkit-box; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: normal; cursor: pointer; line-height: 1.9em; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                            ${title}
+                        </label>
                         <span class="GPlabelActive fr-label fr-hint-text">${producerName}</span>
-                    </label>
+                    </div>
                     <button 
                         id="catalog-collapse-more-${i}-${categoryId}"
                         role="button-collapse-more-${categoryId}"
@@ -766,7 +768,7 @@ var CatalogDOM = {
                         tabindex="0" 
                         aria-pressed="false"
                         aria-controls="catalog-info-more-${i}-${categoryId}"
-                        style="">
+                        style="position: relative;">
                     </button>
                 </div>
                 <div class="gpf-hidden" id="catalog-info-more-${i}-${categoryId}">
