@@ -19,5 +19,6 @@ declare namespace CatalogDOM {
     function _createCatalogContentCategoriesTabs(categories: Categories): HTMLElement;
     function _createCatalogContentCategoryTabContent(category: Categories, layersFiltered: any): HTMLElement;
     function _updateListenersLayersDOM(content: HTMLElement, id: string): void;
+    function updateVisibilitySectionsByCategory(sectionId: any, categoryId: any, visible: any): void;
 }
 //# sourceMappingURL=CatalogDOM.d.ts.map

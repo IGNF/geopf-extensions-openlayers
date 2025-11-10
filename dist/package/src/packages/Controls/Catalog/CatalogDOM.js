@@ -799,7 +799,11 @@ var CatalogDOM = {
             var idCollapseSection = `accordion-${categoryId}-${id}`;
             return `
             <!-- section -->
-            <section id="section-${categoryId}-${id}" class="fr-accordion" style="contain: content;">
+            <section 
+                id="section-${categoryId}-${id}" 
+                data-category="${categoryId}"
+                data-id="${id}"
+                class="fr-accordion" style="contain: content;">
                 <h3 class="fr-accordion__title">
                     <button class="GPcatalogButtonSection fr-accordion__btn gpf-accordion__btn" role="section-collapse-${categoryId}" aria-expanded="false" aria-controls="${idCollapseSection}">
                         <span class="GPshowCatalogAdvancedTools gpf-hidden"></span>
@@ -912,7 +916,7 @@ var CatalogDOM = {
                         if (found) {
                             icon = found.icon;
                         } else {
-                            icon = "fr-icon-arrow-right-s-line"; // icone par defaut !
+                            icon = "fr-icon-subtract-line"; // icone par defaut !
                         }
                     }
                     strElements = tmplSection(id, category.id, title, icon, count, data);
@@ -1001,13 +1005,21 @@ var CatalogDOM = {
             buttons.forEach((button) => {
                 button.addEventListener("click", (e) => {
                     e.target.ariaExpanded = !(e.target.ariaExpanded === "true");
-                    var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                    var collapseId = e.target.getAttribute("aria-controls");
+                    var collapse = document.getElementById(collapseId);
                     if (!collapse) {
                         return;
                     }
+                    var sectionId = collapseId.replace("accordion", "section");
+                    var section = document.getElementById(sectionId);
+                    var categoryId = (section) ? section.dataset.category : null;
                     if (e.target.ariaExpanded === "true") {
                         collapse.classList.add("fr-collapse--expanded");
                         collapse.classList.remove("GPelementHidden");
+                        if (section) {
+                            section.classList.add("catalog-section-full");
+                            this.updateVisibilitySectionsByCategory(sectionId, categoryId, false);
+                        }
                         // scroll auto sur le bouton cliqué (dsfr oblige de passer par scrollTop sur le container au lieu de scrollIntoView)
                         const container = button.closest("div[id^=\"tabpanel-\"]");
                         const buttonRect = button.getBoundingClientRect();
@@ -1021,6 +1033,10 @@ var CatalogDOM = {
                     } else {
                         collapse.classList.remove("fr-collapse--expanded");
                         collapse.classList.add("GPelementHidden");
+                        if (section) {
+                            section.classList.remove("catalog-section-full");
+                            this.updateVisibilitySectionsByCategory(sectionId, categoryId, true);
+                        }
                     }
                 }, false);
             });
@@ -1099,6 +1115,25 @@ var CatalogDOM = {
                     e.target.parentElement.click();
                 });
             });
+        }
+    },
+
+    updateVisibilitySectionsByCategory (sectionId, categoryId, visible) {
+        // rendre les sections visibles ou non de la sous-categorie
+        var selector = `[id^="section-${categoryId}-"]`;
+        var sections = document.querySelectorAll(selector);
+        for (let i = 0; i < sections.length; i++) {
+            const section = sections[i];
+            if (section.id === sectionId) {
+                continue;
+            }
+            if (visible) {
+                section.classList.remove("gpf-hidden");
+                section.classList.remove("GPelementHidden");
+            } else {
+                section.classList.add("gpf-hidden");
+                section.classList.add("GPelementHidden");
+            }
         }
     }
 
