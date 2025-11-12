@@ -23,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de catalogue avec options sur les categories</h2>
+            <h2>Ajout du gestionnaire de catalogue avec options sur les categories sans sections (sous categories)</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -61,42 +61,38 @@
                             {
                                 title : "Données",
                                 id : "data",
-                                cluster : true
-                            },
-                            {
-                                title : "WMTS",
-                                default : false,
-                                cluster : true,
-                                filter : {
-                                    field : "service",
-                                    value : "WMTS"
-                                }
-                            },
-                            {
-                                title : "WMS",
-                                cluster : true,
-                                filter : {
-                                    field : "service",
-                                    value : "WMS"
-                                }
-                            },
-                            {
-                                title : "TMS",
-                                default : true,
-                                cluster : true,
-                                filter : {
-                                    field : "service",
-                                    value : "TMS"
-                                }
-                            },
-                            {
-                                title : "WFS",
-                                default : false,
-                                cluster : false,
-                                filter : {
-                                    field : "service",
-                                    value : "WFS"
-                                }
+                                items : [
+                                    {
+                                        title : "WMTS",
+                                        default : true,
+                                        cluster : true,
+                                        filter : {
+                                            field : "service",
+                                            value : "WMTS"
+                                        }
+                                    },
+                                    {
+                                        title : "WMS",
+                                        cluster : true,
+                                        filter : {
+                                            field : "service",
+                                            value : "WMS"
+                                        }
+                                    },
+                                    {
+                                        title : "TMS",
+                                        cluster : true,
+                                        filter : {
+                                            field : "service",
+                                            value : "TMS"
+                                        }
+                                    },
+                                    {
+                                        title : "Tout",
+                                        cluster : true,
+                                        filter : null
+                                    }
+                                ]
                             }
                         ],
                     });

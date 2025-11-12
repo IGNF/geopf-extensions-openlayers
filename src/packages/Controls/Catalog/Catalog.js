@@ -667,7 +667,30 @@ class Catalog extends Control {
          */
         this.layersList = {};
 
+        /**
+         * specify clusterize instances for each category/subcategory/section
+         * @type {Object}
+         * @example
+         * {
+         *    "data" : Clusterize, // category id + instance
+         *    "454587412" : Clusterize, // subcategory id + instance
+         *    "457121205" : Clusterize, // subcategory id + instance
+         * }
+         */
         this.clusterize = {};
+        /**
+         * specify clusterize sections for each category/subcategory
+         * @type {Object}
+         * @example
+         * {
+         *    548487533 : { // subcategory id
+         *       "section-accordion-548487533-72432" : [rows], // section id + rows
+         *       "section-accordion-548487533-78155" : [rows]  // section id + rows
+         *    }
+         * }
+         */
+        this.clusterizeSections = {};
+
         /**
          * specify all categories
          * @type {Array<Categories}
@@ -703,21 +726,16 @@ class Catalog extends Control {
             var items = cat.items;
             if (cat.items) {
                 items = cat.items.map((i) => {
-                    var cluster = i.hasOwnProperty("cluster") ? i.cluster : false;
-                    // INFO
-                    // on desactive le clustering si on a des sections
-                    if (i.hasOwnProperty("section") && i.section) {
-                        cluster = false;
-                    }
                     return {
                         title : i.title,
                         id : i.id || this.generateID(i.title),
+                        default : i.hasOwnProperty("default") ? i.default : false,
                         section : i.hasOwnProperty("section") ? i.section : false,
                         sections : [], // liste des valeurs des sections remplie ulterieurement !
+                        subcategory : true, // new property !
                         icon : i.hasOwnProperty("icon") ? i.icon : false,
                         iconJson : i.iconJson || [], // liste des icones (json) pour les sections
-                        default : i.hasOwnProperty("default") ? i.default : false,
-                        cluster : cluster,
+                        cluster : i.hasOwnProperty("cluster") ? i.cluster : false,
                         clusterOptions : i.hasOwnProperty("clusterOptions") ? i.clusterOptions : this.clusterOptions,
                         filter : i.filter || null,
                     };
@@ -1147,54 +1165,46 @@ class Catalog extends Control {
                 // et on charge les autres au fur et à mesure
             }
             var layersCategorised = this.getLayersByCategory(categories[i], data.layers);
-            this._createCatalogContentCategoryTabContent(categories[i], layersCategorised)
+            var nodata = categories[i].cluster; // pas de données directement dans le DOM en mode cluster
+            this._createCatalogContentCategoryTabContent(categories[i], layersCategorised, nodata)
                 .then((data) => {
                     // Utilisation d'un DocumentFragment pour optimiser l'insertion DOM
                     const fragment = document.createDocumentFragment();
-                    // TEST 
-                    // par blocks (categories / sous-categories avec sections)
-                    // mais à priori pas d'intérêt car trop de DOM à gérer
-                    if (data.blocks && false) {
-                        for (let j = 0; j < data.blocks.length; j++) {
-                            const element = data.blocks[j];
-                            fragment.appendChild(element.dom);
-                            content.appendChild(fragment);
-                            console.log(`Content for category ${categories[i].title} with type ${element.type} / value ${element.value}.`);
-                            if (categories[i].cluster) {
-                                this.clusterize[element.id] = new Clusterize({
+                    if (data.dom) {
+                        fragment.appendChild(data.dom);
+                        content.appendChild(fragment);
+                        console.log(`Content for category ${categories[i].title} created.`);
+                        if (categories[i].cluster) {
+                            if (categories[i].section) {
+                                // INFO
+                                // on realise la clusterisation à la demande
+                                // cad quand l'action d'ouvrir la section est déclenchée
+                                console.warn(`No clustering at initialization for sections : ${categories[i].title} !`);
+                                
+                                // INFO
+                                // enregistrement des informations utiles pour construire le clusterize plus tard
+                                // lors de l'ouverture de la section
+                                this.clusterizeSections[categories[i].id] = data.blocks.reduce((acc, item) => {
+                                    acc[item.domid] = item.rows;
+                                    return acc;
+                                }, {});
+                                this._updateListenersLayersDOM(content, categories[i].id);
+                            } else {
+                                this.clusterize[categories[i].id] = new Clusterize({
                                     scrollId : content.parentElement.id,
-                                    contentId : (element.type === "layer") ? content.children[0].id : content.children[0].id.replace("sections", "accordion"),
+                                    contentId : data.blocks[0].domid,
+                                    rows : data.blocks[0].rows,
                                     rows_in_block : categories[i].clusterOptions.rows_in_block,
                                     blocks_in_cluster : categories[i].clusterOptions.blocks_in_cluster,
                                     callbacks : {
                                         clusterChanged : () => {
                                             logger.trace("cluster changed");
-                                            this.updateListenersLayersDOM();
+                                            this._updateListenersLayersDOM(content, categories[i].id);
+                                            this.checkLayersOnMap();
                                         }
                                     }
-                                });             
+                                });
                             }
-                        }
-                    }
-
-                    if (data.dom && true) {
-                        fragment.appendChild(data.dom);
-                        content.appendChild(fragment);
-                        console.log(`Content for category ${categories[i].title} created.`);
-                        if (categories[i].cluster) {
-                            this.clusterize[categories[i].id] = new Clusterize({
-                                scrollId : content.parentElement.id,
-                                contentId : content.children[0].id,
-                                rows_in_block : categories[i].clusterOptions.rows_in_block,
-                                blocks_in_cluster : categories[i].clusterOptions.blocks_in_cluster,
-                                callbacks : {
-                                    clusterChanged : () => {
-                                        logger.trace("cluster changed");
-                                        this._updateListenersLayersDOM(content, categories[i].id);
-                                        this.checkLayersOnMap();
-                                    }
-                                }
-                            });
                         } else {
                             this._updateListenersLayersDOM(content, categories[i].id);
                             this.checkLayersOnMap();
@@ -1736,6 +1746,62 @@ class Catalog extends Control {
      */
     onToggleCatalogMoreLearnClick (e) {
         logger.trace(e);
+    }
+
+    onToggleCatalogSectionClick (e, categoryId, sectionId) {
+        logger.trace(e);
+        var categories = []; // remise à plat des catégories / sous-categories
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categories.push(element);
+                }
+            } else {
+                categories.push(category);
+            }
+        });
+        // INFO
+        // la clusterisation est réalisée à la demande
+        // cad quand l'action d'ouvrir la section est déclenchée
+        // on crée l'instance Clusterize à ce moment là
+        // sauf si elle existe déjà, on la reactive simplement
+        var opened = (e.target.ariaExpanded === "true");
+        var container = document.getElementById(sectionId);
+        var category = categories.find(cat => cat.id == categoryId); // non strict !
+        if (container && category.cluster) {
+            if (opened) {
+                // on crée une instance clusterize si besoin ou on réactive le clusterize existant
+                if (this.clusterize[category.id] && this.clusterize[category.id][sectionId] && this.clusterize[category.id][sectionId].destroyed) {
+                    this.clusterize[category.id][sectionId].refresh(true);
+                } else {
+                    // on crée le clusterize
+                    var rows = this.clusterizeSections[category.id][sectionId];
+                    if (!this.clusterize[category.id]) {
+                        this.clusterize[category.id] = {};
+                    }
+                    this.clusterize[category.id][sectionId] = new Clusterize({
+                        scrollId : container.parentElement.id,
+                        contentId : sectionId,
+                        rows : rows,
+                        rows_in_block : category.clusterOptions.rows_in_block,
+                        blocks_in_cluster : category.clusterOptions.blocks_in_cluster,
+                        callbacks : {
+                            clusterChanged : () => {
+                                logger.trace("cluster changed");
+                                this._updateListenersLayersDOM(container, category.id);
+                                this.checkLayersOnMap();
+                            }
+                        }
+                    });
+                }
+            } else {
+                // on désactive le clusterize
+                if (this.clusterize[category.id] && this.clusterize[category.id][sectionId] && !this.clusterize[category.id][sectionId].destroyed) {
+                    this.clusterize[category.id][sectionId].destroy(true);
+                }
+            }
+        }
     }
 
     /**
