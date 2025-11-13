@@ -45,10 +45,7 @@
         "no-console": "off",
         "no-proto": "off",
         "no-prototype-builtins": "off",
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
+        "linebreak-style": "off",
         "padded-blocks": [
             "error",
             {

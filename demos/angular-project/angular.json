@@ -38,6 +38,7 @@
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/MousePosition/GPFmousePosition.css",
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/Export/GPFexport.css",
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/SearchEngine/GPFsearchEngine.css",
+              "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/SearchEngine/GPFadvancedSearchEngine.css",
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/Editor/GPFeditor.css",
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/ReverseGeocoding/GPFreverseGeocoding.css",
               "node_modules/geopf-extensions-openlayers/src/packages/CSS/Controls/Drawing/GPFdrawing.css",
