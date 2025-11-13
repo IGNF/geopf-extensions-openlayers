@@ -350,7 +350,16 @@ var CatalogDOM = {
             // et l'attribut 'aria-controls' permet de retrouver le panneau du contenu
             return `
             <li class="GPtabList" role="presentation">
-                <button id="tabbutton-${i}_${id}" class="${className}" tabindex="${tabindex}" role="tabbutton" aria-selected="${value}" aria-controls="tabpanel-${i}-panel_${id}">${title}</button>
+                <button 
+                    id="tabbutton-${i}_${id}" 
+                    class="${className}" 
+                    data-category="${id}"
+                    tabindex="${tabindex}" 
+                    role="tabbutton" 
+                    aria-selected="${value}" 
+                    aria-controls="tabpanel-${i}-panel_${id}">
+                    ${title}
+                </button>
             </li>
             `;
         };
@@ -399,6 +408,7 @@ var CatalogDOM = {
                         type="radio" 
                         ${checked} 
                         id="radio-inline_${subcategory.id}" 
+                        data-category="${subcategory.id}"
                         name="radio-inline-${id}" 
                         role="radio-inline-section"
                         aria-controls="tabcontent-${subcategory.id}">
@@ -548,6 +558,7 @@ var CatalogDOM = {
                     var panel = document.getElementById(e.target.getAttribute("aria-controls"));
                     panel.classList.remove("gpf-hidden");
                     panel.classList.remove("GPelementHidden");
+                    this.onToggleCatalogRadioChange(e, e.target.getAttribute("data-category"));
                 });
             });
         }
@@ -555,6 +566,10 @@ var CatalogDOM = {
         var buttons = shadow.querySelectorAll("[role=\"tabbutton\"]");
         if (buttons) {
             buttons.forEach((btn) => {
+                var selected = btn.getAttribute("aria-selected");
+                if (selected === "true") {
+                    btn.click();
+                }
                 btn.addEventListener("click", (e) => {
                     // gestion de l'affichage
 
@@ -593,7 +608,7 @@ var CatalogDOM = {
                     panel.classList.remove("gpf-hidden");
                     panel.classList.remove("GPelementHidden");
                     // appel
-                    this.onSelectCatalogTabClick(e);
+                    this.onSelectCatalogTabClick(e, e.target.getAttribute("data-category") );
                 });
             });
         }

@@ -1671,19 +1671,67 @@ class Catalog extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @param {String} categoryId - ...
      * @private
      */
-    onSelectCatalogTabClick (e) {
+    onSelectCatalogTabClick (e, categoryId) {
         logger.trace(e);
-        // sauvegarde de la categorie courrante pour la gestion de la recherche
-        // de couches dans la liste associée à la categorie
-        var id = e.target.id;
-        var category = id.split("_")[1];
-        this.categoryId = category;
-
-        // TODO
-        // affichage des données
         
+        var prevcontainer = document.getElementById(`checkboxes-${this.categoryId}`);
+        if (prevcontainer) {
+            // on supprime le contenu du DOM de l'ancienne catégorie
+            if (this.options.optimisation === "on-demand") {
+                prevcontainer.innerHTML = "";
+            }
+        }
+        // sauvegarde de la categorie courrante
+        this.categoryId = categoryId;
+
+        var categories = []; // remise à plat des catégories / sous-categories
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categories.push(element);
+                }
+            } else {
+                categories.push(category);
+            }
+        });
+        var category = categories.find(cat => cat.id == categoryId); // non strict !
+
+        // fonction de clonage d'un DocumentFragment
+        const cloneFragment = (fragment) => {
+            const clone = document.createDocumentFragment();
+            fragment.childNodes.forEach(node => {
+                clone.appendChild(node.cloneNode(true));
+            });
+            return clone;
+        };
+
+        var selected = (e.target.ariaSelected === "true");
+        var container = document.getElementById(`checkboxes-${categoryId}`);
+
+        // par defaut, sans optimisation, le contenu est déjà dans le DOM...
+        if (container && container.children.length === 0) {
+            // on charge le contenu à la demande
+            if (this.options.optimisation === "on-demand") {
+                if (selected) {
+                    // on ajoute le fragment dans le DOM
+                    var fragment = this.dataOnDemand[category.id];
+                    if (fragment) {
+                        container.appendChild(cloneFragment(fragment));
+                        this._updateListenersLayersDOM(container, category.id);
+                        this.checkLayersOnMap();
+                    }
+                }
+            }
+            // TODO 
+            // on clusterise le contenu
+            if (category.cluster && this.options.optimisation === "clusterize") {}
+        }
+        
+        // INFO
         // on affiche la barre de recherche spécifique
         // si l'option search=true est activée pour la categorie courante
         // on recherche dans la liste des categories, la catégorie courante
@@ -1765,6 +1813,13 @@ class Catalog extends Control {
         logger.trace(e);
     }
 
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {String} categoryId - ...
+     * @param {String} sectionId - ...
+     * @private
+     */
     onToggleCatalogSectionClick (e, categoryId, sectionId) {
         logger.trace(e);
 
@@ -1788,10 +1843,10 @@ class Catalog extends Control {
                 categories.push(category);
             }
         });
+        var category = categories.find(cat => cat.id == categoryId); // non strict !
 
         var opened = (e.target.ariaExpanded === "true");
         var container = document.getElementById(sectionId);
-        var category = categories.find(cat => cat.id == categoryId); // non strict !
         // par defaut, sans optimisation, le contenu est déjà dans le DOM...
         if (container) {
             // on charge le contenu à la demande
@@ -1843,6 +1898,70 @@ class Catalog extends Control {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {String} categoryId - ...
+     * @private
+     */
+    onToggleCatalogRadioChange (e, categoryId) {
+        logger.trace(e, categoryId);
+
+        var categories = []; // remise à plat des catégories / sous-categories
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categories.push(element);
+                }
+            } else {
+                categories.push(category);
+            }
+        });
+        var category = categories.find(cat => cat.id == categoryId); // non strict !
+
+        var prevcontainer = document.getElementById(`checkboxes-${this.categoryId}`);
+        if (prevcontainer && !category.section) {
+            // on supprime le contenu du DOM de l'ancienne catégorie
+            if (this.options.optimisation === "on-demand") {
+                prevcontainer.innerHTML = "";
+            }
+        }
+
+        // sauvegarde de la categorie courrante
+        this.categoryId = categoryId;
+
+        // fonction de clonage d'un DocumentFragment
+        const cloneFragment = (fragment) => {
+            const clone = document.createDocumentFragment();
+            fragment.childNodes.forEach(node => {
+                clone.appendChild(node.cloneNode(true));
+            });
+            return clone;
+        };
+
+        var container = document.getElementById(`checkboxes-${categoryId}`);
+
+        // par defaut, sans optimisation, le contenu est déjà dans le DOM...
+        if (container && container.children.length === 0) {
+            // on charge le contenu à la demande
+            if (this.options.optimisation === "on-demand") {
+                if (e.target.checked) {
+                    // on ajoute le fragment dans le DOM
+                    var fragment = this.dataOnDemand[category.id];
+                    if (fragment) {
+                        container.appendChild(cloneFragment(fragment));
+                        this._updateListenersLayersDOM(container, category.id);
+                        this.checkLayersOnMap();
+                    }
+                }
+            }
+            // TODO 
+            // on clusterise le contenu
+            if (category.cluster && this.options.optimisation === "clusterize") {}
         }
     }
 
