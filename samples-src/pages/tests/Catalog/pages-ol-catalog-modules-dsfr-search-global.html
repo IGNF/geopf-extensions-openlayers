@@ -57,16 +57,48 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        layerLabel : "name",
-                        layerFilter : [
+                        optimisation: "on-demand",
+                        search : { 
+                            display : true,
+                            label : "Recherche globale",
+                        },
+                        categories : [
                             {
-                                field : "service",
-                                value : "WMTS"
+                                title : "Données",
+                                id : "data"
                             },
                             {
-                                
+                                title : "WMTS",
+                                default : false,
+                                filter : {
+                                    field : "service",
+                                    value : "WMTS"
+                                }
+                            },
+                            {
+                                title : "WMS",
+                                filter : {
+                                    field : "service",
+                                    value : "WMS"
+                                }
+                            },
+                            {
+                                title : "TMS",
+                                default : true,
+                                filter : {
+                                    field : "service",
+                                    value : "TMS"
+                                }
+                            },
+                            {
+                                title : "WFS",
+                                default : false,
+                                filter : {
+                                    field : "service",
+                                    value : "WFS"
+                                }
                             }
-                        ]
+                        ],
                     });
                     map.addControl(catalog);
                 };

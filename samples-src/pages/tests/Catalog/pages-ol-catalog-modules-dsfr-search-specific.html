@@ -23,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de catalogue avec options sur les categories sans sections (sous categories)</h2>
+            <h2>Ajout du gestionnaire de catalogue avec option sur le filtrage des couches</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -57,39 +57,47 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
+                        search : { 
+                            display : false
+                        },
                         optimisation: "on-demand",
                         categories : [
                             {
                                 title : "Données",
-                                id : "data",
-                                items : [
-                                    {
-                                        title : "WMTS",
-                                        filter : {
-                                            field : "service",
-                                            value : "WMTS"
-                                        }
-                                    },
-                                    {
-                                        title : "WMS",
-                                        filter : {
-                                            field : "service",
-                                            value : "WMS"
-                                        }
-                                    },
-                                    {
-                                        title : "TMS",
-                                        default : true,
-                                        filter : {
-                                            field : "service",
-                                            value : "TMS"
-                                        }
-                                    },
-                                    {
-                                        title : "Tout",
-                                        filter : null
-                                    }
-                                ]
+                                id : "data"
+                            },
+                            {
+                                title : "WMTS",
+                                default : false,
+                                search : true,
+                                filter : {
+                                    field : "service",
+                                    value : "WMTS"
+                                }
+                            },
+                            {
+                                title : "WMS",
+                                filter : {
+                                    field : "service",
+                                    value : "WMS"
+                                }
+                            },
+                            {
+                                title : "TMS",
+                                default : true,
+                                filter : {
+                                    field : "service",
+                                    value : "TMS"
+                                }
+                            },
+                            {
+                                title : "WFS",
+                                default : false,
+                                search : true,
+                                filter : {
+                                    field : "service",
+                                    value : "WFS"
+                                }
                             }
                         ],
                     });

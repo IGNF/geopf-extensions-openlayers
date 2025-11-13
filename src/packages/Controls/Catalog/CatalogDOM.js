@@ -542,10 +542,6 @@ var CatalogDOM = {
         var radios = shadow.querySelectorAll("[role=\"radio-inline-section\"]");
         if (radios) {
             radios.forEach((radio) => {
-                var checked = radio.getAttribute("checked");
-                if (checked !== null) {
-                    radio.click();
-                }
                 radio.addEventListener("change", (e) => {
                     for (let j = 0; j < panelSections.length; j++) {
                         const section = panelSections[j];
@@ -566,10 +562,6 @@ var CatalogDOM = {
         var buttons = shadow.querySelectorAll("[role=\"tabbutton\"]");
         if (buttons) {
             buttons.forEach((btn) => {
-                var selected = btn.getAttribute("aria-selected");
-                if (selected === "true") {
-                    btn.click();
-                }
                 btn.addEventListener("click", (e) => {
                     // gestion de l'affichage
 
@@ -1133,6 +1125,12 @@ var CatalogDOM = {
                 continue;
             }
             if (visible) {
+                var idCount = `section-count-${categoryId}-${section.getAttribute("data-id")}`;
+                var countDom = document.getElementById(idCount);
+                var count = parseInt(countDom.textContent, 10);
+                if (count === 0) {
+                    continue;
+                }
                 section.classList.remove("gpf-hidden");
                 section.classList.remove("GPelementHidden");
             } else {

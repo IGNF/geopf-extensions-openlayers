@@ -30,6 +30,7 @@ import Topics from "./topics.json";
 import { marked as Marked } from "marked";
 
 import Clusterize from "clusterize.js";
+import { textSpanIntersectsWithPosition } from "typescript";
 const Test = Clusterize.default;
 
 var logger = Logger.getLogger("widget");
@@ -57,7 +58,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} [id] - Identifiant unique du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
- * @property {string} [optimisation="none"] - Type d'optimisation pour l'affichage des listes de couches : "none", "clusterize" ou "on-demand".
+ * @property {string} [optimisation="none"] - Type d'optimisation pour l'affichage des listes de couches : "none", "clusterize" (experimental) ou "on-demand".
  */
 
 /**
@@ -65,7 +66,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} default - Indique si c'est la catégorie par défaut.
- * @property {boolean} [cluster=false] - Clusterisation de la liste des couches.
+ * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
  * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
@@ -86,7 +87,7 @@ var logger = Logger.getLogger("widget");
  * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
- * @property {boolean} [cluster=false] - Clusterisation de la liste des couches.
+ * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
  * @property {string} filter.field - Champ utilisé pour le filtre.
@@ -693,6 +694,18 @@ class Catalog extends Control {
          */
         this.clusterizeSections = {};
 
+        /**
+         * specify data on demand instances for each category/subcategory/section
+         * @type {Object}
+         * @example
+         * {
+         *    base : fragmentDocument, // category id + fragmentDocument
+         *    457121205 : fragmentDocument, // subcategory id + fragmentDocument
+         *    548487533 : {
+         *      "section-accordion-548487533-72432" : fragmentDocument, // section id + fragmentDocument
+         *      "section-accordion-548487533-78155" : fragmentDocument  // section id + fragmentDocument
+         * }
+         */
         this.dataOnDemand = {};
 
         /**
@@ -1222,6 +1235,19 @@ class Catalog extends Control {
                                 }, {});
                             } else {
                                 this.dataOnDemand[categories[i].id] = data.blocks[0].fragment;
+                                if (categories[i].default) {
+                                    // fonction de clonage d'un DocumentFragment
+                                    const cloneFragment = (fragment) => {
+                                        const clone = document.createDocumentFragment();
+                                        fragment.childNodes.forEach(node => {
+                                            clone.appendChild(node.cloneNode(true));
+                                        });
+                                        return clone;
+                                    };
+                                    // chargement à la demande immédiat
+                                    const fragmentDocument = cloneFragment(this.dataOnDemand[categories[i].id]);
+                                    content.querySelector(`#checkboxes-${categories[i].id}`).appendChild(fragmentDocument);
+                                }
                             }
                             this._updateListenersLayersDOM(content, categories[i].id);
                         } else {
@@ -1512,7 +1538,7 @@ class Catalog extends Control {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
                 layer.hidden = false;
-                this.updateVisibilityFilteredLayersDOM(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden);
             }
         }
     }
@@ -1542,38 +1568,64 @@ class Catalog extends Control {
                     logger.info(`Filtering layer ${layer.name} with words : ${words}`);
                 }
                 // on met à jour pour chaque couche la visibilité
-                this.updateVisibilityFilteredLayersDOM(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden);
             }
         }
         // on rend invisible les sections qui ne possède plus de couches visibles
-        this.updateVisibilityFilteredSectionsDOM();
+        this.updateVisibilityFilteredSections();
     }
 
     /**
      * Update DOM layer visibility
      *
-     * @param {*} id - ...
+     * @param {*} name - ...
      * @param {*} service  - ...
      * @param {*} hidden  - ...
      * @private
      */
-    updateVisibilityFilteredLayersDOM (id, service, hidden) {
-        var categories = []; // remise à plat des catégories / sous-categories pour obtenir leur id
+    updateVisibilityFilteredLayers (name, service, hidden) {
+        const escapeSelector = (str) => {
+            return str.replace(/\./g, "\\.");
+        };
+
+        var categories = []; // remise à plat des catégories / sous-categories
         this.categories.forEach((category) => {
             if (category.items) {
                 for (let i = 0; i < category.items.length; i++) {
                     const element = category.items[i];
-                    categories.push(element.id);
+                    categories.push(element);
                 }
             } else {
-                categories.push(category.id);
+                categories.push(category);
             }
         });
+
+        // FIXME
+        // performance de la recherche du container : querySelector !
+        const findContainerLayer = (category, name, service) => {
+            var container = document.getElementById(`fieldset-${category.id}_${name}-${service}`);
+            if (this.options.optimisation === "on-demand") {
+                // en mode on-demand, on doit chercher dans les fragments
+                if (category.section) {
+                    for (const sectionId in this.dataOnDemand[category.id]) {
+                        const fragment = this.dataOnDemand[category.id][sectionId];
+                        if (fragment) {
+                            var id = escapeSelector(`#fieldset-${category.id}_${name}-${service}`);
+                            container = fragment.querySelector(id);
+                            if (container) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return container;
+        };
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
             // on modifie la visibilité du container pour chaque couche
-            var container = document.getElementById(`fieldset-${category}_${id}-${service}`);
+            var container = findContainerLayer(category, name, service);
             if (container) {
                 if (hidden) {
                     container.classList.add("gpf-hidden");
@@ -1581,7 +1633,7 @@ class Catalog extends Control {
                 } else {
                     container.classList.remove("gpf-hidden");
                     container.classList.remove("GPelementHidden");
-                    logger.info(`Layer ${id}:${service} visibility updated to hidden=${hidden} in category ${category} (${container.id}).`);
+                    logger.info(`Layer ${name}:${service} visibility updated to hidden=${hidden} in category ${category.id} (${container.id}).`);
                 }
             }
         }
@@ -1592,7 +1644,7 @@ class Catalog extends Control {
      *
      * @private
      */
-    updateVisibilityFilteredSectionsDOM () {
+    updateVisibilityFilteredSections () {
         // il faut savoir si les couches d'une section sont toutes à hidden
         // si oui, on cache la section
         // si non, on met à jour le compteur des couches visibles
@@ -1606,6 +1658,24 @@ class Catalog extends Control {
         // var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
         // avec data est la liste des couches (DOM)
 
+        const countLayersInSection = (categoryId, sectionId) => {
+            var count = 0;
+            // en mode on-demand, on doit chercher dans le fragment
+            if (this.options.optimisation === "on-demand") {
+                var fragment = this.dataOnDemand[categoryId][sectionId];
+                if (fragment) {
+                    count = fragment.querySelectorAll(".fr-fieldset__element:not(.gpf-hidden):not(.GPelementHidden)").length;
+                }
+            } else {
+                var container = document.getElementById(sectionId);
+                if (container) {
+                    var data = container.innerHTML;
+                    count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                }
+            }
+            return count;
+        };
+
         for (let i = 0; i < this.categories.length; i++) {
             const category = this.categories[i];
             if (category.items) {
@@ -1615,15 +1685,18 @@ class Catalog extends Control {
                     if (subcategory.section) {
                         for (let k = 0; k < subcategory.sections.length; k++) {
                             const section = subcategory.sections[k];
-                            var id = `section-${subcategory.id}-${this.generateID(section)}`;
-                            var container = document.getElementById(id);
+                            var container = document.getElementById(`section-${subcategory.id}-${this.generateID(section)}`);
                             if (container) {
-                                var data = container.innerHTML;
-                                var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                                var id = `section-accordion-${subcategory.id}-${this.generateID(section)}`;
+                                var count = countLayersInSection(subcategory.id, id);
                                 var countDom = document.getElementById(`section-count-${subcategory.id}-${this.generateID(section)}`);
                                 if (count === 0) {
                                     container.classList.add("gpf-hidden");
                                     container.classList.add("GPelementHidden");
+                                    // inutile ?
+                                    if (countDom) {
+                                        countDom.textContent = count;
+                                    }
                                 } else {
                                     if (countDom) {
                                         countDom.textContent = count;
@@ -1734,10 +1807,10 @@ class Catalog extends Control {
         // INFO
         // on affiche la barre de recherche spécifique
         // si l'option search=true est activée pour la categorie courante
-        // on recherche dans la liste des categories, la catégorie courante
-        var o = this.categories.find(c => c.id === category);
+        // on recherche les couches dans la catégorie courante uniquement !
         var searchSpecific = document.getElementById("catalog-container-search-specific");
         if (searchSpecific) {
+            var o = this.categories.find(c => c.id == categoryId); // non strict !
             if (o && o.search) {
                 searchSpecific.classList.remove("gpf-hidden");
                 searchSpecific.classList.add("fr-tabs__panel--selected");
@@ -1747,15 +1820,28 @@ class Catalog extends Control {
             }
         }
         // INFO
+        // dés que l'on change de categorie,
         // on remet à zéro l'outil de recherche specifique
-        // et on remet à zéro la liste des couches
-        // pour afficher toutes les couches de la catégorie
+        // et la liste des couches pour afficher 
+        // toutes les couches de la catégorie
         var inputSpecific = document.getElementById("catalog-input-search-specific");
         if (inputSpecific) {
             if (inputSpecific.value !== "") {
                 inputSpecific.value = "";
                 this.setFilteredLayersList("");
             }
+        }
+
+        // INFO
+        // sur la recherche globale, on applique le filtre de recherche
+        // sur le mode on-demand car les données sont chargées à la volée
+        var inputGlobal = document.getElementById("catalog-input-search-global");
+        if (inputGlobal) {
+            if (this.options.optimisation === "on-demand") {
+                if (inputGlobal.value !== "") {
+                    this.setFilteredLayersList(inputGlobal.value);
+                }
+            }            
         }
     }
 
@@ -1972,8 +2058,8 @@ class Catalog extends Control {
      */
     onSearchGlobalCatalogButtonClick (e) {
         // INFO
-        // la saisie du critère de recherche doit filtrer la liste des couches affichée
-        // dans l'onglet courant.
+        // la saisie du critère de recherche doit filtrer la liste des couches 
+        // dans tous les ongletst.
         // on masque les entrées non conforme
         // - en ajoutant la classe 'gpf-hidden' dans le DOM
         // - en sauvegardant l'état avec la property 'hidden:true'
@@ -2000,7 +2086,7 @@ class Catalog extends Control {
      */
     onSearchGlobalCatalogButtonResetClick (e) {
         this.resetFilteredLayersList();
-        this.updateVisibilityFilteredSectionsDOM();
+        this.updateVisibilityFilteredSections();
     }
 
     /**
@@ -2033,7 +2119,7 @@ class Catalog extends Control {
 
     onSearchSpecificCatalogButtonResetClick (e) {
         this.resetFilteredLayersList();
-        this.updateVisibilityFilteredSectionsDOM();
+        this.updateVisibilityFilteredSections();
     }
 
 };
