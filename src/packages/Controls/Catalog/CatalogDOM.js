@@ -872,9 +872,13 @@ var CatalogDOM = {
         }
 
         if (strElements !== "") {
+            var container = stringToHTML(strElements);
+            const shadow = container.attachShadow({ mode : "open" });
+            shadow.innerHTML = strElements.trim();
             blocks.push({
                 domid : `checkboxes-${category.id}`,
                 rows : lstElements,
+                fragment : shadow,
                 debug : {
                     type : "layers",
                     desc : "liste des couches pour une categorie",
@@ -919,9 +923,13 @@ var CatalogDOM = {
                     category.sections.push(title);
 
                     if (strSection !== "") {
+                        var container = stringToHTML(data);
+                        const shadow = container.attachShadow({ mode : "open" });
+                        shadow.innerHTML = data.trim();
                         blocks.push({
                             domid : `section-accordion-${category.id}-${id}`,
                             rows : lstElementsBySection,
+                            fragment : shadow,
                             debug : {
                                 type : "section",
                                 desc : "liste des couches pour une section",
