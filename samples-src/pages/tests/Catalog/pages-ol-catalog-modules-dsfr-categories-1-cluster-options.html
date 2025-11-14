@@ -64,6 +64,7 @@
                         titlePrimary : "Catalogue des cartes",
                         layerLabel : "title",
                         layerThumbnail : true,
+                        size : "xl",
                         search : {
                             display : false,
                             // criteria : ["name","title","description"]
@@ -86,6 +87,7 @@
                                         title : "Thème",
                                         default : true,
                                         section : true,
+                                        cluster : false,
                                         filter : {
                                             field : "thematic",
                                             value : "*"
@@ -95,7 +97,11 @@
                                     {
                                         title : "Producteur",
                                         section : true,
-                                        cluster : true, // pas de cluster pour des sections !
+                                        cluster : true,
+                                        clusterOptions : {
+                                            rows_in_block : 5,
+                                            blocks_in_cluster : 2,
+                                        },
                                         filter : {
                                             field : "producer",
                                             value : "*"

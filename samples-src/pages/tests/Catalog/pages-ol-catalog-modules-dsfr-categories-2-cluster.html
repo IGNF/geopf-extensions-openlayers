@@ -23,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de catalogue avec options sur les categories avec sections</h2>
+            <h2>Ajout du gestionnaire de catalogue avec options sur les categories sans sections (sous categories)</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -57,47 +57,44 @@
 
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
-                        titlePrimary : "",
-                        size : "md",
                         categories : [
                             {
-                                title : "Cartes de références",
-                                id : "base",
-                                filter : {
-                                    field : "base",
-                                    value : "true"
-                                }
-                            },
-                            {
-                                title : "Toutes les cartes",
+                                title : "Données",
                                 id : "data",
                                 items : [
                                     {
-                                        title : "Thème",
+                                        title : "WMTS",
                                         default : true,
-                                        section : true,
+                                        cluster : true,
                                         filter : {
-                                            field : "thematic",
-                                            value : "*"
-                                            // value : ["Hydrologie", "Agriculture", "Transports"] // all : "*"
+                                            field : "service",
+                                            value : "WMTS"
                                         }
                                     },
                                     {
-                                        title : "Producteur",
-                                        section : true,
+                                        title : "WMS",
+                                        cluster : true,
                                         filter : {
-                                            field : "producer",
-                                            value : "*"
+                                            field : "service",
+                                            value : "WMS"
+                                        }
+                                    },
+                                    {
+                                        title : "TMS",
+                                        cluster : true,
+                                        filter : {
+                                            field : "service",
+                                            value : "TMS"
                                         }
                                     },
                                     {
                                         title : "Tout",
-                                        section : false,
+                                        cluster : true,
                                         filter : null
                                     }
                                 ]
                             }
-                        ]
+                        ],
                     });
                     map.addControl(catalog);
                 };
