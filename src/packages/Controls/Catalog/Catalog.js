@@ -30,7 +30,6 @@ import Topics from "./topics.json";
 import { marked as Marked } from "marked";
 
 import Clusterize from "clusterize.js";
-import { textSpanIntersectsWithPosition } from "typescript";
 const Test = Clusterize.default;
 
 var logger = Logger.getLogger("widget");
