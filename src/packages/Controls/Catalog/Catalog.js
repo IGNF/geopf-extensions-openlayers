@@ -1750,16 +1750,6 @@ class Catalog extends Control {
     onSelectCatalogTabClick (e, categoryId) {
         logger.trace(e);
         
-        var prevcontainer = document.getElementById(`checkboxes-${this.categoryId}`);
-        if (prevcontainer) {
-            // on supprime le contenu du DOM de l'ancienne catégorie
-            if (this.options.optimisation === "on-demand") {
-                prevcontainer.innerHTML = "";
-            }
-        }
-        // sauvegarde de la categorie courrante
-        this.categoryId = categoryId;
-
         var categories = []; // remise à plat des catégories / sous-categories
         this.categories.forEach((category) => {
             if (category.items) {
@@ -1771,6 +1761,18 @@ class Catalog extends Control {
                 categories.push(category);
             }
         });
+
+        var prevcontainer = document.getElementById(`checkboxes-${this.categoryId}`);
+        if (prevcontainer) {
+            // on supprime le contenu du DOM de l'ancienne catégorie
+            var oldCategory = categories.find(cat => cat.id == this.categoryId); // non strict !
+            if (this.options.optimisation === "on-demand" && !oldCategory.section) {
+                prevcontainer.innerHTML = "";
+            }
+        }
+        // sauvegarde de la categorie courrante
+        this.categoryId = categoryId;
+
         var category = categories.find(cat => cat.id == categoryId); // non strict !
 
         // fonction de clonage d'un DocumentFragment
@@ -2012,6 +2014,7 @@ class Catalog extends Control {
         var prevcontainer = document.getElementById(`checkboxes-${this.categoryId}`);
         if (prevcontainer && !category.section) {
             // on supprime le contenu du DOM de l'ancienne catégorie
+            // sauf si la categorie contient des sections
             if (this.options.optimisation === "on-demand") {
                 prevcontainer.innerHTML = "";
             }
