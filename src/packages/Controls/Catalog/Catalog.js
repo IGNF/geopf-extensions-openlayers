@@ -2061,7 +2061,7 @@ class Catalog extends Control {
     onSearchGlobalCatalogButtonClick (e) {
         // INFO
         // la saisie du critère de recherche doit filtrer la liste des couches 
-        // dans tous les ongletst.
+        // dans tous les onglets.
         // on masque les entrées non conforme
         // - en ajoutant la classe 'gpf-hidden' dans le DOM
         // - en sauvegardant l'état avec la property 'hidden:true'
