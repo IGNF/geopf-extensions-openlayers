@@ -89,6 +89,10 @@ export type CatalogOptions = {
      * - Ajoute ou retire l’espace autour du panneau.
      */
     gutter?: boolean | undefined;
+    /**
+     * - Type d'optimisation pour l'affichage des listes de couches : "none", "clusterize" (experimental) ou "on-demand".
+     */
+    optimisation?: string | undefined;
 };
 /**
  * - Catégories principales du catalogue sous forme d'onglets
@@ -107,7 +111,7 @@ export type Categories = {
      */
     default: boolean;
     /**
-     * - Clusterisation de la liste des couches.
+     * - **Experimental** Clusterisation de la liste des couches.
      */
     cluster?: boolean | undefined;
     /**
@@ -174,7 +178,7 @@ export type SubCategories = {
      */
     default: boolean;
     /**
-     * - Clusterisation de la liste des couches.
+     * - **Experimental** Clusterisation de la liste des couches.
      */
     cluster?: boolean | undefined;
     /**
@@ -229,13 +233,14 @@ export type ConfigLayer = any;
  * @property {string} [id] - Identifiant unique du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ * @property {string} [optimisation="none"] - Type d'optimisation pour l'affichage des listes de couches : "none", "clusterize" (experimental) ou "on-demand".
  */
 /**
  * @typedef {Object} Categories - Catégories principales du catalogue sous forme d'onglets
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} default - Indique si c'est la catégorie par défaut.
- * @property {boolean} [cluster=false] - Clusterisation de la liste des couches.
+ * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
  * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
@@ -255,7 +260,7 @@ export type ConfigLayer = any;
  * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
- * @property {boolean} [cluster=false] - Clusterisation de la liste des couches.
+ * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
  * @property {string} filter.field - Champ utilisé pour le filtre.
@@ -490,6 +495,7 @@ declare class Catalog extends Control {
         titleSecondary: string;
         layerLabel: string;
         layerThumbnail: boolean;
+        optimisation: string;
         size: string;
         search: {
             display: boolean;
@@ -545,7 +551,42 @@ declare class Catalog extends Control {
      * @type {Array<Object>}
      */
     layersList: any[] | undefined;
-    clusterize: {} | undefined;
+    /**
+     * specify clusterize instances for each category/subcategory/section
+     * @type {Object}
+     * @example
+     * {
+     *    "data" : Clusterize, // category id + instance
+     *    "454587412" : Clusterize, // subcategory id + instance
+     *    "457121205" : Clusterize, // subcategory id + instance
+     * }
+     */
+    clusterizeRef: any;
+    /**
+     * specify clusterize sections for each category/subcategory
+     * @type {Object}
+     * @example
+     * {
+     *    548487533 : { // subcategory id
+     *       "section-accordion-548487533-72432" : [rows], // section id + rows
+     *       "section-accordion-548487533-78155" : [rows]  // section id + rows
+     *    }
+     * }
+     */
+    clusterizeSections: any;
+    /**
+     * specify data on demand instances for each category/subcategory/section
+     * @type {Object}
+     * @example
+     * {
+     *    base : fragmentDocument, // category id + fragmentDocument
+     *    457121205 : fragmentDocument, // subcategory id + fragmentDocument
+     *    548487533 : {
+     *      "section-accordion-548487533-72432" : fragmentDocument, // section id + fragmentDocument
+     *      "section-accordion-548487533-78155" : fragmentDocument  // section id + fragmentDocument
+     * }
+     */
+    dataOnDemand: any;
     /**
      * specify all categories
      * @type {Array<Categories}
@@ -768,18 +809,18 @@ declare class Catalog extends Control {
     /**
      * Update DOM layer visibility
      *
-     * @param {*} id - ...
+     * @param {*} name - ...
      * @param {*} service  - ...
      * @param {*} hidden  - ...
      * @private
      */
-    private updateVisibilityFilteredLayersDOM;
+    private updateVisibilityFilteredLayers;
     /**
      * Update DOM sections visibility if no layers are visible
      *
      * @private
      */
-    private updateVisibilityFilteredSectionsDOM;
+    private updateVisibilityFilteredSections;
     /**
      * ...
      * @param {Event} e - ...
@@ -795,6 +836,7 @@ declare class Catalog extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @param {String} categoryId - ...
      * @private
      */
     private onSelectCatalogTabClick;
@@ -810,6 +852,21 @@ declare class Catalog extends Control {
      * @private
      */
     private onToggleCatalogMoreLearnClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {String} categoryId - ...
+     * @param {String} sectionId - ...
+     * @private
+     */
+    private onToggleCatalogSectionClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {String} categoryId - ...
+     * @private
+     */
+    private onToggleCatalogRadioChange;
     /**
      * ...
      * @param {Event} e - ...

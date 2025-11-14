@@ -350,7 +350,16 @@ var CatalogDOM = {
             // et l'attribut 'aria-controls' permet de retrouver le panneau du contenu
             return `
             <li class="GPtabList" role="presentation">
-                <button id="tabbutton-${i}_${id}" class="${className}" tabindex="${tabindex}" role="tabbutton" aria-selected="${value}" aria-controls="tabpanel-${i}-panel_${id}">${title}</button>
+                <button 
+                    id="tabbutton-${i}_${id}" 
+                    class="${className}" 
+                    data-category="${id}"
+                    tabindex="${tabindex}" 
+                    role="tabbutton" 
+                    aria-selected="${value}" 
+                    aria-controls="tabpanel-${i}-panel_${id}">
+                    ${title}
+                </button>
             </li>
             `;
         };
@@ -399,6 +408,7 @@ var CatalogDOM = {
                         type="radio" 
                         ${checked} 
                         id="radio-inline_${subcategory.id}" 
+                        data-category="${subcategory.id}"
                         name="radio-inline-${id}" 
                         role="radio-inline-section"
                         aria-controls="tabcontent-${subcategory.id}">
@@ -532,10 +542,6 @@ var CatalogDOM = {
         var radios = shadow.querySelectorAll("[role=\"radio-inline-section\"]");
         if (radios) {
             radios.forEach((radio) => {
-                var checked = radio.getAttribute("checked");
-                if (checked !== null) {
-                    radio.click();
-                }
                 radio.addEventListener("change", (e) => {
                     for (let j = 0; j < panelSections.length; j++) {
                         const section = panelSections[j];
@@ -548,6 +554,7 @@ var CatalogDOM = {
                     var panel = document.getElementById(e.target.getAttribute("aria-controls"));
                     panel.classList.remove("gpf-hidden");
                     panel.classList.remove("GPelementHidden");
+                    this.onToggleCatalogRadioChange(e, e.target.getAttribute("data-category"));
                 });
             });
         }
@@ -593,7 +600,7 @@ var CatalogDOM = {
                     panel.classList.remove("gpf-hidden");
                     panel.classList.remove("GPelementHidden");
                     // appel
-                    this.onSelectCatalogTabClick(e);
+                    this.onSelectCatalogTabClick(e, e.target.getAttribute("data-category") );
                 });
             });
         }
@@ -630,18 +637,18 @@ var CatalogDOM = {
      *
      * @param {Categories} category - category to create tab content
      * @param {*} layersFiltered - filtered layers for the category
+     * @param {Boolean} nodata - do not write the data to the DOM
      * @returns {HTMLElement} DOM element
      * @description
      * - create the content for a category tab
      * - each layer has a checkbox to select it
      * - each layer has a panel with information
      */
-    _createCatalogContentCategoryTabContent : async function (category, layersFiltered) {
+    _createCatalogContentCategoryTabContent : async function (category, layersFiltered, nodata) {
         var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
         const batchSize = 10; // nombre d'éléments à traiter par lot
         var blocks = [];
 
-        var lstElements = [];
         var strElements = "";
         var tmplElement = (i, name, title, service, description, informations, thumbnail, categoryId) => {
             // ajout de la vignette si elle existe
@@ -785,7 +792,6 @@ var CatalogDOM = {
             `;
         };
 
-        var lstSections = [];
         var strSections = "";
         var tmplSection = (id, categoryId, title, icon, count, data) => {
             // INFO
@@ -796,7 +802,7 @@ var CatalogDOM = {
             // - on n'utilise pas le composant DSFR "fr-accordion"
             // - ...
             var classNameIcon = (icon && icon.startsWith("fr-icon")) ? icon : "";
-            var idCollapseSection = `accordion-${categoryId}-${id}`;
+            var idCollapseSection = `section-accordion-${categoryId}-${id}`;
             return `
             <!-- section -->
             <section 
@@ -832,6 +838,7 @@ var CatalogDOM = {
 
         var sections = {};
         // regroupement par sections (ou pas) sur les couches
+        var lstElements = [];
         for (let i = 0; i < layers.length; i += batchSize) {
             for (let j = i; j < Math.min(i + batchSize, layers.length); j++) {
                 const layer = layers[j];
@@ -840,7 +847,7 @@ var CatalogDOM = {
                     thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
                     metadatas : layer.metadata_urls  // tableau
                 };
-                var element = tmplElement(j, layer.name, layer.label, layer.service, layer.description, infos, layer.thumbnail, category.id);
+                var strElement = tmplElement(j, layer.name, layer.label, layer.service, layer.description, infos, layer.thumbnail, category.id);
                 // INFO
                 // a t on des sections (regroupements) ?
                 // - oui, si elle correspond au filtre, on ajoute la couche dans la section
@@ -857,14 +864,14 @@ var CatalogDOM = {
                         if (!sections.hasOwnProperty(value)) {
                             sections[value] = "";
                         }
-                        sections[value] += element;
+                        sections[value] += strElement;
                     } else {
                         // au cas où...
-                        sections["Autres"] += element;
+                        sections["Autres"] += strElement;
                     }
                 } else {
-                    strElements += element;
-                    lstElements.push(element);
+                    strElements += strElement;
+                    lstElements.push(strElement);
                 }
             }
             // Pause pour laisser respirer l'UI
@@ -872,26 +879,22 @@ var CatalogDOM = {
         }
 
         if (strElements !== "") {
-            var strContainer = `
-            <!-- liste de couches -->
-            <div class="fr-accordions-group" 
-                id="layers-${category.id}"
-                data-category="${category.id}"
-                data-sections="false"
-                aria-labelledby="checkboxes-legend checkboxes-messages"
-                style="contain: content;">
-                ${strElements}
-            </div>
-            `;
-            var container = stringToHTML(strContainer);
+            var container = stringToHTML(strElements);
+            const shadow = container.attachShadow({ mode : "open" });
+            shadow.innerHTML = strElements.trim();
             blocks.push({
-                id : category.id,
-                dom : container.firstChild,
-                type : "layers",
-                desc : "liste des couches pour une categorie",
+                domid : `checkboxes-${category.id}`,
                 rows : lstElements,
-                title : category.title
+                fragment : shadow,
+                debug : {
+                    type : "layers",
+                    desc : "liste des couches pour une categorie",
+                    title : category.title
+                }
             });
+            if (nodata) {
+                strElements = "";
+            }
         }
 
         if (isSection) {
@@ -901,11 +904,11 @@ var CatalogDOM = {
             for (const title in sections) {
                 if (Object.prototype.hasOwnProperty.call(sections, title)) {
                     const data = sections[title];
-                    var rows = [];
+                    var lstElementsBySection = [];
                     var array = [...data.matchAll(/"fr-fieldset__element"/g)];
                     for (let index = 0; index < array.length; index++) {
                         const el = array[index];
-                        rows.push(el.input);
+                        lstElementsBySection.push(el.input);
                     }
                     var count = array.length;
                     var id = this.generateID(title);
@@ -919,36 +922,29 @@ var CatalogDOM = {
                             icon = "fr-icon-subtract-line"; // icone par defaut !
                         }
                     }
-                    strElements = tmplSection(id, category.id, title, icon, count, data);
-                    strSections += strElements;
+                    var strSection = tmplSection(id, category.id, title, icon, count, (nodata) ? "" : data);
+                    strSections += strSection;
 
-                    // HACK 
+                    // DEBUG
                     // on enregistre les valeurs des sections dans l'objet category
                     category.sections.push(title);
-                    if (strElements !== "") {
-                        var strSectionsContainer = `
-                        <!-- liste de sections -->
-                        <div class="fr-accordions-group" 
-                            id="sections-${category.id}-${id}"
-                            data-category="${category.id}"
-                            data-section="true"
-                            data-id="${id}"
-                            data-title="${title}"
-                            aria-labelledby="checkboxes-legend checkboxes-messages"
-                            style="contain: content;">
-                            ${strElements}
-                        </div>
-                        `;
-                        var container = stringToHTML(strSectionsContainer);
+
+                    if (strSection !== "") {
+                        var container = stringToHTML(data);
+                        const shadow = container.attachShadow({ mode : "open" });
+                        shadow.innerHTML = data.trim();
                         blocks.push({
-                            id : `${category.id}-${id}`,
-                            dom : container.firstChild,
-                            type : "sections",
-                            rows : rows,
-                            desc : "liste des couches pour une section",
-                            title : title
+                            domid : `section-accordion-${category.id}-${id}`,
+                            rows : lstElementsBySection,
+                            fragment : shadow,
+                            debug : {
+                                type : "section",
+                                desc : "liste des couches pour une section",
+                                title : title,
+                                id : id,
+                                category : category.id
+                            }
                         });
-                        strElements = ""; // reset
                     }
                 }
             }
@@ -1010,7 +1006,7 @@ var CatalogDOM = {
                     if (!collapse) {
                         return;
                     }
-                    var sectionId = collapseId.replace("accordion", "section");
+                    var sectionId = collapseId.replace("section-accordion", "section");
                     var section = document.getElementById(sectionId);
                     var categoryId = (section) ? section.dataset.category : null;
                     if (e.target.ariaExpanded === "true") {
@@ -1038,6 +1034,7 @@ var CatalogDOM = {
                             this.updateVisibilitySectionsByCategory(sectionId, categoryId, true);
                         }
                     }
+                    this.onToggleCatalogSectionClick(e, categoryId, collapseId);
                 }, false);
             });
         }
@@ -1128,6 +1125,12 @@ var CatalogDOM = {
                 continue;
             }
             if (visible) {
+                var idCount = `section-count-${categoryId}-${section.getAttribute("data-id")}`;
+                var countDom = document.getElementById(idCount);
+                var count = parseInt(countDom.textContent, 10);
+                if (count === 0) {
+                    continue;
+                }
                 section.classList.remove("gpf-hidden");
                 section.classList.remove("GPelementHidden");
             } else {
