@@ -39,6 +39,7 @@ __DATE__
   - LayerSwitcher : correctif sur les vignettes par défaut
   - OverviewMap : correctif sur le zoom min(1) et max(8) par défaut
   - DSFR Tooltips : affichage au-dessus des modales de contrôles (#458)
+  - Catalog : correctifs et performance avec l'option 'optimisation:none|on-demand|clusterize'
 
 * 🔒 [Security]
 
