@@ -76,7 +76,10 @@ var CatalogDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowCatalogPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowCatalogPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-catalog fr-btn fr-btn--tertiary";
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowCatalogPicto");
+        button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-catalog");
+        // button.classList.add("icon--ri", "icon--ri--map-2-line");
+        button.classList.add("fr-btn", "fr-btn--tertiary");
         button.setAttribute("aria-label", "Catalogue de données");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

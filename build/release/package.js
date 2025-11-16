@@ -1,32 +1,32 @@
 /* eslint-disable no-console */
 const fse = require("fs-extra");
 const path = require("path");
-var yargs = require('yargs');
+var yargs = require("yargs");
 const child_process = require("child_process");
 const fg = require("fast-glob");
 const base64Img = require("base64-img");
 
 async function main () {
     const argv = yargs
-    .usage("Usage: $0 [options]")
-    .version(false)
-    .option("version", {
-        alias: "v",
-        description: "",
-        type: "string",
-        nargs: 1,
-        demandOption: false,
-    })
-    .option("date", {
-        alias: "d",
-        description: "",
-        type: "string",
-        nargs: 1
-    })
-    .help()
-    .alias("help", "h")
-    .epilog("Pour plus d'informations, CONSULTER LE FICHIER 'README.md' !")
-    .argv;
+        .usage("Usage: $0 [options]")
+        .version(false)
+        .option("version", {
+            alias : "v",
+            description : "",
+            type : "string",
+            nargs : 1,
+            demandOption : false,
+        })
+        .option("date", {
+            alias : "d",
+            description : "",
+            type : "string",
+            nargs : 1
+        })
+        .help()
+        .alias("help", "h")
+        .epilog("Pour plus d'informations, CONSULTER LE FICHIER 'README.md' !")
+        .argv;
 
     // console.log("options", argv);
     var version = argv.version;

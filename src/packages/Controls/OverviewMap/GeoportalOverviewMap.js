@@ -310,7 +310,10 @@ class GeoportalOverviewMap extends OverviewMap {
         // button
         var button = elements[1];
         button.id = "GPshowOverviewMap-" +  this._uid;
-        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowOverviewMap", "gpf-btn-icon", "gpf-btn-icon-overviewmap", "fr-btn", "fr-btn--tertiary", "gpf-btn--tertiary");
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowOverviewMapPicto");
+        button.classList.add("gpf-btn-icon", "gpf-btn--tertiary", "gpf-btn-icon-overviewmap");
+        // button.classList.add("icon--ri", "icon--ri--navigation-line");
+        button.classList.add("fr-btn", "fr-btn--tertiary");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", !this.options.collapsed);
         button.setAttribute("type", "button");
