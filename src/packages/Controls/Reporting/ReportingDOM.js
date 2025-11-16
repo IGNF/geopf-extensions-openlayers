@@ -68,6 +68,7 @@ var ReportingDOM = {
         button.appendChild(span);
         button.id = this._addUID("GPshowReportingPicto");
         button.className = "gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-reporting fr-btn fr-btn--tertiary ";
+        // button.classList.add("icon--ri", "icon--ri--feedback-line");
         button.title = `${title}`;
         button.setAttribute("aria-label", "Signalement");
         button.setAttribute("tabindex", "0");
