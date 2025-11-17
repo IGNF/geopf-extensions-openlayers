@@ -33,7 +33,7 @@
         { 
             "id" : "farming",
             "name" : "Agriculture",
-            "icon" : "fr-icon-seeding-fill"
+            "icon" : "fr-icon-seedling-fill"
         },
         { 
             "id" : "geoscientificInformation",
