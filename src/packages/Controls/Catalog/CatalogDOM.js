@@ -922,7 +922,7 @@ var CatalogDOM = {
                         if (found) {
                             icon = found.icon;
                         } else {
-                            icon = "fr-icon-subtract-line"; // icone par defaut !
+                            icon = "fr-icon-folder-2-fill"; // icone par defaut !
                         }
                     }
                     var strSection = tmplSection(id, category.id, title, icon, count, (nodata) ? "" : data);
