@@ -3,7 +3,7 @@
         {
             "id" : "biota",
             "name" : "Biologie, faune et flore",
-            "icon" : "fr-icon-leaf-file"
+            "icon" : "fr-icon-plant-fill"
         },
         { 
             "id" : "boundaries",
@@ -18,22 +18,22 @@
         { 
             "id" : "economy",
             "name" : "Économie",
-            "icon" : "fr-icon-line-chart-fill"
+            "icon" : "fr-icon-bar-chart-box-fill"
         },
         { 
             "id" : "elevation",
             "name" : "Altimétrie",
-            "icon" : "fr-icon-map-pin-2-fill"
+            "icon" : "fr-icon-line-chart-fill"
         },
         { 
             "id" : "environment",
             "name" : "Environnement",
-            "icon" : "fr-icon-seedling-fill"
+            "icon" : "fr-icon-leaf-fill"
         },
         { 
             "id" : "farming",
             "name" : "Agriculture",
-            "icon" : "fr-icon-plant-fill"
+            "icon" : "fr-icon-seeding-fill"
         },
         { 
             "id" : "geoscientificInformation",
@@ -43,12 +43,12 @@
         { 
             "id" : "health",
             "name" : "Santé",
-            "icon" : "fr-icon-capsule-fill"
+            "icon" : "fr-icon-first-aid-kit-fill"
         },
         { 
             "id" : "imageryBaseMapsEarthCover",
             "name" : "Carte de référence de la couverture terrestre",
-            "icon" : "fr-icon-france-fill"
+            "icon" : "fr-icon-global-fill"
         },
         {
             "id" : "intelligenceMilitary", 
@@ -58,7 +58,7 @@
         { 
             "id" : "inlandWaters",
             "name" : "Eaux intérieures, Hydrographie",
-            "icon" : "fr-icon-flood-fill"
+            "icon" : "fr-icon-drop-fill"
         },
         { 
             "id" : "location",
@@ -73,17 +73,17 @@
         { 
             "id" : "planningCadastre",
             "name" : "Cadastre, aménagement",
-            "icon" : "fr-icon-community-fill"
+            "icon" : "fr-icon-layout-grid-fill"
         },
         { 
             "id" : "society",
             "name" : "Société",
-            "icon" : "fr-icon-group-fill"
+            "icon" : "fr-icon-capsule-fill"
         },
         { 
             "id" : "structure",
             "name" : "Constructions et ouvrages",
-            "icon" : "fr-icon-compasses-2-fill"
+            "icon" : "fr-icon-community-fill"
         },
         { 
             "id" : "transportation",
@@ -93,7 +93,7 @@
         {
             "id" : "utilitiesCommunication",
             "name" : "Télécommunication, approvisionnement et énergie",
-            "icon" : "fr-icon-radar-fill"
+            "icon" : "fr-icon-lightbulb-fill"
         }
     ],
     "service" : [
