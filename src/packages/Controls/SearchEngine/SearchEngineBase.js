@@ -323,6 +323,7 @@ class SearchEngineBase extends Control {
 
         // Autocomplete container
         const acContainer = document.createElement("div");
+        acContainer.id = Helper.getUid("GPautoCompleteContainer-");
         acContainer.className = "GPautoCompleteContainer GPelementHidden gpf-hidden";
         element.appendChild(acContainer);
         // element.appendChild(acContainer);

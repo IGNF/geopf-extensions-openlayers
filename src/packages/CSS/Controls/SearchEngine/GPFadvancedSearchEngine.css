@@ -79,3 +79,19 @@ form[id^=GPAdvancedForm-] ul.search-result .fr-message--error {
 form[id^=GPAdvancedForm-] select option.option {
     background-color: var(--background-action-low-blue-france);
 }
+
+
+/* Search parcels */
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .GPautoCompleteList {
+    display: none;
+    z-index: 1;
+    background-color: #fff;
+    padding: 0;
+}
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .GPautoCompleteList.gpf-visible {
+    display: block;
+}
+
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .GPautoCompleteList li {
+    height: auto;
+}

@@ -78,6 +78,7 @@ module.exports = (env, argv) => {
             case "SearchEngineGeocodeIGN":
             case "SearchEngineAdvanced":
             case "LocationAdvancedSearch":
+            case "ParcelAdvancedSearch":
             case "AbstractAdvancedSearch":
             case "InseeAdvancedSearch":
             case "CoordinateAdancedSearch":

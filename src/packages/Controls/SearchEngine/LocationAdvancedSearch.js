@@ -441,16 +441,13 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         }
         */
         if (this.filter.postcode) {
-            console.log("testcode");
-            const postalRegex = new RegExp(this.element.querySelector("input[name='postalCode']").pattern);
-            if (!postalRegex.test(this.filter.postcode)) {
+            if (!this.element.querySelector("input[name='postalCode']").checkValidity()) {
                 this._showMessage("postalCode", "Le code postal doit être composé de 5 chiffres.");
                 return;
             }
         }
         if (this.filter.citycode) {
-            const inseeRegex = new RegExp(this.element.querySelector("input[name='cityCode']").pattern);
-            if (!inseeRegex.test(this.filter.citycode)) {
+            if (!this.element.querySelector("input[name='cityCode']").checkValidity()) {
                 this._showMessage("cityCode", "Le code INSEE doit être composé de 5 caractères (chiffres ou 2A, 2B).");
                 return;
             }

@@ -31,6 +31,7 @@ export { default as AbstractAdvancedSearch } from "./packages/Controls/SearchEng
 export { default as CoordinateAdvancedSearch } from "./packages/Controls/SearchEngine/CoordinateAdvancedSearch";
 export { default as InseeAdvancedSearch } from "./packages/Controls/SearchEngine/InseeAdvancedSearch";
 export { default as LocationAdvancedSearch } from "./packages/Controls/SearchEngine/LocationAdvancedSearch";
+export { default as ParcelAdvancedSearch } from "./packages/Controls/SearchEngine/ParcelAdvancedSearch";
 export { default as MousePosition } from "./packages/Controls/MousePosition/MousePosition";
 export { default as Drawing } from "./packages/Controls/Drawing/Drawing";
 export { default as Route } from "./packages/Controls/Route/Route";

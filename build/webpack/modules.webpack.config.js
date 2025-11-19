@@ -49,6 +49,7 @@ module.exports = (env, argv) => {
             "GpfExtOlSearchEngineGeocodeIGN" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "SearchEngineGeocodeIGN.js"),
             "GpfExtOlSearchEngineAdvanced" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "SearchEngineAdvanced.js"),
             "GpfExtOlLocationAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "LocationAdvancedSearch.js"),
+            "GpfExtOlParcelAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "ParcelAdvancedSearch.js"),
             "GpfExtOlInseeAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "InseeAdvancedSearch.js"),
             "GpfExtOlAbstractAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "AbstractAdvancedSearch.js"),
             "GpfExtOlCoordinateAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "CoordinateAdvancedSearch.js"),
