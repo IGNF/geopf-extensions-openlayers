@@ -6,6 +6,8 @@ module.exports = (env, argv) => {
         entry : {
             // CSS themes portail
             "Classic" : [
+                // INFO dépendances externes !
+                // path.join(rootdir, "src", "packages", "CSS", "Iconify", "ri.css"),
                 path.join(rootdir, "src", "packages", "CSS", "GPFwaiting.css"),
                 path.join(rootdir, "src", "packages", "CSS", "GPFgeneralWidget.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Drawing", "GPFdrawingStyle.css"),
@@ -41,6 +43,7 @@ module.exports = (env, argv) => {
             // CSS themes dsfr
             "Dsfr" : [
                 // INFO dépendances externes !
+                // path.join(rootdir, "src", "packages", "CSS", "Iconify", "ri.css"),
                 // path.join(rootdir, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
                 // path.join(rootdir, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
                 path.join(rootdir, "src", "packages", "CSS", "DSFRgeneralWidget.css"),

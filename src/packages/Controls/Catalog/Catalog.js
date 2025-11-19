@@ -23,24 +23,33 @@ import GeoportalMapBox from "../../Layers/LayerMapBox";
 // DOM
 import CatalogDOM from "./CatalogDOM";
 
-// Mapping de themes anglais -> français
+// Gestion des topics en local : themes et services et producteurs
 import Topics from "./topics.json";
+
+// import externe
+import { marked as Marked } from "marked";
+
+import Clusterize from "clusterize.js";
+const Test = Clusterize.default;
 
 var logger = Logger.getLogger("widget");
 
 /**
- * @typedef {Object} CatalogOptions
+ * @typedef {Object} CatalogOptions - Liste des options du widget Catalog
  * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
  * @property {boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
  * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
  * @property {string} [titlePrimary="Gérer vos couches de données"] - Titre principal du panneau.
  * @property {string} [titleSecondary=""] - Titre secondaire du panneau.
  * @property {string} [layerLabel="title"] - Propriété utilisée comme label pour les couches.
+ * @property {Boolean} [layerThumbnail=false] - Affiche les miniatures des couches si disponibles.
+ * @property {string} [size="md"] - Taille de la fenêtre : sm, md, lg ou xl.
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
+ * @property {string} [search.label="Rechercher une donnée"] - Label du champ de recherche.
  * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
  * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
- * @property {Array<Object>} [categories] - Liste des catégories et sous-catégories.
+ * @property {Array<Categories>} [categories] - Liste des catégories et sous-catégories.
  * @property {Object} [configuration] - Configuration des sources de données.
  * @property {string} [configuration.type="json"] - Type de configuration ("json" ou "service").
  * @property {Array<string>} [configuration.urls] - URLs des fichiers de configuration JSON.
@@ -48,7 +57,60 @@ var logger = Logger.getLogger("widget");
  * @property {string} [id] - Identifiant unique du widget.
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ * @property {string} [optimisation="none"] - Type d'optimisation pour l'affichage des listes de couches : "none", "clusterize" (experimental) ou "on-demand".
  */
+
+/**
+ * @typedef {Object} Categories - Catégories principales du catalogue sous forme d'onglets
+ * @property {string} title - Titre de la catégorie.
+ * @property {string} id - Identifiant unique de la catégorie.
+ * @property {boolean} default - Indique si c'est la catégorie par défaut.
+ * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
+ * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
+ * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
+ * @property {Array<SubCategories>} [items] - Liste des sous-catégories.
+ * @property {Object|null} filter - Filtre appliqué à la catégorie.
+ * @property {string} filter.field - Champ utilisé pour le filtre.
+ * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
+ */
+
+/**
+ * @typedef {Object} SubCategories - Sous-catégories du catalogue sous forme de boutons radio 
+ * avec ou sans sections. Une section, c'est un regroupement thématique des couches.
+ * ex. : regrouper les couches par "thématique" (voir propriété "thematic" dans la conf. des couches)
+ * @property {string} title - Titre de la sous-catégorie.
+ * @property {string} id - Identifiant unique de la sous-catégorie.
+ * @property {boolean} section - Indique si la sous-catégorie utilise des sections.
+ * @property {boolean} [collapsible] - **TODO** Indique si les sections sont repliables.
+ * @property {boolean} [icon] - Indique que l'on souhaite un icone de type dsfr classe pour les sections de la sous-catégorie.
+ * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
+ * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
+ * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
+ * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
+ * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
+ * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
+ * @property {string} filter.field - Champ utilisé pour le filtre.
+ * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
+ */
+
+/**
+ * @typedef {Object} Config - Configuration des sources de données
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ */
+
+/**
+ * @typedef {Object} ConfigLayer - Configuration d'une couche
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * @description
+ * Un objet de type ConfigLayer est un objet qui contient la configuration d'une couche.
+ * Il est issu de la configuration globale (Config) et enrichi de propriétés supplémentaires
+ * pour le bon fonctionnement du catalogue.
+ * ex. : service, categories, producer_urls, thematic_urls, etc.
+ * Les types de services supportés sont : WMTS, WMS, WFS, TMS.
+ */
+
 /**
  * @classdesc
  *
@@ -66,8 +128,8 @@ class Catalog extends Control {
      * @fires catalog:loaded
      * @fires catalog:layer:add
      * @fires catalog:layer:remove
-     * @see [schema - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json]
-     * @see [jsdoc - https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc]
+     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
+     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
      * @example
      * var widget = new ol.control.Catalog({
      *           collapsed : true,
@@ -75,8 +137,10 @@ class Catalog extends Control {
      *           titlePrimary : "",
      *           titleSecondary : "Gérer vos couches de données",
      *           layerLabel : "title",
+     *           layerThumbnail : true,
      *           search : {
      *               display : true,
+     *               label : "Rechercher une donnée",
      *               criteria : [
      *                   "name",
      *                   "title",
@@ -89,12 +153,15 @@ class Catalog extends Control {
      *                   title : "Données",
      *                   id : "data",
      *                   default : true,
+     *                   search : false,
      *                   filter : null
      *                   // sous categories
      *                   // items : [
      *                   //     {
      *                   //         title : "",
      *                   //         default : true,
+     *                   //         section : true, // avec section (ex. regroupement par themes)
+     *                   //         icon : true, // icone pour les sections (svg ou lien http ou dsfr classe)
      *                   //         filter : {
      *                   //             field : "",
      *                   //             value : ""
@@ -148,10 +215,12 @@ class Catalog extends Control {
         // car l'opération peut être async si un download est demandé.
         // une patience permet d'attendre que la liste soit récupérée.
         this.showWaiting();
-        this.initLayersList()
+        this.initConfigData()
             .then((data) => {
                 logger.trace(this, data);
                 this.hideWaiting();
+                // sauvegarde de la configuration
+                this.configData = data;
                 /**
                  * event triggered when data is loaded
                  */
@@ -169,20 +238,19 @@ class Catalog extends Control {
         return this;
     }
 
-    // ################################################################### //
-    // ##################### public methods ############################## //
-    // ################################################################### //
-
     /**
      * Overwrite OpenLayers setMap method
-     *
-     * @param {Map} map - Map.
+     * This method sets the map for the Catalog control.
+     * It initializes event listeners for the map and sets up the control's draggable and collapsed states.
+     * It also checks for existing layers on the map and updates the control accordingly.
+     * 
+     * @param {Map} map - Map instance to set for the control.
      */
     setMap (map) {
         if (map) {
             // INFO
             // on verifie les couches déjà présentes sur la cartes
-            this.on("catalog:loaded", this.initMapLayers);
+            this.on("catalog:loaded", this.checkLayersOnMap);
 
             // mode "draggable"
             if (this.draggable) {
@@ -203,7 +271,7 @@ class Catalog extends Control {
                 this.addEventsListeners(map);
             }
         } else {
-            this.un("catalog:loaded", this.initMapLayers);
+            this.un("catalog:loaded", this.checkLayersOnMap);
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
             if (this.auto) {
@@ -226,8 +294,44 @@ class Catalog extends Control {
     }
 
     /**
+     * Returns true if widget is collapsed (minimized), false otherwise
+     *
+     * @returns {Boolean} collapsed - true if widget is collapsed
+     */
+    getCollapsed () {
+        return this.collapsed;
+    }
+
+    /**
+     * Collapse or display widget main container
+     *
+     * @param {Boolean} collapsed - True to collapse widget, False to display it
+     */
+    setCollapsed (collapsed) {
+        if (collapsed === undefined) {
+            logger.error("[ERROR] Catalog:setCollapsed - missing collapsed parameter");
+            return;
+        }
+        if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
+            return;
+        }
+        if (collapsed) {
+            this.buttonCatalogClose.click();
+        } else {
+            this.buttonCatalogShow.click();
+        }
+        this.collapsed = collapsed;
+    }
+
+    // ################################################################### //
+    // ##################### public methods ############################## //
+    // ################################################################### //
+
+    /**
      * Add a layer config
-     * @param {*} conf conf
+     * This method processes a configuration object containing layer definitions.
+     * 
+     * @param {Config} conf conf
      */
     addLayerConfig (conf) {
         for (const key in conf) {
@@ -238,8 +342,8 @@ class Catalog extends Control {
                     var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                     layer.service = service; // new proprerty !
                     layer.categories = []; // new property ! vide pour le moment
-                    layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
-                    layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
+                    layer.producer_urls = this.createCatalogLinks("producer", layer.producer); // plus d'info
+                    layer.thematic_urls = this.createCatalogLinks("thematic", layer.thematic); // plus d'info
                     this.layersList[key] = layer;
                 }
             }
@@ -255,16 +359,52 @@ class Catalog extends Control {
         this.createCatalogContentEntries(this.layersList);
     }
 
+    /**
+     * Activate a layer by its ID
+     * This method activates a layer based on its ID, which is expected to be in the format "name$service".
+     * It splits the ID to extract the layer name and service, then calls the `activeLayer` method.
+     * 
+     * @param {*} id - Layer ID in the format "name$service".
+     * @example
+     * activeLayerByID("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$WMTS");
+     * activeLayerByID("PLAN.IGN$GEOPORTAIL:TMS");
+     */
     activeLayerByID (id) {
         var name = id.split("$")[0];
         var service = id.split(":").slice(-1)[0];
         this.activeLayer(name, service);
     }
+
+    /**
+     * Disable a layer by its ID
+     * This method disables a layer based on its ID, which is expected to be in the format "name$service".
+     * It splits the ID to extract the layer name and service, then calls the `disableLayer` method.
+     * @param {*} id - Layer ID in the format "name$service".
+     * @example
+     * disableLayerByID("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2$WMTS");
+     * disableLayerByID("PLAN.IGN$GEOPORTAIL:TMS");
+     * @todo
+     * - ajouter un test pour vérifier si l'ID est valide
+     * - ajouter un test pour vérifier si la couche est déjà active
+     * - ajouter un test pour vérifier si la couche est déjà désactivée
+     */
     disableLayerByID (id) {
         var name = id.split("$")[0];
         var service = id.split(":").slice(-1)[0];
         this.disableLayer(name, service);
     }
+
+    /**
+     * Activate a layer
+     * This method activates a layer by its name and service.
+     * It checks if the layer exists in the `layersList` and if it does, it adds the layer to the map if `addToMap` is true.
+     * It then dispatches an event indicating that the layer has been added to the catalog.
+     * @param {String} name - Layer name.
+     * @param {String} service - Layer service.
+     * @example
+     * activeLayer("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * activeLayer("PLAN.IGN", "GEOPORTAIL:TMS");
+     */
     activeLayer (name, service) {
         // cf. this.onSelectCatalogEntryClick
         var id = this.getLayerId(name, service);
@@ -281,6 +421,18 @@ class Catalog extends Control {
             });
         }
     }
+
+    /**
+     * Disable a layer
+     * This method disables a layer by its name and service.
+     * It checks if the layer exists in the `layersList` and if it does, it removes the layer from the map if `addToMap` is true.
+     * It then dispatches an event indicating that the layer has been removed from the catalog.
+     * @param {String} name - Layer name.
+     * @param {String} service - Layer service.
+     * @example
+     * disableLayer("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * disableLayer("PLAN.IGN", "GEOPORTAIL:TMS");
+     */
     disableLayer (name, service) {
         var id = this.getLayerId(name, service);
         if (id) {
@@ -296,24 +448,20 @@ class Catalog extends Control {
             });
         }
     }
-    // ################################################################### //
-    // ################### getters / setters ############################# //
-    // ################################################################### //
-
-    /**
-     * Get container
-     *
-     * @returns {HTMLElement} container
-     */
-    getContainer () {
-        return this.container;
-    }
 
     /**
      * Get long layer ID
-     * @param {*} name  nom de la couche
-     * @param {*} service service de la couche
-     * @returns {String} - long layer ID
+     * 
+     * @param {*} name - nom de la couche
+     * @param {*} service - service de la couche
+     * @return {String|null} - long layer ID or null if not found
+     * @description
+     * This method retrieves the long layer ID based on the provided name and service.
+     * It searches through the `layersList` object for a key that matches the pattern of "name.*service".
+     * If a match is found, it returns the key; otherwise, it returns null.
+     * @example
+     * getLayerId("GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "WMTS");
+     * getLayerId("PLAN.IGN", "GEOPORTAIL:TMS");
      */
     getLayerId (name, service) {
         if (!this.layersList || typeof this.layersList !== "object") {
@@ -332,6 +480,57 @@ class Catalog extends Control {
         return null;
     }
 
+    /**
+     * Get layers by category
+     * This method filters the layers based on the provided category.
+     * It checks if the category has a filter defined and applies it to the layers.
+     * If the filter matches, the layer is added to the `layersCategorised` object.
+     * It also updates the `categories` property of each layer to include the category ID.
+     * 
+     * @param {*} category - Category object containing the filter.
+     * @param {*} layers - Object containing all layers.
+     * @return {Object} - Filtered layers categorized by the provided category.
+     */
+    getLayersByCategory (category, layers) {
+        // INFO
+        // comment gerer les listes de layers filtrées pour chaque categorie ?
+        // on doit les stocker si l'on souhaite faire des requêtes
+        // avec l'outil de recherche par la suite
+        var layersCategorised = layers;
+        var filter = category.filter;
+        if (filter) {
+            layersCategorised = {};
+            for (const key in layers) {
+                if (Object.prototype.hasOwnProperty.call(layers, key)) {
+                    const layer = layers[key];
+                    if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
+                        var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
+                        if (condition) {
+                            layersCategorised[key] = layer;
+                            // on ajoute l'appartenance de la couche à une categorie
+                            this.layersList[key].categories.push(category.id);
+                        }
+                    }
+                }
+            }
+        }
+
+        return layersCategorised;
+    }
+
+    // ################################################################### //
+    // ################### getters / setters ############################# //
+    // ################################################################### //
+
+    /**
+     * Get container
+     *
+     * @returns {HTMLElement} container
+     */
+    getContainer () {
+        return this.container;
+    }
+
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
@@ -347,6 +546,10 @@ class Catalog extends Control {
         this.uid = options.id || SelectorID.generate();
 
         // set default options
+        this.clusterOptions = {
+            rows_in_block : 50,
+            blocks_in_cluster : 4
+        };
         this.options = {
             collapsed : true,
             draggable : false,
@@ -354,8 +557,12 @@ class Catalog extends Control {
             titlePrimary : "Gérer vos couches de données",
             titleSecondary : "",
             layerLabel : "title",
+            layerThumbnail : false,
+            optimisation : "none", // none | clusterize | on-demand
+            size : "md",
             search : {
-                display : true,
+                display : true, // barre de recherche globale
+                label : "Rechercher une donnée",
                 criteria : [
                     "name",
                     "title",
@@ -369,6 +576,8 @@ class Catalog extends Control {
                     // categories : sous forme d'un onglet par categorie
                     title : "Données",
                     id : "data",
+                    cluster : true,
+                    clusterOptions : this.clusterOptions,
                     default : true,
                     filter : null
                     // INFO
@@ -377,7 +586,9 @@ class Catalog extends Control {
                     //     {
                     //         title : "",
                     //         default : true,
+                    //         cluster : false,
                     //         section : true, // avec section (ex. regroupement par themes)
+                    //         icon : true, // icone pour les sections (svg ou lien http ou dsfr classe)  
                     //         filter : {
                     //             field : "thematic",
                     //             value : ""
@@ -387,6 +598,7 @@ class Catalog extends Control {
                     //         title : "Toutes les données",
                     //         default : false,
                     //         section : false, // sans section
+                    //         cluster : false,
                     //         filter : null // sans filtre, on prend toutes les données
                     //     }
                     // ]
@@ -395,6 +607,7 @@ class Catalog extends Control {
             configuration : {
                 type : "json", // TODO type:"service"
                 urls : [ // data:{}
+                    // ex.
                     // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
                     // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json",
                     "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/entreeCarto.json"
@@ -402,8 +615,10 @@ class Catalog extends Control {
             }
         };
 
-        // merge with user options
+        // merge with user optionssearch
+        var searchOptions = Utils.assign(this.options.search, options.search);
         Utils.assign(this.options, options);
+        Utils.assign(this.options.search, searchOptions);
 
         /**
          * specify if control is collapsed (true) or not (false)
@@ -444,16 +659,81 @@ class Catalog extends Control {
         this.waitingContainer = null;
 
         /**
+         * specify configuration data (configuration service)
+         */
+        this.configData = {};
+
+        /**
          * specify all list of layers (configuration service)
-         * @type {Object}
-         * @see [schema](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json)
-         * @see [jsdoc](https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc)
+         * @type {Array<Object>}
          */
         this.layersList = {};
 
         /**
+         * specify clusterize instances for each category/subcategory/section
+         * @type {Object}
+         * @example
+         * {
+         *    "data" : Clusterize, // category id + instance
+         *    "454587412" : Clusterize, // subcategory id + instance
+         *    "457121205" : Clusterize, // subcategory id + instance
+         * }
+         */
+        this.clusterizeRef = {};
+        /**
+         * specify clusterize sections for each category/subcategory
+         * @type {Object}
+         * @example
+         * {
+         *    548487533 : { // subcategory id
+         *       "section-accordion-548487533-72432" : [rows], // section id + rows
+         *       "section-accordion-548487533-78155" : [rows]  // section id + rows
+         *    }
+         * }
+         */
+        this.clusterizeSections = {};
+
+        /**
+         * specify data on demand instances for each category/subcategory/section
+         * @type {Object}
+         * @example
+         * {
+         *    base : fragmentDocument, // category id + fragmentDocument
+         *    457121205 : fragmentDocument, // subcategory id + fragmentDocument
+         *    548487533 : {
+         *      "section-accordion-548487533-72432" : fragmentDocument, // section id + fragmentDocument
+         *      "section-accordion-548487533-78155" : fragmentDocument  // section id + fragmentDocument
+         * }
+         */
+        this.dataOnDemand = {};
+
+        /**
          * specify all categories
-         * @type {Array}
+         * @type {Array<Categories}
+         * @example
+         * [
+         *     {
+         *        title : "Données",   // title of the category
+         *        id : "data",         // id of the category
+         *        default : true,      // if true, this category is selected by default
+         *        search : false,      // if true, a search bar is displayed for this category
+         *        cluster : false,     // if true, clustering is activated for this category
+         *        filter : null,       // filter to apply on the category
+         *        items : [            // list of subcategories
+         *            {
+         *               title : "Toutes les données", // title of the subcategory
+         *               id : "all",                   // id of the subcategory
+         *               default : true,               // if true, this subcategory is selected by default
+         *               icon : true,                  // icon for the subcategory (svg or http link or dsfr class)
+         *               iconJson : [],                // list of icons (json) for the sections
+         *               cluster : false,              // if true, clustering is activated for this subcategory
+         *               section : false,              // if true, this subcategory has a section
+         *               sections : [],                // list of sections (filled later)
+         *               filter : null,                // filter to apply on the subcategory
+         *            }
+         *        ]
+         *     }
+         * ]
          */
         this.categories = this.options.categories.map((cat) => {
             // INFO
@@ -465,9 +745,14 @@ class Catalog extends Control {
                     return {
                         title : i.title,
                         id : i.id || this.generateID(i.title),
+                        default : i.hasOwnProperty("default") ? i.default : false,
                         section : i.hasOwnProperty("section") ? i.section : false,
                         sections : [], // liste des valeurs des sections remplie ulterieurement !
-                        default : i.hasOwnProperty("default") ? i.default : false,
+                        subcategory : true, // new property !
+                        icon : i.hasOwnProperty("icon") ? i.icon : false,
+                        iconJson : i.iconJson || [], // liste des icones (json) pour les sections
+                        cluster : i.hasOwnProperty("cluster") ? i.cluster : false,
+                        clusterOptions : i.hasOwnProperty("clusterOptions") ? i.clusterOptions : this.clusterOptions,
                         filter : i.filter || null,
                     };
                 });
@@ -476,6 +761,9 @@ class Catalog extends Control {
                 title : cat.title,
                 id : cat.id || this.generateID(cat.title),
                 default : cat.hasOwnProperty("default") ? cat.default : false,
+                search : cat.hasOwnProperty("search") ? cat.search : false,
+                cluster : cat.hasOwnProperty("cluster") ? cat.cluster : false,
+                clusterOptions : cat.hasOwnProperty("clusterOptions") ? cat.clusterOptions : this.clusterOptions,
                 filter : cat.filter || null,
                 items : items || null
             };
@@ -507,6 +795,9 @@ class Catalog extends Control {
          * }
          */
         this.layersListOnMap = {};
+
+        /** @private */
+        this._searchTimeout = null; // timeout for search input
 
         /**
          * event triggered when layer is added
@@ -574,11 +865,16 @@ class Catalog extends Control {
 
         // panel
         var widgetPanel = this.panelCatalogContainer = this._createCatalogPanelElement();
+        var widgetPanelSize = this._createCatalogPanelDivSizeElement(this.options.size);
+        widgetPanel.appendChild(widgetPanelSize);
         var widgetPanelDiv = this._createCatalogPanelDivElement();
-        widgetPanel.appendChild(widgetPanelDiv);
+        widgetPanelSize.appendChild(widgetPanelDiv);
 
         // header
         var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createCatalogPanelHeaderElement();
+        // icone
+        var widgetPanelIcon = this._createCatalogPanelIconElement(this.options.titlePrimary);
+        widgetPanelHeader.appendChild(widgetPanelIcon);
         // title
         var widgetPanelTitle = this._createCatalogPanelTitleElement(this.options.titlePrimary);
         widgetPanelHeader.appendChild(widgetPanelTitle);
@@ -589,11 +885,12 @@ class Catalog extends Control {
 
         var widgetContentDiv = this._createCatalogPanelContentDivElement();
 
-        // container for the custom dynamic code (cf. initLayersList())
+        // container for the custom dynamic code (cf. initConfigData())
         var widgetContentElementDiv = this.contentCatalogContainer = this._createCatalogContentDivElement();
         widgetContentElementDiv.appendChild(this._createCatalogContentTitleElement(this.options.titleSecondary));
+        // search bar (global)
         if (this.options.search.display) {
-            widgetContentElementDiv.appendChild(this._createCatalogContentSearchElement());
+            widgetContentElementDiv.appendChild(this._createCatalogContentSearchGlobalElement(this.options.search.label));
         }
         // waiting
         var waiting = this.waitingContainer = this._createCatalogWaitingElement();
@@ -604,14 +901,17 @@ class Catalog extends Control {
 
         container.appendChild(widgetPanel);
 
+
         return container;
     }
 
     /**
-     * ...
+     * Check layers already present on the map
+     * This method checks the layers already present on the map
+     * and marks them as checked in the catalog.
      * @private
      */
-    initMapLayers () {
+    checkLayersOnMap () {
         var map = this.getMap();
         if (!map) {
             return;
@@ -633,12 +933,16 @@ class Catalog extends Control {
     }
 
     /**
-     * Configuration loading
+     * Initialize layers list and other properties
+     * This method initializes the layers list from the configuration data.
+     * It can load data from a local object or fetch it from URLs.
+     * It processes the layers to add additional properties such as `service`, `categories`, and URLs for producers and thematics.
+     * It also creates the catalog content entries based on the layers.
      *
      * @returns {Promise} - promise
      * @private
      */
-    async initLayersList () {
+    async initConfigData () {
         var data = null; // reponse brute du service
 
         if (this.options.configuration.data) {
@@ -648,33 +952,13 @@ class Catalog extends Control {
                 Utils.mergeParams(data, Config.configuration);
             }
 
-            // INFO
-            // on en profite pour ajouter des properties :
-            // - service : utile pour identifier la couche
-            // de manière unique : name + service
-            // - categories : utile pour definir l'appartenance d'une couche
-            // à une ou plusieurs categories
-            for (const key in data.layers) {
-                if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
-                    const layer = data.layers[key];
-                    if (layer.serviceParams) {
-                        // si la couche a bien une configuration valide liée au service
-                        var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                        layer.service = service; // new proprerty !
-                        layer.categories = []; // new property ! vide pour le moment
-                        layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
-                        layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
-                    } else {
-                        // sinon on supprime l'entrée car pas de configuration valide
-                        delete data.layers[key];
-                    }
-                }
-            }
+            // contrôle des couches
+            this.checkConfigLayers(data.layers);
 
-            // sauvegarde de la liste des couches
+            // sauvegarde des couches de données
             this.layersList = data.layers;
 
-            this.createCatalogContentEntries(data.layers);
+            this.createCatalogContentEntries(data);
             return new Promise((resolve, reject) => {
                 resolve(data);
             });
@@ -723,33 +1007,13 @@ class Catalog extends Control {
                     Utils.mergeParams(data, Config.configuration);
                 }
 
-                // INFO
-                // on en profite pour ajouter des properties :
-                // - service : utile pour identifier la couche
-                // de manière unique : name + service
-                // - categories : utile pour definir l'appartenance d'une couche
-                // à une ou plusieurs categories
-                for (const key in data.layers) {
-                    if (Object.prototype.hasOwnProperty.call(data.layers, key)) {
-                        const layer = data.layers[key];
-                        if (layer.serviceParams) {
-                            // si la couche a bien une configuration valide liée au service
-                            var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                            layer.service = service; // new proprerty !
-                            layer.categories = []; // new property ! vide pour le moment
-                            layer.producer_urls = this.getInformationsCatalog("producer", layer.producer); // plus d'info
-                            layer.thematic_urls = this.getInformationsCatalog("thematic", layer.thematic); // plus d'info
-                        } else {
-                            // sinon on supprime l'entrée car pas de configuration valide
-                            delete data.layers[key];
-                        }
-                    }
-                }
+                // contrôle des couches
+                this.checkConfigLayers(data.layers);
 
                 // sauvegarde de la liste des couches
                 this.layersList = data.layers;
 
-                this.createCatalogContentEntries(data.layers);
+                this.createCatalogContentEntries(data);
                 return await new Promise((resolve, reject) => {
                     resolve(data);
                 });
@@ -762,56 +1026,146 @@ class Catalog extends Control {
     }
 
     /**
-     * Create DOM content categories and entries
-     * @param {*} layers couches
+     * Check configuration layers
+     * This method checks the configuration of layers to ensure they have valid service parameters.
+     * It also adds additional properties to each layer, such as `service`, `categories`, and URLs for producers and thematics.
+     * It cleans the list of layers by removing those without valid configuration and adds a default thumbnail if enabled and not present.
+     * 
+     * @param {Array<ConfigLayer>} layers - list of layers
+     * @private
      */
-    createCatalogContentEntries (layers) {
-        // traitement du contenu (liste de couches) d'une categorie
-        // en fonction d'un filtre
-        var self = this;
-        const getLayersByCategory = (category, layers) => {
-            // INFO
-            // comment gerer les listes de layers filtrées pour chaque categorie ?
-            // on doit les stocker si l'on souhaite faire des requêtes
-            // avec l'outil de recherche par la suite
-            var layersCategorised = layers;
-            var filter = category.filter;
-            if (filter) {
-                layersCategorised = {};
-                for (const key in layers) {
-                    if (Object.prototype.hasOwnProperty.call(layers, key)) {
-                        const layer = layers[key];
-                        if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
-                            var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
-                            if (condition) {
-                                layersCategorised[key] = layer;
-                                // on ajoute l'appartenance de la couche à une categorie
-                                self.layersList[key].categories.push(category.id);
-                            }
+    checkConfigLayers (layers) {
+        // INFO
+        // on en profite pour ajouter des properties :
+        // - service : utile pour identifier la couche
+        // de manière unique : name + service
+        // - categories : utile pour definir l'appartenance d'une couche
+        // à une ou plusieurs categories
+        // on en profite aussi pour nettoyer la liste
+        // des couches qui n'ont pas de configuration valide
+        // cf. serviceParams obligatoire
+        // on en profite aussi pour ajouter une vignette par défaut
+        // si la couche n'en a pas et que l'option est activée
+        for (const key in layers) {
+            if (Object.prototype.hasOwnProperty.call(layers, key)) {
+                const layer = layers[key];
+                if (layer.serviceParams) {
+                    // TEST
+                    const isHTML = (str) => {
+                        const doc = document.createElement("div");
+                        doc.innerHTML = str.trim();
+                        // Si le premier enfant est un élément HTML, c'est du HTML
+                        return doc.childNodes.length > 0 && doc.firstChild.nodeType === 1;
+                    };
+
+                    if (isHTML(layer.description)) {
+                        logger.error(`layer description contains HTML code, which is not allowed. Layer: ${key}`);
+                        logger.error("Please use Markdown syntax for layer descriptions instead.");
+                        logger.error(layer.description);
+                        delete layers[key];
+                        continue;
+                    }
+                    // si la couche a bien une configuration valide liée au service
+                    var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
+                    layer.service = service; // new proprerty !
+                    layer.categories = []; // new property ! vide pour le moment
+                    layer.producer_urls = this.createCatalogProducerLinks(layer.producer); // plus d'info
+                    layer.thematic_urls = this.createCatalogThematicLinks(layer.thematic); // plus d'info
+                    // label de la couche
+                    layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
+                    // INFO
+                    // On transforme le markdown en HTML
+                    // et on nettoie le HTML pour éviter les injections XSS
+                    // cf. https://marked.js.org/
+                    // Le markdown ne doit pas être échappé pour realiser une transformation !
+                    layer.description = Marked.parse(layer.description);
+                    // les vignettes !
+                    if (this.options.layerThumbnail) {
+                        // si on souhaite afficher une vignette
+                        // et que la couche n'en a pas
+                        // on met une vignette par défaut
+                        if (!layer.thumbnail) {
+                            layer.thumbnail = "default";
+                        }
+                    } else {
+                        // sinon pas de vignette
+                        if (layer.thumbnail) {
+                            // FIXME 
+                            // suppression !?
+                            delete layer.thumbnail;
                         }
                     }
+                } else {
+                    // sinon on supprime l'entrée car pas de configuration valide
+                    delete layers[key];
                 }
             }
+        }
+    }
 
-            return layersCategorised;
-        };
-
+    /**
+     * Create DOM content categories and entries
+     * @param {Config} data - data
+     * @private
+     */
+    createCatalogContentEntries (data) {
         var container = this.contentCatalogContainer;
 
         var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories);
         container.appendChild(widgetContentEntryTabs);
 
-        var categories = []; // remise à plat des catégories / sous-categories
+        // INFO 
+        // Remise à plat des catégories / sous-categories sur le même niveau
+        // pour simplifier la gestion des couches
+        // et la création des onglets de contenu
+        // on a autant de catégories / sous-catégories que de containers
+        // dans le DOM, on ne peut pas faire autrement
+        // on va donc créer un tableau de catégories / sous-catégories
+        // qui contiendra toutes les couches
+        // et on va créer le contenu de chaque catégorie / sous-catégorie
+        // dans le DOM, dans l'ordre des catégories / sous-catégories
+        var categories = [];
         this.categories.forEach((category) => {
             if (category.items) {
                 for (let i = 0; i < category.items.length; i++) {
                     const element = category.items[i];
+                    // INFO
+                    // on recherche la liste des icones pour les sections
+                    // si l'élément est une section et qu'il n'a pas d'icones
+                    // on va chercher les icones dans les données
+                    // en fonction du filtre de la section
+                    // ex. filter.field = "thematic"
+                    // on va chercher toutes les valeurs de "thematic"
+                    // dans les couches
+                    if (element.icon && element.iconJson.length === 0 && element.section && element.filter) {
+                        const tag = element.filter.field;
+                        // recherche si on a un mapping des topics
+                        if (data.topics && data.topics[tag]) {
+                            // dans la configuration avec un tag 'topics' (ex. edisto.json)
+                            element.iconJson = data.topics[tag];
+                        } else if (data[tag]) {
+                            // dans la configuration avec directement la cléf
+                            element.iconJson = data[tag];
+                        } else if (Topics[tag]) {
+                            // dans le fichier de mapping local
+                            element.iconJson = Topics[tag];
+                        } else {
+                            // pas d'icones
+                            element.iconJson = [];
+                        }
+                    }
+                    element.subcategory = true; // new property !
                     categories.push(element);
                 }
             } else {
                 categories.push(category);
             }
         });
+        // Crée uniquement le contenu de la catégorie active
+        var activeIndex = categories.findIndex(cat => cat.id === this.categoryId);
+        if (activeIndex === -1) {
+            activeIndex = 0;
+        }
         // INFO
         // les containers de contenu sont definis à partir
         // de l'ordre des catégories / sous-categories
@@ -819,61 +1173,135 @@ class Catalog extends Control {
         var contents = container.querySelectorAll(".tabcontent");
         for (let i = 0; i < contents.length; i++) {
             const content = contents[i];
-            var layersCategorised = getLayersByCategory(categories[i], layers);
-            content.appendChild(this._createCatalogContentCategoryTabContent(categories[i], layersCategorised));
+            if (i === activeIndex) {
+                // TODO
+                // on peut faire un lazy-load des autres catégories
+                // pour ne pas charger toutes les couches d'un coup
+                // on affiche le contenu de la catégorie active
+                // et on charge les autres au fur et à mesure
+            }
+            var layersCategorised = this.getLayersByCategory(categories[i], data.layers);
+            // INFO
+            // Pas de données directement dans le DOM si 
+            // - en mode cluster, on attend la création du cluster pour ajouter des données
+            // - en mode on-demand, on attend la demande de chargement
+            // - en mode none, on ajoute directement les données dans le DOM
+            var nodata = (categories[i].cluster && this.options.optimisation === "clusterize") || this.options.optimisation === "on-demand";
+            this._createCatalogContentCategoryTabContent(categories[i], layersCategorised, nodata)
+                .then((data) => {
+                    // Utilisation d'un DocumentFragment pour optimiser l'insertion DOM
+                    const fragment = document.createDocumentFragment();
+                    if (data.dom) {
+                        fragment.appendChild(data.dom);
+                        content.appendChild(fragment);
+                        console.log(`Content for category ${categories[i].title} created.`);
+                        if (categories[i].cluster && this.options.optimisation === "clusterize") {
+                            if (categories[i].section) {
+                                // INFO
+                                // on realise la clusterisation à la demande
+                                // cad quand l'action d'ouvrir la section est déclenchée
+                                console.warn(`No clustering at initialization for sections : ${categories[i].title} !`);
+                                
+                                // INFO
+                                // enregistrement des informations utiles pour construire le clusterize plus tard
+                                // lors de l'ouverture de la section
+                                this.clusterizeSections[categories[i].id] = data.blocks.reduce((acc, item) => {
+                                    acc[item.domid] = item.rows;
+                                    return acc;
+                                }, {});
+                                this._updateListenersLayersDOM(content, categories[i].id);
+                            } else {
+                                this.clusterizeRef[categories[i].id] = new Clusterize({
+                                    scrollId : content.parentElement.id,
+                                    contentId : data.blocks[0].domid,
+                                    rows : data.blocks[0].rows,
+                                    rows_in_block : categories[i].clusterOptions.rows_in_block,
+                                    blocks_in_cluster : categories[i].clusterOptions.blocks_in_cluster,
+                                    callbacks : {
+                                        clusterChanged : () => {
+                                            logger.trace("cluster changed");
+                                            this._updateListenersLayersDOM(content, categories[i].id);
+                                            this.checkLayersOnMap();
+                                        }
+                                    }
+                                });
+                            }
+                        } else if (this.options.optimisation === "on-demand") {
+                            if (categories[i].section) {
+                                this.dataOnDemand[categories[i].id] = data.blocks.reduce((acc, item) => {
+                                    acc[item.domid] = item.fragment;
+                                    return acc;
+                                }, {});
+                            } else {
+                                this.dataOnDemand[categories[i].id] = data.blocks[0].fragment;
+                                if (categories[i].default) {
+                                    // fonction de clonage d'un DocumentFragment
+                                    const cloneFragment = (fragment) => {
+                                        const clone = document.createDocumentFragment();
+                                        fragment.childNodes.forEach(node => {
+                                            clone.appendChild(node.cloneNode(true));
+                                        });
+                                        return clone;
+                                    };
+                                    // chargement à la demande immédiat
+                                    const fragmentDocument = cloneFragment(this.dataOnDemand[categories[i].id]);
+                                    content.querySelector(`#checkboxes-${categories[i].id}`).appendChild(fragmentDocument);
+                                }
+                            }
+                            this._updateListenersLayersDOM(content, categories[i].id);
+                        } else {
+                            // pas d'optimisation, on ajoute directement les données dans le DOM
+                            this._updateListenersLayersDOM(content, categories[i].id);
+                            this.checkLayersOnMap();
+                        }
+                    }
+                });
         }
     }
 
     /**
-     * Get information in the catalog
-     * @param {*} key type de catégorisation 'producer' ou 'thematic'
-     * @param {*} value tableau de couches
+     * Create links information to the catalog for thematic
+     * @param {*} value - ...
      * @private
-     * @returns {Object} fiche d'information
+     * @returns {Array<Object>} fiche d'information
      * @todo récuperer l'url du service du catalogue selon l'environnement !
      * @example
-     * // OUTPUT ?
+     * // pour les thématiques
+     * createCatalogThematicLinks(["Agriculture", "Transports", "Autres"]);
+     * // OUTPUT
+     * [
+     *   {
+     *     name : "Agriculture",
+     *     url : "https://cartes.gouv.fr/catalogue/search?topic=farming"
+     *   }
+     * ]
+     * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
      */
-    getInformationsCatalog (key, value) {
+    createCatalogThematicLinks (value) {
         if (!value) {
             return null;
         }
         var url = "https://cartes.gouv.fr/catalogue/search?";
         var data = [];
-        // INFO liens vers le catalogue
-        //
+        // INFO
         // - comment recuperer la fiche si pas renseigné dans metadata_urls ?
         // ex. https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN
         // > la conf nous fournit une liste via le champ 'metada_urls'
-        //
-        // - comment avoir l'info sur le producteur à partir de la liste des acronymes ?
-        // ex. https://cartes.gouv.fr/catalogue/search?organization=IGN
-        // > la conf nous fournit une liste via le champ 'producer'
-        if (key === "producer") {
-            for (let i = 0; i < value.length; i++) {
-                const element = value[i];
-                if (element === "Autres") {
-                    continue;
-                }
-                data.push({
-                    name : element,
-                    url : url + "organization=" + element
-                });
-            }
-        }
+        
         // - comment faire le lien entre les noms pour obtenir les données du theme ?
         // ex. pour Agriculture, l'url est https://cartes.gouv.fr/catalogue/search?topic=farming
+        // pour les thématiques, un mapping est nécessaire entre le nom et l'id
         // > un fichier de mapping est disponible
-        if (key === "thematic") {
-            for (let j = 0; j < value.length; j++) {
-                const element = value[j];
-                if (element === "Autres") {
-                    continue;
-                }
-                var mapping = Object.keys(Topics).find((key) => Topics[key] === element);
+        for (let j = 0; j < value.length; j++) {
+            const element = value[j];
+            if (element === "Autres") {
+                continue;
+            }
+            var mapping = Topics.thematic.find((o) => o.name === element);
+            if (mapping) {
                 data.push({
                     name : element,
-                    url : url + "topic=" + mapping
+                    url : url + "topic=" + mapping.id
                 });
             }
         }
@@ -882,6 +1310,56 @@ class Catalog extends Control {
         }
         return data;
     }
+
+    /**
+     * Create links information to the catalog for producer
+     * @param {*} value - ...
+     * @private
+     * @returns {Array<Object>} fiche d'information
+     * @todo récuperer l'url du service du catalogue selon l'environnement !
+     * @example
+     * // pour les producteurs
+     * createCatalogProducerLinks(["IGN", "IGNF", "Autres"]);
+     * 
+     * // OUTPUT
+     * [
+     *   {
+     *      name : "IGN",
+     *      url : "https://cartes.gouv.fr/catalogue/search?organization=IGN"
+     *   }
+     * ]
+     * @see [mapping - https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/topics.json]
+     */
+    createCatalogProducerLinks (value) {
+        if (!value) {
+            return null;
+        }
+        var url = "https://cartes.gouv.fr/catalogue/search?";
+        var data = [];
+        // INFO
+        // - comment recuperer la fiche si pas renseigné dans metadata_urls ?
+        // ex. https://cartes.gouv.fr/catalogue/dataset/IGNF_PLAN-IGN
+        // > la conf nous fournit une liste via le champ 'metada_urls'
+        
+        // - comment avoir l'info sur le producteur à partir de la liste des acronymes ?
+        // ex. https://cartes.gouv.fr/catalogue/search?organization=IGN
+        // > la conf nous fournit une liste via le champ 'producer'
+        for (let i = 0; i < value.length; i++) {
+            const element = value[i];
+            if (element === "Autres") {
+                continue;
+            }
+            data.push({
+                name : element,
+                url : url + "organization=" + element
+            });
+        }
+        if (data.length === 0) {
+            data = null;
+        }
+        return data;
+    }
+
     // ################################################################### //
     // ######################## methods on listeners ##################### //
     // ################################################################### //
@@ -1059,7 +1537,7 @@ class Catalog extends Control {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
                 layer.hidden = false;
-                this.updateVisibilityFilteredLayersDOM(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden);
             }
         }
     }
@@ -1085,39 +1563,68 @@ class Catalog extends Control {
                     }
                 }
                 layer.hidden = !words.includes(value.toLowerCase());
+                if (!layer.hidden) {
+                    logger.info(`Filtering layer ${layer.name} with words : ${words}`);
+                }
                 // on met à jour pour chaque couche la visibilité
-                this.updateVisibilityFilteredLayersDOM(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden);
             }
         }
         // on rend invisible les sections qui ne possède plus de couches visibles
-        this.updateVisibilitySectionsDOM();
+        this.updateVisibilityFilteredSections();
     }
 
     /**
      * Update DOM layer visibility
      *
-     * @param {*} id - ...
+     * @param {*} name - ...
      * @param {*} service  - ...
      * @param {*} hidden  - ...
      * @private
      */
-    updateVisibilityFilteredLayersDOM (id, service, hidden) {
-        var categories = []; // remise à plat des catégories / sous-categories pour obtenir leur id
+    updateVisibilityFilteredLayers (name, service, hidden) {
+        const escapeSelector = (str) => {
+            return str.replace(/\./g, "\\.");
+        };
+
+        var categories = []; // remise à plat des catégories / sous-categories
         this.categories.forEach((category) => {
             if (category.items) {
                 for (let i = 0; i < category.items.length; i++) {
                     const element = category.items[i];
-                    categories.push(element.id);
+                    categories.push(element);
                 }
             } else {
-                categories.push(category.id);
+                categories.push(category);
             }
         });
+
+        // FIXME
+        // performance de la recherche du container : querySelector !
+        const findContainerLayer = (category, name, service) => {
+            var container = document.getElementById(`fieldset-${category.id}_${name}-${service}`);
+            if (this.options.optimisation === "on-demand") {
+                // en mode on-demand, on doit chercher dans les fragments
+                if (category.section) {
+                    for (const sectionId in this.dataOnDemand[category.id]) {
+                        const fragment = this.dataOnDemand[category.id][sectionId];
+                        if (fragment) {
+                            var id = escapeSelector(`#fieldset-${category.id}_${name}-${service}`);
+                            container = fragment.querySelector(id);
+                            if (container) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return container;
+        };
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
             // on modifie la visibilité du container pour chaque couche
-            var container = document.getElementById(`fieldset-${category}_${id}-${service}`);
+            var container = findContainerLayer(category, name, service);
             if (container) {
                 if (hidden) {
                     container.classList.add("gpf-hidden");
@@ -1125,6 +1632,7 @@ class Catalog extends Control {
                 } else {
                     container.classList.remove("gpf-hidden");
                     container.classList.remove("GPelementHidden");
+                    logger.info(`Layer ${name}:${service} visibility updated to hidden=${hidden} in category ${category.id} (${container.id}).`);
                 }
             }
         }
@@ -1133,10 +1641,9 @@ class Catalog extends Control {
     /**
      * Update DOM sections visibility if no layers are visible
      *
-     * @todo cacher les section si elles sont vides
      * @private
      */
-    updateVisibilitySectionsDOM () {
+    updateVisibilityFilteredSections () {
         // il faut savoir si les couches d'une section sont toutes à hidden
         // si oui, on cache la section
         // si non, on met à jour le compteur des couches visibles
@@ -1150,6 +1657,24 @@ class Catalog extends Control {
         // var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
         // avec data est la liste des couches (DOM)
 
+        const countLayersInSection = (categoryId, sectionId) => {
+            var count = 0;
+            // en mode on-demand, on doit chercher dans le fragment
+            if (this.options.optimisation === "on-demand") {
+                var fragment = this.dataOnDemand[categoryId][sectionId];
+                if (fragment) {
+                    count = fragment.querySelectorAll(".fr-fieldset__element:not(.gpf-hidden):not(.GPelementHidden)").length;
+                }
+            } else {
+                var container = document.getElementById(sectionId);
+                if (container) {
+                    var data = container.innerHTML;
+                    count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                }
+            }
+            return count;
+        };
+
         for (let i = 0; i < this.categories.length; i++) {
             const category = this.categories[i];
             if (category.items) {
@@ -1159,15 +1684,18 @@ class Catalog extends Control {
                     if (subcategory.section) {
                         for (let k = 0; k < subcategory.sections.length; k++) {
                             const section = subcategory.sections[k];
-                            var id = `section-${subcategory.id}-${this.generateID(section)}`;
-                            var container = document.getElementById(id);
+                            var container = document.getElementById(`section-${subcategory.id}-${this.generateID(section)}`);
                             if (container) {
-                                var data = container.innerHTML;
-                                var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                                var id = `section-accordion-${subcategory.id}-${this.generateID(section)}`;
+                                var count = countLayersInSection(subcategory.id, id);
                                 var countDom = document.getElementById(`section-count-${subcategory.id}-${this.generateID(section)}`);
                                 if (count === 0) {
                                     container.classList.add("gpf-hidden");
                                     container.classList.add("GPelementHidden");
+                                    // inutile ?
+                                    if (countDom) {
+                                        countDom.textContent = count;
+                                    }
                                 } else {
                                     if (countDom) {
                                         countDom.textContent = count;
@@ -1182,6 +1710,7 @@ class Catalog extends Control {
             }
         }
     }
+
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
@@ -1192,9 +1721,13 @@ class Catalog extends Control {
      * @private
      */
     onShowCatalogClick (e) {
-        if (e.target.ariaPressed === "true") {
+        var opened = e.target.ariaPressed;
+        if (opened === "true") {
             this.onPanelOpen();
         }
+        this.collapsed = !(opened === "true");
+        this.dispatchEvent("change:collapsed");
+        
         logger.trace(e);
     }
 
@@ -1210,15 +1743,107 @@ class Catalog extends Control {
     /**
      * ...
      * @param {Event} e - ...
+     * @param {String} categoryId - ...
      * @private
      */
-    onSelectCatalogTabClick (e) {
+    onSelectCatalogTabClick (e, categoryId) {
         logger.trace(e);
-        // sauvegarde de la categorie courrante pour la gestion de la recherche
-        // de couches dans la liste associée à la categorie
-        var id = e.target.id;
-        var category = id.split("_")[1];
-        this.categoryId = category;
+        
+        var categories = []; // remise à plat des catégories / sous-categories
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categories.push(element);
+                }
+            } else {
+                categories.push(category);
+            }
+        });
+
+        var prevcontainer = document.getElementById(`checkboxes-${this.categoryId}`);
+        if (prevcontainer) {
+            // on supprime le contenu du DOM de l'ancienne catégorie
+            var oldCategory = categories.find(cat => cat.id == this.categoryId); // non strict !
+            if (this.options.optimisation === "on-demand" && !oldCategory.section) {
+                prevcontainer.innerHTML = "";
+            }
+        }
+        // sauvegarde de la categorie courrante
+        this.categoryId = categoryId;
+
+        var category = categories.find(cat => cat.id == categoryId); // non strict !
+
+        // fonction de clonage d'un DocumentFragment
+        const cloneFragment = (fragment) => {
+            const clone = document.createDocumentFragment();
+            fragment.childNodes.forEach(node => {
+                clone.appendChild(node.cloneNode(true));
+            });
+            return clone;
+        };
+
+        var selected = (e.target.ariaSelected === "true");
+        var container = document.getElementById(`checkboxes-${categoryId}`);
+
+        // par defaut, sans optimisation, le contenu est déjà dans le DOM...
+        if (container && container.children.length === 0) {
+            // on charge le contenu à la demande
+            if (this.options.optimisation === "on-demand") {
+                if (selected) {
+                    // on ajoute le fragment dans le DOM
+                    var fragment = this.dataOnDemand[category.id];
+                    if (fragment) {
+                        container.appendChild(cloneFragment(fragment));
+                        this._updateListenersLayersDOM(container, category.id);
+                        this.checkLayersOnMap();
+                    }
+                }
+            }
+            // TODO 
+            // on clusterise le contenu
+            if (category.cluster && this.options.optimisation === "clusterize") {}
+        }
+        
+        // INFO
+        // on affiche la barre de recherche spécifique
+        // si l'option search=true est activée pour la categorie courante
+        // on recherche les couches dans la catégorie courante uniquement !
+        var searchSpecific = document.getElementById("catalog-container-search-specific");
+        if (searchSpecific) {
+            var o = this.categories.find(c => c.id == categoryId); // non strict !
+            if (o && o.search) {
+                searchSpecific.classList.remove("gpf-hidden");
+                searchSpecific.classList.add("fr-tabs__panel--selected");
+            } else {
+                searchSpecific.classList.add("gpf-hidden");
+                searchSpecific.classList.remove("fr-tabs__panel--selected");
+            }
+        }
+        // INFO
+        // dés que l'on change de categorie,
+        // on remet à zéro l'outil de recherche specifique
+        // et la liste des couches pour afficher 
+        // toutes les couches de la catégorie
+        var inputSpecific = document.getElementById("catalog-input-search-specific");
+        if (inputSpecific) {
+            if (inputSpecific.value !== "") {
+                inputSpecific.value = "";
+                this.setFilteredLayersList("");
+            }
+        }
+
+        // INFO
+        // sur la recherche globale, on applique le filtre de recherche
+        // sur le mode on-demand car les données sont chargées à la volée
+        var inputGlobal = document.getElementById("catalog-input-search-global");
+        if (inputGlobal) {
+            if (this.options.optimisation === "on-demand") {
+                if (inputGlobal.value !== "") {
+                    this.setFilteredLayersList(inputGlobal.value);
+                }
+            }            
+        }
     }
 
     /**
@@ -1268,25 +1893,235 @@ class Catalog extends Control {
 
     /**
      * ...
+     * @param {Event} e - ...
      * @private
      */
-    onSearchCatalogButtonClick () {
+    onToggleCatalogMoreLearnClick (e) {
+        logger.trace(e);
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {String} categoryId - ...
+     * @param {String} sectionId - ...
+     * @private
+     */
+    onToggleCatalogSectionClick (e, categoryId, sectionId) {
+        logger.trace(e);
+
+        // fonction de clonage d'un DocumentFragment
+        const cloneFragment = (fragment) => {
+            const clone = document.createDocumentFragment();
+            fragment.childNodes.forEach(node => {
+                clone.appendChild(node.cloneNode(true));
+            });
+            return clone;
+        };
+
+        var categories = []; // remise à plat des catégories / sous-categories
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categories.push(element);
+                }
+            } else {
+                categories.push(category);
+            }
+        });
+        var category = categories.find(cat => cat.id == categoryId); // non strict !
+
+        var opened = (e.target.ariaExpanded === "true");
+        var container = document.getElementById(sectionId);
+        // par defaut, sans optimisation, le contenu est déjà dans le DOM...
+        if (container) {
+            // on charge le contenu à la demande
+            if (this.options.optimisation === "on-demand") {
+                if (opened) {
+                    // on ajoute le fragment dans le DOM
+                    var fragment = this.dataOnDemand[category.id][sectionId];
+                    if (fragment) {
+                        container.appendChild(cloneFragment(fragment));
+                        this._updateListenersLayersDOM(container, category.id);
+                        this.checkLayersOnMap();
+                    }
+                } else {
+                    // on supprime le contenu du DOM
+                    container.innerHTML = "";
+                }
+            }
+            // on clusterise le contenu
+            if (category.cluster && this.options.optimisation === "clusterize") {
+                if (opened) {
+                    // on crée une instance clusterize si besoin ou on réactive le clusterize existant
+                    if (this.clusterizeRef[category.id] && this.clusterizeRef[category.id][sectionId] && this.clusterizeRef[category.id][sectionId].destroyed) {
+                        this.clusterizeRef[category.id][sectionId].refresh(true);
+                    } else {
+                        // on crée le clusterize
+                        var rows = this.clusterizeSections[category.id][sectionId];
+                        if (!this.clusterizeRef[category.id]) {
+                            this.clusterizeRef[category.id] = {};
+                        }
+                        this.clusterizeRef[category.id][sectionId] = new Clusterize({
+                            scrollId : container.parentElement.id,
+                            contentId : sectionId,
+                            rows : rows,
+                            rows_in_block : category.clusterOptions.rows_in_block,
+                            blocks_in_cluster : category.clusterOptions.blocks_in_cluster,
+                            callbacks : {
+                                clusterChanged : () => {
+                                    logger.trace("cluster changed");
+                                    this._updateListenersLayersDOM(container, category.id);
+                                    this.checkLayersOnMap();
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    // on désactive le clusterize
+                    if (this.clusterizeRef[category.id] && this.clusterizeRef[category.id][sectionId] && !this.clusterizeRef[category.id][sectionId].destroyed) {
+                        this.clusterizeRef[category.id][sectionId].destroy(true);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {String} categoryId - ...
+     * @private
+     */
+    onToggleCatalogRadioChange (e, categoryId) {
+        logger.trace(e, categoryId);
+
+        var categories = []; // remise à plat des catégories / sous-categories
+        this.categories.forEach((category) => {
+            if (category.items) {
+                for (let i = 0; i < category.items.length; i++) {
+                    const element = category.items[i];
+                    categories.push(element);
+                }
+            } else {
+                categories.push(category);
+            }
+        });
+        var category = categories.find(cat => cat.id == categoryId); // non strict !
+
+        var prevcontainer = document.getElementById(`checkboxes-${this.categoryId}`);
+        if (prevcontainer && !category.section) {
+            // on supprime le contenu du DOM de l'ancienne catégorie
+            // sauf si la categorie contient des sections
+            if (this.options.optimisation === "on-demand") {
+                prevcontainer.innerHTML = "";
+            }
+        }
+
+        // sauvegarde de la categorie courrante
+        this.categoryId = categoryId;
+
+        // fonction de clonage d'un DocumentFragment
+        const cloneFragment = (fragment) => {
+            const clone = document.createDocumentFragment();
+            fragment.childNodes.forEach(node => {
+                clone.appendChild(node.cloneNode(true));
+            });
+            return clone;
+        };
+
+        var container = document.getElementById(`checkboxes-${categoryId}`);
+
+        // par defaut, sans optimisation, le contenu est déjà dans le DOM...
+        if (container && container.children.length === 0) {
+            // on charge le contenu à la demande
+            if (this.options.optimisation === "on-demand") {
+                if (e.target.checked) {
+                    // on ajoute le fragment dans le DOM
+                    var fragment = this.dataOnDemand[category.id];
+                    if (fragment) {
+                        container.appendChild(cloneFragment(fragment));
+                        this._updateListenersLayersDOM(container, category.id);
+                        this.checkLayersOnMap();
+                    }
+                }
+            }
+            // TODO 
+            // on clusterise le contenu
+            if (category.cluster && this.options.optimisation === "clusterize") {}
+        }
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onSearchGlobalCatalogButtonClick (e) {
+        // INFO
+        // la saisie du critère de recherche doit filtrer la liste des couches 
+        // dans tous les onglets.
+        // on masque les entrées non conforme
+        // - en ajoutant la classe 'gpf-hidden' dans le DOM
+        // - en sauvegardant l'état avec la property 'hidden:true'
+        var value = e.target.value;
+        this.setFilteredLayersList(value);
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onSearchGlobalCatalogInputChange (e) {
+        clearTimeout(this._searchTimeout);
+        this._searchTimeout = setTimeout(() => {
+            this.onSearchGlobalCatalogButtonClick(e);
+        }, 200); // 200ms de délai
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onSearchGlobalCatalogButtonResetClick (e) {
+        this.resetFilteredLayersList();
+        this.updateVisibilityFilteredSections();
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onSearchSpecificCatalogButtonClick (e) {
         // INFO
         // la saisie du critère de recherche doit filtrer la liste des couches affichée
         // dans l'onglet courant.
         // on masque les entrées non conforme
         // - en ajoutant la classe 'gpf-hidden' dans le DOM
         // - en sauvegardant l'état avec la property 'hidden:true'
-        var value = document.getElementById("search-input").value;
+        var value = e.target.value;
         this.setFilteredLayersList(value);
     }
 
     /**
      * ...
+     * @param {Event} e - ...
      * @private
      */
-    onSearchCatalogInputChange () {
-        this.onSearchCatalogButtonClick();
+    onSearchSpecificCatalogInputChange (e) {
+        clearTimeout(this._searchTimeout);
+        this._searchTimeout = setTimeout(() => {
+            this.onSearchSpecificCatalogButtonClick(e);
+        }, 200); // 200ms de délai
+    }
+
+    onSearchSpecificCatalogButtonResetClick (e) {
+        this.resetFilteredLayersList();
+        this.updateVisibilityFilteredSections();
     }
 
 };

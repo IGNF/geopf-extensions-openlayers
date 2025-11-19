@@ -68,7 +68,9 @@ var MousePositionDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowMousePositionPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-position fr-btn fr-btn--tertiary";
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto");
+        button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-position");
+        button.classList.add("fr-btn", "fr-btn--tertiary");
         button.setAttribute("aria-label", "Afficher les coordonnées du curseur");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);

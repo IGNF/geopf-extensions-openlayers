@@ -62,8 +62,9 @@
                     });
 
                     var catalog = new ol.control.Catalog({
-                        position: "top-left",
-                        collapsed : false
+                        position: "top-right",
+                        collapsed : false,
+                        draggable : true
                     });
                     catalog.on("catalog:loaded", (e) => {
                         console.log(e);
@@ -79,7 +80,7 @@
                     layerSwitcher = new ol.control.LayerSwitcher({
                         options : {
                             position : "bottom-right",
-                            collapsed : false,
+                            collapsed : true,
                             panel : true,
                             counter : true
                         }

@@ -42,8 +42,11 @@ var ReverseGeocodeDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowReverseGeocodingPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowReverseGeocodingPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-reverse fr-btn fr-btn--tertiary";
-        button.setAttribute("aria-label", "Ouvrir la recherche inverse");
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowReverseGeocodingPicto");
+        button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-reverse");
+        // button.classList.add("icon--ri", "icon--ri--signpost-line");
+        button.classList.add("fr-btn", "fr-btn--tertiary");
+        button.setAttribute("aria-label", "Ouvrir la recherche d'adresses");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -124,73 +127,85 @@ var ReverseGeocodeDOM = {
 
         var container = document.getElementById(this._addUID("GPreverseGeocodingResultsList"));
         var resultDiv = document.createElement("div");
-        resultDiv.id = this._addUID("GPreverseGeocodedLocationResultDiv_" + id);
-        var div = document.createElement("div");
-        div.id = this._addUID("GPreverseGeocodedLocation_" + id);
-        div.setAttribute("tabindex", "0");
-        div.className = "GPautoCompleteProposal gpf-panel__items";
-        div.innerHTML = locationDescription;
-        div.title = locationDescription;
 
-        if (div.addEventListener) {
-            div.addEventListener("mouseover", function (e) {
-                context.onReverseGeocodingResultMouseOver(e);
-            });
-            div.addEventListener("focus", function (e) {
-                context.onReverseGeocodingResultMouseOver(e);
-            });
-            div.addEventListener("mouseout", function (e) {
-                context.onReverseGeocodingResultMouseOut(e);
-            });
-            div.addEventListener("blur", function (e) {
-                context.onReverseGeocodingResultMouseOut(e);
-            });
-            div.addEventListener("click", function (e) {
-                if (typeof context.onReverseGeocodingResultClick === "function") {
-                    context.onReverseGeocodingResultClick(e);
-                }
-            });
-        } else if (div.attachEvent) {
-            div.attachEvent("onmouseover", function (e) {
-                context.onReverseGeocodingResultMouseOver(e);
-            });
-            div.attachEvent("onmouseout", function (e) {
-                context.onReverseGeocodingResultMouseOut(e);
-            });
-            div.attachEvent("onclick", function (e) {
-                if (typeof context.onReverseGeocodingResultClick === "function") {
-                    context.onReverseGeocodingResultClick(e);
-                }
-            });
+        if (!locationDescription) {
+            resultDiv.id = this._addUID("GPreverseGeocodedLocationNoResultDiv");
+            var div = document.createElement("div");
+            div.id = this._addUID("GPreverseGeocodedNoResult");
+            div.setAttribute("tabindex", "0");
+            div.className = "GPautoCompleteProposal gpf-panel__items";
+            div.innerHTML = "Aucun résultat trouvé";
+            div.title = "Aucun résultat trouvé";
+            resultDiv.appendChild(div);
+        } else {
+            resultDiv.id = this._addUID("GPreverseGeocodedLocationResultDiv_" + id);
+            var div = document.createElement("div");
+            div.id = this._addUID("GPreverseGeocodedLocation_" + id);
+            div.setAttribute("tabindex", "0");
+            div.className = "GPautoCompleteProposal gpf-panel__items";
+            div.innerHTML = locationDescription;
+            div.title = locationDescription;
+    
+            if (div.addEventListener) {
+                div.addEventListener("mouseover", function (e) {
+                    context.onReverseGeocodingResultMouseOver(e);
+                });
+                div.addEventListener("focus", function (e) {
+                    context.onReverseGeocodingResultMouseOver(e);
+                });
+                div.addEventListener("mouseout", function (e) {
+                    context.onReverseGeocodingResultMouseOut(e);
+                });
+                div.addEventListener("blur", function (e) {
+                    context.onReverseGeocodingResultMouseOut(e);
+                });
+                div.addEventListener("click", function (e) {
+                    if (typeof context.onReverseGeocodingResultClick === "function") {
+                        context.onReverseGeocodingResultClick(e);
+                    }
+                });
+            } else if (div.attachEvent) {
+                div.attachEvent("onmouseover", function (e) {
+                    context.onReverseGeocodingResultMouseOver(e);
+                });
+                div.attachEvent("onmouseout", function (e) {
+                    context.onReverseGeocodingResultMouseOut(e);
+                });
+                div.attachEvent("onclick", function (e) {
+                    if (typeof context.onReverseGeocodingResultClick === "function") {
+                        context.onReverseGeocodingResultClick(e);
+                    }
+                });
+            }
+    
+            // Copy result button
+            var copyResultButton = document.createElement("button");
+            copyResultButton.type = "button";
+            copyResultButton.id = this._addUID("GPreverseGeocodedLocationResultCopy_" + id);
+            copyResultButton.setAttribute("data-text-geolocate", div.innerHTML);
+            copyResultButton.setAttribute("title", "Copier le résultat");
+            copyResultButton.classList.add("gpf-btn-icon-copy-result", "fr-btn", "fr-btn--tertiary", "gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
+    
+            if (copyResultButton.addEventListener) {
+                copyResultButton.addEventListener("click", function (e) {
+                    if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
+                        context.onReverseGeocodingResultCopyButtonClick(e);
+                        copyResultButton.classList.add("GPcopiedLocation");
+                        setTimeout(() => {
+                            copyResultButton.classList.remove("GPcopiedLocation");
+                        }, 1000); 
+                    }
+                });
+            } else if (copyResultButton.attachEvent) {
+                copyResultButton.attachEvent("onclick", function (e) {
+                    if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
+                        context.onReverseGeocodingResultCopyButtonClick(e);
+                    }
+                });
+            }
+            resultDiv.appendChild(div);
+            resultDiv.appendChild(copyResultButton);
         }
-
-        // Copy result button
-        var copyResultButton = document.createElement("button");
-        copyResultButton.type = "button";
-        copyResultButton.id = this._addUID("GPreverseGeocodedLocationResultCopy_" + id);
-        copyResultButton.setAttribute("data-text-geolocate", div.innerHTML);
-        copyResultButton.setAttribute("title", "Copier le résultat");
-        copyResultButton.classList.add("gpf-btn-icon-copy-result", "fr-btn", "fr-btn--tertiary", "gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
-
-        if (copyResultButton.addEventListener) {
-            copyResultButton.addEventListener("click", function (e) {
-                if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
-                    context.onReverseGeocodingResultCopyButtonClick(e);
-                    copyResultButton.classList.add("GPcopiedLocation");
-                    setTimeout(() => {
-                        copyResultButton.classList.remove("GPcopiedLocation");
-                    }, 1000); 
-                }
-            });
-        } else if (copyResultButton.attachEvent) {
-            copyResultButton.attachEvent("onclick", function (e) {
-                if (typeof context.onReverseGeocodingResultCopyButtonClick === "function") {
-                    context.onReverseGeocodingResultCopyButtonClick(e);
-                }
-            });
-        }
-        resultDiv.appendChild(div);
-        resultDiv.appendChild(copyResultButton);
         container.appendChild(resultDiv);
     },
 
@@ -258,7 +273,7 @@ var ReverseGeocodeDOM = {
             buttonNew.addEventListener("click", function (e) {
                 document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
                 document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "GPform gpf-panel__content fr-modal__content";
-                document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Recherche inverse";
+                document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Trouver une adresse";
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPelementHidden");
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-hidden");
                 self.onGPreverseGeocodingReturnPictoClick(e);
@@ -267,7 +282,7 @@ var ReverseGeocodeDOM = {
             buttonNew.attachEvent("onclick", function (e) {
                 document.getElementById(self._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
                 document.getElementById(self._addUID("GPreverseGeocodingForm")).className = "GPform gpf-panel__content fr-modal__content";
-                document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Recherche inverse";
+                document.getElementById(self._addUID("GPreverseGeocodingHeaderTitle")).innerHTML = "Trouver une adresse";
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("GPelementHidden");
                 document.getElementById(self._addUID("GPreverseGeocodingReturnPicto")).classList.add("gpf-hidden");
                 self.onGPreverseGeocodingReturnPictoClick(e);
@@ -285,7 +300,7 @@ var ReverseGeocodeDOM = {
         var div = document.createElement("div");
         div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
         div.id = this._addUID("GPreverseGeocodingHeaderTitle");
-        div.innerHTML = "Recherche inverse";
+        div.innerHTML = "Trouver une adresse";
         return div;
     },
 

@@ -58,9 +58,10 @@
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
                         titlePrimary : "",
+                        size : "md",
                         categories : [
                             {
-                                title : "Fonds de carte",
+                                title : "Cartes de références",
                                 id : "base",
                                 filter : {
                                     field : "base",
@@ -68,7 +69,7 @@
                                 }
                             },
                             {
-                                title : "Données",
+                                title : "Toutes les cartes",
                                 id : "data",
                                 items : [
                                     {

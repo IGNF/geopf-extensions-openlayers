@@ -187,7 +187,10 @@ var LayerSwitcherDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowLayersListPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn fr-btn--tertiary";
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowLayersListPicto");
+        button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-layerswitcher");
+        // button.classList.add("fr-icon-stack-line");
+        button.classList.add("fr-btn", "fr-btn--tertiary");
         button.htmlFor = this._addUID("GPshowLayersList");
         button.setAttribute("aria-label", "Afficher/masquer le gestionnaire de couches");
         button.setAttribute("tabindex", "0");
@@ -586,7 +589,7 @@ var LayerSwitcherDOM = {
         img.className = "GPtitleImage GPtitleDefaultImage";
         img.alt = "";
 
-        if (obj.thumbnail) {
+        if (obj.thumbnail && typeof obj.thumbnail === "string" && obj.thumbnail !== "default") {
             img.classList.remove("GPtitleDefaultImage");
             img.src = obj.thumbnail;
         }
@@ -1722,8 +1725,16 @@ var LayerSwitcherDOM = {
         var list = document.createElement("div");
         list.id = this._addUID("GPlayerStyleList");
 
+        // regex pour détecter un préfixe UUID suivi d'un underscore
+        const uuidRegex = /^([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}_)/i;
+
         for (let i = 0; i < obj.styles.length; i++) {
             var style = obj.styles[i];
+            var title = style.title ? style.title : style.name;
+            // INFO
+            // demande de cartes.gouv.fr d'ajouter un préfixe UUID aux noms de styles
+            // mais, pour la lisibilité, on enlève le préfixe UUID s'il existe du titre affiché
+            title = title.replace(uuidRegex, "");
             var elem = document.createElement("div");
             elem.className = "gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
             var input = document.createElement("input");
@@ -1734,7 +1745,7 @@ var LayerSwitcherDOM = {
             input.dataset.name = style.name;
             var label = document.createElement("label");
             label.className = "gpf-label fr-label";
-            label.innerText = style.title;
+            label.innerText = title;
             label.htmlFor = this._addUID("styleradio_" + style.name + "_ID_" + obj.id);
             elem.appendChild(input);
             elem.appendChild(label);

@@ -1,0 +1,99 @@
+{
+    "thematic" : [
+        {
+            "id" : "biota",
+            "name" : "Biologie, faune et flore",
+            "icon" : "fr-icon-leaf-file"
+        },
+        { 
+            "id" : "boundaries",
+            "name" : "Limites politiques et administratives",
+            "icon" : "fr-icon-france-line"
+        },
+        { 
+            "id" : "climatologyMeteorologyAtmosphere",
+            "name" : "Climatologie, météorologie, atmosphère",
+            "icon" : "fr-icon-heavy-showers-fill"
+        },
+        { 
+            "id" : "economy",
+            "name" : "Économie",
+            "icon" : "fr-icon-line-chart-fill"
+        },
+        { 
+            "id" : "elevation",
+            "name" : "Altimétrie",
+            "icon" : "fr-icon-map-pin-2-fill"
+        },
+        { 
+            "id" : "environment",
+            "name" : "Environnement",
+            "icon" : "fr-icon-seedling-fill"
+        },
+        { 
+            "id" : "farming",
+            "name" : "Agriculture",
+            "icon" : "fr-icon-plant-fill"
+        },
+        { 
+            "id" : "geoscientificInformation",
+            "name" : "Sciences de la terre, géosciences",
+            "icon" : "fr-icon-earth-fill"
+        },
+        { 
+            "id" : "health",
+            "name" : "Santé",
+            "icon" : "fr-icon-capsule-fill"
+        },
+        { 
+            "id" : "imageryBaseMapsEarthCover",
+            "name" : "Carte de référence de la couverture terrestre",
+            "icon" : "fr-icon-france-fill"
+        },
+        {
+            "id" : "intelligenceMilitary", 
+            "name" : "Infrastructures militaires",
+            "icon" : "fr-icon-medal-fill"
+        },
+        { 
+            "id" : "inlandWaters",
+            "name" : "Eaux intérieures, Hydrographie",
+            "icon" : "fr-icon-flood-fill"
+        },
+        { 
+            "id" : "location",
+            "name" : "Localisation",
+            "icon" : "fr-icon-road-map-fill"
+        },
+        { 
+            "id" : "oceans",
+            "name" : "Océans",
+            "icon" : "fr-icon-fr--submersion-fill"
+        },
+        { 
+            "id" : "planningCadastre",
+            "name" : "Cadastre, aménagement",
+            "icon" : "fr-icon-community-fill"
+        },
+        { 
+            "id" : "society",
+            "name" : "Société",
+            "icon" : "fr-icon-group-fill"
+        },
+        { 
+            "id" : "structure",
+            "name" : "Constructions et ouvrages",
+            "icon" : "fr-icon-compasses-2-fill"
+        },
+        { 
+            "id" : "transportation",
+            "name" : "Infrastructures de transport",
+            "icon" : "fr-icon-bus-fill"
+        },
+        {
+            "id" : "utilitiesCommunication",
+            "name" : "Télécommunication, approvisionnement et énergie",
+            "icon" : "fr-icon-radar-fill"
+        }
+    ]
+}

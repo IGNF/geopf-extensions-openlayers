@@ -12,6 +12,10 @@ dialog[id^=GPcatalogPanel-] {
     width: 280px;
 }
 
+button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
+    max-width: 450px;
+}
+
 .GPcatalogPanelClose {
     background-image: url("img/GPcatalogOpen.png");
 }

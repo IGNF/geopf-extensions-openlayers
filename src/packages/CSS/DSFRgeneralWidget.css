@@ -188,6 +188,7 @@
   content: attr(aria-label);
   position: absolute;
   top: 0;
+  z-index: 2000;
   color: var(--text-default-grey);
   font-size: .75rem;
   width: fit-content;
