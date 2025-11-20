@@ -7,9 +7,14 @@ import Helper from "../../Utils/Helper";
 
 // Voir les typedefs partagés dans ./typedefs.js (SearchEngineBaseOptions, SearchServiceOptions, ...)
 
+const history = "fr-icon-history-line";
 const typeClasses = {
-    "history" : "fr-icon-history-line",
-    "search" : "fr-icon-map-pin-2-line",
+    "StreetAddress" : "fr-icon-map-pin-2-line",
+    "PositionOfInterest" : {
+        "administratif" : "fr-icon-france-fill",
+        "hydrographie" : "fr-icon-ign-mer",
+        "default" : "fr-icon-map-pin-2-line",
+    }
 };
 
 var logger = Logger.getLogger("searchengine");
@@ -174,18 +179,9 @@ class SearchEngineBase extends Control {
                             // Réaffiche la valeur précédente de l'utilisateur
                             e.target.value = this._previousValue;
                         }
-                        break;
-                    case "Enter":
-                        // Lance la recherche
-                        let item = list[idx];
-                        if (idx < 0) {
-                            // Pas d'item sélectionné : on prend le premier de la liste
-                            item = list[0];
-                        }
-                        if (item) {
-                            // Simule un clic sur l'élément sélectionné
-                            item.click();
-                        }
+                        // Envoie un événement de type input pour notifier le changement
+                        this.input.dispatchEvent(new Event("input"));
+
                         break;
                     default:
                         if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
@@ -500,14 +496,22 @@ class SearchEngineBase extends Control {
         this.input.setAttribute("data-active-option", "");
         // Update list
         this.autocompleteList.innerHTML = "";
-        const iconClass = typeClasses[type] || typeClasses["search"];
         tab.forEach((item, idx) => {
             const li = document.createElement("li");
-            li.id = Helper.getUid("GPsearchHistoric-");
-            li.className = `GPsearchHistoric gpf-panel__item gpf-panel__item-searchengine ${iconClass} fr-icon--sm`;
+            const iconClass = this.getIconClass(item, type);
+
+            li.id = Helper.getUid("GPsearchResult-");
+            li.className = `GPsearchResult gpf-panel__item gpf-panel__item-searchengine ${iconClass} fr-icon--sm`;
             li.setAttribute("role", "option");
             li.setAttribute("data-idx", idx);
             li.innerHTML = li.title = this.getItemTitle(item);
+            if (type === "history") {
+                li.classList.add("GPsearchHistoric");
+                const span = document.createElement("span");
+                span.ariaHidden = "true";
+                span.className = `${history} fr-icon--sm`;
+                li.append(span);
+            }
             this.autocompleteList.appendChild(li);
             li.addEventListener("click", function (e) {
                 const idx = Number(e.target.getAttribute("data-idx"));
@@ -517,6 +521,30 @@ class SearchEngineBase extends Control {
                 });
             }.bind(this));
         });    
+    }
+
+    /**
+     * Retourne la classe à ajouter pour un résultat d'autocomplétion
+     * @param {AutocompleteResult} item Résultat de l'autocomplétion (ou historique)
+     * @param {String} type Type de la recherche ("history" ou "search")
+     * @returns {String} classe à ajouter
+     */
+    getIconClass (item, type) {
+        // let iconClass = typeClasses[type];
+        let iconClass = typeClasses[item.type];
+        // Cas où l'on a d'autres éléments
+        if (typeof iconClass === "object") {
+            // Cherche les types de POI
+            for (let i = 0; i < item.poiType.length; i++) {
+                const poiType = item.poiType[i];
+                if (Object.hasOwn(iconClass, poiType)) {
+                    iconClass = iconClass[poiType];
+                    break;
+                }
+            }
+            iconClass = typeof iconClass === "object" ? iconClass["default"] : iconClass;
+        }
+        return iconClass;
     }
 
     /**

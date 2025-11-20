@@ -187,7 +187,7 @@ class SearchEngineAdvanced extends Control {
                     // Focus sur le bouton de recherche avancée
                     this.advancedBtn.focus();
                 } else {
-                    this.baseSearchEngine.subimtBt.focus();
+                    this.eraseBtn.focus();
                 }
             }
         }.bind(this));
@@ -337,6 +337,8 @@ class SearchEngineAdvanced extends Control {
         eraseBtn.addEventListener("click", function () {
             this.baseSearchEngine.input.value = "";
             delete this.baseSearchEngine.input.dataset.empty;
+            // Notifie l'input du changement
+            this.baseSearchEngine.input.dispatchEvent(new Event("input"));
         }.bind(this));
         this.baseSearchEngine.optionscontainer.appendChild(eraseBtn);
     }

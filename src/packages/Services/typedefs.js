@@ -48,7 +48,7 @@
  * @typedef {Object} IGNSearchObject
  * @property {AutocompleteResult|String} location - Objet utilisé pour faire la requête.
  * Peut être soit le résultat de l'autocomplétion ou une chaîne de caractère.
- * @property {IGNSearchFilter} [filter] - Filtres optionnels pour
+ * @property {IGNSearchFilter} [filters] - Filtres optionnels pour la recherche
  */
 
 /**
@@ -57,7 +57,7 @@
  * @typedef {Object} IGNSearchFilter
  * @property {string} [postalCode] - Code postal (adresses, toponymes).
  * @property {string} [inseeCode] - Code INSEE (adresses, toponymes).
- * @property {string} [city] - Nom de la ville (adresses uniquement).
+ * @property {string} [city] - Nom de la ville (adresses, toponymes).
  * @property {string} [type] - Type de toponyme (toponymes uniquement).
  * @property {string} [codeDepartement] - Code département (parcelles cadastrales uniquement).
  * @property {string} [codeCommune] - Code commune (parcelles cadastrales uniquement).
