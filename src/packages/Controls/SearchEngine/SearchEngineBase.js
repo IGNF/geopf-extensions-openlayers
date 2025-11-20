@@ -179,18 +179,9 @@ class SearchEngineBase extends Control {
                             // Réaffiche la valeur précédente de l'utilisateur
                             e.target.value = this._previousValue;
                         }
-                        break;
-                    case "Enter":
-                        // Lance la recherche
-                        let item = list[idx];
-                        if (idx < 0) {
-                            // Pas d'item sélectionné : on prend le premier de la liste
-                            item = list[0];
-                        }
-                        if (item) {
-                            // Simule un clic sur l'élément sélectionné
-                            item.click();
-                        }
+                        // Envoie un événement de type input pour notifier le changement
+                        this.input.dispatchEvent(new Event("input"));
+
                         break;
                     default:
                         if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
