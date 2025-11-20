@@ -4,9 +4,6 @@
           
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
-        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
-        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -26,7 +23,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du gestionnaire de catalogue avec options par defaut</h2>
+            <h2>Ajout du gestionnaire de catalogue avec option sur le filtrage des couches</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -47,9 +44,6 @@
                     map = new ol.Map({
                         target : "map",
                         layers : [
-                            new ol.layer.GeoportalWMTS({
-                                layer : "ACCES.BIOMETHANE"
-                            }),
                             new ol.layer.Tile({
                                 source: new ol.source.OSM(),
                                 opacity: 0.5
@@ -62,38 +56,52 @@
                     });
 
                     var catalog = new ol.control.Catalog({
-                        position: "top-right",
-                        collapsed : false,
-                        draggable : true
-                    });
-                    catalog.on("catalog:loaded", (e) => {
-                        console.log(e);
-                    });
-                    catalog.on("catalog:layer:add", (e) => {
-                        console.log(e);
-                    });
-                    catalog.on("catalog:layer:remove", (e) => {
-                        console.log(e);
+                        position: "top-left",
+                        search : { 
+                            display : false
+                        },
+                        optimisation: "on-demand",
+                        categories : [
+                            {
+                                title : "Données",
+                                id : "data"
+                            },
+                            {
+                                title : "WMTS",
+                                default : false,
+                                search : true,
+                                filter : {
+                                    field : "service",
+                                    value : "WMTS"
+                                }
+                            },
+                            {
+                                title : "WMS",
+                                filter : {
+                                    field : "service",
+                                    value : "WMS"
+                                }
+                            },
+                            {
+                                title : "TMS",
+                                default : true,
+                                filter : {
+                                    field : "service",
+                                    value : "TMS"
+                                }
+                            },
+                            {
+                                title : "WFS",
+                                default : false,
+                                search : true,
+                                filter : {
+                                    field : "service",
+                                    value : "WFS"
+                                }
+                            }
+                        ],
                     });
                     map.addControl(catalog);
-                    
-                    layerSwitcher = new ol.control.LayerSwitcher({
-                        options : {
-                            position : "bottom-right",
-                            collapsed : true,
-                            panel : true,
-                            counter : true
-                        }
-                    });
-
-                    layerSwitcher.on("layerswitcher:add", function (e) {
-                        console.warn("layer", e, e.layer);
-                    });
-                    layerSwitcher.on("layerswitcher:remove", function (e) {
-                        console.warn("layer", e, e.layer);
-                    });
-
-                    map.addControl(layerSwitcher);
                 };
                 Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",

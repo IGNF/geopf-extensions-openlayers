@@ -66,7 +66,10 @@ var TerritoriesDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowTerritoriesPicto");
-        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowTerritoriesPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-territories fr-btn fr-btn--tertiary";
+        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowTerritoriesPicto");
+        button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-territories");
+        button.classList.add("fr-icon-france-line");
+        button.classList.add("fr-btn", "fr-btn--tertiary");
         button.setAttribute("aria-label", "Sélecteur de territoire");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
