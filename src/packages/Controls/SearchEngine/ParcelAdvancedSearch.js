@@ -408,7 +408,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * Récupère les feuilles cadastrales d'une commune via le WFS Geopf
      * @private
      * @param {String} code Code INSEE de la commune
-     * @returns 
+     * @returns {Object} data
      */
     async _fetchFeuille (code) {
         const domtom = ["97","98"].includes(code.slice(0,2));

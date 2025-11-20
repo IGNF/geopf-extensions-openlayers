@@ -308,9 +308,17 @@ div[id^=GPgeocodeResults-] {
   box-shadow: 0 -1px 0 0 var(--border-default-grey);
 }
 
+[id^="GPsearchEngine"] ul li.GPsearchHistoric {
+  padding-right: 1.75rem;
+}
+
+[id^="GPsearchEngine"] ul li.GPsearchHistoric > span {
+  position: absolute;
+  right: 1rem;
+  color: var(--grey-625-425);
+}
+
 [id^="GPsearchEngine"] ul li:first-child {
-  padding: 0.75rem 0.5rem;
-  color: var(--text-action-high-grey);
   box-shadow: none;
 }
 
@@ -410,4 +418,10 @@ form.GPSearchBar > .GPInputGroup > input[data-empty] ~ .GPOptionsContainer > but
 
 form.GPSearchBar > .GPInputGroup > input[data-empty] ~ .GPOptionsContainer > button[id^="GPSearchEngine-advanced-btn"] {
   display:none;
+}
+
+.fr-icon-ign-mer::before,
+.fr-icon-ign-mer::after {
+  -webkit-mask-image: url("./img/dsfr/ign-mer.svg");
+  mask-image: url("./img/dsfr/ign-mer.svg");
 }

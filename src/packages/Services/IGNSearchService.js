@@ -10,10 +10,10 @@ import GeocodeUtils from "../Utils/GeocodeUtils";
 import Search from "./Search";
 import Feature from "ol/Feature.js";
 import Point from "ol/geom/Point.js";
-import { canvasPool } from "ol/renderer/canvas/Layer";
 
 var logger = Logger.getLogger("searchengine");
 
+// logger.log = () => { };
 
 /**
  * @classdesc
@@ -72,11 +72,11 @@ class IGNSearchService extends AbstractSearchService {
             autocomplete : true,
             autocompleteOptions : {
                 serviceOptions : {
-                    maximumResponses : 5,
+                    maximumResponses : 10,
                 },
                 triggerGeocode : false,
                 triggerDelay : 1000,
-                prettifyResults : false
+                prettifyResults : true
             },
         };
 
@@ -137,8 +137,6 @@ class IGNSearchService extends AbstractSearchService {
          * @type {Array<AutocompleteResult>}
          */
         this._suggestedLocations;
-
-        console.log(this.options);
     }
 
 
@@ -332,8 +330,8 @@ class IGNSearchService extends AbstractSearchService {
      * @private
      */
     _prettifyAutocompleteResults (autocompleteResults) {
-        for (var i = autocompleteResults.length - 1; i >= 0; i--) {
-            var autocompleteResult = autocompleteResults[i];
+        for (let i = autocompleteResults.length - 1; i >= 0; i--) {
+            const autocompleteResult = autocompleteResults[i];
             if ((autocompleteResult.type === "StreetAddress" && autocompleteResult.kind === "municipality") ||
             autocompleteResult.type === "PositionOfInterest" && autocompleteResult.poiType[0] === "lieu-dit habité" && autocompleteResult.poiType[1] === "zone d'habitation") {
                 // on retire les éléments streetAdress - municipality car déjà pris en compte par POI
@@ -400,37 +398,75 @@ class IGNSearchService extends AbstractSearchService {
     /**
      * Lance une recherche sur les services de géocodage de l'IGN
      * @see {@link https://data.geopf.fr/geocodage/search}
+     * @see {@link https://data.geopf.fr/geocodage/openapi}
      * @param {IGNSearchObject} object Recherche 
      * @abstract
      */
     search (object) {
-        const location = object.location;
-        const filters = object.filters;
+        let location = object.location;
+        const filters = object.filters ? object.filters : {};
 
         if (location === undefined) {
             return;
         }
         // on ajoute le texte de l'autocomplétion dans l'input
         let label;
+        let index = this.get("index");
+        let truegeometry = this.get("returnTrueGeometry");
         if (typeof location === "string") {
+            // Location est un texte, on prend les valeurs par défaut
             label = location;
         } else {
+            // location est un objet : on vérifie les informations qu'il comporte
+
+            // Récupère les infos (s'il y'en a)
+            index = location.type ? location.type : index;
             label = GeocodeUtils.getSuggestedLocationFreeform(location);
+            if (index === "PositionOfInterest") {
+                // Recherche d'un POI : ajout d'infos supplémentaires
+                let poiType = location.poiType[0];
+                if (poiType === "administratif" && location.poiType[1]) {
+                    poiType = location.poiType[1];
+                }
+                filters.category = poiType ? poiType : null;
+
+                // Retourne la géométrie pour certains types seulement
+                truegeometry = false;
+                const trueGeometries = ["administratif", "département", "construction", "hydrographie"];
+                for (let i = 0; i < location.poiType.length; i++) {
+                    const type = location.poiType[i];
+                    if (type !== "lieu-dit habité" && trueGeometries.includes(type)) {
+                        truegeometry = true;
+                        break;
+                    }
+                }
+            }
+            filters.postalCode = location.postalCode ? location.postalCode : null;
+
+            // Retire chaque valeurs nulles
+            for (const key in filters) {
+                if (!Object.hasOwn(filters, key)) {
+                    continue;
+                };
+                if (filters[key] === null) {
+                    delete filters[key];
+                }
+            }
         }
 
-        // on sauvegarde le localisant
-        this._currentGeocodingLocation = label;
-
         // on centre la vue et positionne le marker, à la position reprojetée dans la projection de la carte
+
         this._requestGeocoding({
-            index : this.get("index"),
+            index : index,
             limit : this.get("limit"),
-            returnTrueGeometry : this.get("returnTrueGeometry"),
+            returnTrueGeometry : truegeometry,
             location : label,
             filters : filters,
             onSuccess : this._onSuccessSearch.bind(this),
             onFailure : this._onFailureSearch.bind(this, location),
         });
+        // on sauvegarde le localisant
+        this._currentGeocodingLocation = label;
     }
 
 
