@@ -83,19 +83,52 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
     /** Show error message for a given input
      * @param {String} name Input name
      * @param {String} [message] Message to show (if none remove message)
+     * @param {String} [what="error"] Message type (error, warning, info)
      * @private
      */
-    _showMessage (name, message) {
+    _showMessage (name, message, what) {
         const div = this.element.querySelector("[name='" + name + "']").parentElement.querySelector(".GPMessagesGroup");
         if (message) {
             const msg = document.createElement("p");
-            msg.className = "fr-message fr-message--error";
+            msg.className = "fr-message fr-message--" + (what || "error");
             msg.textContent = message;
             div.innerHTML = "";
             div.appendChild(msg);
         } else {
             div.innerHTML = "";
         }
+    }
+
+    /** Change the section
+     * @private
+     */
+    setSection () {
+        const prefix = this.prefixInput.value;
+        const section = this.sectionInput.value;
+        this.numberList.innerHTML = "";
+        this._showMessage("section", "chargement en cours", "info");
+        this._fetchCadastre(this.communeId, prefix, section).then(data => {
+            this._showMessage("section", "");
+            const section = this.sectionInput.value;
+            if (data && data.features && data.features[0].properties.section === section) {
+                this.numberInput.focus();
+                const numbers = [];
+                data.features.forEach(numero => numbers.push(numero.properties.numero));
+                // Sort numbers
+                numbers.sort().forEach(numero => {
+                    const option = document.createElement("li");
+                    option.value = option.textContent = numero.replace(/^0{1,4}/g,"");
+                    option.addEventListener("click", () => {
+                        this.numberInput.value = option.value;
+                        this._onSearch();
+                        this.numberInput.blur();
+                        this.numberInput.ariaExpanded = "false";
+                    });
+                    this.numberList.appendChild(option);
+                });
+                this.filterListNumber();
+            }
+        });
     }
 
     /**
@@ -110,10 +143,14 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             section.value = "";
             section.textContent = "Sélectionner une section";
             this.sectionInput.appendChild(section);
+            let previous = "";
             this.feuilles[prefix].sort().forEach(key => {
-                const section = document.createElement("option");
-                section.value = section.textContent = key;
-                this.sectionInput.appendChild(section);
+                if (key !== previous) {
+                    const section = document.createElement("option");
+                    section.value = section.textContent = key;
+                    this.sectionInput.appendChild(section);
+                    previous = key;
+                }
             });
             this.sectionInput.removeAttribute("disabled");
             this.sectionInput.focus();
@@ -133,8 +170,10 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             this.communeId = id;
             prefixInput.innerHTML = "";
             if (id) {
+                this._showMessage("commCode", "chargement en cours", "info");
                 // Fetch prefixes and sections for the selected commune
-                this._fetchFeuille(id).then(data => {
+                this._fetchCadastre(id).then(data => {
+                    this._showMessage("commCode", "");
                     this.feuilles = {};
 
                     data.features.forEach(feuille => {
@@ -143,10 +182,14 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                         }
                         this.feuilles[feuille.properties.com_abs].push(feuille.properties.section);
                     });
+                    let previous = "";
                     Object.keys(this.feuilles).sort().forEach(key => {
-                        const prefix = document.createElement("option");
-                        prefix.value = prefix.textContent = key;
-                        prefixInput.appendChild(prefix);
+                        if (key !== previous) {
+                            const prefix = document.createElement("option");
+                            prefix.value = prefix.textContent = key;
+                            prefixInput.appendChild(prefix);
+                            previous = key;
+                        }
                     });
                     this.setFeuille("000");
                 });
@@ -223,6 +266,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                         if (index >= autoOptions.length) {
                             index = -1;
                         }
+                        e.preventDefault();
                         break;
                     }
                     case "ArrowUp": {
@@ -230,6 +274,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                         if (index < -1) {
                             index += autoOptions.length +1;
                         }
+                        e.preventDefault();
                         break;
                     }
                     case "Enter": {
@@ -238,8 +283,6 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                             autoOptions[index].click();
                             index = -1;
                         }
-                        e.preventDefault();
-                        e.stopPropagation();
                         break;
                     }
                     default: {
@@ -247,7 +290,6 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                     }
                 }
                 if (selectedIndex !== index) {
-                    e.preventDefault();
                     // Update selected option
                     autoOptions[selectedIndex]?.classList.remove("active");
                     selectedIndex = index;
@@ -261,9 +303,8 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
 
         // Show autocomplete on input
         comCodeInput.addEventListener("keyup", e => {
-            e.preventDefault();
-            e.stopPropagation();
             if (["ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key)) {
+                e.preventDefault();
                 return;
             }
             showAutocomplete(e);
@@ -284,18 +325,22 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             } else {
                 this._clearMessages();
             }
+            this._showMessage("commCode", "chargement en cours", "info");
             this._fetchCommuneData(comCodeInput.value).then(data => {
+                this._showMessage("commCode", "");
                 // Clear previous suggestions
                 autocompleteList.innerHTML = "";
                 communeName = "";
                 if (data.length === 0) {
                     // errror message
+                    this._showMessage("commCode", "Aucune commune ne correspond à ce code INSEE ou code postal.");
+                    this.setCommune();
                 } else if (data.length === 1) {
                     communeName = comCodeInput.value = `${data[0].code} (${data[0].nom})`;
                     this.setCommune(data[0].code);
                 } else {
                     data.forEach(commune => {
-                        const type = commune.codesPostaux ? "code postal" : "code INSEE";
+                        const type = commune.codesPostaux ? "code INSEE" : "code postal";
                         const option = document.createElement("li");
                         option.className = "GPautoCompleteOption";
                         option.setAttribute("role", "option");
@@ -319,14 +364,56 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         prefixInput.addEventListener("change", () => {
             this.setFeuille(prefixInput.value);
         });
-        // Fetch parcelles
+        // Fetch parcelles number
         sectionInput.addEventListener("change", () => {
             if (sectionInput.value) {
                 this.numberInput.removeAttribute("disabled");
+                this.setSection();
             } else {
                 this.numberInput.setAttribute("disabled", "disabled");
             }
         });
+
+        // Handle listbox for number input
+        this.numberInput.addEventListener("focus", () => {
+            this.numberInput.ariaExpanded = "true";
+        });
+        this.numberInput.addEventListener("blur", (e) => {
+            if (e.relatedTarget !== this.numberList) {
+                this.numberInput.ariaExpanded = "false";
+            }
+        });
+
+        // Filter number list on keyup
+        this.numberInput.addEventListener("keyup", (e) => {
+            this.filterListNumber();
+            if (e.key === "Enter") {
+                this.numberInput.ariaExpanded = "false";
+                this.numberInput.blur();
+            }
+        });
+    }
+
+
+    /** Filter listbox options
+     */ 
+    filterListNumber () {
+        const filter = this.numberInput.value.toUpperCase();
+        const options = this.numberList.querySelectorAll("li");
+        let hasNumber = false;
+        options.forEach(option => {
+            if (option.textContent.toUpperCase().indexOf(filter) > -1) {
+                option.style.display = "";
+                hasNumber = true;
+            } else {
+                option.style.display = "none";
+            }
+        });
+        if (!hasNumber) {
+            this._showMessage("numero", "Aucun numéro de parcelle ne correspond à cette saisie.");
+        } else {
+            this._showMessage("numero", "");
+        }
     }
 
     /**
@@ -401,6 +488,9 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             return Promise.all(responses.map(res => res.json())).then(json => {
                 return json[0].concat(json[1]);
             });
+        }).catch(error => {
+            this._showMessage("commCode", "Une erreur est survenue lors de la récupération des données de la commune.");
+            return [];
         });
     }
 
@@ -408,9 +498,11 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * Récupère les feuilles cadastrales d'une commune via le WFS Geopf
      * @private
      * @param {String} code Code INSEE de la commune
-     * @returns 
+     * @param {String} [prefix] Préfixe de la parcelle
+     * @param {String} [section] Section de la parcelle
+     * @returns {Promise} Promesse avec les données GeoJSON
      */
-    async _fetchFeuille (code) {
+    async _fetchCadastre (code, prefix, section) {
         const domtom = ["97","98"].includes(code.slice(0,2));
         const dep = code.slice(0, domtom ? 3 : 2);
         const com = code.slice(domtom ? 3 : 2, 5);
@@ -419,16 +511,33 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             service : "WFS",
             version : "2.0.0",
             request : "GetFeature",
-            typename : "CADASTRALPARCELS.PARCELLAIRE_EXPRESS:feuille",
+            typename : "CADASTRALPARCELS.PARCELLAIRE_EXPRESS:" + (section ? "parcelle" : "feuille"),
             outputFormat : "application/json",
             srsName : "CRS:84",
             count : "1000",
-            propertyName : "com_abs,section",
-            cql_filter : `code_dep='${dep}' and code_com='${com}'`
+            propertyName : section ? "com_abs,section,numero" : "com_abs,section",
+            cql_filter : `code_dep='${dep}' and code_com='${com}'` + (section ? ` and com_abs='${prefix}' and section='${section}'` : "")
         };
         const queryString = new URLSearchParams(params).toString();
         const fullUrl = url + queryString;
-        const response = await fetch(fullUrl);
+        // Abort previous request
+        if (this.controller) {
+            this.controller.abort();
+        }
+        // New request
+        this.controller = new AbortController();
+        const response = await fetch(fullUrl, {
+            headers : {
+                "Content-Type" : "application/json",     
+            },
+            signal : this.controller.signal
+        }).catch(error => {
+            return null;
+        });
+        this.controller = null;
+        if (!response) {
+            return {};
+        }
         const data = await response.json();
         return data;
     }
@@ -504,9 +613,18 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         numberInput.name = "numero";
         numberInput.title = "Numéro de la parcelle";
         numberInput.autocomplete = "off";
+        numberInput.ariaExpanded = "false";
         numberInput.id = Helper.getUid("ParcelAdvancedSearch-number-");
         numberInput.setAttribute("disabled", "disabled");
-        this._getLabelContainer("Numéro*", "fr-input-group", numberInput, "");
+        const numDiv = this._getLabelContainer("Numéro*", "fr-input-group", numberInput, "");
+
+        const numberList = this.numberList = document.createElement("ul");
+        numberList.className = "GPautoCompleteList";
+        numberList.id = Helper.getUid("GPautoCompleteList-");
+        numberList.setAttribute("role", "listbox");
+        numberList.setAttribute("tabindex", "-1");
+        numberList.setAttribute("aria-label", "Propositions");
+        numDiv.insertBefore(numberList, numberInput.nextSibling);
     }
 
     /** Do search
@@ -515,7 +633,9 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * @param {PointerEvent} e Événement de soumission
      */
     _onSearch (e) {
-        super._onSearch(e);
+        if (e) {
+            super._onSearch(e);
+        }
 
         this._clearMessages();
 
@@ -526,7 +646,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         const section = this.sectionInput.value;
         const number = this.numberInput.value;
         if (!prefix) {
-            this._showMessage("prefix", "Le préfixe est obligatoire.");
+            // this._showMessage("prefix", "Le préfixe est obligatoire.");
             return;
         } else if (!section) {
             this._showMessage("section", "La section est obligatoire.");
@@ -558,6 +678,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
     _onErase (e) {
         super._onErase(e);
         this.setCommune();
+        this._clearMessages();
     }
 
 }

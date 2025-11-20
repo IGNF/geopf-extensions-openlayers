@@ -85,7 +85,6 @@ form[id^=GPAdvancedForm-] select option.option {
 form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .GPautoCompleteList {
     display: none;
     z-index: 1;
-    background-color: #fff;
     padding: 0;
 }
 form[id^=GPAdvancedForm-ParcelAdvancedSearch-] input[aria-expanded="true"] ~ .GPautoCompleteList {
