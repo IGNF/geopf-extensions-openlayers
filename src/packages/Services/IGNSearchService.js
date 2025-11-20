@@ -511,7 +511,10 @@ class IGNSearchService extends AbstractSearchService {
         ];
         let f, extent;
         if (location.placeAttributes.truegeometry) {
-            let geom = JSON.parse(location.placeAttributes.truegeometry);
+            let geom = location.placeAttributes.truegeometry;
+            if (typeof geom === "string") {
+                JSON.parse(geom);
+            }
 
             let format = new GeoJSON();
             let geometry = format.readGeometry(geom, {

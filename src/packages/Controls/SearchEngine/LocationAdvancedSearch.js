@@ -105,6 +105,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
             if (e.extent) {
                 e.extent.setProperties(info);
             }
+            console.log(e);
             this.dispatchEvent(e);
         } else {
             this.element.parentElement.parentElement.scrollTop = 0;
