@@ -110,6 +110,13 @@ class SearchEngineAdvanced extends Control {
          */
         this._searchForms;
 
+        /**
+         * Si vrai, écoute les clics sur le document pour gérer
+         * la modale de recherche avancée
+         * @type {Boolean}
+         */
+        this.listenToClick = false;
+
         if (options.advancedSearch && options.advancedSearch instanceof Array) {
             this._searchForms = options.advancedSearch;
         } else {
@@ -193,6 +200,16 @@ class SearchEngineAdvanced extends Control {
         }.bind(this));
 
         this.on("search", this.addResultToMap.bind(this));
+
+        // Gère le cas du conteneur de recherche avancée
+        ["mousedown", "focusin"].map(eventListener => document.addEventListener(eventListener, this._onDocumentClick.bind(this)));
+
+        this.advancedBtn.addEventListener("blur", function (e) {
+            if (e.relatedTarget === this.baseSearchEngine.input) {
+                this.listenToClick = false;
+                this.advancedBtn.setAttribute("aria-expanded", false);
+            }
+        }.bind(this));
     }
 
     /**
@@ -314,12 +331,27 @@ class SearchEngineAdvanced extends Control {
 
         // Gestion du bouton avancé
         advancedBtn.setAttribute("aria-controls", advancedContainer.id);
-        advancedBtn.addEventListener("click", (e) => {
+        advancedBtn.addEventListener("click", function (/** @type {PointerEvent} */ e)  {
             e.preventDefault();
             const isHidden = advancedBtn.getAttribute("aria-expanded") === "false";
             advancedBtn.setAttribute("aria-expanded", isHidden);
-            this.baseSearchEngine.setActive(isHidden);
-        });
+            this.listenToClick = isHidden;
+            if (isHidden) {
+                // Si la modale est ouverte, on met le focus sur le premier élément focusable
+                const focusableSelectors = [
+                    "a[href]",
+                    "button:not([disabled])",
+                    "input:not([disabled])",
+                    "select:not([disabled])",
+                    "textarea:not([disabled])",
+                    "[tabindex]:not([tabindex='-1'])"
+                ].join(",");
+                const firstFocusable = advancedContainer.querySelector(focusableSelectors);
+                if (firstFocusable) {
+                    firstFocusable.focus();
+                }
+            }
+        }.bind(this));
 
         // N'ajoute pas le bouton s'il n'y a pas d'options avancées
         if (this._searchForms.length) {
@@ -341,6 +373,24 @@ class SearchEngineAdvanced extends Control {
             this.baseSearchEngine.input.dispatchEvent(new Event("input"));
         }.bind(this));
         this.baseSearchEngine.optionscontainer.appendChild(eraseBtn);
+    }
+
+    /**
+     * Fonction active si la recherche avancée est active
+     * @param {PointerEvent} e Événement de clic sur le document
+     */
+    _onDocumentClick (e) {
+        if (this.listenToClick === true) {
+            // Écoute des clics sur le document ==> recherche avancée active
+            const clickOnAdvancedContainer = (this.advancedContainer === e.target || this.advancedContainer.contains(e.target));
+            const clickOnAdvancedBtn = this.advancedBtn === e.target;
+            if (!(clickOnAdvancedContainer || clickOnAdvancedBtn)) {
+                // On fait une action si un clic se produit en dehors du conteneur
+                // Et si le bouton de recherche avancée n'est pas cliqué
+                this.listenToClick = false;
+                this.advancedBtn.setAttribute("aria-expanded", false);
+            }
+        }
     }
 
     /**
