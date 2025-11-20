@@ -403,7 +403,7 @@ class IGNSearchService extends AbstractSearchService {
      * @abstract
      */
     search (object) {
-        let location = object.location;
+        const location = object.location;
         const filters = object.filters ? object.filters : {};
 
         if (location === undefined) {
@@ -422,6 +422,13 @@ class IGNSearchService extends AbstractSearchService {
             // Récupère les infos (s'il y'en a)
             index = location.type ? location.type : index;
             label = GeocodeUtils.getSuggestedLocationFreeform(location);
+            // TODO : AMÉLIORER CETTE PARTIE (REDONDANTE)
+            // Enlève l'ajout du prettify
+            if ((location.type === "PositionOfInterest" && location.poiType[0] === "administratif" &&
+                (location.poiType[1] === "département" || location.poiType[1] === "région"))) {
+                label = label.substring(0, label.length - (location.poiType[1].length + 2));
+            }
+
             if (index === "PositionOfInterest") {
                 // Recherche d'un POI : ajout d'infos supplémentaires
                 let poiType = location.poiType[0];
