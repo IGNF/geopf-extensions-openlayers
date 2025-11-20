@@ -12,8 +12,7 @@ const typeClasses = {
     "StreetAddress" : "fr-icon-map-pin-2-line",
     "PositionOfInterest" : {
         "administratif" : "fr-icon-france-fill",
-        "cours d'eau" : "fr-icon-ign-mer",
-        "construction" : "fr-icon-train-line",
+        "hydrographie" : "fr-icon-ign-mer",
         "default" : "fr-icon-map-pin-2-line",
     }
 };
