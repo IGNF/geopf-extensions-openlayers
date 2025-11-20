@@ -611,6 +611,15 @@ class Territories extends Control {
         this.append = e.target.checked;
     }
 
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onModifyTerritoriesClick (e) {
+        logger.trace(e);
+    }
+
 };
 
 // on récupère les méthodes de la classe DOM

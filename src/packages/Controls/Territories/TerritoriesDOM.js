@@ -170,9 +170,10 @@ var TerritoriesDOM = {
         var content = "&#x2630";
 
         var idButton = "gpf-territories-button-option-id";
-        var idInput = "gpf-territories-upload-id";
+        var idInputUpload = "gpf-territories-upload-id";
         var idClose = "gpf-territories-upload-close-id";
         var idToggle = "gpf-territories-toggle-messages";
+        var idBtnModify = "gpf-territories-modify-id";
 
         var strContainer = `
         <div>
@@ -195,26 +196,39 @@ var TerritoriesDOM = {
                         <span>Fermer</span>
                     </button>
                 </div>
-                <label class="fr-label" for="gpf-territories-upload-id">
+                <label class="fr-label">
                     ${title}
                     <span class="fr-hint-text">${description}</span>
                 </label>
-                <div class="fr-toggle fr-m-2v">
-                    <input 
-                        id="${idToggle}" 
-                        class="fr-toggle__input" 
-                        type="checkbox" 
-                        aria-describedby="gpf-territories-toggle-messages">
-                    <label class="fr-toggle__label" for="${idToggle}">Compléter la liste</label>
-                    <div class="fr-messages-group" id="gpf-territories-toggle-messages" aria-live="polite"></div>
-                </div>
-                <input 
-                    id="${idInput}" 
-                    class="fr-upload" 
-                    aria-describedby="gpf-territories-upload-id-messages" 
-                    type="file" 
-                    name="upload">
-                <div class="fr-messages-group" id="gpf-territories-upload-id-messages" aria-live="polite"></div>
+                <fieldset class="fr-fieldset">
+                    <div class="fr-fieldset__element">
+                        <div class="fr-toggle fr-m-2v">
+                            <input 
+                                id="${idToggle}" 
+                                class="fr-toggle__input" 
+                                type="checkbox" 
+                                aria-describedby="gpf-territories-toggle-messages">
+                            <label class="fr-toggle__label" for="${idToggle}">Compléter la liste</label>
+                            <div class="fr-messages-group" id="gpf-territories-toggle-messages" aria-live="polite"></div>
+                        </div>
+                    </div>
+                    <div class="fr-fieldset__element">
+                        <input 
+                            id="${idInputUpload}" 
+                            class="fr-upload" 
+                            aria-describedby="gpf-territories-upload-id-messages" 
+                            type="file" 
+                            name="upload">
+                        <div class="fr-messages-group" id="gpf-territories-upload-id-messages" aria-live="polite"></div>
+                    </div>
+                </fieldset>
+                <fieldset class="fr-fieldset">
+                    <button 
+                        id="${idBtnModify}" 
+                        class="gpf-button gpf-button fr-btn--tertiary fr-btn--tertiary" 
+                        aria-describedby="gpf-territories-modify-id-messages">Modifier les territoires</button>
+                    <div class="fr-messages-group" id="gpf-territories-modify-id-messages" aria-live="polite"></div>
+                </fieldset>
             </dialog>
         </div>
         `;
@@ -253,9 +267,9 @@ var TerritoriesDOM = {
 
         // INFO
         // https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications
-        var input = shadow.getElementById(idInput);
-        if (input) {
-            input.addEventListener("change", (e) => {
+        var inputUpload = shadow.getElementById(idInputUpload);
+        if (inputUpload) {
+            inputUpload.addEventListener("change", (e) => {
                 self.onUploadFileClick(e);
             }, false);
         }
@@ -266,6 +280,14 @@ var TerritoriesDOM = {
                 console.log(e.target.checked);
                 self.onUploadToggleClick(e);
             });
+        }
+
+        var inputModify = shadow.getElementById(idBtnModify);
+        if (inputModify) {
+            inputModify.addEventListener("change", (e) => {
+                // TODO: A implémenter
+                self.onModifyTerritoriesClick(e);
+            }, false);
         }
         return shadow.firstChild;
     },
