@@ -392,10 +392,19 @@ class Territories extends Control {
         var territoriesPanel = this.panelTerritoriesContainer = this._createTerritoriesPanelElement();
         territoriesPanel.classList.add("tiles-direction");
         territoriesPanel.classList.add("tiles-" + this.options.tiles);
+        
         var territoriesPanelDiv = this._createTerritoriesPanelDivElement();
         territoriesPanel.appendChild(territoriesPanelDiv);
         
-        
+        // menu views button
+        var territoriesPanelMenuViewsDiv = this._createTerritoriesPanelMenuViewsDivElement();
+        territoriesPanel.appendChild(territoriesPanelMenuViewsDiv);
+
+        // INFO
+        // Les territoires seront ajoutés dans ce conteneur
+        // au moment de l'appel de la méthode setTerritory()
+        // ou setTerritories() dans SetMap()
+
         // container for the custom code
         var territoriesEntriesDiv = this.panelTerritoriesEntriesContainer = this._createTerritoriesElement();
         territoriesEntriesDiv.classList.add("tiles-direction");
@@ -618,6 +627,25 @@ class Territories extends Control {
      */
     onModifyTerritoriesClick (e) {
         logger.trace(e);
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onShowTerritoriesViewsClick (e) {
+        logger.trace(e);
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {String} viewName - ...
+     * @private
+     */
+    onAddTerritoriesViewClick (e, viewName) {
+        logger.trace(e, viewName);
     }
 
 };

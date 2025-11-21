@@ -16,7 +16,32 @@
     background-size: auto auto;
     background-position: center center;
 }
+/* */
+.gpf-panel__menuviews_territories {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-default-grey);
+    height: 48px;
+    background-color: var(--background-lifted-grey);
+}
+#gpf-territories-views-container-id {
+    top: 50px;
+    z-index: 10000;
+    border-color: #ddd;
+    border-width: 1px;
+    width: auto;
+    height: auto;
+}
+.gpf-panel__views_territories-menu {}
+.gpf-panel__views_territories-addview {}
+.gpf-panel__views_territories-listview {}
 
+
+/* */
 .gpf-panel__body_territories {
     overflow: auto;
     max-height: 300px;
