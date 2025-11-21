@@ -412,11 +412,11 @@ button[id^="GPSearchEngine-erase-btn"] {
   display: none;
 }
 
-form.GPSearchBar > .GPInputGroup > input[data-empty] ~ .GPOptionsContainer > button[id^="GPSearchEngine-erase-btn"] {
+form.GPSearchBar > .GPInputGroup > input[data-erase] ~ .GPOptionsContainer > button[id^="GPSearchEngine-erase-btn"] {
   display:block;
 }
 
-form.GPSearchBar > .GPInputGroup > input[data-empty] ~ .GPOptionsContainer > button[id^="GPSearchEngine-advanced-btn"] {
+form.GPSearchBar > .GPInputGroup > input[data-erase] ~ .GPOptionsContainer > button[id^="GPSearchEngine-advanced-btn"] {
   display:none;
 }
 

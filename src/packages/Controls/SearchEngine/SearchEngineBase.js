@@ -8,12 +8,35 @@ import Helper from "../../Utils/Helper";
 // Voir les typedefs partagés dans ./typedefs.js (SearchEngineBaseOptions, SearchServiceOptions, ...)
 
 const history = "fr-icon-history-line";
+const defaultIcon = "fr-icon-map-pin-2-line";
 const typeClasses = {
     "StreetAddress" : "fr-icon-map-pin-2-line",
     "PositionOfInterest" : {
         "administratif" : "fr-icon-france-line",
         "hydrographie" : "fr-icon-ign-mer",
-        "default" : "fr-icon-map-pin-2-line",
+        "transport" : {
+            "télécabine, téléphérique transport par câble" : "fr-icon-subway-line",
+            "gare voyageurs uniquement" : "fr-icon-subway-line",
+            "voyageurs et fret" : "fr-icon-subway-line",
+            "station de métro" : "fr-icon-subway-line",
+            "gare fret uniquement" : "fr-icon-subway-line",
+            "gare routière" : "fr-icon-subway-line",
+            "station de tramway" : "fr-icon-subway-line",
+            "arrêt voyageurs" : "fr-icon-subway-line",
+
+            "aérodrome" : "fr-icon-plane-line",
+            "héliport" : "fr-icon-plane-line",
+            "altiport" : "fr-icon-plane-line",
+            "aérogare" : "fr-icon-plane-line",
+
+            "port" : "fr-icon-ship-2-line",
+            "gare maritime" : "fr-icon-ship-2-line",
+
+            "parking" : "fr-icon-parking-box-line",
+            "aire de repos ou de service" : "fr-icon-parking-box-line",
+
+            "service dédié aux vélos" : "fr-icon-bike-line",
+        }
     }
 };
 
@@ -100,7 +123,7 @@ class SearchEngineBase extends Control {
     initialize (options) {
         // Valeurs par défaut des options
         options.minChars = options.minChars ? options.minChars : 3;
-        options.maximumEntries = (typeof options.maximumEntries === "number")  ? options.maximumEntries : 5;
+        options.maximumEntries = (typeof options.maximumEntries === "number") ? options.maximumEntries : 5;
         options.historic = (typeof options.historic === "string" ? options.historic : this.CLASSNAME);
         options.title = options.title ? options.title : "Rechercher";
         options.ariaLabel = options.ariaLabel ? options.ariaLabel : "Rechercher";
@@ -124,11 +147,7 @@ class SearchEngineBase extends Control {
         if (this.searchService.get("autocomplete") !== false) {
             // Empty input
             this.input.addEventListener("input", function (e) {
-                if (e.target.value.length != 0) {
-                    e.target.dataset.empty = true;
-                } else {
-                    delete e.target.dataset.empty;
-                }
+                e.target.dataset.erase = true;
                 if (!e.target.value) {
                     this.showHistoric();
                 }
@@ -186,7 +205,7 @@ class SearchEngineBase extends Control {
                     default:
                         if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
                             this.autocomplete(e.target.value);
-                        } 
+                        }
                         break;
                 }
                 this._currentValue = e.target.value;
@@ -259,7 +278,7 @@ class SearchEngineBase extends Control {
             }
             element.appendChild(this.button);
         }
-        
+
         element.appendChild(container);
 
         const search = document.createElement("div");
@@ -268,7 +287,6 @@ class SearchEngineBase extends Control {
         search.classList.add(options.search ? "fr-input" : "fr-input-group");
         container.appendChild(search);
 
-        
         // Input
         const input = this.input = document.createElement("input");
         input.type = "text";
@@ -299,7 +317,7 @@ class SearchEngineBase extends Control {
         messages.id = Helper.getUid("GPMessagesGroup-");
         input.setAttribute("aria-describedby", messages.id);
         search.appendChild(messages);
-        
+
         // Options container
         this.optionscontainer = document.createElement("div");
         this.optionscontainer.className = "GPOptionsContainer";
@@ -350,6 +368,7 @@ class SearchEngineBase extends Control {
 
         if (this.searchService.get("autocomplete") !== false) {
             input.addEventListener("focus", () => {
+                input.dataset.erase = true;
                 input.setAttribute("aria-expanded", "true");
                 acContainer.classList.add("gpf-visible");
                 acContainer.classList.remove("gpf-hidden");
@@ -366,10 +385,15 @@ class SearchEngineBase extends Control {
                         input.focus();
                     } else {
                         // Ajout d'un event listener pour retourner sur l'input en cas de besoin
-                        e.relatedTarget.addEventListener("blur", (e) => {
+                        e.relatedTarget.addEventListener("blur", (/** @type {FocusEvent}*/ e) => {
                             if (e.relatedTarget && acContainer.contains(e.relatedTarget) || e.relatedTarget === input) {
                                 input.focus();
                             } else {
+                                // On doit aller sur le bouton recherche avancée
+                                if (input.value.length === 0) {
+                                    delete input.dataset.erase;
+                                    e.relatedTarget.parentNode.querySelector("button")?.focus();
+                                }
                                 setTimeout(() => {
                                     input.setAttribute("aria-expanded", "false");
                                     acContainer.classList.remove("gpf-visible");
@@ -381,6 +405,7 @@ class SearchEngineBase extends Control {
                         }, { once : true });
                     }
                 } else {
+                    input.value.length === 0 && delete input.dataset.erase;
                     setTimeout(() => {
                         input.setAttribute("aria-expanded", "false");
                         acContainer.classList.remove("gpf-visible");
@@ -463,8 +488,8 @@ class SearchEngineBase extends Control {
         this._currentValue = title;
         this._updateHistoric(item);
         this._updateList();
-        this.dispatchEvent({ 
-            type : "select", 
+        this.dispatchEvent({
+            type : "select",
             title : this.getItemTitle(item),
             item : item
         });
@@ -523,7 +548,7 @@ class SearchEngineBase extends Control {
                     location : tab[idx]
                 });
             }.bind(this));
-        });    
+        });
     }
 
     /**
@@ -545,7 +570,19 @@ class SearchEngineBase extends Control {
                     break;
                 }
             }
-            iconClass = typeof iconClass === "object" ? iconClass["default"] : iconClass;
+            
+            // TODO : améliorer la fonction (faire récursif ?)
+            if (typeof iconClass === "object") {
+                // Cherche les types de POI
+                for (let i = 0; i < item.poiType.length; i++) {
+                    const poiType = item.poiType[i];
+                    if (Object.hasOwn(iconClass, poiType)) {
+                        iconClass = iconClass[poiType];
+                        break;
+                    }
+                }
+            }
+            iconClass = typeof iconClass === "object" ? defaultIcon : iconClass;
         }
         return iconClass;
     }
@@ -621,7 +658,7 @@ class SearchEngineBase extends Control {
             p.className = `GPMessage GPMessage--${messageType} fr-message fr-message--${messageType}`;
             p.id = Helper.getUid("GPMessage-");
             p.textContent = message;
-    
+
             messageElement.replaceChildren(p);
         }
     }

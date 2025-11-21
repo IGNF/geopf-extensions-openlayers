@@ -93,9 +93,30 @@ div[id^=GPsearchEngine-AdvancedContainer-] .fr-accordion .fr-collapse {
   -webkit-mask-image: url("./img/dsfr/map-pin-add-line.svg");
   mask-image: url("./img/dsfr/map-pin-add-line.svg");
 }
-
 .fr-icon-map-pin-add-fill::before,
 .fr-icon-map-pin-add-fill::after {
   -webkit-mask-image: url("./img/dsfr/map-pin-add-fill.svg");
   mask-image: url("./img/dsfr/map-pin-add-fill.svg");
+}
+
+.fr-icon-bike-line::before,
+.fr-icon-bike-line::after {
+  -webkit-mask-image: url("./img/dsfr/bike-line.svg");
+  mask-image: url("./img/dsfr/bike-line.svg");
+}
+
+.fr-icon-parking-box-line::before,
+.fr-icon-parking-box-line::after {
+  -webkit-mask-image: url("./img/dsfr/parking-box-line.svg");
+  mask-image: url("./img/dsfr/parking-box-line.svg");
+}
+.fr-icon-plane-line::before,
+.fr-icon-plane-line::after {
+  -webkit-mask-image: url("./img/dsfr/plane-line.svg");
+  mask-image: url("./img/dsfr/plane-line.svg");
+}
+.fr-icon-subway-line::before,
+.fr-icon-subway-line::after {
+  -webkit-mask-image: url("./img/dsfr/subway-line.svg");
+  mask-image: url("./img/dsfr/subway-line.svg");
 }
