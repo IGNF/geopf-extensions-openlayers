@@ -21,9 +21,10 @@ import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
 /** Get style for features 
  * @param {String|Array<Number>} color - Couleur du contour
  * @param {String|Array<Number>} [fillColor] - Couleur de remplissage
+ * @param {Number} [offset = 0] - Décalage de la ligne. Par défaut, 0
  * @returns {Style} Style OpenLayers
  */
-function getStyle (color, fillColor) {
+function getStyle (color, fillColor, offset = 0) {
     return new Style({
         image : new Icon({
             src : mapPinIcon,
@@ -32,8 +33,9 @@ function getStyle (color, fillColor) {
         }),
         stroke : new Stroke({
             color : color,
-            lineDash : [8, 8], 
+            lineDash : [8,  8],
             width : 2,
+            lineDashOffset : offset
         }),
         fill : new Fill({
             color : fillColor || "rgba(0, 0, 0, 0.1)",
@@ -74,7 +76,7 @@ class SearchEngineAdvanced extends Control {
         this.layer = new Vector({
             source : new VectorSource({}),
             zIndex : Infinity,
-            style : getStyle([0, 0, 145, 1]),
+            style : [getStyle([255, 255, 255, 1]), getStyle([0, 0, 145, 1], null, 8)],
         });
 
         this.selectInteraction = new Select({
@@ -409,6 +411,7 @@ class SearchEngineAdvanced extends Control {
         if (!!e.result) {
             this.layer.getSource().addFeature(e.result);
             extent = e.result.getGeometry().getExtent();
+            this.selectInteraction.getFeatures().push(e.result);
             this._setPopupInfo(e.result);
         }
         if (!!e.extent) {
@@ -435,12 +438,16 @@ class SearchEngineAdvanced extends Control {
         if (feature) {
             // Ferme l'ancien popup
             this.popup.setPosition(undefined);
+            let offset = null;
             // Ajoute le popup
             if (feature.getGeometry()?.getType() === "Point") {
                 // Place le popup sur le point
                 position = feature.getGeometry()?.getCoordinates();
+                // TODO : AMÉLIORER L'OFFSET
+                offset = [0, -20];
             }
             this.popup.setPosition(position);
+            offset && this.popup.setOffset(offset);
             this.setPopupContent(feature.get("infoPopup") || "");
             this.popup.set("feature", feature);
             this.popup.set("layer", this.layer);

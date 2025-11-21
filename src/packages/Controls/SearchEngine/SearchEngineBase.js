@@ -11,7 +11,7 @@ const history = "fr-icon-history-line";
 const typeClasses = {
     "StreetAddress" : "fr-icon-map-pin-2-line",
     "PositionOfInterest" : {
-        "administratif" : "fr-icon-france-fill",
+        "administratif" : "fr-icon-france-line",
         "hydrographie" : "fr-icon-ign-mer",
         "default" : "fr-icon-map-pin-2-line",
     }
