@@ -17,6 +17,7 @@ import mapPinIcon from "./map-pin-2-fill.svg";
 import Feature from "ol/Feature";
 import { Layer } from "ol/layer";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
+import Coordinate from "ol/coordinate.js";
 
 /** Get style for features 
  * @param {String|Array<Number>} color - Couleur du contour
@@ -409,6 +410,7 @@ class SearchEngineAdvanced extends Control {
         if (!!e.result) {
             this.layer.getSource().addFeature(e.result);
             extent = e.result.getGeometry().getExtent();
+            this._setPopupInfo(e.result);
         }
         if (!!e.extent) {
             this.layer.getSource().addFeature(e.extent);
@@ -426,20 +428,18 @@ class SearchEngineAdvanced extends Control {
     }
 
     /**
-     * Callback lors de la sélection d'une feature (affiche le popup).
-     * @param {SelectEvent} e Événement de sélection
-     * @private
+     * Ajoute les infos au popup
+     * @param {Feature} [feature] Feature à ajouter. Si non fourni
+     * @param {Coordinate} [position] Position du popup
      */
-    _onSelectElement (e) {
-        let position = e.mapBrowserEvent.coordinate;
-        if (e.selected.length) {
+    _setPopupInfo (feature, position) {
+        if (feature) {
             // Ferme l'ancien popup
             this.popup.setPosition(undefined);
             // Ajoute le popup
-            const feature = e.selected[0];
-            if (feature.getGeometry().getType() === "Point") {
+            if (feature.getGeometry()?.getType() === "Point") {
                 // Place le popup sur le point
-                position = feature.getGeometry().getCoordinates();
+                position = feature.getGeometry()?.getCoordinates();
             }
             this.popup.setPosition(position);
             this.setPopupContent(feature.get("infoPopup") || "");
@@ -451,6 +451,16 @@ class SearchEngineAdvanced extends Control {
             this.popup.unset("feature");
             this.popup.unset("layer");
         }
+    }
+
+    /**
+     * Callback lors de la sélection d'une feature (affiche le popup).
+     * @param {SelectEvent} e Événement de sélection
+     * @private
+     */
+    _onSelectElement (e) {
+        let position = e.mapBrowserEvent.coordinate;
+        this._setPopupInfo(e.selected.length ? e.selected[0] : null, position);
     }
 
     /**
