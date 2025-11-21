@@ -123,7 +123,7 @@ class SearchEngineAdvanced extends Control {
             this._searchForms = [];
         }
 
-        this._searchForms.forEach(search => {            
+        this._searchForms.forEach(search => {
             // Gère la recherche
             search.on("search", this.onAdvancedSearchResult.bind(this));
         });
@@ -361,7 +361,7 @@ class SearchEngineAdvanced extends Control {
 
         // Ajout des options avancées
         const eraseBtn = this.eraseBtn = document.createElement("button");
-        eraseBtn.className = "GPSearchEngine-erase-btn fr-btn fr-btn--sm fr-icon-close-circle-line fr-btn--tertiary-no-outline";
+        eraseBtn.className = "GPSearchEngine-erase-btn fr-btn fr-btn--sm fr-icon-close-circle-fill fr-btn--tertiary-no-outline";
         eraseBtn.id = Helper.getUid("GPSearchEngine-erase-btn-");
         eraseBtn.type = "button";
         eraseBtn.title = "Effacer la saisie";
