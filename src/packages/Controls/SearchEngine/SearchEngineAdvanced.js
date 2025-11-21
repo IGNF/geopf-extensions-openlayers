@@ -123,7 +123,8 @@ class SearchEngineAdvanced extends Control {
             this._searchForms = [];
         }
 
-        this._searchForms.forEach(search => {
+        this._searchForms.forEach(search => {            
+            // Gère la recherche
             search.on("search", this.onAdvancedSearchResult.bind(this));
         });
     }
@@ -374,7 +375,7 @@ class SearchEngineAdvanced extends Control {
             // Met le focus sur l'input
             setTimeout(() => {
                 this.baseSearchEngine.input.focus();
-            }, 50);            
+            }, 50);
         }.bind(this));
         this.baseSearchEngine.optionscontainer.appendChild(eraseBtn);
     }
@@ -626,6 +627,9 @@ class SearchEngineAdvanced extends Control {
      * @private
      */
     onAdvancedSearchResult (e) {
+        // Ferme la modale de recherche avancée
+        this.listenToClick = false;
+        this.advancedBtn.setAttribute("aria-expanded", false);
         if (e.result instanceof Array) {
             // TODO : GÉRER MULTIPLE RÉSULTATS
         } else if (e.result instanceof Feature) {
