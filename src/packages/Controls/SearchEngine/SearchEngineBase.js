@@ -376,7 +376,7 @@ class SearchEngineBase extends Control {
                                     acContainer.classList.add("gpf-hidden");
                                     acContainer.classList.remove("GPelementVisible");
                                     acContainer.classList.add("GPelementHidden");
-                                }, 100);
+                                }, 50);
                             }
                         }, { once : true });
                     }
@@ -387,7 +387,7 @@ class SearchEngineBase extends Control {
                         acContainer.classList.add("gpf-hidden");
                         acContainer.classList.remove("GPelementVisible");
                         acContainer.classList.add("GPelementHidden");
-                    }, 100);
+                    }, 50);
                 }
             });
         }
@@ -459,6 +459,7 @@ class SearchEngineBase extends Control {
         clearTimeout(this._completeDelay);
         const title = this.getItemTitle(item);
         this.input.value = title;
+        this.input.dispatchEvent(new Event("input"));
         this._currentValue = title;
         this._updateHistoric(item);
         this._updateList();
@@ -513,9 +514,11 @@ class SearchEngineBase extends Control {
                 li.append(span);
             }
             this.autocompleteList.appendChild(li);
-            li.addEventListener("click", function (e) {
+            li.addEventListener("click", function (/** @type {PointerEvent} */ e) {
                 const idx = Number(e.target.getAttribute("data-idx"));
+                // Sélectionne l'item
                 this.select(tab[idx]);
+                // Lance la recherche pour cet item
                 this.search({
                     location : tab[idx]
                 });

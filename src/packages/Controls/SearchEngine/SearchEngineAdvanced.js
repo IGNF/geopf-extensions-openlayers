@@ -371,6 +371,10 @@ class SearchEngineAdvanced extends Control {
             delete this.baseSearchEngine.input.dataset.empty;
             // Notifie l'input du changement
             this.baseSearchEngine.input.dispatchEvent(new Event("input"));
+            // Met le focus sur l'input
+            setTimeout(() => {
+                this.baseSearchEngine.input.focus();
+            }, 50);            
         }.bind(this));
         this.baseSearchEngine.optionscontainer.appendChild(eraseBtn);
     }
