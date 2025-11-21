@@ -17,7 +17,6 @@ import mapPinIcon from "./map-pin-2-fill.svg";
 import Feature from "ol/Feature";
 import { Layer } from "ol/layer";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
-import Coordinate from "ol/coordinate.js";
 
 /** Get style for features 
  * @param {String|Array<Number>} color - Couleur du contour
@@ -430,7 +429,7 @@ class SearchEngineAdvanced extends Control {
     /**
      * Ajoute les infos au popup
      * @param {Feature} [feature] Feature à ajouter. Si non fourni
-     * @param {Coordinate} [position] Position du popup
+     * @param {Number[]} [position] Position du popup
      */
     _setPopupInfo (feature, position) {
         if (feature) {
