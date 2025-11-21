@@ -209,6 +209,13 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
     _initEvents (options) {
         super._initEvents(options);
 
+        // Focus commune input on expand
+        this.on("expand", e => {
+            if (e.expanded) {
+                setTimeout(() => comCodeInput.focus(), 300);
+            }
+        });
+
         // Inputs
         const comCodeInput = this.comCodeInput;
         const autocompleteList = this.autocompleteList;
@@ -220,8 +227,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         this.communeId = "";
         // Autocomplete selected index
         let selectedIndex = -1;
-        // Autocomplete options
-        let autoOptions = [];
+        let parcelIndex = -1;
 
         // Show/hide autocomplete list
         const showAutocomplete = (b) => {
@@ -234,19 +240,33 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             }
             if (b) {
                 comCodeInput.setAttribute("aria-expanded", "true");
-                comCodeInput.setAttribute("aria-activedescendant", autoOptions[selectedIndex]?.id || "");
+                comCodeInput.setAttribute("aria-activedescendant", autocompleteList.children[selectedIndex]?.id || "");
             } else {
                 comCodeInput.setAttribute("aria-expanded", "false");    
-                autoOptions[selectedIndex]?.classList.remove("active");
-                comCodeInput.setAttribute("aria-activedescendant", autoOptions[selectedIndex]?.id || "");
+                autocompleteList.children[selectedIndex]?.classList.remove("active");
+                comCodeInput.setAttribute("aria-activedescendant", autocompleteList.children[selectedIndex]?.id || "");
                 selectedIndex = -1;
             }
         };
 
 
         // Keyboard navigation on autocomplete list
+        let previousValue = "";
         comCodeInput.addEventListener("keydown", e => {
-            autoOptions = autocompleteList.querySelectorAll(".GPautoCompleteOption");
+            // Prevent default behavior for navigation keys if elements are disabled
+            if (e.key === "Tab") {
+                if (!e.shiftKey                 // backward tab
+                    && comCodeInput.value       // input not empty
+                    && previousValue !== comCodeInput.value  // value not changed
+                    && prefixInput.getAttribute("disabled") === "disabled"  // prefix disabled
+                ) {
+                    e.preventDefault();
+                    comCodeInput.dispatchEvent(new Event("change"));
+                }
+            }
+            previousValue = comCodeInput.value;
+            // Autocomplete navigation
+            const autoOptions = autocompleteList.children;
             if (autoOptions.length) {
                 let index = selectedIndex;
                 switch (e.key) {
@@ -385,20 +405,89 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         });
 
         // Filter number list on keyup
+        this.numberInput.addEventListener("keydown", (e) => {
+            if (["ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key)) {
+                e.preventDefault();
+                return;
+            }
+        });
         this.numberInput.addEventListener("keyup", (e) => {
             this.filterListNumber();
-            if (e.key === "Enter") {
-                this.numberInput.ariaExpanded = "false";
-                this.numberInput.blur();
+            let index = parcelIndex;
+            switch (e.key) {
+                case "ArrowDown": {
+                    // Next non hidden option
+                    for (let i=parcelIndex +1; i < this.numberList.children.length; i++) {
+                        if (this.numberList.children[i].style.display !== "none") {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index >= this.numberList.children.length) {
+                        index = -1;
+                    }
+                    e.preventDefault();
+                    break;
+                }
+                case "ArrowUp": {
+                    // Previous non hidden option
+                    for (let i=parcelIndex -1; i >= -1; i--) {
+                        if (i === -1 || this.numberList.children[i].style.display !== "none") {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index < -1) {
+                        index += this.numberList.children.length +1;
+                    }
+                    e.preventDefault();
+                    break; 
+                }
+                case "Escape": {
+                    index = -1;
+                    this.numberInput.ariaExpanded = "false";
+                    break;
+                }
+                case "Enter": {
+                    //this.numberList.children[index]?.click();
+                    const value = this.numberList.children[index]?.value || "";
+                    if (value) {
+                        this.numberInput.value = value;
+                        this._onSearch();
+                        this.filterListNumber();
+                        index = -1;
+                        setTimeout(() => this.numberInput.ariaExpanded = "false");
+                    }
+                    break;
+                }
+                default: {
+                    // reset selection
+                    index = -1;
+                    break;
+                }
+            }
+            if (parcelIndex !== index) {
+                // Update selected option
+                this.numberList.children[parcelIndex]?.classList.remove("active");
+                parcelIndex = index;
+                this.numberList.children[parcelIndex]?.classList.add("active");
+                this.numberInput.setAttribute("aria-activedescendant", this.numberList.children[parcelIndex]?.id || "");
+                // Scroll to selected option
+                this.numberInput.ariaExpanded = "true";
+                this.numberList.children[parcelIndex]?.scrollIntoView({ block : "nearest" });
             }
         });
     }
 
 
-    /** Filter listbox options
+    /** Filter listbox options on input value
      */ 
     filterListNumber () {
         const filter = this.numberInput.value.toUpperCase();
+        if (this.currentFilter === filter) {
+            return;
+        }
+        this.currentFilter = filter;
         const options = this.numberList.querySelectorAll("li");
         let hasNumber = false;
         options.forEach(option => {
@@ -413,6 +502,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             this._showMessage("numero", "Aucun numéro de parcelle ne correspond à cette saisie.");
         } else {
             this._showMessage("numero", "");
+            this.numberInput.ariaExpanded = "true";
         }
     }
 
@@ -500,7 +590,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * @param {String} code Code INSEE de la commune
      * @param {String} [prefix] Préfixe de la parcelle
      * @param {String} [section] Section de la parcelle
-     * @returns {Promise} Promesse avec les données GeoJSON
+     * @returns {Promise} Promesse avec les données GeoJSON (feuilles ou parcelles si section renseignée)
      */
     async _fetchCadastre (code, prefix, section) {
         const domtom = ["97","98"].includes(code.slice(0,2));
