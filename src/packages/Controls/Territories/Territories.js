@@ -52,7 +52,7 @@ var logger = Logger.getLogger("territories");
  * @property {Array<number>} [point] - Point central du territoire au format [lon, lat] en EPSG:4326.
  * @property {number} [zoom] - Niveau de zoom à appliquer lors de la sélection du territoire.
  * @property {string} [thumbnail] - URL ou data URI de la vignette du territoire (format image tel que PNG, JPEG, SVG).
- * @property {string} [icon] - URL, data URI ou classe CSS DSFR de l’icône du territoire (format vecteur SVG).
+ * @property {string} [icon] - URL, data URI ou classe CSS DSFR de l’icône du territoire (format vectoriel SVG).
  */
 
 /**Object
