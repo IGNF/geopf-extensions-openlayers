@@ -547,7 +547,9 @@ class Territories extends Control {
             var proj = map.getView().getProjection().getCode();
             if (bbox) {
                 var extent = olTransformExtentProj(bbox, "EPSG:4326", proj);
-                map.getView().fit(extent, map.getSize());
+                map.getView().fit(extent, {
+                    size : map.getSize()
+                });
             }
             if (point) {
                 var coord = olTransformProj(point, "EPSG:4326", proj);
