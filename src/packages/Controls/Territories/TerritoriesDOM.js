@@ -287,7 +287,7 @@ var TerritoriesDOM = {
 
         var inputModify = shadow.getElementById(idBtnModify);
         if (inputModify) {
-            inputModify.addEventListener("change", (e) => {
+            inputModify.addEventListener("click", (e) => {
                 // TODO: A implémenter
                 self.onModifyTerritoriesClick(e);
             }, false);
