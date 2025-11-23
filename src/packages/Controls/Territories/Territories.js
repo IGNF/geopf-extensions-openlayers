@@ -263,7 +263,7 @@ class Territories extends Control {
                     found = true;
                     var count = this.element.querySelector("#gpf-territories-views-count-id");
                     if (count) {
-                        var nb = this.territories.length + 1;
+                        var nb = this.territories.length;
                         count.innerText = nb;
                     }
                     break;
