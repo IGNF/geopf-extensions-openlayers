@@ -51,7 +51,8 @@ var logger = Logger.getLogger("territories");
  * @property {Array<number>} bbox - Bbox du territoire au format [minx, miny, maxx, maxy] en EPSG:4326.
  * @property {Array<number>} [point] - Point central du territoire au format [lon, lat] en EPSG:4326.
  * @property {number} [zoom] - Niveau de zoom à appliquer lors de la sélection du territoire.
- * @property {string} [thumbnail] - URL ou data URI de l’imagette du territoire.    
+ * @property {string} [thumbnail] - URL ou data URI de la vignette du territoire (format image tel que PNG, JPEG, SVG).
+ * @property {string} [icon] - URL, data URI ou classe CSS DSFR de l’icône du territoire (format vecteur SVG).
  */
 
 /**Object
@@ -68,7 +69,11 @@ class Territories extends Control {
      * @constructor
      * @param {TerritoriesOptions} options - options for function call.
      *
+     * @fires territories:loaded
      * @fires territories:change
+     * @fires territories:add
+     * @fires territories:remove
+     * @public
      * @example
      * var territories = new ol.control.Territories({
      *   collapsed: true,
@@ -83,6 +88,9 @@ class Territories extends Control {
      * territories.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
      * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
      * map.addControl(territories);
+     * territories.on("territories:loaded", (e) => { console.log(e.data); });
+     * territories.on("territories:add", (e) => { console.log(e); });
+     * territories.on("territories:remove", (e) => { console.log(e); });
      */
     constructor (options) {
         options = options || {};
@@ -156,6 +164,23 @@ class Territories extends Control {
         if (this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
         }
+
+        /**
+         * event triggered when a territory is loaded
+         *
+         * @event territories:loaded
+         * @defaultValue "territories:loaded"
+         * @group Events
+         * @property {Object} type - event
+         * @property {Object} target - instance Territories
+         * @example
+         * Territories.on("territories:loaded", function (e) {
+         *   console.log(e);
+         * })
+         */
+        this.dispatchEvent({
+            type : "territories:loaded"
+        });
     }
 
     // ################################################################### //
@@ -182,11 +207,22 @@ class Territories extends Control {
         var founded = this.territories.some(e => e.data.id === territory.id);
         if (territory && !founded) {
             var entry = this._createTerritoryEntry(territory);
-            if (entry) {
+            var view = this._createTerritoryView(territory);
+            if (entry && view) {
                 this.panelTerritoriesEntriesContainer.appendChild(entry);
+                var panelTerritoriesViewsContainer = this.element.querySelector("#gpf-territories-views-listview-entries-id");
+                if (panelTerritoriesViewsContainer) {
+                    panelTerritoriesViewsContainer.appendChild(view);
+                }
+                var count = this.element.querySelector("#gpf-territories-views-count-id");
+                if (count) {
+                    var nb = this.territories.length + 1;
+                    count.innerText = nb;
+                }
                 this.territories.push({
                     data : territory,
-                    dom : entry
+                    domEntry : entry,
+                    domView : view
                 });
                 return true;
             }
@@ -221,9 +257,15 @@ class Territories extends Control {
             for (let i = 0; i < this.territories.length; i++) {
                 const o = this.territories[i];
                 if (o.data.id === territory.data.id) {
-                    this.territories[i].dom.remove();
+                    this.territories[i].domEntry.remove();
+                    this.territories[i].domView.remove();
                     this.territories.splice(i, 1);
                     found = true;
+                    var count = this.element.querySelector("#gpf-territories-views-count-id");
+                    if (count) {
+                        var nb = this.territories.length + 1;
+                        count.innerText = nb;
+                    }
                     break;
                 }
             }
@@ -237,7 +279,8 @@ class Territories extends Control {
     removeTerritories () {
         for (let i = 0; i < this.territories.length; i++) {
             const territory = this.territories[i];
-            territory.dom.remove();
+            territory.domEntry.remove();
+            territory.domView.remove();
         }
         this.territories = [];
     }
@@ -518,17 +561,19 @@ class Territories extends Control {
              * event triggered when a territory is clicked
              *
              * @event territories:change
+             * @defaultValue "territories:change"
+             * @group Events
              * @property {Object} type - event
              * @property {Object} target - instance Territories
              * @property {Object} territory - territory
              * @example
-             * Route.on("territories:change", function (e) {
+             * Territories.on("territories:change", function (e) {
              *   console.log(e.target.getData());
              * })
              */
             this.dispatchEvent({
                 type : "territories:change",
-                territory : territory
+                territory : territory.data
             });
         }
     }
@@ -646,6 +691,98 @@ class Territories extends Control {
      */
     onAddTerritoriesViewClick (e, viewName) {
         logger.trace(e, viewName);
+        var id = Math.abs(Array.from(viewName).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
+        var view = this.getMap().getView();
+        var proj = view.getProjection().getCode();
+        var coord = olTransformProj(view.getCenter(), proj, "EPSG:4326");
+        var zoom = view.getZoom();
+        var territory = {
+            "id" : id.toString(),
+            "title" : viewName,
+            "description" : "Vue personnalisée",
+            "point" : coord,
+            "zoom" : zoom,
+            "thumbnail" : "",
+            "icon" : "fr-icon-map-pin-2-line" // icone DSFR ou svg
+        };
+        this.setTerritory(territory);
+        /**
+         * event triggered when a territory is added
+         *
+         * @event territories:add
+         * @defaultValue "territories:add"
+         * @group Events
+         * @property {Object} type - event
+         * @property {Object} target - instance Territories
+         * @property {Object} territory - territory
+         * @example
+         * Territories.on("territories:add", function (e) {
+         *   console.log(e.territory);
+         * })
+         */
+        this.dispatchEvent({
+            type : "territories:add",
+            territory : territory
+        });
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onResetTerritoriesViewClick (e) {
+        logger.trace(e);
+        this.removeTerritories();
+        // Ajout des territoires par defaut ou customisés
+        // les territoires ajoutés manuellement ne sont pas conservés...
+        var territories = (this.auto) ? TerritoriesJson : this.options.territories;
+        for (let index = 0; index < territories.length; index++) {
+            const territory = territories[index];
+            this.setTerritory(territory);
+        }
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {*} id - ...
+     * @private
+     */
+    onViewTerritoryClick (e, id) {
+        logger.trace(e, id);
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {*} id - ...
+     * @private
+     */
+    onViewTerritoryRemoveClick (e, id) {
+        logger.trace(e, id);
+        var territory = this.territories.find(e => e.data.id === id);
+        if (territory) {
+            this.removeTerritory(territory);
+            /**
+             * event triggered when a territory is removed
+             *
+             * @event territories:remove
+             * @defaultValue "territories:remove"
+             * @group Events
+             * @property {Object} type - event
+             * @property {Object} target - instance Territories
+             * @property {Object} territory - territory
+             * @example
+             * Territories.on("territories:remove", function (e) {
+             *   console.log(e.territory);
+             * })
+             */
+            this.dispatchEvent({
+                type : "territories:remove",
+                territory : territory.data
+            });
+        }
     }
 
 };

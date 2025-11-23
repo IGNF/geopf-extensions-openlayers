@@ -461,9 +461,9 @@ var TerritoriesDOM = {
                 var input = document.getElementById(inputId);
                 if (input) {
                     var message = document.getElementById(inputId + "-message-error-id");
-                    // TODO
                     // validation du nom de la vue avec ceux de la liste
-                    if (message && input.value === "") {
+                    var territory = self.territories.find(e => e.data.title === input.value);
+                    if ((message && input.value === "") || territory) {
                         message.classList.remove("gpf-hidden");
                         return;
                     } else {
@@ -478,17 +478,50 @@ var TerritoriesDOM = {
     },
 
     _createTerritoriesMenuListViewElement : function () {
-        var div = document.createElement("div");
-        div.className = "gpf-panel__views_territories-listview";
-        // TODO: A implémenter
-        var strContainer = ``;
+        var self = this;
+        
+        var buttonId = "gpf-territories-views-reset-button-id";
+        var countId = "gpf-territories-views-count-id";
+
+        var strContainer = `
+        <div class="gpf-panel__views_territories-listview">
+            <!-- Menu de la liste des vues -->
+            <div class="gpf-panel__views_territories-listview-header">
+                <div class="gpf-panel__views_territories-listview-count">
+                    <span class="fr-label" style="padding-right: 10px;"> Territoires </span>
+                    <span 
+                        class="fr-message" 
+                        id="${countId}"> 0 </span>
+                </div>
+                <button 
+                    id="${buttonId}" 
+                    class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                    title="Réinitialiser la liste des territoires" 
+                    type="button">
+                    Réinitialiser
+                </button>
+            </div>
+            <!-- Liste des vues -->
+            <div 
+                id="gpf-territories-views-listview-entries-id"
+                class="gpf-panel__views_territories-listview-entries">
+            </div>
+        </div>
+        `;
         var container = stringToHTML(strContainer);
 
         // ajout du shadow DOM pour creer les listeners
         const shadow = container.attachShadow({ mode : "open" });
         shadow.innerHTML = strContainer.trim();
 
-        return shadow;
+        var button = shadow.getElementById(buttonId);
+        if (button) {
+            button.addEventListener("click", (e) => {
+                self.onResetTerritoriesViewClick(e);
+            }, false);
+        }
+
+        return shadow.firstChild;
     },
 
     // ################################################################### //
@@ -505,10 +538,25 @@ var TerritoriesDOM = {
         var self = this;
         
         if (o) {
-            // test si la vignette est renseignée
-            var defaultImage = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iNTgxLjAwMDAwMHB0IiBoZWlnaHQ9IjM1Ni4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDU4MS4wMDAwMDAgMzU2LjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgoKPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsMzU2LjAwMDAwMCkgc2NhbGUoMC4xMDAwMDAsLTAuMTAwMDAwKSIKZmlsbD0iI2I0YjNiMyIgc3Ryb2tlPSJub25lIj4KPHBhdGggZD0iTTAgMTc4MCBsMCAtMTc4MCAyOTA1IDAgMjkwNSAwIDAgMTc4MCAwIDE3ODAgLTI5MDUgMCAtMjkwNSAwIDAKLTE3ODB6Ii8+CjwvZz4KPC9zdmc+Cg==";
-            var thumbnail = o.thumbnail || defaultImage;
-            var icon = o.icon || defaultImage;
+            // Test si la vignette est demandée ou non (SVG ou DSFR)
+            // On propose une image par défaut (cf. img/image-not-found.png)
+            var DefaultImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFvSURBVHgB7ZfBisIwEIb/aIWKHsXH8OCT+lBevHgRjwp6EBEREdRqTbKZLN3FXT20yRyK80FIqJR8mf4drDqfjUWNaKBmiDA3IsyNCHMjwtyIMDcizI0Ic/O5wsYA7bZCkjxfb7UQlWjCnY7CaJRhNtM/0nSAyUQjTRViEU3Yug+t8Tj3ws2mcpVVWCw0Gm4Hmv9Wvioq1jcdRaLbVX6+XCyUK+p0ql2VgevVYjhM/LVQolSYqni7AVlm/aB4UKXT9LvyFI35PE40goVJ9nSiYb0cPfrVyvh1Aa21BjYb4+KCIIKFiwhQNzgcSFphvTb/ugMdZLnULhbq6TBlCcowSex2v7dTRvd74+PxLq90kMEg8dGpQuUKF1GgR01VpvF4AP1+A3lu/frVOB4ttltT+QWsXGHakN7+V5mkQ9zv7++l33s95efS+4ZEIqRNVc1xUDu3UTp4OeTfGjcizI0IcyPC3IgwNyLMjQhzUzvhL49qosB5TImnAAAAAElFTkSuQmCC";
+            
+            var thumbnail = o.thumbnail || DefaultImage;
+            var iconDiv = "";
+            var icon = o.icon || DefaultImage;
+            if (icon.startsWith("fr-icon-")) {
+                iconDiv = `
+                <button 
+                    type="button" 
+                    class="fr-btn fr-btn--lg ${icon} fr-btn--tertiary-no-outline">
+                </button>`;
+            } else {
+                iconDiv = `
+                <svg>       
+                    <image id="icon-${o.id}" xlink:href="${icon}" style="width:100%;"/>    
+                </svg>`;
+            }
             var id = o.id.toLowerCase();
             // tile dsfr
             var entry = stringToHTML(`
@@ -525,9 +573,7 @@ var TerritoriesDOM = {
                         <img id="thumbnail-${o.id}" src="${thumbnail}" width="100%" height="100%" title="${o.description}"/>
                     </div>
                     <div class="fr-tile__pictogram fr-tile__icon fr-tile__icon--${id}">
-                        <svg>       
-                            <image id="icon-${o.id}" xlink:href="${icon}" style="width:100%;"/>    
-                        </svg>
+                        ${iconDiv}
                     </div>
                 </div>
             </div>
@@ -538,6 +584,43 @@ var TerritoriesDOM = {
                 div.addEventListener("click", (e) => {
                     self.onImageTerritoriesClick(e, o.id);
                 });
+            }
+            return entry.firstChild;
+        }
+    },
+
+    _createTerritoryView : function (o) {
+        var self = this;
+        
+        var buttonId = "gpf-territories-view-entry-button-id-" + o.id;
+        if (o) {
+            var entry = stringToHTML(`
+            <div class="gpf-panel__views_territories-listview-entry">
+                <!-- ${o.title} -->
+                <div style="display: flex;flex-direction: row;align-items: center;">    
+                    <span class="gpf-btn gpf-btn-icon-territories-draggable gpf-btn--tertiary"></span>
+                    <label class="gpf-label fr-label" title="${o.description}">${o.title}</label>
+                </div>
+                <button 
+                    id="${buttonId}" 
+                    type="button" 
+                    class="fr-btn fr-btn--sm fr-btn--icon-left fr-btn--tertiary-no-outline gpf-btn gpf-btn-icon-territories-remove gpf-btn--tertiary"></button>
+            </div>
+            `);
+            var div = entry.firstChild;
+            if (div) {
+                div.addEventListener("click", (e) => {
+                    // some stuff to select the view
+                    self.onViewTerritoryClick(e, o.id);
+                });
+                var button = entry.querySelector("#" + buttonId);
+                if (button) {
+                    button.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        // some stuff to remove the view
+                        self.onViewTerritoryRemoveClick(e, o.id);
+                    });
+                }
             }
             return entry.firstChild;
         }

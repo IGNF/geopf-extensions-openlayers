@@ -137,6 +137,20 @@
       bbox: [],
       thumbnail: "", // image par defaut !
     });
+  
+    // écoute de l'évènement de changement de territoire
+    territories.on("territories:loaded", function (e) {
+      console.log("territory loaded", e);
+    });
+    territories.on("territories:change", function (e) {
+      console.log("territory changed:", e.territory);
+    });
+    territories.on("territories:add", function (e) {
+      console.log("territory added:", e.territory);
+    });
+    territories.on("territories:remove", function (e) {
+      console.log("territory removed:", e.territory);
+    });
   };
   Gp.Services.getConfig({
     customConfigFile: "{{ configurl }}",
