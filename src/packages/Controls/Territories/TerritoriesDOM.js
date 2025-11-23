@@ -461,9 +461,12 @@ var TerritoriesDOM = {
                 var input = document.getElementById(inputId);
                 if (input) {
                     var message = document.getElementById(inputId + "-message-error-id");
-                    // validation du nom de la vue avec ceux de la liste
                     var territory = self.territories.find(e => e.data.title === input.value);
-                    if ((message && input.value === "") || territory) {
+                    if (message && input.value === "") {
+                        return;
+                    }
+                    // validation du nom de la vue avec ceux de la liste
+                    if (message && territory) {
                         message.classList.remove("gpf-hidden");
                         return;
                     } else {
