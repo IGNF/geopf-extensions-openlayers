@@ -697,6 +697,16 @@ class Territories extends Control {
      */
     onShowTerritoriesViewsClick (e) {
         logger.trace(e);
+        this.closePanelUpLoad();
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onCloseTerritoriesViewsClick (e) {
+        logger.trace(e);
     }
 
     /**
@@ -751,8 +761,9 @@ class Territories extends Control {
         logger.trace(e);
         // On supprime tous les territoires ajoutées manuellement via le bouton "Ajouter une vue"
         // et on recharge la liste initiale
-        for (let index = 0; index < this.territories.length; index++) {
-            const territory = this.territories[index];
+        var territories = [...this.territories];
+        for (let index = 0; index < territories.length; index++) {
+            const territory = territories[index];
             if (territory.isAdded) {
                 this.removeTerritory(territory, true);
             } else {

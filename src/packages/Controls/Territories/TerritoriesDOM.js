@@ -442,6 +442,7 @@ var TerritoriesDOM = {
                     return;
                 }
                 button.setAttribute("aria-pressed", "false");
+                self.onCloseTerritoriesViewsClick(e);
             }, false);
         }
         var form = shadow.getElementById(formId);
