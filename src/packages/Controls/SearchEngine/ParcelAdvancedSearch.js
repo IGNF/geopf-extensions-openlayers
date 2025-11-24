@@ -2,7 +2,6 @@ import def from "ajv/dist/vocabularies/discriminator";
 import InseeSearchService from "../../Services/InseeSearchService";
 import Helper from "../../Utils/Helper";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
-import { couldStartTrivia } from "typescript";
 import IGNSearchService from "../../Services/IGNSearchService";
 
 /**
@@ -118,11 +117,13 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                 numbers.sort().forEach(numero => {
                     const option = document.createElement("li");
                     option.value = option.textContent = numero.replace(/^0{1,4}/g,"");
+                    option.id = Helper.getUid("GPautoCompleteOption-");
                     option.addEventListener("click", () => {
                         this.numberInput.value = option.value;
                         this._onSearch();
                         this.numberInput.blur();
                         this.numberInput.ariaExpanded = "false";
+                        this.numberInput.setAttribute("aria-activedescendant", "");
                     });
                     this.numberList.appendChild(option);
                 });
@@ -384,15 +385,30 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         prefixInput.addEventListener("change", () => {
             this.setFeuille(prefixInput.value);
         });
+
         // Fetch parcelles number
-        sectionInput.addEventListener("change", () => {
-            if (sectionInput.value) {
-                this.numberInput.removeAttribute("disabled");
-                this.setSection();
-            } else {
-                this.numberInput.setAttribute("disabled", "disabled");
-            }
-        });
+        let selectTout = null;
+        let hascliked = false;
+        // Handle click and change separately to manage click on the list
+        sectionInput.addEventListener("click", () => {
+            hascliked = true;
+        })
+        sectionInput.addEventListener("change", e => {
+            // Wait for click event to be handled first
+            setTimeout(() => {
+                clearTimeout(selectTout);
+                // If clicked, do it immediately, else wait a bit (use key to navigate the list)
+                selectTout = setTimeout(() => {
+                    if (sectionInput.value) {
+                        this.numberInput.removeAttribute("disabled");
+                        this.setSection();
+                    } else {
+                        this.numberInput.setAttribute("disabled", "disabled");
+                    }
+                }, hascliked ? 0 : 500);
+            });
+            hascliked = false;
+        })
 
         // Handle listbox for number input
         this.numberInput.addEventListener("focus", () => {
@@ -474,6 +490,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                 this.numberInput.setAttribute("aria-activedescendant", this.numberList.children[parcelIndex]?.id || "");
                 // Scroll to selected option
                 this.numberInput.ariaExpanded = "true";
+                this.numberInput.setAttribute("aria-activedescendant", this.numberList.children[parcelIndex]?.id || "");
                 this.numberList.children[parcelIndex]?.scrollIntoView({ block : "nearest" });
             }
         });
