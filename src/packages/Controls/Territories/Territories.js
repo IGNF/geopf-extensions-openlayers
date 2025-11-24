@@ -508,7 +508,16 @@ class Territories extends Control {
      * @private
      */
     closePanelUpLoad () {
-        this.containerTerritoriesOptions.children[0].click();
+        // document.getElementById("gpf-territories-upload-container-id")
+        var button = this.containerTerritoriesOptions.children[0];
+        if (button) {
+            button.setAttribute("aria-expanded", "false");
+        }
+        var dialog = this.containerTerritoriesOptions.children[1];
+        if (dialog) {
+            dialog.classList.add("gpf-hidden");
+            dialog.classList.remove("gpf-visible");
+        }
     }
 
     // ################################################################### //
@@ -688,6 +697,8 @@ class Territories extends Control {
      */
     onModifyTerritoriesClick (e) {
         logger.trace(e);
+        // on ferme le panneau des options
+        this.closePanelUpLoad();
     }
 
     /**
@@ -697,7 +708,6 @@ class Territories extends Control {
      */
     onShowTerritoriesViewsClick (e) {
         logger.trace(e);
-        this.closePanelUpLoad();
     }
 
     /**
@@ -707,6 +717,8 @@ class Territories extends Control {
      */
     onCloseTerritoriesViewsClick (e) {
         logger.trace(e);
+        // on ferme le panneau des options
+        this.closePanelUpLoad();
     }
 
     /**
