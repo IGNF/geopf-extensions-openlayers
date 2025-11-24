@@ -191,6 +191,7 @@ class Territories extends Control {
      * Add a territory
      *
      * @param {Territory} territory  - territory
+     * @param {Boolean} [isAdded=false] - specify if territory is added manually with "Add view" button
      * @returns {Boolean} - true|false
      * @public
      * @example
@@ -202,7 +203,7 @@ class Territories extends Control {
      *  thumbnail: "data:image/png;base64,..."
      * });
      */
-    setTerritory (territory) {
+    setTerritory (territory, isAdded = false) {
         // Test if a territory already exist
         var founded = this.territories.some(e => e.data.id === territory.id);
         if (territory && !founded) {
@@ -216,10 +217,12 @@ class Territories extends Control {
                 }
                 var count = this.element.querySelector("#gpf-territories-views-count-id");
                 if (count) {
-                    var nb = this.territories.length + 1;
+                    var nb = this.territories.filter(t => !t.isRemoved).length + 1;
                     count.innerText = nb;
                 }
                 this.territories.push({
+                    isRemoved : false,
+                    isAdded : isAdded,
                     data : territory,
                     domEntry : entry,
                     domView : view
@@ -246,12 +249,13 @@ class Territories extends Control {
      * Remove a territory
      *
      * @param {String} territory - territory id (FRA, MTQ, ...)
+     * @param {Boolean} [force=false] - force removal even if territory was added manually
      * @returns {Boolean} - true|false
      * @public
      * @example
      * territories.removeTerritory("MTQ"); // id du territoire
      */
-    removeTerritory (territory) {
+    removeTerritory (territory, force = false) {
         var found = false;
         if (territory) {
             for (let i = 0; i < this.territories.length; i++) {
@@ -259,11 +263,18 @@ class Territories extends Control {
                 if (o.data.id === territory.data.id) {
                     this.territories[i].domEntry.remove();
                     this.territories[i].domView.remove();
-                    this.territories.splice(i, 1);
+                    if (!force) {
+                        // on ne le supprime pas de la liste des territoires
+                        // mais on le masque uniquement
+                        this.territories[i].isRemoved = true;
+                    } else {
+                        // on le supprime de la liste des territoires
+                        this.territories.splice(i, 1);
+                    }
                     found = true;
                     var count = this.element.querySelector("#gpf-territories-views-count-id");
                     if (count) {
-                        var nb = this.territories.length;
+                        var nb = this.territories.filter(t => !t.isRemoved).length;
                         count.innerText = nb;
                     }
                     break;
@@ -387,7 +398,10 @@ class Territories extends Control {
          * @type {Array} 
          * @example
          * {
-         *   dom : { HTMLelment },
+         *   isRemoved : { Boolean },
+         *   isAdded : { Boolean },
+         *   domView : { HTMLelment },
+         *   domEntry : { HTMLelment },
          *   data : {
          *     id: "MTQ",
          *     title: "Martinique",
@@ -707,7 +721,7 @@ class Territories extends Control {
             "thumbnail" : "",
             "icon" : "fr-icon-map-pin-2-line" // icone DSFR ou svg
         };
-        this.setTerritory(territory);
+        this.setTerritory(territory, true);
         /**
          * event triggered when a territory is added
          *
@@ -735,13 +749,29 @@ class Territories extends Control {
      */
     onResetTerritoriesViewClick (e) {
         logger.trace(e);
-        this.removeTerritories();
-        // Ajout des territoires par defaut ou customisés
-        // les territoires ajoutés manuellement ne sont pas conservés...
-        var territories = (this.auto) ? TerritoriesJson : this.options.territories;
-        for (let index = 0; index < territories.length; index++) {
-            const territory = territories[index];
-            this.setTerritory(territory);
+        // On supprime tous les territoires ajoutées manuellement via le bouton "Ajouter une vue"
+        // et on recharge la liste initiale
+        for (let index = 0; index < this.territories.length; index++) {
+            const territory = this.territories[index];
+            if (territory.isAdded) {
+                this.removeTerritory(territory, true);
+            } else {
+                // on ré-affiche les territoires non supprimés
+                if (territory.isRemoved) {
+                    this.panelTerritoriesEntriesContainer.appendChild(territory.domEntry);
+                    var panelTerritoriesViewsContainer = this.element.querySelector("#gpf-territories-views-listview-entries-id");
+                    if (panelTerritoriesViewsContainer) {
+                        panelTerritoriesViewsContainer.appendChild(territory.domView);
+                    }
+                    territory.isRemoved = false;
+                }
+            }
+        }
+        // mise à jour du compteur des vues
+        var count = this.element.querySelector("#gpf-territories-views-count-id");
+        if (count) {
+            var nb = this.territories.filter(t => !t.isRemoved).length;
+            count.innerText = nb;
         }
     }
 
@@ -765,7 +795,9 @@ class Territories extends Control {
         logger.trace(e, id);
         var territory = this.territories.find(e => e.data.id === id);
         if (territory) {
-            this.removeTerritory(territory);
+            // on le supprime définitivement pour les vues personnalisées
+            // mais on masque uniquement pour les territoires par défaut
+            this.removeTerritory(territory, territory.isAdded);
             /**
              * event triggered when a territory is removed
              *
