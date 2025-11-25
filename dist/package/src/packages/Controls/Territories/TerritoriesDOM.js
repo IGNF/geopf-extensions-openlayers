@@ -173,9 +173,10 @@ var TerritoriesDOM = {
         var content = "&#x2630";
 
         var idButton = "gpf-territories-button-option-id";
-        var idInput = "gpf-territories-upload-id";
+        var idInputUpload = "gpf-territories-upload-id";
         var idClose = "gpf-territories-upload-close-id";
         var idToggle = "gpf-territories-toggle-messages";
+        var idBtnApply = "gpf-territories-apply-id";
 
         var strContainer = `
         <div>
@@ -198,26 +199,39 @@ var TerritoriesDOM = {
                         <span>Fermer</span>
                     </button>
                 </div>
-                <label class="fr-label" for="gpf-territories-upload-id">
+                <label class="fr-label">
                     ${title}
                     <span class="fr-hint-text">${description}</span>
                 </label>
-                <div class="fr-toggle fr-m-2v">
-                    <input 
-                        id="${idToggle}" 
-                        class="fr-toggle__input" 
-                        type="checkbox" 
-                        aria-describedby="gpf-territories-toggle-messages">
-                    <label class="fr-toggle__label" for="${idToggle}">Compléter la liste</label>
-                    <div class="fr-messages-group" id="gpf-territories-toggle-messages" aria-live="polite"></div>
-                </div>
-                <input 
-                    id="${idInput}" 
-                    class="fr-upload" 
-                    aria-describedby="gpf-territories-upload-id-messages" 
-                    type="file" 
-                    name="upload">
-                <div class="fr-messages-group" id="gpf-territories-upload-id-messages" aria-live="polite"></div>
+                <fieldset class="fr-fieldset">
+                    <div class="fr-fieldset__element">
+                        <div class="fr-toggle fr-m-2v">
+                            <input 
+                                id="${idToggle}" 
+                                class="fr-toggle__input" 
+                                type="checkbox" 
+                                aria-describedby="gpf-territories-toggle-messages">
+                            <label class="fr-toggle__label" for="${idToggle}">Compléter la liste</label>
+                            <div class="fr-messages-group" id="gpf-territories-toggle-messages" aria-live="polite"></div>
+                        </div>
+                    </div>
+                    <div class="fr-fieldset__element">
+                        <input 
+                            id="${idInputUpload}" 
+                            class="fr-upload" 
+                            aria-describedby="gpf-territories-upload-id-messages" 
+                            type="file" 
+                            name="upload">
+                        <div class="fr-messages-group" id="gpf-territories-upload-id-messages" aria-live="polite"></div>
+                    </div>
+                </fieldset>
+                <fieldset class="fr-fieldset">
+                    <button 
+                        id="${idBtnApply}" 
+                        class="gpf-button gpf-button fr-btn fr-btn--tertiary" 
+                        aria-describedby="gpf-territories-apply-id-messages">Appliquer</button>
+                    <div class="fr-messages-group" id="gpf-territories-apply-id-messages" aria-live="polite"></div>
+                </fieldset>
             </dialog>
         </div>
         `;
@@ -256,9 +270,9 @@ var TerritoriesDOM = {
 
         // INFO
         // https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications
-        var input = shadow.getElementById(idInput);
-        if (input) {
-            input.addEventListener("change", (e) => {
+        var inputUpload = shadow.getElementById(idInputUpload);
+        if (inputUpload) {
+            inputUpload.addEventListener("change", (e) => {
                 self.onUploadFileClick(e);
             }, false);
         }
@@ -270,6 +284,246 @@ var TerritoriesDOM = {
                 self.onUploadToggleClick(e);
             });
         }
+
+        var inputApply = shadow.getElementById(idBtnApply);
+        if (inputApply) {
+            inputApply.addEventListener("click", (e) => {
+                self.onApplyTerritoriesClick(e);
+            }, false);
+        }
+        return shadow.firstChild;
+    },
+
+    // ################################################################### //
+    // ####################### Methods for dialog  ####################### //
+    // ################################################################### //
+    _createTerritoriesPanelMenuViewsDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "territories-views gpf-panel__menuviews_territories";
+        div.appendChild(this._createTerritoriesButtonOpenMenuViewsElement());
+        div.appendChild(this._createTerritoriesPanelMenuViewsElement());
+        return div;
+    },
+
+    _createTerritoriesButtonOpenMenuViewsElement : function () {
+        var self = this;
+
+        var button = document.createElement("button");
+        // INFO: Ajout d'une SPAN pour enlever des marges de 6px dans CHROMIUM (?!)
+        var span = document.createElement("span");
+        button.appendChild(span);
+        button.id = "gpf-territories-button-open-views-id";
+        button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
+        button.classList.add("fr-btn", "fr-btn--tertiary");
+        button.setAttribute("aria-label", "Modifier les territoires");
+        button.setAttribute("tabindex", "0");
+        button.setAttribute("aria-pressed", false);
+        button.setAttribute("aria-controls", "gpf-territories-views-container-id");
+        button.setAttribute("type", "button");
+        button.innerHTML = "Modifier les territoires";
+
+        // Close all results and panels when minimizing the widget
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                if (!collapse) {
+                    return;
+                }
+                if (status) {
+                    collapse.classList.remove("gpf-visible");
+                    collapse.classList.add("gpf-hidden");
+                } else {
+                    collapse.classList.add("gpf-visible");
+                    collapse.classList.remove("gpf-hidden");
+                }
+                self.onShowTerritoriesViewsClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                var collapse = document.getElementById(e.target.getAttribute("aria-controls"));
+                if (!collapse) {
+                    return;
+                }
+                if (status) {
+                    collapse.classList.remove("gpf-visible");
+                    collapse.classList.add("gpf-hidden");
+                } else {
+                    collapse.classList.add("gpf-visible");
+                    collapse.classList.remove("gpf-hidden");
+                }
+                self.onShowTerritoriesViewsClick(e);
+            });
+        }
+
+        return button;
+    },
+
+    _createTerritoriesPanelMenuViewsElement : function () {
+        var dialog = document.createElement("dialog");
+        dialog.id = "gpf-territories-views-container-id";
+        dialog.className = "fr-modal__body gpf-panel__views_territories-menu gpf-hidden";
+        dialog.appendChild(this._createTerritoriesMenuAddViewElement());
+        dialog.appendChild(this._createTerritoriesMenuListViewElement());
+        return dialog;
+    },
+    _createTerritoriesMenuAddViewElement : function () {
+        var self = this;
+
+        var buttonId = "gpf-territories-views-back-button-id";
+        var inputId = "gpf-territories-views-input-id";
+        var formId = "gpf-territories-views-form-id";
+        var submitId = "gpf-territories-views-submit-id";
+
+        var strContainer = `
+        <div>
+            <button 
+                id="${buttonId}" 
+                class="fr-btn fr-icon-arrow-left-line fr-btn--icon-left fr-btn--tertiary-no-outline"
+                aria-pressed="false" 
+                aria-controls="gpf-territories-views-container-id gpf-territories-button-open-views-id"
+                title="Retour au sélecteur de territoires" 
+                type="button">
+                Modifier les territoires
+            </button>
+            <form id="${formId}">
+                <fieldset 
+                    class="fr-fieldset" 
+                    id="add-view-form-fieldset" 
+                    aria-labelledby="add-view-form-fieldset-legend add-view-form-fieldset-messages">
+                    <legend 
+                        class="fr-fieldset__legend" 
+                        id="add-view-form-fieldset-legend"> 
+                        Ajouter la vue actuelle 
+                    </legend>
+                    <div class="fr-fieldset__element">
+                        <div class="fr-input-group" id="${inputId}-input-group-view">
+                            <label class="fr-label" for="${inputId}"> Nom </label>
+                            <input class="fr-input" aria-describedby="${inputId}-messages" id="${inputId}" type="text">
+                            <div class="fr-messages-group" id="${inputId}-messages" aria-live="polite"></div>
+                        </div>
+                    </div>
+                    <div class="fr-messages-group" id="add-view-form-fieldset-messages" aria-live="polite">
+                        <p class="fr-message fr-message--error gpf-hidden" id="${inputId}-message-error-id">Ce nom est déjà utilisé</p>
+                    </div>
+                </fieldset>
+            </form>
+            <input type="submit" id="${submitId}" value="Ajouter" class="fr-btn">
+            <hr class="fr-m-1v"/>
+        </div>
+        `;
+        var container = stringToHTML(strContainer);
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+
+        var button = shadow.getElementById(buttonId);
+        if (button) {
+            button.addEventListener("click", (e) => {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+
+                var controls = e.target.getAttribute("aria-controls").split(" ");
+
+                var collapse = document.getElementById(controls[0]);
+                if (!collapse) {
+                    return;
+                }
+                collapse.classList.remove("gpf-visible");
+                collapse.classList.add("gpf-hidden");
+
+                var button = document.getElementById(controls[1]);
+                if (!button) {
+                    return;
+                }
+                button.setAttribute("aria-pressed", "false");
+                self.onCloseTerritoriesViewsClick(e);
+            }, false);
+        }
+        var form = shadow.getElementById(formId);
+        if (form) {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                var input = document.getElementById(inputId);
+                if (input) {
+                    self.onAddTerritoriesViewClick(e, input.value);
+                }
+            }, false);
+        }
+        var submit = shadow.getElementById(submitId);
+        if (submit) {
+            submit.addEventListener("click", (e) => {
+                e.preventDefault();
+                var input = document.getElementById(inputId);
+                if (input) {
+                    var message = document.getElementById(inputId + "-message-error-id");
+                    var territory = self.territories.find(e => e.data.title === input.value);
+                    if (message && input.value === "") {
+                        return;
+                    }
+                    // validation du nom de la vue avec ceux de la liste
+                    if (message && territory) {
+                        message.classList.remove("gpf-hidden");
+                        return;
+                    } else {
+                        message.classList.add("gpf-hidden");
+                    }
+                    self.onAddTerritoriesViewClick(e, input.value);
+                }
+            }, false);
+        }
+
+        return shadow.firstChild;
+    },
+
+    _createTerritoriesMenuListViewElement : function () {
+        var self = this;
+        
+        var buttonId = "gpf-territories-views-reset-button-id";
+        var countId = "gpf-territories-views-count-id";
+
+        var strContainer = `
+        <div class="gpf-panel__views_territories-listview">
+            <!-- Menu de la liste des vues -->
+            <div class="gpf-panel__views_territories-listview-header">
+                <div class="gpf-panel__views_territories-listview-count">
+                    <span class="fr-label" style="padding-right: 10px;"> Territoires </span>
+                    <span 
+                        class="fr-message" 
+                        id="${countId}"> 0 </span>
+                </div>
+                <button 
+                    id="${buttonId}" 
+                    class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                    title="Réinitialiser la liste des territoires" 
+                    type="button">
+                    Réinitialiser
+                </button>
+            </div>
+            <!-- Liste des vues -->
+            <div 
+                id="gpf-territories-views-listview-entries-id"
+                class="gpf-panel__views_territories-listview-entries">
+            </div>
+        </div>
+        `;
+        var container = stringToHTML(strContainer);
+
+        // ajout du shadow DOM pour creer les listeners
+        const shadow = container.attachShadow({ mode : "open" });
+        shadow.innerHTML = strContainer.trim();
+
+        var button = shadow.getElementById(buttonId);
+        if (button) {
+            button.addEventListener("click", (e) => {
+                self.onResetTerritoriesViewClick(e);
+            }, false);
+        }
+
         return shadow.firstChild;
     },
 
@@ -287,10 +541,25 @@ var TerritoriesDOM = {
         var self = this;
         
         if (o) {
-            // test si la vignette est renseignée
-            var defaultImage = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iNTgxLjAwMDAwMHB0IiBoZWlnaHQ9IjM1Ni4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDU4MS4wMDAwMDAgMzU2LjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgoKPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsMzU2LjAwMDAwMCkgc2NhbGUoMC4xMDAwMDAsLTAuMTAwMDAwKSIKZmlsbD0iI2I0YjNiMyIgc3Ryb2tlPSJub25lIj4KPHBhdGggZD0iTTAgMTc4MCBsMCAtMTc4MCAyOTA1IDAgMjkwNSAwIDAgMTc4MCAwIDE3ODAgLTI5MDUgMCAtMjkwNSAwIDAKLTE3ODB6Ii8+CjwvZz4KPC9zdmc+Cg==";
-            var thumbnail = o.thumbnail || defaultImage;
-            var icon = o.icon || defaultImage;
+            // Test si la vignette est demandée ou non (SVG ou DSFR)
+            // On propose une image par défaut (cf. img/image-not-found.png)
+            var DefaultImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFvSURBVHgB7ZfBisIwEIb/aIWKHsXH8OCT+lBevHgRjwp6EBEREdRqTbKZLN3FXT20yRyK80FIqJR8mf4drDqfjUWNaKBmiDA3IsyNCHMjwtyIMDcizI0Ic/O5wsYA7bZCkjxfb7UQlWjCnY7CaJRhNtM/0nSAyUQjTRViEU3Yug+t8Tj3ws2mcpVVWCw0Gm4Hmv9Wvioq1jcdRaLbVX6+XCyUK+p0ql2VgevVYjhM/LVQolSYqni7AVlm/aB4UKXT9LvyFI35PE40goVJ9nSiYb0cPfrVyvh1Aa21BjYb4+KCIIKFiwhQNzgcSFphvTb/ugMdZLnULhbq6TBlCcowSex2v7dTRvd74+PxLq90kMEg8dGpQuUKF1GgR01VpvF4AP1+A3lu/frVOB4ttltT+QWsXGHakN7+V5mkQ9zv7++l33s95efS+4ZEIqRNVc1xUDu3UTp4OeTfGjcizI0IcyPC3IgwNyLMjQhzUzvhL49qosB5TImnAAAAAElFTkSuQmCC";
+            
+            var thumbnail = o.thumbnail || DefaultImage;
+            var iconDiv = "";
+            var icon = o.icon || DefaultImage;
+            if (icon.startsWith("fr-icon-")) {
+                iconDiv = `
+                <button 
+                    type="button" 
+                    class="fr-btn fr-btn--lg ${icon} fr-btn--tertiary-no-outline">
+                </button>`;
+            } else {
+                iconDiv = `
+                <svg>       
+                    <image id="icon-${o.id}" xlink:href="${icon}" style="width:100%;"/>    
+                </svg>`;
+            }
             var id = o.id.toLowerCase();
             // tile dsfr
             var entry = stringToHTML(`
@@ -307,9 +576,7 @@ var TerritoriesDOM = {
                         <img id="thumbnail-${o.id}" src="${thumbnail}" width="100%" height="100%" title="${o.description}"/>
                     </div>
                     <div class="fr-tile__pictogram fr-tile__icon fr-tile__icon--${id}">
-                        <svg>       
-                            <image id="icon-${o.id}" xlink:href="${icon}" style="width:100%;"/>    
-                        </svg>
+                        ${iconDiv}
                     </div>
                 </div>
             </div>
@@ -320,6 +587,43 @@ var TerritoriesDOM = {
                 div.addEventListener("click", (e) => {
                     self.onImageTerritoriesClick(e, o.id);
                 });
+            }
+            return entry.firstChild;
+        }
+    },
+
+    _createTerritoryView : function (o) {
+        var self = this;
+        
+        var buttonId = "gpf-territories-view-entry-button-id-" + o.id;
+        if (o) {
+            var entry = stringToHTML(`
+            <div class="gpf-panel__views_territories-listview-entry">
+                <!-- ${o.title} -->
+                <div style="display: flex;flex-direction: row;align-items: center;">    
+                    <span class="gpf-btn gpf-btn-icon-territories-draggable gpf-btn--tertiary"></span>
+                    <label class="gpf-label fr-label" title="${o.description}">${o.title}</label>
+                </div>
+                <button 
+                    id="${buttonId}" 
+                    type="button" 
+                    class="fr-btn fr-btn--sm fr-btn--icon-left fr-btn--tertiary-no-outline gpf-btn gpf-btn-icon-territories-remove gpf-btn--tertiary"></button>
+            </div>
+            `);
+            var div = entry.firstChild;
+            if (div) {
+                div.addEventListener("click", (e) => {
+                    // some stuff to select the view
+                    self.onViewTerritoryClick(e, o.id);
+                });
+                var button = entry.querySelector("#" + buttonId);
+                if (button) {
+                    button.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        // some stuff to remove the view
+                        self.onViewTerritoryRemoveClick(e, o.id);
+                    });
+                }
             }
             return entry.firstChild;
         }

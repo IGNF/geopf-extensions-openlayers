@@ -92,9 +92,13 @@ export type Territory = {
      */
     zoom?: number | undefined;
     /**
-     * - URL ou data URI de l’imagette du territoire.
+     * - URL ou data URI de la vignette du territoire (format image tel que PNG, JPEG, SVG).
      */
     thumbnail?: string | undefined;
+    /**
+     * - URL, data URI ou classe CSS DSFR de l’icône du territoire (format vectoriel SVG).
+     */
+    icon?: string | undefined;
 };
 /**
  * @typedef {Object} TerritoriesOptions
@@ -123,7 +127,8 @@ export type Territory = {
  * @property {Array<number>} bbox - Bbox du territoire au format [minx, miny, maxx, maxy] en EPSG:4326.
  * @property {Array<number>} [point] - Point central du territoire au format [lon, lat] en EPSG:4326.
  * @property {number} [zoom] - Niveau de zoom à appliquer lors de la sélection du territoire.
- * @property {string} [thumbnail] - URL ou data URI de l’imagette du territoire.
+ * @property {string} [thumbnail] - URL ou data URI de la vignette du territoire (format image tel que PNG, JPEG, SVG).
+ * @property {string} [icon] - URL, data URI ou classe CSS DSFR de l’icône du territoire (format vectoriel SVG).
  */
 /**Object
  * @classdesc
@@ -138,7 +143,11 @@ declare class Territories extends Control {
      * @constructor
      * @param {TerritoriesOptions} options - options for function call.
      *
+     * @fires territories:loaded
      * @fires territories:change
+     * @fires territories:add
+     * @fires territories:remove
+     * @public
      * @example
      * var territories = new ol.control.Territories({
      *   collapsed: true,
@@ -153,6 +162,9 @@ declare class Territories extends Control {
      * territories.setTerritory({id: "MTQ", title: "Martinique", description: "", bbox: [], thumbnail: "data:image/png;base64,..."});
      * territories.setTerritory({id: "GLP", title: "Guadeloupe", description: "", bbox: [], thumbnail: "http://..."});
      * map.addControl(territories);
+     * territories.on("territories:loaded", (e) => { console.log(e.data); });
+     * territories.on("territories:add", (e) => { console.log(e); });
+     * territories.on("territories:remove", (e) => { console.log(e); });
      */
     constructor(options: TerritoriesOptions);
     /**
@@ -171,6 +183,7 @@ declare class Territories extends Control {
      * Add a territory
      *
      * @param {Territory} territory  - territory
+     * @param {Boolean} [isAdded=false] - specify if territory is added manually with "Add view" button
      * @returns {Boolean} - true|false
      * @public
      * @example
@@ -182,7 +195,7 @@ declare class Territories extends Control {
      *  thumbnail: "data:image/png;base64,..."
      * });
      */
-    public setTerritory(territory: Territory): boolean;
+    public setTerritory(territory: Territory, isAdded?: boolean): boolean;
     /**
      * Load a new configuration
      *
@@ -193,12 +206,13 @@ declare class Territories extends Control {
      * Remove a territory
      *
      * @param {String} territory - territory id (FRA, MTQ, ...)
+     * @param {Boolean} [force=false] - force removal even if territory was added manually
      * @returns {Boolean} - true|false
      * @public
      * @example
      * territories.removeTerritory("MTQ"); // id du territoire
      */
-    public removeTerritory(territory: string): boolean;
+    public removeTerritory(territory: string, force?: boolean): boolean;
     /**
      * Remove all territories
      */
@@ -260,6 +274,10 @@ declare class Territories extends Control {
      * @type {Boolean} */
     auto: boolean | undefined;
     /**
+     * @type {Object}
+     * upload configuration */
+    uploadConfig: any;
+    /**
      * @type {Boolean}
      * specify if a list of object territories must be appended or replaced */
     append: boolean | undefined;
@@ -318,6 +336,51 @@ declare class Territories extends Control {
      * @private
      */
     private onUploadToggleClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onApplyTerritoriesClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onShowTerritoriesViewsClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onCloseTerritoriesViewsClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {String} viewName - ...
+     * @private
+     */
+    private onAddTerritoriesViewClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onResetTerritoriesViewClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {*} id - ...
+     * @private
+     */
+    private onViewTerritoryClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @param {*} id - ...
+     * @private
+     */
+    private onViewTerritoryRemoveClick;
 }
 import Control from "../Control";
 import Map from "ol/Map";
