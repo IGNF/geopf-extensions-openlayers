@@ -120,3 +120,14 @@ div[id^=GPsearchEngine-AdvancedContainer-] .fr-accordion .fr-collapse {
   -webkit-mask-image: url("./img/dsfr/subway-line.svg");
   mask-image: url("./img/dsfr/subway-line.svg");
 }
+
+[id^="GPsearchEngine"] form[id^="GPsearchInput-Base-"].GPSearchBar > .GPInputGroup:has(> .GPsearchInputText:focus:focus-visible) {
+  outline-offset: 2px;
+  outline-width: 2px;
+  outline-color: #0a76f6;
+  outline-style: solid;
+}
+
+[id^="GPsearchEngine"] form[id^="GPsearchInput-Base-"].GPSearchBar > .GPInputGroup >.GPsearchInputText:focus:focus-visible {
+  outline-style: none;
+}

@@ -147,7 +147,12 @@ class SearchEngineBase extends Control {
         if (this.searchService.get("autocomplete") !== false) {
             // Empty input
             this.input.addEventListener("input", function (e) {
-                e.target.dataset.erase = true;
+                if (e.target.value.length > 0) {
+                    e.target.dataset.erase = true;
+                } else {
+                    delete e.target.dataset.erase;
+                }
+                console.log("input", e, e.target.value);
                 if (!e.target.value) {
                     this.showHistoric();
                 }
@@ -336,7 +341,7 @@ class SearchEngineBase extends Control {
         }
 
         // Autocomplete container
-        const acContainer = document.createElement("div");
+        const acContainer = this.acContainer = document.createElement("div");
         acContainer.id = Helper.getUid("GPautoCompleteContainer-");
         acContainer.className = "GPautoCompleteContainer GPelementHidden gpf-hidden";
         element.appendChild(acContainer);
@@ -368,7 +373,6 @@ class SearchEngineBase extends Control {
 
         if (this.searchService.get("autocomplete") !== false) {
             input.addEventListener("focus", () => {
-                input.dataset.erase = true;
                 input.setAttribute("aria-expanded", "true");
                 acContainer.classList.add("gpf-visible");
                 acContainer.classList.remove("gpf-hidden");

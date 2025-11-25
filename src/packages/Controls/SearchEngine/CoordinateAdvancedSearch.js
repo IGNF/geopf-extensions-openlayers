@@ -50,6 +50,9 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         this._initCoordinateSearchSystems(options);
         this._initCoordinateSearchUnits(options);
 
+        this._boundOnLonLatBeforeInput = this._onlonLatBeforeInput.bind(this);
+        this._boundOnLonLatInput = this._onlonLatInput.bind(this);
+
         this._currentCoordinateSystem = this._coordinateSearchSystems[0];
         this._currentUnit = this._coordinateSearchUnits[this._currentCoordinateSystem.type];
 
@@ -496,23 +499,32 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         if (this.get("unitType") === "Metric") {
             factor = unit === "KM" ? 0.001 : 1000;
         }
+        // TODO : Faire convertion ?!
         if (unit === "DMS") {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
                 input.value = "";
                 input.minLength = "6";
                 input.maxLength = "6";
-                input.addEventListener("beforeinput", this._onlonLatBeforeInput.bind(this));
-                input.addEventListener("input", this._onlonLatInput.bind(this));
+                input.addEventListener("beforeinput", this._boundOnLonLatBeforeInput);
+                input.addEventListener("input", this._boundOnLonLatInput);
             });
         } else {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
-                input.value = input.value === "" || isNaN(input.value) ? "" : parseFloat(input.value) * factor;
+                if (unit === "DEC") {
+                    input.value = "";
+                } else {
+                    input.value = input.value === "" || isNaN(input.value) ? "" : parseFloat(input.value) * factor;
+                }
                 input.removeAttribute("minLength");
                 input.removeAttribute("maxLength");
-                input.removeEventListener("beforeinput", this._onlonLatBeforeInput);
-                input.removeEventListener("input", this._onlonLatInput);
+                input.removeEventListener("beforeinput", this._boundOnLonLatBeforeInput);
+                input.removeEventListener("input", this._boundOnLonLatInput);
             });
         }
+        // Réinitialise le mask de l'input (dans tous les cas)
+        this.getContent().querySelectorAll(".display-mask").forEach(mask => {
+            mask.textContent = "__°__'__\"";
+        });
     }
 
     /**
@@ -525,7 +537,8 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         // const regex = /^(?:\d{2}°\d{2}'\d{2}(?:"|''))$|^\d{6}$/;
         const regex = /^\d+$/;
         // Vérifie si c'est un chiffre
-        if (e.inputType.startsWith("insert") && !regex.test(e.data)) {
+        // TODO : améliorer cela ? vis à vis du insertLineBreak (touche entrée)
+        if (e.inputType.startsWith("insert") && e.inputType != "insertLineBreak" && !regex.test(e.data)) {
             e.preventDefault();
         }
     }
@@ -549,6 +562,7 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @param {InputEvent} e Événement input
      */
     _onlonLatInput (e) {
+        console.log("on lon lat inputs");
         const value = e.target.value;
         const mask = e.target.parentElement.querySelector(".display-mask");
         mask.textContent = this._format(value);
@@ -641,6 +655,19 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         }
         const infoPopup = `<b>${x} : </b>${valueX}<br><b>${y} : </b>${valueY}`;
         return infoPopup;
+    }
+
+
+    /**
+     * Réinitialise les champs du formulaire.
+     * @param {PointerEvent} e Événement d'effacement
+     * @protected
+     */
+    _onErase (e) {
+        super._onErase(e);
+        this.getContent().querySelectorAll(".display-mask").forEach(mask => {
+            mask.textContent = "__°__'__\"";
+        });
     }
 
 }

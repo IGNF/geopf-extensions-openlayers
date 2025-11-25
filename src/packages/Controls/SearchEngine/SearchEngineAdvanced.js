@@ -213,6 +213,12 @@ class SearchEngineAdvanced extends Control {
                 this.advancedBtn.setAttribute("aria-expanded", false);
             }
         }.bind(this));
+
+        this.baseSearchEngine.input.addEventListener("blur", function (/** @type {FocusEvent} */e) {
+            if (e.relatedTarget && e.relatedTarget === this.eraseBtn) {
+                e.target.dispatchEvent(new Event("input"));
+            }
+        }.bind(this));
     }
 
     /**
@@ -375,6 +381,7 @@ class SearchEngineAdvanced extends Control {
             // Notifie l'input du changement
             this.baseSearchEngine.input.dispatchEvent(new Event("input"));
             // Met le focus sur l'input
+            console.log("click");
             setTimeout(() => {
                 this.baseSearchEngine.input.focus();
             }, 50);
