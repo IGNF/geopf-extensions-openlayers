@@ -21,7 +21,7 @@ import TerritoriesJson from "./Territories.json";
 // DOM
 import TerritoriesDOM from "./TerritoriesDOM";
 
-var logger = Logger.getLogger("territories");
+let logger = Logger.getLogger("territories");
 
 /**
  * @typedef {Object} TerritoriesOptions
@@ -412,6 +412,10 @@ class Territories extends Control {
          * }
          */
         this.territories = [];
+        /** 
+         * @type {Object} 
+         * upload configuration */
+        this.uploadConfig = null;
 
         /** 
          * @type {Boolean} 
@@ -662,16 +666,17 @@ class Territories extends Control {
         fReader.onload = (e) => {
             logger.log("file content : ", e.target.result);
 
-            // on ferme le panneau
-            self.closePanelUpLoad(target);
-            // on convertie string -> json
-            var config = JSON.parse(e.target.result);
-            if (!self.append) {
-                // on nettoie l'ancienne configuration
-                self.removeTerritories();
+            try {
+                // on convertie string -> json
+                self.uploadConfig = JSON.parse(e.target.result);
+                if (!self.uploadConfig) {
+                    console.error("Invalid configuration file !");
+                    return;
+                }
+            } catch (err) {
+                console.error("Error parsing configuration file : ", err);
+                return;
             }
-            // et, on en ajoute une autre
-            self.setTerritories(config);
         };
 
         // Lecture du fichier chargé à l'aide de fileReader
@@ -695,10 +700,20 @@ class Territories extends Control {
      * @param {Event} e - ...
      * @private
      */
-    onModifyTerritoriesClick (e) {
+    onApplyTerritoriesClick (e) {
         logger.trace(e);
-        // on ferme le panneau des options
+        // on ferme le panneau
         this.closePanelUpLoad();
+        if (!this.uploadConfig) {
+            logger.error("No configuration to apply !");
+            return;
+        }
+        if (!this.append) {
+            // on nettoie l'ancienne configuration
+            this.removeTerritories();
+        }
+        // et, on en ajoute une autre
+        this.setTerritories(this.uploadConfig);
     }
 
     /**

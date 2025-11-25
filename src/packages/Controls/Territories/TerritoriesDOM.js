@@ -176,7 +176,7 @@ var TerritoriesDOM = {
         var idInputUpload = "gpf-territories-upload-id";
         var idClose = "gpf-territories-upload-close-id";
         var idToggle = "gpf-territories-toggle-messages";
-        var idBtnModify = "gpf-territories-modify-id";
+        var idBtnApply = "gpf-territories-apply-id";
 
         var strContainer = `
         <div>
@@ -227,10 +227,10 @@ var TerritoriesDOM = {
                 </fieldset>
                 <fieldset class="fr-fieldset">
                     <button 
-                        id="${idBtnModify}" 
+                        id="${idBtnApply}" 
                         class="gpf-button gpf-button fr-btn fr-btn--tertiary" 
-                        aria-describedby="gpf-territories-modify-id-messages">Appliquer</button>
-                    <div class="fr-messages-group" id="gpf-territories-modify-id-messages" aria-live="polite"></div>
+                        aria-describedby="gpf-territories-apply-id-messages">Appliquer</button>
+                    <div class="fr-messages-group" id="gpf-territories-apply-id-messages" aria-live="polite"></div>
                 </fieldset>
             </dialog>
         </div>
@@ -285,11 +285,10 @@ var TerritoriesDOM = {
             });
         }
 
-        var inputModify = shadow.getElementById(idBtnModify);
-        if (inputModify) {
-            inputModify.addEventListener("click", (e) => {
-                // TODO: A implémenter
-                self.onModifyTerritoriesClick(e);
+        var inputApply = shadow.getElementById(idBtnApply);
+        if (inputApply) {
+            inputApply.addEventListener("click", (e) => {
+                self.onApplyTerritoriesClick(e);
             }, false);
         }
         return shadow.firstChild;
