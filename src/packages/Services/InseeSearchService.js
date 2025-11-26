@@ -58,11 +58,11 @@ class InseeSearchService extends AbstractSearchService {
      * @override
      * @param {Object} object Objet contenant le code INSEE
      * @param {String} object.location Code INSEE à rechercher
+     * @param {Boolean} [arr] Si vrai, recherche pour un arrondissement
      */
-    search (object) {
+    search (object, arr) {
         const insee = object.location;
-        // Envoi la requête si le chiffre est compris entre 0 et 99999
-        const response = this._requestGeoAPI({ value : insee });
+        const response = this._requestGeoAPI({ value : insee, arr : !!arr });
         response.then(r => {
             if (r instanceof Array && r.length) {
                 const result = r[0];
@@ -85,6 +85,11 @@ class InseeSearchService extends AbstractSearchService {
 
                 this.ignService.search(obj);
             } else {
+                // Cherche, pour les département 13, 69 et 75 si c'est un arrondissement
+                if (/^(13|69|75)/.test(insee) && !arr) {
+                    this.search(object, true);
+                    return;
+                }
                 // Pas de résultat, on envoi un événement "search" vide
                 this._onSearch({
                     type : this.SEARCH_EVENT,
@@ -108,13 +113,19 @@ class InseeSearchService extends AbstractSearchService {
      * @private
      * @param {Object} settings Paramètres de requêtes
      * @param {String} settings.value Code INSEE à interroger
+     * @param {Boolean} [settings.arr] Si vrai, recherche sur un arrondissement
      * @returns {Promise<Object[]>} Résultat de l'API
      */
     async _requestGeoAPI (settings) {
         const baseURL = "https://geo.api.gouv.fr/communes";
         const format = "json";
         const fields = ["nom", "code", "codesPostaux"];
-        const url = `${baseURL}?code=${settings.value}&format=${format}&fields=${fields}`;
+        const arr = settings.arr;
+        let url = `${baseURL}?code=${settings.value}&format=${format}&fields=${fields}`;
+
+        if (arr) {
+            url += "&type=arrondissement-municipal";
+        }
 
         try {
             const response = await fetch(url, {

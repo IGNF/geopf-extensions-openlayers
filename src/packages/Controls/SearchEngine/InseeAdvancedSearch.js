@@ -105,6 +105,17 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
+     * Permet de supprimer les messages d'erreur, en plus du fonctionnement initial.
+     * 
+     * @protected
+     * @override
+     */
+    _onErase (e) {
+        super._onErase(e);
+        this.inseeInput.removeMessages();
+    }
+
+    /**
      * Handler de la recherche déclenchée (bouton / submit).
      * Valide le code INSEE puis lance la recherche via le SearchEngine associé.
      * @protected
