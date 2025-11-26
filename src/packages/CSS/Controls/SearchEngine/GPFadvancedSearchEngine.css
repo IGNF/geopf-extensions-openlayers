@@ -100,4 +100,8 @@ form[id^=GPAdvancedForm-ParcelAdvancedSearch-] [id^=ParcelAdvancedSearch-section
     color: var(--text-disabled-grey);
     font-style: italic;
 }
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .fr-select-group:has(select:disabled) label,
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .fr-input-group:has(input:disabled) label {
+    color: var(--text-disabled-grey);
+}
 

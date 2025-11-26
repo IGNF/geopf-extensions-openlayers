@@ -23,7 +23,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
     constructor (options) {
         options = options || {};
 
-        options.name = options.name || "Parcelles";
+        options.name = options.name || "Parcelles cadastrales";
 
         // call ol.control.Control constructor
         super(options);
@@ -106,7 +106,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         const section = this.sectionInput.value;
         this.numberList.innerHTML = "";
         this._showMessage("section", "chargement en cours", "info");
-        this._fetchCadastre(this.communeId, prefix, section).then(data => {
+        this._fetchCadastre(this.communeId, this.arrondId, prefix, section).then(data => {
             this._showMessage("section", "");
             const section = this.sectionInput.value;
             if (data && data.features && data.features[0].properties.section === section) {
@@ -163,17 +163,19 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
 
     /** Set the commune
      * @param {String} [id] Commune INSEE code
+     * @param {String} [arrond] Arrondissement code
      */
-    setCommune (id="") {
+    setCommune (id="", arrond="000") {
         if (this.communeId !== id) {
             const prefixInput = this.prefixInput;
 
             this.communeId = id;
+            this.arrondId = arrond;
             prefixInput.innerHTML = "";
             if (id) {
                 this._showMessage("commCode", "chargement en cours", "info");
                 // Fetch prefixes and sections for the selected commune
-                this._fetchCadastre(id).then(data => {
+                this._fetchCadastre(id, arrond).then(data => {
                     this._showMessage("commCode", "");
                     this.feuilles = {};
 
@@ -337,6 +339,15 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             }
         });
 
+        // Fomat commune name for display / postal codes
+        function formatCommune (commune, cpost) {
+            const name = `${commune.arrond || commune.code} ${commune.nom}`;
+            if (cpost && commune.codesPostaux) {
+                return `${name}, ${commune.codesPostaux.join(", ")} (postal)`;
+            } 
+            return name;
+        }
+
         // Fetch commune data on change
         comCodeInput.addEventListener("change", () => {
             //check valid input
@@ -357,8 +368,8 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                     this._showMessage("commCode", "Aucune commune ne correspond à ce code INSEE ou code postal.");
                     this.setCommune();
                 } else if (data.length === 1) {
-                    communeName = comCodeInput.value = `${data[0].code} (${data[0].nom})`;
-                    this.setCommune(data[0].code);
+                    communeName = comCodeInput.value = formatCommune(data[0]);
+                    this.setCommune(data[0].code, data[0].arrond);
                 } else {
                     data.forEach(commune => {
                         const type = commune.codesPostaux ? "code INSEE" : "code postal";
@@ -366,10 +377,10 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                         option.className = "GPautoCompleteOption";
                         option.setAttribute("role", "option");
                         option.id = Helper.getUid("GPautoCompleteOption-");
-                        option.textContent = `${commune.code}, ${commune.nom} (${type})`;
+                        option.title = option.textContent = formatCommune(commune, type);
                         option.addEventListener("click", () => {
-                            communeName = comCodeInput.value = `${commune.code} (${commune.nom})`;
-                            this.setCommune(commune.code);
+                            communeName = comCodeInput.value = formatCommune(commune);
+                            this.setCommune(commune.code, commune.arrond);
                             showAutocomplete(false);
                         });
                         autocompleteList.appendChild(option);
@@ -392,7 +403,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         // Handle click and change separately to manage click on the list
         sectionInput.addEventListener("click", () => {
             hascliked = true;
-        })
+        });
         sectionInput.addEventListener("change", e => {
             // Wait for click event to be handled first
             setTimeout(() => {
@@ -408,7 +419,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                 }, hascliked ? 0 : 500);
             });
             hascliked = false;
-        })
+        });
 
         // Handle listbox for number input
         this.numberInput.addEventListener("focus", () => {
@@ -590,10 +601,53 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         };
         return Promise.all([
             fetch(url1, param),
-            fetch(url2, param)
+            fetch(url1 + "&type=arrondissement-municipal", param),
+            fetch(url2, param),
+            fetch(url2 + "&type=arrondissement-municipal", param),
         ]).then(responses => {  
             return Promise.all(responses.map(res => res.json())).then(json => {
-                return json[0].concat(json[1]);
+                // Handle insee code
+                if (json[1].length) {
+                    json[1].forEach(com => {
+                        com.arrond = com.code;
+                        switch (com.code.slice(0,2)) {
+                            // Paris
+                            case "75": {
+                                com.code = "75056";
+                                break;
+                            }
+                            // Lyon
+                            case "69": {
+                                com.code = "69123";
+                                break;
+                            }
+                            // Marseille
+                            case "13": {
+                                com.code = "13055";
+                                break;  
+                            }
+                            default: {
+                                break;
+                            }
+                        }
+                    });
+                }
+                // Handle arrondissements municipaux
+                if (json[3].length) {
+                    const arrond = json[3][0];
+                    const cpost = arrond.codesPostaux[0];
+                    if (json[2].length) {
+                        // Filter out duplicates with same postal code
+                        const filter = json[2].filter(com => com.codesPostaux.includes(cpost) >= 0);
+                        json[2] = json[2].filter(com => com.codesPostaux.includes(cpost) < 0);
+                        const com = filter.find(com => com.code !== arrond.code);
+                        if (com) {
+                            arrond.arrond = arrond.code;
+                            arrond.code = com.code;
+                        }
+                    }
+                }
+                return json[0].concat(json[1]).concat(json[2]).concat(json[3]);
             });
         }).catch(error => {
             this._showMessage("commCode", "Une erreur est survenue lors de la récupération des données de la commune.");
@@ -605,11 +659,12 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * Récupère les feuilles cadastrales d'une commune via le WFS Geopf
      * @private
      * @param {String} code Code INSEE de la commune
+     * @param {String} [arrond] Code de l'arrondissement (pour les communes avec arrondissements municipaux)
      * @param {String} [prefix] Préfixe de la parcelle
      * @param {String} [section] Section de la parcelle
      * @returns {Promise} Promesse avec les données GeoJSON (feuilles ou parcelles si section renseignée)
      */
-    async _fetchCadastre (code, prefix, section) {
+    async _fetchCadastre (code, arrond, prefix, section) {
         const domtom = ["97","98"].includes(code.slice(0,2));
         const dep = code.slice(0, domtom ? 3 : 2);
         const com = code.slice(domtom ? 3 : 2, 5);
@@ -622,8 +677,8 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             outputFormat : "application/json",
             srsName : "CRS:84",
             count : "1000",
-            propertyName : section ? "com_abs,section,numero" : "com_abs,section",
-            cql_filter : `code_dep='${dep}' and code_com='${com}'` + (section ? ` and com_abs='${prefix}' and section='${section}'` : "")
+            propertyName : section ? "com_abs,section,numero" : "com_abs,section,code_arr",
+            cql_filter : `code_dep='${dep}' and code_com='${com}' and code_arr='${arrond ? arrond.slice(2) : "000"}'` + (section ? ` and com_abs='${prefix}' and section='${section}'` : "")
         };
         const queryString = new URLSearchParams(params).toString();
         const fullUrl = url + queryString;
@@ -766,8 +821,10 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             return;
         }
 
+        // Gestion des arrondissements municipaux
+        const communeId = this.arrondId || this.communeId;
         // Search parcelle
-        const parcelId = this.communeId 
+        const parcelId = communeId 
             + "000".slice(prefix.length) + prefix 
             + section 
             + "0000".slice(number.length) + number;
