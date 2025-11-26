@@ -194,7 +194,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                             previous = key;
                         }
                     });
-                    this.setFeuille("000");
+                    this.setFeuille(prefixInput.value);
                 });
                 prefixInput.removeAttribute("disabled");
             } else {
@@ -597,18 +597,28 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         const param ={
             headers : {
                 "Content-Type" : "application/json",     
-            },   
+            },
         };
-        return Promise.all([
+        // Fetch both insee code and postal code
+        const fetchtable = [
             fetch(url1, param),
-            fetch(url1 + "&type=arrondissement-municipal", param),
             fetch(url2, param),
-            fetch(url2 + "&type=arrondissement-municipal", param),
-        ]).then(responses => {  
+        ];
+        // For municipal arrondissements, fetch them too
+        if (/^75|^6900|^1300|^1301/.test(code)) {
+            fetchtable.push(
+                fetch(url1 + "&type=arrondissement-municipal", param),
+            );
+            fetchtable.push(
+                fetch(url2 + "&type=arrondissement-municipal", param),
+            );
+        }
+        // Process responses
+        return Promise.all(fetchtable).then(responses => {  
             return Promise.all(responses.map(res => res.json())).then(json => {
                 // Handle insee code
-                if (json[1].length) {
-                    json[1].forEach(com => {
+                if (json[2]) {
+                    json[2].forEach(com => {
                         com.arrond = com.code;
                         switch (com.code.slice(0,2)) {
                             // Paris
@@ -633,13 +643,13 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                     });
                 }
                 // Handle arrondissements municipaux
-                if (json[3].length) {
+                if (json[3]) {
                     const arrond = json[3][0];
                     const cpost = arrond.codesPostaux[0];
-                    if (json[2].length) {
+                    if (json[1].length) {
                         // Filter out duplicates with same postal code
-                        const filter = json[2].filter(com => com.codesPostaux.includes(cpost) >= 0);
-                        json[2] = json[2].filter(com => com.codesPostaux.includes(cpost) < 0);
+                        const filter = json[1].filter(com => com.codesPostaux.includes(cpost) >= 0);
+                        json[1] = json[1].filter(com => com.codesPostaux.includes(cpost) < 0);
                         const com = filter.find(com => com.code !== arrond.code);
                         if (com) {
                             arrond.arrond = arrond.code;
@@ -647,7 +657,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                         }
                     }
                 }
-                return json[0].concat(json[1]).concat(json[2]).concat(json[3]);
+                return json[0].concat(json[1]).concat(json[2]||[]).concat(json[3]||[]);
             });
         }).catch(error => {
             this._showMessage("commCode", "Une erreur est survenue lors de la récupération des données de la commune.");
