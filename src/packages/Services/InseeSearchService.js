@@ -84,6 +84,11 @@ class InseeSearchService extends AbstractSearchService {
                 };
 
                 this.ignService.search(obj);
+            } else {
+                // Pas de résultat, on envoi un événement "search" vide
+                this._onSearch({
+                    type : this.SEARCH_EVENT,
+                });
             }
         });
     }

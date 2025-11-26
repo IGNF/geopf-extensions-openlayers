@@ -653,11 +653,26 @@ class SearchEngineAdvanced extends Control {
         // Ferme la modale de recherche avancée
         this.listenToClick = false;
         this.advancedBtn.setAttribute("aria-expanded", false);
+        // Ferme les sections
+        this.closeAllSections();
         if (e.result instanceof Array) {
             // TODO : GÉRER MULTIPLE RÉSULTATS
         } else if (e.result instanceof Feature) {
             this.addResultToMap(e);
         }
+    }
+
+    /**
+     * Ferme toutes les accordéons et affiche les sections
+     */
+    closeAllSections () {
+        this.advancedContainer.dataset.open = false;
+        this.advancedContainer.querySelectorAll("section").forEach(section => {
+            const btn = section.querySelector(".fr-accordion__title > button[aria-expanded]");
+            btn.setAttribute("aria-expanded", "false");
+            btn.ariaControlsElements[0].classList.remove("fr-collapse--expanded");
+            section.classList.remove("fr-hidden");
+        });
     }
 
 }

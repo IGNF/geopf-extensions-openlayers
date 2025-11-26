@@ -26,7 +26,12 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
         super(options);
 
         this.inseeInput.on("search", function (e) {
-            this.dispatchEvent(e);
+            if (e.result) {
+                this.dispatchEvent(e);
+            } else {
+                // Pas de réponse, on affiche un message d'erreur
+                this.inseeInput.addMessage("Ce code INSEE est introuvable.");
+            }
         }.bind(this));
     }
 
@@ -41,6 +46,8 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
             options.name = "Code INSEE";
         }
         super.initialize(options);
+
+        this._inputPattern = /^(\d\d|2[A,B,a,b])\d{3}$/;
 
         /**
          * Nom de la classe (heritage)
@@ -71,8 +78,12 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
             })
         });
 
-        this.inseeInput.input.pattern = "(\\d\\d|2[A,B,a,b])\\d{3}";
         this.inseeInput.input.title = "Code INSEE sur 5 caractères";
+
+        // TODO : laisser validation directe par l'ordi ?
+        // this.inseeInput.input.pattern = "^(\\d\\d|2[A,B,a,b])\\d{3}$";
+        // this.inseeInput.input.maxLength = 5;
+        // this.inseeInput.input.minLength = 5;
 
         this.inputs.push(inseeInput);
     }
@@ -101,10 +112,9 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
      */
     _onSearch (e) {
         super._onSearch(e);
-        const pattern = this.inseeInput.input.pattern;
         const insee = this.inseeInput.input.value;
 
-        if (RegExp(pattern).test(insee)) {
+        if (this._inputPattern.test(insee)) {
             this.inseeInput.removeMessages();
             this.inseeInput.search({
                 location : insee,

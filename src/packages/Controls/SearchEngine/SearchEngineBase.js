@@ -663,6 +663,13 @@ class SearchEngineBase extends Control {
             p.id = Helper.getUid("GPMessage-");
             p.textContent = message;
 
+            // Enlève la classe du type de message à l'élément parent
+            messageElement.parentElement?.classList.forEach(c => {
+                if (/^fr-.*-group$/.test(c)) {
+                    messageElement.parentElement?.classList.add(`${c}--${messageType}`);
+                }
+            });
+
             messageElement.replaceChildren(p);
         }
     }
@@ -676,6 +683,13 @@ class SearchEngineBase extends Control {
         let messageElement = this.input.ariaDescribedByElements[0];
         if (messageElement) {
             messageElement.replaceChildren();
+
+            // Enlève la classe du type de message à l'élément parent
+            messageElement.parentElement?.classList.forEach(c => {
+                if (/^fr-.*-group--/.test(c)) {
+                    messageElement.parentElement?.classList.remove(c);
+                }
+            });
         }
     }
 
