@@ -165,7 +165,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * @param {String} [id] Commune INSEE code
      * @param {String} [arrond] Arrondissement code
      */
-    setCommune (id="", arrond="000") {
+    setCommune (id="", arrond="") {
         if (this.communeId !== id) {
             const prefixInput = this.prefixInput;
 
@@ -688,7 +688,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             srsName : "CRS:84",
             count : "1000",
             propertyName : section ? "com_abs,section,numero" : "com_abs,section,code_arr",
-            cql_filter : `code_dep='${dep}' and code_com='${com}' and code_arr='${arrond ? arrond.slice(2) : "000"}'` + (section ? ` and com_abs='${prefix}' and section='${section}'` : "")
+            cql_filter : `code_dep='${dep}' and code_com='${com}'` + (arrond ? `and code_arr='${arrond.slice(2)}'` : "") + (section ? ` and com_abs='${prefix}' and section='${section}'` : "")
         };
         const queryString = new URLSearchParams(params).toString();
         const fullUrl = url + queryString;
