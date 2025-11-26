@@ -605,7 +605,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             fetch(url2, param),
         ];
         // For municipal arrondissements, fetch them too
-        if (/^75|^6900|^1300|^1301/.test(code)) {
+        if (/^75|^6900|^6938|^1300|^1301|^1320|^1321/.test(code)) {
             fetchtable.push(
                 fetch(url1 + "&type=arrondissement-municipal", param),
             );
@@ -617,7 +617,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         return Promise.all(fetchtable).then(responses => {  
             return Promise.all(responses.map(res => res.json())).then(json => {
                 // Handle insee code
-                if (json[2]) {
+                if (json[2] && json[2].length) {
                     json[2].forEach(com => {
                         com.arrond = com.code;
                         switch (com.code.slice(0,2)) {
@@ -643,7 +643,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                     });
                 }
                 // Handle arrondissements municipaux
-                if (json[3]) {
+                if (json[3] && json[3].length) {
                     const arrond = json[3][0];
                     const cpost = arrond.codesPostaux[0];
                     if (json[1].length) {
