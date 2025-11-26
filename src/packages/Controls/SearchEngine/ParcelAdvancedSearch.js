@@ -808,12 +808,14 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         if (e) {
             super._onSearch(e);
         }
-
-        this._clearMessages();
-
+        // Nothing to do if no commune selected
         if (!this.communeId) {
             return;
         }
+
+        // Check form validity
+        this._clearMessages();
+
         const prefix = this.prefixInput.value;
         const section = this.sectionInput.value;
         const number = this.numberInput.value;
