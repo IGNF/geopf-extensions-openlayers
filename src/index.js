@@ -60,6 +60,7 @@ export { default as Panoramax } from "./packages/Controls/Panoramax/Panoramax";
 
 // Interactions
 export { default as DrawingInteraction } from "./packages/Interactions/Drawing";
+export { default as SelectingInteraction } from "./packages/Interactions/Selecting";
 
 // Services
 export { default as AbstractSearchService } from "./packages/Services/AbstractSearchService";

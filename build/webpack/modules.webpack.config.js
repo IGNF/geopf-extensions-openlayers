@@ -69,6 +69,7 @@ module.exports = (env, argv) => {
             "GpfExtOlPanoramax" : path.join(rootdir, "src", "packages", "Controls/Panoramax", "Panoramax.js"),
             // Interactions
             "GpfExtOlDrawingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Drawing.js"),
+            "GpfExtOlSelectingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Selecting.js"),
             // Formats étendus
             "GpfExtOlFormats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),

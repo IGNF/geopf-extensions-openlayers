@@ -14,6 +14,7 @@ import coordinate from "ol/coordinate";
 import Control from "ol/control/Control";
 
 import mapPinIcon from "../Controls/SearchEngine/map-pin-2-fill.svg";
+import VectorSource from "ol/source/Vector";
 
 /** Get all points in coordinates
  * @param {Array<coordinate>} coords
@@ -63,6 +64,7 @@ class DrawingInteraction extends Interaction {
      * @param {*} options Openlayers drawing options
      */
     constructor (options) {
+        options = options || {};
         super({
             handleEvent : function (e) {
                 this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";
@@ -70,8 +72,9 @@ class DrawingInteraction extends Interaction {
             }
         });
         this._type = options.type || "Point";
+        this.setSource(options.source);
 
-        /** Finish drawing on keydown
+        /** Handle drawing on keydown
          * @param {Event} evt
          */
         const onkeydown = (evt) => {
@@ -79,10 +82,12 @@ class DrawingInteraction extends Interaction {
                 return;
             }
             switch (evt.key) {
+                // Finish drawing on Enter or double click
                 case "Enter": {
-                    draw.finishDrawing();
+                    this.draw.finishDrawing();
                     break;
                 }
+                // Remove last point on Backspace
                 case "Backspace": {
                     this.draw.removeLastPoint();
                     break;
@@ -90,9 +95,12 @@ class DrawingInteraction extends Interaction {
             }
         };
 
+        // Info control
+        this.info = new InfoControl();
+
         // Draw interaction
-        const draw = this.draw = new Draw({
-            source : options.source,
+        this.draw = new Draw({
+            // source : options.source,
             type : this._type,
             style : (feature, resolution) => this.getStyle(feature, resolution),
         });
@@ -104,13 +112,17 @@ class DrawingInteraction extends Interaction {
             this.dispatchEvent(e);
         });
         this.draw.on(["drawend","drawabort"], (e) => {
+            if (e.type === "drawend") {
+                const source = this.getSource();
+                if (source) {
+                    source.addFeature(e.feature);
+                }
+            }
             this.showInfo(this.getActive() ? "Cliquer pour commencer." : "");
             this._currentFeature = null;
             document.removeEventListener("keydown", onkeydown);
             this.dispatchEvent(e);
         });
-        // Info control
-        this.info = new InfoControl();
     }
 
     /**
@@ -132,6 +144,20 @@ class DrawingInteraction extends Interaction {
             map.addControl(this.info);
         }
         this.setActive(this.getActive());
+    }
+
+    /** Change the source to collect features
+     * @param {VectorSource} source Vector source
+     */
+    setSource (source) {
+        this._source = source || null;
+    }
+
+    /** The source to collect features
+     * @param {VectorSource} source Vector source
+     */
+    getSource () {
+        return this._source || null;
     }
 
     /** Set interaction active state
