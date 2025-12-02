@@ -57,6 +57,10 @@ export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextM
 export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
 export { default as Panoramax } from "./packages/Controls/Panoramax/Panoramax";
 
+
+// Interactions
+export { default as DrawingInteraction } from "./packages/Interactions/Drawing";
+
 // Services
 export { default as AbstractSearchService } from "./packages/Services/AbstractSearchService";
 export { default as DefaultSearchService } from "./packages/Services/DefaultSearchService";
