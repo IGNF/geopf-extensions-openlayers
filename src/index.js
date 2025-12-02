@@ -56,6 +56,10 @@ export { default as ControlList } from "./packages/Controls/ControlList/ControlL
 export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextMenu";
 export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
 
+
+// Interactions
+export { default as DrawingInteraction } from "./packages/Interactions/Drawing";
+
 // Services
 export { default as AbstractSearchService } from "./packages/Services/AbstractSearchService";
 export { default as DefaultSearchService } from "./packages/Services/DefaultSearchService";
