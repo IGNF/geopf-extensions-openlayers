@@ -59,6 +59,7 @@ export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
 
 // Interactions
 export { default as DrawingInteraction } from "./packages/Interactions/Drawing";
+export { default as SelectingInteraction } from "./packages/Interactions/Selecting";
 
 // Services
 export { default as AbstractSearchService } from "./packages/Services/AbstractSearchService";

@@ -3,6 +3,7 @@
 {{#content "vendor"}}
     <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
     <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -60,12 +61,13 @@
                         ]
                     });
 
+                    // Drawing
                     const drawing = {};
                     ["Point", "LineString", "Polygon"].forEach(k => {
                         drawing[k] = new ol.interaction.Drawing({
                             type : k,
                             source : source
-                        })
+                        });
                     })
                     layer.setStyle(drawing.Point.getStyle());
                     Object.keys(drawing).forEach((k, i) => {
@@ -86,6 +88,11 @@
                         });
                     });
 
+                    const select = new ol.interaction.Selecting({
+
+                    });
+                    map.addInteraction(select);
+                    select.on('dblclick', e => console.log(e.feature));
                 };
            </script>
 {{/content}}
