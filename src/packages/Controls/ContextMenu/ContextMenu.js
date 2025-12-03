@@ -273,8 +273,14 @@ class ContextMenu extends Control {
      * @private
      */
     addEventsListeners () {
-        this.contextmenu.on("open", (evt) => {evt.this = this; this.onOpenContextMenu(evt);});
-        this.contextmenu.on("close", (evt) => {evt.this = this; this.onCloseContextMenu(evt);});
+        this.contextmenu.on("open", (evt) => {
+            evt.this = this; 
+            this.onOpenContextMenu(evt);
+        });
+        this.contextmenu.on("close", (evt) => {
+            evt.this = this; 
+            this.onCloseContextMenu(evt);
+        });
     }
 
     /**
@@ -615,6 +621,16 @@ class ContextMenu extends Control {
      * @private
      */
     onOpenContextMenu (e) {
+        // Récupère le canvas de la carte
+        const mapViewport = this.getMap().getViewport();
+        const canvas = mapViewport.querySelector("canvas");
+        // Vérifie que le clic droit est bien sur le canvas de la carte
+        if (!canvas || e.originalEvent.target !== canvas) {
+            // On ne fait rien si ce n’est pas sur le canvas de la carte
+            this.contextmenu.clear();
+            this.contextmenu.closeMenu();
+            return;
+        }
         var addMenuToolsEventListeners = () => {
             e.this.controlList = []; 
             var controlArray = e.this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route");
