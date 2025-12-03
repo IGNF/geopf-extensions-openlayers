@@ -319,15 +319,15 @@ var TerritoriesDOM = {
     // ################################################################### //
     // ####################### Methods for dialog  ####################### //
     // ################################################################### //
-    _createTerritoriesPanelMenuViewsDivElement : function () {
+    _createTerritoriesPanelMenuViewsDivElement : function (title, description) {
         var div = document.createElement("div");
         div.className = "territories-views gpf-panel__menuviews_territories";
-        div.appendChild(this._createTerritoriesButtonOpenMenuViewsElement());
-        div.appendChild(this._createTerritoriesPanelMenuViewsElement());
+        div.appendChild(this._createTerritoriesButtonOpenMenuViewsElement(title, description));
+        div.appendChild(this._createTerritoriesPanelMenuViewsElement(title));
         return div;
     },
 
-    _createTerritoriesButtonOpenMenuViewsElement : function () {
+    _createTerritoriesButtonOpenMenuViewsElement : function (title, description) {
         var self = this;
 
         var button = document.createElement("button");
@@ -337,12 +337,13 @@ var TerritoriesDOM = {
         button.id = "gpf-territories-button-open-views-id";
         button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
         button.classList.add("fr-btn", "fr-btn--tertiary");
-        button.setAttribute("aria-label", "Modifier les territoires");
+        button.setAttribute("aria-label", title);
+        button.setAttribute("title", description);
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("aria-controls", "gpf-territories-views-container-id");
         button.setAttribute("type", "button");
-        button.innerHTML = "Modifier les territoires";
+        button.innerHTML = title;
 
         // Close all results and panels when minimizing the widget
         if (button.addEventListener) {
@@ -384,15 +385,15 @@ var TerritoriesDOM = {
         return button;
     },
 
-    _createTerritoriesPanelMenuViewsElement : function () {
+    _createTerritoriesPanelMenuViewsElement : function (title) {
         var dialog = document.createElement("dialog");
         dialog.id = "gpf-territories-views-container-id";
         dialog.className = "fr-modal__body gpf-panel__views_territories-menu gpf-hidden";
-        dialog.appendChild(this._createTerritoriesMenuAddViewElement());
+        dialog.appendChild(this._createTerritoriesMenuAddViewElement(title));
         dialog.appendChild(this._createTerritoriesMenuListViewElement());
         return dialog;
     },
-    _createTerritoriesMenuAddViewElement : function () {
+    _createTerritoriesMenuAddViewElement : function (title) {
         var self = this;
 
         var buttonId = "gpf-territories-views-back-button-id";
@@ -409,7 +410,7 @@ var TerritoriesDOM = {
                 aria-controls="gpf-territories-views-container-id gpf-territories-button-open-views-id"
                 title="Retour au sélecteur de territoires" 
                 type="button">
-                Modifier les territoires
+                ${title}
             </button>
             <form id="${formId}">
                 <fieldset 
