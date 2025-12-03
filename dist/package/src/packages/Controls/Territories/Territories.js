@@ -37,6 +37,10 @@ let logger = Logger.getLogger("territories");
  * @property {boolean} [upload.active=false] - Active le menu d’import de fichier.
  * @property {string} [upload.title="Ajouter un fichier de configuration"] - Titre du menu d’import.
  * @property {string} [upload.description=""] - Description du menu d’import.
+ * @property {Object} [view] - Options pour la configuration des vues.
+ * @property {boolean} [view.active=false] - Active le menu de gestion des vues.
+ * @property {string} [view.title="Modifier les territoires"] - Titre du menu de gestion des vues.
+ * @property {string} [view.description=""] - Description du menu de gestion des vues.
  * @property {string} [title="Sélectionner un territoire"] - Titre affiché dans le panneau.
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
@@ -365,6 +369,11 @@ class Territories extends Control {
                 title : "Ajouter un fichier de configuration",
                 description : ""
             }, // menu du upload
+            view : {
+                active : false,
+                title : "Modifier les territoires",
+                description : ""
+            }, // menu du vues
             title : "Sélectionner un territoire",
             auto : false, // chargement auto des territoires par defaut
             thumbnail : false, // imagette des territoires
@@ -458,8 +467,10 @@ class Territories extends Control {
         territoriesPanel.appendChild(territoriesPanelDiv);
         
         // menu views button
-        var territoriesPanelMenuViewsDiv = this._createTerritoriesPanelMenuViewsDivElement();
-        territoriesPanel.appendChild(territoriesPanelMenuViewsDiv);
+        if (this.options.view && this.options.view.active) {
+            var territoriesPanelMenuViewsDiv = this._createTerritoriesPanelMenuViewsDivElement(this.options.view.title, this.options.view.description);
+            territoriesPanel.appendChild(territoriesPanelMenuViewsDiv);
+        }
 
         // INFO
         // Les territoires seront ajoutés dans ce conteneur

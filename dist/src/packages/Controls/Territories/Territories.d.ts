@@ -50,6 +50,23 @@ export type TerritoriesOptions = {
         description?: string | undefined;
     } | undefined;
     /**
+     * - Options pour la configuration des vues.
+     */
+    view?: {
+        /**
+         * - Active le menu de gestion des vues.
+         */
+        active?: boolean | undefined;
+        /**
+         * - Titre du menu de gestion des vues.
+         */
+        title?: string | undefined;
+        /**
+         * - Description du menu de gestion des vues.
+         */
+        description?: string | undefined;
+    } | undefined;
+    /**
      * - Titre affiché dans le panneau.
      */
     title?: string | undefined;
@@ -114,6 +131,10 @@ export type Territory = {
  * @property {boolean} [upload.active=false] - Active le menu d’import de fichier.
  * @property {string} [upload.title="Ajouter un fichier de configuration"] - Titre du menu d’import.
  * @property {string} [upload.description=""] - Description du menu d’import.
+ * @property {Object} [view] - Options pour la configuration des vues.
+ * @property {boolean} [view.active=false] - Active le menu de gestion des vues.
+ * @property {string} [view.title="Modifier les territoires"] - Titre du menu de gestion des vues.
+ * @property {string} [view.description=""] - Description du menu de gestion des vues.
  * @property {string} [title="Sélectionner un territoire"] - Titre affiché dans le panneau.
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
@@ -253,6 +274,11 @@ declare class Territories extends Control {
         draggable: boolean;
         panel: boolean;
         upload: {
+            active: boolean;
+            title: string;
+            description: string;
+        };
+        view: {
             active: boolean;
             title: string;
             description: string;

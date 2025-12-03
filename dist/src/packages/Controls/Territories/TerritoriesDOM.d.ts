@@ -10,10 +10,10 @@ declare namespace TerritoriesDOM {
     function _createTerritoriesPanelTitleElement(title: any): HTMLDivElement;
     function _createTerritoriesPanelCloseElement(): HTMLButtonElement;
     function _createTerritoriesPanelOptionsElement(title: any, description: any): ChildNode | null;
-    function _createTerritoriesPanelMenuViewsDivElement(): HTMLDivElement;
-    function _createTerritoriesButtonOpenMenuViewsElement(): HTMLButtonElement;
-    function _createTerritoriesPanelMenuViewsElement(): HTMLDialogElement;
-    function _createTerritoriesMenuAddViewElement(): ChildNode | null;
+    function _createTerritoriesPanelMenuViewsDivElement(title: any, description: any): HTMLDivElement;
+    function _createTerritoriesButtonOpenMenuViewsElement(title: any, description: any): HTMLButtonElement;
+    function _createTerritoriesPanelMenuViewsElement(title: any): HTMLDialogElement;
+    function _createTerritoriesMenuAddViewElement(title: any): ChildNode | null;
     function _createTerritoriesMenuListViewElement(): ChildNode | null;
     function _createTerritoriesElement(): HTMLDivElement;
     function _createTerritoryEntry(o: any): ChildNode | null | undefined;
