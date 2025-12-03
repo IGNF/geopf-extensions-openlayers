@@ -9,7 +9,7 @@ __DATE__
 
 ### 🎉 Summary
 
-Mise à jour des icônes DSFR pour les boutons pictogrammes des widgets
+Mise à jour des icônes DSFR pour les boutons pictogrammes des widgets et refonte de la barre de recherche.
 
 ### 💥 Breaking changes
 
@@ -19,6 +19,7 @@ Mise à jour des icônes DSFR pour les boutons pictogrammes des widgets
 
   - Contextual Menu : Ajout du getFeatureInfo dans les entrées du menu contextuel (#442)
   - LayerSwitcher : Gestion des noms des styles MapBox issus de cartes.gouv.fr (#455)
+  - Search : Nouvelle barre de recherche au DSFR (#452)
 
 * 🔨 [Changed]
 
