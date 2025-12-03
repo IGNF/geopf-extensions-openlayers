@@ -2,8 +2,10 @@
 
 {{#content "vendor"}}
     <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlContextMenu.css" />
     <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
     <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
+    <style> a:focus { color: red!important } </style>
 {{/content}}
 
 {{#content "head"}}
@@ -28,9 +30,9 @@
             <div id="map">
             </div>
             <p>Dernière sélection : <span id="selection"></span></p>
-            <button class="fr-btn fr-btn--secondary" onclick="setType('Point')">Point</button>
-            <button class="fr-btn fr-btn--secondary" onclick="setType('LineString')">Ligne</button>
-            <button class="fr-btn fr-btn--secondary" onclick="setType('Polygon')">Surface</button>
+            <button class="fr-btn fr-btn--secondary" onclick="setDrawing('Point')">Point</button>
+            <button class="fr-btn fr-btn--secondary" onclick="setDrawing('LineString')">Ligne</button>
+            <button class="fr-btn fr-btn--secondary" onclick="setDrawing('Polygon')">Surface</button>
 {{/content}}
 
 {{#content "js"}}
@@ -61,37 +63,49 @@
                         ]
                     });
 
-                    // Drawing
-                    const drawing = {};
-                    ["Point", "LineString", "Polygon"].forEach(k => {
-                        drawing[k] = new ol.interaction.Drawing({
-                            type : k,
-                            source : source
-                        });
-                    })
-                    layer.setStyle(drawing.Point.getStyle());
-                    Object.keys(drawing).forEach((k, i) => {
-                        drawing[k].setActive(false);
-                        map.addInteraction(drawing[k]);
-                    });
-
-                    // Activate drawing
-                    window.setType = function (type) {
-                        Object.keys(drawing).forEach(k => {
-                            drawing[k].setActive(type===k);
-                        });
-                    }
-                    // Deactivate drawing on drawend
-                    Object.keys(drawing).forEach((k, i) => {
-                        drawing[k].on("drawend", () => {
-                            setTimeout(() => drawing[k].setActive(false));
-                        });
-                    });
-
+                    // Select + modify interaction
                     const select = new ol.interaction.Selecting({
 
                     });
                     map.addInteraction(select);
+
+                    // Drawing interactions
+                    const drawing = {};
+                    ["Point", "LineString", "Polygon"].forEach(k => {
+                        drawing[k] = new ol.interaction.Drawing({
+                            type : k,
+                            source : source,
+                            select : select,
+                            selectOnDrawEnd : true,
+                        });
+                        drawing[k].setActive(false);
+                        map.addInteraction(drawing[k]);
+                    })
+
+                    /* ---------------------------- */
+
+                    // Snap interaction
+                    map.addInteraction(new ol.interaction.Snap({ source: source }));
+
+                    // Style layer
+                    const style = drawing.Point.getStyle();
+                    style.setStroke(new ol.style.Stroke({
+                        color: "orange",
+                        width: 1.5
+                    }));
+                    style.setFill (new ol.style.Fill({
+                        color: "rgb(255,165,0,0.2)",
+                    }));
+                    layer.setStyle(style);
+
+                    // Activate drawing
+                    window.setDrawing = function (type) {
+                        Object.keys(drawing).forEach(k => {
+                            drawing[k].setActive(type===k);
+                        });
+                    }
+                    
+                    // Check double-click
                     select.on('dblclick', e => console.log(e.feature));
                 };
            </script>
