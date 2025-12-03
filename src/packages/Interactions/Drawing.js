@@ -1,37 +1,13 @@
 // import CSS
 import "../CSS/Interactions/Drawing.css";
 
-import Interaction from "ol/interaction/Interaction";
 import Draw from "ol/interaction/Draw";
-import Style from "ol/style/Style";
-import ImageStyle from "ol/style/Image";
-import Icon from "ol/style/Icon";
-import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
-import CircleStyle from "ol/style/Circle";
-import MultiPoint from "ol/geom/MultiPoint";
-import * as coordinate from "ol/coordinate";
+import Select from "ol/interaction/Select";
 import Control from "ol/control/Control";
-
-import mapPinIcon from "../Controls/SearchEngine/map-pin-2-fill.svg";
 import VectorSource from "ol/source/Vector";
 
-/** Get all points in coordinates
- * @param {Array<coordinate>} coords
- * @returns {Array<coordinate>}
- * @private
- */
-function getFlatCoordinates (coords) {
-    if (coords && coords[0].length && coords[0][0].length) {
-        var c = [];
-        for (var i=0; i<coords.length; i++) {
-            c = c.concat(getFlatCoordinates(coords[i]));
-        }
-        return c;
-    } else {
-        return coords;
-    }
-}
+import { selectStyle, defaultStyle } from "./selectStyle.js";
+
 
 /** Show info on map
  * @extends {ol.control.Control}
@@ -57,19 +33,22 @@ class InfoControl extends Control {
  *
  * @extends {ol.interaction.Interaction}
  */
-class DrawingInteraction extends Interaction {
+class DrawingInteraction extends Draw {
 
     /**
      * Initialize drawing interaction
-     * @param {*} options Openlayers drawing options
+     * @param {*} options extend Openlayers drawing options
+     * @param {Select} [options.select] - Select interaction to associate with drawing (default null)
+     * @param {boolean} [options.selectOnDrawEnd] - If true, select the feature on draw end (default false)
      */
     constructor (options) {
         options = options || {};
         super({
-            handleEvent : function (e) {
-                this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";
-                return true;
-            }
+            type : options.type || "Point",
+            style : (f) => {
+                return defaultStyle[`${this._type}_${f.get("geometry").getType()}`] || defaultStyle.Point;
+                return selectStyle(this._type, f.get("geometry").getType(), options.image);
+            },
         });
         this._type = options.type || "Point";
         this.setSource(options.source);
@@ -78,18 +57,15 @@ class DrawingInteraction extends Interaction {
          * @param {Event} evt
          */
         const onkeydown = (evt) => {
-            if (!this._currentFeature) {
-                return;
-            }
             switch (evt.key) {
                 // Finish drawing on Enter or double click
                 case "Enter": {
-                    this.draw.finishDrawing();
+                    this.finishDrawing();
                     break;
                 }
                 // Remove last point on Backspace
                 case "Backspace": {
-                    this.draw.removeLastPoint();
+                    this.removeLastPoint();
                     break;
                 }
             }
@@ -98,31 +74,50 @@ class DrawingInteraction extends Interaction {
         // Info control
         this.info = new InfoControl();
 
-        // Draw interaction
-        this.draw = new Draw({
-            // source : options.source,
-            type : this._type,
-            style : (feature, resolution) => this.getStyle(feature, resolution),
-        });
         // Draw interaction events
-        this.draw.on("drawstart", (e) => {
+        this.on("drawstart", (e) => {
             this.showInfo("Double-cliquer ou appuyer sur Entrée pour terminer.");
-            this._currentFeature = e.feature;
             document.addEventListener("keydown", onkeydown);
-            this.dispatchEvent(e);
         });
-        this.draw.on(["drawend","drawabort"], (e) => {
+        this.on(["drawend","drawabort"], (e) => {
+            // Add feature to source on draw end
             if (e.type === "drawend") {
                 const source = this.getSource();
                 if (source) {
                     source.addFeature(e.feature);
                 }
             }
+            // Start a new drawing
             this.showInfo(this.getActive() ? "Cliquer pour commencer." : "");
-            this._currentFeature = null;
             document.removeEventListener("keydown", onkeydown);
-            this.dispatchEvent(e);
         });
+
+        // Associate a select interaction
+        if (options.select instanceof Select) {
+            this._select = options.select;
+            // prevent douible interactions
+            this._select.on("change:active", (e) => {
+                if (this._select.getActive()) {
+                    this.setActive(false);
+                }
+            });
+            // select on draw end
+            if (options.selectOnDrawEnd) {
+                this.on("drawend", (e) => {
+                    // Add to selection
+                    this._select.getFeatures().push(e.feature);
+                    // And activate select interaction
+                    setTimeout(() => this._select.setActive(true));
+                });
+            };
+        }
+    }
+
+    /** Get default style
+     * 
+     */
+    getStyle () {
+        return selectStyle(this._type);
     }
 
     /**
@@ -132,7 +127,6 @@ class DrawingInteraction extends Interaction {
      */
     setMap (map) {
         if (this.getMap()) {
-            this.getMap().removeInteraction(this.draw);
             this.getMap().removeControl(this.info);
             // reset cursor
             this.getMap().getTargetElement().style.cursor = "";
@@ -140,7 +134,6 @@ class DrawingInteraction extends Interaction {
         super.setMap(map);
         // Additional setup can be done here if needed
         if (map) {
-            map.addInteraction(this.draw);
             map.addControl(this.info);
         }
         this.setActive(this.getActive());
@@ -165,83 +158,18 @@ class DrawingInteraction extends Interaction {
      */
     setActive (active) {
         super.setActive(active);
-        if (this.draw) {
-            this.draw.setActive(active);
-            this.showInfo(active ? "Cliquer pour commencer." : "");
-        }
+        this.showInfo(active ? "Cliquer pour commencer." : "");
+
         if (this.getMap()) {
             this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";
         }
-    }
-
-    /** Get drawing style
-     * @returns {ol_style_Style|Array<ol_style_Style>} Style
-     */
-    getStyle () {
-        const stroke = new Stroke({
-            color : "#33b1ff",
-            width : 2,
-        });
-        const fill = new Fill({
-            color : "rgb(51, 177, 255, 0.2)" 
-        });
-        const image = this._image || new Icon({
-            src : mapPinIcon,
-            color : "#000091",
-            anchor : [0.5, 1],
-        });
-        const circle = new CircleStyle({
-            stroke : new Stroke({ 
-                color : "#fff", 
-                width : 2 
-            }),
-            fill : new Fill({ 
-                color : "#33b1ff",
-            }),
-            radius : 5,
-        });
-
-        switch (this._type) {
-            case "LineString":
-            case "Polygon": {
-                return [
-                    new Style({
-                        image : circle,
-                        stroke : stroke,
-                        fill : fill,
-                    }),
-                    new Style({
-                        image : circle,
-                        geometry : (f) => new MultiPoint( getFlatCoordinates(f.getGeometry().getCoordinates() ) ),
-                    })
-                ];
-            }
-            case "Point":
-            default: {
-                return new Style({
-                    image : image,
-                    stroke : stroke,
-                    fill : fill,
-                });
-            }
+        // prevent conflict with select interaction
+        if (this._select && this.getActive()) {
+            // deactivate select interaction
+            this._select.setActive(false);
+            // Clear selection when drawing is activated
+            this._select.getFeatures().clear();
         }
-    }
-
-    /** Set an image for drawing points
-     * @param {ImageStyle} image Image
-     */
-    setImage (image) {
-        // TODO : allow to set custom image for point drawing
-        if (image instanceof ImageStyle) {
-            this._image = image;
-        }
-    }
-
-    /** Get image used for drawing points
-     * @returns {ImageStyle} Image
-     */
-    getImage () {
-        return this._image;
     }
 
     /**
@@ -249,11 +177,21 @@ class DrawingInteraction extends Interaction {
      * @param {String} info message info
      */
     showInfo (info = "") {
-        this.info.setInfo(info);
+        if (this.info) {
+            this.info.setInfo(info);
+        }
+    }
+
+    /** Handle event on the map
+     * @param {ol.MapBrowserEvent} event Event
+     * @returns {boolean} Whether to propagate the event further
+     */
+    handleEvent (event) {
+        this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";
+        return super.handleEvent(event);
     }
 
 }
-
 
 export default DrawingInteraction;
 
