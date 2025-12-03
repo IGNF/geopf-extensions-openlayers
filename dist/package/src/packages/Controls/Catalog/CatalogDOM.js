@@ -870,6 +870,9 @@ var CatalogDOM = {
                         sections[value] += strElement;
                     } else {
                         // au cas où...
+                        if (!sections.hasOwnProperty("Autres")) {
+                            sections["Autres"] = "";
+                        }
                         sections["Autres"] += strElement;
                     }
                 } else {
