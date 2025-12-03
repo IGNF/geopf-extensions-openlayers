@@ -10,7 +10,7 @@ import Stroke from "ol/style/Stroke";
 import Fill from "ol/style/Fill";
 import CircleStyle from "ol/style/Circle";
 import MultiPoint from "ol/geom/MultiPoint";
-import coordinate from "ol/coordinate";
+import * as coordinate from "ol/coordinate";
 import Control from "ol/control/Control";
 
 import mapPinIcon from "../Controls/SearchEngine/map-pin-2-fill.svg";
