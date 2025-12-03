@@ -17,6 +17,81 @@
     background-position: center center;
 }
 
+.image-not-found {
+    background-image: url("img/image-not-found.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
+
+/* */
+.gpf-panel__menuviews_territories {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-default-grey);
+    height: 48px;
+    background-color: var(--background-lifted-grey);
+}
+#gpf-territories-views-container-id {
+    top: 50px;
+    z-index: 10000;
+    border-color: #ddd;
+    border-width: 1px;
+    width: auto;
+    height: auto;
+}
+.gpf-panel__views_territories-menu {}
+.gpf-panel__views_territories-addview {}
+.gpf-panel__views_territories-listview {}
+
+.gpf-panel__views_territories-listview-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.gpf-panel__views_territories-listview-count {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.gpf-panel__views_territories-listview-entries {
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow: auto;
+}
+.gpf-panel__views_territories-listview-entry {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid var(--border-default-grey);
+    justify-content: space-between;
+}
+.gpf-btn-icon-territories-draggable {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-right: 0;
+    margin-left: 0;
+    vertical-align: middle;
+}
+.gpf-btn-icon-territories-draggable::after {
+    -webkit-mask: url("img/dsfr/draggable.svg") center no-repeat;
+    mask: url("img/dsfr/draggable.svg") center no-repeat;
+}
+.gpf-btn-icon-territories-remove {}
+.gpf-btn-icon-territories-remove::after {
+    -webkit-mask: url("img/dsfr/remove.svg") center no-repeat;
+    mask: url("img/dsfr/remove.svg") center no-repeat;
+}
+
+/* */
 .gpf-panel__body_territories {
     overflow: auto;
     max-height: 300px;
@@ -109,7 +184,7 @@ dialog.tiles-direction { }
 
 div.fr-tile div.fr-tile__header div.fr-tile__icon,
 div.fr-tile div.fr-tile__header div.fr-tile__thumbnail {
-    display: block;
+    display: flex;
 }
 
 /* reduce */
