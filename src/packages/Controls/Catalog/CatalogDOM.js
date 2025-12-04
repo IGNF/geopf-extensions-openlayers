@@ -328,6 +328,7 @@ var CatalogDOM = {
      * Create Catalog Content Categories Tabs
      * 
      * @param {Categories} categories - categories to create tabs
+     * @param {Boolean} tabHeightAuto - size auto or fixe
      * @returns {HTMLElement} DOM element
      * @description
      * - create the tabs for categories
@@ -336,7 +337,7 @@ var CatalogDOM = {
      * - each subcategory has a radio button to select it
      * - each subcategory has a panel with layers
      */
-    _createCatalogContentCategoriesTabs : function (categories) {
+    _createCatalogContentCategoriesTabs : function (categories, tabHeightAuto) {
         // les onglets
         var strCategoriesTabButtons = "";
         var tmplCategoryTabButton = (i, id, title, selected) => {
@@ -516,16 +517,16 @@ var CatalogDOM = {
         const titleSpecifBar = "Rechercher une donnée dans la catégorie";
         var strSearchSpecificBar = tmplSearchSpecificBar(currentActiveBar, titleSpecifBar);
         // FIXME 
-        // le calcul de la hauteur est realisé à la main pour pallier le manque de JS DSFR (?)
-        // style="--tabs-height: 294px;"
-        var tabHeight = "369px"; // par defaut
+        // le calcul de la hauteur est realisé par le JS DSFR si il est present
+        // sinon, on peut le fixer ou le mettre en mode auto
+        var classTabHeight = "gpf-catalog-tabs-fixe"; // par defaut
         if (hasActiveBar) {
-            tabHeight = "434px"; // si la barre de recherche spécifique est active
+            classTabHeight = "gpf-catalog-tabs-fixe-with-bar"; // si la barre de recherche spécifique est active
         }
         var strContainer = `
         <!-- onglets -->
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
-            <div class="GPtabs fr-tabs" style="--tabs-height: ${tabHeight};">
+            <div class="GPtabs fr-tabs ${tabHeightAuto ? "" : classTabHeight}">
                 <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="presentation">
                     ${strCategoriesTabButtons}
                 </ul>
