@@ -227,7 +227,7 @@ declare class Territories extends Control {
      * Remove a territory
      *
      * @param {String} territory - territory id (FRA, MTQ, ...)
-     * @param {Boolean} [force=false] - force removal even if territory was added manually
+     * @param {Boolean} [force=false] - force removal
      * @returns {Boolean} - true|false
      * @public
      * @example
@@ -319,6 +319,8 @@ declare class Territories extends Control {
     private containerTerritoriesOptions;
     /** @private */
     private panelTerritoriesEntriesContainer;
+    /** @private */
+    private panelTerritoriesViewsContainer;
     /**
      * Create control main container (DOM initialize)
      *
@@ -407,6 +409,12 @@ declare class Territories extends Control {
      * @private
      */
     private onViewTerritoryRemoveClick;
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    private onReorderTerritoriesViews;
 }
 import Control from "../Control";
 import Map from "ol/Map";

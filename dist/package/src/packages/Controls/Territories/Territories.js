@@ -169,6 +169,13 @@ class Territories extends Control {
             this.getContainer().classList.add("gpf-button-no-gutter");
         }
 
+        // draggable des vues
+        var self = this;
+        this.createDraggableElement(
+            self.element.querySelector("#gpf-territories-views-listview-entries-id"),
+            self
+        );
+
         /**
          * event triggered when a territory is loaded
          *
@@ -215,10 +222,7 @@ class Territories extends Control {
             var view = this._createTerritoryView(territory);
             if (entry && view) {
                 this.panelTerritoriesEntriesContainer.appendChild(entry);
-                var panelTerritoriesViewsContainer = this.element.querySelector("#gpf-territories-views-listview-entries-id");
-                if (panelTerritoriesViewsContainer) {
-                    panelTerritoriesViewsContainer.appendChild(view);
-                }
+                this.panelTerritoriesViewsContainer.appendChild(view);
                 var count = this.element.querySelector("#gpf-territories-views-count-id");
                 if (count) {
                     var nb = this.territories.filter(t => !t.isRemoved).length + 1;
@@ -228,6 +232,7 @@ class Territories extends Control {
                     isRemoved : false,
                     isAdded : isAdded,
                     data : territory,
+                    initialIndex : this.territories.length,
                     domEntry : entry,
                     domView : view
                 });
@@ -253,7 +258,7 @@ class Territories extends Control {
      * Remove a territory
      *
      * @param {String} territory - territory id (FRA, MTQ, ...)
-     * @param {Boolean} [force=false] - force removal even if territory was added manually
+     * @param {Boolean} [force=false] - force removal
      * @returns {Boolean} - true|false
      * @public
      * @example
@@ -265,14 +270,16 @@ class Territories extends Control {
             for (let i = 0; i < this.territories.length; i++) {
                 const o = this.territories[i];
                 if (o.data.id === territory.data.id) {
-                    this.territories[i].domEntry.remove();
-                    this.territories[i].domView.remove();
                     if (!force) {
                         // on ne le supprime pas de la liste des territoires
                         // mais on le masque uniquement
                         this.territories[i].isRemoved = true;
+                        this.territories[i].domEntry.classList.add("gpf-hidden");
+                        this.territories[i].domView.style.display = "none";
                     } else {
                         // on le supprime de la liste des territoires
+                        this.territories[i].domEntry.remove();
+                        this.territories[i].domView.remove();
                         this.territories.splice(i, 1);
                     }
                     found = true;
@@ -411,6 +418,7 @@ class Territories extends Control {
          *   isAdded : { Boolean },
          *   domView : { HTMLelment },
          *   domEntry : { HTMLelment },
+         *   initialIndex : { Number }, // index d’origine
          *   data : {
          *     id: "MTQ",
          *     title: "Martinique",
@@ -443,6 +451,8 @@ class Territories extends Control {
         this.containerTerritoriesOptions = null;
         /** @private */
         this.panelTerritoriesEntriesContainer = null;
+        /** @private */
+        this.panelTerritoriesViewsContainer = null;
     }
 
     /**
@@ -470,6 +480,7 @@ class Territories extends Control {
         if (this.options.view && this.options.view.active) {
             var territoriesPanelMenuViewsDiv = this._createTerritoriesPanelMenuViewsDivElement(this.options.view.title, this.options.view.description);
             territoriesPanel.appendChild(territoriesPanelMenuViewsDiv);
+            this.panelTerritoriesViewsContainer = territoriesPanelMenuViewsDiv.querySelector("#gpf-territories-views-listview-entries-id");
         }
 
         // INFO
@@ -799,23 +810,31 @@ class Territories extends Control {
         logger.trace(e);
         // On supprime tous les territoires ajoutées manuellement via le bouton "Ajouter une vue"
         // et on recharge la liste initiale
-        var territories = [...this.territories];
-        for (let index = 0; index < territories.length; index++) {
-            const territory = territories[index];
+        for (let index = 0; index < this.territories.length; index++) {
+            const territory = this.territories[index];
             if (territory.isAdded) {
+                // on supprime les territoires ajoutés manuellement
                 this.removeTerritory(territory, true);
             } else {
                 // on ré-affiche les territoires non supprimés
                 if (territory.isRemoved) {
-                    this.panelTerritoriesEntriesContainer.appendChild(territory.domEntry);
-                    var panelTerritoriesViewsContainer = this.element.querySelector("#gpf-territories-views-listview-entries-id");
-                    if (panelTerritoriesViewsContainer) {
-                        panelTerritoriesViewsContainer.appendChild(territory.domView);
-                    }
+                    territory.domEntry.classList.remove("gpf-hidden");
+                    territory.domView.style.display = "";
                     territory.isRemoved = false;
                 }
             }
         }
+        // reordonne la liste des territoires selon l'index initial
+        this.territories.sort((a, b) => a.initialIndex - b.initialIndex);
+        // mise à jour le DOM principal
+        this.panelTerritoriesEntriesContainer.innerHTML = "";
+        this.territories.forEach(territory => {
+            this.panelTerritoriesEntriesContainer.appendChild(territory.domEntry);
+        });
+        this.panelTerritoriesViewsContainer.innerHTML = "";
+        this.territories.forEach(territory => {
+            this.panelTerritoriesViewsContainer.appendChild(territory.domView);
+        });
         // mise à jour du compteur des vues
         var count = this.element.querySelector("#gpf-territories-views-count-id");
         if (count) {
@@ -866,6 +885,32 @@ class Territories extends Control {
                 territory : territory.data
             });
         }
+    }
+
+    /**
+     * ...
+     * @param {Event} e - ...
+     * @private
+     */
+    onReorderTerritoriesViews (e) {
+        logger.trace(e);
+    
+        // on récupère l’ordre des vues dans le conteneur
+        const domViews = Array.from(this.panelTerritoriesViewsContainer.children);
+        // on recrée l’ordre des territoires selon les vues
+        const newOrderTerritories = [];
+        domViews.forEach(domView => {
+            const found = this.territories.find(territory => territory.domView === domView);
+            if (found) {
+                newOrderTerritories.push(found);
+            }
+        });
+        this.territories = newOrderTerritories;
+        // mise à jour l’ordre des territoires dans le DOM principal
+        this.panelTerritoriesEntriesContainer.innerHTML = "";
+        this.territories.forEach(territory => {
+            this.panelTerritoriesEntriesContainer.appendChild(territory.domEntry);
+        });
     }
 
 };

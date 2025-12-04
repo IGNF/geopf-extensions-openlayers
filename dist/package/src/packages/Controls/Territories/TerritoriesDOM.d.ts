@@ -1,6 +1,7 @@
 export default TerritoriesDOM;
 declare namespace TerritoriesDOM {
     function _addUID(id: string): string;
+    function createDraggableElement(elementDraggable: any, context: any): any;
     function _createMainContainerElement(): HTMLElement;
     function _createShowTerritoriesPictoElement(): HTMLElement;
     function _createTerritoriesPanelElement(): HTMLElement;
