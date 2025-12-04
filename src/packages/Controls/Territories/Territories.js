@@ -477,10 +477,12 @@ class Territories extends Control {
         territoriesPanel.appendChild(territoriesPanelDiv);
         
         // menu views button
-        if (this.options.view && this.options.view.active) {
-            var territoriesPanelMenuViewsDiv = this._createTerritoriesPanelMenuViewsDivElement(this.options.view.title, this.options.view.description);
-            territoriesPanel.appendChild(territoriesPanelMenuViewsDiv);
-            this.panelTerritoriesViewsContainer = territoriesPanelMenuViewsDiv.querySelector("#gpf-territories-views-listview-entries-id");
+        var territoriesPanelMenuViewsDiv = this._createTerritoriesPanelMenuViewsDivElement(this.options.view.title, this.options.view.description);
+        territoriesPanel.appendChild(territoriesPanelMenuViewsDiv);
+        this.panelTerritoriesViewsContainer = territoriesPanelMenuViewsDiv.querySelector("#gpf-territories-views-listview-entries-id");
+        if (this.options.view && !this.options.view.active) {
+            // on masque le bouton
+            territoriesPanelMenuViewsDiv.style.display = "none";
         }
 
         // INFO
