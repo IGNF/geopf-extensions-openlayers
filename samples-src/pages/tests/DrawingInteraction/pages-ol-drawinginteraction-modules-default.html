@@ -2,8 +2,7 @@
 
 {{#content "vendor"}}
     <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
-    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlContextMenu.css" />
-    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSimpleMenu.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.css" />
     <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
     <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
 {{/content}}
@@ -65,7 +64,11 @@
 
                     // Select + modify interaction
                     const select = new ol.interaction.Selecting({
-
+                        /* activate modify condition
+                        modifyCondition : e => {
+                            return (e.type === 'dblclick');
+                        }
+                        */
                     });
                     map.addInteraction(select);
 
@@ -106,7 +109,7 @@
                     }
                     
                     // Check double-click
-                    select.on('dblclick', e => console.log(e.feature));
+                    // select.on('dblclick', e => console.log(e.feature));
                 };
            </script>
 {{/content}}

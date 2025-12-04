@@ -23,6 +23,11 @@ class ModifyingInteraction extends Modify {
         this._select = options.select;
     }
 
+    /**
+     * Overwrite OpenLayers setMap method
+     *
+     * @param {Map} map - Map.
+     */
     setMap (map) {
         if (this.getMap()) {
             this.getMap().removeControl(this._menu);
@@ -34,6 +39,11 @@ class ModifyingInteraction extends Modify {
         this._menu.hide();
     }
 
+    /**
+     * Overwrite OpenLayers setActive method / hide menu
+     *
+     * @param {Boolean} active Active state
+     */
     setActive (active) {
         super.setActive(active);
         if (this._menu) {
@@ -41,6 +51,10 @@ class ModifyingInteraction extends Modify {
         }
     }
 
+    /** Overwrite OpenLayers Handle event on the map
+     * @param {ol.MapBrowserEvent} e Event
+     * @returns {Boolean} Whether to propagate the event further
+     */
     handleEvent (e) {
         const isPoint = this.getOverlay().getSource().getFeaturesAtCoordinate(e.coordinate).length;
         const resp = super.handleEvent(e);
@@ -50,9 +64,6 @@ class ModifyingInteraction extends Modify {
             e.originalEvent.preventDefault();
 
             if (isPoint && this.canRemovePoint()) {
-                // Disable context menu on map
-                console.log("context menu :", isPoint, isAdd, this.vertexFeature_, e.coordinate);
-                // this.removePoint(e.coordinate);
                 this._menu.setMenu([
                     {
                         text : "Supprimer le point",
@@ -63,24 +74,27 @@ class ModifyingInteraction extends Modify {
                     },
                 ]);
                 this._menu.show(e.pixel);
-            } else if (this._select && this._select.getFeatures().getLength() > 0) {
+            } else if (this._select && this._select.selectedAtPixel(e.pixel)) {
                 this._menu.setMenu([
                     {
                         text : "Dupliquer",
                         callback : () => {
                             const features = this._select.getFeatures().getArray().slice();
                             this._select.getFeatures().clear();
+                            const sel = [];
                             features.forEach(f => {
                                 const layer = this._select.getLayer(f);
                                 if (layer) {
                                     const source = layer.getSource();
                                     const f2 = f.clone();
                                     source.addFeature(f2);
-                                    this._select.getFeatures().push(f2);
+                                    sel.push(f2);
                                 } else {
-                                    this._select.getFeatures().push(f);
+                                    sel.push(f);
                                 }
                             });
+                            this._select.clear();
+                            sel.forEach(f => this._select.getFeatures().push(f));
                         },
                         hide : true
                     },{
@@ -94,7 +108,7 @@ class ModifyingInteraction extends Modify {
                                     source.removeFeature(f);
                                 }
                             });
-                            this._select.getFeatures().clear();
+                            this._select.clear();
                         },
                         hide : true
                     },
@@ -104,7 +118,6 @@ class ModifyingInteraction extends Modify {
                 this._menu.hide();
             }
         } else if (e.type !== "pointermove") {
-            console.log("hide menu", e.type);
             this._menu.hide();
         }
         // Dragging feature : show crosshair cursor

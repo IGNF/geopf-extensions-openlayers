@@ -55,6 +55,7 @@ export { default as Territories } from "./packages/Controls/Territories/Territor
 export { default as ControlList } from "./packages/Controls/ControlList/ControlList";
 export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextMenu";
 export { default as SimpleMenu } from "./packages/Controls/ContextMenu/SimpleMenu";
+export { default as InfoControl } from "./packages/Controls/ContextMenu/InfoControl";
 export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
 
 

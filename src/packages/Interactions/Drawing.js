@@ -3,30 +3,11 @@ import "../CSS/Interactions/Drawing.css";
 
 import Draw from "ol/interaction/Draw";
 import Select from "ol/interaction/Select";
-import Control from "ol/control/Control";
 import VectorSource from "ol/source/Vector";
+import InfoControl from "../Controls/ContextMenu/InfoControl.js";
 
 import { selectStyle, defaultStyle } from "./selectStyle.js";
 
-
-/** Show info on map
- * @extends {ol.control.Control}
- * @private
- */
-class InfoControl extends Control {
-
-    constructor () {
-        const element = document.createElement("div");
-        element.className = "ol-drawing-info ol-unselectable ol-control";
-        super({
-            element : element
-        });
-    }
-    setInfo (text = "") {
-        this.element.innerHTML = text;
-    }
-
-}
 
 /**
  * Drawing interaction class.
@@ -39,7 +20,7 @@ class DrawingInteraction extends Draw {
      * Initialize drawing interaction
      * @param {*} options extend Openlayers drawing options
      * @param {Select} [options.select] - Select interaction to associate with drawing (default null)
-     * @param {boolean} [options.selectOnDrawEnd] - If true, select the feature on draw end (default false)
+     * @param {Boolean} [options.selectOnDrawEnd] - If true, select the feature on draw end (default false)
      */
     constructor (options) {
         options = options || {};
@@ -54,7 +35,7 @@ class DrawingInteraction extends Draw {
         this.setSource(options.source);
 
         /** Handle drawing on keydown
-         * @param {Event} evt
+         * @param { Event } evt
          */
         const onkeydown = (evt) => {
             switch (evt.key) {
@@ -104,17 +85,17 @@ class DrawingInteraction extends Draw {
             // select on draw end
             if (options.selectOnDrawEnd) {
                 this.on("drawend", (e) => {
-                    // Add to selection
-                    this._select.getFeatures().push(e.feature);
                     // And activate select interaction
                     setTimeout(() => this._select.setActive(true));
+                    // Add to selection
+                    this._select.getFeatures().push(e.feature);
                 });
             };
         }
     }
 
     /** Get default style
-     * 
+     * @returns {ol.style.Style|Array<ol.style.Style>} Style
      */
     getStyle () {
         return selectStyle(this._type);
@@ -148,6 +129,7 @@ class DrawingInteraction extends Draw {
 
     /** The source to collect features
      * @param {VectorSource} source Vector source
+     * @returns {VectorSource} Vector source
      */
     getSource () {
         return this._source || null;
@@ -168,7 +150,7 @@ class DrawingInteraction extends Draw {
             // deactivate select interaction
             this._select.setActive(false);
             // Clear selection when drawing is activated
-            this._select.getFeatures().clear();
+            this._select.clear();
         }
     }
 
@@ -182,9 +164,9 @@ class DrawingInteraction extends Draw {
         }
     }
 
-    /** Handle event on the map
+    /** Overwrite OpenLayers Handle event on the map
      * @param {ol.MapBrowserEvent} event Event
-     * @returns {boolean} Whether to propagate the event further
+     * @returns {Boolean} Whether to propagate the event further
      */
     handleEvent (event) {
         this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";

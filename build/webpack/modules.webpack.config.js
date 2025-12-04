@@ -66,6 +66,7 @@ module.exports = (env, argv) => {
             "GpfExtOlControlList" : path.join(rootdir, "src", "packages", "Controls/ControlList", "ControlList.js"),
             "GpfExtOlContextMenu" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "ContextMenu.js"),
             "GpfExtOlSimpleMenu" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "SimpleMenu.js"),
+            "GpfExtOlInfoControl" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "InfoControl.js"),
             "GpfExtOlReporting" : path.join(rootdir, "src", "packages", "Controls/Reporting", "Reporting.js"),
             // Interactions
             "GpfExtOlDrawingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Drawing.js"),
