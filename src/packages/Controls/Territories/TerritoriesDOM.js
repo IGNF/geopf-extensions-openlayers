@@ -1,3 +1,5 @@
+import Sortable from "sortablejs";
+
 const stringToHTML = (str) => {
     var support = function () {
         if (!window.DOMParser) {
@@ -25,16 +27,36 @@ const stringToHTML = (str) => {
     return dom;
 };
 
-var TerritoriesDOM = {
 
+var TerritoriesDOM = {
+    
     /**
-    * Add uuid to the tag ID
-    * @param {String} id - id selector
-    * @returns {String} uid - id selector with an unique id
+     * Add uuid to the tag ID
+     * @param {String} id - id selector
+     * @returns {String} uid - id selector with an unique id
     */
     _addUID : function (id) {
         var uid = (this.uid) ? id + "-" + this.uid : id;
         return uid;
+    },
+    
+    /**
+     * https://github.com/SortableJS/Sortable?tab=readme-ov-file#options
+     * @param {*} elementDraggable - element to make draggable
+     * @param {*} context - context for the draggable element
+     * @returns {*} Sortable instance
+     */
+    createDraggableElement : function (elementDraggable, context) {
+        const sortable = Sortable.create(elementDraggable, {
+            animation : 150,
+            handle : ".gpf-btn-icon-territories-draggable",
+            draggable : ".draggable-territories-view",
+            ghostClass : "gpf-territories-view-ghost",
+            onEnd : function (e) {
+                context.onReorderTerritoriesViews(e);
+            }
+        });
+        return sortable;     
     },
 
     /**
@@ -408,7 +430,8 @@ var TerritoriesDOM = {
                         </div>
                     </div>
                     <div class="fr-messages-group" id="add-view-form-fieldset-messages" aria-live="polite">
-                        <p class="fr-message fr-message--error gpf-hidden" id="${inputId}-message-error-id">Ce nom est déjà utilisé</p>
+                        <p class="fr-message fr-message--error gpf-hidden" id="${inputId}-message-error-duplicate-id">Ce nom est déjà utilisé</p>
+                        <p class="fr-message fr-message--error gpf-hidden" id="${inputId}-message-error-empty-id">Le nom est vide</p>
                     </div>
                 </fieldset>
             </form>
@@ -442,6 +465,19 @@ var TerritoriesDOM = {
                     return;
                 }
                 button.setAttribute("aria-pressed", "false");
+                // reinit 
+                var input = document.getElementById(inputId);
+                if (input) {
+                    input.value = "";
+                    var emptyMessage = document.getElementById(inputId + "-message-error-empty-id");
+                    var duplicateMessage = document.getElementById(inputId + "-message-error-duplicate-id");
+                    if (emptyMessage) {
+                        emptyMessage.classList.add("gpf-hidden");
+                    }
+                    if (duplicateMessage) {
+                        duplicateMessage.classList.add("gpf-hidden");
+                    }
+                }
                 self.onCloseTerritoriesViewsClick(e);
             }, false);
         }
@@ -461,17 +497,36 @@ var TerritoriesDOM = {
                 e.preventDefault();
                 var input = document.getElementById(inputId);
                 if (input) {
-                    var message = document.getElementById(inputId + "-message-error-id");
                     var territory = self.territories.find(e => e.data.title === input.value);
-                    if (message && input.value === "") {
+                    var emptyMessage = document.getElementById(inputId + "-message-error-empty-id");
+                    var duplicateMessage = document.getElementById(inputId + "-message-error-duplicate-id");
+
+                    // Check if input is empty
+                    if (input.value === "") {
+                        if (emptyMessage) {
+                            emptyMessage.classList.remove("gpf-hidden");
+                        }
+                        if (duplicateMessage) {
+                            duplicateMessage.classList.add("gpf-hidden");
+                        }
                         return;
                     }
-                    // validation du nom de la vue avec ceux de la liste
-                    if (message && territory) {
-                        message.classList.remove("gpf-hidden");
+                    // Check if territory with same name exists
+                    if (territory) {
+                        if (duplicateMessage) {
+                            duplicateMessage.classList.remove("gpf-hidden");
+                        }
+                        if (emptyMessage) {
+                            emptyMessage.classList.add("gpf-hidden");
+                        }
                         return;
-                    } else {
-                        message.classList.add("gpf-hidden");
+                    }
+                    // Hide both error messages if valid
+                    if (emptyMessage) {
+                        emptyMessage.classList.add("gpf-hidden");
+                    }
+                    if (duplicateMessage) {
+                        duplicateMessage.classList.add("gpf-hidden");
                     }
                     self.onAddTerritoriesViewClick(e, input.value);
                 }
@@ -599,7 +654,7 @@ var TerritoriesDOM = {
         var buttonId = "gpf-territories-view-entry-button-id-" + o.id;
         if (o) {
             var entry = stringToHTML(`
-            <div class="gpf-panel__views_territories-listview-entry">
+            <div class="gpf-panel__views_territories-listview-entry draggable-territories-view">
                 <!-- ${o.title} -->
                 <div style="display: flex;flex-direction: row;align-items: center;">    
                     <span class="gpf-btn gpf-btn-icon-territories-draggable gpf-btn--tertiary"></span>
