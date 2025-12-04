@@ -44,6 +44,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} [layerLabel="title"] - Propriété utilisée comme label pour les couches.
  * @property {Boolean} [layerThumbnail=false] - Affiche les miniatures des couches si disponibles.
  * @property {string} [size="md"] - Taille de la fenêtre : sm, md, lg ou xl.
+ * @property {Boolean} [tabHeightAuto=false] - Gestion dynamique ou fixe de la taille des onglets en fonction du contenu.
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
  * @property {string} [search.label="Rechercher une donnée"] - Label du champ de recherche.
@@ -558,6 +559,7 @@ class Catalog extends Control {
             titleSecondary : "",
             layerLabel : "title",
             layerThumbnail : false,
+            tabHeightAuto : false,
             optimisation : "none", // none | clusterize | on-demand
             size : "md",
             search : {
@@ -1111,7 +1113,7 @@ class Catalog extends Control {
     createCatalogContentEntries (data) {
         var container = this.contentCatalogContainer;
 
-        var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories);
+        var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories, this.options.tabHeightAuto);
         container.appendChild(widgetContentEntryTabs);
 
         // INFO 

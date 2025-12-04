@@ -36,6 +36,10 @@ export type CatalogOptions = {
      */
     size?: string | undefined;
     /**
+     * - Gestion dynamique ou fixe de la taille des onglets en fonction du contenu.
+     */
+    tabHeightAuto?: boolean | undefined;
+    /**
      * - Options de recherche.
      */
     search?: {
@@ -220,6 +224,7 @@ export type ConfigLayer = any;
  * @property {string} [layerLabel="title"] - Propriété utilisée comme label pour les couches.
  * @property {Boolean} [layerThumbnail=false] - Affiche les miniatures des couches si disponibles.
  * @property {string} [size="md"] - Taille de la fenêtre : sm, md, lg ou xl.
+ * @property {Boolean} [tabHeightAuto=false] - Gestion dynamique ou fixe de la taille des onglets en fonction du contenu.
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
  * @property {string} [search.label="Rechercher une donnée"] - Label du champ de recherche.
@@ -495,6 +500,7 @@ declare class Catalog extends Control {
         titleSecondary: string;
         layerLabel: string;
         layerThumbnail: boolean;
+        tabHeightAuto: boolean;
         optimisation: string;
         size: string;
         search: {

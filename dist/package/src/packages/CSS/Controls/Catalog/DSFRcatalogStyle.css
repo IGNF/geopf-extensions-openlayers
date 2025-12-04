@@ -59,6 +59,13 @@
     right: 0;
 }
 
+.gpf-catalog-tabs-fixe {
+    --tabs-height: 369px !important;
+}
+.gpf-catalog-tabs-fixe-with-bar {
+    --tabs-height: 434px !important;
+}
+
 .informations-more {
     display: flex;
     flex-direction: column;
