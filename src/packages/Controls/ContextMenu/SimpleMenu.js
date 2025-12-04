@@ -8,14 +8,24 @@ import "../../CSS/Controls/ContextMenu/SimpleMenu.css";
  */
 class SimpleMenu extends Control {
 
-    constructor () {
+    /**
+     * Initialize simple menu
+     * @param {Object} options Control options
+     * 
+     */
+    constructor (options = {}) {
         super({
             element : document.createElement("ul"),
         });
-        this.element.className = "gpf-simple-menu ol-unselectable ol-control";
+        this.element.className = "gpf-simple-menu ol-unselectable ol-control" + (options.className ? " " + options.className : "");
         this.element.style.display = "none";
     }
-    setMenu (items) {
+
+    /**
+     * Set menu items
+     * @param {Array<Object>} items Array of menu items { text : String, callback : Function, hide : Boolean to hide menu after click }
+     */
+    setMenu (items = []) {
         this.element.innerHTML = "";
         items.forEach(item => {
             const li = document.createElement("li");
@@ -34,6 +44,11 @@ class SimpleMenu extends Control {
             li.appendChild(a);
         });
     }
+
+    /** 
+     * Display menu at pixel
+     * @param {ol.Pixel} pixel Pixel position
+     */
     show (pixel) {
         this.element.style.display = "block";
         const extent = this.getMap().getSize();
@@ -60,6 +75,10 @@ class SimpleMenu extends Control {
             a.focus();
         }
     }
+
+    /**
+     * Hide menu
+     */
     hide () {
         this.element.style.display = "none";
     }

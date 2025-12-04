@@ -3,6 +3,7 @@ import Icon from "ol/style/Icon";
 import Stroke from "ol/style/Stroke";
 import Fill from "ol/style/Fill";
 import CircleStyle from "ol/style/Circle";
+import RegularShape from "ol/style/RegularShape";
 import MultiPoint from "ol/geom/MultiPoint";
 
 import mapPinIcon from "../Controls/SearchEngine/map-pin-2-fill.svg";
@@ -29,11 +30,26 @@ function getFlatCoordinates (coords) {
 
 /** Default syle
  * @param {String} type Geometry type
- * @param {String} featureType Current feature geometry type
+ * @param {String} featureType Current feature geometry type or "select"
  * @param {ol.style.Image} img Image style for points
  * @returns {ol.style.Style|Array<ol.style.Style>} Style
  */
 function selectStyle (type, featureType, img) {
+    if (type==="select") {
+        const style = selectStyle("Point", "select", img);
+        style.push(new Style({
+            image : new RegularShape({
+                points : 4,
+                radius : 6,
+                stroke : new Stroke({ 
+                    color : "#33b1ff", 
+                    width : 1 
+                }),
+            })
+        }));
+        return style;
+    }
+
     const stroke = new Stroke({
         color : "#33b1ff",
         width : 2,
@@ -69,9 +85,17 @@ function selectStyle (type, featureType, img) {
 
     switch (type) {
         case "Point": {
-            return new Style({
-                image : image,
-            });
+            return [
+                new Style({
+                    image : image,
+                    stroke : stroke,
+                    fill : fill,
+                }),
+                new Style({
+                    image : circle,
+                    geometry : (f) => new MultiPoint( getFlatCoordinates(f) )
+                })
+            ];
         }
         case "LineString":
         case "Polygon": 

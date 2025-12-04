@@ -35,7 +35,7 @@ class DrawingInteraction extends Draw {
         this.setSource(options.source);
 
         /** Handle drawing on keydown
-         * @param { Event } evt
+         * @param { Event } evt Keyboard event
          */
         const onkeydown = (evt) => {
             switch (evt.key) {

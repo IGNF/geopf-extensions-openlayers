@@ -1,7 +1,8 @@
 import Select from "ol/interaction/Select";
 import ModifyingInteraction from "./Modifying.js";
 import { getFlatCoordinates, selectStyle } from "./selectStyle";
-import {fromExtent} from "ol/geom/Polygon";
+import RegularShape from "ol/style/RegularShape";
+import Stroke from "ol/style/Stroke";
 import MultiPoint from "ol/geom/MultiPoint";
 
 /** Outil de selection et d'interaction avec des features
@@ -15,13 +16,33 @@ class SelectingInteraction extends Select {
      */
     constructor (options) {
         options = options || {};
+
         // Prevent selecting on empty space
         options.filter = (feature, layer) => {
             return (!!layer);
         };
-        // Check style
-        options.style = selectStyle();
-        options.style[1].setGeometry( f => this._modify.getActive() ? new MultiPoint(getFlatCoordinates(f)) : null);
+
+        // Default selection style
+        if (!options.style) {
+            const style = selectStyle("select");
+            // Show vertices when modifying
+            style[1].setGeometry( f => this._modify.getActive() ? new MultiPoint(getFlatCoordinates(f)) : null);
+            const image = style[0].getImage();
+            // Border around icon
+            options.style = (f) => {
+                style[2].setImage(new RegularShape({
+                    points : 4,
+                    radius : image.getHeight() / 2 + 2,
+                    angle : Math.PI / 4,
+                    displacement : [0, image.getHeight() / 2],
+                    stroke : new Stroke({ 
+                        color : "#33b1ff", 
+                        width : 1 
+                    })
+                }));
+                return style;
+            };
+        }
 
         // Handle double click on selected feature
         options.condition = function (e) {
@@ -49,7 +70,7 @@ class SelectingInteraction extends Select {
 
         // Check modify condition on select event
         this.on("select", (e) => {
-            this._modify.setActive(this._modifyCondition({ type : "active" }));
+            this._modify.setActive(this._modifyCondition({ type : "activate" }));
         });
         // refresh style
         this._modify.on("change:active", (e) => {
@@ -61,24 +82,23 @@ class SelectingInteraction extends Select {
 
     /** Chek if a feature is selected at pixel
      * @param {ol.Pixel} pixel Pixel to check
-     * @return {Feature|Boolean} Found feature or false
+     * @return {Array<Feature>|Boolean} Found feature or false
      */
     selectedAtPixel (pixel) {
-        let found = false;
+        const features = [];
         map.forEachFeatureAtPixel(
             pixel,
             (feature) => {
                 if (this.getLayer(feature)) {
-                    found = feature;
+                    features.push(feature);
                 }
-                return (found !== false);
             },
             {
                 layerFilter : this.layerFilter_,
                 hitTolerance : this.hitTolerance_,
             },
         );
-        return found;
+        return features.length ? features : false;
     }
 
     clear () {
@@ -101,7 +121,7 @@ class SelectingInteraction extends Select {
         if (map) {
             map.addInteraction(this._modify);
         }
-        this._modify.setActive(this.getActive() && this._modifyCondition({type : "active"}));
+        this._modify.setActive(this.getActive() && this._modifyCondition({type : "activate"}));
     }
 
     /** Set interaction active state
@@ -110,7 +130,7 @@ class SelectingInteraction extends Select {
     setActive (active) {
         super.setActive(active);
         if (this._modify) {
-            this._modify.setActive(active && this._modifyCondition({type : "active"}));
+            this._modify.setActive(active && this._modifyCondition({type : "activate"}));
         }
     }
 
