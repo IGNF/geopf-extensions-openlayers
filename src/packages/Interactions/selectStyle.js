@@ -8,11 +8,14 @@ import MultiPoint from "ol/geom/MultiPoint";
 import mapPinIcon from "../Controls/SearchEngine/map-pin-2-fill.svg";
 
 /** Get all points in coordinates
- * @param {Array<coordinate>} coords
- * @returns {Array<coordinate>}
+ * @param {Feature|Array<coordinate>} coords Coordinates or feature
+ * @returns {Array<coordinate>} Flat coordinates array
  * @private
  */
 function getFlatCoordinates (coords) {
+    if (coords.getGeometry) {
+        coords = coords.getGeometry().getCoordinates();
+    }
     if (coords && coords[0].length && coords[0][0].length) {
         var c = [];
         for (var i=0; i<coords.length; i++) {
@@ -26,6 +29,7 @@ function getFlatCoordinates (coords) {
 
 /** Default syle
  * @param {String} type Geometry type
+ * @param {String} featureType Current feature geometry type
  * @param {ol.style.Image} img Image style for points
  * @returns {ol.style.Style|Array<ol.style.Style>} Style
  */
@@ -98,7 +102,7 @@ function selectStyle (type, featureType, img) {
                         }),
                         new Style({
                             image : circle,
-                            geometry : (f) => new MultiPoint( getFlatCoordinates(f.getGeometry().getCoordinates() ) )
+                            geometry : (f) => new MultiPoint( getFlatCoordinates(f) )
                         })
                     ];
                 }
