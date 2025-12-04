@@ -64,11 +64,13 @@
 
                     // Select + modify interaction
                     const select = new ol.interaction.Selecting({
-                        /* activate modify condition
+                        /* activate modify condition on double click */
+                        /*
                         modifyCondition : e => {
-                            return (e.type === 'dblclick');
+                            // return (e.type === "activate");
+                            return (e.type === "dblclick");
                         }
-                        */
+                        /* */
                     });
                     map.addInteraction(select);
 
@@ -91,7 +93,7 @@
                     map.addInteraction(new ol.interaction.Snap({ source: source }));
 
                     // Style layer
-                    const style = drawing.Point.getStyle();
+                    const style = drawing.Point.getStyle()[0];
                     style.setStroke(new ol.style.Stroke({
                         color: "orange",
                         width: 1.5

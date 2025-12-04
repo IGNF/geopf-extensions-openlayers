@@ -62,8 +62,39 @@ class ModifyingInteraction extends Modify {
 
         if (e.type === "contextmenu") {
             e.originalEvent.preventDefault();
+            const currentFeatures = this._select.selectedAtPixel(e.pixel);
 
-            if (isPoint && this.canRemovePoint()) {
+            // TODO : Check if can remove point
+            let canRemove = false;
+            (currentFeatures || []).forEach(f => {
+                switch (f.getGeometry().getType()) {
+                    case "LineString": {
+                        if (f.getGeometry().getCoordinates().length > 2 ) {
+                            canRemove = true;
+                        }
+                        break;
+                    }
+                    case "Polygon": {
+                        const geom = f.getGeometry().getCoordinates();
+                        geom.forEach(ring => {
+                            if (ring.length > 4 ) {
+                                canRemove = true;
+                            }
+                        });
+                        break;
+                    }
+                    case "MultiLineString":
+                    case "MultiPolygon": {
+                        console.log("todo");
+                    }
+                    default: {
+                        break;
+                    }
+                }
+            });
+
+            // Show menu
+            if (isPoint && canRemove) {
                 this._menu.setMenu([
                     {
                         text : "Supprimer le point",
@@ -74,7 +105,8 @@ class ModifyingInteraction extends Modify {
                     },
                 ]);
                 this._menu.show(e.pixel);
-            } else if (this._select && this._select.selectedAtPixel(e.pixel)) {
+                e.stopPropagation();
+            } else if (this._select && currentFeatures) {
                 this._menu.setMenu([
                     {
                         text : "Dupliquer",
@@ -114,6 +146,7 @@ class ModifyingInteraction extends Modify {
                     },
                 ]);
                 this._menu.show(e.pixel);
+                e.stopPropagation();
             } else {
                 this._menu.hide();
             }
