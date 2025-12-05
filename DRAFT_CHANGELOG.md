@@ -19,6 +19,7 @@ Mise à jour des icônes DSFR pour les boutons pictogrammes des widgets
 
   - Contextual Menu : Ajout du getFeatureInfo dans les entrées du menu contextuel (#442)
   - LayerSwitcher : Gestion des noms des styles MapBox issus de cartes.gouv.fr (#455)
+  - Territories : Mode DragNDrop des territoires (#468)
 
 * 🔨 [Changed]
 
@@ -28,6 +29,7 @@ Mise à jour des icônes DSFR pour les boutons pictogrammes des widgets
   - ReverseGeocode : changement titre modale et message si pas de résultat trouvé (#453)
   - GetFeatureInfo : corrections diverse sur l'UI du panel de résultats (#448)
   - Icones : Mise à jour des icônes DSFR pour les boutons (#462)
+  - Territories : Ajout d'un menu de gestion des territoires (#464)
 
 * 🔥 [Deprecated]
 

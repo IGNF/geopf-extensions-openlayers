@@ -39,7 +39,7 @@
         "id": "REU",
         "title": "Réunion",
         "description": "",
-        "zoom": 10,
+        "zoom": null,
         "bbox": [55.07, -21.46, 55.86, -20.79],
         "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/reu.png",
         "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/reu.svg"
@@ -57,7 +57,7 @@
         "id": "IDF",
         "title": "Paris petite couronne",
         "description": "",
-        "zoom": 12,
+        "zoom": null,
         "bbox": [2.18, 48.77, 2.52, 48.95],
         "thumbnail": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/thumbnails/idf.png",
         "icon": "https://data.geopf.fr/annexes/cartes.gouv.fr-config/public/resources/territories/idf.svg"

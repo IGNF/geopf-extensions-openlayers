@@ -101,8 +101,13 @@
       panel: true,
       upload: {
           active : true,
-          title : "Ceci est le libellé principal",
-          description : "Ceci est une indication"
+          title : "Configuration de l'outil",
+          description : "Modifier la configuration"
+      },
+      view : {
+          active : true,
+          title : "Gérer les vues",
+          description : "Modifier la vue"
       },
       auto: true,
       thumbnail: false,
@@ -136,6 +141,20 @@
       description: "",
       bbox: [],
       thumbnail: "", // image par defaut !
+    });
+  
+    // écoute de l'évènement de changement de territoire
+    territories.on("territories:loaded", function (e) {
+      console.log("territory loaded", e);
+    });
+    territories.on("territories:change", function (e) {
+      console.log("territory changed:", e.territory);
+    });
+    territories.on("territories:add", function (e) {
+      console.log("territory added:", e.territory);
+    });
+    territories.on("territories:remove", function (e) {
+      console.log("territory removed:", e.territory);
     });
   };
   Gp.Services.getConfig({
