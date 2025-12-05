@@ -1,0 +1,121 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+        
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSearchEngine.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlAbstractAdvancedSearch.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlSearchEngineAdvanced.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlInseeAdvancedSearch.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLocationAdvancedSearch.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlParcelAdvancedSearch.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCoordinateAdvancedSearch.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers SearchEngine</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+            [id^="GPsearchEngine-"] {
+                top: 8px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du moteur de recherche avec les options par défaut</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+            <p>Dernière sélection : <span id="selection"></span></p>
+            <button class="fr-btn fr-btn--secondary">Bouton pour le focus</button>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                window.onload = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
+					// 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
+                            }),
+                            layer
+                        ]
+                    });
+
+                    var insee = new ol.control.InseeAdvancedSearch({
+                    })
+
+                    var location = new ol.control.LocationAdvancedSearch({
+                    })
+
+                    var parcel = new ol.control.ParcelAdvancedSearch({
+                    })
+
+                    var coordinates = new ol.control.CoordinateAdvancedSearch({
+                    })
+
+                    let addFeatureToLayer = function (feature) {
+                        source.addFeature(feature);
+                        // Feature traitée => supprimer de la recherche
+                        return true;
+                        /*
+                        // Feature non traitée => conserver la recherche
+                        return false;
+                        */
+                    }
+
+					// 2. Appel du SearchEngine
+                    var search = new ol.control.SearchEngineAdvanced({
+                        advancedSearch : [insee, location, coordinates, parcel],
+                        returnTrueGeometry : true,
+                        popupButtons : [{
+                            label : "Ajouter l'objet à la couche",
+                            className : "custom-button",
+                            icon : "fr-icon-map-pin-add-line",
+                            attributes : {
+                                "data-action" : "add-feature",
+                            },
+                            onClick : addFeatureToLayer
+                        }]
+                    });
+
+					// 3. Ajout du SearchEngine à la carte
+                    map.addControl(search);
+
+                    // Get search info
+                    search.on('select', e => {
+                        console.log("Select", e)
+                        document.getElementById("selection").innerHTML = e.title;
+                    })
+
+                    // Get search info
+                    search.on('search', e => {
+                        console.log("search", e)
+                    })
+                };
+           </script>
+{{/content}}
+
+{{/extend}}
