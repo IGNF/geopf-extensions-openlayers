@@ -1,3 +1,5 @@
+let uidCounter_ = 0;
+
 /**
 * @module Helper
 * @alias module:~utils/HelperUtils
@@ -99,6 +101,24 @@ var Helper = {
                 }
             }
         }
+    },
+    /**
+     * Gets a unique ID for an object. This mutates the object so that further calls
+     * with the same object as a parameter returns the same value. Unique IDs are generated
+     * as a strictly increasing sequence. Adapted from goog.getUid.
+     *
+     * @param {String} prefix - prefix for the unique ID
+     * @param {Object} [obj] The object to get the unique ID for.
+     * @return {String} The unique ID for the object.
+     * @api
+     */
+    getUid : function (prefix, obj) {
+        if (obj) {
+            if (obj.id) {
+                return obj.id;
+            }
+        }
+        return prefix + (++uidCounter_);
     }
 };
 

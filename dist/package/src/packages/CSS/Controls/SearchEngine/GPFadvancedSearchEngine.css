@@ -1,0 +1,108 @@
+/** STYLE COMMUN RECHERCHE AVANCEE **/
+
+div[id^=GPsearchEngine-Advanced] {
+    padding: 5px;
+    margin: -5px;
+}
+
+div[id^=GPsearchEngine-Advanced] div[id^=GPsearchEngine-] {
+    width: 100%;
+    margin: 0 5px;
+}
+
+form[id^=GPAdvancedForm-], form[id^=GPAdvancedForm-] * {
+    height : 100%;
+    width: 100%;
+}
+
+form[id^=GPAdvancedForm-] > .GPFormFooter {
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+[id^="GPsearchEngine-Advanced"] form[id^="GPsearchInput-Base-"]:first-child {
+    display: flex;
+    flex-direction: row;
+}
+
+form[id^=GPAdvancedForm-] > .GPFormFooter > button {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form[id^=GPAdvancedForm-] ul.search-result {
+    list-style-type: none;
+    padding: 0;
+    margin: -0.5em 0 0;
+}
+form[id^=GPAdvancedForm-] ul.search-result a {
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    padding: 0;
+    background: none;
+    display: block;
+}
+form[id^=GPAdvancedForm-] ul.search-result a:before {
+    margin-right: 0.5em;
+}
+form[id^=GPAdvancedForm-] ul.search-result .hidden {
+    display: none;
+}
+form[id^=GPAdvancedForm-] ul.search-result button {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+form[id^=GPAdvancedForm-] ul.search-result .search-result-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-direction: column;
+    text-align: center;
+}
+form[id^=GPAdvancedForm-] ul.search-result .search-result-actions:hover {
+    background-color: transparent;
+}
+form[id^=GPAdvancedForm-] ul.search-result .fr-message--error {
+    color: var(--background-flat-warning);
+    white-space: normal;
+}
+
+form[id^=GPAdvancedForm-] select option.option {
+    background-color: var(--background-action-low-blue-france);
+}
+
+
+/* Search parcels */
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .GPautoCompleteList {
+    display: none;
+    z-index: 1;
+    padding: 0;
+}
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] input[aria-expanded="true"] ~ .GPautoCompleteList {
+    display: block;
+}
+
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .GPautoCompleteList li {
+    height: auto;
+}
+
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] [id^=ParcelAdvancedSearch-section] option:first-child{
+    color: #aaa;
+    color: var(--text-disabled-grey);
+    font-style: italic;
+}
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .fr-select-group:has(select:disabled) label,
+form[id^=GPAdvancedForm-ParcelAdvancedSearch-] .fr-input-group:has(input:disabled) label {
+    color: var(--text-disabled-grey);
+}
+
+

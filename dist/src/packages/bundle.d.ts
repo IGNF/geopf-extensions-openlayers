@@ -57,6 +57,7 @@ declare namespace Ol {
         export { GeoportalAttribution };
         export { GetFeatureInfo };
         export { SearchEngine };
+        export { SearchEngineBase };
         export { Route };
         export { Isocurve };
         export { MousePosition as GeoportalMousePosition };
@@ -105,6 +106,7 @@ import LayerSwitcher from "./Controls/LayerSwitcher/LayerSwitcher";
 import GeoportalAttribution from "./Controls/Attribution/GeoportalAttribution";
 import GetFeatureInfo from "./Controls/GetFeatureInfo/GetFeatureInfo";
 import SearchEngine from "./Controls/SearchEngine/SearchEngine";
+import SearchEngineBase from "./Controls/SearchEngine/SearchEngineBase";
 import Route from "./Controls/Route/Route";
 import Isocurve from "./Controls/Isocurve/Isocurve";
 import MousePosition from "./Controls/MousePosition/MousePosition";

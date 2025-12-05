@@ -3,6 +3,8 @@
 [id^="GPsearchEngine-"] {
   flex-direction: row;
   align-items: center;
+  top: 8px;
+  left: 46px;
 }
 
 .position-container-top-left [id^="GPsearchEngine-"],
@@ -159,9 +161,13 @@ dialog[id^=GPgeocodeResultsList] {
   width: 280px;
   position: absolute;
   max-height: 140px;
-  background-color: var(--background-default-grey);
+  background-color: #ffffff;
 }
 
+
+[id^="GPsearchEngine-Advanced"] > .GPAdvancedContainer  {
+  background-color: #ffffff;
+}
 
 div[id^=GPautoCompleteList] {
   top: 35px;
@@ -214,3 +220,23 @@ div[id^=GPgeocodeResults-] {
   padding: 0;
 }
 
+[id^="GPsearchEngine"] .GPautoCompleteContainer {
+  background-color: white;
+}
+
+[id^="GPsearchEngine"] ul {
+  margin: 3px 0;
+  width: 100%;
+  padding: 0;
+}
+
+[id^="GPsearchEngine"] ul li {
+  color: #5E5E5E;
+  padding: 6px 10px;
+}
+
+[id^="GPsearchEngine"] ul li.active,
+[id^="GPsearchEngine"] ul li:hover {
+    color: #000000;
+    background-color: #CEDBEF;
+}

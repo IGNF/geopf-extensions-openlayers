@@ -1,11 +1,6 @@
 /* SEARCH ENGINE */
 
 [id^="GPsearchEngine-"] {
-  top: 8px;
-  left: 46px;
-}
-
-[id^="GPsearchEngine-"] {
   /* dsfr */
   display: flex;
 }
@@ -62,6 +57,7 @@ form[id^=GPsearchInput-] {
   display: inline-block;
   position: relative;
   overflow: hidden;
+  width: 100%;
   transition: max-width 0.5s ease-out 0s;
 }
 
@@ -134,9 +130,6 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 
 /* Simple search input */
 
-[id^="GPsearchInput"] {}
-
-
 [id^="GPshowSearchDiv"]{
   display: flex;
 }
@@ -164,6 +157,7 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
 
 [id^="GPautoCompleteList"] {
   margin-left: 33px;
+  z-index: 2;
 }
 
 [id^="GPautoCompleteList"] {
@@ -186,5 +180,129 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
     max-width: calc(100vw - 56px - 40px - 58px - 16px - 10px);
   }
 
+}
+
+[id^="GPsearchEngine"] .GPautoCompleteContainer {
+  /* position: absolute; */
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 18, 0.16);
+  list-style: none;
+  overflow: hidden;
+  flex-direction: column;
+  width: 100%;
+  z-index: 1;
+}
+[id^="GPsearchEngine"] ul li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[id^=GPsearchEngine-].ol-collapsed form[id^=GPsearchInput-Base-] {
+  overflow: hidden;
+}
+[id^=GPsearchEngine-] form[id^=GPsearchInput-Base-] {
+  overflow: visible;
+}
+
+[id^="GPsearchEngine"] {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-].GPSearchBar > :first-child {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+}
+
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer {
+    display: flex;
+    height: calc(100% - 2px);
+}
+
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer button {
+    margin: 0.5rem;
+}
+
+.GPautoCompleteHeader {
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 0.75rem 0;
+}
+
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPautoCompleteHeader button {
+  /* margin: 12px 12px 0; */
+  max-width: unset;
+}
+[id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPautoCompleteFooter button {
+  margin: 0 12px 12px;
+  max-width: unset;
+}
+
+[id^="GPsearchEngine"] .GPautoCompleteContainer .GPautoCompleteHeader {
+  display: none;
+}
+[id^="GPsearchEngine"] .GPautoCompleteContainer[data-type="history"] .GPautoCompleteHeader {
+  display: block;
+}
+
+/* Advanced search panel */
+[id^="GPsearchEngine-Advanced"] {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100% - 2rem);
+    overflow: hidden;
+}
+[id^="GPsearchEngine-Advanced"] [id^="GPsearchEngine-"]{
+    max-height: unset;
+}
+
+[id^="GPsearchEngine-Advanced"] [id^="GPsearchEngine-"] { 
+    position: static;
+}
+[id^="GPsearchEngine-Advanced"] > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+[id^="GPsearchEngine-Advanced"] > .GPAdvancedContainer  {
+    display: none;
+    box-sizing: content-box;
+    max-width: 100%;
+    max-height: unset;
+    padding: 0.75rem 0.75rem 1px;
+    box-sizing: border-box;
+}
+[id^="GPsearchEngine-Advanced"]:has(.GPSearchEngine-advanced-btn[aria-expanded="true"]) > .GPAdvancedContainer  {
+    display: flex;
+    z-index: 1;
+}
+[id^="GPsearchEngine-Advanced"] .GPSearchEngine-advanced-btn[aria-expanded="false"]::after {
+    transform: rotate(180deg);
+}
+
+/* [id^="GPsearchEngine-Advanced"] .GPAdvancedContainer[data-open="true"] > button {
+    display: none;
+} */
+
+[id^="GPsearchEngine-Advanced"][data-open="true"] section {
+    overflow: hidden auto;
+}
+/* [id^="GPsearchEngine-Advanced"] [data-open="true"] section::before {
+    display: none;
+} */
+
+[id^="GPsearchEngine-Advanced"] section .fr-collapse {
+  box-sizing: border-box;   
+}
+
+[id^="GPsearchEngine-Advanced"] [id^="GPsearchInput-Base-"] .GPsearchInputText {
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+[id^="GPsearchEngine-Advanced"] section [id^="GPsearchInput-Base-"] .GPsearchInputSubmit {
+    display: none;
+}
+[id^="GPsearchEngine-Advanced"] section [id^="GPsearchEngine-"] { 
+    margin-top: 0.5rem;
 }
 
