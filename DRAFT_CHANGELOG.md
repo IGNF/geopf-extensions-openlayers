@@ -9,7 +9,11 @@ __DATE__
 
 ### 🎉 Summary
 
-Mise à jour des icônes DSFR pour les boutons pictogrammes des widgets et refonte de la barre de recherche.
+Mise à jour des icônes DSFR pour les boutons pictogrammes des widgets.
+Refontes majeures : 
+- la barre de recherche
+- le gestionnaire de couches
+- le catalogue
 
 ### 💥 Breaking changes
 
