@@ -617,8 +617,10 @@ var LayerSwitcherDOM = {
             label.title = obj.name;
         }
         label.innerHTML = obj.title;
+        // FIXME Hack temporaire pour TMS
+        // en attendant une meilleure gestion des titres de couches
         if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
-            label.innerHTML = obj.description;
+            label.innerHTML = obj.title || obj.description;
         }
         return label;
     },

@@ -61,6 +61,13 @@
                         })
                     });
 
+                    var layerSwitcher = new ol.control.LayerSwitcher({
+                        options :{
+                            panel: true,
+                        }
+                    });
+                    map.addControl(layerSwitcher);
+                    
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
                         titlePrimary : "Catalogue des cartes",
@@ -161,12 +168,6 @@
                     });
                     map.addControl(catalog);
 
-                    var layerSwitcher = new ol.control.LayerSwitcher({
-                        options :{
-                            panel: true,
-                        }
-                    });
-                    map.addControl(layerSwitcher);
                 };
                 Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",
