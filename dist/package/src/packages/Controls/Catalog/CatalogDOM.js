@@ -649,7 +649,12 @@ var CatalogDOM = {
      * - each layer has a panel with information
      */
     _createCatalogContentCategoryTabContent : async function (category, layersFiltered, nodata) {
-        var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
+        // les couches
+        var layers = Object.values(layersFiltered).map(layer => layer); // object -> array
+        if (category.order) {
+            // on ordonne les couches selon l'ordre alpahbétique du titre
+            layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
+        }
         const batchSize = 10; // nombre d'éléments à traiter par lot
         var blocks = [];
 

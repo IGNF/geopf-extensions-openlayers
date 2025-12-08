@@ -113,7 +113,11 @@ export type Categories = {
     /**
      * - Indique si c'est la catégorie par défaut.
      */
-    default: boolean;
+    default?: boolean | undefined;
+    /**
+     * - Indique si les données doivent être ordonnées.
+     */
+    order?: boolean | undefined;
     /**
      * - **Experimental** Clusterisation de la liste des couches.
      */
@@ -160,7 +164,11 @@ export type SubCategories = {
     /**
      * - Indique si la sous-catégorie utilise des sections.
      */
-    section: boolean;
+    section?: boolean | undefined;
+    /**
+     * - Liste des sections (remplie ultérieurement).
+     */
+    sections: Array<string>;
     /**
      * - **TODO** Indique si les sections sont repliables.
      */
@@ -174,13 +182,13 @@ export type SubCategories = {
      */
     iconJson?: any[] | undefined;
     /**
-     * - Liste des sections (remplie ultérieurement).
-     */
-    sections: Array<string>;
-    /**
      * - Indique si c'est la sous-catégorie par défaut.
      */
-    default: boolean;
+    default?: boolean | undefined;
+    /**
+     * - Indique si les données doivent être ordonnées.
+     */
+    order?: boolean | undefined;
     /**
      * - **Experimental** Clusterisation de la liste des couches.
      */
@@ -192,7 +200,7 @@ export type SubCategories = {
     /**
      * - Filtre appliqué à la sous-catégorie.
      */
-    filter: any | null;
+    filter?: any | null;
     /**
      * - Champ utilisé pour le filtre.
      */
@@ -244,7 +252,8 @@ export type ConfigLayer = any;
  * @typedef {Object} Categories - Catégories principales du catalogue sous forme d'onglets
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
- * @property {boolean} default - Indique si c'est la catégorie par défaut.
+ * @property {boolean} [default=false] - Indique si c'est la catégorie par défaut.
+ * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
  * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
@@ -259,15 +268,16 @@ export type ConfigLayer = any;
  * ex. : regrouper les couches par "thématique" (voir propriété "thematic" dans la conf. des couches)
  * @property {string} title - Titre de la sous-catégorie.
  * @property {string} id - Identifiant unique de la sous-catégorie.
- * @property {boolean} section - Indique si la sous-catégorie utilise des sections.
+ * @property {boolean} [section] - Indique si la sous-catégorie utilise des sections.
+ * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} [collapsible] - **TODO** Indique si les sections sont repliables.
  * @property {boolean} [icon] - Indique que l'on souhaite un icone de type dsfr classe pour les sections de la sous-catégorie.
  * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
- * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
- * @property {boolean} default - Indique si c'est la sous-catégorie par défaut.
+ * @property {boolean} [default=false] - Indique si c'est la sous-catégorie par défaut.
+ * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
  * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
- * @property {Object|null} filter - Filtre appliqué à la sous-catégorie.
+ * @property {Object|null} [filter] - Filtre appliqué à la sous-catégorie.
  * @property {string} filter.field - Champ utilisé pour le filtre.
  * @property {string|Array<string>} filter.value - Valeur ou liste de valeurs pour le filtre.
  */
@@ -512,6 +522,7 @@ declare class Catalog extends Control {
         categories: {
             title: string;
             id: string;
+            order: boolean;
             cluster: boolean;
             clusterOptions: {
                 rows_in_block: number;
@@ -602,6 +613,7 @@ declare class Catalog extends Control {
      *        title : "Données",   // title of the category
      *        id : "data",         // id of the category
      *        default : true,      // if true, this category is selected by default
+     *        order : false,       // if true, the items are ordered alphabetically
      *        search : false,      // if true, a search bar is displayed for this category
      *        cluster : false,     // if true, clustering is activated for this category
      *        filter : null,       // filter to apply on the category
@@ -610,6 +622,7 @@ declare class Catalog extends Control {
      *               title : "Toutes les données", // title of the subcategory
      *               id : "all",                   // id of the subcategory
      *               default : true,               // if true, this subcategory is selected by default
+     *               order : false,                // if true, the items are ordered alphabetically
      *               icon : true,                  // icon for the subcategory (svg or http link or dsfr class)
      *               iconJson : [],                // list of icons (json) for the sections
      *               cluster : false,              // if true, clustering is activated for this subcategory
