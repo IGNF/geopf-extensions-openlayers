@@ -911,11 +911,24 @@ var CatalogDOM = {
 
         if (isSection) {
             category.sections = [];
+            // Transformer sections en tableau trié, avec "Autres" à la fin
+            const sectionsArray = Object.entries(sections).sort((a, b) => {
+                const titleA = a[0];
+                const titleB = b[0];
+                // Si "Autres", toujours en dernier
+                if (titleA === "Autres") { 
+                    return 1;
+                }
+                if (titleB === "Autres") {
+                    return -1;
+                }
+                // Sinon tri alphabétique
+                return titleA.localeCompare(titleB, "fr", { sensitivity : "base" });
+            });
             // creation des sections de regroupement
             // et ajout des couches dans les sections
-            for (const title in sections) {
+            for (const [title, data] of sectionsArray) {
                 if (Object.prototype.hasOwnProperty.call(sections, title)) {
-                    const data = sections[title];
                     var lstElementsBySection = [];
                     var array = [...data.matchAll(/"fr-fieldset__element"/g)];
                     for (let index = 0; index < array.length; index++) {
