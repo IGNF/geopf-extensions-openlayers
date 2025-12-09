@@ -505,7 +505,7 @@ class Catalog extends Control {
         // gestion du tri des couches
         var layersCategorised = Object.values(layers).map(layer => layer); // object -> array
         if (category.order) {
-            // on ordonne les couches selon l'ordre alpahbétique du titre
+            // on ordonne les couches selon l'ordre alphabétique du titre
             layersCategorised = Object.values(layers).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
         }
     
