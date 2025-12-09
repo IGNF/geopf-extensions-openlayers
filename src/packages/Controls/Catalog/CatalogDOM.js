@@ -80,7 +80,7 @@ var CatalogDOM = {
         button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-catalog");
         // button.classList.add("icon--ri", "icon--ri--map-2-line");
         button.classList.add("fr-btn", "fr-btn--tertiary");
-        button.setAttribute("aria-label", "Catalogue de données");
+        button.setAttribute("aria-label", "Catalogue de cartes");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
