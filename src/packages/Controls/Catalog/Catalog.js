@@ -67,6 +67,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} [default=false] - Indique si c'est la catégorie par défaut.
  * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
+ * @property {boolean} [featured=false] - Indique si les données mises en avant doivent être affichées en premier. 
  * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
@@ -89,6 +90,7 @@ var logger = Logger.getLogger("widget");
  * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
  * @property {boolean} [default=false] - Indique si c'est la sous-catégorie par défaut.
  * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
+ * @property {boolean} [featured=false] - Indique si les données mises en avant doivent être affichées en premier.
  * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {Object|null} [filter] - Filtre appliqué à la sous-catégorie.
@@ -485,37 +487,67 @@ class Catalog extends Control {
 
     /**
      * Get layers by category
-     * This method filters the layers based on the provided category.
+     * This method filters the layers based on the provided category and sort order if specified.
      * It checks if the category has a filter defined and applies it to the layers.
-     * If the filter matches, the layer is added to the `layersCategorised` object.
+     * If the filter matches, the layer is added to the `layersCategorised` array.
      * It also updates the `categories` property of each layer to include the category ID.
      * 
      * @param {*} category - Category object containing the filter.
      * @param {*} layers - Object containing all layers.
-     * @return {Object} - Filtered layers categorized by the provided category.
+     * @return {Array} - Filtered layers categorized by the provided category.
      */
     getLayersByCategory (category, layers) {
         // INFO
         // comment gerer les listes de layers filtrées pour chaque categorie ?
         // on doit les stocker si l'on souhaite faire des requêtes
         // avec l'outil de recherche par la suite
-        var layersCategorised = layers;
+
+        // gestion du tri des couches
+        var layersCategorised = Object.values(layers).map(layer => layer); // object -> array
+        if (category.order) {
+            // on ordonne les couches selon l'ordre alpahbétique du titre
+            layersCategorised = Object.values(layers).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
+        }
+    
+        // gestion du filtre des couches
+        // le tri se fait avant le filtre si demandé 
         var filter = category.filter;
         if (filter) {
-            layersCategorised = {};
-            for (const key in layers) {
-                if (Object.prototype.hasOwnProperty.call(layers, key)) {
-                    const layer = layers[key];
-                    if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
-                        var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
-                        if (condition) {
-                            layersCategorised[key] = layer;
-                            // on ajoute l'appartenance de la couche à une categorie
-                            this.layersList[key].categories.push(category.id);
-                        }
+            var layersSelected = [];
+            for (let i = 0; i < layersCategorised.length; i++) {
+                const layer = layersCategorised[i];
+                if (layer[filter.field]) { // FIXME impl. clef multiple : property.property !
+                    var condition = Array.isArray(filter.value) ? filter.value.includes(layer[filter.field].toString()) : (filter.value === "*" || layer[filter.field].toString() === filter.value);
+                    if (condition) {
+                        layersSelected.push(layer);
+                        // on ajoute l'appartenance de la couche à une categorie
+                        this.layersList[layer.key].categories.push(category.id);
                     }
                 }
             }
+            // on remplace la liste
+            layersCategorised = layersSelected;
+        }
+
+        // gestion du featured : mise en avant de certaines couches
+        if (category.featured && this.featuredLayersList && this.featuredLayersList.length > 0) {
+            // Liste ordonnée des clés des couches à mettre en avant
+            const featuredKeys = this.featuredLayersList;
+            
+            // Séparer les couches featured et les autres
+            const featured = [];
+            const others = [];
+            
+            layersCategorised.forEach(layer => {
+                if (featuredKeys.includes(layer.name)) {
+                    featured.push(layer);
+                } else {
+                    others.push(layer);
+                }
+            });
+            
+            // Fusionner : featured en premier, puis les autres
+            layersCategorised = [...featured, ...others];
         }
 
         return layersCategorised;
@@ -581,6 +613,7 @@ class Catalog extends Control {
                     title : "Données",
                     id : "data",
                     order : false,
+                    featured : false,
                     cluster : true,
                     clusterOptions : this.clusterOptions,
                     default : true,
@@ -677,6 +710,12 @@ class Catalog extends Control {
         this.layersList = {};
 
         /**
+         * specify all featured layers id
+         * @type {Array}
+         */
+        this.featuredLayersList = [];
+
+        /**
          * specify clusterize instances for each category/subcategory/section
          * @type {Object}
          * @example
@@ -687,6 +726,7 @@ class Catalog extends Control {
          * }
          */
         this.clusterizeRef = {};
+
         /**
          * specify clusterize sections for each category/subcategory
          * @type {Object}
@@ -724,6 +764,7 @@ class Catalog extends Control {
          *        id : "data",         // id of the category
          *        default : true,      // if true, this category is selected by default
          *        order : false,       // if true, the items are ordered alphabetically
+         *        featured : false,    // if true, featured items are displayed first
          *        search : false,      // if true, a search bar is displayed for this category
          *        cluster : false,     // if true, clustering is activated for this category
          *        filter : null,       // filter to apply on the category
@@ -733,6 +774,7 @@ class Catalog extends Control {
          *               id : "all",                   // id of the subcategory
          *               default : true,               // if true, this subcategory is selected by default
          *               order : false,                // if true, the items are ordered alphabetically
+         *               featured : false,             // if true, featured items are displayed first
          *               icon : true,                  // icon for the subcategory (svg or http link or dsfr class)
          *               iconJson : [],                // list of icons (json) for the sections
          *               cluster : false,              // if true, clustering is activated for this subcategory
@@ -756,6 +798,7 @@ class Catalog extends Control {
                         id : i.id || this.generateID(i.title),
                         default : i.hasOwnProperty("default") ? i.default : false,
                         order : i.hasOwnProperty("order") ? i.order : false,
+                        featured : i.hasOwnProperty("featured") ? i.featured : false,
                         section : i.hasOwnProperty("section") ? i.section : false,
                         sections : [], // liste des valeurs des sections remplie ulterieurement !
                         subcategory : true, // new property !
@@ -772,6 +815,7 @@ class Catalog extends Control {
                 id : cat.id || this.generateID(cat.title),
                 default : cat.hasOwnProperty("default") ? cat.default : false,
                 order : cat.hasOwnProperty("order") ? cat.order : false,
+                featured : cat.hasOwnProperty("featured") ? cat.featured : false,
                 search : cat.hasOwnProperty("search") ? cat.search : false,
                 cluster : cat.hasOwnProperty("cluster") ? cat.cluster : false,
                 clusterOptions : cat.hasOwnProperty("clusterOptions") ? cat.clusterOptions : this.clusterOptions,
@@ -968,6 +1012,7 @@ class Catalog extends Control {
 
             // sauvegarde des couches de données
             this.layersList = data.layers;
+            this.featuredLayersList = data.featured;
 
             this.createCatalogContentEntries(data);
             return new Promise((resolve, reject) => {
@@ -1023,6 +1068,7 @@ class Catalog extends Control {
 
                 // sauvegarde de la liste des couches
                 this.layersList = data.layers;
+                this.featuredLayersList = data.featured;
 
                 this.createCatalogContentEntries(data);
                 return await new Promise((resolve, reject) => {
@@ -1080,6 +1126,7 @@ class Catalog extends Control {
                     var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
                     layer.service = service; // new proprerty !
                     layer.categories = []; // new property ! vide pour le moment
+                    layer.key = key; // new property ! clef de la couche dans la config
                     layer.producer_urls = this.createCatalogProducerLinks(layer.producer); // plus d'info
                     layer.thematic_urls = this.createCatalogThematicLinks(layer.thematic); // plus d'info
                     // label de la couche
@@ -1193,7 +1240,7 @@ class Catalog extends Control {
             }
             var layersCategorised = this.getLayersByCategory(categories[i], data.layers);
             // INFO
-            // Pas de données directement dans le DOM si 
+            // Avec ou sans données directement dans le DOM si 
             // - en mode cluster, on attend la création du cluster pour ajouter des données
             // - en mode on-demand, on attend la demande de chargement
             // - en mode none, on ajoute directement les données dans le DOM
