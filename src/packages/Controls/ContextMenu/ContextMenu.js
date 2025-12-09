@@ -281,6 +281,11 @@ class ContextMenu extends Control {
             evt.this = this; 
             this.onCloseContextMenu(evt);
         });
+        document.addEventListener("click", (event) => {
+            if (!this.container.contains(event.target)) {
+              this.contextmenu.closeMenu();
+            }
+        });
     }
 
     /**
