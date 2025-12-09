@@ -283,7 +283,7 @@ class ContextMenu extends Control {
         });
         document.addEventListener("click", (event) => {
             if (!this.container.contains(event.target)) {
-              this.contextmenu.closeMenu();
+                this.contextmenu.closeMenu();
             }
         });
     }
