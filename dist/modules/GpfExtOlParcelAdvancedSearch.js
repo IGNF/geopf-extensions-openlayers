@@ -8,8 +8,8 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.7
- * @date 05/12/2025
+ * @version 1.0.0-beta.7-472
+ * @date 09/12/2025
  *
  */(()=>{var __webpack_modules__={208:(e,t,r)=>{"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.reportTypeError=t.checkDataTypes=t.checkDataType=t.coerceAndCheckDataType=t.getJSONTypes=t.getSchemaTypes=t.DataType=void 0;const n=r(396),o=r(7887),i=r(8708),s=r(9029),a=r(4227);var c;function u(e){const t=Array.isArray(e)?e:e?[e]:[];if(t.every(n.isJSONType))return t;throw new Error("type must be JSONType or JSONType[]: "+t.join(","))}!function(e){e[e.Correct=0]="Correct",e[e.Wrong=1]="Wrong"}(c||(t.DataType=c={})),t.getSchemaTypes=function(e){const t=u(e.type);if(t.includes("null")){if(!1===e.nullable)throw new Error("type: null contradicts nullable: false")}else{if(!t.length&&void 0!==e.nullable)throw new Error('"nullable" cannot be used without "type"');!0===e.nullable&&t.push("null")}return t},t.getJSONTypes=u,t.coerceAndCheckDataType=function(e,t){const{gen:r,data:n,opts:i}=e,a=function(e,t){return t?e.filter(e=>l.has(e)||"array"===t&&"array"===e):[]}(t,i.coerceTypes),u=t.length>0&&!(0===a.length&&1===t.length&&(0,o.schemaHasRulesForType)(e,t[0]));if(u){const o=h(t,n,i.strictNumbers,c.Wrong);r.if(o,()=>{a.length?function(e,t,r){const{gen:n,data:o,opts:i}=e,a=n.let("dataType",s._`typeof ${o}`),c=n.let("coerced",s._`undefined`);"array"===i.coerceTypes&&n.if(s._`${a} == 'object' && Array.isArray(${o}) && ${o}.length == 1`,()=>n.assign(o,s._`${o}[0]`).assign(a,s._`typeof ${o}`).if(h(t,o,i.strictNumbers),()=>n.assign(c,o)));n.if(s._`${c} !== undefined`);for(const e of r)(l.has(e)||"array"===e&&"array"===i.coerceTypes)&&u(e);function u(e){switch(e){case"string":return void n.elseIf(s._`${a} == "number" || ${a} == "boolean"`).assign(c,s._`"" + ${o}`).elseIf(s._`${o} === null`).assign(c,s._`""`);case"number":return void n.elseIf(s._`${a} == "boolean" || ${o} === null
               || (${a} == "string" && ${o} && ${o} == +${o})`).assign(c,s._`+${o}`);case"integer":return void n.elseIf(s._`${a} === "boolean" || ${o} === null
