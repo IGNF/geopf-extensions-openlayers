@@ -17,11 +17,18 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - Cartalog : ajout d'une option pour ordonner la liste des couches (fd34a4013860db2c831cef5febbf9d553b2e9a0a)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
 
+  - LayerSwitcher : retrait hack pour affichage description TMS au lieu du titre (ff0c3434b5e3f6b3be729d0fe4969416bb00e706)
+
 * 🐛 [Fixed]
+
+  - Layerswitcher : correction hauteur du dialog qui empechait l'interaction de zoom (#472)
+  - ContextMenu : correction de la fermeture du menu contextuel en cas de clic sur d'autres boutons (#472)
   
 * 🔒 [Security]
 
