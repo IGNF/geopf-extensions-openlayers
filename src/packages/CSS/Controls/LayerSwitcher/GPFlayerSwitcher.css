@@ -60,6 +60,7 @@ button[id^="GPshowLayersListPicto-"][aria-pressed="true"] + dialog {
 dialog[id^=GPlayersList] {
  position: relative;
  float: left;
+ height: fit-content;
 }
 button[id^=GPshowLayersListPicto-] {
   float: right;

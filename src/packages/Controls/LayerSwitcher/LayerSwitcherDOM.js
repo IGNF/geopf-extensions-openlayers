@@ -1381,7 +1381,7 @@ var LayerSwitcherDOM = {
         let label;
         if (checkDsfr()) {
             icon = "fr-icon-zoom-in-line";
-            label = "Recentrer";
+            label = "Centrer sur la couche";
         }
         let className = `GPelementHidden GPlayerExtent gpf-btn--tertiary gpf-btn fr-btn fr-btn--tertiary-no-outline`;
 
