@@ -67,7 +67,7 @@ var logger = Logger.getLogger("widget");
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} [default=false] - Indique si c'est la catégorie par défaut.
  * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
- * @property {boolean} [featured=false] - Indique si les données mises en avant doivent être affichées en premier. 
+ * @property {boolean} [featured=false] - Indique si les données mises en avant doivent être affichées en premier.
  * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
