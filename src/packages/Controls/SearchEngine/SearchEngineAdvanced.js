@@ -360,6 +360,10 @@ class SearchEngineAdvanced extends Control {
                     firstFocusable.focus();
                 }
             }
+            this.dispatchEvent({
+                type : "searchengineadvanced:button:click",
+                expanded : isHidden
+            });
         }.bind(this));
 
         // N'ajoute pas le bouton s'il n'y a pas d'options avancées
