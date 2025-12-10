@@ -20,6 +20,8 @@ declare class SourceWFS extends VectorSource<import("ol").Feature<import("ol/geo
     * @param {String} [options.title]   - title of the layer
     * @param {String} [options.description]   - description of the layer
     * @param {String} [options.quicklookUrl]   - quicklookUrl of the layer
+    * @param {String} [options.thumbnail]   - thumbnail of the layer
+    * @param {String} [options.producer]   - producer of the layer
     * @param {Object} [options.olParams] - other options for ol.source.Vector function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.Vector.html ol.source.Vector})
     * @example
     * var sourceWFS = new ol.source.GeoportalWFS({
@@ -39,6 +41,8 @@ declare class SourceWFS extends VectorSource<import("ol").Feature<import("ol/geo
         title?: string | undefined;
         description?: string | undefined;
         quicklookUrl?: string | undefined;
+        thumbnail?: string | undefined;
+        producer?: string | undefined;
         olParams?: any;
     });
     _originators: any;
@@ -47,6 +51,8 @@ declare class SourceWFS extends VectorSource<import("ol").Feature<import("ol/geo
     _title: any;
     _description: any;
     _quicklookUrl: any;
+    _thumbnail: any;
+    _producer: any;
     name: string;
     service: string;
 }

@@ -416,6 +416,22 @@ class LayerWMTS extends TileLayer {
     getOriginators () {
         return this.getSource()._originators;
     }
+
+    /**
+     * Get thumbnail url
+     * @returns {String} - thumbnail
+     */
+    getThumbnailUrl () {
+        return this.getSource()._thumbnail;
+    }
+
+    /**
+     * Get producer
+     * @returns {String} - producer
+     */
+    getProducer () {
+        return this.getSource()._producer;
+    }
     
 };
 

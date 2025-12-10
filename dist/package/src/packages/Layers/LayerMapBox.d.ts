@@ -182,6 +182,16 @@ declare class LayerMapBox extends VectorTileLayer<VectorTileSource<any>, any> {
      * @returns {Array} - originators
      */
     getOriginators(): any[];
+    /**
+     * Get thumbnail url
+     * @returns {String} - thumbnail
+     */
+    getThumbnailUrl(): string;
+    /**
+     * Get producer
+     * @returns {String} - producer
+     */
+    getProducer(): string;
 }
 import VectorTileSource from "ol/source/VectorTile";
 import VectorTileLayer from "ol/layer/VectorTile";

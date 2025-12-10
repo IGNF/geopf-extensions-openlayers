@@ -1309,6 +1309,7 @@ class Catalog extends Control {
                                 }
                             }
                             this._updateListenersLayersDOM(content, categories[i].id);
+                            this.checkLayersOnMap();
                         } else {
                             // pas d'optimisation, on ajoute directement les données dans le DOM
                             this._updateListenersLayersDOM(content, categories[i].id);

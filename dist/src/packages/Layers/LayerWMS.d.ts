@@ -93,6 +93,16 @@ declare class LayerWMS extends TileLayer<import("ol/source").Tile<import("ol").T
      * @returns {Array} - originators
      */
     getOriginators(): any[];
+    /**
+     * Get thumbnail url
+     * @returns {String} - thumbnail
+     */
+    getThumbnailUrl(): string;
+    /**
+     * Get producer
+     * @returns {String} - producer
+     */
+    getProducer(): string;
 }
 import TileLayer from "ol/layer/Tile";
 //# sourceMappingURL=LayerWMS.d.ts.map

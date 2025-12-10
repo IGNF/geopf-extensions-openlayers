@@ -35,6 +35,8 @@ class SourceWFS extends VectorSource {
     * @param {String} [options.title]   - title of the layer
     * @param {String} [options.description]   - description of the layer
     * @param {String} [options.quicklookUrl]   - quicklookUrl of the layer
+    * @param {String} [options.thumbnail]   - thumbnail of the layer
+    * @param {String} [options.producer]   - producer of the layer
     * @param {Object} [options.olParams] - other options for ol.source.Vector function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.Vector.html ol.source.Vector})
     * @example
     * var sourceWFS = new ol.source.GeoportalWFS({
@@ -179,11 +181,13 @@ class SourceWFS extends VectorSource {
         this._originators = wfsParams.originators;
 
         // save legends and metadata (to be added to LayerSwitcher control)
-        this._legends = options.legends || wfsParams.legends;
-        this._metadata = options.metadata || wfsParams.metadata;
-        this._title = options.title || wfsParams.title;
-        this._description = options.description || wfsParams.description;
-        this._quicklookUrl = options.quicklookUrl || wfsParams.quicklookUrl;
+        this._legends = options.legends || layerCfg.legends;
+        this._metadata = options.metadata || layerCfg.metadata || layerCfg.metadata_urls;
+        this._title = options.title || layerCfg.title;
+        this._description = options.description || layerCfg.description;
+        this._quicklookUrl = options.quicklookUrl || layerCfg.quicklookUrl;
+        this._thumbnail = options.thumbnail || layerCfg.thumbnail;
+        this._producer = options.producer || layerCfg.producer;
 
         this.name = options.layer;
         this.service = "WFS";

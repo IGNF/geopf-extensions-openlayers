@@ -105,6 +105,16 @@ declare class LayerWFS extends VectorLayer<import("ol/source").Vector<any>, any>
      * @returns {Array} - originators
      */
     getOriginators(): any[];
+    /**
+     * Get thumbnail url
+     * @returns {String} - thumbnail
+     */
+    getThumbnailUrl(): string;
+    /**
+     * Get producer
+     * @returns {String} - producer
+     */
+    getProducer(): string;
 }
 import VectorLayer from "ol/layer/Vector";
 //# sourceMappingURL=LayerWFS.d.ts.map

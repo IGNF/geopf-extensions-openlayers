@@ -19,6 +19,8 @@ declare class SourceWMS extends TileWMSSource {
      * @param {String} [options.title]   - title of the layer
      * @param {String} [options.description]   - description of the layer
      * @param {String} [options.quicklookUrl]   - quicklookUrl of the layer
+     * @param {String} [options.thumbnail]   - thumbnail of the layer
+     * @param {String} [options.producer]   - producer of the layer
      * @param {Object} [options.olParams] - other options for ol.source.TileWMS function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.TileWMS.html ol.source.TileWMS})
      * @example
      * var sourceWMS = new ol.source.GeoportalWMS({
@@ -36,6 +38,8 @@ declare class SourceWMS extends TileWMSSource {
         title?: string | undefined;
         description?: string | undefined;
         quicklookUrl?: string | undefined;
+        thumbnail?: string | undefined;
+        producer?: string | undefined;
         olParams?: any;
     });
     _originators: any;
@@ -44,6 +48,8 @@ declare class SourceWMS extends TileWMSSource {
     _title: any;
     _description: any;
     _quicklookUrl: any;
+    _thumbnail: any;
+    _producer: any;
     name: string;
     service: string;
 }
