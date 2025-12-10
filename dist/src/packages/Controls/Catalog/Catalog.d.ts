@@ -119,6 +119,10 @@ export type Categories = {
      */
     order?: boolean | undefined;
     /**
+     * - Indique si les données mises en avant doivent être affichées en premier.
+     */
+    featured?: boolean | undefined;
+    /**
      * - **Experimental** Clusterisation de la liste des couches.
      */
     cluster?: boolean | undefined;
@@ -190,6 +194,10 @@ export type SubCategories = {
      */
     order?: boolean | undefined;
     /**
+     * - Indique si les données mises en avant doivent être affichées en premier.
+     */
+    featured?: boolean | undefined;
+    /**
      * - **Experimental** Clusterisation de la liste des couches.
      */
     cluster?: boolean | undefined;
@@ -254,6 +262,7 @@ export type ConfigLayer = any;
  * @property {string} id - Identifiant unique de la catégorie.
  * @property {boolean} [default=false] - Indique si c'est la catégorie par défaut.
  * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
+ * @property {boolean} [featured=false] - Indique si les données mises en avant doivent être affichées en premier.
  * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {boolean} [search=false] - Affiche une barre de recherche spécifique à la catégorie.
@@ -275,6 +284,7 @@ export type ConfigLayer = any;
  * @property {Array<Object>} [iconJson] - Liste d'icones (json) pour les sections de la sous-catégorie.
  * @property {boolean} [default=false] - Indique si c'est la sous-catégorie par défaut.
  * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
+ * @property {boolean} [featured=false] - Indique si les données mises en avant doivent être affichées en premier.
  * @property {boolean} [cluster=false] - **Experimental** Clusterisation de la liste des couches.
  * @property {Object|null} clusterOptions - Options de la librairie Clusterize.
  * @property {Object|null} [filter] - Filtre appliqué à la sous-catégorie.
@@ -473,16 +483,16 @@ declare class Catalog extends Control {
     getLayerId(name: any, service: any): string | null;
     /**
      * Get layers by category
-     * This method filters the layers based on the provided category.
+     * This method filters the layers based on the provided category and sort order if specified.
      * It checks if the category has a filter defined and applies it to the layers.
-     * If the filter matches, the layer is added to the `layersCategorised` object.
+     * If the filter matches, the layer is added to the `layersCategorised` array.
      * It also updates the `categories` property of each layer to include the category ID.
      *
      * @param {*} category - Category object containing the filter.
      * @param {*} layers - Object containing all layers.
-     * @return {Object} - Filtered layers categorized by the provided category.
+     * @return {Array} - Filtered layers categorized by the provided category.
      */
-    getLayersByCategory(category: any, layers: any): any;
+    getLayersByCategory(category: any, layers: any): any[];
     /**
      * Get container
      *
@@ -523,6 +533,7 @@ declare class Catalog extends Control {
             title: string;
             id: string;
             order: boolean;
+            featured: boolean;
             cluster: boolean;
             clusterOptions: {
                 rows_in_block: number;
@@ -569,6 +580,11 @@ declare class Catalog extends Control {
      */
     layersList: any[] | undefined;
     /**
+     * specify all featured layers id
+     * @type {Array}
+     */
+    featuredLayersList: any[] | undefined;
+    /**
      * specify clusterize instances for each category/subcategory/section
      * @type {Object}
      * @example
@@ -614,6 +630,7 @@ declare class Catalog extends Control {
      *        id : "data",         // id of the category
      *        default : true,      // if true, this category is selected by default
      *        order : false,       // if true, the items are ordered alphabetically
+     *        featured : false,    // if true, featured items are displayed first
      *        search : false,      // if true, a search bar is displayed for this category
      *        cluster : false,     // if true, clustering is activated for this category
      *        filter : null,       // filter to apply on the category
@@ -623,6 +640,7 @@ declare class Catalog extends Control {
      *               id : "all",                   // id of the subcategory
      *               default : true,               // if true, this subcategory is selected by default
      *               order : false,                // if true, the items are ordered alphabetically
+     *               featured : false,             // if true, featured items are displayed first
      *               icon : true,                  // icon for the subcategory (svg or http link or dsfr class)
      *               iconJson : [],                // list of icons (json) for the sections
      *               cluster : false,              // if true, clustering is activated for this subcategory

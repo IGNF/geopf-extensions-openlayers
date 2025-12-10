@@ -17,7 +17,7 @@ declare namespace CatalogDOM {
     function _createCatalogContentSearchGlobalElement(label: any): ShadowRoot;
     function _createCatalogWaitingElement(): HTMLElement;
     function _createCatalogContentCategoriesTabs(categories: Categories, tabHeightAuto: boolean): HTMLElement;
-    function _createCatalogContentCategoryTabContent(category: Categories, layersFiltered: any, nodata: boolean): HTMLElement;
+    function _createCatalogContentCategoryTabContent(category: Categories, layersFiltered: any[], nodata: boolean): HTMLElement;
     function _updateListenersLayersDOM(content: HTMLElement, id: string): void;
     function updateVisibilitySectionsByCategory(sectionId: any, categoryId: any, visible: any): void;
 }

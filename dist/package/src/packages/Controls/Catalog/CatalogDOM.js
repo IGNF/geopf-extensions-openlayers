@@ -640,7 +640,7 @@ var CatalogDOM = {
      * Create Catalog Content Category Tab Content (layers)
      *
      * @param {Categories} category - category to create tab content
-     * @param {*} layersFiltered - filtered layers for the category
+     * @param {Array} layersFiltered - filtered layers for the category
      * @param {Boolean} nodata - do not write the data to the DOM
      * @returns {HTMLElement} DOM element
      * @description
@@ -648,13 +648,7 @@ var CatalogDOM = {
      * - each layer has a checkbox to select it
      * - each layer has a panel with information
      */
-    _createCatalogContentCategoryTabContent : async function (category, layersFiltered, nodata) {
-        // les couches
-        var layers = Object.values(layersFiltered).map(layer => layer); // object -> array
-        if (category.order) {
-            // on ordonne les couches selon l'ordre alpahbétique du titre
-            layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
-        }
+    _createCatalogContentCategoryTabContent : async function (category, layersFiltered, nodata) {   
         const batchSize = 10; // nombre d'éléments à traiter par lot
         var blocks = [];
 
@@ -840,7 +834,7 @@ var CatalogDOM = {
         if (isSection) {
             // on procède à un tri
             // ex. tri sur le champ 'thematic'
-            layers = layers.sort((a, b) => {
+            layersFiltered = layersFiltered.sort((a, b) => {
                 return a[category.filter.field][0].localeCompare(b[category.filter.field][0]);
             });
         }
@@ -848,9 +842,9 @@ var CatalogDOM = {
         var sections = {};
         // regroupement par sections (ou pas) sur les couches
         var lstElements = [];
-        for (let i = 0; i < layers.length; i += batchSize) {
-            for (let j = i; j < Math.min(i + batchSize, layers.length); j++) {
-                const layer = layers[j];
+        for (let i = 0; i < layersFiltered.length; i += batchSize) {
+            for (let j = i; j < Math.min(i + batchSize, layersFiltered.length); j++) {
+                const layer = layersFiltered[j];
                 const infos = {
                     producers : layer.producer_urls, // tableau d'objets [{name,url}]
                     thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
