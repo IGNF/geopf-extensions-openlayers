@@ -52,7 +52,7 @@ var RouteDOM = {
         button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-route");
         // button.classList.add("icon--ri", "icon--ri--route-line");
         button.classList.add("fr-btn", "fr-btn--tertiary");
-        button.setAttribute("aria-label", "Ouvrir le calcul d'itinéraire");
+        button.setAttribute("aria-label", "Itinéraire");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");

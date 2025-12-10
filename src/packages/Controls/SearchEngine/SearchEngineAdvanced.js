@@ -278,7 +278,7 @@ class SearchEngineAdvanced extends Control {
         advancedBtn.className = "GPSearchEngine-advanced-btn fr-btn fr-btn--sm fr-icon-arrow-up-s-line fr-btn--icon-right fr-btn--tertiary-no-outline";
         advancedBtn.id = Helper.getUid("GPSearchEngine-advanced-btn-");
         advancedBtn.type = "button";
-        advancedBtn.title = "Avancée";
+        advancedBtn.title = "Recherche avancée ";
         advancedBtn.innerHTML = "Avancée";
         advancedBtn.setAttribute("aria-label", "Afficher les options avancées");
         advancedBtn.setAttribute("aria-expanded", "false");
