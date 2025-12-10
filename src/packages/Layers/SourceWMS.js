@@ -31,6 +31,8 @@ class SourceWMS extends TileWMSSource {
      * @param {String} [options.title]   - title of the layer
      * @param {String} [options.description]   - description of the layer
      * @param {String} [options.quicklookUrl]   - quicklookUrl of the layer
+     * @param {String} [options.thumbnail]   - thumbnail of the layer
+     * @param {String} [options.producer]   - producer of the layer
      * @param {Object} [options.olParams] - other options for ol.source.TileWMS function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.TileWMS.html ol.source.TileWMS})
      * @example
      * var sourceWMS = new ol.source.GeoportalWMS({
@@ -136,11 +138,13 @@ class SourceWMS extends TileWMSSource {
         this._originators = wmsParams.originators;
 
         // save legends and metadata (to be added to LayerSwitcher control)
-        this._legends = options.legends || wmsParams.legends;
-        this._metadata = options.metadata || wmsParams.metadata;
-        this._title = options.title || wmsParams.title;
-        this._description = options.description || wmsParams.description;
-        this._quicklookUrl = options.quicklookUrl || wmsParams.quicklookUrl;
+        this._legends = options.legends || layerCfg.legends;
+        this._metadata = options.metadata || layerCfg.metadata || layerCfg.metadata_urls;
+        this._title = options.title || layerCfg.title;
+        this._description = options.description || layerCfg.description;
+        this._quicklookUrl = options.quicklookUrl || layerCfg.quicklookUrl;
+        this._thumbnail = options.thumbnail || layerCfg.thumbnail;
+        this._producer = options.producer || layerCfg.producer;
 
         this.name = options.layer;
         this.service = "WMS";

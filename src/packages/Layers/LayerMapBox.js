@@ -218,6 +218,8 @@ class LayerMapBox extends VectorTileLayer {
         source._description = layerCfg.description;
         source._title = layerCfg.title + " (" + styleTitle + ")";
         source._quicklookUrl = layerCfg.quicklookUrl;
+        source._thumbnail = layerCfg.thumbnail;
+        source._producer = layerCfg.producer;
         
         // options definies sur ol.layer.VectorTile
         var layerVectorTileOptions = {
@@ -427,6 +429,22 @@ class LayerMapBox extends VectorTileLayer {
      */
     getOriginators () {
         return this.getSource()._originators;
+    }
+
+    /**
+     * Get thumbnail url
+     * @returns {String} - thumbnail
+     */
+    getThumbnailUrl () {
+        return this.getSource()._thumbnail;
+    }
+
+    /**
+     * Get producer
+     * @returns {String} - producer
+     */
+    getProducer () {
+        return this.getSource()._producer;
     }
     
 };
