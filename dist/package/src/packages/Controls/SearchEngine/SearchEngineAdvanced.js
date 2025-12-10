@@ -205,7 +205,7 @@ class SearchEngineAdvanced extends Control {
         this.on("search", this.addResultToMap.bind(this));
 
         // Gère le cas du conteneur de recherche avancée
-        ["mousedown", "focusin"].map(eventListener => document.addEventListener(eventListener, this._onDocumentClick.bind(this)));
+        ["mousedown", "focus"].map(eventListener => document.addEventListener(eventListener, this._onDocumentClick.bind(this)));
 
         this.advancedBtn.addEventListener("blur", function (e) {
             if (e.relatedTarget === this.baseSearchEngine.input) {
