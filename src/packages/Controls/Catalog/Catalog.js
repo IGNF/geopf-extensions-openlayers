@@ -531,22 +531,24 @@ class Catalog extends Control {
 
         // gestion du featured : mise en avant de certaines couches
         if (category.featured && this.featuredLayersList && this.featuredLayersList.length > 0) {
-            // Liste ordonnée des clés des couches à mettre en avant
+            // Liste ordonnée des couches à mettre en avant
             const featuredKeys = this.featuredLayersList;
-            
-            // Séparer les couches featured et les autres
-            const featured = [];
-            const others = [];
-            
-            layersCategorised.forEach(layer => {
-                if (featuredKeys.includes(layer.name)) {
-                    featured.push(layer);
-                } else {
-                    others.push(layer);
-                }
-            });
-            
-            // Fusionner : featured en premier, puis les autres
+
+            // Séparer les layers par nom pour accès direct
+            const layersByName = Object.fromEntries(
+                layersCategorised.map(layer => [layer.name, layer])
+            );
+        
+            // Construire la liste featured dans l'ordre de featuredKeys
+            const featured = featuredKeys
+                .map(key => layersByName[key])
+                .filter(Boolean);  // pour ignorer les clés absentes
+        
+            // Construire la liste des autres layers (non contenues dans featuredKeys)
+            const others = layersCategorised
+                .filter(layer => !featuredKeys.includes(layer.name));
+        
+            // Fusionner
             layersCategorised = [...featured, ...others];
         }
 
