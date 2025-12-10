@@ -36,7 +36,7 @@ class GeoportalFullScreen extends FullScreen {
         options.labelActive = options.labelActive || "";
         options.activeClassName = options.activeClassName || className + "-true";
         options.inactiveClassName =  options.inactiveClassName || className + "-false";
-        options.tipLabel = options.tipLabel || "Basculer en mode plein écran";
+        options.tipLabel = options.tipLabel || "Plein écran";
 
         super(options);
         /**
