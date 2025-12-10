@@ -252,7 +252,7 @@ class GeoportalOverviewMap extends OverviewMap {
             options.collapsed = true;
         }
         options.label = options.label || "";
-        options.tipLabel = "Carte générale";
+        options.tipLabel = "Mini-carte";
         options.layers = options.layers || [
             new GeoportalWMTS({
                 layer : "GEOGRAPHICALGRIDSYSTEMS.MAPS.OVERVIEW",

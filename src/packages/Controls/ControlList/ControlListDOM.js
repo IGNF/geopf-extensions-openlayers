@@ -47,7 +47,7 @@ var ControlListDOM = {
         button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-controllist");
         // button.classList.add("icon--ri", "icon--ri--list-check");
         button.classList.add("fr-btn", "fr-btn--tertiary");
-        button.setAttribute("aria-label", "Tous mes outils");
+        button.setAttribute("aria-label", "Afficher plus");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
