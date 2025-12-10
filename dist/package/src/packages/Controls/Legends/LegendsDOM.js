@@ -44,7 +44,7 @@ var LegendsDOM = {
         button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-legends");
         // button.classList.add("icon--ri", "icon--ri--list-indefinite");
         button.classList.add("fr-btn", "fr-btn--tertiary");
-        button.setAttribute("aria-label", "Afficher les légendes");
+        button.setAttribute("aria-label", "Légende");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");

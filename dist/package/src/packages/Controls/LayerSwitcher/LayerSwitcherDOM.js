@@ -192,7 +192,7 @@ var LayerSwitcherDOM = {
         // button.classList.add("fr-icon-stack-line");
         button.classList.add("fr-btn", "fr-btn--tertiary");
         button.htmlFor = this._addUID("GPshowLayersList");
-        button.setAttribute("aria-label", "Afficher/masquer le gestionnaire de couches");
+        button.setAttribute("aria-label", "Ma sélection de cartes");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
