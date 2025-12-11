@@ -710,7 +710,9 @@ var CatalogDOM = {
                 var data = "";
                 for (let i = 0; i < metadatas.length; i++) {
                     const metadata = metadatas[i];
-                    if (metadata.includes("catalogue/dataset")) {
+                    // INFO
+                    // 2 routes possibles pour la fiche de donnée
+                    if (metadata.includes("catalogue/dataset") || metadata.includes("rechercher-une-donnee/dataset")) {
                         return `
                             <a href="${metadata}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
                                 Voir la fiche détaillée
