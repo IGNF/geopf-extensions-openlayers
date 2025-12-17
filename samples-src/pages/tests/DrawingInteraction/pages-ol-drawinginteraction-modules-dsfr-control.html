@@ -124,7 +124,8 @@
                     drawing.forEach(interaction => {
                         draw.addInteraction({
                             interaction : interaction,
-                            label: interaction._type
+                            label: interaction._type,
+                            icon: icons[interaction._type],
                         });
                     });
 
