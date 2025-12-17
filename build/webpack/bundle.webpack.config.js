@@ -179,6 +179,24 @@ module.exports = (env, argv) => {
                     ]
                 },
                 {
+                    test : /\.scss$/,
+                    include : [
+                        path.join(rootdir, "src", "packages", "CSS"),
+                    ],
+                    use : [
+                        MiniCssExtractPlugin.loader,
+                        "css-loader",
+                        {
+                            loader : "sass-loader",
+                            options : {
+                                sassOptions : {
+                                    includePaths : [path.join(rootdir, "src", "packages", "CSS")]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     test : /\.(png|jpg|gif|svg|woff|woff2)$/,
                     type : "asset/inline"
                 }
