@@ -57,7 +57,12 @@ export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextM
 export { default as SimpleMenu } from "./packages/Controls/ContextMenu/SimpleMenu";
 export { default as InfoControl } from "./packages/Controls/ContextMenu/InfoControl";
 export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
-
+export { default as Toggle } from "./packages/Controls/Toggle/Toggle";
+export { default as ToggleContent } from "./packages/Controls/Toggle/ToggleContent";
+export { default as ToggleInteraction } from "./packages/Controls/Toggle/ToggleInteraction";
+export { default as Dialog } from "./packages/Controls/Toggle/Dialog";
+export { default as TabNav } from "./packages/Controls/Toggle/TabNav";
+export { default as Draw } from "./packages/Controls/Draw/Draw";
 
 // Interactions
 export { default as DrawingInteraction } from "./packages/Interactions/Drawing";
