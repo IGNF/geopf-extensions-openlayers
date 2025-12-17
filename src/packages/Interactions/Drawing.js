@@ -3,6 +3,7 @@ import "../CSS/Interactions/Drawing.css";
 
 import Draw from "ol/interaction/Draw";
 import Select from "ol/interaction/Select";
+import { SelectEvent } from "ol/interaction/Select";
 import VectorSource from "ol/source/Vector";
 import InfoControl from "../Controls/ContextMenu/InfoControl.js";
 
@@ -73,9 +74,27 @@ class DrawingInteraction extends Draw {
             document.removeEventListener("keydown", onkeydown);
         });
 
-        // Associate a select interaction
-        if (options.select instanceof Select) {
-            this._select = options.select;
+        this.set("selectOnDrawEnd", !!options.selectOnDrawEnd);
+
+        this.setSelect(options.select);
+    }
+
+    /**
+     * Retourne l'interaction de sélection
+     * @returns {Select} Intéraction de sélection
+     */
+    getSelect () {
+        return this.select;
+    }
+
+    /**
+     * 
+     * @param {Select} [select] Intéraction de sélection
+     */
+    setSelect (select) {
+        this.getSelect() && this.getMap()?.removeInteraction(this.getSelect());
+        if (select instanceof Select) {
+            this._select = select;
             // prevent douible interactions
             this._select.on("change:active", (e) => {
                 if (this._select.getActive()) {
@@ -83,14 +102,17 @@ class DrawingInteraction extends Draw {
                 }
             });
             // select on draw end
-            if (options.selectOnDrawEnd) {
+            if (this.get("selectOnDrawEnd")) {
                 this.on("drawend", (e) => {
                     // And activate select interaction
                     setTimeout(() => this._select.setActive(true));
                     // Add to selection
                     this._select.getFeatures().push(e.feature);
+                    this._select.dispatchEvent(new SelectEvent("select", [e.feature], [], undefined));
                 });
             };
+        } else {
+            this._select = null;
         }
     }
 
@@ -150,7 +172,9 @@ class DrawingInteraction extends Draw {
             // deactivate select interaction
             this._select.setActive(false);
             // Clear selection when drawing is activated
+            const selectedFeature = this._select.getFeatures().item(0);
             this._select.clear();
+            this._select.dispatchEvent(new SelectEvent("select", [], [selectedFeature], undefined));
         }
     }
 

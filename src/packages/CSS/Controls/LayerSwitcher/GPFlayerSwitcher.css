@@ -191,6 +191,10 @@ div[id^=GPlayerTitle_ID_] {
 }
 
 div[id^=GPlayerTitle_ID_] > * {
+  display: -webkit-box;
+  line-clamp:2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;

@@ -1,0 +1,37 @@
+@use './GPFpanelStyle.scss';
+
+.GPToggleControl {
+  background-color: #fff;
+
+  > button {
+    min-width: 30px;
+    min-height: 30px;
+
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgb(208, 208, 215);
+    }
+
+    &:active {
+      background-color: rgb(177, 177, 185);
+    }
+
+    &[aria-pressed='true'],
+    &[aria-extended='true'] {
+      background-color: rgba(0, 60, 136, 0.4);
+
+      &:hover {
+        background-color: rgba(0, 60, 136, 0.6);
+      }
+
+      &:active {
+        background-color: rgba(0, 60, 136, 0.8);
+      }
+    }
+
+    &[class*=' gpf-btn-icon-ls-tools-']::before {
+      background-color: #909090;
+    }
+  }
+}

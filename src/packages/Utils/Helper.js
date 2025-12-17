@@ -119,6 +119,55 @@ var Helper = {
             }
         }
         return prefix + (++uidCounter_);
+    },
+
+    /**
+     * Ajoute une icône à un élémént avec le style si nécessaire
+     * @param {HTMLElement} element Élément sur lequel ajouter l'icône
+     * @param {String|HTMLElement} [icon] Icône à ajouter
+     * @param {String} [label] Label du bouton (utilisé dans la classe en cas de svg)
+     */
+    setIcon : function (element, icon, label) {
+        let svg = false;
+        const regex = /(\.|\\)/;
+        if (icon) {
+            if (icon.startsWith("<svg")) {
+                // FIXME
+                // width / height à definir si ces options ne sont pas renseignées inline
+                icon = "data:image/svg+xml;base64," + btoa(icon);
+                svg = true;
+            } else if (!regex.test(icon)) {
+                // L'icône n'est pas une URL
+                element.classList.add(icon);
+            } else {
+                // On ajoute l'URL en style après
+                svg = true;
+            }
+        }
+
+        // Ajoute le style SVG
+        if (svg) {
+            const iconClass = `gpf-btn-icon-ls-tools-${label ? label : Helper.getUid("icon-toggle-button-")}`;
+            // Ajoute la classe au bouton
+            element.classList.add(iconClass);
+            if (!document.querySelector(`style[data-injected="${iconClass.toLowerCase()}"]`)) {
+                // Ajoute le style au document s'il n'existe pas encore
+                const style = document.createElement("style");
+                style.dataset.injected = iconClass.toLowerCase();
+                style.textContent = `
+                    .${iconClass.toLowerCase()}::before {
+                        -webkit-mask-image: url('${icon}');
+                        -webkit-mask-repeat: no-repeat;
+                        -webkit-mask-position: center;
+
+                        mask-image: url('${icon}');
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
     }
 };
 

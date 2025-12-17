@@ -1,0 +1,27 @@
+@use '../../respond-from.scss' as rf;
+@use "./DSFRtabNavStyle.scss";
+
+.GPF-dialog {
+
+  background-color: var(--background-default-grey);
+  box-shadow: 0 2px 6px 0 var(--shadow-color);
+
+  &__header {
+    color: var(--text-action-high-blue-france);
+    background-color: var(--background-open-blue-france);
+
+    .GPF-dialog__buttons {
+      background-color: var(--background-open-blue-france);
+      --hover: var(--background-open-blue-france-hover);
+      --active: var(--background-open-blue-france-active);
+
+      &:hover {
+        background-color: var(--hover-tint);
+      }
+
+      &:active {
+        background-color: var(--active-tint);
+      }
+    }
+  }
+}

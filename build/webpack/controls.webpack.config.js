@@ -90,6 +90,13 @@ module.exports = (env, argv) => {
                 // ras
                 moduledir = "Measures";
                 break;
+            case "Toggle":
+            case "ToggleContent":
+            case "ToggleInteraction":
+            case "Dialog":
+            case "TabNav":
+                moduledir = "Toggle";
+                break;
             case "Legends":
                 // ras
                 break;

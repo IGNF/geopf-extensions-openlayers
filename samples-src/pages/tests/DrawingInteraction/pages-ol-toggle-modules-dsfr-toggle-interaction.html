@@ -1,14 +1,18 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
-    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.css" />
-    <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
-    <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
+        
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlToggle.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlToggleInteraction.js"></script>
+
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample openlayers Drawing interaction</title>
+        <title>Sample openlayers Toggle</title>
 {{/content}}
 
 {{#content "style"}}
@@ -17,8 +21,11 @@
                 width: 100%;
                 height: 500px;
             }
-            [id^="GPsearchEngine-"] {
-                top: 8px;
+            div > div:nth-child(2 of .GPToggleControl) {
+                top: calc(0.5rem + (40px * 1) + 4px)
+            }
+            div > div:nth-child(3 of .GPToggleControl) {
+                top: calc(0.5rem + (40px * 2) + (4px * 2))
             }
         </style>
 {{/content}}
@@ -28,10 +35,10 @@
             <!-- map -->
             <div id="map">
             </div>
-            <p>Dernière sélection : <span id="selection"></span></p>
-            <button class="fr-btn fr-btn--secondary" onclick="setDrawing('Point')">Point</button>
-            <button class="fr-btn fr-btn--secondary" onclick="setDrawing('LineString')">Ligne</button>
-            <button class="fr-btn fr-btn--secondary" onclick="setDrawing('Polygon')">Surface</button>
+
+            <div class="fr-m-2v">
+                <p>Dernière sélection : <span id="selection"></span></p>
+            </div>
 {{/content}}
 
 {{#content "js"}}
@@ -62,6 +69,7 @@
                         ]
                     });
 
+
                     // Select + modify interaction
                     const select = new ol.interaction.Selecting({
                         // activate modify condition on double click
@@ -71,6 +79,7 @@
                         // }
                     });
                     map.addInteraction(select);
+
 
                     // Drawing interactions
                     const drawing = {};
@@ -82,13 +91,41 @@
                             selectOnDrawEnd : true,
                         });
                         drawing[k].setActive(false);
-                        map.addInteraction(drawing[k]);
+                        // map.addInteraction(drawing[k]);
                     })
-
-                    /* ---------------------------- */
 
                     // Snap interaction
                     map.addInteraction(new ol.interaction.Snap({ source: source }));
+
+                    const togglePoint = new ol.control.ToggleInteraction({
+                        interaction : drawing["Point"],
+                        icon : 'fr-icon-lock-fill',
+                    });
+                    const toggleLine = new ol.control.ToggleInteraction({
+                        interaction : drawing["LineString"],
+                        // icon : '{{ resources }}/data/recherche-avancee.svg',
+                        icon : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/1200px-How_to_use_icon.svg.png',
+                    });
+                    const togglePoly = new ol.control.ToggleInteraction({
+                        interaction : drawing["Polygon"],
+                        icon : '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66667 15.3333L6 12.6667H11.3333L8.66667 15.3333ZM8.66667 2L11.3333 4.66667H6L8.66667 2ZM8.66667 10C7.93027 10 7.33333 9.40307 7.33333 8.66667C7.33333 7.93027 7.93027 7.33333 8.66667 7.33333C9.40307 7.33333 10 7.93027 10 8.66667C10 9.40307 9.40307 10 8.66667 10ZM2 8.66667L4.66667 6V11.3333L2 8.66667ZM15.3333 8.66667L12.6667 11.3333V6L15.3333 8.66667Z" fill="#000091"/></svg>',
+                    });
+                    console.log(togglePoint,
+                    toggleLine,
+                    togglePoly,)
+ 
+                    map.addControl(togglePoint);
+                    map.addControl(toggleLine);
+                    map.addControl(togglePoly);
+
+                    [togglePoint, toggleLine, togglePoly].forEach((toggle, index, array) => {
+                        toggle.on("change:active", (e) => {
+                            const active = e.target.getActive();
+                            array.forEach(t => t !== toggle && t.toggleActive(false));
+                            toggle.setActive(active);
+                        })
+                    })
+
 
                     // Style layer
                     const style = drawing.Point.getStyle()[0];
@@ -101,15 +138,9 @@
                     }));
                     layer.setStyle(style);
 
-                    // Activate drawing
-                    window.setDrawing = function (type) {
-                        Object.keys(drawing).forEach(k => {
-                            drawing[k].setActive(type===k);
-                        });
-                    }
-                    
-                    // Check double-click
-                    // select.on('dblclick', e => console.log(e.feature));
+                    window.togglePoint = togglePoint;
+                    window.toggleLine = toggleLine;
+                    window.togglePoly = togglePoly;
                 };
            </script>
 {{/content}}
