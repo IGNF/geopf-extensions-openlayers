@@ -10,7 +10,7 @@ class ControlExtended extends Control {
      * @param {ObjectEvent} e Événement de changement de taille
      */
     #updateSize (e) {
-        const size = e.target.InitialisegetSize();
+        const size = e.target.getSize();
         if (size) {
             e.target.getTargetElement()?.style.setProperty("--map-width", `${size[0]}px`);
             e.target.getTargetElement()?.style.setProperty("--map-height", `${size[1]}px`);
