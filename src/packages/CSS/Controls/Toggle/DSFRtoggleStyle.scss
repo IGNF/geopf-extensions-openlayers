@@ -1,0 +1,53 @@
+@use './DSFRpanelStyle.scss';
+
+.GPToggleControl {
+  background-color: var(--background-default-grey);
+  padding: 0;
+
+  > button {
+    &[aria-pressed='true'],
+    &[aria-extended='true'] {
+      background-color: var(--background-open-blue-france);
+      --hover: var(--background-open-blue-france-hover);
+      --active: var(--background-open-blue-france-active);
+
+      &:hover {
+        background-color: var(--hover-tint);
+      }
+
+      &:active {
+        background-color: var(--active-tint);
+      }
+    }
+
+    // Icônes personnalisées
+    &[class*=' gpf-btn-icon-ls-tools-'] {
+      &:empty {
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 2.5rem;
+        max-height: 2.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        --icon-size: 1.5rem;
+      }
+
+      &:not(:empty) {
+        --icon-size: 1rem;
+      }
+
+      &::before {
+        margin-left: 0;
+        margin-right: 0.5rem;
+
+        content: '';
+        flex: 0 0 auto;
+        vertical-align: calc((0.75em - var(--icon-size)) * 0.5);
+        background-color: var(--text-action-high-blue-france);
+        width: var(--icon-size);
+        height: var(--icon-size);
+        mask-size: 100% 100%;
+      }
+    }
+  }
+}

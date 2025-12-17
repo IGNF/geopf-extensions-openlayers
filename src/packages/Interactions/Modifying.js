@@ -151,6 +151,7 @@ class ModifyingInteraction extends Modify {
                 this._menu.hide();
             }
         } else if (e.type !== "pointermove") {
+            // TODO : améliorer pour linux (pointerup et pas pointermove)
             this._menu.hide();
         }
         // Dragging feature : show crosshair cursor

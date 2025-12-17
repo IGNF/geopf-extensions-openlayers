@@ -1,0 +1,11 @@
+@use '../../respond-from.scss' as rf;
+
+.dialog-draw {
+  .GPF-dialog__content {
+    padding: 0.75rem 0.75rem 0 0.75rem;
+
+    > .GPF-btn-group button {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

@@ -53,6 +53,12 @@ module.exports = (env, argv) => {
             "GpfExtOlInseeAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "InseeAdvancedSearch.js"),
             "GpfExtOlAbstractAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "AbstractAdvancedSearch.js"),
             "GpfExtOlCoordinateAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "CoordinateAdvancedSearch.js"),
+            "GpfExtOlToggle" : path.join(rootdir, "src", "packages", "Controls/Toggle", "Toggle.js"),
+            "GpfExtOlToggleContent" : path.join(rootdir, "src", "packages", "Controls/Toggle", "ToggleContent.js"),
+            "GpfExtOlToggleInteraction" : path.join(rootdir, "src", "packages", "Controls/Toggle", "ToggleInteraction.js"),
+            "GpfExtOlDialog" : path.join(rootdir, "src", "packages", "Controls/Toggle", "Dialog.js"),
+            "GpfExtOlTabNav" : path.join(rootdir, "src", "packages", "Controls/Toggle", "TabNav.js"),
+            "GpfExtOlDraw" : path.join(rootdir, "src", "packages", "Controls/Draw", "Draw.js"),
             "GpfExtOlExport" : path.join(rootdir, "src", "packages", "Controls/Export", "Export.js"),
             "GpfExtOlMeasureArea" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureArea.js"),
             "GpfExtOlMeasureAzimuth" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureAzimuth.js"),
@@ -232,6 +238,24 @@ module.exports = (env, argv) => {
                     use : [
                         MiniCssExtractPlugin.loader,
                         "css-loader"
+                    ]
+                },
+                {
+                    test : /\.scss$/,
+                    include : [
+                        path.join(rootdir, "src", "packages", "CSS"),
+                    ],
+                    use : [
+                        MiniCssExtractPlugin.loader,
+                        "css-loader",
+                        {
+                            loader : "sass-loader",
+                            options : {
+                                sassOptions : {
+                                    includePaths : [path.join(rootdir, "src", "packages", "CSS")]
+                                }
+                            }
+                        }
                     ]
                 },
                 {

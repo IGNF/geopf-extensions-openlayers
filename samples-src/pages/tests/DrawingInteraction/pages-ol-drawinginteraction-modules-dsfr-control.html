@@ -1,0 +1,160 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Drawing interaction</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+            [id^="GPsearchEngine-"] {
+                top: 8px;
+            }
+            #myDialog {
+                top: 10px;
+                left: 10px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Outil de dessin avec style</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                window.onload = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
+					// 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
+                            }),
+                            layer
+                        ]
+                    });
+
+                    // Création du Dialog avec navigation tertiaire
+                    const dialog = new ol.control.Dialog({
+                        id: "myDialog",
+                        title: "Dialog",
+                        position: "left",
+                        items: [
+                            {
+                                label: "Style",
+                                content: "<p>Onglet Style</p>",
+                                title: "Configuration du style"
+                            },
+                            {
+                                label: "Texte",
+                                content: "<p>Onglet Texte</p>",
+                                title: "Configuration du texte"
+                            },
+                            {
+                                label: "Infobulle",
+                                content: "<p>Onglet Infobulle</p>",
+                                title: "Configuration de l'infobulle"
+                            },
+                            {
+                                label: "Attributs",
+                                content: "<p>Onglet Attributs</p>",
+                                title: "Configuration des attributs"
+                            }
+                        ],
+                        labelTabNav: "Navigation de configuration"
+                    });
+
+                    map.addControl(dialog);
+
+                    const draw = new ol.control.Draw({
+                        position: "right",
+                    });
+
+                    const icons = {
+                        "Point" : "fr-icon-map-pin-2-line",
+                        "LineString" : "fr-icon-git-merge-line",
+                        "Polygon" : "fr-icon-france-line",
+                    }
+
+                    map.addControl(draw);
+
+                    const drawing = [];
+                    // ["Point", "Point", "Point", "LineString", "LineString", "LineString", "Polygon", "Polygon", "Polygon"].forEach((k, index) => {
+                    ["Point", "LineString", "Polygon"].forEach((k, index) => {
+                        drawing.push(new ol.interaction.Drawing({
+                            type : k,
+                            source : source,
+                            select : draw.select,
+                            selectOnDrawEnd : true,
+                        }));
+                        drawing[index].setActive(false);
+                    })
+
+                    drawing.forEach(interaction => {
+                        draw.addInteraction({
+                            interaction : interaction,
+                            label: interaction._type
+                        });
+                    });
+
+                    // Style layer
+                    const style = drawing[0].getStyle()[0];
+                    style.setStroke(new ol.style.Stroke({
+                        color: "orange",
+                        width: 1.5
+                    }));
+                    style.setFill (new ol.style.Fill({
+                        color: "rgb(255,165,0,0.2)",
+                    }));
+                    layer.setStyle(style);
+
+                    draw.getSelect().on("select", (e) => {
+                        console.log(e)
+                        if (e.selected.length) {
+                            const geomType = e.selected[0].getGeometry().getType();
+                            dialog.setDialogTitle(geomType);
+                            dialog.setIcon(icons[geomType]);
+                            
+                            dialog.show();
+                        } else {
+                            dialog.close();
+                        }
+                    })
+
+                    window.dialog = dialog;
+                };
+           </script>
+{{/content}}
+
+{{/extend}}

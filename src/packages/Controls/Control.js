@@ -1,7 +1,21 @@
 import Control from "ol/control/Control";
 import checkDsfr from "./Utils/CheckDsfr";
+import { ObjectEvent } from "ol/Object";
+import { Map } from "ol";
 
 class ControlExtended extends Control {
+
+    /**
+     * Fonction appelée au changement de taille de la carte
+     * @param {ObjectEvent} e Événement de changement de taille
+     */
+    #updateSize (e) {
+        const size = e.target.InitialisegetSize();
+        if (size) {
+            e.target.getTargetElement()?.style.setProperty("--map-width", `${size[0]}px`);
+            e.target.getTargetElement()?.style.setProperty("--map-height", `${size[1]}px`);
+        }
+    }
 
     constructor (options) {
         options = options || {};
@@ -37,6 +51,56 @@ class ControlExtended extends Control {
             instance.update(pos);
         }
     }
+
+    /**
+     * Ajoute un écouteur d'événement sur la taille de la carte
+     * 
+     * @param {Map} map Carte
+     * @override
+     */
+    setMap (map) {
+        super.setMap(map);
+        if (map) {
+            const size = map.getSize();
+            // Initie les valeurs
+            if (size) {
+                map.getTargetElement()?.style.setProperty("--map-width", `${size[0]}px`);
+                map.getTargetElement()?.style.setProperty("--map-height", `${size[1]}px`);
+            }
+
+            // Vérifie si la carte écoute déjà cet événement
+            if (!map.get("listenToChangeSizeEvent")) {
+                // Ajoute la valeur et l'écouteur d'événement;
+                map.on("change:size", this.#updateSize);
+                map.set("listenToChangeSizeEvent", true);
+            }
+        }
+    }
+
+
+    /**
+     * Initialise les valeurs du contrôle.
+     * @protected
+     * @param {Object} options Options du constructeur (dépend du contrôle)
+     * @abstract
+     */
+    _initialize (options) { }
+
+    /**
+     * Initialise le DOM du contrôle.
+     * @protected
+     * @param {Object} options Options du constructeur (dépend du contrôle)
+     * @abstract
+     */
+    _initContainer (options) { }
+
+    /**
+     * Initialise les événements sur le contrôle.
+     * @protected
+     * @param {Object} options Options du constructeur (dépend du contrôle)
+     * @abstract
+     */
+    _initEvents (options) { }
 
 };
 

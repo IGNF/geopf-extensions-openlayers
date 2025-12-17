@@ -1,0 +1,93 @@
+@use '../../respond-from.scss' as rf;
+
+.GPF-dialog {
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: 100%;
+  max-height: 80%;
+  position: fixed;
+  pointer-events: auto;
+  bottom: 0;
+  cursor:auto;
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @include rf.respond-from('sm') {
+    border-radius: 0.25rem;
+    width: 380px;
+    position: absolute;
+    top: 0.5rem;
+    max-height: calc(var(--map-height) - 20%);
+
+
+    &.GPF-dialog__left {
+      left: 0.5rem;
+      width: 330px;
+    }
+
+    &.GPF-dialog__right {
+      right: 4rem;
+      left: auto;
+    }
+
+    &.GPF-dialog--md {
+      width: 280px;
+    }
+
+    &.GPF-dialog--sm {
+      width: 200px;
+    }
+  }
+
+  &__header {
+    padding: 0.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+
+    @include rf.respond-from('sm') {
+      border-radius: 0.25rem 0.25rem 0 0;
+    }
+
+    .GPF-dialog__title {
+      display: flex;
+      gap: 0.5rem;
+
+      &-name {
+        font-size: 0.875rem;
+      }
+    }
+
+    .GPF-dialog__buttons {
+      display: flex;
+    }
+  }
+
+  &__content {
+    padding: 0 0.75rem 1.5rem;
+    overflow: hidden scroll;
+    
+    @include rf.respond-from('sm') {
+      max-height: calc(var(--map-height) - 20% - 48px);
+    }
+
+    .GPwidget {
+      position: unset;
+    }
+
+    &:empty {
+      padding: 0;
+    }
+  }
+
+  &:has(.fr-tabnav.fr-hidden) {
+    .GPF-dialog__content {
+      padding-top: 1.5rem;
+    }
+  }
+}
