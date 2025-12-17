@@ -547,9 +547,9 @@ var TerritoriesDOM = {
             <!-- Menu de la liste des vues -->
             <div class="gpf-panel__views_territories-listview-header">
                 <div class="gpf-panel__views_territories-listview-count">
-                    <span class="fr-label" style="padding-right: 10px;"> Territoires </span>
+                    <span class="fr-label" style="padding-right: 10px; font-weight: bolder;"> Territoires </span>
                     <span 
-                        class="fr-message" 
+                        class="fr-badge fr-badge--sm fr-badge--info fr-badge--no-icon" 
                         id="${countId}"> 0 </span>
                 </div>
                 <button 
