@@ -1,7 +1,8 @@
 import Modify from "ol/interaction/Modify";
 import Menu from "../Controls/ContextMenu/SimpleMenu";
 
-import { selectStyle } from "./selectStyle";
+// import { selectStyle } from "./selectStyle";
+import { selectStyle } from "./selectFlatStyle";
 
 /** Modifying interaction 
  * @extends {ol.interaction.Modify}
