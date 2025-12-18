@@ -154,6 +154,8 @@
                     })
 
                     window.dialog = dialog;
+
+                    draw.on(["drawstart", "drawend", "drawabort"], console.log)
                 };
            </script>
 {{/content}}

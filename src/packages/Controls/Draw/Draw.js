@@ -93,6 +93,7 @@ class Draw extends ToggleContent {
                     }
                 });
             });
+            toggle.getInteraction()?.on(["drawstart", "drawend", "drawabort"], this.dispatchEvent.bind(this));
         }.bind(this));
 
         // Ferme l'interaction si on ferme la modale
