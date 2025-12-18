@@ -1,4 +1,4 @@
-import Select from "ol/interaction/Select";
+import Select, { SelectEvent } from "ol/interaction/Select";
 import ModifyingInteraction from "./Modifying.js";
 import { getFlatCoordinates, selectStyle } from "./selectStyle";
 import RegularShape from "ol/style/RegularShape";
@@ -86,7 +86,7 @@ class SelectingInteraction extends Select {
      */
     selectedAtPixel (pixel) {
         const features = [];
-        map.forEachFeatureAtPixel(
+        this.getMap()?.forEachFeatureAtPixel(
             pixel,
             (feature) => {
                 if (this.getLayer(feature)) {
@@ -102,7 +102,9 @@ class SelectingInteraction extends Select {
     }
 
     clear () {
+        const features = this.getFeatures().getArray();
         this.getFeatures().clear();
+        this.dispatchEvent(new SelectEvent("select", [], features, undefined));
         for (const property in this.featureLayerAssociation_) {
             delete this.featureLayerAssociation_[property];
         }

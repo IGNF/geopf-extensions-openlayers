@@ -172,9 +172,14 @@ class DrawingInteraction extends Draw {
             // deactivate select interaction
             this._select.setActive(false);
             // Clear selection when drawing is activated
-            const selectedFeature = this._select.getFeatures().item(0);
-            this._select.clear();
-            this._select.dispatchEvent(new SelectEvent("select", [], [selectedFeature], undefined));
+            const features = this._select.getFeatures().getArray();
+            if (features.length) {
+                // Vérifie si la fonction clear existe
+                this._select.clear ? this._select.clear() : this._select.getFeatures().clear();
+                // Si ce n'est pas le cas, envoie un événement "select"
+                // Sinon l'événement est envoyé par clear()
+                this._select.clear ?? this._select.dispatchEvent(new SelectEvent("select", [], features, undefined));
+            }
         }
     }
 

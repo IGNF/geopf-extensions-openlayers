@@ -54,6 +54,10 @@ class Draw extends ToggleContent {
 
         if (!(options.select instanceof Select)) {
             options.select = new SelectingInteraction();
+            this.on("change:active", (e) => {
+                options.select.clear();
+                options.select.setActive(e.target.getActive());
+            });
         }
 
         /**
