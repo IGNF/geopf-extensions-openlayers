@@ -1,6 +1,8 @@
 import Select, { SelectEvent } from "ol/interaction/Select";
 import ModifyingInteraction from "./Modifying.js";
-import { getFlatCoordinates, selectStyle } from "./selectStyle";
+// import { getFlatCoordinates, selectStyle } from "./selectStyle";
+import { getFlatCoordinates, selectStyle } from "./selectFlatStyle";
+
 import RegularShape from "ol/style/RegularShape";
 import Stroke from "ol/style/Stroke";
 import MultiPoint from "ol/geom/MultiPoint";

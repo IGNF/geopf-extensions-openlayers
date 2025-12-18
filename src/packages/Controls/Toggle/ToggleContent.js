@@ -74,7 +74,7 @@ class ToggleContent extends Toggle {
         super._initEvents(options);
 
         this.dialog.on("dialog:close", (e) => {
-            this.setActive(false, true);
+            this.getActive() && this.setActive(false);
         });
     }
 
