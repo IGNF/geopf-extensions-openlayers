@@ -812,8 +812,7 @@ class Territories extends Control {
         logger.trace(e);
         // On supprime tous les territoires ajoutées manuellement via le bouton "Ajouter une vue"
         // et on recharge la liste initiale
-        for (let index = 0; index < this.territories.length; index++) {
-            const territory = this.territories[index];
+        for (const territory of this.territories.slice()) {
             if (territory.isAdded) {
                 // on supprime les territoires ajoutés manuellement
                 this.removeTerritory(territory, true);
