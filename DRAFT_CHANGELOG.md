@@ -20,6 +20,7 @@ __DATE__
   - Cartalog : ajout d'une option pour mettre en avant des couches dans les categories (#473)
   - Cartalog : ajout d'une option pour ordonner la liste des couches (fd34a4013860db2c831cef5febbf9d553b2e9a0a)
   - UI : changement contenu labels affichés au survol (#474)
+  - Territories : ajout des territoires d'outre-mer
 
 * 🔥 [Deprecated]
 
