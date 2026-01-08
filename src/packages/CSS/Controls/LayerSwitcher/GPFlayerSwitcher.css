@@ -78,17 +78,20 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList
 
 .GPlayerCounter {
   position: relative;
-  background: #fff;
-  color: #000;
-  padding: 2px 0px 1px;
-  border-radius: 100px;
-  min-width: 15px;
-  text-align: center;
-  font-size: 12px;
-  line-height: 1;
+  z-index: 1;
   top: -15px;
   left: 15px;
-  display: inline-block;
+  background: var(--background-active-blue-france-active);
+  color: var(--text-inverted-grey);
+  font-size: 12px;
+  font-weight: 700;
+  box-sizing: content-box;
+  padding: 4px;
+  min-width: 1em;
+  height: 1em;
+  line-height: 1em;
+  white-space: nowrap;
+  border-radius: 50%;
 }
 
 /* Layer : general */
