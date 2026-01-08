@@ -167,7 +167,7 @@ class TabNav extends Control {
         content.id = contentId;
         content.setAttribute("aria-labelledby", btnId);
         content.setAttribute("role", "tabpanel");
-        content.className = "fr-tabnav__panel fr-hidden GPF-hidden";
+        content.className = "fr-tabnav__panel fr-hidden GPelementHidden";
 
         if (typeof item.content === "string") {
             content.innerHTML = item.content;
@@ -223,7 +223,7 @@ class TabNav extends Control {
             // Fermeture de l'onglet actuel
             currentLink.ariaSelected = false;
             const currentContent = currentLink.ariaControlsElements?.[0];
-            currentContent?.classList.add("fr-hidden", "GPF-hidden");
+            currentContent?.classList.add("fr-hidden", "GPelementHidden");
 
             this.dispatchEvent({
                 type : this.selectors.CLOSE_TAB,
@@ -239,7 +239,7 @@ class TabNav extends Control {
         // Ouverture du nouvel onglet
         link.ariaSelected = true;
         const content = link.ariaControlsElements?.[0];
-        content?.classList.remove("fr-hidden", "GPF-hidden");
+        content?.classList.remove("fr-hidden", "GPelementHidden");
 
         this.dispatchEvent({
             type : this.selectors.OPEN_TAB,
@@ -272,14 +272,14 @@ class TabNav extends Control {
      * Affiche la navigation.
      */
     show () {
-        this.element.classList.remove("fr-hidden", "GPF-hidden");
+        this.element.classList.remove("fr-hidden", "GPelementHidden");
     }
 
     /**
      * Masque la navigation.
      */
     hide () {
-        this.element.classList.add("fr-hidden", "GPF-hidden");
+        this.element.classList.add("fr-hidden", "GPelementHidden");
     }
 
     /**
@@ -287,7 +287,7 @@ class TabNav extends Control {
      * @param {HTMLDivElement} item Item à afficher
      */
     showItem (item) {
-        item.classList.remove("fr-hidden", "GPF-hidden");
+        item.classList.remove("fr-hidden", "GPelementHidden");
     }
 
     /**
@@ -295,7 +295,7 @@ class TabNav extends Control {
      * @param {HTMLDivElement} item Item à masquer
      */
     hideItem (item) {
-        item.classList.add("fr-hidden", "GPF-hidden");
+        item.classList.add("fr-hidden", "GPelementHidden");
     }
 
     /**

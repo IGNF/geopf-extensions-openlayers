@@ -1,6 +1,10 @@
-@use '../../respond-from.scss' as rf;
+@use './GPFtabNavStyle.scss';
 
 .GPF-dialog {
+  button {
+    cursor: pointer;
+  }
+
   &__header {
     color: black;
     background-color: rgba(0, 60, 136, 0.6);

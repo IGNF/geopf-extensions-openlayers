@@ -4,6 +4,11 @@
         
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlToggle.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlToggleInteraction.js"></script>
+
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -16,6 +21,17 @@
                 width: 100%;
                 height: 500px;
             }
+
+            /* Positionnement des contrôles avec espacement de 30px */
+            div.GPToggleControl:nth-child(1 of div.GPToggleControl) {
+                top: 10px;
+            }
+            div.GPToggleControl:nth-child(2 of div.GPToggleControl) {
+                top: 50px;
+            }
+            div.GPToggleControl:nth-child(3 of div.GPToggleControl) {
+                top: 90px;
+            }
         </style>
 {{/content}}
 
@@ -25,7 +41,7 @@
             <div id="map">
             </div>
 
-            <div class="fr-m-2v">
+            <div class="fr-m-2v" style="margin: 12px;">
                 <button id="toggle-button" class="fr-btn fr-btn--secondary">Toggle le toggle</button>
                 <button id="force-active" class="fr-btn fr-btn--secondary">Forcer activation toggle</button>
                 <button id="force-deactive" class="fr-btn fr-btn--secondary">Forcer désactivation toggle</button>
@@ -60,27 +76,80 @@
                         ]
                     });
 
-                    const toggle = new ol.control.ToggleInteraction({
+                    // Select + modify interaction
+                    const select = new ol.interaction.Selecting({
+                        // activate modify condition on double click
+                        // modifyCondition : e => {
+                        //     // return (e.type === "activate");
+                        //     return (e.type === "dblclick");
+                        // }
                     });
+                    map.addInteraction(select);
 
-                    map.addControl(toggle);
 
-                    toggleBtn = document.querySelector("#toggle-button");
-                    toggleBtn.addEventListener("click", () => {
-                        const bool = toggle.toggleActive();
-                        console.log(`État toggle : ${bool ? "activé" : "désactivé"}`)
-                    });
+                    // Drawing interactions
+                    const drawing = {};
+                    ["Point", "LineString", "Polygon"].forEach(k => {
+                        drawing[k] = new ol.interaction.Drawing({
+                            type : k,
+                            source : source,
+                            select : select,
+                            selectOnDrawEnd : true,
+                        });
+                        drawing[k].setActive(false);
+                        // map.addInteraction(drawing[k]);
+                    })
 
-                    activeForce = document.querySelector("#force-active");
-                    activeForce.addEventListener("click", () => {
-                        const bool = toggle.toggleActive(true);
-                        console.log(`État toggle : ${bool ? "activé" : "désactivé"}`)
+                    // Snap interaction
+                    map.addInteraction(new ol.interaction.Snap({ source: source }));
+
+                    const togglePoint = new ol.control.ToggleInteraction({
+                        title:"Dessiner un point",
+                        interaction : drawing["Point"],
+                        icon : 'fr-icon-lock-fill',
                     });
-                    deactiveForce = document.querySelector("#force-deactive");
-                    deactiveForce.addEventListener("click", () => {
-                        const bool = toggle.toggleActive(false);
-                        console.log(`État toggle : ${bool ? "activé" : "désactivé"}`)
+                    const toggleLine = new ol.control.ToggleInteraction({
+                        title:"Dessiner une ligne",
+                        interaction : drawing["LineString"],
+                        // icon : '{{ resources }}/data/recherche-avancee.svg',
+                        icon : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/1200px-How_to_use_icon.svg.png',
                     });
+                    const togglePoly = new ol.control.ToggleInteraction({
+                        title:"Dessiner un polygone",
+                        interaction : drawing["Polygon"],
+                        icon : '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66667 15.3333L6 12.6667H11.3333L8.66667 15.3333ZM8.66667 2L11.3333 4.66667H6L8.66667 2ZM8.66667 10C7.93027 10 7.33333 9.40307 7.33333 8.66667C7.33333 7.93027 7.93027 7.33333 8.66667 7.33333C9.40307 7.33333 10 7.93027 10 8.66667C10 9.40307 9.40307 10 8.66667 10ZM2 8.66667L4.66667 6V11.3333L2 8.66667ZM15.3333 8.66667L12.6667 11.3333V6L15.3333 8.66667Z" fill="#000091"/></svg>',
+                    });
+                    console.log(togglePoint,
+                    toggleLine,
+                    togglePoly,)
+
+                    map.addControl(togglePoint);
+                    map.addControl(toggleLine);
+                    map.addControl(togglePoly);
+
+                    [togglePoint, toggleLine, togglePoly].forEach((toggle, index, array) => {
+                        toggle.on("change:active", (e) => {
+                            const active = e.target.getActive();
+                            array.forEach(t => t !== toggle && t.toggleActive(false));
+                            toggle.setActive(active);
+                        })
+                    })
+
+
+                    // Style layer
+                    const style = drawing.Point.getStyle()[0];
+                    style.setStroke(new ol.style.Stroke({
+                        color: "orange",
+                        width: 1.5
+                    }));
+                    style.setFill (new ol.style.Fill({
+                        color: "rgb(255,165,0,0.2)",
+                    }));
+                    layer.setStyle(style);
+
+                    window.togglePoint = togglePoint;
+                    window.toggleLine = toggleLine;
+                    window.togglePoly = togglePoly;
 
                 };
            </script>

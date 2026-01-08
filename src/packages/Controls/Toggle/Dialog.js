@@ -221,10 +221,10 @@ class Dialog extends ControlExtended {
      * @param {String} [title] Titre
      */
     setIcon (icon, title) {
-        this.dialogIcon.classList.remove(this.icon);
+        this.dialogIcon.classList.remove(this.iconClass);
         if (icon) {
-            this.icon = icon;
-            Helper.setIcon(this.dialogIcon, icon, title);
+            const iconClass = Helper.setIcon(this.dialogIcon, icon, title);
+            this.iconClass = iconClass;
         }
     }
 
@@ -366,9 +366,9 @@ class Dialog extends ControlExtended {
 
         // Gestion de la visibilité de la navigation
         if (this.tabNav.hasItems()) {
-            navContainer.classList.remove("fr-hidden", "GPF-hidden");
+            navContainer.classList.remove("fr-hidden", "GPelementHidden");
         } else {
-            navContainer.classList.add("fr-hidden", "GPF-hidden");
+            navContainer.classList.add("fr-hidden", "GPelementHidden");
         }
     }
 
@@ -391,7 +391,7 @@ class Dialog extends ControlExtended {
             this.tabNav.addItem(item);
             const navContainer = this.querySelector(`.${this.dialogClass}__nav-container`);
             if (this.tabNav.hasItems()) {
-                navContainer.classList.remove("fr-hidden", "GPF-hidden");
+                navContainer.classList.remove("fr-hidden", "GPelementHidden");
             }
         }
     }
@@ -403,7 +403,7 @@ class Dialog extends ControlExtended {
         if (this.tabNav) {
             this.tabNav.clear();
             const navContainer = this.querySelector(`.${this.dialogClass}__nav-container`);
-            navContainer.classList.add("fr-hidden", "GPF-hidden");
+            navContainer.classList.add("fr-hidden", "GPelementHidden");
         }
     }
 

@@ -1,4 +1,5 @@
 @use './GPFpanel.scss';
+@use '../../mixins.scss' as mix;
 
 .GPToggleControl {
   top: 0.5rem;
@@ -6,4 +7,37 @@
 
   width: fit-content;
   height: fit-content;
+}
+
+[class*=' gpf-btn-icon-ls-tools-'] {
+  &:empty {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &::before {
+    content: '';
+    flex: 0 0 auto;
+    mask-size: 100% 100%;
+  }
+}
+
+/* Affichage du tooltip au survol du bouton toggle */
+@include mix.hover-media-query {
+  .GPToggleControl > .GPToggleButton[aria-label]:not([aria-extended='true']):not([aria-pressed='true']):hover::after {
+    mask-image: none;
+    -webkit-mask-image: none;
+    content: attr(aria-label);
+    display: flex;
+    align-items: center;
+    position: absolute;
+    z-index: 2000;
+    width: fit-content;
+    white-space: nowrap;
+    background-color: transparent;
+    background-repeat: no-repeat;
+
+    /* Ouverture à gauche (bouton positionné à droite) */
+    transform: translate(calc(-100% - 8px));
+  }
 }

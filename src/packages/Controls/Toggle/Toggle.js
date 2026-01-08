@@ -121,11 +121,11 @@ class Toggle extends Control {
         if (options.title) {
             this.set("title", options.title);
             this.button.title = options.title;
+            this.set("aria-label", options.title);
+            this.button.ariaLabel = options.title;
         }
         if (options.label) {
             this.button.textContent = options.label;
-            this.set("aria-label", options.label);
-            this.button.ariaLabel = options.label;
         }
         this.element.appendChild(this.button);
     }
