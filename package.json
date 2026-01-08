@@ -43,7 +43,7 @@
   "homepage": "https://github.com/IGNF/geopf-extensions-openlayers#readme",
   "dependencies": {
     "@gouvfr/dsfr": "^1.13.1",
-    "@mapbox/mapbox-gl-style-spec": "14.8.0",
+    "@mapbox/mapbox-gl-style-spec": "14.17.0",
     "@xmldom/xmldom": "^0.9.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
