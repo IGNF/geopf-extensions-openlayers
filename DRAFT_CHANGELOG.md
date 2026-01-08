@@ -31,6 +31,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - Layerswitcher : correction hauteur du dialog qui empechait l'interaction de zoom (#472)
+  - Layerswitcher : correction du style du compteur (#466)
   - ContextMenu : correction de la fermeture du menu contextuel en cas de clic sur d'autres boutons (#472)
   - Territories : correctif sur la reinitialisation par defaut des territoires
   
