@@ -63,6 +63,8 @@ class ModifyingInteraction extends Modify {
 
         if (e.type === "contextmenu") {
             e.originalEvent.preventDefault();
+        } else if (e.type === "pointerup" && e.originalEvent.button === 2) {
+            e.originalEvent.preventDefault();
             const currentFeatures = this._select.selectedAtPixel(e.pixel);
 
             // TODO : Check if can remove point
@@ -152,7 +154,6 @@ class ModifyingInteraction extends Modify {
                 this._menu.hide();
             }
         } else if (e.type !== "pointermove") {
-            // TODO : améliorer pour linux (pointerup et pas pointermove)
             this._menu.hide();
         }
         // Dragging feature : show crosshair cursor
