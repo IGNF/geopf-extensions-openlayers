@@ -126,10 +126,12 @@ var Helper = {
      * @param {HTMLElement} element Élément sur lequel ajouter l'icône
      * @param {String|HTMLElement} [icon] Icône à ajouter
      * @param {String} [label] Label du bouton (utilisé dans la classe en cas de svg)
+     * @returns {String} Classe ajoutée à l'élément
      */
     setIcon : function (element, icon, label) {
         let svg = false;
         const regex = /(\.|\\)/;
+        let iconClass;
         if (icon) {
             if (icon.startsWith("<svg")) {
                 // FIXME
@@ -139,6 +141,7 @@ var Helper = {
             } else if (!regex.test(icon)) {
                 // L'icône n'est pas une URL
                 element.classList.add(icon);
+                iconClass = icon;
             } else {
                 // On ajoute l'URL en style après
                 svg = true;
@@ -147,15 +150,16 @@ var Helper = {
 
         // Ajoute le style SVG
         if (svg) {
-            const iconClass = `gpf-btn-icon-ls-tools-${label ? label : Helper.getUid("icon-toggle-button-")}`;
+            iconClass = `gpf-btn-icon-ls-tools-${label ? label : Helper.getUid("icon-toggle-button-")}`;
+            iconClass = iconClass.toLowerCase();
             // Ajoute la classe au bouton
             element.classList.add(iconClass);
-            if (!document.querySelector(`style[data-injected="${iconClass.toLowerCase()}"]`)) {
+            if (!document.querySelector(`style[data-injected="${iconClass}"]`)) {
                 // Ajoute le style au document s'il n'existe pas encore
                 const style = document.createElement("style");
-                style.dataset.injected = iconClass.toLowerCase();
+                style.dataset.injected = iconClass;
                 style.textContent = `
-                    .${iconClass.toLowerCase()}::before {
+                    .${iconClass}::before {
                         -webkit-mask-image: url('${icon}');
                         -webkit-mask-repeat: no-repeat;
                         -webkit-mask-position: center;
@@ -168,6 +172,8 @@ var Helper = {
                 document.head.appendChild(style);
             }
         }
+
+        return iconClass;
     }
 };
 

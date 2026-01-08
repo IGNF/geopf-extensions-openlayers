@@ -1,4 +1,5 @@
-@use '../../respond-from.scss' as rf;
+@use './GPFtabNav.scss';
+@use '../../mixins.scss' as mix;
 
 .GPF-dialog {
   margin: 0;
@@ -17,7 +18,7 @@
     flex-direction: column;
   }
 
-  @include rf.respond-from('sm') {
+  @include mix.respond-from('sm') {
     border-radius: 0.25rem;
     width: 380px;
     position: absolute;
@@ -51,7 +52,7 @@
     align-items: center;
     justify-content: space-between;
 
-    @include rf.respond-from('sm') {
+    @include mix.respond-from('sm') {
       border-radius: 0.25rem 0.25rem 0 0;
     }
 
@@ -71,9 +72,9 @@
 
   &__content {
     padding: 0 0.75rem 1.5rem;
-    overflow: hidden scroll;
+    overflow: hidden auto;
     
-    @include rf.respond-from('sm') {
+    @include mix.respond-from('sm') {
       max-height: calc(var(--map-height) - 20% - 48px);
     }
 

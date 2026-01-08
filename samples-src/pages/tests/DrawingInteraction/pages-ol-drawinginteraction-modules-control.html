@@ -1,0 +1,165 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Drawing interaction</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+            [id^="GPsearchEngine-"] {
+                top: 8px;
+            }
+            #myDialog {
+                top: 10px;
+                left: 10px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Outil de dessin avec style</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                window.onload = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
+					// 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
+                            }),
+                            layer
+                        ]
+                    });
+
+                    // Création du Dialog avec navigation tertiaire
+                    const dialog = new ol.control.Dialog({
+                        id: "myDialog",
+                        title: "Dialog",
+                        position: "left",
+                        items: [
+                            {
+                                label: "Style",
+                                content: "<p>Onglet Style</p>",
+                                title: "Configuration du style"
+                            },
+                            {
+                                label: "Texte",
+                                content: "<p>Onglet Texte</p>",
+                                title: "Configuration du texte"
+                            },
+                            {
+                                label: "Infobulle",
+                                content: "<p>Onglet Infobulle</p>",
+                                title: "Configuration de l'infobulle"
+                            },
+                            {
+                                label: "Attributs",
+                                content: "<p>Onglet Attributs</p>",
+                                title: "Configuration des attributs"
+                            }
+                        ],
+                        labelTabNav: "Navigation de configuration"
+                    });
+
+                    map.addControl(dialog);
+
+                    const draw = new ol.control.Draw({
+                        position: "right",
+                        icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.7279 9.57627L14.3137 8.16206L5 17.4758V18.89H6.41421L15.7279 9.57627ZM17.1421 8.16206L18.5563 6.74785L17.1421 5.33363L15.7279 6.74785L17.1421 8.16206ZM7.24264 20.89H3V16.6473L16.435 3.21231C16.8256 2.82179 17.4587 2.82179 17.8492 3.21231L20.6777 6.04074C21.0682 6.43126 21.0682 7.06443 20.6777 7.45495L7.24264 20.89Z"></path></svg>`,
+                        title: "Dessiner",
+                    });
+
+                    const icons = {
+                        "Point" : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.8995L16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995ZM12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM12 13C13.1046 13 14 12.1046 14 11C14 9.89543 13.1046 9 12 9C10.8954 9 10 9.89543 10 11C10 12.1046 10.8954 13 12 13ZM12 15C9.79086 15 8 13.2091 8 11C8 8.79086 9.79086 7 12 7C14.2091 7 16 8.79086 16 11C16 13.2091 14.2091 15 12 15Z"></path></svg>`,
+                        "LineString" : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 11H4V13H2V11ZM6 11H18V13H6V11ZM20 11H22V13H20V11Z"></path></svg>`,
+                        "Polygon" : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7.82929 20C7.41746 21.1652 6.30622 22 5 22C3.34315 22 2 20.6569 2 19C2 17.6938 2.83481 16.5825 4 16.1707V7.82929C2.83481 7.41746 2 6.30622 2 5C2 3.34315 3.34315 2 5 2C6.30622 2 7.41746 2.83481 7.82929 4H16.1707C16.5825 2.83481 17.6938 2 19 2C20.6569 2 22 3.34315 22 5C22 6.30622 21.1652 7.41746 20 7.82929V16.1707C21.1652 16.5825 22 17.6938 22 19C22 20.6569 20.6569 22 19 22C17.6938 22 16.5825 21.1652 16.1707 20H7.82929ZM7.82929 18H16.1707C16.472 17.1476 17.1476 16.472 18 16.1707V7.82929C17.1476 7.52801 16.472 6.85241 16.1707 6H7.82929C7.52801 6.85241 6.85241 7.52801 6 7.82929V16.1707C6.85241 16.472 7.52801 17.1476 7.82929 18ZM5 6C5.55228 6 6 5.55228 6 5C6 4.44772 5.55228 4 5 4C4.44772 4 4 4.44772 4 5C4 5.55228 4.44772 6 5 6ZM19 6C19.5523 6 20 5.55228 20 5C20 4.44772 19.5523 4 19 4C18.4477 4 18 4.44772 18 5C18 5.55228 18.4477 6 19 6ZM19 20C19.5523 20 20 19.5523 20 19C20 18.4477 19.5523 18 19 18C18.4477 18 18 18.4477 18 19C18 19.5523 18.4477 20 19 20ZM5 20C5.55228 20 6 19.5523 6 19C6 18.4477 5.55228 18 5 18C4.44772 18 4 18.4477 4 19C4 19.5523 4.44772 20 5 20Z"></path></svg>`,
+                    }
+
+                    map.addControl(draw);
+
+                    const drawing = [];
+                    // ["Point", "Point", "Point", "LineString", "LineString", "LineString", "Polygon", "Polygon", "Polygon"].forEach((k, index) => {
+                    ["Point", "LineString", "Polygon"].forEach((k, index) => {
+                        drawing.push(new ol.interaction.Drawing({
+                            type : k,
+                            source : source,
+                            select : draw.select,
+                            selectOnDrawEnd : true,
+                        }));
+                        drawing[index].setActive(false);
+                    })
+
+                    drawing.forEach(interaction => {
+                        draw.addInteraction({
+                            interaction : interaction,
+                            label: interaction._type,
+                            icon: icons[interaction._type],
+                        });
+                    });
+
+                    // Style layer
+                    const style = drawing[0].getStyle()[0];
+                    style.setStroke(new ol.style.Stroke({
+                        color: "orange",
+                        width: 1.5
+                    }));
+                    style.setFill (new ol.style.Fill({
+                        color: "rgb(255,165,0,0.2)",
+                    }));
+                    layer.setStyle(style);
+
+                    draw.getSelect().on("select", (e) => {
+                        console.log(e)
+                        if (e.selected.length) {
+                            const geomType = e.selected[0].getGeometry().getType();
+                            dialog.setDialogTitle(geomType);
+                            dialog.setIcon(icons[geomType]);
+                            
+                            dialog.show();
+                        } else {
+                            dialog.close();
+                        }
+                    })
+
+                    window.dialog = dialog;
+
+                    draw.on(["drawstart", "drawend", "drawabort"], console.log)
+                };
+           </script>
+{{/content}}
+
+{{/extend}}

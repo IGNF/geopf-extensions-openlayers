@@ -1,0 +1,69 @@
+@use "sass:map";
+@use "sass:list";
+
+// Du DSFR
+@mixin hover-media-query() {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+// Change la couleur du background du bouton
+@mixin button-state(
+  $text-color: var(--text-action-high-blue-france),
+  $background: unset
+) {
+  &,
+  &:hover,
+  &:active {
+    color: $text-color;
+    background-color: $background;
+  }
+
+  @include hover-media-query {
+    &:hover {
+      background-color: var(--hover-tint);
+    }
+
+    &:active {
+      background-color: var(--active-tint);
+    }
+  }
+}
+
+// Directement pris des fichiers du DSFR (mais permet d'éviter les warnings)
+// @use '@gouvfr/dsfr/src/module/media-query/mixin/respond-from'
+////
+/// Media query : breakpoints
+/// @group media-query
+////
+
+$values: (
+  xs: 0 35.98em,
+  sm: 36em 47.98em,
+  md: 48em 61.98em,
+  lg: 62em 77.98em,
+  xl: 78em,
+);
+
+/// Set media query styles
+///
+/// @param {String} $media [md] - Layout size `['xs', 'sm', 'md', 'lg', 'xl']`
+///
+/// @example scss -
+///   .foo {
+///     @include respond-from(md) {
+///     }
+///   }
+@mixin respond-from($media) {
+  $limits: map.get($values, $media);
+
+  @if $limits != null {
+    @media (min-width: list.nth($limits, 1)) {
+      @content;
+    }
+  }
+  @else {
+    @content;
+  }
+}

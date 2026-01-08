@@ -98,15 +98,18 @@
                     map.addInteraction(new ol.interaction.Snap({ source: source }));
 
                     const togglePoint = new ol.control.ToggleInteraction({
+                        title:"Dessiner un point",
                         interaction : drawing["Point"],
                         icon : 'fr-icon-lock-fill',
                     });
                     const toggleLine = new ol.control.ToggleInteraction({
+                        title:"Dessiner une ligne",
                         interaction : drawing["LineString"],
                         // icon : '{{ resources }}/data/recherche-avancee.svg',
                         icon : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/1200px-How_to_use_icon.svg.png',
                     });
                     const togglePoly = new ol.control.ToggleInteraction({
+                        title:"Dessiner un polygone",
                         interaction : drawing["Polygon"],
                         icon : '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66667 15.3333L6 12.6667H11.3333L8.66667 15.3333ZM8.66667 2L11.3333 4.66667H6L8.66667 2ZM8.66667 10C7.93027 10 7.33333 9.40307 7.33333 8.66667C7.33333 7.93027 7.93027 7.33333 8.66667 7.33333C9.40307 7.33333 10 7.93027 10 8.66667C10 9.40307 9.40307 10 8.66667 10ZM2 8.66667L4.66667 6V11.3333L2 8.66667ZM15.3333 8.66667L12.6667 11.3333V6L15.3333 8.66667Z" fill="#000091"/></svg>',
                     });
