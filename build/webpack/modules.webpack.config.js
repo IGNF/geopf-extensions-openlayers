@@ -77,6 +77,7 @@ module.exports = (env, argv) => {
             // Interactions
             "GpfExtOlDrawingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Drawing.js"),
             "GpfExtOlSelectingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Selecting.js"),
+            "GpfExtOlModifyingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Modifying.js"),
             // Formats étendus
             "GpfExtOlFormats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),

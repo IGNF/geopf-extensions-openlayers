@@ -1,6 +1,7 @@
 .gpf-simple-menu {
     pointer-events: all!important;
     background-color: white;
+    background-color: var(--background-default-grey);
     list-style: none;
     margin: 5px 0;
     padding: 0;

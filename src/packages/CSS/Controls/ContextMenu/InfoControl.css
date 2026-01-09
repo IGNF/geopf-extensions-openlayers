@@ -1,5 +1,5 @@
 .ol-control.ol-drawing-info {
-    color: var(--light-decisions-text-text-default-grey, #3A3A3A);
+    color: var(--text-default-grey, #3A3A3A);
     /* 2.Corps de texte/XS - Texte mention/Desktop & Mobile - Regular */
     font-family: Marianne;
     font-size: 12px;
@@ -13,9 +13,10 @@
     align-items: center;
     gap: 4px;
 
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: var(--background-default-grey, rgba(255, 255, 255, 0.8));
     border-radius: 4px;
     font-size: 12px;
+    opacity: 0.8;;
 
     top: 4em;
     left: 50%;
