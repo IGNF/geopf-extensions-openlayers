@@ -3,8 +3,12 @@
 {{#content "vendor"}}
     <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
     <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSimpleMenu.css" />
 
     <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlModifyingInteraction.js"></script>
+
     <script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
     <script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
     <script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
@@ -109,6 +113,23 @@
 
                     map.addControl(draw);
 
+                    // Modify interaction
+                    const modify = new ol.interaction.Modifying({ 
+                        select : draw.select,
+                    });
+                    map.addInteraction(modify);
+
+                    // Show points on modifying
+                    draw.select.showPoints(() => modify.getActive());
+
+                    // Copy / past
+                    modify.on(["copy", "cut", "paste"], console.log);
+                    modify.on("paste", e => {
+                        e.features.forEach(elt => {
+                            elt.layer.getSource().addFeature(elt.feature.clone());
+                        });
+                    });
+
                     const drawing = [];
                     // ["Point", "Point", "Point", "LineString", "LineString", "LineString", "Polygon", "Polygon", "Polygon"].forEach((k, index) => {
                     ["Point", "LineString", "Polygon"].forEach((k, index) => {
@@ -141,7 +162,7 @@
                     layer.setStyle(style);
 
                     draw.getSelect().on("select", (e) => {
-                        console.log(e)
+                        // console.log(e)
                         if (e.selected.length) {
                             const geomType = e.selected[0].getGeometry().getType();
                             dialog.setDialogTitle(geomType);

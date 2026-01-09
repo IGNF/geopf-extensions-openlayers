@@ -1,6 +1,4 @@
 import Select, { SelectEvent } from "ol/interaction/Select";
-import ModifyingInteraction from "./Modifying.js";
-// import { getFlatCoordinates, selectStyle } from "./selectStyle";
 import { getFlatCoordinates, selectStyle } from "./selectFlatStyle";
 
 import RegularShape from "ol/style/RegularShape";
@@ -8,13 +6,17 @@ import Stroke from "ol/style/Stroke";
 import MultiPoint from "ol/geom/MultiPoint";
 
 /** Outil de selection et d'interaction avec des features
- * 
+ * Gestion du double click sur un objet selectione
+ * Gestion propre du clear sur une selection (nettoyage de la liste des features et dispatch d'un evenement select)
+ * Gestion du style de selection par defaut
+ * Dispatch dblclick when double clicking on a selected feature
+ * @extends {ol.interaction.Select}
  */
 class SelectingInteraction extends Select {
 
     /** Outil de selection avec gestion du doule click / modify interaction
      * @param {Object} options extend ol/interaction/Select options
-     * @param {Function} [options.modifyCondition] - Function to determine if modify interaction is active  (default always true)
+     * @param {Function} [options.showPoint] - Function to determine if should diplay points on line style  (default false)
      */
     constructor (options) {
         options = options || {};
@@ -28,7 +30,7 @@ class SelectingInteraction extends Select {
         if (!options.style) {
             const style = selectStyle("select");
             // Show vertices when modifying
-            style[1].setGeometry( f => this._modify.getActive() ? new MultiPoint(getFlatCoordinates(f)) : null);
+            style[1].setGeometry( f => this._showPoints() ? new MultiPoint(getFlatCoordinates(f)) : null);
             const image = style[0].getImage();
             // Border around icon
             options.style = (f) => {
@@ -54,7 +56,6 @@ class SelectingInteraction extends Select {
                     e.feature = found;
                     this.dispatchEvent(e);
                     e.stopPropagation();
-                    this._modify.setActive(this._modifyCondition(e));
                 }
             }
             return (e.type === "singleclick");
@@ -63,28 +64,28 @@ class SelectingInteraction extends Select {
         // call parent constructor
         super(options);
 
-        this._modify = new ModifyingInteraction({
-            select : this,
-        });
+        // Show points in style function
+        if (typeof options.showPoints !== "function") {
+            this._showPoints = function () {
+                return false;
+            };
+        } else {
+            this._showPoints = options.showPoints;
+        }
+    }
 
-        // Modify condition
-        this._modifyCondition = options.modifyCondition || (e => true);
-
-        // Check modify condition on select event
-        this.on("select", (e) => {
-            this._modify.setActive(this._modifyCondition({ type : "activate" }));
-        });
-        // refresh style
-        this._modify.on("change:active", (e) => {
-            this.getFeatures().forEach( f => {
-                f.changed();
-            });
-        });
+    /** Show points on selected features (lines and polygons)
+     * @param {Function} fn Function to determine if should diplay points on line style
+     */
+    showPoints (fn) {
+        if (typeof fn === "function") {
+            this._showPoints = fn;
+        }
     }
 
     /** Chek if a feature is selected at pixel
      * @param {ol.Pixel} pixel Pixel to check
-     * @return {Array<Feature>|Boolean} Found feature or false
+     * @return {Array<Feature>|Boolean} Found features or false
      */
     selectedAtPixel (pixel) {
         const features = [];
@@ -103,6 +104,9 @@ class SelectingInteraction extends Select {
         return features.length ? features : false;
     }
 
+    /** Clear interaction properly and remove 
+     * Dispatch deselect event
+     */
     clear () {
         const features = this.getFeatures().getArray();
         this.getFeatures().clear();
@@ -110,39 +114,6 @@ class SelectingInteraction extends Select {
         for (const property in this.featureLayerAssociation_) {
             delete this.featureLayerAssociation_[property];
         }
-    }
-
-    /**
-     * Overwrite OpenLayers setMap method
-     *
-     * @param {Map} map - Map.
-     */
-    setMap (map) {
-        if (this.getMap()) {
-            this.getMap().removeInteraction(this._modify);
-        }
-        super.setMap(map);
-        if (map) {
-            map.addInteraction(this._modify);
-        }
-        this._modify.setActive(this.getActive() && this._modifyCondition({type : "activate"}));
-    }
-
-    /** Set interaction active state
-     * @param {Boolean} active Active state
-     */
-    setActive (active) {
-        super.setActive(active);
-        if (this._modify) {
-            this._modify.setActive(active && this._modifyCondition({type : "activate"}));
-        }
-    }
-
-    /** Get internal modification intercation
-     * @return {Modify} modify interaction
-     */
-    getModifyInteraction () {
-        return this._modify;
     }
 
 }

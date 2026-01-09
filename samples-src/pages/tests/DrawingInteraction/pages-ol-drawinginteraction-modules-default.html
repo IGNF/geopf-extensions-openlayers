@@ -2,9 +2,11 @@
 
 {{#content "vendor"}}
     <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
-    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSimpleMenu.css" />
+
     <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
     <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlModifyingInteraction.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -64,13 +66,25 @@
 
                     // Select + modify interaction
                     const select = new ol.interaction.Selecting({
-                        // activate modify condition on double click
-                        // modifyCondition : e => {
-                        //     // return (e.type === "activate");
-                        //     return (e.type === "dblclick");
-                        // }
+                        showPoints: () => modify.getActive()
                     });
                     map.addInteraction(select);
+
+                    const modify = new ol.interaction.Modifying({ 
+                        select : select,
+                        // Activate modify condition on double click
+                        /*
+                        modifyCondition : e => {
+                            // Always (default)
+                            // return true;
+                            // on selection
+                            // return (e.type === "activate");
+                            // on dblclick
+                             return (e.type === "dblclick");
+                        }
+                        */
+                    });
+                    map.addInteraction(modify);
 
                     // Drawing interactions
                     const drawing = {};
