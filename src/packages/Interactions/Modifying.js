@@ -192,7 +192,7 @@ class ModifyingInteraction extends Modify {
         const res = this.get("hitTolerance") * this.getMap().getView().getResolution();
         const extent = [e.coordinate[0] - res, e.coordinate[1] - res, e.coordinate[0] + res, e.coordinate[1] + res];
         // On a point && adding point
-        const isPoint = this.getOverlay().getSource().getFeaturesInExtent(extent).length;
+        let isPoint = this.getOverlay().getSource().getFeaturesInExtent(extent)[0];
         const isAdd = !!this.vertexFeature_;
 
         // Handle parent events
@@ -207,32 +207,47 @@ class ModifyingInteraction extends Modify {
 
             // TODO : Check if can remove point
             let canRemove = false;
-            (currentFeatures || []).forEach(f => {
-                switch (f.getGeometry().getType()) {
-                    case "LineString": {
-                        if (f.getGeometry().getCoordinates().length > 2 ) {
-                            canRemove = true;
+            if (isPoint) {
+                const position = isPoint.getGeometry().getCoordinates();
+
+                isPoint = false;
+                (currentFeatures || []).forEach(f => {
+                    // Check if current point is a vertex
+                    const getFlatCoordinates = f.getGeometry().getFlatCoordinates();
+                    for (let i=0; i<getFlatCoordinates.length; i+=2) {
+                        if (getFlatCoordinates[i] === position[0] && getFlatCoordinates[i+1] === position[1]) {
+                            isPoint = true;
+                            break;
                         }
-                        break;
-                    }
-                    case "Polygon": {
-                        const geom = f.getGeometry().getCoordinates();
-                        geom.forEach(ring => {
-                            if (ring.length > 4 ) {
+                    };
+                    // Check if can remove vertex
+                    switch (f.getGeometry().getType()) {
+                        case "LineString": {
+                            if (f.getGeometry().getCoordinates().length > 2 ) {
                                 canRemove = true;
                             }
-                        });
-                        break;
+                            break;
+                        }
+                        case "Polygon": {
+                            const geom = f.getGeometry().getCoordinates();
+                            geom.forEach(ring => {
+                                if (ring.length > 4 ) {
+                                    canRemove = true;
+                                }
+                            });
+                            break;
+                        }
+                        case "MultiLineString": 
+                        case "MultiPolygon": {
+                            canRemove = true;
+                            console.log("todo");
+                        }
+                        default: {
+                            break;
+                        }
                     }
-                    case "MultiLineString":
-                    case "MultiPolygon": {
-                        console.log("todo");
-                    }
-                    default: {
-                        break;
-                    }
-                }
-            });
+                });
+            }
 
             // Show menu
             if (isPoint && canRemove) {
