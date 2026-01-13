@@ -191,12 +191,10 @@ div[id^=GPlayerTitle_ID_] {
   flex: 1 1 auto;
 }
 
-
 div[id^=GPlayerTitle_ID_] > * {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  white-space: nowrap;
   width: 100%;
 }
 
