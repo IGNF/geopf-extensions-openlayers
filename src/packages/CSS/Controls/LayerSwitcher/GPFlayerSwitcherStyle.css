@@ -37,6 +37,7 @@ button[id^=GPshowLayersListPicto][aria-pressed="true"] {
 
 div[id^=GPlayerTitle_ID_] > * {
   white-space: nowrap;
+  display: block;
 }
 
 button[id^=GPlayerInfoClose] {
