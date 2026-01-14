@@ -8,8 +8,8 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.7-473
- * @date 10/12/2025
+ * @version 1.0.0-beta.7-476
+ * @date 13/12/2025
  *
  */
 /*!
