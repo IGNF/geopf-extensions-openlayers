@@ -187,16 +187,12 @@ div[id^=GPlayerTitle_ID_] {
   justify-content: center;
   align-items: flex-start;
   width: calc(100% - 52px);
-
   flex: 1 1 auto;
 }
-
 
 div[id^=GPlayerTitle_ID_] > * {
   overflow: hidden;
   text-overflow: ellipsis;
-  display: block;
-  white-space: nowrap;
   width: 100%;
 }
 

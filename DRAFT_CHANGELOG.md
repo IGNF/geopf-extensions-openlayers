@@ -21,6 +21,7 @@ __DATE__
   - Cartalog : ajout d'une option pour ordonner la liste des couches (fd34a4013860db2c831cef5febbf9d553b2e9a0a)
   - UI : changement contenu labels affichés au survol (#474)
   - Territories : ajout des territoires d'outre-mer
+  - Layerswitcher : affichage des titres des couches sur deux lignes en mode DSFR (#476)
 
 * 🔥 [Deprecated]
 
