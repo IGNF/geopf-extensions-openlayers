@@ -35,13 +35,6 @@ class Draw extends ToggleContent {
      * @param {ToggleContentOptions} options Options du constructeur
      */
     _initialize (options) {
-        super._initialize(options);
-        /**
-         * Nom de la classe (heritage)
-         * @private
-         */
-        this.CLASSNAME = "Draw";
-
         /**
          * Tableau des toggle interactions contenant les interactions de dessin
          * @type {Collection<ToggleInteraction>}
@@ -54,11 +47,14 @@ class Draw extends ToggleContent {
 
         if (!(options.select instanceof Select)) {
             options.select = new SelectingInteraction();
-            this.on("change:active", (e) => {
-                options.select.clear();
-                options.select.setActive(e.target.getActive());
-            });
         }
+
+        super._initialize(options);
+        /**
+         * Nom de la classe (heritage)
+         * @private
+         */
+        this.CLASSNAME = "Draw";
 
         /**
          * Interaction de sélection
@@ -99,6 +95,20 @@ class Draw extends ToggleContent {
         // Ferme l'interaction si on ferme la modale
         this.dialog.on("dialog:close", (e) => {
             this.getActiveToggle()?.setActive(false);
+        });
+
+        this.on("change:active", (e) => {
+            try {
+                this.select.clear();
+            } catch {
+                const features = this.getFeatures().getArray();
+                this.select.getFeatures().clear();
+                this.select.dispatchEvent(new SelectEvent("select", [], features, undefined));
+                for (const property in this.select.featureLayerAssociation_) {
+                    delete this.select.featureLayerAssociation_[property];
+                }
+            }
+            this.select.setActive(e.target.getActive());
         });
     }
 
