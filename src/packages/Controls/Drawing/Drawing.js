@@ -2123,6 +2123,11 @@ class Drawing extends Control {
         if (opened === "true") {
             this.onPanelOpen();
         }
+        else {
+            if (this.popupOvl) {
+                this.getMap().removeOverlay(this.popupOvl);
+            }
+        }
         
         this.disable();
 
