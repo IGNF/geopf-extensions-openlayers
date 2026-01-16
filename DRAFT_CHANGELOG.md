@@ -35,6 +35,7 @@ __DATE__
   - Layerswitcher : correction du style du compteur (#466)
   - ContextMenu : correction de la fermeture du menu contextuel en cas de clic sur d'autres boutons (#472)
   - Territories : correctif sur la reinitialisation par defaut des territoires
+  - Drawing : suppression de l'overlay si le widget est fermé (#477)
   
 * 🔒 [Security]
 
