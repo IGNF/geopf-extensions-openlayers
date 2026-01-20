@@ -24,6 +24,9 @@
             <!-- map -->
             <div id="map">
             </div>
+            <div>
+                <input id="scale" type="text">
+            </div>
 {{/content}}
 
 {{#content "js"}}
@@ -626,6 +629,7 @@
                         }
                     };
                     
+                    var input = document.getElementById("scale");
                     var view = new ol.View({
                         center : [288074.8449901076, 6247982.515792289],
                         zoom : 6,
@@ -644,8 +648,10 @@
                     });
                     view.on('change:resolution', function() {
                         var scale = view.getResolution();
-                        console.log("Scale : " + scale + " @ Zoom : " + view.getZoom());
-
+                        var zoom = view.getZoom();
+                        var message = "Scale : " + Number.parseFloat(scale).toFixed(2) + " @ Zoom : " + Number.parseFloat(zoom).toFixed(2)
+                        console.log(message);
+                        input.value = message;
                     });
 
                     // Appel du LayerSwitcher
@@ -653,6 +659,12 @@
 
 					// Ajout du LayerSwitcher à la carte
                     map.addControl(layerSwitcher);
+
+                    const scaleControl = new ol.control.ScaleLine({
+                        units: 'metric',
+                        bar: false,
+                    });
+                    map.addControl(scaleControl);
            </script>
 {{/content}}
 

@@ -16,6 +16,7 @@ import SourceWMTS from "./SourceWMTS";
  * @property {Object} [configuration] - Configuration de la couche
  * @property {boolean} [ssl] - Forcer le protocole https (pour nodejs)
  * @property {string} [apiKey] - Clé d'accès à la plateforme
+ * @property {boolean} [noConstraint] - Désactive les contraintes d'affichage (étendue, résolutions)
  * @property {Object} [olParams] - Options supplémentaires pour ol.layer.Tile {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_Tile-TileLayer.html ol.layer.Tile options}
  * et options supplémentaires pour ol.source.WMTS dans olParams.sourceParams {@link https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html ol.source.WMTS options}
  */
@@ -267,6 +268,11 @@ class LayerWMTS extends TileLayer {
         if (typeof options.ssl === "undefined") {
             options.ssl = true;
         }
+
+        // par defaut
+        if (typeof options.noConstraint === "undefined") {
+            options.noConstraint = false;
+        }
         
         // configuration de la ressource
         var layerCfg = options.configuration;
@@ -327,7 +333,8 @@ class LayerWMTS extends TileLayer {
                 } else {
                     p = olGetProj("EPSG:3857");
                 }
-                if (layerCfg.globalConstraint.noConstraint !== true) {
+
+                if (options.noConstraint !== true && layerCfg.globalConstraint.noConstraint !== true) {
                     // puis, selon l'unité de la projection, on calcule la résolution correspondante
                     if (p && p.getUnits()) {
                         if (p.getUnits() === "m") {
