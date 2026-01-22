@@ -69,7 +69,7 @@ class ModifyingInteraction extends Modify {
                 return;
             }
             // Handle key
-            if (evt.key === "Delete") {
+            if (evt.key === "Delete" || evt.key === "Backspace") {
                 // get deleted features
                 const deleted = [];
                 this._select.getFeatures().forEach( f => {
@@ -81,12 +81,14 @@ class ModifyingInteraction extends Modify {
                 // Delete features
                 this.deleteSelection();
                 // To notify others
-                this.dispatchEvent({ 
-                    type : "delete", 
-                    deleted : deleted
-                });
+                if (deleted.length !== 0) {
+                    this.dispatchEvent({ 
+                        type : "delete", 
+                        deleted : deleted
+                    });
+                }
             }
-            if ((evt.key === "c" || evt.key === "x") && evt.ctrlKey) {
+            if ((evt.key === "c" || evt.key === "x") && (evt.ctrlKey  || evt.metaKey)) {
                 // Get Features to copy/cut
                 copyFeatures = [];
                 this._select.getFeatures().forEach( f => {
@@ -105,12 +107,14 @@ class ModifyingInteraction extends Modify {
                     this.deleteSelection();
                 } 
                 // Dispatch copy/cut event
-                this.dispatchEvent({ 
-                    type : (evt.key === "x") ? "cut" : "copy", 
-                    features : copyFeatures,
-                });
+                if (copyFeatures.length !== 0) {
+                    this.dispatchEvent({ 
+                        type : (evt.key === "x") ? "cut" : "copy", 
+                        features : copyFeatures,
+                    });
+                }
             }
-            if (evt.key === "v" && evt.ctrlKey) {
+            if (evt.key === "v" && (evt.ctrlKey || evt.metaKey) && copyFeatures.length !== 0) {
                 this.dispatchEvent({ 
                     type : "paste", 
                     features : copyFeatures
@@ -268,27 +272,54 @@ class ModifyingInteraction extends Modify {
                         text : "Dupliquer",
                         callback : () => {
                             const features = this._select.getFeatures().getArray().slice();
-                            this._select.getFeatures().clear();
                             const sel = [];
+                            const tab = [];
                             features.forEach(f => {
                                 const layer = this._select.getLayer(f);
                                 if (layer) {
-                                    const source = layer.getSource();
+                                    // Restore style before cloning
+                                    this._select.restorePreviousStyle_(f);
                                     const f2 = f.clone();
-                                    source.addFeature(f2);
+                                    // Reapply selected style
+                                    this._select.applySelectedStyle_(f);
+                                    // Add cloned feature
+                                    layer.getSource().addFeature(f2);
                                     sel.push(f2);
+                                    tab.push({
+                                        feature : f2,
+                                        layer : layer
+                                    });
                                 } else {
                                     sel.push(f);
                                 }
                             });
                             this._select.clear();
                             sel.forEach(f => this._select.getFeatures().push(f));
+                            if (tab.length) {
+                                this.dispatchEvent({ 
+                                    type : "duplicate", 
+                                    features : tab
+                                });
+                            }
                         },
                         hide : true
                     },{
                         text : "Supprimer",
                         callback : () => {
+                            const deleted = [];
+                            this._select.getFeatures().forEach( f => {
+                                deleted.push({
+                                    feature : f,
+                                    layer : this._select.getLayer(f)
+                                });
+                            });
                             this.deleteSelection();
+                            if (deleted.length !== 0) {
+                                this.dispatchEvent({ 
+                                    type : "delete", 
+                                    deleted : deleted
+                                });
+                            }
                         },
                         hide : true
                     },
