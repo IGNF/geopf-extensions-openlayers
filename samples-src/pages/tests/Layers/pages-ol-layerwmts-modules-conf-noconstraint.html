@@ -20,7 +20,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout d'une couche WMTS</h2>
+            <h2>Ajout d'une couche WMTS avec zoom client (19 à 24)</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -39,8 +39,9 @@
                         title: "Photographies aériennes",
                         description: "Photographies aériennes",
                         globalConstraint: {
-                            maxScaleDenominator: 559082264.0287179,
-                            minScaleDenominator: 266.5911979812229,
+                            "noConstraint": true,
+                            "maxScaleDenominator": 559082264.0287179,
+                            "minScaleDenominator": 1066.364791924893,
                             bbox: {
                                 left: -180,
                                 right: 180,
@@ -57,7 +58,7 @@
                         },
                         defaultProjection: "EPSG:3857",
                         wmtsOptions: {
-                            tileMatrixSetLink: "PM",
+                            tileMatrixSetLink: "PM_0_19",
                             tileMatrixSetLimits: {
                                 0: {
                                     minTileRow: "0",
@@ -178,18 +179,6 @@
                                     maxTileRow: "524288",
                                     minTileCol: "0",
                                     maxTileCol: "524287"
-                                },
-                                20: {
-                                    minTileRow: "0",
-                                    maxTileRow: "1048576",
-                                    minTileCol: "0",
-                                    maxTileCol: "1048575"
-                                },
-                                21: {
-                                    minTileRow: "0",
-                                    maxTileRow: "2097152",
-                                    minTileCol: "0",
-                                    maxTileCol: "2097151"
                                 }
                             }
                         },
@@ -214,13 +203,13 @@
                             "version": "1.0.0",
                             "format": "image/jpeg",
                             "projection": "EPSG:3857",
-                            "minScale": 266.5911979812229,
-                            "maxScale": 559082264.0287179,
-                            "extent": {
-                                "left": -178.187,
-                                "right": 55.8561,
-                                "top": 51.091,
-                                "bottom": -21.4013
+                            "maxScaleDenominator": 559082264.0287179,
+                            "minScaleDenominator": 1066.364791924893,
+                            "bbox": {
+                                "left": -180,
+                                "right": 180,
+                                "top": 89,
+                                "bottom": -89
                             },
                             "legends": [
                                 {
@@ -232,86 +221,128 @@
                             "title": "Photographies aériennes 2000-2005",
                             "description": "Prises de vues aériennes des territoires pour les années 2000 à 2005",
                             "tileMatrixSetLimits": {
-                                "6": {
-                                    "minTileRow": "21",
-                                    "maxTileRow": "35",
+                                "0": {
+                                    "minTileRow": "0",
+                                    "maxTileRow": "0",
                                     "minTileCol": "0",
-                                    "maxTileCol": "41"
+                                    "maxTileCol": "0"
+                                },
+                                "1": {
+                                    "minTileRow": "0",
+                                    "maxTileRow": "1",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "1"
+                                },
+                                "2": {
+                                    "minTileRow": "0",
+                                    "maxTileRow": "3",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "3"
+                                },
+                                "3": {
+                                    "minTileRow": "1",
+                                    "maxTileRow": "6",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "7"
+                                },
+                                "4": {
+                                    "minTileRow": "2",
+                                    "maxTileRow": "13",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "15"
+                                },
+                                "5": {
+                                    "minTileRow": "5",
+                                    "maxTileRow": "26",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "31"
+                                },
+                                "6": {
+                                    "minTileRow": "11",
+                                    "maxTileRow": "52",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "63"
                                 },
                                 "7": {
-                                    "minTileRow": "42",
-                                    "maxTileRow": "71",
+                                    "minTileRow": "22",
+                                    "maxTileRow": "105",
                                     "minTileCol": "0",
-                                    "maxTileCol": "83"
+                                    "maxTileCol": "127"
                                 },
                                 "8": {
-                                    "minTileRow": "85",
-                                    "maxTileRow": "143",
-                                    "minTileCol": "1",
-                                    "maxTileCol": "167"
+                                    "minTileRow": "45",
+                                    "maxTileRow": "210",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "255"
                                 },
                                 "9": {
-                                    "minTileRow": "171",
-                                    "maxTileRow": "287",
-                                    "minTileCol": "2",
-                                    "maxTileCol": "335"
+                                    "minTileRow": "90",
+                                    "maxTileRow": "421",
+                                    "minTileCol": "0",
+                                    "maxTileCol": "511"
                                 },
                                 "10": {
-                                    "minTileRow": "342",
-                                    "maxTileRow": "574",
-                                    "minTileCol": "5",
-                                    "maxTileCol": "670"
+                                    "minTileRow": "181",
+                                    "maxTileRow": "842",
+                                    "minTileCol": "1",
+                                    "maxTileCol": "1022"
                                 },
                                 "11": {
-                                    "minTileRow": "684",
-                                    "maxTileRow": "1148",
-                                    "minTileCol": "10",
-                                    "maxTileCol": "1341"
+                                    "minTileRow": "363",
+                                    "maxTileRow": "1684",
+                                    "minTileCol": "2",
+                                    "maxTileCol": "2045"
                                 },
                                 "12": {
-                                    "minTileRow": "1369",
-                                    "maxTileRow": "2297",
-                                    "minTileCol": "20",
-                                    "maxTileCol": "2683"
+                                    "minTileRow": "726",
+                                    "maxTileRow": "3369",
+                                    "minTileCol": "5",
+                                    "maxTileCol": "4090"
                                 },
                                 "13": {
-                                    "minTileRow": "2739",
-                                    "maxTileRow": "4594",
-                                    "minTileCol": "41",
-                                    "maxTileCol": "5367"
+                                    "minTileRow": "1452",
+                                    "maxTileRow": "6739",
+                                    "minTileCol": "11",
+                                    "maxTileCol": "8180"
                                 },
                                 "14": {
-                                    "minTileRow": "5478",
-                                    "maxTileRow": "9189",
-                                    "minTileCol": "82",
-                                    "maxTileCol": "10734"
+                                    "minTileRow": "2904",
+                                    "maxTileRow": "13479",
+                                    "minTileCol": "22",
+                                    "maxTileCol": "16361"
                                 },
                                 "15": {
-                                    "minTileRow": "10956",
-                                    "maxTileRow": "18378",
-                                    "minTileCol": "165",
-                                    "maxTileCol": "21468"
+                                    "minTileRow": "5809",
+                                    "maxTileRow": "26958",
+                                    "minTileCol": "45",
+                                    "maxTileCol": "32722"
                                 },
                                 "16": {
-                                    "minTileRow": "21913",
-                                    "maxTileRow": "36757",
-                                    "minTileCol": "330",
-                                    "maxTileCol": "42936"
+                                    "minTileRow": "11619",
+                                    "maxTileRow": "53916",
+                                    "minTileCol": "91",
+                                    "maxTileCol": "65444"
                                 },
                                 "17": {
-                                    "minTileRow": "43827",
-                                    "maxTileRow": "73515",
-                                    "minTileCol": "660",
-                                    "maxTileCol": "85872"
+                                    "minTileRow": "23238",
+                                    "maxTileRow": "107833",
+                                    "minTileCol": "182",
+                                    "maxTileCol": "130889"
                                 },
                                 "18": {
-                                    "minTileRow": "87654",
-                                    "maxTileRow": "147031",
-                                    "minTileCol": "1320",
-                                    "maxTileCol": "171745"
+                                    "minTileRow": "46477",
+                                    "maxTileRow": "215666",
+                                    "minTileCol": "364",
+                                    "maxTileCol": "261779"
+                                },
+                                "19": {
+                                    "minTileRow": "92955",
+                                    "maxTileRow": "431332",
+                                    "minTileCol": "728",
+                                    "maxTileCol": "523559"
                                 }
                             },
-                            "TMSLink": "PM",
+                            "TMSLink": "PM_0_19",
                             "matrixIds": [
                                 "0",
                                 "1",
@@ -332,9 +363,7 @@
                                 "16",
                                 "17",
                                 "18",
-                                "19",
-                                "20",
-                                "21"
+                                "19"
                             ],
                             "tileMatrices": {
                                 "0": {
@@ -576,30 +605,6 @@
                                         "x": -20037508.3427892,
                                         "y": 20037508.3427892
                                     }
-                                },
-                                "20": {
-                                    "matrixId": "20",
-                                    "matrixHeight": 1048576,
-                                    "matrixWidth": 1048576,
-                                    "scaleDenominator": 533.1823959624465,
-                                    "tileHeight": 256,
-                                    "tileWidth": 256,
-                                    "topLeftCorner": {
-                                        "x": -20037508.3427892,
-                                        "y": 20037508.3427892
-                                    }
-                                },
-                                "21": {
-                                    "matrixId": "21",
-                                    "matrixHeight": 2097152,
-                                    "matrixWidth": 2097152,
-                                    "scaleDenominator": 266.5911979812229,
-                                    "tileHeight": 256,
-                                    "tileWidth": 256,
-                                    "topLeftCorner": {
-                                        "x": -20037508.3427892,
-                                        "y": 20037508.3427892
-                                    }
                                 }
                             },
                             "nativeResolutions": [
@@ -622,9 +627,7 @@
                                 "2.388657133911758",
                                 "1.194328566955879",
                                 "0.5971642834779395",
-                                "0.2985821417389697",
-                                "0.1492910708694849",
-                                "0.0746455354347424"
+                                "0.2985821417389697"
                             ]
                         }
                     };
@@ -634,7 +637,7 @@
                         center : [288074.8449901076, 6247982.515792289],
                         zoom : 6,
                         minZoom: 0,
-                        maxZoom: 21
+                        maxZoom: 24
                     });
                     var map = new ol.Map({
                         target : "map",
@@ -642,6 +645,7 @@
                         layers : [
                             new ol.layer.GeoportalWMTS({
                                 layer : "ORTHOIMAGERY.ORTHOPHOTOS",
+                                noConstraint: true,
                                 configuration : conf
                             })
                         ]

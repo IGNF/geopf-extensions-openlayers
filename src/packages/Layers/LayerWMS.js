@@ -16,6 +16,7 @@ import SourceWMS from "./SourceWMS";
  * @property {Object} [configuration] - Configuration de la couche
  * @property {boolean} [ssl] - Forcer le protocole https (pour nodejs)
  * @property {string} [apiKey] - Clé d'accès à la plateforme
+ * @property {boolean} [noConstraint] - Désactive les contraintes d'affichage (étendue, résolutions)
  * @property {Object} [olParams] - Options supplémentaires pour ol.layer.Tile {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_Tile-TileLayer.html ol.layer.Tile options}
  * et options supplémentaires pour ol.source.TileWMS dans olParams.sourceParams {@link https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html ol.source.TileWMS options}
  */
@@ -60,6 +61,11 @@ class LayerWMS extends TileLayer {
         // par defaut
         if (typeof options.ssl === "undefined") {
             options.ssl = true;
+        }
+
+        // par defaut
+        if (typeof options.noConstraint === "undefined") {
+            options.noConstraint = false;
         }
 
         // configuration de la ressource
@@ -124,22 +130,25 @@ class LayerWMS extends TileLayer {
                 } else if (typeof olSourceParams.projection === "object" && olSourceParams.projection.getCode()) {
                     p = olGetProj(olSourceParams.projection.getCode());
                 }
-                // puis, selon l'unité de la projection, on calcule la résolution correspondante
-                if (p && p.getUnits()) {
-                    if (p.getUnits() === "m") {
-                        /* fixme : fix temporaire pour gérer les min/max scaledenominator qui sont arrondis dans la configuration !
-                         * on les arrondit respectivement à l'unité inférieure et supérieure
-                         * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
-                        // info : 1 pixel = 0.00028 m
-                        layerTileOptions.minResolution = (layerCfg.globalConstraint.minScaleDenominator - 1) * 0.00028;
-                        layerTileOptions.maxResolution = (layerCfg.globalConstraint.maxScaleDenominator + 1) * 0.00028;
-                    } else if (p.getUnits() === "degrees") {
-                        /* fixme : fix temporaire pour gérer les min/max scaledenominator qui sont arrondis dans la configuration !
-                         * on les arrondit respectivement à l'unité inférieure et supérieure
-                         * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
-                        // info : 6378137 * 2 * pi / 360 = rayon de la terre (ellipsoide WGS84)
-                        layerTileOptions.minResolution = (layerCfg.globalConstraint.minScaleDenominator - 1) * 0.00028 * 180 / (Math.PI * 6378137);
-                        layerTileOptions.maxResolution = (layerCfg.globalConstraint.maxScaleDenominator + 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                 
+                if (options.noConstraint !== true && layerCfg.globalConstraint.noConstraint !== true) {
+                    // puis, selon l'unité de la projection, on calcule la résolution correspondante
+                    if (p && p.getUnits()) {
+                        if (p.getUnits() === "m") {
+                            /* fixme : fix temporaire pour gérer les min/max scaledenominator qui sont arrondis dans la configuration !
+                             * on les arrondit respectivement à l'unité inférieure et supérieure
+                             * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
+                            // info : 1 pixel = 0.00028 m
+                            layerTileOptions.minResolution = (layerCfg.globalConstraint.minScaleDenominator - 1) * 0.00028;
+                            layerTileOptions.maxResolution = (layerCfg.globalConstraint.maxScaleDenominator + 1) * 0.00028;
+                        } else if (p.getUnits() === "degrees") {
+                            /* fixme : fix temporaire pour gérer les min/max scaledenominator qui sont arrondis dans la configuration !
+                             * on les arrondit respectivement à l'unité inférieure et supérieure
+                             * pour que les couches soient bien disponibles aux niveaux de zoom correspondants */
+                            // info : 6378137 * 2 * pi / 360 = rayon de la terre (ellipsoide WGS84)
+                            layerTileOptions.minResolution = (layerCfg.globalConstraint.minScaleDenominator - 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                            layerTileOptions.maxResolution = (layerCfg.globalConstraint.maxScaleDenominator + 1) * 0.00028 * 180 / (Math.PI * 6378137);
+                        }
                     }
                 }
             }
