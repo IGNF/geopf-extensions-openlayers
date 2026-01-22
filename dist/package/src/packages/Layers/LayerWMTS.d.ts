@@ -17,6 +17,10 @@ export type LayerWMTSOptions = {
      */
     apiKey?: string | undefined;
     /**
+     * - Désactive les contraintes d'affichage (étendue, résolutions)
+     */
+    noConstraint?: boolean | undefined;
+    /**
      * - Options supplémentaires pour ol.layer.Tile {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_Tile-TileLayer.html ol.layer.Tile options}
      * et options supplémentaires pour ol.source.WMTS dans olParams.sourceParams {@link https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html ol.source.WMTS options}
      */
@@ -28,6 +32,7 @@ export type LayerWMTSOptions = {
  * @property {Object} [configuration] - Configuration de la couche
  * @property {boolean} [ssl] - Forcer le protocole https (pour nodejs)
  * @property {string} [apiKey] - Clé d'accès à la plateforme
+ * @property {boolean} [noConstraint] - Désactive les contraintes d'affichage (étendue, résolutions)
  * @property {Object} [olParams] - Options supplémentaires pour ol.layer.Tile {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_Tile-TileLayer.html ol.layer.Tile options}
  * et options supplémentaires pour ol.source.WMTS dans olParams.sourceParams {@link https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html ol.source.WMTS options}
  */
