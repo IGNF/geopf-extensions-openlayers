@@ -36,6 +36,7 @@ __DATE__
   - ContextMenu : correction de la fermeture du menu contextuel en cas de clic sur d'autres boutons (#472)
   - Territories : correctif sur la reinitialisation par defaut des territoires
   - Drawing : suppression de l'overlay si le widget est fermé (#477)
+  - Layers : permettre l'utilisation du zoom client en supprimant les contraintes de resolutions pour les niveau 20 et 21 (#478)
   
 * 🔒 [Security]
 
