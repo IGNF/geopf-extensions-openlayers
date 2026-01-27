@@ -87,6 +87,13 @@
                 })
             });
             map.addLayer(gpHydro);
+
+            var mapbox = new ol.layer.GeoportalMapBox({
+                layer  : "PLAN.IGN",
+                style  : "gris"
+            });
+            map.addLayer(mapbox);
+            
             // 3. Ajout du GetFeatureInfo
             var getFeatureInfo = new ol.control.GetFeatureInfo({
                 position: "bottom-left",
