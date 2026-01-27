@@ -3,6 +3,16 @@ import Control from "ol/control/Control";
 // import CSS
 import "../../CSS/Controls/ContextMenu/SimpleMenu.css";
 
+
+/**
+ * @typedef {Object} MenuItem
+ * @property {string} text - Texte de l'élément de menu.
+ * @property {Function} callback - Fonction à exécuter lors du clic sur l'élément de menu.
+ * @property {boolean} [hide=true] - Définit si le menu doit se fermer après le clic sur cet élément.
+ * @property {boolean} [link=false] - Utiliser un lien plutot qu'un bouton
+ * @property {string} [className] - Classe CSS à appliquer à l'élément de menu.
+ */
+
 /** A simple menu to display on a map
  * @extends {ol.control.Control}
  */
@@ -23,16 +33,19 @@ class SimpleMenu extends Control {
 
     /**
      * Set menu items
-     * @param {Array<Object>} items Array of menu items { text : String, callback : Function, hide : Boolean to hide menu after click }
+     * @param {Array<MenuItem>} items Array of menu items 
      */
     setMenu (items = []) {
         this.element.innerHTML = "";
         items.forEach(item => {
             const li = document.createElement("li");
             this.element.appendChild(li);
-            const a = document.createElement("a");
+            const a = document.createElement(item.link ? "a" : "button");
             a.innerHTML = item.text;
-            a.href = "#";
+            a.className = item.className || "gpf-btn fr-btn fr-btn--tertiary";
+            if (item.link) {
+                a.href = "#";
+            }
             a.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
