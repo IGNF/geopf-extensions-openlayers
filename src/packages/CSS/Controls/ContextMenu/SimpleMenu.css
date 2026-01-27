@@ -22,6 +22,7 @@
 .gpf-simple-menu a {
     color: #333;
     color: var(--text-action-high-blue-france);
+    background-color: transparent;
     display: flex;
     padding: 8px 16px 8px 12px;
     justify-content: center;
@@ -34,10 +35,14 @@
     border: 0;
     box-shadow: unset;
 }
+.ol-touch .gpf-simple-menu button {
+    font-size: 1em;
+}
 .gpf-simple-menu button:hover,
 .gpf-simple-menu a:hover {
     background-color: #eee;
     background-color: var(--background-default-grey-active);
+    color: var(--text-action-high-blue-france);;
     border: 0;
     box-shadow: unset;
     outline: none;
