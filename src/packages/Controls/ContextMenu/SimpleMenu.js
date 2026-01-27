@@ -46,14 +46,14 @@ class SimpleMenu extends Control {
             if (item.link) {
                 a.href = "#";
             }
-            a.onclick = (e) => {
+            a.addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 item.callback();
                 if (item.hide) {
                     setTimeout( () => this.hide() );
                 }
-            };
+            });
             li.appendChild(a);
         });
     }
