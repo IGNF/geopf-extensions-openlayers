@@ -37,6 +37,7 @@ __DATE__
   - Territories : correctif sur la reinitialisation par defaut des territoires
   - Drawing : suppression de l'overlay si le widget est fermé (#477)
   - Layers : permettre l'utilisation du zoom client en supprimant les contraintes de resolutions pour les niveau 20 et 21 (#478)
+  - Layerswitcher : modification du titre du gestionnaire de couches quand on change de style MapBox (#480)
   
 * 🔒 [Security]
 
