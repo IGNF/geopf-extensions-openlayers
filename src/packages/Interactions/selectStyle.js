@@ -5,6 +5,7 @@ import Fill from "ol/style/Fill";
 import CircleStyle from "ol/style/Circle";
 import RegularShape from "ol/style/RegularShape";
 import MultiPoint from "ol/geom/MultiPoint";
+import LineString from "ol/geom/LineString";
 
 import mapPinIcon from "../Controls/SearchEngine/map-pin-2-fill.svg";
 
@@ -52,6 +53,15 @@ function selectStyle (type, featureType, img) {
 
     const stroke = new Stroke({
         color : "#33b1ff",
+        width : 2,
+    });
+    const wStroke = new Stroke({
+        color : "#fff",
+        width : 2,
+    });
+    const dash = new Stroke({
+        color : "#33b1ff",
+        lineDash : [5, 6],
         width : 2,
     });
     const fill = new Fill({
@@ -102,16 +112,16 @@ function selectStyle (type, featureType, img) {
         default: {
             switch (featureType) {
                 case "Point": {
-                    return [];
+                    /* prevent point under the cursor > return empty style */
+                    // return [];
+                    // Show point under the cursor
+                    return [new Style({
+                        image : circle,
+                    })];
                 }
                 case "Polygon": {
                     return [
                         new Style({
-                            stroke : new Stroke({
-                                color : "#33b1ff",
-                                lineDash : [5, 6],
-                                width : 2,
-                            }),
                             fill : fill,
                         })
                     ];
@@ -120,9 +130,19 @@ function selectStyle (type, featureType, img) {
                 default: {
                     return [
                         new Style({
+                            stroke : wStroke,
+                        }),
+                        new Style({
+                            stroke : dash,
+                        }),
+                        new Style({
                             image : wcircle,
                             stroke : stroke,
-                            fill : fill,
+                            geometry : (f) => {
+                                const coords = f.getGeometry().getCoordinates();
+                                coords.pop();
+                                return new LineString( coords );
+                            }
                         }),
                         new Style({
                             image : circle,

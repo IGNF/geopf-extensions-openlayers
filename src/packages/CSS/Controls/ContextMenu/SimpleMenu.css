@@ -18,6 +18,7 @@
     border-top: none;
 }
 
+.gpf-simple-menu button,
 .gpf-simple-menu a {
     color: #333;
     color: var(--text-action-high-blue-france);
@@ -29,8 +30,15 @@
     align-self: stretch;
     text-decoration: none;
     background-image: none;
+    width: 100%;
+    border: 0;
+    box-shadow: unset;
 }
+.gpf-simple-menu button:hover,
 .gpf-simple-menu a:hover {
     background-color: #eee;
     background-color: var(--background-default-grey-active);
+    border: 0;
+    box-shadow: unset;
+    outline: none;
 }

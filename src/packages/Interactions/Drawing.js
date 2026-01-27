@@ -29,7 +29,7 @@ class DrawingInteraction extends Draw {
             type : options.type || "Point",
             style : (f) => {
                 return defaultStyle[`${this._type}_${f.get("geometry").getType()}`] || defaultStyle.Point;
-                return selectStyle(this._type, f.get("geometry").getType(), options.image);
+                // return selectStyle(this._type, f.get("geometry").getType(), options.image);
             },
         });
         this._type = options.type || "Point";
@@ -164,9 +164,6 @@ class DrawingInteraction extends Draw {
         super.setActive(active);
         this.showInfo(active ? "Cliquer pour commencer." : "");
 
-        if (this.getMap()) {
-            this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";
-        }
         // prevent conflict with select interaction
         if (this._select && this.getActive()) {
             // deactivate select interaction
@@ -180,6 +177,11 @@ class DrawingInteraction extends Draw {
                 // Sinon l'événement est envoyé par clear()
                 this._select.clear ?? this._select.dispatchEvent(new SelectEvent("select", [], features, undefined));
             }
+        }
+
+        // Show Crosshair cursor
+        if (this.getMap()) {
+            this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";
         }
     }
 
@@ -198,7 +200,10 @@ class DrawingInteraction extends Draw {
      * @returns {Boolean} Whether to propagate the event further
      */
     handleEvent (event) {
-        this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";
+        // For cursor update
+        setTimeout(() => {
+            this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";
+        });
         return super.handleEvent(event);
     }
 
