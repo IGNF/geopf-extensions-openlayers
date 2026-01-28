@@ -243,6 +243,7 @@ class LayerMapBox extends VectorTileLayer {
         this.sourceId = options.source;
         this.styleUrl = styleUrl;
         this.styleName = styleName;
+        this.styleTitle = styleTitle;
         this.config = layerCfg;
         
         // récuperation du style
@@ -253,18 +254,28 @@ class LayerMapBox extends VectorTileLayer {
     
     /**
      * Get Style MapBox
+     * @returns {Promise} - Promise
      * @private
      */
     setStyleMapBox () {
         var self = this;
-        fetch(this.styleUrl, {
+        return fetch(this.styleUrl, {
             credentials : "same-origin"
         }).then(function (response) {
             if (response.ok) {
-                response.json().then(function (style) {
+                return response.json().then(function (style) {
                     self.onStyleMapBoxLoad(style);
                 });
             }
+        }).then(() => {
+            var _source = self.getSource();
+            if (_source.getState() !== "ready") {
+                _source.setState("loading");
+            }
+            // mise à jour du titre de la couche avec le nom du style
+            var _layerName = self.config.title;
+            var _styleName = self.styleName || self.styleTitle;
+            _source._title = _layerName + " (" + _styleName + ")";
         }).catch(function (e) {
             self.onStyleMapBoxError(e);
         });
