@@ -131,9 +131,11 @@ declare class LayerMapBox extends VectorTileLayer<VectorTileSource<any>, any> {
     sourceId: string | undefined;
     styleUrl: any;
     styleName: string | undefined;
+    styleTitle: string;
     config: any;
     /**
      * Get Style MapBox
+     * @returns {Promise} - Promise
      * @private
      */
     private setStyleMapBox;

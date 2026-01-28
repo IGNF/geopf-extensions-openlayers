@@ -1607,7 +1607,12 @@ class LayerSwitcher extends Control {
 
         layer.styleUrl = e.target.value;
         layer.styleName = e.target.dataset.name;
-        layer.setStyleMapBox();
+        layer.setStyleMapBox()
+            .then(() => {
+                layer.setProperties({
+                    "title" : layer.getSource()._title || layer.styleName || layer.styleTitle,
+                });
+            });
 
         /**
          * event triggered when an select style is changed
