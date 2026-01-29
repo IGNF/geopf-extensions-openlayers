@@ -44,12 +44,13 @@ class ButtonExport extends Control {
     * @param {String} [options.kind = "secondary"] - button type : primary | secondary | tertiary
     * @param {Boolean} [options.menu = false] - displays the menu
     * @param {Object} [options.menuOptions] - options of the menu.
+    * @param {Boolean} [options.menuOptions.name = "options"] - displays the menu name. Null if you don't want it
     * @param {Boolean} [options.menuOptions.outside = false] - displays all element outside of menu
-    * @param {Boolean} [options.menuOptions.above = false] - displays menu above or not of the button
+    * @param {String} [options.menuOptions.position = "bottom"] - displays menu position relative to the button
     * @param {Boolean} [options.menuOptions.labelName = true] - displays the label name
     * @param {Boolean} [options.menuOptions.labelDesc = true] - displays the label description
     * @param {Boolean} [options.menuOptions.selectFormat = true] - displays the select format
-    * @param {String} [options.direction = "row"] - buttons and menus layout
+    * @param {String} [options.direction = "column"] - buttons and menus layout
     * @param {Object} [options.icons] - icons
     * @param {String} [options.icons.menu = "\u2630 "] - displays the menu icon, or otherwise left blank if you don't want it
     * @param {String} [options.icons.button = "export"] - displays the button icon : save or export icon, or otherwise left blank if you don't want it
@@ -354,10 +355,11 @@ class ButtonExport extends Control {
             description : "export",
             title : "Exporter",
             kind : "secondary",
-            direction : "row",
+            direction : "column",
             menu : false,
             menuOptions : {
-                above : false, // au dessus ou en dessous du bouton !
+                name : "options",
+                position : "bottom", // en dessous du bouton
                 outside : false,
                 labelName : true,
                 labelDesc : true,
@@ -431,12 +433,9 @@ class ButtonExport extends Control {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPexportContainer");
-        div.className = "GPexportMenuContainer gpf-export-menu-container gpf-export-menu-container-row-reverse";
+        div.className = "GPexportMenuContainer gpf-export-menu-container gpf-export-menu-container-column-reverse";
 
-        if (this.options.direction === "column") {
-            div.classList.replace("gpf-export-menu-container-row-reverse", "gpf-export-menu-container-column-reverse");
-        }
-        
+        var menuName = this.options.menuOptions.name || "";
         // menu des options
         // > GPexportMenuHidden : pas de menu pour le mode classic !
         var menu = this.stringToHTML(`
@@ -445,22 +444,23 @@ class ButtonExport extends Control {
                     <button type="button" 
                         id="GPexportBtnMenuContent-${this.uid}"
                         class="gpf-accordion__btn fr-accordion__btn" 
-                        aria-expanded="false" aria-controls="GPexportMenuContent-${this.uid}">options</button>
+                        aria-expanded="false" aria-controls="GPexportMenuContent-${this.uid}">${menuName}</button>
                 </h3>
                 <div id="GPexportMenuContent-${this.uid}"
                     class="GPexportMenuContent fr-collapse fr-mx-2w">
                     <div id="GPexportMenuName-${this.uid}" 
-                        class="GPexportMenuName">
+                        class="gpf-export-menu-name">
                         <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputName-${this.uid}" title="Nom">Nom</label>
                         <input type="text" id="GPexportMenuInputName-${this.uid}" class="GPinput gpf-input fr-input">
                     </div>
                     <div id="GPexportMenuDesc-${this.uid}"
-                        class="GPexportMenuDesc">
+                        class="gpf-export-menu-desc">
                         <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputDesc-${this.uid}" title="Description">Description</label>
                         <input type="text" id="GPexportMenuInputDesc-${this.uid}" class="GPinput gpf-input fr-input">
                     </div>
-                    <div id="GPexportMenuFormat-${this.uid}">
-                        <label class="GPlabel gpf-label fr-label" title="Formats">Formats</label>
+                    <div id="GPexportMenuFormat-${this.uid}"
+                        class="gpf-export-menu-format">
+                        <label class="GPlabel gpf-label fr-label" title="Formats">Format</label>
                         <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
                             <input type="radio" 
                                 id="GPmenuFormatGeojson-${this.uid}"
@@ -543,6 +543,11 @@ class ButtonExport extends Control {
             var btnCancel = this.menu.querySelector("#GPexportMenuButtonCancel-" + this.uid);
             btnCancel.addEventListener("click", (e) => this.onClickButtonCancel(e));
         
+            if (this.options.direction === "row") {
+                this.menu.querySelector("#GPexportMenuName-" + this.uid).classList.add("gpf-export-menu-options-row");
+                this.menu.querySelector("#GPexportMenuDesc-" + this.uid).classList.add("gpf-export-menu-options-row");
+                this.menu.querySelector("#GPexportMenuFormat-" + this.uid).classList.add("gpf-export-menu-options-row");                
+            }
             // les options du menu
             if (this.options.menuOptions) {
                 if (this.options.menuOptions.outside) {
@@ -553,22 +558,35 @@ class ButtonExport extends Control {
                     divContent.classList.remove("fr-collapse");
                     var divButtons = this.menu.querySelector("#GPexportMenuButtons-" + this.uid);
                     divButtons.classList.add("gpf-hidden");
+                    divButtons.style.display = "none";
                 }
-                if (this.options.menuOptions.above) {
-                    div.classList.replace("gpf-export-menu-container-row-reverse", "gpf-export-menu-container-row");
+                if (this.options.menuOptions.position === "top") {
                     div.classList.replace("gpf-export-menu-container-column-reverse", "gpf-export-menu-container-column");
+                }
+                // bottom par defaut
+                if (this.options.menuOptions.position === "bottom") {
+                    div.classList.replace("gpf-export-menu-container-column", "gpf-export-menu-container-column-reverse");
+                }
+                if (this.options.menuOptions.position === "left") {
+                    div.classList.replace("gpf-export-menu-container-column-reverse", "gpf-export-menu-container-row");
+                }
+                if (this.options.menuOptions.position === "right") {
+                    div.classList.replace("gpf-export-menu-container-column-reverse", "gpf-export-menu-container-row-reverse");
                 }
                 if (!this.options.menuOptions.labelName) {
                     var divName = this.menu.querySelector("#GPexportMenuName-" + this.uid);
                     divName.classList.add("gpf-hidden");
+                    divName.style.display = "none";
                 }
                 if (!this.options.menuOptions.labelDesc) {
                     var divDesc = this.menu.querySelector("#GPexportMenuDesc-" + this.uid);
                     divDesc.classList.add("gpf-hidden");
+                    divDesc.style.display = "none";
                 }
                 if (!this.options.menuOptions.selectFormat) {
                     var divFormat = this.menu.querySelector("#GPexportMenuFormat-" + this.uid);
                     divFormat.classList.add("gpf-hidden");
+                    divFormat.style.display = "none";
                 }
             }
         }

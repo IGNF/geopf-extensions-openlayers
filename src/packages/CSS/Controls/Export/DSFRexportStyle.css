@@ -42,22 +42,41 @@ dialog div .gpf-export-menu-container {
     justify-content: flex-end;
 }
 
+.gpf-export-menu-format,
+.gpf-export-menu-desc,
+.gpf-export-menu-name {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+/* position du menu */
+
+/* right */
 .gpf-export-menu-container-row-reverse {
     flex-direction: row-reverse;
 }
-
+/* bottom (par défaut) */
 .gpf-export-menu-container-column-reverse {
     flex-direction: column-reverse;
 }
-
+/* left */
 .gpf-export-menu-container-row {
     flex-direction: row;
 }
-
+/* top */
 .gpf-export-menu-container-column {
     flex-direction: column;
 }
 
+/* position des options dans le menu */
+.gpf-export-menu-options-row {
+    flex-direction: row;
+    align-items: center;
+}
+.gpf-export-menu-options-column {
+    flex-direction: column;
+}
 .gpf-accordion {
     width: 110px;
 }

@@ -1,0 +1,13 @@
+/* le menu des options */
+[id^=GPexportBtnMenuContent] {}
+[id^=GPexportMenuContent]{}
+[id^=GPexportMenuButtons] {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-content: center;
+}
+[id^=GPexportMenuName]{}
+[id^=GPexportMenuDesc]{}
+[id^=GPexportMenuFormat]{}

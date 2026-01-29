@@ -92,6 +92,7 @@
                 // * appel instance externe
                 var drawing = new ol.control.Drawing({
                   position: "bottom-left",
+                  collapsed: false,
                   tools : {
                     export : false
                   }
@@ -105,9 +106,12 @@
                   direction : "column",
                   menu : true,
                   menuOptions : {
-                    above : true,
-                    outside : true,
-                    labelFormat : false
+                    name : "option",
+                    position : "top",
+                    outside : false,
+                    labelName : true,
+                    labelDesc : true,
+                    selectFormat : true
                   },
                   icons : {
                     menu : "",
@@ -165,7 +169,7 @@
                   direction: "column",
                   menu : true,
                   menuOptions : {
-                    above : true,
+                    position : "top",
                     outside : true,
                     selectFormat : false
                   },
@@ -182,7 +186,7 @@
                 exportRoute.setTitle("Exporter Itineraire");
                 exportRoute.setMenu(true);
                 exportRoute.setMenuOptions({
-                  above : true,
+                  position : "top",
                   outside : true,
                   selectFormat : false
                 });
