@@ -445,6 +445,7 @@ class ButtonExport extends Control {
                         id="GPexportBtnMenuContent-${this.uid}"
                         class="gpf-accordion__btn fr-accordion__btn" 
                         aria-expanded="false" aria-controls="GPexportMenuContent-${this.uid}">${menuName}</button>
+                    <span id="GPexportTxtMenuContent-${this.uid}" class="gpf-hidden">${menuName}</span>
                 </h3>
                 <div id="GPexportMenuContent-${this.uid}"
                     class="GPexportMenuContent fr-collapse">
@@ -554,6 +555,8 @@ class ButtonExport extends Control {
                     this.menu.classList.remove("gpf-accordion", "fr-accordion");
                     var divButton = this.menu.querySelector("#GPexportBtnMenuContent-" + this.uid);
                     divButton.classList.add("gpf-hidden");
+                    var txtButton = this.menu.querySelector("#GPexportTxtMenuContent-" + this.uid);
+                    txtButton.classList.remove("gpf-hidden");
                     var divContent = this.menu.querySelector("#GPexportMenuContent-" + this.uid);
                     divContent.classList.remove("fr-collapse");
                     var divButtons = this.menu.querySelector("#GPexportMenuButtons-" + this.uid);
