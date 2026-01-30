@@ -440,27 +440,27 @@ class ButtonExport extends Control {
         // > GPexportMenuHidden : pas de menu pour le mode classic !
         var menu = this.stringToHTML(`
             <div class="GPexportMenuHidden gpf-accordion fr-accordion ${this.menuClassHidden}">
-                <h3 class="gpf-accordion__title fr-accordion__title">
+                <h3 class="gpf-accordion__title fr-accordion__title fr-my-1w">
                     <button type="button" 
                         id="GPexportBtnMenuContent-${this.uid}"
                         class="gpf-accordion__btn fr-accordion__btn" 
                         aria-expanded="false" aria-controls="GPexportMenuContent-${this.uid}">${menuName}</button>
                 </h3>
                 <div id="GPexportMenuContent-${this.uid}"
-                    class="GPexportMenuContent fr-collapse fr-mx-2w">
+                    class="GPexportMenuContent fr-collapse">
                     <div id="GPexportMenuName-${this.uid}" 
                         class="gpf-export-menu-name">
-                        <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputName-${this.uid}" title="Nom">Nom</label>
+                        <label class="GPlabel gpf-label fr-label fr-mr-1w" for="GPexportMenuInputName-${this.uid}" title="Nom">Nom</label>
                         <input type="text" id="GPexportMenuInputName-${this.uid}" class="GPinput gpf-input fr-input">
                     </div>
                     <div id="GPexportMenuDesc-${this.uid}"
-                        class="gpf-export-menu-desc">
-                        <label class="GPlabel gpf-label fr-label" for="GPexportMenuInputDesc-${this.uid}" title="Description">Description</label>
+                        class="gpf-export-menu-desc fr-mt-2w">
+                        <label class="GPlabel gpf-label fr-label fr-mr-1w" for="GPexportMenuInputDesc-${this.uid}" title="Description">Description</label>
                         <input type="text" id="GPexportMenuInputDesc-${this.uid}" class="GPinput gpf-input fr-input">
                     </div>
                     <div id="GPexportMenuFormat-${this.uid}"
-                        class="gpf-export-menu-format">
-                        <label class="GPlabel gpf-label fr-label" title="Formats">Format</label>
+                        class="gpf-export-menu-format fr-mt-2w">
+                        <label class="GPlabel gpf-label fr-label fr-mr-1w" title="Formats">Format</label>
                         <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
                             <input type="radio" 
                                 id="GPmenuFormatGeojson-${this.uid}"
