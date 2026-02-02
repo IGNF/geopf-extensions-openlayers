@@ -1,5 +1,6 @@
 import Modify from "ol/interaction/Modify";
 import Menu from "../Controls/ContextMenu/SimpleMenu";
+import LongTouch from "./LongTouch.js";
 
 import { selectStyle } from "./selectFlatStyle";
 
@@ -29,6 +30,19 @@ class ModifyingInteraction extends Modify {
 
         this._menu = new Menu();
         this._select = options.select;
+
+        // Long touch interaction
+        this.longtouch = new LongTouch({ 
+            pixelTolerance : 6, 
+            delay: 600,
+            handleLongTouchEvent : (e) => {
+                if (this.getActive()) {
+                    this._showContextMenu(e, this._isOnPoint(e));
+                    this._islongtouch = true;
+                }
+            }
+        });
+        this.longtouch.setActive(true);
 
         // Activate modify interaction on select event
         this._modifyCondition = options.modifyCondition || (e => true);
@@ -60,7 +74,7 @@ class ModifyingInteraction extends Modify {
 
         let copyFeatures = [];
         // Do something on keyup (delete features)
-        this._onKeyUp = (evt) => {
+        this._onKey = (evt) => {
             if (!this.getActive()) {
                 return;
             }
@@ -69,7 +83,7 @@ class ModifyingInteraction extends Modify {
                 return;
             }
             // Handle key
-            if (evt.key === "Delete") {
+            if (evt.key === "Delete" || evt.key === "Backspace") {
                 // get deleted features
                 const deleted = [];
                 this._select.getFeatures().forEach( f => {
@@ -81,12 +95,14 @@ class ModifyingInteraction extends Modify {
                 // Delete features
                 this.deleteSelection();
                 // To notify others
-                this.dispatchEvent({ 
-                    type : "delete", 
-                    deleted : deleted
-                });
+                if (deleted.length !== 0) {
+                    this.dispatchEvent({ 
+                        type : "delete", 
+                        deleted : deleted
+                    });
+                }
             }
-            if ((evt.key === "c" || evt.key === "x") && evt.ctrlKey) {
+            if ((evt.key === "c" || evt.key === "x") && (evt.ctrlKey  || evt.metaKey)) {
                 // Get Features to copy/cut
                 copyFeatures = [];
                 this._select.getFeatures().forEach( f => {
@@ -105,12 +121,14 @@ class ModifyingInteraction extends Modify {
                     this.deleteSelection();
                 } 
                 // Dispatch copy/cut event
-                this.dispatchEvent({ 
-                    type : (evt.key === "x") ? "cut" : "copy", 
-                    features : copyFeatures,
-                });
+                if (copyFeatures.length !== 0) {
+                    this.dispatchEvent({ 
+                        type : (evt.key === "x") ? "cut" : "copy", 
+                        features : copyFeatures,
+                    });
+                }
             }
-            if (evt.key === "v" && evt.ctrlKey) {
+            if (evt.key === "v" && (evt.ctrlKey || evt.metaKey) && copyFeatures.length !== 0) {
                 this.dispatchEvent({ 
                     type : "paste", 
                     features : copyFeatures
@@ -149,12 +167,14 @@ class ModifyingInteraction extends Modify {
     setMap (map) {
         if (this.getMap()) {
             this.getMap().removeControl(this._menu);
+            this.getMap().removeInteraction(this.longtouch);
         } 
         super.setMap(map);
         if (map) {
             map.addControl(this._menu);
             this.getMap().getTargetElement().setAttribute("tabindex", "0");
-            this.getMap().getTargetElement().addEventListener("keyup", this._onKeyUp);
+            this.getMap().getTargetElement().addEventListener("keydown", this._onKey);
+            this.getMap().addInteraction(this.longtouch);
         }
         this._menu.hide();
     }
@@ -188,118 +208,33 @@ class ModifyingInteraction extends Modify {
      * @returns {Boolean} Whether to propagate the event further
      */
     handleEvent (e) {
-        // 3 pixels tolerance
-        const res = this.get("hitTolerance") * this.getMap().getView().getResolution();
-        const extent = [e.coordinate[0] - res, e.coordinate[1] - res, e.coordinate[0] + res, e.coordinate[1] + res];
         // On a point && adding point
-        let isPoint = this.getOverlay().getSource().getFeaturesInExtent(extent)[0];
+        let isPoint = this._isOnPoint(e);
         const isAdd = !!this.vertexFeature_;
 
         // Handle parent events
-        const resp = super.handleEvent(e);
+        const resp = super.handleEvent(e, isPoint);
 
         // Handle context menu
+        if (this._islongtouch) {
+            if (e.type === "singleclick") {
+                setTimeout(() => {
+                    this._islongtouch = false;
+                });
+                return;
+            } else if (e.type === "click" || e.type === "pointerup") {
+                return true;
+            }
+        }
         if (e.type === "contextmenu") {
             e.originalEvent.preventDefault();
         } else if (e.type === "pointerup" && e.originalEvent.button === 2) {
             e.originalEvent.preventDefault();
-            const currentFeatures = this.selectedAtPixel(e.pixel);
-
-            // TODO : Check if can remove point
-            let canRemove = false;
-            if (isPoint) {
-                const position = isPoint.getGeometry().getCoordinates();
-
-                isPoint = false;
-                (currentFeatures || []).forEach(f => {
-                    // Check if current point is a vertex
-                    const getFlatCoordinates = f.getGeometry().getFlatCoordinates();
-                    for (let i=0; i<getFlatCoordinates.length; i+=2) {
-                        if (getFlatCoordinates[i] === position[0] && getFlatCoordinates[i+1] === position[1]) {
-                            isPoint = true;
-                            break;
-                        }
-                    };
-                    // Check if can remove vertex
-                    switch (f.getGeometry().getType()) {
-                        case "LineString": {
-                            if (f.getGeometry().getCoordinates().length > 2 ) {
-                                canRemove = true;
-                            }
-                            break;
-                        }
-                        case "Polygon": {
-                            const geom = f.getGeometry().getCoordinates();
-                            geom.forEach(ring => {
-                                if (ring.length > 4 ) {
-                                    canRemove = true;
-                                }
-                            });
-                            break;
-                        }
-                        case "MultiLineString": 
-                        case "MultiPolygon": {
-                            canRemove = true;
-                            console.log("todo");
-                        }
-                        default: {
-                            break;
-                        }
-                    }
-                });
-            }
-
-            // Show menu
-            if (isPoint && canRemove) {
-                this._menu.setMenu([
-                    {
-                        text : "Supprimer le point",
-                        callback : () => {
-                            this.removePoint(e.coordinate);
-                        },
-                        hide : true
-                    },
-                ]);
-                this._menu.show(e.pixel);
-                e.stopPropagation();
-            } else if (this._select && currentFeatures) {
-                this._menu.setMenu([
-                    {
-                        text : "Dupliquer",
-                        callback : () => {
-                            const features = this._select.getFeatures().getArray().slice();
-                            this._select.getFeatures().clear();
-                            const sel = [];
-                            features.forEach(f => {
-                                const layer = this._select.getLayer(f);
-                                if (layer) {
-                                    const source = layer.getSource();
-                                    const f2 = f.clone();
-                                    source.addFeature(f2);
-                                    sel.push(f2);
-                                } else {
-                                    sel.push(f);
-                                }
-                            });
-                            this._select.clear();
-                            sel.forEach(f => this._select.getFeatures().push(f));
-                        },
-                        hide : true
-                    },{
-                        text : "Supprimer",
-                        callback : () => {
-                            this.deleteSelection();
-                        },
-                        hide : true
-                    },
-                ]);
-                this._menu.show(e.pixel);
-                e.stopPropagation();
-            } else {
-                this._menu.hide();
-            }
+            this._showContextMenu(e, isPoint);
         } else if (e.type !== "pointermove") {
-            this._menu.hide();
+            if (e.originalEvent.target === this.getMap().getTargetElement()) {
+                setTimeout(() => this._menu.hide() );
+            }
         }
         // Dragging feature : show crosshair cursor
         if (e.type==="pointerdrag" && isAdd) { 
@@ -319,6 +254,143 @@ class ModifyingInteraction extends Modify {
             this.getMap().getTargetElement().style.cursor = "";
         }
         return resp;
+    }
+
+    _showContextMenu (e, isPoint) {
+        const currentFeatures = this.selectedAtPixel(e.pixel);
+
+        // TODO : Check if can remove point
+        let canRemove = false;
+        if (isPoint) {
+            const position = isPoint.getGeometry().getCoordinates();
+
+            isPoint = false;
+            (currentFeatures || []).forEach(f => {
+                // Check if current point is a vertex
+                const getFlatCoordinates = f.getGeometry().getFlatCoordinates();
+                for (let i=0; i<getFlatCoordinates.length; i+=2) {
+                    if (getFlatCoordinates[i] === position[0] && getFlatCoordinates[i+1] === position[1]) {
+                        isPoint = true;
+                        break;
+                    }
+                };
+                // Check if can remove vertex
+                switch (f.getGeometry().getType()) {
+                    case "LineString": {
+                        if (f.getGeometry().getCoordinates().length > 2 ) {
+                            canRemove = true;
+                        }
+                        break;
+                    }
+                    case "Polygon": {
+                        const geom = f.getGeometry().getCoordinates();
+                        geom.forEach(ring => {
+                            if (ring.length > 4 ) {
+                                canRemove = true;
+                            }
+                        });
+                        break;
+                    }
+                    case "MultiLineString": 
+                    case "MultiPolygon": {
+                        canRemove = true;
+                        console.log("todo");
+                    }
+                    default: {
+                        break;
+                    }
+                }
+            });
+        }
+
+        // Show menu
+        if (isPoint && canRemove) {
+            this._menu.setMenu([
+                {
+                    text : "Supprimer le point",
+                    callback : () => {
+                        this.removePoint(e.coordinate);
+                    },
+                    hide : true
+                },
+            ]);
+            this._menu.show(e.pixel);
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+        } else if (this._select && currentFeatures) {
+            this._menu.setMenu([
+                {
+                    text : "Dupliquer",
+                    callback : () => {
+                        const features = this._select.getFeatures().getArray().slice();
+                        const sel = [];
+                        const tab = [];
+                        features.forEach(f => {
+                            const layer = this._select.getLayer(f);
+                            if (layer) {
+                                // Restore style before cloning
+                                this._select.restorePreviousStyle_(f);
+                                const f2 = f.clone();
+                                // Reapply selected style
+                                this._select.applySelectedStyle_(f);
+                                // Add cloned feature
+                                layer.getSource().addFeature(f2);
+                                sel.push(f2);
+                                tab.push({
+                                    feature : f2,
+                                    layer : layer
+                                });
+                            } else {
+                                sel.push(f);
+                            }
+                        });
+                        this._select.clear();
+                        sel.forEach(f => this._select.getFeatures().push(f));
+                        if (tab.length) {
+                            this.dispatchEvent({ 
+                                type : "duplicate", 
+                                features : tab
+                            });
+                        }
+                    },
+                    hide : true
+                },{
+                    text : "Supprimer",
+                    callback : () => {
+                        const deleted = [];
+                        this._select.getFeatures().forEach( f => {
+                            deleted.push({
+                                feature : f,
+                                layer : this._select.getLayer(f)
+                            });
+                        });
+                        this.deleteSelection();
+                        if (deleted.length !== 0) {
+                            this.dispatchEvent({ 
+                                type : "delete", 
+                                deleted : deleted
+                            });
+                        }
+                    },
+                    hide : true
+                },
+            ]);
+            this._menu.show(e.pixel);
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+        } else {
+            this._menu.hide();
+        }
+    }
+
+    _isOnPoint (e) {
+        // 3 pixels tolerance
+        const res = this.get("hitTolerance") * this.getMap().getView().getResolution();
+        const extent = [e.coordinate[0] - res, e.coordinate[1] - res, e.coordinate[0] + res, e.coordinate[1] + res];
+        // On a point && adding point
+        return this.getOverlay().getSource().getFeaturesInExtent(extent)[0];
     }
 
 }
