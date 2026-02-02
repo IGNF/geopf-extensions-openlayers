@@ -439,7 +439,7 @@ class ButtonExport extends Control {
         // menu des options
         // > GPexportMenuHidden : pas de menu pour le mode classic !
         var menu = this.stringToHTML(`
-            <div class="GPexportMenuHidden gpf-accordion fr-accordion ${this.menuClassHidden}">
+            <div class="GPexportMenuHidden fr-accordion ${this.menuClassHidden}">
                 <h3 class="gpf-accordion__title fr-accordion__title fr-my-1w">
                     <button type="button" 
                         id="GPexportBtnMenuContent-${this.uid}"

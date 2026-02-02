@@ -11,3 +11,13 @@
 [id^=GPexportMenuName]{}
 [id^=GPexportMenuDesc]{}
 [id^=GPexportMenuFormat]{}
+
+[id^=GPexportMenuFormat].gpf-export-menu-options-row label,
+[id^=GPexportMenuDesc].gpf-export-menu-options-row label,
+[id^=GPexportMenuName].gpf-export-menu-options-row label {
+    width: 30%;
+}
+[id^=GPexportMenuDesc].gpf-export-menu-options-row input,
+[id^=GPexportMenuName].gpf-export-menu-options-row input {
+    width: 70%;
+}
