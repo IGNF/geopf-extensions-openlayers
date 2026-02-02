@@ -279,6 +279,8 @@ class ButtonExport extends Control {
         /** @private */
         this.inputDesc = null;
         /** @private */
+        this.inputFormats = {};
+        /** @private */
         this.menu = null;
         /** @private */
         this.menuClassHidden = "GPelementHidden gpf-hidden";
@@ -439,7 +441,7 @@ class ButtonExport extends Control {
         // menu des options
         // > GPexportMenuHidden : pas de menu pour le mode classic !
         var menu = this.stringToHTML(`
-            <div class="GPexportMenuHidden fr-accordion ${this.menuClassHidden}">
+            <div id="GPexportMenu-${this.uid}" class="GPexportMenuHidden fr-accordion ${this.menuClassHidden}">
                 <h3 class="gpf-accordion__title fr-accordion__title fr-my-1w">
                     <button type="button" 
                         id="GPexportBtnMenuContent-${this.uid}"
@@ -465,7 +467,7 @@ class ButtonExport extends Control {
                         <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
                             <input type="radio" 
                                 id="GPmenuFormatGeojson-${this.uid}"
-                                name="format" 
+                                name="format-${this.uid}" 
                                 value="geojson">
                             <label class="fr-label container" for="GPmenuFormatGeojson-${this.uid}">GeoJSON
                                 <span class="checkmark"></span>
@@ -474,7 +476,7 @@ class ButtonExport extends Control {
                         <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
                             <input type="radio" 
                                 id="GPmenuFormatKml-${this.uid}"
-                                name="format" 
+                                name="format-${this.uid}" 
                                 value="kml">
                             <label class="fr-label container" for="GPmenuFormatKml-${this.uid}">KML
                                 <span class="checkmark"></span>
@@ -483,7 +485,7 @@ class ButtonExport extends Control {
                         <div class="GPexportMenuFormat fr-radio-group fr-m-1w">
                             <input type="radio" 
                                 id="GPmenuFormatGpx-${this.uid}"
-                                name="format" 
+                                name="format-${this.uid}" 
                                 value="gpx">
                             <label class="fr-label container" for="GPmenuFormatGpx-${this.uid}">GPX
                                 <span class="checkmark"></span>
@@ -509,16 +511,17 @@ class ButtonExport extends Control {
             </div>
         `);
 
-        this.menu = menu.firstChild;
+        this.menu = menu.querySelector("#GPexportMenu-" + this.uid);
         if (this.menu) {
             if (this.options.menu) {
                 var className = this.menu.className;
                 this.menu.className = className.replace(this.menuClassHidden, "");
             }
             var format = this.options.format.toUpperCase();
-            var radios = this.menu.querySelectorAll(`input[type=radio][name="format"]`);
+            var radios = this.menu.querySelectorAll(`input[type=radio][name="format-${this.uid}"]`);
             for (let i = 0; i < radios.length; i++) {
                 var radio = radios[i];
+                this.inputFormats[radio.value] = radio;
                 // radio checked par defaut
                 if (radio.id.toUpperCase().includes(format)) {
                     radio.checked = true;
@@ -988,20 +991,32 @@ class ButtonExport extends Control {
             case "KML":
                 this.extension = ".kml";
                 this.mimeType = "application/vnd.google-earth.kml+xml";
+                if (this.inputFormats["kml"]) {
+                    this.inputFormats["kml"].checked = true;
+                }
                 break;
             case "GPX":
                 this.extension = ".gpx";
                 this.mimeType = "application/gpx+xml";
+                if (this.inputFormats["gpx"]) {
+                    this.inputFormats["gpx"].checked = true;
+                }
                 break;
             case "GEOJSON":
                 this.extension = ".geojson";
                 this.mimeType = "application/geo+json";
+                if (this.inputFormats["geojson"]) {
+                    this.inputFormats["geojson"].checked = true;
+                }
                 break;
             default:
                 // redefine format by default !
                 this.options.format = "GEOJSON";
                 this.extension = ".geojson";
                 this.mimeType = "application/geo+json";
+                if (this.inputFormats["geojson"]) {
+                    this.inputFormats["geojson"].checked = true;
+                }
                 break;
         }
     }
@@ -1013,6 +1028,9 @@ class ButtonExport extends Control {
      */
     setName (name) {
         this.options.name = name;
+        if (this.inputName) {
+            this.inputName.value = name;
+        }
     }
 
     /**
@@ -1022,6 +1040,9 @@ class ButtonExport extends Control {
      */
     setDescription (desc) {
         this.options.description = desc;
+        if (this.inputDesc) {
+            this.inputDesc.value = desc;
+        }
     }
 
     /**
