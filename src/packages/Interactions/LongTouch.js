@@ -39,10 +39,13 @@ class LongTouch extends ol_interaction_Interaction {
                                 console.log("longtouch");
                                 ltouch(event);
                                 event.map.dispatchEvent(event);
+                                e.type = "pointerup";
+                                event.map.dispatchEvent(e);
                             }, this.delay_);
                             break;
                         }
                         case "pointerdrag": {
+                            // e.dragging = false;
                             // Check if dragging over tolerance
                             if (_timeout && (Math.abs(e.pixel[0] - position[0]) > tol || Math.abs(e.pixel[1] - position[1]) > tol)) {
                                 clearTimeout(_timeout);

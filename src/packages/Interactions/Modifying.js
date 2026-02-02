@@ -1,6 +1,6 @@
 import Modify from "ol/interaction/Modify";
 import Menu from "../Controls/ContextMenu/SimpleMenu";
-import LonTouch from "./LongTouch.js";
+import LongTouch from "./LongTouch.js";
 
 import { selectStyle } from "./selectFlatStyle";
 
@@ -32,8 +32,9 @@ class ModifyingInteraction extends Modify {
         this._select = options.select;
 
         // Long touch interaction
-        this.longtouch = new LonTouch({ 
-            pixelTolerance : 3, 
+        this.longtouch = new LongTouch({ 
+            pixelTolerance : 6, 
+            delay: 600,
             handleLongTouchEvent : (e) => {
                 if (this.getActive()) {
                     this._showContextMenu(e, this._isOnPoint(e));
@@ -73,7 +74,7 @@ class ModifyingInteraction extends Modify {
 
         let copyFeatures = [];
         // Do something on keyup (delete features)
-        this._onKeyUp = (evt) => {
+        this._onKey = (evt) => {
             if (!this.getActive()) {
                 return;
             }
@@ -172,7 +173,7 @@ class ModifyingInteraction extends Modify {
         if (map) {
             map.addControl(this._menu);
             this.getMap().getTargetElement().setAttribute("tabindex", "0");
-            this.getMap().getTargetElement().addEventListener("keyup", this._onKeyUp);
+            this.getMap().getTargetElement().addEventListener("keydown", this._onKey);
             this.getMap().addInteraction(this.longtouch);
         }
         this._menu.hide();
@@ -222,7 +223,7 @@ class ModifyingInteraction extends Modify {
                 });
                 return;
             } else if (e.type === "click" || e.type === "pointerup") {
-                return;
+                return true;
             }
         }
         if (e.type === "contextmenu") {
