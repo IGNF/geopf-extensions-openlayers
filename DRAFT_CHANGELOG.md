@@ -22,6 +22,7 @@ __DATE__
   - UI : changement contenu labels affichés au survol (#474)
   - Territories : ajout des territoires d'outre-mer
   - Layerswitcher : affichage des titres des couches sur deux lignes en mode DSFR (#476)
+  - Export : Amélioration de l'interface utilisateur du menu d'exportation (#481)
 
 * 🔥 [Deprecated]
 
