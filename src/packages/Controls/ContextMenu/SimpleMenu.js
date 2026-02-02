@@ -51,7 +51,7 @@ class SimpleMenu extends Control {
                 e.stopPropagation();
                 item.callback();
                 if (item.hide) {
-                    setTimeout( () => this.hide() );
+                    setTimeout( () => this.hide(), 300 );
                 }
             });
             li.appendChild(a);
