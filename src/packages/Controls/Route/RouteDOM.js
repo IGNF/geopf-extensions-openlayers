@@ -999,7 +999,7 @@ var RouteDOM = {
      *
      * @returns {HTMLElement} DOM element
      */
-    _createRoutePanelFormModeChoiceComputeElement : function () {
+    _createRoutePanelFormModeChoiceComputeElement : function (prettify) {
         // contexte d'execution
         var context = this;
 
@@ -1017,6 +1017,7 @@ var RouteDOM = {
 
         var div = document.createElement("div");
         div.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        div.id = this._addUID("GProuteComputeFastest");
         var inputFastest = document.createElement("input");
         inputFastest.id = this._addUID("GProuteComputationFastest");
         inputFastest.type = "radio";
@@ -1047,6 +1048,7 @@ var RouteDOM = {
 
         var div2 = document.createElement("div");
         div2.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        div2.id = this._addUID("GProuteComputeShortest");
         var inputShortest = document.createElement("input");
         inputShortest.id = this._addUID("GProuteComputationShortest");
         inputShortest.type = "radio";
@@ -1065,6 +1067,9 @@ var RouteDOM = {
             });
         }
         div2.appendChild(inputShortest);
+        if (prettify) {
+            div2.style.display = "none";
+        }
 
         var labelShortest = document.createElement("label");
         labelShortest.className = "gpf-label fr-label";

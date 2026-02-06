@@ -60,6 +60,7 @@ class Route extends Control {
      * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
      * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
      * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of resources, by default : ["Voiture", "Pieton"]. The first element is selected.
+     * @param {Boolean}   [options.pretiffyCompute = false] - if true, only display fastest for pedestrian transport mode.
      * @param {Object} [options.routeOptions = {}] - route service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~route Gp.Services.route()} to know all route options.
      * @param {Object} [options.autocompleteOptions = {}] - autocomplete service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options
      * @param {Object} [options.markersOpts] - options to use your own markers. Object properties can be "departure", "stages" or "arrival". Corresponding value is an object with following properties :
@@ -504,6 +505,7 @@ class Route extends Control {
                 tunnel : false,
                 bridge : false
             },
+            pretiffyCompute : false,
             routeOptions : {},
             autocompleteOptions : {},
             layerDescription : {
@@ -738,7 +740,7 @@ class Route extends Control {
             routeForm.appendChild(points[i]);
         }
 
-        routeForm.appendChild(this._createRoutePanelFormModeChoiceComputeElement());
+        routeForm.appendChild(this._createRoutePanelFormModeChoiceComputeElement(this.options.pretiffyCompute));
 
         // form: menu des exclusions
         this._showRouteExclusionsElement = this._createShowRouteExclusionsPictoElement();
@@ -800,7 +802,6 @@ class Route extends Control {
         if (!transport || transport.length === 0) {
             this.options.graphs = ["Pieton", "Voiture"];
         }
-
         // option
         if (Array.isArray(transport) && transport.length) {
             // FIXME pb si le 1er graphe n'est pas une ressource connue !
@@ -1351,8 +1352,14 @@ class Route extends Control {
      */
     onRouteModeTransportChange (e) {
         var value = e.target.value;
+        var shortestDiv = document.getElementById("GProuteComputeShortest-" + this._uid);
         if (!value) {
             return;
+        }
+        if (value === "Pieton" && this.options.pretiffyCompute === true) {
+            shortestDiv.style.display = "none";
+        } else {
+            shortestDiv.style.display = "block";
         }
         this._currentTransport = value;
     }
