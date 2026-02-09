@@ -293,16 +293,17 @@ var RouteDOM = {
 
     /**
      * Create Results Panel
+     * @param {Boolean} prettify - option to display shortest/longest selector
      *
      * @returns {HTMLElement} DOM element
      */
-    _createRoutePanelResultsElement : function () {
+    _createRoutePanelResultsElement : function (prettify) {
         var container = document.createElement("div");
         container.id = this._addUID("GProuteResultsPanel");
         container.className = "GPelementHidden gpf-hidden";
 
         container.appendChild(this._createRouteResultsStagesElement());
-        container.appendChild(this._createRouteResultsElement());
+        container.appendChild(this._createRouteResultsElement(prettify));
         container.appendChild(this._createRouteShowResultsDetailsElement());
         container.appendChild(this._createRouteResultsDetailsElement());
 
@@ -381,10 +382,11 @@ var RouteDOM = {
     /**
      * Create Show Results
      * see event!
+     * @param {Boolean} prettify - option to display shortest/longest selector
      *
      * @returns {HTMLElement} DOM element
      */
-    _createRouteResultsElement : function () {
+    _createRouteResultsElement : function (prettify) {
         // contexte
         var self = this;
 
@@ -397,8 +399,12 @@ var RouteDOM = {
         container.appendChild(divValue);
 
         var divMode = document.createElement("div");
-        divMode.id = this._addUID("GProuteResultsMode");
 
+        divMode.id = this._addUID("GProuteResultsMode");
+        /* Sélecteur mode d'itinéraire inactif en mode Pieton */
+        if (prettify) {
+            divMode.style.display = "none";
+        }
         var select = document.createElement("select");
         select.id = this._addUID("GProuteResultsComputationSelect");
         select.className = "GPselect gpf-select fr-select";
@@ -407,7 +413,6 @@ var RouteDOM = {
         select.addEventListener("change", function (e) {
             self.onRouteModeComputationChangeAndRun(e);
         });
-
         var computes = [{
             code : "fastest",
             label : "Plus rapide"
@@ -415,7 +420,6 @@ var RouteDOM = {
             code : "shortest",
             label : "Plus court"
         }];
-
         for (var i = 0; i < computes.length; i++) {
             var option = document.createElement("option");
             option.value = computes[i].code;
@@ -996,10 +1000,11 @@ var RouteDOM = {
     /**
      * Create Mode choice computation
      * see event!
+     * @param {Boolean} prettify - option to display shortest/longest selector
      *
      * @returns {HTMLElement} DOM element
      */
-    _createRoutePanelFormModeChoiceComputeElement : function () {
+    _createRoutePanelFormModeChoiceComputeElement : function (prettify) {
         // contexte d'execution
         var context = this;
 
@@ -1017,6 +1022,7 @@ var RouteDOM = {
 
         var div = document.createElement("div");
         div.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        div.id = this._addUID("GProuteComputeFastest");
         var inputFastest = document.createElement("input");
         inputFastest.id = this._addUID("GProuteComputationFastest");
         inputFastest.type = "radio";
@@ -1047,6 +1053,7 @@ var RouteDOM = {
 
         var div2 = document.createElement("div");
         div2.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        div2.id = this._addUID("GProuteComputeShortest");
         var inputShortest = document.createElement("input");
         inputShortest.id = this._addUID("GProuteComputationShortest");
         inputShortest.type = "radio";
@@ -1065,6 +1072,10 @@ var RouteDOM = {
             });
         }
         div2.appendChild(inputShortest);
+        /* Sélecteur mode d'itinéraire inactif en mode Pieton */
+        if (prettify) {
+            div2.style.display = "none";
+        }
 
         var labelShortest = document.createElement("label");
         labelShortest.className = "gpf-label fr-label";
