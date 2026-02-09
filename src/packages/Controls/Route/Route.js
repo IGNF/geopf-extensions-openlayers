@@ -60,6 +60,7 @@ class Route extends Control {
      * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
      * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
      * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of resources, by default : ["Voiture", "Pieton"]. The first element is selected.
+     * @param {Boolean}   [options.prettifyCompute = false] - if true, only display fastest for pedestrian transport mode.
      * @param {Object} [options.routeOptions = {}] - route service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~route Gp.Services.route()} to know all route options.
      * @param {Object} [options.autocompleteOptions = {}] - autocomplete service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options
      * @param {Object} [options.markersOpts] - options to use your own markers. Object properties can be "departure", "stages" or "arrival". Corresponding value is an object with following properties :
@@ -504,6 +505,7 @@ class Route extends Control {
                 tunnel : false,
                 bridge : false
             },
+            prettifyCompute : false,
             routeOptions : {},
             autocompleteOptions : {},
             layerDescription : {
@@ -738,7 +740,7 @@ class Route extends Control {
             routeForm.appendChild(points[i]);
         }
 
-        routeForm.appendChild(this._createRoutePanelFormModeChoiceComputeElement());
+        routeForm.appendChild(this._createRoutePanelFormModeChoiceComputeElement(this.options.prettifyCompute));
 
         // form: menu des exclusions
         this._showRouteExclusionsElement = this._createShowRouteExclusionsPictoElement();
@@ -762,7 +764,7 @@ class Route extends Control {
         routePanelDiv.appendChild(routeForm);
 
         // results
-        var routeResults = this._resultsRouteContainer = this._createRoutePanelResultsElement();
+        var routeResults = this._resultsRouteContainer = this._createRoutePanelResultsElement(this.options.prettifyCompute);
         routePanelDiv.appendChild(routeResults);
         
         var plugin = this._createDrawingButtonsPluginDiv();
@@ -800,7 +802,6 @@ class Route extends Control {
         if (!transport || transport.length === 0) {
             this.options.graphs = ["Pieton", "Voiture"];
         }
-
         // option
         if (Array.isArray(transport) && transport.length) {
             // FIXME pb si le 1er graphe n'est pas une ressource connue !
@@ -1351,8 +1352,15 @@ class Route extends Control {
      */
     onRouteModeTransportChange (e) {
         var value = e.target.value;
+        var shortestDiv = document.getElementById("GProuteComputeShortest-" + this._uid);
         if (!value) {
             return;
+        }
+        /* Sélecteur mode d'itinéraire inactif en mode Pieton */
+        if (value === "Pieton" && this.options.prettifyCompute === true) {
+            shortestDiv.style.display = "none";
+        } else {
+            shortestDiv.style.display = "block";
         }
         this._currentTransport = value;
     }
@@ -1620,6 +1628,13 @@ class Route extends Control {
         this._formRouteContainer.className = "GPelementHidden gpf-hidden gpf-panel__content fr-modal__content";
         this._hideWaitingContainer();
         this._resultsRouteContainer.className = "";
+        /* Sélecteur mode d'itinéraire inactif en mode Pieton */
+        let selectorDiv = document.getElementById("GProuteResultsMode-" + this._uid);
+        if (this._currentTransport === "Pieton" && this.options.prettifyCompute === true) {
+            selectorDiv.style.display = "none";
+        } else {
+            selectorDiv.style.display = "block";
+        }
     }
 
     /**
