@@ -88,8 +88,8 @@ declare class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     system: HTMLSelectElement | undefined;
     unit: HTMLSelectElement | undefined;
     lonLatInputs: HTMLDivElement | undefined;
-    lon: HTMLElement | undefined;
     lat: HTMLElement | undefined;
+    lon: HTMLElement | undefined;
     /**
      * Crée le wrapper (label + input + masques) pour une composante de coordonnées (lon/lat).
      *
