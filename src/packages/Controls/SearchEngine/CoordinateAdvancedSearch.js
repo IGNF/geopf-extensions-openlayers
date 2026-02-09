@@ -319,14 +319,14 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         const values = this.lonLatInputs = document.createElement("div");
         values.className = "GPLonLatInputs";
         
-        // Longitude / X
-        const lonWrapper = this.lon = this.createCoordinateInput("lon");
-        values.appendChild(lonWrapper);
-        
         // Latitude / Y
         const latWrapper = this.lat = this.createCoordinateInput("lat");
         values.appendChild(latWrapper);
-        
+
+        // Longitude / X
+        const lonWrapper = this.lon = this.createCoordinateInput("lon");
+        values.appendChild(lonWrapper);
+
         this.inputs.push(values);
     }
 
@@ -648,12 +648,12 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
                 valueY = `${lat} °`;
             }
         } else {
-            x = "X";
             y = "Y";
-            valueX = `${lon} ${this.get("unit").toLowerCase()}`;
+            x = "X";
             valueY = `${lat} ${this.get("unit").toLowerCase()}`;
+            valueX = `${lon} ${this.get("unit").toLowerCase()}`;
         }
-        const infoPopup = `<b>${x} : </b>${valueX}<br><b>${y} : </b>${valueY}`;
+        const infoPopup = `<b>${y} : </b>${valueY}<br><b>${x} : </b>${valueX}`;
         return infoPopup;
     }
 
