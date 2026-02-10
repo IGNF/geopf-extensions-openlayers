@@ -27,7 +27,7 @@ declare namespace RouteDOM {
     function _createRoutePanelFormModeChoiceTransportElement(transports: string[]): HTMLElement;
     function _createRoutePanelFormModeChoiceComputeElement(prettify: boolean): HTMLElement;
     function _createShowRouteExclusionsPictoElement(): HTMLElement;
-    function _createRoutePanelFormExclusionsElement(): HTMLElement;
+    function _createRoutePanelFormExclusionsElement(prettify: any): HTMLElement;
     function _createRoutePanelFormExclusionOptionsElement(exclusions: any[]): HTMLElement;
     function _createRouteSubmitFormElement(): HTMLElement;
     function _createRouteFormResetElement(): HTMLElement;
