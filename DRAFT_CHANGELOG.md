@@ -9,6 +9,8 @@ __DATE__
 
 ### 🎉 Summary
 
+Corrections sur le layerSwitcher et amélioration de l'affichage des couches dans le cartalogue
+
 ### 💥 Breaking changes
 
 ### 📖 Changelog
