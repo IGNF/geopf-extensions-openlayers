@@ -843,37 +843,50 @@ var LayerSwitcherDOM = {
                     }
                     // Si une fonction a bien été trouvée, on créé le bouton qui va avec
                     if (typeof fn === "function") {
-                        btnGroups.appendChild(fn.call(this, obj, tool));
+                        const button = fn.call(this, obj, tool);
+                        if (button) {
+                            btnGroups.appendChild(button);
+                        }
                     }
                 } else if (tool) {
-                    btnGroups.appendChild(this._createAdvancedToolElement(obj, tool));
+                    const button = this._createAdvancedToolElement(obj, tool);
+                    if (button) {
+                        btnGroups.appendChild(button);
+                    }
                 }
             });
 
             container.appendChild(btnGroups);
         } else {
             if (checkDsfr()) {
-                if ((obj.description && obj.description.length) || (obj.metadata && obj.metadata.length)) {
-                    btnGroups.appendChild(this._createInformationElement(obj, {}));
+                const infoButton = this._createInformationElement(obj, {});
+                if (infoButton) {
+                    btnGroups.appendChild(infoButton);
                 }
 
-                if (obj.metadata && obj.editable) {
-                    btnGroups.appendChild(this._createEditionElement(obj, {}));
+                const editButton = this._createEditionElement(obj, {});
+                if (editButton) {
+                    btnGroups.appendChild(editButton);
                 }
-                if (obj.grayable) {
-                    btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+
+                const greyButton = this._createGreyscaleElement(obj, {});
+                if (greyButton) {
+                    btnGroups.appendChild(greyButton);
                 }
-                const hasExtent = (obj.layer.config && obj.layer.config.globalConstraint && obj.layer.config.globalConstraint.bbox) || 
-                      (obj.layer.gpResultLayerId);
-                if (hasExtent) {
-                    btnGroups.appendChild(this._createExtentElement(obj, {}));
+
+                const extentButton = this._createExtentElement(obj, {});
+                if (extentButton) {
+                    btnGroups.appendChild(extentButton);
                 }
             } else {
-                if ((obj.description && obj.description.length) || (obj.metadata && obj.metadata.length)) {
-                    btnGroups.appendChild(this._createInformationElement(obj, {}));
+                const infoBtn = this._createInformationElement(obj, {});
+                if (infoBtn) {
+                    btnGroups.appendChild(infoBtn);
                 }
-                if (obj.grayable) {
-                    btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+
+                const greyBtn = this._createGreyscaleElement(obj, {});
+                if (greyBtn) {
+                    btnGroups.appendChild(greyBtn);
                 }
             }
             container.appendChild(btnGroups);
@@ -1378,6 +1391,14 @@ var LayerSwitcherDOM = {
     _createExtentElement : function (obj, tool) {
         let id = obj.id;
         // FIXME inactif en mode classique !
+        
+        // Ne crée pas le bouton si pas d'extent disponible
+        const hasExtent = (obj.layer.config && obj.layer.config.globalConstraint && obj.layer.config.globalConstraint.bbox) || 
+                          (obj.layer.gpResultLayerId);
+        if (!hasExtent) {
+            return null;
+        }
+
         let button = document.createElement("button");
         button.id = this._addUID("GPextent_ID_" + id);
         button.layerId = id;
@@ -1385,13 +1406,9 @@ var LayerSwitcherDOM = {
         tool = tool ? tool : {};
 
         // Options du bouton
-        let icon = "gpf-btn-icon-ls-extent gpf-btn-icon";
-        let label;
-        if (checkDsfr()) {
-            icon = "fr-icon-zoom-in-line";
-            label = "Recentrer";
-        }
-        let className = `GPelementHidden GPlayerExtent gpf-btn--tertiary gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+        let icon = "fr-icon-zoom-in-line";
+        let label = "Recentrer";
+        let className = `GPlayerExtent gpf-btn--tertiary gpf-btn fr-btn fr-btn--tertiary-no-outline`;
 
         const options = {
             icon : icon,
