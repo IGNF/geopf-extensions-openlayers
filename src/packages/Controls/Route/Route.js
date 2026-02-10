@@ -60,7 +60,7 @@ class Route extends Control {
      * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
      * @param {Object}  [options.exclusions = {"toll" : false, "tunnel" : false, "bridge" : false}] - list of exclusions with status (true = checked). By default : no exclusions checked.
      * @param {Array}   [options.graphs = ["Voiture", "Pieton"]] - list of resources, by default : ["Voiture", "Pieton"]. The first element is selected.
-     * @param {Boolean}   [options.prettifyCompute = false] - if true, only display fastest for pedestrian transport mode.
+     * @param {Boolean}   [options.prettifyCompute = false] - if true, the pedestrian method does not displays the compute and exclusions interface. The request sent is forced with shortest compute method and no exclusions.
      * @param {Object} [options.routeOptions = {}] - route service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~route Gp.Services.route()} to know all route options.
      * @param {Object} [options.autocompleteOptions = {}] - autocomplete service options. see {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~autoComplete Gp.Services.autoComplete()} to know all autocomplete options
      * @param {Object} [options.markersOpts] - options to use your own markers. Object properties can be "departure", "stages" or "arrival". Corresponding value is an object with following properties :
@@ -1540,8 +1540,8 @@ class Route extends Control {
         if (!options.endPoint) {
             return;
         }
-
-        if (this.options.prettifyCompute === true && options.transport === "Pieton") {
+        // on force la méthode shortest au moment de la requête en mode piéton si l'option prettifyCompute est à true
+        if (this.options.prettifyCompute === true && options.graph === "Pieton") {
             options.routePreference = "shortest";
             options.exclusions = [];
         }
