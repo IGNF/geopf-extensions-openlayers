@@ -187,12 +187,9 @@ var LayerSwitcherDOM = {
         var span = document.createElement("span");
         button.appendChild(span);
         button.id = this._addUID("GPshowLayersListPicto");
-        button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowLayersListPicto");
-        button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-layerswitcher");
-        // button.classList.add("fr-icon-stack-line");
-        button.classList.add("fr-btn", "fr-btn--tertiary");
+        button.className = "GPshowOpen GPshowAdvancedToolPicto GPshowLayersListPicto gpf-btn gpf-btn--tertiary gpf-btn-icon gpf-btn-icon-layerswitcher fr-btn fr-btn--tertiary";
         button.htmlFor = this._addUID("GPshowLayersList");
-        button.setAttribute("aria-label", "Ma sélection de cartes");
+        button.setAttribute("aria-label", "Afficher/masquer le gestionnaire de couches");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -547,8 +544,9 @@ var LayerSwitcherDOM = {
         let div = document.createElement("div");
         div.id = this._addUID("GPtitle_ID_" + obj.id);
         div.className = "GPtitle";
-
-        div.appendChild(this._createLayerThumbnailElement(obj));
+        if (obj.thumbnail) {
+            div.appendChild(this._createLayerThumbnailElement(obj));
+        }
 
         div.appendChild(this._createLayerNameDivElement(obj, tooltips));
 
@@ -587,13 +585,12 @@ var LayerSwitcherDOM = {
         let img = document.createElement("img");
         img.id = this._addUID("GPtitleImage_ID_" + obj.id);
         img.className = "GPtitleImage GPtitleDefaultImage";
-        img.alt = "";
+        img.alt = "Miniature de la couche " + obj.title;
 
-        if (obj.thumbnail && typeof obj.thumbnail === "string" && obj.thumbnail !== "default") {
+        if (obj.thumbnail) {
             img.classList.remove("GPtitleDefaultImage");
             img.src = obj.thumbnail;
         }
-
         return img;
     },
 
@@ -617,10 +614,8 @@ var LayerSwitcherDOM = {
             label.title = obj.name;
         }
         label.innerHTML = obj.title;
-        // FIXME Hack temporaire pour TMS
-        // en attendant une meilleure gestion des titres de couches
         if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
-            label.innerHTML = obj.title || obj.description;
+            label.innerHTML = obj.description;
         }
         return label;
     },
@@ -714,7 +709,7 @@ var LayerSwitcherDOM = {
         button.title = "Afficher/masquer la couche";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", visible);
-        button.setAttribute("type","button");
+        button.setAttribute("type", "button");
 
         var context = this;
 
@@ -848,30 +843,57 @@ var LayerSwitcherDOM = {
                     }
                     // Si une fonction a bien été trouvée, on créé le bouton qui va avec
                     if (typeof fn === "function") {
-                        btnGroups.appendChild(fn.call(this, obj, tool));
+                        const button = fn.call(this, obj, tool);
+                        if (button) {
+                            btnGroups.appendChild(button);
+                        }
                     }
                 } else if (tool) {
-                    btnGroups.appendChild(this._createAdvancedToolElement(obj, tool));
+                    const button = this._createAdvancedToolElement(obj, tool);
+                    if (button) {
+                        btnGroups.appendChild(button);
+                    }
                 }
             });
 
             container.appendChild(btnGroups);
         } else {
             if (checkDsfr()) {
-                btnGroups.appendChild(this._createInformationElement(obj, {}));
-                btnGroups.appendChild(this._createEditionElement(obj, {}));
-                btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
-                btnGroups.appendChild(this._createExtentElement(obj, {}));
+                const infoButton = this._createInformationElement(obj, {});
+                if (infoButton) {
+                    btnGroups.appendChild(infoButton);
+                }
+
+                const editButton = this._createEditionElement(obj, {});
+                if (editButton) {
+                    btnGroups.appendChild(editButton);
+                }
+
+                const greyButton = this._createGreyscaleElement(obj, {});
+                if (greyButton) {
+                    btnGroups.appendChild(greyButton);
+                }
+
+                const extentButton = this._createExtentElement(obj, {});
+                if (extentButton) {
+                    btnGroups.appendChild(extentButton);
+                }
             } else {
-                btnGroups.appendChild(this._createInformationElement(obj, {}));
-                btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+                const infoBtn = this._createInformationElement(obj, {});
+                if (infoBtn) {
+                    btnGroups.appendChild(infoBtn);
+                }
+
+                const greyBtn = this._createGreyscaleElement(obj, {});
+                if (greyBtn) {
+                    btnGroups.appendChild(greyBtn);
+                }
             }
             container.appendChild(btnGroups);
         }
-        
+
         return container;
     },
-
     /**
      * Configure le bouton selon les options du bouton.
      * 
@@ -994,7 +1016,7 @@ var LayerSwitcherDOM = {
     _createDeleteElement : function (id) {
         let button = document.createElement("button");
         button.id = this._addUID("GPremove_ID_" + id);
-        
+
         // Icône et type de bouton
         let className = "gpf-btn-icon-ls-remove gpf-btn-icon";
         if (checkDsfr()) {
@@ -1066,14 +1088,13 @@ var LayerSwitcherDOM = {
         if (tool && tool.className) {
             toolOptions.className += ` ${tool.className}`;
         }
-        
+
         // Mets les attributs du bouton
         this._setAdvancedToolOptions(button, toolOptions, false);
 
-        // hack pour garder un emplacement vide en mode desktop
-        // et cacher l'entrée en mode mobile
+        // Pas d'ajout du bouton si l'édition n'est pas possible
         if (!editable || (tms && styles.length === 1)) {
-            button.disabled = true;
+            return null;
         }
 
         let context = this;
@@ -1145,14 +1166,14 @@ var LayerSwitcherDOM = {
         if (tool && tool.className) {
             toolOptions.className += ` ${tool.className}`;
         }
-        
+
         // Permet d'override les valeurs par défaut du bouton
         this._setAdvancedToolOptions(button, toolOptions, false);
 
         // button.title = "Informations/légende";
 
         if (!title || !description) {
-            button.disabled = true;
+            return null;
         }
         // add event on click
         var context = this;
@@ -1222,7 +1243,7 @@ var LayerSwitcherDOM = {
         if (tool && tool.className) {
             toolOptions.className += ` ${tool.className}`;
         }
-        
+
         // Permet d'override les valeurs par défaut du bouton
         this._setAdvancedToolOptions(button, toolOptions, false);
 
@@ -1232,9 +1253,9 @@ var LayerSwitcherDOM = {
 
         button.setAttribute("aria-pressed", _grayscale);
 
-        // hack pour garder un emplacement vide
+        // Pas d'ajout du bouton si la fonction n'est pas présente
         if (!grayable) {
-            button.disabled = true;
+            return null;
         }
 
         // add event on click
@@ -1370,6 +1391,14 @@ var LayerSwitcherDOM = {
     _createExtentElement : function (obj, tool) {
         let id = obj.id;
         // FIXME inactif en mode classique !
+        
+        // Ne crée pas le bouton si pas d'extent disponible
+        const hasExtent = (obj.layer.config && obj.layer.config.globalConstraint && obj.layer.config.globalConstraint.bbox) || 
+                          (obj.layer.gpResultLayerId);
+        if (!hasExtent) {
+            return null;
+        }
+
         let button = document.createElement("button");
         button.id = this._addUID("GPextent_ID_" + id);
         button.layerId = id;
@@ -1377,13 +1406,9 @@ var LayerSwitcherDOM = {
         tool = tool ? tool : {};
 
         // Options du bouton
-        let icon = "gpf-btn-icon-ls-extent gpf-btn-icon";
-        let label;
-        if (checkDsfr()) {
-            icon = "fr-icon-zoom-in-line";
-            label = "Centrer sur la couche";
-        }
-        let className = `GPelementHidden GPlayerExtent gpf-btn--tertiary gpf-btn fr-btn fr-btn--tertiary-no-outline`;
+        let icon = "fr-icon-zoom-in-line";
+        let label = "Recentrer";
+        let className = `GPlayerExtent gpf-btn--tertiary gpf-btn fr-btn fr-btn--tertiary-no-outline`;
 
         const options = {
             icon : icon,
@@ -1396,7 +1421,6 @@ var LayerSwitcherDOM = {
         if (tool && tool.className) {
             toolOptions.className += ` ${tool.className}`;
         }
-        
         // Permet d'override les valeurs par défaut du bouton
         this._setAdvancedToolOptions(button, toolOptions, false);
 
@@ -1727,16 +1751,8 @@ var LayerSwitcherDOM = {
         var list = document.createElement("div");
         list.id = this._addUID("GPlayerStyleList");
 
-        // regex pour détecter un préfixe UUID suivi d'un underscore
-        const uuidRegex = /^([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}_)/i;
-
         for (let i = 0; i < obj.styles.length; i++) {
             var style = obj.styles[i];
-            var title = style.title ? style.title : style.name;
-            // INFO
-            // demande de cartes.gouv.fr d'ajouter un préfixe UUID aux noms de styles
-            // mais, pour la lisibilité, on enlève le préfixe UUID s'il existe du titre affiché
-            title = title.replace(uuidRegex, "");
             var elem = document.createElement("div");
             elem.className = "gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
             var input = document.createElement("input");
@@ -1747,7 +1763,7 @@ var LayerSwitcherDOM = {
             input.dataset.name = style.name;
             var label = document.createElement("label");
             label.className = "gpf-label fr-label";
-            label.innerText = title;
+            label.innerText = style.title;
             label.htmlFor = this._addUID("styleradio_" + style.name + "_ID_" + obj.id);
             elem.appendChild(input);
             elem.appendChild(label);
