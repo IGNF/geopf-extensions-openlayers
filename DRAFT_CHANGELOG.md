@@ -22,7 +22,7 @@ __DATE__
   - UI : changement contenu labels affichés au survol (#474)
   - Territories : ajout des territoires d'outre-mer
   - Layerswitcher : affichage des titres des couches sur deux lignes en mode DSFR (#476)
-  - Route : ajout d'une option pour se passer de l'option "compute" en mode itinéraire piéton (#483)
+  - Route : ajout d'une option pour se passer de l'option "compute" en mode itinéraire piéton (#483, #486)
 
 * 🔥 [Deprecated]
 
