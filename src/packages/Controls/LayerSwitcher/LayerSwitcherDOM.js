@@ -1407,7 +1407,7 @@ var LayerSwitcherDOM = {
 
         // Options du bouton
         let icon = "fr-icon-zoom-in-line";
-        let label = "Recentrer";
+        let label = "Centrer sur la couche";
         let className = `GPlayerExtent gpf-btn--tertiary gpf-btn fr-btn fr-btn--tertiary-no-outline`;
 
         const options = {
