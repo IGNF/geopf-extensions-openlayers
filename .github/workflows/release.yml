@@ -237,6 +237,7 @@ jobs:
   # - download changelog (from release)
   # - download package (from build)
   # - then simply publish repo
+  # NOTE : publish npm with tag next expect to beta version !
   publish: # Only for tags !
     if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: release
@@ -266,7 +267,7 @@ jobs:
       - name: Publish on npm
         run: |
           cd ./dist/package
-          npm publish
+          npm publish --tag next
         # env:
         #   NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
 
