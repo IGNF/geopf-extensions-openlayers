@@ -268,8 +268,8 @@ jobs:
         run: |
           cd ./dist/package
           npm publish --tag next
-        # env:
-        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
 
   # - checkout master or main
   # - download changelog (from release)
