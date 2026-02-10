@@ -745,7 +745,7 @@ class Route extends Control {
         // form: menu des exclusions
         this._showRouteExclusionsElement = this._createShowRouteExclusionsPictoElement();
         routeForm.appendChild(this._showRouteExclusionsElement);
-        var exclusion = this._createRoutePanelFormExclusionsElement();
+        var exclusion = this._createRoutePanelFormExclusionsElement(this.options.prettifyCompute);
         exclusion.appendChild(this._createRoutePanelFormExclusionOptionsElement(this.options.exclusions));
         routeForm.appendChild(exclusion);
 
@@ -1352,15 +1352,18 @@ class Route extends Control {
      */
     onRouteModeTransportChange (e) {
         var value = e.target.value;
-        var shortestDiv = document.getElementById("GProuteComputeShortest-" + this._uid);
+        var shortestDiv = document.getElementById("GProuteComputationChoice-" + this._uid);
+        var exclusionDiv = document.getElementById("GProuteExclusions-" + this._uid);
         if (!value) {
             return;
         }
         /* Sélecteur mode d'itinéraire inactif en mode Pieton */
         if (value === "Pieton" && this.options.prettifyCompute === true) {
             shortestDiv.style.display = "none";
+            exclusionDiv.style.display = "none";
         } else {
             shortestDiv.style.display = "block";
+            exclusionDiv.style.display = "block";
         }
         this._currentTransport = value;
     }
@@ -1538,6 +1541,10 @@ class Route extends Control {
             return;
         }
 
+        if (this.options.prettifyCompute === true && options.transport === "Pieton") {
+            options.routePreference = "shortest";
+            options.exclusions = [];
+        }
         // cas où la clef API n'est pas renseignée dans les options du service,
         // on utilise celle renseignée au niveau du controle (calcul par défaut)
         options.apiKey = this.options.routeOptions.apiKey || this.options.apiKey;
