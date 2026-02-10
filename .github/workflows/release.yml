@@ -267,9 +267,9 @@ jobs:
       - name: Publish on npm
         run: |
           cd ./dist/package
-          npm publish --tag next
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
+          npm publish --provenance --access public --tag next
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
 
   # - checkout master or main
   # - download changelog (from release)
