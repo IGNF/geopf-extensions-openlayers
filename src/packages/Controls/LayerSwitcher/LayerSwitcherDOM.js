@@ -544,8 +544,9 @@ var LayerSwitcherDOM = {
         let div = document.createElement("div");
         div.id = this._addUID("GPtitle_ID_" + obj.id);
         div.className = "GPtitle";
-
-        div.appendChild(this._createLayerThumbnailElement(obj));
+        if (obj.thumbnail) {
+            div.appendChild(this._createLayerThumbnailElement(obj));
+        }
 
         div.appendChild(this._createLayerNameDivElement(obj, tooltips));
 
@@ -584,13 +585,12 @@ var LayerSwitcherDOM = {
         let img = document.createElement("img");
         img.id = this._addUID("GPtitleImage_ID_" + obj.id);
         img.className = "GPtitleImage GPtitleDefaultImage";
-        img.alt = "";
+        img.alt = "Miniature de la couche " + obj.title;
 
         if (obj.thumbnail) {
             img.classList.remove("GPtitleDefaultImage");
             img.src = obj.thumbnail;
         }
-
         return img;
     },
 
@@ -709,7 +709,7 @@ var LayerSwitcherDOM = {
         button.title = "Afficher/masquer la couche";
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", visible);
-        button.setAttribute("type","button");
+        button.setAttribute("type", "button");
 
         var context = this;
 
@@ -853,20 +853,34 @@ var LayerSwitcherDOM = {
             container.appendChild(btnGroups);
         } else {
             if (checkDsfr()) {
-                btnGroups.appendChild(this._createInformationElement(obj, {}));
-                btnGroups.appendChild(this._createEditionElement(obj, {}));
-                btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
-                btnGroups.appendChild(this._createExtentElement(obj, {}));
+                if ((obj.description && obj.description.length) || (obj.metadata && obj.metadata.length)) {
+                    btnGroups.appendChild(this._createInformationElement(obj, {}));
+                }
+
+                if (obj.metadata && obj.editable) {
+                    btnGroups.appendChild(this._createEditionElement(obj, {}));
+                }
+                if (obj.grayable) {
+                    btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+                }
+                const hasExtent = (obj.layer.config && obj.layer.config.globalConstraint && obj.layer.config.globalConstraint.bbox) || 
+                      (obj.layer.gpResultLayerId);
+                if (hasExtent) {
+                    btnGroups.appendChild(this._createExtentElement(obj, {}));
+                }
             } else {
-                btnGroups.appendChild(this._createInformationElement(obj, {}));
-                btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+                if ((obj.description && obj.description.length) || (obj.metadata && obj.metadata.length)) {
+                    btnGroups.appendChild(this._createInformationElement(obj, {}));
+                }
+                if (obj.grayable) {
+                    btnGroups.appendChild(this._createGreyscaleElement(obj, {}));
+                }
             }
             container.appendChild(btnGroups);
         }
-        
+
         return container;
     },
-
     /**
      * Configure le bouton selon les options du bouton.
      * 
@@ -989,7 +1003,7 @@ var LayerSwitcherDOM = {
     _createDeleteElement : function (id) {
         let button = document.createElement("button");
         button.id = this._addUID("GPremove_ID_" + id);
-        
+
         // Icône et type de bouton
         let className = "gpf-btn-icon-ls-remove gpf-btn-icon";
         if (checkDsfr()) {
@@ -1061,14 +1075,13 @@ var LayerSwitcherDOM = {
         if (tool && tool.className) {
             toolOptions.className += ` ${tool.className}`;
         }
-        
+
         // Mets les attributs du bouton
         this._setAdvancedToolOptions(button, toolOptions, false);
 
-        // hack pour garder un emplacement vide en mode desktop
-        // et cacher l'entrée en mode mobile
+        // Pas d'ajout du bouton si l'édition n'est pas possible
         if (!editable || (tms && styles.length === 1)) {
-            button.disabled = true;
+            return null;
         }
 
         let context = this;
@@ -1140,14 +1153,14 @@ var LayerSwitcherDOM = {
         if (tool && tool.className) {
             toolOptions.className += ` ${tool.className}`;
         }
-        
+
         // Permet d'override les valeurs par défaut du bouton
         this._setAdvancedToolOptions(button, toolOptions, false);
 
         // button.title = "Informations/légende";
 
         if (!title || !description) {
-            button.disabled = true;
+            return null;
         }
         // add event on click
         var context = this;
@@ -1217,7 +1230,7 @@ var LayerSwitcherDOM = {
         if (tool && tool.className) {
             toolOptions.className += ` ${tool.className}`;
         }
-        
+
         // Permet d'override les valeurs par défaut du bouton
         this._setAdvancedToolOptions(button, toolOptions, false);
 
@@ -1227,9 +1240,9 @@ var LayerSwitcherDOM = {
 
         button.setAttribute("aria-pressed", _grayscale);
 
-        // hack pour garder un emplacement vide
+        // Pas d'ajout du bouton si la fonction n'est pas présente
         if (!grayable) {
-            button.disabled = true;
+            return null;
         }
 
         // add event on click
@@ -1391,7 +1404,6 @@ var LayerSwitcherDOM = {
         if (tool && tool.className) {
             toolOptions.className += ` ${tool.className}`;
         }
-        
         // Permet d'override les valeurs par défaut du bouton
         this._setAdvancedToolOptions(button, toolOptions, false);
 
