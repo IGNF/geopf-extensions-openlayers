@@ -9,7 +9,11 @@ env:
   MODULE_NAME: modules
   BUNDLE_NAME: bundle
   PACKAGE_NAME: package
-  
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
 
   # - checkout master ou main
