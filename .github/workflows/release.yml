@@ -260,15 +260,15 @@ jobs:
       - name: Use registry npm
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
           
       - name: Publish on npm
         run: |
           cd ./dist/package
           npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
 
   # - checkout master or main
   # - download changelog (from release)
