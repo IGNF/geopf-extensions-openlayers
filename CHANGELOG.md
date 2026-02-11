@@ -47,6 +47,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * [🎉 Summary](#%F0%9F%8E%89-summary-7)
   * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes-7)
   * [📖 Changelog](#%F0%9F%93%96-changelog-7)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.8](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta8)
+  * [Unreleased](#unreleased-8)
+  * [🎉 Summary](#%F0%9F%8E%89-summary-8)
+  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes-8)
+  * [📖 Changelog](#%F0%9F%93%96-changelog-8)
 
 <!-- tocstop -->
 
@@ -488,6 +493,54 @@ Refontes majeures :
   - DSFR Tooltips : affichage au-dessus des modales de contrôles (#458)
   - Catalog : correctifs et performance avec l'option 'optimisation:none|on-demand|clusterize'
 
+* 🔒 [Security]
+
+
+---
+## Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.8
+
+2026-02-11
+> 🚀 Release Extension Geoplateforme openlayers
+
+### Unreleased
+
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.8...HEAD>
+
+### 🎉 Summary
+
+Corrections sur le layerSwitcher et amélioration de l'affichage des couches dans le cartalogue
+
+### 💥 Breaking changes
+
+### 📖 Changelog
+
+* ✨ [Added]
+
+* 🔨 [Changed]
+
+  - Cartalog : ajout d'une option pour mettre en avant des couches dans les categories (#473)
+  - Cartalog : ajout d'une option pour ordonner la liste des couches (fd34a4013860db2c831cef5febbf9d553b2e9a0a)
+  - UI : changement contenu labels affichés au survol (#474)
+  - Territories : ajout des territoires d'outre-mer
+  - Layerswitcher : affichage des titres des couches sur deux lignes en mode DSFR (#476)
+  - Route : ajout d'une option pour se passer de l'option "compute" en mode itinéraire piéton (#483, #486)
+
+* 🔥 [Deprecated]
+
+* 🔥 [Removed]
+
+  - LayerSwitcher : retrait hack pour affichage description TMS au lieu du titre (ff0c3434b5e3f6b3be729d0fe4969416bb00e706)
+
+* 🐛 [Fixed]
+
+  - Layerswitcher : correction hauteur du dialog qui empechait l'interaction de zoom (#472)
+  - Layerswitcher : correction du style du compteur (#466)
+  - ContextMenu : correction de la fermeture du menu contextuel en cas de clic sur d'autres boutons (#472)
+  - Territories : correctif sur la reinitialisation par defaut des territoires
+  - Drawing : suppression de l'overlay si le widget est fermé (#477)
+  - Layers : permettre l'utilisation du zoom client en supprimant les contraintes de resolutions pour les niveau 20 et 21 (#478)
+  - Layerswitcher : modification du titre du gestionnaire de couches quand on change de style MapBox (#480)
+  
 * 🔒 [Security]
 
 
