@@ -12,7 +12,9 @@ export default GeoJSON;
  * @alias ol.format.GeoJSONExtended
  * @module GeoJSONExtended
 */
-declare class GeoJSON extends olGeoJSON<Feature<import("ol/geom").Geometry>> {
+declare class GeoJSON extends olGeoJSON<Feature<import("ol/geom").Geometry, {
+    [x: string]: any;
+}>> {
     /**
      * @constructor
      * @param {Object} options - Options

@@ -14,7 +14,11 @@ declare class SearchEngineAdvanced extends Control {
      */
     constructor(options: SearchEngineAdvancedOptions);
     geolocation: Geolocation;
-    layer: Vector<VectorSource<OlFeature<import("ol/geom").Geometry>>, OlFeature<import("ol/geom").Geometry>>;
+    layer: Vector<VectorSource<OlFeature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }>>, OlFeature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }>>;
     selectInteraction: Select;
     popup: Overlay;
     /**

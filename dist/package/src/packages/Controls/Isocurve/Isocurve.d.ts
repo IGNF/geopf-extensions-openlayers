@@ -125,7 +125,11 @@ declare class Isocurve extends Control {
      * @param {Layer} layer - ol.layer.Vector isocurve layer
      */
     setLayer(layer: Layer): void;
-    _geojsonLayer: VectorLayer<any, any> | VectorLayer<VectorSource<import("ol").Feature<import("ol/geom").Geometry>>, import("ol").Feature<import("ol/geom").Geometry>> | null | undefined;
+    _geojsonLayer: VectorLayer<any, any> | VectorLayer<VectorSource<import("ol").Feature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }>>, import("ol").Feature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }>> | null | undefined;
     /**
      * Get vector layer
      *

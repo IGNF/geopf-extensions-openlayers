@@ -89,7 +89,9 @@ export type AdvancedToolOption = {
      * Le constructeur ou le nom du constructeur peut être donné en argument.
      * Ne fonctionne pas pour les fonctionnalités déjà existantes.
      */
-    accepted?: (string | import("ol/layer/Base").default)[] | undefined;
+    accepted?: (string | import("ol/layer/Base").default<{
+        [x: string]: any;
+    }>)[] | undefined;
     /**
      * - Optionnel. Callback au click sur l'outil.
      */
@@ -960,7 +962,9 @@ declare class LayerSwitcher extends Control {
      * @public
      */
     public setSelectedLayer(layer: Layer, selected: boolean): void;
-    selectedLayer: Layer<import("ol/source").Source, import("ol/renderer/Layer").default<any>> | null | undefined;
+    selectedLayer: Layer<import("ol/source").Source, import("ol/renderer/Layer").default<any>, {
+        [x: string]: any;
+    }> | null | undefined;
     /**
      * check layers range on map movement
      *

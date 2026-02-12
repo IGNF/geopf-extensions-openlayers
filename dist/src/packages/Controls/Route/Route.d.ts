@@ -132,7 +132,11 @@ declare class Route extends Control {
      * @param {VectorLayer} layer - ol.layer.Vector route layer
      */
     setLayer(layer: VectorLayer): void;
-    _geojsonSections: VectorLayer<VectorSource<any>, any> | VectorLayer<VectorSource<import("ol").Feature<import("ol/geom").Geometry>>, import("ol").Feature<import("ol/geom").Geometry>> | null | undefined;
+    _geojsonSections: VectorLayer<VectorSource<any>, any> | VectorLayer<VectorSource<import("ol").Feature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }>>, import("ol").Feature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }>> | null | undefined;
     /**
      * Get vector layer
      *

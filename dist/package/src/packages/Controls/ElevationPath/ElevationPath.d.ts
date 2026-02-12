@@ -208,11 +208,19 @@ declare class ElevationPath extends Control {
     _markerStyle: Style | null;
     _profile: any;
     _data: {};
-    _measureSource: VectorSource<any> | VectorSource<Feature<import("ol/geom").Geometry>> | null;
-    _measureVector: VectorLayer<VectorSource<any>, any> | VectorLayer<VectorSource<any> | VectorSource<Feature<import("ol/geom").Geometry>>, any> | null;
+    _measureSource: VectorSource<any> | VectorSource<Feature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }>> | null;
+    _measureVector: VectorLayer<VectorSource<any>, any> | VectorLayer<VectorSource<any> | VectorSource<Feature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }>>, any> | null;
     _measureDraw: DrawInteraction | null;
-    _lastSketch: Feature<import("ol/geom").Geometry> | null;
-    _currentSketch: Feature<import("ol/geom").Geometry> | null;
+    _lastSketch: Feature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }> | null;
+    _currentSketch: Feature<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }> | null;
     _marker: any;
     _container: HTMLElement;
     /**

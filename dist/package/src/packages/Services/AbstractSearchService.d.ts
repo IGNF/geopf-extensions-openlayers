@@ -8,7 +8,9 @@ export default AbstractSearchService;
  * @abstract
  * @module SearchService
  */
-declare class AbstractSearchService extends BaseObject {
+declare class AbstractSearchService extends BaseObject<{
+    [x: string]: any;
+}> {
     /**
      * Constructeur du service abstrait.
      * @constructor

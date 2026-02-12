@@ -6,7 +6,9 @@ export default SourceWFS;
  * @alias ol.source.GeoportalWFS
  * @module GeoportalWFS
 */
-declare class SourceWFS extends VectorSource<import("ol").Feature<import("ol/geom").Geometry>> {
+declare class SourceWFS extends VectorSource<import("ol").Feature<import("ol/geom").Geometry, {
+    [x: string]: any;
+}>> {
     /**
     * @constructor
     * @param {Object} options            - options for function call.
