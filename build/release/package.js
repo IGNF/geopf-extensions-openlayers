@@ -4,7 +4,7 @@ const path = require("path");
 var yargs = require("yargs");
 const child_process = require("child_process");
 const fg = require("fast-glob");
-const base64Img = require("base64-img");
+
 
 async function main () {
     const argv = yargs
@@ -73,7 +73,21 @@ async function main () {
                 if (!url.startsWith("data:")) {
                     url = path.normalize(url);
                     url = path.join(path.dirname(entry), url);
-                    const data = base64Img.base64Sync(url);
+                    // Remplacement de base64-img par une lecture/encodage natif
+                    const imgBuffer = fse.readFileSync(url);
+                    const mimeType = (() => {
+                        const ext = path.extname(url).toLowerCase();
+                        switch (ext) {
+                            case '.png': return 'image/png';
+                            case '.jpg':
+                            case '.jpeg': return 'image/jpeg';
+                            case '.svg': return 'image/svg+xml';
+                            case '.gif': return 'image/gif';
+                            case '.webp': return 'image/webp';
+                            default: return 'application/octet-stream';
+                        }
+                    })();
+                    const data = `data:${mimeType};base64,${imgBuffer.toString('base64')}`;
                     line = line.substring(0, start) + "('" + data + "'" + line.substring(end);
                 }
             }
