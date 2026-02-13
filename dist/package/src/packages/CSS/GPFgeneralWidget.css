@@ -45,7 +45,6 @@
 #position-container-top-right,
 #position-container-bottom-left,
 #position-container-bottom-right {
-  border-style: solid;
   position: absolute;
   display: flex;
   flex-direction: column;

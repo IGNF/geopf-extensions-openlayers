@@ -21,6 +21,7 @@ button[id^=GPexportButton-].GPexportButtonExportIcon {
     background-size: 25px 25px;
     background-repeat: no-repeat;
     background-position: left;
+    cursor: pointer;
 }
 
 button[id^=GPexportButton-].GPexportButtonSaveIcon {
@@ -29,6 +30,7 @@ button[id^=GPexportButton-].GPexportButtonSaveIcon {
     background-size: 25px 25px;
     background-repeat: no-repeat;
     background-position: left;
+    cursor: pointer;
 }
 
 /* menu */
