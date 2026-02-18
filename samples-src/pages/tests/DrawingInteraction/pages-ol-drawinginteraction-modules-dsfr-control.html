@@ -69,35 +69,63 @@
                         ]
                     });
 
-                    // Création du Dialog avec navigation tertiaire
-                    const dialog = new ol.control.Dialog({
-                        id: "myDialog",
-                        title: "Dialog",
-                        position: "left",
-                        items: [
-                            {
-                                label: "Style",
-                                content: "<p>Onglet Style</p>",
-                                title: "Configuration du style"
-                            },
-                            {
-                                label: "Texte",
-                                content: "<p>Onglet Texte</p>",
-                                title: "Configuration du texte"
-                            },
-                            {
-                                label: "Infobulle",
-                                content: "<p>Onglet Infobulle</p>",
-                                title: "Configuration de l'infobulle"
-                            },
-                            {
-                                label: "Attributs",
-                                content: "<p>Onglet Attributs</p>",
-                                title: "Configuration des attributs"
-                            }
-                        ],
-                        labelTabNav: "Navigation de configuration"
-                    });
+        // Création du Dialog avec navigation tertiaire
+        const dialog = new ol.control.Dialog({
+            id: "myDialog",
+            title: "Dialog",
+            position: "left",
+            onOpen: function (e) {
+                console.log(e)
+                console.log(this)
+            },
+            onClose: function (e) {
+                console.log(e)
+                console.log(this);
+            },
+            items: [
+                {
+                    label: "Style",
+                    content: "<p>Onglet Style</p>",
+                    onOpen: function (e) {
+                        console.log("on open style")
+                        console.log(e)
+                        console.log(this)
+                    },
+                    onClose: function (e) {
+                        console.log("on close style")
+                        console.log(e)
+                        console.log(this);
+                    },
+                    title: "Configuration du style"
+                },
+                {
+                    label: "Texte",
+                    content: "<p>Onglet Texte</p>",
+                    onOpen: function (e) {
+                        console.log("on open texte")
+                        console.log(e)
+                        console.log(this)
+                    },
+                    onClose: function (e) {
+                        console.log("on close texte")
+                        console.log(e)
+                        console.log(this);
+                    },
+                    title: "Configuration du texte"
+                },
+                {
+                    label: "Infobulle",
+                    content: "<p>Onglet Infobulle</p>",
+                    title: "Configuration de l'infobulle"
+                },
+                {
+                    label: "Attributs",
+                    content: "<p>Onglet Attributs</p>",
+                    title: "Configuration des attributs"
+                }
+            ],
+            labelTabNav: "Navigation de configuration"
+        });
 
                     map.addControl(dialog);
 
