@@ -379,8 +379,18 @@ div[id^=GPtitle_ID_] {
     min-width: 184px;
 }
 
-div[id^=GPlayerTitle_ID_] > * {
+/* Titres des couches sur deux lignes avec points de suspension si toujours trop long */
+
+div[id^="GPlayerTitle_ID_"] > * {
     font-weight: 400;
+  }
+  
+@supports (-webkit-line-clamp: 2) {
+    div[id^="GPlayerTitle_ID_"] > * {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
 }
 
 .GPlayerName {

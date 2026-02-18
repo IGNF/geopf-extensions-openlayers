@@ -80,7 +80,7 @@ var CatalogDOM = {
         button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-catalog");
         // button.classList.add("icon--ri", "icon--ri--map-2-line");
         button.classList.add("fr-btn", "fr-btn--tertiary");
-        button.setAttribute("aria-label", "Catalogue de données");
+        button.setAttribute("aria-label", "Catalogue de cartes");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -328,6 +328,7 @@ var CatalogDOM = {
      * Create Catalog Content Categories Tabs
      * 
      * @param {Categories} categories - categories to create tabs
+     * @param {Boolean} tabHeightAuto - size auto or fixe
      * @returns {HTMLElement} DOM element
      * @description
      * - create the tabs for categories
@@ -336,7 +337,7 @@ var CatalogDOM = {
      * - each subcategory has a radio button to select it
      * - each subcategory has a panel with layers
      */
-    _createCatalogContentCategoriesTabs : function (categories) {
+    _createCatalogContentCategoriesTabs : function (categories, tabHeightAuto) {
         // les onglets
         var strCategoriesTabButtons = "";
         var tmplCategoryTabButton = (i, id, title, selected) => {
@@ -516,16 +517,16 @@ var CatalogDOM = {
         const titleSpecifBar = "Rechercher une donnée dans la catégorie";
         var strSearchSpecificBar = tmplSearchSpecificBar(currentActiveBar, titleSpecifBar);
         // FIXME 
-        // le calcul de la hauteur est realisé à la main pour pallier le manque de JS DSFR (?)
-        // style="--tabs-height: 294px;"
-        var tabHeight = "369px"; // par defaut
+        // le calcul de la hauteur est realisé par le JS DSFR si il est present
+        // sinon, on peut le fixer ou le mettre en mode auto
+        var classTabHeight = "gpf-catalog-tabs-fixe"; // par defaut
         if (hasActiveBar) {
-            tabHeight = "434px"; // si la barre de recherche spécifique est active
+            classTabHeight = "gpf-catalog-tabs-fixe-with-bar"; // si la barre de recherche spécifique est active
         }
         var strContainer = `
         <!-- onglets -->
         <div id="GPcatalogContainerTabs" class="catalog-container-tabs">
-            <div class="GPtabs fr-tabs" style="--tabs-height: ${tabHeight};">
+            <div class="GPtabs fr-tabs ${tabHeightAuto ? "" : classTabHeight}">
                 <ul class="GPtabsList fr-tabs__list" role="tablist" aria-label="presentation">
                     ${strCategoriesTabButtons}
                 </ul>
@@ -639,7 +640,7 @@ var CatalogDOM = {
      * Create Catalog Content Category Tab Content (layers)
      *
      * @param {Categories} category - category to create tab content
-     * @param {*} layersFiltered - filtered layers for the category
+     * @param {Array} layersFiltered - filtered layers for the category
      * @param {Boolean} nodata - do not write the data to the DOM
      * @returns {HTMLElement} DOM element
      * @description
@@ -647,8 +648,7 @@ var CatalogDOM = {
      * - each layer has a checkbox to select it
      * - each layer has a panel with information
      */
-    _createCatalogContentCategoryTabContent : async function (category, layersFiltered, nodata) {
-        var layers = Object.values(layersFiltered).sort((a, b) => a.title.localeCompare(b.title, "fr", { sensitivity : "base" })); // object -> array
+    _createCatalogContentCategoryTabContent : async function (category, layersFiltered, nodata) {   
         const batchSize = 10; // nombre d'éléments à traiter par lot
         var blocks = [];
 
@@ -710,7 +710,9 @@ var CatalogDOM = {
                 var data = "";
                 for (let i = 0; i < metadatas.length; i++) {
                     const metadata = metadatas[i];
-                    if (metadata.includes("catalogue/dataset")) {
+                    // INFO
+                    // 2 routes possibles pour la fiche de donnée
+                    if (metadata.includes("catalogue/dataset") || metadata.includes("rechercher-une-donnee/dataset")) {
                         return `
                             <a href="${metadata}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
                                 Voir la fiche détaillée
@@ -834,7 +836,7 @@ var CatalogDOM = {
         if (isSection) {
             // on procède à un tri
             // ex. tri sur le champ 'thematic'
-            layers = layers.sort((a, b) => {
+            layersFiltered = layersFiltered.sort((a, b) => {
                 return a[category.filter.field][0].localeCompare(b[category.filter.field][0]);
             });
         }
@@ -842,9 +844,9 @@ var CatalogDOM = {
         var sections = {};
         // regroupement par sections (ou pas) sur les couches
         var lstElements = [];
-        for (let i = 0; i < layers.length; i += batchSize) {
-            for (let j = i; j < Math.min(i + batchSize, layers.length); j++) {
-                const layer = layers[j];
+        for (let i = 0; i < layersFiltered.length; i += batchSize) {
+            for (let j = i; j < Math.min(i + batchSize, layersFiltered.length); j++) {
+                const layer = layersFiltered[j];
                 const infos = {
                     producers : layer.producer_urls, // tableau d'objets [{name,url}]
                     thematics : layer.thematic_urls, // tableau d'objets [{name,url}]
@@ -870,6 +872,9 @@ var CatalogDOM = {
                         sections[value] += strElement;
                     } else {
                         // au cas où...
+                        if (!sections.hasOwnProperty("Autres")) {
+                            sections["Autres"] = "";
+                        }
                         sections["Autres"] += strElement;
                     }
                 } else {
@@ -902,11 +907,24 @@ var CatalogDOM = {
 
         if (isSection) {
             category.sections = [];
+            // Transformer sections en tableau trié, avec "Autres" à la fin
+            const sectionsArray = Object.entries(sections).sort((a, b) => {
+                const titleA = a[0];
+                const titleB = b[0];
+                // Si "Autres", toujours en dernier
+                if (titleA === "Autres") { 
+                    return 1;
+                }
+                if (titleB === "Autres") {
+                    return -1;
+                }
+                // Sinon tri alphabétique
+                return titleA.localeCompare(titleB, "fr", { sensitivity : "base" });
+            });
             // creation des sections de regroupement
             // et ajout des couches dans les sections
-            for (const title in sections) {
+            for (const [title, data] of sectionsArray) {
                 if (Object.prototype.hasOwnProperty.call(sections, title)) {
-                    const data = sections[title];
                     var lstElementsBySection = [];
                     var array = [...data.matchAll(/"fr-fieldset__element"/g)];
                     for (let index = 0; index < array.length; index++) {

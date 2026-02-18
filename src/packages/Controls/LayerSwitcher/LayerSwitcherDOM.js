@@ -192,7 +192,7 @@ var LayerSwitcherDOM = {
         // button.classList.add("fr-icon-stack-line");
         button.classList.add("fr-btn", "fr-btn--tertiary");
         button.htmlFor = this._addUID("GPshowLayersList");
-        button.setAttribute("aria-label", "Afficher/masquer le gestionnaire de couches");
+        button.setAttribute("aria-label", "Ma sélection de cartes");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
         button.setAttribute("type", "button");
@@ -617,8 +617,10 @@ var LayerSwitcherDOM = {
             label.title = obj.name;
         }
         label.innerHTML = obj.title;
+        // FIXME Hack temporaire pour TMS
+        // en attendant une meilleure gestion des titres de couches
         if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
-            label.innerHTML = obj.description;
+            label.innerHTML = obj.title || obj.description;
         }
         return label;
     },
@@ -1379,7 +1381,7 @@ var LayerSwitcherDOM = {
         let label;
         if (checkDsfr()) {
             icon = "fr-icon-zoom-in-line";
-            label = "Recentrer";
+            label = "Centrer sur la couche";
         }
         let className = `GPelementHidden GPlayerExtent gpf-btn--tertiary gpf-btn fr-btn fr-btn--tertiary-no-outline`;
 

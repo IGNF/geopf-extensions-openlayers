@@ -4,6 +4,8 @@
           
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -59,12 +61,20 @@
                         })
                     });
 
+                    var layerSwitcher = new ol.control.LayerSwitcher({
+                        options :{
+                            panel: true,
+                        }
+                    });
+                    map.addControl(layerSwitcher);
+                    
                     var catalog = new ol.control.Catalog({
                         position: "top-left",
                         titlePrimary : "Catalogue des cartes",
                         layerLabel : "title",
                         layerThumbnail : true,
                         optimisation : "on-demand",
+                        tabHeightAuto : false,
                         size : "xl",
                         search : {
                             display : false,
@@ -74,6 +84,8 @@
                             {
                                 title : "Cartes de références",
                                 id : "base",
+                                order : false,
+                                featured : true,
                                 filter : {
                                     field : "base",
                                     value : "true"
@@ -87,6 +99,7 @@
                                     {
                                         title : "Thème",
                                         default : true,
+                                        order : true,
                                         section : true,
                                         icon : true,
                                         filter : {
@@ -98,6 +111,7 @@
                                     {
                                         title : "Producteur",
                                         section : true,
+                                        order : true,
                                         icon : true,
                                         filter : {
                                             field : "producer",
@@ -107,6 +121,8 @@
                                     {
                                         title : "Service",
                                         section : true,
+                                        order : true,
+                                        featured : true,
                                         icon : true,
                                         filter : {
                                             field : "service",
@@ -153,18 +169,19 @@
                         ]
                     });
                     map.addControl(catalog);
+
                 };
-                // Gp.Services.getConfig({
-                //     customConfigFile : "{{ configurl }}",
-                //     callbackSuffix : "",
-                //     // apiKey: "{{ apikey }}",
-                //     timeOut : 20000,
-                //     onSuccess : createMap,
-                //     onFailure : (e) => {
-                //         console.error(e);
-                //     }
-                // });
-                createMap();
+                Gp.Services.getConfig({
+                    customConfigFile : "{{ configurl }}",
+                    callbackSuffix : "",
+                    // apiKey: "{{ apikey }}",
+                    timeOut : 20000,
+                    onSuccess : createMap,
+                    onFailure : (e) => {
+                        console.error(e);
+                    }
+                });
+                // createMap();
            </script>
 {{/content}}
 

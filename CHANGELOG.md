@@ -5,45 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-<!-- toc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+- [CHANGELOG EXTENSION GEOPORTAL](#changelog-extension-geoportal)
 
-- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta0)
-  * [Unreleased](#unreleased)
-  * [🎉 Summary](#%F0%9F%8E%89-summary)
-  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes)
-  * [📖 Changelog](#%F0%9F%93%96-changelog)
-- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.1](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta1)
-  * [Unreleased](#unreleased-1)
-  * [🎉 Summary](#%F0%9F%8E%89-summary-1)
-  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes-1)
-  * [📖 Changelog](#%F0%9F%93%96-changelog-1)
-- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.2](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta2)
-  * [Unreleased](#unreleased-2)
-  * [🎉 Summary](#%F0%9F%8E%89-summary-2)
-  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes-2)
-  * [📖 Changelog](#%F0%9F%93%96-changelog-2)
-- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.3](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta3)
-  * [Unreleased](#unreleased-3)
-  * [🎉 Summary](#%F0%9F%8E%89-summary-3)
-  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes-3)
-  * [📖 Changelog](#%F0%9F%93%96-changelog-3)
-- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.4](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta4)
-  * [Unreleased](#unreleased-4)
-  * [🎉 Summary](#%F0%9F%8E%89-summary-4)
-  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes-4)
-  * [📖 Changelog](#%F0%9F%93%96-changelog-4)
-- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.5](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta5)
-  * [Unreleased](#unreleased-5)
-  * [🎉 Summary](#%F0%9F%8E%89-summary-5)
-  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes-5)
-  * [📖 Changelog](#%F0%9F%93%96-changelog-5)
-- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.6](#extension-geoplateforme-openlayers-%F0%9F%94%96-version-100-beta6)
-  * [Unreleased](#unreleased-6)
-  * [🎉 Summary](#%F0%9F%8E%89-summary-6)
-  * [💥 Breaking changes](#%F0%9F%92%A5-breaking-changes-6)
-  * [📖 Changelog](#%F0%9F%93%96-changelog-6)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0](#extension-geoplateforme-openlayers--version-100-beta0)
+  - [Unreleased](#unreleased)
+  - [🎉 Summary](#-summary)
+  - [💥 Breaking changes](#-breaking-changes)
+  - [📖 Changelog](#-changelog)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.1](#extension-geoplateforme-openlayers--version-100-beta1)
+  - [Unreleased](#unreleased-1)
+  - [🎉 Summary](#-summary-1)
+  - [💥 Breaking changes](#-breaking-changes-1)
+  - [📖 Changelog](#-changelog-1)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.2](#extension-geoplateforme-openlayers--version-100-beta2)
+  - [Unreleased](#unreleased-2)
+  - [🎉 Summary](#-summary-2)
+  - [💥 Breaking changes](#-breaking-changes-2)
+  - [📖 Changelog](#-changelog-2)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.3](#extension-geoplateforme-openlayers--version-100-beta3)
+  - [Unreleased](#unreleased-3)
+  - [🎉 Summary](#-summary-3)
+  - [💥 Breaking changes](#-breaking-changes-3)
+  - [📖 Changelog](#-changelog-3)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.4](#extension-geoplateforme-openlayers--version-100-beta4)
+  - [Unreleased](#unreleased-4)
+  - [🎉 Summary](#-summary-4)
+  - [💥 Breaking changes](#-breaking-changes-4)
+  - [📖 Changelog](#-changelog-4)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.5](#extension-geoplateforme-openlayers--version-100-beta5)
+  - [Unreleased](#unreleased-5)
+  - [🎉 Summary](#-summary-5)
+  - [💥 Breaking changes](#-breaking-changes-5)
+  - [📖 Changelog](#-changelog-5)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.6](#extension-geoplateforme-openlayers--version-100-beta6)
+  - [Unreleased](#unreleased-6)
+  - [🎉 Summary](#-summary-6)
+  - [💥 Breaking changes](#-breaking-changes-6)
+  - [📖 Changelog](#-changelog-6)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.7](#extension-geoplateforme-openlayers--version-100-beta7)
+  - [Unreleased](#unreleased-7)
+  - [🎉 Summary](#-summary-7)
+  - [💥 Breaking changes](#-breaking-changes-7)
+  - [📖 Changelog](#-changelog-7)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.8](#extension-geoplateforme-openlayers--version-100-beta8)
+  - [Unreleased](#unreleased-8)
+  - [🎉 Summary](#-summary-8)
+  - [💥 Breaking changes](#-breaking-changes-8)
+  - [📖 Changelog](#-changelog-8)
 
-<!-- tocstop -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ---
 ## Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0
@@ -426,6 +438,111 @@ Corrections diverses sur l'ensemble des widgets, et reprise de la documentation 
   - Report : correction du workflow en cas de croquis ou d'email non renseigné lors d'un signalement (725dc53 et d11d147)
 
 
+* 🔒 [Security]
+
+
+---
+## Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.7
+
+2025-12-05
+> 🚀 Release Extension Geoplateforme openlayers
+
+### Unreleased
+
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.7...HEAD>
+
+### 🎉 Summary
+
+Mise à jour des icônes DSFR pour les boutons pictogrammes des widgets.
+Refontes majeures : 
+- la barre de recherche
+- le gestionnaire de couches
+- le catalogue
+
+### 💥 Breaking changes
+
+### 📖 Changelog
+
+* ✨ [Added]
+
+  - Contextual Menu : Ajout du getFeatureInfo dans les entrées du menu contextuel (#442)
+  - LayerSwitcher : Gestion des noms des styles MapBox issus de cartes.gouv.fr (#455)
+  - Territories : Mode DragNDrop des territoires (#468)
+  - Search : Nouvelle barre de recherche au DSFR (#471)
+
+* 🔨 [Changed]
+
+  - Catalog : refonte et optimisation du widget (#423)
+  - LayerSwitcher : refonte complète de l'outil (#434)
+  - Contextual Menu : Changement nom de l'entrée isochrone (3d228a692c8d51155bbdf8c8c32bb51629b6a03f)
+  - ReverseGeocode : changement titre modale et message si pas de résultat trouvé (#453)
+  - GetFeatureInfo : corrections diverse sur l'UI du panel de résultats (#448)
+  - Icones : Mise à jour des icônes DSFR pour les boutons (#462)
+  - Territories : Ajout d'un menu de gestion des territoires (#464)
+
+* 🔥 [Deprecated]
+
+* 🔥 [Removed]
+
+* 🐛 [Fixed]
+
+  - LayerSwitcher : Drag & drop sous Chrome (#444)
+  - Contextual Menu : GetFeatureInfo via menu contextuel conserve état du widget associé (#445)
+  - GetFeatureInfo : Possibilité de sélectionner à la souris le contenu renvoyer par le GFI (#446)
+  - ReverseGeocode :  Application de la bonne classe css au panel de résultats pour affichage mobile (#456)
+  - LayerSwitcher : correctif sur les vignettes par défaut
+  - OverviewMap : correctif sur le zoom min(1) et max(8) par défaut
+  - DSFR Tooltips : affichage au-dessus des modales de contrôles (#458)
+  - Catalog : correctifs et performance avec l'option 'optimisation:none|on-demand|clusterize'
+
+* 🔒 [Security]
+
+
+---
+## Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.8
+
+2026-02-11
+> 🚀 Release Extension Geoplateforme openlayers
+
+### Unreleased
+
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.8...HEAD>
+
+### 🎉 Summary
+
+Corrections sur le layerSwitcher et amélioration de l'affichage des couches dans le cartalogue
+
+### 💥 Breaking changes
+
+### 📖 Changelog
+
+* ✨ [Added]
+
+* 🔨 [Changed]
+
+  - Cartalog : ajout d'une option pour mettre en avant des couches dans les categories (#473)
+  - Cartalog : ajout d'une option pour ordonner la liste des couches (fd34a4013860db2c831cef5febbf9d553b2e9a0a)
+  - UI : changement contenu labels affichés au survol (#474)
+  - Territories : ajout des territoires d'outre-mer
+  - Layerswitcher : affichage des titres des couches sur deux lignes en mode DSFR (#476)
+  - Route : ajout d'une option pour se passer de l'option "compute" en mode itinéraire piéton (#483, #486)
+
+* 🔥 [Deprecated]
+
+* 🔥 [Removed]
+
+  - LayerSwitcher : retrait hack pour affichage description TMS au lieu du titre (ff0c3434b5e3f6b3be729d0fe4969416bb00e706)
+
+* 🐛 [Fixed]
+
+  - Layerswitcher : correction hauteur du dialog qui empechait l'interaction de zoom (#472)
+  - Layerswitcher : correction du style du compteur (#466)
+  - ContextMenu : correction de la fermeture du menu contextuel en cas de clic sur d'autres boutons (#472)
+  - Territories : correctif sur la reinitialisation par defaut des territoires
+  - Drawing : suppression de l'overlay si le widget est fermé (#477)
+  - Layers : permettre l'utilisation du zoom client en supprimant les contraintes de resolutions pour les niveau 20 et 21 (#478)
+  - Layerswitcher : modification du titre du gestionnaire de couches quand on change de style MapBox (#480)
+  
 * 🔒 [Security]
 
 

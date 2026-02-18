@@ -37,13 +37,24 @@
     background-color: var(--background-lifted-grey);
 }
 #gpf-territories-views-container-id {
-    top: 50px;
+    top: 48px;
     z-index: 10000;
     border-color: #ddd;
     border-width: 1px;
     width: auto;
     height: auto;
 }
+
+#gpf-territories-views-form-id {
+    padding: unset;
+    padding-right: 128px;
+    margin-top: 12px;
+}
+
+#gpf-territories-views-submit-id {
+    margin-bottom: 24px;
+}
+
 .gpf-panel__views_territories-menu {}
 .gpf-panel__views_territories-addview {}
 .gpf-panel__views_territories-listview {}

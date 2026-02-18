@@ -34,7 +34,7 @@ class ModifyingInteraction extends Modify {
         // Long touch interaction
         this.longtouch = new LongTouch({ 
             pixelTolerance : 6, 
-            delay: 600,
+            delay : 600,
             handleLongTouchEvent : (e) => {
                 if (this.getActive()) {
                     this._showContextMenu(e, this._isOnPoint(e));

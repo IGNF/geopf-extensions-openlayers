@@ -18,7 +18,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout d'une couche WMS Geoportail</h2>
+            <h2>Ajout d'une couche WMTS</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -41,18 +41,18 @@
                             zoom : 6,
                             minZoom: 0,
                             maxZoom: 24
-
                     });
                     map = new ol.Map({
                         target : "map",
                         view : view,
                         layers : [
-                            new ol.layer.GeoportalWMS({
-                                layer : "ORTHOIMAGERY.ORTHOPHOTOS"
+                            new ol.layer.GeoportalWMTS({
+                                layer : "ORTHOIMAGERY.ORTHOPHOTOS",
+                                // no constraints on zoom levels
+                                noConstraint: true
                             })
                         ]
                     });
-
                     view.on('change:resolution', function() {
                         var scale = view.getResolution();
                         var zoom = view.getZoom();
@@ -60,6 +60,8 @@
                         console.log(message);
                         input.value = message;
                     });
+
+
                 };
                 Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",
