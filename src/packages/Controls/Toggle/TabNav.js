@@ -2,6 +2,8 @@ import BaseObject from "ol/Object";
 import Logger from "../../Utils/LoggerByDefault";
 import Helper from "../../Utils/Helper";
 import Control from "../Control";
+import Collection from "ol/Collection";
+import TabNavItem from "./TabNavItem";
 var logger = Logger.getLogger("tabnav");
 
 /**
@@ -45,6 +47,8 @@ class TabNav extends Control {
     _initialize (options) {
         super._initialize(options);
         this.tabNavClass = "GPF-tabnav";
+
+        this.items = new Collection();
 
         const tabClass = ".fr-tabnav";
         this.selectors = {
@@ -102,11 +106,18 @@ class TabNav extends Control {
      */
     _initEvents (options) {
         super._initEvents(options);
+
+        this.items.on("add", (e) => {
+            const item = e.element;
+            item.getButton().addEventListener("click", (e) => {
+                this.setCurrentLink(item);
+            });
+        });
     }
 
     /**
      * Ajoute plusieurs items à la navigation.
-     * @param {Array<TabNavItem>} items Liste des items à ajouter
+     * @param {Array<TabNavItemOptions>} items Liste des items à ajouter
      */
     addItems (items) {
         if (!Array.isArray(items)) {
@@ -120,67 +131,16 @@ class TabNav extends Control {
 
     /**
      * Ajoute un item à la navigation.
-     * @param {TabNavItem} item Item à ajouter
+     * @param {TabNavItemOptions} option Item à ajouter
      */
-    addItem (item) {
-        if (!item) {
+    addItem (option) {
+        if (!option) {
             return;
         }
-
-        const btnId = Helper.getUid("tabNavLink");
-        const contentId = Helper.getUid("tabNavContent");
-
-        // Création de la puce
-        const li = document.createElement("li");
-        li.className = `fr-nav__item fr-tabnav__item  ${this.tabNavClass}__item`;
-        li.setAttribute("role", "presentation");
-
-        // Création du bouton
-        const button = document.createElement("button");
-        button.type = "button";
-        button.id = btnId;
-        button.setAttribute("role", "tab");
-        button.setAttribute("aria-controls", contentId);
-        button.setAttribute("aria-selected", "false");
-        button.innerHTML = item.label;
-
-        let buttonClasses = `fr-nav__link fr-tabnav__link ${this.tabNavClass}__link`;
-        if (item.icon) {
-            buttonClasses += ` ${item.icon} fr-btn--icon-left ${this.tabNavClass}__link-btn`;
-        }
-        button.className = buttonClasses;
-
-        if (item.title) {
-            button.title = item.title;
-        }
-
-        // Stockage des callbacks
-        button._onTabOpen = item.onOpen;
-        button._onTabClose = item.onClose;
-
-        // Événement click
-        button.addEventListener("click", this._handleClick.bind(this));
-
-        li.appendChild(button);
-        this.navigationList.appendChild(li);
-
-        // Création du contenu lié à l'onglet
-        const content = document.createElement("div");
-        content.id = contentId;
-        content.setAttribute("aria-labelledby", btnId);
-        content.setAttribute("role", "tabpanel");
-        content.className = "fr-tabnav__panel fr-hidden GPelementHidden";
-
-        if (typeof item.content === "string") {
-            content.innerHTML = item.content;
-        } else if (item.content instanceof HTMLElement) {
-            content.appendChild(item.content);
-        }
-        this.contentContainer.appendChild(content);
-
-        // Ajoute écouteur d'événement à  l'ouverture / fermeture de l'onglet
-        typeof item.onOpen === "function" && this.addEventListener(this.selectors.OPEN_TAB, item.onOpen);
-        typeof item.onClose === "function" && this.addEventListener(this.selectors.CLOSE_TAB, item.onClose);
+        const item = new TabNavItem(option);
+        this.items.push(item);
+        this.navigationList.appendChild(item.getElement());
+        this.contentContainer.appendChild(item.getContent());
     }
 
     /**
@@ -188,7 +148,7 @@ class TabNav extends Control {
      * @returns {Boolean} Vrai si contient des éléments
      */
     hasNavItem () {
-        return !!this.element.querySelectorAll(this.selectors.NAVIGATION_ITEM).length;
+        return !!this.items.length;
     }
 
     /**
@@ -208,15 +168,15 @@ class TabNav extends Control {
 
     /**
      * Retourne le lien actuellement sélectionné.
-     * @returns {HTMLButtonElement|null} Bouton actuellement sélectionné
+     * @returns {TabNavItem|null} Bouton actuellement sélectionné
      */
     getCurrentLink () {
-        return this.element.querySelector(this.selectors.CURRENT_LINK);
+        return this.currentItem;
     }
 
     /**
      * Définit le lien courant et gère l'affichage du contenu.
-     * @param {HTMLButtonElement} link Bouton à activer
+     * @param {TabNavItem} link Bouton à activer
      */
     setCurrentLink (link) {
         const currentLink = this.getCurrentLink();
@@ -227,27 +187,11 @@ class TabNav extends Control {
 
         if (currentLink) {
             // Fermeture de l'onglet actuel
-            currentLink.ariaSelected = false;
-            const currentContent = currentLink.ariaControlsElements?.[0];
-            currentContent?.classList.add("fr-hidden", "GPelementHidden");
-
-            this.dispatchEvent({
-                type : this.selectors.CLOSE_TAB,
-                tab : currentLink,
-                content : currentContent,
-            });
+            currentLink.setSelected(false);
         }
 
-        // Ouverture du nouvel onglet
-        link.ariaSelected = true;
-        const content = link.ariaControlsElements?.[0];
-        content?.classList.remove("fr-hidden", "GPelementHidden");
-
-        this.dispatchEvent({
-            type : this.selectors.OPEN_TAB,
-            tab : link,
-            content : content
-        });
+        this.currentItem = link;
+        link.setSelected(true);
     }
 
     /**
@@ -255,7 +199,7 @@ class TabNav extends Control {
      * @returns {Boolean} True si au moins un item existe
      */
     hasItems () {
-        return this.navigationList.children.length > 0;
+        return this.items.getLength() > 0;
     }
 
     /**
@@ -282,28 +226,25 @@ class TabNav extends Control {
 
     /**
      * Affiche un item.
-     * @param {HTMLDivElement} item Item à afficher
+     * @param {TabNavItem} item Item à afficher
      */
     showItem (item) {
-        item.classList.remove("fr-hidden", "GPelementHidden");
+        item.show();
     }
 
     /**
      * Masque un item.
-     * @param {HTMLDivElement} item Item à masquer
+     * @param {TabNavItem} item Item à masquer
      */
     hideItem (item) {
-        item.classList.add("fr-hidden", "GPelementHidden");
+        item.hide();
     }
 
     /**
      * Sélectionne le premier onglet.
      */
     selectFirst () {
-        const firstLink = this.element.querySelector(this.selectors.NAVIGATION_LINK);
-        if (firstLink) {
-            this.setCurrentLink(firstLink);
-        }
+        this.items.item(0) && this.setCurrentLink(this.items.item(0));
     }
 
     /**
@@ -311,6 +252,7 @@ class TabNav extends Control {
      */
     clear () {
         this.navigationList.replaceChildren();
+        this.items.clear();
     }
 
 }
