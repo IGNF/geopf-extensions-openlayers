@@ -69,9 +69,6 @@ class Dialog extends ControlExtended {
         super.setMap(map);
         if (map) {
             this.tabNav?.setMap(map);
-
-            // Sélection du premier onglet
-            this.tabNav?.selectFirst();
         }
     }
 
@@ -317,6 +314,16 @@ class Dialog extends ControlExtended {
     show () {
         this.element.show();
         this.dispatchEvent(this.selectors.OPEN_EVENT);
+
+        // Envoie un événement d'ouverture à l'onglet sélectionné
+        if (this.tabNav) {
+            const currentLink = this.tabNav.getCurrentLink();
+            if (!currentLink) {
+                this.tabNav.selectFirst();
+            } else {
+                currentLink.dispatchEvent(currentLink.selectors.OPEN_TAB);
+            }
+        }
     }
 
     /**
@@ -326,6 +333,11 @@ class Dialog extends ControlExtended {
         if (this.isOpen()) {
             this.element.close();
             this.dispatchEvent(this.selectors.CLOSE_EVENT);
+
+            // Envoie un événement de fermeture à l'onglet sélectionné
+            if (this.tabNav) {
+                this.tabNav.getCurrentLink()?.dispatchEvent(this.tabNav.getCurrentLink().selectors.CLOSE_TAB);
+            }
         }
     }
 
