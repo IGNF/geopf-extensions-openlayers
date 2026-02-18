@@ -63,9 +63,6 @@ class Dialog extends ControlExtended {
         if (options.items.length) {
             this.setTabNav(options.items, options.labelTabNav);
         }
-
-        this.onOpenCallback = options.onOpen;
-        this.onCloseCallback = options.onClose;
     }
 
     setMap (map) {
@@ -102,6 +99,10 @@ class Dialog extends ControlExtended {
         // Initialisation de la navigation tertiaire
         this.tabNav = null;
         options.items ??= [];
+
+        // Fonction à l'ouverture / fermeture du dialog
+        this.onOpenCallback = typeof options.onOpen === "function" ? options.onOpen : () => { };
+        this.onCloseCallback = typeof options.onClose === "function" ? options.onClose : () => { };
     }
 
     /**
@@ -179,6 +180,8 @@ class Dialog extends ControlExtended {
         this.closeBtn.onclick = () => {
             this.close();
         };
+        this.on(this.selectors.OPEN_EVENT, this.onOpenCallback.bind(this));
+        this.on(this.selectors.CLOSE_EVENT, this.onCloseCallback.bind(this));
     }
 
     /**
@@ -314,9 +317,6 @@ class Dialog extends ControlExtended {
     show () {
         this.element.show();
         this.dispatchEvent(this.selectors.OPEN_EVENT);
-        if (this.onOpenCallback) {
-            this.onOpenCallback();
-        }
     }
 
     /**
@@ -326,9 +326,6 @@ class Dialog extends ControlExtended {
         if (this.isOpen()) {
             this.element.close();
             this.dispatchEvent(this.selectors.CLOSE_EVENT);
-            if (this.onCloseCallback) {
-                this.onCloseCallback();
-            }
         }
     }
 

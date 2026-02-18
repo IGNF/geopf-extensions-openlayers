@@ -43,6 +43,7 @@ class TabNav extends Control {
      * @param {TabNavOptions} options Options de construction
      */
     _initialize (options) {
+        super._initialize(options);
         this.tabNavClass = "GPF-tabnav";
 
         const tabClass = ".fr-tabnav";
@@ -82,6 +83,7 @@ class TabNav extends Control {
      * @returns {HTMLElement} Élément div de navigation
      */
     _initContainer (options) {
+        super._initContainer(options);
         this.element = document.createElement("div");
         this.element.className = `${this.tabNavClass} fr-nav fr-tabnav`;
 
@@ -99,7 +101,7 @@ class TabNav extends Control {
      * @param {TabNavOptions} options Options du constructeur
      */
     _initEvents (options) {
-
+        super._initEvents(options);
     }
 
     /**
@@ -175,6 +177,10 @@ class TabNav extends Control {
             content.appendChild(item.content);
         }
         this.contentContainer.appendChild(content);
+
+        // Ajoute écouteur d'événement à  l'ouverture / fermeture de l'onglet
+        typeof item.onOpen === "function" && this.addEventListener(this.selectors.OPEN_TAB, item.onOpen);
+        typeof item.onClose === "function" && this.addEventListener(this.selectors.CLOSE_TAB, item.onClose);
     }
 
     /**
@@ -230,10 +236,6 @@ class TabNav extends Control {
                 tab : currentLink,
                 content : currentContent,
             });
-
-            if (typeof currentLink._onTabClose === "function") {
-                currentLink._onTabClose(currentLink, currentContent);
-            }
         }
 
         // Ouverture du nouvel onglet
@@ -246,10 +248,6 @@ class TabNav extends Control {
             tab : link,
             content : content
         });
-
-        if (typeof link._onTabOpen === "function") {
-            link._onTabOpen(link, content);
-        }
     }
 
     /**
