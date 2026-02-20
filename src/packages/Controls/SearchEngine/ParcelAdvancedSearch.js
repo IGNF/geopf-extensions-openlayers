@@ -675,9 +675,12 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * @returns {Promise} Promesse avec les données GeoJSON (feuilles ou parcelles si section renseignée)
      */
     async _fetchCadastre (code, arrond, prefix, section) {
-        const domtom = ["97","98"].includes(code.slice(0,2));
-        const dep = code.slice(0, domtom ? 3 : 2);
-        const com = code.slice(domtom ? 3 : 2, 5);
+        // const domtom = ["97","98"].includes(code.slice(0,2));
+        // const dep = code.slice(0, domtom ? 3 : 2);
+        // const com = code.slice(domtom ? 3 : 2, 5);
+        // Pas de traitement différent pour les drom-com;
+        const dep = code.slice(0, 2);
+        const com = code.slice(2, 5);
         const url = "https://data.geopf.fr/wfs/ows?";
         const params = {
             service : "WFS",
