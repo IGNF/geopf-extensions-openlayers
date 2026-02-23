@@ -64,7 +64,6 @@ form[id^=GPsearchInput-] {
 button[id^=GPsearchInputReset] {
   position: absolute;
   top: 0px;
-  right: 0px;
   border: unset;
 }
 
