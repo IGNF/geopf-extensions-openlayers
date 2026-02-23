@@ -1,0 +1,13 @@
+.gpf-btn-icon-panoramax::after {
+    -webkit-mask: url("img/dsfr/panoramax.svg") center no-repeat;
+    mask: url("img/dsfr/panoramax.svg") center no-repeat;
+    background-color: var(--gpf-color-text);  /* hack to apply color to the icon */
+}
+
+.gpf-btn-icon-header-panoramax,
+.gpf-btn-icon-panoramax {
+    background-image: url("img/dsfr/panoramax.svg");
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: center center;
+}
