@@ -4,11 +4,13 @@ import mapPinIcon from "../Controls/SearchEngine/map-pin-2-fill.svg";
 import VectorLayer from "ol/layer/Vector";
 import Feature from "ol/Feature";
 
+import { getFlatCoordinates } from "./selectStyle";
+
 /** Get all points in coordinates
  * @param {Feature|Array<coordinate>} coords Coordinates or feature
  * @returns {Array<coordinate>} Flat coordinates array
  * @private
- */
+ * /
 function getFlatCoordinates (coords) {
     if (coords.getGeometry) {
         coords = coords.getGeometry().getCoordinates();
