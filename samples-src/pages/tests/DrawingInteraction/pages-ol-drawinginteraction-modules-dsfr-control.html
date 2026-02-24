@@ -137,6 +137,8 @@
                         "Point" : "fr-icon-map-pin-2-line",
                         "LineString" : "fr-icon-git-merge-line",
                         "Polygon" : "fr-icon-france-line",
+                        "Circle" : "fr-icon-circle-line",
+                        "Box" : "fr-icon-rectangle-line",
                     }
 
                     map.addControl(draw);
@@ -158,9 +160,9 @@
                         });
                     });
 
-                    const drawing = [];
+                    const drawing = window.drawing = [];
                     // ["Point", "Point", "Point", "LineString", "LineString", "LineString", "Polygon", "Polygon", "Polygon"].forEach((k, index) => {
-                    ["Point", "LineString", "Polygon"].forEach((k, index) => {
+                    ["Point", "LineString", "Polygon", "Circle", "Box" ].forEach((k, index) => {
                         drawing.push(new ol.interaction.Drawing({
                             type : k,
                             source : source,

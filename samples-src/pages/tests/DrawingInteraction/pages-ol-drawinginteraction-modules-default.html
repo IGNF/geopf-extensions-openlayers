@@ -34,6 +34,8 @@
             <button class="fr-btn fr-btn--secondary" onclick="setDrawing('Point')">Point</button>
             <button class="fr-btn fr-btn--secondary" onclick="setDrawing('LineString')">Ligne</button>
             <button class="fr-btn fr-btn--secondary" onclick="setDrawing('Polygon')">Surface</button>
+            <button class="fr-btn fr-btn--secondary" onclick="setDrawing('Circle')">Cercle</button>
+            <button class="fr-btn fr-btn--secondary" onclick="setDrawing('Box')">Box</button>
 {{/content}}
 
 {{#content "js"}}
@@ -88,7 +90,7 @@
 
                     // Drawing interactions
                     const drawing = {};
-                    ["Point", "LineString", "Polygon"].forEach(k => {
+                    ["Point", "LineString", "Polygon", "Circle", "Box"].forEach(k => {
                         drawing[k] = new ol.interaction.Drawing({
                             type : k,
                             source : source,

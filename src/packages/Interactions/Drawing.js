@@ -1,14 +1,18 @@
 // import CSS
 import "../CSS/Interactions/Drawing.css";
 
-import Draw from "ol/interaction/Draw";
+import Draw from "ol/interaction/Draw.js";
 import Select from "ol/interaction/Select";
 import { SelectEvent } from "ol/interaction/Select";
 import VectorSource from "ol/source/Vector";
 import InfoControl from "../Controls/ContextMenu/InfoControl.js";
-
+import Feature from "ol/Feature";
+import Point from "ol/geom/Point";
+import Polygon, { fromCircle } from "ol/geom/Polygon";
+import Circle from "ol/geom/Circle";
 import { selectStyle, defaultStyle } from "./selectStyle.js";
-
+import { skipPartiallyEmittedExpressions } from "typescript";
+import { MultiPoint } from "ol/geom";
 
 /**
  * Drawing interaction class.
@@ -24,9 +28,100 @@ class DrawingInteraction extends Draw {
      * @param {Boolean} [options.selectOnDrawEnd] - If true, select the feature on draw end (default false)
      */
     constructor (options) {
+        // Parameters
         options = options || {};
+        let type = options.type || "Point";
+        let geometryFunction = null;
+        let condition, freehandCondition;
+
+        // Special shape handling for Circle and Box
+        if (type === "Circle" || type === "Box") {
+            type = "Circle";
+            // Custom geometry function to create a box or a circle based on the first and last point
+            geometryFunction = function (coordinates, geometry, projection) {
+                const p0 = coordinates[0];
+                const p1 = coordinates[coordinates.length - 1];
+                let center = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2];
+                let dx = Math.abs(p0[0] - p1[0]);
+                let dy = Math.abs(p0[1] - p1[1]);
+                let shapeCoord;
+                // Draw a box or a circle 
+                if (this._type === "Box") {
+                    // From center 
+                    if (this._modifiers.ctrlKey) {
+                        center = p0;
+                        dx *= 2;
+                        dy *= 2;
+                    }
+                    // Square by adjusting dy to dx versa
+                    if (this._modifiers.shiftKey) {
+                        dy = dx;
+                        if (!this._modifiers.ctrlKey) {
+                            if (p1[1] > p0[1]) {
+                                center[1] = p0[1] + dy / 2;
+                            } else {
+                                center[1] = p0[1] - dy / 2;
+                            }
+                        }
+                    }
+                    // Coords of the box
+                    shapeCoord = [[
+                        [center[0] - dx / 2, center[1] - dy / 2],
+                        [center[0] + dx / 2, center[1] - dy / 2],
+                        [center[0] + dx / 2, center[1] + dy / 2],
+                        [center[0] - dx / 2, center[1] + dy / 2],
+                        [center[0] - dx / 2, center[1] - dy / 2],
+                    ]];
+                } else if (this._type === "Circle") {
+                    let radius;
+                    if (this._modifiers.ctrlKey) {
+                        radius = Math.sqrt(dx*dx + dy*dy) / 2;
+                    } else {
+                        center = p0;
+                        radius = Math.sqrt(dx*dx + dy*dy);
+                    }
+                    // Optimize points on the circle
+                    const centerPx = this.getMap().getPixelFromCoordinate(center);
+                    const pix = this.getMap().getPixelFromCoordinate([center[0] + radius, center[1]]);
+                    let dmax = Math.max(100, Math.abs(centerPx[0] - pix[0]), Math.abs(centerPx[1] - pix[1]));
+                    dmax = Math.round(dmax / 4);
+                    // Round shape
+                    const shape = fromCircle(new Circle(center, radius), dmax);
+                    shapeCoord = shape.getCoordinates();
+                    // Fit to extent (ellipse) if shift key is not pressed
+                    if (!this._modifiers.shiftKey) {
+                        var scx = Math.abs(center[0] - p1[0]) / radius;
+                        var scy = Math.abs(center[1] - p1[1]) / radius;
+                        shapeCoord[0].forEach((coord, i) => {
+                            coord[0] = center[0] + (coord[0] - center[0]) * scx;
+                            coord[1] = center[1] + (coord[1] - center[1]) * scy;
+                            shapeCoord[0][i] = coord;
+                        });
+                    }
+                }
+                const pt = new Feature(new Point(p0));
+                setTimeout(() => {
+                    this.getOverlay().getSource().addFeature(pt);
+                });
+                // Set geometry 
+                if (geometry) {
+                    geometry.setCoordinates(shapeCoord);
+                } else {
+                    geometry = new Polygon(shapeCoord);
+                }
+                return geometry;
+            };
+            // Prenvent freehand drawing for circle and box
+            condition = () => true;
+            freehandCondition = () => false;
+        }
+
+        // Call parent constructor
         super({
-            type : options.type || "Point",
+            type : type,
+            geometryFunction : geometryFunction,
+            condition : condition,
+            freehandCondition : freehandCondition,
             style : (f) => {
                 return defaultStyle[`${this._type}_${f.get("geometry").getType()}`] || defaultStyle.Point;
                 // return selectStyle(this._type, f.get("geometry").getType(), options.image);
@@ -58,7 +153,12 @@ class DrawingInteraction extends Draw {
 
         // Draw interaction events
         this.on("drawstart", (e) => {
-            this.showInfo("Double-cliquer ou appuyer sur Entrée pour terminer.");
+            if (this.type_ === "Circle") {
+                this.showInfo("Cliquer pour terminer - "
+                    +" Shift pour faire un " + (this._type === "Circle" ? "cercle." : "carré."));
+            } else {
+                this.showInfo("Double-cliquer ou appuyer sur Entrée pour terminer.");
+            }
             document.addEventListener("keydown", onkeydown);
         });
         this.on(["drawend","drawabort"], (e) => {
@@ -95,7 +195,7 @@ class DrawingInteraction extends Draw {
         this.getSelect() && this.getMap()?.removeInteraction(this.getSelect());
         if (select instanceof Select) {
             this._select = select;
-            // prevent douible interactions
+            // prevent double interactions
             this._select.on("change:active", (e) => {
                 if (this._select.getActive()) {
                     this.setActive(false);
@@ -105,7 +205,8 @@ class DrawingInteraction extends Draw {
             if (this.get("selectOnDrawEnd")) {
                 this.on("drawend", (e) => {
                     // And activate select interaction
-                    setTimeout(() => this._select.setActive(true));
+                    setTimeout(() => this._select.setActive(true), 500);
+                    setTimeout(() => this.setActive(false));
                     // Add to selection
                     this._select.getFeatures().push(e.feature);
                     this._select.dispatchEvent(new SelectEvent("select", [e.feature], [], undefined));
@@ -200,6 +301,10 @@ class DrawingInteraction extends Draw {
      * @returns {Boolean} Whether to propagate the event further
      */
     handleEvent (event) {
+        this._modifiers = {
+            shiftKey : event.originalEvent.shiftKey,
+            ctrlKey : event.originalEvent.ctrlKey,
+        };
         // For cursor update
         setTimeout(() => {
             this.getMap().getTargetElement().style.cursor = this.getActive() ? "crosshair" : "";

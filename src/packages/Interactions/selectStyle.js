@@ -15,10 +15,10 @@ import mapPinIcon from "../Controls/SearchEngine/map-pin-2-fill.svg";
  * @private
  */
 function getFlatCoordinates (coords) {
-    if (coords.getGeometry) {
+    if (coords.getGeometry && coords.getGeometry().getCoordinates) {
         coords = coords.getGeometry().getCoordinates();
     }
-    if (coords && coords[0].length && coords[0][0].length) {
+    if (coords && coords[0] && coords[0].length && coords[0][0].length) {
         var c = [];
         for (var i=0; i<coords.length; i++) {
             c = c.concat(getFlatCoordinates(coords[i]));
@@ -107,6 +107,16 @@ function selectStyle (type, featureType, img) {
                 })
             ];
         }
+        case "Box":
+        case "Circle": {
+            return [
+                new Style({
+                    image : circle,
+                    stroke : stroke,
+                    fill : fill,
+                }),
+            ];
+        }
         case "LineString":
         case "Polygon": 
         default: {
@@ -158,7 +168,7 @@ function selectStyle (type, featureType, img) {
 // Default syle cache
 const defaultStyle = {};
 
-["Point", "LineString", "Polygon"].forEach(type => {
+["Point", "LineString", "Polygon", "Circle", "Box"].forEach(type => {
     defaultStyle[type] = selectStyle(type);
     ["Point", "LineString", "Polygon"].forEach(ftype => {
         defaultStyle[`${type}_${ftype}`] = selectStyle(type, ftype);
