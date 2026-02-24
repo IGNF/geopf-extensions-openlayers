@@ -225,6 +225,7 @@ module.exports = (env, argv) => {
                     include : [
                         path.join(rootdir, "src", "packages", "CSS"),
                         /node_modules\/@gouvfr\/dsfr\/dist/,
+                        /node_modules\/@panoramax\/web-viewer\/build/,
                     ],
                     use : [
                         MiniCssExtractPlugin.loader,

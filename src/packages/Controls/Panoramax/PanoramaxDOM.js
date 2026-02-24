@@ -70,7 +70,7 @@ var PanoramaxDOM = {
     },
 
     // ################################################################### //
-    // ################### Methods of panel container #################### //
+    // ################ Methods of panel buttons container ############### //
     // ################################################################### //
 
     /**
@@ -175,6 +175,22 @@ var PanoramaxDOM = {
         return form;
     },
 
+    // ################################################################### //
+    // ################ Methods of panel viewer container ################ //
+    // ################################################################### //
+
+    /**
+     * Create Container Panel for photoviewer
+     *
+     * @returns {DOMElement} DOM element
+     */
+    _createWidgetPanelViewerElement : function () {
+        var dialog = document.createElement("dialog");
+        dialog.id = this._addUID("GPpanoramaxPanelViewer");
+        dialog.className = "GPpanel gpf-panel fr-modal";
+        // Target tag for the photoviewer dialog (see Panoramax.js)
+        return dialog;
+    },
 };
 
 export default PanoramaxDOM;

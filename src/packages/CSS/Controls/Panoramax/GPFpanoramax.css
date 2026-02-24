@@ -20,7 +20,23 @@ button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] + dialog {
     /* max-height: inherit; */
 }
 
+button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] + dialog[id^="GPpanoramaxPanelButtons-"] {
+    height: 50px;
+}
+
+button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] + dialog[id^="GPpanoramaxPanelViewer-"] {
+    width: 750px;
+    height: 100%;
+}
+
 dialog[id^="GPpanoramaxPanelButtons-"] {
+    position: absolute;
+    left: 34px;
+    top: 0px;
+    height: inherit;
+}
+
+dialog[id^="GPpanoramaxPanelViewer-"] {
     position: absolute;
     left: 34px;
     top: 0px;

@@ -50,7 +50,7 @@
                 target : "map",
                 view : new ol.View({
                     center : [288074.8449901076, 6247982.515792289],
-                    zoom : 6
+                    zoom : 14
                 })
             });
 
@@ -80,11 +80,13 @@
             panoramax = new ol.control.Panoramax({
                 collapsed: true,
                 position: "bottom-right",
-                panel : false
+                panel : false,
+                auto : true,
+                hover: true
             });
             // Gestion de l'événement d'ouverture du formulaire de Panoramax
             // mais, une seule fois !
-            panoramax.once("panoramax:opened", function () {
+            panoramax.once("pnx:opened", function () {
                 console.log("Panoramax event opened !");
             });
             map.addControl(panoramax);
