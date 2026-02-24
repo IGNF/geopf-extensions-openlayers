@@ -149,30 +149,42 @@ var PanoramaxDOM = {
     },
 
     // ################################################################### //
-    // ####################### Methods for form ########################## //
+    // ####################### Methods for buttons ####################### //
     // ################################################################### //
     
     /**
-     * Create Form
+     * Create buttons
      * see evenement !
      *
      * @returns {DOMElement} DOM element
      */
-    _createWidgetPanelButtonsFormElement : function () {
-        // contexte d'execution
-        var self = this;
+    _createWidgetButtonsElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__content fr-modal__content";
 
-        var form = document.createElement("form");
-        form.id = this._addUID("GPpanoramaxButtonsForm");
-        form.className = "GPform gpf-panel__content fr-modal__content";
+        return div;
+    },
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            self.onPanoramaxComputationSubmit(e);
-            return false;
-        });
+    _createButtonFiltersElement : function (opts) {
+        var button = document.createElement("button");
+        button.id = this._addUID("GPpanoramaxButtonFilters");
+        button.className = "gpf-btn gpf-btn--secondary gpf-btn--icon gpf-btn-icon-filters fr-btn fr-btn--secondary";
+        button.title = "Filtres";
+        button.setAttribute("aria-label", "Afficher les filtres");
+        button.setAttribute("type", "button");
 
-        return form;
+        return button;
+    },
+
+    _createButtonContributionsElement : function (opts) {
+        var button = document.createElement("button");
+        button.id = this._addUID("GPpanoramaxButtonContributions");
+        button.className = "gpf-btn gpf-btn--secondary gpf-btn--icon gpf-btn-icon-contributions fr-btn fr-btn--secondary";
+        button.title = "Contributions";
+        button.setAttribute("aria-label", "Afficher les contributions");
+        button.setAttribute("type", "button");
+
+        return button;
     },
 
     // ################################################################### //

@@ -27,51 +27,53 @@ var logger = Logger.getLogger("panoramax");
 
 /**
  * @typedef {Object} PanoramaxOptions
- * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
- * @property {boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
- * @property {boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
- * @property {boolean} [hover=true] - Active l’interaction au survol (pointermove) sur la couche Panoramax.
- * @property {boolean} [panel=false] - Affiche un en-tête (header) dans le panneau.
- * @property {string} [id] - Identifiant unique du widget.
- * @property {string} [position] - Position CSS du widget sur la carte.
- * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
+ * @property {Boolean} [collapsed=true] - Définit si le widget est replié au chargement.
+ * @property {Boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
+ * @property {Boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
+ * @property {Boolean} [hover=true] - Active l’interaction au survol (pointermove) sur la couche Panoramax.
+ * @property {Boolean} [panel=false] - Affiche un en-tête (header) dans le panneau.
+ * @property {String} [id] - Identifiant unique du widget.
+ * @property {String} [position] - Position CSS du widget sur la carte.
+ * @property {Boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
  * @property {Object} [layer] - Options de configuration de la couche de données.
- * @property {string} [layer.url] - URL du style de la couche à charger.
- * @property {string} [layer.name] - Nom de la couche à afficher dans le gestionnaire de couches.
+ * @property {String} [layer.url] - URL du style de la couche à charger.
+ * @property {String} [layer.name] - Nom de la couche à afficher dans le gestionnaire de couches.
  * @property {Object} [background] - Options de configuration de la couche de fond.
- * @property {boolean} [background.display] - Affiche ou masque la couche de fond.
- * @property {string} [background.url] - URL du style de la couche de fond à charger.
- * @property {string} [background.name] - Nom de la couche de fond à afficher dans le gestionnaire de couches.
+ * @property {Boolean} [background.display] - Affiche ou masque la couche de fond.
+ * @property {String} [background.url] - URL du style de la couche de fond à charger.
+ * @property {String} [background.name] - Nom de la couche de fond à afficher dans le gestionnaire de couches.
  * @property {Object} [buttons] - Options de configuration des boutons.
  * @property {Object} [buttons.filters] - Options de configuration des filtres.
- * @property {boolean} [buttons.filters.display] - Affiche ou masque les filtres.
- * @property {string} [buttons.filters.label] - Libellé du bouton de filtrage.
+ * @property {Boolean} [buttons.filters.display] - Affiche ou masque les filtres.
+ * @property {String} [buttons.filters.label] - Libellé du bouton de filtrage.
  * @property {Object} [buttons.filters.content] - Options de configuration du contenu des filtres.
  * @property {Array} [buttons.filters.content.types] - Types d'images à filtrer (Tout, classique, 360).
  * @property {Array} [buttons.filters.content.dates] - Plages de dates à filtrer.
- * @property {Array} [buttons.filters.content.quality] - Niveaux de qualité à filtrer.
- * @property {Array} [buttons.filters.content.precision] - Niveaux de précision à filtrer.
- * @property {Object} [buttons.tags] - Options de configuration des tags.
- * @property {boolean} [buttons.tags.display] - Affiche ou masque les tags.
- * @property {string} [buttons.tags.label] - Libellé du bouton de tags.
- * @property {Object} [buttons.tags.content] - Options de configuration du contenu des tags.
- * @property {Array} [buttons.tags.content.all] - Tous les objets à taguer.
- * @property {Array} [buttons.tags.content.roadSigns] - Panneaux routiers à taguer.
  * @property {Object} [buttons.contributions] - Options de configuration des contributions.
- * @property {boolean} [buttons.contributions.display] - Affiche ou masque les contributions.
- * @property {string} [buttons.contributions.label] - Libellé du bouton de contribution.
+ * @property {Boolean} [buttons.contributions.display] - Affiche ou masque les contributions.
+ * @property {String} [buttons.contributions.label] - Libellé du bouton de contribution.
+ * @property {String} [buttons.contributions.link] - Lien vers la page de contribution.
  * @property {Object} [visualizationWindow] - Options de configuration de la fenêtre de visualisation.
- * @property {boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
+ * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
+ */
+
+/**
+ * @typedef {Object} PanoramaxPreviewFeature
+ * @property {Array<Number>} coordinates - Coordonnées de l'entité en projection carte.
+ * @property {Object<String, *>} properties - Propriétés de l'entité survolée.
+ */
+
+/**
+ * @typedef {"grid"|"sequences"|"pictures"} PanoramaxPreviewLayerType
  */
 
 /**
  * @classdesc
  *
- * Panoramax widget for OpenLayers. 
- * This widget allows users to visualize panoramic images on the map, 
- * filter them based on various criteria, and contribute to the dataset. 
- * The widget can be configured with different options to customize 
- * its behavior and appearance.
+ * Widget Panoramax pour OpenLayers.
+ * Permet de visualiser des images panoramiques sur la carte,
+ * de les filtrer selon différents critères et d'accéder au parcours de contribution.
+ * Le widget est configurable via les options du constructeur.
  *
  * @alias ol.control.Panoramax
  * @module Panoramax
@@ -80,9 +82,9 @@ class Panoramax extends Control {
     
     /**
      * @constructor
-     * @param {PanoramaxOptions} options - options for function call.
+     * @param {PanoramaxOptions} [options={}] - Options de configuration du contrôle.
      * 
-     * @fires panoramax:opened
+     * @fires pnx:opened
      * @example
      * var panoramax = new ol.control.Panoramax();
      * map.addControl(panoramax);
@@ -118,9 +120,9 @@ class Panoramax extends Control {
     // ################################################################### //
 
     /**
-     * Overwrite OpenLayers setMap method
+     * Surcharge la méthode `setMap` d'OpenLayers.
      *
-     * @param {Map} map - Map.
+     * @param {Map|null} map - Carte cible, ou `null` lors du détachement.
      */
     setMap (map) {
         if (map) {
@@ -179,18 +181,18 @@ class Panoramax extends Control {
     }
 
     /**
-     * Returns true if widget is collapsed (minimized), false otherwise
+     * Indique si le widget est replié.
      *
-     * @returns {Boolean} collapsed - true if widget is collapsed
+     * @returns {Boolean} `true` si le widget est replié, `false` sinon.
      */
     getCollapsed () {
         return this.collapsed;
     }
 
     /**
-     * Collapse or display widget main container
+     * Replie ou déplie le conteneur principal du widget.
      *
-     * @param {Boolean} collapsed - True to collapse widget, False to display it
+     * @param {Boolean} collapsed - `true` pour replier, `false` pour afficher.
      */
     setCollapsed (collapsed) {
         if (collapsed === undefined) {
@@ -199,10 +201,8 @@ class Panoramax extends Control {
         if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
             return;
         }
-        if (collapsed) {
-            this.buttonReportingClose.click();
-        } else {
-            this.buttonReportingShow.click();
+        if (this.buttonPanoramaxShow) {
+            this.buttonPanoramaxShow.click();
         }
         this.collapsed = collapsed;
     }
@@ -212,7 +212,7 @@ class Panoramax extends Control {
     // ################################################################### //
     
     /**
-     * Initialize Panoramax control (called by Panoramax constructor)
+     * Initialise le contrôle Panoramax (appelé par le constructeur).
      *
      * @param {PanoramaxOptions} options - constructor options
      * @private
@@ -246,11 +246,6 @@ class Panoramax extends Control {
                     label : "Filtrer",
                     content : {}
                 },
-                tags : {
-                    display : false,
-                    label : "Ajouter des tags",
-                    content : {}
-                },
                 contributions : {
                     display : true,
                     label : "Contribuer"
@@ -274,24 +269,28 @@ class Panoramax extends Control {
         // merge with user options
         Utils.assign(this.options, options);
 
-        /** 
-         * @type {Boolean} 
-         * specify if control is collapsed (true) or not (false) */
+        /**
+         * @type {Boolean}
+         * Indique si le contrôle est replié (`true`) ou non (`false`).
+         */
         this.collapsed = this.options.collapsed;
 
-        /** 
-         * @type {Boolean} 
-         * specify if control is draggable (true) or not (false) */
+        /**
+         * @type {Boolean}
+         * Indique si le contrôle est déplaçable (`true`) ou non (`false`).
+         */
         this.draggable = this.options.draggable;
 
-        /** 
-         * @type {Boolean} 
-         * specify if control add some stuff auto */
+        /**
+         * @type {Boolean}
+         * Indique si le contrôle active automatiquement ses comportements.
+         */
         this.auto = this.options.auto;
 
         /**
          * @type {Boolean}
-         * specify if hover interaction is enabled */
+         * Indique si l'interaction au survol est activée.
+         */
         this.hover = this.options.hover;
 
         /** @private */
@@ -305,48 +304,48 @@ class Panoramax extends Control {
         /** @private */
         this.buttonPanoramaxButtonsClose = null;
         /** @private */
-        this.formPanoramaxButtonsContainer = null;
+        this.btnPanoramaxButtonsContainer = null;
+        /** @private */
+        this.btnPanoramaxFilters = null;
+        /** @private */
+        this.btnPanoramaxContributions = null;
 
-        /** 
+        /**
          * @type {Boolean}
-         * specify if event is activated (true) or not (false) */
+         * Indique si les interactions de la carte sont actives.
+         */
         this.eventActived = false;
-        /** 
-         * @type {Array} 
-         * specify some events listeners */
+        /**
+         * @type {Object<String, Function>}
+         * Référence des gestionnaires d'événements enregistrés sur la carte.
+         */
         this.eventsListeners = [];
 
         /**
-         * event triggered when the panoramax panel is opened
+         * Événement déclenché à l'ouverture du panneau Panoramax.
          * @event pnx:opened
          * @defaultValue "pnx:opened"
          * @group Events
          * @description
-         * This event is dispatched when the panoramax panel is opened.
-         * It indicates that the panoramax process has started.
-         * This event can be used to perform additional actions 
-         * when the panoramax panel is opened.
+         * Cet événement est émis quand le panneau Panoramax est ouvert.
+         * Il indique que le processus Panoramax est démarré.
+         * Il peut être utilisé pour déclencher des actions complémentaires.
          */
         this.OPENED_PANORAMAX_EVENT = "pnx:opened";
 
         /**
-         * callback triggered when the user clicks on the map 
-         * with the panoramax layer active
+         * Nom du callback déclenché lors d'un clic sur la couche Panoramax active.
          * @event pnx:data:clicked
          * @defaultValue "pnx:data:clicked"
          * @group Callbacks
          * @description
-         * This callback is triggered when the user clicks on the map 
-         * while the panoramax layer is active.
-         * It allows you to retrieve information about the clicked feature,
-         * such as its coordinates and properties.
-         * This callback can be used to display a popup with more information.
+         * Ce callback est utilisé pour récupérer la première entité touchée
+         * au clic (coordonnées et propriétés) sur la couche Panoramax.
          */
         this.CLICKED_DATA_PANORAMAX_CB = "pnx:data:clicked";
 
         /**
-         * callback triggered when the user hovers the map
-         * with the panoramax layer active
+         * Nom du callback déclenché lors du survol de la couche Panoramax active.
          * @event pnx:data:hovered
          * @defaultValue "pnx:data:hovered"
          * @group Callbacks
@@ -368,7 +367,7 @@ class Panoramax extends Control {
     }
 
     /**
-     * Create control main container (DOM initialize)
+     * Construit le conteneur principal du contrôle (initialisation DOM).
      *
      * @returns {HTMLElement} DOM element
      * @private
@@ -388,9 +387,13 @@ class Panoramax extends Control {
         var widgetPanelDiv = this._createWidgetPanelButtonsDivElement();
         widgetPanel.appendChild(widgetPanelDiv);
 
-        // container for the custom code
-        var form = this.formPanoramaxButtonsContainer = this._createWidgetPanelButtonsFormElement();
-        widgetPanel.appendChild(form);
+        // container for the custom code : buttons, header, etc.
+        var buttons = this.btnPanoramaxButtonsContainer = this._createWidgetButtonsElement();
+        widgetPanel.appendChild(buttons);
+        this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttons.filters);
+        this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttons.contributions);
+        buttons.appendChild(this.btnPanoramaxFilters);
+        buttons.appendChild(this.btnPanoramaxContributions);
 
         // header
         var widgetPanelHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
@@ -418,9 +421,9 @@ class Panoramax extends Control {
     // ################################################################### //
 
     /**
-     * Add events listeners on map (called by setMap)
+     * Ajoute les écouteurs d'événements sur la carte (appelé par `setMap`).
      * 
-     * @param {Map} map - map
+     * @param {Map} map - Instance de carte.
      * @private
      */
     addEventsListeners (map) {
@@ -494,7 +497,7 @@ class Panoramax extends Control {
     }
 
     /**
-     * Remove events listeners on map (called by setMap)
+     * Supprime les écouteurs d'événements de la carte (appelé par `setMap`).
      * @private
      */
     removeEventsListeners () {
@@ -518,8 +521,7 @@ class Panoramax extends Control {
     // ################################################################### //
 
     /**
-     * Clear the content of the panel (called when the panel is closed)
-     * And reset some stuff if necessary
+     * Réinitialise le contenu du panneau à la fermeture.
      * @private
      */
     reset () {
@@ -529,12 +531,12 @@ class Panoramax extends Control {
         this.resetLayer();
         // - reinit des filtres
         this.resetFilters();
-        // - reinit des tags
-        this.resetTags();
-        // - reinit des contributions
+        // - reinit des contributions (?)
         this.resetContributions();
         // - reinit de la fenêtre de visualisation (?)
         this.resetVisualizationWindow();
+        // - reinit du viewer de photos
+        this.resetPhotoViewer();
         // - nettoyer l'aperçu au survol
         this.resetPreview();
         // - etc.
@@ -558,9 +560,8 @@ class Panoramax extends Control {
         }
     }
     resetFilters () {}
-    resetTags () {}
     resetContributions () {}
-    resetVisualizationWindow () {
+    resetPhotoViewer () {
         if (this.photoViewerPanoramax) {
             this.photoViewerPanoramax.setAttribute("sequence", "");
             this.photoViewerPanoramax.setAttribute("picture", "");
@@ -568,14 +569,30 @@ class Panoramax extends Control {
             this.hidePhotoViewer();
         }
     }
+    resetVisualizationWindow () {
+    }
+    resetPreview () {
+        var map = this.getMap();
+        if (!map) {
+            return;
+        }
+        if (this.previewMarkerOverlay) {
+            map.removeOverlay(this.previewMarkerOverlay);
+            this.previewMarkerOverlay = null;
+        }
+        if (this.previewPopupOverlay) {
+            map.removeOverlay(this.previewPopupOverlay);
+            this.previewPopupOverlay = null;
+        }
+        this.previewPopupElement = null;
+    }
 
     // ################################################################### //
     // ################# privates methods : init ######################### //
     // ################################################################### //
 
     /**
-     * Load some stuff in the panel (called when the panel is opened)
-     * And launch some processes if necessary
+     * Charge les éléments du panneau à l'ouverture.
      * @private
      */
     async load () {
@@ -586,13 +603,12 @@ class Panoramax extends Control {
             await this.setLayer(this.options.layer);
             // - charger le bouton des filtres
             await this.initFilters();
-            // - charger le bouton de tags
-            await this.initTags();
             // - charger le bouton de contribution
             await this.initContributions();
             // - charger la fenêtre de visualisation (?)
             await this.initVisualizationWindow();
-            // - etc.
+            // - configurer le viewer de photos
+            await this.initPhotoViewer();
         } catch (err) {
             logger.error("Error loading Panoramax content", err);
         }
@@ -662,20 +678,6 @@ class Panoramax extends Control {
         });
     }
 
-    initTags () {
-        // options.tags.display : true/false
-        // options.tags.label : "Ajouter des tags"
-        // options des tags :
-        // - tous les objets
-        // - les panneaux routiers
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                logger.debug("initTags");
-                resolve();
-            }, 1000);
-        });
-    }
-
     initContributions () {
         // options.contributions.display : true/false
         // options.contributions.label : "Contribuer"
@@ -703,6 +705,19 @@ class Panoramax extends Control {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 logger.debug("initVisualizationWindow");
+                resolve();
+            }, 100);
+        });
+    }
+
+    initPhotoViewer () {
+        // options.viewer.endpoint : "https://explore.panoramax.fr/api"
+        // options.viewer.class : "..." (TODO)
+        // options.viewer.widgets : true/false (TODO)
+        // options.viewer.psv-options : {} (TODO)
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                logger.debug("initPhotoViewer");
                 if (!this.photoViewerPanoramax) {
                     this.photoViewerPanoramax = this.createPhotoViewer();
                     this.hidePhotoViewer();
@@ -770,9 +785,9 @@ class Panoramax extends Control {
     // ################################################################### //
 
     /**
-     * Display/update preview marker at given coordinates.
+      Affiche ou met à jour le marqueur de prévisualisation.
      *
-     * @param {Array<Number>} coordinates - Feature coordinates [x, y] on map projection.
+     * @param {Array<Number>} coordinates - Coordonnées `[x, y]` en projection carte.
      */
     setMarker (coordinates) {
         if (!coordinates || coordinates.length < 2) {
@@ -787,13 +802,7 @@ class Panoramax extends Control {
 
         if (!this.previewMarkerOverlay) {
             var markerElement = document.createElement("span");
-            markerElement.style.width = "12px";
-            markerElement.style.height = "12px";
-            markerElement.style.display = "block";
-            markerElement.style.borderRadius = "50%";
-            markerElement.style.border = "2px solid #ffffff";
-            markerElement.style.backgroundColor = "#0B6BA7";
-            markerElement.style.boxShadow = "0 0 0 1px rgba(0, 0, 0, 0.35)";
+            markerElement.className = "pnx-preview-marker";
 
             this.previewMarkerOverlay = new Overlay({
                 element : markerElement,
@@ -807,10 +816,10 @@ class Panoramax extends Control {
     }
 
     /**
-     * Display/update preview popup at given coordinates with provided HTML content.
+     * Affiche ou met à jour la popup de prévisualisation.
      *
-     * @param {Array<Number>} coordinates - Feature coordinates [x, y] on map projection.
-     * @param {String} [content] - HTML content to inject into popup.
+     * @param {Array<Number>} coordinates - Coordonnées `[x, y]` en projection carte.
+     * @param {String} [content=""] - Contenu HTML injecté dans la popup.
      */
     setPopup (coordinates, content = "") {
         if (!coordinates || coordinates.length < 2) {
@@ -825,7 +834,7 @@ class Panoramax extends Control {
 
         if (!this.previewPopupElement) {
             this.previewPopupElement = document.createElement("div");
-            this.previewPopupElement.className = "gp-feature-info-div geoportail-popup-content";
+            this.previewPopupElement.className = "pnx-popup-content";
         }
         this.previewPopupElement.innerHTML = content;
 
@@ -843,24 +852,10 @@ class Panoramax extends Control {
     }
 
     /**
-     * Remove marker and popup overlays used by hover preview.
+     * Affiche la prévisualisation selon le type de couche Panoramax.
+     *
+     * @param {PanoramaxPreviewFeature} feature - Entité à prévisualiser.
      */
-    resetPreview () {
-        var map = this.getMap();
-        if (!map) {
-            return;
-        }
-        if (this.previewMarkerOverlay) {
-            map.removeOverlay(this.previewMarkerOverlay);
-            this.previewMarkerOverlay = null;
-        }
-        if (this.previewPopupOverlay) {
-            map.removeOverlay(this.previewPopupOverlay);
-            this.previewPopupOverlay = null;
-        }
-        this.previewPopupElement = null;
-    }
-
     displayPreview (feature) {
         var type = feature.properties.layer;
         switch (type) {
@@ -878,6 +873,12 @@ class Panoramax extends Control {
         }
     }
 
+    /**
+     * Échappe une valeur pour un affichage HTML sûr.
+     *
+     * @param {*} value - Valeur à échapper.
+     * @returns {String} Valeur échappée.
+     */
     _escape (value) {
         if (value === undefined || value === null) {
             return "";
@@ -891,99 +892,74 @@ class Panoramax extends Control {
     }
 
     /**
-     * Display a preview of the panoramic image at the given coordinates 
-     * and for the given feature.
-     * @param {*} coordinates - coordinates of the clicked point
-     * @param {*} feature - feature corresponding to the clicked point (with its properties)
+     * Affiche la prévisualisation d'une entité de type `grid`.
+     *
+     * @param {Array<Number>} coordinates - Coordonnées du point survolé.
+     * @param {Object<String, *>} feature - Propriétés de l'entité survolée.
      */
     displayPreviewGrid (coordinates, feature) {
         var id = this._escape(feature.id);
         var nbPictures = this._escape(feature.nb_pictures);
         var nb360Pictures = this._escape(feature.nb_360_pictures);
         var nbFlatPictures = this._escape(feature.nb_flat_pictures);
-        var coef = this._escape(feature.coef);
-        var coef360Pictures = this._escape(feature.coef_360_pictures);
-        var coefFlatPictures = this._escape(feature.coef_flat_pictures);
 
-        var className = "gpf-hidden"; // orienté maintenance
-        var content = `
-        <p><strong>ID :</strong> ${id || "-"}</p>
-        <ul class="${className}">
-            <li><strong>nb_pictures :</strong> ${nbPictures || "-"}</li>
-            <li><strong>nb_360_pictures :</strong> ${nb360Pictures || "-"}</li>
-            <li><strong>nb_flat_pictures :</strong> ${nbFlatPictures || "-"}</li>
-            <li><strong>coef :</strong> ${coef || "-"}</li>
-            <li><strong>coef_360_pictures :</strong> ${coef360Pictures || "-"}</li>
-            <li><strong>coef_flat_pictures :</strong> ${coefFlatPictures || "-"}</li>
-        </ul>`;
-
-        this.setMarker(coordinates);
-        this.setPopup(coordinates, content);
-    }
-
-    /**
-     * Display a preview of the panoramic image at the given coordinates 
-     * and for the given feature.
-     * @param {*} coordinates - coordinates of the clicked point
-     * @param {*} feature - feature corresponding to the clicked point (with its properties)
-     */
-    displayPreviewSequence (coordinates, feature) {
-        var id = this._escape(feature.id);
-        var accountId = this._escape(feature.account_id);
-        var model = this._escape(feature.model);
-        var type = this._escape(feature.type);
-        var date = this._escape(feature.date || feature.created_at || feature.datetime);
-        var gpsAccuracy = this._escape(feature.gps_accuracy);
-        var hPixelDensity = this._escape(feature.h_pixel_density);
-
-        var className = "gpf-hidden"; // orienté maintenance
+        var className = "pnx-preview-grid-popup";
         var content = `
             <p><strong>ID :</strong> ${id || "-"}</p>
             <ul class="${className}">
-                <li><strong>account_id :</strong> ${accountId || "-"}</li>
-                <li><strong>model :</strong> ${model || "-"}</li>
-                <li><strong>type :</strong> ${type || "-"}</li>
-                <li><strong>date :</strong> ${date || "-"}</li>
-                <li><strong>gps_accuracy :</strong> ${gpsAccuracy || "-"}</li>
-                <li><strong>h_pixel_density :</strong> ${hPixelDensity || "-"}</li>
-            </ul>`;
+                <li><strong>nombre de photos :</strong> ${nbPictures || "-"}</li>
+                <li><strong>nombre de photos 360° :</strong> ${nb360Pictures || "-"}</li>
+                <li><strong>nombre de photos plates :</strong> ${nbFlatPictures || "-"}</li>
+            </ul>
+        `;
 
         this.setMarker(coordinates);
         this.setPopup(coordinates, content);
     }
 
     /**
-     * Display a preview of the panoramic image at the given coordinates 
-     * and for the given feature.
-     * @param {*} coordinates - coordinates of the clicked point
-     * @param {*} feature - feature corresponding to the clicked point (with its properties)
+     * Affiche la prévisualisation d'une entité de type `sequences`.
+     *
+     * @param {Array<Number>} coordinates - Coordonnées du point survolé.
+     * @param {Object<String, *>} feature - Propriétés de l'entité survolée.
+     */
+    displayPreviewSequence (coordinates, feature) {
+        var id = this._escape(feature.id);
+        var date = this._escape(feature.date || feature.created_at || feature.datetime);
+
+        var className = "pnx-preview-sequence-popup";
+        var content = `
+            <p class="${className}"><strong>ID :</strong> ${id || "-"}
+                <pre>date : ${date || "-"}</pre>
+            </p>
+        `;
+
+        this.setMarker(coordinates);
+        this.setPopup(coordinates, content);
+    }
+
+    /**
+     * Affiche la prévisualisation d'une entité de type `pictures`.
+     *
+     * @param {Array<Number>} coordinates - Coordonnées du point survolé.
+     * @param {Object<String, *>} feature - Propriétés de l'entité survolée.
      */
     displayPreviewPicture (coordinates, feature) {
-        var id = this._escape(feature.id);
-        var accountId = this._escape(feature.account_id);
+        var pictureId = feature.id;
+        var id = this._escape(pictureId);
         var ts = this._escape(feature.ts || feature.datetime || feature.created_at);
-        var heading = this._escape(feature.heading);
-        var sequences = this._escape(feature.sequences || feature.first_sequence);
-        var type = this._escape(feature.type);
-        var model = this._escape(feature.model);
-        var gpsAccuracy = this._escape(feature.gps_accuracy);
-        var hPixelDensity = this._escape(feature.h_pixel_density);
 
-        var api = this.options.viewer.endpoint || "https://explore.panoramax.fr/api";
-        var className = "gpf-hidden"; // orienté maintenance
+        var encodedPictureId = pictureId ? encodeURIComponent(pictureId) : "";
+        var api = (this.options.viewer.endpoint || "https://explore.panoramax.fr/api").replace(/\/+$/, "");
+        var className = "pnx-preview-picture-popup";
+        var imageHtml = encodedPictureId
+            ? `<img src="${api}/pictures/${encodedPictureId}/thumb.jpg" alt="Preview image" class="pnx-preview-picture-popup__img">`
+            : "";
         var content = `
-        <p><strong>ID :</strong> ${id || "-"}</p>
-        <img src="${api}/pictures/${id}//thumb.jpg" alt="Preview image" style="width: 100%; height: auto; margin-bottom: 5px; border-radius: 4px; object-fit: cover;">
-        <ul class="${className}">
-            <li><strong>account_id :</strong> ${accountId || "-"}</li>
-            <li><strong>ts :</strong> ${ts || "-"}</li>
-            <li><strong>heading :</strong> ${heading || "-"}</li>
-            <li><strong>sequences :</strong> ${sequences || "-"}</li>
-            <li><strong>type :</strong> ${type || "-"}</li>
-            <li><strong>model :</strong> ${model || "-"}</li>
-            <li><strong>gps_accuracy :</strong> ${gpsAccuracy || "-"}</li>
-            <li><strong>h_pixel_density :</strong> ${hPixelDensity || "-"}</li>
-        </ul>
+            <p class="${className}"><strong>ID :</strong> ${id || "-"}
+                <pre>date : ${ts || "-"}</pre>
+                ${imageHtml}
+            </p>
         `;
 
         this.setMarker(coordinates);
@@ -995,8 +971,9 @@ class Panoramax extends Control {
     // ################################################################### //
     
     /**
-     * ...
-     * @param {*} e - ...
+     * Gère le clic d'ouverture/fermeture du contrôle Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton d'ouverture.
      * @private
      */
     onShowPanoramaxClick (e) {
@@ -1027,20 +1004,12 @@ class Panoramax extends Control {
     }
 
     /**
-     * ...
-     * @param {*} e - ...
+     * Gère le clic de fermeture du panneau Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de fermeture.
      * @private
      */
     onClosePanoramaxClick (e) {
-        logger.debug(e);
-        this.eventActived = false;
-    }
-
-    /**
-     * @param {*} e - ...
-     * @private
-     */
-    onPanoramaxComputationSubmit (e) {
         logger.debug(e);
     }
 
