@@ -22,6 +22,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - SearchEngine : recherche guidée parcellaire sur les DROM-COM (#491)
   
 * 🔒 [Security]
 
