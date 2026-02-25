@@ -12,6 +12,41 @@
     background-position: center center;
 }
 
+.gpf-btn-icon-background {
+    background-color: var(--background-default-grey);
+}
+
+/* buttons: toggle hover */
+[id^="GPpanoramaxToggle-"] {}
+[id^="GPpanoramaxToggleInput-"] {}
+[id^="GPpanoramaxToggleLabel-"] {
+    color: var(--text-action-high-blue-france);
+}
+
+.gpf-panoramax-toggle__label {}
+.gpf-panoramax-toggle__input {}
+.gpf-panoramax-toggle {
+    background: var(--background-default-grey);
+    width: fit-content;
+    border-radius: 10px;
+}
+/* viewer size */
+.pnx-visualization-window-size-small {
+    width: 350px;
+    height: 350px;
+}
+.pnx-visualization-window-size-medium {
+    width: 700px;
+    height: 500px;
+}
+.pnx-visualization-window-size-large {
+    width: 1000px;
+    height: 700px;
+}
+.pnx-visualization-window-size-fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
 /* popup */
 .pnx-popup-content {
   bottom: 17px;

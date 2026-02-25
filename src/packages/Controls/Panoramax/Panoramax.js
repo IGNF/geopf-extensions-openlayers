@@ -38,33 +38,105 @@ var logger = Logger.getLogger("panoramax");
  * @property {Object} [layer] - Options de configuration de la couche de données.
  * @property {String} [layer.url] - URL du style de la couche à charger.
  * @property {String} [layer.name] - Nom de la couche à afficher dans le gestionnaire de couches.
+ * @property {Number} [layer.minZoom] - Zoom minimum pour afficher la couche.
+ * @property {Number} [layer.maxZoom] - Zoom maximum pour afficher la couche.
  * @property {Object} [background] - Options de configuration de la couche de fond.
  * @property {Boolean} [background.display] - Affiche ou masque la couche de fond.
  * @property {String} [background.url] - URL du style de la couche de fond à charger.
  * @property {String} [background.name] - Nom de la couche de fond à afficher dans le gestionnaire de couches.
+ * @property {Number} [background.minZoom] - Zoom minimum pour afficher la couche de fond.
+ * @property {Number} [background.maxZoom] - Zoom maximum pour afficher la couche de fond.
  * @property {Object} [buttons] - Options de configuration des boutons.
+ * @property {Boolean} [buttons.display] - Affiche ou masque les boutons.
  * @property {Object} [buttons.filters] - Options de configuration des filtres.
  * @property {Boolean} [buttons.filters.display] - Affiche ou masque les filtres.
  * @property {String} [buttons.filters.label] - Libellé du bouton de filtrage.
  * @property {Object} [buttons.filters.content] - Options de configuration du contenu des filtres.
  * @property {Array} [buttons.filters.content.types] - Types d'images à filtrer (Tout, classique, 360).
  * @property {Array} [buttons.filters.content.dates] - Plages de dates à filtrer.
+ * @property {Object} [buttons.hover] - Options de configuration du bouton de survol.
+ * @property {Boolean} [buttons.hover.display] - Affiche ou masque le bouton de survol.
+ * @property {String} [buttons.hover.label] - Libellé du bouton de survol.
+ * @property {String} [buttons.hover.description] - Description du bouton de survol.
  * @property {Object} [buttons.contributions] - Options de configuration des contributions.
  * @property {Boolean} [buttons.contributions.display] - Affiche ou masque les contributions.
  * @property {String} [buttons.contributions.label] - Libellé du bouton de contribution.
  * @property {String} [buttons.contributions.link] - Lien vers la page de contribution.
  * @property {Object} [visualizationWindow] - Options de configuration de la fenêtre de visualisation.
  * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
+ * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen").
  */
 
 /**
  * @typedef {Object} PanoramaxPreviewFeature
  * @property {Array<Number>} coordinates - Coordonnées de l'entité en projection carte.
- * @property {Object<String, *>} properties - Propriétés de l'entité survolée.
+ * @property {PanoramaxPreviewLayerType} properties - Propriétés de l'entité survolée.
+ * @property {String} properties.layer - Type de couche ("grid", "sequences" ou "pictures").
+ * @sample
+ * ex. des champs panoramax du TMS vecteur (https://api.panoramax.xyz/api/map/style.json) :
+ *           "sequences": [
+ *               "id",
+ *               "account_id",
+ *               "model",
+ *               "type",
+ *               "date",
+ *               "gps_accuracy",
+ *               "h_pixel_density"
+ *           ],
+ *           "pictures": [
+ *               "id",
+ *               "account_id",
+ *               "ts",
+ *               "heading",
+ *               "sequences",
+ *               "type",
+ *               "model",
+ *               "gps_accuracy",
+ *               "h_pixel_density"
+ *           ],
+ *           "grid": [
+ *               "id",
+ *               "nb_pictures",
+ *               "nb_360_pictures",
+ *               "nb_flat_pictures",
+ *               "coef",
+ *               "coef_360_pictures",
+ *               "coef_flat_pictures"
+ *           ]
  */
 
 /**
  * @typedef {"grid"|"sequences"|"pictures"} PanoramaxPreviewLayerType
+ * @type {grid} - Couche de grille (agrégats de points).
+ * @property {String} id - Identifiant de la grille.
+ * @property {Number} nb_pictures - Nombre total d'images dans la grille.
+ * @property {Number} nb_360_pictures - Nombre d'images 360 dans la grille.
+ * @property {Number} nb_flat_pictures - Nombre d'images classiques dans la grille.
+ * @property {Number} coef - Coefficient de densité d'images dans la grille.
+ * @property {Number} coef_360_pictures - Coefficient de densité d'images 360 dans la grille.
+ * @property {Number} coef_flat_pictures - Coefficient de densité d'images classiques dans la grille.
+ * 
+ * @type {sequences} - Couche de séquences (groupes d'images).
+ * @property {String} id - Identifiant de la séquence.
+ * @property {String} account_id - Identifiant du compte utilisateur ayant contribué la séquence.
+ * @property {String} model - Modèle de la séquence (ex. "equirectangular" ou "flat").
+ * @property {String} type - Type de la séquence (ex. "360" ou "classic").
+ * @property {String} date - Date de contribution de la séquence.
+ * @property {Number} gps_accuracy - Précision GPS de la séquence (en mètres).
+ * @property {Number} h_pixel_density - Densité de pixels horizontale de la séquence (en pixels/mètre).
+ * 
+ * @type {pictures} - Couche d'images individuelles.
+ * @property {String} id - Identifiant de l'image.
+ * @property {String} account_id - Identifiant du compte utilisateur ayant contribué l'image.
+ * @property {String} ts - Timestamp de prise de vue de l'image.
+ * @property {Number} heading - Cap de prise de vue de l'image (en degrés).
+ * @property {String} sequences - Identifiant de la séquence à laquelle appartient l'image.
+ * @property {String} type - Type de l'image (ex. "360" ou "classic").
+ * @property {String} model - Modèle de l'image (ex. "equirectangular" ou "flat").
+ * @property {Number} gps_accuracy - Précision GPS de l'image (en mètres).
+ * @property {Number} h_pixel_density - Densité de pixels horizontale de l'image (en pixels/mètre).
+ * @property {String} first_sequence - Identifiant de la première séquence à laquelle appartient l'image.    
+ * 
  */
 
 /**
@@ -231,32 +303,44 @@ class Panoramax extends Control {
             gutter : false,
             layer : {
                 url : "https://api.panoramax.xyz/api/map/style.json",
-                name : "Panoramax"
+                name : "Panoramax",
+                minZoom : 6,
+                maxZoom : 21
             },
             background : {
                 display : false,
                 url : "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
-                name : "Background"
+                name : "Background",
+                minZoom : 6,
+                maxZoom : 21
             },
-            buttons : { // TODO
+            buttons : {
                 display : true,
-                target : "map",
+                target : "map", // TODO
                 filters : {
                     display : true,
                     label : "Filtrer",
+                    description : "Filtrer les images affichées",
                     content : {}
+                },
+                hover : {
+                    display : true,
+                    label : "Aperçu au survol",
+                    description : "Afficher un aperçu de l'image au survol"
                 },
                 contributions : {
                     display : true,
-                    label : "Contribuer"
+                    label : "Contribuer",
+                    description : "Accéder au parcours de contribution",
+                    link : "https://panoramax.openstreetmap.fr/why-contribute"
                 },
             },
-            visualizationWindow : { // TODO
+            visualizationWindow : {
                 display : true,
-                target : "map",
+                target : "map", // TODO
                 size : "medium",
-                title : "Visualiser l'image",
-                position : "top-right",
+                title : "Visualiser l'image", // TODO
+                position : "top-right", // TODO
             },
             viewer : {
                 "endpoint" : "https://explore.panoramax.fr/api",
@@ -309,6 +393,8 @@ class Panoramax extends Control {
         this.btnPanoramaxFilters = null;
         /** @private */
         this.btnPanoramaxContributions = null;
+        /** @private */
+        this.btnPanoramaxHover = null;
 
         /**
          * @type {Boolean}
@@ -379,7 +465,10 @@ class Panoramax extends Control {
         var picto = this.buttonPanoramaxShow = this._createShowWidgetPictoElement();
         container.appendChild(picto);
 
+        // panel viewer
         var widgetPanelViewer = this.panelPanoramaxViewerContainer = this._createWidgetPanelViewerElement();
+        var widgetPanelDiv = this._createWidgetPanelViewerDivElement();
+        widgetPanelViewer.appendChild(widgetPanelDiv);
         container.appendChild(widgetPanelViewer);
 
         // panel buttons
@@ -390,10 +479,20 @@ class Panoramax extends Control {
         // container for the custom code : buttons, header, etc.
         var buttons = this.btnPanoramaxButtonsContainer = this._createWidgetButtonsElement();
         widgetPanel.appendChild(buttons);
-        this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttons.filters);
-        this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttons.contributions);
-        buttons.appendChild(this.btnPanoramaxFilters);
-        buttons.appendChild(this.btnPanoramaxContributions);
+        if (this.options.buttons.display) {
+            if (this.options.buttons.filters.display) {
+                this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttons.filters);
+                buttons.appendChild(this.btnPanoramaxFilters);
+            }
+            if (this.options.buttons.contributions.display) {
+                this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttons.contributions);
+                buttons.appendChild(this.btnPanoramaxContributions);
+            }
+            if (this.options.buttons.hover.display) {
+                this.btnPanoramaxHover = this._createButtonChoiceHoverElement(this.options.hover, this.options.buttons.hover);
+                buttons.appendChild(this.btnPanoramaxHover);
+            }
+        }
 
         // header
         var widgetPanelHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
@@ -431,9 +530,71 @@ class Panoramax extends Control {
         var self = this;
 
         // click on map with panoramax layer active
-        // display the panoramic image in the photo viewer at the clicked coordinates
+        // display the panoramic image in the photo viewer at the clicked coordinates if
+        // a feature of type picture is found, otherwise zoom on the clicked coordinates 
         this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB] = function (e) {
             if (!self.eventActived) {
+                return;
+            }
+            var callback = (feature) => {
+                // stop iteration after the first feature is found
+                return {
+                    coordinates : feature.getFlatCoordinates(),
+                    properties : feature.getProperties()
+                };
+            };
+            var options = {
+                layerFilter : (l) => l === self.layerPanoramax || l=== self.previewMarkerOverlay,
+                hitTolerance : 5
+            };
+            var feature = e.map.forEachFeatureAtPixel(e.pixel, callback, options);
+            if (!feature) {
+                return;
+            }
+            var sequenceId = feature.properties.first_sequence || null;
+            var pictureId = feature.properties.id || null;
+            var type = feature.properties.layer || null;
+            if (type !== "pictures") {
+                if (type === "grid") {
+                    // zoom on the clicked coordinates with a zoom level 
+                    // depending on the density of images in the grid
+                    var zoom = e.map.getView().getZoom();
+                    var newZoom = zoom + 4; // FIXME valeur aleatoire !?
+                    e.map.getView().animate({
+                        center : feature.coordinates,
+                        zoom : newZoom,
+                        duration : 500
+                    });
+                }
+                if (type === "sequences") {
+                    // zoom on the clicked coordinates with a zoom level 
+                    // depending on the density of images in the sequence
+                    var zoom = e.map.getView().getZoom();
+                    var newZoom = zoom + 2; // FIXME valeur aleatoire !?
+                    e.map.getView().animate({
+                        center : feature.coordinates,
+                        zoom : newZoom,
+                        duration : 500
+                    });
+                }
+                return;
+            } else {
+                if (!sequenceId && !pictureId) {
+                    logger.warn("No sequenceId or pictureId found for the clicked feature");
+                    return;
+                }
+                self.displayPhotoViewer(sequenceId, pictureId);
+            }
+        };
+        map.on("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
+
+        // hover on map with panoramax layer active
+        // display a preview of the panoramic image at the hovered coordinates
+        this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB] = function (e) {
+            if (!self.hover) {
+                return;
+            }
+            if (!self.eventActived || e.dragging) {
                 return;
             }
             var callback = (feature) => {
@@ -448,52 +609,17 @@ class Panoramax extends Control {
                 hitTolerance : 5
             };
             var feature = e.map.forEachFeatureAtPixel(e.pixel, callback, options);
+            var mapTarget = e.map.getTargetElement();
+            if (mapTarget) {
+                mapTarget.style.cursor = feature ? "pointer" : "";
+            }
             if (!feature) {
+                self.resetPreview();
                 return;
             }
-            console.debug("Clicked coordinates :", feature.coordinates);
-            console.debug("Clicked feature :", feature.properties);
-            var sequenceId = feature.properties.first_sequence || null;
-            var pictureId = feature.properties.id || null;
-            if (!sequenceId && !pictureId) {
-                logger.warn("No sequenceId or pictureId found for the clicked feature");
-                return;
-            }
-            self.displayPhotoViewer(sequenceId, pictureId);
+            self.displayPreview(feature);
         };
-        map.on("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
-
-        if (this.hover) {
-            // hover on map with panoramax layer active
-            // display a preview of the panoramic image at the hovered coordinates
-            this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB] = function (e) {
-                if (!self.eventActived || e.dragging) {
-                    return;
-                }
-                var callback = (feature) => {
-                    // stop iteration after the first feature is found
-                    return {
-                        coordinates : feature.getFlatCoordinates(),
-                        properties : feature.getProperties()
-                    };
-                };
-                var options = {
-                    layerFilter : (l) => l === self.layerPanoramax,
-                    hitTolerance : 5
-                };
-                var feature = e.map.forEachFeatureAtPixel(e.pixel, callback, options);
-                var mapTarget = e.map.getTargetElement();
-                if (mapTarget) {
-                    mapTarget.style.cursor = feature ? "pointer" : "";
-                }
-                if (!feature) {
-                    self.resetPreview();
-                    return;
-                }
-                self.displayPreview(feature);
-            };
-            map.on("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
-        }
+        map.on("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
     }
 
     /**
@@ -503,12 +629,11 @@ class Panoramax extends Control {
     removeEventsListeners () {
         var map = this.getMap();
         this.resetPreview();
+
         map.un("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
         delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
-        if (this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]) {
-            map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
-            delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
-        }
+        map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
+        delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
 
         var mapTarget = map.getTargetElement();
         if (mapTarget) {
@@ -621,7 +746,11 @@ class Panoramax extends Control {
         // - name : "Panoramax"
         // - etc.
         var map = this.getMap();
-        this.layerPanoramax = new VectorTileLayer({ declutter : true });
+        this.layerPanoramax = new VectorTileLayer({ 
+            declutter : true,
+            minZoom : opts.minZoom || 6,
+            maxZoom : opts.maxZoom || 21
+        });
         this.layerPanoramax.styleUrl = opts.url;
         try {
             await applyStyle(
@@ -646,7 +775,11 @@ class Panoramax extends Control {
             return;
         }
         var map = this.getMap();
-        this.backgroundPanoramax = new VectorTileLayer({ declutter : true });
+        this.backgroundPanoramax = new VectorTileLayer({ 
+            declutter : true,
+            minZoom : opts.minZoom || 6,
+            maxZoom : opts.maxZoom || 21
+        });
         this.backgroundPanoramax.styleUrl = opts.url;
         try {
             await applyStyle(
@@ -705,6 +838,9 @@ class Panoramax extends Control {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 logger.debug("initVisualizationWindow");
+                this.setSizeWindow(this.options.visualizationWindow.size);
+                this.panelPanoramaxViewerContainer.classList.add("gpf-hidden");
+                this.panelPanoramaxViewerContainer.firstChild.classList.add("gpf-hidden");
                 resolve();
             }, 100);
         });
@@ -739,8 +875,8 @@ class Panoramax extends Control {
         if (!photoViewer) {
             photoViewer = document.createElement("pnx-photo-viewer");
             photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
-            photoViewer.setAttribute("style", "width: 100%; height: 100%;");
-            this.panelPanoramaxViewerContainer.appendChild(photoViewer);
+            photoViewer.setAttribute("style", "width: 100vw; height: 100vh");
+            this.panelPanoramaxViewerContainer.firstChild.appendChild(photoViewer);
         }
         return photoViewer;
     }
@@ -768,8 +904,9 @@ class Panoramax extends Control {
             logger.warn("Panoramax photo viewer is not available");
             return;
         }
-        this.photoViewerPanoramax.classList.remove("gpf-hidden");
-        this.panelPanoramaxViewerContainer.classList.remove("gpf-hidden");
+        this.photoViewerPanoramax.classList.replace("gpf-hidden", "gpf-visible");
+        this.panelPanoramaxViewerContainer.classList.replace("gpf-hidden", "gpf-visible");
+        this.panelPanoramaxViewerContainer.firstChild.classList.replace("gpf-hidden", "gpf-visible");
     }
 
     hidePhotoViewer () {
@@ -777,9 +914,11 @@ class Panoramax extends Control {
             logger.warn("Panoramax photo viewer is not available");
             return;
         }
-        this.photoViewerPanoramax.classList.add("gpf-hidden");
-        this.panelPanoramaxViewerContainer.classList.add("gpf-hidden");
+        this.photoViewerPanoramax.classList.replace("gpf-visible", "gpf-hidden");
+        this.panelPanoramaxViewerContainer.classList.replace("gpf-visible", "gpf-hidden");
+        this.panelPanoramaxViewerContainer.firstChild.classList.replace("gpf-visible", "gpf-hidden");
     }
+
     // ################################################################### //
     // ######################## methods preview ########################## //
     // ################################################################### //
@@ -898,14 +1037,12 @@ class Panoramax extends Control {
      * @param {Object<String, *>} feature - Propriétés de l'entité survolée.
      */
     displayPreviewGrid (coordinates, feature) {
-        var id = this._escape(feature.id);
         var nbPictures = this._escape(feature.nb_pictures);
         var nb360Pictures = this._escape(feature.nb_360_pictures);
         var nbFlatPictures = this._escape(feature.nb_flat_pictures);
 
         var className = "pnx-preview-grid-popup";
         var content = `
-            <p><strong>ID :</strong> ${id || "-"}</p>
             <ul class="${className}">
                 <li><strong>nombre de photos :</strong> ${nbPictures || "-"}</li>
                 <li><strong>nombre de photos 360° :</strong> ${nb360Pictures || "-"}</li>
@@ -924,13 +1061,20 @@ class Panoramax extends Control {
      * @param {Object<String, *>} feature - Propriétés de l'entité survolée.
      */
     displayPreviewSequence (coordinates, feature) {
-        var id = this._escape(feature.id);
+        var pictureId = feature.id;
+        var id = this._escape(pictureId);
         var date = this._escape(feature.date || feature.created_at || feature.datetime);
 
+        var encodedPictureId = pictureId ? encodeURIComponent(pictureId) : "";
+        var api = (this.options.viewer.endpoint || "https://explore.panoramax.fr/api").replace(/\/+$/, "");
         var className = "pnx-preview-sequence-popup";
+        var imageHtml = encodedPictureId
+            ? `<img src="${api}/collections/${encodedPictureId}/thumb.jpg" alt="Preview image" class="pnx-preview-picture-popup__img">`
+            : "";
         var content = `
             <p class="${className}"><strong>ID :</strong> ${id || "-"}
                 <pre>date : ${date || "-"}</pre>
+                ${imageHtml}
             </p>
         `;
 
@@ -964,6 +1108,36 @@ class Panoramax extends Control {
 
         this.setMarker(coordinates);
         this.setPopup(coordinates, content);
+    }
+
+    // ################################################################### //
+    // ######################## methods visualization #################### //
+    // ################################################################### //
+
+    setSizeWindow (size) {
+        var container = this.panelPanoramaxViewerContainer;
+        if (!container) {
+            return;
+        }
+        container.classList.remove("pnx-visualization-window-size-small", "pnx-visualization-window-size-medium", "pnx-visualization-window-size-large", "pnx-visualization-window-size-fullscreen");
+        switch (size) {
+            case "small":
+                container.classList.add("pnx-visualization-window-size-small");
+                break;
+            case "medium":
+                container.classList.add("pnx-visualization-window-size-medium");
+                break;
+            case "large":
+                container.classList.add("pnx-visualization-window-size-large");
+                break;
+            case "fullscreen":
+                container.classList.add("pnx-visualization-window-size-fullscreen");
+                break;
+            default:
+                logger.warn("Unknown visualization window size :", size);
+                container.classList.add("pnx-visualization-window-size-medium");
+                break;
+        }
     }
 
     // ################################################################### //
@@ -1010,6 +1184,27 @@ class Panoramax extends Control {
      * @private
      */
     onClosePanoramaxClick (e) {
+        logger.debug(e);
+    }
+
+    /**
+     * Gère le clic d'activation/désactivation du mode de survol dans Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de survol.
+     * @private
+     */
+    onToggleChoiceHoverPanoramaxClick (e) {
+        logger.debug(e);
+        this.hover = !this.hover;
+    }
+
+    /**
+     * Gère le clic d'ouverture des filtres Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de filtres.
+     * @private
+     */
+    onOpenPanoramaxFiltersClick (e) {
         logger.debug(e);
     }
 

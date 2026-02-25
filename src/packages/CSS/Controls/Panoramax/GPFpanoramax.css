@@ -5,29 +5,21 @@ div[id^=GPpanoramax-] {
 
 /* Showing/hiding */
 
-button[id^=GPshowPanoramaxPicto][aria-pressed="false"] + dialog {
+button[id^=GPshowPanoramaxPicto][aria-pressed="false"] ~ dialog {
     display: none;
     visibility: hidden;
     opacity: 0%;
 }
 
-button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] + dialog {
+button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] ~ dialog {}
+
+button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] ~ dialog[id^="GPpanoramaxPanelButtons-"] {
     display: flex;
     visibility: visible;
     opacity: 100%;
-    width: 350px;
-    /* height: initial; */
-    /* max-height: inherit; */
 }
 
-button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] + dialog[id^="GPpanoramaxPanelButtons-"] {
-    height: 50px;
-}
-
-button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] + dialog[id^="GPpanoramaxPanelViewer-"] {
-    width: 750px;
-    height: 100%;
-}
+button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] ~ dialog[id^="GPpanoramaxPanelViewer-"] {}
 
 dialog[id^="GPpanoramaxPanelButtons-"] {
     position: absolute;
@@ -40,5 +32,5 @@ dialog[id^="GPpanoramaxPanelViewer-"] {
     position: absolute;
     left: 34px;
     top: 0px;
-    height: inherit;
+    /* height: inherit; */
 }

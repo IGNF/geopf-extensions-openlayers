@@ -166,25 +166,91 @@ var PanoramaxDOM = {
     },
 
     _createButtonFiltersElement : function (opts) {
+        var self = this;
+        // <button type="button" class="fr-btn fr-icon-equalizer-line fr-btn--icon-right fr-btn--secondary">Filtrer</button>
         var button = document.createElement("button");
         button.id = this._addUID("GPpanoramaxButtonFilters");
-        button.className = "gpf-btn gpf-btn--secondary gpf-btn--icon gpf-btn-icon-filters fr-btn fr-btn--secondary";
-        button.title = "Filtres";
-        button.setAttribute("aria-label", "Afficher les filtres");
+        button.className = "gpf-btn gpf-btn-icon gpf-btn-icon-background";
+        button.classList.add("fr-btn", "fr-icon-equalizer-line", "fr-btn--icon-right", "fr-btn--secondary");
+        button.title = opts.label;
+        button.setAttribute("aria-label", opts.description);
+        button.setAttribute("aria-pressed", "false");
         button.setAttribute("type", "button");
+        button.innerHTML = opts.label;
 
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.getAttribute("aria-pressed") === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onOpenPanoramaxFiltersClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onOpenPanoramaxFiltersClick(e);
+            });
+        }
+        
         return button;
     },
 
     _createButtonContributionsElement : function (opts) {
-        var button = document.createElement("button");
-        button.id = this._addUID("GPpanoramaxButtonContributions");
-        button.className = "gpf-btn gpf-btn--secondary gpf-btn--icon gpf-btn-icon-contributions fr-btn fr-btn--secondary";
-        button.title = "Contributions";
-        button.setAttribute("aria-label", "Afficher les contributions");
-        button.setAttribute("type", "button");
+        // <a href="[url - à modifier]" target="_self" class="fr-btn fr-icon-external-link-fill fr-btn--icon-right fr-btn--secondary">Contribuer</a>
+        var href = document.createElement("a");
+        href.id = this._addUID("GPpanoramaxButtonContributions");
+        href.className = "fr-btn fr-icon-external-link-fill fr-btn--icon-right fr-btn--secondary";
+        href.classList.add("gpf-btn", "gpf-btn-icon", "gpf-btn-icon-background");
+        href.title = opts.label;
+        href.setAttribute("aria-label", opts.description);
+        href.setAttribute("target", "_self");
+        href.setAttribute("href", opts.link);
+        href.innerHTML = opts.label;
 
-        return button;
+        return href;
+    },
+
+    _createButtonChoiceHoverElement : function (active, opts) {
+        var self = this;
+
+        var div = document.createElement("div");
+        div.id = this._addUID("GPpanoramaxToggle");
+        div.className = "gpf-panoramax-toggle fr-toggle fr-m-2v";
+
+        var messages = document.createElement("div");
+        messages.id = this._addUID("GPpanoramaxToggleMessages");
+        messages.className = "fr-messages-group";
+        messages.setAttribute("aria-live", "polite");
+        
+        var input = document.createElement("input");
+        input.id = this._addUID("GPpanoramaxToggleInput");
+        input.className = "gpf-panoramax-toggle__input fr-input toggle__input";
+        input.type = "checkbox";
+        input.checked = active;
+        input.setAttribute("aria-describedby", messages.id);
+
+        if (input.addEventListener) {
+            input.addEventListener("click", function (e) {
+                self.onToggleChoiceHoverPanoramaxClick(e);
+            });
+        } else if (input.attachEvent) {
+            input.attachEvent("onclick", function (e) {
+                self.onToggleChoiceHoverPanoramaxClick(e);
+            });
+        }
+
+        var label = document.createElement("label");
+        label.id = this._addUID("GPpanoramaxToggleLabel");
+        label.className = "gpf-panoramax-toggle__label fr-toggle__label";
+        label.setAttribute("title", opts.description);
+        label.setAttribute("for", input.id);
+        label.innerText = opts.label;
+
+        div.appendChild(input);
+        div.appendChild(label);
+        div.appendChild(messages);
+
+        return div;
     },
 
     // ################################################################### //
@@ -200,8 +266,16 @@ var PanoramaxDOM = {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPpanoramaxPanelViewer");
         dialog.className = "GPpanel gpf-panel fr-modal";
-        // Target tag for the photoviewer dialog (see Panoramax.js)
+        dialog.classList.add("gpf-hidden");
         return dialog;
+    },
+    
+    _createWidgetPanelViewerDivElement : function () {
+        var div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
+        div.classList.add("gpf-hidden");
+        // Target tag for the photoviewer dialog (see Panoramax.js)
+        return div;
     },
 };
 
