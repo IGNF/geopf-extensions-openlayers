@@ -9,7 +9,13 @@ env:
   MODULE_NAME: modules
   BUNDLE_NAME: bundle
   PACKAGE_NAME: package
-  
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: write  # Required to push to gh-pages and main branches
+  packages: write  # Required to publish to npm
+  actions: write   # Required to create releases and upload assets
+
 jobs:
 
   # - checkout master ou main
@@ -231,10 +237,15 @@ jobs:
   # - download changelog (from release)
   # - download package (from build)
   # - then simply publish repo
+  # NOTE : publish npm with tag next expect to beta version !
   publish: # Only for tags !
     if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC
+      contents: read  # Required to download release assets
+      packages: write  # Required to publish to npm
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -254,15 +265,16 @@ jobs:
       - name: Use registry npm
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
           
       - name: Publish on npm
         run: |
           cd ./dist/package
-          npm publish
+          npm publish --provenance --access public --tag next
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
+
 
   # - checkout master or main
   # - download changelog (from release)
@@ -291,12 +303,12 @@ jobs:
       
       - name: Install Libs
         run: |
-          npm install markdown-toc
+          npm install doctoc
       
       - name: Archive changelog
         run: |
           cat DRAFT_CHANGELOG.md >> CHANGELOG.md
-          ./node_modules/.bin/markdown-toc -i CHANGELOG.md
+          ./node_modules/.bin/doctoc CHANGELOG.md
       
       - name: Reset draft changelog
         run: |

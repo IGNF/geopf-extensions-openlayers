@@ -66,6 +66,7 @@ input[name^="inputSex"].gpf-input {
 button[id^=GPsearchInputReset] {
   width: 40px;
   height: 40px;
+  right: 0px;
 }
 
 [id^="GPshowSearchDiv"] {
