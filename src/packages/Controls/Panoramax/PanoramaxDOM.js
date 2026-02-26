@@ -311,15 +311,15 @@ var PanoramaxDOM = {
     _createWidgetPanelViewerElement : function () {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPpanoramaxPanelViewer");
-        dialog.className = "GPpanel gpf-panel fr-modal";
-        dialog.classList.add("gpf-hidden");
+        dialog.className = "GPpanel pnx-visualization-window-panel gpf-panel fr-modal";
+        // dialog.classList.add("gpf-hidden");
         return dialog;
     },
     
     _createWidgetPanelViewerDivElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__body fr-modal__body";
-        div.classList.add("gpf-hidden");
+        div.className = "pnx-visualization-window-panel__body gpf-panel__body fr-modal__body";
+        // div.classList.add("gpf-hidden");
         // Target tag for the photoviewer dialog (see Panoramax.js)
         return div;
     },

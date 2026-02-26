@@ -31,20 +31,44 @@
     margin-inline: auto;
     border-radius: 10px;
 }
-/* viewer size */
+/* photo viewer */
+[id^="pnx-photo-viewer-"] {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.pnx-photo-viewer-container {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* viewer */
+.pnx-visualization-window-panel {}
+.pnx-visualization-window-panel__body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* window parent viewer : size */
 .pnx-visualization-window-size-small {
+    position: relative;
     width: 350px;
     height: 350px;
 }
 .pnx-visualization-window-size-medium {
+    position: relative;
     width: 700px;
     height: 500px;
 }
 .pnx-visualization-window-size-large {
+    position: relative;
     width: 1000px;
     height: 700px;
 }
 .pnx-visualization-window-size-fullscreen {
+    position: relative;
     width: 100vw;
     height: 100vh;
 }

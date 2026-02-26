@@ -909,8 +909,12 @@ class Panoramax extends Control {
             setTimeout(() => {
                 logger.debug("initVisualizationWindow");
                 this.setSizeWindow(this.options.visualizationWindow.size);
-                this.panelPanoramaxViewerContainer.classList.add("gpf-hidden");
-                this.panelPanoramaxViewerContainer.firstChild.classList.add("gpf-hidden");
+                // INFO
+                // par défaut, la fenêtre de visualisation est masquée, elle s'affiche au clic sur une image
+                // mais pour initialiser le viewer de photos de Panoramax, il faut que le container soit visible, 
+                // avec une taille !
+                // this.panelPanoramaxViewerContainer.classList.add("gpf-hidden");
+                // this.panelPanoramaxViewerContainer.firstChild.classList.add("gpf-hidden");
                 resolve();
             }, 100);
         });
@@ -926,6 +930,15 @@ class Panoramax extends Control {
                 logger.debug("initPhotoViewer");
                 if (!this.photoViewerPanoramax) {
                     this.photoViewerPanoramax = this.createPhotoViewer();
+                    console.error(this.photoViewerPanoramax.offsetWidth, this.photoViewerPanoramax.isWidthSmall());
+                    console.error(this.photoViewerPanoramax.offsetHeight, this.photoViewerPanoramax.isHeightSmall());
+                    window.PHOTOVIEWER = this.photoViewerPanoramax;
+                    // INFO
+                    // la taille du viewer de photos de Panoramax est calculée à partir de la taille 
+                    // de son container parent, donc pour initialiser correctement le viewer, 
+                    // il faut que le container soit visible, avec une taille !
+                    this.panelPanoramaxViewerContainer.classList.add("gpf-hidden");
+                    this.panelPanoramaxViewerContainer.firstChild.classList.add("gpf-hidden");
                     this.hidePhotoViewer();
                 }
                 resolve();
@@ -944,9 +957,10 @@ class Panoramax extends Control {
         var photoViewer = this.panelPanoramaxViewerContainer.querySelector("pnx-photo-viewer");
         if (!photoViewer) {
             photoViewer = document.createElement("pnx-photo-viewer");
-            photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
-            photoViewer.setAttribute("style", "width: 100vw; height: 100vh");
-
+            photoViewer.id = "pnx-photo-viewer-" + this.uid;
+            photoViewer.className = "pnx-photo-viewer-container";
+            // photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
+            
             // si un target est spécifié dans les options, on l'utilise, 
             // sinon on utilise le container par défaut
             var target = this.panelPanoramaxViewerContainer.firstChild;
@@ -961,6 +975,9 @@ class Panoramax extends Control {
             }
             if (target) {
                 target.appendChild(photoViewer);
+                requestAnimationFrame(() => {
+                    photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
+                });
             }
         }
         return photoViewer;
@@ -1204,6 +1221,7 @@ class Panoramax extends Control {
         if (!container) {
             return;
         }
+
         container.classList.remove("pnx-visualization-window-size-small", "pnx-visualization-window-size-medium", "pnx-visualization-window-size-large", "pnx-visualization-window-size-fullscreen");
         switch (size) {
             case "small":
