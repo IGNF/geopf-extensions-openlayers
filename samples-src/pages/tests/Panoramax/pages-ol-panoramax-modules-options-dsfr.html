@@ -17,8 +17,8 @@
 {{#content "style"}}
         <style>
             div#map {
-                width: 100%;
-                height: 600px;
+                width: 100vw;
+                height: calc(100vh - 200px);
                 background-image:url("{{ resources }}/geoportail-waiting.gif");
                 background-position:center center;
                 background-repeat:no-repeat;
@@ -82,7 +82,7 @@
                 position: "bottom-right",
                 panel : false,
                 auto : true,
-                hover: false
+                hover: true,
             });
             // Gestion de l'événement d'ouverture du formulaire de Panoramax
             // mais, une seule fois !

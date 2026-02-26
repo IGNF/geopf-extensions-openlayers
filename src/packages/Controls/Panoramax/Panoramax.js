@@ -62,6 +62,15 @@ var logger = Logger.getLogger("panoramax");
  * @property {Boolean} [buttons.contributions.display] - Affiche ou masque les contributions.
  * @property {String} [buttons.contributions.label] - Libellé du bouton de contribution.
  * @property {String} [buttons.contributions.link] - Lien vers la page de contribution.
+ * @property {Object} [buttons.styles] - Options de configuration du bouton de styles.
+ * @property {Boolean} [buttons.styles.display] - Affiche ou masque le bouton de styles.
+ * @property {String} [buttons.styles.label] - Libellé du bouton de styles.
+ * @property {String} [buttons.styles.description] - Description du bouton de styles.
+ * @property {Object} [buttons.styles.content] - Options de configuration du contenu des styles.
+ * @property {Object} [buttons.background] - Options de configuration du bouton de fond.
+ * @property {Boolean} [buttons.background.display] - Affiche ou masque le bouton de fond de carte.
+ * @property {String} [buttons.background.label] - Libellé du bouton de fond de carte.
+ * @property {String} [buttons.background.description] - Description du bouton de fond de carte.
  * @property {Object} [visualizationWindow] - Options de configuration de la fenêtre de visualisation.
  * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
  * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen").
@@ -316,12 +325,14 @@ class Panoramax extends Control {
             },
             buttons : {
                 display : true,
-                target : "map", // TODO
+                target : null, // TODO
+                position : "top-right", // TODO
+                order : ["filters", "contributions", "hover", "styles", "background"], // TODO
                 filters : {
                     display : true,
                     label : "Filtrer",
                     description : "Filtrer les images affichées",
-                    content : {}
+                    content : {} // TODO
                 },
                 hover : {
                     display : true,
@@ -334,13 +345,24 @@ class Panoramax extends Control {
                     description : "Accéder au parcours de contribution",
                     link : "https://panoramax.openstreetmap.fr/why-contribute"
                 },
+                styles : { // TODO
+                    display : false,
+                    label : "Style",
+                    description : "Personnaliser le style d'affichage des images",
+                    content : {}
+                },
+                background : {
+                    display : true,
+                    label : "Fond de carte",
+                    description : "Afficher ou masquer un fond de carte de référence"
+                }
             },
             visualizationWindow : {
                 display : true,
-                target : "map", // TODO
+                target : null, // par defaut
+                position : "top-right", // TODO
                 size : "medium",
                 title : "Visualiser l'image", // TODO
-                position : "top-right", // TODO
             },
             viewer : {
                 "endpoint" : "https://explore.panoramax.fr/api",
@@ -351,7 +373,24 @@ class Panoramax extends Control {
         };
 
         // merge with user options
-        Utils.assign(this.options, options);
+        Utils.assign(this.options.layer, options.layer);
+        Utils.assign(this.options.background, options.background);
+        Utils.assign(this.options.buttons, options.buttons);
+        Utils.assign(this.options.visualizationWindow, options.visualizationWindow);
+        Utils.assign(this.options.viewer, options.viewer);
+        [
+            "collapsed", 
+            "draggable", 
+            "panel", 
+            "auto", 
+            "hover", 
+            "gutter", 
+            "position"
+        ].forEach((key) => {
+            if (Object.prototype.hasOwnProperty.call(options, key)) {
+                this.options[key] = options[key];
+            }
+        });
 
         /**
          * @type {Boolean}
@@ -395,6 +434,10 @@ class Panoramax extends Control {
         this.btnPanoramaxContributions = null;
         /** @private */
         this.btnPanoramaxHover = null;
+        /** @private */
+        this.btnPanoramaxStyles = null;
+        /** @private */
+        this.btnPanoramaxBackground = null;
 
         /**
          * @type {Boolean}
@@ -480,17 +523,41 @@ class Panoramax extends Control {
         var buttons = this.btnPanoramaxButtonsContainer = this._createWidgetButtonsElement();
         widgetPanel.appendChild(buttons);
         if (this.options.buttons.display) {
-            if (this.options.buttons.filters.display) {
-                this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttons.filters);
-                buttons.appendChild(this.btnPanoramaxFilters);
-            }
-            if (this.options.buttons.contributions.display) {
-                this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttons.contributions);
-                buttons.appendChild(this.btnPanoramaxContributions);
-            }
-            if (this.options.buttons.hover.display) {
-                this.btnPanoramaxHover = this._createButtonChoiceHoverElement(this.options.hover, this.options.buttons.hover);
-                buttons.appendChild(this.btnPanoramaxHover);
+            for (const buttonKey of this.options.buttons.order) {
+                switch (buttonKey) {
+                    case "filters":
+                        if (this.options.buttons.filters.display) {
+                            this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttons.filters);
+                            buttons.appendChild(this.btnPanoramaxFilters);
+                        }
+                        break;
+                    case "contributions":
+                        if (this.options.buttons.contributions.display) {
+                            this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttons.contributions);
+                            buttons.appendChild(this.btnPanoramaxContributions);
+                        }
+                        break;
+                    case "hover":
+                        if (this.options.buttons.hover.display) {
+                            this.btnPanoramaxHover = this._createButtonChoiceHoverElement(this.options.hover, this.options.buttons.hover);
+                            buttons.appendChild(this.btnPanoramaxHover);
+                        }
+                        break;
+                    case "styles":
+                        if (this.options.buttons.styles.display) {
+                            this.btnPanoramaxStyles = this._createButtonChoiceStylesElement(this.options.styles);
+                            buttons.appendChild(this.btnPanoramaxStyles);
+                        }
+                        break;
+                    case "background":
+                        if (this.options.buttons.background.display) {
+                            this.btnPanoramaxBackground = this._createButtonChoiceBackgroundElement(this.options.background.display, this.options.buttons.background);
+                            buttons.appendChild(this.btnPanoramaxBackground);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -788,6 +855,9 @@ class Panoramax extends Control {
             );
             map.addLayer(this.backgroundPanoramax);
             this.backgroundPanoramax.set("title", opts.name);
+            if (this.layerPanoramax) {
+                this.backgroundPanoramax.setZIndex(this.layerPanoramax.getZIndex() - 1);
+            }
         } catch (err) {
             logger.error("Error loading Panoramax background layer style", err);
             this.backgroundPanoramax = null;
@@ -876,7 +946,22 @@ class Panoramax extends Control {
             photoViewer = document.createElement("pnx-photo-viewer");
             photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
             photoViewer.setAttribute("style", "width: 100vw; height: 100vh");
-            this.panelPanoramaxViewerContainer.firstChild.appendChild(photoViewer);
+
+            // si un target est spécifié dans les options, on l'utilise, 
+            // sinon on utilise le container par défaut
+            var target = this.panelPanoramaxViewerContainer.firstChild;
+            if (this.options.visualizationWindow.target) {
+                // FIXME on perd le focus sur la carte (zoom, déplacement, etc.) 
+                // quand le photoViewer est affiché dans un container externe, 
+                // à cause !?
+                var targetCustom = document.getElementById(this.options.visualizationWindow.target);
+                if (targetCustom) {
+                    target = targetCustom;
+                }
+            }
+            if (target) {
+                target.appendChild(photoViewer);
+            }
         }
         return photoViewer;
     }
@@ -1206,6 +1291,22 @@ class Panoramax extends Control {
      */
     onOpenPanoramaxFiltersClick (e) {
         logger.debug(e);
+    }
+
+    /**
+     * Gère le clic d'activation/désactivation de la couche de fond dans Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de couche de fond.
+     * @private
+     */
+    onToggleChoiceBackgroundPanoramaxClick (e) {
+        logger.debug(e);
+        this.options.background.display = !this.options.background.display;
+        if (this.options.background.display) {
+            this.setBackground(this.options.background);
+        } else {
+            this.resetBackground();
+        }
     }
 
 };

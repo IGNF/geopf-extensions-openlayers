@@ -28,6 +28,7 @@
 .gpf-panoramax-toggle {
     background: var(--background-default-grey);
     width: fit-content;
+    margin-inline: auto;
     border-radius: 10px;
 }
 /* viewer size */

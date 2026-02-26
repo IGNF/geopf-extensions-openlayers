@@ -224,7 +224,7 @@ var PanoramaxDOM = {
         
         var input = document.createElement("input");
         input.id = this._addUID("GPpanoramaxToggleInput");
-        input.className = "gpf-panoramax-toggle__input fr-input toggle__input";
+        input.className = "gpf-panoramax-toggle__input fr-toggle__input";
         input.type = "checkbox";
         input.checked = active;
         input.setAttribute("aria-describedby", messages.id);
@@ -253,6 +253,52 @@ var PanoramaxDOM = {
         return div;
     },
 
+    // TODO : à implémenter si besoin de styles spécifiques pour la couche
+    // des données Panoramax (ex : choix de la couleur des points d'intérêts)
+    _createButtonChoiceStyleElement : function (styles) {},
+
+    _createButtonChoiceBackgroundElement : function (active, opts) {
+        var self = this;
+
+        var div = document.createElement("div");
+        div.id = this._addUID("GPpanoramaxToggleBackground");
+        div.className = "gpf-panoramax-toggle fr-toggle fr-m-2v";
+
+        var messages = document.createElement("div");
+        messages.id = this._addUID("GPpanoramaxToggleBackgroundMessages");
+        messages.className = "fr-messages-group";
+        messages.setAttribute("aria-live", "polite");
+        
+        var input = document.createElement("input");
+        input.id = this._addUID("GPpanoramaxToggleBackgroundInput");
+        input.className = "gpf-panoramax-toggle__input fr-toggle__input";
+        input.type = "checkbox";
+        input.checked = active;
+        input.setAttribute("aria-describedby", messages.id);
+
+        if (input.addEventListener) {
+            input.addEventListener("click", function (e) {
+                self.onToggleChoiceBackgroundPanoramaxClick(e);
+            });
+        } else if (input.attachEvent) {
+            input.attachEvent("onclick", function (e) {
+                self.onToggleChoiceBackgroundPanoramaxClick(e);
+            });
+        }
+
+        var label = document.createElement("label");
+        label.id = this._addUID("GPpanoramaxToggleBackgroundLabel");
+        label.className = "gpf-panoramax-toggle__label fr-toggle__label";
+        label.setAttribute("title", opts.description);
+        label.setAttribute("for", input.id);
+        label.innerText = opts.label;
+
+        div.appendChild(input);
+        div.appendChild(label);
+        div.appendChild(messages);
+
+        return div;
+    },
     // ################################################################### //
     // ################ Methods of panel viewer container ################ //
     // ################################################################### //
