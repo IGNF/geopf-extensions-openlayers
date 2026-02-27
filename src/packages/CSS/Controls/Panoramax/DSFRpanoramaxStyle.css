@@ -32,6 +32,14 @@
     margin-inline: auto;
     border-radius: 10px;
 }
+/* */
+.pnx-buttons-panel__body {}
+.pnx-buttons-panel__header {}
+.pnx-buttons-panel__content {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
 
 /* photo viewer */
 [id^="pnx-photo-viewer-"] {

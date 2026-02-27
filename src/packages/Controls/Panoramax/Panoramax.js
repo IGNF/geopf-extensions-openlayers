@@ -517,9 +517,23 @@ class Panoramax extends Control {
         var widgetPanelDiv = this._createWidgetPanelButtonsDivElement();
         widgetPanel.appendChild(widgetPanelDiv);
 
+        // header
+        var widgetPanelHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
+        // icone
+        var widgetPanelIcon = this._createWidgetPanelButtonsIconElement();
+        widgetPanelHeader.appendChild(widgetPanelIcon);
+        // title
+        var widgetPanelTitle = this._createWidgetPanelButtonsTitleElement();
+        widgetPanelHeader.appendChild(widgetPanelTitle);
+        // close picto
+        var widgetCloseBtn = this._createWidgetPanelButtonsCloseElement();
+        widgetPanelHeader.appendChild(widgetCloseBtn);
+        
+        widgetPanelDiv.appendChild(widgetPanelHeader);
+
         // container for the custom code : buttons, header, etc.
         var buttons = this.btnPanoramaxButtonsContainer = this._createWidgetButtonsElement();
-        widgetPanel.appendChild(buttons);
+        widgetPanelDiv.appendChild(buttons);
         if (this.options.buttons.display) {
             for (const buttonKey of this.options.buttons.order) {
                 switch (buttonKey) {
@@ -558,20 +572,6 @@ class Panoramax extends Control {
                 }
             }
         }
-
-        // header
-        var widgetPanelHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
-        // icone
-        var widgetPanelIcon = this._createWidgetPanelButtonsIconElement();
-        widgetPanelHeader.appendChild(widgetPanelIcon);
-        // title
-        var widgetPanelTitle = this._createWidgetPanelButtonsTitleElement();
-        widgetPanelHeader.appendChild(widgetPanelTitle);
-        // close picto
-        var widgetCloseBtn = this._createWidgetPanelButtonsCloseElement();
-        widgetPanelHeader.appendChild(widgetCloseBtn);
-        
-        widgetPanelDiv.appendChild(widgetPanelHeader);
 
         container.appendChild(widgetPanel);
 
@@ -719,10 +719,8 @@ class Panoramax extends Control {
         this.resetBackground();
         // - vider la couche de données
         this.resetLayer();
-        // - reinit des filtres
-        this.resetFilters();
-        // - reinit des contributions (?)
-        this.resetContributions();
+        // - reinit des boutons
+        this.resetButtons();
         // - reinit de la fenêtre de visualisation (?)
         this.resetVisualizationWindow();
         // - reinit du viewer de photos
@@ -749,8 +747,7 @@ class Panoramax extends Control {
             this.backgroundPanoramax = null;
         }
     }
-    resetFilters () {}
-    resetContributions () {}
+    resetButtons () {}
     resetPhotoViewer () {
         if (this.photoViewerPanoramax) {
             this.photoViewerPanoramax.setAttribute("sequence", "");
@@ -791,10 +788,8 @@ class Panoramax extends Control {
             await this.setBackground(this.options.background);
             // - charger la couche de données
             await this.setLayer(this.options.layer);
-            // - charger le bouton des filtres
-            await this.initFilters();
-            // - charger le bouton de contribution
-            await this.initContributions();
+            // - charger les boutons
+            await this.initButtons();
             // - charger la fenêtre de visualisation (?)
             await this.initVisualizationWindow();
             // - configurer le viewer de photos
@@ -862,7 +857,9 @@ class Panoramax extends Control {
         }
     }
 
-    initFilters () {
+    initButtons () {
+        // options.contributions.display : true/false
+        // options.contributions.label : "Contribuer"
         // options.filters.display : true/false
         // options.filters.label : "Filtrer"
         // options des filtres :
@@ -873,18 +870,8 @@ class Panoramax extends Control {
         // - etc.
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                logger.debug("initFilters");
-                resolve();
-            }, 1000);
-        });
-    }
-
-    initContributions () {
-        // options.contributions.display : true/false
-        // options.contributions.label : "Contribuer"
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                logger.debug("initContributions");
+                logger.debug("initButtons");
+                this.showButtonsPanel();
                 resolve();
             }, 1000);
         });
@@ -931,13 +918,23 @@ class Panoramax extends Control {
                     console.error(this.photoViewerPanoramax.offsetWidth, this.photoViewerPanoramax.isWidthSmall());
                     console.error(this.photoViewerPanoramax.offsetHeight, this.photoViewerPanoramax.isHeightSmall());
                     // window.PHOTOVIEWER = this.photoViewerPanoramax;
-                    this.hidePhotoViewer();
                 }
+                this.hidePhotoViewer();
                 resolve();
             }, 100);
         });
     }
 
+    // ################################################################### //
+    // ######################## methods menu buttons ##################### //
+    // ################################################################### //
+    showButtonsPanel () {
+        this.panelPanoramaxButtonsContainer.firstChild.classList.replace("gpf-hidden", "gpf-visible");
+    }
+
+    hideButtonsPanel () {
+        this.panelPanoramaxButtonsContainer.firstChild.classList.replace("gpf-visible", "gpf-hidden");
+    }
     // ################################################################### //
     // ######################## methods photoviewer ###################### //
     // ################################################################### //
@@ -991,6 +988,7 @@ class Panoramax extends Control {
             }
         }
         this.showPhotoViewer();
+        this.hideButtonsPanel();
     }
 
     showPhotoViewer () {
@@ -1295,6 +1293,7 @@ class Panoramax extends Control {
     onReturnPanoramaxClick (e) {
         logger.debug(e);
         this.hidePhotoViewer();
+        this.showButtonsPanel();
     }
 
     /**

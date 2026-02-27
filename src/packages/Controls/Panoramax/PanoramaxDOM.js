@@ -82,13 +82,13 @@ var PanoramaxDOM = {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPpanoramaxPanelButtons");
         dialog.className = "GPpanel gpf-panel fr-modal";
-
         return dialog;
     },
-
+    
     _createWidgetPanelButtonsDivElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__body fr-modal__body";
+        div.className = "pnx-buttons-panel__body gpf-panel__body fr-modal__body";
+        div.classList.add("gpf-visible");
         return div;
     },
 
@@ -100,7 +100,7 @@ var PanoramaxDOM = {
      */
     _createWidgetPanelButtonsHeaderElement : function (display) {
         var container = document.createElement("div");
-        container.className = "gpf-panel__header fr-modal__header";
+        container.className = "pnx-buttons-panel__header gpf-panel__header fr-modal__header";
         if (!display) {
             container.classList.add("gpf-hidden");
         }
@@ -184,7 +184,7 @@ var PanoramaxDOM = {
      */
     _createWidgetButtonsElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__content fr-modal__content";
+        div.className = "pnx-buttons-panel__content gpf-panel__content fr-modal__content";
 
         return div;
     },
