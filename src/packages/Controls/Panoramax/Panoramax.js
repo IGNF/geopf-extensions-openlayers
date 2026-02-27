@@ -48,6 +48,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {Number} [background.maxZoom] - Zoom maximum pour afficher la couche de fond.
  * @property {Object} [buttons] - Options de configuration des boutons.
  * @property {Boolean} [buttons.display] - Affiche ou masque les boutons.
+ * @property {String|HTMLElement|null} [buttons.target] - **Experimental** -Cible DOM où injecter le panneau des boutons.
  * @property {Object} [buttons.filters] - Options de configuration des filtres.
  * @property {Boolean} [buttons.filters.display] - Affiche ou masque les filtres.
  * @property {String} [buttons.filters.label] - Libellé du bouton de filtrage.
@@ -73,6 +74,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {String} [buttons.background.description] - Description du bouton de fond de carte.
  * @property {Object} [visualizationWindow] - Options de configuration de la fenêtre de visualisation.
  * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
+ * @property {String|HTMLElement|null} [visualizationWindow.target] - **Experimental** - Cible DOM où injecter le panneau de visualisation.
  * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen").
  */
 
@@ -209,11 +211,18 @@ class Panoramax extends Control {
         if (map) {
             // mode "draggable"
             if (this.draggable) {
-                Draggable.dragElement(
-                    this.panelPanoramaxButtonsContainer,
-                    this.panelPanoramaxButtonsHeaderContainer,
-                    this.options.position ? null : map.getTargetElement()
-                );
+                var dragContainer = this.panelPanoramaxButtonsContainer && this.panelPanoramaxButtonsContainer.parentElement
+                    ? this.panelPanoramaxButtonsContainer.parentElement
+                    : (this.options.position ? null : map.getTargetElement());
+                if (!dragContainer) {
+                    logger.warn("Panoramax draggable mode requires a container element");
+                } else {
+                    Draggable.dragElement(
+                        this.panelPanoramaxButtonsContainer,
+                        this.panelPanoramaxButtonsHeaderContainer,
+                        dragContainer
+                    );
+                }
             }
             // mode "collapsed"
             if (!this.collapsed) {
@@ -325,9 +334,9 @@ class Panoramax extends Control {
             },
             buttons : {
                 display : true,
-                target : null, // TODO
+                target : null, // experimental !
                 position : "top-right", // TODO
-                order : ["filters", "contributions", "hover", "styles", "background"], // TODO
+                order : ["filters", "contributions", "hover", "styles", "background"],
                 filters : {
                     display : true,
                     label : "Filtrer",
@@ -359,10 +368,9 @@ class Panoramax extends Control {
             },
             visualizationWindow : {
                 display : true,
-                target : null, // par defaut
+                target : null, // experimental !
                 position : "top-right", // TODO
-                size : "medium",
-                title : "Visualiser l'image", // TODO
+                size : "medium"
             },
             viewer : {
                 "endpoint" : "https://explore.panoramax.fr/api",
@@ -508,32 +516,49 @@ class Panoramax extends Control {
 
         // panel viewer
         var widgetPanelViewer = this.panelPanoramaxViewerContainer = this._createWidgetPanelViewerElement();
-        var widgetPanelDiv = this._createWidgetPanelViewerDivElement();
-        widgetPanelViewer.appendChild(widgetPanelDiv);
-        container.appendChild(widgetPanelViewer);
+        var widgetPanelViewerDiv = this._createWidgetPanelViewerDivElement();
+        widgetPanelViewer.appendChild(widgetPanelViewerDiv);
+
+        // experimental : possibilité d'injecter le panneau de visualisation 
+        // dans une cible spécifique
+        var panelViewerTarget = this.resolveTargetElement(this.options.visualizationWindow.target);
+        if (panelViewerTarget) {
+            panelViewerTarget.appendChild(widgetPanelViewer);
+        } else {
+            container.appendChild(widgetPanelViewer);
+        }
 
         // panel buttons
-        var widgetPanel = this.panelPanoramaxButtonsContainer = this._createWidgetPanelButtonsElement();
-        var widgetPanelDiv = this._createWidgetPanelButtonsDivElement();
-        widgetPanel.appendChild(widgetPanelDiv);
+        var widgetPanelButtons = this.panelPanoramaxButtonsContainer = this._createWidgetPanelButtonsElement();
+        var widgetPanelButtonsDiv = this._createWidgetPanelButtonsDivElement();
+        widgetPanelButtons.appendChild(widgetPanelButtonsDiv);
+
+        // experimental : possibilité d'injecter le panneau des boutons 
+        // dans une cible spécifique
+        var panelButtonsTarget = this.resolveTargetElement(this.options.buttons.target);
+        if (panelButtonsTarget) {
+            panelButtonsTarget.appendChild(widgetPanelButtons);
+        } else {
+            container.appendChild(widgetPanelButtons);
+        }
 
         // header
-        var widgetPanelHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
+        var widgetPanelButtonsHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
         // icone
-        var widgetPanelIcon = this._createWidgetPanelButtonsIconElement();
-        widgetPanelHeader.appendChild(widgetPanelIcon);
+        var widgetPanelButtonsIcon = this._createWidgetPanelButtonsIconElement();
+        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsIcon);
         // title
-        var widgetPanelTitle = this._createWidgetPanelButtonsTitleElement();
-        widgetPanelHeader.appendChild(widgetPanelTitle);
+        var widgetPanelButtonsTitle = this._createWidgetPanelButtonsTitleElement();
+        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsTitle);
         // close picto
-        var widgetCloseBtn = this._createWidgetPanelButtonsCloseElement();
-        widgetPanelHeader.appendChild(widgetCloseBtn);
+        var widgetPanelButtonsClose = this._createWidgetPanelButtonsCloseElement();
+        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsClose);
         
-        widgetPanelDiv.appendChild(widgetPanelHeader);
+        widgetPanelButtonsDiv.appendChild(widgetPanelButtonsHeader);
 
         // container for the custom code : buttons, header, etc.
         var buttons = this.btnPanoramaxButtonsContainer = this._createWidgetButtonsElement();
-        widgetPanelDiv.appendChild(buttons);
+        widgetPanelButtonsDiv.appendChild(buttons);
         if (this.options.buttons.display) {
             for (const buttonKey of this.options.buttons.order) {
                 switch (buttonKey) {
@@ -573,11 +598,68 @@ class Panoramax extends Control {
             }
         }
 
-        container.appendChild(widgetPanel);
+        // experimental : possibilité d'injecter le panneau des boutons dans une cible spécifique
+        var panelButtonsTarget = this.resolveTargetElement(this.options.buttons.target);
+        if (panelButtonsTarget) {
+            panelButtonsTarget.appendChild(widgetPanelButtons);
+        } else {
+            container.appendChild(widgetPanelButtons);
+        }
 
         logger.log(container);
 
         return container;
+    }
+
+    /**
+     * Résout une cible DOM à partir 
+     * - d'un élément, 
+     * - d'un id
+     * - d'un sélecteur CSS.
+     *
+     * @param {HTMLElement|String|null|undefined} target - Cible DOM fournie dans les options.
+     * @returns {HTMLElement|null} Élément cible résolu, sinon `null`.
+     * @private
+     */
+    resolveTargetElement (target) {
+        if (!target) {
+            return null;
+        }
+
+        if (target instanceof HTMLElement) {
+            return target;
+        }
+
+        if (typeof target !== "string") {
+            logger.warn("Unsupported Panoramax target option type:", typeof target);
+            return null;
+        }
+
+        var normalizedTarget = target.trim();
+        if (!normalizedTarget) {
+            return null;
+        }
+
+        var targetElement = null;
+        if (normalizedTarget.charAt(0) === "#") {
+            targetElement = document.getElementById(normalizedTarget.slice(1));
+        } else {
+            targetElement = document.getElementById(normalizedTarget);
+        }
+
+        if (!targetElement) {
+            try {
+                targetElement = document.querySelector(normalizedTarget);
+            } catch (err) {
+                logger.warn("Invalid Panoramax target selector:", normalizedTarget, err);
+                return null;
+            }
+        }
+
+        if (!targetElement) {
+            logger.warn("Panoramax target not found:", normalizedTarget);
+        }
+        return targetElement;
     }
 
     // ################################################################### //
@@ -609,7 +691,7 @@ class Panoramax extends Control {
                 };
             };
             var options = {
-                layerFilter : (l) => l === self.layerPanoramax || l=== self.previewMarkerOverlay,
+                layerFilter : (l) => l === self.layerPanoramax || l === self.previewMarkerOverlay,
                 hitTolerance : 5
             };
             var feature = e.map.forEachFeatureAtPixel(e.pixel, callback, options);
@@ -806,6 +888,9 @@ class Panoramax extends Control {
         // - name : "Panoramax"
         // - etc.
         var map = this.getMap();
+        if (!map) {
+            return;
+        }
         this.layerPanoramax = new VectorTileLayer({ 
             declutter : true,
             minZoom : opts.minZoom || 6,
@@ -835,6 +920,9 @@ class Panoramax extends Control {
             return;
         }
         var map = this.getMap();
+        if (!map) {
+            return;
+        }
         this.backgroundPanoramax = new VectorTileLayer({ 
             declutter : true,
             minZoom : opts.minZoom || 6,
@@ -915,8 +1003,8 @@ class Panoramax extends Control {
                 if (!this.photoViewerPanoramax) {
                     this.photoViewerPanoramax = this.createPhotoViewer();
                     // HACK orienté maintenance :
-                    console.error(this.photoViewerPanoramax.offsetWidth, this.photoViewerPanoramax.isWidthSmall());
-                    console.error(this.photoViewerPanoramax.offsetHeight, this.photoViewerPanoramax.isHeightSmall());
+                    // console.error(this.photoViewerPanoramax.offsetWidth, this.photoViewerPanoramax.isWidthSmall());
+                    // console.error(this.photoViewerPanoramax.offsetHeight, this.photoViewerPanoramax.isHeightSmall());
                     // window.PHOTOVIEWER = this.photoViewerPanoramax;
                 }
                 this.hidePhotoViewer();
