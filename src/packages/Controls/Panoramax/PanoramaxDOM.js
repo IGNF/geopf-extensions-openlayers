@@ -113,6 +113,32 @@ var PanoramaxDOM = {
         label.setAttribute("aria-label", `Afficher ${title}`);
         return label;
     },
+    _createWidgetPanelButtonsReturnElement : function () {
+        var self = this;
+
+        var btnReturn = document.createElement("button");
+        btnReturn.className = "gpf-btn gpf-btn-icon-return fr-btn--return fr-btn fr-btn--tertiary-no-outline fr-m-1w";
+        btnReturn.title = "Retour au panneau de contrôle";
+
+        // Link panel return / visibility checkbox
+        if (btnReturn.addEventListener) {
+            btnReturn.addEventListener("click", function (e) {
+                self.onReturnPanoramaxClick(e);
+            }, false);
+        } else if (btnReturn.attachEvent) {
+            btnReturn.attachEvent("onclick", function (e) {
+                self.onReturnPanoramaxClick(e);
+            });
+        }
+
+        var span = document.createElement("span");
+        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.innerText = "Retour";
+
+        btnReturn.appendChild(span);
+
+        return btnReturn;
+    },
     _createWidgetPanelButtonsTitleElement : function () {
         var div = document.createElement("div");
         div.className = "gpf-panel__title fr-modal__title fr-pt-4w";
@@ -129,12 +155,10 @@ var PanoramaxDOM = {
         // Link panel close / visibility checkbox
         if (btnClose.addEventListener) {
             btnClose.addEventListener("click", function (e) {
-                document.getElementById(self._addUID("GPshowPanoramaxPicto")).click();
                 self.onClosePanoramaxClick(e);
             }, false);
         } else if (btnClose.attachEvent) {
             btnClose.attachEvent("onclick", function (e) {
-                document.getElementById(self._addUID("GPshowPanoramaxPicto")).click();
                 self.onClosePanoramaxClick(e);
             });
         }
@@ -215,7 +239,7 @@ var PanoramaxDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPpanoramaxToggle");
-        div.className = "gpf-panoramax-toggle fr-toggle fr-m-2v";
+        div.className = "pnx-toggle fr-toggle fr-m-2v";
 
         var messages = document.createElement("div");
         messages.id = this._addUID("GPpanoramaxToggleMessages");
@@ -224,7 +248,7 @@ var PanoramaxDOM = {
         
         var input = document.createElement("input");
         input.id = this._addUID("GPpanoramaxToggleInput");
-        input.className = "gpf-panoramax-toggle__input fr-toggle__input";
+        input.className = "pnx-toggle__input fr-toggle__input";
         input.type = "checkbox";
         input.checked = active;
         input.setAttribute("aria-describedby", messages.id);
@@ -241,7 +265,7 @@ var PanoramaxDOM = {
 
         var label = document.createElement("label");
         label.id = this._addUID("GPpanoramaxToggleLabel");
-        label.className = "gpf-panoramax-toggle__label fr-toggle__label";
+        label.className = "pnx-toggle__label fr-toggle__label";
         label.setAttribute("title", opts.description);
         label.setAttribute("for", input.id);
         label.innerText = opts.label;
@@ -253,16 +277,17 @@ var PanoramaxDOM = {
         return div;
     },
 
-    // TODO : à implémenter si besoin de styles spécifiques pour la couche
-    // des données Panoramax (ex : choix de la couleur des points d'intérêts)
-    _createButtonChoiceStyleElement : function (styles) {},
+    _createButtonChoiceStyleElement : function (styles) {
+        // TODO : à implémenter si besoin de styles spécifiques pour la couche
+        // des données Panoramax (ex : choix de la couleur des points d'intérêts)
+    },
 
     _createButtonChoiceBackgroundElement : function (active, opts) {
         var self = this;
 
         var div = document.createElement("div");
         div.id = this._addUID("GPpanoramaxToggleBackground");
-        div.className = "gpf-panoramax-toggle fr-toggle fr-m-2v";
+        div.className = "pnx-toggle fr-toggle fr-m-2v";
 
         var messages = document.createElement("div");
         messages.id = this._addUID("GPpanoramaxToggleBackgroundMessages");
@@ -271,7 +296,7 @@ var PanoramaxDOM = {
         
         var input = document.createElement("input");
         input.id = this._addUID("GPpanoramaxToggleBackgroundInput");
-        input.className = "gpf-panoramax-toggle__input fr-toggle__input";
+        input.className = "pnx-toggle__input fr-toggle__input";
         input.type = "checkbox";
         input.checked = active;
         input.setAttribute("aria-describedby", messages.id);
@@ -288,7 +313,7 @@ var PanoramaxDOM = {
 
         var label = document.createElement("label");
         label.id = this._addUID("GPpanoramaxToggleBackgroundLabel");
-        label.className = "gpf-panoramax-toggle__label fr-toggle__label";
+        label.className = "pnx-toggle__label fr-toggle__label";
         label.setAttribute("title", opts.description);
         label.setAttribute("for", input.id);
         label.innerText = opts.label;
@@ -311,15 +336,22 @@ var PanoramaxDOM = {
     _createWidgetPanelViewerElement : function () {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPpanoramaxPanelViewer");
-        dialog.className = "GPpanel pnx-visualization-window-panel gpf-panel fr-modal";
-        // dialog.classList.add("gpf-hidden");
+        dialog.className = "GPpanel pnx-visualization-window-panel gpf-panel fr-modal gpf-visible";
+        dialog.classList.add("gpf-hidden"); // la fenêtre de visualisation est masquée par défaut, elle s'affiche au clic sur une image
+        
+        var header = document.createElement("div");
+        header.className = "pnx-visualization-window-panel__header gpf-panel__header fr-modal__header";
+        header.appendChild(this._createWidgetPanelButtonsReturnElement());
+        header.appendChild(this._createWidgetPanelButtonsCloseElement());
+
+        dialog.appendChild(header);
         return dialog;
     },
     
     _createWidgetPanelViewerDivElement : function () {
         var div = document.createElement("div");
         div.className = "pnx-visualization-window-panel__body gpf-panel__body fr-modal__body";
-        // div.classList.add("gpf-hidden");
+        div.classList.add("gpf-hidden");
         // Target tag for the photoviewer dialog (see Panoramax.js)
         return div;
     },

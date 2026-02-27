@@ -1,3 +1,4 @@
+/* icon */
 .gpf-btn-icon-panoramax::after {
     -webkit-mask: url("img/dsfr/panoramax.svg") center no-repeat;
     mask: url("img/dsfr/panoramax.svg") center no-repeat;
@@ -23,14 +24,15 @@
     color: var(--text-action-high-blue-france);
 }
 
-.gpf-panoramax-toggle__label {}
-.gpf-panoramax-toggle__input {}
-.gpf-panoramax-toggle {
+.pnx-toggle__label {}
+.pnx-toggle__input {}
+.pnx-toggle {
     background: var(--background-default-grey);
     width: fit-content;
     margin-inline: auto;
     border-radius: 10px;
 }
+
 /* photo viewer */
 [id^="pnx-photo-viewer-"] {
     width: 100%;
@@ -45,6 +47,10 @@
 
 /* viewer */
 .pnx-visualization-window-panel {}
+.pnx-visualization-window-panel__header {
+    background-color: var(--background-default-grey);
+    height: 50px;
+}
 .pnx-visualization-window-panel__body {
     width: 100%;
     height: 100%;

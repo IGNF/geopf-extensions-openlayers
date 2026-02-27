@@ -425,8 +425,6 @@ class Panoramax extends Control {
         /** @private */
         this.panelPanoramaxButtonsHeaderContainer = null; // usefull for the dragNdrop
         /** @private */
-        this.buttonPanoramaxButtonsClose = null;
-        /** @private */
         this.btnPanoramaxButtonsContainer = null;
         /** @private */
         this.btnPanoramaxFilters = null;
@@ -570,7 +568,7 @@ class Panoramax extends Control {
         var widgetPanelTitle = this._createWidgetPanelButtonsTitleElement();
         widgetPanelHeader.appendChild(widgetPanelTitle);
         // close picto
-        var widgetCloseBtn = this.buttonPanoramaxButtonsClose = this._createWidgetPanelButtonsCloseElement();
+        var widgetCloseBtn = this._createWidgetPanelButtonsCloseElement();
         widgetPanelHeader.appendChild(widgetCloseBtn);
         
         widgetPanelDiv.appendChild(widgetPanelHeader);
@@ -909,12 +907,6 @@ class Panoramax extends Control {
             setTimeout(() => {
                 logger.debug("initVisualizationWindow");
                 this.setSizeWindow(this.options.visualizationWindow.size);
-                // INFO
-                // par défaut, la fenêtre de visualisation est masquée, elle s'affiche au clic sur une image
-                // mais pour initialiser le viewer de photos de Panoramax, il faut que le container soit visible, 
-                // avec une taille !
-                // this.panelPanoramaxViewerContainer.classList.add("gpf-hidden");
-                // this.panelPanoramaxViewerContainer.firstChild.classList.add("gpf-hidden");
                 resolve();
             }, 100);
         });
@@ -928,17 +920,17 @@ class Panoramax extends Control {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 logger.debug("initPhotoViewer");
+                // INFO
+                // par défaut, la fenêtre de visualisation est masquée, elle s'affiche au clic sur une image
+                // mais pour initialiser le viewer de photos de Panoramax, il faut que le container soit visible, 
+                // avec une taille !
+                this.showPhotoViewer();
                 if (!this.photoViewerPanoramax) {
                     this.photoViewerPanoramax = this.createPhotoViewer();
+                    // HACK orienté maintenance :
                     console.error(this.photoViewerPanoramax.offsetWidth, this.photoViewerPanoramax.isWidthSmall());
                     console.error(this.photoViewerPanoramax.offsetHeight, this.photoViewerPanoramax.isHeightSmall());
-                    window.PHOTOVIEWER = this.photoViewerPanoramax;
-                    // INFO
-                    // la taille du viewer de photos de Panoramax est calculée à partir de la taille 
-                    // de son container parent, donc pour initialiser correctement le viewer, 
-                    // il faut que le container soit visible, avec une taille !
-                    this.panelPanoramaxViewerContainer.classList.add("gpf-hidden");
-                    this.panelPanoramaxViewerContainer.firstChild.classList.add("gpf-hidden");
+                    // window.PHOTOVIEWER = this.photoViewerPanoramax;
                     this.hidePhotoViewer();
                 }
                 resolve();
@@ -963,7 +955,7 @@ class Panoramax extends Control {
             
             // si un target est spécifié dans les options, on l'utilise, 
             // sinon on utilise le container par défaut
-            var target = this.panelPanoramaxViewerContainer.firstChild;
+            var target = this.panelPanoramaxViewerContainer.lastChild;
             if (this.options.visualizationWindow.target) {
                 // FIXME on perd le focus sur la carte (zoom, déplacement, etc.) 
                 // quand le photoViewer est affiché dans un container externe, 
@@ -1002,23 +994,25 @@ class Panoramax extends Control {
     }
 
     showPhotoViewer () {
+        this.panelPanoramaxViewerContainer.classList.replace("gpf-hidden", "gpf-visible");
+        this.panelPanoramaxViewerContainer.lastChild.classList.replace("gpf-hidden", "gpf-visible");
+        
         if (!this.photoViewerPanoramax) {
             logger.warn("Panoramax photo viewer is not available");
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-hidden", "gpf-visible");
-        this.panelPanoramaxViewerContainer.classList.replace("gpf-hidden", "gpf-visible");
-        this.panelPanoramaxViewerContainer.firstChild.classList.replace("gpf-hidden", "gpf-visible");
     }
 
     hidePhotoViewer () {
+        this.panelPanoramaxViewerContainer.classList.replace("gpf-visible", "gpf-hidden");
+        this.panelPanoramaxViewerContainer.lastChild.classList.replace("gpf-visible", "gpf-hidden");
+        
         if (!this.photoViewerPanoramax) {
             logger.warn("Panoramax photo viewer is not available");
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-visible", "gpf-hidden");
-        this.panelPanoramaxViewerContainer.classList.replace("gpf-visible", "gpf-hidden");
-        this.panelPanoramaxViewerContainer.firstChild.classList.replace("gpf-visible", "gpf-hidden");
     }
 
     // ################################################################### //
@@ -1288,6 +1282,19 @@ class Panoramax extends Control {
      */
     onClosePanoramaxClick (e) {
         logger.debug(e);
+        this.buttonPanoramaxShow.click();
+    }
+
+    /**
+     * Gère le clic de retour sur la carte avec
+     * fermeture du panneau Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de retour.
+     * @private
+     */
+    onReturnPanoramaxClick (e) {
+        logger.debug(e);
+        this.hidePhotoViewer();
     }
 
     /**
