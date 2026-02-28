@@ -15,9 +15,14 @@ import Draggable from "../../Utils/Draggable";
 import PanoramaxDOM from "./PanoramaxDOM";
 
 // lib ol
-import VectorTileLayer from "ol/layer/VectorTile";
 import Overlay from "ol/Overlay";
-import { applyStyle } from "ol-mapbox-style";
+import { 
+    MapboxVectorLayer,
+    addMapboxLayer, 
+    removeMapboxLayer, 
+    updateMapboxLayer,
+    recordStyleLayer
+} from "ol-mapbox-style";
 
 // lib panoramax
 import "@panoramax/web-viewer/build/photoviewer";
@@ -228,9 +233,6 @@ class Panoramax extends Control {
             if (!this.collapsed) {
                 this.buttonPanoramaxShow.setAttribute("aria-pressed", true);
             }
-
-            // some stuff
-
             // ajout des evenements sur la carte
             if (this.auto) {
                 this.addEventsListeners(map);
@@ -255,6 +257,8 @@ class Panoramax extends Control {
         if (this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
         }
+
+        window.PNX_MAP = map; // for debug
     }
 
     // ################################################################### //
@@ -457,6 +461,12 @@ class Panoramax extends Control {
         this.eventsListeners = [];
 
         /**
+         * Types de couches Panoramax disponibles dans le TMS vecteur 
+         * (https://api.panoramax.xyz/api/map/style.json).
+         */
+        this.PANORAMAX_LAYERS_TYPES = ["grid", "sequences", "pictures"];
+
+        /**
          * Événement déclenché à l'ouverture du panneau Panoramax.
          * @event pnx:opened
          * @defaultValue "pnx:opened"
@@ -484,14 +494,17 @@ class Panoramax extends Control {
          * @event pnx:data:hovered
          * @defaultValue "pnx:data:hovered"
          * @group Callbacks
+         * @description
+         * Ce callback est utilisé pour récupérer la première entité touchée
+         * au survol (coordonnées et propriétés) sur la couche Panoramax.
          */
         this.HOVERED_DATA_PANORAMAX_CB = "pnx:data:hovered";
 
         /** photo viewer */
         this.photoViewerPanoramax = null;
-        /** layer */
+        /** @type {MapboxVectorLayer} */
         this.layerPanoramax = null;
-        /** background */
+        /** @type {MapboxVectorLayer} */
         this.backgroundPanoramax = null;
         /** preview marker overlay */
         this.previewMarkerOverlay = null;
@@ -881,6 +894,71 @@ class Panoramax extends Control {
         }
     }
 
+    waitForMapboxVectorLayerReady (layer) {
+        return new Promise((resolve, reject) => {
+            if (!layer) {
+                reject(new Error("Layer is not defined"));
+                return;
+            }
+
+            var source = layer.getSource && layer.getSource();
+            if (!source) {
+                reject(new Error("Layer source is not available"));
+                return;
+            }
+
+            var state = source.getState && source.getState();
+            if (state === "ready") {
+                resolve(layer);
+                return;
+            }
+            if (state === "error") {
+                reject(new Error("Error loading layer source"));
+                return;
+            }
+
+            var onSourceChange = () => {
+                var nextState = source.getState && source.getState();
+                if (nextState === "ready") {
+                    source.un("change", onSourceChange);
+                    resolve(layer);
+                } else if (nextState === "error") {
+                    source.un("change", onSourceChange);
+                    reject(new Error("Error loading layer source"));
+                }
+            };
+
+            source.on("change", onSourceChange);
+            layer.once("error", (evt) => {
+                source.un("change", onSourceChange);
+                reject(evt && evt.error ? evt.error : new Error("Error loading layer style"));
+            });
+        });
+    }
+
+    async getStyleJsonFromMapboxVectorLayer (layer) {
+        if (!layer) {
+            return null;
+        }
+
+        var styleJson = layer.get("mapbox-style");
+        if (!styleJson) {
+            try {
+                const response = await fetch(layer.styleUrl);
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status + " while fetching style");
+                }
+                const styleJson = await response.json();
+                // sauvegarde du style JSON dans les propriétés de la couche 
+                // pour une utilisation ultérieure (ex. personnalisation du style)
+                layer.set("mapbox-style", styleJson);
+            } catch (err) {
+                logger.warn("Unable to cache Panoramax layer style JSON", err);
+            }
+        }
+        return styleJson;
+    }
+
     async setLayer (opts) {
         logger.debug("initLayer");
         // options de la couche :
@@ -891,22 +969,30 @@ class Panoramax extends Control {
         if (!map) {
             return;
         }
-        this.layerPanoramax = new VectorTileLayer({ 
+        var layer = new MapboxVectorLayer({ 
+            styleUrl : opts.url,
             declutter : true,
             minZoom : opts.minZoom || 6,
             maxZoom : opts.maxZoom || 21
         });
-        this.layerPanoramax.styleUrl = opts.url;
+        // hack pour le gestionnaire de couche
+        layer.styleUrl = opts.url;
+        
+        map.addLayer(layer);
+
         try {
-            await applyStyle(
-                this.layerPanoramax,
-                opts.url
-            );
-            map.addLayer(this.layerPanoramax);
-            this.layerPanoramax.set("title", opts.name);
+            await this.waitForMapboxVectorLayerReady(layer);
+            await this.getStyleJsonFromMapboxVectorLayer(layer);
+            // mise à jour du nom de la couche du gestionnaire de couche
+            layer.set("title", opts.name);
+            // sauvegarde de la référence de la couche
+            this.layerPanoramax = layer;
+            return layer;
         } catch (err) {
             logger.error("Error loading Panoramax layer style", err);
+            map.removeLayer(layer);
             this.layerPanoramax = null;
+            throw err;
         }
     }
 
@@ -923,29 +1009,34 @@ class Panoramax extends Control {
         if (!map) {
             return;
         }
-        this.backgroundPanoramax = new VectorTileLayer({ 
+
+        var layer = new MapboxVectorLayer({ 
+            styleUrl : opts.url,
             declutter : true,
             minZoom : opts.minZoom || 6,
             maxZoom : opts.maxZoom || 21
         });
-        this.backgroundPanoramax.styleUrl = opts.url;
+        layer.styleUrl = opts.url;
+
+        map.addLayer(layer);
+
         try {
-            await applyStyle(
-                this.backgroundPanoramax,
-                opts.url
-            );
-            map.addLayer(this.backgroundPanoramax);
+            await this.waitForMapboxVectorLayerReady(layer);
+            this.backgroundPanoramax = layer;
             this.backgroundPanoramax.set("title", opts.name);
             if (this.layerPanoramax) {
                 this.backgroundPanoramax.setZIndex(this.layerPanoramax.getZIndex() - 1);
             }
+            return layer;
         } catch (err) {
             logger.error("Error loading Panoramax background layer style", err);
+            map.removeLayer(layer);
             this.backgroundPanoramax = null;
+            throw err;
         }
     }
 
-    initButtons () {
+    async initButtons () {
         // options.contributions.display : true/false
         // options.contributions.label : "Contribuer"
         // options.filters.display : true/false
@@ -961,11 +1052,11 @@ class Panoramax extends Control {
                 logger.debug("initButtons");
                 this.showButtonsPanel();
                 resolve();
-            }, 1000);
+            }, 100);
         });
     }
 
-    initVisualizationWindow () {
+    async initVisualizationWindow () {
         // options.visualizationWindow.display : true/false
         // options de la fenêtre de visualisation :
         // - title : "Visualiser l'image"
@@ -987,7 +1078,7 @@ class Panoramax extends Control {
         });
     }
 
-    initPhotoViewer () {
+    async initPhotoViewer () {
         // options.viewer.endpoint : "https://explore.panoramax.fr/api"
         // options.viewer.class : "..." (TODO)
         // options.viewer.widgets : true/false (TODO)
@@ -1005,7 +1096,7 @@ class Panoramax extends Control {
                     // HACK orienté maintenance :
                     // console.error(this.photoViewerPanoramax.offsetWidth, this.photoViewerPanoramax.isWidthSmall());
                     // console.error(this.photoViewerPanoramax.offsetHeight, this.photoViewerPanoramax.isHeightSmall());
-                    // window.PHOTOVIEWER = this.photoViewerPanoramax;
+                    // window.PNX_PHOTOVIEWER = this.photoViewerPanoramax;
                 }
                 this.hidePhotoViewer();
                 resolve();
@@ -1323,6 +1414,167 @@ class Panoramax extends Control {
         }
     }
 
+    // ################################################################### //
+    // ######################## methods filters ########################## //
+    // ################################################################### //
+
+    /**
+     * Récupère le style Mapbox de la couche de photos Panoramax.
+     * Ex. : pour les types "grid", "sequences", ou "pictures", 
+     * on retourne le style de la couche correspondante.
+     *
+     * @param {PanoramaxPreviewLayerType} type - Type de photo sélectionné pour le filtrage.
+     * @returns {Object|null} Objet de style Mapbox de la couche de photos, ou `null` si non trouvé.
+     */
+    getMapboxLayerByType (type) {
+        if (!type) {
+            return null;
+        }
+        if (!this.PANORAMAX_LAYERS_TYPES.includes(type)) {
+            return null;
+        }
+        if (!this.layerPanoramax) {
+            return null;
+        }
+        var field = this.layerPanoramax.get("mapbox-layers").find(l => l.id.includes(type));
+        if (!field) {
+            return null;
+        }
+        var originalMapboxLayer = this.layerPanoramax.get("mapbox-style").layers.find(l => l.id === field.id);
+        if (!originalMapboxLayer) {
+            return null;
+        }
+        return originalMapboxLayer;
+    }
+
+    /**
+     * Filtre des couches mapbox selon le type de photo sélectionné.
+     * @param {String|null} value - Type de photo à filtrer : 
+     * "flat", "equirectangular", ou `null` pour réinitialiser le filtre.
+     * @returns {Array<Object>} Tableau d'objets de style Mapbox.
+     */
+    filterCameraToMapboxLayer (value) {
+        var mapboxLayers = [];
+        for (let index = 0; index < this.PANORAMAX_LAYERS_TYPES.length; index++) {
+            const type = this.PANORAMAX_LAYERS_TYPES[index];
+            var mapboxLayer = this.getMapboxLayerByType(type);
+            if (type === "pictures" || type === "sequences") {
+                var filter = [];
+                if (value === "flat" || value === "equirectangular") {
+                    filter.push("all");
+                    filter.push(["!=", ["get", "type"], value]);
+                }
+                if (filter && filter.length > 0) {
+                    mapboxLayer.filter = filter;
+                }
+            } else if (type === "grid") {
+                // TODO
+                // comment filtrer la couche de grille en fonction du type de photo sélectionné ?
+                // ex. afficher uniquement les cellules contenant des photos 360° ?
+            }
+            mapboxLayers.push(mapboxLayer);
+        }
+        return mapboxLayers;
+    }
+
+    /**
+     * Filtre des couches mapbox selon la plage de dates sélectionnée.
+     * @param {Date|null} minDate - Date minimale à filtrer.
+     * @param {Date|null} maxDate - Date maximale à filtrer.
+     * @returns {Array<Object>} Tableau d'objets de style Mapbox.
+     */
+    filterDateToMapboxLayer (minDate, maxDate) {
+        var mapboxLayers = [];
+        for (let index = 0; index < this.PANORAMAX_LAYERS_TYPES.length; index++) {
+            const type = this.PANORAMAX_LAYERS_TYPES[index];
+            var mapboxLayer = this.getMapboxLayerByType(type);
+            if (type === "pictures") {
+                var filter = [];
+                if (minDate && minDate instanceof Date) {
+                    filter.push([">=", ["to-number", ["get", "ts"]], minDate.getTime()]);
+                }
+                if (maxDate && maxDate instanceof Date) {
+                    filter.push(["<=", ["to-number", ["get", "ts"]], maxDate.getTime()]);
+                }
+                if (filter && filter.length > 0) {
+                    if (filter.length === 1) {
+                        filter.unshift("all");
+                    }
+                    mapboxLayer.filter = filter;
+                }
+            } else if (type === "sequences") {
+                var filter = [];
+                if (minDate && minDate instanceof Date) {
+                    filter.push([">=", ["to-number", ["get", "date"]], minDate.getTime()]);
+                }
+                if (maxDate && maxDate instanceof Date) {
+                    filter.push(["<=", ["to-number", ["get", "date"]], maxDate.getTime()]);
+                }
+                if (filter && filter.length > 0) {
+                    if (filter.length === 1) {
+                        filter.unshift("all");
+                    }
+                    mapboxLayer.filter = filter;
+                }
+            } else if (type === "grid") {
+                // TODO
+                // comment filtrer la couche de grille en fonction de la plage de dates sélectionnée ?
+                // ex. afficher uniquement les cellules contenant des photos prises dans la plage de dates sélectionnée ?
+            }
+            mapboxLayers.push(mapboxLayer);
+        }
+        return mapboxLayers;
+    }
+
+    /**
+     * Filtre des couches mapbox selon une période prédéfinie sélectionnée 
+     * (ex : "last_year", "last_month", etc.).
+     * @param {String|null} value - Valeur de la période prédéfinie à filtrer.
+     * @returns {Array<Object>} Tableau d'objets de style Mapbox.
+     */
+    filterPredifinedDateToMapboxLayer (value) {
+        var now = new Date();
+        var minDate = null;
+        var maxDate = null;
+        switch (value) {
+            case "last_year":
+                minDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+                break;
+            case "last_month":
+                minDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+                break;
+            case "last_week":
+                minDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+                break;
+            case "last_24h":
+                minDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                break;
+        }
+        return this.filterDateToMapboxLayer(minDate, maxDate);
+    }
+
+    /**
+     * Applique les filtres sélectionnés à la couche Panoramax.
+     * @param {Array<Object>} mapboxLayers - format Mapbox Style.
+     * @returns {Promise} Promise résolue lorsque les filtres sont appliqués.
+     */
+    applyFilters (mapboxLayers) {
+        logger.debug("applyFilters", mapboxLayers);
+        if (!this.layerPanoramax) {
+            logger.warn("Panoramax layer is not available");
+            return Promise.reject(new Error("Panoramax layer is not available"));
+        }
+        if (!mapboxLayers) {
+            logger.warn("No Mapbox layers provided");
+            return Promise.reject(new Error("No Mapbox layers provided"));
+        }
+        var promises = [];
+        for (let index = 0; index < mapboxLayers.length; index++) {
+            const mapboxLayer = mapboxLayers[index];
+            promises.push(updateMapboxLayer(this.layerPanoramax, mapboxLayer));
+        }
+        return Promise.all(promises);
+    }
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
