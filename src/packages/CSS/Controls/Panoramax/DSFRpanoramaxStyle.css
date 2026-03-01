@@ -41,6 +41,30 @@
     gap: 10px;
 }
 
+/* panel filters */
+.pnx-filters-panel {
+    position: fixed;
+    z-index: 1001;
+    min-width: 260px;
+    background-color: var(--background-default-grey);
+    border-radius: 8px;
+    box-shadow: var(--raised-shadow);
+    max-width: 320px;
+}
+
+.pnx-filters-panel__title {
+    color: var(--text-default-grey);
+    font-weight: 700;
+}
+
+/* panel filters: elements */
+.pnx-filters-panel__date-start {}
+.pnx-filters-panel__date-end {}
+.pnx-filters-panel__type {}
+.gpf-fieldset__element {
+    flex: none;
+}
+
 /* photo viewer */
 [id^="pnx-photo-viewer-"] {
     width: 100%;

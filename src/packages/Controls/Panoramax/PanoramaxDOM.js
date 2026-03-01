@@ -1,3 +1,5 @@
+import { _ } from "ajv";
+
 var title = "panoramax";
 
 var PanoramaxDOM = {
@@ -324,6 +326,168 @@ var PanoramaxDOM = {
 
         return div;
     },
+
+    // ################################################################### //
+    // ####################### Methods for filters ####################### //
+    // ################################################################### //
+
+    _createWidgetPanelFiltersElement : function (opts) {
+        var panel = document.createElement("div");
+        panel.id = this._addUID("GPpanoramaxPanelFilters");
+        panel.className = "pnx-filters-panel gpf-panel gpf-hidden fr-p-2w";
+        panel.setAttribute("role", "region");
+        panel.setAttribute("aria-label", opts.description || "Panneau des filtres Panoramax");
+
+        if (opts.Periode) {
+            var periodes = ["1 mois", "6 mois", "1 an"];
+            var PeriodeGroup = this._createGroupFiltersPeriodeElement(periodes);
+            panel.appendChild(PeriodeGroup);
+        }
+
+        if (opts.date) {
+            var startDateGroup = this._createGroupFiltersStartDateElement();
+            panel.appendChild(startDateGroup);
+            
+            var endDateGroup = this._createGroupFiltersEndDateElement();
+            panel.appendChild(endDateGroup);
+        }
+        
+        if (opts.types) {
+            var values = ["Tout", "Classique", "360°"];
+            var typeGroup = this._createGroupFiltersTypeElement(values);
+            panel.appendChild(typeGroup);
+        }
+        
+        if (panel.addEventListener) {
+            panel.addEventListener("click", function (e) {
+                e.stopPropagation();
+            });
+        } else if (panel.attachEvent) {
+            panel.attachEvent("onclick", function (e) {
+                e.stopPropagation();
+            });
+        }
+
+        return panel;
+    },
+
+    _createGroupFiltersPeriodeElement : function (periodes) {
+        var PeriodeGroup = document.createElement("div");
+        PeriodeGroup.className = "pnx-filters-panel__date-predefined";
+
+        var fieldset = document.createElement("fieldset");
+        fieldset.className = "fr-fieldset";
+        fieldset.setAttribute("aria-labelledby", "");
+
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend";
+        legend.innerText = "Date";
+        fieldset.appendChild(legend);
+
+        for (var i = 0; i < periodes.length; i++) {
+            var fieldsetElement = document.createElement("div");
+            fieldsetElement.className = "gpf-fieldset__element fr-fieldset__element";
+
+            var buttonPeriode = document.createElement("button");
+            buttonPeriode.className = "fr-tag";
+            buttonPeriode.setAttribute("type", "button");
+            buttonPeriode.setAttribute("aria-pressed", "false");
+            buttonPeriode.innerText = periodes[i];
+
+            fieldsetElement.appendChild(buttonPeriode);
+            fieldset.appendChild(fieldsetElement);
+        }
+
+        PeriodeGroup.appendChild(fieldset);
+
+        return PeriodeGroup;
+    },
+    _createGroupFiltersStartDateElement : function () {
+        var startDateGroup = document.createElement("div");
+        startDateGroup.className = "pnx-filters-panel__date-start fr-input-group fr-mb-1w";
+        
+        var fieldset = document.createElement("fieldset");
+        fieldset.className = "fr-fieldset";
+        fieldset.setAttribute("aria-labelledby", "");
+
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend";
+        legend.innerText = "De";
+        fieldset.appendChild(legend);
+
+        var startDateInput = document.createElement("input");
+        startDateInput.id = this._addUID("GPpanoramaxFilterDateStart");
+        startDateInput.className = "fr-input";
+        startDateInput.setAttribute("type", "date");
+
+        fieldset.appendChild(startDateInput);
+        startDateGroup.appendChild(fieldset);
+
+        return startDateGroup;
+    },
+    _createGroupFiltersEndDateElement : function () {
+        var endDateGroup = document.createElement("div");
+        endDateGroup.className = "pnx-filters-panel__date-end fr-input-group fr-mb-1w";
+
+        var fieldset = document.createElement("fieldset");
+        fieldset.className = "fr-fieldset";
+        fieldset.setAttribute("aria-labelledby", "");
+
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend";
+        legend.innerText = "À";
+        fieldset.appendChild(legend);
+
+        var endDateInput = document.createElement("input");
+        endDateInput.id = this._addUID("GPpanoramaxFilterDateEnd");
+        endDateInput.className = "fr-input";
+        endDateInput.setAttribute("type", "date");
+
+        fieldset.appendChild(endDateInput);
+        endDateGroup.appendChild(fieldset);
+
+        return endDateGroup;
+    },
+    _createGroupFiltersTypeElement : function (values) {
+        var self = this;
+
+        var typeGroup = document.createElement("div");
+        typeGroup.className = "pnx-filters-panel__type fr-select-group fr-mb-1w";
+
+        var fieldset = document.createElement("fieldset");
+        fieldset.className = "fr-fieldset";
+        fieldset.setAttribute("aria-labelledby", "");
+
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend";
+        legend.innerText = "Type d'image";
+        fieldset.appendChild(legend);
+        
+        var typeSelect = document.createElement("select");
+        typeSelect.id = this._addUID("GPpanoramaxFilterType");
+        typeSelect.className = "fr-select";
+        for (var i = 0; i < values.length; i++) {
+            var option = document.createElement("option");
+            option.value = values[i];
+            option.innerText = values[i];
+            typeSelect.appendChild(option);
+        }
+
+        if (typeSelect.addEventListener) {
+            typeSelect.addEventListener("change", function (e) {
+                self.onChangePanoramaxFilterType(e);
+            });
+        } else if (typeSelect.attachEvent) {
+            typeSelect.attachEvent("onchange", function (e) {
+                self.onChangePanoramaxFilterType(e);
+            });
+        }
+
+        fieldset.appendChild(typeSelect);
+        typeGroup.appendChild(fieldset);
+        return typeGroup;
+    },
+
     // ################################################################### //
     // ################ Methods of panel viewer container ################ //
     // ################################################################### //

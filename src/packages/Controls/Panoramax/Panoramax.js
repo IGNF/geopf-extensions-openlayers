@@ -21,7 +21,8 @@ import {
     addMapboxLayer, 
     removeMapboxLayer, 
     updateMapboxLayer,
-    recordStyleLayer
+    recordStyleLayer,
+    applyStyle
 } from "ol-mapbox-style";
 
 // lib panoramax
@@ -345,7 +346,11 @@ class Panoramax extends Control {
                     display : true,
                     label : "Filtrer",
                     description : "Filtrer les images affichées",
-                    content : {} // TODO
+                    content : {
+                        date : true,
+                        types : true,
+                        Periode : true
+                    }
                 },
                 hover : {
                     display : true,
@@ -440,6 +445,10 @@ class Panoramax extends Control {
         this.btnPanoramaxButtonsContainer = null;
         /** @private */
         this.btnPanoramaxFilters = null;
+        /** @private */
+        this.panelPanoramaxFilters = null;
+        /** @private */
+        this._onPanoramaxFiltersReposition = null;
         /** @private */
         this.btnPanoramaxContributions = null;
         /** @private */
@@ -579,6 +588,7 @@ class Panoramax extends Control {
                         if (this.options.buttons.filters.display) {
                             this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttons.filters);
                             buttons.appendChild(this.btnPanoramaxFilters);
+                            this.panelPanoramaxFilters = this._createWidgetPanelFiltersElement(this.options.buttons.filters.content);
                         }
                         break;
                     case "contributions":
@@ -609,6 +619,11 @@ class Panoramax extends Control {
                         break;
                 }
             }
+        }
+
+        if (this.panelPanoramaxFilters) {
+            var panelFiltersTarget = this.panelPanoramaxButtonsContainer.parentElement || container;
+            panelFiltersTarget.appendChild(this.panelPanoramaxFilters);
         }
 
         // experimental : possibilité d'injecter le panneau des boutons dans une cible spécifique
@@ -842,7 +857,15 @@ class Panoramax extends Control {
             this.backgroundPanoramax = null;
         }
     }
-    resetButtons () {}
+    resetButtons () {
+        if (this.panelPanoramaxFilters) {
+            this.panelPanoramaxFilters.classList.replace("gpf-visible", "gpf-hidden");
+        }
+        if (this.btnPanoramaxFilters) {
+            this.btnPanoramaxFilters.setAttribute("aria-pressed", "false");
+        }
+        this.unbindFiltersPanelPositioning();
+    }
     resetPhotoViewer () {
         if (this.photoViewerPanoramax) {
             this.photoViewerPanoramax.setAttribute("sequence", "");
@@ -941,7 +964,12 @@ class Panoramax extends Control {
             return null;
         }
 
-        var styleJson = layer.get("mapbox-style");
+        var map = this.getMap();
+        if (!map) {
+            return null;
+        }
+
+        var styleJson = layer.get("mapbox-styles");
         if (!styleJson) {
             try {
                 const response = await fetch(layer.styleUrl);
@@ -951,7 +979,7 @@ class Panoramax extends Control {
                 const styleJson = await response.json();
                 // sauvegarde du style JSON dans les propriétés de la couche 
                 // pour une utilisation ultérieure (ex. personnalisation du style)
-                layer.set("mapbox-style", styleJson);
+                layer.set("mapbox-styles", styleJson);
             } catch (err) {
                 logger.warn("Unable to cache Panoramax layer style JSON", err);
             }
@@ -1436,11 +1464,11 @@ class Panoramax extends Control {
         if (!this.layerPanoramax) {
             return null;
         }
-        var field = this.layerPanoramax.get("mapbox-layers").find(l => l.id.includes(type));
+        var field = this.layerPanoramax.get("mapbox-layers").find(l => l.includes(type));
         if (!field) {
             return null;
         }
-        var originalMapboxLayer = this.layerPanoramax.get("mapbox-style").layers.find(l => l.id === field.id);
+        var originalMapboxLayer = this.layerPanoramax.get("mapbox-styles").layers.find(l => l.id === field);
         if (!originalMapboxLayer) {
             return null;
         }
@@ -1458,14 +1486,20 @@ class Panoramax extends Control {
         for (let index = 0; index < this.PANORAMAX_LAYERS_TYPES.length; index++) {
             const type = this.PANORAMAX_LAYERS_TYPES[index];
             var mapboxLayer = this.getMapboxLayerByType(type);
-            if (type === "pictures" || type === "sequences") {
-                var filter = [];
+            if (!mapboxLayer) {
+                continue;
+            }
+            if (type === "pictures") {
                 if (value === "flat" || value === "equirectangular") {
-                    filter.push("all");
-                    filter.push(["!=", ["get", "type"], value]);
+                    mapboxLayer.filter = ["all", ["==", ["get", "type"], value]];
+                } else {
+                    delete mapboxLayer.filter;
                 }
-                if (filter && filter.length > 0) {
-                    mapboxLayer.filter = filter;
+            } else if (type === "sequences") {
+                if (value === "flat" || value === "equirectangular") {
+                    mapboxLayer.filter = ["all", ["==", ["get", "type"], value]];
+                } else {
+                    delete mapboxLayer.filter;
                 }
             } else if (type === "grid") {
                 // TODO
@@ -1560,21 +1594,85 @@ class Panoramax extends Control {
      */
     applyFilters (mapboxLayers) {
         logger.debug("applyFilters", mapboxLayers);
+
         if (!this.layerPanoramax) {
-            logger.warn("Panoramax layer is not available");
-            return Promise.reject(new Error("Panoramax layer is not available"));
+            logger.warn("Panoramax layer not available");
+            return Promise.reject(new Error("Panoramax layer not available"));
         }
+
         if (!mapboxLayers) {
             logger.warn("No Mapbox layers provided");
             return Promise.reject(new Error("No Mapbox layers provided"));
         }
-        var promises = [];
+
+        var map = this.getMap();
+        if (!map) {
+            logger.warn("Map not available");
+            return Promise.reject(new Error("Map not available"));
+        }
+
+        var style = this.layerPanoramax.get("mapbox-styles");
+        if (!style || !Array.isArray(style.layers)) {
+            logger.warn("Panoramax layer style not available");
+            return Promise.reject(new Error("Panoramax layer style not available"));
+        }
+
+        var updatesById = {};
         for (let index = 0; index < mapboxLayers.length; index++) {
             const mapboxLayer = mapboxLayers[index];
-            promises.push(updateMapboxLayer(this.layerPanoramax, mapboxLayer));
+            if (!mapboxLayer || !mapboxLayer.id) {
+                continue;
+            }
+            updatesById[mapboxLayer.id] = mapboxLayer;
         }
-        return Promise.all(promises);
+
+        style.layers = style.layers.map((layer) => {
+            var nextLayer = updatesById[layer.id];
+            return nextLayer || layer;
+        });
+
+        return applyStyle(this.layerPanoramax, style, { updateSource : true })
+            .then(() => {
+                this.layerPanoramax.changed();
+                map.render();
+            })
+            .then(() => {
+                // orienté maintenance !
+                return mapboxLayers;
+            });
     }
+
+    // ################################################################### //
+    // ################## methods position UI filters #################### //
+    // ################################################################### //
+
+    updateFiltersPanelPosition () {
+        if (!this.panelPanoramaxFilters || !this.panelPanoramaxButtonsContainer) {
+            return;
+        }
+        var dialogRect = this.panelPanoramaxButtonsContainer.getBoundingClientRect();
+        this.panelPanoramaxFilters.style.left = dialogRect.left + "px";
+        this.panelPanoramaxFilters.style.top = dialogRect.bottom + 6 + "px";
+    }
+
+    bindFiltersPanelPositioning () {
+        if (this._onPanoramaxFiltersReposition) {
+            return;
+        }
+        this._onPanoramaxFiltersReposition = this.updateFiltersPanelPosition.bind(this);
+        window.addEventListener("resize", this._onPanoramaxFiltersReposition);
+        window.addEventListener("scroll", this._onPanoramaxFiltersReposition, true);
+    }
+
+    unbindFiltersPanelPositioning () {
+        if (!this._onPanoramaxFiltersReposition) {
+            return;
+        }
+        window.removeEventListener("resize", this._onPanoramaxFiltersReposition);
+        window.removeEventListener("scroll", this._onPanoramaxFiltersReposition, true);
+        this._onPanoramaxFiltersReposition = null;
+    }
+
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
@@ -1655,6 +1753,54 @@ class Panoramax extends Control {
      */
     onOpenPanoramaxFiltersClick (e) {
         logger.debug(e);
+        if (!this.panelPanoramaxFilters || !this.btnPanoramaxFilters) {
+            return;
+        }
+
+        var panel = this.panelPanoramaxFilters;
+        var button = this.btnPanoramaxFilters;
+        var open = button.getAttribute("aria-pressed") === "true";
+
+        if (!open) {
+            panel.classList.replace("gpf-visible", "gpf-hidden");
+            this.unbindFiltersPanelPositioning();
+            return;
+        }
+
+        panel.classList.replace("gpf-hidden", "gpf-visible");
+        this.updateFiltersPanelPosition();
+        this.bindFiltersPanelPositioning();
+    }
+
+    /**
+     * Gère le changement de type d'image dans les filtres Panoramax.
+     *
+     * @param {Event} e - Événement DOM du sélecteur de type.
+     * @private
+     */
+    onChangePanoramaxFilterType (e) {
+        logger.debug("onChangePanoramaxFilterType", e);
+        if (!e || !e.target) {
+            return;
+        }
+
+        var selectedType = (e.target.value || "").toLowerCase();
+        var cameraType = null;
+
+        if (selectedType === "classique") {
+            cameraType = "flat";
+        } else if (selectedType === "360°" || selectedType === "360") {
+            cameraType = "equirectangular";
+        }
+
+        var mapboxLayers = this.filterCameraToMapboxLayer(cameraType);
+        this.applyFilters(mapboxLayers)
+            .then((mapboxLayers) => {
+                logger.debug("Panoramax type filter applied successfully", mapboxLayers);
+            })
+            .catch((err) => {
+                logger.error("Error applying Panoramax type filter", err);
+            });
     }
 
     /**
