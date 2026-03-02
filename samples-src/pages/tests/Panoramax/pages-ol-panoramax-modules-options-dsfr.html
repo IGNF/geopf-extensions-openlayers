@@ -37,6 +37,8 @@
 {{#content "js"}}
     <script>
         if (window.Gp) {
+            localStorage.setItem("loglevel", "debug");
+            localStorage.setItem("loglevel:panoramax", "debug");
             // activation des loggers
             Gp.Logger.enableAll();
         }
