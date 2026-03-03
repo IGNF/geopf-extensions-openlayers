@@ -1978,6 +1978,12 @@ class LayerImport extends Control {
         if (layer.get("mapbox-source") === data.source && layer.get("mapbox-editor") === e.target.editorID) {
             // reload style with new param : layout.visibility : "visible" or "none"...
             var styles = layer.get("mapbox-styles");
+            if (styles.id) {
+                // on supprime l'id du style pour éviter les problèmes de cache 
+                // de MapBox GL JS (il considère que c'est le même style et 
+                // ne recharge pas la couche)
+                delete styles.id; 
+            }
             var layerMapBox;
             var layers = styles.layers;
             for (var i = 0; i < layers.length; i++) {
@@ -1994,13 +2000,11 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            updateMapboxLayerOlms(map, layerMapBox);
-            Promise.resolve();
-            // applyStyleOlms(layer, styles, { source : data.source })
-            //     .then(function () {})
-            //     .catch(function (error) {
-            //         logger.error(error);
-            //     });
+            applyStyleOlms(layer, styles, { source : data.source, updateSource : false })
+                .then(function () {})
+                .catch(function (error) {
+                    logger.error(error);
+                });
         }
     }
 
@@ -2020,6 +2024,12 @@ class LayerImport extends Control {
         if (layer.get("mapbox-source") === data.source && layer.get("mapbox-editor") === e.target.editorID) {
             // reload style with new param : minZoom = ...
             var styles = layer.get("mapbox-styles");
+            if (styles.id) {
+                // on supprime l'id du style pour éviter les problèmes de cache 
+                // de MapBox GL JS (il considère que c'est le même style et 
+                // ne recharge pas la couche)
+                delete styles.id; 
+            }
             var layerMapBox;
             var layers = styles.layers;
             for (var i = 0; i < layers.length; i++) {
@@ -2030,13 +2040,11 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            updateMapboxLayerOlms(map, layerMapBox);
-            Promise.resolve();
-            // applyStyleOlms(layer, styles, { source : data.source })
-            //     .then(function () {})
-            //     .catch(function (error) {
-            //         logger.error(error);
-            //     });
+            applyStyleOlms(layer, styles, { source : data.source })
+                .then(function () {})
+                .catch(function (error) {
+                    logger.error(error);
+                });
         }
     }
 
@@ -2057,6 +2065,9 @@ class LayerImport extends Control {
         if (layer.get("mapbox-source") === data.source && layer.get("mapbox-editor") === e.target.editorID) {
             // reload style with new param : minZoom = ...
             var styles = layer.get("mapbox-styles");
+            if (styles.id) {    
+                delete styles.id;
+            }
             var layerMapBox;
             var layers = styles.layers;
             for (var i = 0; i < layers.length; i++) {
@@ -2067,13 +2078,11 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            updateMapboxLayerOlms(map, layerMapBox);
-            Promise.resolve();
-            // applyStyleOlms(layer, styles, { source : data.source })
-            //     .then(function () {})
-            //     .catch(function (error) {
-            //         logger.error(error);
-            //     });
+            applyStyleOlms(layer, styles, { source : data.source, updateSource : false })
+                .then(function () {})
+                .catch(function (error) {
+                    logger.error(error);
+                });
         }
     }
 
@@ -2094,6 +2103,9 @@ class LayerImport extends Control {
         if (layer.get("mapbox-source") === data.source && layer.get("mapbox-editor") === e.target.editorID) {
             // reload style with new param :
             var styles = layer.get("mapbox-styles");
+            if (styles.id) {
+                delete styles.id;
+            }
             var layerMapBox;
             var layers = styles.layers;
             for (var i = 0; i < layers.length; i++) {
@@ -2106,13 +2118,12 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            updateMapboxLayerOlms(map, layerMapBox);
-            Promise.resolve();
-            // applyStyleOlms(layer, styles, { source : data.source })
-            //     .then(function () {})
-            //     .catch(function (error) {
-            //         logger.error(error);
-            //     });
+            
+            applyStyleOlms(layer, styles, { source : data.source, updateSource : false })
+                .then(function () {})
+                .catch(function (error) {
+                    logger.error(error);
+                });
         }
     }
 
