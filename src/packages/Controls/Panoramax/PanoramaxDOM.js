@@ -428,6 +428,8 @@ var PanoramaxDOM = {
         return PeriodeGroup;
     },
     _createGroupFiltersByStartDateElement : function () {
+        var self = this;
+
         var startDateGroup = document.createElement("div");
         startDateGroup.className = "pnx-filters-panel__date-start fr-input-group fr-mb-1w";
         
@@ -444,7 +446,10 @@ var PanoramaxDOM = {
         startDateInput.id = this._addUID("GPpanoramaxFilterDateStart");
         startDateInput.className = "fr-input";
         startDateInput.setAttribute("type", "date");
-        startDateInput.disabled = true;
+        startDateInput.dataset.filters = "group-filter-dates";
+        startDateInput.addEventListener("change", function (e) {
+            self.onChangePanoramaxFilterByDates(e);
+        });
 
         fieldset.appendChild(startDateInput);
         startDateGroup.appendChild(fieldset);
@@ -452,6 +457,8 @@ var PanoramaxDOM = {
         return startDateGroup;
     },
     _createGroupFiltersByEndDateElement : function () {
+        var self = this;
+
         var endDateGroup = document.createElement("div");
         endDateGroup.className = "pnx-filters-panel__date-end fr-input-group fr-mb-1w";
 
@@ -468,7 +475,10 @@ var PanoramaxDOM = {
         endDateInput.id = this._addUID("GPpanoramaxFilterDateEnd");
         endDateInput.className = "fr-input";
         endDateInput.setAttribute("type", "date");
-        endDateInput.disabled = true;
+        endDateInput.dataset.filters = "group-filter-dates";
+        endDateInput.addEventListener("change", function (e) {
+            self.onChangePanoramaxFilterByDates(e);
+        });
 
         fieldset.appendChild(endDateInput);
         endDateGroup.appendChild(fieldset);
@@ -493,6 +503,7 @@ var PanoramaxDOM = {
         var typeSelect = document.createElement("select");
         typeSelect.id = this._addUID("GPpanoramaxFilterType");
         typeSelect.className = "fr-select";
+        typeSelect.dataset.filters = "group-filter-types";
         for (var i = 0; i < values.length; i++) {
             var option = document.createElement("option");
             option.value = values[i];

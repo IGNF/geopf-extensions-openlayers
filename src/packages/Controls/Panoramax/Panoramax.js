@@ -174,8 +174,80 @@ class Panoramax extends Control {
      * @param {PanoramaxOptions} [options={}] - Options de configuration du contrôle.
      * 
      * @fires pnx:opened
+     * @fires pnx:data:clicked
+     * @fires pnx:data:hovered
+     * @fires pnx:filter:dates
+     * @fires pnx:filter:periode
+     * @fires pnx:filter:type
+     *
      * @example
-     * var panoramax = new ol.control.Panoramax();
+     * var panoramax = new ol.control.Panoramax({
+     *   collapsed: false,
+     *   draggable: true,
+     *   auto: true,
+     *   hover: true,
+     *   position: "top-right",
+     *   layer: {
+     *     url: "https://api.panoramax.xyz/api/map/style.json",
+     *     name: "Panoramax",
+     *     minZoom: 6,
+     *     maxZoom: 21
+     * },
+     * background: {
+     *  display: true,
+     *  url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
+     *  name: "Background",
+     *  minZoom: 6,
+     *  maxZoom: 21
+     * },
+     * buttons: {
+     *   display: true,
+     *   position: "top-right",
+     *   order: ["filters", "contributions", "hover", "styles", "background"],
+     *   filters: {
+     *     display: true,
+     *     label: "Filtrer",
+     *     description: "Filtrer les images affichées",
+     *     content: {
+     *       dates: true,
+     *       types: true,
+     *       periodes: true
+     *     }
+     *   },
+     *   hover: {
+     *     display: true,
+     *     label: "Aperçu au survol",
+     *     description: "Afficher un aperçu de l'image au survol"
+     *   },
+     *   contributions: {
+     *     display: true,
+     *     label: "Contribuer",
+     *     description: "Accéder au parcours de contribution",
+     *     link: "https://panoramax.openstreetmap.fr/why-contribute"
+     *   },
+     *   styles: {
+     *     display: false,
+     *     label: "Style",
+     *     description: "Personnaliser le style d'affichage des images",
+     *     content: {}
+     *   },
+     *   background: {
+     *     display: true,
+     *     label: "Fond de carte",
+     *     description: "Afficher ou masquer un fond de carte de référence"
+     *   }
+     * },
+     * visualizationWindow: {
+     *   display: true,
+     *   position: "top-right",
+     *   size: "medium"
+     * },
+     * viewer: {
+     *   endpoint: "https://explore.panoramax.fr/api",
+     *   class: "",
+     *   widgets: true,
+     *   psv-options: {}
+     * }}});
      * map.addControl(panoramax);
      */
     constructor (options) {
@@ -270,6 +342,7 @@ class Panoramax extends Control {
      * Get container
      *
      * @returns {HTMLElement} container
+     * @public
      */
     getContainer () {
         return this.container;
@@ -279,6 +352,7 @@ class Panoramax extends Control {
      * Indique si le widget est replié.
      *
      * @returns {Boolean} `true` si le widget est replié, `false` sinon.
+     * @public
      */
     getCollapsed () {
         return this.collapsed;
@@ -288,6 +362,7 @@ class Panoramax extends Control {
      * Replie ou déplie le conteneur principal du widget.
      *
      * @param {Boolean} collapsed - `true` pour replier, `false` pour afficher.
+     * @public
      */
     setCollapsed (collapsed) {
         if (collapsed === undefined) {
@@ -510,6 +585,30 @@ class Panoramax extends Control {
          * au survol (coordonnées et propriétés) sur la couche Panoramax.
          */
         this.HOVERED_DATA_PANORAMAX_CB = "pnx:data:hovered";
+
+        /**
+         * Nom de l'événement déclenché quand une plage de dates est saisie.
+         * @event pnx:filter:dates
+         * @defaultValue "pnx:filter:dates"
+         * @group Events
+         */
+        this.FILTER_DATES_PANORAMAX_EVENT = "pnx:filter:dates";
+
+        /**
+         * Nom de l'événement déclenché quand une période prédéfinie est sélectionnée.
+         * @event pnx:filter:periode
+         * @defaultValue "pnx:filter:periode"
+         * @group Events
+         */
+        this.FILTER_PERIODE_PANORAMAX_EVENT = "pnx:filter:periode";
+
+        /**
+         * Nom de l'événement déclenché quand un type d'image est sélectionné.
+         * @event pnx:filter:type
+         * @defaultValue "pnx:filter:type"
+         * @group Events
+         */
+        this.FILTER_TYPE_PANORAMAX_EVENT = "pnx:filter:type";
 
         /** photo viewer */
         this.photoViewerPanoramax = null;
@@ -1314,6 +1413,7 @@ class Panoramax extends Control {
       Affiche ou met à jour le marqueur de prévisualisation.
      *
      * @param {Array<Number>} coordinates - Coordonnées `[x, y]` en projection carte.
+     * @private
      */
     setMarker (coordinates) {
         if (!coordinates || coordinates.length < 2) {
@@ -1346,6 +1446,7 @@ class Panoramax extends Control {
      *
      * @param {Array<Number>} coordinates - Coordonnées `[x, y]` en projection carte.
      * @param {String} [content=""] - Contenu HTML injecté dans la popup.
+     * @private
      */
     setPopup (coordinates, content = "") {
         if (!coordinates || coordinates.length < 2) {
@@ -1381,6 +1482,7 @@ class Panoramax extends Control {
      * Affiche la prévisualisation selon le type de couche Panoramax.
      *
      * @param {PanoramaxPreviewFeature} feature - Entité à prévisualiser.
+     * @private
      */
     displayPreview (feature) {
         var type = feature.properties.layer || feature.properties["mvt:layer"];
@@ -1404,6 +1506,7 @@ class Panoramax extends Control {
      *
      * @param {*} value - Valeur à échapper.
      * @returns {String} Valeur échappée.
+     * @private
      */
     _escape (value) {
         if (value === undefined || value === null) {
@@ -1422,6 +1525,7 @@ class Panoramax extends Control {
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
      * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
+     * @private
      */
     displayPreviewGrid (coordinates, feature) {
         var nbPictures = this._escape(feature.nb_pictures);
@@ -1446,6 +1550,7 @@ class Panoramax extends Control {
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
      * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
+     * @private
      */
     displayPreviewSequence (coordinates, feature) {
         var pictureId = feature.id;
@@ -1479,6 +1584,7 @@ class Panoramax extends Control {
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
      * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
+     * @private
      */
     displayPreviewPicture (coordinates, feature) {
         var pictureId = feature.id;
@@ -1546,6 +1652,7 @@ class Panoramax extends Control {
      *
      * @param {PanoramaxPreviewLayerType} type - Type de photo sélectionné pour le filtrage.
      * @returns {Object|null} Objet de style Mapbox de la couche de photos, ou `null` si non trouvé.
+     * @private
      */
     getMapboxLayerByType (type) {
         if (!type) {
@@ -1573,6 +1680,7 @@ class Panoramax extends Control {
      * @param {String|null} value - Type de photo à filtrer : 
      * "flat", "equirectangular", ou `null` pour réinitialiser le filtre.
      * @returns {Array<Object>} Tableau d'objets de style Mapbox.
+     * @private
      */
     filterCameraToMapboxLayer (value) {
         var mapboxLayers = [];
@@ -1609,6 +1717,7 @@ class Panoramax extends Control {
      * @param {Date|null} minDate - Date minimale à filtrer.
      * @param {Date|null} maxDate - Date maximale à filtrer.
      * @returns {Array<Object>} Tableau d'objets de style Mapbox.
+     * @private
      */
     filterDateToMapboxLayer (minDate, maxDate) {
         var mapboxLayers = [];
@@ -1671,6 +1780,7 @@ class Panoramax extends Control {
      * ex : "last_year = 12", "last_month = 1", etc.
      * @param {Number|null} value - Valeur de la période sélectionnée à filtrer en nombre de mois.
      * @returns {Array<Object>} Tableau d'objets de style Mapbox.
+     * @private
      */
     filterPeriodeToMapboxLayer (value) {
         var startDate = null;
@@ -1692,6 +1802,7 @@ class Panoramax extends Control {
      *   ex. si on applique un filtre de type de photo, 
      *   puis un filtre de date, le second filtre écrase le premier, 
      *   au lieu de les cumuler (ex. filtrer par type de photo ET par date)
+     * @private
      */
     async applyFilters (mapboxLayers) {
         logger.debug("applyFilters", mapboxLayers);
@@ -1894,7 +2005,13 @@ class Panoramax extends Control {
 
         this.applyFilters(mapboxLayers)
             .then((mapboxLayers) => {
-                logger.debug("Panoramax type filter applied successfully", mapboxLayers);
+                this.dispatchEvent({
+                    type : this.FILTER_TYPE_PANORAMAX_EVENT,
+                    data : {
+                        value : selectedType,
+                        mapboxLayers : mapboxLayers
+                    }
+                });
             })
             .catch((err) => {
                 logger.error("Error applying Panoramax type filter", err);
@@ -1921,10 +2038,64 @@ class Panoramax extends Control {
 
         this.applyFilters(mapboxLayers)
             .then((mapboxLayers) => {
-                logger.debug("Panoramax predefined date filter applied successfully", mapboxLayers);
+                this.dispatchEvent({
+                    type : this.FILTER_PERIODE_PANORAMAX_EVENT,
+                    data : {
+                        value : selectedValue,
+                        mapboxLayers : mapboxLayers
+                    }
+                });
             })
             .catch((err) => {
                 logger.error("Error applying Panoramax predefined date filter", err);
+            });
+    }
+
+    /**
+     * Gère la saisie des dates (début/fin) dans les filtres Panoramax.
+     * Déclenche un événement uniquement quand les deux dates sont renseignées.
+     *
+     * @param {Event} e - Événement DOM des champs date.
+     * @private
+     */
+    onChangePanoramaxFilterByDates (e) {
+        logger.debug("onChangePanoramaxFilterByDates", e);
+
+        var startInput = document.getElementById(this._addUID("GPpanoramaxFilterDateStart"));
+        var endInput = document.getElementById(this._addUID("GPpanoramaxFilterDateEnd"));
+        if (!startInput || !endInput) {
+            return;
+        }
+
+        var mapboxLayers = null;
+
+        var startValue = startInput.value;
+        var endValue = endInput.value;
+
+        if (!startValue && !endValue) {
+            mapboxLayers = this.filterDateToMapboxLayer(null, null);
+        } else {
+            var startDate = new Date(startValue);
+            var endDate = new Date(endValue);
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                return;
+            }
+            mapboxLayers = this.filterDateToMapboxLayer(startDate, endDate);
+        }
+
+        this.applyFilters(mapboxLayers)
+            .then((mapboxLayers) => {
+                this.dispatchEvent({
+                    type : this.FILTER_DATES_PANORAMAX_EVENT,
+                    data : {
+                        startDate : startValue,
+                        endDate : endValue,
+                        mapboxLayers : mapboxLayers
+                    }
+                });
+            })
+            .catch((err) => {
+                logger.error("Error applying Panoramax start/end date filter", err);
             });
     }
 
