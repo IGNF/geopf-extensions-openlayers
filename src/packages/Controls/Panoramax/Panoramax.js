@@ -16,13 +16,15 @@ import PanoramaxDOM from "./PanoramaxDOM";
 
 // lib ol
 import Overlay from "ol/Overlay";
+import LayerGroup from "ol/layer/Group";
 import { 
     MapboxVectorLayer,
     addMapboxLayer, 
     removeMapboxLayer, 
     updateMapboxLayer,
     recordStyleLayer,
-    applyStyle
+    applyStyle,
+    apply
 } from "ol-mapbox-style";
 
 // lib panoramax
@@ -327,14 +329,16 @@ class Panoramax extends Control {
             auto : true,
             hover : true,
             gutter : false,
+            group : true,
             layer : {
                 url : "https://api.panoramax.xyz/api/map/style.json",
+                source : "geovisio",
                 name : "Panoramax",
                 minZoom : 6,
                 maxZoom : 21
             },
             background : {
-                display : false,
+                display : true,
                 url : "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
                 name : "Background",
                 minZoom : 6,
@@ -514,10 +518,14 @@ class Panoramax extends Control {
 
         /** photo viewer */
         this.photoViewerPanoramax = null;
+
         /** @type {MapboxVectorLayer} */
         this.layerPanoramax = null;
         /** @type {MapboxVectorLayer} */
         this.backgroundPanoramax = null;
+        /** @type {MapboxLayerGroup} */
+        this.groupPanoramax = null;
+
         /** preview marker overlay */
         this.previewMarkerOverlay = null;
         /** preview popup overlay */
@@ -731,7 +739,7 @@ class Panoramax extends Control {
             }
             var sequenceId = feature.properties.first_sequence || null;
             var pictureId = feature.properties.id || null;
-            var type = feature.properties.layer || null;
+            var type = feature.properties.layer || feature.properties["mvt:layer"] || null;
             if (type !== "pictures") {
                 if (type === "grid") {
                     // zoom on the clicked coordinates with a zoom level 
@@ -828,6 +836,9 @@ class Panoramax extends Control {
      * @private
      */
     reset () {
+        if (this.options.group) {
+            this.resetGroupLayer();
+        }
         // - vider la couche de fond
         this.resetBackground();
         // - vider la couche de données
@@ -844,11 +855,22 @@ class Panoramax extends Control {
         this.eventActived = false;
     }
 
+    resetGroupLayer () {
+        logger.debug("resetGroupLayer");
+        var map = this.getMap();
+        if (this.groupPanoramax) {
+            map.removeLayer(this.groupPanoramax);
+            this.groupPanoramax = null;
+        }
+    }
     resetLayer () {
         logger.debug("resetLayer");
         var map = this.getMap();
         if (this.layerPanoramax) {
             map.removeLayer(this.layerPanoramax);
+            if (this.groupPanoramax) {
+                this.groupPanoramax.getLayers().remove(this.layerPanoramax);
+            }
             this.layerPanoramax = null;
         }
     }
@@ -857,6 +879,9 @@ class Panoramax extends Control {
         var map = this.getMap();
         if (this.backgroundPanoramax) {
             map.removeLayer(this.backgroundPanoramax);
+            if (this.groupPanoramax) {
+                this.groupPanoramax.getLayers().remove(this.backgroundPanoramax);
+            }
             this.backgroundPanoramax = null;
         }
     }
@@ -905,6 +930,9 @@ class Panoramax extends Control {
      */
     async load () {
         try {
+            if (this.options.group) {
+                this.setLayerGroup();
+            }
             // - charger la couche de fond
             await this.setBackground(this.options.background);
             // - charger la couche de données
@@ -920,8 +948,16 @@ class Panoramax extends Control {
         }
     }
 
+    /**
+     * Attends que la couche Mapbox Vector soit prête 
+     * (source chargée et style appliqué) avant de continuer.
+     * @param {MapboxVectorLayer} layer - Couche Mapbox Vector à vérifier.
+     * @returns {Promise<MapboxVectorLayer>} Promise résolue avec la couche prête, ou rejetée en cas d'erreur.
+     * @private
+     */
     waitForMapboxVectorLayerReady (layer) {
         return new Promise((resolve, reject) => {
+            // on vérifie que la source de la couche est prête avant de continuer
             if (!layer) {
                 reject(new Error("Layer is not defined"));
                 return;
@@ -962,6 +998,12 @@ class Panoramax extends Control {
         });
     }
 
+    /**
+     * Récupère le style JSON de la couche Mapbox Vector et le met en cache dans la couche.
+     * @param {MapboxVectorLayer} layer - Couche Mapbox Vector dont on veut récupérer le style JSON.
+     * @returns {Promise<Object|null>} Promise résolue avec le style JSON de la couche, ou `null` en cas d'erreur ou si la couche n'est pas définie.
+     * @private
+     */
     async getStyleJsonFromMapboxVectorLayer (layer) {
         if (!layer) {
             return null;
@@ -972,7 +1014,14 @@ class Panoramax extends Control {
             return null;
         }
 
-        var styleJson = layer.get("mapbox-styles");
+        // INFO
+        // on utilise "mapbox-style" comme clé de cache dans la couche
+        // ol-mapbox-style met à jour les clefs suivantes : 
+        // - mapbox-style
+        // - mapbox-source
+        // - mapbox-layers
+        // - mapbox-metadata (?)
+        var styleJson = layer.get("mapbox-style");
         if (!styleJson) {
             try {
                 const response = await fetch(layer.styleUrl);
@@ -980,14 +1029,31 @@ class Panoramax extends Control {
                     throw new Error("HTTP " + response.status + " while fetching style");
                 }
                 const styleJson = await response.json();
-                // sauvegarde du style JSON dans les propriétés de la couche 
-                // pour une utilisation ultérieure (ex. personnalisation du style)
-                layer.set("mapbox-styles", styleJson);
+                layer.set("mapbox-style", styleJson);
+                // on duplique dans la source...
+                var source = layer.getSource && layer.getSource();
+                if (source) {
+                    source.set("mapbox-source", layer.get("mapbox-source"));
+                    source.set("mapbox-style", layer.get("mapbox-style"));
+                    source.set("mapbox-layers", layer.get("mapbox-layers"));
+                }
             } catch (err) {
                 logger.warn("Unable to cache Panoramax layer style JSON", err);
             }
         }
         return styleJson;
+    }
+
+    setLayerGroup () {
+        var map = this.getMap();
+        if (!map) {
+            return;
+        }
+        if (!this.groupPanoramax) {
+            this.groupPanoramax = new LayerGroup();
+            map.addLayer(this.groupPanoramax);
+            this.groupPanoramax.set("title", "Panoramax");
+        }
     }
 
     async setLayer (opts) {
@@ -1002,6 +1068,7 @@ class Panoramax extends Control {
         }
         var layer = new MapboxVectorLayer({ 
             styleUrl : opts.url,
+            source : opts.source,
             declutter : true,
             minZoom : opts.minZoom || 6,
             maxZoom : opts.maxZoom || 21
@@ -1009,7 +1076,11 @@ class Panoramax extends Control {
         // hack pour le gestionnaire de couche
         layer.styleUrl = opts.url;
         
-        map.addLayer(layer);
+        if (this.groupPanoramax) {
+            this.groupPanoramax.getLayers().push(layer);
+        } else {
+            map.addLayer(layer);
+        }
 
         try {
             await this.waitForMapboxVectorLayerReady(layer);
@@ -1049,7 +1120,11 @@ class Panoramax extends Control {
         });
         layer.styleUrl = opts.url;
 
-        map.addLayer(layer);
+        if (this.groupPanoramax) {
+            this.groupPanoramax.getLayers().insertAt(0, layer);
+        } else {
+            map.addLayer(layer);
+        }
 
         try {
             await this.waitForMapboxVectorLayerReady(layer);
@@ -1300,7 +1375,7 @@ class Panoramax extends Control {
      * @param {PanoramaxPreviewFeature} feature - Entité à prévisualiser.
      */
     displayPreview (feature) {
-        var type = feature.properties.layer;
+        var type = feature.properties.layer || feature.properties["mvt:layer"];
         switch (type) {
             case "grid":
                 this.displayPreviewGrid(feature.coordinates, feature.properties);
@@ -1338,7 +1413,7 @@ class Panoramax extends Control {
      * Affiche la prévisualisation d'une entité de type `grid`.
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
-     * @param {Object<String, *>} feature - Propriétés de l'entité survolée.
+     * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
      */
     displayPreviewGrid (coordinates, feature) {
         var nbPictures = this._escape(feature.nb_pictures);
@@ -1362,12 +1437,13 @@ class Panoramax extends Control {
      * Affiche la prévisualisation d'une entité de type `sequences`.
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
-     * @param {Object<String, *>} feature - Propriétés de l'entité survolée.
+     * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
      */
     displayPreviewSequence (coordinates, feature) {
         var pictureId = feature.id;
         var id = this._escape(pictureId);
         var date = this._escape(feature.date || feature.created_at || feature.datetime);
+        var type = this._escape(feature.type);
 
         var encodedPictureId = pictureId ? encodeURIComponent(pictureId) : "";
         var api = (this.options.viewer.endpoint || "https://explore.panoramax.fr/api").replace(/\/+$/, "");
@@ -1376,8 +1452,12 @@ class Panoramax extends Control {
             ? `<img src="${api}/collections/${encodedPictureId}/thumb.jpg" alt="Preview image" class="pnx-preview-picture-popup__img">`
             : "";
         var content = `
-            <p class="${className}"><strong>ID :</strong> ${id || "-"}
-                <pre>date : ${date || "-"}</pre>
+            <p class="${className}">
+                <samp>
+                    <strong>ID :</strong> <small>${id || "-"}</small> <br>
+                    date : ${date || "-"} <br>
+                    type : ${type || "-"}
+                </samp>
                 ${imageHtml}
             </p>
         `;
@@ -1390,12 +1470,13 @@ class Panoramax extends Control {
      * Affiche la prévisualisation d'une entité de type `pictures`.
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
-     * @param {Object<String, *>} feature - Propriétés de l'entité survolée.
+     * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
      */
     displayPreviewPicture (coordinates, feature) {
         var pictureId = feature.id;
         var id = this._escape(pictureId);
         var ts = this._escape(feature.ts || feature.datetime || feature.created_at);
+        var type = this._escape(feature.type);
 
         var encodedPictureId = pictureId ? encodeURIComponent(pictureId) : "";
         var api = (this.options.viewer.endpoint || "https://explore.panoramax.fr/api").replace(/\/+$/, "");
@@ -1406,6 +1487,7 @@ class Panoramax extends Control {
         var content = `
             <p class="${className}"><strong>ID :</strong> ${id || "-"}
                 <pre>date : ${ts || "-"}</pre>
+                <pre>type : ${type || "-"}</pre>
                 ${imageHtml}
             </p>
         `;
@@ -1471,7 +1553,7 @@ class Panoramax extends Control {
         if (!field) {
             return null;
         }
-        var originalMapboxLayer = this.layerPanoramax.get("mapbox-styles").layers.find(l => l.id === field);
+        var originalMapboxLayer = this.layerPanoramax.get("mapbox-style").layers.find(l => l.id === field);
         if (!originalMapboxLayer) {
             return null;
         }
@@ -1541,6 +1623,9 @@ class Panoramax extends Control {
                         picturesFilter.unshift("all");
                     }
                     mapboxLayer.filter = picturesFilter;
+                    // colorer les séquences contenant des photos prises 
+                    // dans la plage de dates sélectionnée (ex. en bleu)
+                    // mapboxLayer.paint["circle-color"] = "#0000FF"; 
                 } else {
                     delete mapboxLayer.filter;
                 }
@@ -1557,6 +1642,9 @@ class Panoramax extends Control {
                         sequencesFilter.unshift("all");
                     }
                     mapboxLayer.filter = sequencesFilter;
+                    // colorer les séquences contenant des photos prises 
+                    // dans la plage de dates sélectionnée (ex. en bleu)
+                    // mapboxLayer.paint["line-color"] = "#0000FF"; 
                 } else {
                     delete mapboxLayer.filter;
                 }
@@ -1597,7 +1685,7 @@ class Panoramax extends Control {
      *   puis un filtre de date, le second filtre écrase le premier, 
      *   au lieu de les cumuler (ex. filtrer par type de photo ET par date)
      */
-    applyFilters (mapboxLayers) {
+    async applyFilters (mapboxLayers) {
         logger.debug("applyFilters", mapboxLayers);
 
         if (!this.layerPanoramax) {
@@ -1616,30 +1704,31 @@ class Panoramax extends Control {
             return Promise.reject(new Error("Map not available"));
         }
 
-        var style = this.layerPanoramax.get("mapbox-styles");
+        var style = this.layerPanoramax.get("mapbox-style");
         if (!style || !Array.isArray(style.layers)) {
             logger.warn("Panoramax layer style not available");
             return Promise.reject(new Error("Panoramax layer style not available"));
+        }
+
+        // HACK pour forcer la mise à jour du cache interne de ol-mapbox-style
+        if (style.id) {
+            delete style.id;
         }
 
         // on remplace les couches du style de la couche Panoramax 
         // par les couches filtrées
         style.layers = mapboxLayers;
         
-        var self = this;
-        return applyStyle(this.layerPanoramax, style, { source : "geovisio", updateSource : false })
-            .then(() => {
-                self.layerPanoramax.changed();
-                map.renderSync();
-            })
-            .then(() => {
-                // orienté maintenance !
-                return mapboxLayers;
-            })
-            .catch((err) => {
-                console.error("Error applying filters to Panoramax layer", err);
-                throw err;
-            });
+        try {
+            // mise à jour d'une couche MapBoxLayer
+            await applyStyle(this.layerPanoramax, style, { /* styleUrl : this.layerPanoramax.styleUrl, */ updateSource : false });
+            self.layerPanoramax.changed();
+            map.renderSync();
+            return mapboxLayers;
+        } catch (err) {
+            console.error("Error applying filters to Panoramax layer", err);
+            throw err;
+        }
     }
 
     // ################################################################### //
