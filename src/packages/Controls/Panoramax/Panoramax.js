@@ -19,12 +19,7 @@ import Overlay from "ol/Overlay";
 import LayerGroup from "ol/layer/Group";
 import { 
     MapboxVectorLayer,
-    addMapboxLayer, 
-    removeMapboxLayer, 
-    updateMapboxLayer,
-    recordStyleLayer,
-    applyStyle,
-    apply
+    applyStyle
 } from "ol-mapbox-style";
 
 // lib panoramax
@@ -712,9 +707,18 @@ class Panoramax extends Control {
      * @private
      */
     addEventsListeners (map) {
-        // TODO : à revoir pour éviter les problèmes de performance
         var self = this;
 
+        function debounce (func, delay) {
+            let timerId;
+
+            return function (...args) {
+                clearTimeout(timerId);
+                timerId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
         // click on map with panoramax layer active
         // display the panoramic image in the photo viewer at the clicked coordinates if
         // a feature of type picture is found, otherwise zoom on the clicked coordinates 
@@ -805,7 +809,7 @@ class Panoramax extends Control {
             }
             self.displayPreview(feature);
         };
-        map.on("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
+        map.on("pointermove", debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 300));
     }
 
     /**
@@ -896,8 +900,12 @@ class Panoramax extends Control {
     }
     resetPhotoViewer () {
         if (this.photoViewerPanoramax) {
-            this.photoViewerPanoramax.setAttribute("sequence", "");
-            this.photoViewerPanoramax.setAttribute("picture", "");
+            if (this.photoViewerPanoramax.getAttribute("sequence")) {
+                this.photoViewerPanoramax.setAttribute("sequence", "");
+            }
+            if (this.photoViewerPanoramax.getAttribute("picture")) {
+                this.photoViewerPanoramax.setAttribute("picture", "");
+            }
             this.photoViewerPanoramax.select();
             this.hidePhotoViewer();
         }
