@@ -1847,7 +1847,7 @@ class Panoramax extends Control {
             map.renderSync();
             return mapboxLayers;
         } catch (err) {
-            console.error("Error applying filters to Panoramax layer", err);
+            logger.error("Error applying filters to Panoramax layer", err);
             throw err;
         }
     }
