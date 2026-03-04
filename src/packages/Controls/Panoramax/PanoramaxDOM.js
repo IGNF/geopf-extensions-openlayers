@@ -546,7 +546,7 @@ var PanoramaxDOM = {
     _createWidgetPanelViewerElement : function () {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPpanoramaxPanelViewer");
-        dialog.className = "GPpanel pnx-visualization-window-panel gpf-panel fr-modal gpf-visible";
+        dialog.className = "GPpanel pnx-visualization-window-panel gpf-panel fr-modal";
         dialog.classList.add("gpf-hidden"); // la fenêtre de visualisation est masquée par défaut, elle s'affiche au clic sur une image
         
         var header = document.createElement("div");
