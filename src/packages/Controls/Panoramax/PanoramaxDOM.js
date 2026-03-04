@@ -1,5 +1,3 @@
-import { _ } from "ajv";
-
 var title = "panoramax";
 
 var PanoramaxDOM = {
