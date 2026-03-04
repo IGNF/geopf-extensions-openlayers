@@ -200,7 +200,7 @@ var PanoramaxDOM = {
         button.setAttribute("aria-label", opts.description);
         button.setAttribute("aria-pressed", "false");
         button.setAttribute("type", "button");
-        button.innerHTML = opts.label;
+        button.textContent = opts.label;
 
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
