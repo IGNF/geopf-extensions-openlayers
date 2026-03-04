@@ -710,7 +710,7 @@ class Panoramax extends Control {
                         break;
                     case "styles":
                         if (this.options.buttons.styles.display) {
-                            this.btnPanoramaxStyles = this._createButtonChoiceStylesElement(this.options.styles);
+                            this.btnPanoramaxStyles = this._createButtonChoiceStyleElement(this.options.buttons.styles);
                             buttons.appendChild(this.btnPanoramaxStyles);
                         }
                         break;
