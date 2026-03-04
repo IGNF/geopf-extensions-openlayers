@@ -56,14 +56,14 @@ var PanoramaxDOM = {
         // Close all results and panels when minimizing the widget
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
+                var status = (button.getAttribute("aria-pressed") === "true");
+                button.setAttribute("aria-pressed", !status);
                 self.onShowPanoramaxClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
+                var status = (button.getAttribute("aria-pressed") === "true");
+                button.setAttribute("aria-pressed", !status);
                 self.onShowPanoramaxClick(e);
             });
         }
@@ -280,8 +280,22 @@ var PanoramaxDOM = {
     },
 
     _createButtonChoiceStyleElement : function (styles) {
-        // TODO : à implémenter si besoin de styles spécifiques pour la couche
-        // des données Panoramax (ex : choix de la couleur des points d'intérêts)
+        // NOTE:
+        //  Cette méthode est volontairement laissée sans implémentation fonctionnelle
+        //  pour l'instant. Elle sera utilisée lorsque des styles spécifiques pour la
+        //  couche Panoramax (par ex. choix de la couleur des points d'intérêts) seront
+        //  exposés dans l'interface.
+        //
+        //  Un avertissement est émis pour aider au débogage si cette méthode est
+        //  appelée avant que la fonctionnalité ne soit disponible.
+        if (typeof console !== "undefined" && typeof console.warn === "function") {
+            console.warn(title + " - _createButtonChoiceStyleElement is not implemented yet.");
+        }
+
+        // Retourne explicitement null pour signaler l'absence de composant DOM.
+        // Lorsque la fonctionnalité sera implémentée, cette méthode devra retourner
+        // l'élément DOM correspondant aux options de style passées en paramètre.
+        return null;
     },
 
     _createButtonChoiceBackgroundElement : function (active, opts) {
@@ -383,7 +397,6 @@ var PanoramaxDOM = {
 
         var fieldset = document.createElement("fieldset");
         fieldset.className = "fr-tags-group fr-fieldset";
-        fieldset.setAttribute("aria-labelledby", "");
 
         var legend = document.createElement("legend");
         legend.className = "fr-fieldset__legend";
@@ -435,7 +448,6 @@ var PanoramaxDOM = {
         
         var fieldset = document.createElement("fieldset");
         fieldset.className = "fr-fieldset";
-        fieldset.setAttribute("aria-labelledby", "");
 
         var legend = document.createElement("legend");
         legend.className = "fr-fieldset__legend";
@@ -464,7 +476,6 @@ var PanoramaxDOM = {
 
         var fieldset = document.createElement("fieldset");
         fieldset.className = "fr-fieldset";
-        fieldset.setAttribute("aria-labelledby", "");
 
         var legend = document.createElement("legend");
         legend.className = "fr-fieldset__legend";
@@ -493,7 +504,6 @@ var PanoramaxDOM = {
 
         var fieldset = document.createElement("fieldset");
         fieldset.className = "fr-fieldset";
-        fieldset.setAttribute("aria-labelledby", "");
 
         var legend = document.createElement("legend");
         legend.className = "fr-fieldset__legend";

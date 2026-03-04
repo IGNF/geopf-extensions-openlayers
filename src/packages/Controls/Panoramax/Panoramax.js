@@ -399,7 +399,7 @@ class Panoramax extends Control {
             auto : true,
             hover : true,
             gutter : false,
-            group : true,
+            group : true, // option interne !
             layer : {
                 url : "https://api.panoramax.xyz/api/map/style.json",
                 source : "geovisio",
@@ -442,8 +442,8 @@ class Panoramax extends Control {
                 },
                 styles : { // TODO
                     display : false,
-                    label : "Style",
-                    description : "Personnaliser le style d'affichage des images",
+                    label : "Rendu de la carte",
+                    description : "Personnaliser le rendu de la carte",
                     content : {}
                 },
                 background : {
@@ -799,6 +799,16 @@ class Panoramax extends Control {
     // ################# privates events / handlers ###################### //
     // ################################################################### //
 
+    debounce (func, delay) {
+        let timerId;
+
+        return function (...args) {
+            clearTimeout(timerId);
+            timerId = setTimeout(() => {
+                func.apply(this, args);
+            }, delay);
+        };
+    }
     /**
      * Ajoute les écouteurs d'événements sur la carte (appelé par `setMap`).
      * 
@@ -808,16 +818,6 @@ class Panoramax extends Control {
     addEventsListeners (map) {
         var self = this;
 
-        function debounce (func, delay) {
-            let timerId;
-
-            return function (...args) {
-                clearTimeout(timerId);
-                timerId = setTimeout(() => {
-                    func.apply(this, args);
-                }, delay);
-            };
-        }
         // click on map with panoramax layer active
         // display the panoramic image in the photo viewer at the clicked coordinates if
         // a feature of type picture is found, otherwise zoom on the clicked coordinates 
@@ -908,7 +908,7 @@ class Panoramax extends Control {
             }
             self.displayPreview(feature);
         };
-        map.on("pointermove", debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 300));
+        map.on("pointermove", this.debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 300));
     }
 
     /**
@@ -921,7 +921,7 @@ class Panoramax extends Control {
 
         map.un("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
         delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
-        map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
+        map.un("pointermove", this.debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 300));
         delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
 
         var mapTarget = map.getTargetElement();
@@ -969,6 +969,9 @@ class Panoramax extends Control {
     resetLayer () {
         logger.debug("resetLayer");
         var map = this.getMap();
+        if (!map) {
+            return;
+        }
         if (this.layerPanoramax) {
             map.removeLayer(this.layerPanoramax);
             if (this.groupPanoramax) {
@@ -980,6 +983,9 @@ class Panoramax extends Control {
     resetBackground () {
         logger.debug("resetBackground");
         var map = this.getMap();
+        if (!map) {
+            return;
+        }
         if (this.backgroundPanoramax) {
             map.removeLayer(this.backgroundPanoramax);
             if (this.groupPanoramax) {
@@ -1062,7 +1068,7 @@ class Panoramax extends Control {
      * @returns {Promise<MapboxVectorLayer>} Promise résolue avec la couche prête, ou rejetée en cas d'erreur.
      * @private
      */
-    waitForMapboxVectorLayerReady (layer) {
+    async waitForMapboxVectorLayerReady (layer) {
         return new Promise((resolve, reject) => {
             // on vérifie que la source de la couche est prête avant de continuer
             if (!layer) {
@@ -1135,7 +1141,7 @@ class Panoramax extends Control {
                 if (!response.ok) {
                     throw new Error("HTTP " + response.status + " while fetching style");
                 }
-                const styleJson = await response.json();
+                styleJson = await response.json();
                 layer.set("mapbox-style", styleJson);
                 // on duplique dans la source...
                 var source = layer.getSource && layer.getSource();
@@ -1261,11 +1267,9 @@ class Panoramax extends Control {
         // - precision : ...
         // - etc.
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                logger.debug("initButtons");
-                this.showButtonsPanel();
-                resolve();
-            }, 100);
+            logger.debug("initButtons");
+            this.showButtonsPanel();
+            resolve();
         });
     }
 
@@ -1283,11 +1287,9 @@ class Panoramax extends Control {
         //   - minimap
         //   - informations sur l'image
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                logger.debug("initVisualizationWindow");
-                this.setSizeWindow(this.options.visualizationWindow.size);
-                resolve();
-            }, 100);
+            logger.debug("initVisualizationWindow");
+            this.setSizeWindow(this.options.visualizationWindow.size);
+            resolve();
         });
     }
 
@@ -1349,7 +1351,7 @@ class Panoramax extends Control {
                 // FIXME on perd le focus sur la carte (zoom, déplacement, etc.) 
                 // quand le photoViewer est affiché dans un container externe, 
                 // à cause !?
-                var targetCustom = document.getElementById(this.options.visualizationWindow.target);
+                var targetCustom = this.resolveTargetElement(this.options.visualizationWindow.target);
                 if (targetCustom) {
                     target = targetCustom;
                 }
@@ -1841,7 +1843,7 @@ class Panoramax extends Control {
         try {
             // mise à jour d'une couche MapBoxLayer
             await applyStyle(this.layerPanoramax, style, { /* styleUrl : this.layerPanoramax.styleUrl, */ updateSource : false });
-            self.layerPanoramax.changed();
+            this.layerPanoramax.changed();
             map.renderSync();
             return mapboxLayers;
         } catch (err) {
