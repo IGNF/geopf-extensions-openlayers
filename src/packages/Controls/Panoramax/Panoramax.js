@@ -418,7 +418,7 @@ class Panoramax extends Control {
                 display : true,
                 target : null, // experimental !
                 position : "top-right", // TODO
-                order : ["filters", "contributions", "hover", "styles", "background"],
+                order : ["filters", "contributions", "hover", "background", "styles"],
                 filters : {
                     display : true,
                     label : "Filtrer",
@@ -441,10 +441,10 @@ class Panoramax extends Control {
                     link : "https://panoramax.openstreetmap.fr/why-contribute"
                 },
                 styles : { // TODO
-                    display : false,
+                    display : true,
                     label : "Rendu de la carte",
                     description : "Personnaliser le rendu de la carte",
-                    content : {}
+                    content : ["Classique", "Type de camera", "Date de prise de vue"]
                 },
                 background : {
                     display : true,
@@ -609,6 +609,14 @@ class Panoramax extends Control {
          * @group Events
          */
         this.FILTER_TYPE_PANORAMAX_EVENT = "pnx:filter:type";
+
+        /**
+         * Nom de l'événement déclenché quand les filtres sont appliqués.
+         * @event pnx:filter:render
+         * @defaultValue "pnx:filter:render"
+         * @group Events
+         */
+        this.FILTER_RENDER_PANORAMAX_EVENT = "pnx:filter:render";
 
         /** photo viewer */
         this.photoViewerPanoramax = null;
@@ -1798,6 +1806,18 @@ class Panoramax extends Control {
 
     /**
      * Applique les filtres sélectionnés à la couche Panoramax.
+     * @param {String} value - nom du rendu sélectionné.
+     * @return {Array<Object>} Tableau d'objets de style Mapbox filtrés selon le rendu sélectionné.
+     * @private
+     * @todo implémenter les autres types de filtres !
+     */
+    filterRenderToMapboxLayer (value) {
+        var mapboxLayers = [];
+        return mapboxLayers;
+    }
+
+    /**
+     * Applique les filtres sélectionnés à la couche Panoramax.
      * @param {Array<Object>} mapboxLayers - format Mapbox Style.
      * @returns {Promise} Promise résolue lorsque les filtres sont appliqués.
      * @fixme les filtres ne sont cumulatifs : 
@@ -2115,6 +2135,36 @@ class Panoramax extends Control {
         } else {
             this.resetBackground();
         }
+    }
+
+    /**
+     * Gère le changement de mode de rendu dans Panoramax.
+     *
+     * @param {Event} e - Événement DOM du sélecteur de mode de rendu.
+     * @private
+     */
+    onSelectPanoramaxRenderClick (e) {
+        logger.debug(e);
+        if (!e || !e.target) {
+            return;
+        }
+
+        var selectedValue = e.target.value;
+        var mapboxLayers = this.filterRenderToMapboxLayer(selectedValue);
+
+        this.applyFilters(mapboxLayers)
+            .then((mapboxLayers) => {
+                this.dispatchEvent({
+                    type : this.FILTER_RENDER_PANORAMAX_EVENT,
+                    data : {
+                        value : selectedValue,
+                        mapboxLayers : mapboxLayers
+                    }
+                });
+            })
+            .catch((err) => {
+                logger.error("Error applying Panoramax render", err);
+            });
     }
 
 };

@@ -277,23 +277,62 @@ var PanoramaxDOM = {
         return div;
     },
 
-    _createButtonChoiceStyleElement : function (styles) {
-        // NOTE:
-        //  Cette méthode est volontairement laissée sans implémentation fonctionnelle
-        //  pour l'instant. Elle sera utilisée lorsque des styles spécifiques pour la
-        //  couche Panoramax (par ex. choix de la couleur des points d'intérêts) seront
-        //  exposés dans l'interface.
-        //
-        //  Un avertissement est émis pour aider au débogage si cette méthode est
-        //  appelée avant que la fonctionnalité ne soit disponible.
-        if (typeof console !== "undefined" && typeof console.warn === "function") {
-            console.warn(title + " - _createButtonChoiceStyleElement is not implemented yet.");
+    /**
+     * Crée un sélecteur de rendu de carte.
+     * @param {Object} opts - Configuration du bouton de styles.
+     * @returns {HTMLElement} DOM element
+     */
+    _createButtonChoiceStyleElement : function (opts) {
+        var items = ["Classique", "Type de camera", "Date de prise de vue"];
+        if (
+            opts &&
+            opts.content &&
+            Array.isArray(opts.content) &&
+            opts.content.length
+        ) {
+            items = opts.content;
         }
 
-        // Retourne explicitement null pour signaler l'absence de composant DOM.
-        // Lorsque la fonctionnalité sera implémentée, cette méthode devra retourner
-        // l'élément DOM correspondant aux options de style passées en paramètre.
-        return null;
+        var self = this;
+        var container = document.createElement("div");
+        container.id = this._addUID("GPpanoramaxStyleChoice");
+        container.className = "pnx-style-choice fr-select-group fr-m-2v";
+
+        var label = document.createElement("label");
+        label.className = "fr-label fr-icon-palette-line fr-label--icon-left gpf-icon-color";
+        label.setAttribute("for", this._addUID("GPpanoramaxStyleChoiceSelect"));
+        label.innerText = (opts && opts.label) || "Rendu";
+
+        var select = document.createElement("select");
+        select.id = this._addUID("GPpanoramaxStyleChoiceSelect");
+        select.className = "fr-select";
+        select.disabled = true; // désactivé par défaut, il s'active une fois les rendus disponibles
+        select.setAttribute("title", (opts && opts.description) || "Selectionner un rendu de carte");
+
+        for (var i = 0; i < items.length; i++) {
+            var option = document.createElement("option");
+            option.value = items[i];
+            option.innerText = items[i];
+            if (i === 0) {
+                option.selected = true;
+            }
+            select.appendChild(option);
+        }
+
+        if (select.addEventListener) {
+            select.addEventListener("change", function (e) {
+                self.onSelectPanoramaxRenderClick(e);
+            });
+        } else if (select.attachEvent) {
+            select.attachEvent("onchange", function (e) {
+                self.onSelectPanoramaxRenderClick(e);
+            });
+        }
+
+        container.appendChild(label);
+        container.appendChild(select);
+
+        return container;
     },
 
     _createButtonChoiceBackgroundElement : function (active, opts) {

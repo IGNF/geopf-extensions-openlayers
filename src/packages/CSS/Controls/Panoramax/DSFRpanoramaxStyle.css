@@ -16,6 +16,9 @@
 .gpf-btn-icon-background {
     background-color: var(--background-default-grey);
 }
+.gpf-icon-color::before {
+    background-color: var(--text-action-high-blue-france);
+}
 
 /* buttons: toggle hover */
 [id^="GPpanoramaxToggle-"] {}
@@ -38,7 +41,6 @@
 .pnx-buttons-panel__content {
     display: flex;
     flex-direction: row;
-    gap: 10px;
 }
 
 /* panel filters */

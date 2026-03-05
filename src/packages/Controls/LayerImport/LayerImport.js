@@ -1490,7 +1490,7 @@ class LayerImport extends Control {
                         // TODO ajouter le style de type background !
                         // fonction de style de la couche
                         var setStyle = () => {
-                            applyStyleOlms(p.layer, p.styles, { source : p.id })
+                            applyStyleOlms(p.layer, p.styles, { source : p.id, updateSource : false })
                                 .then(function () {
                                     var visibility = true;
                                     p.layer.setVisible(visibility);
@@ -2040,7 +2040,7 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            applyStyleOlms(layer, styles, { source : data.source })
+            applyStyleOlms(layer, styles, { source : data.source, updateSource : false })
                 .then(function () {})
                 .catch(function (error) {
                     logger.error(error);
