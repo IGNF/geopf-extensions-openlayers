@@ -92,6 +92,7 @@
                 // * appel instance externe
                 var drawing = new ol.control.Drawing({
                   position: "bottom-left",
+                  collapsed: false,
                   tools : {
                     export : false
                   }
@@ -105,9 +106,12 @@
                   direction : "column",
                   menu : true,
                   menuOptions : {
-                    above : true,
+                    name : "Options",
+                    position : "bottom",
                     outside : true,
-                    labelFormat : false
+                    labelName : true,
+                    labelDesc : false,
+                    selectFormat : true
                   },
                   icons : {
                     menu : "",
@@ -133,12 +137,17 @@
                     format: "kml",
                     kind: "primary",
                     name: "export-iso",
-                    direction: "column",
                     description : "Graphe isochrone",
                     title : "Exporter Isochrone",
-                    menu: true,
+                    direction : "column",
+                    menu : true,
                     menuOptions : {
-                      outside : true
+                      name : "Options",
+                      position : "bottom",
+                      outside : true,
+                      labelName : true,
+                      labelDesc : false,
+                      selectFormat : true
                     },
                     icons : {
                       menu : "",
@@ -162,12 +171,15 @@
                 });
                 map.addControl(route);
                 exportRoute = new ol.control.Export({
-                  direction: "column",
+                  direction : "column",
                   menu : true,
                   menuOptions : {
-                    above : true,
+                    name : "Options",
+                    position : "bottom",
                     outside : true,
-                    selectFormat : false
+                    labelName : true,
+                    labelDesc : false,
+                    selectFormat : true
                   },
                   icons: {
                     menu : "",
@@ -182,9 +194,12 @@
                 exportRoute.setTitle("Exporter Itineraire");
                 exportRoute.setMenu(true);
                 exportRoute.setMenuOptions({
-                  above : true,
-                  outside : true,
-                  selectFormat : false
+                    name : "Options",
+                    position : "bottom",
+                    outside : true,
+                    labelName : true,
+                    labelDesc : false,
+                    selectFormat : true
                 });
                 exportRoute.on("button:clicked", (e) => {
                   console.log("Export Route", e);
@@ -205,13 +220,16 @@
                   control: measureProfil,
                   name: "export-profil", 
                   format : "geojson",
-                  direction: "column",
+                  direction : "column",
                   menu : true,
                   menuOptions : {
+                    name : "Options",
+                    position : "bottom",
                     outside : true,
-                    selectFormat : false,
-                    labelDesc : false
-                  }
+                    labelName : true,
+                    labelDesc : false,
+                    selectFormat : true
+                  },
                 });
                 map.addControl(exportProfil);
                 exportProfil.on("button:clicked", (e) => {
