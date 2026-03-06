@@ -26,6 +26,7 @@ __DATE__
   - SearchEngine : recherche guidée parcellaire sur les DROM-COM (#491)
   - Reporting: suppression de la classe gpf-button-no-gutter par défaut
   - Territories: suppression d'une classe qui empeche la tooltip de s'afficher
+  - MousePosition: supprime l'ajout d'une balise <body> dans le panel
 
 * 🔒 [Security]
 
