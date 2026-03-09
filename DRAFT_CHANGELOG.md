@@ -30,5 +30,5 @@ __DATE__
 
 * 🔒 [Security]
 
-
+  - Build : transformation images en base 64 pour se passer de lodash.template (#488)
 ---
