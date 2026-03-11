@@ -8,8 +8,8 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.8-488
- * @date 04/03/2026
+ * @version 1.0.0-beta.9
+ * @date 11/03/2026
  *
  */[class*=GPlocationPoint]{position:relative}div[id^=GPlocationAutoCompleteResult]{border-top:none;left:0;max-height:140px;overflow-y:auto;top:45px}div[id^=GPlocationAutoCompleteList]{position:absolute;z-index:2}
 /*# sourceMappingURL=GpfExtOlLocationSelector.css.map*/
