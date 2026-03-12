@@ -559,6 +559,9 @@ class Territories extends Control {
      */
     closePanelUpLoad () {
         // document.getElementById("gpf-territories-upload-container-id")
+        if (!this.containerTerritoriesOptions) {
+            return;
+        }
         var button = this.containerTerritoriesOptions.children[0];
         if (button) {
             button.setAttribute("aria-expanded", "false");
