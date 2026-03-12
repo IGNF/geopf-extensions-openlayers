@@ -880,7 +880,7 @@ class Territories extends Control {
          */
         this.dispatchEvent({
             type : "territories:reset",
-            territories : this.territories
+            territories : this.getTerritories()
         });
     }
 
@@ -968,7 +968,7 @@ class Territories extends Control {
          */
         this.dispatchEvent({
             type : "territories:order",
-            territories : this.territories
+            territories : this.getTerritories()
         });
     }
 
