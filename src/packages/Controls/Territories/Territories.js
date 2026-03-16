@@ -77,6 +77,8 @@ class Territories extends Control {
      * @fires territories:change
      * @fires territories:add
      * @fires territories:remove
+     * @fires territories:reset
+     * @fires territories:order
      * @public
      * @example
      * var territories = new ol.control.Territories({
@@ -95,6 +97,8 @@ class Territories extends Control {
      * territories.on("territories:loaded", (e) => { console.log(e.data); });
      * territories.on("territories:add", (e) => { console.log(e); });
      * territories.on("territories:remove", (e) => { console.log(e); });
+     * territories.on("territories:reset", (e) => { console.log(e); });
+     * territories.on("territories:order", (e) => { console.log(e); });
      */
     constructor (options) {
         options = options || {};
@@ -197,6 +201,24 @@ class Territories extends Control {
     // ################################################################### //
     // ################### getters / setters ############################# //
     // ################################################################### //
+
+    /**
+     * Get all territories
+     * @returns {Array<Territory>} - list of territories
+     */
+    getTerritories () {
+        return this.territories.map(t => t.data);
+    }
+    
+    /**
+     * Find a territory by its ID
+     * @param {String} id - territory ID
+     * @returns {Territory|null} - territory or null if not found
+     */
+    findTerritoryById (id) {
+        var found = this.territories.find(e => e.data.id === id);
+        return found ? found.data : null;
+    }
 
     /**
      * Add a territory
@@ -537,6 +559,9 @@ class Territories extends Control {
      */
     closePanelUpLoad () {
         // document.getElementById("gpf-territories-upload-container-id")
+        if (!this.containerTerritoriesOptions) {
+            return;
+        }
         var button = this.containerTerritoriesOptions.children[0];
         if (button) {
             button.setAttribute("aria-expanded", "false");
@@ -842,6 +867,24 @@ class Territories extends Control {
             var nb = this.territories.filter(t => !t.isRemoved).length;
             count.innerText = nb;
         }
+        /**
+         * event triggered when a territory is reset
+         *
+         * @event territories:reset
+         * @defaultValue "territories:reset"
+         * @group Events
+         * @property {Object} type - event
+         * @property {Object} target - instance Territories
+         * @property {Object} territories - territories
+         * @example
+         * Territories.on("territories:reset", function (e) {
+         *   console.log(e.territories);
+         * })
+         */
+        this.dispatchEvent({
+            type : "territories:reset",
+            territories : this.getTerritories()
+        });
     }
 
     /**
@@ -911,6 +954,24 @@ class Territories extends Control {
         this.panelTerritoriesEntriesContainer.innerHTML = "";
         this.territories.forEach(territory => {
             this.panelTerritoriesEntriesContainer.appendChild(territory.domEntry);
+        });
+        /**
+         * event triggered when a territory is reordered
+         *
+         * @event territories:order
+         * @defaultValue "territories:order"
+         * @group Events
+         * @property {Object} type - event
+         * @property {Object} target - instance Territories
+         * @property {Object} territories - territories
+         * @example
+         * Territories.on("territories:order", function (e) {
+         *   console.log(e.territories);
+         * })
+         */
+        this.dispatchEvent({
+            type : "territories:order",
+            territories : this.getTerritories()
         });
     }
 
