@@ -168,6 +168,8 @@ declare class Territories extends Control {
      * @fires territories:change
      * @fires territories:add
      * @fires territories:remove
+     * @fires territories:reset
+     * @fires territories:order
      * @public
      * @example
      * var territories = new ol.control.Territories({
@@ -186,6 +188,8 @@ declare class Territories extends Control {
      * territories.on("territories:loaded", (e) => { console.log(e.data); });
      * territories.on("territories:add", (e) => { console.log(e); });
      * territories.on("territories:remove", (e) => { console.log(e); });
+     * territories.on("territories:reset", (e) => { console.log(e); });
+     * territories.on("territories:order", (e) => { console.log(e); });
      */
     constructor(options: TerritoriesOptions);
     /**
@@ -200,6 +204,17 @@ declare class Territories extends Control {
      * @param {Map} map - Map.
      */
     setMap(map: Map): void;
+    /**
+     * Get all territories
+     * @returns {Array<Territory>} - list of territories
+     */
+    getTerritories(): Array<Territory>;
+    /**
+     * Find a territory by its ID
+     * @param {String} id - territory ID
+     * @returns {Territory|null} - territory or null if not found
+     */
+    findTerritoryById(id: string): Territory | null;
     /**
      * Add a territory
      *
