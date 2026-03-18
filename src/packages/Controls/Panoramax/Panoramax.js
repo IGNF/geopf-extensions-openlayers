@@ -304,7 +304,7 @@ class Panoramax extends Control {
             }
             // mode "collapsed"
             if (!this.collapsed) {
-                this.buttonPanoramaxShow.setAttribute("aria-pressed", true);
+                this.buttonPanoramaxShow.click();
             }
             // ajout des evenements sur la carte
             if (this.auto) {
@@ -460,9 +460,20 @@ class Panoramax extends Control {
             },
             viewer : {
                 "endpoint" : "https://explore.panoramax.fr/api",
-                "class" : "", // TODO
-                "widgets" : true, // TODO
-                "psv-options" : {} // TODO
+                "widgets" : [
+                    "btnBack",
+                    "btnClose",
+                    "btnZoom",
+                    "btnFullscreen", // TODO
+                    "cmpMenuActions", // TODO
+                    "cmpMinimap", // TODO
+                ],
+                "pnxOptions" : { // TODO
+                    "class" : "",
+                    "widgets" : true,
+                    "psv-options" : {}
+                    
+                },
             },
         };
 
@@ -650,7 +661,7 @@ class Panoramax extends Control {
         container.appendChild(picto);
 
         // panel viewer
-        var widgetPanelViewer = this.panelPanoramaxViewerContainer = this._createWidgetPanelViewerElement();
+        var widgetPanelViewer = this.panelPanoramaxViewerContainer = this._createWidgetPanelViewerElement(this.options.panel);
         var widgetPanelViewerDiv = this._createWidgetPanelViewerDivElement();
         widgetPanelViewer.appendChild(widgetPanelViewerDiv);
 
@@ -1320,6 +1331,14 @@ class Panoramax extends Control {
                     // console.error(this.photoViewerPanoramax.offsetWidth, this.photoViewerPanoramax.isWidthSmall());
                     // console.error(this.photoViewerPanoramax.offsetHeight, this.photoViewerPanoramax.isHeightSmall());
                     // window.PNX_PHOTOVIEWER = this.photoViewerPanoramax;
+                    this.photoViewerPanoramax.addEventListener("ready", () => {
+                        console.debug("Panoramax photo viewer is ready", this);
+                        // Modification position "Annotations switch"
+                        this.modifyWidgetAnnotationsSwitch();
+                    });
+                    this.photoViewerPanoramax.addEventListener("broken", () => {
+                        console.warn("Panoramax photo viewer is broken");
+                    });
                 }
                 this.hidePhotoViewer();
                 resolve();
@@ -1330,6 +1349,7 @@ class Panoramax extends Control {
     // ################################################################### //
     // ######################## methods menu buttons ##################### //
     // ################################################################### //
+    
     showButtonsPanel () {
         this.panelPanoramaxButtonsContainer.firstChild.classList.replace("gpf-hidden", "gpf-visible");
     }
@@ -1337,21 +1357,74 @@ class Panoramax extends Control {
     hideButtonsPanel () {
         this.panelPanoramaxButtonsContainer.firstChild.classList.replace("gpf-visible", "gpf-hidden");
     }
+
     // ################################################################### //
     // ######################## methods photoviewer ###################### //
     // ################################################################### //
 
+    /*
+    * FIXME :
+    * le menu de metainformations est en mode mobile (affichage en bas) même sur desktop, 
+    * à cause de la classe "is-small" qui est appliquée par défaut sur le composant pnx-photo-viewer
+    * 
+    * cf. https://docs.panoramax.fr/web-viewer/reference/components/core/PhotoViewer/#panoramaxcomponentscorephotoviewer-basic
+    * - Make sure to set width/height through CSS for proper display
+    *   <pnx-photo-viewer style="width: 300px; height: 250px"></pnx-photo-viewer>
+    * 
+    * INFO :
+    * https://docs.panoramax.fr/web-viewer/tutorials/custom_widgets/#reuse-default-widgets
+    * - With slotted widgets
+    *   <pnx-photo-viewer>
+    *     <pnx-my-widget slot="top-left" /> <!-- custom widget -->
+    *     <pnx-widget-zoom slot="top-right" /> <!-- reuse default widgets -->
+    *   </pnx-photo-viewer>
+    * 
+    * TODO : ajouter des widgets
+    * https://docs.panoramax.fr/web-viewer/reference/#componentsui
+    * - ex. https://docs.panoramax.fr/web-viewer/reference/components/ui/widgets/CopyCoordinates/
+    * 
+    */
     createPhotoViewer () {
         if (!this.panelPanoramaxViewerContainer) {
             return null;
         }
         var photoViewer = this.panelPanoramaxViewerContainer.querySelector("pnx-photo-viewer");
         if (!photoViewer) {
+            // Photo Viewer
             photoViewer = document.createElement("pnx-photo-viewer");
             photoViewer.id = "pnx-photo-viewer-" + this.uid;
             photoViewer.className = "pnx-photo-viewer-container";
+            photoViewer.style = "width: 100%; height: 100%";
             // photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
             
+            var widgets = this.options.viewer.widgets && Array.isArray(this.options.viewer.widgets) ? this.options.viewer.widgets : null;
+            if (widgets) {
+                // Button close
+                if (widgets.includes("btnClose")) {
+                    this.addWidget(this.createWidgetBtnClose(), photoViewer);
+                }
+                // Button back
+                if (widgets.includes("btnBack")) {
+                    this.addWidget(this.createWidgetBtnBack(), photoViewer);
+                }
+                // Button Zoom
+                if (widgets.includes("btnZoom")) {
+                    this.addWidget(this.createWidgetBtnZoom(), photoViewer);
+                }
+                // Button Fullscreen (TODO)
+                if (widgets.includes("btnFullscreen")) {
+                    this.addWidget(this.createWidgetBtnFullScreen(), photoViewer);
+                }
+                // Component Minimap (TODO)
+                if (widgets.includes("cmpMinimap")) {
+                    this.addWidget(this.createWidgetCmpMinimap(), photoViewer);
+                }
+                // Component Menu Actions (TODO)
+                if (widgets.includes("cmpMenuActions")) {
+                    this.addWidget(this.createWidgetCmpMenuActions(), photoViewer);
+                }
+            }
+  
             // si un target est spécifié dans les options, on l'utilise, 
             // sinon on utilise le container par défaut
             var target = this.panelPanoramaxViewerContainer.lastChild;
@@ -1413,6 +1486,119 @@ class Panoramax extends Control {
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-visible", "gpf-hidden");
+    }
+
+    // ################################################################### //
+    // ######################## methods widgets ########################## //
+    // ################################################################### //
+
+    /**
+     * Ajoute un widget personnalisé au viewer de photos de Panoramax.
+     * @param {HTMLElement} widget - Élément du widget à ajouter.
+     * @param {HTMLElement} container - Conteneur dans lequel ajouter le widget (le viewer de photos).
+     */
+    addWidget (widget, container) {
+        if (!widget) {
+            return;
+        }
+        if (!container) {
+            return;
+        }
+        container.appendChild(widget);
+    }
+
+    /**
+     * Crée un bouton de retour personnalisé pour le viewer de photos de Panoramax.
+     * @returns {HTMLElement} Élément du bouton de retour.
+     */
+    createWidgetBtnBack () {
+        // Button back
+        var buttonBack = document.createElement("pnx-button");
+        buttonBack.className = "pnx-photo-viewer-back-button";
+        buttonBack.classList.add("gpf-btn"); // TODO dsfr
+        buttonBack.setAttribute("slot", "top-left");
+        buttonBack.setAttribute("kind", "superflat");
+        buttonBack.setAttribute("size", "md");
+        buttonBack.textContent = "Retour";
+        buttonBack.addEventListener("click", () => {
+            this.onClickPnxViewerWidgetBack();
+        });
+        return buttonBack;
+    }
+
+    /**
+     * Crée un bouton de fermeture personnalisé pour le viewer de photos de Panoramax.
+     * @returns {HTMLElement} Élément du bouton de fermeture.
+     */
+    createWidgetBtnClose () {
+        // Button close
+        var button = document.createElement("pnx-button");
+        button.className = "pnx-photo-viewer-close-button";
+        button.classList.add("gpf-btn"); // TODO dsfr
+        button.setAttribute("slot", "top-right");
+        button.setAttribute("kind", "superflat");
+        button.setAttribute("size", "md");
+        button.textContent = "Fermer";
+        button.addEventListener("click", () => {
+            this.onClickPnxViewerWidgetClose();
+        });
+        return button;
+    }
+
+    /**
+     * Crée un bouton de zoom personnalisé pour le viewer de photos de Panoramax.
+     * @returns {HTMLElement} Élément du bouton de zoom.
+     */
+    createWidgetBtnZoom () {
+        // Button Zoom
+        var zoom = document.createElement("pnx-widget-zoom");
+        zoom.className = "pnx-photo-viewer-zoom-button";
+        zoom.classList.add("gpf-btn"); // TODO dsfr
+        zoom.setAttribute("slot", "bottom-right");
+        zoom.setAttribute("kind", "superflat");
+        zoom.setAttribute("size", "md");
+        zoom.addEventListener("click", () => {
+            this.onClickPnxViewerWidgetZoom();
+        });
+        return zoom;
+    }
+
+    /**
+     * Crée un bouton de plein écran personnalisé pour le viewer de photos de Panoramax.
+     * @returns {HTMLElement} Élément du bouton de plein écran.
+     */
+    createWidgetBtnFullScreen () {}
+
+    /**
+     * Crée un composant de minimap personnalisé pour le viewer de photos de Panoramax.
+     * @returns {HTMLElement} Élément du composant de minimap.
+     */
+    createWidgetCmpMinimap () {}
+
+    /**
+     * Crée un composant de menu d'actions personnalisé pour le viewer de photos de Panoramax.
+     * @returns {HTMLElement} Élément du composant de menu d'actions.
+     */
+    createWidgetCmpMenuActions () {}
+
+    /**
+     * Modifie le positionnement du widget "Annotations switch" du viewer 
+     * de photos de Panoramax
+     * On ajoute un écouteur d'événement sur le changement d'état du switch.
+     * @returns {HTMLElement|null} Élément du switch d'annotations modifié.
+     */
+    modifyWidgetAnnotationsSwitch () {
+        if (!this.photoViewerPanoramax) {
+            logger.warn("Panoramax photo viewer is not available");
+            return;
+        }
+        var pnxAnnotationsSwitch = this.photoViewerPanoramax.querySelector("pnx-annotations-switch");
+        pnxAnnotationsSwitch.setAttribute("slot", "top-right");
+        pnxAnnotationsSwitch.addEventListener("change", (e) => {
+            var checked = e.target.checked;
+            this.onTogglePnxViewerWidgetAnnotationsSwitch(checked);
+        });
+        return pnxAnnotationsSwitch;
     }
 
     // ################################################################### //
@@ -1946,8 +2132,7 @@ class Panoramax extends Control {
      * @param {Event} e - Événement DOM du bouton de fermeture.
      * @private
      */
-    onClosePanoramaxClick (e) {
-        logger.debug(e);
+    onClosePanoramaxClick () {
         this.buttonPanoramaxShow.click();
     }
 
@@ -1958,8 +2143,7 @@ class Panoramax extends Control {
      * @param {Event} e - Événement DOM du bouton de retour.
      * @private
      */
-    onReturnPanoramaxClick (e) {
-        logger.debug(e);
+    onReturnPanoramaxClick () {
         this.hidePhotoViewer();
         this.showButtonsPanel();
     }
@@ -2165,6 +2349,22 @@ class Panoramax extends Control {
             .catch((err) => {
                 logger.error("Error applying Panoramax render", err);
             });
+    }
+
+    onClickPnxViewerWidgetBack () {
+        this.onReturnPanoramaxClick();
+    }
+
+    onClickPnxViewerWidgetClose () {
+        this.onClosePanoramaxClick();
+    }
+
+    onClickPnxViewerWidgetZoom () {
+        // TODO : implémenter le comportement du bouton de zoom personnalisé
+    }
+    
+    onTogglePnxViewerWidgetAnnotationsSwitch (checked) {
+        // TODO : implémenter le comportement du switch d'affichage des annotations 
     }
 
 };

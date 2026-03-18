@@ -53,7 +53,7 @@
                 target : "map",
                 view : new ol.View({
                     center : [288074.8449901076, 6247982.515792289],
-                    zoom : 14
+                    zoom : 18
                 })
             });
 
@@ -81,11 +81,18 @@
 
             // Ajout du contrôle Panoramax
             panoramax = new ol.control.Panoramax({
-                collapsed: true,
+                collapsed: false,
                 position: "bottom-right",
                 panel : false,
                 auto : true,
-                hover: true,
+                hover: false,
+                // layer : {
+                //     url : "https://panoramax.ign.fr/api/map/style.json",
+                //     source : "geovisio",
+                //     name : "Panoramax",
+                //     minZoom : 6,
+                //     maxZoom : 21
+                // },
                 visualizationWindow : {
                     size : "medium",
                 },

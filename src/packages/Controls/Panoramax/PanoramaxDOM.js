@@ -579,10 +579,11 @@ var PanoramaxDOM = {
 
     /**
      * Create Container Panel for photoviewer
-     *
+     * 
+     * @param {Boolean} display - true if the panel header must be displayed, false otherwise
      * @returns {DOMElement} DOM element
      */
-    _createWidgetPanelViewerElement : function () {
+    _createWidgetPanelViewerElement : function (display) {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPpanoramaxPanelViewer");
         dialog.className = "GPpanel pnx-visualization-window-panel gpf-panel fr-modal";
@@ -590,6 +591,9 @@ var PanoramaxDOM = {
         
         var header = document.createElement("div");
         header.className = "pnx-visualization-window-panel__header gpf-panel__header fr-modal__header";
+        if (!display) {
+            header.classList.add("gpf-hidden");
+        }
         header.appendChild(this._createWidgetPanelButtonsReturnElement());
         header.appendChild(this._createWidgetPanelButtonsCloseElement());
 

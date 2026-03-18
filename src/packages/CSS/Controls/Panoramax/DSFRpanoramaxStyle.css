@@ -78,6 +78,10 @@
     height: 100%;
     display: block;
 }
+/* viewer: widgets */
+.pnx-photo-viewer-close-button {
+    
+}
 
 /* viewer */
 .pnx-visualization-window-panel {}
@@ -112,6 +116,7 @@
     width: 100vw;
     height: 100vh;
 }
+
 /* popup */
 .pnx-popup-content {
   bottom: 17px;
