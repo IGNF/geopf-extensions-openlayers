@@ -52,32 +52,32 @@ var logger = Logger.getLogger("panoramax");
  * @property {String} [background.name] - Nom de la couche de fond à afficher dans le gestionnaire de couches.
  * @property {Number} [background.minZoom] - Zoom minimum pour afficher la couche de fond.
  * @property {Number} [background.maxZoom] - Zoom maximum pour afficher la couche de fond.
- * @property {Object} [buttons] - Options de configuration des boutons.
- * @property {Boolean} [buttons.display] - Affiche ou masque les boutons.
- * @property {String|HTMLElement|null} [buttons.target] - **Experimental** -Cible DOM où injecter le panneau des boutons.
- * @property {Object} [buttons.filters] - Options de configuration des filtres.
- * @property {Boolean} [buttons.filters.display] - Affiche ou masque les filtres.
- * @property {String} [buttons.filters.label] - Libellé du bouton de filtrage.
- * @property {Object} [buttons.filters.content] - Options de configuration du contenu des filtres.
- * @property {Array} [buttons.filters.content.types] - Types d'images à filtrer (Tout, classique, 360).
- * @property {Array} [buttons.filters.content.dates] - Plages de dates à filtrer.
- * @property {Object} [buttons.hover] - Options de configuration du bouton de survol.
- * @property {Boolean} [buttons.hover.display] - Affiche ou masque le bouton de survol.
- * @property {String} [buttons.hover.label] - Libellé du bouton de survol.
- * @property {String} [buttons.hover.description] - Description du bouton de survol.
- * @property {Object} [buttons.contributions] - Options de configuration des contributions.
- * @property {Boolean} [buttons.contributions.display] - Affiche ou masque les contributions.
- * @property {String} [buttons.contributions.label] - Libellé du bouton de contribution.
- * @property {String} [buttons.contributions.link] - Lien vers la page de contribution.
- * @property {Object} [buttons.styles] - Options de configuration du bouton de styles.
- * @property {Boolean} [buttons.styles.display] - Affiche ou masque le bouton de styles.
- * @property {String} [buttons.styles.label] - Libellé du bouton de styles.
- * @property {String} [buttons.styles.description] - Description du bouton de styles.
- * @property {Object} [buttons.styles.content] - Options de configuration du contenu des styles.
- * @property {Object} [buttons.background] - Options de configuration du bouton de fond.
- * @property {Boolean} [buttons.background.display] - Affiche ou masque le bouton de fond de carte.
- * @property {String} [buttons.background.label] - Libellé du bouton de fond de carte.
- * @property {String} [buttons.background.description] - Description du bouton de fond de carte.
+ * @property {Object} [buttonsWindow] - Options de configuration des boutons.
+ * @property {Boolean} [buttonsWindow.display] - Affiche ou masque les boutons.
+ * @property {String|HTMLElement|null} [buttonsWindow.target] - **Experimental** -Cible DOM où injecter le panneau des boutons.
+ * @property {Object} [buttonsWindow.filters] - Options de configuration des filtres.
+ * @property {Boolean} [buttonsWindow.filters.display] - Affiche ou masque les filtres.
+ * @property {String} [buttonsWindow.filters.label] - Libellé du bouton de filtrage.
+ * @property {Object} [buttonsWindow.filters.content] - Options de configuration du contenu des filtres.
+ * @property {Array} [buttonsWindow.filters.content.types] - Types d'images à filtrer (Tout, classique, 360).
+ * @property {Array} [buttonsWindow.filters.content.dates] - Plages de dates à filtrer.
+ * @property {Object} [buttonsWindow.hover] - Options de configuration du bouton de survol.
+ * @property {Boolean} [buttonsWindow.hover.display] - Affiche ou masque le bouton de survol.
+ * @property {String} [buttonsWindow.hover.label] - Libellé du bouton de survol.
+ * @property {String} [buttonsWindow.hover.description] - Description du bouton de survol.
+ * @property {Object} [buttonsWindow.contributions] - Options de configuration des contributions.
+ * @property {Boolean} [buttonsWindow.contributions.display] - Affiche ou masque les contributions.
+ * @property {String} [buttonsWindow.contributions.label] - Libellé du bouton de contribution.
+ * @property {String} [buttonsWindow.contributions.link] - Lien vers la page de contribution.
+ * @property {Object} [buttonsWindow.styles] - Options de configuration du bouton de styles.
+ * @property {Boolean} [buttonsWindow.styles.display] - Affiche ou masque le bouton de styles.
+ * @property {String} [buttonsWindow.styles.label] - Libellé du bouton de styles.
+ * @property {String} [buttonsWindow.styles.description] - Description du bouton de styles.
+ * @property {Object} [buttonsWindow.styles.content] - Options de configuration du contenu des styles.
+ * @property {Object} [buttonsWindow.background] - Options de configuration du bouton de fond.
+ * @property {Boolean} [buttonsWindow.background.display] - Affiche ou masque le bouton de fond de carte.
+ * @property {String} [buttonsWindow.background.label] - Libellé du bouton de fond de carte.
+ * @property {String} [buttonsWindow.background.description] - Description du bouton de fond de carte.
  * @property {Object} [visualizationWindow] - Options de configuration de la fenêtre de visualisation.
  * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
  * @property {String|HTMLElement|null} [visualizationWindow.target] - **Experimental** - Cible DOM où injecter le panneau de visualisation.
@@ -200,7 +200,7 @@ class Panoramax extends Control {
      *  minZoom: 6,
      *  maxZoom: 21
      * },
-     * buttons: {
+     * buttonsWindow: {
      *   display: true,
      *   position: "top-right",
      *   order: ["filters", "contributions", "hover", "styles", "background"],
@@ -415,7 +415,7 @@ class Panoramax extends Control {
                 minZoom : 6,
                 maxZoom : 21
             },
-            buttons : {
+            buttonsWindow : {
                 display : true,
                 target : null, // experimental !
                 position : "bottom-left", // TODO
@@ -466,6 +466,7 @@ class Panoramax extends Control {
                     "btnClose",
                     "btnZoom",
                     "btnFullscreen", // TODO
+                    "cmpPictureLegend",
                     "cmpMenuActions", // TODO
                     "cmpMinimap", // TODO
                 ],
@@ -481,7 +482,7 @@ class Panoramax extends Control {
         // merge with user options
         Utils.assign(this.options.layer, options.layer);
         Utils.assign(this.options.background, options.background);
-        Utils.assign(this.options.buttons, options.buttons);
+        Utils.assign(this.options.buttonsWindow, options.buttonsWindow);
         Utils.assign(this.options.visualizationWindow, options.visualizationWindow);
         Utils.assign(this.options.viewer, options.viewer);
         [
@@ -682,7 +683,7 @@ class Panoramax extends Control {
 
         // experimental : possibilité d'injecter le panneau des boutons 
         // dans une cible spécifique
-        var panelButtonsTarget = this.resolveTargetElement(this.options.buttons.target);
+        var panelButtonsTarget = this.resolveTargetElement(this.options.buttonsWindow.target);
         if (panelButtonsTarget) {
             panelButtonsTarget.appendChild(widgetPanelButtons);
         } else {
@@ -706,37 +707,37 @@ class Panoramax extends Control {
         // container for the custom code : buttons, header, etc.
         var buttons = this.btnPanoramaxButtonsContainer = this._createWidgetButtonsElement();
         widgetPanelButtonsDiv.appendChild(buttons);
-        if (this.options.buttons.display) {
-            for (const buttonKey of this.options.buttons.order) {
+        if (this.options.buttonsWindow.display) {
+            for (const buttonKey of this.options.buttonsWindow.order) {
                 switch (buttonKey) {
                     case "filters":
-                        if (this.options.buttons.filters.display) {
-                            this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttons.filters);
+                        if (this.options.buttonsWindow.filters.display) {
+                            this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttonsWindow.filters);
                             buttons.appendChild(this.btnPanoramaxFilters);
-                            this.panelPanoramaxFilters = this._createWidgetPanelFiltersElement(this.options.buttons.filters.content);
+                            this.panelPanoramaxFilters = this._createWidgetPanelFiltersElement(this.options.buttonsWindow.filters.content);
                         }
                         break;
                     case "contributions":
-                        if (this.options.buttons.contributions.display) {
-                            this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttons.contributions);
+                        if (this.options.buttonsWindow.contributions.display) {
+                            this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttonsWindow.contributions);
                             buttons.appendChild(this.btnPanoramaxContributions);
                         }
                         break;
                     case "hover":
-                        if (this.options.buttons.hover.display) {
-                            this.btnPanoramaxHover = this._createButtonChoiceHoverElement(this.options.hover, this.options.buttons.hover);
+                        if (this.options.buttonsWindow.hover.display) {
+                            this.btnPanoramaxHover = this._createButtonChoiceHoverElement(this.options.hover, this.options.buttonsWindow.hover);
                             buttons.appendChild(this.btnPanoramaxHover);
                         }
                         break;
                     case "styles":
-                        if (this.options.buttons.styles.display) {
-                            this.btnPanoramaxStyles = this._createButtonChoiceStyleElement(this.options.buttons.styles);
+                        if (this.options.buttonsWindow.styles.display) {
+                            this.btnPanoramaxStyles = this._createButtonChoiceStyleElement(this.options.buttonsWindow.styles);
                             buttons.appendChild(this.btnPanoramaxStyles);
                         }
                         break;
                     case "background":
-                        if (this.options.buttons.background.display) {
-                            this.btnPanoramaxBackground = this._createButtonChoiceBackgroundElement(this.options.background.display, this.options.buttons.background);
+                        if (this.options.buttonsWindow.background.display) {
+                            this.btnPanoramaxBackground = this._createButtonChoiceBackgroundElement(this.options.background.display, this.options.buttonsWindow.background);
                             buttons.appendChild(this.btnPanoramaxBackground);
                         }
                         break;
@@ -752,7 +753,7 @@ class Panoramax extends Control {
         }
 
         // experimental : possibilité d'injecter le panneau des boutons dans une cible spécifique
-        var panelButtonsTarget = this.resolveTargetElement(this.options.buttons.target);
+        var panelButtonsTarget = this.resolveTargetElement(this.options.buttonsWindow.target);
         if (panelButtonsTarget) {
             panelButtonsTarget.appendChild(widgetPanelButtons);
         } else {
@@ -1318,6 +1319,7 @@ class Panoramax extends Control {
         // options.viewer.class : "..." (TODO)
         // options.viewer.widgets : true/false (TODO)
         // options.viewer.psv-options : {} (TODO)
+        var self = this;
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 logger.debug("initPhotoViewer");
@@ -1325,23 +1327,27 @@ class Panoramax extends Control {
                 // par défaut, la fenêtre de visualisation est masquée, elle s'affiche au clic sur une image
                 // mais pour initialiser le viewer de photos de Panoramax, il faut que le container soit visible, 
                 // avec une taille !
-                this.showPhotoViewer();
-                if (!this.photoViewerPanoramax) {
-                    this.photoViewerPanoramax = this.createPhotoViewer();
+                self.showPhotoViewer();
+                if (!self.photoViewerPanoramax) {
+                    self.photoViewerPanoramax = self.createPhotoViewer();
                     // HACK orienté maintenance :
-                    // console.error(this.photoViewerPanoramax.offsetWidth, this.photoViewerPanoramax.isWidthSmall());
-                    // console.error(this.photoViewerPanoramax.offsetHeight, this.photoViewerPanoramax.isHeightSmall());
-                    // window.PNX_PHOTOVIEWER = this.photoViewerPanoramax;
-                    this.photoViewerPanoramax.addEventListener("ready", () => {
-                        console.debug("Panoramax photo viewer is ready", this);
+                    // console.error(self.photoViewerPanoramax.offsetWidth, self.photoViewerPanoramax.isWidthSmall());
+                    // console.error(self.photoViewerPanoramax.offsetHeight, self.photoViewerPanoramax.isHeightSmall());
+                    // window.PNX_PHOTOVIEWER = self.photoViewerPanoramax;
+                    self.photoViewerPanoramax.addEventListener("ready", () => {
+                        console.debug("Panoramax photo viewer is ready", self);
                         // Modification position "Annotations switch"
-                        this.modifyWidgetAnnotationsSwitch();
+                        self.modifyWidgetAnnotationsSwitch();
+                        // Suppression "Picture legend Drawer"
+                        if (self.options.viewer.widgets && self.options.viewer.widgets.includes("cmpPictureLegend")) {
+                            self.removeWidgetPictureLegendDrawer();
+                        }
                     });
-                    this.photoViewerPanoramax.addEventListener("broken", () => {
+                    self.photoViewerPanoramax.addEventListener("broken", () => {
                         console.warn("Panoramax photo viewer is broken");
                     });
                 }
-                this.hidePhotoViewer();
+                self.hidePhotoViewer();
                 resolve();
             }, 100);
         });
@@ -1415,6 +1421,10 @@ class Panoramax extends Control {
                 // Button Fullscreen (TODO)
                 if (widgets.includes("btnFullscreen")) {
                     this.addWidget(this.createWidgetBtnFullScreen(), photoViewer);
+                }
+                // Component Picture Legend
+                if (widgets.includes("cmpPictureLegend")) {
+                    this.addWidget(this.createWidgetCmpPictureLegend(), photoViewer);
                 }
                 // Component Minimap (TODO)
                 if (widgets.includes("cmpMinimap")) {
@@ -1513,6 +1523,7 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de retour.
      */
     createWidgetBtnBack () {
+        var svg = `<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-left" class="svg-inline--fa fa-arrow-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg>`;
         // Button back
         var buttonBack = document.createElement("pnx-button");
         buttonBack.className = "pnx-photo-viewer-back-button";
@@ -1520,7 +1531,8 @@ class Panoramax extends Control {
         buttonBack.setAttribute("slot", "top-left");
         buttonBack.setAttribute("kind", "superflat");
         buttonBack.setAttribute("size", "md");
-        buttonBack.textContent = "Retour";
+        buttonBack.title = "Retour";
+        buttonBack.innerHTML = svg;
         buttonBack.addEventListener("click", () => {
             this.onClickPnxViewerWidgetBack();
         });
@@ -1532,6 +1544,7 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de fermeture.
      */
     createWidgetBtnClose () {
+        var svg = `<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="xmark" class="svg-inline--fa fa-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg>`;
         // Button close
         var button = document.createElement("pnx-button");
         button.className = "pnx-photo-viewer-close-button";
@@ -1539,7 +1552,8 @@ class Panoramax extends Control {
         button.setAttribute("slot", "top-right");
         button.setAttribute("kind", "superflat");
         button.setAttribute("size", "md");
-        button.textContent = "Fermer";
+        button.title = "Fermer";
+        button.innerHTML = svg;
         button.addEventListener("click", () => {
             this.onClickPnxViewerWidgetClose();
         });
@@ -1571,6 +1585,25 @@ class Panoramax extends Control {
     createWidgetBtnFullScreen () {}
 
     /**
+     * Crée un composant de légende des photos personnalisé pour le viewer 
+     * de photos de Panoramax.
+     * @returns {HTMLElement} Élément du composant de légende des photos.
+     */
+    createWidgetCmpPictureLegend () {
+        var pnxPictureLegend = document.createElement("pnx-picture-legend");
+        pnxPictureLegend.className = "pnx-photo-viewer-picture-legend";
+        pnxPictureLegend.classList.add("gpf-panel"); // TODO dsfr
+        pnxPictureLegend.setAttribute("slot", "top-left");
+        pnxPictureLegend.setAttribute("collapsable", "true");
+        return pnxPictureLegend;
+
+        // var pnxMiniPictureLegend = document.createElement("pnx-mini-picture-legend");
+        // pnxMiniPictureLegend.className = "pnx-photo-viewer-mini-picture-legend";
+        // pnxMiniPictureLegend.setAttribute("slot", "top-left");
+        // return pnxMiniPictureLegend;
+    }
+
+    /**
      * Crée un composant de minimap personnalisé pour le viewer de photos de Panoramax.
      * @returns {HTMLElement} Élément du composant de minimap.
      */
@@ -1600,6 +1633,23 @@ class Panoramax extends Control {
             this.onTogglePnxViewerWidgetAnnotationsSwitch(checked);
         });
         return pnxAnnotationsSwitch;
+    }
+
+    /**
+     * Supprime le widget "Picture legend" du viewer de photos de Panoramax
+     * On supprime le mode drawer pour le widget de légende des photos, 
+     */
+    removeWidgetPictureLegendDrawer () {
+        if (!this.photoViewerPanoramax) {
+            logger.warn("Panoramax photo viewer is not available");
+            return;
+        }
+        // on supprime le mode drawer pour le widget de légende des photos,
+        // pour l'afficher directement dans le viewer, en haut à gauche
+        var pnxBottomDrawer = this.photoViewerPanoramax.querySelector("pnx-bottom-drawer");
+        if (pnxBottomDrawer) {
+            pnxBottomDrawer.remove();
+        }
     }
 
     // ################################################################### //

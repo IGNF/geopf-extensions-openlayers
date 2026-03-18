@@ -81,7 +81,7 @@ var PanoramaxDOM = {
     _createWidgetPanelButtonsElement : function () {
         var dialog = document.createElement("dialog");
         dialog.id = this._addUID("GPpanoramaxPanelButtons");
-        dialog.className = "GPpanel gpf-panel fr-modal";
+        dialog.className = "GPpanel pnx-buttons-window-panel gpf-panel fr-modal";
         return dialog;
     },
     
