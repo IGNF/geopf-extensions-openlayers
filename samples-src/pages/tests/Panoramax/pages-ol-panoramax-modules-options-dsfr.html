@@ -80,23 +80,92 @@
             map.addControl(catalog);
 
             // Ajout du contrôle Panoramax
-            panoramax = new ol.control.Panoramax({
-                collapsed: false,
-                position: "bottom-right",
+            var options = {
+                collapsed : false,
+                draggable : false,
                 panel : false,
                 auto : true,
-                hover: false,
-                // layer : {
-                //     url : "https://panoramax.ign.fr/api/map/style.json",
-                //     source : "geovisio",
-                //     name : "Panoramax",
-                //     minZoom : 6,
-                //     maxZoom : 21
-                // },
-                visualizationWindow : {
-                    size : "medium",
+                hover : true,
+                gutter : false,
+                position : "bottom-left",
+                group : true, // option interne !
+                layer : {
+                    url : "https://api.panoramax.xyz/api/map/style.json",
+                    source : "geovisio",
+                    name : "Panoramax",
+                    minZoom : 6,
+                    maxZoom : 21
                 },
-            });
+                background : {
+                    display : true,
+                    url : "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
+                    name : "Background",
+                    minZoom : 6,
+                    maxZoom : 21
+                },
+                buttons : {
+                    display : true,
+                    target : null, // experimental !
+                    position : "bottom-left", // TODO
+                    order : ["filters", "contributions", "hover", "background", "styles"],
+                    filters : {
+                        display : true,
+                        label : "Filtrer",
+                        description : "Filtrer les images affichées",
+                        content : {
+                            dates : true,
+                            types : true,
+                            periodes : true
+                        }
+                    },
+                    hover : {
+                        display : true,
+                        label : "Aperçu au survol",
+                        description : "Afficher un aperçu de l'image au survol"
+                    },
+                    contributions : {
+                        display : true,
+                        label : "Contribuer",
+                        description : "Accéder au parcours de contribution",
+                        link : "https://panoramax.openstreetmap.fr/why-contribute"
+                    },
+                    styles : { // TODO
+                        display : true,
+                        label : "Rendu de la carte",
+                        description : "Personnaliser le rendu de la carte",
+                        content : ["Classique", "Type de camera", "Date de prise de vue"]
+                    },
+                    background : {
+                        display : true,
+                        label : "Fond de carte",
+                        description : "Afficher ou masquer un fond de carte de référence"
+                    }
+                },
+                visualizationWindow : {
+                    display : true,
+                    target : null, // experimental !
+                    position : "bottom-left", // TODO
+                    size : "fullscreen"
+                },
+                viewer : {
+                    "endpoint" : "https://explore.panoramax.fr/api",
+                    "widgets" : [
+                        "btnBack",
+                        "btnClose",
+                        "btnZoom",
+                        "btnFullscreen", // TODO
+                        "cmpMenuActions", // TODO
+                        "cmpMinimap", // TODO
+                    ],
+                    "pnxOptions" : { // TODO
+                        "class" : "",
+                        "widgets" : true,
+                        "psv-options" : {}
+                        
+                    },
+                },
+            };
+            panoramax = new ol.control.Panoramax(options);
             // Gestion de l'événement d'ouverture du formulaire de Panoramax
             // mais, une seule fois !
             panoramax.once("pnx:opened", function () {

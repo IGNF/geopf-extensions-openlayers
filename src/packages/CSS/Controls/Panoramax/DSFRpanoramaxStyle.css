@@ -112,9 +112,17 @@
     height: 700px;
 }
 .pnx-visualization-window-size-fullscreen {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+    position: fixed;
+    inset: 0 !important;
+    width: 100dvw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    z-index: 1000;
 }
 
 /* popup */

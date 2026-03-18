@@ -399,6 +399,7 @@ class Panoramax extends Control {
             auto : true,
             hover : true,
             gutter : false,
+            position : "bottom-left",
             group : true, // option interne !
             layer : {
                 url : "https://api.panoramax.xyz/api/map/style.json",
@@ -417,7 +418,7 @@ class Panoramax extends Control {
             buttons : {
                 display : true,
                 target : null, // experimental !
-                position : "top-right", // TODO
+                position : "bottom-left", // TODO
                 order : ["filters", "contributions", "hover", "background", "styles"],
                 filters : {
                     display : true,
@@ -455,7 +456,7 @@ class Panoramax extends Control {
             visualizationWindow : {
                 display : true,
                 target : null, // experimental !
-                position : "top-right", // TODO
+                position : "bottom-left", // TODO
                 size : "medium"
             },
             viewer : {
