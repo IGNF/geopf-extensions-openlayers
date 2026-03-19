@@ -31,7 +31,7 @@
 .pnx-toggle__input {}
 .pnx-toggle {
     background: var(--background-default-grey);
-    width: fit-content;
+    width: 100%;
     margin-inline: auto;
     border-radius: 10px;
 }
@@ -63,6 +63,12 @@
 .pnx-filters-panel__title {
     color: var(--text-default-grey);
     font-weight: 700;
+}
+.pnx-filters-panel-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 /* panel filters: elements */

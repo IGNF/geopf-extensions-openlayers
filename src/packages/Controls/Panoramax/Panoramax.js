@@ -47,7 +47,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {Number} [layer.minZoom] - Zoom minimum pour afficher la couche.
  * @property {Number} [layer.maxZoom] - Zoom maximum pour afficher la couche.
  * @property {Object} [background] - Options de configuration de la couche de fond.
- * @property {Boolean} [background.display] - Affiche ou masque la couche de fond.
+ * @property {Boolean} [background.active] - Affiche ou masque la couche de fond.
  * @property {String} [background.url] - URL du style de la couche de fond à charger.
  * @property {String} [background.name] - Nom de la couche de fond à afficher dans le gestionnaire de couches.
  * @property {Number} [background.minZoom] - Zoom minimum pour afficher la couche de fond.
@@ -409,7 +409,7 @@ class Panoramax extends Control {
                 maxZoom : 21
             },
             background : {
-                display : true,
+                active : true,
                 url : "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
                 name : "Background",
                 minZoom : 6,
@@ -422,8 +422,8 @@ class Panoramax extends Control {
                 order : ["filters", "contributions", "hover", "background", "styles"],
                 filters : {
                     display : true,
-                    label : "Filtrer",
-                    description : "Filtrer les images affichées",
+                    label : "Effacer les filtres",
+                    description : "Réinitialiser les filtres",
                     content : {
                         dates : true,
                         types : true,
@@ -543,6 +543,8 @@ class Panoramax extends Control {
         /** @private */
         this.panelPanoramaxFilters = null;
         /** @private */
+        this.btnPanoramaxResetFilters = null;
+        /** @private */
         this.btnPanoramaxContributions = null;
         /** @private */
         this.btnPanoramaxHover = null;
@@ -579,6 +581,14 @@ class Panoramax extends Control {
          * Il peut être utilisé pour déclencher des actions complémentaires.
          */
         this.OPENED_PANORAMAX_EVENT = "pnx:opened";
+
+        /**
+         * Événement déclenché à l'initialisation du panneau des filtres.
+         * @event pnx:filter:init
+         * @defaultValue "pnx:filter:init"
+         * @group Events
+         */
+        this.FILTER_INIT_PANORAMAX_EVENT = "pnx:filter:init";
 
         /**
          * Nom du callback déclenché lors d'un clic sur la couche Panoramax active.
@@ -643,6 +653,8 @@ class Panoramax extends Control {
         this.backgroundPanoramax = null;
         /** @type {MapboxLayerGroup} */
         this.groupPanoramax = null;
+
+        this.originalStyleLayerPanoramax = null;
 
         /** preview marker overlay */
         this.previewMarkerOverlay = null;
@@ -717,11 +729,20 @@ class Panoramax extends Control {
                     case "filters":
                         if (this.options.buttonsWindow.filters.display) {
                             this.panelPanoramaxFilters = this._createWidgetPanelFiltersElement(this.options.buttonsWindow.filters);
+                            this.btnPanoramaxResetFilters = this._createButtonResetFiltersElement(this.options.buttonsWindow.filters);
+                            this.panelPanoramaxFilters.lastChild.appendChild(this.btnPanoramaxResetFilters);
+                            // par defaut, on ajoute le bouton des contributions avec les filtres
+                            // sauf si les filtres sont absents.
+                            if (this.options.buttonsWindow.contributions.display) {
+                                this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttonsWindow.contributions);
+                                this.panelPanoramaxFilters.lastChild.appendChild(this.btnPanoramaxContributions);
+                            }
                             this.panelPanoramaxOptions.appendChild(this.panelPanoramaxFilters);
                         }
                         break;
                     case "contributions":
-                        if (this.options.buttonsWindow.contributions.display) {
+                        // si les filtres sont absents, on ajoute le bouton Contributions dans le panneau
+                        if (this.options.buttonsWindow.contributions.display && !this.options.buttonsWindow.filters.display) {
                             this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttonsWindow.contributions);
                             this.panelPanoramaxOptions.appendChild(this.btnPanoramaxContributions);
                         }
@@ -740,7 +761,7 @@ class Panoramax extends Control {
                         break;
                     case "background":
                         if (this.options.buttonsWindow.background.display) {
-                            this.btnPanoramaxBackground = this._createButtonChoiceBackgroundElement(this.options.background.display, this.options.buttonsWindow.background);
+                            this.btnPanoramaxBackground = this._createButtonChoiceBackgroundElement(this.options.background.active, this.options.buttonsWindow.background);
                             this.panelPanoramaxOptions.appendChild(this.btnPanoramaxBackground);
                         }
                         break;
@@ -1183,6 +1204,9 @@ class Panoramax extends Control {
                 logger.warn("Unable to cache Panoramax layer style JSON", err);
             }
         }
+        // clone pour éviter les problèmes de références dans le style JSON 
+        this.originalStyleLayerPanoramax = styleJson ? structuredClone(styleJson) : null;
+
         return styleJson;
     }
 
@@ -1246,7 +1270,7 @@ class Panoramax extends Control {
         // - url : https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json
         // - name : "Background"
         // - etc.
-        if (!opts.display) {
+        if (!opts.active) {
             return;
         }
         var map = this.getMap();
@@ -1746,7 +1770,9 @@ class Panoramax extends Control {
                 this.displayPreviewGrid(feature.coordinates, feature.properties);
                 break;
             case "sequences":
-                this.displayPreviewSequence(feature.coordinates, feature.properties);
+                // FIXME 
+                // on desactive temporairement la prévisualisation des séquences
+                // this.displayPreviewSequence(feature.coordinates, feature.properties);
                 break;
             case "pictures":
                 this.displayPreviewPicture(feature.coordinates, feature.properties);
@@ -2259,6 +2285,24 @@ class Panoramax extends Control {
     }
 
     /**
+     * Gère le clic de réinitialisation des filtres Panoramax.
+     * @param {Event} e - Événement DOM du bouton de réinitialisation.
+     * @todo remettre les filtres à leur état initial (ex. type de photo, période, dates, etc.)
+     */
+    onResetPanoramaxFiltersClick (e) {
+        // réinitialiser tous les filtres à leur état initial
+        // ainsi que le rendu de la couche
+        var mapboxLayers = this.originalStyleLayerPanoramax.layers;
+        this.applyFilters(mapboxLayers)
+            .then(() => {
+                this.dispatchEvent(this.FILTER_INIT_PANORAMAX_EVENT);
+            })
+            .catch((err) => {
+                logger.error("Error applying initial Panoramax filters", err);
+            });
+    }
+
+    /**
      * Gère le changement de type d'image dans les filtres Panoramax.
      *
      * @param {Event} e - Événement DOM du sélecteur de type.
@@ -2385,8 +2429,8 @@ class Panoramax extends Control {
      */
     onToggleChoiceBackgroundPanoramaxClick (e) {
         logger.debug(e);
-        this.options.background.display = !this.options.background.display;
-        if (this.options.background.display) {
+        this.options.background.active = !this.options.background.active;
+        if (this.options.background.active) {
             this.setBackground(this.options.background);
         } else {
             this.resetBackground();

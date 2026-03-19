@@ -97,21 +97,21 @@
                     maxZoom : 21
                 },
                 background : {
-                    display : true,
+                    active : false,
                     url : "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
                     name : "Background",
                     minZoom : 6,
                     maxZoom : 21
                 },
-                buttons : {
+                buttonsWindow : {
                     display : true,
                     target : null, // experimental !
                     position : "bottom-left", // TODO
                     order : ["filters", "contributions", "hover", "background", "styles"],
                     filters : {
                         display : true,
-                        label : "Filtrer",
-                        description : "Filtrer les images affichées",
+                        label : "Effacer les filtres",
+                        description : "Réinitialiser les filtres",
                         content : {
                             dates : true,
                             types : true,
@@ -129,8 +129,8 @@
                         description : "Accéder au parcours de contribution",
                         link : "https://panoramax.openstreetmap.fr/why-contribute"
                     },
-                    styles : { // TODO
-                        display : true,
+                    styles : {
+                        display : false,
                         label : "Rendu de la carte",
                         description : "Personnaliser le rendu de la carte",
                         content : ["Classique", "Type de camera", "Date de prise de vue"]

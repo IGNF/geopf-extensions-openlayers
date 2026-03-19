@@ -437,7 +437,42 @@ var PanoramaxDOM = {
             });
         }
 
+        // container pour des boutons
+        var div = document.createElement("div");
+        div.className = "pnx-filters-panel-buttons";
+        panel.appendChild(div);
+
         return panel;
+    },
+
+    _createButtonResetFiltersElement : function (opts) {
+        var self = this;
+        // <button type="button" class="fr-btn fr-icon-equalizer-line fr-btn--icon-right fr-btn--secondary">Filtrer</button>
+        var button = document.createElement("button");
+        button.id = this._addUID("GPpanoramaxButtonResetFilters");
+        button.className = "gpf-btn gpf-btn-icon gpf-btn-icon-background";
+        button.classList.add("fr-btn", "fr-btn--secondary");
+        button.title = opts.description;
+        button.setAttribute("aria-label", opts.description);
+        button.setAttribute("aria-pressed", "false");
+        button.setAttribute("type", "button");
+        button.textContent = opts.label;
+
+        if (button.addEventListener) {
+            button.addEventListener("click", function (e) {
+                var status = (e.target.getAttribute("aria-pressed") === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onResetPanoramaxFiltersClick(e);
+            });
+        } else if (button.attachEvent) {
+            button.attachEvent("onclick", function (e) {
+                var status = (e.target.ariaPressed === "true");
+                e.target.setAttribute("aria-pressed", !status);
+                self.onResetPanoramaxFiltersClick(e);
+            });
+        }
+        
+        return button;
     },
 
     _createGroupFiltersByPeriodeElement : function (periodes) {
