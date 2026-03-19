@@ -529,16 +529,19 @@ class Panoramax extends Control {
         this.panelPanoramaxViewerContainer = null;
         /** @private */
         this.panelPanoramaxButtonsContainer = null;
+
         /** @private */
         this.panelPanoramaxButtonsHeaderContainer = null; // usefull for the dragNdrop
+
         /** @private */
-        this.btnPanoramaxButtonsContainer = null;
+        this.btnPanoramaxOptions = null;
         /** @private */
-        this.btnPanoramaxFilters = null;
+        this.panelPanoramaxOptions = null;
+        /** @private */
+        this._onPanoramaxOptionsReposition = null;
+
         /** @private */
         this.panelPanoramaxFilters = null;
-        /** @private */
-        this._onPanoramaxFiltersReposition = null;
         /** @private */
         this.btnPanoramaxContributions = null;
         /** @private */
@@ -659,10 +662,11 @@ class Panoramax extends Control {
         // create main container
         var container = this._createMainContainerElement();
 
+        // picto show
         var picto = this.buttonPanoramaxShow = this._createShowWidgetPictoElement();
         container.appendChild(picto);
 
-        // panel viewer
+        // container panel viewer
         var widgetPanelViewer = this.panelPanoramaxViewerContainer = this._createWidgetPanelViewerElement(this.options.panel);
         var widgetPanelViewerDiv = this._createWidgetPanelViewerDivElement();
         widgetPanelViewer.appendChild(widgetPanelViewerDiv);
@@ -676,19 +680,10 @@ class Panoramax extends Control {
             container.appendChild(widgetPanelViewer);
         }
 
-        // panel buttons
+        // main container panel buttons
         var widgetPanelButtons = this.panelPanoramaxButtonsContainer = this._createWidgetPanelButtonsElement();
         var widgetPanelButtonsDiv = this._createWidgetPanelButtonsDivElement();
         widgetPanelButtons.appendChild(widgetPanelButtonsDiv);
-
-        // experimental : possibilité d'injecter le panneau des boutons 
-        // dans une cible spécifique
-        var panelButtonsTarget = this.resolveTargetElement(this.options.buttonsWindow.target);
-        if (panelButtonsTarget) {
-            panelButtonsTarget.appendChild(widgetPanelButtons);
-        } else {
-            container.appendChild(widgetPanelButtons);
-        }
 
         // header
         var widgetPanelButtonsHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
@@ -704,41 +699,49 @@ class Panoramax extends Control {
         
         widgetPanelButtonsDiv.appendChild(widgetPanelButtonsHeader);
 
-        // container for the custom code : buttons, header, etc.
-        var buttons = this.btnPanoramaxButtonsContainer = this._createWidgetButtonsElement();
+        // container des boutons (ex. Options)
+        // INFO : possibilité d'injecter d'autres boutons
+        var buttons = this._createWidgetButtonsElement();
         widgetPanelButtonsDiv.appendChild(buttons);
+        // bouton options
+        this.btnPanoramaxOptions = this._createButtonOptionsElement();
+        buttons.appendChild(this.btnPanoramaxOptions);
+        // panneau pour toutes les options
+        this.panelPanoramaxOptions = this._createWidgetPanelOptionsElement();
+        buttons.appendChild(this.panelPanoramaxOptions);
+
+        // panneau des filtres et divers boutons optionnels du menu Options
         if (this.options.buttonsWindow.display) {
             for (const buttonKey of this.options.buttonsWindow.order) {
                 switch (buttonKey) {
                     case "filters":
                         if (this.options.buttonsWindow.filters.display) {
-                            this.btnPanoramaxFilters = this._createButtonFiltersElement(this.options.buttonsWindow.filters);
-                            buttons.appendChild(this.btnPanoramaxFilters);
-                            this.panelPanoramaxFilters = this._createWidgetPanelFiltersElement(this.options.buttonsWindow.filters.content);
+                            this.panelPanoramaxFilters = this._createWidgetPanelFiltersElement(this.options.buttonsWindow.filters);
+                            this.panelPanoramaxOptions.appendChild(this.panelPanoramaxFilters);
                         }
                         break;
                     case "contributions":
                         if (this.options.buttonsWindow.contributions.display) {
                             this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttonsWindow.contributions);
-                            buttons.appendChild(this.btnPanoramaxContributions);
+                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxContributions);
                         }
                         break;
                     case "hover":
                         if (this.options.buttonsWindow.hover.display) {
                             this.btnPanoramaxHover = this._createButtonChoiceHoverElement(this.options.hover, this.options.buttonsWindow.hover);
-                            buttons.appendChild(this.btnPanoramaxHover);
+                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxHover);
                         }
                         break;
                     case "styles":
                         if (this.options.buttonsWindow.styles.display) {
                             this.btnPanoramaxStyles = this._createButtonChoiceStyleElement(this.options.buttonsWindow.styles);
-                            buttons.appendChild(this.btnPanoramaxStyles);
+                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxStyles);
                         }
                         break;
                     case "background":
                         if (this.options.buttonsWindow.background.display) {
                             this.btnPanoramaxBackground = this._createButtonChoiceBackgroundElement(this.options.background.display, this.options.buttonsWindow.background);
-                            buttons.appendChild(this.btnPanoramaxBackground);
+                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxBackground);
                         }
                         break;
                     default:
@@ -747,9 +750,9 @@ class Panoramax extends Control {
             }
         }
 
-        if (this.panelPanoramaxFilters) {
-            var panelFiltersTarget = this.panelPanoramaxButtonsContainer.parentElement || container;
-            panelFiltersTarget.appendChild(this.panelPanoramaxFilters);
+        if (this.panelPanoramaxOptions) {
+            var panelOptionsTarget = this.panelPanoramaxButtonsContainer.parentElement || container;
+            panelOptionsTarget.appendChild(this.panelPanoramaxOptions);
         }
 
         // experimental : possibilité d'injecter le panneau des boutons dans une cible spécifique
@@ -820,16 +823,21 @@ class Panoramax extends Control {
     // ################# privates events / handlers ###################### //
     // ################################################################### //
 
-    debounce (func, delay) {
-        let timerId;
-
-        return function (...args) {
-            clearTimeout(timerId);
-            timerId = setTimeout(() => {
-                func.apply(this, args);
-            }, delay);
+    onPointerMoveDebounced (e) {
+        const debounce = (func, delay) => {
+            let timerId;
+    
+            return function (...args) {
+                clearTimeout(timerId);
+                timerId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
         };
+
+        return debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 300);
     }
+
     /**
      * Ajoute les écouteurs d'événements sur la carte (appelé par `setMap`).
      * 
@@ -929,7 +937,7 @@ class Panoramax extends Control {
             }
             self.displayPreview(feature);
         };
-        map.on("pointermove", this.debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 300));
+        map.on("pointermove", this.onPointerMoveDebounced());
     }
 
     /**
@@ -942,7 +950,7 @@ class Panoramax extends Control {
 
         map.un("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
         delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
-        map.un("pointermove", this.debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 300));
+        map.un("pointermove", this.onPointerMoveDebounced());
         delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
 
         var mapTarget = map.getTargetElement();
@@ -1016,11 +1024,11 @@ class Panoramax extends Control {
         }
     }
     resetButtons () {
-        if (this.panelPanoramaxFilters) {
-            this.panelPanoramaxFilters.classList.replace("gpf-visible", "gpf-hidden");
+        if (this.panelPanoramaxOptions) {
+            this.panelPanoramaxOptions.classList.replace("gpf-visible", "gpf-hidden");
         }
-        if (this.btnPanoramaxFilters) {
-            this.btnPanoramaxFilters.setAttribute("aria-pressed", "false");
+        if (this.btnPanoramaxOptions) {
+            this.btnPanoramaxOptions.setAttribute("aria-pressed", "false");
         }
         this.unbindFiltersPanelPositioning();
     }
@@ -1846,9 +1854,12 @@ class Panoramax extends Control {
             ? `<img src="${api}/pictures/${encodedPictureId}/thumb.jpg" alt="Preview image" class="pnx-preview-picture-popup__img">`
             : "";
         var content = `
-            <p class="${className}"><strong>ID :</strong> ${id || "-"}
-                <pre>date : ${ts || "-"}</pre>
-                <pre>type : ${type || "-"}</pre>
+            <p class="${className}">
+                <samp>
+                    <strong>ID :</strong> ${id || "-"} <br>
+                    date : ${ts || "-"} <br>
+                    type : ${type || "-"}
+                </samp>
                 ${imageHtml}
             </p>
         `;
@@ -1911,11 +1922,21 @@ class Panoramax extends Control {
         if (!this.layerPanoramax) {
             return null;
         }
-        var field = this.layerPanoramax.get("mapbox-layers").find(l => l.includes(type));
+
+        var mapboxLayers = this.layerPanoramax.get("mapbox-layers");  
+        var mapboxStyle = this.layerPanoramax.get("mapbox-style");  
+        if (!Array.isArray(mapboxLayers)) {  
+            return null;  
+        }
+        if (!mapboxStyle || !Array.isArray(mapboxStyle.layers)) {  
+            return null;  
+        }
+
+        var field = mapboxLayers.find(l => l.includes(type));
         if (!field) {
             return null;
         }
-        var originalMapboxLayer = this.layerPanoramax.get("mapbox-style").layers.find(l => l.id === field);
+        var originalMapboxLayer = mapboxStyle.layers.find(l => l.id === field);
         if (!originalMapboxLayer) {
             return null;
         }
@@ -2114,30 +2135,30 @@ class Panoramax extends Control {
     // ################################################################### //
 
     updateFiltersPanelPosition () {
-        if (!this.panelPanoramaxFilters || !this.panelPanoramaxButtonsContainer) {
+        if (!this.panelPanoramaxOptions || !this.panelPanoramaxButtonsContainer) {
             return;
         }
         var dialogRect = this.panelPanoramaxButtonsContainer.getBoundingClientRect();
-        this.panelPanoramaxFilters.style.left = dialogRect.left + "px";
-        this.panelPanoramaxFilters.style.top = dialogRect.bottom + 6 + "px";
+        this.panelPanoramaxOptions.style.left = dialogRect.left + "px";
+        this.panelPanoramaxOptions.style.top = dialogRect.bottom + 6 + "px";
     }
 
     bindFiltersPanelPositioning () {
-        if (this._onPanoramaxFiltersReposition) {
+        if (this._onPanoramaxOptionsReposition) {
             return;
         }
-        this._onPanoramaxFiltersReposition = this.updateFiltersPanelPosition.bind(this);
-        window.addEventListener("resize", this._onPanoramaxFiltersReposition);
-        window.addEventListener("scroll", this._onPanoramaxFiltersReposition, true);
+        this._onPanoramaxOptionsReposition = this.updateFiltersPanelPosition.bind(this);
+        window.addEventListener("resize", this._onPanoramaxOptionsReposition);
+        window.addEventListener("scroll", this._onPanoramaxOptionsReposition, true);
     }
 
     unbindFiltersPanelPositioning () {
-        if (!this._onPanoramaxFiltersReposition) {
+        if (!this._onPanoramaxOptionsReposition) {
             return;
         }
-        window.removeEventListener("resize", this._onPanoramaxFiltersReposition);
-        window.removeEventListener("scroll", this._onPanoramaxFiltersReposition, true);
-        this._onPanoramaxFiltersReposition = null;
+        window.removeEventListener("resize", this._onPanoramaxOptionsReposition);
+        window.removeEventListener("scroll", this._onPanoramaxOptionsReposition, true);
+        this._onPanoramaxOptionsReposition = null;
     }
 
     // ################################################################### //
@@ -2211,19 +2232,19 @@ class Panoramax extends Control {
     }
 
     /**
-     * Gère le clic d'ouverture des filtres Panoramax.
+     * Gère le clic d'ouverture du menu des options.
      *
-     * @param {Event} e - Événement DOM du bouton de filtres.
+     * @param {Event} e - Événement DOM du bouton des options.
      * @private
      */
-    onOpenPanoramaxFiltersClick (e) {
+    onOpenPanoramaxOptionsClick (e) {
         logger.debug(e);
-        if (!this.panelPanoramaxFilters || !this.btnPanoramaxFilters) {
+        if (!this.panelPanoramaxOptions || !this.btnPanoramaxOptions) {
             return;
         }
 
-        var panel = this.panelPanoramaxFilters;
-        var button = this.btnPanoramaxFilters;
+        var panel = this.panelPanoramaxOptions;
+        var button = this.btnPanoramaxOptions;
         var open = button.getAttribute("aria-pressed") === "true";
 
         if (!open) {

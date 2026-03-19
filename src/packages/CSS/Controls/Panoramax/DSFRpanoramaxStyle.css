@@ -36,6 +36,11 @@
     border-radius: 10px;
 }
 
+.pnx-options-panel {
+    position: fixed;
+    background-color: var(--background-default-grey);
+}
+
 /* panel buttons window */
 .pnx-buttons-window-panel {}
 .pnx-buttons-panel__body {}
@@ -47,7 +52,7 @@
 
 /* panel filters */
 .pnx-filters-panel {
-    position: fixed;
+    position: relative;
     z-index: 1001;
     min-width: 260px;
     background-color: var(--background-default-grey);
@@ -168,6 +173,11 @@
     font-size: 0.875rem;
     line-height: 1.25rem;
 }
+.pnx-preview-sequence-popup > samp,
+.pnx-preview-picture-popup > samp {
+    display: none;
+}
+
 .pnx-preview-picture-popup__img {
     width: min(220px, 100%);
     max-height: 140px;

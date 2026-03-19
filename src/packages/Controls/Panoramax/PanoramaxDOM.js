@@ -189,35 +189,49 @@ var PanoramaxDOM = {
         return div;
     },
 
-    _createButtonFiltersElement : function (opts) {
+    _createButtonOptionsElement : function () {
         var self = this;
         // <button type="button" class="fr-btn fr-icon-equalizer-line fr-btn--icon-right fr-btn--secondary">Filtrer</button>
         var button = document.createElement("button");
-        button.id = this._addUID("GPpanoramaxButtonFilters");
+        button.id = this._addUID("GPpanoramaxButtonOptions");
         button.className = "gpf-btn gpf-btn-icon gpf-btn-icon-background";
         button.classList.add("fr-btn", "fr-icon-equalizer-line", "fr-btn--icon-right", "fr-btn--secondary");
-        button.title = opts.label;
-        button.setAttribute("aria-label", opts.description);
+        button.title = "Options";
+        button.setAttribute("aria-label", "Options");
         button.setAttribute("aria-pressed", "false");
         button.setAttribute("type", "button");
-        button.textContent = opts.label;
+        button.textContent = "Options";
 
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
                 var status = (e.target.getAttribute("aria-pressed") === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onOpenPanoramaxFiltersClick(e);
+                self.onOpenPanoramaxOptionsClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
                 var status = (e.target.ariaPressed === "true");
                 e.target.setAttribute("aria-pressed", !status);
-                self.onOpenPanoramaxFiltersClick(e);
+                self.onOpenPanoramaxOptionsClick(e);
             });
         }
         
         return button;
     },
+
+    _createWidgetPanelOptionsElement : function () {
+        var panel = document.createElement("div");
+        panel.id = this._addUID("GPpanoramaxPanelOptions");
+        panel.className = "pnx-options-panel gpf-panel gpf-hidden fr-p-2w";
+        panel.setAttribute("role", "region");
+        panel.setAttribute("aria-label", "Panneau des options Panoramax");
+
+        return panel;
+    },
+
+    // ################################################################### //
+    // ####################### Methods for options ####################### //
+    // ################################################################### //
 
     _createButtonContributionsElement : function (opts) {
         // <a href="[url - à modifier]" target="_self" class="fr-btn fr-icon-external-link-fill fr-btn--icon-right fr-btn--secondary">Contribuer</a>
@@ -385,11 +399,11 @@ var PanoramaxDOM = {
     _createWidgetPanelFiltersElement : function (opts) {
         var panel = document.createElement("div");
         panel.id = this._addUID("GPpanoramaxPanelFilters");
-        panel.className = "pnx-filters-panel gpf-panel gpf-hidden fr-p-2w";
+        panel.className = "pnx-filters-panel fr-p-2w";
         panel.setAttribute("role", "region");
         panel.setAttribute("aria-label", opts.description || "Panneau des filtres Panoramax");
 
-        if (opts.periodes) {
+        if (opts.content.periodes) {
             var periodes = [
                 { text : "1 mois", value : 1 },
                 { text : "6 mois", value : 6 },
@@ -399,7 +413,7 @@ var PanoramaxDOM = {
             panel.appendChild(PeriodeGroup);
         }
 
-        if (opts.dates) {
+        if (opts.content.dates) {
             var startDateGroup = this._createGroupFiltersByStartDateElement();
             panel.appendChild(startDateGroup);
             
@@ -407,7 +421,7 @@ var PanoramaxDOM = {
             panel.appendChild(endDateGroup);
         }
         
-        if (opts.types) {
+        if (opts.content.types) {
             var values = ["Tout", "Classique", "360°"];
             var typeGroup = this._createGroupFiltersByTypeElement(values);
             panel.appendChild(typeGroup);
