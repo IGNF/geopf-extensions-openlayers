@@ -418,7 +418,7 @@ class Panoramax extends Control {
             buttonsWindow : {
                 display : true,
                 target : null, // experimental !
-                position : "bottom-left", // TODO
+                position : "bottom-left", // TODO position ?
                 order : ["filters", "contributions", "hover", "background", "styles"],
                 filters : {
                     display : true,
@@ -441,7 +441,7 @@ class Panoramax extends Control {
                     description : "Accéder au parcours de contribution",
                     link : "https://panoramax.openstreetmap.fr/why-contribute"
                 },
-                styles : { // TODO
+                styles : { // TODO styles de rendu ?
                     display : true,
                     label : "Rendu de la carte",
                     description : "Personnaliser le rendu de la carte",
@@ -456,7 +456,7 @@ class Panoramax extends Control {
             visualizationWindow : {
                 display : true,
                 target : null, // experimental !
-                position : "bottom-left", // TODO
+                position : "bottom-left", // TODO position ?
                 size : "medium"
             },
             viewer : {
@@ -465,12 +465,12 @@ class Panoramax extends Control {
                     "btnBack",
                     "btnClose",
                     "btnZoom",
-                    "btnFullscreen", // TODO
+                    "btnFullscreen", // TODO widget
                     "cmpPictureLegend",
-                    "cmpMenuActions", // TODO
-                    "cmpMinimap", // TODO
+                    "cmpMenuActions", // TODO widget
+                    "cmpMinimap", // TODO widget
                 ],
-                "pnxOptions" : { // TODO
+                "pnxOptions" : { // TODO opts psv ?
                     "class" : "",
                     "widgets" : true,
                     "psv-options" : {}
@@ -898,7 +898,7 @@ class Panoramax extends Control {
                     // zoom on the clicked coordinates with a zoom level 
                     // depending on the density of images in the grid
                     var zoom = e.map.getView().getZoom();
-                    var newZoom = zoom + 4; // FIXME valeur aleatoire !?
+                    var newZoom = zoom + 4; // FIXME zoom aleatoire !?
                     e.map.getView().animate({
                         center : feature.coordinates,
                         zoom : newZoom,
@@ -909,7 +909,7 @@ class Panoramax extends Control {
                     // zoom on the clicked coordinates with a zoom level 
                     // depending on the density of images in the sequence
                     var zoom = e.map.getView().getZoom();
-                    var newZoom = zoom + 2; // FIXME valeur aleatoire !?
+                    var newZoom = zoom + 2; // FIXME zoom aleatoire !?
                     e.map.getView().animate({
                         center : feature.coordinates,
                         zoom : newZoom,
@@ -1362,10 +1362,6 @@ class Panoramax extends Control {
                 self.showPhotoViewer();
                 if (!self.photoViewerPanoramax) {
                     self.photoViewerPanoramax = self.createPhotoViewer();
-                    // HACK orienté maintenance :
-                    // console.error(self.photoViewerPanoramax.offsetWidth, self.photoViewerPanoramax.isWidthSmall());
-                    // console.error(self.photoViewerPanoramax.offsetHeight, self.photoViewerPanoramax.isHeightSmall());
-                    // window.PNX_PHOTOVIEWER = self.photoViewerPanoramax;
                     self.photoViewerPanoramax.addEventListener("ready", () => {
                         console.debug("Panoramax photo viewer is ready", self);
                         // Modification position "Annotations switch"
@@ -1611,7 +1607,7 @@ class Panoramax extends Control {
     }
 
     /**
-     * Crée un bouton de plein écran personnalisé pour le viewer de photos de Panoramax.
+     * TODO Crée un bouton de plein écran personnalisé pour le viewer de photos de Panoramax.
      * @returns {HTMLElement} Élément du bouton de plein écran.
      */
     createWidgetBtnFullScreen () {}
@@ -1636,13 +1632,13 @@ class Panoramax extends Control {
     }
 
     /**
-     * Crée un composant de minimap personnalisé pour le viewer de photos de Panoramax.
+     * TODO Crée un composant de minimap personnalisé pour le viewer de photos de Panoramax.
      * @returns {HTMLElement} Élément du composant de minimap.
      */
     createWidgetCmpMinimap () {}
 
     /**
-     * Crée un composant de menu d'actions personnalisé pour le viewer de photos de Panoramax.
+     * TODO Crée un composant de menu d'actions personnalisé pour le viewer de photos de Panoramax.
      * @returns {HTMLElement} Élément du composant de menu d'actions.
      */
     createWidgetCmpMenuActions () {}
@@ -1770,8 +1766,7 @@ class Panoramax extends Control {
                 this.displayPreviewGrid(feature.coordinates, feature.properties);
                 break;
             case "sequences":
-                // FIXME 
-                // on desactive temporairement la prévisualisation des séquences
+                // FIXME desactive temporairement la prévisualisation des séquences
                 // this.displayPreviewSequence(feature.coordinates, feature.properties);
                 break;
             case "pictures":
@@ -1997,7 +1992,7 @@ class Panoramax extends Control {
                     delete mapboxLayer.filter;
                 }
             } else if (type === "grid") {
-                // TODO
+                // TODO filtrer la couche de grille
                 // comment filtrer la couche de grille en fonction du type de photo sélectionné ?
                 // ex. afficher uniquement les cellules contenant des photos 360° ?
             }
@@ -2060,7 +2055,7 @@ class Panoramax extends Control {
                     delete mapboxLayer.filter;
                 }
             } else if (type === "grid") {
-                // TODO
+                // TODO filtrer la couche de grille
                 // comment filtrer la couche de grille en fonction de la plage de dates sélectionnée ?
                 // ex. afficher uniquement les cellules contenant des photos prises dans la plage de dates sélectionnée ?
             }
@@ -2104,13 +2099,13 @@ class Panoramax extends Control {
      * Applique les filtres sélectionnés à la couche Panoramax.
      * @param {Array<Object>} mapboxLayers - format Mapbox Style.
      * @returns {Promise} Promise résolue lorsque les filtres sont appliqués.
-     * @fixme les filtres ne sont cumulatifs : 
-     *   ex. si on applique un filtre de type de photo, 
-     *   puis un filtre de date, le second filtre écrase le premier, 
-     *   au lieu de les cumuler (ex. filtrer par type de photo ET par date)
      * @private
      */
     async applyFilters (mapboxLayers) {
+        // FIXME les filtres ne sont pas cumulatifs : 
+        // ex. si on applique un filtre de type de photo, 
+        // puis un filtre de date, le second filtre écrase le premier, 
+        // au lieu de les cumuler (ex. filtrer par type de photo ET par date)
         logger.debug("applyFilters", mapboxLayers);
 
         if (!this.layerPanoramax) {
@@ -2135,7 +2130,7 @@ class Panoramax extends Control {
             return Promise.reject(new Error("Panoramax layer style not available"));
         }
 
-        // HACK pour forcer la mise à jour du cache interne de ol-mapbox-style
+        // Pour forcer la mise à jour du cache interne de ol-mapbox-style
         if (style.id) {
             delete style.id;
         }
@@ -2256,6 +2251,7 @@ class Panoramax extends Control {
     onToggleChoiceHoverPanoramaxClick (e) {
         logger.debug(e);
         this.hover = !this.hover;
+        this.resetPreview();
     }
 
     /**
@@ -2288,13 +2284,15 @@ class Panoramax extends Control {
     /**
      * Gère le clic de réinitialisation des filtres Panoramax.
      * @param {Event} e - Événement DOM du bouton de réinitialisation.
-     * @todo remettre les filtres à leur état initial (ex. type de photo, période, dates, etc.)
      */
     onResetPanoramaxFiltersClick (e) {
         // réinitialiser tous les filtres à leur état initial
         // ainsi que le rendu de la couche
         var mapboxLayers = this.originalStyleLayerPanoramax.layers;
         this.applyFilters(mapboxLayers)
+            .then(() => {
+                // TODO remettre les filtres à leur état initial
+            })
             .then(() => {
                 this.dispatchEvent(this.FILTER_INIT_PANORAMAX_EVENT);
             })
