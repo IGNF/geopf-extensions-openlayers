@@ -2166,7 +2166,8 @@ class Panoramax extends Control {
         }
         var dialogRect = this.panelPanoramaxButtonsContainer.getBoundingClientRect();
         this.panelPanoramaxOptions.style.left = dialogRect.left + "px";
-        this.panelPanoramaxOptions.style.top = dialogRect.bottom + 6 + "px";
+        this.panelPanoramaxOptions.style.top = "";
+        this.panelPanoramaxOptions.style.bottom = (window.innerHeight - dialogRect.top + 6) + "px";
     }
 
     bindFiltersPanelPositioning () {
