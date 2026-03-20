@@ -90,7 +90,6 @@ var TerritoriesDOM = {
         button.id = this._addUID("GPshowTerritoriesPicto");
         button.classList.add("GPshowOpen", "GPshowAdvancedToolPicto", "GPshowTerritoriesPicto");
         button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon", "gpf-btn-icon-territories");
-        button.classList.add("fr-icon-france-line");
         button.classList.add("fr-btn", "fr-btn--tertiary");
         button.setAttribute("aria-label", "Sélectionner un territoire");
         button.setAttribute("tabindex", "0");

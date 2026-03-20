@@ -47,7 +47,7 @@ var ReportingDOM = {
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.id = this._addUID("GPreporting");
-        container.className = "gpf-widget gpf-widget-button gpf-mobile-fullscreen gpf-button-no-gutter";
+        container.className = "gpf-widget gpf-widget-button gpf-mobile-fullscreen";
         return container;
     },
 
