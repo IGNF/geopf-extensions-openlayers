@@ -2462,7 +2462,30 @@ class Panoramax extends Control {
         var mapboxLayers = this.originalStyleLayerPanoramax.layers;
         this.applyFilters(mapboxLayers)
             .then(() => {
-                // TODO remettre les filtres à leur état initial
+                var elements = this.panelPanoramaxOptions.elements;
+                const groups = [
+                    "group-filter-dates",
+                    "group-filter-periodes",
+                    "group-filter-types"
+                ];
+                groups.forEach(group => {
+                    var groupElements = elements[group];
+                    if (!groupElements) {
+                        return;
+                    }
+                    Array.from(groupElements).forEach(el => {
+                        if (el.type === "input" || el.type === "radio") {
+                            el.checked = (el.dataset.default === "true");
+                            if (el.checked) {
+                                el.dispatchEvent(new Event("change", { "bubbles" : true }));
+                            }
+                        } else if (el.type === "button") {
+                            el.setAttribute("aria-pressed", "false");
+                        } else if (el.type === "date") {
+                            el.value = "";
+                        }
+                    });
+                });
             })
             .then(() => {
                 this.dispatchEvent(this.FILTER_INIT_PANORAMAX_EVENT);
@@ -2476,15 +2499,16 @@ class Panoramax extends Control {
      * Gère le changement de type d'image dans les filtres Panoramax.
      *
      * @param {Event} e - Événement DOM du sélecteur de type.
+     * @param {String} value - Valeur du type d'image sélectionné.
      * @private
      */
-    onChangePanoramaxFilterByType (e) {
+    onChangePanoramaxFilterByType (e, value) {
         logger.debug("onChangePanoramaxFilterByType", e);
         if (!e || !e.target) {
             return;
         }
 
-        var selectedType = (e.target.value || "").toLowerCase();
+        var selectedType = (value || "").toLowerCase();
         var cameraType = null;
 
         if (selectedType === "classique") {

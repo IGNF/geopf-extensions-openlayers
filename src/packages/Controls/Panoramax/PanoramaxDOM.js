@@ -220,7 +220,7 @@ var PanoramaxDOM = {
     },
 
     _createWidgetPanelOptionsElement : function () {
-        var panel = document.createElement("div");
+        var panel = document.createElement("form");
         panel.id = this._addUID("GPpanoramaxPanelOptions");
         panel.className = "pnx-options-panel gpf-panel gpf-hidden fr-p-2w";
         panel.setAttribute("role", "region");
@@ -501,6 +501,7 @@ var PanoramaxDOM = {
             buttonPeriode.setAttribute("type", "button");
             buttonPeriode.setAttribute("aria-pressed", "false");
             buttonPeriode.dataset.filters = "group-filter-periodes";
+            buttonPeriode.name = "group-filter-periodes";
             buttonPeriode.innerText = periodes[i].text;
             buttonPeriode.value = periodes[i].value;
 
@@ -554,6 +555,7 @@ var PanoramaxDOM = {
         startDateInput.className = "fr-input gpf-input-date";
         startDateInput.setAttribute("type", "date");
         startDateInput.dataset.filters = "group-filter-dates";
+        startDateInput.name = "group-filter-dates";
         startDateInput.addEventListener("change", function (e) {
             self.onChangePanoramaxFilterByDates(e);
         });
@@ -582,6 +584,7 @@ var PanoramaxDOM = {
         endDateInput.className = "fr-input gpf-input-date";
         endDateInput.setAttribute("type", "date");
         endDateInput.dataset.filters = "group-filter-dates";
+        endDateInput.name = "group-filter-dates";
         endDateInput.addEventListener("change", function (e) {
             self.onChangePanoramaxFilterByDates(e);
         });
@@ -619,9 +622,10 @@ var PanoramaxDOM = {
             var input = document.createElement("input");
             input.value = i;
             input.checked = (i === 0); // cocher le premier élément par défaut
+            input.dataset.default = (i === 0);
             input.type = "radio";
             input.id = "filter-type-segmented-" + i;
-            input.name = "segmented-filter-types";
+            input.name = "group-filter-types";
             input.addEventListener("change", function (e) {
                 // uncheck all buttons in the group
                 var groupName = e.target.parentElement.parentElement.dataset.filters;
@@ -632,8 +636,7 @@ var PanoramaxDOM = {
                     }
                 }
                 var index = parseInt(e.target.value, 10);
-                e.target.value = values[index];
-                self.onChangePanoramaxFilterByType(e);
+                self.onChangePanoramaxFilterByType(e, values[index]);
             });
             segmentedElement.appendChild(input);
 
