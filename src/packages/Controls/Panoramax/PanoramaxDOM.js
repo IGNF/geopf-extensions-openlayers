@@ -414,11 +414,14 @@ var PanoramaxDOM = {
         }
 
         if (opts.content.dates) {
+            var dateGroup = this._createGroupFiltersByDateElement();
+            panel.appendChild(dateGroup);
+
             var startDateGroup = this._createGroupFiltersByStartDateElement();
-            panel.appendChild(startDateGroup);
+            dateGroup.appendChild(startDateGroup);
             
             var endDateGroup = this._createGroupFiltersByEndDateElement();
-            panel.appendChild(endDateGroup);
+            dateGroup.appendChild(endDateGroup);
         }
         
         if (opts.content.types) {
@@ -491,7 +494,7 @@ var PanoramaxDOM = {
 
         for (var i = 0; i < periodes.length; i++) {
             var fieldsetElement = document.createElement("div");
-            fieldsetElement.className = "gpf-fieldset__element fr-fieldset__element";
+            fieldsetElement.className = "gpf-fieldset__element";
 
             var buttonPeriode = document.createElement("button");
             buttonPeriode.className = "fr-tag";
@@ -526,11 +529,17 @@ var PanoramaxDOM = {
 
         return PeriodeGroup;
     },
+    _createGroupFiltersByDateElement : function () {
+        var dateGroup = document.createElement("div");
+        dateGroup.className = "pnx-filters-panel__date gpf-input-group gpf-mb-1w";
+        
+        return dateGroup;
+    },
     _createGroupFiltersByStartDateElement : function () {
         var self = this;
 
         var startDateGroup = document.createElement("div");
-        startDateGroup.className = "pnx-filters-panel__date-start fr-input-group fr-mb-1w";
+        startDateGroup.className = "pnx-filters-panel__date-start gpf-input-group gpf-mb-1w";
         
         var fieldset = document.createElement("fieldset");
         fieldset.className = "fr-fieldset";
@@ -542,7 +551,7 @@ var PanoramaxDOM = {
 
         var startDateInput = document.createElement("input");
         startDateInput.id = this._addUID("GPpanoramaxFilterDateStart");
-        startDateInput.className = "fr-input";
+        startDateInput.className = "fr-input gpf-input-date";
         startDateInput.setAttribute("type", "date");
         startDateInput.dataset.filters = "group-filter-dates";
         startDateInput.addEventListener("change", function (e) {
@@ -558,7 +567,7 @@ var PanoramaxDOM = {
         var self = this;
 
         var endDateGroup = document.createElement("div");
-        endDateGroup.className = "pnx-filters-panel__date-end fr-input-group fr-mb-1w";
+        endDateGroup.className = "pnx-filters-panel__date-end gpf-input-group fr-mb-1w";
 
         var fieldset = document.createElement("fieldset");
         fieldset.className = "fr-fieldset";
@@ -570,7 +579,7 @@ var PanoramaxDOM = {
 
         var endDateInput = document.createElement("input");
         endDateInput.id = this._addUID("GPpanoramaxFilterDateEnd");
-        endDateInput.className = "fr-input";
+        endDateInput.className = "fr-input gpf-input-date";
         endDateInput.setAttribute("type", "date");
         endDateInput.dataset.filters = "group-filter-dates";
         endDateInput.addEventListener("change", function (e) {
@@ -586,39 +595,56 @@ var PanoramaxDOM = {
         var self = this;
 
         var typeGroup = document.createElement("div");
-        typeGroup.className = "pnx-filters-panel__type fr-select-group fr-mb-1w";
+        typeGroup.className = "pnx-filters-panel__type gpf-select-group gpf-mb-1w";
 
-        var fieldset = document.createElement("fieldset");
-        fieldset.className = "fr-fieldset";
+        var segmentedFieldset = document.createElement("fieldset");
+        segmentedFieldset.className = "fr-segmented";
 
-        var legend = document.createElement("legend");
-        legend.className = "fr-fieldset__legend";
-        legend.innerText = "Type d'image";
-        fieldset.appendChild(legend);
-        
-        var typeSelect = document.createElement("select");
-        typeSelect.id = this._addUID("GPpanoramaxFilterType");
-        typeSelect.className = "fr-select";
-        typeSelect.dataset.filters = "group-filter-types";
+        var segmentedLegend = document.createElement("legend");
+        segmentedLegend.className = "fr-fieldset__legend fr-segmented__legend";
+        segmentedLegend.innerText = "Type d'image";
+        segmentedFieldset.appendChild(segmentedLegend);
+
+        var segmentedElements = document.createElement("div");
+        segmentedElements.className = "fr-segmented__elements";
+        segmentedElements.dataset.filters = "group-filter-types";
+        segmentedFieldset.appendChild(segmentedElements);
+
         for (var i = 0; i < values.length; i++) {
-            var option = document.createElement("option");
-            option.value = values[i];
-            option.innerText = values[i];
-            typeSelect.appendChild(option);
-        }
+            var item = values[i];
+            var segmentedElement = document.createElement("div");
+            segmentedElement.className = "fr-segmented__element";
+            segmentedElements.appendChild(segmentedElement);
 
-        if (typeSelect.addEventListener) {
-            typeSelect.addEventListener("change", function (e) {
+            var input = document.createElement("input");
+            input.value = i;
+            input.checked = (i === 0); // cocher le premier élément par défaut
+            input.type = "radio";
+            input.id = "filter-type-segmented-" + i;
+            input.name = "segmented-filter-types";
+            input.addEventListener("change", function (e) {
+                // uncheck all buttons in the group
+                var groupName = e.target.parentElement.parentElement.dataset.filters;
+                var groupButtons = segmentedFieldset.querySelectorAll("[data-filters='" + groupName + "'] input");
+                for (var j = 0; j < groupButtons.length; j++) {
+                    if (groupButtons[j] !== e.target) {
+                        groupButtons[j].checked = false;
+                    }
+                }
+                var index = parseInt(e.target.value, 10);
+                e.target.value = values[index];
                 self.onChangePanoramaxFilterByType(e);
             });
-        } else if (typeSelect.attachEvent) {
-            typeSelect.attachEvent("onchange", function (e) {
-                self.onChangePanoramaxFilterByType(e);
-            });
+            segmentedElement.appendChild(input);
+
+            var label = document.createElement("label");
+            label.className = "fr-label";
+            label.htmlFor = "filter-type-segmented-" + i;
+            label.innerText = item;
+            segmentedElement.appendChild(label);
         }
 
-        fieldset.appendChild(typeSelect);
-        typeGroup.appendChild(fieldset);
+        typeGroup.appendChild(segmentedFieldset);
         return typeGroup;
     },
 

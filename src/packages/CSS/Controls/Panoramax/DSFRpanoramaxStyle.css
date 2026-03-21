@@ -57,7 +57,7 @@
     min-width: 260px;
     background-color: var(--background-default-grey);
     border-radius: 8px;
-    box-shadow: var(--raised-shadow);
+    /* box-shadow: var(--raised-shadow); */
     max-width: 320px;
 }
 .pnx-filters-panel__title {
@@ -72,11 +72,19 @@
 }
 
 /* panel filters: elements */
+.pnx-filters-panel__date {
+    display: flex;
+    flex-direction: column;
+}
 .pnx-filters-panel__date-start {}
 .pnx-filters-panel__date-end {}
 .pnx-filters-panel__type {}
 .gpf-fieldset__element {
     flex: none;
+}
+.gpf-input-date {
+    background-color: var(--background-default-grey);
+    color: var(--background-action-high-blue-france);
 }
 
 /* photo viewer */

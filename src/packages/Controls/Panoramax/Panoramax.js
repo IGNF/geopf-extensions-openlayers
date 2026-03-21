@@ -1402,22 +1402,6 @@ class Panoramax extends Control {
     // ################################################################### //
 
     /*
-    * FIXME :
-    * le menu de metainformations est en mode mobile (affichage en bas) même sur desktop, 
-    * à cause de la classe "is-small" qui est appliquée par défaut sur le composant pnx-photo-viewer
-    * 
-    * cf. https://docs.panoramax.fr/web-viewer/reference/components/core/PhotoViewer/#panoramaxcomponentscorephotoviewer-basic
-    * - Make sure to set width/height through CSS for proper display
-    *   <pnx-photo-viewer style="width: 300px; height: 250px"></pnx-photo-viewer>
-    * 
-    * INFO :
-    * https://docs.panoramax.fr/web-viewer/tutorials/custom_widgets/#reuse-default-widgets
-    * - With slotted widgets
-    *   <pnx-photo-viewer>
-    *     <pnx-my-widget slot="top-left" /> <!-- custom widget -->
-    *     <pnx-widget-zoom slot="top-right" /> <!-- reuse default widgets -->
-    *   </pnx-photo-viewer>
-    * 
     * TODO : ajouter des widgets
     * https://docs.panoramax.fr/web-viewer/reference/#componentsui
     * - ex. https://docs.panoramax.fr/web-viewer/reference/components/ui/widgets/CopyCoordinates/
@@ -1754,7 +1738,13 @@ class Panoramax extends Control {
             logger.warn("Panoramax photo viewer is not available");
             return;
         }
+
         const host = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
+        if (!host) {
+            logger.warn("Panoramax picture legend is not available");
+            return;
+        }
+
         // on masque les métadonnées de la photo, qui ne sont pas pertinentes pour notre usage
         var pnxPictureMetadata = host.shadowRoot.querySelector("pnx-picture-metadata");
         if (pnxPictureMetadata) {
@@ -1767,6 +1757,10 @@ class Panoramax extends Control {
         var pnxExpander = host.shadowRoot.querySelector("#pic-legend-expand");
         if (pnxExpander) {
             pnxExpander.style.display = "none";
+        }
+        var pnxInfo = host.shadowRoot.querySelector("#pic-legend-info");
+        if (pnxInfo) {
+            pnxInfo.classList.remove("pnx-hidden");
         }
     }
 
