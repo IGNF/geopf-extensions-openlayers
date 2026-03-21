@@ -660,6 +660,9 @@ class Panoramax extends Control {
         this.previewPopupOverlay = null;
         /** preview popup element */
         this.previewPopupElement = null;
+        
+        /** map viewport sync listener */
+        this.mapViewportSyncListener = null;
     }
 
     /**
@@ -1064,6 +1067,7 @@ class Panoramax extends Control {
         }
     }
     resetVisualizationWindow () {
+        this.stopMapViewportSync();
     }
     resetPreview () {
         var map = this.getMap();
@@ -1508,6 +1512,7 @@ class Panoramax extends Control {
     hidePhotoViewer () {
         this.panelPanoramaxViewerContainer.classList.replace("gpf-visible", "gpf-hidden");
         this.panelPanoramaxViewerContainer.lastChild.classList.replace("gpf-visible", "gpf-hidden");
+        this.stopMapViewportSync();
         
         if (!this.photoViewerPanoramax) {
             logger.warn("Panoramax photo viewer is not available");
@@ -1987,25 +1992,91 @@ class Panoramax extends Control {
         switch (size) {
             case "small":
                 container.classList.add("pnx-visualization-window-size-small");
+                this.stopMapViewportSync();
                 break;
             case "medium":
                 container.classList.add("pnx-visualization-window-size-medium");
+                this.stopMapViewportSync();
                 break;
             case "large":
                 container.classList.add("pnx-visualization-window-size-large");
+                this.stopMapViewportSync();
                 break;
             case "fullscreen":
                 container.classList.add("pnx-visualization-window-size-fullscreen");
+                this.stopMapViewportSync();
                 break;
             case "fullscreen-map":
-                // FIXME le mode "fullscreen-map" !?
                 container.classList.add("pnx-visualization-window-size-fullscreen-map");
+                this.startMapViewportSync();
                 break;
             default:
                 logger.warn("Unknown visualization window size :", size);
                 container.classList.add("pnx-visualization-window-size-medium");
+                this.stopMapViewportSync();
                 break;
         }
+    }
+
+    /**
+     * Synchronise la position et la taille de la fenêtre de visualisation
+     * avec la carte (mode fullscreen-map)
+     * 
+     * @private
+     */
+    startMapViewportSync () {
+        var self = this;
+        if (this.mapViewportSyncListener) {
+            return; // Évite d'ajouter plusieurs écouteurs
+        }
+
+        var map = this.getMap();
+        var updateMapViewport = () => {
+            if (!self.panelPanoramaxViewerContainer || !map) {
+                return;
+            }
+            var mapViewport = map.getViewport();
+            var rect = mapViewport.getBoundingClientRect();
+            
+            self.panelPanoramaxViewerContainer.style.setProperty("--pnx-map-top", rect.top + "px");
+            self.panelPanoramaxViewerContainer.style.setProperty("--pnx-map-left", rect.left + "px");
+            self.panelPanoramaxViewerContainer.style.setProperty("--pnx-map-width", rect.width + "px");
+            self.panelPanoramaxViewerContainer.style.setProperty("--pnx-map-height", rect.height + "px");
+        };
+
+        // Calcul initial
+        updateMapViewport();
+
+        // Mise à jour lors du redimensionnement de la fenêtre
+        this.mapViewportSyncListener = updateMapViewport;
+        window.addEventListener("resize", this.mapViewportSyncListener);
+
+        // Mise à jour lors du défilement
+        window.addEventListener("scroll", this.mapViewportSyncListener);
+
+        // Mise à jour lors des changements nécessaires (ex: pan, zoom)
+        var map = this.getMap();
+        if (map) {
+            map.on("change:size", this.mapViewportSyncListener);
+        }
+    }
+
+    /**
+     * Arrête la synchronisation de la position et la taille
+     * 
+     * @private
+     */
+    stopMapViewportSync () {
+        if (!this.mapViewportSyncListener) {
+            return;
+        }
+        window.removeEventListener("resize", this.mapViewportSyncListener);
+        window.removeEventListener("scroll", this.mapViewportSyncListener);
+        var map = this.getMap();
+        if (map) {
+            map.un("change:size", this.mapViewportSyncListener);
+        }
+        this.mapViewportSyncListener = null;
     }
 
     // ################################################################### //

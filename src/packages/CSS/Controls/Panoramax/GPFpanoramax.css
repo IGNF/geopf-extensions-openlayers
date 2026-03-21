@@ -38,6 +38,7 @@ dialog[id^="GPpanoramaxPanelViewer-"] {
 
 dialog[id^="GPpanoramaxPanelViewer-"].pnx-visualization-window-size-fullscreen {
     position: fixed;
+    /* 
     inset: 0;
     left: 0;
     top: 0;
@@ -51,14 +52,16 @@ dialog[id^="GPpanoramaxPanelViewer-"].pnx-visualization-window-size-fullscreen {
     padding: 0;
     border: 0;
     border-radius: 0;
-    z-index: 1000;
+    z-index: 1000; */
 }
 
 dialog[id^="GPpanoramaxPanelViewer-"].pnx-visualization-window-size-fullscreen-map {
-    position: absolute;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
+    position: fixed;
+    /* 
+    top: var(--pnx-map-top, 0px);
+    left: var(--pnx-map-left, 0px);
+    width: var(--pnx-map-width, 100%);
+    height: var(--pnx-map-height, 100%);
     min-width: unset;
     min-height: unset;
     max-width: none;
@@ -68,5 +71,5 @@ dialog[id^="GPpanoramaxPanelViewer-"].pnx-visualization-window-size-fullscreen-m
     border: 0;
     border-radius: 0;
     transform: none !important;
-    z-index: 10000 !important;
+    z-index: 10000 !important; */
 }

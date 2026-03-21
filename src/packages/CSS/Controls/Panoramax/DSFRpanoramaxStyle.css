@@ -146,29 +146,34 @@
 .pnx-visualization-window-size-fullscreen {
     position: fixed;
     inset: 0 !important;
-    width: 100dvw;
-    height: 100dvh;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100dvw !important;
+    height: 100dvh !important;
+    min-width: 100dvw;
+    min-height: 100dvh;
     max-width: none;
     max-height: none;
     margin: 0;
+    padding: 0;
     border: 0;
     border-radius: 0;
-    padding: 0;
     z-index: 1000;
 }
 .pnx-visualization-window-size-fullscreen-map {
-    position: absolute;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
+    position: fixed;
+    top: var(--pnx-map-top, 0px) !important;
+    left: var(--pnx-map-left, 0px) !important;
+    width: var(--pnx-map-width, 100%) !important;
+    height: var(--pnx-map-height, 100%) !important;
     min-width: unset;
     min-height: unset;
     max-width: none;
     max-height: none;
     margin: 0;
+    padding: 0;
     border: 0;
     border-radius: 0;
-    padding: 0;
     transform: none !important;
     z-index: 10000 !important;
 }
