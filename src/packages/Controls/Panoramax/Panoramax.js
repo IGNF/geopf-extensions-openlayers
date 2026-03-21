@@ -1360,6 +1360,10 @@ class Panoramax extends Control {
                 self.showPhotoViewer();
                 if (!self.photoViewerPanoramax) {
                     self.photoViewerPanoramax = self.createPhotoViewer();
+                    self.photoViewerPanoramax.onceReady()
+                        .then(() => {
+                            console.debug("Panoramax photo viewer is ready");
+                        });
                     self.photoViewerPanoramax.addEventListener("ready", () => {
                         console.debug("Panoramax photo viewer is ready", self);
                         // Suppression "Player"
@@ -1501,6 +1505,7 @@ class Panoramax extends Control {
                 this.photoViewerPanoramax.setAttribute("picture", pictureId);
             }
         }
+        this.hideWidgetPictureMetadata(); // pas le meilleur endroit pour cacher le widget des métadonnées...
         this.showPhotoViewer();
         this.hideButtonsPanel();
     }
@@ -1553,11 +1558,11 @@ class Panoramax extends Control {
     createWidgetBtnBack () {
         var svg = `
         <svg 
-        aria-hidden="true" 
-        focusable="false" 
-        class="" 
-        role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-        <path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path>
+            aria-hidden="true" 
+            focusable="false" 
+            class="" 
+            role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path>
         </svg>`;
         // Button back
         var buttonBack = document.createElement("pnx-button");
@@ -1662,9 +1667,10 @@ class Panoramax extends Control {
     createWidgetCmpPictureLegend () {
         var pnxPictureLegend = document.createElement("pnx-picture-legend");
         pnxPictureLegend.className = "pnx-photo-viewer-picture-legend";
-        pnxPictureLegend.classList.add("gpf-panel"); // TODO dsfr
+        // TODO dsfr
+        // pnxPictureLegend.classList.add("gpf-panel"); 
         pnxPictureLegend.setAttribute("slot", "top-left");
-        pnxPictureLegend.setAttribute("collapsable", "true");
+        pnxPictureLegend.setAttribute("collapsable", "false");
         return pnxPictureLegend;
 
         // var pnxMiniPictureLegend = document.createElement("pnx-mini-picture-legend");
@@ -1736,6 +1742,31 @@ class Panoramax extends Control {
         var pnxPlayer = this.photoViewerPanoramax.querySelector("pnx-widget-player");
         if (pnxPlayer) {
             pnxPlayer.remove();
+        }
+    }
+
+    /**
+     * Masque les métadonnées de la photo dans le widget de légende 
+     * du viewer de photos de Panoramax
+     */
+    hideWidgetPictureMetadata () {
+        if (!this.photoViewerPanoramax) {
+            logger.warn("Panoramax photo viewer is not available");
+            return;
+        }
+        const host = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
+        // on masque les métadonnées de la photo, qui ne sont pas pertinentes pour notre usage
+        var pnxPictureMetadata = host.shadowRoot.querySelector("pnx-picture-metadata");
+        if (pnxPictureMetadata) {
+            pnxPictureMetadata.style.display = "none";
+        }
+        var pnxCta = host.shadowRoot.querySelector("#pic-legend-cta");
+        if (pnxCta) {
+            pnxCta.style.display = "none";
+        }
+        var pnxExpander = host.shadowRoot.querySelector("#pic-legend-expand");
+        if (pnxExpander) {
+            pnxExpander.style.display = "none";
         }
     }
 
