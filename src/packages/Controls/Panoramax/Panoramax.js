@@ -81,7 +81,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {Object} [visualizationWindow] - Options de configuration de la fenêtre de visualisation.
  * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
  * @property {String|HTMLElement|null} [visualizationWindow.target] - **Experimental** - Cible DOM où injecter le panneau de visualisation.
- * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen").
+ * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen", "fullscreen-map").
  */
 
 /**
@@ -330,8 +330,6 @@ class Panoramax extends Control {
         if (this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
         }
-
-        window.PNX_MAP = map; // for debug
     }
 
     // ################################################################### //
@@ -1364,8 +1362,10 @@ class Panoramax extends Control {
                     self.photoViewerPanoramax = self.createPhotoViewer();
                     self.photoViewerPanoramax.addEventListener("ready", () => {
                         console.debug("Panoramax photo viewer is ready", self);
-                        // Modification position "Annotations switch"
-                        self.modifyWidgetAnnotationsSwitch();
+                        // Suppression "Player"
+                        self.removeWidgetPlayer();
+                        // Suppression "Annotations switch"
+                        self.removeWidgetAnnotationsSwitch();
                         // Suppression "Picture legend Drawer"
                         if (self.options.viewer.widgets && self.options.viewer.widgets.includes("cmpPictureLegend")) {
                             self.removeWidgetPictureLegendDrawer();
@@ -1551,11 +1551,21 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de retour.
      */
     createWidgetBtnBack () {
-        var svg = `<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-left" class="svg-inline--fa fa-arrow-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg>`;
+        var svg = `
+        <svg 
+        aria-hidden="true" 
+        focusable="false" 
+        class="" 
+        role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path>
+        </svg>`;
         // Button back
         var buttonBack = document.createElement("pnx-button");
         buttonBack.className = "pnx-photo-viewer-back-button";
-        buttonBack.classList.add("gpf-btn"); // TODO dsfr
+        // TODO dsfr
+        // buttonBack.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
+        // buttonBack.classList.add("icon--ri", "icon--ri--close-line");
+        // buttonBack.classList.add("fr-btn", "fr-btn--tertiary");
         buttonBack.setAttribute("slot", "top-left");
         buttonBack.setAttribute("kind", "superflat");
         buttonBack.setAttribute("size", "md");
@@ -1572,11 +1582,22 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de fermeture.
      */
     createWidgetBtnClose () {
-        var svg = `<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="xmark" class="svg-inline--fa fa-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg>`;
+        var svg = `
+        <svg 
+        aria-hidden="true" 
+        focusable="false" 
+        class="" 
+        role="img" 
+        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+        <path fill="currentColor" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
+        </svg>`;
         // Button close
         var button = document.createElement("pnx-button");
         button.className = "pnx-photo-viewer-close-button";
-        button.classList.add("gpf-btn"); // TODO dsfr
+        // TODO dsfr
+        // button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
+        // button.classList.add("icon--ri", "icon--ri--close-line");
+        // button.classList.add("fr-btn", "fr-btn--tertiary");
         button.setAttribute("slot", "top-right");
         button.setAttribute("kind", "superflat");
         button.setAttribute("size", "md");
@@ -1593,10 +1614,10 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de zoom.
      */
     createWidgetBtnZoom () {
+        // TODO dsfr
         // Button Zoom
         var zoom = document.createElement("pnx-widget-zoom");
         zoom.className = "pnx-photo-viewer-zoom-button";
-        zoom.classList.add("gpf-btn"); // TODO dsfr
         zoom.setAttribute("slot", "bottom-right");
         zoom.setAttribute("kind", "superflat");
         zoom.setAttribute("size", "md");
@@ -1607,10 +1628,31 @@ class Panoramax extends Control {
     }
 
     /**
-     * TODO Crée un bouton de plein écran personnalisé pour le viewer de photos de Panoramax.
+     * Crée un bouton de plein écran personnalisé pour le viewer de photos de Panoramax.
      * @returns {HTMLElement} Élément du bouton de plein écran.
      */
-    createWidgetBtnFullScreen () {}
+    createWidgetBtnFullScreen () {
+        var svg = `
+        <svg width='24' height='24' viewBox='0 0 24 24' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+        <path d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z"></path>
+        </svg>`;
+        // Button fullscreen
+        var button = document.createElement("pnx-button");
+        button.className = "pnx-photo-viewer-fullscreen-button";
+        // TODO dsfr
+        // button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
+        // button.classList.add("icon--ri", "icon--ri--close-line");
+        // button.classList.add("fr-btn", "fr-btn--tertiary");
+        button.setAttribute("slot", "bottom-right");
+        button.setAttribute("kind", "superflat");
+        button.setAttribute("size", "md");
+        button.title = "Plein écran";
+        button.innerHTML = svg;
+        button.addEventListener("click", (e) => {
+            this.onClickPnxViewerWidgetFullScreen(e);
+        });
+        return button;
+    }
 
     /**
      * Crée un composant de légende des photos personnalisé pour le viewer 
@@ -1632,16 +1674,20 @@ class Panoramax extends Control {
     }
 
     /**
-     * TODO Crée un composant de minimap personnalisé pour le viewer de photos de Panoramax.
+     * Crée un composant de minimap personnalisé pour le viewer de photos de Panoramax.
      * @returns {HTMLElement} Élément du composant de minimap.
      */
-    createWidgetCmpMinimap () {}
+    createWidgetCmpMinimap () {
+        // TODO Créer un composant
+    }
 
     /**
-     * TODO Crée un composant de menu d'actions personnalisé pour le viewer de photos de Panoramax.
+     * Crée un composant de menu d'actions personnalisé pour le viewer de photos de Panoramax.
      * @returns {HTMLElement} Élément du composant de menu d'actions.
      */
-    createWidgetCmpMenuActions () {}
+    createWidgetCmpMenuActions () {
+        // TODO Créer un composant
+    }
 
     /**
      * Modifie le positionnement du widget "Annotations switch" du viewer 
@@ -1649,23 +1695,21 @@ class Panoramax extends Control {
      * On ajoute un écouteur d'événement sur le changement d'état du switch.
      * @returns {HTMLElement|null} Élément du switch d'annotations modifié.
      */
-    modifyWidgetAnnotationsSwitch () {
+    removeWidgetAnnotationsSwitch () {
         if (!this.photoViewerPanoramax) {
             logger.warn("Panoramax photo viewer is not available");
             return;
         }
+        // on supprime le switch d'annotations, qui n'est pas pertinent pour notre usage,
         var pnxAnnotationsSwitch = this.photoViewerPanoramax.querySelector("pnx-annotations-switch");
-        pnxAnnotationsSwitch.setAttribute("slot", "top-right");
-        pnxAnnotationsSwitch.addEventListener("change", (e) => {
-            var checked = e.target.checked;
-            this.onTogglePnxViewerWidgetAnnotationsSwitch(checked);
-        });
-        return pnxAnnotationsSwitch;
+        if (pnxAnnotationsSwitch) {
+            pnxAnnotationsSwitch.remove();
+        }
     }
 
     /**
      * Supprime le widget "Picture legend" du viewer de photos de Panoramax
-     * On supprime le mode drawer pour le widget de légende des photos, 
+     * On supprime le mode drawer pour le widget de légende des photos
      */
     removeWidgetPictureLegendDrawer () {
         if (!this.photoViewerPanoramax) {
@@ -1677,6 +1721,21 @@ class Panoramax extends Control {
         var pnxBottomDrawer = this.photoViewerPanoramax.querySelector("pnx-bottom-drawer");
         if (pnxBottomDrawer) {
             pnxBottomDrawer.remove();
+        }
+    }
+
+    /**
+     * Supprime le widget de player de séquence du viewer de photos de Panoramax
+     */
+    removeWidgetPlayer () {
+        if (!this.photoViewerPanoramax) {
+            logger.warn("Panoramax photo viewer is not available");
+            return;
+        }
+        // on supprime le player de séquence, qui n'est pas pertinent pour notre usage,
+        var pnxPlayer = this.photoViewerPanoramax.querySelector("pnx-widget-player");
+        if (pnxPlayer) {
+            pnxPlayer.remove();
         }
     }
 
@@ -1899,7 +1958,7 @@ class Panoramax extends Control {
             return;
         }
 
-        container.classList.remove("pnx-visualization-window-size-small", "pnx-visualization-window-size-medium", "pnx-visualization-window-size-large", "pnx-visualization-window-size-fullscreen");
+        container.classList.remove("pnx-visualization-window-size-small", "pnx-visualization-window-size-medium", "pnx-visualization-window-size-large", "pnx-visualization-window-size-fullscreen", "pnx-visualization-window-size-fullscreen-map");
         switch (size) {
             case "small":
                 container.classList.add("pnx-visualization-window-size-small");
@@ -1912,6 +1971,10 @@ class Panoramax extends Control {
                 break;
             case "fullscreen":
                 container.classList.add("pnx-visualization-window-size-fullscreen");
+                break;
+            case "fullscreen-map":
+                // FIXME le mode "fullscreen-map" !?
+                container.classList.add("pnx-visualization-window-size-fullscreen-map");
                 break;
             default:
                 logger.warn("Unknown visualization window size :", size);
@@ -2227,7 +2290,13 @@ class Panoramax extends Control {
      * @private
      */
     onClosePanoramaxClick () {
+        var container = this.panelPanoramaxViewerContainer;
+        if (!container) {
+            return;
+        }
         this.buttonPanoramaxShow.click();
+        // reset du fullscreen si besoin
+        this.setSizeWindow(this.options.visualizationWindow.size || "medium");
     }
 
     /**
@@ -2238,8 +2307,14 @@ class Panoramax extends Control {
      * @private
      */
     onReturnPanoramaxClick () {
+        var container = this.panelPanoramaxViewerContainer;
+        if (!container) {
+            return;
+        }
         this.hidePhotoViewer();
         this.showButtonsPanel();
+        // reset du fullscreen si besoin
+        this.setSizeWindow(this.options.visualizationWindow.size || "medium");
     }
 
     /**
@@ -2474,12 +2549,16 @@ class Panoramax extends Control {
         this.onClosePanoramaxClick();
     }
 
+    onClickPnxViewerWidgetFullScreen (e) {
+        var container = this.panelPanoramaxViewerContainer;
+        if (!container) {
+            return;
+        }
+        this.setSizeWindow("fullscreen");
+    }
+
     onClickPnxViewerWidgetZoom () {
         // TODO : implémenter le comportement du bouton de zoom personnalisé
-    }
-    
-    onTogglePnxViewerWidgetAnnotationsSwitch (checked) {
-        // TODO : implémenter le comportement du switch d'affichage des annotations 
     }
 
 };

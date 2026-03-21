@@ -494,7 +494,7 @@ var PanoramaxDOM = {
             fieldsetElement.className = "gpf-fieldset__element fr-fieldset__element";
 
             var buttonPeriode = document.createElement("button");
-            buttonPeriode.className = "fr-tag fr-tag--défaut";
+            buttonPeriode.className = "fr-tag";
             buttonPeriode.setAttribute("type", "button");
             buttonPeriode.setAttribute("aria-pressed", "false");
             buttonPeriode.dataset.filters = "group-filter-periodes";
