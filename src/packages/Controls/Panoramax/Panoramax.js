@@ -194,7 +194,7 @@ class Panoramax extends Control {
      *     maxZoom: 21
      * },
      * background: {
-     *  display: true,
+     *  active: true,
      *  url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
      *  name: "Background",
      *  minZoom: 6,
@@ -560,7 +560,7 @@ class Panoramax extends Control {
          * @type {Object<String, Function>}
          * Référence des gestionnaires d'événements enregistrés sur la carte.
          */
-        this.eventsListeners = [];
+        this.eventsListeners = {};
 
         /**
          * Types de couches Panoramax disponibles dans le TMS vecteur 
@@ -679,7 +679,7 @@ class Panoramax extends Control {
         var picto = this.buttonPanoramaxShow = this._createShowWidgetPictoElement();
         container.appendChild(picto);
 
-        // container panel viewer
+        // container pour le panneau du dialogue du viewer
         var widgetPanelViewer = this.panelPanoramaxViewerContainer = this._createWidgetPanelViewerElement(this.options.panel);
         var widgetPanelViewerDiv = this._createWidgetPanelViewerDivElement();
         widgetPanelViewer.appendChild(widgetPanelViewerDiv);
@@ -693,35 +693,37 @@ class Panoramax extends Control {
             container.appendChild(widgetPanelViewer);
         }
 
-        // main container panel buttons
+        // container pour le panneau du dialogue des boutons
         var widgetPanelButtons = this.panelPanoramaxButtonsContainer = this._createWidgetPanelButtonsElement();
         var widgetPanelButtonsDiv = this._createWidgetPanelButtonsDivElement();
         widgetPanelButtons.appendChild(widgetPanelButtonsDiv);
 
-        // header
-        var widgetPanelButtonsHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
-        // icone
-        var widgetPanelButtonsIcon = this._createWidgetPanelButtonsIconElement();
-        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsIcon);
-        // title
-        var widgetPanelButtonsTitle = this._createWidgetPanelButtonsTitleElement();
-        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsTitle);
-        // close picto
-        var widgetPanelButtonsClose = this._createWidgetPanelButtonsCloseElement();
-        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsClose);
-        
-        widgetPanelButtonsDiv.appendChild(widgetPanelButtonsHeader);
-
-        // container des boutons (ex. Options)
+        // menu des boutons (ex. Options)
         // INFO : possibilité d'injecter d'autres boutons
         var buttons = this._createWidgetButtonsElement();
         widgetPanelButtonsDiv.appendChild(buttons);
-        // bouton options
+
+        // bouton du menu des Options
         this.btnPanoramaxOptions = this._createButtonOptionsElement();
         buttons.appendChild(this.btnPanoramaxOptions);
-        // panneau pour toutes les options
+
+        // panneau pour toutes les filtres et autres boutons optionnels du menu Options
         this.panelPanoramaxOptions = this._createWidgetPanelOptionsElement();
         buttons.appendChild(this.panelPanoramaxOptions);
+
+        // ajout d'un header
+        var widgetPanelButtonsHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
+        // avec icone
+        var widgetPanelButtonsIcon = this._createWidgetPanelButtonsIconElement();
+        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsIcon);
+        // avec title
+        var widgetPanelButtonsTitle = this._createWidgetPanelButtonsTitleElement();
+        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsTitle);
+        // avec close picto
+        var widgetPanelButtonsClose = this._createWidgetPanelButtonsCloseElement();
+        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsClose);
+        
+        this.panelPanoramaxOptions.appendChild(widgetPanelButtonsHeader);
 
         // panneau des filtres et divers boutons optionnels du menu Options
         if (this.options.buttonsWindow.display) {
@@ -1062,7 +1064,9 @@ class Panoramax extends Control {
             if (this.photoViewerPanoramax.getAttribute("picture")) {
                 this.photoViewerPanoramax.setAttribute("picture", "");
             }
-            this.photoViewerPanoramax.select();
+            if (typeof this.photoViewerPanoramax.select === "function") {
+                this.photoViewerPanoramax.select();
+            }  
             this.hidePhotoViewer();
         }
     }
@@ -1207,7 +1211,7 @@ class Panoramax extends Control {
             }
         }
         // clone pour éviter les problèmes de références dans le style JSON 
-        this.originalStyleLayerPanoramax = styleJson ? structuredClone(styleJson) : null;
+        this.originalStyleLayerPanoramax = styleJson ? JSON.parse(JSON.stringify(styleJson)) : null;
 
         return styleJson;
     }
@@ -1299,7 +1303,8 @@ class Panoramax extends Control {
             this.backgroundPanoramax = layer;
             this.backgroundPanoramax.set("title", opts.name);
             if (this.layerPanoramax) {
-                this.backgroundPanoramax.setZIndex(this.layerPanoramax.getZIndex() - 1);
+                const baseZIndex = this.layerPanoramax.getZIndex() ?? 0;  
+                this.backgroundPanoramax.setZIndex(baseZIndex - 1);  
             }
             return layer;
         } catch (err) {

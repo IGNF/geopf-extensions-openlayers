@@ -12,6 +12,12 @@
     background-size: auto auto;
     background-position: center center;
 }
+.gpf-btn-header-panoramax {
+    z-index: 2;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+}
 
 .gpf-btn-icon-background {
     background-color: var(--background-default-grey);
@@ -41,10 +47,33 @@
     background-color: var(--background-default-grey);
 }
 
+/* header */
+.pnx-buttons-panel__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    background: #E3E3FD;
+    height: 48px;
+    padding-left: 4px;
+}
+
+.pnx-buttons-panel__title {
+    color: #101092;
+    padding: 12px 15px;
+    position: relative;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+    right: -16px;
+}
+
 /* panel buttons window */
 .pnx-buttons-window-panel {}
 .pnx-buttons-panel__body {}
-.pnx-buttons-panel__header {}
+.pnx-buttons-panel__header > .gpf-btn-icon-close {
+    top: 0px;
+}
 .pnx-buttons-panel__content {
     display: flex;
     flex-direction: row;

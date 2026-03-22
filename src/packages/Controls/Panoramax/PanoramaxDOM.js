@@ -100,7 +100,7 @@ var PanoramaxDOM = {
      */
     _createWidgetPanelButtonsHeaderElement : function (display) {
         var container = document.createElement("div");
-        container.className = "pnx-buttons-panel__header gpf-panel__header fr-modal__header";
+        container.className = "pnx-buttons-panel__header gpf-panel__header";
         if (!display) {
             container.classList.add("gpf-hidden");
         }
@@ -108,7 +108,7 @@ var PanoramaxDOM = {
     },
     _createWidgetPanelButtonsIconElement : function () {
         var label = document.createElement("label");
-        label.className = "GPpanelIcon gpf-btn-header gpf-btn-icon-header-panoramax";
+        label.className = "gpf-btn-header-panoramax gpf-btn-icon-header-panoramax";
         label.title = `${title}`;
         label.setAttribute("aria-label", `Afficher ${title}`);
         return label;
@@ -141,7 +141,7 @@ var PanoramaxDOM = {
     },
     _createWidgetPanelButtonsTitleElement : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__title fr-modal__title fr-pt-4w";
+        div.className = "pnx-buttons-panel__title gpf-panel__title";
         div.innerHTML = `${title}`;
         return div;
     },
@@ -164,7 +164,7 @@ var PanoramaxDOM = {
         }
 
         var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
+        span.className = "GPelementHidden gpf-hidden";
         span.innerText = "Fermer";
 
         btnClose.appendChild(span);
@@ -222,7 +222,7 @@ var PanoramaxDOM = {
     _createWidgetPanelOptionsElement : function () {
         var panel = document.createElement("form");
         panel.id = this._addUID("GPpanoramaxPanelOptions");
-        panel.className = "pnx-options-panel gpf-panel gpf-hidden fr-p-2w";
+        panel.className = "GPpanel pnx-options-panel gpf-panel gpf-hidden";
         panel.setAttribute("role", "region");
         panel.setAttribute("aria-label", "Panneau des options Panoramax");
 
@@ -672,7 +672,10 @@ var PanoramaxDOM = {
         if (!display) {
             header.classList.add("gpf-hidden");
         }
-        header.appendChild(this._createWidgetPanelButtonsReturnElement());
+
+        // on desactive cette partie du header pour ne pas avoir de bouton retour 
+        // dans la fenêtre de visualisation
+        // header.appendChild(this._createWidgetPanelButtonsReturnElement());
         header.appendChild(this._createWidgetPanelButtonsCloseElement());
 
         dialog.appendChild(header);
