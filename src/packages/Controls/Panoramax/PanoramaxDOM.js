@@ -220,12 +220,11 @@ var PanoramaxDOM = {
     },
 
     _createWidgetPanelOptionsElement : function () {
+        // TODO : faire un dialog pour les options ? ou un panel classique ? à voir
         var panel = document.createElement("form");
         panel.id = this._addUID("GPpanoramaxPanelOptions");
         panel.className = "GPpanel pnx-options-panel gpf-panel gpf-hidden";
-        panel.setAttribute("role", "region");
         panel.setAttribute("aria-label", "Panneau des options Panoramax");
-
         return panel;
     },
 

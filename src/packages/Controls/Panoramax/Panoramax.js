@@ -1602,8 +1602,8 @@ class Panoramax extends Control {
         button.setAttribute("size", "md");
         button.title = "Fermer";
         button.innerHTML = svg;
-        button.addEventListener("click", () => {
-            this.onClickPnxViewerWidgetClose();
+        button.addEventListener("click", (e) => {
+            this.onClickPnxViewerWidgetClose(e);
         });
         return button;
     }
@@ -1620,8 +1620,8 @@ class Panoramax extends Control {
         zoom.setAttribute("slot", "bottom-right");
         zoom.setAttribute("kind", "superflat");
         zoom.setAttribute("size", "md");
-        zoom.addEventListener("click", () => {
-            this.onClickPnxViewerWidgetZoom();
+        zoom.addEventListener("click", (e) => {
+            this.onClickPnxViewerWidgetZoom(e);
         });
         return zoom;
     }
@@ -2390,7 +2390,7 @@ class Panoramax extends Control {
      * @param {Event} e - Événement DOM du bouton de fermeture.
      * @private
      */
-    onClosePanoramaxClick () {
+    onClosePanoramaxClick (e) {
         var container = this.panelPanoramaxViewerContainer;
         if (!container) {
             return;
@@ -2398,6 +2398,8 @@ class Panoramax extends Control {
         this.buttonPanoramaxShow.click();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
+        // Bloque l'envoi/rechargement de la page
+        e.preventDefault();
     }
 
     /**
@@ -2407,7 +2409,7 @@ class Panoramax extends Control {
      * @param {Event} e - Événement DOM du bouton de retour.
      * @private
      */
-    onReturnPanoramaxClick () {
+    onReturnPanoramaxClick (e) {
         var container = this.panelPanoramaxViewerContainer;
         if (!container) {
             return;
@@ -2666,12 +2668,12 @@ class Panoramax extends Control {
             });
     }
 
-    onClickPnxViewerWidgetBack () {
-        this.onReturnPanoramaxClick();
+    onClickPnxViewerWidgetBack (e) {
+        this.onReturnPanoramaxClick(e);
     }
 
-    onClickPnxViewerWidgetClose () {
-        this.onClosePanoramaxClick();
+    onClickPnxViewerWidgetClose (e) {
+        this.onClosePanoramaxClick(e);
     }
 
     onClickPnxViewerWidgetFullScreen (e) {
@@ -2682,7 +2684,7 @@ class Panoramax extends Control {
         this.setSizeWindow("fullscreen");
     }
 
-    onClickPnxViewerWidgetZoom () {
+    onClickPnxViewerWidgetZoom (e) {
         // TODO : implémenter le comportement du bouton de zoom personnalisé
     }
 
