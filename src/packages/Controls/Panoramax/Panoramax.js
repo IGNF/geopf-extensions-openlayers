@@ -407,7 +407,7 @@ class Panoramax extends Control {
                 maxZoom : 21
             },
             background : {
-                active : true,
+                active : false,
                 url : "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
                 name : "Background",
                 minZoom : 6,
@@ -436,11 +436,11 @@ class Panoramax extends Control {
                 contributions : {
                     display : true,
                     label : "Contribuer",
-                    description : "Accéder au parcours de contribution",
-                    link : "https://panoramax.openstreetmap.fr/why-contribute"
+                    description : "Partager vos photos sur Panoramax",
+                    link : "https://panoramax.fr/comment-participer-a-panoramax"
                 },
                 styles : { // TODO styles de rendu ?
-                    display : true,
+                    display : false,
                     label : "Rendu de la carte",
                     description : "Personnaliser le rendu de la carte",
                     content : ["Classique", "Type de camera", "Date de prise de vue"]

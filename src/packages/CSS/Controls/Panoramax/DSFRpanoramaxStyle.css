@@ -15,8 +15,8 @@
 .gpf-btn-header-panoramax {
     z-index: 2;
     position: absolute;
-    width: 26px;
-    height: 26px;
+    width: 20px;
+    height: 20px;
 }
 
 .gpf-btn-icon-background {
@@ -83,11 +83,11 @@
 .pnx-filters-panel {
     position: relative;
     z-index: 1001;
-    min-width: 260px;
+    min-width: 340px;
     background-color: var(--background-default-grey);
     border-radius: 8px;
     /* box-shadow: var(--raised-shadow); */
-    max-width: 320px;
+    max-width: 400px;
 }
 .pnx-filters-panel__title {
     color: var(--text-default-grey);
@@ -97,23 +97,42 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
+    justify-content: center;
     margin-top: 10px;
 }
 
 /* panel filters: elements */
 .pnx-filters-panel__date {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    border-bottom: 1px solid var(--border-default-grey);
+    margin-bottom: 10px;
+    column-gap: 20px;
 }
 .pnx-filters-panel__date-start {}
 .pnx-filters-panel__date-end {}
 .pnx-filters-panel__type {}
+
+.gpf-segmented__element {}
+.gpf-segmented {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
 .gpf-fieldset__element {
     flex: none;
 }
 .gpf-input-date {
+    box-shadow: inset 0px 0px 0px 1px var(--border-default-grey);
     background-color: var(--background-default-grey);
     color: var(--background-action-high-blue-france);
+}
+
+@supports selector(::-webkit-calendar-picker-indicator) {
+  .gpf-input-date[type=date] {}
+}
+@supports selector(::-webkit-calendar-picker-indicator) {
+  .gpf-input-date[type=date]::after {}
 }
 
 /* photo viewer */

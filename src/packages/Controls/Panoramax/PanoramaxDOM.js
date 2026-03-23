@@ -1,4 +1,4 @@
-var title = "panoramax";
+var title = "Panoramax";
 
 var PanoramaxDOM = {
 
@@ -108,7 +108,8 @@ var PanoramaxDOM = {
     },
     _createWidgetPanelButtonsIconElement : function () {
         var label = document.createElement("label");
-        label.className = "gpf-btn-header-panoramax gpf-btn-icon-header-panoramax";
+        label.className = "gpf-btn-header-panoramax gpf-icon-color"; // gpf-btn-icon-header-panoramax
+        label.classList.add("fr-icon", "fr-icon-equalizer-line");
         label.title = `${title}`;
         label.setAttribute("aria-label", `Afficher ${title}`);
         return label;
@@ -142,7 +143,7 @@ var PanoramaxDOM = {
     _createWidgetPanelButtonsTitleElement : function () {
         var div = document.createElement("div");
         div.className = "pnx-buttons-panel__title gpf-panel__title";
-        div.innerHTML = `${title}`;
+        div.innerHTML = "Options";
         return div;
     },
     _createWidgetPanelButtonsCloseElement : function () {
@@ -237,8 +238,8 @@ var PanoramaxDOM = {
         var href = document.createElement("a");
         href.id = this._addUID("GPpanoramaxButtonContributions");
         href.className = "fr-btn fr-icon-external-link-fill fr-btn--icon-right fr-btn--secondary";
-        href.classList.add("gpf-btn", "gpf-btn-icon", "gpf-btn-icon-background");
-        href.title = opts.label;
+        href.classList.add("gpf-btn");
+        href.title = opts.description;
         href.setAttribute("aria-label", opts.description);
         href.setAttribute("target", "_self");
         href.setAttribute("href", opts.link);
@@ -452,8 +453,8 @@ var PanoramaxDOM = {
         // <button type="button" class="fr-btn fr-icon-equalizer-line fr-btn--icon-right fr-btn--secondary">Filtrer</button>
         var button = document.createElement("button");
         button.id = this._addUID("GPpanoramaxButtonResetFilters");
-        button.className = "gpf-btn gpf-btn-icon gpf-btn-icon-background";
-        button.classList.add("fr-btn", "fr-btn--secondary");
+        button.className = "gpf-btn";
+        button.classList.add("fr-btn", "fr-btn--tertiary");
         button.title = opts.description;
         button.setAttribute("aria-label", opts.description);
         button.setAttribute("aria-pressed", "false");
@@ -600,7 +601,7 @@ var PanoramaxDOM = {
         typeGroup.className = "pnx-filters-panel__type gpf-select-group gpf-mb-1w";
 
         var segmentedFieldset = document.createElement("fieldset");
-        segmentedFieldset.className = "fr-segmented";
+        segmentedFieldset.className = "gpf-segmented fr-segmented";
 
         var segmentedLegend = document.createElement("legend");
         segmentedLegend.className = "fr-fieldset__legend fr-segmented__legend";
@@ -615,7 +616,7 @@ var PanoramaxDOM = {
         for (var i = 0; i < values.length; i++) {
             var item = values[i];
             var segmentedElement = document.createElement("div");
-            segmentedElement.className = "fr-segmented__element";
+            segmentedElement.className = "gpf-segmented__element fr-segmented__element";
             segmentedElements.appendChild(segmentedElement);
 
             var input = document.createElement("input");
