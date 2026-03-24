@@ -51,7 +51,7 @@
     "clusterize.js": "^1.0.0",
     "date-fns": "^4.1.0",
     "doctoc": "^2.3.0",
-    "dompurify": "^3.2.6",
+    "dompurify": "^3.3.3",
     "eventbusjs": "0.2.0",
     "geoportal-access-lib": "3.4.6",
     "loglevel": "^1.9.1",

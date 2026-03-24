@@ -1,6 +1,8 @@
 {{#extend "ol-sample-bundle-dsfr-layout"}}
 
 {{#content "vendor"}}
+        <link rel="stylesheet" href="{{ resources }}/vendor/panoramax/v4.4.0/photoviewer.css" />
+        <script src="{{ resources }}/vendor/panoramax/v4.4.0/photoviewer.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/bundle/GpfExtOL.css" />
         <script src="{{ baseurl }}/dist/bundle/GpfExtOL.js"></script>
 {{/content}}
@@ -46,8 +48,18 @@
                   })
                 });
 
+                var panoramax = new ol.control.Panoramax({
+                    position: "bottom-left",
+                    collapsed: true,
+                    panel : true,
+                    visualizationWindow : {
+                      size : "fullscreen-map",
+                    }
+                });
+                map.addControl(panoramax);
+
                 var catalog = new ol.control.Catalog({
-                  position : "top-left"
+                  position : "top-right"
                 });
                 map.addControl(catalog);
 
@@ -56,22 +68,22 @@
                 });
                 map.addControl(reporting);
                 
-                var zoom = new ol.control.GeoportalZoom({
-                  position : "bottom-left"
-                });
-                map.addControl(zoom);
-
                 var fullscreen = new ol.control.GeoportalFullScreen({
-                  position : "top-right"
+                  position : "bottom-right"
                 });
                 map.addControl(fullscreen);
-
+                
                 var overview = new ol.control.GeoportalOverviewMap({
-                  position : "bottom-left",
-                  collapsed: false
+                  position : "bottom-right",
+                  collapsed: true
                 });
                 map.addControl(overview);
-
+                
+                var zoom = new ol.control.GeoportalZoom({
+                  position : "bottom-right"
+                });
+                map.addControl(zoom);
+                
                 var drawing = new ol.control.Drawing({
                   position : "bottom-left"
                 });

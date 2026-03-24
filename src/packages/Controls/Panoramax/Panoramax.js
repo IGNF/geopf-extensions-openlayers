@@ -24,7 +24,6 @@ import {
 
 // lib panoramax
 import "@panoramax/web-viewer/build/photoviewer";
-import "@panoramax/web-viewer/build/photoviewer.css";
 
 // lib external
 import { subMonths } from "date-fns";
@@ -1498,7 +1497,10 @@ class Panoramax extends Control {
                 this.photoViewerPanoramax.setAttribute("picture", pictureId);
             }
         }
-        this.hideWidgetPictureMetadata(); // pas le meilleur endroit pour cacher le widget des métadonnées...
+        // FIXME pas le meilleur endroit pour cacher le widget des métadonnées...
+        this.hideWidgetPictureMetadata();
+        this.modifyWidgetPictureLegendContent();
+        
         this.showPhotoViewer();
         this.hideButtonsPanel();
     }
@@ -1774,6 +1776,25 @@ class Panoramax extends Control {
         }
     }
 
+    /**
+     * Modifie le contenu du widget de légende des photos 
+     * du viewer de photos de Panoramax
+     */
+    modifyWidgetPictureLegendContent () {
+        if (!this.photoViewerPanoramax) {
+            logger.warn("Panoramax photo viewer is not available");
+            return;
+        }
+
+        const host = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
+        if (!host) {
+            logger.warn("Panoramax picture legend is not available");
+            return;
+        }
+
+        // TODO modifier le contenu du widget de légende des photos, 
+        // pour n'afficher que les informations pertinentes pour notre usage
+    }
     // ################################################################### //
     // ######################## methods preview ########################## //
     // ################################################################### //
