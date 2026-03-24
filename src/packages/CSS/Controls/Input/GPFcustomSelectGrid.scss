@@ -1,0 +1,21 @@
+@use '../../mixins.scss' as mx;
+
+.input-style-select-grid {
+  > .input-style__container[data-type='icon'] {
+    > span {
+      color: var(--text-label-grey);
+    }
+  }
+  .input-style {
+    &__options-container {
+      &-content {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+
+        > *:not(.input-style__options-container-header) {
+          padding: 0;
+        }
+      }
+    }
+  }
+}

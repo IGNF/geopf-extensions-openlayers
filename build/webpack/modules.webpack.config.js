@@ -75,6 +75,15 @@ module.exports = (env, argv) => {
             "GpfExtOlInfoControl" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "InfoControl.js"),
             "GpfExtOlReporting" : path.join(rootdir, "src", "packages", "Controls/Reporting", "Reporting.js"),
             "GpfExtOlPanoramax" : path.join(rootdir, "src", "packages", "Controls/Panoramax", "Panoramax.js"),
+            // Input Controls
+            "GpfExtOlInputNumber" : path.join(rootdir, "src", "packages", "Controls/Input", "InputNumber.js"),
+            "GpfExtOlCustomSelect" : path.join(rootdir, "src", "packages", "Controls/Input", "CustomSelect.js"),
+            "GpfExtOlCustomSelectGrid" : path.join(rootdir, "src", "packages", "Controls/Input", "CustomSelectGrid.js"),
+            "GpfExtOlDefaultInput" : path.join(rootdir, "src", "packages", "Controls/Input", "DefaultInput.js"),
+            // StyleDialog Controls
+            "GpfExtOlFlatStyleForm" : path.join(rootdir, "src", "packages", "Controls/StyleDialog", "FlatStyleForm.js"),
+            "GpfExtOlStyleForm" : path.join(rootdir, "src", "packages", "Controls/StyleDialog", "styleForm.js"),
+            "GpfExtOlLabelForm" : path.join(rootdir, "src", "packages", "Controls/StyleDialog", "labelForm.js"),
             // Interactions
             "GpfExtOlDrawingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Drawing.js"),
             "GpfExtOlSelectingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Selecting.js"),

@@ -126,6 +126,19 @@ module.exports = (env, argv) => {
                 moduledir = "OverviewMap";
                 // ras
                 break;
+            case "InputNumber":
+            case "CustomSelect":
+            case "CustomSelectGrid":
+            case "DefaultInput":
+                moduledir = "Input";
+                // ras
+                break;
+            case "FlatStyleForm":
+            case "styleForm":
+            case "labelForm":
+                moduledir = "StyleDialog";
+                // ras
+                break;
             default:
                 break;
         }

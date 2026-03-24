@@ -1,3 +1,5 @@
+@use '../../mixins.scss' as mx;
+
 .GPF-tabnav__list {
   list-style-type: none;
   padding-inline-start: 0;
@@ -7,6 +9,8 @@
   background-position: 0 100%;
   background-repeat: no-repeat;
   background-size: 100% 2px;
+
+  margin: 0;
 }
 
 .GPF-tabnav__link {
@@ -18,13 +22,12 @@
   margin: 0;
   background-color: transparent;
 
-  &:hover {
-    background-color: rgb(208, 208, 215);
-  }
+  --hover: #d0d0d7;
+  --active: #b1b1b9;
+  --hover-tint: var(--hover);
+  --active-tint: var(--active);
 
-  &:active {
-    background-color: rgb(177, 177, 185);
-  }
+  @include mx.button-state();
 
   background-image: linear-gradient(0deg, #ebebeb, #ebebeb);
 

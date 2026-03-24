@@ -1,0 +1,132 @@
+@use '../../mixins.scss' as mx;
+
+.input-style-select {
+  .input-style {
+    &__container {
+      --hover: #d0d0d7;
+      --active: #b1b1b9;
+      --hover-tint: var(--hover);
+      --active-tint: var(--active);
+
+      @include mx.button-state();
+
+      &[aria-expanded='true'] {
+        background-color: var(--active-tint);
+      }
+
+      &::after {
+        background-color: black;
+      }
+    }
+  }
+}
+
+.input-style {
+  &__options-container {
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+
+    background-color: rgba(0, 0, 0, 0.08);
+    @include mx.respond-from('sm') {
+      background-color: #ffffff;
+    }
+
+    // Drag en mobile
+    & > &-drag {
+      background-color: #ffffff;
+      > .input-style__options-container-drag-handle {
+        border: 0.125rem solid #cacaca;
+      }
+    }
+
+    &-content {
+      gap: 0.25rem;
+      padding: 0.25rem;
+      background-color: #ffffff;
+
+      // Bouton d'une option
+      > *:not(.input-style__options-container-drag) {
+        padding: 0;
+        gap: 0.125rem;
+        border: 0;
+        box-shadow: inset 0 0 0 1px #8f8f9d;
+        
+        &:not(:hover):not(:active) {
+          background-color: transparent;
+        }
+
+        // Bouton de séléction
+        &[role='option'] {
+          &:focus:focus-visible {
+            outline-style: auto;
+          }
+
+          &[aria-selected='true'] {
+            outline-style: auto;
+          }
+        }
+      }
+    }
+  }
+
+  [role='option'],
+  [role='combobox'] {
+    // Cas du "sans" (couleur, bordure etc.)
+    &[data-value='none'],
+    &[data-value='null'],
+    &[data-value='transparent'],
+    &[data-value='#0000000'],
+    &[data-value=''],
+    &[data-value=' '] {
+      > span.input-style__option-value {
+        background-image: url('../../img/StyleDialog/ban-solid-full.svg');
+      }
+    }
+
+    // Bordures
+    &[data-type='stroke'] {
+      > span.input-style__option-value {
+        background-color: black;
+      }
+    }
+
+    // Terminaison
+    &[data-type='arrow'] {
+      > span.input-style__option-value {
+        background-color: black;
+      }
+    }
+
+    // Terminaison
+    &[data-type='form'] {
+      &:not([data-value='none']) > span.input-style__option-value {
+        background-color: black;
+      }
+    }
+
+    // Motif
+    &[data-type='pattern'] {
+      &:not([data-value='']) > span.input-style__option-value {
+        // On utilise before et after pour afficher le masque en premier lieu
+        &::before {
+          background-color: black;
+        }
+        // Et une bordure dessus (border et mask ne fonctionnent pas ensemble)
+        &::after {
+          border: 1px solid #cacaca;
+        }
+      }
+      &[data-value=''] > span.input-style__option-value {
+        background-color: black;
+        box-shadow:
+          inset 1px 0 #cacaca,
+          inset 0 1px #cacaca,
+          inset -1px 0 #cacaca,
+          inset 0 -1px #cacaca,
+          inset 3px 0 #e6e6e6,
+          inset 0 3px #e6e6e6,
+          inset -3px 0 #e6e6e6,
+          inset 0 -3px #e6e6e6;
+      }
+    }
+  }
+}
