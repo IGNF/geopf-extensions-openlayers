@@ -1,0 +1,17 @@
+@use '../../mixins.scss' as mx;
+
+.input-style-number {
+  .input-style__container {
+    // Mode non-dsfr : on laisse les boutons initiaux
+    & > .input-style__buttons-container {
+      display: none;
+    }
+  }
+
+  .input-style__input {
+    height: 38px;
+    margin: 1px;
+    padding: 0;
+    border: 0;
+  }
+}

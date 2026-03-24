@@ -6,25 +6,25 @@ import Feature from "ol/Feature";
 
 import { getFlatCoordinates } from "./selectStyle";
 
-/** Get all points in coordinates
- * @param {Feature|Array<coordinate>} coords Coordinates or feature
- * @returns {Array<coordinate>} Flat coordinates array
- * @private
- * /
-function getFlatCoordinates (coords) {
-    if (coords.getGeometry) {
-        coords = coords.getGeometry().getCoordinates();
-    }
-    if (coords && coords[0].length && coords[0][0].length) {
-        var c = [];
-        for (var i=0; i<coords.length; i++) {
-            c = c.concat(getFlatCoordinates(coords[i]));
-        }
-        return c;
-    } else {
-        return coords;
-    }
-}
+// /** Get all points in coordinates
+//  * @param {Feature|Array<coordinate>} coords Coordinates or feature
+//  * @returns {Array<coordinate>} Flat coordinates array
+//  * @private
+//  */
+// function getFlatCoordinates (coords) {
+//     if (coords.getGeometry) {
+//         coords = coords.getGeometry().getCoordinates();
+//     }
+//     if (coords && coords[0].length && coords[0][0].length) {
+//         var c = [];
+//         for (var i=0; i<coords.length; i++) {
+//             c = c.concat(getFlatCoordinates(coords[i]));
+//         }
+//         return c;
+//     } else {
+//         return coords;
+//     }
+// }
 
 /** Default flat style
  * @param {String} type Geometry type

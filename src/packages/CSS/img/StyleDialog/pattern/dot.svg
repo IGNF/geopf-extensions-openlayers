@@ -1,0 +1,24 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="24" height="24" rx="2" fill="url(#pattern0_6060_12677)"/>
+<defs>
+<pattern id="pattern0_6060_12677" patternUnits="userSpaceOnUse" patternTransform="matrix(28 0 0 28 -2 -2)" preserveAspectRatio="none" viewBox="0 0 28 28" width="1" height="1">
+<g id="pattern0_6060_12677_inner">
+<circle cx="2" cy="2" r="2" fill="#161616"/>
+<circle cx="10" cy="2" r="2" fill="#161616"/>
+<circle cx="18" cy="2" r="2" fill="#161616"/>
+<circle cx="26" cy="2" r="2" fill="#161616"/>
+<circle cx="2" cy="10" r="2" fill="#161616"/>
+<circle cx="10" cy="10" r="2" fill="#161616"/>
+<circle cx="18" cy="10" r="2" fill="#161616"/>
+<circle cx="26" cy="10" r="2" fill="#161616"/>
+<circle cx="2" cy="18" r="2" fill="#161616"/>
+<circle cx="10" cy="18" r="2" fill="#161616"/>
+<circle cx="18" cy="18" r="2" fill="#161616"/>
+<circle cx="26" cy="18" r="2" fill="#161616"/>
+<circle cx="2" cy="26" r="2" fill="#161616"/>
+<circle cx="10" cy="26" r="2" fill="#161616"/>
+<circle cx="18" cy="26" r="2" fill="#161616"/>
+<circle cx="26" cy="26" r="2" fill="#161616"/>
+</g>
+</pattern></defs>
+</svg>

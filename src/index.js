@@ -64,6 +64,17 @@ export { default as Dialog } from "./packages/Controls/Toggle/Dialog";
 export { default as TabNav } from "./packages/Controls/Toggle/TabNav";
 export { default as Draw } from "./packages/Controls/Draw/Draw";
 
+// Input Controls
+export { default as InputNumber } from "./packages/Controls/Input/InputNumber";
+export { default as CustomSelect } from "./packages/Controls/Input/CustomSelect";
+export { default as CustomSelectGrid } from "./packages/Controls/Input/CustomSelectGrid";
+export { default as DefaultInput } from "./packages/Controls/Input/DefaultInput";
+
+// StyleDialog Controls
+export { default as FlatStyleForm } from "./packages/Controls/StyleDialog/FlatStyleForm";
+export { default as styleForm } from "./packages/Controls/StyleDialog/styleForm";
+export { default as labelForm } from "./packages/Controls/StyleDialog/labelForm";
+
 // Interactions
 export { default as DrawingInteraction } from "./packages/Interactions/Drawing";
 export { default as SelectingInteraction } from "./packages/Interactions/Selecting";

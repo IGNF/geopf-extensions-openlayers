@@ -42,6 +42,11 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ControlList", "GPFcontrolListStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ContextMenu", "GPFcontextMenuStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Reporting", "GPFreportingStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Input", "GPFinputNumberStyle.scss"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Input", "GPFcustomSelectStyle.scss"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Input", "GPFcustomSelectGridStyle.scss"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Input", "GPFdefaultInputStyle.scss"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/StyleDialog", "GPFflatStyleFormStyle.scss"),
             ],
             // CSS themes dsfr
             "Dsfr" : [
@@ -82,6 +87,11 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ControlList", "DSFRcontrolListStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ContextMenu", "DSFRcontextMenuStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Reporting", "DSFRreportingStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Input", "DSFRinputNumberStyle.scss"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Input", "DSFRcustomSelectStyle.scss"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Input", "DSFRcustomSelectGridStyle.scss"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Input", "DSFRdefaultInputStyle.scss"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/StyleDialog", "DSFRflatStyleFormStyle.scss"),
             ],
         }
     };
