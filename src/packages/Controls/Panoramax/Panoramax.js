@@ -86,9 +86,10 @@ var logger = Logger.getLogger("panoramax");
 /**
  * @typedef {Object} PanoramaxPreviewFeature
  * @property {Array<Number>} coordinates - Coordonnées de l'entité en projection carte.
- * @property {PanoramaxPreviewLayerType} properties - Propriétés de l'entité survolée.
+ * @property {PanoramaxPreviewGridLayer|PanoramaxPreviewSequencesLayer|PanoramaxPreviewPicturesLayer} properties - Propriétés de l'entité survolée.
  * @property {String} properties.layer - Type de couche ("grid", "sequences" ou "pictures").
- * @sample
+ * @example
+ * Structure des entités de prévisualisation retournées par la couche Panoramax au survol.
  * ex. des champs panoramax du TMS vecteur (https://api.panoramax.xyz/api/map/style.json) :
  *           "sequences": [
  *               "id",
@@ -122,8 +123,7 @@ var logger = Logger.getLogger("panoramax");
  */
 
 /**
- * @typedef {"grid"|"sequences"|"pictures"} PanoramaxPreviewLayerType
- * @type {grid} - Couche de grille (agrégats de points).
+ * @typedef {Object} PanoramaxPreviewGridLayer - Couche de grille (agrégats de points).
  * @property {String} id - Identifiant de la grille.
  * @property {Number} nb_pictures - Nombre total d'images dans la grille.
  * @property {Number} nb_360_pictures - Nombre d'images 360 dans la grille.
@@ -132,7 +132,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {Number} coef_360_pictures - Coefficient de densité d'images 360 dans la grille.
  * @property {Number} coef_flat_pictures - Coefficient de densité d'images classiques dans la grille.
  * 
- * @type {sequences} - Couche de séquences (groupes d'images).
+ * @typedef {Object} PanoramaxPreviewSequencesLayer - Couche de séquences (groupes d'images).
  * @property {String} id - Identifiant de la séquence.
  * @property {String} account_id - Identifiant du compte utilisateur ayant contribué la séquence.
  * @property {String} model - Modèle de la séquence (ex. "equirectangular" ou "flat").
@@ -141,7 +141,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {Number} gps_accuracy - Précision GPS de la séquence (en mètres).
  * @property {Number} h_pixel_density - Densité de pixels horizontale de la séquence (en pixels/mètre).
  * 
- * @type {pictures} - Couche d'images individuelles.
+ * @typedef {Object} PanoramaxPreviewPicturesLayer - Couche d'images individuelles.
  * @property {String} id - Identifiant de l'image.
  * @property {String} account_id - Identifiant du compte utilisateur ayant contribué l'image.
  * @property {String} ts - Timestamp de prise de vue de l'image.
@@ -191,61 +191,61 @@ class Panoramax extends Control {
      *     name: "Panoramax",
      *     minZoom: 6,
      *     maxZoom: 21
-     * },
-     * background: {
-     *  active: true,
-     *  url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
-     *  name: "Background",
-     *  minZoom: 6,
-     *  maxZoom: 21
-     * },
-     * buttonsWindow: {
-     *   display: true,
-     *   position: "top-right",
-     *   order: ["filters", "contributions", "hover", "styles", "background"],
-     *   filters: {
-     *     display: true,
-     *     label: "Filtrer",
-     *     description: "Filtrer les images affichées",
-     *     content: {
-     *       dates: true,
-     *       types: true,
-     *       periodes: true
-     *     }
-     *   },
-     *   hover: {
-     *     display: true,
-     *     label: "Aperçu au survol",
-     *     description: "Afficher un aperçu de l'image au survol"
-     *   },
-     *   contributions: {
-     *     display: true,
-     *     label: "Contribuer",
-     *     description: "Accéder au parcours de contribution",
-     *     link: "https://panoramax.openstreetmap.fr/why-contribute"
-     *   },
-     *   styles: {
-     *     display: false,
-     *     label: "Style",
-     *     description: "Personnaliser le style d'affichage des images",
-     *     content: {}
      *   },
      *   background: {
+     *    active: true,
+     *    url: "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
+     *    name: "Background",
+     *    minZoom: 6,
+     *    maxZoom: 21
+     *   },
+     *   buttonsWindow: {
      *     display: true,
-     *     label: "Fond de carte",
-     *     description: "Afficher ou masquer un fond de carte de référence"
-     *   }
-     * },
-     * visualizationWindow: {
-     *   display: true,
-     *   position: "top-right",
-     *   size: "medium"
-     * },
-     * viewer: {
-     *   endpoint: "https://explore.panoramax.fr/api",
-     *   class: "",
-     *   widgets: true,
-     *   psv-options: {}
+     *     position: "top-right",
+     *     order: ["filters", "contributions", "hover", "styles", "background"],
+     *     filters: {
+     *       display: true,
+     *       label: "Filtrer",
+     *       description: "Filtrer les images affichées",
+     *       content: {
+     *         dates: true,
+     *         types: true,
+     *         periodes: true
+     *       }
+     *     },
+     *     hover: {
+     *       display: true,
+     *       label: "Aperçu au survol",
+     *       description: "Afficher un aperçu de l'image au survol"
+     *     },
+     *     contributions: {
+     *       display: true,
+     *       label: "Contribuer",
+     *       description: "Accéder au parcours de contribution",
+     *       link: "https://panoramax.openstreetmap.fr/why-contribute"
+     *     },
+     *     styles: {
+     *       display: false,
+     *       label: "Style",
+     *       description: "Personnaliser le style d'affichage des images",
+     *       content: {}
+     *     },
+     *     background: {
+     *       display: true,
+     *       label: "Fond de carte",
+     *       description: "Afficher ou masquer un fond de carte de référence"
+     *     }
+     *   },
+     *   visualizationWindow: {
+     *     display: true,
+     *     position: "top-right",
+     *     size: "medium"
+     *   },
+     *   viewer: {
+     *     endpoint: "https://explore.panoramax.fr/api",
+     *     class: "",
+     *     widgets: true,
+     *     psv-options: {}
      * }}});
      * map.addControl(panoramax);
      */
@@ -283,6 +283,7 @@ class Panoramax extends Control {
      * Surcharge la méthode `setMap` d'OpenLayers.
      *
      * @param {Map|null} map - Carte cible, ou `null` lors du détachement.
+     * @public
      */
     setMap (map) {
         if (map) {
@@ -641,26 +642,55 @@ class Panoramax extends Control {
          */
         this.FILTER_RENDER_PANORAMAX_EVENT = "pnx:filter:render";
 
-        /** photo viewer */
+        /** 
+         * photo viewer 
+         * @private
+         */
         this.photoViewerPanoramax = null;
 
-        /** @type {MapboxVectorLayer} */
+        /** 
+         * @type {MapboxVectorLayer} 
+         * @private
+         */
         this.layerPanoramax = null;
-        /** @type {MapboxVectorLayer} */
+        /** 
+         * @type {MapboxVectorLayer} 
+         * @private
+         */
         this.backgroundPanoramax = null;
-        /** @type {MapboxLayerGroup} */
+        /** 
+         * @type {MapboxLayerGroup} 
+         * @private
+         */
         this.groupPanoramax = null;
 
+        /** 
+         * original style layer 
+         * @type {JSON} 
+         * @private
+         */
         this.originalStyleLayerPanoramax = null;
 
-        /** preview marker overlay */
+        /** 
+         * preview marker overlay 
+         * @private 
+         */
         this.previewMarkerOverlay = null;
-        /** preview popup overlay */
+        /** 
+         * preview popup overlay 
+         * @private
+         */
         this.previewPopupOverlay = null;
-        /** preview popup element */
+        /** 
+         * preview popup element 
+         * @private
+         */
         this.previewPopupElement = null;
         
-        /** map viewport sync listener */
+        /** 
+         * map viewport sync listener 
+         * @private 
+         */
         this.mapViewportSyncListener = null;
     }
 
@@ -988,7 +1018,6 @@ class Panoramax extends Control {
 
     /**
      * Réinitialise le contenu du panneau à la fermeture.
-     * @private
      */
     reset () {
         if (this.options.group) {
@@ -1010,6 +1039,7 @@ class Panoramax extends Control {
         this.eventActived = false;
     }
 
+    /** @private */
     resetGroupLayer () {
         logger.debug("resetGroupLayer");
         var map = this.getMap();
@@ -1018,6 +1048,7 @@ class Panoramax extends Control {
             this.groupPanoramax = null;
         }
     }
+    /** @private */
     resetLayer () {
         logger.debug("resetLayer");
         var map = this.getMap();
@@ -1032,6 +1063,7 @@ class Panoramax extends Control {
             this.layerPanoramax = null;
         }
     }
+    /** @private */
     resetBackground () {
         logger.debug("resetBackground");
         var map = this.getMap();
@@ -1046,6 +1078,7 @@ class Panoramax extends Control {
             this.backgroundPanoramax = null;
         }
     }
+    /** @private */
     resetButtons () {
         if (this.panelPanoramaxOptions) {
             this.panelPanoramaxOptions.classList.replace("gpf-visible", "gpf-hidden");
@@ -1055,6 +1088,7 @@ class Panoramax extends Control {
         }
         this.unbindFiltersPanelPositioning();
     }
+    /** @private */
     resetPhotoViewer () {
         if (this.photoViewerPanoramax) {
             if (this.photoViewerPanoramax.getAttribute("sequence")) {
@@ -1069,9 +1103,11 @@ class Panoramax extends Control {
             this.hidePhotoViewer();
         }
     }
+    /** @private */
     resetVisualizationWindow () {
         this.stopMapViewportSync();
     }
+    /** @private */
     resetPreview () {
         var map = this.getMap();
         if (!map) {
@@ -1094,7 +1130,6 @@ class Panoramax extends Control {
 
     /**
      * Charge les éléments du panneau à l'ouverture.
-     * @private
      */
     async load () {
         try {
@@ -1215,6 +1250,7 @@ class Panoramax extends Control {
         return styleJson;
     }
 
+    /** @private */
     setLayerGroup () {
         var map = this.getMap();
         if (!map) {
@@ -1227,6 +1263,7 @@ class Panoramax extends Control {
         }
     }
 
+    /** @private */
     async setLayer (opts) {
         logger.debug("initLayer");
         // options de la couche :
@@ -1269,6 +1306,7 @@ class Panoramax extends Control {
         }
     }
 
+    /** @private */
     async setBackground (opts) {
         logger.debug("initBackground");
         // options de la couche de fond :
@@ -1314,6 +1352,7 @@ class Panoramax extends Control {
         }
     }
 
+    /** @private */
     async initButtons () {
         // options.contributions.display : true/false
         // options.contributions.label : "Contribuer"
@@ -1332,6 +1371,7 @@ class Panoramax extends Control {
         });
     }
 
+    /** @private */
     async initVisualizationWindow () {
         // options.visualizationWindow.display : true/false
         // options de la fenêtre de visualisation :
@@ -1352,6 +1392,7 @@ class Panoramax extends Control {
         });
     }
 
+    /** @private */
     async initPhotoViewer () {
         // options.viewer.endpoint : "https://explore.panoramax.fr/api"
         // options.viewer.class : "..." (TODO)
@@ -1397,10 +1438,12 @@ class Panoramax extends Control {
     // ######################## methods menu buttons ##################### //
     // ################################################################### //
     
+    /** @private */
     showButtonsPanel () {
         this.panelPanoramaxButtonsContainer.firstChild.classList.replace("gpf-hidden", "gpf-visible");
     }
 
+    /** @private */
     hideButtonsPanel () {
         this.panelPanoramaxButtonsContainer.firstChild.classList.replace("gpf-visible", "gpf-hidden");
     }
@@ -1409,13 +1452,13 @@ class Panoramax extends Control {
     // ######################## methods photoviewer ###################### //
     // ################################################################### //
 
-    /*
-    * TODO : ajouter des widgets
-    * https://docs.panoramax.fr/web-viewer/reference/#componentsui
-    * - ex. https://docs.panoramax.fr/web-viewer/reference/components/ui/widgets/CopyCoordinates/
-    * 
-    */
+    /**
+     * Crée et configure le viewer de photos de Panoramax,
+     * en ajoutant les widgets spécifiés dans les options.
+     * @returns {HTMLElement|null} Élément du viewer de photos créé, ou `null` si le conteneur n'est pas disponible.
+     */
     createPhotoViewer () {
+        // cf. https://docs.panoramax.fr/web-viewer/reference/#componentsui
         if (!this.panelPanoramaxViewerContainer) {
             return null;
         }
@@ -1482,6 +1525,12 @@ class Panoramax extends Control {
         return photoViewer;
     }
 
+    /**
+     * Affiche le viewer de photos de Panoramax avec l'image 
+     * spécifiée par les identifiants de séquence et de photo.
+     * @param {String} sequenceId - Identifiant de la séquence.
+     * @param {String} pictureId - Identifiant de la photo.
+     */
     displayPhotoViewer (sequenceId, pictureId) {
         if (!this.photoViewerPanoramax) {
             logger.warn("Panoramax photo viewer is not available");
@@ -1505,6 +1554,7 @@ class Panoramax extends Control {
         this.hideButtonsPanel();
     }
 
+    /** @private */
     showPhotoViewer () {
         this.panelPanoramaxViewerContainer.classList.replace("gpf-hidden", "gpf-visible");
         this.panelPanoramaxViewerContainer.lastChild.classList.replace("gpf-hidden", "gpf-visible");
@@ -1516,6 +1566,7 @@ class Panoramax extends Control {
         this.photoViewerPanoramax.classList.replace("gpf-hidden", "gpf-visible");
     }
 
+    /** @private */
     hidePhotoViewer () {
         this.panelPanoramaxViewerContainer.classList.replace("gpf-visible", "gpf-hidden");
         this.panelPanoramaxViewerContainer.lastChild.classList.replace("gpf-visible", "gpf-hidden");
@@ -1795,6 +1846,7 @@ class Panoramax extends Control {
         // TODO modifier le contenu du widget de légende des photos, 
         // pour n'afficher que les informations pertinentes pour notre usage
     }
+
     // ################################################################### //
     // ######################## methods preview ########################## //
     // ################################################################### //
@@ -1803,7 +1855,6 @@ class Panoramax extends Control {
       Affiche ou met à jour le marqueur de prévisualisation.
      *
      * @param {Array<Number>} coordinates - Coordonnées `[x, y]` en projection carte.
-     * @private
      */
     setMarker (coordinates) {
         if (!coordinates || coordinates.length < 2) {
@@ -1836,7 +1887,6 @@ class Panoramax extends Control {
      *
      * @param {Array<Number>} coordinates - Coordonnées `[x, y]` en projection carte.
      * @param {String} [content=""] - Contenu HTML injecté dans la popup.
-     * @private
      */
     setPopup (coordinates, content = "") {
         if (!coordinates || coordinates.length < 2) {
@@ -1872,7 +1922,6 @@ class Panoramax extends Control {
      * Affiche la prévisualisation selon le type de couche Panoramax.
      *
      * @param {PanoramaxPreviewFeature} feature - Entité à prévisualiser.
-     * @private
      */
     displayPreview (feature) {
         var type = feature.properties.layer || feature.properties["mvt:layer"];
@@ -2008,6 +2057,11 @@ class Panoramax extends Control {
     // ######################## methods visualization #################### //
     // ################################################################### //
 
+    /**
+     * Applique la taille de fenêtre de visualisation spécifiée dans les options,
+     * en ajoutant la classe CSS correspondante au container de la fenêtre de visualisation.
+     * @param {String} size - Taille de la fenêtre de visualisation : "small", "medium", "large", "fullscreen", ou "fullscreen-map".
+     */
     setSizeWindow (size) {
         var container = this.panelPanoramaxViewerContainer;
         if (!container) {
@@ -2151,6 +2205,7 @@ class Panoramax extends Control {
 
     /**
      * Filtre des couches mapbox selon le type de photo sélectionné.
+     * 
      * @param {String|null} value - Type de photo à filtrer : 
      * "flat", "equirectangular", ou `null` pour réinitialiser le filtre.
      * @returns {Array<Object>} Tableau d'objets de style Mapbox.
@@ -2188,6 +2243,7 @@ class Panoramax extends Control {
 
     /**
      * Filtre des couches mapbox selon la plage de dates sélectionnée.
+     * 
      * @param {Date|null} minDate - Date minimale à filtrer.
      * @param {Date|null} maxDate - Date maximale à filtrer.
      * @returns {Array<Object>} Tableau d'objets de style Mapbox.
@@ -2252,6 +2308,7 @@ class Panoramax extends Control {
     /**
      * Filtre des couches mapbox selon une période sélectionnée 
      * ex : "last_year = 12", "last_month = 1", etc.
+     * 
      * @param {Number|null} value - Valeur de la période sélectionnée à filtrer en nombre de mois.
      * @returns {Array<Object>} Tableau d'objets de style Mapbox.
      * @private
@@ -2270,6 +2327,7 @@ class Panoramax extends Control {
 
     /**
      * Applique les filtres sélectionnés à la couche Panoramax.
+     * 
      * @param {String} value - nom du rendu sélectionné.
      * @return {Array<Object>} Tableau d'objets de style Mapbox filtrés selon le rendu sélectionné.
      * @private
@@ -2282,9 +2340,9 @@ class Panoramax extends Control {
 
     /**
      * Applique les filtres sélectionnés à la couche Panoramax.
+     * 
      * @param {Array<Object>} mapboxLayers - format Mapbox Style.
      * @returns {Promise} Promise résolue lorsque les filtres sont appliqués.
-     * @private
      */
     async applyFilters (mapboxLayers) {
         // FIXME les filtres ne sont pas cumulatifs : 
@@ -2340,6 +2398,11 @@ class Panoramax extends Control {
     // ################## methods position UI filters #################### //
     // ################################################################### //
 
+    /**
+     * Met à jour la position du panneau de filtres Panoramax 
+     * pour qu'il soit aligné avec le panneau de boutons d'ouverture du viewer.
+     * @private
+     */
     updateFiltersPanelPosition () {
         if (!this.panelPanoramaxOptions || !this.panelPanoramaxButtonsContainer) {
             return;
@@ -2350,6 +2413,11 @@ class Panoramax extends Control {
         this.panelPanoramaxOptions.style.bottom = (window.innerHeight - dialogRect.top + 6) + "px";
     }
 
+    /**
+     * Lie les événements de redimensionnement et de défilement 
+     * pour mettre à jour la position du panneau de filtres Panoramax.
+     * @private
+     */
     bindFiltersPanelPositioning () {
         if (this._onPanoramaxOptionsReposition) {
             return;
@@ -2359,6 +2427,10 @@ class Panoramax extends Control {
         window.addEventListener("scroll", this._onPanoramaxOptionsReposition, true);
     }
 
+    /**
+     * Délie les événements de redimensionnement et de défilement
+     * @private
+     */
     unbindFiltersPanelPositioning () {
         if (!this._onPanoramaxOptionsReposition) {
             return;
@@ -2689,14 +2761,32 @@ class Panoramax extends Control {
             });
     }
 
+    /**
+     * Gère le clic de retour sur la carte avec fermeture du panneau Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de retour.
+     * @private
+     */
     onClickPnxViewerWidgetBack (e) {
         this.onReturnPanoramaxClick(e);
     }
 
+    /**
+     * Gère le clic de fermeture du panneau Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de fermeture.
+     * @private
+     */
     onClickPnxViewerWidgetClose (e) {
         this.onClosePanoramaxClick(e);
     }
 
+    /**
+     * Gère le clic de mise en plein écran du panneau Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de plein écran.
+     * @private
+     */
     onClickPnxViewerWidgetFullScreen (e) {
         var container = this.panelPanoramaxViewerContainer;
         if (!container) {
@@ -2705,6 +2795,12 @@ class Panoramax extends Control {
         this.setSizeWindow("fullscreen");
     }
 
+    /**
+     * Gère le clic du bouton de zoom personnalisé du panneau Panoramax.
+     *
+     * @param {Event} e - Événement DOM du bouton de zoom.
+     * @private
+     */
     onClickPnxViewerWidgetZoom (e) {
         // TODO : implémenter le comportement du bouton de zoom personnalisé
     }
