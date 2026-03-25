@@ -11,7 +11,7 @@
   pointer-events: auto;
   bottom: 0;
   cursor:auto;
-  z-index: 10;
+  z-index: auto;
 
   &[open] {
     display: flex;
