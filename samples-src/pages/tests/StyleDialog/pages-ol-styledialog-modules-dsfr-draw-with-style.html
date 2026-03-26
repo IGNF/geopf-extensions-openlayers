@@ -1,0 +1,223 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSimpleMenu.css" />
+
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlInputNumber.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCustomSelect.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCustomSelectGrid.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDefaultInput.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlFlatStyleForm.css" /> 
+
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlModifyingInteraction.js"></script>
+
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
+        
+        <!-- StyleDialog Controls -->
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlStyleForm.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLabelForm.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers StyleDialog</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Outil de dessin avec dialogue de style</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+            <div>
+                <button class="fr-btn fr-btn--secondary" id="toggleActive">Active / désactive input forme</button>
+            </div>
+            <div>
+                <button class="fr-btn fr-btn--secondary" id="changeSource">Change la source</button>
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                window.onload = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
+                    
+                    // 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                opacity: 0.5
+                            }),
+                            layer
+                        ]
+                    });
+
+                    // // 2. Création des formulaires
+                    // const styleForm = ol.control.styleForm;
+                    // const labelForm = ol.control.labelForm;
+                    // const forms = [styleForm, labelForm];
+
+                    // // 3. Création du Dialog avec navigation tertiaire
+                    // const styleDialog = new ol.control.Dialog({
+                    //     id: "style-dialog",
+                    //     title: "Configuration du style",
+                    //     position: "left",
+                    //     items: [
+                    //         {
+                    //             label: "Style",
+                    //             content: styleForm.getContent(),
+                    //             title: "Configuration du style"
+                    //         },
+                    //         {
+                    //             label: "Texte",
+                    //             content: labelForm.getContent(),
+                    //             title: "Configuration du texte"
+                    //         },
+                    //         {
+                    //             label: "Infobulle",
+                    //             content: "<p>Onglet Infobulle</p>",
+                    //             title: "Configuration de l'infobulle"
+                    //         },
+                    //         {
+                    //             label: "Attributs",
+                    //             content: "<p>Onglet Attributs</p>",
+                    //             title: "Configuration des attributs"
+                    //         }
+                    //     ],
+                    //     labelTabNav: "Navigation de configuration",
+                    // });
+
+                    // map.addControl(styleDialog);
+
+                    const draw = new ol.control.Draw({
+                        // position: "right",
+                        style: true,
+                    });
+
+                    // const icons = {
+                    //     "Point" : "fr-icon-map-pin-2-line",
+                    //     "LineString" : "fr-icon-git-merge-line",
+                    //     "Polygon" : "fr-icon-france-line",
+                    //     "Circle" : "fr-icon-circle-line",
+                    //     "Box" : "fr-icon-rectangle-line",
+                    // }
+
+                    map.addControl(draw);
+
+                    // Modify interaction
+                    const modify = new ol.interaction.Modifying({ 
+                        select : draw.select,
+                    });
+                    map.addInteraction(modify);
+
+                    // Show points on modifying
+                    draw.select.showPoints(() => modify.getActive());
+
+                    // Copy / past
+                    modify.on(["copy", "cut", "paste"], console.log);
+                    modify.on("paste", e => {
+                        e.features.forEach(elt => {
+                            elt.layer.getSource().addFeature(elt.feature.clone());
+                        });
+                    });
+                    // const drawing = [];
+
+                    // Object.keys(icons).forEach((k, index) => {
+                    //     drawing.push(new ol.interaction.Drawing({
+                    //         type : k,
+                    //         source : source,
+                    //         select : draw.select,
+                    //         selectOnDrawEnd : true,
+                    //     }));
+                    //     drawing[index].setActive(false);
+                    // })
+
+                    // drawing.forEach(interaction => {
+                    //     draw.addInteraction({
+                    //         interaction : interaction,
+                    //         label: interaction._type,
+                    //         icon: icons[interaction._type],
+                    //     });
+                    // });
+
+
+                    // draw.getSelect().on("select", (e) => {
+                    //     // console.log(e)
+                    //     if (e.selected.length) {
+                    //         const geomType = e.selected[0].getGeometry().getType();
+                    //         styleDialog.setDialogTitle(geomType);
+                    //         styleDialog.setIcon(icons[geomType]);
+
+                    //         const gTypes = {};
+                    //         e.target.getFeatures().forEach(f => {
+                    //             gTypes[f.getGeometry().getType()] = true;
+                    //         });
+
+                    //         styleDialog.getDialogContent().className = 'GPF-dialog__content ' + Object.keys(gTypes).join(' ');
+                            
+                    //         styleDialog.show();
+                    //     } else {
+                    //         styleDialog.close();
+                    //     }
+                    // })
+
+                    // window.dialog = styleDialog;
+                    window.select = draw.select;
+
+                    draw.on(["drawstart", "drawend", "drawabort"], console.log)
+
+                    // // 4. Écouteurs d'événements pour chaque formulaire
+                    // forms.forEach(form => {
+                    //     form.on("style", (e) => {
+                    //         console.log('Événement style reçu:', e);
+                    //     });
+                    // });
+
+                    // const btn = document.getElementById("toggleActive");
+
+                    // btn.addEventListener("click", () => {
+                    //     const input = styleForm.getInput("point-form");
+                    //     console.log(input)
+                    //     input.setDisabled(!input.get("disabled"))
+                    // })
+                    const changeSource = document.getElementById("changeSource");
+                    
+                    // Vrai si la source est active, i.e. le dessin reste sur la carte
+                    let activeSource = false;
+
+                    changeSource.addEventListener("click", () => {
+                        activeSource ? draw.setSource() : draw.setSource(source);
+                        activeSource = !activeSource;
+                    })
+                };
+           </script>
+{{/content}}
+
+{{/extend}}

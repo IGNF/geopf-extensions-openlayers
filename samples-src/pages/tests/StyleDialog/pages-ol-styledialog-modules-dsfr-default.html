@@ -35,9 +35,6 @@
                 width: 100%;
                 height: 500px;
             }
-            #style-dialog {
-                z-index: 12;
-            }
         </style>
 {{/content}}
 
@@ -46,7 +43,6 @@
             <!-- map -->
             <div id="map">
             </div>
-
             <div>
                 <button class="fr-btn fr-btn--secondary" id="toggleActive">Active / désactive input forme</button>
             </div>
@@ -85,6 +81,22 @@
                     const labelForm = ol.control.labelForm;
                     const forms = [styleForm, labelForm];
 
+                    const draw = new ol.control.Draw({
+                        position: "right",
+                        icon: "fr-icon-checkbox-line"
+                    });
+
+                    const icons = {
+                        "Point" : "fr-icon-map-pin-2-line",
+                        "LineString" : "fr-icon-git-merge-line",
+                        "Polygon" : "fr-icon-france-line",
+                        "Circle" : "fr-icon-circle-line",
+                        "Box" : "fr-icon-rectangle-line",
+                    }
+
+                    map.addControl(draw);
+
+
                     // 3. Création du Dialog avec navigation tertiaire
                     const styleDialog = new ol.control.Dialog({
                         id: "style-dialog",
@@ -116,20 +128,6 @@
                     });
 
                     map.addControl(styleDialog);
-
-                    const draw = new ol.control.Draw({
-                        position: "right",
-                    });
-
-                    const icons = {
-                        "Point" : "fr-icon-map-pin-2-line",
-                        "LineString" : "fr-icon-git-merge-line",
-                        "Polygon" : "fr-icon-france-line",
-                        "Circle" : "fr-icon-circle-line",
-                        "Box" : "fr-icon-rectangle-line",
-                    }
-
-                    map.addControl(draw);
 
                     // Modify interaction
                     const modify = new ol.interaction.Modifying({ 

@@ -55,6 +55,7 @@ module.exports = (env, argv) => {
                 // path.join(rootdir, "node_modules/@gouvfr/dsfr/dist/dsfr.css"),
                 // path.join(rootdir, "node_modules/@gouvfr/dsfr/dist/utility/icons/icons.css"),
                 path.join(rootdir, "src", "packages", "CSS", "DSFRgeneralWidget.css"),
+                path.join(rootdir, "src", "packages", "CSS", "DSFRicons.scss"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Drawing", "DSFRdrawingStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Attribution", "DSFRattributionStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Editor", "DSFReditorStyle.css"),
