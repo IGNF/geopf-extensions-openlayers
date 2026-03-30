@@ -227,7 +227,7 @@ var catalog = new ol.control.Catalog({
 
 ---
 
-## Voici une explication sur la configuration des **catégories**, **sous-catégories** et **sections** dans le widget Catalog
+## Voici une explication sur la configuration des **catégories**, **sous-catégories** et **sections**
 
 ---
 
@@ -338,7 +338,7 @@ Catégorie ("Données")
 - Les sections regroupent dynamiquement les couches selon une propriété (thématique, producteur, etc.).
 - Les icônes DSFR ou SVG peuvent être associées aux sections pour un affichage visuel.
 
-## Voici une explication sur l’option **configuration** du widget Catalog
+## Voici une explication sur l’option **configuration**
 
 ---
 
@@ -391,7 +391,7 @@ configuration: {
 
 ---
 
-## Voici une explication sur la notion de **Topics** dans le widget Catalog
+## Voici une explication sur la notion de **Topics**
 
 ---
 
