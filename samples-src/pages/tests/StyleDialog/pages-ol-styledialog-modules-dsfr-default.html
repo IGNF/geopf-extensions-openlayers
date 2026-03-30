@@ -83,7 +83,8 @@
 
                     const draw = new ol.control.Draw({
                         position: "right",
-                        icon: "fr-icon-checkbox-line"
+                        icon: "fr-icon-checkbox-line",
+                        drawingInteractions : false,
                     });
 
                     const icons = {
@@ -95,7 +96,6 @@
                     }
 
                     map.addControl(draw);
-
 
                     // 3. Création du Dialog avec navigation tertiaire
                     const styleDialog = new ol.control.Dialog({
@@ -179,7 +179,8 @@
                                 gTypes[f.getGeometry().getType()] = true;
                             });
 
-                            styleDialog.getDialogContent().className = 'GPF-dialog__content ' + Object.keys(gTypes).join(' ');
+                            styleDialog.getElement().classList.remove(...Object.keys(icons));
+                            styleDialog.getElement().classList.add(...Object.keys(gTypes));
                             
                             styleDialog.show();
                         } else {

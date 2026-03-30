@@ -1,6 +1,10 @@
 import FlatStyleForm from "./FlatStyleForm.js";
 
-// Création du formulaire de style
+/**
+ * Formulaire de gestion de l'étiquette
+ * @constant
+ * @type {FlatStyleForm}
+ */
 const labelForm = new FlatStyleForm();
 
 const label = labelForm.addInput("Texte", "text-value", "textarea");

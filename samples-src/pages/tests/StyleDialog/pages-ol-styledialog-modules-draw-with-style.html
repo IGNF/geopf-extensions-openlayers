@@ -104,54 +104,22 @@
                         });
                     });
 
-                    // draw.getSelect().on("select", (e) => {
-                    //     // console.log(e)
-                    //     if (e.selected.length) {
-                    //         const geomType = e.selected[0].getGeometry().getType();
-                    //         styleDialog.setDialogTitle(geomType);
-                    //         styleDialog.setIcon(icons[geomType]);
-
-                    //         const gTypes = {};
-                    //         e.target.getFeatures().forEach(f => {
-                    //             gTypes[f.getGeometry().getType()] = true;
-                    //         });
-
-                    //         styleDialog.getDialogContent().className = 'GPF-dialog__content ' + Object.keys(gTypes).join(' ');
-                            
-                    //         styleDialog.show();
-                    //     } else {
-                    //         styleDialog.close();
-                    //     }
-                    // })
-
-                    // window.dialog = styleDialog;
-                    window.select = draw.select;
-
                     draw.on(["drawstart", "drawend", "drawabort"], console.log)
 
-                    // // 4. Écouteurs d'événements pour chaque formulaire
-                    // forms.forEach(form => {
-                    //     form.on("style", (e) => {
-                    //         console.log('Événement style reçu:', e);
-                    //     });
-                    // });
-
-                    // const btn = document.getElementById("toggleActive");
-
-                    // btn.addEventListener("click", () => {
-                    //     const input = styleForm.getInput("point-form");
-                    //     console.log(input)
-                    //     input.setDisabled(!input.get("disabled"))
-                    // })
                     const changeSource = document.getElementById("changeSource");
                     
                     // Vrai si la source est active, i.e. le dessin reste sur la carte
-                    let activeSource = false;
+                    let activeSource = true;
+                    draw.setSource(source)
 
                     changeSource.addEventListener("click", () => {
                         activeSource ? draw.setSource() : draw.setSource(source);
                         activeSource = !activeSource;
                     })
+
+                    draw.getStyleDialog().on("style", (e) => {
+                        console.log('Événement style reçu:', e);
+                    });
                 };
            </script>
 {{/content}}

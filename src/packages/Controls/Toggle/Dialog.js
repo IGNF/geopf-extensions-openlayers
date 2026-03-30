@@ -44,7 +44,7 @@ class Dialog extends ControlExtended {
         this._initialize(options);
 
         // Initialise le conteneur
-        this.element = this._initContainer(options);
+        this._initContainer(options);
 
         // Initialise les événements liés au conteneur et au contrôle
         this._initEvents(options);
@@ -73,7 +73,6 @@ class Dialog extends ControlExtended {
     }
 
     /**
-     * Initialise le contrôle Toggle (appelé par le constructeur).
      * @protected
      * @param {DialogOptions} options Options du constructeur
      */
@@ -103,10 +102,8 @@ class Dialog extends ControlExtended {
     }
 
     /**
-     * Crée le conteneur principal du dialog.
-     * @private
+     * @protected
      * @param {DialogOptions} options Options de construction
-     * @returns {HTMLDialogElement} Dialog HTML avec le contenu
      */
     _initContainer (options) {
         const container = document.createElement("dialog");
@@ -165,7 +162,7 @@ class Dialog extends ControlExtended {
         container.appendChild(navContainer);
         container.appendChild(content);
 
-        return container;
+        this.element = container;
     }
 
     /**
@@ -364,7 +361,7 @@ class Dialog extends ControlExtended {
         }
 
         const navContainer = this.querySelector(`.${this.dialogClass}__nav-container`);
-        
+
         // Création de la navigation
         this.tabNav = new TabNav({
             items : items,
@@ -391,7 +388,7 @@ class Dialog extends ControlExtended {
 
     /**
      * Ajoute un item à la navigation tertiaire.
-     * @param {TabNavItem} item Item à ajouter
+     * @param {TabNavItemOptions} item Item à ajouter
      */
     addTabNavItem (item) {
         if (!this.tabNav) {

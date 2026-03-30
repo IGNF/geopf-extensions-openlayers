@@ -2,13 +2,18 @@ import FlatStyleForm from "./FlatStyleForm.js";
 // import InputColor from './InputColor.js';
 
 // Création du formulaire de style
+/**
+ * Formulaire de gestion du style
+ * @constant
+ * @type {FlatStyleForm}
+ */
 const styleForm = new FlatStyleForm();
 
 // POINT //
 
 styleForm.addCustomSelect({
     label : "Forme",
-    property : "point-form",
+    property : "circle-form",
     type : "form",
     options : {
         none : "Sans",
@@ -20,33 +25,33 @@ styleForm.addCustomSelect({
     disabled : true,
 });
 
-// styleForm.addInput('Couleur', 'point-color', new InputColor());
+// styleForm.addInput('Couleur', 'circle-color', new InputColor());
 
 styleForm.addCustomInput({
     label : "Taille",
     labelInfo : "(pt)",
-    property : "point-radius",
+    property : "circle-radius",
 });
 
-styleForm.addBreak("point-form");
-// styleForm.addInput('Bordure', 'point-stroke-color', new InputColor());
+styleForm.addBreak("circle-form");
+// styleForm.addInput('Bordure', 'circle-stroke-color', new InputColor());
 
 styleForm.addCustomInput({
     label : "Taille",
     labelInfo : "(pt)",
-    property : "point-stroke-width",
+    property : "circle-stroke-width",
 });
 
-styleForm.addBreak("point-stroke");
+styleForm.addBreak("circle-stroke");
 
 // styleForm.addCustomSelect({
 //     label : "Symbole",
-//     property : "point-glyph",
+//     property : "circle-glyph",
 //     type : "icon",
 //     fonts : ["remixicon"],
 // });
-// styleForm.addInput('Couleur', 'point-symbol-color', new InputColor());
-styleForm.addBreak("point-symbol");
+// styleForm.addInput('Couleur', 'circle-symbol-color', new InputColor());
+styleForm.addBreak("circle-symbol");
 
 // POLYGONE //
 

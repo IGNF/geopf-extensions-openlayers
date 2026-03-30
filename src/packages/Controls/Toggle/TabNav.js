@@ -67,7 +67,7 @@ class TabNav extends Control {
             container.className = "GPF-tabnav__container";
             options.contentContainer = container;
         }
-
+        
         this.contentContainer = options.contentContainer;
     }
 
