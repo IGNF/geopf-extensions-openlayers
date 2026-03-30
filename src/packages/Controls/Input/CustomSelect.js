@@ -4,24 +4,12 @@ import DefaultInput from "./DefaultInput.js";
 import { isElementInView, isScrollable, maintainScrollVisibility } from "../../Utils/Scroll.js";
 
 /**
- * @typedef {Object} InputConfig
- * @property {HTMLElement} input L'élément input HTML
+ * @typedef {Object} CustomSelectConfig
  * @property {string} label Le label de l'input
+ * @property {string} [labelInfo] Info supplémentaire du label (ex: unité)
  * @property {string} property La propriété flat style correspondante
- */
-
-/**
- * @typedef {Object} SelectConfig
- * @property {HTMLSelectElement} select L'élément select HTML
- * @property {string} label Le label du select
- * @property {string} property La propriété flat style correspondante
- * @property {Object<string, string>} options Les options du select (valeur: libellé)
- */
-
-/**
- * @typedef {Object} InputStyleConfig
- * @property {string} label Le label de l'input
- * @property {string} property La propriété flat style correspondante
+ * @property {string} [type] Type de l'input
+ * @property {Boolean} [disabled=false] Si vrai, désactive l'input
  * @property {Object<string, string>} options Les options de la sélection (valeur: libellé)
  */
 
@@ -32,14 +20,14 @@ class CustomSelect extends DefaultInput {
 
     /**
      * Constructeur du contrôle CustomSelect
-     * @param {InputStyleConfig} options Options du contrôle
+     * @param {CustomSelectConfig} options Options du contrôle
      */
     constructor (options = {}) {
         super(options);
     }
 
     /**
-     * @param {InputStyleConfig} options Options du contrôle
+     * @param {CustomSelectConfig} options Options du contrôle
      * @override
      */
     _initialize (options) {
@@ -85,7 +73,7 @@ class CustomSelect extends DefaultInput {
 
 
     /**
-     * @param {InputStyleConfig} options Options du contrôle
+     * @param {CustomSelectConfig} options Options du contrôle
      * @override
      */
     _initContainer (options) {
@@ -173,7 +161,7 @@ class CustomSelect extends DefaultInput {
     }
 
     /**
-     * @param {InputStyleConfig} options Options du contrôle
+     * @param {CustomSelectConfig} options Options du contrôle
      * @override
      */
     _initEvents (options) {

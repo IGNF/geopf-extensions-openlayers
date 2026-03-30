@@ -79,55 +79,10 @@
                         ]
                     });
 
-                    // // 2. Création des formulaires
-                    // const styleForm = ol.control.styleForm;
-                    // const labelForm = ol.control.labelForm;
-                    // const forms = [styleForm, labelForm];
-
-                    // // 3. Création du Dialog avec navigation tertiaire
-                    // const styleDialog = new ol.control.Dialog({
-                    //     id: "style-dialog",
-                    //     title: "Configuration du style",
-                    //     position: "left",
-                    //     items: [
-                    //         {
-                    //             label: "Style",
-                    //             content: styleForm.getContent(),
-                    //             title: "Configuration du style"
-                    //         },
-                    //         {
-                    //             label: "Texte",
-                    //             content: labelForm.getContent(),
-                    //             title: "Configuration du texte"
-                    //         },
-                    //         {
-                    //             label: "Infobulle",
-                    //             content: "<p>Onglet Infobulle</p>",
-                    //             title: "Configuration de l'infobulle"
-                    //         },
-                    //         {
-                    //             label: "Attributs",
-                    //             content: "<p>Onglet Attributs</p>",
-                    //             title: "Configuration des attributs"
-                    //         }
-                    //     ],
-                    //     labelTabNav: "Navigation de configuration",
-                    // });
-
-                    // map.addControl(styleDialog);
-
                     const draw = new ol.control.Draw({
                         // position: "right",
                         style: true,
                     });
-
-                    // const icons = {
-                    //     "Point" : "fr-icon-map-pin-2-line",
-                    //     "LineString" : "fr-icon-git-merge-line",
-                    //     "Polygon" : "fr-icon-france-line",
-                    //     "Circle" : "fr-icon-circle-line",
-                    //     "Box" : "fr-icon-rectangle-line",
-                    // }
 
                     map.addControl(draw);
 
@@ -147,75 +102,23 @@
                             elt.layer.getSource().addFeature(elt.feature.clone());
                         });
                     });
-                    // const drawing = [];
-
-                    // Object.keys(icons).forEach((k, index) => {
-                    //     drawing.push(new ol.interaction.Drawing({
-                    //         type : k,
-                    //         source : source,
-                    //         select : draw.select,
-                    //         selectOnDrawEnd : true,
-                    //     }));
-                    //     drawing[index].setActive(false);
-                    // })
-
-                    // drawing.forEach(interaction => {
-                    //     draw.addInteraction({
-                    //         interaction : interaction,
-                    //         label: interaction._type,
-                    //         icon: icons[interaction._type],
-                    //     });
-                    // });
-
-
-                    // draw.getSelect().on("select", (e) => {
-                    //     // console.log(e)
-                    //     if (e.selected.length) {
-                    //         const geomType = e.selected[0].getGeometry().getType();
-                    //         styleDialog.setDialogTitle(geomType);
-                    //         styleDialog.setIcon(icons[geomType]);
-
-                    //         const gTypes = {};
-                    //         e.target.getFeatures().forEach(f => {
-                    //             gTypes[f.getGeometry().getType()] = true;
-                    //         });
-
-                    //         styleDialog.getDialogContent().className = 'GPF-dialog__content ' + Object.keys(gTypes).join(' ');
-                            
-                    //         styleDialog.show();
-                    //     } else {
-                    //         styleDialog.close();
-                    //     }
-                    // })
-
-                    // window.dialog = styleDialog;
-                    window.select = draw.select;
 
                     draw.on(["drawstart", "drawend", "drawabort"], console.log)
 
-                    // // 4. Écouteurs d'événements pour chaque formulaire
-                    // forms.forEach(form => {
-                    //     form.on("style", (e) => {
-                    //         console.log('Événement style reçu:', e);
-                    //     });
-                    // });
-
-                    // const btn = document.getElementById("toggleActive");
-
-                    // btn.addEventListener("click", () => {
-                    //     const input = styleForm.getInput("point-form");
-                    //     console.log(input)
-                    //     input.setDisabled(!input.get("disabled"))
-                    // })
                     const changeSource = document.getElementById("changeSource");
                     
                     // Vrai si la source est active, i.e. le dessin reste sur la carte
-                    let activeSource = false;
+                    let activeSource = true;
+                    draw.setSource(source)
 
                     changeSource.addEventListener("click", () => {
                         activeSource ? draw.setSource() : draw.setSource(source);
                         activeSource = !activeSource;
                     })
+
+                    draw.getStyleDialog().on("style", (e) => {
+                        console.log('Événement style reçu:', e);
+                    });
                 };
            </script>
 {{/content}}

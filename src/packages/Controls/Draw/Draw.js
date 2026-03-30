@@ -10,6 +10,8 @@ import { Map } from "ol";
 import checkDsfr from "../Utils/CheckDsfr";
 import DrawingInteraction from "../../Interactions/Drawing";
 import VectorSource from "ol/source/Vector";
+import FlatStyleForm from "../StyleDialog/FlatStyleForm";
+import StyleDialog from "../StyleDialog/StyleDialog";
 
 
 /**
@@ -20,8 +22,17 @@ import VectorSource from "ol/source/Vector";
  * @property {String} [size="sm"] Taille du panneau ("sm" ou "lg").
  * @property {String} [position=right] Position du panneau ("left" ou "right").
  * @property {Select} [select] Interaction de sélection lié au contrôle. Si aucune interaction n'est donnée, ajoute une interaction de type {@link SelectingInteraction SelectingInteraction}.
- * @property {String} [style=false] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Un dialog par défaut contenant un formulaire de style et une édition de texte seront ajoutés dans ce dialog.
- * @property {Array<InteractionOptions} [drawingInteractions] Interactions à ajouter dans le contrôle. Si aucun objet n'est donné, ajoutera trois interactions de dessin, de types respectifs : `Point`, `LineString`, `Polygon`. Voir interaction de dessin openlayer : {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html | Draw}
+ * @property {Boolean} [style=false] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Le contenu de ce panneau est géré par les formulaires donné dans le paramètre `forms`.
+ * @property {Array<StyleDialogTabNav>} [forms=[]] Si `style=true`, ajoute les formulaires dans le dialogue. Si `style=true` mais que le paramètre est vide ou nul, des formulaires par défauts seront ajoutés. Non pris en compte si `style=false`.
+ * @property {Array<InteractionOptions>|Boolean} [drawingInteractions=[]] Interactions à ajouter dans le contrôle. Mettre à `false` pour ne pas ajouter d'interactions par défaut. aucune Si aucun objet n'est donné, ajoutera trois interactions de dessin, de types respectifs : `Point`, `LineString`, `Polygon`. Voir interaction de dessin openlayer : {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html | Draw}
+ */
+
+
+/**
+ * @typedef {Object} StyleDialogTabNav Options pour une navigation tertiaire du dialog de style.
+ * @property {String} label Libellé de la navigation.
+ * @property {FlatStyleForm} form Formulaire de style correspondant.
+ * @property {String} [title] Titre associé (attribut title).
  */
 
 /**
@@ -73,10 +84,10 @@ class Draw extends ToggleContent {
             options.drawingInteractions.forEach(i => {
                 this.addInteraction(i);
             });
-        } else {
-            // Ajoute les interactions par défaut
-            const icons = checkDsfr() ? dsfrDefaultIcons : defaultIcons;
-            /** @type {Array<DrawingInteraction} Interactions par défaut */
+        } else if (options.drawingInteractions !== false) {
+            // Ajoute les interactions par défaut si le param est différent de false
+            this.icons = checkDsfr() ? dsfrDefaultIcons : defaultIcons;
+            /** @type {Array<DrawingInteraction>} Interactions par défaut */
             const interactions = [];
             // Création des interactions de dessin
             Object.keys(defaultInteractionsLabel).forEach((k, index) => {
@@ -94,7 +105,7 @@ class Draw extends ToggleContent {
                 this.addInteraction({
                     interaction : interaction,
                     label : defaultInteractionsLabel[interaction._type],
-                    icon : icons[interaction._type],
+                    icon : this.icons[interaction._type],
                 });
             });
         }
@@ -143,11 +154,27 @@ class Draw extends ToggleContent {
     }
 
     /**
-     * Renvoie l'intéraction de sélection lié au contrôle
-     * @returns {Select} Intéraction de sélection
+     * @param {DrawOptions} options Options du constructeur
+     * @override
      */
-    getSelect () {
-        return this.select;
+    _initContainer (options) {
+        super._initContainer(options);
+
+        // Ajout d'un conteneur
+        const btnGroup = document.createElement("div");
+        btnGroup.className = "GPF-btn-group fr-btns-group fr-btns-group--icon-left";
+        this.btnGroup = btnGroup;
+        this.dialog.setDialogContent(btnGroup, false);
+
+        if (options.style) {
+            this.styleDialog = new StyleDialog({
+                id : "style-dialog",
+                title : "Configuration du style",
+                position : "left",
+                forms : options.forms,
+                select : this.select,
+            });
+        }
     }
 
     /**
@@ -192,6 +219,14 @@ class Draw extends ToggleContent {
     }
 
     /**
+     * Renvoie l'intéraction de sélection lié au contrôle
+     * @returns {Select} Intéraction de sélection
+     */
+    getSelect () {
+        return this.select;
+    }
+
+    /**
      * Récupère l'intéraction active si elle existe
      * @returns {ToggleInteraction|undefined} Interaction active (s'il y'en a une)
      */
@@ -208,26 +243,12 @@ class Draw extends ToggleContent {
     }
 
     /**
-     * @param {DrawOptions} options Options du constructeur
-     * @override
-     */
-    _initContainer (options) {
-        super._initContainer(options);
-
-        // Ajout d'un conteneur
-        const btnGroup = document.createElement("div");
-        btnGroup.className = "GPF-btn-group fr-btns-group fr-btns-group--icon-left";
-        this.btnGroup = btnGroup;
-        this.dialog.setDialogContent(btnGroup, false);
-    }
-
-    /**
      * @param {Map} map Carte à ajouter
      * @override
      */
     setMap (map) {
         this.select && this.getMap()?.removeInteraction(this.select);
-        
+
         super.setMap(map);
 
         if (map) {
@@ -235,6 +256,8 @@ class Draw extends ToggleContent {
                 i.setMap(map);
             });
             this.select && map.addInteraction(this.select);
+
+            this.styleDialog && map.addControl(this.styleDialog);
         }
     }
 
@@ -274,9 +297,19 @@ class Draw extends ToggleContent {
         this.toggleInteractions.push(toggle);
     }
 
+    /**
+     * Renvoie le dialogue de style, s'il est ajouté au contrôleur.
+     * 
+     * @returns {StyleDialog|undefined} Dialogue de style
+     */
+    getStyleDialog () {
+        return this.styleDialog;
+    }
+
 }
 
 export default Draw;
+export { dsfrDefaultIcons, defaultIcons };
 
 // Expose Draw as ol.control.Draw (for a build bundle)
 if (window.ol && window.ol.control) {

@@ -31,7 +31,6 @@
       display: none;
     }
 
-
     .fr-select-group,
     .fr-input-group {
       margin: 0;
@@ -70,25 +69,26 @@
   }
 }
 
-.GPF-dialog__content:has(.style-form) {
-    [data-property^='text'] {
+.GPF-dialog:has(.style-form) {
+  [data-property^='text'] {
+    display: block;
+  }
+  &.Point {
+    [data-property^='point'],
+    [data-property^='circle'] {
       display: block;
     }
-    &.Point {
-      [data-property^='point'] {
-        display: block;
-      }
-    }
-    &.Polygon {
-      [data-property^='fill'],
-      [data-property^='stroke'] {
-        display: block;
-      }
-    }
-    &.LineString {
-      [data-property^='line'],
-      [data-property^='stroke'] {
-        display: block;
-      }
+  }
+  &.Polygon {
+    [data-property^='fill'],
+    [data-property^='stroke'] {
+      display: block;
     }
   }
+  &.LineString {
+    [data-property^='line'],
+    [data-property^='stroke'] {
+      display: block;
+    }
+  }
+}

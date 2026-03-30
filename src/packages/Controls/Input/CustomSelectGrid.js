@@ -2,24 +2,12 @@ import "../../CSS/Controls/Input/GPFcustomSelectGrid.scss";
 import CustomSelect from "./CustomSelect.js";
 
 /**
- * @typedef {Object} InputConfig
- * @property {HTMLElement} input L'élément input HTML
+ * @typedef {Object} CustomSelectConfig
  * @property {string} label Le label de l'input
+ * @property {string} [labelInfo] Info supplémentaire du label (ex: unité)
  * @property {string} property La propriété flat style correspondante
- */
-
-/**
- * @typedef {Object} SelectConfig
- * @property {HTMLSelectElement} select L'élément select HTML
- * @property {string} label Le label du select
- * @property {string} property La propriété flat style correspondante
- * @property {Object<string, string>} options Les options du select (valeur: libellé)
- */
-
-/**
- * @typedef {Object} InputStyleConfig
- * @property {string} label Le label de l'input
- * @property {string} property La propriété flat style correspondante
+ * @property {string} [type] Type de l'input
+ * @property {Boolean} [disabled=false] Si vrai, désactive l'input
  * @property {Object<string, string>} options Les options de la sélection (valeur: libellé)
  */
 
@@ -30,12 +18,16 @@ class CustomSelectGrid extends CustomSelect {
 
     /**
      * Constructeur du contrôle CustomSelectGrid
-     * @param {InputStyleConfig} options Options du contrôle
+     * @param {CustomSelectConfig} options Options du contrôle
      */
     constructor (options = {}) {
         super(options);
     }
 
+    /**
+     * @param {CustomSelectConfig} options Options du contrôle
+     * @override
+     */
     _initialize (options) {
         super._initialize(options);
         /**
@@ -46,6 +38,10 @@ class CustomSelectGrid extends CustomSelect {
         this.pageSize = 5;
     }
 
+    /**
+     * @param {CustomSelectConfig} options Options du contrôle
+     * @override
+     */
     _initContainer (options) {
         super._initContainer(options);
         this.element.classList.add("input-style-select-grid");
@@ -56,6 +52,7 @@ class CustomSelectGrid extends CustomSelect {
      * @param {Number} maxIndex Indice max
      * @param {Number} action Type d'action
      * @returns {Number} nouvel indice
+     * @override
      */
     getUpdatedIndex (currentIndex, maxIndex, action) {
         // Cas aucune option sélectionnée
@@ -100,11 +97,11 @@ class CustomSelectGrid extends CustomSelect {
     }
 
     /**
-     * Créé une option avec une valeur et un label
      * @param {String} value Valeur du choix (dépend de la propriété)
      * @param {String} label Libellé à afficher
      * @param {Number} index Indice de l'élément (utile pour les raccourcis claviers)
      * @returns {HTMLButtonElement} Option ajoutée
+     * @override
      */
     addChoice (value, label, index) {
         const option = super.addChoice(value, label, index);
