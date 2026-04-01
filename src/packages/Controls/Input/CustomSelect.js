@@ -103,7 +103,6 @@ class CustomSelect extends DefaultInput {
         this.inputContainer.ariaSelected = true;
 
         // Pour les type = color seulement (provisoire)
-        this.inputContainer.style.setProperty("--bg-color", value);
 
         // Élément choisi (visible en permanence)
         this.choice = document.createElement("span");
@@ -543,7 +542,6 @@ class CustomSelect extends DefaultInput {
 
         // Mets la valeur dans le choix
         this.inputContainer.dataset.value = option[0];
-        this.inputContainer.style.setProperty("--bg-color", option[0]);
         this.inputContainer.ariaLabel = option[1];
         this.input.value = option[0];
         if (this.type === "icon") {
@@ -630,7 +628,6 @@ class CustomSelect extends DefaultInput {
         option.dataset.type = this.type;
         option.dataset.value = value;
         option.tabIndex = -1;
-        // option.style.setProperty("--bg-color", value);
 
         // Si la valeur est la même que la valeur choisi, on la sélectionne
         if (value === this.choice.dataset.value) {

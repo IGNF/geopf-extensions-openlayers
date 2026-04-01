@@ -82,43 +82,10 @@
                     const draw = new ol.control.Draw({
                         // position: "right",
                         style: true,
+                        source : source,
                     });
 
                     map.addControl(draw);
-
-                    // Modify interaction
-                    const modify = new ol.interaction.Modifying({ 
-                        select : draw.select,
-                    });
-                    map.addInteraction(modify);
-
-                    // Show points on modifying
-                    draw.select.showPoints(() => modify.getActive());
-
-                    // Copy / past
-                    modify.on(["copy", "cut", "paste"], console.log);
-                    modify.on("paste", e => {
-                        e.features.forEach(elt => {
-                            elt.layer.getSource().addFeature(elt.feature.clone());
-                        });
-                    });
-
-                    draw.on(["drawstart", "drawend", "drawabort"], console.log)
-
-                    const changeSource = document.getElementById("changeSource");
-                    
-                    // Vrai si la source est active, i.e. le dessin reste sur la carte
-                    let activeSource = true;
-                    draw.setSource(source)
-
-                    changeSource.addEventListener("click", () => {
-                        activeSource ? draw.setSource() : draw.setSource(source);
-                        activeSource = !activeSource;
-                    })
-
-                    draw.getStyleDialog().on("style", (e) => {
-                        console.log('Événement style reçu:', e);
-                    });
                 };
            </script>
 {{/content}}
