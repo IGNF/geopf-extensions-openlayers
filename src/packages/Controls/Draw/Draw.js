@@ -12,6 +12,8 @@ import DrawingInteraction from "../../Interactions/Drawing";
 import VectorSource from "ol/source/Vector";
 import FlatStyleForm from "../StyleDialog/FlatStyleForm";
 import StyleDialog from "../StyleDialog/StyleDialog";
+import VectorLayer from "ol/layer/Vector";
+import DrawInteraction from "ol/interaction/Draw";
 
 
 /**
@@ -22,6 +24,8 @@ import StyleDialog from "../StyleDialog/StyleDialog";
  * @property {String} [size="sm"] Taille du panneau ("sm" ou "lg").
  * @property {String} [position=right] Position du panneau ("left" ou "right").
  * @property {Select} [select] Interaction de sélection lié au contrôle. Si aucune interaction n'est donnée, ajoute une interaction de type {@link SelectingInteraction SelectingInteraction}.
+ * @property {VectorSource} [source] Source à ajouter au contrôle initialement. Peut-être fait après via la méthode `setSource`. Si aucune source n'est donnée, en ajoute une de base.
+ * @property {Boolean} [addToMap] Si vrai, ajoute une couche par défaut à la carte. Cela n'a pas d'effet si une source est donnée via le paramètrr `source`.
  * @property {Boolean} [style=false] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Le contenu de ce panneau est géré par les formulaires donné dans le paramètre `forms`.
  * @property {Array<StyleDialogTabNav>} [forms=[]] Si `style=true`, ajoute les formulaires dans le dialogue. Si `style=true` mais que le paramètre est vide ou nul, des formulaires par défauts seront ajoutés. Non pris en compte si `style=false`.
  * @property {Array<InteractionOptions>|Boolean} [drawingInteractions=[]] Interactions à ajouter dans le contrôle. Mettre à `false` pour ne pas ajouter d'interactions par défaut. aucune Si aucun objet n'est donné, ajoutera trois interactions de dessin, de types respectifs : `Point`, `LineString`, `Polygon`. Voir interaction de dessin openlayer : {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html | Draw}
@@ -37,7 +41,7 @@ import StyleDialog from "../StyleDialog/StyleDialog";
 
 /**
  * @typedef {Object} InteractionOptions
- * @property {Interaction} interaction - L'interaction de dessin OpenLayers à ajouter (Voir {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Interaction-Interaction.html | Interaction})
+ * @property {DrawInteraction} interaction - L'interaction de dessin OpenLayers à ajouter (Voir {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Interaction-Interaction.html | Interaction})
  * @property {String} label - Libellé de l'interaction
  * @property {String} [icon] - Icône de l'interaction
  */
@@ -82,6 +86,7 @@ class Draw extends ToggleContent {
         if (options.drawingInteractions instanceof Array && options.drawingInteractions.length) {
             // Ajoute les interactions de dessin
             options.drawingInteractions.forEach(i => {
+                this.source && i.interaction?.setSource?.(this.source);
                 this.addInteraction(i);
             });
         } else if (options.drawingInteractions !== false) {
@@ -136,8 +141,17 @@ class Draw extends ToggleContent {
             options.select = new SelectingInteraction();
         }
 
-        // Source pour le dessin
-        this.source = new VectorSource({});
+        if (!(options.source instanceof VectorSource)) {
+            this.source = new VectorSource({});
+            if (options.addToMap) {
+                // On ajoute la source à une couche, que l'on ajoutera sur la carte.
+                this.layer = new VectorLayer({
+                    source : this.source
+                });
+            }
+        } else {
+            this.source = options.source;
+        }
 
         super._initialize(options);
         /**
@@ -258,6 +272,8 @@ class Draw extends ToggleContent {
             this.select && map.addInteraction(this.select);
 
             this.styleDialog && map.addControl(this.styleDialog);
+
+            this.layer && map.addLayer(this.layer);
         }
     }
 

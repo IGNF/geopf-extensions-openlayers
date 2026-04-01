@@ -46,9 +46,6 @@
             <div>
                 <button class="fr-btn fr-btn--secondary" id="toggleActive">Active / désactive input forme</button>
             </div>
-            <div>
-                <button class="fr-btn fr-btn--secondary" id="changeSource">Change la source</button>
-            </div>
 {{/content}}
 
 {{#content "js"}}
@@ -59,9 +56,9 @@
                     document.getElementById('map').style.backgroundImage = 'none';
 
                     let source = new ol.source.Vector({})
-                    let layer = new ol.layer.Vector({
-                        source: source
-                    })
+                    // let layer = new ol.layer.Vector({
+                    //     source: source
+                    // })
                     
                     // 1. Création de la map
                     map = new ol.Map({
@@ -75,14 +72,14 @@
                                 source: new ol.source.OSM(),
                                 opacity: 0.5
                             }),
-                            layer
+                            // layer
                         ]
                     });
 
                     const draw = new ol.control.Draw({
                         // position: "right",
                         style: true,
-                        source : source,
+                        addToMap: true,
                     });
 
                     map.addControl(draw);
