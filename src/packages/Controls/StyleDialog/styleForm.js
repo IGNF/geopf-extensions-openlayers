@@ -25,7 +25,11 @@ styleForm.addCustomSelect({
     disabled : true,
 });
 
-// styleForm.addInput('Couleur', 'circle-color', new InputColor());
+styleForm.addCustomSelect({
+    label : "Couleur",
+    property : "circle-color",
+    type : "color",
+});
 
 styleForm.addCustomInput({
     label : "Taille",

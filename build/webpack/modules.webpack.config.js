@@ -76,6 +76,7 @@ module.exports = (env, argv) => {
             "GpfExtOlReporting" : path.join(rootdir, "src", "packages", "Controls/Reporting", "Reporting.js"),
             // Input Controls
             "GpfExtOlInputNumber" : path.join(rootdir, "src", "packages", "Controls/Input", "InputNumber.js"),
+            "GpfExtOlInputColor" : path.join(rootdir, "src", "packages", "Controls/Input", "InputColor.js"),
             "GpfExtOlCustomSelect" : path.join(rootdir, "src", "packages", "Controls/Input", "CustomSelect.js"),
             "GpfExtOlCustomSelectGrid" : path.join(rootdir, "src", "packages", "Controls/Input", "CustomSelectGrid.js"),
             "GpfExtOlDefaultInput" : path.join(rootdir, "src", "packages", "Controls/Input", "DefaultInput.js"),

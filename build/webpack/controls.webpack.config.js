@@ -126,6 +126,7 @@ module.exports = (env, argv) => {
                 moduledir = "OverviewMap";
                 // ras
                 break;
+            case "InputColor":
             case "InputNumber":
             case "CustomSelect":
             case "CustomSelectGrid":

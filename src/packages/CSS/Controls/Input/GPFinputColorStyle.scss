@@ -1,0 +1,11 @@
+.input-style {
+  [role='option'],
+  [role='combobox'] {
+    // Pour tous, on met un masque
+    &[data-type='color']:not(&[data-value='']) {
+      > span.input-style__option-value {
+        border: 1px solid #cacaca;
+      }
+    }
+  }
+}

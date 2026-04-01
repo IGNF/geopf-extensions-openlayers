@@ -65,6 +65,7 @@ export { default as TabNav } from "./packages/Controls/Toggle/TabNav";
 export { default as Draw } from "./packages/Controls/Draw/Draw";
 
 // Input Controls
+export { default as InputColor } from "./packages/Controls/Input/InputColor";
 export { default as InputNumber } from "./packages/Controls/Input/InputNumber";
 export { default as CustomSelect } from "./packages/Controls/Input/CustomSelect";
 export { default as CustomSelectGrid } from "./packages/Controls/Input/CustomSelectGrid";

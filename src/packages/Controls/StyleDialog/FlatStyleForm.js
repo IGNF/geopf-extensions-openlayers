@@ -6,6 +6,7 @@ import InputNumber from "../Input/InputNumber.js";
 import DefaultInput from "../Input/DefaultInput.js";
 import CustomSelect from "../Input/CustomSelect.js";
 import CustomSelectGrid from "../Input/CustomSelectGrid.js";
+import InputColor from "../Input/InputColor.js";
 
 /**
  * @typedef {Object} InputConfig Configuration pour un type input
@@ -366,8 +367,9 @@ class FlatStyleForm extends ControlExtended {
         let inputNumber;
         if (options.type === "pattern") {
             inputNumber = new CustomSelectGrid(options);
-        }
-        else {
+        } else if (options.type === "color") {
+            inputNumber = new InputColor(options);
+        } else {
             inputNumber = new CustomSelect(options);
         }
         this.element.appendChild(inputNumber.getElement());
