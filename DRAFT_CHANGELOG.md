@@ -19,6 +19,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+- perf: écoute évènement moveend sur map au lieu de change:resolution sur view
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
