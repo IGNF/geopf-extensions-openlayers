@@ -16,6 +16,7 @@ import VectorLayer from "ol/layer/Vector";
 import DrawInteraction from "ol/interaction/Draw";
 import Feature from "ol/Feature";
 import { createDefaultStyle } from "ol/style/flat";
+import { asArray, asString } from "ol/color";
 
 /**
  * @typedef {Object} DrawOptions
@@ -63,26 +64,53 @@ import { createDefaultStyle } from "ol/style/flat";
 
 
 /// VALEURS PAR DÉFAUTS ///
-// Style par défaut
-const defaultStyle = createDefaultStyle();
+// TODO : Mettre ça dans un autre fichier ?
 // Style actuel
 const currentStyle = createDefaultStyle();
+
+// Couleur par défaut du texte
+currentStyle["text-fill-color"] = "#000000";
+// Taille par défaut du texte
+currentStyle["text-font-size"] = "10";
+// Valeur d'opacité par défaut
+currentStyle["fill-color-opacity"] = "0.4";
+
 // Couche utilisée pour transformer le flat style en style openlayers
 const layerStyle = new VectorLayer({ style : currentStyle });
 
 /**
  * @type {Object<RegExp, Function>} Objet prenant des propriétés flat style
  * et une fonction de transformation correspondante.
+ * L'ordre des transformeurs est importante : si une propriété correspond à plusieurs
+ * clé de l'objet, la dernière clé sera utilisée comme transformeur.
  * 
- * Si la propriété n'est pas dedans, la valeur est laisée dedans
+ * Si la propriété n'est pas dedans, la valeur est laisée sans changement.
  */
 const flatStyleTransformers = {
-    // Transforme la valeur en nombre
-    "width|radius|size|offset" : (/** @type {Number} */v) => parseFloat(v),
+    // Transforme le "sans couleur" en couleur valide
+    "color" : (/** @type {String} */ v) => v === "" ? "#00000000" : v,
     // Transforme la valeur en tableau de nombre
-    "dash" : (/** @type {String} */ v) => v.split(",").map(elem => parseFloat(elem)),
+    "dash" : (/** @type {String} */ v) => {
+        if (v === "") {
+            return [0];
+        } else {
+            return v.split(",").map(elem => parseFloat(elem) * currentStyle["stroke-width"]);
+        }
+    },
+    // Transforme la valeur en nombre
+    "width|radius|size|offset|opacity" : (/** @type {Number} */ v) => parseFloat(v),
     // Font pour les textes : transforme en font CSS
-    "text-font" : (/** @type {String} */ v) => `${parseInt(v)}px sans-serif`,
+    "text-font$" : (/** @type {String} */ v) => `${parseInt(v)}px sans-serif`,
+    // Applique la valeur de l'opacité à la couleur
+    "^fill-color$" : (/** @type {String} */ v) => {
+        if (v === "") {
+            return "#00000000";
+        } else {
+            const fillColor = asArray(v);
+            fillColor[3] = currentStyle["fill-color-opacity"];
+            return asString(fillColor);
+        }
+    },
 };
 
 // Libellés des boutons pour les interactions par défaut
@@ -232,7 +260,7 @@ class Draw extends ToggleContent {
                 position : "left",
                 forms : options.forms,
                 select : this.select,
-                onOpen : this.onOpenStyleDialog,
+                onOpen : this.onOpenStyleDialog.bind(this),
                 onClose : function () {
                     // Déselectionne la sélection courante
                     this.select.getFeatures().clear();
@@ -249,18 +277,14 @@ class Draw extends ToggleContent {
      * @private
      */
     onOpenStyleDialog (e) {
-        console.log(e, this);
         // Initialise les formulaires
-        const feature = this.select.getFeatures().item(0);
+        const feature = this.getStyleDialog().getSelect().getFeatures().item(0);
         if (!feature) {
             return;
         }
         setTimeout(() => {
-            // TODO : RÉCUPÉRER FLAT STYLE FEATURE ET APPLIQUER AU FORMULAIRE
-            this.getForms().forEach(form => {
-                // form.setFlatStyle(flatStyle);
-                console.log(form);
-            });
+            const flatStyle = this.getFlatStyle(feature);
+            this.getStyleDialog().setFormValues(flatStyle);
         });
     }
 
@@ -313,15 +337,14 @@ class Draw extends ToggleContent {
                 // Fonction donnée par l'user
                 this.styleDialog.on("style", (e) => {
                     const { property, value } = e;
-                    console.log(property, value);
+                    const features = [...this.getSelect().getFeatures().getArray()];
+                    onStyle.call(this, property, value, features);
                 });
             } else {
                 this.styleDialog.on("style", (e) => {
                     const { property, value } = e;
                     const features = [...this.getSelect().getFeatures().getArray()];
-                    // this.getSelect().getFeatures().clear();
                     this.defaultOnStyle(property, value, features);
-                    // this.getSelect().getFeatures().push(...features);
                 });
 
                 // Applique le style courant à la fin du dessin
@@ -333,6 +356,39 @@ class Draw extends ToggleContent {
                 });
             }
         }
+    }
+
+    /**
+     * Ajoute une propriété flat style sur une entité
+     * Les propriétés flat style sont récupérable via
+     * `feature.get("flatStyle")` ou via la méthode `getFlatStyle(feature)` du contrôle
+     * {@link Draw | Draw}
+     * 
+     * @param {Feature} feature Entité sur laquelle appliquer la propriété
+     * @param {String} property Propriété flat style
+     * @param {any} value Valeur correspondante
+     * @private
+     */
+    setFlatStyleProperty (feature, property, value) {
+        let flatStyle = feature.get("flatStyle");
+        if (flatStyle === undefined) {
+            feature.set("flatStyle", {});
+        }
+        flatStyle = feature.get("flatStyle");
+        flatStyle[property] = value;
+    }
+
+    /**
+     * Récupère le style flat style pour l'appliquer à un formulaire.
+     * Cela concatène les valeurs actuelles et, si une entité est donnée en paramètre,
+     * les propriétés de l'entité surchargent les valeurs par défaut.
+     * 
+     * @param {Feature} [feature] Entité depuis laquelle récupérer les propriété flatStyle
+     * @returns {Object} formulaire de style flat style
+     * @public
+     */
+    getFlatStyle (feature) {
+        return Object.assign(currentStyle, feature.get("flatStyle"));
     }
 
     /**
@@ -350,15 +406,51 @@ class Draw extends ToggleContent {
         for (const key in flatStyleTransformers) {
             if (RegExp(key, "i").test(property)) {
                 transformer = flatStyleTransformers[key];
+                // Pas de break pour que la dernière propriété correspondant
+                // à la regex soit prise en compte
             }
         }
+
+        // TODO : améliorer car pas très propre
+        // Si modif de stroke-width, on modifie le dash aussi
+        if (property === "stroke-width") {
+            const dash = currentStyle["stroke-line-dash"];
+            const oldWidth = currentStyle[property];
+            const newWidth = transformer(value);
+            if (dash) {
+                currentStyle["stroke-line-dash"] = dash.map(elem => elem / oldWidth * newWidth);
+            }
+        }
+        // Modifie la propriété text-font si on modifie la taille du texte
+        else if (property === "text-font-size") {
+            let fontTransformer;
+            const fontProperty = "text-font";
+            for (const key in flatStyleTransformers) {
+                if (RegExp(key, "i").test(fontProperty)) {
+                    fontTransformer = flatStyleTransformers[key];
+                    break;
+                }
+            }
+            currentStyle[fontProperty] = fontTransformer(value);
+        }
+        // Modifie la couleur en fonction de l'opacité
+        else if (property === "fill-color-opacity") {
+            const fillColor = asArray(currentStyle["fill-color"]);
+            fillColor[3] = transformer(value);
+            currentStyle["fill-color"] = fillColor;
+        }
+
+        // Change le style actuel
         currentStyle[property] = transformer(value);
         // Applique le nouveau style à la couche
         layerStyle.setStyle(currentStyle);
         const styleFn = layerStyle.getStyleFunction();
+
         // Et modifie les entités selon la fonction de style
         features.forEach(feature => {
             feature.setStyle(styleFn(feature));
+            // Pour retrouver la valeur
+            this.setFlatStyleProperty(feature, property, transformer(value));
         });
     }
 

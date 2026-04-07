@@ -34,7 +34,7 @@ labelForm.addCustomSelect({
 labelForm.addCustomInput({
     label : "Taille",
     labelInfo : "(px)",
-    property : "text-font",
+    property : "text-font-size",
 });
 
 export default labelForm;
