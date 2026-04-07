@@ -318,7 +318,7 @@ class FlatStyleForm extends ControlExtended {
     }
 
     /**
-     * @param {InputStyleConfig} options Options constructeur
+     * @param {InputConfig} options Options constructeur
      * @returns {InputNumber} Input créé
      */
     addCustomInput (options) {
@@ -338,7 +338,7 @@ class FlatStyleForm extends ControlExtended {
         return inputNumber;
     }
     /**
-     * @param {InputStyleConfig} options Options constructeur
+     * @param {InputConfig} options Options constructeur
      * @returns {DefaultInput} Input créé
      */
     addDefaultInput (options) {
@@ -360,7 +360,7 @@ class FlatStyleForm extends ControlExtended {
     }
 
     /**
-     * @param {InputStyleConfig} options Options constructeur
+     * @param {InputConfig} options Options constructeur
      * @returns {CustomSelect} Input créé
      */
     addCustomSelect (options) {

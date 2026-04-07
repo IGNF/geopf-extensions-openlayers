@@ -34,7 +34,7 @@ const defaultColors = {
     "#787878" : "Gris",
     "#424242" : "Gris foncé",
     "#000000" : "Noir",
-    "" : "Sans couleur",
+    "#00000000" : "Sans couleur",
 };
 
 /**
@@ -48,8 +48,6 @@ class InputColor extends CustomSelectGrid {
      */
     constructor (options = {}) {
         super(options);
-
-        console.log(this.choices);
     }
 
     /**
@@ -80,12 +78,13 @@ class InputColor extends CustomSelectGrid {
     }
 
     selectOption (index, silent = false) {
-        super.selectOption(index, silent);
+        const isSelected = super.selectOption(index, silent);
 
         // Màj couleur
-        const option = this.choices[index];
-        console.log("selected option :", option, "index", index);
-        this.inputContainer.style.setProperty("--bg-color", option[0]);
+        if (isSelected) {
+            const option = this.choices[index];
+            this.inputContainer.style.setProperty("--bg-color", option[0]);
+        }
     }
 
     /**

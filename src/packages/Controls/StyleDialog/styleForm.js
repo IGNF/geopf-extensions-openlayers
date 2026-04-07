@@ -1,3 +1,4 @@
+import InputColor from "../Input/InputColor.js";
 import FlatStyleForm from "./FlatStyleForm.js";
 // import InputColor from './InputColor.js';
 
@@ -27,7 +28,7 @@ styleForm.addCustomSelect({
 
 styleForm.addCustomSelect({
     label : "Couleur",
-    property : "circle-color",
+    property : "circle-fill-color",
     type : "color",
 });
 
@@ -39,6 +40,11 @@ styleForm.addCustomInput({
 
 styleForm.addBreak("circle-form");
 // styleForm.addInput('Bordure', 'circle-stroke-color', new InputColor());
+styleForm.addCustomSelect({
+    label : "Bordure",
+    property : "circle-stroke-color",
+    type : "color",
+});
 
 styleForm.addCustomInput({
     label : "Taille",
@@ -84,6 +90,11 @@ const inputPattern = styleForm.addCustomSelect({
 });
 
 // styleForm.addInput('Couleur', 'fill-color', new InputColor());
+styleForm.addCustomSelect({
+    label : "Couleur",
+    property : "fill-color",
+    type : "color",
+});
 
 const inputFillSize = styleForm.addCustomInput({
     label : "Taille",
@@ -91,17 +102,20 @@ const inputFillSize = styleForm.addCustomInput({
 });
 
 styleForm.addBreak("fill-style");
-// const inputFillColor = new InputColor();
-// styleForm.addInput('Fond', 'fill-pattern-color', inputFillColor);
+const inputFillColor = styleForm.addCustomSelect({
+    label : "Couleur",
+    property : "fill-color",
+    type : "color",
+});
 styleForm.addBreak("fill-patern");
 
 /* Disable pattern options when no patter */
 inputPattern.input.addEventListener("change", e => {
     if (e.target.value) {
-    // inputFillColor.disable(false);  
+        inputFillColor.setDisabled(false);
         inputFillSize.input.disabled = false;
     } else {
-    // inputFillColor.disable(true);  
+        inputFillColor.setDisabled(true);
         inputFillSize.input.disabled = true;
     }
 });
@@ -121,6 +135,11 @@ styleForm.addCustomSelect({
     type : "stroke",
 });
 // styleForm.addInput('Couleur', 'stroke-color', new InputColor());
+styleForm.addCustomSelect({
+    label : "Couleur",
+    property : "stroke-color",
+    type : "color",
+});
 styleForm.addCustomInput({
     label : "Taille",
     labelInfo : "(pt)",

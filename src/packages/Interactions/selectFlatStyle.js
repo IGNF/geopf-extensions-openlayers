@@ -125,4 +125,4 @@ const defaultFlatStyle = {};
     });
 });
 
-export { defaultFlatStyle, selectStyle, getFlatCoordinates };
+export { defaultFlatStyle, selectStyle, selectFlatStyle, getFlatCoordinates };

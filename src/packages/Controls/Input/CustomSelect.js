@@ -467,7 +467,6 @@ class CustomSelect extends DefaultInput {
             
             // Vérifie la hauteur de l'élément
             const { height, top, bottom } = this.optionsContainer.getBoundingClientRect();
-            console.log(height, top, bottom);
             if (bottom > document.documentElement.clientHeight) {
                 // Ne se voit pas, place l'élément au dessus du bouton
                 this.optionsContainer.style.top = Math.max(top - height - btnPos.height, 0) + "px";
@@ -523,12 +522,12 @@ class CustomSelect extends DefaultInput {
      * Sélectionne une option et envoi un événement `change` sur l'input.
      * @param {Number} index Indice de l'élément à sélectionner
      * @param {Boolean} silent Si vrai, n'envoie pas d'événement change
-     * @returns {void}
+     * @returns {Boolean} Vrai si l'option est sélectionnée
      */
     selectOption (index, silent = false) {
         // Pas d'indice choisi, on s'arrête là
         if (index === undefined) {
-            return;
+            return false;
         }
         this.activeIndex = index;
 
@@ -555,6 +554,8 @@ class CustomSelect extends DefaultInput {
         if (!silent) {
             this.input.dispatchEvent(new Event("change"));
         }
+
+        return true;
     }
 
     /**
