@@ -14,7 +14,8 @@ import FlatStyleForm from "../StyleDialog/FlatStyleForm";
 import StyleDialog from "../StyleDialog/StyleDialog";
 import VectorLayer from "ol/layer/Vector";
 import DrawInteraction from "ol/interaction/Draw";
-
+import Feature from "ol/Feature";
+import { createDefaultStyle } from "ol/style/flat";
 
 /**
  * @typedef {Object} DrawOptions
@@ -27,13 +28,26 @@ import DrawInteraction from "ol/interaction/Draw";
  * @property {VectorSource} [source] Source à ajouter au contrôle initialement. Peut-être fait après via la méthode `setSource`. Si aucune source n'est donnée, en ajoute une de base.
  * @property {Boolean} [addToMap] Si vrai, ajoute une couche par défaut à la carte. Cela n'a pas d'effet si une source est donnée via le paramètrr `source`.
  * @property {Boolean} [style=false] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Le contenu de ce panneau est géré par les formulaires donné dans le paramètre `forms`.
+ * @property {Boolean|OnStyleCallBack} [onStyle] Fonction par défaut à appliquer lors d'un changement de style. 3 valeurs sont possibles :
+ * - Aucune valeur / `true` : Modifie le style des features sélectionnés. Aucun événement style ne sera envoyé sur le contrôle Draw (il est possible de les écouter via `getStyleDialog().on("style")`).
+ * - `false` : Aucune action par défaut n'est effectuée. Les modifications du style sont écoutable via les événements de type `"style"` (`draw.on("style", callback)`);
+ * - fonction de type {@link OnStyleCallBack OnStyleCallBack} : La fonction sera appliquée, aucun événement ne sera envoyé sur le contrôle Draw (il est possible de les écouter via `getStyleDialog().on("style")`).
+ * 
+ * Le paramètre n'est pas pris en compte si `style=false`.
  * @property {Array<StyleDialogTabNav>} [forms=[]] Si `style=true`, ajoute les formulaires dans le dialogue. Si `style=true` mais que le paramètre est vide ou nul, des formulaires par défauts seront ajoutés. Non pris en compte si `style=false`.
  * @property {Array<InteractionOptions>|Boolean} [drawingInteractions=[]] Interactions à ajouter dans le contrôle. Mettre à `false` pour ne pas ajouter d'interactions par défaut. aucune Si aucun objet n'est donné, ajoutera trois interactions de dessin, de types respectifs : `Point`, `LineString`, `Polygon`. Voir interaction de dessin openlayer : {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html | Draw}
  */
 
+/**
+ * @callback OnStyleCallBack
+ * @param {String} property Nom de la propriété flatstyle
+ * @param {any} value Valeur correspondante
+ * @param {Array<Feature>} features Entités sur lesquelles appliquer le style.
+ * Si une sélection est passée dans le dialogue de style, le paramètre correspondra aux entités sélectionnées, récupérées via la méthode `getFeatures()`.
+ */
 
 /**
- * @typedef {Object} StyleDialogTabNav Options pour une navigation tertiaire du dialog de style.
+ * @typedef {Object} StyleDialogTabNav Options pour une navigation tertiaire du dialogue de style.
  * @property {String} label Libellé de la navigation.
  * @property {FlatStyleForm} form Formulaire de style correspondant.
  * @property {String} [title] Titre associé (attribut title).
@@ -46,17 +60,46 @@ import DrawInteraction from "ol/interaction/Draw";
  * @property {String} [icon] - Icône de l'interaction
  */
 
+
+
+/// VALEURS PAR DÉFAUTS ///
+// Style par défaut
+const defaultStyle = createDefaultStyle();
+// Style actuel
+const currentStyle = createDefaultStyle();
+// Couche utilisée pour transformer le flat style en style openlayers
+const layerStyle = new VectorLayer({ style : currentStyle });
+
+/**
+ * @type {Object<RegExp, Function>} Objet prenant des propriétés flat style
+ * et une fonction de transformation correspondante.
+ * 
+ * Si la propriété n'est pas dedans, la valeur est laisée dedans
+ */
+const flatStyleTransformers = {
+    // Transforme la valeur en nombre
+    "width|radius|size|offset" : (/** @type {Number} */v) => parseFloat(v),
+    // Transforme la valeur en tableau de nombre
+    "dash" : (/** @type {String} */ v) => v.split(",").map(elem => parseFloat(elem)),
+    // Font pour les textes : transforme en font CSS
+    "text-font" : (/** @type {String} */ v) => `${parseInt(v)}px sans-serif`,
+};
+
+// Libellés des boutons pour les interactions par défaut
 const defaultInteractionsLabel = {
     "Point" : "Point",
     "LineString" : "Ligne",
     "Polygon" : "Surface",
 };
 
+// Icônes DSFR des interactions par défaut
 const dsfrDefaultIcons = {
     "Point" : "fr-icon-map-pin-2-line",
     "LineString" : "fr-icon-ign-dessiner-trace-line",
     "Polygon" : "fr-icon-ign-shape-3-fill",
 };
+
+// Icônes non-DSFR des interactions par défaut
 const defaultIcons = {
     "Point" : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.8995L16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995ZM12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM12 13C13.1046 13 14 12.1046 14 11C14 9.89543 13.1046 9 12 9C10.8954 9 10 9.89543 10 11C10 12.1046 10.8954 13 12 13ZM12 15C9.79086 15 8 13.2091 8 11C8 8.79086 9.79086 7 12 7C14.2091 7 16 8.79086 16 11C16 13.2091 14.2091 15 12 15Z"></path></svg>`,
     "LineString" : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 11H4V13H2V11ZM6 11H18V13H6V11ZM20 11H22V13H20V11Z"></path></svg>`,
@@ -138,7 +181,9 @@ class Draw extends ToggleContent {
         options.drawingInteractions ??= [];
 
         if (!(options.select instanceof Select)) {
-            options.select = new SelectingInteraction();
+            options.select = new SelectingInteraction({
+                style : null,
+            });
         }
 
         if (!(options.source instanceof VectorSource)) {
@@ -187,8 +232,36 @@ class Draw extends ToggleContent {
                 position : "left",
                 forms : options.forms,
                 select : this.select,
+                onOpen : this.onOpenStyleDialog,
+                onClose : function () {
+                    // Déselectionne la sélection courante
+                    this.select.getFeatures().clear();
+                    this.select.dispatchEvent("select");
+                },
             });
         }
+    }
+
+    /**
+     * Fonction à l'ouverture du dialogue de style.
+     * Permet d'initialiser le formulaire
+     * @param {Event} e Événement envoyé par l'ouverture du dialog
+     * @private
+     */
+    onOpenStyleDialog (e) {
+        console.log(e, this);
+        // Initialise les formulaires
+        const feature = this.select.getFeatures().item(0);
+        if (!feature) {
+            return;
+        }
+        setTimeout(() => {
+            // TODO : RÉCUPÉRER FLAT STYLE FEATURE ET APPLIQUER AU FORMULAIRE
+            this.getForms().forEach(form => {
+                // form.setFlatStyle(flatStyle);
+                console.log(form);
+            });
+        });
     }
 
     /**
@@ -229,6 +302,63 @@ class Draw extends ToggleContent {
                 }
             }
             this.select.setActive(e.target.getActive());
+        });
+
+        if (options.style) {
+            const onStyle = options.onStyle;
+            if (onStyle === false) {
+                // Aucune action. Les événements sont renvoyés sur le contrôle.
+                this.styleDialog.on("style", (e) => this.dispatchEvent(e));
+            } else if (typeof onStyle === "function") {
+                // Fonction donnée par l'user
+                this.styleDialog.on("style", (e) => {
+                    const { property, value } = e;
+                    console.log(property, value);
+                });
+            } else {
+                this.styleDialog.on("style", (e) => {
+                    const { property, value } = e;
+                    const features = [...this.getSelect().getFeatures().getArray()];
+                    // this.getSelect().getFeatures().clear();
+                    this.defaultOnStyle(property, value, features);
+                    // this.getSelect().getFeatures().push(...features);
+                });
+
+                // Applique le style courant à la fin du dessin
+                this.on("drawend", (e) => {
+                    if (e.feature) {
+                        const styleFn = layerStyle.getStyleFunction();
+                        e.feature.setStyle(styleFn(e.feature));
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * Fonction par défaut appliquant un style sur des entités.
+     * 
+     * @param {String} property Nom de la propriété flatstyle
+     * @param {any} value Valeur correspondante
+     * @param {Array<Feature>} features Entités sur lesquelles appliquer le style.
+     * @private
+     */
+    defaultOnStyle (property, value, features) {
+        console.log(property, value, features);
+        // Transforme la valeur (en fonction de son type)
+        let transformer = (v) => v;
+        for (const key in flatStyleTransformers) {
+            if (RegExp(key, "i").test(property)) {
+                transformer = flatStyleTransformers[key];
+            }
+        }
+        currentStyle[property] = transformer(value);
+        // Applique le nouveau style à la couche
+        layerStyle.setStyle(currentStyle);
+        const styleFn = layerStyle.getStyleFunction();
+        // Et modifie les entités selon la fonction de style
+        features.forEach(feature => {
+            feature.setStyle(styleFn(feature));
         });
     }
 

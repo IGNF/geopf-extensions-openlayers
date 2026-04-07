@@ -19,9 +19,9 @@ class ModifyingInteraction extends Modify {
      */
     constructor (options) {
         options = options || {};
-        if (!options.style) {
-            options.style = selectStyle();
-        }
+        // if (!options.style) {
+        //     options.style = selectStyle();
+        // }
 
         // Use features from select interaction if provided
         options.features = options.select ? options.select.getFeatures() : options.features;

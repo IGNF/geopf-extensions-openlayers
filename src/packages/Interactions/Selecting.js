@@ -26,8 +26,8 @@ class SelectingInteraction extends Select {
             return (!!layer);
         };
 
-        // Default selection style
-        if (!options.style) {
+        // Default selection style if undefined
+        if (options.style === undefined) {
             const style = selectStyle("select");
             // Show vertices when modifying
             style[1].setGeometry( f => this._showPoints() ? new MultiPoint(getFlatCoordinates(f)) : null);

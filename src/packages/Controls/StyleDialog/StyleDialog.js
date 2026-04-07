@@ -111,7 +111,7 @@ class StyleDialog extends Dialog {
         if (options.select instanceof Select) {
             this.select = options.select;
             this.select.on("select", (e) => {
-                if (e.selected.length) {
+                if (e.selected && e.selected.length) {
                     // Récupère les types de géométries
                     const geomType = e.selected[0].getGeometry().getType();
                     this.setDialogTitle(geomType);
@@ -148,6 +148,16 @@ class StyleDialog extends Dialog {
      */
     getSelect () {
         return this.select;
+    }
+
+
+
+    /**
+     * Retourne les formulaires dans le dialogue de style
+     * @returns {Array<FlatStyleForm>} Formulaires liés au dialogue de style
+     */
+    getForms () {
+        return this.forms.map(form => form.form);
     }
 
 }

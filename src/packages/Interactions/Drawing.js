@@ -122,10 +122,10 @@ class DrawingInteraction extends Draw {
             geometryFunction : geometryFunction,
             condition : condition,
             freehandCondition : freehandCondition,
-            style : (f) => {
-                return defaultStyle[`${this._type}_${f.get("geometry").getType()}`] || defaultStyle.Point;
-                // return selectStyle(this._type, f.get("geometry").getType(), options.image);
-            },
+            // style : (f) => {
+            //     return defaultStyle[`${this._type}_${f.get("geometry").getType()}`] || defaultStyle.Point;
+            //     // return selectStyle(this._type, f.get("geometry").getType(), options.image);
+            // },
         });
         this._type = options.type || "Point";
         this.setSource(options.source);
@@ -204,9 +204,9 @@ class DrawingInteraction extends Draw {
             // select on draw end
             if (this.get("selectOnDrawEnd")) {
                 this.on("drawend", (e) => {
+                    setTimeout(() => this.setActive(false), 1);
                     // And activate select interaction
                     setTimeout(() => this._select.setActive(true), 500);
-                    setTimeout(() => this.setActive(false));
                     // Add to selection
                     this._select.getFeatures().push(e.feature);
                     this._select.dispatchEvent(new SelectEvent("select", [e.feature], [], undefined));
@@ -217,12 +217,12 @@ class DrawingInteraction extends Draw {
         }
     }
 
-    /** Get default style
-     * @returns {ol.style.Style|Array<ol.style.Style>} Style
-     */
-    getStyle () {
-        return selectStyle(this._type);
-    }
+    // /** Get default style
+    //  * @returns {ol.style.Style|Array<ol.style.Style>} Style
+    //  */
+    // getStyle () {
+    //     return selectStyle(this._type);
+    // }
 
     /**
      * Overwrite OpenLayers setMap method

@@ -26,11 +26,15 @@ label.addEventListener("change", () => {
 labelForm.addBreak("text");
 
 // Couleur et taille du texte
-
+labelForm.addCustomSelect({
+    label : "Couleur",
+    property : "text-fill-color",
+    type : "color",
+});
 labelForm.addCustomInput({
     label : "Taille",
-    labelInfo : "(pt)",
-    property : "text-size",
+    labelInfo : "(px)",
+    property : "text-font",
 });
 
 export default labelForm;
