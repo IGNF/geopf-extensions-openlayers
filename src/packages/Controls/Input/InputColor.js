@@ -34,7 +34,7 @@ const defaultColors = {
     "#787878" : "Gris",
     "#424242" : "Gris foncé",
     "#000000" : "Noir",
-    "#00000000" : "Sans couleur",
+    "" : "Sans couleur",
 };
 
 /**
@@ -59,7 +59,7 @@ class InputColor extends CustomSelectGrid {
             // Couleurs par défaut
             options.options = defaultColors;
         }
-        
+
         options.type = "color";
         super._initialize(options);
     }
@@ -75,6 +75,17 @@ class InputColor extends CustomSelectGrid {
         // Première valeur : correspond à l'élément de base
         const value = Object.keys(options.options)[0];
         this.inputContainer.style.setProperty("--bg-color", value);
+    }
+
+    /**
+     * Met une couleur dans l'input.
+     * 
+     * Peut notamment être utilisé pour mettre une valeur initiale.
+     * @param {String} color Couleur à mettre dans l'input
+     * @param {String} [label] Libellé de la couleur
+     */
+    setColor (color, label) {
+        this.inputContainer.style.setProperty("--bg-color", color);
     }
 
     selectOption (index, silent = false) {

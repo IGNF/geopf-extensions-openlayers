@@ -16,6 +16,18 @@ import InputColor from "../Input/InputColor.js";
  * Peut être un objet avec une methode getInput()/getElement() pour les inputs personnalisés
  * @property {Object<String, String>} options Les options du select (valeur: libellé)
  * @property {String} label Le label de l'input
+ * @property {Boolean} [disabled=false] Si vrai, désactive l'input
+ */
+
+/**
+ * @typedef {Object} InputNumberConfig
+ * @property {string} label Le label de l'input
+ * @property {string} [labelInfo] Info supplémentaire du label (ex: unité)
+ * @property {string} property La propriété flat style correspondante
+ * @property {string} [type] Type de l'input
+ * @property {string} [step] Attribut step de l'input. 1 par défaut.
+ * @property {Boolean} [disabled=false] Si vrai, désactive l'input
+ * @property {Object<string, string>} options Les options de la sélection (valeur: libellé)
  */
 
 /**
@@ -40,7 +52,7 @@ import InputColor from "../Input/InputColor.js";
  * - `addCustomInput` : ajoute un input de type InputNumber (@see {@link InputNumber})
  * - `addDefaultInput` : ajoute un input de type DefaultInput (@see {@link DefaultInput})
  * - `addCustomSelect` : ajoute un input d'un type différent en fonction du paramètre type :
- *   - Pour un type `icon`, ajoute un input de type SelectIcons (@see {@link SelectIcons})
+ *   - Pour un type `color`, ajoute un input de type InputColor (@see {@link InputColor})
  *   - Sinon, ajoute un input de type CustomSelect (@see {@link CustomSelect})
  * 
  * @extends ControlExtended
@@ -137,9 +149,12 @@ class FlatStyleForm extends ControlExtended {
             const input = elem.getInput ? elem.getInput() : elem;
             const value = this.flatStyle[property];
             input.value = value !== undefined ? value : input.value;
+            // Pour déclencher les éventuels écouteurs de changement
             // cancelable:true pour ne pas envoyer d'événement "style"
             input.dispatchEvent(new Event("change", { bubbles : true, cancelable : true }));
-            // Pour déclencher les éventuels écouteurs de changement
+            if (elem instanceof InputColor) {
+                elem.setColor(value);
+            }
         });
     }
 
@@ -392,7 +407,7 @@ class FlatStyleForm extends ControlExtended {
     /**
      * Récupère un input par sa propriété
      * @param {String} property - Le nom de la propriété
-     * @returns {InputConfig|undefined} La configuration de l'input ou undefined si non trouvé
+     * @returns {DefaultInput} La configuration de l'input ou undefined si non trouvé
      */
     getInput (property) {
         return this.inputs[property];

@@ -61,64 +61,71 @@ styleForm.addBreak("circle-stroke");
 //     fonts : ["remixicon"],
 // });
 // styleForm.addInput('Couleur', 'circle-symbol-color', new InputColor());
-styleForm.addBreak("circle-symbol");
+// styleForm.addBreak("circle-symbol");
 
 // POLYGONE //
 
+// Pattern : nécessite plus de travail
+// const inputPattern = styleForm.addCustomSelect({
+//     label : "Motif",
+//     property : "fill-pattern-config",
+//     options : {
+//         "" : "Plein",
+//         "hatch;0" : "Lignes verticales",
+//         "hatch;90" : "Lignes horizontales",
+//         "hatch;45" : "Diagonales (droite)",
+//         "hatch;135" : "Diagonales (gauche)",
+//         "cross;1" : "Quadrillage",
+//         "dot;1" : "Points",
+//         "tile;1" : "Carrés",
+//         "caps" : "Triangles",
+//         "crosses" : "Croix",
+//         "wave" : "Vagues",
+//         "forest2" : "Arbres",
+//     },
+//     type : "pattern",
+//     disabled : true,
+// });
 
-// const patternObject = new SelectPattern();
-// patternObject.setFlatStyleForm(styleForm);
+// // styleForm.addInput('Couleur', 'fill-color', new InputColor());
+// styleForm.addCustomSelect({
+//     label : "Couleur",
+//     property : "fill-color",
+//     type : "color",
+// });
 
-const inputPattern = styleForm.addCustomSelect({
-    label : "Motif",
-    property : "fill-pattern-config",
-    options : {
-        "" : "Plein",
-        "hatch;0" : "Lignes verticales",
-        "hatch;90" : "Lignes horizontales",
-        "hatch;45" : "Diagonales (droite)",
-        "hatch;135" : "Diagonales (gauche)",
-        "cross;1" : "Quadrillage",
-        "dot;1" : "Points",
-        "tile;1" : "Carrés",
-        "caps" : "Triangles",
-        "crosses" : "Croix",
-        "wave" : "Vagues",
-        "forest2" : "Arbres",
-    },
-    type : "pattern"
-});
+// const inputFillSize = styleForm.addCustomInput({
+//     label : "Taille",
+//     property : "fill-pattern-scale",
+// });
 
-// styleForm.addInput('Couleur', 'fill-color', new InputColor());
+// /* Désactive les options du pattern si aucun pattern n'est choisi */
+// inputPattern.input.addEventListener("change", e => {
+//     if (e.target.value) {
+//         inputFillColor.setDisabled(false);
+//         inputFillSize.input.disabled = false;
+//     } else {
+//         inputFillColor.setDisabled(true);
+//         inputFillSize.input.disabled = true;
+//     }
+// });
+// styleForm.addBreak("fill-patern");
+
 styleForm.addCustomSelect({
     label : "Couleur",
     property : "fill-color",
     type : "color",
 });
 
-const inputFillSize = styleForm.addCustomInput({
-    label : "Taille",
-    property : "fill-pattern-scale",
+styleForm.addCustomInput({
+    label : "Opacité",
+    property : "fill-color-opacity",
+    attributes : {
+        step : 0.1,
+        max : 1
+    },
 });
-
 styleForm.addBreak("fill-style");
-const inputFillColor = styleForm.addCustomSelect({
-    label : "Couleur",
-    property : "fill-color",
-    type : "color",
-});
-styleForm.addBreak("fill-patern");
-
-/* Disable pattern options when no patter */
-inputPattern.input.addEventListener("change", e => {
-    if (e.target.value) {
-        inputFillColor.setDisabled(false);
-        inputFillSize.input.disabled = false;
-    } else {
-        inputFillColor.setDisabled(true);
-        inputFillSize.input.disabled = true;
-    }
-});
 
 
 // LIGNE / POLYGONE //
@@ -148,10 +155,11 @@ styleForm.addCustomInput({
 
 // LIGNE //
 
+// Disabled : true car non géré par l'application de base
 styleForm.addBreak("line-arrow");
 styleForm.addCustomSelect({
     label : "Début",
-    // disabled: true,
+    // disabled : true,
     property : "line-arrow-start",
     options : {
         "" : "Simple",
@@ -160,6 +168,7 @@ styleForm.addCustomSelect({
         "square" : "Carré",
     },
     type : "arrow",
+    disabled : true,
 });
 
 styleForm.addCustomSelect({
@@ -172,6 +181,7 @@ styleForm.addCustomSelect({
         "square" : "Carré",
     },
     type : "arrow",
+    disabled : true,
 });
 
 export default styleForm;

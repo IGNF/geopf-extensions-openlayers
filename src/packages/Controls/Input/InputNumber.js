@@ -8,7 +8,7 @@ import DefaultInput from "./DefaultInput.js";
  * @property {string} property La propriété flat style correspondante
  * @property {string} [type] Type de l'input
  * @property {Boolean} [disabled=false] Si vrai, désactive l'input
- * @property {Object<string, string>} options Les options de la sélection (valeur: libellé)
+ * @property {Object} [attributes] Attributs à ajouter sur l'input. Ceux-ci doivent être compatibles avec le .
  */
 
 class InputNumber extends DefaultInput {
@@ -31,6 +31,8 @@ class InputNumber extends DefaultInput {
      */
     _initialize (options) {
         super._initialize(options);
+
+        options.attributes ??= {};
 
         /**
          * @type {Number|null} Nombre retourné par setInterval
@@ -89,6 +91,10 @@ class InputNumber extends DefaultInput {
         // Input
         this.input.type = "number";
         this.input.min = 0;
+
+        Object.entries(options.attributes).forEach(([prop, value]) => {
+            this.input.setAttribute(prop, value);
+        });
 
         // Lie les boutons à l'input
         this.up.setAttribute("aria-controls", this.input.id);

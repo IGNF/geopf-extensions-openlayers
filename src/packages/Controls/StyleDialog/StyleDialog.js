@@ -5,6 +5,7 @@ import checkDsfr from "../Utils/CheckDsfr.js";
 import styleForm from "./styleForm.js";
 import labelForm from "./labelForm.js";
 import { defaultIcons, dsfrDefaultIcons } from "../Draw/Draw.js";
+import DefaultInput from "../Input/DefaultInput.js";
 
 /**
  * @typedef StyleDialogOptions Options du constructeur du dialogue de style
@@ -21,6 +22,18 @@ import { defaultIcons, dsfrDefaultIcons } from "../Draw/Draw.js";
  * @property {Function} [onOpen] - Callback appelé à l'ouverture du dialog
  * @property {Function} [onClose] - Callback appelé à la fermeture du dialog
 */
+
+/**
+ * @typedef {Object} InputConfig Configuration pour un type input
+ * @property {String} label Le label de l'input
+ * @property {String} property La propriété flat style correspondante
+ * @property {String|Object} type Le type de l'input. Peut aussi être un type `select`, auquel cas l'élément ajouté est un élément select.
+ * Peut être un objet avec une methode getInput()/getElement() pour les inputs personnalisés
+ * @property {Object<String, String>} options Les options du select (valeur: libellé)
+ * @property {String} label Le label de l'input
+ * @property {Boolean} [disabled=false] Si vrai, désactive l'input
+ */
+
 
 /**
  * @typedef {Object} StyleDialogTabNav Options pour une navigation tertiaire du dialog de style.
@@ -150,14 +163,41 @@ class StyleDialog extends Dialog {
         return this.select;
     }
 
-
-
     /**
      * Retourne les formulaires dans le dialogue de style
      * @returns {Array<FlatStyleForm>} Formulaires liés au dialogue de style
      */
     getForms () {
         return this.forms.map(form => form.form);
+    }
+
+
+    /**
+     * Récupère un input du dialog en appelant les méthodes `getInput` des formulaires correspondants.
+     * Si deux inputs ont la même propriétés, seule la première sera renvoyée.
+     * 
+     * @param {String} property - Le nom de la propriété
+     * @returns {DefaultInput|undefined} Input correspondant;
+     */
+    getInput (property) {
+        let input;
+        for (const form of this.forms) {
+            input = form.form.getInput(property);
+            if (input) {
+                break;
+            }
+        }
+        return input;
+    }
+
+    /**
+     * Mets des valeurs dans le formulaire de style
+     * @param {Object<String, any>} flatStyle Objet contenant les valeurs à mettre dans les formulaires de style
+     */
+    setFormValues (flatStyle) {
+        this.getForms().forEach(form => {
+            form.setFlatStyle(flatStyle);
+        });
     }
 
 }
