@@ -25,5 +25,11 @@
         margin: 0;
       }
     }
+
+    &:has(.GPF-dialog__btns-group:not(:empty)), &:has(.GPF-dialog__footer-content:not(:empty)) {
+      &::before {
+        background-color: var(--border-default-grey);
+      }
+    }
   }
 }
