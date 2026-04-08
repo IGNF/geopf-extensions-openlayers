@@ -400,7 +400,6 @@ class Draw extends ToggleContent {
      * @private
      */
     defaultOnStyle (property, value, features) {
-        console.log(property, value, features);
         // Transforme la valeur (en fonction de son type)
         let transformer = (v) => v;
         for (const key in flatStyleTransformers) {
