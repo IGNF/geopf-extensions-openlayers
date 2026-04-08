@@ -10,7 +10,7 @@
   position: fixed;
   pointer-events: auto;
   bottom: 0;
-  cursor:auto;
+  cursor: auto;
   z-index: auto;
 
   &[open] {
@@ -24,7 +24,6 @@
     position: absolute;
     top: 0.5rem;
     max-height: calc(var(--map-height) - 20%);
-
 
     &.GPF-dialog__left {
       left: 0.5rem;
@@ -73,7 +72,7 @@
   &__content {
     padding: 0 0.75rem 1.5rem;
     overflow: hidden auto;
-    
+
     @include mx.respond-from('sm') {
       max-height: calc(var(--map-height) - 20% - 48px);
     }
@@ -90,6 +89,14 @@
   &:has(.fr-tabnav.fr-hidden) {
     .GPF-dialog__content {
       padding-top: 1.5rem;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    &:has(.GPF-dialog__btns-group:not(:empty)) {
+      padding: 0.5rem 0.75rem 0.75rem;
     }
   }
 }

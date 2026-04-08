@@ -499,6 +499,14 @@ class Draw extends ToggleContent {
     }
 
     /**
+     * Retourne la source utilisée actuellement
+     * @returns {VectorSource} Source actuelle
+     */
+    getSource () {
+        return this.source;
+    }
+
+    /**
      * Modifie la source pour les interactions de dessins
      * @param {VectorSource} source Source à ajouter
      */

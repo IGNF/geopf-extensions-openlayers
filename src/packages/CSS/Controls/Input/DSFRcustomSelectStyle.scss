@@ -1,4 +1,4 @@
-@use '../../mixins.scss' as mx;
+@use '../../mixins.scss' as mix;
 
 .input-style-select {
   .input-style {
@@ -8,7 +8,7 @@
       --hover-tint: var(--hover);
       --active-tint: var(--active);
 
-      @include mx.button-state();
+      @include mix.button-state();
 
       &[aria-expanded='true'] {
         background-color: var(--background-default-grey-active);
@@ -26,7 +26,7 @@
     box-shadow: var(--overlap-shadow);
 
     background-color: rgba(0, 0, 0, 0.08);
-    @include mx.respond-from('sm') {
+    @include mix.respond-from('sm') {
       background-color: var(--background-overlap-grey);
     }
 
