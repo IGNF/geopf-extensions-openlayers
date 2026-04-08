@@ -7,6 +7,7 @@ Le fichier [CONTRIBUTING.md](CONTRIBUTING.md) définit les règles et pratiques 
 * [elias75015](https://github.com/elias75015)
 * [azarz](https://github.com/azarz)
 * [IGNFhc](https://github.com/IGNFhc)
+* [iamvdo](https://github.com/iamvdo)
 
 # Autres contributeurs
 

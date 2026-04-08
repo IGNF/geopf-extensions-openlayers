@@ -407,7 +407,7 @@ class Legends extends Control {
             // * du DOM
             // * de la liste des entrées
         };
-        this.eventsListeners["view:change:resolution"] = function (e) {
+        this.eventsListeners["map:moveend"] = function (e) {
             logger.trace(e);
             // à la modification de l'echelle de la carte, on modifie les entrées
             // * du DOM si necessaire
@@ -459,7 +459,7 @@ class Legends extends Control {
         map.getLayers().on("add", this.eventsListeners["layer:add"]);
         map.getLayers().on("remove", this.eventsListeners["layer:remove"]);
         map.getLayers().on("change:zIndex", this.eventsListeners["layer:change:position"]);
-        map.getView().on("change:resolution", this.eventsListeners["view:change:resolution"]);
+        map.on("moveend", this.eventsListeners["map:moveend"]);
     }
 
     /**
@@ -471,11 +471,11 @@ class Legends extends Control {
         map.getLayers().un("add", this.eventsListeners["layer:add"]);
         map.getLayers().un("remove", this.eventsListeners["layer:remove"]);
         map.getLayers().un("change:zIndex", this.eventsListeners["layer:change:position"]);
-        map.getView().un("change:resolution", this.eventsListeners["view:change:resolution"]);
+        map.un("moveend", this.eventsListeners["map:moveend"]);
         delete this.eventsListeners["layer:add"];
         delete this.eventsListeners["layer:remove"];
         delete this.eventsListeners["layer:change:position"];
-        delete this.eventsListeners["view:change:resolution"];
+        delete this.eventsListeners["map:moveend"];
     }
 
     // ################################################################### //
