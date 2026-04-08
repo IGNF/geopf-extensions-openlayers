@@ -7,7 +7,11 @@ import FlatStyleForm from "./FlatStyleForm.js";
  */
 const labelForm = new FlatStyleForm();
 
-const label = labelForm.addInput("Texte", "text-value", "textarea");
+const label = labelForm.addInput({
+    label : "Texte",
+    property : "text-value",
+    type : "textarea",
+});
 // Update label value on keyup with a delay to avoid too many updates
 let tout, value = label.value;
 label.addEventListener("keyup", () => {
@@ -26,15 +30,16 @@ label.addEventListener("change", () => {
 labelForm.addBreak("text");
 
 // Couleur et taille du texte
-labelForm.addCustomSelect({
+labelForm.addInput({
     label : "Couleur",
     property : "text-fill-color",
     type : "color",
 });
-labelForm.addCustomInput({
+labelForm.addInput({
     label : "Taille",
     labelInfo : "(px)",
     property : "text-font-size",
+    type : "number",
 });
 
 export default labelForm;

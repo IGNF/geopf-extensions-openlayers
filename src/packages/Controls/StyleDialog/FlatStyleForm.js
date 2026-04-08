@@ -12,30 +12,24 @@ import InputColor from "../Input/InputColor.js";
  * @typedef {Object} InputConfig Configuration pour un type input
  * @property {String} label Le label de l'input
  * @property {String} property La propriété flat style correspondante
- * @property {String|Object} type Le type de l'input. Peut aussi être un type `select`, auquel cas l'élément ajouté est un élément select.
- * Peut être un objet avec une methode getInput()/getElement() pour les inputs personnalisés
- * @property {Object<String, String>} options Les options du select (valeur: libellé)
- * @property {String} label Le label de l'input
+ * @property {String|Object} type Le type de l'input.
+ * Peut être un objet avec une methode getInput()/getElement() pour les inputs personnalisés.
+ * En fonction du type, l'input sera soit un élément HTML de type `input` / `select`
+ * , ou bien un enfant de {@link DefaultInput}.
+ * Certaines valeurs de l'attributs changent le type d'input créé :
+ * - `type : number` : Créé un élément de type {@link InputNumber};
+ * - `type : color` : Créé un élément de type {@link InputColor};
+ * - `type : default` : Créé un élément de type {@link DefaultInput};
+ * - `type : pattern` : Créé un élément de type {@link CustomSelectGrid};
+ * - `type : input` : Créé un élément HTML {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input | input} de type `text`;
+ * - `type : textarea` : Créé un élément HTML {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/textarea | textarea};
+ * - `type : select` : Créé un élément HTML {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select | select}.
+ * Créé par défaut un élémént de type {@link CustomSelect}.
+ * @property {Object<String, String>} options Options de la sélection (valeur: libellé)
  * @property {Boolean} [disabled=false] Si vrai, désactive l'input
- */
-
-/**
- * @typedef {Object} InputNumberConfig
- * @property {string} label Le label de l'input
- * @property {string} [labelInfo] Info supplémentaire du label (ex: unité)
- * @property {string} property La propriété flat style correspondante
- * @property {string} [type] Type de l'input
- * @property {string} [step] Attribut step de l'input. 1 par défaut.
- * @property {Boolean} [disabled=false] Si vrai, désactive l'input
- * @property {Object<string, string>} options Les options de la sélection (valeur: libellé)
- */
-
-/**
- * @typedef {Object} SelectConfig
- * @property {HTMLSelectElement} select L'élément select HTML
- * @property {String} label Le label du select
- * @property {String} property La propriété flat style correspondante
- * @property {Object<String, String>} options Les options du select (valeur: libellé)
+ * @property {Object} [attributes] Attributs supplémentaires à ajouter sur l'élément input / select.
+ * @property {Object} [placeholder] `type : select` seulement. Texte du placeholder.
+ * @property {string} [labelInfo] `type:number` seulement. Info supplémentaire du label (ex: unité)
  */
 
 /**
@@ -44,6 +38,7 @@ import InputColor from "../Input/InputColor.js";
  */
 
 /**
+ * @classdesc
  * Classe représentant un formulaire de style.
  * Les inputs correspondant sont ajoutés via les méthodes suivantes :
  * 
@@ -107,24 +102,24 @@ class FlatStyleForm extends ControlExtended {
      * Gestionnaire de soumission du formulaire.
      * Récupère les valeurs de tous les inputs et leurs propriétés associées.
      * @returns {Object} Valeur des inputs avec leurs propriétés associées
+     * @protected
      */
     onSubmit () {
         const values = {};
 
         // Boucler sur chaque input/select
-        Object.entries(this.inputs).forEach(([property, input]) => {
+        Object.entries(this.inputs).forEach(([property, elem]) => {
             // Récupérer l'élément (input ou select)
-            let elem;
-            if (input instanceof DefaultInput || input.getInput) {
-                elem = input.getInput();
+            let input;
+            if (elem instanceof DefaultInput || elem.getInput) {
+                input = elem.getInput();
             } else {
-                elem = input;
+                input = elem;
             }
-            // const element = config.input || config.select;
 
-            if (elem) {
+            if (input) {
                 // Récupérer la valeur
-                values[property] = parseFloat(element.value) ? parseFloat(element.value) : element.value;
+                values[property] = parseFloat(input.value) ? parseFloat(input.value) : input.value;
             }
         });
 
@@ -141,6 +136,7 @@ class FlatStyleForm extends ControlExtended {
     /**
      * Initialise les valeurs des inputs à partir d'un style flat
      * @param {Object} flatStyle - Le style flat utilisé pour initialiser les inputs
+     * @public
      */
     setFlatStyle (flatStyle) {
         this.flatStyle = flatStyle;
@@ -159,28 +155,88 @@ class FlatStyleForm extends ControlExtended {
     }
 
     /**
-     * Ajoute un input au formulaire
-     * @param {String} label - Le libellé de l'input
-     * @param {String} property - La propriété flat style correspondante
-     * @param {String|Object} type - Le type d'input (par défaut: 'text') ou objet avec une methode getInput()/getElement() pour les inputs personnalisés
-     * @param {Object<String, String>} options - Les options du select (si type='select')
-     * @param {String} placeholder - Le placeholder (si type='select')
-     * @returns {HTMLInputElement|HTMLSelectElement} L'élément input ou select créé
+     * Ajoute un input au formulaire de style.
+     * En fonction du paramètre `type`, l'élément créé sera différent.
+     * 
+     * @see {@link InputConfig} pour plus d'informations sur le paramètre de construction.
+     * 
+     * @param {InputConfig} config Config pour la construction de l'input.
+     * @returns {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement|DefaultInput} Input créé. Cela n'est pas nécessairement l'élément `input`, mais peut être l'objet créé.
      */
-    addInput (label, property, type = "text", options = {}, placeholder) {
-    // Si le type est 'select', déléguer à addSelect
-        if (type === "select") {
-            return this.addSelect(label, property, options, placeholder);
+    addInput (config) {
+        let input;
+        let elem;
+        // Pour ne pas ajouter l'élément après
+        let appendChild = true;
+        const type = config.type;
+        // Ajouter d'autres types ici au besoin
+        switch (type) {
+            case "number":
+                elem = new InputNumber(config);
+                break;
+            case "color":
+                elem = new InputColor(config);
+                break;
+            case (typeof type === "object" && type.getInput):
+            case "input":
+            case "textarea":
+            case "select":
+                input = this._addInputElement(config);
+                appendChild = false;
+                break;
+            case "pattern":
+                elem = new CustomSelectGrid(config);
+                break;
+            case "default":
+                elem = new DefaultInput(config);
+                break;
+            default:
+                elem = new CustomSelect(config);
+                break;
+        }
+        if (appendChild) {
+            input = elem.getInput();
+            this.element.appendChild(elem.getElement());
         }
 
+        const property = config.property;
+
+        // Envoie un événement `style` au changement de l'input
+        input.addEventListener("change", (e) => {
+            !e.cancelable && this.dispatchEvent({ type : "style", property : property, value : e.target.value });
+        });
+
+        // Garde en mémoire la valeur de retour (elem pour les objets, input pour les balises HTML)
+        const returnValue = elem || input;
+        this.inputs[property] = returnValue;
+        return returnValue;
+    }
+
+
+    /**
+     * Ajoute un input simple au formulaire.
+     * Si `config.type` est un objet, utilise les méthodes `getInput` et `getElement` de cet objet pour 
+     * 
+     * @param {InputConfig} config Config pour la construction de l'input.
+     * @returns {HTMLInputElement} Input créé.
+     * @private
+     */
+    _addInputElement (config) {
+        const { label, property, type, placeholder } = config;
+
+        // Initialise les options
+        const options = config.options ? config.options : {};
+
+        const typeName = type === "select" ? type : "input";
+
         // Générer des IDs uniques
-        const inputId = Helper.getUid("input");
-        const groupId = Helper.getUid("input-group");
+        const inputId = Helper.getUid(`${typeName}`);
+        const groupId = Helper.getUid(`${typeName}-group`);
         const messagesId = `${inputId}-messages`;
 
         // Créer le conteneur principal
         const container = document.createElement("div");
-        container.className = "fr-input-group";
+        container.className = `fr-${typeName}-group`;
         container.dataset.property = property;
         container.id = groupId;
 
@@ -189,19 +245,22 @@ class FlatStyleForm extends ControlExtended {
         labelElement.className = "fr-label input-style__label";
         labelElement.htmlFor = inputId;
         labelElement.textContent = label;
-
-        // Input specifique
+        
+        // Ajoute le label
+        container.appendChild(labelElement);
 
         /**
-         * @type {HTMLInputElement|HTMLTextAreaElement}
-         */
+         * @type {HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement}
+        */
         let input;
         /**
          * @type {HTMLElement}
-         */
+        */
         let element;
+        // Input specifique (objet)
         const userInput = (typeof type === "object" && type.getInput);
         if (userInput) {
+            // Récupère l'input et l'élément
             input = type.getInput();
             element = type.getElement();
             const id = element.id;
@@ -210,8 +269,8 @@ class FlatStyleForm extends ControlExtended {
             labelElement.addEventListener("click", () => {
                 element.focus({ focusVisible : true });
             });
-        } else {
-            // Input standard
+        } else if (type !== "select") {
+            // Input standard, de type text ou textarea
             if (type === "textarea") {
                 input = document.createElement(type);
             } else {
@@ -221,6 +280,31 @@ class FlatStyleForm extends ControlExtended {
             input.className = "fr-input";
             input.id = inputId;
             input.setAttribute("aria-describedby", messagesId);
+        } else {
+            // Créer le select
+            input = document.createElement("select");
+            input.className = "fr-select";
+            input.id = selectId;
+            input.name = selectId;
+            input.setAttribute("aria-describedby", messagesId);
+
+            if (placeholder) {
+                // Ajouter l'option placeholder
+                const placeholderOption = document.createElement("option");
+                placeholderOption.value = "";
+                placeholderOption.selected = true;
+                placeholderOption.disabled = true;
+                placeholderOption.textContent = placeholder;
+                input.appendChild(placeholderOption);
+            }
+
+            // Ajouter les options
+            Object.entries(options).forEach(([value, label]) => {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = label;
+                input.appendChild(option);
+            });
         }
 
         // Créer le conteneur de messages
@@ -229,8 +313,6 @@ class FlatStyleForm extends ControlExtended {
         messagesContainer.id = messagesId;
         messagesContainer.setAttribute("aria-live", "polite");
 
-        // Assembler les éléments
-        container.appendChild(labelElement);
         if (userInput) {
             container.appendChild(element);
         } 
@@ -251,10 +333,13 @@ class FlatStyleForm extends ControlExtended {
         return input;
     }
 
+
     /**
-     * Ajoute une séparation visuelle (break) au formulaire
-     * @param {String} property - La propriété
+     * Ajoute une séparation visuelle (break) au formulaire.
+     * Retourne l'élément pour le réutiliser au besoin.
+     * @param {String} property - La propriété correspondante
      * @returns {Element} Élément break
+     * @public
      */
     addBreak (property) {
         const br = document.createElement("hr");
@@ -262,146 +347,6 @@ class FlatStyleForm extends ControlExtended {
         br.dataset.property = property;
         this.element.appendChild(br);
         return br;
-    }
-
-    /**
-     * Ajoute un select au formulaire (méthode privée)
-     * @param {String} label - Le libellé du select
-     * @param {String} property - La propriété flat style correspondante
-     * @param {Object<String, String>} options - Les options du select (valeur: libellé)
-     * @param {String} placeholder - Le texte du placeholder (par défaut: 'Sélectionnez une option')
-     * @returns {HTMLSelectElement} L'élément select créé
-     * @private
-     */
-    addSelect (label, property, options = {}, placeholder = "Sélectionnez une option") {
-    // Générer des IDs uniques
-        const selectId = Helper.getUid("select");
-        const messagesId = `${selectId}-messages`;
-
-        // Créer le conteneur principal
-        const container = document.createElement("div");
-        container.className = "fr-select-group";
-        container.dataset.property = property;
-
-        // Créer le label
-        const labelElement = document.createElement("label");
-        labelElement.className = "fr-label";
-        labelElement.htmlFor = selectId;
-        labelElement.textContent = label;
-
-        // Créer le select
-        const select = document.createElement("select");
-        select.className = "fr-select";
-        select.id = selectId;
-        select.name = selectId;
-        select.setAttribute("aria-describedby", messagesId);
-
-        // Ajouter l'option placeholder
-        const placeholderOption = document.createElement("option");
-        placeholderOption.value = "";
-        placeholderOption.selected = true;
-        placeholderOption.disabled = true;
-        placeholderOption.textContent = placeholder;
-        select.appendChild(placeholderOption);
-
-        // Ajouter les options
-        Object.keys(options).forEach(value => {
-            const option = document.createElement("option");
-            option.value = value;
-            option.textContent = options[value];
-            select.appendChild(option);
-        });
-
-        // Créer le conteneur de messages
-        const messagesContainer = document.createElement("div");
-        messagesContainer.className = "fr-messages-group";
-        messagesContainer.id = messagesId;
-        messagesContainer.setAttribute("aria-live", "polite");
-
-        // Assembler les éléments
-        container.appendChild(labelElement);
-        container.appendChild(select);
-        container.appendChild(messagesContainer);
-
-        // Ajouter le conteneur au formulaire
-        this.element.appendChild(container);
-
-        // Stocker la configuration dans la Map
-        this.inputs[property] = select;
-
-        return select;
-    }
-
-    /**
-     * @param {InputConfig} options Options constructeur
-     * @returns {InputNumber} Input créé
-     */
-    addCustomInput (options) {
-        const inputNumber = new InputNumber(options);
-        this.element.appendChild(inputNumber.getElement());
-
-        const input = inputNumber.getInput();
-        const property = options.property;
-
-        // Prevenir que la valeur a changée
-        input.addEventListener("change", (e) => {
-            !e.cancelable && this.dispatchEvent({ type : "style", property : property, value : e.target.value });
-        });
-
-        // Stocker la configuration dans la Map
-        this.inputs[property] = inputNumber;
-        return inputNumber;
-    }
-    /**
-     * @param {InputConfig} options Options constructeur
-     * @returns {DefaultInput} Input créé
-     */
-    addDefaultInput (options) {
-        const inputNumber = new DefaultInput(options);
-        this.element.appendChild(inputNumber.getElement());
-
-        const input = inputNumber.getInput();
-        const label = options.label;
-        const property = options.property;
-
-        // Prevenir que la valeur a changée
-        input.addEventListener("change", (e) => {
-            !e.cancelable && this.dispatchEvent({ type : "style", property : property, value : e.target.value });
-        });
-
-        // Stocker la configuration dans la Map
-        this.inputs[property] = inputNumber;
-        return inputNumber;
-    }
-
-    /**
-     * @param {InputConfig} options Options constructeur
-     * @returns {CustomSelect} Input créé
-     */
-    addCustomSelect (options) {
-        let inputNumber;
-        if (options.type === "pattern") {
-            inputNumber = new CustomSelectGrid(options);
-        } else if (options.type === "color") {
-            inputNumber = new InputColor(options);
-        } else {
-            inputNumber = new CustomSelect(options);
-        }
-        this.element.appendChild(inputNumber.getElement());
-
-        const input = inputNumber.getInput();
-        const label = options.label;
-        const property = options.property;
-        const opts = options.options;
-
-        // Prevenir que la valeur a changée
-        input.addEventListener("change", (e) => {
-            !e.cancelable && this.dispatchEvent({ type : "style", property : property, value : e.target.value });
-        });
-
-        // Stocker la configuration dans la Map
-        this.inputs[property] = inputNumber;
-        return inputNumber;
     }
 
     /**
