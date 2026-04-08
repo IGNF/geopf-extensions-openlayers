@@ -11,8 +11,7 @@ import FlatStyleForm from "./FlatStyleForm.js";
 const styleForm = new FlatStyleForm();
 
 // POINT //
-
-styleForm.addCustomSelect({
+styleForm.addInput({
     label : "Forme",
     property : "circle-form",
     type : "form",
@@ -26,47 +25,39 @@ styleForm.addCustomSelect({
     disabled : true,
 });
 
-styleForm.addCustomSelect({
+styleForm.addInput({
     label : "Couleur",
     property : "circle-fill-color",
     type : "color",
 });
 
-styleForm.addCustomInput({
+styleForm.addInput({
     label : "Taille",
     labelInfo : "(pt)",
     property : "circle-radius",
+    type : "number",
 });
 
 styleForm.addBreak("circle-form");
-// styleForm.addInput('Bordure', 'circle-stroke-color', new InputColor());
-styleForm.addCustomSelect({
+styleForm.addInput({
     label : "Bordure",
     property : "circle-stroke-color",
     type : "color",
 });
 
-styleForm.addCustomInput({
+styleForm.addInput({
     label : "Taille",
     labelInfo : "(pt)",
+    type : "number",
     property : "circle-stroke-width",
 });
 
 styleForm.addBreak("circle-stroke");
 
-// styleForm.addCustomSelect({
-//     label : "Symbole",
-//     property : "circle-glyph",
-//     type : "icon",
-//     fonts : ["remixicon"],
-// });
-// styleForm.addInput('Couleur', 'circle-symbol-color', new InputColor());
-// styleForm.addBreak("circle-symbol");
-
 // POLYGONE //
 
 // Pattern : nécessite plus de travail
-// const inputPattern = styleForm.addCustomSelect({
+// const inputPattern = styleForm.addInput({
 //     label : "Motif",
 //     property : "fill-pattern-config",
 //     options : {
@@ -87,15 +78,15 @@ styleForm.addBreak("circle-stroke");
 //     disabled : true,
 // });
 
-// // styleForm.addInput('Couleur', 'fill-color', new InputColor());
-// styleForm.addCustomSelect({
+// styleForm.addInput({
 //     label : "Couleur",
 //     property : "fill-color",
 //     type : "color",
 // });
 
-// const inputFillSize = styleForm.addCustomInput({
+// const inputFillSize = styleForm.addInput({
 //     label : "Taille",
+//     type : "number",
 //     property : "fill-pattern-scale",
 // });
 
@@ -111,26 +102,27 @@ styleForm.addBreak("circle-stroke");
 // });
 // styleForm.addBreak("fill-patern");
 
-styleForm.addCustomSelect({
+styleForm.addInput({
     label : "Couleur",
     property : "fill-color",
     type : "color",
 });
 
-styleForm.addCustomInput({
+styleForm.addInput({
     label : "Opacité",
     property : "fill-color-opacity",
     attributes : {
         step : 0.1,
         max : 1
     },
+    type : "number",
 });
 styleForm.addBreak("fill-style");
 
 
 // LIGNE / POLYGONE //
 
-styleForm.addCustomSelect({
+styleForm.addInput({
     label : "Bordure",
     property : "stroke-line-dash",
     options : {
@@ -141,23 +133,23 @@ styleForm.addCustomSelect({
     },
     type : "stroke",
 });
-// styleForm.addInput('Couleur', 'stroke-color', new InputColor());
-styleForm.addCustomSelect({
+styleForm.addInput({
     label : "Couleur",
     property : "stroke-color",
     type : "color",
 });
-styleForm.addCustomInput({
+styleForm.addInput({
     label : "Taille",
     labelInfo : "(pt)",
     property : "stroke-width",
+    type : "number",
 });
 
 // LIGNE //
 
 // Disabled : true car non géré par l'application de base
 styleForm.addBreak("line-arrow");
-styleForm.addCustomSelect({
+styleForm.addInput({
     label : "Début",
     // disabled : true,
     property : "line-arrow-start",
@@ -171,7 +163,7 @@ styleForm.addCustomSelect({
     disabled : true,
 });
 
-styleForm.addCustomSelect({
+styleForm.addInput({
     label : "Fin",
     property : "line-arrow-end",
     options : {
