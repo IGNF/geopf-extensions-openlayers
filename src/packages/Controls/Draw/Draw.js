@@ -17,6 +17,7 @@ import DrawInteraction from "ol/interaction/Draw";
 import Feature from "ol/Feature";
 import { createDefaultStyle } from "ol/style/flat";
 import { asArray, asString } from "ol/color";
+import Dialog from "../Toggle/Dialog";
 
 /**
  * @typedef {Object} DrawOptions
@@ -28,7 +29,9 @@ import { asArray, asString } from "ol/color";
  * @property {Select} [select] Interaction de sélection lié au contrôle. Si aucune interaction n'est donnée, ajoute une interaction de type {@link SelectingInteraction SelectingInteraction}.
  * @property {VectorSource} [source] Source à ajouter au contrôle initialement. Peut-être fait après via la méthode `setSource`. Si aucune source n'est donnée, en ajoute une de base.
  * @property {Boolean} [addToMap] Si vrai, ajoute une couche par défaut à la carte. Cela n'a pas d'effet si une source est donnée via le paramètrr `source`.
- * @property {Boolean} [style=false] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Le contenu de ce panneau est géré par les formulaires donné dans le paramètre `forms`.
+ * @property {Boolean|Dialog} [style=false] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Si faux, n'ajoute aucun style.
+ * Le contenu de ce panneau est géré par les formulaires donné dans le paramètre `forms`.
+ * Un dialogue peut aussi être mis directement sur ce paramètre.
  * @property {Boolean|OnStyleCallBack} [onStyle] Fonction par défaut à appliquer lors d'un changement de style. 3 valeurs sont possibles :
  * - Aucune valeur / `true` : Modifie le style des features sélectionnés. Aucun événement style ne sera envoyé sur le contrôle Draw (il est possible de les écouter via `getStyleDialog().on("style")`).
  * - `false` : Aucune action par défaut n'est effectuée. Les modifications du style sont écoutable via les événements de type `"style"` (`draw.on("style", callback)`);
@@ -253,7 +256,7 @@ class Draw extends ToggleContent {
         this.btnGroup = btnGroup;
         this.dialog.setDialogContent(btnGroup, false);
 
-        if (options.style) {
+        if (options.style === true) {
             this.styleDialog = new StyleDialog({
                 id : "style-dialog",
                 title : "Configuration du style",
@@ -267,6 +270,8 @@ class Draw extends ToggleContent {
                     this.select.dispatchEvent("select");
                 },
             });
+        } else if (options.style instanceof Dialog) {
+            this.styleDialog = options.style;
         }
     }
 

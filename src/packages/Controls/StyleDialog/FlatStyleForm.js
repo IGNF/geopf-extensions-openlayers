@@ -13,8 +13,7 @@ import InputColor from "../Input/InputColor.js";
  * @property {String} label Le label de l'input
  * @property {String} property La propriété flat style correspondante
  * @property {String|Object} type Le type de l'input.
- * Peut être un objet avec une methode getInput()/getElement() pour les inputs personnalisés.
- * En fonction du type, l'input sera soit un élément HTML de type `input` / `select`
+ * Il faut passer par l'attribut `input` pour ajouter un input personnalisé.* En fonction du type, l'input sera soit un élément HTML de type `input` / `select`
  * , ou bien un enfant de {@link DefaultInput}.
  * Certaines valeurs de l'attributs changent le type d'input créé :
  * - `type : number` : Créé un élément de type {@link InputNumber};
@@ -26,6 +25,8 @@ import InputColor from "../Input/InputColor.js";
  * - `type : select` : Créé un élément HTML {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select | select}.
  * Créé par défaut un élémént de type {@link CustomSelect}.
  * @property {Object<String, String>} options Options de la sélection (valeur: libellé)
+ * @property {Object} [input] Objet / classe permettant d'ajouter un input.
+ * L'objet doit avoir une méthode `getInput()` et `getElement()` pour les inputs personnalisés.
  * @property {Boolean} [disabled=false] Si vrai, désactive l'input
  * @property {Object} [attributes] Attributs supplémentaires à ajouter sur l'élément input / select.
  * @property {Object} [placeholder] `type : select` seulement. Texte du placeholder.
@@ -40,15 +41,17 @@ import InputColor from "../Input/InputColor.js";
 /**
  * @classdesc
  * Classe représentant un formulaire de style.
- * Les inputs correspondant sont ajoutés via les méthodes suivantes :
+ * Un input peut être ajouté via la méthode `addInput(config)`.
+ * Le paramètre `config.type` définit le type d'objet créé :
  * 
- * - `addInput` : ajoute un élément input
- * - `addSelect` : ajoute un élément select
- * - `addCustomInput` : ajoute un input de type InputNumber (@see {@link InputNumber})
- * - `addDefaultInput` : ajoute un input de type DefaultInput (@see {@link DefaultInput})
- * - `addCustomSelect` : ajoute un input d'un type différent en fonction du paramètre type :
- *   - Pour un type `color`, ajoute un input de type InputColor (@see {@link InputColor})
- *   - Sinon, ajoute un input de type CustomSelect (@see {@link CustomSelect})
+ * - `type : number` : Créé un élément de type {@link InputNumber};
+ * - `type : color` : Créé un élément de type {@link InputColor};
+ * - `type : default` : Créé un élément de type {@link DefaultInput};
+ * - `type : pattern` : Créé un élément de type {@link CustomSelectGrid};
+ * - `type : input` : Créé un élément HTML {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input | input} de type `text`;
+ * - `type : textarea` : Créé un élément HTML {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/textarea | textarea};
+ * - `type : select` : Créé un élément HTML {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select | select}.
+ * Créé par défaut un élémént de type {@link CustomSelect}.
  * 
  * @extends ControlExtended
  */
@@ -177,7 +180,6 @@ class FlatStyleForm extends ControlExtended {
             case "color":
                 elem = new InputColor(config);
                 break;
-            case (typeof type === "object" && type.getInput):
             case "input":
             case "textarea":
             case "select":
@@ -191,7 +193,18 @@ class FlatStyleForm extends ControlExtended {
                 elem = new DefaultInput(config);
                 break;
             default:
-                elem = new CustomSelect(config);
+                // Input personnalisé héritant de Default Input
+                if (config.input instanceof DefaultInput) {
+                    elem = config.input;
+                }
+                // Input personnalisé, n'héritant pas de DefaultInput
+                else if (typeof config.input === "object" && config.input.getInput && config.input.getElement) {
+                    input = this._addInputElement(config);
+                    appendChild = false;
+                }
+                else {
+                    elem = new CustomSelect(config);
+                }
                 break;
         }
         if (appendChild) {
@@ -226,6 +239,7 @@ class FlatStyleForm extends ControlExtended {
 
         // Initialise les options
         const options = config.options ? config.options : {};
+        const customInput = config.input;
 
         const typeName = type === "select" ? type : "input";
 
@@ -258,11 +272,11 @@ class FlatStyleForm extends ControlExtended {
         */
         let element;
         // Input specifique (objet)
-        const userInput = (typeof type === "object" && type.getInput);
+        const userInput = (typeof customInput === "object" && customInput.getInput && customInput.getElement);
         if (userInput) {
             // Récupère l'input et l'élément
-            input = type.getInput();
-            element = type.getElement();
+            input = customInput.getInput();
+            element = customInput.getElement();
             const id = element.id;
             labelElement.htmlFor = id;
             // Ajoute un événement sur le label (pour bien focus sur l'input)
