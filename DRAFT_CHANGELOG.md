@@ -18,6 +18,7 @@ __DATE__
 * 🔨 [Changed]
 
 - perf: écoute évènement moveend sur map au lieu de change:resolution sur view
+- searchengine : exception de recherche pour communes à moins de 3 caractères.
 
 * 🔥 [Deprecated]
 
