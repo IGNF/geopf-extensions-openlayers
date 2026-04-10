@@ -233,3 +233,15 @@ div[id^=GPopacityContainer_ID_] {
 div[id^=GPopacityContainer_ID_] > .GPlayerOpacity {
   flex: auto;
 }
+
+/* Tooltip */
+div:not(.position) > .gpf-widget[id^=GPlayerSwitcher-] > .gpf-btn-icon[aria-label]:hover::before {
+  display: unset;
+}
+.gpf-widget.gpf-tooltip-right > .gpf-btn-icon[aria-label]:hover::before {
+  transform: translateX(calc(-100% - 16px));
+  padding: .5rem 1.25rem .5rem .5rem;
+  background-size: .375rem .5rem, .375rem .5rem, 1px 100%, 100%;
+  background-position: calc(100% - 0.125rem) 50%, 100% 50%, calc(100% - 0.375rem) 0, calc(100% - 0.375rem) 0;
+  background-image: conic-gradient(from 236.31deg at 100% 50%, transparent 0deg, var(--background-overlap-grey) 0deg, var(--background-overlap-grey) 67.38deg, transparent 67.38deg), conic-gradient(from 236.31deg at 100% 50%, transparent 0deg, var(--border-default-grey) 0deg, var(--border-default-grey) 67.38deg, transparent 67.38deg), linear-gradient(90deg, var(--border-default-grey), var(--border-default-grey)), linear-gradient(90deg, var(--background-overlap-grey), var(--background-overlap-grey));
+}
