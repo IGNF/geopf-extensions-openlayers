@@ -1,0 +1,102 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.css" />
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.js"></script>
+
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Drawing interaction</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+            [id^="GPsearchEngine-"] {
+                top: 8px;
+            }
+            #myDialog {
+                top: 10px;
+                left: 10px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Outil de dessin avec style</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                window.onload = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
+					// 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
+                            }),
+                            layer
+                        ]
+                    });
+
+                    const layerSwitcher = new ol.control.LayerSwitcher({
+                        options :{
+                            position : "top-right",
+                            collapsed : false,
+                            panel : true,
+                            counter : true
+                        }
+                    });
+                    map.addControl(layerSwitcher);
+
+                    iso = new ol.control.Isocurve({
+                        draggable: true,
+                        position: "top-right"
+                    });
+                    map.addControl(iso);
+
+                    const draw = new ol.control.Draw({
+                        position: "top-right",
+                        style: true,
+                        addToMap: true,
+                    });
+
+                    map.addControl(draw);
+                };
+           </script>
+{{/content}}
+
+{{/extend}}
