@@ -129,18 +129,6 @@
                         })
                     })
 
-
-                    // Style layer
-                    const style = drawing.Point.getStyle()[0];
-                    style.setStroke(new ol.style.Stroke({
-                        color: "orange",
-                        width: 1.5
-                    }));
-                    style.setFill (new ol.style.Fill({
-                        color: "rgb(255,165,0,0.2)",
-                    }));
-                    layer.setStyle(style);
-
                     window.togglePoint = togglePoint;
                     window.toggleLine = toggleLine;
                     window.togglePoly = togglePoly;
