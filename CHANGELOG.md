@@ -59,6 +59,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [🎉 Summary](#-summary-9)
   - [💥 Breaking changes](#-breaking-changes-9)
   - [📖 Changelog](#-changelog-9)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.10](#extension-geoplateforme-openlayers--version-100-beta10)
+  - [Unreleased](#unreleased-10)
+  - [🎉 Summary](#-summary-10)
+  - [💥 Breaking changes](#-breaking-changes-10)
+  - [📖 Changelog](#-changelog-10)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -588,4 +593,42 @@ Release qui contient des corrections diverses, principalement liées à de l'UI.
 * 🔒 [Security]
 
   - Build : transformation images en base 64 pour se passer de lodash.template (#488)
+---
+## Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.10
+
+2026-04-15
+> 🚀 Release Extension Geoplateforme openlayers
+
+### Unreleased
+
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.10...HEAD>
+
+### 🎉 Summary
+
+Corrections et changements mineurs sur le paramétrage et les événements exposés de plusieurs widgets.
+
+### 💥 Breaking changes
+
+### 📖 Changelog
+
+* ✨ [Added]
+
+- territories : ajout d'événements et de nouvelles méthodes sur le widget des territoires (#496)
+
+* 🔨 [Changed]
+
+- perf: écoute évènement moveend sur map au lieu de change:resolution sur view (#500)
+- searchengine : exception de recherche pour communes à moins de 3 caractères. (#502)
+
+* 🔥 [Deprecated]
+
+* 🔥 [Removed]
+
+* 🐛 [Fixed]
+  
+- attributions : correction de la surchage sur l'option collapse du widget d'attributions (#498)
+
+* 🔒 [Security]
+
+
 ---

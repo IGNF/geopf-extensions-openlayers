@@ -48,7 +48,7 @@
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "clusterize.js": "^1.0.0",
-    "doctoc": "^2.3.0",
+    "doctoc": "^2.4.0",
     "dompurify": "^3.2.6",
     "eventbusjs": "0.2.0",
     "geoportal-access-lib": "3.4.6",
