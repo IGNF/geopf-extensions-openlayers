@@ -4,6 +4,7 @@ import Control from "../Control";
 import Logger from "../../Utils/LoggerByDefault";
 import DefaultSearchService from "../../Services/DefaultSearchService";
 import Helper from "../../Utils/Helper";
+import { getExceptionParams, isException } from "./SearchEngineException";
 
 // Voir les typedefs partagés dans ./typedefs.js (SearchEngineBaseOptions, SearchServiceOptions, ...)
 
@@ -152,7 +153,6 @@ class SearchEngineBase extends Control {
                 } else {
                     delete e.target.dataset.erase;
                 }
-                console.log("input", e, e.target.value);
                 if (!e.target.value) {
                     this.showHistoric();
                 }
@@ -226,6 +226,22 @@ class SearchEngineBase extends Control {
                 // Si on appuie sur le bouton, on vérifie que l'input ne soit pas vide
                 let input = e.target.querySelector("input");
                 const value = input.value;
+                
+                // Le service de géocodage IGN est limité à 3 caractères, 
+                // on utilise ce Hack pour permettre la recherche de communes avec des noms courts
+                if (value && isException(value)) {
+                    const params = getExceptionParams(value);
+                    this.search({
+                        "index" : "poi",
+                        // HACK permet de rechercher les communes avec des noms courts (ex. "By")
+                        "location" : params.nomCommune + "**",
+                        "filters" : {
+                            "cityCode" : params.codeCommune
+                        }
+                    });
+                    return false;
+                }
+
                 if (value.length < options.minChars) {
                     return false;
                 }
