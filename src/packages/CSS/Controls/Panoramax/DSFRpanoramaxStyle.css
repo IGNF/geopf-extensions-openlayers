@@ -271,11 +271,11 @@
     object-fit: cover;
 }
 .pnx-preview-marker {
-     width: 12px;
-     height: 12px;
-     display: block;
-     border-radius: 50%;
-     border: 2px solid #ffffff;
-     background-color: #0B6BA7;
-     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+    width: 12px;
+    height: 12px;
+    display: block;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    background-color: #0B6BA7;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
 }

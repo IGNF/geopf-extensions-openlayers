@@ -25,6 +25,9 @@ import {
 // lib panoramax
 import "@panoramax/web-viewer/build/photoviewer";
 
+// plugin PSV plan2 (MiniMap pour OpenLayers)
+// import { Plan2Plugin } from "@photo-sphere-viewer/plan2-plugin";
+
 // lib external
 import { subMonths } from "date-fns";
 
@@ -242,7 +245,7 @@ class Panoramax extends Control {
      *     size: "medium"
      *   },
      *   viewer: {
-     *     endpoint: "https://explore.panoramax.fr/api",
+     *     endpoint: "https://explore.panoramax.fr/",
      *     class: "",
      *     widgets: true,
      *     psv-options: {}
@@ -888,7 +891,7 @@ class Panoramax extends Control {
             };
         };
 
-        return debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 300);
+        return debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 100);
     }
 
     /**
@@ -1284,6 +1287,10 @@ class Panoramax extends Control {
         // hack pour le gestionnaire de couche
         layer.styleUrl = opts.url;
         
+        if (this.options.group) {
+            this.setLayerGroup();
+        }
+
         if (this.groupPanoramax) {
             this.groupPanoramax.getLayers().push(layer);
         } else {
@@ -1400,37 +1407,31 @@ class Panoramax extends Control {
         // options.viewer.psv-options : {} (TODO)
         var self = this;
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                logger.debug("initPhotoViewer");
-                // INFO
-                // par défaut, la fenêtre de visualisation est masquée, elle s'affiche au clic sur une image
-                // mais pour initialiser le viewer de photos de Panoramax, il faut que le container soit visible, 
-                // avec une taille !
-                self.showPhotoViewer();
-                if (!self.photoViewerPanoramax) {
-                    self.photoViewerPanoramax = self.createPhotoViewer();
-                    self.photoViewerPanoramax.onceReady()
-                        .then(() => {
-                            console.debug("Panoramax photo viewer is ready");
-                        });
-                    self.photoViewerPanoramax.addEventListener("ready", () => {
-                        console.debug("Panoramax photo viewer is ready", self);
-                        // Suppression "Player"
-                        self.removeWidgetPlayer();
-                        // Suppression "Annotations switch"
-                        self.removeWidgetAnnotationsSwitch();
-                        // Suppression "Picture legend Drawer"
-                        if (self.options.viewer.widgets && self.options.viewer.widgets.includes("cmpPictureLegend")) {
-                            self.removeWidgetPictureLegendDrawer();
-                        }
+            logger.debug("initPhotoViewer");
+            // INFO
+            // par défaut, la fenêtre de visualisation est masquée, elle s'affiche au clic sur une image
+            if (!self.photoViewerPanoramax) {
+                self.photoViewerPanoramax = self.createPhotoViewer();
+                self.photoViewerPanoramax.onceReady()
+                    .then(() => {
+                        console.debug("Panoramax photo viewer is ready");
                     });
-                    self.photoViewerPanoramax.addEventListener("broken", () => {
-                        console.warn("Panoramax photo viewer is broken");
-                    });
-                }
-                self.hidePhotoViewer();
-                resolve();
-            }, 100);
+                self.photoViewerPanoramax.addEventListener("ready", () => {
+                    console.debug("Panoramax photo viewer is ready", self);
+                    // Suppression "Player"
+                    self.removeWidgetPlayer();
+                    // Suppression "Annotations switch"
+                    self.removeWidgetAnnotationsSwitch();
+                    // Suppression "Picture legend Drawer"
+                    if (self.options.viewer.widgets && self.options.viewer.widgets.includes("cmpPictureLegend")) {
+                        self.removeWidgetPictureLegendDrawer();
+                    }
+                });
+                self.photoViewerPanoramax.addEventListener("broken", () => {
+                    console.warn("Panoramax photo viewer is broken");
+                });
+            }
+            resolve();
         });
     }
 
@@ -1469,7 +1470,7 @@ class Panoramax extends Control {
             photoViewer.id = "pnx-photo-viewer-" + this.uid;
             photoViewer.className = "pnx-photo-viewer-container";
             photoViewer.style = "width: 100%; height: 100%";
-            // photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
+            photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
             
             var widgets = this.options.viewer.widgets && Array.isArray(this.options.viewer.widgets) ? this.options.viewer.widgets : null;
             if (widgets) {
@@ -1517,9 +1518,6 @@ class Panoramax extends Control {
             }
             if (target) {
                 target.appendChild(photoViewer);
-                requestAnimationFrame(() => {
-                    photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
-                });
             }
         }
         return photoViewer;
@@ -1636,12 +1634,12 @@ class Panoramax extends Control {
     createWidgetBtnClose () {
         var svg = `
         <svg 
-        aria-hidden="true" 
-        focusable="false" 
-        class="" 
-        role="img" 
-        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-        <path fill="currentColor" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
+            aria-hidden="true" 
+            focusable="false" 
+            class="" 
+            role="img" 
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+            <path fill="currentColor" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
         </svg>`;
         // Button close
         var button = document.createElement("pnx-button");
@@ -1686,7 +1684,7 @@ class Panoramax extends Control {
     createWidgetBtnFullScreen () {
         var svg = `
         <svg width='24' height='24' viewBox='0 0 24 24' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
-        <path d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z"></path>
+            <path d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z"></path>
         </svg>`;
         // Button fullscreen
         var button = document.createElement("pnx-button");
@@ -1731,7 +1729,7 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du composant de minimap.
      */
     createWidgetCmpMinimap () {
-        // TODO Créer un composant
+        // TODO Créer un composant : mise en place du plugin PSV Plan2Plugin !
     }
 
     /**
@@ -1740,6 +1738,8 @@ class Panoramax extends Control {
      */
     createWidgetCmpMenuActions () {
         // TODO Créer un composant
+        // - pnx-picture-legend-actions
+        // -   pnx-list-group
     }
 
     /**
@@ -1964,7 +1964,7 @@ class Panoramax extends Control {
      * Affiche la prévisualisation d'une entité de type `grid`.
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
-     * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
+     * @param {PanoramaxPreviewGridLayer} feature - Propriétés de l'entité survolée.
      * @private
      */
     displayPreviewGrid (coordinates, feature) {
@@ -1989,7 +1989,7 @@ class Panoramax extends Control {
      * Affiche la prévisualisation d'une entité de type `sequences`.
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
-     * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
+     * @param {PanoramaxPreviewSequenceLayer} feature - Propriétés de l'entité survolée.
      * @private
      */
     displayPreviewSequence (coordinates, feature) {
@@ -2023,7 +2023,7 @@ class Panoramax extends Control {
      * Affiche la prévisualisation d'une entité de type `pictures`.
      *
      * @param {Array<Number>} coordinates - Coordonnées du point survolé.
-     * @param {PanoramaxPreviewLayerType} feature - Propriétés de l'entité survolée.
+     * @param {PanoramaxPreviewPictureLayer} feature - Propriétés de l'entité survolée.
      * @private
      */
     displayPreviewPicture (coordinates, feature) {

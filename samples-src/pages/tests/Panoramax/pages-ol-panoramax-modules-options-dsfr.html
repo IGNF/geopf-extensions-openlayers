@@ -83,8 +83,11 @@
 
             // Ajout du contrôle Panoramax
             var options = {
-                collapsed: false,
-                panel : true
+                collapsed: true,
+                panel : true,
+                visualizationWindow : {
+                    size : "fullscreen-map"
+                }
             };
             panoramax = new ol.control.Panoramax(options);
             // Gestion de l'événement d'ouverture du formulaire de Panoramax

@@ -667,18 +667,21 @@ var PanoramaxDOM = {
         dialog.className = "GPpanel pnx-visualization-window-panel gpf-panel fr-modal";
         dialog.classList.add("gpf-hidden"); // la fenêtre de visualisation est masquée par défaut, elle s'affiche au clic sur une image
         
-        var header = document.createElement("div");
-        header.className = "pnx-visualization-window-panel__header gpf-panel__header fr-modal__header";
-        if (!display) {
-            header.classList.add("gpf-hidden");
-        }
+        // INFO
+        // on desactive le header de la fenêtre de visualisation
+        // var header = document.createElement("div");
+        // header.className = "pnx-visualization-window-panel__header gpf-panel__header fr-modal__header";
+        // if (!display) {
+        //     header.classList.add("gpf-hidden");
+        // }
 
+        // INFO
         // on desactive cette partie du header pour ne pas avoir de bouton retour 
         // dans la fenêtre de visualisation
         // header.appendChild(this._createWidgetPanelButtonsReturnElement());
-        header.appendChild(this._createWidgetPanelButtonsCloseElement());
+        // header.appendChild(this._createWidgetPanelButtonsCloseElement());
 
-        dialog.appendChild(header);
+        // dialog.appendChild(header);
         return dialog;
     },
     
