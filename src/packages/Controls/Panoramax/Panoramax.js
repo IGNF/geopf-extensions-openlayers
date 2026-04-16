@@ -1601,13 +1601,17 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de retour.
      */
     createWidgetBtnBack () {
+        // svg DSFR (fr-icon-arrow-left-line)
         var svg = `
-        <svg 
-            aria-hidden="true" 
-            focusable="false" 
-            class="" 
-            role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-            <path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            class="pnx-btn-svg"
+            role="img"
+            viewBox="0 0 24 24"
+        >
+            <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M7.828 11H20V13H7.828L13.192 18.364L11.778 19.778L4 12L11.778 4.22205L13.192 5.63605L7.828 11Z" />
         </svg>`;
         // Button back
         var buttonBack = document.createElement("pnx-button");
@@ -1632,14 +1636,17 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de fermeture.
      */
     createWidgetBtnClose () {
+        // svg DSFR (fr-icon-close-line)
         var svg = `
-        <svg 
-            aria-hidden="true" 
-            focusable="false" 
-            class="" 
-            role="img" 
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-            <path fill="currentColor" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            class="pnx-btn-svg"
+            role="img"
+            viewBox="0 0 24 24"
+        >
+            <path fill="currentColor" d="m12 10.6 4.95-4.96 1.4 1.4L13.42 12l4.96 4.95-1.4 1.4L12 13.42l-4.95 4.96-1.4-1.4L10.58 12 5.63 7.05l1.4-1.4z"/>
         </svg>`;
         // Button close
         var button = document.createElement("pnx-button");
@@ -1683,8 +1690,15 @@ class Panoramax extends Control {
      */
     createWidgetBtnFullScreen () {
         var svg = `
-        <svg width='24' height='24' viewBox='0 0 24 24' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
-            <path d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z"></path>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            class="pnx-btn-svg"
+            role="img"
+            viewBox="0 0 24 24"
+        >
+            <path fill='currentColor' d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z" />
         </svg>`;
         // Button fullscreen
         var button = document.createElement("pnx-button");
@@ -1909,7 +1923,6 @@ class Panoramax extends Control {
             this.previewPopupOverlay = new Overlay({
                 element : this.previewPopupElement,
                 positioning : "bottom-center",
-                offset : [0, -18],
                 stopEvent : false
             });
             map.addOverlay(this.previewPopupOverlay);
@@ -1981,8 +1994,8 @@ class Panoramax extends Control {
             </ul>
         `;
 
-        this.setMarker(coordinates);
         this.setPopup(coordinates, content);
+        this.setMarker(coordinates);
     }
 
     /**
@@ -2002,7 +2015,7 @@ class Panoramax extends Control {
         var api = (this.options.viewer.endpoint || "https://explore.panoramax.fr/api").replace(/\/+$/, "");
         var className = "pnx-preview-sequence-popup";
         var imageHtml = encodedPictureId
-            ? `<img src="${api}/collections/${encodedPictureId}/thumb.jpg" alt="Preview image" class="pnx-preview-picture-popup__img">`
+            ? `<img src="${api}/collections/${encodedPictureId}/thumb.jpg" alt="" class="pnx-preview-picture-popup__img" width="240">`
             : "";
         var content = `
             <p class="${className}">
@@ -2015,8 +2028,8 @@ class Panoramax extends Control {
             </p>
         `;
 
-        this.setMarker(coordinates);
         this.setPopup(coordinates, content);
+        this.setMarker(coordinates);
     }
 
     /**
@@ -2036,7 +2049,7 @@ class Panoramax extends Control {
         var api = (this.options.viewer.endpoint || "https://explore.panoramax.fr/api").replace(/\/+$/, "");
         var className = "pnx-preview-picture-popup";
         var imageHtml = encodedPictureId
-            ? `<img src="${api}/pictures/${encodedPictureId}/thumb.jpg" alt="Preview image" class="pnx-preview-picture-popup__img">`
+            ? `<img src="${api}/pictures/${encodedPictureId}/thumb.jpg" alt="" class="pnx-preview-picture-popup__img" width="240">`
             : "";
         var content = `
             <p class="${className}">
@@ -2048,9 +2061,8 @@ class Panoramax extends Control {
                 ${imageHtml}
             </p>
         `;
-
-        this.setMarker(coordinates);
         this.setPopup(coordinates, content);
+        this.setMarker(coordinates);
     }
 
     // ################################################################### //
