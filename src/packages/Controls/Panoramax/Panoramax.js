@@ -1891,6 +1891,10 @@ class Panoramax extends Control {
                 stopEvent : false
             });
             map.addOverlay(this.previewMarkerOverlay);
+            // empêche les events sur la couche Panoramax pendant que la preview est ouverte
+            markerElement.addEventListener("pointermove", (evt) => {
+                evt.stopImmediatePropagation();
+            });
         }
 
         this.previewMarkerOverlay.setPosition(position);
@@ -1926,6 +1930,10 @@ class Panoramax extends Control {
                 stopEvent : false
             });
             map.addOverlay(this.previewPopupOverlay);
+            // empêche les events sur la couche Panoramax pendant que la preview est ouverte
+            this.previewPopupElement.addEventListener("pointermove", (evt) => {
+                evt.stopImmediatePropagation();
+            });
         }
 
         this.previewPopupOverlay.setPosition(position);
