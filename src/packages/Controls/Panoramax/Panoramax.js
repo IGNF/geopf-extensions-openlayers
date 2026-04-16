@@ -689,7 +689,13 @@ class Panoramax extends Control {
          * @private
          */
         this.previewPopupElement = null;
-        
+
+        /**
+         * feature sélectionnée lors du survol (utilisée au click)
+         * @private
+         */
+        this.selectedFeature = null;
+
         /** 
          * map viewport sync listener 
          * @private 
@@ -910,21 +916,10 @@ class Panoramax extends Control {
             if (!self.eventActived) {
                 return;
             }
-            var callback = (feature) => {
-                // stop iteration after the first feature is found
-                return {
-                    coordinates : feature.getFlatCoordinates(),
-                    properties : feature.getProperties()
-                };
-            };
-            var options = {
-                layerFilter : (l) => l === self.layerPanoramax || l === self.previewMarkerOverlay,
-                hitTolerance : 5
-            };
-            var feature = e.map.forEachFeatureAtPixel(e.pixel, callback, options);
-            if (!feature) {
+            if (!self.selectedFeature) {
                 return;
             }
+            let feature = self._transformToPanoramaxFeature(self.selectedFeature);
             var sequenceId = feature.properties.first_sequence || null;
             var pictureId = feature.properties.id || null;
             var type = feature.properties.layer || feature.properties["mvt:layer"] || null;
@@ -971,18 +966,11 @@ class Panoramax extends Control {
             if (!self.eventActived || e.dragging) {
                 return;
             }
-            var callback = (feature) => {
-                // stop iteration after the first feature is found
-                return {
-                    coordinates : feature.getFlatCoordinates(),
-                    properties : feature.getProperties()
-                };
-            };
             var options = {
                 layerFilter : (l) => l === self.layerPanoramax,
                 hitTolerance : 5
             };
-            var feature = e.map.forEachFeatureAtPixel(e.pixel, callback, options);
+            var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature,options);
             var mapTarget = e.map.getTargetElement();
             if (mapTarget) {
                 mapTarget.style.cursor = feature ? "pointer" : "";
@@ -1125,6 +1113,7 @@ class Panoramax extends Control {
             this.previewPopupOverlay = null;
         }
         this.previewPopupElement = null;
+        this.selectedFeature = null;
     }
 
     // ################################################################### //
@@ -1942,12 +1931,15 @@ class Panoramax extends Control {
     /**
      * Affiche la prévisualisation selon le type de couche Panoramax.
      *
-     * @param {PanoramaxPreviewFeature} feature - Entité à prévisualiser.
+     * @param {ol.Feature} feature - Entité à prévisualiser.
      */
     displayPreview (feature) {
-        var type = feature.properties.layer || feature.properties["mvt:layer"];
+        let properties = feature.getProperties();
+        var type = properties.layer || properties["mvt:layer"];
         switch (type) {
             case "grid":
+                // preview la feature panoramax
+                feature = this._transformToPanoramaxFeature(feature);
                 this.displayPreviewGrid(feature.coordinates, feature.properties);
                 break;
             case "sequences":
@@ -1955,12 +1947,29 @@ class Panoramax extends Control {
                 // this.displayPreviewSequence(feature.coordinates, feature.properties);
                 break;
             case "pictures":
+                // stocke la feature survolée
+                this.selectedFeature = feature;
+                // preview la feature panoramax
+                feature = this._transformToPanoramaxFeature(feature);
                 this.displayPreviewPicture(feature.coordinates, feature.properties);
                 break;
             default:
                 logger.warn("Unknown feature type :", type);
         }
     }
+
+    /**
+     * Transforme une feature OL en PanoramaxPreviewFeature
+     * @param {ol.Feature} feature - Feature OL
+     * @returns {PanoramaxPreviewFeature} Feature Panoramax pour prévisualisation
+     * @private
+     */
+    _transformToPanoramaxFeature (feature) {
+        return {
+            coordinates : feature.getFlatCoordinates(),
+            properties : feature.getProperties()
+        };
+    };
 
     /**
      * Échappe une valeur pour un affichage HTML sûr.
