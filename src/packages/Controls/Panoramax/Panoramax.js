@@ -891,7 +891,7 @@ class Panoramax extends Control {
             };
         };
 
-        return debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 100);
+        return debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 20);
     }
 
     /**
