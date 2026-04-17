@@ -39,6 +39,7 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ControlList", "GPFcontrolListStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ContextMenu", "GPFcontextMenuStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Reporting", "GPFreportingStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Panoramax", "GPFpanoramaxStyle.css"),
             ],
             // CSS themes dsfr
             "Dsfr" : [
@@ -76,6 +77,7 @@ module.exports = (env, argv) => {
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ControlList", "DSFRcontrolListStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/ContextMenu", "DSFRcontextMenuStyle.css"),
                 path.join(rootdir, "src", "packages", "CSS", "Controls/Reporting", "DSFRreportingStyle.css"),
+                path.join(rootdir, "src", "packages", "CSS", "Controls/Panoramax", "DSFRpanoramaxStyle.css"),
             ],
         }
     };

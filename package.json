@@ -1,7 +1,7 @@
 {
   "name": "geopf-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.10",
+  "version": "1.0.0-beta.10-492",
   "date": "15/04/2026",
   "module": "src/index.js",
   "directories": {},
@@ -23,7 +23,8 @@
     "publish": "node build/release/package.js",
     "build": "npm run build:bundle && npm run build:modules",
     "build:bundle": "npx rimraf dist/bundle && webpack --config build/webpack/bundle.webpack.config --mode=production",
-    "build:modules": "npx rimraf dist/modules && webpack --config build/webpack/modules.webpack.config --mode=production"
+    "build:modules": "npx rimraf dist/modules && webpack --config build/webpack/modules.webpack.config --mode=production",
+    "build:vendor:panoramax": "webpack --config build/webpack/photoviewer.webpack.config.js --mode=production"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,12 @@
     "url": "https://github.com/IGNF/geopf-extensions-openlayers/issues"
   },
   "homepage": "https://github.com/IGNF/geopf-extensions-openlayers#readme",
+  "peerDependencies": {
+    "@panoramax/web-viewer": "^4.4.0-develop-d8b38e70",
+    "@photo-sphere-viewer/compass-plugin": "^5.14.1",
+    "@photo-sphere-viewer/plan-plugin": "^5.14.1",
+    "@photo-sphere-viewer/plan2-plugin": "./photo-sphere-viewer-plan2-plugin-0.0.0.tgz"
+  },
   "dependencies": {
     "@gouvfr/dsfr": "^1.13.1",
     "@mapbox/mapbox-gl-style-spec": "14.8.0",
@@ -48,15 +55,16 @@
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "clusterize.js": "^1.0.0",
+    "date-fns": "^4.1.0",
     "doctoc": "^2.4.0",
     "dompurify": "^3.2.6",
     "eventbusjs": "0.2.0",
     "geoportal-access-lib": "3.4.6",
     "loglevel": "^1.9.1",
     "marked": "^16.2.1",
-    "ol": "^10.3.1",
+    "ol": "^10.8.0",
     "ol-contextmenu": "^5.5.0",
-    "ol-mapbox-style": "^12.3.5",
+    "ol-mapbox-style": "^13.4.0",
     "proj4": "2.15.0",
     "sortablejs": "1.15.3",
     "typescript": "^5.3.3",

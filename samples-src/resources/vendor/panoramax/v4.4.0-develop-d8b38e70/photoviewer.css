@@ -1,0 +1,1559 @@
+/* Source: node_modules/@panoramax/web-viewer/build/components/core/Basic.css */
+/* Colors */
+:root, :host {
+	--white: #ffffff;
+	--black: #181818;
+	--black-pale: #1b1a17;
+	--red: #f70000;
+	--red-transparent: rgba(247, 0, 0, 0.3);
+	--red-pale: #ff726f;
+	--grey: #f5f5f5;
+	--grey-pale: #cfd2cf;
+	--grey-semi-dark: #808080;
+	--grey-dark: #3e3e3e;
+	--blue: #2954e9;
+	--blue-dark: #0a1f69;
+	--blue-semi: #d7dffc;
+	--blue-pale: #f2f5ff;
+	--blue-geovisio: #34495e;
+	--beige: #f5f3ec;
+	--yellow: #fec868;
+	--orange: #ff6f00;
+	--orange-transparent: rgba(255,111,0,0.3);
+	--orange-pale: #fffafa;
+	--green: #7ec636;
+	--green-pale: #f0ffee;
+	--widget-bg: var(--white);
+	--widget-bg-hover: var(--grey);
+	--widget-bg-active: var(--blue);
+	--widget-bg-inactive: var(--grey-pale);
+	--widget-bg-primary: var(--blue-semi);
+	--widget-bg-primary-hover: #e0e7ff;
+	--widget-bg-warn: #FFECB3;
+	--widget-bg-success: #C8E6C9;
+	--widget-border-div: var(--grey-pale);
+	--widget-border-btn: var(--blue);
+	--widget-font: var(--grey-dark);
+	--widget-font-active: var(--white);
+	--widget-font-direct: var(--blue);
+	--widget-font-warn: #BF360C;
+	--widget-font-success: #1B5E20;
+	--font-family: "Atkinson Hyperlegible Next", sans-serif;
+	--widget-option-left: #6A1B9A;
+	--widget-option-right: #0D47A1;
+	overscroll-behavior-y: contain;
+}
+
+.pnx-hidden { display: none !important; }
+
+/* Hidden elements on mobile */
+@container (max-width: 576px) {
+	.pnx-mobile-hidden { display: none !important; }
+}
+
+/* Hidden elements on print */
+@media print {
+	.pnx-print-hidden { display: none !important; }
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/core/CoverageMap.css */
+pnx-coverage-map {
+	display: block;
+	position: relative;
+}
+
+pnx-coverage-map .maplibregl-map {
+	position: absolute;
+	inset: 0;
+	background-color: white;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/core/Editor.css */
+/* General layout */
+pnx-editor {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+
+pnx-editor .pnx-map,
+pnx-editor .pnx-psv {
+	height: 50%;
+}
+
+/* Map background widget */
+pnx-editor pnx-map-background {
+	position: absolute;
+	padding: 7px;
+	z-index: 120;
+	border-radius: 10px;
+	border: 1px solid var(--widget-border-div);
+	background-color: var(--widget-bg);
+  	color: var(--widget-font);
+	bottom: 10px;
+	left: 10px;
+	font-family: var(--font-family);
+}
+
+/* Player widget */
+pnx-editor pnx-widget-player {
+	margin-top: 10px;
+}
+pnx-editor pnx-widget-player #pnx-player-play {
+	display: none;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/core/PhotoViewer.css */
+pnx-photo-viewer {
+	position: relative;
+	display: block;
+}
+
+/* Maximized components */
+pnx-photo-viewer .pnx-psv {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+}
+
+/* No PSV loader */
+pnx-photo-viewer .psv-loader {
+	display: none;
+}
+
+/* Cornered grid layout */
+pnx-photo-viewer pnx-cornered-grid::part(corner-top-left),
+pnx-photo-viewer pnx-cornered-grid::part(corner-top),
+pnx-photo-viewer pnx-cornered-grid::part(corner-top-right),
+pnx-photo-viewer pnx-cornered-grid::part(corner-bottom-left),
+pnx-photo-viewer pnx-cornered-grid::part(corner-bottom),
+pnx-photo-viewer pnx-cornered-grid::part(corner-bottom-right) {
+	gap: 10px;
+	padding: 10px;
+}
+
+@media screen and (max-width: 576px) {
+	pnx-photo-viewer pnx-cornered-grid::part(corner-top-right) {
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: flex-start;
+	}
+
+	pnx-photo-viewer pnx-cornered-grid::part(corner-top-left) {
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-start;
+	}
+}
+
+/* Hidden widgets on sequence play */
+pnx-photo-viewer.pnx-playing pnx-bottom-drawer,
+pnx-photo-viewer.pnx-playing pnx-widget-legend,
+pnx-photo-viewer.pnx-playing pnx-widget-zoom {
+	display: none;
+}
+
+/* Override legend positioning */
+@media screen and (min-width: 576px) {
+	pnx-photo-viewer pnx-widget-legend:not([light="true"]) {
+		position: absolute;
+		top: 10px;
+		width: 100%;
+	}
+}
+
+/* Hidden widgets on grid toggled */
+pnx-photo-viewer .psv-virtual-tour-arrows {
+	transition: opacity 0.25s ease-in-out;
+	opacity: 100%;
+}
+pnx-photo-viewer.pnx-grid-toggled .psv-virtual-tour-arrows {
+	opacity: 0%;
+}
+pnx-photo-viewer.pnx-grid-toggled .psv-virtual-tour-arrows button {
+	pointer-events: none;
+	cursor: unset;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/core/Viewer.css */
+pnx-viewer {
+	position: relative;
+	display: block;
+}
+
+/* Maximized components */
+pnx-viewer .pnx-map.maplibregl-map,
+pnx-viewer .pnx-psv {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+}
+
+/* No PSV loader */
+pnx-viewer .psv-loader {
+	display: none;
+}
+
+/* Search bar over other components */
+pnx-widget-geosearch {
+	z-index: 129;
+}
+
+/* Cornered grid layout */
+pnx-viewer pnx-cornered-grid::part(corner-top-left),
+pnx-viewer pnx-cornered-grid::part(corner-top),
+pnx-viewer pnx-cornered-grid::part(corner-top-right),
+pnx-viewer pnx-cornered-grid::part(corner-bottom-left),
+pnx-viewer pnx-cornered-grid::part(corner-bottom),
+pnx-viewer pnx-cornered-grid::part(corner-bottom-right) {
+	gap: 10px;
+	padding: 10px;
+}
+
+@media screen and (max-width: 576px) {
+	pnx-viewer pnx-cornered-grid::part(corner-top-right) {
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: flex-start;
+	}
+
+	pnx-viewer pnx-cornered-grid::part(corner-top-left) {
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-start;
+	}
+
+	/* Offset bottom buttons on smartphones */
+	pnx-viewer:not(.pnx-iframed) pnx-cornered-grid::part(corner-bottom-right),
+	pnx-viewer:not(.pnx-iframed) pnx-cornered-grid::part(corner-bottom-left) {
+		margin-bottom: 30px;
+	}
+}
+
+/* Mini component */
+pnx-viewer pnx-mini {
+	box-sizing: border-box;
+	aspect-ratio: 1/1;
+	min-width: 250px;
+	min-height: 250px;
+	position: relative;
+	display: block;
+	z-index: 120;
+}
+
+@media screen and ((max-width: 576px)) {
+	pnx-viewer pnx-mini {
+		min-width: unset;
+		min-height: unset;
+	}
+}
+
+pnx-viewer pnx-mini .psv-container,
+pnx-viewer pnx-mini .pnx-map {
+	border-radius: 10px;
+}
+
+/* Hidden elements depending on focus */
+pnx-viewer:not(pnx-viewer[focus="map"]) .pnx-only-map,
+pnx-viewer:not(pnx-viewer[focus="pic"]) .pnx-only-psv {
+	display: none;
+}
+
+/* Override legend positioning */
+@media screen and (min-width: 576px) {
+	pnx-viewer pnx-widget-legend:not([light="true"]) {
+		position: absolute;
+		left: 10px;
+		top: 60px;
+	}
+
+	pnx-viewer[focus="pic"] pnx-widget-legend:not([light="true"]) {
+		top: 10px;
+		width: 100%;
+	}
+}
+
+/* Hide default map legend */
+pnx-viewer .pnx-map .maplibregl-ctrl-attrib {
+	display: none;
+}
+
+/* Override geosearch sizing */
+@media screen and (max-width: 576px) {
+	pnx-widget-geosearch pnx-search-bar:not([reduced])::part(container) {
+		width: 250px;
+		max-width: 40vw;
+	}
+}
+
+/* Hidden widgets on sequence play */
+pnx-viewer.pnx-playing pnx-bottom-drawer,
+pnx-viewer.pnx-playing pnx-mini,
+pnx-viewer.pnx-playing pnx-widget-legend,
+pnx-viewer.pnx-playing pnx-widget-zoom {
+	display: none;
+}
+
+/* Hidden widgets on grid toggled */
+pnx-viewer .psv-virtual-tour-arrows {
+	transition: opacity 0.25s ease-in-out;
+	opacity: 100%;
+}
+pnx-viewer.pnx-grid-toggled .psv-virtual-tour-arrows {
+	opacity: 0%;
+}
+pnx-viewer.pnx-grid-toggled .psv-virtual-tour-arrows button {
+	pointer-events: none;
+	cursor: unset;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/ui/ButtonGroup.css */
+/* Also defined in styles.js */
+
+pnx-button-group > pnx-button {
+	display: inline-flex;
+}
+
+pnx-button-group > pnx-button::part(btn) {
+	height: unset;
+}
+
+/* Togglable in group */
+pnx-button-group > pnx-togglable-group > pnx-button {
+	width: 100%;
+	height: 100%;
+}
+
+/* Row */
+pnx-button-group[dir="row"] > :not(:first-child):not(:last-child)::part(btn),
+pnx-button-group[dir="row"] > :not(:first-child):not(:last-child) > ::part(btn) {
+	border-radius: 0;
+	border-left: none;
+	border-right: none;
+}
+
+pnx-button-group[dir="row"] > :first-child::part(btn),
+pnx-button-group[dir="row"] > :first-child > ::part(btn) {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	border-right: none;
+}
+
+pnx-button-group[dir="row"] > :last-child::part(btn),
+pnx-button-group[dir="row"] > :last-child > ::part(btn) {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-left: none;
+}
+
+/* Column */
+pnx-button-group[dir="column"] > :not(:first-child):not(:last-child)::part(btn),
+pnx-button-group[dir="column"] > :not(:first-child):not(:last-child) > ::part(btn) {
+	border-radius: 0;
+	border-top: none;
+	border-bottom: none;
+}
+
+pnx-button-group[dir="column"] > :first-child::part(btn),
+pnx-button-group[dir="column"] > :first-child > ::part(btn) {
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	border-bottom: none;
+}
+
+pnx-button-group[dir="column"] > :last-child::part(btn),
+pnx-button-group[dir="column"] > :last-child > ::part(btn) {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-top: none;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/ui/Map.css */
+.maplibregl-map.pnx-map {
+	background: white;
+}
+
+/* Picture thumbnail on map */
+.maplibregl-popup-content {
+	padding: 5px !important;
+	position: relative;
+	pointer-events: none !important;
+}
+
+.pnx-map-thumb {
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle;
+	max-width: 130px;
+	max-height: 130px;
+}
+
+@keyframes rotating {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+.pnx-map-thumb-loader {
+	background-color: rgb(230,230,230);
+	border-radius: 65px;
+	max-height: 60px;
+	margin: 5px 35px;
+	animation: rotating 2s linear infinite;
+}
+
+.pnx-map-thumb-legend {
+	display: block;
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	left: 5px;
+	background-color: rgba(0,0,0,0.8);
+	color: white;
+	text-align: center;
+	font-style: italic;
+	font-size: 0.8em;
+	margin: 0;
+	padding: 0;
+}
+
+.maplibregl-marker {
+	width: 60px;
+}
+
+/* Resize canvas for print */
+@media print {
+	.pnx-map.maplibregl-map .maplibregl-canvas-container {
+		width: 100% !important;
+		height: unset !important;
+	}
+}
+
+/* Discard default indoor= widget */
+.pnx-map .maplibregl-ctrl-indoorequal {
+	display: none;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/ui/Photo.css */
+/* Smaller loading text */
+.psv-loader-text {
+	text-align: center;
+	font-size: 0.9em;
+}
+
+.psv-loader-image { width: 80%; }
+
+.psv-overlay { opacity: 1 !important; }
+
+/* Hide PSV tooltips */
+.psv-virtual-tour-tooltip { display: none; }
+
+/* Resize canvas for print */
+@media print {
+	.pnx-psv canvas {
+		width: 100% !important;
+		height: unset !important;
+	}
+}
+
+/* Virtual Tour SVG arrows */
+.pnx-psv-tour-arrows {
+	background: none;
+	border: none;
+
+}
+.pnx-psv-tour-arrows:active svg,
+.pnx-psv-tour-arrows.pnx-clicked svg {
+	opacity: 0.4;
+	transition: opacity 0.2s ease;
+}
+.pnx-psv-tour-arrows svg {
+	width: 100%;
+	height: auto;
+}
+
+.pnx-psv-tour-arrows svg:hover {
+	filter: drop-shadow(0 0 15px var(--blue));
+}
+
+.pnx-psv-playing .pnx-psv-tour-arrows {
+	display: none;
+}
+
+/* No virtual tour arrows or annotations if photo is reduced */
+pnx-mini .psv-virtual-tour-arrows,
+pnx-mini .pnx-psv-annotation {
+	display: none;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/ui/widgets/GeoSearch.css */
+pnx-widget-geosearch .maplibregl-ctrl {
+	box-shadow: none !important;
+	background: none !important;
+}
+
+pnx-widget-geosearch .maplibregl-ctrl-geolocate {
+	border-radius: 15px;	
+}
+
+pnx-widget-geosearch pnx-search-bar[reduced] .maplibregl-ctrl-geolocate {
+	width: 40px;
+}
+
+pnx-widget-geosearch pnx-search-bar:not([reduced]) .maplibregl-ctrl-geolocate {
+	margin-left: -5px;
+}
+
+pnx-widget-geosearch pnx-search-bar:not([reduceable])::part(input) {
+	width: 300px;
+	max-width: 30vw;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/ui/widgets/LevelSelect.css */
+/*
+ * Common rules
+ */
+
+/* Long level numbers */
+pnx-level-select pnx-button.pnx-level-long::part(btn) {
+	font-size: 0.6em;
+}
+
+
+/*
+ * Shrink selector
+ */
+
+pnx-level-select pnx-button {
+	min-height: fit-content;
+	font-family: var(--font-family);
+	font-size: 0.9em;
+}
+
+pnx-level-select pnx-button.pnx-level-minimal::part(btn) {
+	padding: 2px 5px;
+}
+
+
+/*
+ * Expanded selector
+ */
+
+/* Selected level */
+pnx-level-select pnx-button .pnx-level-active {
+	background-color: var(--widget-bg-active);
+	border-radius: 13px;
+	color: var(--widget-font-active);
+	height: 26px;
+	line-height: 26px;
+	width: 26px;
+}
+
+/* Shrink button */
+pnx-level-select pnx-button.pnx-level-shrink::part(btn) {
+	border-top: 1px solid #cfcfcf !important;
+}
+
+/* Long list of levels scrolling */
+pnx-level-select .pnx-level-scroller {
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 150px;
+	scroll-behavior: smooth;
+}
+
+/* Source: node_modules/@panoramax/web-viewer/build/components/ui/widgets/Player.css */
+pnx-widget-player {
+	pointer-events: none;
+}
+
+pnx-widget-player > pnx-button-group {
+	pointer-events: auto;
+}
+
+/* Source: node_modules/@photo-sphere-viewer/core/index.css */
+/*!
+ * Photo Sphere Viewer 5.14.1
+ * @copyright 2014-2015 Jérémy Heleine
+ * @copyright 2015-2026 Damien "Mistic" Sorel
+ * @licence MIT (https://opensource.org/licenses/MIT)
+ */
+/* src/styles/index.scss */
+.psv-container {
+  --psv-core-loaded: true;
+  container-name: psv-container;
+  container-type: size;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background:
+    radial-gradient(
+      #fff 0%,
+      #fdfdfd 16%,
+      #fbfbfb 33%,
+      #f8f8f8 49%,
+      #efefef 66%,
+      #dfdfdf 82%,
+      #bfbfbf 100%);
+  overflow: hidden;
+}
+.psv-container * {
+  box-sizing: content-box;
+}
+.psv-canvas-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  transition: opacity linear 100ms;
+}
+.psv-fullscreen-emulation {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 9999;
+}
+.psv-loader-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 80;
+}
+.psv-loader {
+  --psv-loader-border: 3px;
+  --psv-loader-tickness: 10px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.7);
+  width: 150px;
+  height: 150px;
+}
+.psv-loader-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: rgba(61, 61, 61, 0.5);
+  z-index: -1;
+}
+.psv-loader-text {
+  font: 600 16px sans-serif;
+  text-align: center;
+}
+.psv-loader--undefined .psv-loader-canvas {
+  animation: psv-loader 2s cubic-bezier(0.75, 0.25, 0.25, 0.75) infinite;
+}
+@keyframes psv-loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.psv-navbar {
+  display: flex;
+  position: absolute;
+  z-index: 90;
+  bottom: -40px;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: rgba(61, 61, 61, 0.5);
+  transition: bottom ease-in-out 0.1s;
+  font: 16px sans-serif;
+  cursor: default;
+}
+.psv-navbar--open {
+  bottom: 0;
+}
+.psv-navbar,
+.psv-navbar * {
+  box-sizing: content-box;
+}
+.psv-button {
+  flex: 0 0 auto;
+  padding: 10px;
+  position: relative;
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+}
+.psv-button--active {
+  background: rgba(255, 255, 255, 0.2);
+}
+.psv-button--disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.psv-button-svg {
+  width: 100%;
+  transform: scale(1);
+  transition: transform 200ms ease;
+  vertical-align: initial;
+}
+.psv-button:not(.psv-button--disabled):focus-visible {
+  outline: 2px solid #007cff;
+  outline-offset: -2px;
+}
+.psv-container:not(.psv--is-touch) .psv-button--hover-scale:not(.psv-button--disabled):hover .psv-button-svg {
+  transform: scale(1.2);
+}
+.psv-move-button + .psv-move-button {
+  margin-left: -10px;
+}
+.psv-download-button {
+  color: rgba(255, 255, 255, 0.7) !important;
+  text-decoration: none !important;
+}
+.psv-download-button::before,
+.psv-download-button::after {
+  display: none !important;
+}
+.psv-custom-button {
+  width: auto;
+  min-width: 20px;
+}
+.psv-custom-button--no-padding {
+  padding: 0;
+  height: 100%;
+}
+.psv-caption {
+  flex: 1 1 100%;
+  color: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  text-align: center;
+  cursor: unset;
+  padding: unset;
+  height: unset;
+  width: unset;
+}
+.psv-caption-content {
+  display: inline-block;
+  padding: 10px;
+  white-space: nowrap;
+}
+.psv-zoom-range.psv-button {
+  width: 80px;
+  height: 1px;
+  margin: 10px 0;
+  padding: 9.5px 0;
+  max-width: 600px;
+}
+.psv-zoom-range-line {
+  position: relative;
+  width: 80px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
+.psv-zoom-range-handle {
+  position: absolute;
+  border-radius: 50%;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+.psv-zoom-range:not(.psv-button--disabled):hover .psv-zoom-range-line {
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.7);
+}
+.psv-zoom-range:not(.psv-button--disabled):hover .psv-zoom-range-handle {
+  transform: scale(1.3);
+}
+.psv-notification {
+  position: absolute;
+  z-index: 100;
+  bottom: -40px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 2em;
+  opacity: 0;
+  transition-property: opacity, bottom;
+  transition-timing-function: ease-in-out;
+  transition-duration: 200ms;
+}
+.psv-notification-content {
+  max-width: 50em;
+  background: rgba(61, 61, 61, 0.8);
+  border-radius: 4px;
+  padding: 0.5em 1em;
+  font: 14px sans-serif;
+  color: rgb(255, 255, 255);
+}
+.psv-notification--visible {
+  opacity: 100;
+  bottom: 80px;
+}
+.psv-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 110;
+  inset: 0;
+  background:
+    radial-gradient(
+      #fff 0%,
+      #fdfdfd 16%,
+      #fbfbfb 33%,
+      #f8f8f8 49%,
+      #efefef 66%,
+      #dfdfdf 82%,
+      #bfbfbf 100%);
+  opacity: 0.8;
+  cursor: default;
+}
+.psv-overlay-image {
+  width: 100%;
+  text-align: center;
+  color: rgb(48, 48, 48);
+}
+.psv-overlay-image svg {
+  width: 50%;
+}
+@container psv-container (orientation: landscape) {
+  .psv-overlay-image svg {
+    width: 33%;
+  }
+}
+.psv-overlay-title {
+  color: black;
+  margin-top: 1em;
+  font: 30px sans-serif;
+  text-align: center;
+}
+.psv-overlay-text {
+  color: rgba(0, 0, 0, 0.8);
+  font: 20px sans-serif;
+  opacity: 0.8;
+  text-align: center;
+}
+.psv-panel {
+  position: absolute;
+  z-index: 90;
+  right: 0;
+  height: 100%;
+  width: 400px;
+  max-width: calc(100% - 9px);
+  background: rgba(10, 10, 10, 0.7);
+  transform: translate3d(100%, 0, 0);
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-timing-function: ease-in-out;
+  transition-duration: 100ms;
+  cursor: default;
+  margin-left: 9px;
+}
+.psv--has-navbar .psv-panel {
+  height: calc(100% - 40px);
+}
+.psv-panel-close-button {
+  display: none;
+  position: absolute;
+  top: -1px;
+  right: 0;
+  width: 19.2px;
+  height: 19.2px;
+  padding: 6.4px;
+  background: transparent;
+  color: #fff;
+  transition: background 300ms ease-in-out;
+  cursor: pointer;
+}
+.psv-panel-close-button svg {
+  transition: transform 300ms ease-in-out;
+}
+.psv-panel-close-button:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+.psv-panel-close-button:hover svg {
+  transform: scale(-1);
+}
+.psv-panel-resizer {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: -9px;
+  width: 9px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  cursor: col-resize;
+}
+.psv-panel-resizer::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 5.5px;
+  margin-top: -14.5px;
+  width: 1px;
+  height: 1px;
+  box-shadow:
+    1px 0 #fff,
+    3px 0px #fff,
+    5px 0px #fff,
+    1px 2px #fff,
+    3px 2px #fff,
+    5px 2px #fff,
+    1px 4px #fff,
+    3px 4px #fff,
+    5px 4px #fff,
+    1px 6px #fff,
+    3px 6px #fff,
+    5px 6px #fff,
+    1px 8px #fff,
+    3px 8px #fff,
+    5px 8px #fff,
+    1px 10px #fff,
+    3px 10px #fff,
+    5px 10px #fff,
+    1px 12px #fff,
+    3px 12px #fff,
+    5px 12px #fff,
+    1px 14px #fff,
+    3px 14px #fff,
+    5px 14px #fff,
+    1px 16px #fff,
+    3px 16px #fff,
+    5px 16px #fff,
+    1px 18px #fff,
+    3px 18px #fff,
+    5px 18px #fff,
+    1px 20px #fff,
+    3px 20px #fff,
+    5px 20px #fff,
+    1px 22px #fff,
+    3px 22px #fff,
+    5px 22px #fff,
+    1px 24px #fff,
+    3px 24px #fff,
+    5px 24px #fff,
+    1px 26px #fff,
+    3px 26px #fff,
+    5px 26px #fff,
+    1px 28px #fff,
+    3px 28px #fff,
+    5px 28px #fff;
+  background: transparent;
+}
+.psv-panel-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  color: rgb(220, 220, 220);
+  font: 16px sans-serif;
+  overflow: auto;
+}
+.psv-panel-content:not(.psv-panel-content--no-margin) {
+  padding: 1em;
+}
+.psv-panel-content--no-interaction {
+  user-select: none;
+  pointer-events: none;
+}
+.psv-panel--open {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  transition-duration: 0.2s;
+}
+.psv-panel--open .psv-panel-close-button,
+.psv-panel--open .psv-panel-resizer {
+  display: block;
+}
+@container psv-container (max-width: 400px) {
+  .psv-panel {
+    width: 100% !important;
+    max-width: none;
+  }
+  .psv-panel-resizer {
+    display: none !important;
+  }
+}
+.psv-panel-menu {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.psv-panel-menu-title {
+  flex: none;
+  display: flex;
+  align-items: center;
+  font: 24px sans-serif;
+  margin: 24px 12px;
+}
+.psv-panel-menu-title svg {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+.psv-panel-menu-list {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+.psv-panel-menu-item {
+  min-height: 1.5em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: background 0.1s ease-in-out;
+}
+.psv-panel-menu-item--active {
+  outline: 1px solid currentcolor;
+  outline-offset: -1px;
+}
+.psv-panel-menu-item-icon {
+  flex: none;
+  height: 1.5em;
+  width: 1.5em;
+  margin-right: 0.5em;
+}
+.psv-panel-menu-item-icon img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.psv-panel-menu-item-icon {
+}
+.psv-panel-menu-item-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.psv-panel-menu-item:focus-visible {
+  outline: 2px solid #007cff;
+  outline-offset: -2px;
+}
+.psv-panel-menu--stripped .psv-panel-menu-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.psv-panel-menu--stripped .psv-panel-menu-item:nth-child(odd),
+.psv-panel-menu--stripped .psv-panel-menu-item:nth-child(odd)::before {
+  background: rgba(255, 255, 255, 0.1);
+}
+.psv-panel-menu--stripped .psv-panel-menu-item:nth-child(even),
+.psv-panel-menu--stripped .psv-panel-menu-item:nth-child(even)::before {
+  background: transparent;
+}
+.psv-container:not(.psv--is-touch) .psv-panel-menu-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.psv-tooltip {
+  position: absolute;
+  z-index: 50;
+  box-sizing: border-box;
+  max-width: 200px;
+  background: rgba(61, 61, 61, 0.8);
+  border-radius: 4px;
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-timing-function: ease-in-out;
+  transition-duration: 100ms;
+  cursor: default;
+}
+.psv-tooltip-content {
+  color: rgb(255, 255, 255);
+  font: 14px sans-serif;
+  text-shadow: 0 1px #000;
+  padding: 0.5em 1em;
+}
+.psv-tooltip-arrow {
+  position: absolute;
+  height: 0;
+  width: 0;
+  border: 7px solid transparent;
+}
+.psv-tooltip--top-left,
+.psv-tooltip--top-center,
+.psv-tooltip--top-right {
+  transform: translate3d(0, 5px, 0);
+}
+.psv-tooltip--top-left .psv-tooltip-arrow,
+.psv-tooltip--top-center .psv-tooltip-arrow,
+.psv-tooltip--top-right .psv-tooltip-arrow {
+  border-top-color: rgba(61, 61, 61, 0.8);
+}
+.psv-tooltip--bottom-left,
+.psv-tooltip--bottom-center,
+.psv-tooltip--bottom-right {
+  transform: translate3d(0, -5px, 0);
+}
+.psv-tooltip--bottom-left .psv-tooltip-arrow,
+.psv-tooltip--bottom-center .psv-tooltip-arrow,
+.psv-tooltip--bottom-right .psv-tooltip-arrow {
+  border-bottom-color: rgba(61, 61, 61, 0.8);
+}
+.psv-tooltip--left-top,
+.psv-tooltip--center-left,
+.psv-tooltip--left-bottom {
+  transform: translate3d(5px, 0, 0);
+}
+.psv-tooltip--left-top .psv-tooltip-arrow,
+.psv-tooltip--center-left .psv-tooltip-arrow,
+.psv-tooltip--left-bottom .psv-tooltip-arrow {
+  border-left-color: rgba(61, 61, 61, 0.8);
+}
+.psv-tooltip--right-top,
+.psv-tooltip--center-right,
+.psv-tooltip--right-bottom {
+  transform: translate3d(-5px, 0, 0);
+}
+.psv-tooltip--right-top .psv-tooltip-arrow,
+.psv-tooltip--center-right .psv-tooltip-arrow,
+.psv-tooltip--right-bottom .psv-tooltip-arrow {
+  border-right-color: rgba(61, 61, 61, 0.8);
+}
+.psv-tooltip--left-top,
+.psv-tooltip--top-left {
+  box-shadow: -3px -3px 0 rgba(90, 90, 90, 0.7);
+}
+.psv-tooltip--top-center {
+  box-shadow: 0 -3px 0 rgba(90, 90, 90, 0.7);
+}
+.psv-tooltip--right-top,
+.psv-tooltip--top-right {
+  box-shadow: 3px -3px 0 rgba(90, 90, 90, 0.7);
+}
+.psv-tooltip--left-bottom,
+.psv-tooltip--bottom-left {
+  box-shadow: -3px 3px 0 rgba(90, 90, 90, 0.7);
+}
+.psv-tooltip--bottom-center {
+  box-shadow: 0 3px 0 rgba(90, 90, 90, 0.7);
+}
+.psv-tooltip--right-bottom,
+.psv-tooltip--bottom-right {
+  box-shadow: 3px 3px 0 rgba(90, 90, 90, 0.7);
+}
+.psv-tooltip--center-left {
+  box-shadow: -3px 0 0 rgba(90, 90, 90, 0.7);
+}
+.psv-tooltip--center-right {
+  box-shadow: 3px 0 0 rgba(90, 90, 90, 0.7);
+}
+.psv-tooltip--visible {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+/*# sourceMappingURL=index.css.map */
+
+/* Source: node_modules/@photo-sphere-viewer/compass-plugin/index.css */
+/*!
+ * Photo Sphere Viewer / Compass Plugin 5.14.1
+ * @copyright 2015-2026 Damien "Mistic" Sorel
+ * @licence MIT (https://opensource.org/licenses/MIT)
+ */
+/* src/styles/index.scss */
+.psv-container {
+  --psv-compass-plugin-loaded: true;
+}
+.psv-compass {
+  position: absolute;
+  margin: 10px;
+  z-index: 39;
+  cursor: default;
+  aspect-ratio: 1;
+}
+.psv--has-navbar .psv-compass {
+  margin-bottom: calc(40px + 10px);
+}
+.psv-compass canvas,
+.psv-compass svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.psv-compass--top-left,
+.psv-compass--top-center,
+.psv-compass--top-right {
+  top: 0;
+}
+.psv-compass--center-left,
+.psv-compass--center-center,
+.psv-compass--center-right {
+  top: 50%;
+}
+.psv-compass--bottom-left,
+.psv-compass--bottom-center,
+.psv-compass--bottom-right {
+  bottom: 0;
+}
+.psv-compass--top-left,
+.psv-compass--center-left,
+.psv-compass--bottom-left {
+  left: 0;
+}
+.psv-compass--top-center,
+.psv-compass--center-center,
+.psv-compass--bottom-center {
+  left: 50%;
+}
+.psv-compass--top-right,
+.psv-compass--center-right,
+.psv-compass--bottom-right {
+  right: 0;
+}
+/*# sourceMappingURL=index.css.map */
+
+/* Source: node_modules/@photo-sphere-viewer/markers-plugin/index.css */
+/*!
+ * Photo Sphere Viewer / Markers Plugin 5.14.1
+ * @copyright 2015-2026 Damien "Mistic" Sorel
+ * @licence MIT (https://opensource.org/licenses/MIT)
+ */
+/* src/styles/index.scss */
+.psv-container {
+  --psv-markers-plugin-loaded: true;
+}
+.psv-markers {
+  pointer-events: none;
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+}
+.psv-markers-svg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+}
+.psv-markers-css3d-container {
+  position: absolute;
+  z-index: 21;
+}
+.psv-marker {
+  display: none;
+  pointer-events: auto;
+}
+.psv-marker--normal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  overflow: visible;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.psv-marker--css3d {
+  display: block;
+}
+.psv-marker--transparent {
+  display: block;
+  opacity: 0;
+}
+.psv-marker--visible {
+  display: block;
+}
+.psv-marker--has-tooltip,
+.psv-marker--has-content {
+  cursor: pointer;
+}
+/*# sourceMappingURL=index.css.map */
+
+/* Source: node_modules/@photo-sphere-viewer/plan2-plugin/index.css */
+/*!
+ * Photo Sphere Viewer / Plan2 Plugin 0.0.0
+ * @copyright 2015-2026 Damien "Mistic" Sorel
+ * @licence MIT (https://opensource.org/licenses/MIT)
+ */
+/* src/styles/index.scss */
+.psv-container {
+  --psv-plan2-plugin-loaded: true;
+}
+.psv-plan2 {
+  position: absolute;
+  margin: 10px;
+  z-index: 40;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: all ease-in-out 0.3s;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+  max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
+}
+.psv--has-navbar .psv-plan2 {
+  max-height: calc(100% - 20px - 40px);
+}
+.psv-plan2__container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  transition: opacity ease-in-out 0.3s;
+}
+.psv-plan2__button {
+  position: absolute;
+  width: 34px;
+  aspect-ratio: 1;
+  line-height: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-origin: center;
+  color: white;
+  cursor: pointer;
+}
+.psv-plan2__button svg {
+  width: 60%;
+}
+.psv-plan2__button--top-left {
+  left: 0;
+  top: 0;
+  border-bottom-right-radius: 8px;
+}
+.psv-plan2__button--top-right {
+  right: 0;
+  top: 0;
+  border-bottom-left-radius: 8px;
+}
+.psv-plan2__button--bottom-left {
+  left: 0;
+  bottom: 0;
+  border-top-right-radius: 8px;
+}
+.psv-plan2__button--bottom-right {
+  right: 0;
+  bottom: 0;
+  border-top-left-radius: 8px;
+}
+.psv-plan2--maximized {
+  width: calc(100% - 20px) !important;
+  height: calc(100% - 20px) !important;
+}
+.psv--has-navbar .psv-plan2--maximized {
+  height: calc(100% - 40px - 20px) !important;
+}
+@container psv-container (max-width: 500px) {
+  .psv-plan2--maximized {
+    margin: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+  }
+  .psv--has-navbar .psv-plan2--maximized {
+    height: calc(100% - 40px) !important;
+    max-height: calc(100% - 40px);
+  }
+}
+.psv-plan2--collapsed {
+  width: 34px !important;
+  height: 34px !important;
+}
+.psv-plan2--collapsed > * {
+  opacity: 0;
+}
+.psv-plan2--collapsed .psv-plan2__button-close {
+  opacity: 1;
+  z-index: 1;
+}
+.psv-plan2--top-left {
+  top: 0;
+  left: 0;
+}
+.psv-plan2--top-right {
+  top: 0;
+  right: 0;
+}
+.psv-plan2--bottom-left {
+  bottom: 0;
+  left: 0;
+}
+.psv--has-navbar .psv-plan2--bottom-left {
+  bottom: 40px;
+}
+.psv-plan2--bottom-right {
+  bottom: 0;
+  right: 0;
+}
+.psv--has-navbar .psv-plan2--bottom-right {
+  bottom: 40px;
+}
+.psv-plan2__pin,
+.psv-plan2__spot {
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+}
+.psv-plan2__pin > *,
+.psv-plan2__spot > * {
+  transform-origin: center;
+}
+.psv-plan2__pin,
+.psv-plan2__spot,
+.psv-plan2__pin-content {
+  width: 100%;
+  height: 100%;
+}
+.psv-plan2__spot {
+  border-radius: 50%;
+}
+.psv-plan2__layers-select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  opacity: 0;
+  cursor: pointer;
+}
+.psv-plan2__layers-select option[selected] {
+  font-weight: bold;
+}
+.psv-plan2 .ol-attribution {
+  left: 0.5rem;
+  right: auto;
+  bottom: 0.5rem;
+  max-width: calc(100% - 1rem);
+}
+/*# sourceMappingURL=index.css.map */
+
+/* Source: node_modules/@photo-sphere-viewer/virtual-tour-plugin/index.css */
+/*!
+ * Photo Sphere Viewer / Virtual Tour Plugin 5.14.1
+ * @copyright 2015-2026 Damien "Mistic" Sorel
+ * @licence MIT (https://opensource.org/licenses/MIT)
+ */
+/* src/styles/index.scss */
+.psv-container {
+  --psv-virtual-tour-plugin-loaded: true;
+}
+.psv-virtual-tour-tooltip h3 {
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+}
+.psv-virtual-tour-tooltip h3:not(:last-child) {
+  margin-bottom: 0.5em;
+}
+.psv-virtual-tour-tooltip img {
+  display: block;
+  width: 200px;
+  margin: 0 -1em;
+}
+.psv-virtual-tour-tooltip img:first-child {
+  border-radius: 4px 4px 0 0;
+}
+.psv-virtual-tour-tooltip img:last-child {
+  border-radius: 0 0 4px 4px;
+}
+.psv-virtual-tour-tooltip img:not(:last-child) {
+  margin-bottom: 0.5em;
+}
+.psv-virtual-tour-tooltip p {
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+}
+.psv-virtual-tour-link {
+  cursor: pointer;
+  transform-origin: center;
+}
+.psv-virtual-tour-arrows {
+  position: absolute;
+  overflow: visible !important;
+  z-index: 11;
+  bottom: 0;
+  left: 0;
+  filter: drop-shadow(0 10px 2px rgba(0, 0, 0, 0.7));
+  pointer-events: none;
+  transition: margin ease-in-out 0.3s;
+}
+.psv-virtual-tour-arrows .psv-virtual-tour-link {
+  transition: opacity linear 0.2s;
+}
+.psv-virtual-tour-arrows .psv-virtual-tour-link:hover {
+  opacity: 1 !important;
+}
+.psv-virtual-tour-arrow {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+}
+.psv-virtual-tour-arrow:hover {
+  animation: psv-virtual-tour-link-button-in 1s ease-out forwards;
+}
+.psv-virtual-tour-loader {
+  display: block;
+  position: relative;
+  width: 40px;
+  height: 30px;
+  margin: 0 40px;
+}
+.psv-virtual-tour-loader div {
+  display: inline-block;
+  position: absolute;
+  left: 10%;
+  width: 20%;
+  background: #fff;
+  animation: psv-virtual-tour-loader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.psv-virtual-tour-loader div:nth-child(1) {
+  left: 10%;
+  animation-delay: -0.24s;
+}
+.psv-virtual-tour-loader div:nth-child(2) {
+  left: 40%;
+  animation-delay: -0.12s;
+}
+.psv-virtual-tour-loader div:nth-child(3) {
+  left: 70%;
+  animation-delay: 0;
+}
+@keyframes psv-virtual-tour-loader {
+  0% {
+    top: 10%;
+    height: 80%;
+  }
+  50%, 100% {
+    top: 30%;
+    height: 40%;
+  }
+}
+@keyframes psv-virtual-tour-link-button-in {
+  0% {
+    box-shadow: 0 0 0 0 rgba(97, 170, 242, 0);
+  }
+  20% {
+    box-shadow: 0 0 0 5px #61aaf2;
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(97, 170, 242, 0);
+  }
+}
+/*# sourceMappingURL=index.css.map */
+

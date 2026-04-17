@@ -1,0 +1,157 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.21.1/dist/maplibre-gl.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core@5.14.1/index.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/virtual-tour-plugin@5.14.1/index.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/gallery-plugin@5.14.1/index.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/markers-plugin@5.14.1/index.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/compass-plugin@5.14.1/index.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/plan-plugin@5.14.1/index.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible-next/index.css" /> -->
+        <link rel="stylesheet" href="{{ resources }}/vendor/panoramax/v4.4.0-develop-d8b38e70/photoviewer.css" />
+        <script src="{{ resources }}/vendor/panoramax/v4.4.0-develop-d8b38e70/photoviewer.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Panoramax</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100vw;
+                height: calc(100vh - 200px);
+                background-image:url("{{ resources }}/geoportail-waiting.gif");
+                background-position:center center;
+                background-repeat:no-repeat;
+            }
+
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du widget Panoramax, avec les options par défaut</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+    <!-- <script type="importmap">
+    {
+        "imports": {
+            "leaflet": "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet-src.esm.js",
+            "@fortawesome/fontawesome-svg-core": "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-svg-core@6.7.2/index.mjs",
+            "@fortawesome/free-regular-svg-icons": "https://cdn.jsdelivr.net/npm/@fortawesome/free-regular-svg-icons@6.7.2/index.mjs",
+            "@fortawesome/free-solid-svg-icons": "https://cdn.jsdelivr.net/npm/@fortawesome/free-solid-svg-icons@6.7.2/index.mjs",
+            "@maplibre/vt-pbf": "https://cdn.jsdelivr.net/npm/@maplibre/vt-pbf@4.3.0/dist/index.es.js",
+            "@mapbox/vector-tile": "https://cdn.jsdelivr.net/npm/@mapbox/vector-tile@2.0.4/index.js",
+            "@photo-sphere-viewer/core": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core@5.14.1/index.module.js",
+            "@photo-sphere-viewer/equirectangular-tiles-adapter": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/equirectangular-tiles-adapter@5.14.1/index.module.js",
+            "@photo-sphere-viewer/gallery-plugin": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/gallery-plugin@5.14.1/index.module.js",
+            "@photo-sphere-viewer/markers-plugin": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/markers-plugin@5.14.1/index.module.js",
+            "@photo-sphere-viewer/compass-plugin": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/compass-plugin@5.14.1/index.module.js",
+            "@photo-sphere-viewer/plan-plugin": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/plan-plugin@5.14.1/index.module.js",
+            "@photo-sphere-viewer/virtual-tour-plugin": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/virtual-tour-plugin@5.14.1/index.module.js",
+            "geojson-vt": "https://cdn.jsdelivr.net/npm/geojson-vt@4.0.2/src/index.js",
+            "iconify-icon": "https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.mjs",
+            "json5": "https://cdn.jsdelivr.net/npm/json5@2.2.3/dist/index.min.mjs",
+            "lit": "https://cdn.jsdelivr.net/npm/lit@3.3.2/index.js",
+            "lit/": "https://cdn.jsdelivr.net/npm/lit@3.3.2/",
+            "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@3.3.2/lit-html.js",
+            "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@3.3.2/",
+            "lit-element/": "https://cdn.jsdelivr.net/npm/lit-element@4.2.2/",
+            "maplibre-gl": "https://cdn.jsdelivr.net/npm/maplibre-gl@5.21.1/dist/maplibre-gl.js",
+            "pmtiles": "https://cdn.jsdelivr.net/npm/pmtiles@4.4.0/dist/esm/index.js",
+            "query-selector-shadow-dom": "https://cdn.jsdelivr.net/npm/query-selector-shadow-dom@1.0.0/dist/querySelectorShadowDom.js",
+            "@panoramax/web-viewer": "{{ baseurl }}/node_modules/@panoramax/web-viewer/src/index.js",
+            "@lit/reactive-element": "https://cdn.jsdelivr.net/npm/@lit/reactive-element@2.1.2/reactive-element.js",
+            "@mapbox/point-geometry": "https://cdn.jsdelivr.net/npm/@mapbox/point-geometry@1.1.0/index.js",
+            "fflate": "https://cdn.jsdelivr.net/npm/fflate@0.8.2/esm/browser.js",
+            "pbf": "https://cdn.jsdelivr.net/npm/pbf@4.0.1/index.js",
+            "three": "https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js"
+        }
+    }
+    </script> -->
+    <script>
+        if (window.Gp) {
+            localStorage.setItem("loglevel", "debug");
+            localStorage.setItem("loglevel:panoramax", "debug");
+            // activation des loggers
+            Gp.Logger.enableAll();
+        }
+        var map;
+        var panoramax;
+
+        var createMap = function () {
+            document.getElementById('map').style.backgroundImage = 'none';
+
+            // Création de la map
+            map = new ol.Map({
+                target : "map",
+                view : new ol.View({
+                    center : [288074.8449901076, 6247982.515792289],
+                    zoom : 18
+                })
+            });
+
+            var gpMaps = new ol.layer.GeoportalWMTS({
+                layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+            });
+            map.addLayer(gpMaps);
+
+            // Ajout du contrôle de gestion  des couches
+            var layerSwitcher = new ol.control.LayerSwitcher({
+                options : {
+                    collapsed: true,
+                    position: "top-left",
+                    panel: true,
+                    counter: true
+                }
+            });
+            map.addControl(layerSwitcher);
+
+            var catalog = new ol.control.Catalog({
+                position: "top-left",
+                collapsed : true
+            });
+            map.addControl(catalog);
+
+            // Ajout du contrôle Panoramax
+            var options = {
+                collapsed: true,
+                panel : true,
+                visualizationWindow : {
+                    size : "fullscreen-map"
+                }
+            };
+            panoramax = new ol.control.Panoramax(options);
+            // Gestion de l'événement d'ouverture du formulaire de Panoramax
+            // mais, une seule fois !
+            panoramax.once("pnx:opened", function () {
+                console.log("Panoramax event opened !");
+            });
+            map.addControl(panoramax);
+        };
+        Gp.Services.getConfig({
+            customConfigFile : "{{ configurl }}",
+            callbackSuffix : "",
+            // apiKey: "{{ apikey }}",
+            timeOut : 20000,
+            onSuccess : createMap,
+            onFailure : (e) => {
+                console.error(e);
+            }
+        });
+    </script>
+{{/content}}
+{{/extend}}

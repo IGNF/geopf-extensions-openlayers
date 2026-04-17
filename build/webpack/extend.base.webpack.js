@@ -107,6 +107,9 @@ module.exports = (env, argv) => {
                     include : [
                         path.join(rootdir, "src", "packages", "CSS"),
                         /node_modules\/@gouvfr\/dsfr\/dist/,
+                        /node_modules\/@panoramax\/web-viewer\/build/,
+                        /node_modules\/@photo-sphere-viewer\/compass-plugin\/index.css/,
+                        /node_modules\/@photo-sphere-viewer\/plan2-plugin\/index.css/
                     ],
                     use : [
                         MiniCssExtractPlugin.loader,

@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - Panoramax : 🎉 nouveau widget !
+
 * 🔨 [Changed]
 
 * 🔥 [Deprecated]
