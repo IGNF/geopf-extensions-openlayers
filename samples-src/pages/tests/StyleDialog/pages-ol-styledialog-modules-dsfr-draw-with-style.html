@@ -77,12 +77,12 @@
                     });
 
                     const draw = new ol.control.Draw({
-                        // position: "right",
-                        style: true,
-                        addToMap: true,
+                        snap:true,
                     });
 
                     map.addControl(draw);
+
+                    window.draw = draw;
 
                     window.select = draw.getSelect();
                 };

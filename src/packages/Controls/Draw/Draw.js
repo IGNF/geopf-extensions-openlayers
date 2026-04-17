@@ -3,7 +3,7 @@ import Collection from "ol/Collection.js";
 import "../../CSS/Controls/Draw/GPFdraw.scss";
 import Logger from "../../Utils/LoggerByDefault";
 import ToggleContent from "../Toggle/ToggleContent";
-import { Interaction, Select } from "ol/interaction";
+import { Interaction, Modify, Select, Snap } from "ol/interaction";
 import SelectingInteraction from "../../Interactions/Selecting";
 import ToggleInteraction from "../Toggle/ToggleInteraction";
 import { Map } from "ol";
@@ -18,6 +18,7 @@ import Feature from "ol/Feature";
 import { createDefaultStyle } from "ol/style/flat";
 import { asArray, asString } from "ol/color";
 import Dialog from "../Toggle/Dialog";
+import ModifyingInteraction from "../../Interactions/Modifying";
 
 /**
  * @typedef {Object} DrawOptions
@@ -28,8 +29,10 @@ import Dialog from "../Toggle/Dialog";
  * @property {String} [position=right] Position du panneau ("left" ou "right").
  * @property {Select} [select] Interaction de sélection lié au contrôle. Si aucune interaction n'est donnée, ajoute une interaction de type {@link SelectingInteraction SelectingInteraction}.
  * @property {VectorSource} [source] Source à ajouter au contrôle initialement. Peut-être fait après via la méthode `setSource`. Si aucune source n'est donnée, en ajoute une de base.
- * @property {Boolean} [addToMap] Si vrai, ajoute une couche par défaut à la carte. Cela n'a pas d'effet si une source est donnée via le paramètrr `source`.
- * @property {Boolean|Dialog} [style=false] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Si faux, n'ajoute aucun style.
+ * @property {Boolean|Modify} [modify=true] Si faux, n'ajoute pas d'interaction pour modifier les objets. Sinon, ajoute une interaction de type {@link ModifyingInteraction ModifyingInteraction}, héritant de {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html Modify}, qui s'active à la sélection d'un objet. Une interaction de type `Modify` peut aussi être passée en paramètre (auquel cas ).
+ * @property {Boolean|Snap} [snap=false] Si vrai, ajoute une interaction {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Snap-Snap.html Snap}, qui s'active au moment du dessin. La source utilisée est celle définie via la méthode `setSource` du contrôle. Une interaction de type `Snap` peut aussi être passée en paramètre.
+ * @property {Boolean} [addToMap=true] Si vrai, ajoute une couche par défaut à la carte. Cela n'a pas d'effet si une source est donnée via le paramètrr `source`.
+ * @property {Boolean|Dialog} [style=true] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Si faux, n'ajoute aucun style.
  * Le contenu de ce panneau est géré par les formulaires donné dans le paramètre `forms`.
  * Un dialogue peut aussi être mis directement sur ce paramètre.
  * @property {Boolean|OnStyleCallBack} [onStyle] Fonction par défaut à appliquer lors d'un changement de style. 3 valeurs sont possibles :
@@ -206,7 +209,11 @@ class Draw extends ToggleContent {
         options.title ??= "Annoter la carte";
         options.size ??= "sm";
         options.position ??= "right";
-        options.style ??= false;
+        options.style ??= true;
+        options.addToMap ??= true;
+        options.modify ??= true;
+        options.snap ??= false;
+
 
         // Tableau vide par défaut, les interactions sont ajoutés à la fin du constructeur
         options.drawingInteractions ??= [];
@@ -214,6 +221,14 @@ class Draw extends ToggleContent {
         if (!(options.select instanceof Select)) {
             options.select = new SelectingInteraction({
                 style : null,
+            });
+        }
+
+        this.modify = options.modify;
+        // Création de l'interaction de modification des objets
+        if (options.modify !== false && !(options.modify instanceof Modify)) {
+            this.modify = new ModifyingInteraction({
+                select : options.select,
             });
         }
 
@@ -228,6 +243,15 @@ class Draw extends ToggleContent {
         } else {
             this.source = options.source;
         }
+
+        this.snap = options.snap;
+        // Création de l'interaction snap
+        if (options.snap === true) {
+            this.snap = new Snap({ 
+                source : this.source,
+            });
+        }
+
 
         super._initialize(options);
         /**
@@ -304,19 +328,22 @@ class Draw extends ToggleContent {
             const array = e.target;
             const toggle = e.element;
             toggle.on("change:active", (e) => {
-                array.forEach(t => {
-                    // Désactive toutes les interactions sauf celle sur laquelle on a cliqué
-                    if (t !== e.target) {
-                        t.toggleActive(false);
-                    }
-                });
+                // Désactive le toggle actif
+                this.activeToggle?.setActive(false, true);
+                if (e.target.getActive()) {
+                    this.activeToggle = e.target;
+                } else {
+                    this.activeToggle = null;
+                    this.select.setActive(true);
+                }
             });
             toggle.getInteraction()?.on(["drawstart", "drawend", "drawabort"], this.dispatchEvent.bind(this));
         }.bind(this));
 
         // Ferme l'interaction si on ferme la modale
-        this.dialog.on("dialog:close", (e) => {
-            this.getActiveToggle()?.setActive(false);
+        this.dialog.on("dialog:close", () => {
+            this.activeToggle?.setActive(false);
+            this.activeToggle = null;
         });
 
         this.on("change:active", (e) => {
@@ -459,15 +486,15 @@ class Draw extends ToggleContent {
     }
 
     /**
-     * Renvoie l'intéraction de sélection lié au contrôle
-     * @returns {Select} Intéraction de sélection
+     * Renvoie l'interaction de sélection lié au contrôle
+     * @returns {Select} interaction de sélection
      */
     getSelect () {
         return this.select;
     }
 
     /**
-     * Récupère l'intéraction active si elle existe
+     * Récupère l'interaction active si elle existe
      * @returns {ToggleInteraction|undefined} Interaction active (s'il y'en a une)
      */
     getActiveToggle () {
@@ -492,6 +519,7 @@ class Draw extends ToggleContent {
         super.setMap(map);
 
         if (map) {
+            this.modify && map.addInteraction(this.modify);
             this.toggleInteractions.forEach(i => {
                 i.setMap(map);
             });
@@ -500,6 +528,8 @@ class Draw extends ToggleContent {
             this.styleDialog && map.addControl(this.styleDialog);
 
             this.layer && map.addLayer(this.layer);
+
+            this.snap && map.addInteraction(this.snap);
         }
     }
 
@@ -526,11 +556,17 @@ class Draw extends ToggleContent {
         this.toggleInteractions.forEach(toggle => {
             toggle.getInteraction().setSource?.(this.source);
         });
+
+        // Recréée une interaction snap (car impossible de modifier la source directement).
+        if (this.snap) {
+            this.snap = new Snap({ source : this.source });
+            this.snap.setMap(this.getMap());
+        }
     }
 
     /**
      * Ajoute une interaction au contrôle
-     * @param {InteractionOptions} options Options pour l'ajout de l'intéraction
+     * @param {InteractionOptions} options Options pour l'ajout de l'interaction
      */
     addInteraction (options) {
         if (!options.interaction instanceof Interaction) {
