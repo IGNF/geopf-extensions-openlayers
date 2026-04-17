@@ -98,7 +98,7 @@ class ToggleInteraction extends Toggle {
     }
 
     _onInteractionChangeActive (e) {
-        this.setActive(e.target.getActive());
+        this.setActive(e.target.getActive(), true);
     }
 
 }
