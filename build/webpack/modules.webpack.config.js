@@ -230,7 +230,10 @@ module.exports = (env, argv) => {
                     test : /\.css$/,
                     include : [
                         path.join(rootdir, "src", "packages", "CSS"),
-                        /node_modules\/@gouvfr\/dsfr\/dist/
+                        /node_modules\/@gouvfr\/dsfr\/dist/,
+                        /node_modules\/@panoramax\/web-viewer\/build/,
+                        /node_modules\/@photo-sphere-viewer\/compass-plugin\//,
+                        /node_modules\/@photo-sphere-viewer\/plan2-plugin\//
                     ],
                     use : [
                         MiniCssExtractPlugin.loader,

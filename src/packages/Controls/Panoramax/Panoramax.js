@@ -1,5 +1,7 @@
 // import CSS
 import "../../CSS/Controls/Panoramax/GPFpanoramax.css";
+// import "@photo-sphere-viewer/compass-plugin/index.css";
+// import "@photo-sphere-viewer/plan2-plugin/index.css";
 
 // import OpenLayers
 import Control from "../Control";
@@ -22,11 +24,10 @@ import {
     applyStyle
 } from "ol-mapbox-style";
 
-// lib panoramax
-import "@panoramax/web-viewer/build/photoviewer";
-
-// plugin PSV plan2 (MiniMap pour OpenLayers)
-// import { Plan2Plugin } from "@photo-sphere-viewer/plan2-plugin";
+// lib panoramax + plugin PSV plan2 (MiniMap pour OpenLayers)
+//  import "@panoramax/web-viewer/build/photoviewer";
+//  import { Plan2Plugin } from "@photo-sphere-viewer/plan2-plugin";
+//  import { CompassPlugin } from "@photo-sphere-viewer/compass-plugin";
 
 // lib external
 import { subMonths } from "date-fns";
@@ -1403,7 +1404,7 @@ class Panoramax extends Control {
                 self.photoViewerPanoramax = self.createPhotoViewer();
                 self.photoViewerPanoramax.onceReady()
                     .then(() => {
-                        console.debug("Panoramax photo viewer is ready");
+                        console.debug("Panoramax photo viewer is ready", self.photoViewerPanoramax);
                     });
                 self.photoViewerPanoramax.addEventListener("ready", () => {
                     console.debug("Panoramax photo viewer is ready", self);
@@ -1459,8 +1460,9 @@ class Panoramax extends Control {
             photoViewer.id = "pnx-photo-viewer-" + this.uid;
             photoViewer.className = "pnx-photo-viewer-container";
             photoViewer.style = "width: 100%; height: 100%";
+            // Define plugins list in PSV options
+            photoViewer["psv-options"] = this.options.viewer.pnxOptions["psv-options"];
             photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
-            
             var widgets = this.options.viewer.widgets && Array.isArray(this.options.viewer.widgets) ? this.options.viewer.widgets : null;
             if (widgets) {
                 // Button close
@@ -1805,26 +1807,26 @@ class Panoramax extends Control {
             return;
         }
 
-        const host = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
-        if (!host) {
+        const container = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
+        if (!container) {
             logger.warn("Panoramax picture legend is not available");
             return;
         }
-
+        var p = container.shadowRoot || container;
         // on masque les métadonnées de la photo, qui ne sont pas pertinentes pour notre usage
-        var pnxPictureMetadata = host.shadowRoot.querySelector("pnx-picture-metadata");
+        var pnxPictureMetadata = p.querySelector("pnx-picture-metadata");
         if (pnxPictureMetadata) {
             pnxPictureMetadata.style.display = "none";
         }
-        var pnxCta = host.shadowRoot.querySelector("#pic-legend-cta");
+        var pnxCta = p.querySelector("#pic-legend-cta");
         if (pnxCta) {
             pnxCta.style.display = "none";
         }
-        var pnxExpander = host.shadowRoot.querySelector("#pic-legend-expand");
+        var pnxExpander = p.querySelector("#pic-legend-expand");
         if (pnxExpander) {
             pnxExpander.style.display = "none";
         }
-        var pnxInfo = host.shadowRoot.querySelector("#pic-legend-info");
+        var pnxInfo = p.querySelector("#pic-legend-info");
         if (pnxInfo) {
             pnxInfo.classList.remove("pnx-hidden");
         }
@@ -1840,14 +1842,30 @@ class Panoramax extends Control {
             return;
         }
 
-        const host = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
-        if (!host) {
+        const container = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
+        if (!container) {
             logger.warn("Panoramax picture legend is not available");
             return;
         }
 
+        var p = container.shadowRoot || container;
         // TODO modifier le contenu du widget de légende des photos, 
         // pour n'afficher que les informations pertinentes pour notre usage
+
+        var address = container._addr;
+        var caption = container._caption;
+        // {
+        //     "address": "Avenue Blaise Pascal, Champs-sur-Marne",
+        //     "caption": {
+        //         "date": "2025-01-14T14:25:14.000Z",
+        //         "tz": "+01:00",
+        //         "producer": [
+        //             "overflorian"
+        //         ],
+        //         "license": "<a href=\"https://www.etalab.gouv.fr/licence-ouverte-open-licence/\" title=\"Voir la description complète de la licence\" target=\"_blank\">etalab-2.0</a>"
+        //     }
+        // }
+        console.debug("Panoramax picture legend content", { address, caption });
     }
 
     // ################################################################### //
