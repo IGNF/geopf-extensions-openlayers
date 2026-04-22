@@ -472,8 +472,16 @@ class IGNSearchService extends AbstractSearchService {
             onSuccess : this._onSuccessSearch.bind(this),
             onFailure : this._onFailureSearch.bind(this, location),
         });
-        // on sauvegarde le localisant
-        this._currentGeocodingLocation = label;
+
+        // HACK on retire les deux caractère manquant pour les communes avec des noms courts (ex. "By") 
+        // pour éviter que le service de géocodage IGN (limité à 3 caractères) ne les ignore et ne renvoie aucun résultat
+        // Ici on modifie la chaîne recherchée qui est utilisée pour l'affichage de l'info-bulle
+        if (label.includes("**")) {
+            this._currentGeocodingLocation = label.replace("**", "");
+        } else {
+            // on sauvegarde le localisant
+            this._currentGeocodingLocation = label;
+        }
     }
 
 

@@ -17,13 +17,13 @@ __DATE__
 
 * 🔨 [Changed]
 
-- perf: écoute évènement moveend sur map au lieu de change:resolution sur view
-
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - Interface(widgets) : interfaçage du paramètre serverUrl pour les widgets iti/iso/reversegeocode/mouseposition
   
 * 🔒 [Security]
 
