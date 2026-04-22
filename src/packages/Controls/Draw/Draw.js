@@ -350,7 +350,7 @@ class Draw extends ToggleContent {
             try {
                 this.select.clear();
             } catch {
-                const features = this.getFeatures().getArray();
+                const features = this.select.getFeatures().getArray();
                 this.select.getFeatures().clear();
                 this.select.dispatchEvent(new SelectEvent("select", [], features, undefined));
                 for (const property in this.select.featureLayerAssociation_) {
