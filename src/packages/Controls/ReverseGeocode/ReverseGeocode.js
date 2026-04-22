@@ -1072,6 +1072,7 @@ class ReverseGeocode extends Control {
         var bOnSuccess = !!(reverseGeocodeOptions.onSuccess !== null && typeof reverseGeocodeOptions.onSuccess === "function");
 
         var requestOptions = {
+            serverUrl : reverseGeocodeOptions.serverUrl,
             apiKey : reverseGeocodeOptions.apiKey || this.options.apiKey,
             ssl : this.options.ssl,
             position : this._requestPosition,
