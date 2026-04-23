@@ -23,6 +23,8 @@ import {
     applyStyle
 } from "ol-mapbox-style";
 
+import "./PictureLegendWidget";
+
 // lib external
 import { subMonths } from "date-fns";
 
@@ -458,7 +460,6 @@ class Panoramax extends Control {
             viewer : {
                 "endpoint" : "https://explore.panoramax.fr/api",
                 "widgets" : [
-                    "btnBack",
                     "btnClose",
                     "btnZoom",
                     "btnFullscreen",
@@ -714,6 +715,7 @@ class Panoramax extends Control {
 
         // container pour le panneau du dialogue du viewer
         var widgetPanelViewer = this.panelPanoramaxViewerContainer = this._createWidgetPanelViewerElement(this.options.panel);
+        this.preventPointerMoveOnMap(this.panelPanoramaxViewerContainer);
         var widgetPanelViewerDiv = this._createWidgetPanelViewerDivElement();
         widgetPanelViewer.appendChild(widgetPanelViewerDiv);
 
@@ -892,7 +894,7 @@ class Panoramax extends Control {
             };
         };
 
-        return debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 20);
+        return debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 10);
     }
 
     /**
@@ -996,6 +998,18 @@ class Panoramax extends Control {
         if (mapTarget) {
             mapTarget.style.cursor = "";
         }
+    }
+
+    preventPointerMoveOnMap (elem) {
+        elem.addEventListener("pointermove", this.stopImmediatePropagation);
+    }
+
+    allowPointerMoveOnMap (elem) {
+        elem.removeEventListener("pointermove", this.stopImmediatePropagation);
+    }
+
+    stopImmediatePropagation (e) {
+        e.stopImmediatePropagation();
     }
 
     // ################################################################### //
@@ -1463,10 +1477,6 @@ class Panoramax extends Control {
                 if (widgets.includes("btnClose")) {
                     this.addWidget(this.createWidgetBtnClose(), photoViewer);
                 }
-                // Button back
-                if (widgets.includes("btnBack")) {
-                    this.addWidget(this.createWidgetBtnBack(), photoViewer);
-                }
                 // Button Zoom
                 if (widgets.includes("btnZoom")) {
                     this.addWidget(this.createWidgetBtnZoom(), photoViewer);
@@ -1530,8 +1540,8 @@ class Panoramax extends Control {
             }
         }
         // FIXME pas le meilleur endroit pour cacher le widget des métadonnées...
-        this.hideWidgetPictureMetadata();
-        this.modifyWidgetPictureLegendContent();
+        // this.hideWidgetPictureMetadata();
+        // this.modifyWidgetPictureLegendContent();
         
         this.showPhotoViewer();
         this.hideButtonsPanel();
@@ -1709,12 +1719,12 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du composant de légende des photos.
      */
     createWidgetCmpPictureLegend () {
-        var pnxPictureLegend = document.createElement("pnx-picture-legend");
-        pnxPictureLegend.className = "pnx-photo-viewer-picture-legend";
-        // TODO dsfr
-        // pnxPictureLegend.classList.add("gpf-panel"); 
+        var pnxPictureLegend = document.createElement("gpf-picture-legend-widget");
+        //var pnxPictureLegend = document.createElement("pnx-picture-legend");
         pnxPictureLegend.setAttribute("slot", "top-left");
-        pnxPictureLegend.setAttribute("collapsable", "false");
+        pnxPictureLegend.addEventListener("close", () => {
+            this.onClickPnxViewerWidgetBack();
+        });
         return pnxPictureLegend;
 
         // var pnxMiniPictureLegend = document.createElement("pnx-mini-picture-legend");
@@ -1898,9 +1908,7 @@ class Panoramax extends Control {
             });
             map.addOverlay(this.previewMarkerOverlay);
             // empêche les events sur la couche Panoramax pendant que la preview est ouverte
-            markerElement.addEventListener("pointermove", (evt) => {
-                evt.stopImmediatePropagation();
-            });
+            this.preventPointerMoveOnMap(markerElement);
         }
 
         this.previewMarkerOverlay.setPosition(position);
@@ -1937,9 +1945,7 @@ class Panoramax extends Control {
             });
             map.addOverlay(this.previewPopupOverlay);
             // empêche les events sur la couche Panoramax pendant que la preview est ouverte
-            this.previewPopupElement.addEventListener("pointermove", (evt) => {
-                evt.stopImmediatePropagation();
-            });
+            this.preventPointerMoveOnMap(this.previewPopupElement);
         }
 
         this.previewPopupOverlay.setPosition(position);

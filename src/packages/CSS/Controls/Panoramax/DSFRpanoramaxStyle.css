@@ -70,7 +70,10 @@
 
 /* panel buttons window */
 .pnx-buttons-window-panel {}
-.pnx-buttons-panel__body {}
+.pnx-buttons-panel__body {
+    background: transparent;
+    overflow: initial;
+}
 .pnx-buttons-panel__header > .gpf-btn-icon-close {
     top: 0px;
 }
@@ -166,18 +169,6 @@ pnx-photo-viewer pnx-cornered-grid::part(corner-top-right) {
 }
 .pnx-photo-viewer-fullscreen-button {}
 .pnx-photo-viewer-back-button {}
-.pnx-photo-viewer-picture-legend {
-    /* position: absolute; */
-    box-sizing: border-box;
-    width: 450px;
-    min-width: unset;
-    max-width: 450px;
-    border-radius: 4px;
-    color: var(--text-default-grey);
-    background-color: var(--background-default-grey);
-    box-shadow: var(--raised-shadow);
-    transition: opacity 0.2s 0.1s;
-}
 
 /* panel viewer window */
 .pnx-visualization-window-panel {}
@@ -243,6 +234,7 @@ pnx-photo-viewer pnx-cornered-grid::part(corner-top-right) {
 }
 
 /* buttons */
+
 ::part(btn-group) {
     width: 48px;
 }
@@ -268,6 +260,17 @@ pnx-photo-viewer pnx-cornered-grid::part(corner-top-right) {
 .pnx-btn-svg {
     width: 24px;
     height: 24px;
+}
+
+/* menu boutons toggable */
+::part(menu) {
+    position: absolute !important;
+    top: 100% !important;
+    border-radius: 4px;
+    color: var(--text-default-grey);
+    background-color: var(--background-default-grey);
+    border: none;
+    box-shadow: var(--raised-shadow);
 }
 
 /* popup */

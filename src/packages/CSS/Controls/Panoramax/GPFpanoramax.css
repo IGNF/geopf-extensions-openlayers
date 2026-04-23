@@ -24,7 +24,7 @@ button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] ~ dialog[id^="GPpanoram
 dialog[id^="GPpanoramaxPanelButtons-"] {
     position: absolute;
     left: 34px;
-    bottom: 0px !important;
+    bottom: 2px !important;
     top: unset !important;  /* neutralise la règle top:0px du fr-modal DSFR */
     height: auto !important;
 }

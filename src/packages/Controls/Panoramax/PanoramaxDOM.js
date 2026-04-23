@@ -52,19 +52,11 @@ var PanoramaxDOM = {
         button.setAttribute("type", "button");
 
         // Close all results and panels when minimizing the widget
-        if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                var status = (button.getAttribute("aria-pressed") === "true");
-                button.setAttribute("aria-pressed", !status);
-                self.onShowPanoramaxClick(e);
-            });
-        } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                var status = (button.getAttribute("aria-pressed") === "true");
-                button.setAttribute("aria-pressed", !status);
-                self.onShowPanoramaxClick(e);
-            });
-        }
+        button.addEventListener("click", function (e) {
+            var status = (button.getAttribute("aria-pressed") === "true");
+            button.setAttribute("aria-pressed", !status);
+            self.onShowPanoramaxClick(e);
+        });
 
         return button;
     },
@@ -122,15 +114,9 @@ var PanoramaxDOM = {
         btnReturn.title = "Retour au panneau de contrôle";
 
         // Link panel return / visibility checkbox
-        if (btnReturn.addEventListener) {
-            btnReturn.addEventListener("click", function (e) {
-                self.onReturnPanoramaxClick(e);
-            }, false);
-        } else if (btnReturn.attachEvent) {
-            btnReturn.attachEvent("onclick", function (e) {
-                self.onReturnPanoramaxClick(e);
-            });
-        }
+        btnReturn.addEventListener("click", function (e) {
+            self.onReturnPanoramaxClick(e);
+        }, false);
 
         var span = document.createElement("span");
         span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
@@ -154,15 +140,9 @@ var PanoramaxDOM = {
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function (e) {
-                self.onClosePanoramaxClick(e);
-            }, false);
-        } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function (e) {
-                self.onClosePanoramaxClick(e);
-            });
-        }
+        btnClose.addEventListener("click", function (e) {
+            self.onClosePanoramaxClick(e);
+        }, false);
 
         var span = document.createElement("span");
         span.className = "GPelementHidden gpf-hidden";
@@ -203,19 +183,11 @@ var PanoramaxDOM = {
         button.setAttribute("type", "button");
         button.textContent = "Options";
 
-        if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                var status = (e.target.getAttribute("aria-pressed") === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                self.onOpenPanoramaxOptionsClick(e);
-            });
-        } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                self.onOpenPanoramaxOptionsClick(e);
-            });
-        }
+        button.addEventListener("click", function (e) {
+            var status = (e.target.getAttribute("aria-pressed") === "true");
+            e.target.setAttribute("aria-pressed", !status);
+            self.onOpenPanoramaxOptionsClick(e);
+        });
         
         return button;
     },
@@ -267,15 +239,9 @@ var PanoramaxDOM = {
         input.checked = active;
         input.setAttribute("aria-describedby", messages.id);
 
-        if (input.addEventListener) {
-            input.addEventListener("click", function (e) {
-                self.onToggleChoiceHoverPanoramaxClick(e);
-            });
-        } else if (input.attachEvent) {
-            input.attachEvent("onclick", function (e) {
-                self.onToggleChoiceHoverPanoramaxClick(e);
-            });
-        }
+        input.addEventListener("click", function (e) {
+            self.onToggleChoiceHoverPanoramaxClick(e);
+        });
 
         var label = document.createElement("label");
         label.id = this._addUID("GPpanoramaxToggleLabel");
@@ -333,15 +299,9 @@ var PanoramaxDOM = {
             select.appendChild(option);
         }
 
-        if (select.addEventListener) {
-            select.addEventListener("change", function (e) {
-                self.onSelectPanoramaxRenderClick(e);
-            });
-        } else if (select.attachEvent) {
-            select.attachEvent("onchange", function (e) {
-                self.onSelectPanoramaxRenderClick(e);
-            });
-        }
+        select.addEventListener("change", function (e) {
+            self.onSelectPanoramaxRenderClick(e);
+        });
 
         container.appendChild(label);
         container.appendChild(select);
@@ -368,15 +328,9 @@ var PanoramaxDOM = {
         input.checked = active;
         input.setAttribute("aria-describedby", messages.id);
 
-        if (input.addEventListener) {
-            input.addEventListener("click", function (e) {
-                self.onToggleChoiceBackgroundPanoramaxClick(e);
-            });
-        } else if (input.attachEvent) {
-            input.attachEvent("onclick", function (e) {
-                self.onToggleChoiceBackgroundPanoramaxClick(e);
-            });
-        }
+        input.addEventListener("click", function (e) {
+            self.onToggleChoiceBackgroundPanoramaxClick(e);
+        });
 
         var label = document.createElement("label");
         label.id = this._addUID("GPpanoramaxToggleBackgroundLabel");
@@ -430,15 +384,9 @@ var PanoramaxDOM = {
             panel.appendChild(typeGroup);
         }
         
-        if (panel.addEventListener) {
-            panel.addEventListener("click", function (e) {
-                e.stopPropagation();
-            });
-        } else if (panel.attachEvent) {
-            panel.attachEvent("onclick", function (e) {
-                e.stopPropagation();
-            });
-        }
+        panel.addEventListener("click", function (e) {
+            e.stopPropagation();
+        });
 
         // container pour des boutons
         var div = document.createElement("div");
@@ -461,20 +409,12 @@ var PanoramaxDOM = {
         button.setAttribute("type", "button");
         button.textContent = opts.label;
 
-        if (button.addEventListener) {
-            button.addEventListener("click", function (e) {
-                var status = (e.target.getAttribute("aria-pressed") === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                self.onResetPanoramaxFiltersClick(e);
-            });
-        } else if (button.attachEvent) {
-            button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
-                self.onResetPanoramaxFiltersClick(e);
-            });
-        }
-        
+        button.addEventListener("click", function (e) {
+            var status = (e.target.getAttribute("aria-pressed") === "true");
+            e.target.setAttribute("aria-pressed", !status);
+            self.onResetPanoramaxFiltersClick(e);
+        });
+
         return button;
     },
 
