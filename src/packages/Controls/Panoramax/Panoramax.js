@@ -13,6 +13,7 @@ import Draggable from "../../Utils/Draggable";
 
 // DOM
 import PanoramaxDOM from "./PanoramaxDOM";
+import "./PnxMiniMapWidget";
 
 // lib ol
 import Overlay from "ol/Overlay";
@@ -1727,7 +1728,12 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du composant de minimap.
      */
     createWidgetCmpMinimap () {
-        // TODO Créer un composant : mise en place du plugin PSV Plan2Plugin !
+        var minimap = document.createElement("pnx-mini-map");
+        minimap.className = "pnx-photo-viewer-mini-map";
+        minimap.setAttribute("slot", "bottom-left");
+        minimap.map = this.getMap();
+        minimap.options = {}; // TODO options de la minimap
+        return minimap;
     }
 
     /**

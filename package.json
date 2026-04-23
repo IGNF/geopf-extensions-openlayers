@@ -56,6 +56,7 @@
     "dompurify": "^3.2.6",
     "eventbusjs": "0.2.0",
     "geoportal-access-lib": "3.4.6",
+    "lit": "^3.2.1",
     "loglevel": "^1.9.1",
     "marked": "^16.2.1",
     "ol": "^10.8.0",
