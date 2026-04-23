@@ -19,6 +19,7 @@ import { createDefaultStyle } from "ol/style/flat";
 import { asArray, asString } from "ol/color";
 import Dialog from "../Toggle/Dialog";
 import ModifyingInteraction from "../../Interactions/Modifying";
+import { SelectEvent } from "ol/interaction/Select";
 
 /**
  * @typedef {Object} DrawOptions
@@ -290,8 +291,9 @@ class Draw extends ToggleContent {
                 onOpen : this.onOpenStyleDialog.bind(this),
                 onClose : function () {
                     // Déselectionne la sélection courante
-                    this.select.getFeatures().clear();
-                    this.select.dispatchEvent("select");
+                    const features = [...carte.getSelect().getFeatures().getArray()]
+                    this.getSelect().getFeatures().clear();
+                    this.getSelect().dispatchEvent(new SelectEvent("select", [], [features], undefined));
                 },
             });
         } else if (options.style instanceof Dialog) {
