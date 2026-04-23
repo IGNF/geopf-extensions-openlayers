@@ -23,8 +23,7 @@
     "publish": "node build/release/package.js",
     "build": "npm run build:bundle && npm run build:modules",
     "build:bundle": "npx rimraf dist/bundle && webpack --config build/webpack/bundle.webpack.config --mode=production",
-    "build:modules": "npx rimraf dist/modules && webpack --config build/webpack/modules.webpack.config --mode=production",
-    "build:vendor:panoramax": "webpack --config build/webpack/photoviewer.webpack.config.js --mode=production"
+    "build:modules": "npx rimraf dist/modules && webpack --config build/webpack/modules.webpack.config --mode=production"
   },
   "repository": {
     "type": "git",
@@ -43,10 +42,7 @@
   },
   "homepage": "https://github.com/IGNF/geopf-extensions-openlayers#readme",
   "peerDependencies": {
-    "@panoramax/web-viewer": "^4.4.0-develop-d8b38e70",
-    "@photo-sphere-viewer/compass-plugin": "^5.14.1",
-    "@photo-sphere-viewer/plan-plugin": "^5.14.1",
-    "@photo-sphere-viewer/plan2-plugin": "./photo-sphere-viewer-plan2-plugin-0.0.0.tgz"
+    "@panoramax/web-viewer": "^4.4.0"
   },
   "dependencies": {
     "@gouvfr/dsfr": "^1.13.1",
