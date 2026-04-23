@@ -1,0 +1,112 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+        <link rel="stylesheet" href="{{ resources }}/vendor/panoramax/v4.4.0/photoviewer.css" />
+        <script src="{{ resources }}/vendor/panoramax/v4.4.0/photoviewer.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Panoramax</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100vw;
+                height: calc(100vh - 200px);
+                background-image:url("{{ resources }}/geoportail-waiting.gif");
+                background-position:center center;
+                background-repeat:no-repeat;
+            }
+
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du widget Panoramax, avec les options par défaut</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+    <script>
+        if (window.Gp) {
+            localStorage.setItem("loglevel", "debug");
+            localStorage.setItem("loglevel:panoramax", "debug");
+            // activation des loggers
+            Gp.Logger.enableAll();
+        }
+        var map;
+        var panoramax;
+
+        var createMap = function () {
+            document.getElementById('map').style.backgroundImage = 'none';
+
+            // Création de la map
+            map = new ol.Map({
+                target : "map",
+                view : new ol.View({
+                    center : [288074.8449901076, 6247982.515792289],
+                    zoom : 18
+                })
+            });
+
+            var gpMaps = new ol.layer.GeoportalWMTS({
+                layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+            });
+            map.addLayer(gpMaps);
+
+            // Ajout du contrôle de gestion  des couches
+            var layerSwitcher = new ol.control.LayerSwitcher({
+                options : {
+                    collapsed: true,
+                    position: "top-left",
+                    panel: true,
+                    counter: true
+                }
+            });
+            map.addControl(layerSwitcher);
+
+            var catalog = new ol.control.Catalog({
+                position: "top-left",
+                collapsed : true
+            });
+            map.addControl(catalog);
+
+            // Ajout du contrôle Panoramax
+            var options = {
+                collapsed: true,
+                panel : true,
+                visualizationWindow : {
+                    size : "fullscreen-map"
+                }
+            };
+            panoramax = new ol.control.Panoramax(options);
+            // Gestion de l'événement d'ouverture du formulaire de Panoramax
+            // mais, une seule fois !
+            panoramax.once("pnx:opened", function () {
+                console.log("Panoramax event opened !");
+            });
+            map.addControl(panoramax);
+        };
+        Gp.Services.getConfig({
+            customConfigFile : "{{ configurl }}",
+            callbackSuffix : "",
+            // apiKey: "{{ apikey }}",
+            timeOut : 20000,
+            onSuccess : createMap,
+            onFailure : (e) => {
+                console.error(e);
+            }
+        });
+    </script>
+{{/content}}
+{{/extend}}

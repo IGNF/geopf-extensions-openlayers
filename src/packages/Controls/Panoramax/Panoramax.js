@@ -1,7 +1,5 @@
 // import CSS
 import "../../CSS/Controls/Panoramax/GPFpanoramax.css";
-// import "@photo-sphere-viewer/compass-plugin/index.css";
-// import "@photo-sphere-viewer/plan2-plugin/index.css";
 
 // import OpenLayers
 import Control from "../Control";
@@ -23,11 +21,6 @@ import {
     MapboxVectorLayer,
     applyStyle
 } from "ol-mapbox-style";
-
-// lib panoramax + plugin PSV plan2 (MiniMap pour OpenLayers)
-//  import "@panoramax/web-viewer/build/photoviewer";
-//  import { Plan2Plugin } from "@photo-sphere-viewer/plan2-plugin";
-//  import { CompassPlugin } from "@photo-sphere-viewer/compass-plugin";
 
 // lib external
 import { subMonths } from "date-fns";
@@ -467,8 +460,8 @@ class Panoramax extends Control {
                     "btnBack",
                     "btnClose",
                     "btnZoom",
-                    "btnFullscreen", // TODO widget
-                    "cmpPictureLegend",
+                    "btnFullscreen",
+                    "cmpPictureLegend", // TODO widget
                     "cmpMenuActions", // TODO widget
                     "cmpMinimap", // TODO widget
                 ],
