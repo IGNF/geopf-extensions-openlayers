@@ -291,7 +291,7 @@ class Draw extends ToggleContent {
                 onOpen : this.onOpenStyleDialog.bind(this),
                 onClose : function () {
                     // Déselectionne la sélection courante
-                    const features = [...carte.getSelect().getFeatures().getArray()]
+                    const features = [...this.getSelect().getFeatures().getArray()];
                     this.getSelect().getFeatures().clear();
                     this.getSelect().dispatchEvent(new SelectEvent("select", [], [features], undefined));
                 },

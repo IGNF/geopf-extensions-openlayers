@@ -15,6 +15,11 @@
         > *:not(.input-style__options-container-header) {
           padding: 0;
         }
+
+        > button {
+          display: flex;
+          justify-content: center;
+        }
       }
     }
   }
