@@ -1742,7 +1742,12 @@ class Panoramax extends Control {
         minimap.className = "pnx-photo-viewer-mini-map";
         minimap.setAttribute("slot", "bottom-left");
         minimap.map = this.getMap();
-        minimap.options = {}; // TODO options de la minimap
+        minimap.options = {
+            layers : [
+                this.backgroundPanoramax, // FIXME si elle est instanciée !?
+                this.layerPanoramax
+            ].filter(Boolean)
+        };
         return minimap;
     }
 
