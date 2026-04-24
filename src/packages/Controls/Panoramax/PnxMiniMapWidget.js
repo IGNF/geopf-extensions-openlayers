@@ -2,14 +2,6 @@ import GeoportalOverviewMap from "../OverviewMap/GeoportalOverviewMap";
 import { LitElement, html } from "lit";
 import View from "ol/View";
 
-class EmbeddedGeoportalOverviewMap extends GeoportalOverviewMap {
-
-    _createContainerPosition (map) {
-        this.container = map.getOverlayContainerStopEvent();
-    }
-
-}
-
 /**
  * Webcomponent Panoramax affichant le controle GeoportalOverviewMap (DSFR).
  */
@@ -206,6 +198,7 @@ class MiniMap extends LitElement {
 
         var options = Object.assign({}, this._getOptionsFromAttribute(), this._options);
         var configuredLayers = Array.isArray(options.layers) ? options.layers.slice() : [];
+        
         options.target = this._container;
 
         options.layers = configuredLayers.filter((layer) => {
@@ -227,7 +220,7 @@ class MiniMap extends LitElement {
             });
         }
 
-        this._overviewControl = new EmbeddedGeoportalOverviewMap(options);
+        this._overviewControl = new GeoportalOverviewMap(options);
         this._map.addControl(this._overviewControl);
         this._applyMiniMapSize();
         this._onViewSync();

@@ -463,9 +463,8 @@ class Panoramax extends Control {
                     "btnClose",
                     "btnZoom",
                     "btnFullscreen",
-                    "cmpPictureLegend", // TODO widget
-                    "cmpMenuActions", // TODO widget
-                    "cmpMinimap", // TODO widget
+                    "cmpPictureLegend",
+                    "cmpMinimap",
                 ],
                 "pnxOptions" : { // TODO opts psv ?
                     "class" : "",
@@ -1161,42 +1160,27 @@ class Panoramax extends Control {
      */
     async waitForMapboxVectorLayerReady (layer) {
         return new Promise((resolve, reject) => {
-            // on vérifie que la source de la couche est prête avant de continuer
             if (!layer) {
                 reject(new Error("Layer is not defined"));
                 return;
             }
 
             var source = layer.getSource && layer.getSource();
-            if (!source) {
-                reject(new Error("Layer source is not available"));
-                return;
-            }
-
-            var state = source.getState && source.getState();
-            if (state === "ready") {
+            if (source && source.getState && source.getState() === "ready") {
                 resolve(layer);
                 return;
             }
-            if (state === "error") {
+
+            if (source && source.getState && source.getState() === "error") {
                 reject(new Error("Error loading layer source"));
                 return;
             }
 
-            var onSourceChange = () => {
-                var nextState = source.getState && source.getState();
-                if (nextState === "ready") {
-                    source.un("change", onSourceChange);
-                    resolve(layer);
-                } else if (nextState === "error") {
-                    source.un("change", onSourceChange);
-                    reject(new Error("Error loading layer source"));
-                }
-            };
+            layer.once("sourceready", () => {
+                resolve(layer);
+            });
 
-            source.on("change", onSourceChange);
             layer.once("error", (evt) => {
-                source.un("change", onSourceChange);
                 reject(evt && evt.error ? evt.error : new Error("Error loading layer style"));
             });
         });
@@ -1345,8 +1329,8 @@ class Panoramax extends Control {
             this.backgroundPanoramax = layer;
             this.backgroundPanoramax.set("title", opts.name);
             if (this.layerPanoramax) {
-                const baseZIndex = this.layerPanoramax.getZIndex() ?? 0;  
-                this.backgroundPanoramax.setZIndex(baseZIndex - 1);  
+                const baseZIndex = this.layerPanoramax.getZIndex() ?? 0;
+                this.backgroundPanoramax.setZIndex(baseZIndex + 1);  
             }
             return layer;
         } catch (err) {
@@ -1407,7 +1391,8 @@ class Panoramax extends Control {
         return new Promise((resolve, reject) => {
             logger.debug("initPhotoViewer");
             // INFO
-            // par défaut, la fenêtre de visualisation est masquée, elle s'affiche au clic sur une image
+            // par défaut, la fenêtre de visualisation est masquée,
+            // elle s'affiche au clic sur une image
             if (!self.photoViewerPanoramax) {
                 self.photoViewerPanoramax = self.createPhotoViewer();
                 self.photoViewerPanoramax.onceReady()
@@ -1481,7 +1466,7 @@ class Panoramax extends Control {
                 if (widgets.includes("btnZoom")) {
                     this.addWidget(this.createWidgetBtnZoom(), photoViewer);
                 }
-                // Button Fullscreen (TODO)
+                // Button Fullscreen
                 if (widgets.includes("btnFullscreen")) {
                     this.addWidget(this.createWidgetBtnFullScreen(), photoViewer);
                 }
@@ -1489,13 +1474,9 @@ class Panoramax extends Control {
                 if (widgets.includes("cmpPictureLegend")) {
                     this.addWidget(this.createWidgetCmpPictureLegend(), photoViewer);
                 }
-                // Component Minimap (TODO)
+                // Component Minimap
                 if (widgets.includes("cmpMinimap")) {
                     this.addWidget(this.createWidgetCmpMinimap(), photoViewer);
-                }
-                // Component Menu Actions (TODO)
-                if (widgets.includes("cmpMenuActions")) {
-                    this.addWidget(this.createWidgetCmpMenuActions(), photoViewer);
                 }
             }
   
@@ -1539,9 +1520,6 @@ class Panoramax extends Control {
                 this.photoViewerPanoramax.setAttribute("picture", pictureId);
             }
         }
-        // FIXME pas le meilleur endroit pour cacher le widget des métadonnées...
-        // this.hideWidgetPictureMetadata();
-        // this.modifyWidgetPictureLegendContent();
         
         this.showPhotoViewer();
         this.hideButtonsPanel();
@@ -1589,41 +1567,6 @@ class Panoramax extends Control {
             return;
         }
         container.appendChild(widget);
-    }
-
-    /**
-     * Crée un bouton de retour personnalisé pour le viewer de photos de Panoramax.
-     * @returns {HTMLElement} Élément du bouton de retour.
-     */
-    createWidgetBtnBack () {
-        // svg DSFR (fr-icon-arrow-left-line)
-        var svg = `
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            focusable="false"
-            class="pnx-btn-svg"
-            role="img"
-            viewBox="0 0 24 24"
-        >
-            <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M7.828 11H20V13H7.828L13.192 18.364L11.778 19.778L4 12L11.778 4.22205L13.192 5.63605L7.828 11Z" />
-        </svg>`;
-        // Button back
-        var buttonBack = document.createElement("pnx-button");
-        buttonBack.className = "pnx-photo-viewer-back-button";
-        // TODO dsfr
-        // buttonBack.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
-        // buttonBack.classList.add("icon--ri", "icon--ri--close-line");
-        // buttonBack.classList.add("fr-btn", "fr-btn--tertiary");
-        buttonBack.setAttribute("slot", "top-left");
-        buttonBack.setAttribute("kind", "superflat");
-        buttonBack.setAttribute("size", "md");
-        buttonBack.title = "Retour";
-        buttonBack.innerHTML = svg;
-        buttonBack.addEventListener("click", () => {
-            this.onClickPnxViewerWidgetBack();
-        });
-        return buttonBack;
     }
 
     /**
@@ -1726,11 +1669,6 @@ class Panoramax extends Control {
             this.onClickPnxViewerWidgetBack();
         });
         return pnxPictureLegend;
-
-        // var pnxMiniPictureLegend = document.createElement("pnx-mini-picture-legend");
-        // pnxMiniPictureLegend.className = "pnx-photo-viewer-mini-picture-legend";
-        // pnxMiniPictureLegend.setAttribute("slot", "top-left");
-        // return pnxMiniPictureLegend;
     }
 
     /**
@@ -1752,20 +1690,8 @@ class Panoramax extends Control {
     }
 
     /**
-     * Crée un composant de menu d'actions personnalisé pour le viewer de photos de Panoramax.
-     * @returns {HTMLElement} Élément du composant de menu d'actions.
-     */
-    createWidgetCmpMenuActions () {
-        // TODO Créer un composant
-        // - pnx-picture-legend-actions
-        // -   pnx-list-group
-    }
-
-    /**
-     * Modifie le positionnement du widget "Annotations switch" du viewer 
+     * Supprime le positionnement du widget "Annotations switch" du viewer 
      * de photos de Panoramax
-     * On ajoute un écouteur d'événement sur le changement d'état du switch.
-     * @returns {HTMLElement|null} Élément du switch d'annotations modifié.
      */
     removeWidgetAnnotationsSwitch () {
         if (!this.photoViewerPanoramax) {
@@ -1809,77 +1735,6 @@ class Panoramax extends Control {
         if (pnxPlayer) {
             pnxPlayer.remove();
         }
-    }
-
-    /**
-     * Masque les métadonnées de la photo dans le widget de légende 
-     * du viewer de photos de Panoramax
-     */
-    hideWidgetPictureMetadata () {
-        if (!this.photoViewerPanoramax) {
-            logger.warn("Panoramax photo viewer is not available");
-            return;
-        }
-
-        const container = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
-        if (!container) {
-            logger.warn("Panoramax picture legend is not available");
-            return;
-        }
-        var p = container.shadowRoot || container;
-        // on masque les métadonnées de la photo, qui ne sont pas pertinentes pour notre usage
-        var pnxPictureMetadata = p.querySelector("pnx-picture-metadata");
-        if (pnxPictureMetadata) {
-            pnxPictureMetadata.style.display = "none";
-        }
-        var pnxCta = p.querySelector("#pic-legend-cta");
-        if (pnxCta) {
-            pnxCta.style.display = "none";
-        }
-        var pnxExpander = p.querySelector("#pic-legend-expand");
-        if (pnxExpander) {
-            pnxExpander.style.display = "none";
-        }
-        var pnxInfo = p.querySelector("#pic-legend-info");
-        if (pnxInfo) {
-            pnxInfo.classList.remove("pnx-hidden");
-        }
-    }
-
-    /**
-     * Modifie le contenu du widget de légende des photos 
-     * du viewer de photos de Panoramax
-     */
-    modifyWidgetPictureLegendContent () {
-        if (!this.photoViewerPanoramax) {
-            logger.warn("Panoramax photo viewer is not available");
-            return;
-        }
-
-        const container = this.photoViewerPanoramax.querySelector("pnx-picture-legend");
-        if (!container) {
-            logger.warn("Panoramax picture legend is not available");
-            return;
-        }
-
-        var p = container.shadowRoot || container;
-        // TODO modifier le contenu du widget de légende des photos, 
-        // pour n'afficher que les informations pertinentes pour notre usage
-
-        var address = container._addr;
-        var caption = container._caption;
-        // {
-        //     "address": "Avenue Blaise Pascal, Champs-sur-Marne",
-        //     "caption": {
-        //         "date": "2025-01-14T14:25:14.000Z",
-        //         "tz": "+01:00",
-        //         "producer": [
-        //             "overflorian"
-        //         ],
-        //         "license": "<a href=\"https://www.etalab.gouv.fr/licence-ouverte-open-licence/\" title=\"Voir la description complète de la licence\" target=\"_blank\">etalab-2.0</a>"
-        //     }
-        // }
-        console.debug("Panoramax picture legend content", { address, caption });
     }
 
     // ################################################################### //
@@ -2395,6 +2250,40 @@ class Panoramax extends Control {
         return mapboxLayers;
     }
 
+    resetAllGroupFilters () {
+        var elements = this.panelPanoramaxOptions.elements;
+        const groups = [
+            "group-filter-dates",
+            "group-filter-periodes",
+            "group-filter-types",
+            "group-filter-renders"
+        ];
+        groups.forEach(group => {
+            this.resetGroupFilter(group);
+        });	
+    }
+
+    resetGroupFilter (group, options = {}) {
+        var silent = options.silent === true;
+        var elements = this.panelPanoramaxOptions.elements;
+        var groupElements = elements[group];
+        if (!groupElements) {
+            return;
+        }
+        Array.from(groupElements).forEach(el => {
+            if (el.type === "input" || el.type === "radio") {
+                el.checked = (el.dataset.default === "true");
+                if (!silent && el.checked) {
+                    el.dispatchEvent(new Event("change", { "bubbles" : true }));
+                }
+            } else if (el.type === "button") {
+                el.setAttribute("aria-pressed", "false");
+            } else if (el.type === "date") {
+                el.value = "";
+            }
+        });
+    }
+
     /**
      * Applique les filtres sélectionnés à la couche Panoramax.
      * 
@@ -2619,30 +2508,7 @@ class Panoramax extends Control {
         var mapboxLayers = this.originalStyleLayerPanoramax.layers;
         this.applyFilters(mapboxLayers)
             .then(() => {
-                var elements = this.panelPanoramaxOptions.elements;
-                const groups = [
-                    "group-filter-dates",
-                    "group-filter-periodes",
-                    "group-filter-types"
-                ];
-                groups.forEach(group => {
-                    var groupElements = elements[group];
-                    if (!groupElements) {
-                        return;
-                    }
-                    Array.from(groupElements).forEach(el => {
-                        if (el.type === "input" || el.type === "radio") {
-                            el.checked = (el.dataset.default === "true");
-                            if (el.checked) {
-                                el.dispatchEvent(new Event("change", { "bubbles" : true }));
-                            }
-                        } else if (el.type === "button") {
-                            el.setAttribute("aria-pressed", "false");
-                        } else if (el.type === "date") {
-                            el.value = "";
-                        }
-                    });
-                });
+                this.resetAllGroupFilters();
             })
             .then(() => {
                 this.dispatchEvent(this.FILTER_INIT_PANORAMAX_EVENT);
@@ -2686,6 +2552,13 @@ class Panoramax extends Control {
                     }
                 });
             })
+            .then(() => {
+                // reset des autres filtres (ex. période, dates, rendu) qui ne sont pas compatibles avec le filtre de type de photo sélectionné
+                // ex. si on sélectionne le type "classique", on réinitialise les autres filtres qui ne sont pas compatibles avec ce type (ex. période "dernier mois", rendu "heatmap", etc.)
+                this.resetGroupFilter("group-filter-periodes", { silent : true });
+                this.resetGroupFilter("group-filter-dates", { silent : true });
+                this.resetGroupFilter("group-filter-render", { silent : true });
+            })
             .catch((err) => {
                 logger.error("Error applying Panoramax type filter", err);
             });
@@ -2718,6 +2591,11 @@ class Panoramax extends Control {
                         mapboxLayers : mapboxLayers
                     }
                 });
+            })
+            .then(() => {
+                // TODO reset des autres filtres 
+                this.resetGroupFilter("group-filter-types", { silent : true });
+                this.resetGroupFilter("group-filter-dates", { silent : true });
             })
             .catch((err) => {
                 logger.error("Error applying Panoramax predefined date filter", err);
@@ -2767,6 +2645,11 @@ class Panoramax extends Control {
                     }
                 });
             })
+            .then(() => {
+                // TODO reset des autres filtres
+                this.resetGroupFilter("group-filter-types", { silent : true });
+                this.resetGroupFilter("group-filter-periodes", { silent : true });
+            })
             .catch((err) => {
                 logger.error("Error applying Panoramax start/end date filter", err);
             });
@@ -2782,7 +2665,11 @@ class Panoramax extends Control {
         logger.debug(e);
         this.options.background.active = !this.options.background.active;
         if (this.options.background.active) {
-            this.setBackground(this.options.background);
+            this.setBackground(this.options.background)
+                .then(() => { logger.log("background layer loaded !"); })
+                .catch((error) => {
+                    console.error(error);
+                });
         } else {
             this.resetBackground();
         }

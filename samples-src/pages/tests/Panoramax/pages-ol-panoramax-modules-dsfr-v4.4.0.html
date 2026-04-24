@@ -9,6 +9,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlGeoportalOverviewMap.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
@@ -81,6 +83,7 @@
             });
             map.addControl(catalog);
 
+
             // Ajout du contrôle Panoramax
             var options = {
                 collapsed: true,
@@ -99,6 +102,12 @@
                 console.log("Panoramax event opened !");
             });
             map.addControl(panoramax);
+
+            var overview = new ol.control.GeoportalOverviewMap({
+                position : "bottom-right",
+                collapsed: true
+            });
+            map.addControl(overview);
         };
         Gp.Services.getConfig({
             customConfigFile : "{{ configurl }}",
