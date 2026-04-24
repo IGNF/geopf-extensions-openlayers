@@ -131,13 +131,16 @@ class TabNav extends Control {
 
     /**
      * Ajoute un item à la navigation.
-     * @param {TabNavItemOptions} option Item à ajouter
+     * @param {TabNavItem|TabNavItemOptions} options Item à ajouter
      */
-    addItem (option) {
-        if (!option) {
+    addItem (options) {
+        if (!options) {
             return;
         }
-        const item = new TabNavItem(option);
+        let item = options;
+        if (!(item instanceof TabNavItem)) {
+            item = new TabNavItem(options);
+        }
         this.items.push(item);
         this.navigationList.appendChild(item.getElement());
         this.contentContainer.appendChild(item.getContent());
@@ -149,21 +152,6 @@ class TabNav extends Control {
      */
     hasNavItem () {
         return !!this.items.length;
-    }
-
-    /**
-     * Gère le clic sur un onglet.
-     * @private
-     * @param {PointerEvent} e Événement de click sur le bouton
-     */
-    _handleClick (e) {
-        const currentLink = this.getCurrentLink();
-
-        if (currentLink === e.target) {
-            return;
-        }
-
-        this.setCurrentLink(e.target);
     }
 
     /**
