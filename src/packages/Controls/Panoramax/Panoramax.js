@@ -460,6 +460,7 @@ class Panoramax extends Control {
             viewer : {
                 "endpoint" : "https://explore.panoramax.fr/api",
                 "widgets" : [
+                    "btnBack",
                     "btnClose",
                     "btnZoom",
                     "btnFullscreen",
@@ -1467,6 +1468,11 @@ class Panoramax extends Control {
             photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
             var widgets = this.options.viewer.widgets && Array.isArray(this.options.viewer.widgets) ? this.options.viewer.widgets : null;
             if (widgets) {
+                // Button back
+                // seulement si le composant PictureLegend est absent !
+                if (widgets.includes("btnBack") && !widgets.includes("cmpPictureLegend")) {
+                    this.addWidget(this.createWidgetBtnBack(), photoViewer);
+                }
                 // Button close
                 if (widgets.includes("btnClose")) {
                     this.addWidget(this.createWidgetBtnClose(), photoViewer);
@@ -1576,6 +1582,41 @@ class Panoramax extends Control {
             return;
         }
         container.appendChild(widget);
+    }
+
+    /**
+     * Crée un bouton de retour personnalisé pour le viewer de photos de Panoramax.
+     * @returns {HTMLElement} Élément du bouton de retour.
+     */
+    createWidgetBtnBack () {
+        // svg DSFR (fr-icon-arrow-left-line)
+        var svg = `
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            class="pnx-btn-svg"
+            role="img"
+            viewBox="0 0 24 24"
+        >
+            <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M7.828 11H20V13H7.828L13.192 18.364L11.778 19.778L4 12L11.778 4.22205L13.192 5.63605L7.828 11Z" />
+        </svg>`;
+        // Button back
+        var buttonBack = document.createElement("pnx-button");
+        buttonBack.className = "pnx-photo-viewer-back-button";
+        // TODO dsfr
+        // buttonBack.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
+        // buttonBack.classList.add("icon--ri", "icon--ri--close-line");
+        // buttonBack.classList.add("fr-btn", "fr-btn--tertiary");
+        buttonBack.setAttribute("slot", "top-left");
+        buttonBack.setAttribute("kind", "superflat");
+        buttonBack.setAttribute("size", "md");
+        buttonBack.title = "Retour";
+        buttonBack.innerHTML = svg;
+        buttonBack.addEventListener("click", () => {
+            this.onClickPnxViewerWidgetBack();
+        });
+        return buttonBack;
     }
 
     /**
