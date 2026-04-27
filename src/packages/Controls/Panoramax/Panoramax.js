@@ -881,7 +881,7 @@ class Panoramax extends Control {
     // ################# privates events / handlers ###################### //
     // ################################################################### //
 
-    onPointerMoveDebounced (e) {
+    onPointerMoveDebounced (handler) {
         const debounce = (func, delay) => {
             let timerId;
     
@@ -893,7 +893,7 @@ class Panoramax extends Control {
             };
         };
 
-        return debounce(this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB], 10);
+        return debounce(handler, 10);
     }
 
     /**
@@ -955,7 +955,7 @@ class Panoramax extends Control {
 
         // hover on map with panoramax layer active
         // display a preview of the panoramic image at the hovered coordinates
-        this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB] = function (e) {
+        const hoverHandler = function (e) {
             if (!self.hover) {
                 return;
             }
@@ -966,7 +966,7 @@ class Panoramax extends Control {
                 layerFilter : (l) => l === self.layerPanoramax,
                 hitTolerance : 5
             };
-            var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature,options);
+            var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature);
             var mapTarget = e.map.getTargetElement();
             if (mapTarget) {
                 mapTarget.style.cursor = feature ? "pointer" : "";
@@ -977,7 +977,8 @@ class Panoramax extends Control {
             }
             self.displayPreview(feature);
         };
-        map.on("pointermove", this.onPointerMoveDebounced());
+        this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB] = this.onPointerMoveDebounced(hoverHandler);
+        map.on("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
     }
 
     /**
@@ -990,7 +991,7 @@ class Panoramax extends Control {
 
         map.un("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
         delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
-        map.un("pointermove", this.onPointerMoveDebounced());
+        map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
         delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
 
         var mapTarget = map.getTargetElement();
@@ -1036,6 +1037,9 @@ class Panoramax extends Control {
         this.resetPreview();
         // - etc.
         this.eventActived = false;
+        if (!this.auto) {
+            this.removeEventsListeners();
+        }
     }
 
     /** @private */
@@ -1135,6 +1139,11 @@ class Panoramax extends Control {
         try {
             if (this.options.group) {
                 this.setLayerGroup();
+            }
+            // - active les interactions sur la carte
+            this.eventActived = true;
+            if (!this.auto) {
+                this.addEventsListeners(this.getMap());
             }
             // - charger la couche de fond
             await this.setBackground(this.options.background);
@@ -2409,10 +2418,6 @@ class Panoramax extends Control {
             this.reset();
         } else {
             this.load()
-                .then(() => {
-                    // activer les interactions de la carte pour la couche panoramax
-                    this.eventActived = true;
-                })
                 .then(() => {
                     /** event triggered when the panoramax panel is opened */
                     this.dispatchEvent(this.OPENED_PANORAMAX_EVENT);
