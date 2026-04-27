@@ -967,7 +967,7 @@ class Panoramax extends Control {
                 layerFilter : (l) => l === self.layerPanoramax,
                 hitTolerance : 5
             };
-            var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature);
+            var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature, options);
             var mapTarget = e.map.getTargetElement();
             if (mapTarget) {
                 mapTarget.style.cursor = feature ? "pointer" : "";
