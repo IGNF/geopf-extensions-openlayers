@@ -1,22 +1,40 @@
 import GeoportalOverviewMap from "../OverviewMap/GeoportalOverviewMap";
 import { LitElement, html } from "lit";
+import Overlay from "ol/Overlay";
 import View from "ol/View";
+
+/**
+ * @typedef {Object} MiniMapOptions
+ * @property {Array<import("ol/layer/Layer").default>} [layers] - Couches à afficher dans la mini-map.
+ * @property {boolean} [collapsed=true] - Indique si la mini-map doit être initialement réduite.
+ * @property {boolean} [collapsible=true] - Indique si la mini-map peut être réduite par l'utilisateur.
+ * @property {import("ol/View").default} [view] - Vue à utiliser pour la mini-map. Si non fournie, une vue par défaut est créée.
+ * @property {number} [width=200] - Largeur de la mini-map en pixels (peut être définie via l'attribut HTML "options" en JSON).
+ * @property {number} [height=150] - Hauteur de la mini-map en pixels (peut être définie via l'attribut HTML "options" en JSON).
+ */
 
 /**
  * Webcomponent Panoramax affichant le controle GeoportalOverviewMap (DSFR).
  */
 class MiniMap extends LitElement {
 
-    constructor () {
+    /**
+     * @constructor
+     * @param {MiniMapOptions} [options={}] - Options de configuration du contrôle de mini-map. 
+     * Ces options sont définies via l'attribut HTML "options" en JSON.
+     */
+    constructor (options = {}) {
         super();
 
         this._map = null;
-        this._options = {};
+        this._options = options && typeof options === "object" ? options : {};
         this._overviewControl = null;
 
         this._isSyncingView = false;
         this._onMainMapMoveEnd = null;
         this._onMiniMapMoveEnd = null;
+
+        this._centerMarkerOverlay = null;
 
         this._container = null;
     }
@@ -28,12 +46,16 @@ class MiniMap extends LitElement {
 
         // les dimensions de la mini-map
         if (!this.style.width) {
-            this.style.width = "200px";
+            this.style.width = (this._options.width ? this._options.width + "px" : "200px");
         }
         if (!this.style.height) {
-            this.style.height = "150px";
+            this.style.height = (this._options.height ? this._options.height + "px" : "150px");
         }
         this.style.display = "block";
+
+        // TODO recuperer les coordonnées de la picture courante pour centrer la mini-map dessus
+        this._parent = this._parent || this.closest("pnx-photo-viewer");
+        console.warn("MiniMap connected to DOM", this._parent);
     }
 
     // Méthode du cycle de vie Web Component :
@@ -56,6 +78,10 @@ class MiniMap extends LitElement {
         this._container = this.querySelector(".pnx-mini-map__container");
         this._renderOverviewMap();
     }
+
+    // ################################################################### //
+    // ########################### setters ############################### //
+    // ################################################################### //
 
     get map () {
         return this._map;
@@ -83,31 +109,63 @@ class MiniMap extends LitElement {
         this._renderOverviewMap();
     }
 
-    _getOptionsFromAttribute () {
-        var raw = this.getAttribute("options");
-        if (!raw) {
-            return {};
+    // ################################################################### //
+    // ######################## marker overlay ########################### //
+    // ################################################################### //
+
+    _initCenterMarkerOverlay () {
+        if (!this._overviewControl || this._centerMarkerOverlay) {
+            return;
         }
 
-        try {
-            var parsed = JSON.parse(raw);
-            return parsed && typeof parsed === "object" ? parsed : {};
-        } catch (e) {
-            return {};
+        var overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
+        if (!overviewMap) {
+            return;
         }
+
+        var miniView = overviewMap.getView && overviewMap.getView();
+        if (!miniView) {
+            return;
+        }
+
+        var markerElement = document.createElement("div");
+        markerElement.className = "pnx-mini-map__center-marker";
+        markerElement.setAttribute("aria-hidden", "true");
+
+        this._centerMarkerOverlay = new Overlay({
+            element : markerElement,
+            positioning : "center-center",
+            stopEvent : false
+        });
+        overviewMap.addOverlay(this._centerMarkerOverlay);
+        this._centerMarkerOverlay.setPosition(miniView.getCenter());
     }
 
-    // FIXME utile !?
-    _applyMiniMapSize () {
-        if (!this._overviewControl) {
+    _updateCenterMarkerOverlayPosition (position) {
+        if (!this._centerMarkerOverlay) {
+            return;
+        }
+
+        this._centerMarkerOverlay.setPosition(position);
+    }
+
+    _removeCenterMarkerOverlay () {
+        if (!this._overviewControl || !this._centerMarkerOverlay) {
+            this._centerMarkerOverlay = null;
             return;
         }
 
         var overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
         if (overviewMap) {
-            overviewMap.updateSize();
+            overviewMap.removeOverlay(this._centerMarkerOverlay);
         }
+
+        this._centerMarkerOverlay = null;
     }
+
+    // ################################################################### //
+    // ########################### view sync ############################# //
+    // ################################################################### //
 
     _onViewSync () {
         if (!this._map || !this._overviewControl) {
@@ -130,7 +188,9 @@ class MiniMap extends LitElement {
                 return;
             }
             this._isSyncingView = true;
-            miniView.setCenter(mainView.getCenter());
+            var center = mainView.getCenter();
+            miniView.setCenter(center);
+            this._updateCenterMarkerOverlayPosition(center);
             this._isSyncingView = false;
         };
 
@@ -139,7 +199,9 @@ class MiniMap extends LitElement {
                 return;
             }
             this._isSyncingView = true;
-            mainView.setCenter(miniView.getCenter());
+            var center = miniView.getCenter();
+            mainView.setCenter(center);
+            this._updateCenterMarkerOverlayPosition(center);
             this._isSyncingView = false;
         };
 
@@ -172,13 +234,31 @@ class MiniMap extends LitElement {
         this._isSyncingView = false;
     }
 
+    // ################################################################### //
+    // ########################### overview map ########################## //
+    // ################################################################### //
+
     _renderOverviewMap () {
         // isConnected : Web Component API property 
         if (!this.isConnected || !this._map || this._overviewControl || !this._container) {
             return;
         }
 
-        var options = Object.assign({}, this._getOptionsFromAttribute(), this._options);
+        const _getOptionsFromAttribute = () => {
+            var raw = this.getAttribute("options");
+            if (!raw) {
+                return {};
+            }
+
+            try {
+                var parsed = JSON.parse(raw);
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (e) {
+                return {};
+            }
+        };
+        
+        var options = Object.assign({}, _getOptionsFromAttribute(), this._options);
         var configuredLayers = Array.isArray(options.layers) ? options.layers.slice() : [];
         
         options.target = this._container;
@@ -203,8 +283,23 @@ class MiniMap extends LitElement {
 
         this._overviewControl = new GeoportalOverviewMap(options);
         this._map.addControl(this._overviewControl);
-        this._applyMiniMapSize();
+        this._initCenterMarkerOverlay(); // FIXME centrer sur la pictureID courrante !
         this._onViewSync();
+    }
+
+    _removeOverviewMap () {
+        this._unViewSync();
+        this._removeCenterMarkerOverlay();
+
+        if (this._overviewControl && this._map) {
+            this._map.removeControl(this._overviewControl);
+        }
+
+        this._overviewControl = null;
+
+        if (this._container) {
+            this._container.innerHTML = "";
+        }
     }
 
     // Méthode du cycle de vie Lit :
@@ -215,6 +310,7 @@ class MiniMap extends LitElement {
                 .pnx-mini-map__container {
                     width: 100%;
                     height: 100%;
+                    position: relative;
                 }
                 .pnx-mini-map__container .ol-overviewmap {
                     width: 100%;
@@ -232,23 +328,22 @@ class MiniMap extends LitElement {
                     height: 48px;
                     padding: unset;
                 }
+                .pnx-mini-map__center-marker {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 14px;
+                    height: 14px;
+                    border: 2px solid #d64f00;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+                    pointer-events: none;
+                    z-index: 2;
+                }
             </style>
             <div class="pnx-mini-map__container"></div>
         `;
-    }
-
-    _removeOverviewMap () {
-        this._unViewSync();
-
-        if (this._overviewControl && this._map) {
-            this._map.removeControl(this._overviewControl);
-        }
-
-        this._overviewControl = null;
-
-        if (this._container) {
-            this._container.innerHTML = "";
-        }
     }
     
 }

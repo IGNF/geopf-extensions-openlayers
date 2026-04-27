@@ -10,6 +10,7 @@ import Utils from "../../Utils/Helper";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
+import GeoportalWMTS from "../../Layers/LayerWMTS";
 
 // DOM
 import PanoramaxDOM from "./PanoramaxDOM";
@@ -1731,9 +1732,13 @@ class Panoramax extends Control {
         minimap.map = this.getMap();
         minimap.options = {
             layers : [
-                this.backgroundPanoramax, // FIXME si elle est instanciée !?
+                new GeoportalWMTS({
+                    layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+                }),
                 this.layerPanoramax
-            ].filter(Boolean)
+            ],
+            width : 220,
+            height : 180
         };
         return minimap;
     }
