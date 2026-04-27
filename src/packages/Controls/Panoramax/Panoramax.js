@@ -1416,9 +1416,8 @@ class Panoramax extends Control {
                     // Suppression "Annotations switch"
                     self.removeWidgetAnnotationsSwitch();
                     // Suppression "Picture legend Drawer"
-                    if (self.options.viewer.widgets && self.options.viewer.widgets.includes("cmpPictureLegend")) {
-                        self.removeWidgetPictureLegendDrawer();
-                    }
+                    // INFO on supprime l'original de Panoramax pour le remplacer par notre propre widget
+                    self.removeWidgetPictureLegendDrawer();
                 });
                 self.photoViewerPanoramax.addEventListener("broken", () => {
                     console.warn("Panoramax photo viewer is broken");
