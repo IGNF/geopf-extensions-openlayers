@@ -26,8 +26,7 @@ class MiniMap extends LitElement {
     connectedCallback () {
         super.connectedCallback();
 
-        // FIXME 
-        // les dimensions de la mini-map ne sont pas appliquées correctement via CSS !?
+        // les dimensions de la mini-map
         if (!this.style.width) {
             this.style.width = "200px";
         }
@@ -98,27 +97,10 @@ class MiniMap extends LitElement {
         }
     }
 
-    // FIXME Conflits de CSS !?
+    // FIXME utile !?
     _applyMiniMapSize () {
-        if (!this._overviewControl || !this._container) {
+        if (!this._overviewControl) {
             return;
-        }
-
-        var controlElement = this._overviewControl.element;
-        if (!controlElement) {
-            return;
-        }
-
-        this._container.style.width = "100%";
-        this._container.style.height = "100%";
-
-        controlElement.style.width = "100%";
-        controlElement.style.height = "100%";
-
-        var mapElement = controlElement.querySelector(".ol-overviewmap-map");
-        if (mapElement) {
-            mapElement.style.width = "100%";
-            mapElement.style.height = "100%";
         }
 
         var overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
@@ -214,8 +196,7 @@ class MiniMap extends LitElement {
         if (options.view === undefined) {
             // FIXME zoom ?
             options.view = new View({
-                zoom : 21,
-                minZoom : 1,
+                minZoom : 16,
                 maxZoom : 21
             });
         }
@@ -229,7 +210,31 @@ class MiniMap extends LitElement {
     // Méthode du cycle de vie Lit :
     // La méthode render() est appelée pour définir le contenu HTML du composant.
     render () {
-        return html`<div class="pnx-mini-map__container"></div>`;
+        return html`
+            <style>
+                .pnx-mini-map__container {
+                    width: 100%;
+                    height: 100%;
+                }
+                .pnx-mini-map__container .ol-overviewmap {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    left: unset;
+                    bottom: unset;
+                }
+                .pnx-mini-map__container .ol-overviewmap .ol-overviewmap-map {
+                    width: 100%;
+                    height: 100%;
+                }
+                .pnx-mini-map__container .ol-overviewmap button {
+                    width: 48px;
+                    height: 48px;
+                    padding: unset;
+                }
+            </style>
+            <div class="pnx-mini-map__container"></div>
+        `;
     }
 
     _removeOverviewMap () {
