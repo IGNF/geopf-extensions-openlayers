@@ -40,6 +40,7 @@ class InseeSearchService extends AbstractSearchService {
             autocomplete : false,
             returnTrueGeometry : true,
             index : "poi",
+            searchOptions : options.searchOptions || {}
         });
 
         this.ignService.on(this.SEARCH_EVENT, this._onSearch.bind(this));
