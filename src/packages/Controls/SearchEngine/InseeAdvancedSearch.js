@@ -60,10 +60,11 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
      * Ajoute les inputs spécifiques au contrôle (surcouche du parent).
      * Crée et configure l'input INSEE.
      * @protected
+     * @param {options} options Options à passer au searchEngineGeocodeIGN
      * @returns {void}
      */
-    addInputs () {
-        super.addInputs();
+    addInputs (options) {
+        super.addInputs(options);
 
         let inseeInput = this.inseeInput = new SearchEngineGeocodeIGN({
             label : "Code INSEE",
@@ -73,6 +74,7 @@ class InseeAdvancedSearch extends AbstractAdvancedSearch {
                 searchOptions : {
                     serviceOptions : {
                         fields : ["postcode"],
+                        serverUrl : (options.searchOptions && options.searchOptions.serverUrl) || {}
                     },
                 },
             })

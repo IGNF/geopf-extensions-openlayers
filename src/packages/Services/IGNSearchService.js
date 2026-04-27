@@ -85,8 +85,8 @@ class IGNSearchService extends AbstractSearchService {
         // configuration avec gestion des options surchargées du service
         if (this.options.searchOptions) {
             if (this.options.searchOptions.serviceOptions) {
-                if (this.options.searchOptions.serviceOptions.url) {
-                    Search.setUrl(this.options.searchOptions.serviceOptions.url);
+                if (this.options.searchOptions.serviceOptions.serverUrl) {
+                    Search.setUrl(this.options.searchOptions.serviceOptions.serverUrl);
                 }
                 if (this.options.searchOptions.serviceOptions.fields) {
                     Search.setFields(this.options.searchOptions.serviceOptions.fields);
@@ -505,25 +505,25 @@ class IGNSearchService extends AbstractSearchService {
 
         var options = {};
         // on recupere les options du service
-        Utils.assign(options, this.options.geocodeOptions.serviceOptions);
+        Utils.assign(options, this.options.searchOptions.serviceOptions);
         // ainsi que la recherche et les callbacks
         Utils.assign(options, settings);
         options.maximumResponses = settings.limit;
         // on redefinie les callbacks si les callbacks de service existent
-        var bOnSuccess = !!(this.options.geocodeOptions.serviceOptions.onSuccess !== null && typeof this.options.geocodeOptions.serviceOptions.onSuccess === "function");
+        var bOnSuccess = !!(this.options.searchOptions.serviceOptions.onSuccess !== null && typeof this.options.searchOptions.serviceOptions.onSuccess === "function");
         if (bOnSuccess) {
             var cbOnSuccess = function (e) {
                 settings.onSuccess.bind(this, e);
-                this.options.geocodeOptions.serviceOptions.onSuccess.bind(this, e);
+                this.options.searchOptions.serviceOptions.onSuccess.bind(this, e);
             };
             options.onSuccess = cbOnSuccess.bind(this);
         }
 
-        var bOnFailure = !!(this.options.geocodeOptions.serviceOptions.onFailure !== null && typeof this.options.geocodeOptions.serviceOptions.onFailure === "function");
+        var bOnFailure = !!(this.options.searchOptions.serviceOptions.onFailure !== null && typeof this.options.searchOptions.serviceOptions.onFailure === "function");
         if (bOnFailure) {
             var cbOnFailure = function (e) {
                 settings.onFailure.bind(this, e);
-                this.options.geocodeOptions.serviceOptions.onFailure.bind(this, e);
+                this.options.searchOptions.serviceOptions.onFailure.bind(this, e);
             };
             options.onFailure = cbOnFailure.bind(this);
         }
