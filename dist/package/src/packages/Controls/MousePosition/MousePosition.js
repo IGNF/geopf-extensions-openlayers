@@ -1152,9 +1152,6 @@ class MousePosition extends Control {
         // on recupere les options du service
         var options = this.options.altitude.serviceOptions || {};
 
-        // éventuelle surcharge de l'adresse du service d'altimétrie
-        var _serverUrl = options.serverUrl;
-
         // gestion du protocole et du timeout
         // le timeout est indispensable sur le protocole JSONP.
         var _protocol = options.protocol || "XHR";
@@ -1238,7 +1235,6 @@ class MousePosition extends Control {
 
         Gp.Services.getAltitude({
             apiKey : _apiKey,
-            serverUrl : _serverUrl,
             protocol : _protocol,
             ssl : _ssl,
             timeOut : _timeout,

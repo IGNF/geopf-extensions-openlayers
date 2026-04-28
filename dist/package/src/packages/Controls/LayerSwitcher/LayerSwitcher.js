@@ -2111,6 +2111,10 @@ class LayerSwitcher extends Control {
         // abonnement/desabonnement aux evenements permettant la conversion en n/b
         var id = e.target.gpLayerId;
         var layer = this._layers[id].layer;
+        if (layer.getLayers && layer.getLayers().getArray().length > 0) {
+            console.warn("Grayscale not implemented for layer groups");
+            return;
+        }
         var source = layer.getSource();
 
         if (!(source instanceof ImageSource || source instanceof TileWMSSource || source instanceof WMTSSource || source instanceof VectorTileSource)) {

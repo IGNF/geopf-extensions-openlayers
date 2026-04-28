@@ -60,7 +60,7 @@ class ElevationPath extends Control {
     * @param {Boolean} [options.active = false] - specify if control should be actived at startup. Default is false.
     * @param {Boolean} [options.ssl = true] - use of ssl or not (default true, service requested using https protocol)
     * @param {Boolean|Object} [options.export = false] - Specify if button "Export" is displayed. For the use of the options of the "Export" control, see {@link packages/Controls/Export/Export.default}
-    * @param {Object} [options.elevationPathOptions = {}] - elevation path service options. See {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~getAltitude Gp.Services.getAltitude()} for available options
+    * @param {Object} [options.elevationOptions = {}] - elevation path service options. See {@link http://ignf.github.io/geoportal-access-lib/latest/jsdoc/module-Services.html#~getAltitude Gp.Services.getAltitude()} for available options
     * @param {Object} [options.layerDescription = {}] - Layer informations to be displayed in LayerSwitcher widget (only if a LayerSwitcher is also added to the map)
     * @param {String} [options.layerDescription.title = "Profil altimétrique"] - Layer title to be displayed in LayerSwitcher
     * @param {String} [options.layerDescription.description = "Mon profil altimétrique"] - Layer description to be displayed in LayerSwitcher
@@ -752,7 +752,7 @@ class ElevationPath extends Control {
             active : false,
             apiKey : null,
             export : false,
-            elevationPathOptions : {
+            elevationOptions : {
                 outputFormat : "json"
             },
             layerDescription : {
@@ -1133,7 +1133,7 @@ class ElevationPath extends Control {
 
             // Si il n'y a pas de surcharge utilisateur de la fonction de recuperation des
             // resultats, on realise l'affichage du panneau
-            if (typeof this.options.elevationPathOptions.onSuccess === "undefined" && this.options.displayProfileOptions.target === null) {
+            if (typeof this.options.elevationOptions.onSuccess === "undefined" && this.options.displayProfileOptions.target === null) {
                 this._panelContainer.style.display = "block";
                 // self._panelContainer.style.visibility = "visible";
             }
@@ -1300,7 +1300,7 @@ class ElevationPath extends Control {
         var options = {};
 
         // on surcharge avec les options de l'utilisateur
-        Utils.mergeParams(options, this.options.elevationPathOptions);
+        Utils.mergeParams(options, this.options.elevationOptions);
 
         // au cas où ...
         Utils.mergeParams(options, {
@@ -1325,8 +1325,8 @@ class ElevationPath extends Control {
         var self = this;
 
         // gestion des callback
-        var bOnFailure = !!(this.options.elevationPathOptions.onFailure !== null && typeof this.options.elevationPathOptions.onFailure === "function"); // cast variable to boolean
-        var bOnSuccess = !!(this.options.elevationPathOptions.onSuccess !== null && typeof this.options.elevationPathOptions.onSuccess === "function");
+        var bOnFailure = !!(this.options.elevationOptions.onFailure !== null && typeof this.options.elevationOptions.onFailure === "function"); // cast variable to boolean
+        var bOnSuccess = !!(this.options.elevationOptions.onSuccess !== null && typeof this.options.elevationOptions.onSuccess === "function");
 
         // callback _requestServiceOnSuccess
         var _requestServiceOnSuccess = function (result) {
@@ -1344,7 +1344,7 @@ class ElevationPath extends Control {
                 self._measureDraw.setActive(true);
             }
             if (bOnSuccess) {
-                self.options.elevationPathOptions.onSuccess.call(self, self.getData());
+                self.options.elevationOptions.onSuccess.call(self, self.getData());
             }
         };
 
@@ -1358,7 +1358,7 @@ class ElevationPath extends Control {
             self._waiting = false;
             self._measureDraw.setActive(true);
             if (bOnFailure) {
-                self.options.elevationPathOptions.onFailure.call(self, error);
+                self.options.elevationOptions.onFailure.call(self, error);
             }
         };
 

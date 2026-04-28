@@ -80,6 +80,7 @@ declare namespace Ol {
         export { ControlList };
         export { ContextMenu };
         export { Reporting };
+        export { Panoramax };
     }
 }
 import GfiUtils from "./Controls/Utils/Gfi";
@@ -129,5 +130,6 @@ import Territories from "./Controls/Territories/Territories";
 import ControlList from "./Controls/ControlList/ControlList";
 import ContextMenu from "./Controls/ContextMenu/ContextMenu";
 import Reporting from "./Controls/Reporting/Reporting";
+import Panoramax from "./Controls/Panoramax/Panoramax";
 export { HelperUtils, LayerUtils, ProxyUtils, ColorUtils, MathUtils, JsonValidatorUtils, Logger, Parser, Register, Ol as olExtended };
 //# sourceMappingURL=bundle.d.ts.map

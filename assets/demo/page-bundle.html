@@ -13,8 +13,12 @@
         <script src="https://ignf.github.io/geoportal-access-lib/latest/dist/GpServices.js"></script>
 
         <!-- Library OpenLayers -->
-        <link rel="stylesheet" href="/geopf-extensions-openlayers/assets/lib/ol@10.3.1/ol.css" />
-        <script src="/geopf-extensions-openlayers/assets/lib/ol@10.3.1/ol.js"></script>
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/assets/lib/ol@10.8.0/ol.css" />
+        <script src="/geopf-extensions-openlayers/assets/lib/ol@10.8.0/ol.js"></script>
+
+        <!-- Librairy Panoramax -->
+        <link rel="stylesheet" href="/geopf-extensions-openlayers/assets/lib/panoramax@4.4.0/photoviewer.css" />
+        <script src="/geopf-extensions-openlayers/assets/lib/panoramax@4.4.0/photoviewer.js"></script>
 
         <!-- Plugins IGN with a thematic by default -->
         <link rel="alternate stylesheet" id="dsfr-1" href="/geopf-extensions-openlayers/assets/css/@gouvfr/dsfr/dist/dsfr.css" />
@@ -124,6 +128,22 @@
                 map.on('loadend', function () {
                   map.getTargetElement().classList.remove('spinner');
                 });
+
+                var panoramax = new ol.control.Panoramax({
+                  collapsed: true,
+                  panel : true,
+                  auto : false,
+                  background : {
+                    active : false
+                  },
+                  visualizationWindow : {
+                      size : "fullscreen-map"
+                  }
+                });
+                panoramax.once("pnx:opened", function () {
+                  console.log("Panoramax event opened !");
+                });
+                map.addControl(panoramax);
 
                 var zoom = new ol.control.GeoportalZoom({
                   position : "top-left"
