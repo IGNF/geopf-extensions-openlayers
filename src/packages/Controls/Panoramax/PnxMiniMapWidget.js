@@ -2,31 +2,39 @@ import GeoportalOverviewMap from "../OverviewMap/GeoportalOverviewMap";
 import { LitElement, html } from "lit";
 import Overlay from "ol/Overlay";
 import View from "ol/View";
+import {
+    transform as olProjTransform,
+} from "ol/proj";
 
 /**
  * @typedef {Object} MiniMapOptions
- * @property {Array<import("ol/layer/Layer").default>} [layers] - Couches à afficher dans la mini-map.
- * @property {boolean} [collapsed=true] - Indique si la mini-map doit être initialement réduite.
- * @property {boolean} [collapsible=true] - Indique si la mini-map peut être réduite par l'utilisateur.
- * @property {import("ol/View").default} [view] - Vue à utiliser pour la mini-map. Si non fournie, une vue par défaut est créée.
- * @property {number} [width=200] - Largeur de la mini-map en pixels (peut être définie via l'attribut HTML "options" en JSON).
- * @property {number} [height=150] - Hauteur de la mini-map en pixels (peut être définie via l'attribut HTML "options" en JSON).
+ * @description Options de configuration pour le contrôle de mini-map.
+ * @property {Object} [options] - Options de configuration du contrôle de mini-map, définies via l'attribut HTML "options" en JSON.
+ * @property {Array<import("ol/layer/Layer").default>} [options.layers] - Couches à afficher dans la mini-map.
+ * @property {boolean} [options.collapsed=true] - Indique si la mini-map doit être initialement réduite.
+ * @property {boolean} [options.collapsible=true] - Indique si la mini-map peut être réduite par l'utilisateur.
+ * @property {import("ol/View").default} [options.view] - Vue à utiliser pour la mini-map. Si non fournie, une vue par défaut est créée.
+ * @property {number} [options.width=200] - Largeur de la mini-map en pixels
+ * @property {number} [options.height=150] - Hauteur de la mini-map en pixels
  */
 
 /**
  * Webcomponent Panoramax affichant le controle GeoportalOverviewMap (DSFR).
+ * @extends {LitElement}
+ * @example
+ * <pnx-mini-map map=map options='{"collapsed": false, "view": {"center": [0, 0], "zoom": 2}}'></pnx-mini-map>
  */
 class MiniMap extends LitElement {
 
     /**
      * @constructor
-     * @param {MiniMapOptions} [options={}] - Options de configuration du contrôle de mini-map. 
-     * Ces options sont définies via l'attribut HTML "options" en JSON.
+     * @param {import("ol/Map").default} [map] - Instance de carte OpenLayers à associer à la mini-map.
+     * @param {MiniMapOptions} [options={}] - Options de configuration du contrôle de mini-map.
      */
-    constructor (options = {}) {
+    constructor (map, options = {}) {
         super();
 
-        this._map = null;
+        this._map = map || null;
         this._options = options && typeof options === "object" ? options : {};
         this._overviewControl = null;
 
@@ -53,9 +61,35 @@ class MiniMap extends LitElement {
         }
         this.style.display = "block";
 
-        // TODO recuperer les coordonnées de la picture courante pour centrer la mini-map dessus
-        this._parent = this._parent || this.closest("pnx-photo-viewer");
-        console.warn("MiniMap connected to DOM", this._parent);
+        // recuperer les coordonnées de la picture courante pour centrer la mini-map dessus
+        customElements.whenDefined("pnx-photo-viewer").then(() => {
+            this._parent = this.closest("pnx-photo-viewer");
+            console.warn("MiniMap connected to DOM", this._parent);
+            this._parent.onceReady()
+                .then(() => {
+                    this._parent.psv.addEventListener("picture-loaded", (e) => {
+                        console.warn("Updating mini-map center to picture position", e);
+                        // Récupérer les coordonnées de l'image (généralement en lat/lon EPSG:4326)
+                        const pictureConfig = e.detail;
+                        
+                        if (pictureConfig && pictureConfig.lon !== undefined && pictureConfig.lat !== undefined) {
+                            let coordinates = [pictureConfig.lon, pictureConfig.lat];
+                            
+                            // Transformer dans la projection de la mini-map si nécessaire
+                            const overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
+                            if (overviewMap) {
+                                const overviewProj = overviewMap.getView().getProjection().getCode();
+                                if (overviewProj !== "EPSG:4326") {
+                                    coordinates = olProjTransform(coordinates, "EPSG:4326", overviewProj);
+                                }
+                            }
+                            
+                            // Mettre à jour la position du marker
+                            this._updateCenterMarkerOverlayPosition(coordinates);
+                        }
+                    });
+                });
+        });
     }
 
     // Méthode du cycle de vie Web Component :
@@ -87,6 +121,10 @@ class MiniMap extends LitElement {
         return this._map;
     }
 
+    /**
+     * Assigne une carte OpenLayers à la mini-map via l'attribut HTML "map" en JSON.
+     * @param {import("ol/Map").default} map - Instance de carte OpenLayers à associer à la mini-map.
+     */
     set map (map) {
         if (this._map === map) {
             return;
@@ -102,6 +140,10 @@ class MiniMap extends LitElement {
         return this._options;
     }
 
+    /**
+     * Assigne des options à la mini-map via l'attribut HTML "options" en JSON.
+     * @param {Object} options - Options à appliquer à la mini-map.
+     */
     set options (options) {
         this._removeOverviewMap();
         this._options = options && typeof options === "object" ? options : {};
@@ -142,8 +184,17 @@ class MiniMap extends LitElement {
     }
 
     _updateCenterMarkerOverlayPosition (position) {
-        if (!this._centerMarkerOverlay) {
+        if (!position || !this._overviewControl || !this._centerMarkerOverlay) {
             return;
+        }
+
+        var overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
+        var miniView = overviewMap && overviewMap.getView && overviewMap.getView();
+
+        if (miniView) {
+            this._isSyncingView = true;
+            miniView.setCenter(position);
+            this._isSyncingView = false;
         }
 
         this._centerMarkerOverlay.setPosition(position);
