@@ -17,6 +17,10 @@
     border-radius: 0.25rem;
   }
 
+  &__label + &__container {
+    margin-top: 0.5rem;
+  }
+
   &__input {
     height: 2.5rem;
     font-size: 1rem;
