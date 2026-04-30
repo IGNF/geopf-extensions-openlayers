@@ -53,6 +53,12 @@ module.exports = (env, argv) => {
             "GpfExtOlInseeAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "InseeAdvancedSearch.js"),
             "GpfExtOlAbstractAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "AbstractAdvancedSearch.js"),
             "GpfExtOlCoordinateAdvancedSearch" : path.join(rootdir, "src", "packages", "Controls/SearchEngine", "CoordinateAdvancedSearch.js"),
+            "GpfExtOlToggle" : path.join(rootdir, "src", "packages", "Controls/Toggle", "Toggle.js"),
+            "GpfExtOlToggleContent" : path.join(rootdir, "src", "packages", "Controls/Toggle", "ToggleContent.js"),
+            "GpfExtOlToggleInteraction" : path.join(rootdir, "src", "packages", "Controls/Toggle", "ToggleInteraction.js"),
+            "GpfExtOlDialog" : path.join(rootdir, "src", "packages", "Controls/Toggle", "Dialog.js"),
+            "GpfExtOlTabNav" : path.join(rootdir, "src", "packages", "Controls/Toggle", "TabNav.js"),
+            "GpfExtOlDraw" : path.join(rootdir, "src", "packages", "Controls/Draw", "Draw.js"),
             "GpfExtOlExport" : path.join(rootdir, "src", "packages", "Controls/Export", "Export.js"),
             "GpfExtOlMeasureArea" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureArea.js"),
             "GpfExtOlMeasureAzimuth" : path.join(rootdir, "src", "packages", "Controls", "Measures", "MeasureAzimuth.js"),
@@ -65,7 +71,23 @@ module.exports = (env, argv) => {
             "GpfExtOlTerritories" : path.join(rootdir, "src", "packages", "Controls/Territories", "Territories.js"),
             "GpfExtOlControlList" : path.join(rootdir, "src", "packages", "Controls/ControlList", "ControlList.js"),
             "GpfExtOlContextMenu" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "ContextMenu.js"),
+            "GpfExtOlSimpleMenu" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "SimpleMenu.js"),
+            "GpfExtOlInfoControl" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "InfoControl.js"),
             "GpfExtOlReporting" : path.join(rootdir, "src", "packages", "Controls/Reporting", "Reporting.js"),
+            // Input Controls
+            "GpfExtOlInputNumber" : path.join(rootdir, "src", "packages", "Controls/Input", "InputNumber.js"),
+            "GpfExtOlInputColor" : path.join(rootdir, "src", "packages", "Controls/Input", "InputColor.js"),
+            "GpfExtOlCustomSelect" : path.join(rootdir, "src", "packages", "Controls/Input", "CustomSelect.js"),
+            "GpfExtOlCustomSelectGrid" : path.join(rootdir, "src", "packages", "Controls/Input", "CustomSelectGrid.js"),
+            "GpfExtOlDefaultInput" : path.join(rootdir, "src", "packages", "Controls/Input", "DefaultInput.js"),
+            // StyleDialog Controls
+            "GpfExtOlFlatStyleForm" : path.join(rootdir, "src", "packages", "Controls/StyleDialog", "FlatStyleForm.js"),
+            "GpfExtOlStyleForm" : path.join(rootdir, "src", "packages", "Controls/StyleDialog", "styleForm.js"),
+            "GpfExtOlLabelForm" : path.join(rootdir, "src", "packages", "Controls/StyleDialog", "labelForm.js"),
+            // Interactions
+            "GpfExtOlDrawingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Drawing.js"),
+            "GpfExtOlSelectingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Selecting.js"),
+            "GpfExtOlModifyingInteraction" : path.join(rootdir, "src", "packages", "Interactions/Modifying.js"),
             // Formats étendus
             "GpfExtOlFormats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),
@@ -227,6 +249,24 @@ module.exports = (env, argv) => {
                     use : [
                         MiniCssExtractPlugin.loader,
                         "css-loader"
+                    ]
+                },
+                {
+                    test : /\.scss$/,
+                    include : [
+                        path.join(rootdir, "src", "packages", "CSS"),
+                    ],
+                    use : [
+                        MiniCssExtractPlugin.loader,
+                        "css-loader",
+                        {
+                            loader : "sass-loader",
+                            options : {
+                                sassOptions : {
+                                    includePaths : [path.join(rootdir, "src", "packages", "CSS")]
+                                }
+                            }
+                        }
                     ]
                 },
                 {

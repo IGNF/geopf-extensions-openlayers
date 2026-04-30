@@ -1,0 +1,22 @@
+.dialog-draw {
+  .fr-btns-group {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+
+    .GPToggleControl {
+      width: 100%;
+      max-width: 100%;
+
+      > button {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 0.25rem;
+      }
+    }
+  }
+}

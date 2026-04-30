@@ -1,0 +1,34 @@
+@use '../../mixins.scss' as mx;
+
+.input-style {
+  &__container {
+    box-shadow: inset 0 0 0 1px var(--border-default-grey);
+  }
+
+  &__input {
+    width: 2.5rem;
+    color: var(--text-default-grey);
+  }
+
+  &--disabled {
+    > label {
+      color: var(--text-disabled-grey);
+    }
+
+    > div[aria-disabled='true'] {
+      background-color: var(--background-default-grey);
+
+      cursor: not-allowed;
+      --hover: null;
+      --active: null;
+
+      &::after {
+        background-color: var(--text-disabled-grey);
+      }
+
+      > span {
+        background-color: var(--text-disabled-grey);
+      }
+    }
+  }
+}

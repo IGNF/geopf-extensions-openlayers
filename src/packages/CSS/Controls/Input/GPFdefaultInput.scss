@@ -1,0 +1,31 @@
+@use '../../mixins.scss' as mx;
+
+.input-style {
+  &__label {
+    width: auto;
+    flex: 1;
+
+    span {
+      display: inline-block;
+      padding: 0 0.5em;
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    border-radius: 0.25rem;
+  }
+
+  &__input {
+    height: 2.5rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+  }
+
+  &--disabled {
+    > div[aria-disabled='true'] {
+      cursor: not-allowed;
+    }
+  }
+}
