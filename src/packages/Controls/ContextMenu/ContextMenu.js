@@ -43,6 +43,8 @@ var logger = Logger.getLogger("contextMenu");
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
  * @property {string|number} [id] - Identifiant unique du widget.
+ * @property {string} [altiServerUrl] - URL vers le service d'altimétrie utilisé (data.geopf.fr par défaut)
+ * @property {string} [reverseGeocodeServerUrl] - URL vers le service de géocodage inverse utilisé (data.geopf.fr par défaut)
  */
 /**
  * @classdesc
@@ -515,7 +517,8 @@ class ContextMenu extends Control {
             onFailure : function (error) {},
             // spécifique au service
             positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
-            outputFormat : "json" // json|xml
+            outputFormat : "json", // json|xml
+            serverUrl : this.options.altiServerUrl
         };
         Gp.Services.getAltitude(altiOptions);
 
@@ -530,7 +533,8 @@ class ContextMenu extends Control {
             position : {lon : clickedCoordinate[1], lat : clickedCoordinate[0]},
             searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[1], clickedCoordinate[0]], radius : 100 },
             index : "CadastralParcel",
-            maximumResponses : 1
+            maximumResponses : 1,
+            serverUrl : this.options.reverseGeocodeServerUrl
         };
         Gp.Services.reverseGeocode(geocodageParcelOptions);
 
@@ -572,7 +576,8 @@ class ContextMenu extends Control {
             position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
             searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
             index : "StreetAddress",
-            maximumResponses : 1
+            maximumResponses : 1,
+            serverUrl : this.options.reverseGeocodeServerUrl
         };
         Gp.Services.reverseGeocode(geocodageAdressOptions);
     }

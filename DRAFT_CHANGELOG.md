@@ -24,6 +24,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - Interface(widgets) : interfaçage du paramètre serverUrl pour les widgets iti/iso/reversegeocode/mouseposition
+  - Interface(ContextMenu): interfacçage du paramétre serverUrl pour le menuContextuel (#506)
   
 * 🔒 [Security]
 
