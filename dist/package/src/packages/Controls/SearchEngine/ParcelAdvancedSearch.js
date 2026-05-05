@@ -34,8 +34,12 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         this.searchService = new IGNSearchService({
             index : "parcel",
             limit : 1,
-            returnTrueGeometry : true
+            returnTrueGeometry : true,
+            searchOptions : {
+                serviceOptions : options.searchOptions || {}
+            }
         });
+
         this.searchService.on("search", e => this.handleSearch(e));
         this.searchService.on("error", e => this.handleError(e));
     }
@@ -99,14 +103,15 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /** Change the section
+     * @param {Obj} options serviceOptions for WFS call
      * @private
      */
-    setSection () {
+    setSection (options) {
         const prefix = this.prefixInput.value;
         const section = this.sectionInput.value;
         this.numberList.innerHTML = "";
         this._showMessage("section", "chargement en cours", "info");
-        this._fetchCadastre(this.communeId, this.arrondId, prefix, section).then(data => {
+        this._fetchCadastre({code : this.communeId, arrond : this.arrondId, prefix : prefix, section : section, serviceOptions : options}).then(data => {
             this._showMessage("section", "");
             const section = this.sectionInput.value;
             if (data && data.features && data.features[0].properties.section === section) {
@@ -164,8 +169,9 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
     /** Set the commune
      * @param {String} [id] Commune INSEE code
      * @param {String} [arrond] Arrondissement code
+     * @param {Obj} {serviceOptions} Service options
      */
-    setCommune (id="", arrond="") {
+    setCommune ({id="", arrond="", serviceOptions}) {
         if (this.communeId !== id) {
             const prefixInput = this.prefixInput;
 
@@ -175,7 +181,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             if (id) {
                 this._showMessage("commCode", "chargement en cours", "info");
                 // Fetch prefixes and sections for the selected commune
-                this._fetchCadastre(id, arrond).then(data => {
+                this._fetchCadastre({code : id, arrond : arrond, serviceOptions : serviceOptions}).then(data => {
                     this._showMessage("commCode", "");
                     this.feuilles = {};
 
@@ -235,7 +241,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         // Show/hide autocomplete list
         const showAutocomplete = (b) => {
             if (communeName !== comCodeInput.value) {
-                this.setCommune();
+                this.setCommune({serviceOptions : options});
             }
             if (b !== false) {
                 // Show autocomplete only if input value matches selected commune
@@ -366,10 +372,10 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                 if (data.length === 0) {
                     // errror message
                     this._showMessage("commCode", "Aucune commune ne correspond à ce code INSEE ou code postal.");
-                    this.setCommune();
+                    this.setCommune({serviceOptions : options});
                 } else if (data.length === 1) {
                     communeName = comCodeInput.value = formatCommune(data[0]);
-                    this.setCommune(data[0].code, data[0].arrond);
+                    this.setCommune({id : data[0].code, arrond : data[0].arrond, serviceOptions : options});
                 } else {
                     data.forEach(commune => {
                         const type = commune.codesPostaux ? "code INSEE" : "code postal";
@@ -380,13 +386,13 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                         option.title = option.textContent = formatCommune(commune, type);
                         option.addEventListener("click", () => {
                             communeName = comCodeInput.value = formatCommune(commune);
-                            this.setCommune(commune.code, commune.arrond);
+                            this.setCommune({id : commune.code, arrond : commune.arrond, serviceOptions : options});
                             showAutocomplete(false);
                         });
                         autocompleteList.appendChild(option);
                     });
                     communeName = comCodeInput.value;
-                    this.setCommune();
+                    this.setCommune({serviceOptions : options});
                     comCodeInput.setAttribute("aria-expanded", "true");
                 }
             });
@@ -412,7 +418,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
                 selectTout = setTimeout(() => {
                     if (sectionInput.value) {
                         this.numberInput.removeAttribute("disabled");
-                        this.setSection();
+                        this.setSection(options);
                     } else {
                         this.numberInput.setAttribute("disabled", "disabled");
                     }
@@ -547,7 +553,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
          */
         this.CLASSNAME = "ParcelAdvancedSearch";
 
-        this.insseSearchService = new InseeSearchService();
+        this.insseSearchService = new InseeSearchService(options);
     }
 
     /**
@@ -674,14 +680,14 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * @param {String} [section] Section de la parcelle
      * @returns {Promise} Promesse avec les données GeoJSON (feuilles ou parcelles si section renseignée)
      */
-    async _fetchCadastre (code, arrond, prefix, section) {
+    async _fetchCadastre ({code, arrond, prefix, section, serviceOptions}) {
         // const domtom = ["97","98"].includes(code.slice(0,2));
         // const dep = code.slice(0, domtom ? 3 : 2);
         // const com = code.slice(domtom ? 3 : 2, 5);
         // Pas de traitement différent pour les drom-com;
         const dep = code.slice(0, 2);
         const com = code.slice(2, 5);
-        const url = "https://data.geopf.fr/wfs/ows?";
+        const url = (serviceOptions && serviceOptions.searchOptions && serviceOptions.searchOptions.wfsServerUrl) || "https://data.geopf.fr/wfs/ows?";
         const params = {
             service : "WFS",
             version : "2.0.0",

@@ -14,6 +14,14 @@ declare class InseeAdvancedSearch extends AbstractAdvancedSearch {
      */
     constructor(options?: AbstractAdvancedSearchOptions);
     _inputPattern: RegExp | undefined;
+    /**
+     * Ajoute les inputs spécifiques au contrôle (surcouche du parent).
+     * Crée et configure l'input INSEE.
+     * @protected
+     * @param {options} options Options à passer au searchEngineGeocodeIGN
+     * @returns {void}
+     */
+    protected addInputs(options: any): void;
     inseeInput: SearchEngineGeocodeIGN | undefined;
     /**
      * Permet de supprimer les messages d'erreur, en plus du fonctionnement initial.

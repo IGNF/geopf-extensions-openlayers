@@ -29,6 +29,7 @@ declare class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      */
     private _showMessage;
     /** Change the section
+     * @param {Obj} options serviceOptions for WFS call
      * @private
      */
     private setSection;
@@ -40,10 +41,11 @@ declare class ParcelAdvancedSearch extends AbstractAdvancedSearch {
     /** Set the commune
      * @param {String} [id] Commune INSEE code
      * @param {String} [arrond] Arrondissement code
+     * @param {Obj} {serviceOptions} Service options
      */
-    setCommune(id?: string, arrond?: string): void;
+    setCommune({ id, arrond, serviceOptions }?: string): void;
     communeId: any;
-    arrondId: string | undefined;
+    arrondId: any;
     feuilles: {} | undefined;
     /** Filter listbox options on input value
      */
