@@ -70,7 +70,7 @@ class SearchEngineGeocodeIGN extends SearchEngineBase {
 
         // Créé le serbice de géocodage IGN
         if (!options.searchService || !(options.searchService instanceof AbstractSearchService)) {
-            options.searchService = new IGNSearchService(options.serviceOptions);
+            options.searchService = new IGNSearchService(options);
         }
 
         super.initialize(options);

@@ -31,7 +31,10 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         this.searchService = new IGNSearchService({
             index : "poi",
             limit : 10,
-            returnTrueGeometry : true
+            returnTrueGeometry : true,
+            searchOptions : {
+                serviceOptions : options.searchOptions || {}
+            }
         });
 
         // Prevent popup validation
