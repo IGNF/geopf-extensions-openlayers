@@ -1155,6 +1155,7 @@ class Isocurve extends Control {
         // on met en place l'affichage des resultats dans la fenetre de resultats.
         var context = this;
         var isoRequestOptions = {
+            serverUrl : options.serverUrl,
             position : position,
             graph : options.graph || this._currentTransport,
             exclusions : options.exclusions || this._currentExclusions,

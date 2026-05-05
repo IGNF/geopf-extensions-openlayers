@@ -280,10 +280,8 @@ class GeoportalOverviewMap extends OverviewMap {
      * @param {Map} map - ...
      */
     _createContainerPosition (map) {
-        const userProvidedTarget = this.options.target;
         this.container = map.getOverlayContainerStopEvent();
         this.options.target = this.container;
-
         if (this.options.position) {
             var id = "position-container-" + this.options.position;
             if (!document.getElementById(id)) {
@@ -295,11 +293,6 @@ class GeoportalOverviewMap extends OverviewMap {
                 this.container.appendChild(div);
             }
             this.options.target = this.container.children[id];
-        }
-
-        // Si l'utilisateur a fourni un target, le restaurer
-        if (userProvidedTarget && userProvidedTarget !== this.options.target) {
-            this.options.target = userProvidedTarget;
         }
     }
 

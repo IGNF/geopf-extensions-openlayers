@@ -93,7 +93,7 @@
 }
 
 .gpf-hidden {
-  display: none !important;
+  display: none;
   visibility: hidden;
   opacity: 0%;
 }

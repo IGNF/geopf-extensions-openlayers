@@ -44,6 +44,14 @@ export type ContextMenuOptions = {
      * - Identifiant unique du widget.
      */
     id?: string | number | undefined;
+    /**
+     * - URL vers le service d'altimétrie utilisé (data.geopf.fr par défaut)
+     */
+    altiServerUrl?: string | undefined;
+    /**
+     * - URL vers le service de géocodage inverse utilisé (data.geopf.fr par défaut)
+     */
+    reverseGeocodeServerUrl?: string | undefined;
 };
 /**
  * @typedef {Object} ContextMenuOptions
@@ -58,6 +66,8 @@ export type ContextMenuOptions = {
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
  * @property {string|number} [id] - Identifiant unique du widget.
+ * @property {string} [altiServerUrl] - URL vers le service d'altimétrie utilisé (data.geopf.fr par défaut)
+ * @property {string} [reverseGeocodeServerUrl] - URL vers le service de géocodage inverse utilisé (data.geopf.fr par défaut)
  */
 /**
  * @classdesc
