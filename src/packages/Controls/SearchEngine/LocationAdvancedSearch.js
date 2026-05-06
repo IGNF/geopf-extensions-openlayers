@@ -16,6 +16,9 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
      * @constructor
      * @param {AbstractAdvancedSearchOptions} options Options du constructeur
      * @param {String} [options.name="Lieux et toponymes"] Nom du contrôle
+     * @param {Object} [options.searchOptions] Options pour le service de geocodage sous-jacent
+     * @param {String} [options.searchOptions.serverUrl] Route vers le serveur de geocodage
+     * @param {String} [options.searchOptions.geocodeGetCapabilitiesUrl] Route vers le getCapabilities du serveur de geocodage
      * @param {Array<String>|Object} [options.typeList] Liste des types de lieux (catégories) ou objet clé/valeur avec tableau de sous-catégories
      * @extends {ol.control.AbstractAdvancedSearch}
      */

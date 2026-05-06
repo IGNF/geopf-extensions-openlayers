@@ -24,7 +24,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - Interface(widgets) : interfaçage du paramètre serverUrl pour les widgets iti/iso/reversegeocode/mouseposition/search (#503)
-  - Interface(AdvancedSearch) : interfaçage du paramètre serverUrl pour le widget de recherche avancée (#504)
+  - Interface(AdvancedSearch) : interfaçage du paramètre serverUrl et geocodeGetCapabilitiesUrl pour le widget de recherche avancée (#504, #508)
   - Interface(ContextMenu): interfacçage du paramétre serverUrl pour le menuContextuel (#506)
   
 * 🔒 [Security]
