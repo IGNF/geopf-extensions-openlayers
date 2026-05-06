@@ -332,7 +332,7 @@ class IGNSearchService extends AbstractSearchService {
     _prettifyAutocompleteResults (autocompleteResults) {
         for (let i = autocompleteResults.length - 1; i >= 0; i--) {
             const autocompleteResult = autocompleteResults[i];
-            if ((autocompleteResult.type === "StreetAddress" && autocompleteResult.kind === "municipality") ||
+            if ((autocompleteResult.type === "StreetAddress" && autocompleteResult.kind === "municipality" && ["Lyon", "Marseille", "Paris"].includes(autocompleteResult.commune)) ||
             autocompleteResult.type === "PositionOfInterest" && autocompleteResult.poiType[0] === "lieu-dit habité" && autocompleteResult.poiType[1] === "zone d'habitation") {
                 // on retire les éléments streetAdress - municipality car déjà pris en compte par POI
                 autocompleteResults.splice(i, 1);
