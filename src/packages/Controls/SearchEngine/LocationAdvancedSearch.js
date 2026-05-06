@@ -142,9 +142,9 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
          * @private
          */
         this.CLASSNAME = "LocationAdvancedSearch";
-
+        const getCapabilitiesUrl = options.searchOptions?.geocodeGetCapabilitiesUrl || "https://data.geopf.fr/geocodage/getCapabilities";
         // Get type list from capabilities if not provided
-        fetch("https://data.geopf.fr/geocodage/getCapabilities").then(response => {
+        fetch(getCapabilitiesUrl).then(response => {
             return response.json();
         }).then (json => {
             // Get list from capabilities
