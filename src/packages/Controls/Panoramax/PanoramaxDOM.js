@@ -133,15 +133,18 @@ var PanoramaxDOM = {
         return div;
     },
     _createWidgetPanelButtonsCloseElement : function () {
-        var self = this;
-
         var btnClose = document.createElement("button");
         btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
-        btnClose.addEventListener("click", function (e) {
-            self.onClosePanoramaxClick(e);
+        btnClose.addEventListener("click", (e) => {
+            e.preventDefault();
+            // switch aria-pressed on options button
+            let buttonOptions = document.getElementById(this._addUID("GPpanoramaxButtonOptions"));
+            buttonOptions.setAttribute("aria-pressed", "false");
+            // call function to open/close
+            this.onOpenPanoramaxOptionsClick(e);
         }, false);
 
         var span = document.createElement("span");
