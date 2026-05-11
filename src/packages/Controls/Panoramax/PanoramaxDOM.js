@@ -129,7 +129,7 @@ var PanoramaxDOM = {
     _createWidgetPanelButtonsTitleElement : function () {
         var div = document.createElement("div");
         div.className = "pnx-buttons-panel__title gpf-panel__title";
-        div.innerHTML = "Options";
+        div.innerHTML = "Options Panoramax";
         return div;
     },
     _createWidgetPanelButtonsCloseElement : function () {
