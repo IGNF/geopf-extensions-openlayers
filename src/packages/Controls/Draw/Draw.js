@@ -28,6 +28,7 @@ import { SelectEvent } from "ol/interaction/Select";
  * @property {String} [title="Annoter la carte"] Attribut title / aria-label.
  * @property {String} [size="sm"] Taille du panneau ("sm" ou "lg").
  * @property {String} [position] - Position CSS du widget sur la carte. Valeurs acceptées : `top-right`, `top-left`, `bottom-right` ou `bottom-left`. Si non donné, le contrôle doit être positionné en CSS.
+ * @property {String} [dialogPosition="right"] - Position du panneau ("left" ou "right").
  * @property {Select} [select] Interaction de sélection lié au contrôle. Si aucune interaction n'est donnée, ajoute une interaction de type {@link SelectingInteraction SelectingInteraction}.
  * @property {VectorSource} [source] Source à ajouter au contrôle initialement. Peut-être fait après via la méthode `setSource`. Si aucune source n'est donnée, en ajoute une de base.
  * @property {Boolean|Modify} [modify=true] Si faux, n'ajoute pas d'interaction pour modifier les objets. Sinon, ajoute une interaction de type {@link ModifyingInteraction ModifyingInteraction}, héritant de {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html Modify}, qui s'active à la sélection d'un objet. Une interaction de type `Modify` peut aussi être passée en paramètre (auquel cas ).
@@ -209,12 +210,11 @@ class Draw extends ToggleContent {
         options.icon ??= "fr-icon-pen-nib-line";
         options.title ??= "Annoter la carte";
         options.size ??= "sm";
-        options.position ??= "right";
+        options.dialogPosition ??= "right";
         options.style ??= true;
         options.addToMap ??= true;
         options.modify ??= true;
         options.snap ??= false;
-
 
         // Tableau vide par défaut, les interactions sont ajoutés à la fin du constructeur
         options.drawingInteractions ??= [];

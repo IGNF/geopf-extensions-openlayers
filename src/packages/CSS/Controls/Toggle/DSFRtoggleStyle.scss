@@ -7,26 +7,28 @@
   > button {
     &[aria-pressed='true'],
     &[aria-extended='true'] {
-      background-color: var(--background-open-blue-france);
       --hover: var(--background-open-blue-france-hover);
       --active: var(--background-open-blue-france-active);
 
-      &:hover {
-        background-color: var(--hover-tint);
-      }
+      @include mix.button-state($background: var(--background-open-blue-france))
 
-      &:active {
-        background-color: var(--active-tint);
-      }
     }
 
     &.fr-btn--secondary,
     &.fr-btn--tertiary,
     &.fr-btn--tertiary-no-outline {
-      // N'empêche pas la couleur du fr-btn de base
-      background-color: var(--background-default-grey);
+      &:not([aria-pressed='true']):not([aria-extended='true']) {
+        // N'empêche pas la couleur du fr-btn de base
+
+        @include mix.button-state($background: var(--background-default-grey));
+      }
     }
   }
+}
+
+div[id^='position-container-'] > .GPToggleControl,
+.ol-overlaycontainer-stopevent > .GPToggleControl {
+  filter: drop-shadow(var(--raised-shadow));
 }
 
 // Icônes personnalisées

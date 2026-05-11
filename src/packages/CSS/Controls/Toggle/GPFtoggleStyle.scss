@@ -2,13 +2,12 @@
 @use '../../mixins.scss' as mix;
 
 .GPToggleControl {
+  background-color: #fff;
 
   > button {
-    background-color: #fff;
     cursor: pointer;
     min-width: 30px;
     min-height: 30px;
-
     background-color: transparent;
 
     &:hover {
