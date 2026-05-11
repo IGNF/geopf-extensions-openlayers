@@ -158,7 +158,7 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
                 this.setCategories(values);
             }
         }).catch(() => {
-            console.log("error");
+            console.log("Geocode getCapabilites parsing error (see https://data.geopf.fr/geocodage/getCapabilities) ");
         });
         this._typeList = {};
         // Default values
