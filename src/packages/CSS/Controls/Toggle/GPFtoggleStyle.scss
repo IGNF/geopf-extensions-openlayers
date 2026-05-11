@@ -2,9 +2,9 @@
 @use '../../mixins.scss' as mix;
 
 .GPToggleControl {
-  background-color: #fff;
 
   > button {
+    background-color: #fff;
     cursor: pointer;
     min-width: 30px;
     min-height: 30px;
@@ -49,6 +49,7 @@
 @include mix.hover-media-query {
   .GPToggleControl > .GPToggleButton[aria-label]:not([aria-extended='true']):not([aria-pressed='true']):hover::after {
     padding: 2px 12px 2px 4px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 18, 0.25));
     background-size:
       0.375rem 0.5rem,
       0.375rem 0.5rem,

@@ -15,6 +15,29 @@
   }
 }
 
+div[id^='position-container-'] > .GPToggleControl {
+  padding: 0.125rem;
+  > .GPToggleButton {
+    border-radius: 0.25rem;
+  }
+}
+
+// Pour ne pas avoir à mettre la classe gpf-btn-icon sur le toggle
+.gpf-button-no-gutter {
+  + .gpf-widget-button.GPToggleControl {
+    > .GPToggleButton {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  }
+  // Pour ne pas avoir à mettre la classe gpf-btn-icon sur le toggle
+  &.GPToggleControl:has(+ .gpf-widget-button) {
+    > .GPToggleButton {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}
 [class*=' gpf-btn-icon-ls-tools-'] {
   &:empty {
     overflow: hidden;
