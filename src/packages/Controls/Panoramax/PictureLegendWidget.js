@@ -3,6 +3,25 @@ import { html } from "lit/static-html.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import Gp from "geoportal-access-lib";
 
+const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org";
+
+function onceParentAvailable (comp) {
+    if (comp._parent) {
+        return Promise.resolve(comp._parent);
+    }
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            const parent = comp.closest("pnx-photo-viewer");
+            if (parent) {
+                comp._parent = parent;
+                clearInterval(intervalId);
+                resolve(parent);
+            }
+        }, 100);
+    });
+}
+
+
 function reverseGeocode (lat, lon, mode = "geoplateforme") {
     if (mode === "geoplateforme") {
         return reverseGeocodeGp(lat, lon);
@@ -37,7 +56,8 @@ function reverseGeocodeGp (lat, lon) {
 }
 
 function reverseGeocodeNominatim (lat, lon) {
-    return fetch(`${Panoramax.utils.services.NominatimBaseUrl()}/reverse?lat=${lat}&lon=${lon}&zoom=18&format=geocodejson`)
+    let nominatimBaseUrl = NOMINATIM_BASE_URL;
+    return fetch(`${nominatimBaseUrl}/reverse?lat=${lat}&lon=${lon}&zoom=18&format=geocodejson`)
         .then(res => res.json())
         .then(res => geocodeJsonToPlaceName(res?.features?.shift()?.properties?.geocoding));
 }
@@ -147,7 +167,7 @@ export default class PictureLegendWidget extends LitElement {
         this._prevSearches = {};
         this._parent = this._parent || this.closest("pnx-photo-viewer");
 
-        Panoramax.utils.widgets.onceParentAvailable(this)
+        onceParentAvailable(this)
             .then(() => this._parent.onceReady())
             .then(() => {
                 //this._onPicChange(this._parent.psv.getPictureMetadata());
