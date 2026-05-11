@@ -7,6 +7,7 @@
  * @typedef {Object} ToggleOptions Options de base du toggle
  * @property {String} [label] - Libellé associé à l'input.
  * @property {String} [title] - Attribut title / aria-label.
+ * @property {String} [position] - Position CSS du widget sur la carte. Valeurs acceptées : `top-right`, `top-left`, `bottom-right` ou `bottom-left`. Si non donné, le contrôle doit être positionné en CSS.
  * @property {String|HTMLElement} [icon] - Classe à ajouter au bouton ou élément svg (inline) ou élément HTML à ajouter avant le label (type span).
  */
 
@@ -17,13 +18,15 @@
  * @property {String|HTMLElement} [icon] - Classe à ajouter au bouton ou élément svg (inline) ou élément HTML à ajouter avant le label (type span).
  * @property {String} [content] - Contenu à ajouter.
  * @property {String} [size] - Taille du panneau ("sm" ou "lg").
- * @property {String} [position] - Position du panneau ("left" ou "right").
+ * @property {String} [position] - Position CSS du widget sur la carte. Valeurs acceptées : `top-right`, `top-left`, `bottom-right` ou `bottom-left`. Si non donné, le contrôle doit être positionné en CSS.
+ * @property {String} [dialogPosition] - Position du panneau ("left" ou "right").
  */
 
 /**
  * @typedef {Object} ToggleInteractionOptions
  * @property {String} [label] - Libellé associé à l'input.
  * @property {String} [title] - Attribut title / aria-label.
+ * @property {String} [position] - Position CSS du widget sur la carte. Valeurs acceptées : `top-right`, `top-left`, `bottom-right` ou `bottom-left`. Si non donné, le contrôle doit être positionné en CSS.
  * @property {String|HTMLElement} [icon] - Classe à ajouter au bouton ou élément svg (inline) ou élément HTML à ajouter avant le label (type span).
  * @property {import("ol/interaction").Interaction} [interaction] - Interaction à ajouter.
  */

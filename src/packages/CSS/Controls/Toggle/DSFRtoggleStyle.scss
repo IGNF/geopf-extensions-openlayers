@@ -2,7 +2,6 @@
 @use '../../mixins.scss' as mix;
 
 .GPToggleControl {
-  background-color: var(--background-default-grey);
   padding: 0;
 
   > button {
@@ -19,6 +18,13 @@
       &:active {
         background-color: var(--active-tint);
       }
+    }
+
+    &.fr-btn--secondary,
+    &.fr-btn--tertiary,
+    &.fr-btn--tertiary-no-outline {
+      // N'empêche pas la couleur du fr-btn de base
+      background-color: var(--background-default-grey);
     }
   }
 }
@@ -53,6 +59,7 @@
     height: 2.5rem;
     font-size: 0.75rem;
     line-height: 1.25rem;
+    filter: drop-shadow(var(--overlap-shadow));
 
     color: var(--text-default-grey);
 

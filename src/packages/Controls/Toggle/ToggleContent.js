@@ -47,6 +47,7 @@ class ToggleContent extends Toggle {
         this.CLASSNAME = "ToggleInteraction";
 
         this.ariaAttribute = "aria-extended";
+        options.dialogPosition ??= "right";
     }
 
     /**
@@ -86,8 +87,11 @@ class ToggleContent extends Toggle {
     _initContainer (options) {
         super._initContainer(options);
 
+        const dialogOptions = Object.assign({}, options);
+        dialogOptions.position = options.dialogPosition;
+
         this.dialog = new Dialog({
-            ...options,
+            ...dialogOptions,
             className : `dialog-${this.CLASSNAME.toLowerCase()}`,
         });
 

@@ -38,6 +38,16 @@ class Toggle extends Control {
 
     setMap (map) {
         super.setMap(map);
+
+        // Position du contrôle
+        if (this.options.position) {
+            this.setPosition(this.options.position);
+        }
+
+        // Réunnion du bouton avec le précédent
+        if (this.options.gutter === false) {
+            this.element.classList.add("gpf-button-no-gutter");
+        }
     }
 
     /**
@@ -91,6 +101,8 @@ class Toggle extends Control {
          * @private
          */
         this.CLASSNAME = "Toggle";
+
+        this.options = options;
     }
 
     /**
@@ -110,7 +122,7 @@ class Toggle extends Control {
     _initContainer (options) {
         this.element = document.createElement("div");
         this.element.id = Helper.getUid("GPToggleControl-");
-        this.element.classList.add("GPwidget", "gpf-widget", "GPToggleControl");
+        this.element.classList.add("GPwidget", "gpf-widget", "gpf-widget-button", "GPToggleControl");
 
         this.button = document.createElement("button");
         this.button.id = Helper.getUid("GPToggleButton-");
