@@ -43,7 +43,11 @@
 }
 
 .pnx-options-panel {
-    position: fixed;
+    position: absolute;
+    height: fit-content;
+    max-height: initial;
+    top: initial;
+    width: 350px;
     background-color: var(--background-default-grey);
 }
 
@@ -86,11 +90,9 @@
 .pnx-filters-panel {
     position: relative;
     z-index: 1001;
-    min-width: 340px;
     background-color: var(--background-default-grey);
     border-radius: 8px;
     /* box-shadow: var(--raised-shadow); */
-    max-width: 400px;
 }
 .pnx-filters-panel__title {
     color: var(--text-default-grey);
@@ -100,7 +102,7 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-    justify-content: center;
+    justify-content: space-between;
     margin-top: 10px;
 }
 
@@ -108,12 +110,17 @@
 .pnx-filters-panel__date {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     border-bottom: 1px solid var(--border-default-grey);
     margin-bottom: 10px;
     column-gap: 20px;
 }
-.pnx-filters-panel__date-start {}
-.pnx-filters-panel__date-end {}
+.pnx-filters-panel__date-start {
+    flex: 1;
+}
+.pnx-filters-panel__date-end {
+    flex: 1;
+}
 .pnx-filters-panel__type {}
 
 .gpf-segmented__element {}
@@ -126,6 +133,8 @@
     flex: none;
 }
 .gpf-input-date {
+    /* reduit le padding gauche/droite */
+    padding: 0.5rem;
     box-shadow: inset 0px 0px 0px 1px var(--border-default-grey);
     background-color: var(--background-default-grey);
     color: var(--background-action-high-blue-france);

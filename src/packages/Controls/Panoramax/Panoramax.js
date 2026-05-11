@@ -812,17 +812,17 @@ class Panoramax extends Control {
             }
         }
 
-        if (this.panelPanoramaxOptions) {
-            var panelOptionsTarget = this.panelPanoramaxButtonsContainer.parentElement || container;
-            panelOptionsTarget.appendChild(this.panelPanoramaxOptions);
-        }
-
         // experimental : possibilité d'injecter le panneau des boutons dans une cible spécifique
         var panelButtonsTarget = this.resolveTargetElement(this.options.buttonsWindow.target);
         if (panelButtonsTarget) {
             panelButtonsTarget.appendChild(widgetPanelButtons);
         } else {
             container.appendChild(widgetPanelButtons);
+        }
+
+        if (this.panelPanoramaxOptions) {
+            var panelOptionsTarget = this.panelPanoramaxButtonsContainer.parentElement || container;
+            panelOptionsTarget.appendChild(this.panelPanoramaxOptions);
         }
 
         logger.log(container);
