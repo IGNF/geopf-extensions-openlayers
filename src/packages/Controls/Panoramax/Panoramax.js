@@ -733,6 +733,7 @@ class Panoramax extends Control {
         var widgetPanelButtons = this.panelPanoramaxButtonsContainer = this._createWidgetPanelButtonsElement();
         var widgetPanelButtonsDiv = this._createWidgetPanelButtonsDivElement();
         widgetPanelButtons.appendChild(widgetPanelButtonsDiv);
+        this.preventPointerMoveOnMap(widgetPanelButtons);
 
         // menu des boutons (ex. Options)
         // INFO : possibilité d'injecter d'autres boutons
@@ -746,6 +747,7 @@ class Panoramax extends Control {
         // panneau pour toutes les filtres et autres boutons optionnels du menu Options
         this.panelPanoramaxOptions = this._createWidgetPanelOptionsElement();
         buttons.appendChild(this.panelPanoramaxOptions);
+        this.preventPointerMoveOnMap(this.panelPanoramaxOptions);
 
         // ajout d'un header
         var widgetPanelButtonsHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
