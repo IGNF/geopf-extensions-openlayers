@@ -4,6 +4,7 @@ import Helper from "../../Utils/Helper";
 import Control from "../Control";
 import Collection from "ol/Collection";
 import TabNavItem from "./TabNavItem";
+import SelectorID from "../../Utils/SelectorID";
 var logger = Logger.getLogger("tabnav");
 
 /**
@@ -48,6 +49,9 @@ class TabNav extends Control {
         super._initialize(options);
         this.tabNavClass = "GPF-tabnav";
 
+        // UID utilisé dans la suite
+        this._uid = options.id || SelectorID.generate();
+
         this.items = new Collection();
 
         const tabClass = ".fr-tabnav";
@@ -63,7 +67,8 @@ class TabNav extends Control {
 
         if (!options.contentContainer) {
             const container = document.createElement("div");
-            container.id = Helper.getUid("GPF-tabnav__container");
+            // container.id = Helper.getUid("GPF-tabnav__container");
+            container.id = Helper.addUID("GPF-tabnav__container", this._uid);
             container.className = "GPF-tabnav__container";
             options.contentContainer = container;
         }

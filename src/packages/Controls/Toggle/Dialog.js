@@ -1,5 +1,6 @@
 import Helper from "../../Utils/Helper";
 import Logger from "../../Utils/LoggerByDefault";
+import SelectorID from "../../Utils/SelectorID";
 import ControlExtended from "../Control";
 import TabNav from "./TabNav";
 
@@ -100,6 +101,9 @@ class Dialog extends ControlExtended {
         this.dialogClass = "GPF-dialog";
         options.id ??= this.dialogClass;
 
+        // UID utilisé dans la suite
+        this._uid = SelectorID.generate();
+
         this.selectors = {
             TITLE : `.${this.dialogClass}__title-name`,
             BTN_CLOSE : `.${this.dialogClass}__close-btn`,
@@ -130,7 +134,7 @@ class Dialog extends ControlExtended {
     _initContainer (options) {
         const container = document.createElement("dialog");
         container.className = this.dialogClass;
-        container.id = options.id;
+        container.id = Helper.addUID(options.id, this._uid);
 
         if (options.className) {
             container.classList.add(options.className);

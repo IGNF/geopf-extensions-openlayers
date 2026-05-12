@@ -122,6 +122,25 @@ var Helper = {
     },
 
     /**
+     * Adapté des méthodes `_addUID` trouvé dans les différents fichiers
+     * DOM des contrôles. Permet d'ajouter un identifiant unique à un objet.
+     *
+     * @param {String} prefix - Préfixe de l'id
+     * @param {Object|String} objectOrId Objet depuis lequel récupéré l'id (`obj._uid`) ou bien directement l'id
+     * @return {String} Un id unique pour l'objet.
+     * @api
+     */
+    addUID : function (prefix, objectOrId) {
+        let uid;
+        if (typeof objectOrId === "object" && objectOrId._uid !== undefined) {
+            uid = objectOrId._uid;
+        } else {
+            uid = objectOrId;
+        }
+        return (uid) ? prefix + "-" + uid : id;
+    },
+
+    /**
      * Ajoute une icône à un élémént avec le style si nécessaire
      * @param {HTMLElement} element Élément sur lequel ajouter l'icône
      * @param {String|HTMLElement} [icon] Icône à ajouter

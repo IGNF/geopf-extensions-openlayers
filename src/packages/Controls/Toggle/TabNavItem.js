@@ -1,6 +1,7 @@
 import Logger from "../../Utils/LoggerByDefault";
 import Helper from "../../Utils/Helper";
 import Control from "../Control";
+import SelectorID from "../../Utils/SelectorID";
 var logger = Logger.getLogger("tabnav");
 
 /**
@@ -38,6 +39,9 @@ class TabNavItem extends Control {
         super._initialize(options);
         this.tabNavItemClass = "GPF-tabnav";
 
+        // UID utilisé dans la suite
+        this._uid = options.id || SelectorID.generate();
+
         this.set("selected", false);
 
         this.selectors = {
@@ -62,8 +66,10 @@ class TabNavItem extends Control {
             return;
         }
 
-        const btnId = Helper.getUid("tabNavLink");
-        const contentId = Helper.getUid("tabNavContent");
+        // const btnId = Helper.getUid("tabNavLink");
+        const btnId = Helper.addUID("tabNavLink", this._uid);
+        // const contentId = Helper.getUid("tabNavContent");
+        const contentId = Helper.addUID("tabNavContent", this._uid);
 
         // Création de la puce
         this.element = document.createElement("li");
