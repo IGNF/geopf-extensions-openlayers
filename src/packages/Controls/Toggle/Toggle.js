@@ -4,6 +4,7 @@ import Control from "../Control";
 import Logger from "../../Utils/LoggerByDefault";
 import Helper from "../../Utils/Helper";
 import BaseEvent from "ol/events/Event";
+import SelectorID from "../../Utils/SelectorID";
 
 var logger = Logger.getLogger("toggle");
 
@@ -103,6 +104,9 @@ class Toggle extends Control {
         this.CLASSNAME = "Toggle";
 
         this.options = options;
+
+        // UID utilisé dans la suite
+        this._uid = options.id || SelectorID.generate();
     }
 
     /**
@@ -121,11 +125,13 @@ class Toggle extends Control {
      */
     _initContainer (options) {
         this.element = document.createElement("div");
-        this.element.id = Helper.getUid("GPToggleControl-");
+        // this.element.id = Helper.getUid("GPToggleControl-");
+        this.element.id = Helper.addUID("GPToggleControl", this._uid);
         this.element.classList.add("GPwidget", "gpf-widget", "gpf-widget-button", "GPToggleControl");
 
         this.button = document.createElement("button");
-        this.button.id = Helper.getUid("GPToggleButton-");
+        // this.button.id = Helper.getUid("GPToggleButton-");
+        this.button.id = Helper.addUID("GPToggleButton", this._uid);
         this.button.className = "GPToggleButton gpf-btn fr-btn fr-btn--tertiary-no-outline";
 
         Helper.setIcon(this.button, options.icon, options.label);

@@ -4,6 +4,7 @@ import Logger from "../../Utils/LoggerByDefault";
 import Helper from "../../Utils/Helper";
 import Toggle from "./Toggle";
 import Dialog from "./Dialog";
+import Widget from "../Widget";
 
 var logger = Logger.getLogger("toggle");
 
@@ -23,6 +24,9 @@ class ToggleContent extends Toggle {
      */
     constructor (options) {
         super(options);
+
+        // Pour gérer l'ouverture des panels
+        this.onPanelOpen = Widget.onPanelOpen.bind(this);
     }
 
     setMap (map) {
@@ -185,6 +189,7 @@ class ToggleContent extends Toggle {
         super.setActive(active, silent);
         if (this.getActive()) {
             // Ouvre la modale
+            this.onPanelOpen();
             this.dialog.show();
         } else {
             // Ferme la modale

@@ -7,6 +7,7 @@ import DefaultInput from "../Input/DefaultInput.js";
 import CustomSelect from "../Input/CustomSelect.js";
 import CustomSelectGrid from "../Input/CustomSelectGrid.js";
 import InputColor from "../Input/InputColor.js";
+import SelectorID from "../../Utils/SelectorID.js";
 
 /**
  * @typedef {Object} InputConfig Configuration pour un type input
@@ -63,6 +64,9 @@ class FlatStyleForm extends ControlExtended {
      */
     constructor (options = {}) {
         super(options);
+
+        // UID utilisé dans la suite
+        this._uid = options.id || SelectorID.generate();
 
         /**
          * Collection des inputs indexés par leur propriété
@@ -244,8 +248,8 @@ class FlatStyleForm extends ControlExtended {
         const typeName = type === "select" ? type : "input";
 
         // Générer des IDs uniques
-        const inputId = Helper.getUid(`${typeName}`);
-        const groupId = Helper.getUid(`${typeName}-group`);
+        const inputId = Helper.addUID(`${typeName}`, this._uid);
+        const groupId = Helper.addUID(`${typeName}-group`, this._uid);
         const messagesId = `${inputId}-messages`;
 
         // Créer le conteneur principal
