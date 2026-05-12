@@ -1,0 +1,12 @@
+@use "./mixins.scss" as mix;
+
+.gpf-widget > .gpf-btn-icon[aria-pressed="true"] {
+  // Enlever le reste et mettre la ligne suivante si on ne veut 
+  // pas d'état hover / actif sur les boutons
+  // background-color: var(--background-open-blue-france);
+
+  --hover: var(--background-open-blue-france-hover);
+  --active: var(--background-open-blue-france-active);
+
+  @include mix.button-state($background: var(--background-open-blue-france))
+}
