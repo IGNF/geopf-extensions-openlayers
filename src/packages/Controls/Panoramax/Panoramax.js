@@ -1650,8 +1650,8 @@ class Panoramax extends Control {
         button.setAttribute("size", "md");
         button.title = "Fermer";
         button.innerHTML = svg;
-        button.addEventListener("click", (e) => {
-            this.onClickPnxViewerWidgetClose(e);
+        button.addEventListener("click", () => {
+            this.onClickPnxViewerWidgetBack();
         });
         return button;
     }
