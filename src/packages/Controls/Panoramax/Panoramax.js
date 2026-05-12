@@ -1537,7 +1537,7 @@ class Panoramax extends Control {
                 this.photoViewerPanoramax.setAttribute("picture", pictureId);
             }
         }
-        
+        this.resetPreview();
         this.showPhotoViewer();
         this.hideButtonsPanel();
     }
