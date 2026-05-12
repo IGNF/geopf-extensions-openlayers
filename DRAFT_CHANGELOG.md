@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - Draw(Widget): nouveau widget de dessin plus poussé qui utilise des composants de DOM génériques (#490)
+
 * 🔨 [Changed]
 
 * 🔥 [Deprecated]
