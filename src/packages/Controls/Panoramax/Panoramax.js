@@ -1728,6 +1728,452 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du composant de minimap.
      */
     createWidgetCmpMinimap () {
+        const LAYER_CONFIG = {
+            "name" : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+            "globalConstraint" : {
+                "maxScaleDenominator" : 559082264.0287179,
+                "minScaleDenominator" : 1066.364791924893,
+                "bbox" : {
+                    "left" : -179.9,
+                    "right" : 179.9,
+                    "top" : 85,
+                    "bottom" : -85
+                }
+            },
+            "params" : {
+                "url" : "https://data.geopf.fr/wmts",
+                "styles" : "normal",
+                "version" : "1.0.0",
+                "format" : "image/png",
+                "projection" : "EPSG:3857",
+                "minScale" : 1066.364791924893,
+                "maxScale" : 559082264.0287179,
+                "extent" : {
+                    "left" : -179.9,
+                    "right" : 179.9,
+                    "top" : 85,
+                    "bottom" : -85
+                },
+                "legends" : [
+                    {
+                        "format" : "image/jpeg",
+                        "url" : "https://data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+                        "minScaleDenominator" : "200"
+                    }
+                ],
+                "title" : "Plan IGN",
+                "description" : "<p>Cartographie multi-échelles sur le territoire national, issue des bases de données vecteur de l’IGN, mis à jour régulièrement et réalisée selon un processus entièrement automatisé.</p>\n",
+                "tileMatrixSetLimits" : {
+                    "0" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "0",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "0"
+                    },
+                    "1" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "1",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "1"
+                    },
+                    "2" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "3",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "3"
+                    },
+                    "3" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "7",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "7"
+                    },
+                    "4" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "15",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "15"
+                    },
+                    "5" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "31",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "31"
+                    },
+                    "6" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "63",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "63"
+                    },
+                    "7" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "127",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "127"
+                    },
+                    "8" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "255",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "255"
+                    },
+                    "9" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "511",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "511"
+                    },
+                    "10" : {
+                        "minTileRow" : "1",
+                        "maxTileRow" : "1022",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "1023"
+                    },
+                    "11" : {
+                        "minTileRow" : "3",
+                        "maxTileRow" : "2044",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "2047"
+                    },
+                    "12" : {
+                        "minTileRow" : "6",
+                        "maxTileRow" : "4089",
+                        "minTileCol" : "1",
+                        "maxTileCol" : "4094"
+                    },
+                    "13" : {
+                        "minTileRow" : "13",
+                        "maxTileRow" : "8178",
+                        "minTileCol" : "2",
+                        "maxTileCol" : "8189"
+                    },
+                    "14" : {
+                        "minTileRow" : "26",
+                        "maxTileRow" : "16357",
+                        "minTileCol" : "4",
+                        "maxTileCol" : "16379"
+                    },
+                    "15" : {
+                        "minTileRow" : "53",
+                        "maxTileRow" : "32714",
+                        "minTileCol" : "9",
+                        "maxTileCol" : "32758"
+                    },
+                    "16" : {
+                        "minTileRow" : "107",
+                        "maxTileRow" : "65428",
+                        "minTileCol" : "18",
+                        "maxTileCol" : "65517"
+                    },
+                    "17" : {
+                        "minTileRow" : "214",
+                        "maxTileRow" : "130857",
+                        "minTileCol" : "36",
+                        "maxTileCol" : "131035"
+                    },
+                    "18" : {
+                        "minTileRow" : "429",
+                        "maxTileRow" : "261714",
+                        "minTileCol" : "72",
+                        "maxTileCol" : "262071"
+                    },
+                    "19" : {
+                        "minTileRow" : "858",
+                        "maxTileRow" : "523429",
+                        "minTileCol" : "145",
+                        "maxTileCol" : "524142"
+                    }
+                },
+                "TMSLink" : "PM_0_19",
+                "matrixIds" : [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "10",
+                    "11",
+                    "12",
+                    "13",
+                    "14",
+                    "15",
+                    "16",
+                    "17",
+                    "18",
+                    "19"
+                ],
+                "tileMatrices" : {
+                    "0" : {
+                        "matrixId" : "0",
+                        "matrixHeight" : 1,
+                        "matrixWidth" : 1,
+                        "scaleDenominator" : 559082264.0287179,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "1" : {
+                        "matrixId" : "1",
+                        "matrixHeight" : 2,
+                        "matrixWidth" : 2,
+                        "scaleDenominator" : 279541132.01435894,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "2" : {
+                        "matrixId" : "2",
+                        "matrixHeight" : 4,
+                        "matrixWidth" : 4,
+                        "scaleDenominator" : 139770566.0071793,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "3" : {
+                        "matrixId" : "3",
+                        "matrixHeight" : 8,
+                        "matrixWidth" : 8,
+                        "scaleDenominator" : 69885283.00358965,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "4" : {
+                        "matrixId" : "4",
+                        "matrixHeight" : 16,
+                        "matrixWidth" : 16,
+                        "scaleDenominator" : 34942641.50179486,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "5" : {
+                        "matrixId" : "5",
+                        "matrixHeight" : 32,
+                        "matrixWidth" : 32,
+                        "scaleDenominator" : 17471320.75089743,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "6" : {
+                        "matrixId" : "6",
+                        "matrixHeight" : 64,
+                        "matrixWidth" : 64,
+                        "scaleDenominator" : 8735660.375448715,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "7" : {
+                        "matrixId" : "7",
+                        "matrixHeight" : 128,
+                        "matrixWidth" : 128,
+                        "scaleDenominator" : 4367830.1877243575,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "8" : {
+                        "matrixId" : "8",
+                        "matrixHeight" : 256,
+                        "matrixWidth" : 256,
+                        "scaleDenominator" : 2183915.0938621787,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "9" : {
+                        "matrixId" : "9",
+                        "matrixHeight" : 512,
+                        "matrixWidth" : 512,
+                        "scaleDenominator" : 1091957.5469310894,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "10" : {
+                        "matrixId" : "10",
+                        "matrixHeight" : 1024,
+                        "matrixWidth" : 1024,
+                        "scaleDenominator" : 545978.7734655464,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "11" : {
+                        "matrixId" : "11",
+                        "matrixHeight" : 2048,
+                        "matrixWidth" : 2048,
+                        "scaleDenominator" : 272989.38673277217,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "12" : {
+                        "matrixId" : "12",
+                        "matrixHeight" : 4096,
+                        "matrixWidth" : 4096,
+                        "scaleDenominator" : 136494.69336638608,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "13" : {
+                        "matrixId" : "13",
+                        "matrixHeight" : 8192,
+                        "matrixWidth" : 8192,
+                        "scaleDenominator" : 68247.34668319322,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "14" : {
+                        "matrixId" : "14",
+                        "matrixHeight" : 16384,
+                        "matrixWidth" : 16384,
+                        "scaleDenominator" : 34123.673341596535,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "15" : {
+                        "matrixId" : "15",
+                        "matrixHeight" : 32768,
+                        "matrixWidth" : 32768,
+                        "scaleDenominator" : 17061.83667079829,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "16" : {
+                        "matrixId" : "16",
+                        "matrixHeight" : 65536,
+                        "matrixWidth" : 65536,
+                        "scaleDenominator" : 8530.918335399145,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "17" : {
+                        "matrixId" : "17",
+                        "matrixHeight" : 131072,
+                        "matrixWidth" : 131072,
+                        "scaleDenominator" : 4265.459167699572,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "18" : {
+                        "matrixId" : "18",
+                        "matrixHeight" : 262144,
+                        "matrixWidth" : 262144,
+                        "scaleDenominator" : 2132.7295838497826,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "19" : {
+                        "matrixId" : "19",
+                        "matrixHeight" : 524288,
+                        "matrixWidth" : 524288,
+                        "scaleDenominator" : 1066.364791924893,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    }
+                },
+                "nativeResolutions" : [
+                    "156543.0339280410",
+                    "78271.51696402048",
+                    "39135.75848201023",
+                    "19567.87924100512",
+                    "9783.939620502561",
+                    "4891.969810251280",
+                    "2445.984905125640",
+                    "1222.992452562820",
+                    "611.4962262814100",
+                    "305.7481131407048",
+                    "152.8740565703525",
+                    "76.43702828517624",
+                    "38.21851414258813",
+                    "19.10925707129406",
+                    "9.554628535647032",
+                    "4.777314267823516",
+                    "2.388657133911758",
+                    "1.194328566955879",
+                    "0.5971642834779395",
+                    "0.2985821417389697"
+                ]
+            }
+        };
         var minimap = document.createElement("pnx-mini-map");
         minimap.className = "pnx-photo-viewer-mini-map";
         minimap.setAttribute("slot", "bottom-left");
@@ -1735,7 +2181,8 @@ class Panoramax extends Control {
         minimap.options = {
             layers : [
                 new GeoportalWMTS({
-                    layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+                    layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+                    configuration : LAYER_CONFIG
                 }),
                 this.layerPanoramax
             ],
