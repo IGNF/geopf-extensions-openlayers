@@ -240,6 +240,8 @@ class Draw extends ToggleContent {
                 this.layer = new VectorLayer({
                     source : this.source
                 });
+                // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant.
+                this.layer.gpResultLayerId = "drawing";
             }
         } else {
             this.source = options.source;
@@ -529,7 +531,11 @@ class Draw extends ToggleContent {
 
             this.styleDialog && map.addControl(this.styleDialog);
 
-            this.layer && map.addLayer(this.layer);
+            try {
+                this.layer && map.addLayer(this.layer);
+            } catch (error) {
+                console.warn("[DRAW] : Couche déjà ajoutée à la carte");
+            }
 
             this.snap && map.addInteraction(this.snap);
         }
