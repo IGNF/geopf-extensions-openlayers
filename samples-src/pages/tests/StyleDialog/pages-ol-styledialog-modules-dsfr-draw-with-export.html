@@ -12,6 +12,9 @@
 <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDefaultInput.css" />
 <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlFlatStyleForm.css" />
 
+<!-- Export -->
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlExport.css" />
+
 <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
 <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
 <script src="{{ baseurl }}/dist/modules/GpfExtOlModifyingInteraction.js"></script>
@@ -23,6 +26,9 @@
 <!-- StyleDialog Controls -->
 <script src="{{ baseurl }}/dist/modules/GpfExtOlStyleForm.js"></script>
 <script src="{{ baseurl }}/dist/modules/GpfExtOlLabelForm.js"></script>
+
+<!-- Export -->
+<script src="{{ baseurl }}/dist/modules/GpfExtOlExport.js"></script>
 {{/content}}
 
 {{#content "head"}}
@@ -39,7 +45,7 @@
 {{/content}}
 
 {{#content "body"}}
-<h2>Outil de dessin avec dialogue de style</h2>
+<h2>Outil de dessin avec export</h2>
 <!-- map -->
 <div id="map">
 </div>
@@ -73,64 +79,61 @@
             ]
         });
 
-        const saveDrawing = function (e) {
-            alert("Enregistrement dans l'espace perso");
-        }
-
-        const exportDrawing = function (e) {
-            // Récupère le nom
-            const input = this.getFooterContent().firstChild?.querySelector("input");
-            const name = input.value || "export_dessin";
-
-            // Récupère la source
-            const source = draw.getSource();
-            const featProj = draw.getSource().getProjection() || draw.getMap().getView().getProjection();
-            if (!featProj) {
-                alert("pas de projection");
-                return;
-            }
-
-            // Transforme en KML
-            const format = new ol.format.KML({});
-            const result = format.writeFeatures(source.getFeatures(), {
-                dataProjection: "EPSG:4326",
-                featureProjection: featProj
-            });
-
-            // Exporte le fichier
-            const link = document.createElement("a");
-            const charset = "utf-8";
-            link.href = "data:application/vnd.google-earth.kml+xml;charset=" + charset + "," + encodeURIComponent(result);
-            link.download = `${name}.kml`;
-            link.click();
-        }
-
         const draw = new ol.control.Draw({
             // position: "right",
             style: true,
             addToMap: true,
-            footer: {
-                content: `<div class="fr-input-group">
-                            <label class="GPlabel gpf-label fr-label" for="fileName">Nom du fichier</label>
-                            <input type="text" id="fileName" class="GPinput gpf-input fr-input">
-                        </div>`,
-                buttons: [
-                    {
-                        label: "Exporter",
-                        title: "Fermer le dialogue",
-                        className: "fr-btn--tertiary",
-                        callback: exportDrawing,
-                    },
-                    {
-                        label: "Enregistrer",
-                        title: "Enregistrer le calque",
-                        callback: saveDrawing,
-                    },
-                ]
-            }
         });
 
         map.addControl(draw);
+
+        const btnExport = new ol.control.Export({
+            title: "Exporter",
+            kind: "secondary",
+            download: true,
+            name: "Mon croquis",
+            description: "",
+            control: draw,
+            menu: true,
+            menuOptions: {
+                outside: true,
+                above: true,
+                selectFormat: false,
+                labelDesc: false
+            },
+            direction: "column",
+            format: "KML",
+            target: draw.getDialog().getFooterContent(),
+            icons: {
+                menu: "",
+                button: "export"
+            }
+        });
+        map.addControl(btnExport);
+        btnExport.on("button:clicked", (e) => {
+            console.log("Export drawing", e);
+        });
+
+        const btnSave = new ol.control.Export({
+            title: "Enregistrer",
+            kind: "primary",
+            download: false,
+            name: "Mon croquis",
+            target: draw.getDialog().getFooterContent(),
+            description: "",
+            control: draw,
+            menu: false,
+            format: "KML",
+            icons: {
+                menu: "",
+                button: "save"
+            }
+        });
+
+        map.addControl(btnSave);
+        btnSave.on("button:clicked", (e) => {
+            console.log("Save drawing", e);
+        });
 
         window.select = draw.getSelect();
     };

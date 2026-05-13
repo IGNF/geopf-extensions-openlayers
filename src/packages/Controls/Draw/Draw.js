@@ -162,7 +162,7 @@ class Draw extends ToggleContent {
     constructor (options) {
         super(options);
 
-        if (options.drawingInteractions instanceof Array && options.drawingInteractions.length) {
+        if (Array.isArray(options.drawingInteractions) && options.drawingInteractions.length) {
             // Ajoute les interactions de dessin
             options.drawingInteractions.forEach(i => {
                 this.source && i.interaction?.setSource?.(this.source);
@@ -592,6 +592,38 @@ class Draw extends ToggleContent {
      */
     getStyleDialog () {
         return this.styleDialog;
+    }
+
+    /**
+     * Définit une couche sur laquelle dessiner.
+     * Permet de donner directement une couche au contrôle,
+     * plutôt qu'une source seulement.
+     * 
+     * La source de la couche est ensuite mise dans le contrôle.
+     * 
+     * @param {VectorLayer} layer Couche sur laquelle dessiner
+     */
+    setLayer (layer) {
+        if (layer instanceof VectorLayer) {
+            // Remplace la couche mais ne l'enlève pas de la carte
+            this.layer = layer;
+            // Modifie la source des interactions
+            if (layer.getSource() instanceof VectorSource) {
+                this.setSource(layer.getSource());
+            } else {
+                console.warn("La source de la couche n'est pas de type VectorSource", layer);
+            }
+        }
+    }
+
+    /**
+     * Renvoie la couche de dessin utilisée.
+     * Méthode créé pour compatibilité avec contrôle Export.
+     * 
+     * @returns {VectorLayer} Couche de dessin, si elle existe
+     */
+    getLayer () {
+        return this.layer;
     }
 
 }
