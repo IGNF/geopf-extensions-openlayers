@@ -324,13 +324,6 @@ export default class PictureLegendWidget extends LitElement {
                                         href=${this._hdUrl}
                                         @click=${this._closeGroup}
                                     >Afficher l’image HD</a>
-                                    <a
-                                        class="fr-px-2v fr-py-3v link"
-                                        download
-                                        target="_blank"
-                                        href="#"
-                                        @click=${this._closeGroup}
-                                    >Un autre lien</a>
                                 </pnx-list-group>
                             </pnx-togglable-group>
                             <pnx-button kind="superflat" size="sm" @click=${this._onExpand}>
