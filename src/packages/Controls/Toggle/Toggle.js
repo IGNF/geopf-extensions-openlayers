@@ -52,6 +52,17 @@ class Toggle extends Control {
     }
 
     /**
+     * Retourne l'élément HTML contenant le contrôle.
+     * Méthode créé pour ne pas créer de conflits avec les
+     * autre contrôles.
+     * 
+     * @returns {HTMLElement} Élément HTML
+     */
+    getContainer () {
+        return this.element;
+    }
+
+    /**
      * Active ou désactive le contrôle (désactive l'input / bouton).
      * @param {Boolean} active Indique si le contrôle doit être activé ou non
      * @param {Boolean} [silent] Si vrai, n'envoie pas d'événement `change:active`
