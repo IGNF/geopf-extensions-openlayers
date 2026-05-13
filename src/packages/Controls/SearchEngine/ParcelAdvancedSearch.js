@@ -774,7 +774,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
         prefixInput.title = "Choisir le préfixe de la parcelle";
         prefixInput.id = Helper.getUid("ParcelAdvancedSearch-prefix-");
         prefixInput.setAttribute("disabled", "disabled");
-        this._getLabelContainer("Préfix", "fr-select-group", prefixInput, "");
+        this._getLabelContainer("Préfixe", "fr-select-group", prefixInput, "");
 
         // Section
         const sectionInput = this.sectionInput = document.createElement("select");
