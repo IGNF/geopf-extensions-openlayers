@@ -5,18 +5,6 @@ import { Map } from "ol";
 
 class ControlExtended extends Control {
 
-    /**
-     * Fonction appelée au changement de taille de la carte
-     * @param {ObjectEvent} e Événement de changement de taille
-     */
-    #updateSize (e) {
-        const size = e.target.getSize();
-        if (size) {
-            e.target.getTargetElement()?.style.setProperty("--map-width", `${size[0]}px`);
-            e.target.getTargetElement()?.style.setProperty("--map-height", `${size[1]}px`);
-        }
-    }
-
     constructor (options) {
         options = options || {};
         super({
@@ -70,8 +58,20 @@ class ControlExtended extends Control {
 
             // Vérifie si la carte écoute déjà cet événement
             if (!map.get("listenToChangeSizeEvent")) {
+                /**
+                 * Fonction appelée au changement de taille de la carte
+                 * @param {ObjectEvent} e Événement de changement de taille
+                 */
+                const updateSize = function (e) {
+                    const size = e.target.getSize();
+                    if (size) {
+                        e.target.getTargetElement()?.style.setProperty("--map-width", `${size[0]}px`);
+                        e.target.getTargetElement()?.style.setProperty("--map-height", `${size[1]}px`);
+                    }
+                };
+
                 // Ajoute la valeur et l'écouteur d'événement;
-                map.on("change:size", this.#updateSize);
+                map.on("change:size", updateSize);
                 map.set("listenToChangeSizeEvent", true);
             }
         }
