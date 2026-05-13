@@ -382,6 +382,18 @@ class LayerSwitcher extends Control {
         if (this.options.allowTooltips) {
             ToolTips.init();
         }
+
+        // Tooltip lorsqu'il n'y a pas de position
+        if (map && !this.options.position) {
+            setTimeout(() => {
+                if (!this.element.closest(".position")) {
+                    const mapRect = map.getViewport().getBoundingClientRect();
+                    const elemRect = this.element.getBoundingClientRect();
+                    const isRightHalf = (elemRect.left + elemRect.width / 2) > (mapRect.left + mapRect.width / 2);
+                    this.element.classList.toggle("gpf-tooltip-right", isRightHalf);
+                }
+            }, 0);
+        }
     }
 
     /**

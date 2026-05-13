@@ -18,8 +18,10 @@ function getSameSideOpenedPanel (position, openedPanelID) {
     return controlPanels.filter(p => {
         var panelID = p.id.match(/(\w+)-[0-9]+/)[1];
         var isException = exceptionPanel.includes(panelID);
-        var isOpened = p.getElementsByTagName("button")[0].getAttribute("aria-pressed");
-        if (isOpened === "true" && !isException) {
+        var button = p.getElementsByTagName("button")[0];
+        // Vérifie si le bouton est ouvert (aria-pressed ou aria-extendeed)
+        var isOpened = (button.getAttribute("aria-pressed") === "true") || (button.getAttribute("aria-extended") === "true");
+        if (isOpened && !isException) {
             return p;
         }
     });

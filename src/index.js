@@ -54,7 +54,32 @@ export { default as Catalog } from "./packages/Controls/Catalog/Catalog";
 export { default as Territories } from "./packages/Controls/Territories/Territories";
 export { default as ControlList } from "./packages/Controls/ControlList/ControlList";
 export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextMenu";
+export { default as SimpleMenu } from "./packages/Controls/ContextMenu/SimpleMenu";
+export { default as InfoControl } from "./packages/Controls/ContextMenu/InfoControl";
 export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
+export { default as Toggle } from "./packages/Controls/Toggle/Toggle";
+export { default as ToggleContent } from "./packages/Controls/Toggle/ToggleContent";
+export { default as ToggleInteraction } from "./packages/Controls/Toggle/ToggleInteraction";
+export { default as Dialog } from "./packages/Controls/Toggle/Dialog";
+export { default as TabNav } from "./packages/Controls/Toggle/TabNav";
+export { default as Draw } from "./packages/Controls/Draw/Draw";
+
+// Input Controls
+export { default as InputColor } from "./packages/Controls/Input/InputColor";
+export { default as InputNumber } from "./packages/Controls/Input/InputNumber";
+export { default as CustomSelect } from "./packages/Controls/Input/CustomSelect";
+export { default as CustomSelectGrid } from "./packages/Controls/Input/CustomSelectGrid";
+export { default as DefaultInput } from "./packages/Controls/Input/DefaultInput";
+
+// StyleDialog Controls
+export { default as FlatStyleForm } from "./packages/Controls/StyleDialog/FlatStyleForm";
+export { default as styleForm } from "./packages/Controls/StyleDialog/styleForm";
+export { default as labelForm } from "./packages/Controls/StyleDialog/labelForm";
+
+// Interactions
+export { default as DrawingInteraction } from "./packages/Interactions/Drawing";
+export { default as SelectingInteraction } from "./packages/Interactions/Selecting";
+export { default as ModifyingInteraction } from "./packages/Interactions/Modifying";
 
 // Services
 export { default as AbstractSearchService } from "./packages/Services/AbstractSearchService";

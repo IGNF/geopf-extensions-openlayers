@@ -1,0 +1,24 @@
+.GPF-tabnav {
+  margin-bottom: 0.5rem;
+  padding: 0 0.75rem;
+}
+
+.GPF-tabnav__list {
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  .GPF-tabnav__item {
+    align-items: flex-start;
+    position: static;
+  }
+}
+
+.GPF-tabnav__link {
+  padding: 0.75rem;
+  min-height: 2rem;
+
+  background-repeat: no-repeat, no-repeat;
+  transition: background-size 0s;
+  background-position: 0 100%;
+  background-size: 100% 2px;
+}

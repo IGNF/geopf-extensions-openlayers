@@ -156,7 +156,11 @@
   background-color: var(--background-default-grey);
 }
 
-.gpf-widget > .gpf-btn-icon[aria-pressed="true"] {
+/* Gestion des couleurs des boutons dans DSFRWidgets.scss
+Plus de barre bleu sur le côté, juste un bouton rose
+*/
+
+/* .gpf-widget > .gpf-btn-icon[aria-pressed="true"] {
   background-color: var(--hover-tint);
   position: relative;
 }
@@ -169,17 +173,17 @@
   left: 44px;
   position: absolute;
   transform: translateY(-40px);
-}
+} */
+
+/* @supports(-moz-appearance:none) {
+  .gpf-widget:has(.gpf-btn-icon[aria-pressed="true"])::after {
+    transform: unset;
+  }
+} */
 
 .gpf-btn-group {
   display: flex;
   justify-content: center;
-}
-
-@supports(-moz-appearance:none) {
-  .gpf-widget:has(.gpf-btn-icon[aria-pressed="true"])::after {
-    transform: unset;
-  }
 }
 
 /* Affichage du tooltip au survol du bouton */

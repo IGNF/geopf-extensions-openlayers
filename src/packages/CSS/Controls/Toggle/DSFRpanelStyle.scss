@@ -1,0 +1,35 @@
+@use './DSFRtabNavStyle.scss';
+@use '../../mixins.scss' as mix;
+
+.GPF-dialog {
+  background-color: var(--background-default-grey);
+  box-shadow: 0 2px 6px 0 var(--shadow-color);
+
+  &__header {
+    color: var(--text-action-high-blue-france);
+    background-color: var(--background-open-blue-france);
+
+    .GPF-dialog__buttons {
+      --hover: var(--background-open-blue-france-hover);
+      --active: var(--background-open-blue-france-active);
+
+      @include mix.button-state($background: var(--background-open-blue-france));
+    }
+  }
+
+  &__footer {
+    > .GPF-dialog__btns-group {
+      gap: 0.5rem;
+      margin: 0;
+      button {
+        margin: 0;
+      }
+    }
+
+    &:has(.GPF-dialog__btns-group:not(:empty)), &:has(.GPF-dialog__footer-content:not(:empty)) {
+      &::before {
+        background-color: var(--border-default-grey);
+      }
+    }
+  }
+}
