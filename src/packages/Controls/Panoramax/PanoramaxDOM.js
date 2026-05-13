@@ -216,7 +216,7 @@ var PanoramaxDOM = {
         href.classList.add("gpf-btn");
         href.title = opts.description;
         href.setAttribute("aria-label", opts.description);
-        href.setAttribute("target", "_self");
+        href.setAttribute("target", "_blank");
         href.setAttribute("href", opts.link);
         href.innerHTML = opts.label;
 
