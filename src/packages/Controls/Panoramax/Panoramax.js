@@ -82,6 +82,21 @@ var logger = Logger.getLogger("panoramax");
  * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
  * @property {String|HTMLElement|null} [visualizationWindow.target] - **Experimental** - Cible DOM où injecter le panneau de visualisation.
  * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen", "fullscreen-map").
+ * @property {Object} [viewer] - Options de configuration du visualiseur d'images panoramiques.
+ * @property {String} [viewer.endpoint] - URL de l'endpoint du visualiseur d'images panoramiques.
+ * @property {String} [viewer.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
+ * @property {Boolean} [viewer.widgets] - Affiche ou masque les widgets du visualiseur.
+ * @property {Object} [viewer.psv-options] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+ * @property {Object} [interactions] - Options de configuration des interactions sur les différentes couches Panoramax. 
+ * @property {Object} [interactions.grid] - Options d'interaction pour la couche de grille.
+ * @property {Boolean} [interactions.grid.active] - Active ou désactive les interactions sur la couche de grille.
+ * @property {Array<String>} [interactions.grid.actions] - Actions disponibles sur la couche de grille ("preview", "zoom").
+ * @property {Object} [interactions.sequences] - Options d'interaction pour la couche de séquences.
+ * @property {Boolean} [interactions.sequences.active] - Active ou désactive les interactions sur la couche de séquences.
+ * @property {Array<String>} [interactions.sequences.actions] - Actions disponibles sur la couche de séquences ("preview", "zoom").
+ * @property {Object} [interactions.pictures] - Options d'interaction pour la couche d'images individuelles.
+ * @property {Boolean} [interactions.pictures.active] - Active ou désactive les interactions sur la couche d'images individuelles.
+ * @property {Array<String>} [interactions.pictures.actions] - Actions disponibles sur la couche d'images individuelles ("preview", "zoom").
  */
 
 /**
@@ -475,6 +490,20 @@ class Panoramax extends Control {
                     
                 },
             },
+            interactions : {
+                grid : {
+                    active : true,
+                    actions : ["zoom"],
+                },
+                sequences : {
+                    active : false,
+                    actions : ["preview", "zoom"],
+                },
+                pictures : {
+                    active : true,
+                    actions : ["preview"],
+                }
+            }
         };
 
         // merge with user options
@@ -483,6 +512,7 @@ class Panoramax extends Control {
         Utils.assign(this.options.buttonsWindow, options.buttonsWindow);
         Utils.assign(this.options.visualizationWindow, options.visualizationWindow);
         Utils.assign(this.options.viewer, options.viewer);
+        Utils.assign(this.options.interactions, options.interactions);
         [
             "collapsed", 
             "draggable", 
@@ -927,24 +957,30 @@ class Panoramax extends Control {
                 if (type === "grid") {
                     // zoom on the clicked coordinates with a zoom level 
                     // depending on the density of images in the grid
-                    var zoom = e.map.getView().getZoom();
-                    var newZoom = zoom + 4; // FIXME zoom aleatoire !?
-                    e.map.getView().animate({
-                        center : feature.coordinates,
-                        zoom : newZoom,
-                        duration : 500
-                    });
+                    if (self.options.interactions.grid.active && 
+                        self.options.interactions.grid.actions.includes("zoom")) {
+                        var zoom = e.map.getView().getZoom();
+                        var newZoom = zoom + 4; // FIXME zoom aleatoire !?
+                        e.map.getView().animate({
+                            center : feature.coordinates,
+                            zoom : newZoom,
+                            duration : 500
+                        });
+                    }
                 }
                 if (type === "sequences") {
                     // zoom on the clicked coordinates with a zoom level 
                     // depending on the density of images in the sequence
-                    var zoom = e.map.getView().getZoom();
-                    var newZoom = zoom + 2; // FIXME zoom aleatoire !?
-                    e.map.getView().animate({
-                        center : feature.coordinates,
-                        zoom : newZoom,
-                        duration : 500
-                    });
+                    if (self.options.interactions.sequences.active && 
+                        self.options.interactions.sequences.actions.includes("zoom")) {
+                        var zoom = e.map.getView().getZoom();
+                        var newZoom = zoom + 2; // FIXME zoom aleatoire !?
+                        e.map.getView().animate({
+                            center : feature.coordinates,
+                            zoom : newZoom,
+                            duration : 500
+                        });
+                    }
                 }
                 return;
             } else {
@@ -2324,22 +2360,35 @@ class Panoramax extends Control {
     displayPreview (feature) {
         let properties = feature.getProperties();
         var type = properties.layer || properties["mvt:layer"];
+
+        // stocke la feature survolée
+        this.selectedFeature = feature;
+        feature = this._transformToPanoramaxFeature(feature);
+
         switch (type) {
             case "grid":
-                // preview la feature panoramax
-                feature = this._transformToPanoramaxFeature(feature);
-                this.displayPreviewGrid(feature.coordinates, feature.properties);
+                // preview des statistiques panoramax
+                if (this.options.interactions["grid"].active && 
+                    this.options.interactions["grid"].actions.includes("preview")
+                ) {
+                    this.displayPreviewGrid(feature.coordinates, feature.properties);
+                }
                 break;
             case "sequences":
-                // FIXME desactive temporairement la prévisualisation des séquences
-                // this.displayPreviewSequence(feature.coordinates, feature.properties);
+                // la prévisualisation d'une image parmis la séquence
+                if (this.options.interactions["sequences"].active && 
+                    this.options.interactions["sequences"].actions.includes("preview")
+                ) {
+                    this.displayPreviewSequence(feature.coordinates, feature.properties);
+                }
                 break;
             case "pictures":
-                // stocke la feature survolée
-                this.selectedFeature = feature;
-                // preview la feature panoramax
-                feature = this._transformToPanoramaxFeature(feature);
-                this.displayPreviewPicture(feature.coordinates, feature.properties);
+                if (this.options.interactions["pictures"].active && 
+                    this.options.interactions["pictures"].actions.includes("preview")
+                ) {
+                    // preview de l'image panoramax
+                    this.displayPreviewPicture(feature.coordinates, feature.properties);
+                }
                 break;
             default:
                 logger.warn("Unknown feature type :", type);
