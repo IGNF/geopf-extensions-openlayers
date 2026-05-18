@@ -292,6 +292,8 @@ pnx-photo-viewer pnx-cornered-grid::part(corner-top-right) {
   font-size: 0.75em;
   background-color: var(--background-default-grey);
   filter: drop-shadow(var(--raised-shadow));
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .pnx-popup-content::before {
