@@ -1039,6 +1039,8 @@ class Panoramax extends Control {
         this.resetPhotoViewer();
         // - nettoyer l'aperçu au survol
         this.resetPreview();
+        // - reinit les filtres
+        this.resetAllGroupFilters();
         // - etc.
         this.eventActived = false;
         if (!this.auto) {
