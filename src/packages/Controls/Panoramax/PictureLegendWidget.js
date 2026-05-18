@@ -153,6 +153,7 @@ export default class PictureLegendWidget extends LitElement {
     constructor () {
         super();
         this._expanded = true;
+        this._onLegendClick = this._onLegendClick.bind(this);
     }
 
     createRenderRoot () {
@@ -175,6 +176,15 @@ export default class PictureLegendWidget extends LitElement {
                     this._onPicChange(this._parent.psv.getPictureMetadata());
                 });
             });
+
+        // close toggable menu when click on legend
+        this.addEventListener("click", this._onLegendClick);
+    }
+
+    /** @private */
+    disconnectedCallback () {
+        this.removeEventListener("click", this._onLegendClick);
+        super.disconnectedCallback();
     }
 
     /**
@@ -224,11 +234,30 @@ export default class PictureLegendWidget extends LitElement {
     }
 
     /** @private */
+    _closeGroup () {
+        const group = this.querySelector("#pic-legend-headline-menu");
+        if (group && typeof group.close === "function") {
+            group.close();
+        }
+    }
+
+    /** @private */
+    _closeMenu () {
+        this._closeGroup();
+    }
+
+    /** @private */
+    _onLegendClick () {
+        this._closeGroup();
+    }
+
+    /** @private */
     render () {
         if (!this._caption) { return nothing; }
         return html`
             <style>
                 .gpf-picture-legend-widget {
+                    cursor: default;
                     display: flex;
                     box-sizing: border-box;
                     width: 450px;
