@@ -48,7 +48,7 @@ var PanoramaxDOM = {
         button.classList.add("fr-btn", "fr-btn--tertiary");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
-        button.setAttribute("aria-label", `Afficher ${title}`);
+        button.setAttribute("aria-label", `Parcourir les photos ${title}`);
         button.setAttribute("type", "button");
 
         // Close all results and panels when minimizing the widget
