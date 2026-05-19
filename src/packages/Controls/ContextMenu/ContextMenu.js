@@ -518,7 +518,8 @@ class ContextMenu extends Control {
             // spécifique au service
             positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
             outputFormat : "json", // json|xml
-            serverUrl : this.options.altiServerUrl
+            serverUrl : this.options.altiServerUrl,
+            resource : this.options.altiResource
         };
         Gp.Services.getAltitude(altiOptions);
 

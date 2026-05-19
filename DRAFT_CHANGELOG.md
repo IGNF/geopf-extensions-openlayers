@@ -29,7 +29,7 @@ Homogénéisation du paramètre serverUrl pour brancher un service différent au
 
   - Interface(widgets) : interfaçage du paramètre serverUrl pour les widgets iti/iso/reversegeocode/mouseposition/search (#503)
   - Interface(AdvancedSearch) : interfaçage du paramètre serverUrl et geocodeGetCapabilitiesUrl pour le widget de recherche avancée (#504, #508)
-  - Interface(ContextMenu): interfaçage du paramétre serverUrl pour le menuContextuel (#506)
+  - Interface(ContextMenu): interfaçage du paramétre serverUrl et resource pour l'alti du menuContextuel (#506)
   - Search: filtrage plus fin des résultats liés aux codes postaux en cas d'option "pretiffyResults" (#507) 
   
 * 🔒 [Security]
