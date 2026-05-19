@@ -267,6 +267,18 @@ jobs:
         with:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
+      
+      - name: Verify npm authentication
+        run: |
+          if npm whoami --registry https://registry.npmjs.org; then
+            echo "✅ Authentification npm OK"
+          else
+            echo "❌ ERREUR: Token npm expiré ou invalide !"
+            echo "Veuillez renouveler le token NPM_GEOPORTAL_TOKEN dans les secrets GitHub"
+            exit 1
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
           
       - name: Publish on npm
         run: |
