@@ -17,6 +17,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - UI(Search): ajout d'un séparateur entre la recherche simple et la recherche avancée (#509)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
