@@ -271,7 +271,7 @@ jobs:
       - name: Publish on npm
         run: |
           cd ./dist/package
-          npm publish --provenance --access public --tag next
+          npm publish --provenance --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
 
