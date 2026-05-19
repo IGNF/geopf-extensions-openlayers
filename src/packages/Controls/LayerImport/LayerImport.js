@@ -1722,18 +1722,18 @@ class LayerImport extends Control {
             logger.log("loaded features : ", features);
             
             // sanitize toutes les properties des features pour éviter les risques de XSS
-            // for (let index = 0; index < features.length; index++) {
-            //     const feature = features[index];
-            //     var properties = feature.getProperties();
-            //     for (var key in properties) {
-            //         if (properties.hasOwnProperty(key)) {
-            //             var value = properties[key];
-            //             if (typeof value === "string") {
-            //                 feature.set(key, sanitizeHtml(value));
-            //             }
-            //         }
-            //     }
-            // }
+            for (let index = 0; index < features.length; index++) {
+                const feature = features[index];
+                var properties = feature.getProperties();
+                for (var key in properties) {
+                    if (properties.hasOwnProperty(key)) {
+                        var value = properties[key];
+                        if (typeof value === "string") {
+                            feature.set(key, sanitizeHtml(value));
+                        }
+                    }
+                }
+            }
             
             // création d'une couche vectorielle à partir de ces features
             vectorSource = new VectorSource({
