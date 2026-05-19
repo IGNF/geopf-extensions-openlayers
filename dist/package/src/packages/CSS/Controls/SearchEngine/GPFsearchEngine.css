@@ -213,6 +213,7 @@ form[id^=GPadvancedSearchForm]:has(option[value="Coordinates"]:checked) > input[
     display: flex;
     flex-direction: row;
     padding: 0;
+    border-radius: 0.25rem 0 0 0;
 }
 
 [id^="GPsearchEngine"] form[id^=GPsearchInput-Base-] .GPOptionsContainer {
