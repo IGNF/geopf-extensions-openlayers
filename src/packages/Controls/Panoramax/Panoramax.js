@@ -1303,6 +1303,7 @@ class Panoramax extends Control {
         }
         if (!this.groupPanoramax) {
             this.groupPanoramax = new LayerGroup();
+            this.groupPanoramax.gpResultLayerId = "panoramax:group";
             map.addLayer(this.groupPanoramax);
             this.groupPanoramax.set("title", "Panoramax");
         }
@@ -1328,6 +1329,7 @@ class Panoramax extends Control {
         });
         // hack pour le gestionnaire de couche
         layer.styleUrl = opts.url;
+        layer.gpResultLayerId = "panoramax:layer";
         
         if (this.options.group) {
             this.setLayerGroup();
@@ -1377,6 +1379,7 @@ class Panoramax extends Control {
             maxZoom : opts.maxZoom || 21
         });
         layer.styleUrl = opts.url;
+        layer.gpResultLayerId = "panoramax:background";
 
         if (this.groupPanoramax) {
             this.groupPanoramax.getLayers().insertAt(0, layer);
