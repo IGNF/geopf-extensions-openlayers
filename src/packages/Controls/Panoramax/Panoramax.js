@@ -496,8 +496,8 @@ class Panoramax extends Control {
                     actions : ["zoom"],
                 },
                 sequences : {
-                    active : false,
-                    actions : ["preview", "zoom"],
+                    active : true,
+                    actions : ["zoom"],
                 },
                 pictures : {
                     active : true,
@@ -960,7 +960,7 @@ class Panoramax extends Control {
                     if (self.options.interactions.grid.active && 
                         self.options.interactions.grid.actions.includes("zoom")) {
                         var zoom = e.map.getView().getZoom();
-                        var newZoom = zoom + 4; // FIXME zoom aleatoire !?
+                        var newZoom = zoom + 4; // FIXME zoom facteur aleatoire !?
                         e.map.getView().animate({
                             center : feature.coordinates,
                             zoom : newZoom,
@@ -973,11 +973,8 @@ class Panoramax extends Control {
                     // depending on the density of images in the sequence
                     if (self.options.interactions.sequences.active && 
                         self.options.interactions.sequences.actions.includes("zoom")) {
-                        var zoom = e.map.getView().getZoom();
-                        var newZoom = zoom + 2; // FIXME zoom aleatoire !?
-                        e.map.getView().animate({
-                            center : feature.coordinates,
-                            zoom : newZoom,
+                        e.map.getView().fit(feature.extent, {
+                            maxZoom : 21,  // FIXME zoom fixe aleatoire !?
                             duration : 500
                         });
                     }
@@ -1004,7 +1001,7 @@ class Panoramax extends Control {
             }
             var options = {
                 layerFilter : (l) => l === self.layerPanoramax,
-                hitTolerance : 5
+                hitTolerance : 0
             };
             var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature, options);
             var mapTarget = e.map.getTargetElement();
@@ -1603,6 +1600,26 @@ class Panoramax extends Control {
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-visible", "gpf-hidden");
+    }
+
+    /** @private */
+    cleanPhotoViewer () {
+        // Nettoie les attributs de séquence et de photo du viewer de photos
+        // ...?pic=02ef4feb-e69a-4c94-88bb-3c2058f2f5c8&seq=1c6b7bd1-a78e-4665-93e9-4ddb666d0a3f&speed=250&xyz=79.00/0.00/30
+        if (!this.photoViewerPanoramax) {
+            logger.warn("Panoramax photo viewer is not available");
+            return;
+        }
+        this.photoViewerPanoramax.removeAttribute("sequence");
+        this.photoViewerPanoramax.removeAttribute("picture");
+        
+        // TODO
+        // 'speed' n'est pas un attribut du photoViewer
+        // on devrait supprimer ce param de l'URL !
+
+        // FIXME
+        // Lors de la seconde ouverture du photoviewer, 
+        // la première photo est visible pendant le chargement !?
     }
 
     // ################################################################### //
@@ -2363,7 +2380,7 @@ class Panoramax extends Control {
 
         // stocke la feature survolée
         this.selectedFeature = feature;
-        feature = this._transformToPanoramaxFeature(feature);
+        var pfeature = this._transformToPanoramaxFeature(feature);
 
         switch (type) {
             case "grid":
@@ -2371,7 +2388,7 @@ class Panoramax extends Control {
                 if (this.options.interactions["grid"].active && 
                     this.options.interactions["grid"].actions.includes("preview")
                 ) {
-                    this.displayPreviewGrid(feature.coordinates, feature.properties);
+                    this.displayPreviewGrid(pfeature.coordinates, pfeature.properties);
                 }
                 break;
             case "sequences":
@@ -2379,7 +2396,7 @@ class Panoramax extends Control {
                 if (this.options.interactions["sequences"].active && 
                     this.options.interactions["sequences"].actions.includes("preview")
                 ) {
-                    this.displayPreviewSequence(feature.coordinates, feature.properties);
+                    this.displayPreviewSequence(pfeature.coordinates, pfeature.properties);
                 }
                 break;
             case "pictures":
@@ -2387,7 +2404,7 @@ class Panoramax extends Control {
                     this.options.interactions["pictures"].actions.includes("preview")
                 ) {
                     // preview de l'image panoramax
-                    this.displayPreviewPicture(feature.coordinates, feature.properties);
+                    this.displayPreviewPicture(pfeature.coordinates, pfeature.properties);
                 }
                 break;
             default:
@@ -2404,6 +2421,7 @@ class Panoramax extends Control {
     _transformToPanoramaxFeature (feature) {
         return {
             coordinates : feature.getFlatCoordinates(),
+            extent : feature.getExtent(),
             properties : feature.getProperties()
         };
     };
@@ -2987,6 +3005,8 @@ class Panoramax extends Control {
         this.buttonPanoramaxShow.click();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
+        // clean du viewer de photos de Panoramax
+        this.cleanPhotoViewer();
         // Bloque l'envoi/rechargement de la page
         e.preventDefault();
     }
@@ -3005,6 +3025,7 @@ class Panoramax extends Control {
         }
         this.hidePhotoViewer();
         this.showButtonsPanel();
+        this.cleanPhotoViewer();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
     }
