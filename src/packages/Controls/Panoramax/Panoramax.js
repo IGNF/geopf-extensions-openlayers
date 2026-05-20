@@ -972,7 +972,7 @@ class Panoramax extends Control {
                         var zoom = e.map.getView().getZoom();
                         var newZoom = zoom + 4; // FIXME zoom facteur aleatoire !?
                         e.map.getView().animate({
-                            center : feature.coordinates,
+                            center : feature.pointerCoordinate || feature.coordinates,
                             zoom : newZoom,
                             duration : 500
                         });
@@ -983,8 +983,9 @@ class Panoramax extends Control {
                     // depending on the density of images in the sequence
                     if (self.options.interactions.sequences.active && 
                         self.options.interactions.sequences.actions.includes("zoom")) {
-                        e.map.getView().fit(feature.extent, {
-                            maxZoom : 21,  // FIXME zoom fixe aleatoire !?
+                        e.map.getView().animate({
+                            center : feature.pointerCoordinate || feature.coordinates,
+                            zoom : 17,
                             duration : 500
                         });
                     }
@@ -1022,6 +1023,7 @@ class Panoramax extends Control {
                 self.resetPreview();
                 return;
             }
+            feature.pointerCoordinate = e.coordinate;
             self.displayPreview(feature);
         };
         this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB] = this.onPointerMoveDebounced(hoverHandler);
@@ -2413,6 +2415,7 @@ class Panoramax extends Control {
         return {
             coordinates : feature.getFlatCoordinates(),
             extent : feature.getExtent(),
+            pointerCoordinate : feature.pointerCoordinate,
             properties : feature.getProperties()
         };
     };
