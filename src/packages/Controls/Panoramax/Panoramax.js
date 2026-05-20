@@ -332,18 +332,26 @@ class Panoramax extends Control {
             if (this.auto) {
                 this.removeEventsListeners();
             }
+            // et d'autres nettoyages éventuels :
+            if (this.options.group) {
+                this.resetGroupLayer();
+            }
+            // - vider la couche de fond
+            this.resetBackground();
+            // - vider la couche de données
+            this.resetLayer();
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
 
         // position
-        if (this.options.position) {
+        if (map && this.options.position) {
             this.setPosition(this.options.position);
         }
 
         // reunion du bouton avec le précédent
-        if (this.options.gutter === false) {
+        if (map && this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
         }
     }
@@ -591,6 +599,8 @@ class Panoramax extends Control {
          * Référence des gestionnaires d'événements enregistrés sur la carte.
          */
         this.eventsListeners = {};
+
+        this.isResetEventPropagation = false; // flag pour éviter la propagation des événements de reset des filtres
 
         /**
          * Types de couches Panoramax disponibles dans le TMS vecteur 
@@ -1072,8 +1082,8 @@ class Panoramax extends Control {
         this.resetPhotoViewer();
         // - nettoyer l'aperçu au survol
         this.resetPreview();
-        // - reinit les filtres
-        this.resetAllGroupFilters();
+        // - reinit des filtres
+        this.resetAllGroupFilters({ isReset : true });
         // - etc.
         this.eventActived = false;
         if (!this.auto) {
@@ -2822,7 +2832,7 @@ class Panoramax extends Control {
         return mapboxLayers;
     }
 
-    resetAllGroupFilters () {
+    resetAllGroupFilters (options = {}) {
         var elements = this.panelPanoramaxOptions.elements;
         const groups = [
             "group-filter-dates",
@@ -2831,7 +2841,7 @@ class Panoramax extends Control {
             "group-filter-renders"
         ];
         groups.forEach(group => {
-            this.resetGroupFilter(group);
+            this.resetGroupFilter(group, options);
         });	
     }
 
@@ -2842,6 +2852,9 @@ class Panoramax extends Control {
         if (!groupElements) {
             return;
         }
+        
+        this.isResetEventPropagation = options.isReset === true;
+
         Array.from(groupElements).forEach(el => {
             if (el.type === "input" || el.type === "radio") {
                 el.checked = (el.dataset.default === "true");
@@ -2854,6 +2867,8 @@ class Panoramax extends Control {
                 el.value = "";
             }
         });
+
+        this.isResetEventPropagation = false;
     }
 
     /**
@@ -3102,6 +3117,10 @@ class Panoramax extends Control {
             return;
         }
 
+        if (this.isResetEventPropagation) {
+            return;
+        }
+
         var selectedType = (value || "").toLowerCase();
         var cameraType = null;
 
@@ -3147,6 +3166,10 @@ class Panoramax extends Control {
             return;
         }
 
+        if (this.isResetEventPropagation) {
+            return;
+        }
+
         var selectedValue = parseInt(e.target.value, 10);
         if (e.target.ariaPressed === "false") {
             selectedValue = null;
@@ -3182,6 +3205,10 @@ class Panoramax extends Control {
      */
     onChangePanoramaxFilterByDates (e) {
         logger.debug("onChangePanoramaxFilterByDates", e);
+
+        if (this.isResetEventPropagation) {
+            return;
+        }
 
         var startInput = document.getElementById(this._addUID("GPpanoramaxFilterDateStart"));
         var endInput = document.getElementById(this._addUID("GPpanoramaxFilterDateEnd"));
