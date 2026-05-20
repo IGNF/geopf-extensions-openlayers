@@ -1154,6 +1154,7 @@ class Route extends Control {
         // on met en place l'affichage des resultats dans la fenetre de resultats.
         var context = this;
         this._requestRouting({
+            serverUrl : routeOptions.serverUrl,
             startPoint : start,
             endPoint : end,
             viaPoints : step,

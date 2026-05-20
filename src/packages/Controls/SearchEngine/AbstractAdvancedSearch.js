@@ -102,7 +102,7 @@ class AbstractAdvancedSearch extends Control {
         fieldset.className = "GPFieldset fr-fieldset gpf-advanced-search-fieldset";
         fieldset.id = Helper.getUid("GPAdvancedFieldset-");
 
-        this.addInputs();
+        this.addInputs(options);
         this.inputs.forEach((elem) => {
             if (elem instanceof Control) {
                 elem.setTarget(element);

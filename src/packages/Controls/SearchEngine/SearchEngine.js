@@ -2718,9 +2718,9 @@ class SearchEngine extends Control {
     _prettifyAutocompleteResults (autocompleteResults) {
         for (var i = autocompleteResults.length - 1; i >= 0; i--) {
             var autocompleteResult = autocompleteResults[i];
-            if ((autocompleteResult.type === "StreetAddress" && autocompleteResult.kind === "municipality") ||
+            if ((autocompleteResult.type === "StreetAddress" && autocompleteResult.kind === "municipality" && ["Lyon", "Marseille", "Paris"].includes(autocompleteResult.commune)) ||
             autocompleteResult.type === "PositionOfInterest" && autocompleteResult.poiType[0] === "lieu-dit habité" && autocompleteResult.poiType[1] === "zone d'habitation") {
-                // on retire les éléments streetAdress - municipality car déjà pris en compte par POI
+                // on retire les éléments streetAdress - municipality pour Lyon Marseille et Paris car ca sort le 1er arrondissement, et que la commune est déjà prise en compte par POI
                 autocompleteResults.splice(i, 1);
             }
             // on précise le type dans le fulltext au POI des types département et région
