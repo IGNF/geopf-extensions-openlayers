@@ -1513,6 +1513,7 @@ class Panoramax extends Control {
             // Define plugins list in PSV options
             photoViewer["psv-options"] = this.options.viewer.pnxOptions["psv-options"];
             photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
+            photoViewer.setAttribute("url-parameters", "false");
             var widgets = this.options.viewer.widgets && Array.isArray(this.options.viewer.widgets) ? this.options.viewer.widgets : null;
             if (widgets) {
                 // Button back
@@ -1610,26 +1611,6 @@ class Panoramax extends Control {
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-visible", "gpf-hidden");
-    }
-
-    /** @private */
-    cleanPhotoViewer () {
-        // Nettoie les attributs de séquence et de photo du viewer de photos
-        // ...?pic=02ef4feb-e69a-4c94-88bb-3c2058f2f5c8&seq=1c6b7bd1-a78e-4665-93e9-4ddb666d0a3f&speed=250&xyz=79.00/0.00/30
-        if (!this.photoViewerPanoramax) {
-            logger.warn("Panoramax photo viewer is not available");
-            return;
-        }
-        this.photoViewerPanoramax.removeAttribute("sequence");
-        this.photoViewerPanoramax.removeAttribute("picture");
-        
-        // TODO
-        // 'speed' n'est pas un attribut du photoViewer
-        // on devrait supprimer ce param de l'URL !
-
-        // FIXME
-        // Lors de la seconde ouverture du photoviewer, 
-        // la première photo est visible pendant le chargement !?
     }
 
     // ################################################################### //
@@ -3020,8 +3001,6 @@ class Panoramax extends Control {
         this.buttonPanoramaxShow.click();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
-        // clean du viewer de photos de Panoramax
-        this.cleanPhotoViewer();
         // Bloque l'envoi/rechargement de la page
         e.preventDefault();
     }
@@ -3040,7 +3019,6 @@ class Panoramax extends Control {
         }
         this.hidePhotoViewer();
         this.showButtonsPanel();
-        this.cleanPhotoViewer();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
     }
