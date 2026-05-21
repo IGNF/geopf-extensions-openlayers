@@ -17,6 +17,8 @@ Homogénéisation du paramètre serverUrl pour brancher un service différent au
 
 * ✨ [Added]
 
+  - Panoramax : 🎉 nouveau widget !
+
 * 🔨 [Changed]
 
   - UI(Search): ajout d'un séparateur entre la recherche simple et la recherche avancée (#509)
