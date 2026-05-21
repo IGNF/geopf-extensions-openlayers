@@ -1,4 +1,4 @@
-import { LitElement, css, nothing } from "lit";
+import { LitElement, nothing } from "lit";
 import { html } from "lit/static-html.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import Gp from "geoportal-access-lib";

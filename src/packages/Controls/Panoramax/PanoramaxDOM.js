@@ -218,7 +218,7 @@ var PanoramaxDOM = {
         href.setAttribute("aria-label", opts.description);
         href.setAttribute("target", "_blank");
         href.setAttribute("href", opts.link);
-        href.innerHTML = opts.label;
+        href.textContent = opts.label;
 
         return href;
     },
