@@ -43,6 +43,8 @@ const sizeClasses = {
  * @property {Object} [attributes] - Attributs additionnels à ajouter au bouton.
  */
 
+const dialogs = {}
+
 /**
  * @classdesc
  * Classe gérant un dialog HTML avec titre, icône et contenu.
@@ -51,6 +53,36 @@ const sizeClasses = {
  * @module Dialog
  */
 class Dialog extends ControlExtended {
+
+    /**
+     * Renvoie le dialog correspondant à l'id donné
+     * @param {string} id Id du dialog
+     * @returns {AbstractDialog} Instance du dialog avec l'id correspondant
+     * @throws {Error} Si aucun dialogue avec cet id n'existe
+     * @static
+     */
+    static getDialog(id) {
+        if (id in dialogs) {
+            return dialogs[id];
+        } else {
+            throw new Error(`Aucun dialogue n'existe avec cet id : ${id}`);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} id 
+     * @private
+     */
+    #addDialog(id) {
+        if (!id) {
+            throw new Error("Un id doit être donné au dialogue");
+        } else if (id in dialogs) {
+            throw new Error(`Un dialogue avec l'id '${id}' existe déjà`);
+        } else {
+            dialogs[id] = this;
+        }
+    }
 
     /**
      * Constructeur du Dialog.
@@ -84,6 +116,8 @@ class Dialog extends ControlExtended {
         if (options.items.length) {
             this.setTabNav(options.items, options.labelTabNav);
         }
+
+        this.#addDialog(this.getElement().id);
     }
 
     setMap (map) {
@@ -214,8 +248,72 @@ class Dialog extends ControlExtended {
         this.closeBtn.onclick = () => {
             this.close();
         };
-        this.on(this.selectors.OPEN_EVENT, this.onOpenCallback.bind(this));
-        this.on(this.selectors.CLOSE_EVENT, this.onCloseCallback.bind(this));
+        this.setOnOpen(this.onOpenCallback);
+        this.setOnClose(this.onCloseCallback);
+    }
+
+    /**
+     * Ajoute ou remplace la fonction lancée à l'ouverture
+     * du dialog.
+     *
+     * @param {Function} onOpen Fonction à l'ouverture du dialog.
+     */
+    setOnOpen (onOpen) {
+        if (this.onOpenFn) {
+            this.un(this.selectors.OPEN_EVENT, this.onOpenFn);
+        }
+        if (typeof onOpen === "function") {
+            this.onOpenFn = onOpen.bind(this);
+            this.on(this.selectors.OPEN_EVENT, this.onOpenFn);
+        }
+    }
+
+    /**
+     * Ajoute ou remplace la fonction lancée à la fermeture
+     * du dialog.
+     *
+     * @param {Function} onClose Fonction à la fermeture du dialog.
+     */
+    setOnClose (onClose) {
+        if (this.onCloseFn) {
+            this.un(this.selectors.CLOSE_EVENT, this.onCloseFn);
+            this.un(this.selectors.CHANGE_CONTENT, this.onCloseFn);
+        }
+        if (typeof onClose === "function") {
+            this.onCloseFn = onClose.bind(this);
+            this.on(this.selectors.CLOSE_EVENT, this.onCloseFn);
+            this.on(this.selectors.CHANGE_CONTENT, this.onCloseFn);
+        }
+    }
+
+    /**
+     * @param {Function} callback Fonction à l'ouverture du dialog.
+     * @param {Boolean} [once=false] Si vrai, écoute une seule fois.
+     */
+    onOpen (callback, once = false) {
+        if (typeof callback !== "function") {
+            return;
+        }
+        if (once) {
+            this.once(this.selectors.OPEN_EVENT, callback);
+        } else {
+            this.on(this.selectors.OPEN_EVENT, callback);
+        }
+    }
+
+    /**
+     * @param {Function} callback Fonction à la fermeture du dialog.
+     * @param {Boolean} [once=false] Si vrai, écoute une seule fois.
+     */
+    onClose (callback, once = false) {
+        if (typeof callback !== "function") {
+            return;
+        }
+        if (once) {
+            this.once(this.selectors.CLOSE_EVENT, callback);
+        } else {
+            this.on(this.selectors.CLOSE_EVENT, callback);
+        }
     }
 
     /**
@@ -245,7 +343,7 @@ class Dialog extends ControlExtended {
      * @param {String} options.title Titre
      * @param {String} options.icon Icône
      * @param {String|Element} options.content Contenu du dialog.
-     * @param {FooterOption} options.content Contenu du dialog.
+     * @param {FooterOption} options.footer Contenu du dialog.
      */
     setContent (options = {}) {
         this.setDialogTitle(options.title);
