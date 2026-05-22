@@ -738,6 +738,18 @@ class Panoramax extends Control {
          * @private 
          */
         this.mapViewportSyncListener = null;
+
+        /**
+         * widget minimap du photoviewer
+         * @private
+         */
+        this.photoViewerMiniMap = null;
+
+        /**
+         * listener de synchro photo -> minimap
+         * @private
+         */
+        this.photoViewerPictureLoadedListener = null;
     }
 
     /**
@@ -1461,6 +1473,7 @@ class Panoramax extends Control {
                 self.photoViewerPanoramax.onceReady()
                     .then(() => {
                         console.debug("Panoramax photo viewer is ready", self.photoViewerPanoramax);
+                        self.bindMiniMapToPhotoViewer();
                     });
                 self.photoViewerPanoramax.addEventListener("ready", () => {
                     console.debug("Panoramax photo viewer is ready", self);
@@ -1616,6 +1629,27 @@ class Panoramax extends Control {
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-visible", "gpf-hidden");
+    }
+
+    /** @private */
+    bindMiniMapToPhotoViewer () {
+        if (!this.photoViewerPanoramax || !this.photoViewerPanoramax.psv || this.photoViewerPictureLoadedListener) {
+            return;
+        }
+
+        this.photoViewerPictureLoadedListener = () => {
+            if (!this.photoViewerMiniMap) {
+                return;
+            }
+
+            var pictureMetadata = typeof this.photoViewerPanoramax.psv.getPictureMetadata === "function"
+                ? this.photoViewerPanoramax.psv.getPictureMetadata()
+                : null;
+            var gps = pictureMetadata && Array.isArray(pictureMetadata.gps) ? pictureMetadata.gps : null;
+            this.photoViewerMiniMap.pictureCoordinates = gps;
+        };
+
+        this.photoViewerPanoramax.psv.addEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
     }
 
     // ################################################################### //
@@ -2242,6 +2276,7 @@ class Panoramax extends Control {
             disableOverviewDragging : true,
             disableOverviewBBox : true
         };
+        this.photoViewerMiniMap = minimap;
         return minimap;
     }
 

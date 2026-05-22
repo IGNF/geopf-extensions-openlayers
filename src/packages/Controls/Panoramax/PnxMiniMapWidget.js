@@ -28,16 +28,12 @@ import {
  */
 class MiniMap extends LitElement {
 
-    /**
-     * @constructor
-     * @param {import("ol/Map").default} [map] - Instance de carte OpenLayers à associer à la mini-map.
-     * @param {MiniMapOptions} [options={}] - Options de configuration du contrôle de mini-map.
-     */
     constructor (map, options = {}) {
         super();
 
         this._map = map || null;
         this._options = options && typeof options === "object" ? options : {};
+        this._pictureCoordinates = null;
         this._overviewControl = null;
 
         this._isSyncingView = false;
@@ -62,36 +58,6 @@ class MiniMap extends LitElement {
             this.style.height = (this._options.height ? this._options.height + "px" : "150px");
         }
         this.style.display = "block";
-
-        // recuperer les coordonnées de la picture courante pour centrer la mini-map dessus
-        customElements.whenDefined("pnx-photo-viewer").then(() => {
-            this._parent = this.closest("pnx-photo-viewer");
-            console.warn("MiniMap connected to DOM", this._parent);
-            this._parent.onceReady()
-                .then(() => {
-                    this._parent.psv.addEventListener("picture-loaded", (e) => {
-                        console.warn("Updating mini-map center to picture position", e);
-                        // Récupérer les coordonnées de l'image (généralement en lat/lon EPSG:4326)
-                        const pictureConfig = e.detail;
-                        
-                        if (pictureConfig && pictureConfig.lon !== undefined && pictureConfig.lat !== undefined) {
-                            let coordinates = [pictureConfig.lon, pictureConfig.lat];
-                            
-                            // Transformer dans la projection de la mini-map si nécessaire
-                            const overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
-                            if (overviewMap) {
-                                const overviewProj = overviewMap.getView().getProjection().getCode();
-                                if (overviewProj !== "EPSG:4326") {
-                                    coordinates = olProjTransform(coordinates, "EPSG:4326", overviewProj);
-                                }
-                            }
-                            
-                            // Mettre à jour la position du marker
-                            this._updateCenterMarkerOverlayPosition(coordinates);
-                        }
-                    });
-                });
-        });
     }
 
     // Méthode du cycle de vie Web Component :
@@ -123,10 +89,6 @@ class MiniMap extends LitElement {
         return this._map;
     }
 
-    /**
-     * Assigne une carte OpenLayers à la mini-map via l'attribut HTML "map" en JSON.
-     * @param {import("ol/Map").default} map - Instance de carte OpenLayers à associer à la mini-map.
-     */
     set map (map) {
         if (this._map === map) {
             return;
@@ -142,15 +104,32 @@ class MiniMap extends LitElement {
         return this._options;
     }
 
-    /**
-     * Assigne des options à la mini-map via l'attribut HTML "options" en JSON.
-     * @param {Object} options - Options à appliquer à la mini-map.
-     */
     set options (options) {
         this._removeOverviewMap();
         this._options = options && typeof options === "object" ? options : {};
         this.requestUpdate();
         this._renderOverviewMap();
+    }
+
+    get pictureCoordinates () {
+        return this._pictureCoordinates;
+    }
+
+    set pictureCoordinates (coordinates) {
+        if (!Array.isArray(coordinates) || coordinates.length < 2) {
+            this._pictureCoordinates = null;
+            return;
+        }
+
+        var lon = Number(coordinates[0]);
+        var lat = Number(coordinates[1]);
+        if (!Number.isFinite(lon) || !Number.isFinite(lat)) {
+            this._pictureCoordinates = null;
+            return;
+        }
+
+        this._pictureCoordinates = [lon, lat];
+        this._syncToPictureCoordinates();
     }
 
     // ################################################################### //
@@ -186,7 +165,7 @@ class MiniMap extends LitElement {
     }
 
     _updateCenterMarkerOverlayPosition (position) {
-        if (!position || !this._overviewControl || !this._centerMarkerOverlay) {
+        if (!position || !this._overviewControl) {
             return;
         }
 
@@ -199,7 +178,29 @@ class MiniMap extends LitElement {
             this._isSyncingView = false;
         }
 
-        this._centerMarkerOverlay.setPosition(position);
+        if (this._centerMarkerOverlay) {
+            this._centerMarkerOverlay.setPosition(position);
+        }
+    }
+
+    _syncToPictureCoordinates () {
+        if (!this._pictureCoordinates || !this._overviewControl) {
+            return;
+        }
+
+        var overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
+        var miniView = overviewMap && overviewMap.getView && overviewMap.getView();
+        if (!miniView) {
+            return;
+        }
+
+        var overviewProj = miniView.getProjection() && miniView.getProjection().getCode();
+        var coordinates = this._pictureCoordinates.slice();
+        if (overviewProj && overviewProj !== "EPSG:4326") {
+            coordinates = olProjTransform(coordinates, "EPSG:4326", overviewProj);
+        }
+
+        this._updateCenterMarkerOverlayPosition(coordinates);
     }
 
     _removeCenterMarkerOverlay () {
@@ -342,8 +343,9 @@ class MiniMap extends LitElement {
 
         this._overviewControl = new GeoportalOverviewMap(options);
         this._map.addControl(this._overviewControl);
-        this._initCenterMarkerOverlay(); // FIXME centrer sur la pictureID courrante !
+        this._initCenterMarkerOverlay();
         this._onViewSync();
+        this._syncToPictureCoordinates();
     }
 
     _removeOverviewMap () {
