@@ -2239,7 +2239,8 @@ class Panoramax extends Control {
             ],
             width : 220,
             height : 180,
-            disableOverviewDragging : true
+            disableOverviewDragging : true,
+            disableOverviewBBox : true
         };
         return minimap;
     }

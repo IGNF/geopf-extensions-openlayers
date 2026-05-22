@@ -16,6 +16,8 @@ import {
  * @property {import("ol/View").default} [options.view] - Vue à utiliser pour la mini-map. Si non fournie, une vue par défaut est créée.
  * @property {number} [options.width=200] - Largeur de la mini-map en pixels
  * @property {number} [options.height=150] - Hauteur de la mini-map en pixels
+ * @property {boolean} [options.disableOverviewDragging=true] - Empêche le déplacement de la mini-map par glisser-déposer.
+ * @property {boolean} [options.disableOverviewBBox=true] - Masque la bbox OpenLayers (rectangle de contexte) dans la mini-map.
  */
 
 /**
@@ -333,6 +335,9 @@ class MiniMap extends LitElement {
         }
         if (options.disableOverviewDragging === undefined) {
             options.disableOverviewDragging = true;
+        }
+        if (options.disableOverviewBBox === undefined) {
+            options.disableOverviewBBox = true;
         }
 
         this._overviewControl = new GeoportalOverviewMap(options);

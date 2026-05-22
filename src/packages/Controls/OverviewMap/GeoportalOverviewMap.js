@@ -23,6 +23,8 @@ class GeoportalOverviewMap extends OverviewMap {
     /**
      * @constructor
      * @param {Object} options - ol.control.OverviewMap options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html ol.Control.OverviewMap})
+     * @property {Boolean} [options.disableOverviewDragging=true] - Empêche le déplacement de la mini-map par glisser-déposer.
+     * @property {Boolean} [options.disableOverviewBBox=false] - Masque la bbox OpenLayers (rectangle de contexte) dans la mini-map.
      * @fires overviewmap:toggle
      * @example
      * var overviewmap = new ol.control.GeoportalOverviewMap({
@@ -270,6 +272,11 @@ class GeoportalOverviewMap extends OverviewMap {
             options.disableOverviewDragging = false;
         }
 
+        // Masque la bbox (ol-overviewmap-box) dessinée par OpenLayers.
+        if (options.disableOverviewBBox === undefined) {
+            options.disableOverviewBBox = false;
+        }
+
         super(options);
 
         /**
@@ -389,6 +396,19 @@ class GeoportalOverviewMap extends OverviewMap {
         }
         this.setTarget(this.options.target);
         super.setMap(map);
+
+        if (map) {
+            var overviewBox = this.boxOverlay_ && this.boxOverlay_.getElement && this.boxOverlay_.getElement();
+            if (overviewBox) {
+                if (this.options.disableOverviewBBox) {
+                    overviewBox.style.display = "none";
+                    overviewBox.style.pointerEvents = "none";
+                } else {
+                    overviewBox.style.display = "";
+                    overviewBox.style.pointerEvents = "";
+                }
+            }
+        }
     }
 
     /**
