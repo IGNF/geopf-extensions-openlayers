@@ -395,9 +395,9 @@ class MiniMap extends LitElement {
                     left: 50%;
                     width: 14px;
                     height: 14px;
-                    border: 2px solid #d64f00;
+                    border: 2px solid #fff;
                     border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.9);
+                    background-color: var(--background-action-high-blue-france);
                     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
                     pointer-events: none;
                     z-index: 2;
