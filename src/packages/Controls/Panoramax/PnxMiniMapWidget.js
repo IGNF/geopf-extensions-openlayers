@@ -331,6 +331,9 @@ class MiniMap extends LitElement {
                 maxZoom : 21
             });
         }
+        if (options.disableOverviewDragging === undefined) {
+            options.disableOverviewDragging = true;
+        }
 
         this._overviewControl = new GeoportalOverviewMap(options);
         this._map.addControl(this._overviewControl);

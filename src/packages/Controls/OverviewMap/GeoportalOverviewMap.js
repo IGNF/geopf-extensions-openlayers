@@ -264,8 +264,14 @@ class GeoportalOverviewMap extends OverviewMap {
             maxZoom : 8
         });
 
+        // Empêche les interactions de pointerdown sur la mini-map 
+        // de déclencher des événements de drag sur la carte
+        if (options.disableOverviewDragging === undefined) {
+            options.disableOverviewDragging = false;
+        }
 
         super(options);
+
         /**
          * Nom de la classe (heritage)
          * @private
@@ -371,6 +377,15 @@ class GeoportalOverviewMap extends OverviewMap {
         if (map) {
             this._createContainerPosition(map);
             this._initContainer();
+            if (this.options.disableOverviewDragging) {
+                const ovDiv = this.ovmapDiv_;
+                if (ovDiv) {
+                    ovDiv.addEventListener("pointerdown", (e) => {
+                        e.stopImmediatePropagation();
+                        e.preventDefault();
+                    }, true);
+                }
+            }
         }
         this.setTarget(this.options.target);
         super.setMap(map);

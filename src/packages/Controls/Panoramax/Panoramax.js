@@ -2238,7 +2238,8 @@ class Panoramax extends Control {
                 this.layerPanoramax
             ],
             width : 220,
-            height : 180
+            height : 180,
+            disableOverviewDragging : true
         };
         return minimap;
     }
