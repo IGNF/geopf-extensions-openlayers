@@ -321,7 +321,7 @@ class MiniMap extends LitElement {
         });
 
         if (options.collapsed === undefined) {
-            options.collapsed = true;
+            options.collapsed = false;
         }
         if (options.collapsible === undefined) {
             options.collapsible = true;
