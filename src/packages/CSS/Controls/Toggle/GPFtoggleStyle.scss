@@ -46,34 +46,37 @@
 
 /* Affichage du tooltip au survol du bouton toggle */
 @include mix.hover-media-query {
-  .GPToggleControl > .GPToggleButton[aria-label]:not([aria-extended='true']):not([aria-pressed='true']):hover::after {
-    padding: 2px 12px 2px 4px;
-    filter: drop-shadow(0 1px 3px rgba(0, 0, 18, 0.25));
-    background-size:
-      0.375rem 0.5rem,
-      0.375rem 0.5rem,
-      1px 100%,
-      100%;
-    background-position:
-      calc(100% - 0.125rem) 50%,
-      100% 50%,
-      calc(100% - 0.375rem) 0,
-      calc(100% - 0.375rem) 0;
-    background-image:
-      conic-gradient(
-        from 236.31deg at 100% 50%,
-        transparent 0deg,
-        #ffffff 0deg,
-        #ffffff 67.38deg,
-        transparent 67.38deg
-      ),
-      conic-gradient(
-        from 236.31deg at 100% 50%,
-        transparent 0deg,
-        #d1d1d1 0deg,
-        #d1d1d1 67.38deg,
-        transparent 67.38deg
-      ),
-      linear-gradient(90deg, #d1d1d1, #d1d1d1), linear-gradient(90deg, #ffffff, #ffffff);
+  .GPToggleControl > .GPToggleButton[aria-label]:not([aria-extended='true']):not([aria-pressed='true']) {
+    &:hover::after,
+    &:focus:focus-visible::after {
+      padding: 2px 12px 2px 4px;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 18, 0.25));
+      background-size:
+        0.375rem 0.5rem,
+        0.375rem 0.5rem,
+        1px 100%,
+        100%;
+      background-position:
+        calc(100% - 0.125rem) 50%,
+        100% 50%,
+        calc(100% - 0.375rem) 0,
+        calc(100% - 0.375rem) 0;
+      background-image:
+        conic-gradient(
+          from 236.31deg at 100% 50%,
+          transparent 0deg,
+          #ffffff 0deg,
+          #ffffff 67.38deg,
+          transparent 67.38deg
+        ),
+        conic-gradient(
+          from 236.31deg at 100% 50%,
+          transparent 0deg,
+          #d1d1d1 0deg,
+          #d1d1d1 67.38deg,
+          transparent 67.38deg
+        ),
+        linear-gradient(90deg, #d1d1d1, #d1d1d1), linear-gradient(90deg, #ffffff, #ffffff);
+    }
   }
 }

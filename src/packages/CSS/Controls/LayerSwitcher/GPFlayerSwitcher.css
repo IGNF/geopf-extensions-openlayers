@@ -235,10 +235,12 @@ div[id^=GPopacityContainer_ID_] > .GPlayerOpacity {
 }
 
 /* Tooltip */
-div:not(.position) > .gpf-widget[id^=GPlayerSwitcher-] > .gpf-btn-icon[aria-label]:hover::before {
+div:not(.position) > .gpf-widget[id^=GPlayerSwitcher-] > .gpf-btn-icon[aria-label]:hover:not(:focus:focus-visible)::before,
+div:not(.position) > .gpf-widget[id^=GPlayerSwitcher-] > .gpf-btn-icon[aria-label]:focus:focus-visible::before {
   display: unset;
 }
-.gpf-widget.gpf-tooltip-right > .gpf-btn-icon[aria-label]:hover::before {
+.gpf-widget.gpf-tooltip-right > .gpf-btn-icon[aria-label]:hover::before,
+.gpf-widget.gpf-tooltip-right > .gpf-btn-icon[aria-label]:focus:focus-visible:before {
   transform: translateX(calc(-100% - 16px));
   padding: .5rem 1.25rem .5rem .5rem;
   background-size: .375rem .5rem, .375rem .5rem, 1px 100%, 100%;
