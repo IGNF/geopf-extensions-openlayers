@@ -53,21 +53,24 @@ div[id^='position-container-'] > .GPToggleControl {
 
 /* Affichage du tooltip au survol du bouton toggle */
 @include mix.hover-media-query {
-  .GPToggleControl > .GPToggleButton[aria-label]:not([aria-extended='true']):not([aria-pressed='true']):hover::after {
-    mask-image: none;
-    -webkit-mask-image: none;
-    content: attr(aria-label);
-    display: flex;
-    align-items: center;
-    position: fixed;
-    font-weight: 500;
-    z-index: 2000;
-    width: fit-content;
-    white-space: nowrap;
-    background-color: transparent;
-    background-repeat: no-repeat;
+  .GPToggleControl > .GPToggleButton[aria-label]:not([aria-extended='true']):not([aria-pressed='true']) {
+    &:hover::after,
+    &:focus:focus-visible::after {
+      mask-image: none;
+      -webkit-mask-image: none;
+      content: attr(aria-label);
+      display: flex;
+      align-items: center;
+      position: fixed;
+      font-weight: 500;
+      z-index: 2000;
+      width: fit-content;
+      white-space: nowrap;
+      background-color: transparent;
+      background-repeat: no-repeat;
 
-    /* Ouverture à gauche (bouton positionné à droite) */
-    transform: translate(calc(-100% - 8px));
+      /* Ouverture à gauche (bouton positionné à droite) */
+      transform: translate(calc(-100% - 8px));
+    }
   }
 }
