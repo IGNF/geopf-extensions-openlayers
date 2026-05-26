@@ -43,7 +43,7 @@ const sizeClasses = {
  * @property {Object} [attributes] - Attributs additionnels à ajouter au bouton.
  */
 
-const dialogs = {}
+const dialogs = {};
 
 /**
  * @classdesc
@@ -56,12 +56,12 @@ class Dialog extends ControlExtended {
 
     /**
      * Renvoie le dialog correspondant à l'id donné
-     * @param {string} id Id du dialog
+     * @param {String} id Id du dialog
      * @returns {AbstractDialog} Instance du dialog avec l'id correspondant
      * @throws {Error} Si aucun dialogue avec cet id n'existe
      * @static
      */
-    static getDialog(id) {
+    static getDialog (id) {
         if (id in dialogs) {
             return dialogs[id];
         } else {
@@ -70,11 +70,13 @@ class Dialog extends ControlExtended {
     }
 
     /**
-     * 
-     * @param {*} id 
+     * Référenc un dialogue.
+     * @param {String} id Id du dialog
      * @private
+     * @throws {Error} Si aucun id n'est donné
+     * @throws {Error} Si un dialogue avec cet id existe déjà.
      */
-    #addDialog(id) {
+    #addDialog (id) {
         if (!id) {
             throw new Error("Un id doit être donné au dialogue");
         } else if (id in dialogs) {
