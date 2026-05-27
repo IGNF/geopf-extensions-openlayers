@@ -219,6 +219,53 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
+     * Set les valeurs entrées en paramètre dans les inputs longitude / latitude.
+     *
+     * @public
+     * @param {Array} coords [Longitude / X, lat Latitude / Y]
+     */
+    setCoordinates (coords) {
+        const lonInput = this.lon.querySelector("input");
+        const latInput = this.lat.querySelector("input");
+
+        if (lonInput) {
+            lonInput.value = coords[0];
+        }
+
+        if (latInput) {
+            latInput.value = coords[1];
+        }
+    }
+
+    /**
+    * Récupère les coordonnées saisies dans les inputs.
+    *
+    * - En mode DMS : retourne les valeurs sous forme de chaînes.
+    * - Sinon : retourne les valeurs sous forme de nombres.
+    *
+    * @public
+    * @returns {[String, String]|[Number, Number]|undefined} current coordinates set
+    */
+    getCoordinates () {
+        const lon = this.lon.querySelector("input").value;
+        const lat = this.lat.querySelector("input").value;
+
+        // Cas DMS : on conserve les strings
+        if (this.get("unit") === "DMS") {
+            return (lon.length === 6 && lat.length === 6) ? [lon, lat] : undefined;
+        }
+
+        const coords = [parseFloat(lon), parseFloat(lat)];
+
+        // si une des deux coordonnées n'a pu être récupéré correctement, on renvoie undefined
+        if (Number.isNaN(coords[0]) || Number.isNaN(coords[1])) {
+            return undefined;
+        }
+
+        return coords;
+    }
+
+    /**
      * Crée un conteneur d'étiquette pour un élément d'input.
      *
      * @private
@@ -436,7 +483,21 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     _updateSystem (e) {
         const crs = this._coordinateSearchSystems[e.target.value].crs;
+
         if (crs !== this._currentCoordinateSystem.crs) {
+            // transformation des coordonnées dans le nouveau système selectionné
+            let coords = this.getCoordinates();
+            let newCoords;
+            if (coords) {
+                // conversion des coordonnées dans l'unité par défaut du système de coordonnées
+                coords = this._normalizeCoordinatesUnit(coords);
+                newCoords = olProjTransform(coords, this._currentCoordinateSystem.crs, crs);
+                newCoords[0] = newCoords[0].toFixed(2);
+                newCoords[1] = newCoords[1].toFixed(2);
+            } else {
+                newCoords = ["", ""];
+            }
+            
             this._currentCoordinateSystem = this._coordinateSearchSystems[e.target.value];
             this._currentUnit = this._coordinateSearchUnits[this._currentCoordinateSystem.type];
             this.unit.replaceChildren();
@@ -451,6 +512,9 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             this.set("unit", this.unit.value);
             e.target.closest("form").dataset.unitType = this._currentCoordinateSystem.type;
             this.set("unitType", this._currentCoordinateSystem.type);
+
+            // remplissage des inputs coordonnées avec les coordonnées calculés plus haut
+            this.setCoordinates(newCoords);
         }
     }
 
@@ -569,15 +633,20 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * @override
-     * @protected
-     * @param {PointerEvent} e Événement de soumission
+     * Normalise des coordonnées selon l’unité actuellement sélectionnée.
+     *
+     * Convertit :
+     * - les coordonnées DMS en degrés décimaux,
+     * - les coordonnées en kilomètres vers des mètres,
+     * - les autres valeurs en nombres flottants.
+     *
+     * @private
+     * @param {Array<String|Number>} coords Tableau contenant les coordonnées [lon, lat]
+     * @returns {Array<Number>} Tableau normalisé contenant [lon, lat]
      */
-    _onSearch (e) {
-        super._onSearch(e);
-        // Récupère les valeurs des inputs
-        let lon = this.lon.querySelector("input").value;
-        let lat = this.lat.querySelector("input").value;
+    _normalizeCoordinatesUnit (coords) {
+        let lon = coords[0];
+        let lat = coords[1];
         if (this.get("unit") === "DMS") {
             // Transforme les DMS en degrés décimaux
             lon = MathUtils.dmsToDecimal(
@@ -601,19 +670,31 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             lon = parseFloat(lon);
             lat = parseFloat(lat);
         }
+        return [lon, lat];
+    }
 
+    /**
+     * @override
+     * @protected
+     * @param {PointerEvent} e Événement de soumission
+     */
+    _onSearch (e) {
+        super._onSearch(e);
+        // Récupère les valeurs des inputs
+        let coords = this.getCoordinates();
+        let normalizedCoords = this._normalizeCoordinatesUnit(coords);
+        
         // Projette les coordonnées dans les coordonnées de la carte
-        let coords = [lon, lat];
         const mapProj = this.getMap().getView().getProjection().getCode();
         const currentProj = this._currentCoordinateSystem.crs;
         if (mapProj !== currentProj) {
-            coords = olProjTransform(coords, currentProj, mapProj);
+            normalizedCoords = olProjTransform(normalizedCoords, currentProj, mapProj);
         }
 
-        const geom = new Point(coords);
+        const geom = new Point(normalizedCoords);
         const f = new Feature({ geometry : geom });
-        // Ajout des coordonnées pour le popup
-        f.set("infoPopup", this._createInfoPopup(lon, lat));
+        // Ajout des coordonnées pour le popup dans l'unité d'origine
+        f.set("infoPopup", this._createInfoPopup(coords[0], coords[1]));
 
         this.dispatchEvent({
             type : "search",
@@ -644,14 +725,14 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
                 const latCardinal = this.lat.querySelector("select").value;
                 valueY = `${parseInt(lat.substring(0, 2))}°${parseInt(lat.substring(2, 4))}'${parseInt(lat.substring(4, 6))}" ${latCardinal}`;
             } else {
-                valueX = `${lon} °`;
-                valueY = `${lat} °`;
+                valueX = `${lon.toFixed(2)} °`;
+                valueY = `${lat.toFixed(2)} °`;
             }
         } else {
             y = "Y";
             x = "X";
-            valueY = `${lat} ${this.get("unit").toLowerCase()}`;
-            valueX = `${lon} ${this.get("unit").toLowerCase()}`;
+            valueY = `${lat.toFixed(2)} ${this.get("unit").toLowerCase()}`;
+            valueX = `${lon.toFixed(2)} ${this.get("unit").toLowerCase()}`;
         }
         const infoPopup = `<b>${y} : </b>${valueY}<br><b>${x} : </b>${valueX}`;
         return infoPopup;
