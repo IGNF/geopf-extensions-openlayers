@@ -9,8 +9,6 @@ __DATE__
 
 ### 🎉 Summary
 
-Homogénéisation du paramètre serverUrl pour brancher un service différent aux widgets.
-
 ### 💥 Breaking changes
 
 ### 📖 Changelog
@@ -28,7 +26,7 @@ Homogénéisation du paramètre serverUrl pour brancher un service différent au
 * 🐛 [Fixed]
 
   - DSFR: ne surcharge plus le style fr-tabs global (#512)
-  - LayerSwitcher : le label "éditer" s'affiche au lieu de "style" pour les couches non TMS
+  - LayerSwitcher : le label "éditer" s'affiche au lieu de "style" pour les couches non TMS (#516)
   
 * 🔒 [Security]
 
