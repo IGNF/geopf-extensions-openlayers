@@ -15,7 +15,7 @@ __DATE__
 
 * ✨ [Added]
 
-  - AdvancedSearch : conversion des coordonnées renseignés dans les inputs en changeant de système via le dropdown 
+  - AdvancedSearch : conversion des coordonnées renseignés dans les inputs en changeant de système ou d'unité via les dropdowns (#518) 
 
 * 🔨 [Changed]
 
