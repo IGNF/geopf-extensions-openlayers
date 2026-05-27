@@ -566,7 +566,30 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         // TODO : Faire convertion ?!
         if (unit === "DMS") {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
-                input.value = "";
+                let decCoord;
+                if (input.id.includes("-lon-")) {
+                    decCoord = this._decimalToCompactDMS(input.value, "lon");
+                }
+
+                if (input.id.includes("-lat-")) {
+                    decCoord = this._decimalToCompactDMS(input.value, "lat");
+                }
+                
+                // Remplit l'input avec la valeur DMS
+                input.value = decCoord.value;
+
+                // Met à jour le mask visuel
+                const mask = input.parentElement.querySelector(".display-mask");
+                if (mask) {
+                    mask.textContent = this._format(decCoord.value);
+                }
+
+                // Met à jour le select cardinal juste après l'input
+                const cardinalSelect = input.closest(".GPCoordinateInputs").querySelector("select");
+                if (cardinalSelect) {
+                    cardinalSelect.value = decCoord.cardinal;
+                }
+
                 input.minLength = "6";
                 input.maxLength = "6";
                 input.addEventListener("beforeinput", this._boundOnLonLatBeforeInput);
@@ -575,7 +598,16 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         } else {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
                 if (unit === "DEC") {
-                    input.value = "";
+                    let dmsCoord;
+                    const cardinal = input.closest(".GPCoordinateInputs").querySelector("select").value;
+                    if (input.id.includes("-lon-")) {
+                        dmsCoord = this._decimalCompactDMSToDecimal(input.value, "lon", cardinal);
+                    }
+
+                    if (input.id.includes("-lat-")) {
+                        dmsCoord = this._decimalCompactDMSToDecimal(input.value, "lat", cardinal);
+                    }
+                    input.value = dmsCoord;
                 } else {
                     input.value = input.value === "" || isNaN(input.value) ? "" : parseFloat(input.value) * factor;
                 }
@@ -584,11 +616,11 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
                 input.removeEventListener("beforeinput", this._boundOnLonLatBeforeInput);
                 input.removeEventListener("input", this._boundOnLonLatInput);
             });
+            // Réinitialise le mask de l'input 
+            this.getContent().querySelectorAll(".display-mask").forEach(mask => {
+                mask.textContent = "__°__'__\"";
+            });
         }
-        // Réinitialise le mask de l'input (dans tous les cas)
-        this.getContent().querySelectorAll(".display-mask").forEach(mask => {
-            mask.textContent = "__°__'__\"";
-        });
     }
 
     /**
@@ -671,6 +703,88 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             lat = parseFloat(lat);
         }
         return [lon, lat];
+    }
+
+    /**
+     * Convertit une coordonnée DMS compacte (DDMMSS + cardinal)
+     * en degrés décimaux.
+     *
+     * Exemple :
+     * "022108", "E" -> 2.3522
+     * "022108", "O" -> -2.3522
+     * "485124", "N" -> 48.8566
+     * "485124", "S" -> -48.8566
+     *
+     * @private
+     * @param {String} dms Chaîne DMS compacte (6 chiffres DDMMSS)
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @param {String} cardinal Point cardinal ("N","S","E","O")
+     * @returns {Number} Coordonnée en degrés décimaux
+     */
+    _decimalCompactDMSToDecimal (dms, type, cardinal) {
+
+        const clean = String(dms).padStart(6, "0");
+
+        const degres = parseInt(clean.slice(0, 2), 10);
+        const minutes = parseInt(clean.slice(2, 4), 10);
+        const secondes = parseInt(clean.slice(4, 6), 10);
+
+        let decimal = degres + minutes / 60 + secondes / 3600;
+
+        // Gestion du signe via cardinal
+        if (
+            (type === "lat" && cardinal === "S") ||
+            (type === "lon" && cardinal === "O")
+        ) {
+            decimal = -decimal;
+        }
+
+        return decimal;
+    }
+
+    /**
+     * Convertit une coordonnée décimale en format DMS compact :
+     * DDMMSS + point cardinal.
+     *
+     * Exemple :
+     *  2.3522  (lon) -> { value: "022108", cardinal: "E" }
+     * -2.3522  (lon) -> { value: "022108", cardinal: "O" }
+     * 48.8566  (lat) -> { value: "485124", cardinal: "N" }
+     * -48.8566 (lat) -> { value: "485124", cardinal: "S" }
+     *
+     * @private
+     * @param {Number} decimal Coordonnée décimale
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {{value: String, cardinal: String}}
+     */
+    _decimalToCompactDMS (decimal, type) {
+
+        const abs = Math.abs(decimal);
+
+        const degres = Math.floor(abs);
+
+        const minutesFloat = (abs - degres) * 60;
+        const minutes = Math.floor(minutesFloat);
+
+        const secondes = Math.round((minutesFloat - minutes) * 60);
+
+        // Gestion du point cardinal
+        let cardinal;
+
+        if (type === "lon") {
+            cardinal = decimal < 0 ? "O" : "E";
+        } else {
+            cardinal = decimal < 0 ? "S" : "N";
+        }
+
+        return {
+            value : [
+                String(degres).padStart(2, "0"),
+                String(minutes).padStart(2, "0"),
+                String(secondes).padStart(2, "0")
+            ].join(""),
+            cardinal
+        };
     }
 
     /**
