@@ -7,7 +7,6 @@ import "../../CSS/Controls/ContextMenu/GPFcontextMenu.css";
 // import OpenLayers
 import Control from "../Control";
 import Overlay from "ol/Overlay";
-import Map from "ol/Map";
 import {
     transform as olTransformProj,
     fromLonLat as olFromLonLat
@@ -195,6 +194,15 @@ class ContextMenu extends Control {
         /** @private */
         this.controlList = []; 
 
+        /** @private */
+        this._listenersAdded = false;
+        /** @private */
+        this._onContextOpen = null;
+        /** @private */
+        this._onContextClose = null;
+        /** @private */
+        this._onDocumentClick = null;
+
         // Point pour le calcul d'itinéraire
         /** @private */
         this.itiPoints =  new Array(7);
@@ -270,31 +278,58 @@ class ContextMenu extends Control {
     }
 
     /**
-     * Add events listeners on map (called by setMap)
+     * Add events listeners on map
      * 
      * @private
      */
     addEventsListeners () {
-        this.contextmenu.on("open", (evt) => {
+        if (this._listenersAdded) {
+            return;
+        }
+
+        this._onContextOpen = (evt) => {
             evt.this = this; 
             this.onOpenContextMenu(evt);
-        });
-        this.contextmenu.on("close", (evt) => {
+        };
+        this._onContextClose = (evt) => {
             evt.this = this; 
             this.onCloseContextMenu(evt);
-        });
-        document.addEventListener("click", (event) => {
+        };
+        this._onDocumentClick = (event) => {
             if (!this.container.contains(event.target)) {
                 this.contextmenu.closeMenu();
             }
-        });
+        };
+
+        this.contextmenu.on("open", this._onContextOpen);
+        this.contextmenu.on("close", this._onContextClose);
+        document.addEventListener("click", this._onDocumentClick);
+        this._listenersAdded = true;
     }
 
     /**
-     * Remove events listeners on map (called by setMap)
+     * Remove events listeners on map
      * @private
      */
     removeEventsListeners () {
+        if (!this._listenersAdded) {
+            return;
+        }
+
+        if (this._onContextOpen) {
+            this.contextmenu.un("open", this._onContextOpen);
+        }
+        if (this._onContextClose) {
+            this.contextmenu.un("close", this._onContextClose);
+        }
+        if (this._onDocumentClick) {
+            document.removeEventListener("click", this._onDocumentClick);
+        }
+
+        this._onContextOpen = null;
+        this._onContextClose = null;
+        this._onDocumentClick = null;
+        this._listenersAdded = false;
     }
 
     /**
@@ -625,6 +660,19 @@ class ContextMenu extends Control {
     onCloseContextMenu (e) {
         e.target.clear();
     }
+    /**
+     * Maj des items lors de l'exécution
+     * Les items sont ajouter après les items détectés par défaut
+     * @param {Array<Object>} items - Tableau d'items ol
+     * @public
+     */
+    updateContextMenuItems (items) {
+        if (!(items instanceof Array)) { return; }
+        this.contextMenuItemsOptions = items.map((item) => ({
+            ...item,
+            classname : item.classname ?? "ol-context-menu-custom fr-text--md"
+        }));
+    }
 
     /**
      * ...
@@ -632,18 +680,31 @@ class ContextMenu extends Control {
      * @private
      */
     onOpenContextMenu (e) {
-        // Récupère le canvas de la carte
-        const mapViewport = this.getMap().getViewport();
-        const canvas = mapViewport.querySelector("canvas");
-        // Vérifie que le clic droit est bien sur le canvas de la carte
-        if (!canvas || e.originalEvent.target !== canvas) {
-            // On ne fait rien si ce n’est pas sur le canvas de la carte
+        const mapInstance = this.getMap();
+        if (!mapInstance) {
+            return;
+        }
+
+        // Récupère le viewport de la carte
+        const mapViewport = mapInstance.getViewport();
+        const target = e?.originalEvent?.target;
+
+        // Vérifie que le clic droit est bien dans le viewport de la carte
+        if (!mapViewport || (target && !mapViewport.contains(target))) {
+            // On ne fait rien si ce n’est pas sur la carte
+            this.contextmenu.clear();
+            this.contextmenu.closeMenu();
+            return;
+        }
+        if (target && target.closest(".GPwidget, .gpf-widget, .ol-control")) {
+            // On ignore les éléments de la carte générés par geopf extensions
+            // Pas de contextMenu sur le searchEngine par exemple
             this.contextmenu.clear();
             this.contextmenu.closeMenu();
             return;
         }
         var addMenuToolsEventListeners = () => {
-            e.this.controlList = []; 
+            e.this.controlList = [];
             var controlArray = e.this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route");
             if (controlArray.length > 0) {
                 controlArray[0].on("route:newresults", () => {
