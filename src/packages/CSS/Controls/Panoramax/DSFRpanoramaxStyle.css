@@ -47,6 +47,8 @@
     height: fit-content;
     max-height: initial;
     top: initial;
+    bottom: 48px;
+    left: 54px;
     width: 350px;
     background-color: var(--background-default-grey);
 }
@@ -73,7 +75,13 @@
 }
 
 /* panel buttons window */
-.pnx-buttons-window-panel {}
+@media (max-width: 576px) {
+    /* surcharge */
+    .position-container-bottom-left .gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog.pnx-buttons-window-panel {
+        top: initial !important;
+        left: 54px !important;
+    }
+}
 .pnx-buttons-panel__body {
     background: transparent;
     overflow: initial;

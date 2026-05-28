@@ -374,17 +374,26 @@ class MiniMap extends LitElement {
                     position: relative;
                 }
                 .pnx-mini-map__container .ol-overviewmap {
-                    width: 100%;
-                    height: 100%;
                     position: relative;
                     left: unset;
                     bottom: unset;
-                }
-                .pnx-mini-map__container .ol-overviewmap .ol-overviewmap-map {
                     width: 100%;
                     height: 100%;
+                    padding: 0;
+                }
+                .pnx-mini-map__container .ol-overviewmap::after {
+                    content: initial !important;
+                }
+                .pnx-mini-map__container .ol-overviewmap .ol-overviewmap-map {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    box-sizing: border-box;
                 }
                 .pnx-mini-map__container .ol-overviewmap button {
+                    position: absolute !important;
+                    bottom: 8px;
+                    left: 8px;
                     width: 48px;
                     height: 48px;
                     padding: unset;

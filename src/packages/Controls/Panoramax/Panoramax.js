@@ -3101,8 +3101,8 @@ class Panoramax extends Control {
         }
 
         panel.classList.replace("gpf-hidden", "gpf-visible");
-        this.updateFiltersPanelPosition();
-        this.bindFiltersPanelPositioning();
+        //this.updateFiltersPanelPosition();
+        //this.bindFiltersPanelPositioning();
     }
 
     /**
