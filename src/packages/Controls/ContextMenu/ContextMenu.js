@@ -11,6 +11,7 @@ import {
     transform as olTransformProj,
     fromLonLat as olFromLonLat
 } from "ol/proj";
+import Map from "ol/Map";
 
 // import geoportal library access
 import Gp from "geoportal-access-lib";
@@ -54,7 +55,7 @@ var logger = Logger.getLogger("contextMenu");
  * @module ContextMenu
 */
 class ContextMenu extends Control {
-    
+
     /**
      * @constructor
      * @param {ContextMenuOptions} options - options for function call.
@@ -70,7 +71,7 @@ class ContextMenu extends Control {
      */
     constructor (options) {
         options = options || {};
-        
+
         // call ol.control.Control constructor
         super({
             element : options.element,
@@ -107,7 +108,7 @@ class ContextMenu extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {Map} map - Map.
+     * @param {Map | null} map - Map.
      */
     setMap (map) {
         if (map) {
@@ -139,7 +140,7 @@ class ContextMenu extends Control {
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
-    
+
     /**
      * Initialize ContextMenu control (called by ContextMenu constructor)
      *
@@ -192,7 +193,7 @@ class ContextMenu extends Control {
         /** @private */
         this.eventsListeners = [];
         /** @private */
-        this.controlList = []; 
+        this.controlList = [];
 
         /** @private */
         this._listenersAdded = false;
@@ -205,7 +206,7 @@ class ContextMenu extends Control {
 
         // Point pour le calcul d'itinéraire
         /** @private */
-        this.itiPoints =  new Array(7);
+        this.itiPoints = new Array(7);
 
         /** @private */
         this._marker = new Overlay({
@@ -217,10 +218,10 @@ class ContextMenu extends Control {
         var contextMenuItems = this.getAvailableContextMenuControls.call(this);
         /** @private */
         this.contextMenuItemsOptions = [];
-        if (options.contextMenuItemsOptions instanceof Array 
+        if (options.contextMenuItemsOptions instanceof Array
             && options.contextMenuItemsOptions
             && options.contextMenuItemsOptions.length > 0) {
-            this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : "ol-context-menu-custom fr-text--md"}));
+            this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : "ol-context-menu-custom fr-text--md" }));
         }
         /** @type {olContextMenu} */
         this.contextmenu = new olContextMenu(
@@ -288,11 +289,11 @@ class ContextMenu extends Control {
         }
 
         this._onContextOpen = (evt) => {
-            evt.this = this; 
+            evt.this = this;
             this.onOpenContextMenu(evt);
         };
         this._onContextClose = (evt) => {
-            evt.this = this; 
+            evt.this = this;
             this.onCloseContextMenu(evt);
         };
         this._onDocumentClick = (event) => {
@@ -420,7 +421,7 @@ class ContextMenu extends Control {
         this.itiPoints[0] = clickedCoordinate;
         route.setData({ points : this.itiPoints });
     }
-  
+
     /**
      * ---- Ajouter un point sur la carte 
      * 
@@ -525,8 +526,8 @@ class ContextMenu extends Control {
      */
     displayAdressAndCoordinate (evt) {
         let clickedCoordinate = this.to4326(evt.coordinate);
-        this.panelPointInfoEntriesContainer.innerHTML = "";   
-    
+        this.panelPointInfoEntriesContainer.innerHTML = "";
+
         this._marker.setPosition(olFromLonLat(clickedCoordinate));
 
         this.buttonPointInfoShow.click();
@@ -549,9 +550,9 @@ class ContextMenu extends Control {
                     altitude.innerHTML = "Altitude : " + json.elevations[0].z + "m";
                 }
             },
-            onFailure : function (error) {},
+            onFailure : function (error) { },
             // spécifique au service
-            positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
+            positions : [{ lon : clickedCoordinate[0], lat : clickedCoordinate[1] }],
             outputFormat : "json", // json|xml
             serverUrl : this.options.altiServerUrl,
             resource : this.options.altiResource
@@ -564,9 +565,9 @@ class ContextMenu extends Control {
                     parcel.innerHTML = "Parcelle : " + json.locations[0].placeAttributes.districtcode + " / " + json.locations[0].placeAttributes.section + " / " + json.locations[0].placeAttributes.number;
                 }
             },
-            onFailure : function (error) {},
+            onFailure : function (error) { },
             // spécifique au service
-            position : {lon : clickedCoordinate[1], lat : clickedCoordinate[0]},
+            position : { lon : clickedCoordinate[1], lat : clickedCoordinate[0] },
             searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[1], clickedCoordinate[0]], radius : 100 },
             index : "CadastralParcel",
             maximumResponses : 1,
@@ -578,7 +579,7 @@ class ContextMenu extends Control {
             let config = {
                 id : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
                 layer : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
-                attributes : ["code_postal","nom_officiel"]
+                attributes : ["code_postal", "nom_officiel"]
             };
             const result = await OGCRequest.computeGenericGPFWFS(
                 config.layer,
@@ -588,7 +589,7 @@ class ContextMenu extends Control {
                 config.additional_cql || "",
                 config.epsg || 4326,
                 config.get_geom || false,
-                clickedCoordinate[0], 
+                clickedCoordinate[0],
                 clickedCoordinate[1]
             );
             if (result.length) {
@@ -609,7 +610,7 @@ class ContextMenu extends Control {
                 getCommuneName();
             },
             // spécifique au service
-            position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
+            position : { lon : clickedCoordinate[0], lat : clickedCoordinate[1] },
             searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
             index : "StreetAddress",
             maximumResponses : 1,
@@ -617,12 +618,12 @@ class ContextMenu extends Control {
         };
         Gp.Services.reverseGeocode(geocodageAdressOptions);
     }
-    
+
 
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
-    
+
     /**
      * ...
      * @param {Event} e - ...
