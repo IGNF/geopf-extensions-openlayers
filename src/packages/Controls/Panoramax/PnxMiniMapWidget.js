@@ -399,9 +399,6 @@ class MiniMap extends LitElement {
                     padding: unset;
                 }
                 .pnx-mini-map__center-marker {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
                     width: 14px;
                     height: 14px;
                     border: 2px solid #fff;
