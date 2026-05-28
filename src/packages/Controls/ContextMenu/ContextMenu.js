@@ -11,7 +11,6 @@ import {
     transform as olTransformProj,
     fromLonLat as olFromLonLat
 } from "ol/proj";
-import Map from "ol/Map";
 
 // import geoportal library access
 import Gp from "geoportal-access-lib";
@@ -108,7 +107,7 @@ class ContextMenu extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {Map | null} map - Map.
+    * @param {import("ol/Map").default | null} map - Map
      */
     setMap (map) {
         if (map) {
