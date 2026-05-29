@@ -722,7 +722,6 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @returns {Number} Coordonnée en degrés décimaux
      */
     _decimalCompactDMSToDecimal (dms, type, cardinal) {
-
         const clean = String(dms).padStart(6, "0");
 
         const degres = parseInt(clean.slice(0, 2), 10);
@@ -758,7 +757,6 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @returns {{value: String, cardinal: String}}
      */
     _decimalToCompactDMS (decimal, type) {
-
         const abs = Math.abs(decimal);
 
         const degres = Math.floor(abs);
