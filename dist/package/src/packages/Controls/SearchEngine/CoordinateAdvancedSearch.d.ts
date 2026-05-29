@@ -57,6 +57,23 @@ declare class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     private _setSystem;
     /**
+     * Set les valeurs entrées en paramètre dans les inputs longitude / latitude.
+     *
+     * @public
+     * @param {Array} coords [Longitude / X, lat Latitude / Y]
+     */
+    public setCoordinates(coords: any[]): void;
+    /**
+    * Récupère les coordonnées saisies dans les inputs.
+    *
+    * - En mode DMS : retourne les valeurs sous forme de chaînes.
+    * - Sinon : retourne les valeurs sous forme de nombres.
+    *
+    * @public
+    * @returns {[String, String]|[Number, Number]|undefined} current coordinates set
+    */
+    public getCoordinates(): [string, string] | [number, number] | undefined;
+    /**
      * Crée un conteneur d'étiquette pour un élément d'input.
      *
      * @private
@@ -160,6 +177,52 @@ declare class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @param {InputEvent} e Événement input
      */
     private _onlonLatInput;
+    /**
+     * Normalise des coordonnées selon l’unité actuellement sélectionnée.
+     *
+     * Convertit :
+     * - les coordonnées DMS en degrés décimaux,
+     * - les coordonnées en kilomètres vers des mètres,
+     * - les autres valeurs en nombres flottants.
+     *
+     * @private
+     * @param {Array<String|Number>} coords Tableau contenant les coordonnées [lon, lat]
+     * @returns {Array<Number>} Tableau normalisé contenant [lon, lat]
+     */
+    private _normalizeCoordinatesUnit;
+    /**
+     * Convertit une coordonnée DMS compacte (DDMMSS + cardinal)
+     * en degrés décimaux.
+     *
+     * Exemple :
+     * "022108", "E" -> 2.3522
+     * "022108", "O" -> -2.3522
+     * "485124", "N" -> 48.8566
+     * "485124", "S" -> -48.8566
+     *
+     * @private
+     * @param {String} dms Chaîne DMS compacte (6 chiffres DDMMSS)
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @param {String} cardinal Point cardinal ("N","S","E","O")
+     * @returns {Number} Coordonnée en degrés décimaux
+     */
+    private _decimalCompactDMSToDecimal;
+    /**
+     * Convertit une coordonnée décimale en format DMS compact :
+     * DDMMSS + point cardinal.
+     *
+     * Exemple :
+     *  2.3522  (lon) -> { value: "022108", cardinal: "E" }
+     * -2.3522  (lon) -> { value: "022108", cardinal: "O" }
+     * 48.8566  (lat) -> { value: "485124", cardinal: "N" }
+     * -48.8566 (lat) -> { value: "485124", cardinal: "S" }
+     *
+     * @private
+     * @param {Number} decimal Coordonnée décimale
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {{value: String, cardinal: String}}
+     */
+    private _decimalToCompactDMS;
     /**
      * @override
      * @protected

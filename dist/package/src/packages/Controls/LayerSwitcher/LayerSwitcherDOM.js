@@ -1049,7 +1049,11 @@ var LayerSwitcherDOM = {
         let label;
         if (checkDsfr()) {
             icon = "fr-icon-pencil-line";
-            label = "Style";
+            if (tms) {
+                label = "Style";
+            } else {
+                label = "Éditer";
+            }
         }
         let className = `GPlayerEdit gpf-btn gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline`;
 
