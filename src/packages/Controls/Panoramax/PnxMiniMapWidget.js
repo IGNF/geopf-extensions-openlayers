@@ -346,6 +346,18 @@ class MiniMap extends LitElement {
         this._initCenterMarkerOverlay();
         this._onViewSync();
         this._syncToPictureCoordinates();
+
+        const _dispatch = (status) => {
+            this.dispatchEvent(new CustomEvent("toggle", { detail : { status } }));
+        };
+
+        if (!options.collapsed) {
+            _dispatch(true);
+        }
+
+        this._overviewControl.on("overviewmap:toggle", (e) => {
+            _dispatch(!e.status);
+        });
     }
 
     _removeOverviewMap () {
@@ -385,18 +397,26 @@ class MiniMap extends LitElement {
                     content: initial !important;
                 }
                 .pnx-mini-map__container .ol-overviewmap .ol-overviewmap-map {
+                    box-sizing: border-box;
                     position: absolute;
                     width: 100%;
                     height: 100%;
-                    box-sizing: border-box;
+                    border-radius: 4px;
+                    border: solid 4px var(--background-default-grey);
+                    background-color: var(--background-default-grey);
+                    box-shadow: var(--raised-shadow);
                 }
                 .pnx-mini-map__container .ol-overviewmap button {
                     position: absolute !important;
-                    bottom: 8px;
-                    left: 8px;
+                    bottom: 0;
+                    left: 0;
                     width: 48px;
                     height: 48px;
                     padding: unset;
+                }
+                .pnx-mini-map__container .ol-overviewmap button[aria-pressed="true"] {
+                    bottom: 8px;
+                    left: 8px;
                 }
                 .pnx-mini-map__center-marker {
                     width: 14px;
@@ -407,6 +427,19 @@ class MiniMap extends LitElement {
                     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
                     pointer-events: none;
                     z-index: 2;
+                }
+                .pnx-mini-map__container .ol-viewport canvas,
+                .pnx-mini-map__container .ol-overlaycontainer {
+                    cursor: default;
+                }
+                @media (max-width: 576px) {
+                    .pnx-mini-map__container .ol-overviewmap .ol-overviewmap-map {
+                        border: none;
+                    }
+                    /* minimap ouverte */
+                    .pnx-photo-viewer-container--minimap-open .pnx-photo-viewer-mini-map {
+                        width: 100cqw !important;
+                    }
                 }
             </style>
             <div class="pnx-mini-map__container"></div>

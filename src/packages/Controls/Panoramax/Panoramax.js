@@ -1725,7 +1725,7 @@ class Panoramax extends Control {
         </svg>`;
         // Button close
         var button = document.createElement("pnx-button");
-        button.className = "pnx-photo-viewer-close-button";
+        button.classList.add("pnx-photo-viewer-close-button", "pnx-mobile-hidden");
         // TODO dsfr
         // button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
         // button.classList.add("icon--ri", "icon--ri--close-line");
@@ -2271,11 +2271,19 @@ class Panoramax extends Control {
                 }),
                 this.layerPanoramax
             ],
-            width : 220,
-            height : 180,
+            width : 280,
+            height : 150,
             disableOverviewDragging : true,
             disableOverviewBBox : true
         };
+        minimap.addEventListener("toggle", (e) => {
+            let status = e.detail.status;
+            if (status) {
+                this.photoViewerPanoramax.classList.add("pnx-photo-viewer-container--minimap-open");
+            } else {
+                this.photoViewerPanoramax.classList.remove("pnx-photo-viewer-container--minimap-open");
+            }
+        });
         this.photoViewerMiniMap = minimap;
         return minimap;
     }

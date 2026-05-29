@@ -152,7 +152,7 @@ export default class PictureLegendWidget extends LitElement {
 
     constructor () {
         super();
-        this._expanded = true;
+        this._expanded = window.matchMedia("(min-width: 576px)").matches;
         this._onLegendClick = this._onLegendClick.bind(this);
     }
 
@@ -262,12 +262,17 @@ export default class PictureLegendWidget extends LitElement {
                     box-sizing: border-box;
                     width: 450px;
                     min-width: unset;
-                    max-width: 450px;
+                    max-width: calc(100cqw - 16px);
                     border-radius: 4px;
                     color: var(--text-default-grey);
                     background-color: var(--background-default-grey);
                     box-shadow: var(--raised-shadow);
                     transition: opacity 0.2s 0.1s;
+                }
+                @media (max-width: 576px) {
+                    .gpf-picture-legend-widget {
+                        width: 600px;
+                    }
                 }
                 .gpf-picture-legend-widget.is-expanded {
                     --line-clamp: 2;
@@ -300,14 +305,26 @@ export default class PictureLegendWidget extends LitElement {
                     -webkit-line-clamp: var(--line-clamp, 1);
                     -webkit-box-orient: vertical;
                 }
+                /* menu boutons toggable */
+                .gpf-picture-legend-widget ::part(menu) {
+                    position: absolute !important;
+                    top: 100% !important;
+                    border-radius: 4px;
+                    color: var(--text-default-grey);
+                    background-color: var(--background-default-grey);
+                    border: none;
+                    box-shadow: var(--raised-shadow);
+                }
+                @media (max-width: 768px) {
+                    .gpf-picture-legend-widget ::part(menu) {
+                        right: 0 !important;
+                    }
+                }
                 .gpf-picture-legend-widget .fr-icon-arrow-down-s-line {
                     transition: transform 0.2s ease;
                 }
                 .gpf-picture-legend-widget .fr-icon-arrow-down-s-line.is-rotated {
                     transform: rotate(180deg);
-                }
-                .gpf-picture-legend-widget pnx-panel::part(menu) {
-                    border-radius: 0;
                 }
                 @keyframes animatedBackground {
                     from { background-position: 0 0; }
