@@ -219,6 +219,53 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
+     * Set les valeurs entrées en paramètre dans les inputs longitude / latitude.
+     *
+     * @public
+     * @param {Array} coords [Longitude / X, lat Latitude / Y]
+     */
+    setCoordinates (coords) {
+        const lonInput = this.lon.querySelector("input");
+        const latInput = this.lat.querySelector("input");
+
+        if (lonInput) {
+            lonInput.value = coords[0];
+        }
+
+        if (latInput) {
+            latInput.value = coords[1];
+        }
+    }
+
+    /**
+    * Récupère les coordonnées saisies dans les inputs.
+    *
+    * - En mode DMS : retourne les valeurs sous forme de chaînes.
+    * - Sinon : retourne les valeurs sous forme de nombres.
+    *
+    * @public
+    * @returns {[String, String]|[Number, Number]|undefined} current coordinates set
+    */
+    getCoordinates () {
+        const lon = this.lon.querySelector("input").value;
+        const lat = this.lat.querySelector("input").value;
+
+        // Cas DMS : on conserve les strings
+        if (this.get("unit") === "DMS") {
+            return (lon.length === 6 && lat.length === 6) ? [lon, lat] : undefined;
+        }
+
+        const coords = [parseFloat(lon), parseFloat(lat)];
+
+        // si une des deux coordonnées n'a pu être récupéré correctement, on renvoie undefined
+        if (Number.isNaN(coords[0]) || Number.isNaN(coords[1])) {
+            return undefined;
+        }
+
+        return coords;
+    }
+
+    /**
      * Crée un conteneur d'étiquette pour un élément d'input.
      *
      * @private
@@ -436,7 +483,21 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     _updateSystem (e) {
         const crs = this._coordinateSearchSystems[e.target.value].crs;
+
         if (crs !== this._currentCoordinateSystem.crs) {
+            // transformation des coordonnées dans le nouveau système selectionné
+            let coords = this.getCoordinates();
+            let newCoords;
+            if (coords) {
+                // conversion des coordonnées dans l'unité par défaut du système de coordonnées
+                coords = this._normalizeCoordinatesUnit(coords);
+                newCoords = olProjTransform(coords, this._currentCoordinateSystem.crs, crs);
+                newCoords[0] = newCoords[0].toFixed(2);
+                newCoords[1] = newCoords[1].toFixed(2);
+            } else {
+                newCoords = ["", ""];
+            }
+            
             this._currentCoordinateSystem = this._coordinateSearchSystems[e.target.value];
             this._currentUnit = this._coordinateSearchUnits[this._currentCoordinateSystem.type];
             this.unit.replaceChildren();
@@ -451,6 +512,9 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             this.set("unit", this.unit.value);
             e.target.closest("form").dataset.unitType = this._currentCoordinateSystem.type;
             this.set("unitType", this._currentCoordinateSystem.type);
+
+            // remplissage des inputs coordonnées avec les coordonnées calculés plus haut
+            this.setCoordinates(newCoords);
         }
     }
 
@@ -502,7 +566,30 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         // TODO : Faire convertion ?!
         if (unit === "DMS") {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
-                input.value = "";
+                let decCoord;
+                if (input.id.includes("-lon-")) {
+                    decCoord = this._decimalToCompactDMS(input.value, "lon");
+                }
+
+                if (input.id.includes("-lat-")) {
+                    decCoord = this._decimalToCompactDMS(input.value, "lat");
+                }
+                
+                // Remplit l'input avec la valeur DMS
+                input.value = decCoord.value;
+
+                // Met à jour le mask visuel
+                const mask = input.parentElement.querySelector(".display-mask");
+                if (mask) {
+                    mask.textContent = this._format(decCoord.value);
+                }
+
+                // Met à jour le select cardinal juste après l'input
+                const cardinalSelect = input.closest(".GPCoordinateInputs").querySelector("select");
+                if (cardinalSelect) {
+                    cardinalSelect.value = decCoord.cardinal;
+                }
+
                 input.minLength = "6";
                 input.maxLength = "6";
                 input.addEventListener("beforeinput", this._boundOnLonLatBeforeInput);
@@ -511,7 +598,16 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         } else {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
                 if (unit === "DEC") {
-                    input.value = "";
+                    let dmsCoord;
+                    const cardinal = input.closest(".GPCoordinateInputs").querySelector("select").value;
+                    if (input.id.includes("-lon-")) {
+                        dmsCoord = this._decimalCompactDMSToDecimal(input.value, "lon", cardinal);
+                    }
+
+                    if (input.id.includes("-lat-")) {
+                        dmsCoord = this._decimalCompactDMSToDecimal(input.value, "lat", cardinal);
+                    }
+                    input.value = dmsCoord;
                 } else {
                     input.value = input.value === "" || isNaN(input.value) ? "" : parseFloat(input.value) * factor;
                 }
@@ -520,11 +616,11 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
                 input.removeEventListener("beforeinput", this._boundOnLonLatBeforeInput);
                 input.removeEventListener("input", this._boundOnLonLatInput);
             });
+            // Réinitialise le mask de l'input 
+            this.getContent().querySelectorAll(".display-mask").forEach(mask => {
+                mask.textContent = "__°__'__\"";
+            });
         }
-        // Réinitialise le mask de l'input (dans tous les cas)
-        this.getContent().querySelectorAll(".display-mask").forEach(mask => {
-            mask.textContent = "__°__'__\"";
-        });
     }
 
     /**
@@ -569,15 +665,20 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * @override
-     * @protected
-     * @param {PointerEvent} e Événement de soumission
+     * Normalise des coordonnées selon l’unité actuellement sélectionnée.
+     *
+     * Convertit :
+     * - les coordonnées DMS en degrés décimaux,
+     * - les coordonnées en kilomètres vers des mètres,
+     * - les autres valeurs en nombres flottants.
+     *
+     * @private
+     * @param {Array<String|Number>} coords Tableau contenant les coordonnées [lon, lat]
+     * @returns {Array<Number>} Tableau normalisé contenant [lon, lat]
      */
-    _onSearch (e) {
-        super._onSearch(e);
-        // Récupère les valeurs des inputs
-        let lon = this.lon.querySelector("input").value;
-        let lat = this.lat.querySelector("input").value;
+    _normalizeCoordinatesUnit (coords) {
+        let lon = coords[0];
+        let lat = coords[1];
         if (this.get("unit") === "DMS") {
             // Transforme les DMS en degrés décimaux
             lon = MathUtils.dmsToDecimal(
@@ -601,19 +702,113 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             lon = parseFloat(lon);
             lat = parseFloat(lat);
         }
+        return [lon, lat];
+    }
 
+    /**
+     * Convertit une coordonnée DMS compacte (DDMMSS + cardinal)
+     * en degrés décimaux.
+     *
+     * Exemple :
+     * "022108", "E" -> 2.3522
+     * "022108", "O" -> -2.3522
+     * "485124", "N" -> 48.8566
+     * "485124", "S" -> -48.8566
+     *
+     * @private
+     * @param {String} dms Chaîne DMS compacte (6 chiffres DDMMSS)
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @param {String} cardinal Point cardinal ("N","S","E","O")
+     * @returns {Number} Coordonnée en degrés décimaux
+     */
+    _decimalCompactDMSToDecimal (dms, type, cardinal) {
+
+        const clean = String(dms).padStart(6, "0");
+
+        const degres = parseInt(clean.slice(0, 2), 10);
+        const minutes = parseInt(clean.slice(2, 4), 10);
+        const secondes = parseInt(clean.slice(4, 6), 10);
+
+        let decimal = degres + minutes / 60 + secondes / 3600;
+
+        // Gestion du signe via cardinal
+        if (
+            (type === "lat" && cardinal === "S") ||
+            (type === "lon" && cardinal === "O")
+        ) {
+            decimal = -decimal;
+        }
+
+        return decimal;
+    }
+
+    /**
+     * Convertit une coordonnée décimale en format DMS compact :
+     * DDMMSS + point cardinal.
+     *
+     * Exemple :
+     *  2.3522  (lon) -> { value: "022108", cardinal: "E" }
+     * -2.3522  (lon) -> { value: "022108", cardinal: "O" }
+     * 48.8566  (lat) -> { value: "485124", cardinal: "N" }
+     * -48.8566 (lat) -> { value: "485124", cardinal: "S" }
+     *
+     * @private
+     * @param {Number} decimal Coordonnée décimale
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {{value: String, cardinal: String}}
+     */
+    _decimalToCompactDMS (decimal, type) {
+
+        const abs = Math.abs(decimal);
+
+        const degres = Math.floor(abs);
+
+        const minutesFloat = (abs - degres) * 60;
+        const minutes = Math.floor(minutesFloat);
+
+        const secondes = Math.round((minutesFloat - minutes) * 60);
+
+        // Gestion du point cardinal
+        let cardinal;
+
+        if (type === "lon") {
+            cardinal = decimal < 0 ? "O" : "E";
+        } else {
+            cardinal = decimal < 0 ? "S" : "N";
+        }
+
+        return {
+            value : [
+                String(degres).padStart(2, "0"),
+                String(minutes).padStart(2, "0"),
+                String(secondes).padStart(2, "0")
+            ].join(""),
+            cardinal
+        };
+    }
+
+    /**
+     * @override
+     * @protected
+     * @param {PointerEvent} e Événement de soumission
+     */
+    _onSearch (e) {
+        super._onSearch(e);
+        // Récupère les valeurs des inputs
+        let coords = this.getCoordinates();
+        let normalizedCoords = this._normalizeCoordinatesUnit(coords);
+        
         // Projette les coordonnées dans les coordonnées de la carte
-        let coords = [lon, lat];
         const mapProj = this.getMap().getView().getProjection().getCode();
         const currentProj = this._currentCoordinateSystem.crs;
         if (mapProj !== currentProj) {
-            coords = olProjTransform(coords, currentProj, mapProj);
+            normalizedCoords = olProjTransform(normalizedCoords, currentProj, mapProj);
         }
 
-        const geom = new Point(coords);
+        const geom = new Point(normalizedCoords);
         const f = new Feature({ geometry : geom });
-        // Ajout des coordonnées pour le popup
-        f.set("infoPopup", this._createInfoPopup(lon, lat));
+        // Ajout des coordonnées pour le popup dans l'unité d'origine
+        f.set("infoPopup", this._createInfoPopup(coords[0], coords[1]));
 
         this.dispatchEvent({
             type : "search",
@@ -644,14 +839,14 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
                 const latCardinal = this.lat.querySelector("select").value;
                 valueY = `${parseInt(lat.substring(0, 2))}°${parseInt(lat.substring(2, 4))}'${parseInt(lat.substring(4, 6))}" ${latCardinal}`;
             } else {
-                valueX = `${lon} °`;
-                valueY = `${lat} °`;
+                valueX = `${lon.toFixed(2)} °`;
+                valueY = `${lat.toFixed(2)} °`;
             }
         } else {
             y = "Y";
             x = "X";
-            valueY = `${lat} ${this.get("unit").toLowerCase()}`;
-            valueX = `${lon} ${this.get("unit").toLowerCase()}`;
+            valueY = `${lat.toFixed(2)} ${this.get("unit").toLowerCase()}`;
+            valueX = `${lon.toFixed(2)} ${this.get("unit").toLowerCase()}`;
         }
         const infoPopup = `<b>${y} : </b>${valueY}<br><b>${x} : </b>${valueX}`;
         return infoPopup;

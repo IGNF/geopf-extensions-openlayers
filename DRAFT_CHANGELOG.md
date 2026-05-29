@@ -15,8 +15,7 @@ __DATE__
 
 * ✨ [Added]
 
-* 🔨 [Changed]
-
+  - AdvancedSearch : conversion des coordonnées renseignés dans les inputs en changeant de système ou d'unité via les dropdowns (#518) 
   - LayerSwitcher : le tooltip au survol de l'entrée de la couche affiche son titre (#505)
 
 * 🔥 [Deprecated]
