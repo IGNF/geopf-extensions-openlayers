@@ -16,8 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - AdvancedSearch : conversion des coordonnées renseignés dans les inputs en changeant de système ou d'unité via les dropdowns (#518) 
-
-* 🔨 [Changed]
+  - LayerSwitcher : le tooltip au survol de l'entrée de la couche affiche son titre (#505)
 
 * 🔥 [Deprecated]
 
@@ -26,6 +25,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - DSFR: ne surcharge plus le style fr-tabs global (#512)
+  - LayerSwitcher : le label "éditer" s'affiche au lieu de "style" pour les couches non TMS (#516)
   
 * 🔒 [Security]
 
