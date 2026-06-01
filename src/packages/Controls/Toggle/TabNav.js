@@ -7,6 +7,28 @@ import TabNavItem from "./TabNavItem";
 import SelectorID from "../../Utils/SelectorID";
 var logger = Logger.getLogger("tabnav");
 
+
+/**
+ * Objet représentant un item de navigation tertiaire.
+ * Voir dans le fichier TabNavItem.js pour plus d'infos.
+ * 
+ * @typedef {Object} TabNavItemOptions
+ * @property {String} label - Label du bouton
+ * @property {String|HTMLElement} [content] - Contenu lié au bouton
+ * @property {String} [title] - Titre du bouton
+ * @property {String} [icon] - Classe CSS de l'icône du bouton
+ * @property {Function} [onOpen] - Callback appelé à l'ouverture de l'onglet
+ * @property {Function} [onClose] - Callback appelé à la fermeture de l'onglet
+ */
+
+/**
+ * Options du constructeur TabNav
+ * @typedef {Object} TabNavOptions
+ * @property {TabNavItemOptions} [items] - Liste des items de navigation
+ * @property {String} [label] - Label ARIA de la navigation
+ * @property {HTMLElement} [contentContainer] - Conteneur du contenu lié aux onglets. Si non fourni, en créé un et l'ajoute juste après les liens.
+ */
+
 /**
  * @classdesc
  * Classe gérant une navigation tertiaire avec onglets.
@@ -122,7 +144,7 @@ class TabNav extends Control {
 
     /**
      * Ajoute plusieurs items à la navigation.
-     * @param {Array<TabNavItemOptions>} items Liste des items à ajouter
+     * @param {TabNavItemOptions} items Liste des items à ajouter
      */
     addItems (items) {
         if (!Array.isArray(items)) {

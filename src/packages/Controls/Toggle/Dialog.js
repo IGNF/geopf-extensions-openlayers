@@ -25,6 +25,22 @@ const sizeClasses = {
 };
 
 /**
+ * Options du constructeur Dialog
+ * @typedef {Object} DialogOptions
+ * @property {String} [id] - Identifiant unique du dialog
+ * @property {String} [title] - Titre du dialog
+ * @property {String} [icon] - Classe CSS de l'icône du dialog
+ * @property {String|HTMLElement} [content] - Contenu du dialog (HTML string ou élément DOM)
+ * @property {String} [position="right"] - Position du dialog ("left" ou "right")
+ * @property {String} [size="md"] - Taille du dialog ("sm" ou "md")
+ * @property {String} [className] - Nom de classe CSS additionnel
+ * @property {Array<import("./typedefs")>} [items] - Liste des items de navigation tertiaire
+ * @property {String} [labelTabNav] - Attribut aria label de la navigation tertiaire
+ * @property {Function} [onOpen] - Callback appelé à l'ouverture du dialog
+ * @property {Function} [onClose] - Callback appelé à la fermeture du dialog
+ */
+
+/**
  * @typedef FooterOption Option pour le pied de page du dialogue.
  * @property {Array<FooterButtonOption>} [buttons] Configurations des boutons de pied de page du dialogue.
  * @property {String|HTMLElement} [content] Contenu du footer, placé avant les boutons
@@ -41,6 +57,19 @@ const sizeClasses = {
  * @property {Boolean} [close=false] - Si vrai, ferme le dialog.
  * @property {Function} [callback] - Fonction au clic sur le bouton.
  * @property {Object} [attributes] - Attributs additionnels à ajouter au bouton.
+ */
+
+/**
+ * Objet représentant un item de navigation tertiaire.
+ * Voir dans le fichier TabNavItem.js pour plus d'infos.
+ * 
+ * @typedef {Object} TabNavItemOptions
+ * @property {String} label - Label du bouton
+ * @property {String|HTMLElement} [content] - Contenu lié au bouton
+ * @property {String} [title] - Titre du bouton
+ * @property {String} [icon] - Classe CSS de l'icône du bouton
+ * @property {Function} [onOpen] - Callback appelé à l'ouverture de l'onglet
+ * @property {Function} [onClose] - Callback appelé à la fermeture de l'onglet
  */
 
 const dialogs = {};

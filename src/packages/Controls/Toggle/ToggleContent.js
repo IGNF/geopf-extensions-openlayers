@@ -9,6 +9,17 @@ import Widget from "../Widget";
 var logger = Logger.getLogger("toggle");
 
 /**
+ * @typedef {Object} ToggleContentOptions
+ * @property {String} [label] - Libellé associé à l'input.
+ * @property {String} [title] - Attribut title / aria-label.
+ * @property {String|HTMLElement} [icon] - Classe à ajouter au bouton ou élément svg (inline) ou élément HTML à ajouter avant le label (type span).
+ * @property {String} [content] - Contenu à ajouter.
+ * @property {String} [size] - Taille du panneau ("sm" ou "lg").
+ * @property {String} [position] - Position CSS du widget sur la carte. Valeurs acceptées : `top-right`, `top-left`, `bottom-right` ou `bottom-left`. Si non donné, le contrôle doit être positionné en CSS.
+ * @property {String} [dialogPosition] - Position du panneau ("left" ou "right").
+ */
+
+/**
  * @classdesc
  * Contrôle de base créant un toggle avec contenu.
  *

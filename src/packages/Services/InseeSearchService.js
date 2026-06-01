@@ -4,6 +4,49 @@ import IGNSearchService from "./IGNSearchService";
 
 var logger = Logger.getLogger("searchengine");
 
+/**
+ * Options pour l'autocomplétion.
+ * @typedef {Object} AutocompleteOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.autoComplete
+ * @property {Number} [maximumResponses] - Nombre maximal de réponses retournées
+ * @property {Boolean} [triggerGeocode=false] - Si vrai, déclenche une requête de géocodage lorsque l'autocomplétion échoue
+ * @property {Number} [triggerDelay=1000] - Délai (ms) avant déclenchement du géocodage automatique
+ * @property {Boolean} [prettifyResults=false] - Si vrai, embellit/filtre les résultats
+ */
+
+/**
+ * Options pour la recherche finale (géocodage).
+ * @typedef {Object} SearchOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.geocode.
+ * @property {Number} [maximumResponses] - Nombre maximal de réponses.
+ * @property {Boolean} [filterLayers] - Active le filtrage des résultats par couche.
+ * @property {String|Array<String>} [index] - Indexs utilisés (ex. "address,poi").
+ * @property {Number} [limit] - Limite de résultats.
+ */
+
+/**
+ * Options pour le géocodage manuel.
+ * @typedef {Object} GeocodeOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.geocode.
+ * @property {String} [location] - Texte à géocoder.
+ * @property {Function} [onSuccess] - Callback en cas de succès.
+ * @property {Function} [onFailure] - Callback en cas d'échec.
+ */
+
+/**
+ * Options de construction d'un service de recherche.
+ * @typedef {Object} AbstractSearchServiceOptions
+ * @property {String} [apiKey] - Clé API pour les services IGN.
+ * @property {Boolean} [ssl=true] - Forcer HTTPS.
+ * @property {AutocompleteOptions} [autocompleteOptions] - Options de l'autocomplétion.
+ * @property {SearchOptions} [searchOptions] - Options de la recherche finale.
+ * @property {GeocodeOptions} [geocodeOptions] - Options de géocodage.
+ * @property {Boolean} [autocomplete=true]
+ * @property {String} [index="address,poi"]
+ * @property {Number} [limit=1]
+ * @property {Boolean} [returnTrueGeometry=false]
+ */
+
 
 /**
  * @classdesc
