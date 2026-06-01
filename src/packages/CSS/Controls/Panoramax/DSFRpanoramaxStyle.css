@@ -329,6 +329,12 @@
     background-color: var(--background-action-high-blue-france);
 }
 
+/* icone minimap */
+.pnx-mini-map__container .ol-overviewmap button::after {
+    -webkit-mask: url("img/minimap-collapse-diagonal.svg") center no-repeat;
+    mask: url("img/minimap-collapse-diagonal.svg") center no-repeat;
+}
+
 /* boutons virtual tour dans le photoviewer */
 .psv-virtual-tour-link {
     background: none !important;
