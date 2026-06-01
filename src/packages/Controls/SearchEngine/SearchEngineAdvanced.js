@@ -17,6 +17,113 @@ import mapPinIcon from "./map-pin-2-fill.svg";
 import Feature from "ol/Feature";
 import { Layer } from "ol/layer";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
+import AbstractSearchService from "../../Services/AbstractSearchService";
+
+
+/**
+ * Callback appelé lors du clic sur un bouton personnalisé du popup.
+ * @callback PopupButtonClickCallback
+ * @param {Feature} feature - La feature associée au popup.
+ * @returns {Boolean} Retourne true si la feature doit être supprimée de la sélection, default (false).
+ * @this SearchEngineAdvanced
+ */
+
+/**
+ * Options pour ajouter un bouton de popup
+ * @typedef {Object} PopupButton
+ * @property {String} label - Attribut title du bouton.
+ * @property {String} [className] - Classe(s) CSS à appliquer au bouton.
+ * @property {String} [icon] - Classe d'icône à ajouter (ex: "fr-icon-delete-line").
+ * @property {Object.<String, String>} [attributes] - Attributs HTML supplémentaires (clé/valeur).
+ * @property {PopupButtonClickCallback} onClick - Fonction appelée au clic sur le bouton.
+ */
+
+/**
+ * Options pour l'autocomplétion.
+ * @typedef {Object} AutocompleteOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.autoComplete
+ * @property {Number} [maximumResponses] - Nombre maximal de réponses retournées
+ * @property {Boolean} [triggerGeocode=false] - Si vrai, déclenche une requête de géocodage lorsque l'autocomplétion échoue
+ * @property {Number} [triggerDelay=1000] - Délai (ms) avant déclenchement du géocodage automatique
+ * @property {Boolean} [prettifyResults=false] - Si vrai, embellit/filtre les résultats
+ */
+
+/**
+ * Options pour la recherche finale (géocodage).
+ * @typedef {Object} SearchOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.geocode.
+ * @property {Number} [maximumResponses] - Nombre maximal de réponses.
+ * @property {Boolean} [filterLayers] - Active le filtrage des résultats par couche.
+ * @property {String|Array<String>} [index] - Indexs utilisés (ex. "address,poi").
+ * @property {Number} [limit] - Limite de résultats.
+ */
+
+/**
+ * Options pour le géocodage manuel.
+ * @typedef {Object} GeocodeOptions
+ * @property {Object} [serviceOptions] - Options passées à Gp.Services.geocode.
+ * @property {String} [location] - Texte à géocoder.
+ * @property {Function} [onSuccess] - Callback en cas de succès.
+ * @property {Function} [onFailure] - Callback en cas d'échec.
+ */
+
+/**
+ * Options de construction d'un service de recherche.
+ * @typedef {Object} AbstractSearchServiceOptions
+ * @property {String} [apiKey] - Clé API pour les services IGN.
+ * @property {Boolean} [ssl=true] - Forcer HTTPS.
+ * @property {AutocompleteOptions} [autocompleteOptions] - Options de l'autocomplétion.
+ * @property {SearchOptions} [searchOptions] - Options de la recherche finale.
+ * @property {GeocodeOptions} [geocodeOptions] - Options de géocodage.
+ * @property {Boolean} [autocomplete=true]
+ * @property {String} [index="address,poi"]
+ * @property {Number} [limit=1]
+ * @property {Boolean} [returnTrueGeometry=false]
+ */
+
+/**
+ * Options pour le contrôle SearchEngineBase.
+ * @typedef {Object} SearchEngineBaseOptions
+ * @property {HTMLElement|string} [target] - Élément DOM ou sélecteur cible.
+ * @property {String} [title="Rechercher"] - Texte du titre du bouton.
+ * @property {String} [label=""] - Label affiché.
+ * @property {String} [hint=""] - Texte d'aide.
+ * @property {Boolean} [search=false] - Comportement en tant que barre de recherche.
+ * @property {String} [collapsible=false] - Si vrai, le contrôle est repliable.
+ * @property {String} [ariaLabel="Rechercher"] - Libellé ARIA.
+ * @property {String} [placeholder=""] - Placeholder de l'input.
+ * @property {Number} [minChars=0] - Nombre minimal de caractères pour autocomplétion.
+ * @property {Number} [maximumEntries=5] - Nombre maximal d'entrées affichées.
+ * @property {boolean|string} [historic=true] - Gestion historique local (false|true|string).
+ * @property {AbstractSearchService} [searchService] - Service de recherche.
+ */
+
+/**
+ * Options pour le contrôle SearchEngineGeocodeIGN.
+ * Étend SearchEngineBaseOptions et ajoute les options spécifiques du service IGN.
+ * @typedef {SearchEngineBaseOptions & {
+ *   serviceOptions?: AbstractSearchServiceOptions
+ * }} SearchEngineGeocodeIGNOptions
+ */
+
+/**
+ * Options pour le contrôle SearchEngineAdvanced.
+ * @typedef {Object} SearchEngineAdvancedOptions
+ * @property {AbstractAdvancedSearch[]} [advancedSearch] - Liste des recherches avancées à intégrer.
+ * @property {PopupButton[]} [popupButtons] - Boutons personnalisés à ajouter dans le popup.
+ * @property {SearchEngineGeocodeIGNOptions} [baseSearchOptions] - Options pour le moteur de recherche de base.
+ * @property {HTMLElement|String} [target] - Élément DOM ou sélecteur cible.
+ * @property {String} [title] - Titre du contrôle.
+ * @property {String} [label] - Label affiché.
+ * @property {String} [hint] - Texte d'aide.
+ * @property {Boolean} [search] - Comportement en tant que barre de recherche.
+ * @property {String} [ariaLabel] - Libellé ARIA.
+ * @property {String} [placeholder] - Placeholder de l'input.
+ * @property {Number} [minChars] - Nombre minimal de caractères pour autocomplétion.
+ * @property {Number} [maximumEntries] - Nombre maximal d'entrées affichées.
+ * @property {Boolean|String} [historic] - Gestion historique local (false|true|string).
+ * @property {AbstractSearchService} [searchService] - Service de recherche.
+ */
 
 /** Get style for features 
  * @param {String|Array<Number>} color - Couleur du contour

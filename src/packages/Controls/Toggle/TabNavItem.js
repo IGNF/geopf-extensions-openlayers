@@ -5,6 +5,17 @@ import SelectorID from "../../Utils/SelectorID";
 var logger = Logger.getLogger("tabnav");
 
 /**
+ * Objet représentant un item de navigation tertiaire
+ * @typedef {Object} TabNavItemOptions
+ * @property {String} label - Label du bouton
+ * @property {String|HTMLElement} [content] - Contenu lié au bouton
+ * @property {String} [title] - Titre du bouton
+ * @property {String} [icon] - Classe CSS de l'icône du bouton
+ * @property {Function} [onOpen] - Callback appelé à l'ouverture de l'onglet
+ * @property {Function} [onClose] - Callback appelé à la fermeture de l'onglet
+ */
+
+/**
  * @classdesc
  * Classe gérant une navigation tertiaire avec onglets.
  *

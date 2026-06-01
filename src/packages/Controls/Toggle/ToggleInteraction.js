@@ -9,6 +9,15 @@ import { Interaction } from "ol/interaction";
 var logger = Logger.getLogger("toggle");
 
 /**
+ * @typedef {Object} ToggleInteractionOptions
+ * @property {String} [label] - Libellé associé à l'input.
+ * @property {String} [title] - Attribut title / aria-label.
+ * @property {String} [position] - Position CSS du widget sur la carte. Valeurs acceptées : `top-right`, `top-left`, `bottom-right` ou `bottom-left`. Si non donné, le contrôle doit être positionné en CSS.
+ * @property {String|HTMLElement} [icon] - Classe à ajouter au bouton ou élément svg (inline) ou élément HTML à ajouter avant le label (type span).
+ * @property {import("ol/interaction").Interaction} [interaction] - Interaction à ajouter.
+ */
+
+/**
  * @classdesc
  * Contrôle de base créant un toggle avec interaction.
  *
