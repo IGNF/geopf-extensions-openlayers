@@ -682,6 +682,14 @@ class Panoramax extends Control {
          */
         this.FILTER_RENDER_PANORAMAX_EVENT = "pnx:filter:render";
 
+        /**
+         * Nom de l'événement déclenché quand on change le mode fullscreen.
+         * @event pnx:fullscreen
+         * @defaultValue "pnx:fullscreen"
+         * @group Events
+         */
+        this.FULLSCREEN_PANORAMAX_EVENT = "pnx:fullscreen";
+
         /** 
          * photo viewer 
          * @private
@@ -1616,6 +1624,11 @@ class Panoramax extends Control {
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-hidden", "gpf-visible");
+
+        // init fullscreen icon
+        let btn = this.photoViewerPanoramax.querySelector(".pnx-photo-viewer-fullscreen-button");
+        btn.querySelectorAll("span")[0].removeAttribute("hidden");
+        btn.querySelectorAll("span")[1].setAttribute("hidden", true);
     }
 
     /** @private */
@@ -1764,6 +1777,10 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de plein écran.
      */
     createWidgetBtnFullScreen () {
+        let container = this.panelPanoramaxViewerContainer;
+        if (!container) {
+            return;
+        }
         var svg = `
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -1773,7 +1790,18 @@ class Panoramax extends Control {
             role="img"
             viewBox="0 0 24 24"
         >
-            <path fill='currentColor' d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z" />
+            <path fill="currentColor" d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z" />
+        </svg>`;
+        let svgOn = `
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            class="pnx-btn-svg"
+            role="img"
+            viewBox="0 0 24 24"
+        >
+            <path fill="currentColor" d="M18 7H22V9H16V3H18V7ZM8 9H2V7H6V3H8V9ZM18 17V21H16V15H22V17H18ZM8 15V21H6V17H2V15H8Z" />
         </svg>`;
         // Button fullscreen
         var button = document.createElement("pnx-button");
@@ -1786,9 +1814,20 @@ class Panoramax extends Control {
         button.setAttribute("kind", "superflat");
         button.setAttribute("size", "md");
         button.title = "Plein écran";
-        button.innerHTML = svg;
+        button.innerHTML = `
+            <span>${svg}</span>
+            <span hidden>${svgOn}</span>
+        `;
         button.addEventListener("click", (e) => {
             this.onClickPnxViewerWidgetFullScreen(e);
+            // on switch l'icone
+            if (container._pnxFullscreen) {
+                button.querySelectorAll("span")[1].removeAttribute("hidden");
+                button.querySelectorAll("span")[0].setAttribute("hidden", true);
+            } else {
+                button.querySelectorAll("span")[0].removeAttribute("hidden");
+                button.querySelectorAll("span")[1].setAttribute("hidden", true);
+            }
         });
         return button;
     }
@@ -2599,21 +2638,26 @@ class Panoramax extends Control {
             case "small":
                 container.classList.add("pnx-visualization-window-size-small");
                 this.stopMapViewportSync();
+                container._pnxFullscreen = false;
                 break;
             case "medium":
                 container.classList.add("pnx-visualization-window-size-medium");
                 this.stopMapViewportSync();
+                container._pnxFullscreen = false;
                 break;
             case "large":
                 container.classList.add("pnx-visualization-window-size-large");
                 this.stopMapViewportSync();
+                container._pnxFullscreen = false;
                 break;
             case "fullscreen":
                 container.classList.add("pnx-visualization-window-size-fullscreen");
+                container._pnxFullscreen = true;
                 this.stopMapViewportSync();
                 break;
             case "fullscreen-map":
                 container.classList.add("pnx-visualization-window-size-fullscreen-map");
+                container._pnxFullscreen = false;
                 this.startMapViewportSync();
                 break;
             default:
@@ -3052,6 +3096,12 @@ class Panoramax extends Control {
         this.buttonPanoramaxShow.click();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
+        this.dispatchEvent({
+            type : this.FULLSCREEN_PANORAMAX_EVENT,
+            data : {
+                fullscreen : false,
+            },
+        });
         // Bloque l'envoi/rechargement de la page
         e.preventDefault();
     }
@@ -3072,6 +3122,12 @@ class Panoramax extends Control {
         this.showButtonsPanel();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
+        this.dispatchEvent({
+            type : this.FULLSCREEN_PANORAMAX_EVENT,
+            data : {
+                fullscreen : false,
+            },
+        });
     }
 
     /**
@@ -3363,7 +3419,17 @@ class Panoramax extends Control {
         if (!container) {
             return;
         }
-        this.setSizeWindow("fullscreen");
+        if (container._pnxFullscreen) {
+            this.setSizeWindow("fullscreen-map");
+        } else {
+            this.setSizeWindow("fullscreen");
+        }
+        this.dispatchEvent({
+            type : this.FULLSCREEN_PANORAMAX_EVENT,
+            data : {
+                fullscreen : container._pnxFullscreen,
+            },
+        });
     }
 
     /**
