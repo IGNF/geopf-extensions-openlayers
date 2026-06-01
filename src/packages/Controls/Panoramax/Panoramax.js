@@ -2271,8 +2271,8 @@ class Panoramax extends Control {
                 }),
                 this.layerPanoramax
             ],
-            width : 280,
-            height : 150,
+            width : 48,
+            height : 48,
             disableOverviewDragging : true,
             disableOverviewBBox : true
         };

@@ -413,10 +413,12 @@ class MiniMap extends LitElement {
                     width: 48px;
                     height: 48px;
                     padding: unset;
+                    opacity: 0;
                 }
                 .pnx-mini-map__container .ol-overviewmap button[aria-pressed="true"] {
                     bottom: 8px;
                     left: 8px;
+                    opacity: 1;
                 }
                 .pnx-mini-map__center-marker {
                     width: 14px;
@@ -432,8 +434,20 @@ class MiniMap extends LitElement {
                 .pnx-mini-map__container .ol-overlaycontainer {
                     cursor: default;
                 }
-                @media (max-width: 576px) {
-                    .pnx-mini-map__container .ol-overviewmap .ol-overviewmap-map {
+                .pnx-mini-map__container .ol-overviewmap.ol-collapsed .ol-overviewmap-map {
+                    display: block;
+                }
+                @media (min-width: 36em) {
+                    .pnx-photo-viewer-mini-map {
+                        transition: width .3s, height .3s;
+                    }
+                }
+                .pnx-photo-viewer-container--minimap-open .pnx-photo-viewer-mini-map {
+                    width: 280px !important;
+                    height: 150px !important;
+                }
+                @media (max-width: 35.99em) {
+                    .pnx-photo-viewer-container--minimap-open .ol-overviewmap .ol-overviewmap-map {
                         border: none;
                     }
                     /* minimap ouverte */
