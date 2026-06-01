@@ -414,11 +414,13 @@ class MiniMap extends LitElement {
                     height: 48px;
                     padding: unset;
                     opacity: 0;
+                    transition: opacity 0s; /* à la fermeture, masquer sans attendre  */
                 }
                 .pnx-mini-map__container .ol-overviewmap button[aria-pressed="true"] {
                     bottom: 8px;
                     left: 8px;
                     opacity: 1;
+                    transition: opacity .15s .3s; /* à l'ouverture, attendre 0.3s et animer en 0.15s */
                 }
                 .pnx-mini-map__center-marker {
                     width: 14px;
