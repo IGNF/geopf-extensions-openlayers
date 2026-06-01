@@ -26,6 +26,7 @@ __DATE__
 
   - DSFR: ne surcharge plus le style fr-tabs global (#512)
   - LayerSwitcher : le label "éditer" s'affiche au lieu de "style" pour les couches non TMS (#516)
+  - Catalog: correction du nom des icones
   
 * 🔒 [Security]
 
