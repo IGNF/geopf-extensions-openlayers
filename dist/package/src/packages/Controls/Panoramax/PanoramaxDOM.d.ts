@@ -20,6 +20,7 @@ declare namespace PanoramaxDOM {
     function _createWidgetPanelFiltersElement(opts: any): HTMLDivElement;
     function _createButtonResetFiltersElement(opts: any): HTMLButtonElement;
     function _createGroupFiltersByPeriodeElement(periodes: any): HTMLDivElement;
+    function _createGroupFiltersByDateFieldsetElement(): HTMLFieldSetElement;
     function _createGroupFiltersByDateElement(): HTMLDivElement;
     function _createGroupFiltersByStartDateElement(): HTMLDivElement;
     function _createGroupFiltersByEndDateElement(): HTMLDivElement;

@@ -206,6 +206,71 @@ export type PanoramaxOptions = {
          */
         size?: string | undefined;
     } | undefined;
+    /**
+     * - Options de configuration du visualiseur d'images panoramiques.
+     */
+    viewer?: {
+        /**
+         * - URL de l'endpoint du visualiseur d'images panoramiques.
+         */
+        endpoint?: string | undefined;
+        /**
+         * - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
+         */
+        class?: string | undefined;
+        /**
+         * - Affiche ou masque les widgets du visualiseur.
+         */
+        widgets?: boolean | undefined;
+        /**
+         * - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+         */
+        psvOptions?: any;
+    } | undefined;
+    /**
+     * - Options de configuration des interactions sur les différentes couches Panoramax.
+     */
+    interactions?: {
+        /**
+         * - Options d'interaction pour la couche de grille.
+         */
+        grid?: {
+            /**
+             * - Active ou désactive les interactions sur la couche de grille.
+             */
+            active?: boolean | undefined;
+            /**
+             * - Actions disponibles sur la couche de grille ("preview", "zoom").
+             */
+            actions?: string[] | undefined;
+        } | undefined;
+        /**
+         * - Options d'interaction pour la couche de séquences.
+         */
+        sequences?: {
+            /**
+             * - Active ou désactive les interactions sur la couche de séquences.
+             */
+            active?: boolean | undefined;
+            /**
+             * - Actions disponibles sur la couche de séquences ("preview", "zoom").
+             */
+            actions?: string[] | undefined;
+        } | undefined;
+        /**
+         * - Options d'interaction pour la couche d'images individuelles.
+         */
+        pictures?: {
+            /**
+             * - Active ou désactive les interactions sur la couche d'images individuelles.
+             */
+            active?: boolean | undefined;
+            /**
+             * - Actions disponibles sur la couche d'images individuelles ("preview", "zoom").
+             */
+            actions?: string[] | undefined;
+        } | undefined;
+    } | undefined;
 };
 export type PanoramaxPreviewFeature = {
     /**
@@ -383,6 +448,21 @@ export type PanoramaxPreviewPicturesLayer = {
  * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
  * @property {String|HTMLElement|null} [visualizationWindow.target] - **Experimental** - Cible DOM où injecter le panneau de visualisation.
  * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen", "fullscreen-map").
+ * @property {Object} [viewer] - Options de configuration du visualiseur d'images panoramiques.
+ * @property {String} [viewer.endpoint] - URL de l'endpoint du visualiseur d'images panoramiques.
+ * @property {String} [viewer.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
+ * @property {Boolean} [viewer.widgets] - Affiche ou masque les widgets du visualiseur.
+ * @property {Object} [viewer.psvOptions] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+ * @property {Object} [interactions] - Options de configuration des interactions sur les différentes couches Panoramax.
+ * @property {Object} [interactions.grid] - Options d'interaction pour la couche de grille.
+ * @property {Boolean} [interactions.grid.active] - Active ou désactive les interactions sur la couche de grille.
+ * @property {Array<String>} [interactions.grid.actions] - Actions disponibles sur la couche de grille ("preview", "zoom").
+ * @property {Object} [interactions.sequences] - Options d'interaction pour la couche de séquences.
+ * @property {Boolean} [interactions.sequences.active] - Active ou désactive les interactions sur la couche de séquences.
+ * @property {Array<String>} [interactions.sequences.actions] - Actions disponibles sur la couche de séquences ("preview", "zoom").
+ * @property {Object} [interactions.pictures] - Options d'interaction pour la couche d'images individuelles.
+ * @property {Boolean} [interactions.pictures.active] - Active ou désactive les interactions sur la couche d'images individuelles.
+ * @property {Array<String>} [interactions.pictures.actions] - Actions disponibles sur la couche d'images individuelles ("preview", "zoom").
  */
 /**
  * @typedef {Object} PanoramaxPreviewFeature
@@ -543,7 +623,7 @@ declare class Panoramax extends Control {
      *     endpoint: "https://explore.panoramax.fr/",
      *     class: "",
      *     widgets: true,
-     *     psv-options: {}
+     *     psvOptions: {}
      * }}});
      * map.addControl(panoramax);
      */
@@ -660,7 +740,21 @@ declare class Panoramax extends Control {
             pnxOptions: {
                 class: string;
                 widgets: boolean;
-                "psv-options": {};
+                psvOptions: {};
+            };
+        };
+        interactions: {
+            grid: {
+                active: boolean;
+                actions: string[];
+            };
+            sequences: {
+                active: boolean;
+                actions: string[];
+            };
+            pictures: {
+                active: boolean;
+                actions: string[];
             };
         };
     } | undefined;
@@ -715,6 +809,7 @@ declare class Panoramax extends Control {
      * Référence des gestionnaires d'événements enregistrés sur la carte.
      */
     eventsListeners: any;
+    isResetEventPropagation: boolean | undefined;
     /**
      * Types de couches Panoramax disponibles dans le TMS vecteur
      * (https://api.panoramax.xyz/api/map/style.json).
@@ -787,6 +882,13 @@ declare class Panoramax extends Control {
      */
     FILTER_RENDER_PANORAMAX_EVENT: string | undefined;
     /**
+     * Nom de l'événement déclenché quand on change le mode fullscreen.
+     * @event pnx:fullscreen
+     * @defaultValue "pnx:fullscreen"
+     * @group Events
+     */
+    FULLSCREEN_PANORAMAX_EVENT: string | undefined;
+    /**
      * photo viewer
      * @private
      */
@@ -838,6 +940,21 @@ declare class Panoramax extends Control {
      */
     private mapViewportSyncListener;
     /**
+     * widget minimap du photoviewer
+     * @private
+     */
+    private photoViewerMiniMap;
+    /**
+     * listener de synchro photo -> minimap
+     * @private
+     */
+    private photoViewerPictureLoadedListener;
+    /**
+     * instance PSV liée au listener de synchro photo -> minimap
+     * @private
+     */
+    private photoViewerPictureLoadedTarget;
+    /**
      * Construit le conteneur principal du contrôle (initialisation DOM).
      *
      * @returns {HTMLElement} DOM element
@@ -865,6 +982,7 @@ declare class Panoramax extends Control {
     private addEventsListeners;
     /**
      * Supprime les écouteurs d'événements de la carte (appelé par `setMap`).
+     * @param {Map} map - Instance de carte.
      * @private
      */
     private removeEventsListeners;
@@ -872,7 +990,7 @@ declare class Panoramax extends Control {
     allowPointerMoveOnMap(elem: any): void;
     stopImmediatePropagation(e: any): void;
     /**
-     * Réinitialise le contenu du panneau à la fermeture.
+     * Réinitialise le contenu du panneau à la fermeture.*
      */
     reset(): void;
     /** @private */
@@ -885,6 +1003,8 @@ declare class Panoramax extends Control {
     private resetButtons;
     /** @private */
     private resetPhotoViewer;
+    /** @private */
+    private cleanupPhotoViewer;
     /** @private */
     private resetVisualizationWindow;
     /** @private */
@@ -941,6 +1061,8 @@ declare class Panoramax extends Control {
     private showPhotoViewer;
     /** @private */
     private hidePhotoViewer;
+    /** @private */
+    private bindMiniMapToPhotoViewer;
     /**
      * Ajoute un widget personnalisé au viewer de photos de Panoramax.
      * @param {HTMLElement} widget - Élément du widget à ajouter.
@@ -1115,7 +1237,7 @@ declare class Panoramax extends Control {
      * @todo implémenter les autres types de filtres !
      */
     private filterRenderToMapboxLayer;
-    resetAllGroupFilters(): void;
+    resetAllGroupFilters(options?: {}): void;
     resetGroupFilter(group: any, options?: {}): void;
     /**
      * Applique les filtres sélectionnés à la couche Panoramax.

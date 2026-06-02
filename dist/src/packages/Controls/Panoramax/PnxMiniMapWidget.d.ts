@@ -10,6 +10,8 @@ export type MiniMapOptions = any;
  * @property {import("ol/View").default} [options.view] - Vue à utiliser pour la mini-map. Si non fournie, une vue par défaut est créée.
  * @property {number} [options.width=200] - Largeur de la mini-map en pixels
  * @property {number} [options.height=150] - Hauteur de la mini-map en pixels
+ * @property {boolean} [options.disableOverviewDragging=true] - Empêche le déplacement de la mini-map par glisser-déposer.
+ * @property {boolean} [options.disableOverviewBBox=true] - Masque la bbox OpenLayers (rectangle de contexte) dans la mini-map.
  */
 /**
  * Webcomponent Panoramax affichant le controle GeoportalOverviewMap (DSFR).
@@ -18,37 +20,34 @@ export type MiniMapOptions = any;
  * <pnx-mini-map map=map options='{"collapsed": false, "view": {"center": [0, 0], "zoom": 2}}'></pnx-mini-map>
  */
 declare class MiniMap extends LitElement {
-    /**
-     * @constructor
-     * @param {import("ol/Map").default} [map] - Instance de carte OpenLayers à associer à la mini-map.
-     * @param {MiniMapOptions} [options={}] - Options de configuration du contrôle de mini-map.
-     */
-    constructor(map?: import("ol/Map").default, options?: MiniMapOptions);
-    _map: import("ol/Map").default | null;
-    _options: any;
+    constructor(map: any, options?: {});
+    _map: any;
+    _options: object;
+    _pictureCoordinates: any;
     _overviewControl: GeoportalOverviewMap | null;
     _isSyncingView: boolean;
     _onMainMapMoveEnd: (() => void) | null;
     _onMiniMapMoveEnd: (() => void) | null;
     _centerMarkerOverlay: Overlay | null;
-    _container: Element | null;
-    _parent: Element | null | undefined;
+    _container: any;
     createRenderRoot(): this;
     firstUpdated(): void;
+    set map(map: any);
+    get map(): any;
+    set options(options: object);
+    get options(): object;
+    set pictureCoordinates(coordinates: number[] | null);
+    get pictureCoordinates(): number[] | null;
     /**
-     * Assigne une carte OpenLayers à la mini-map via l'attribut HTML "map" en JSON.
-     * @param {import("ol/Map").default} map - Instance de carte OpenLayers à associer à la mini-map.
+     * Met à jour les coordonnées photo utilisées par la mini-map.
+     * API explicite destinée au parent (ex. contrôle Panoramax).
+     *
+     * @param {Array<Number>|null} coordinates - Coordonnées [lon, lat] en EPSG:4326.
      */
-    set map(map: import("ol/Map").default);
-    get map(): import("ol/Map").default;
-    /**
-     * Assigne des options à la mini-map via l'attribut HTML "options" en JSON.
-     * @param {Object} options - Options à appliquer à la mini-map.
-     */
-    set options(options: any);
-    get options(): any;
+    setPhotoCoordinates(coordinates: Array<number> | null): void;
     _initCenterMarkerOverlay(): void;
     _updateCenterMarkerOverlayPosition(position: any): void;
+    _syncToPictureCoordinates(): void;
     _removeCenterMarkerOverlay(): void;
     _onViewSync(): void;
     _unViewSync(): void;

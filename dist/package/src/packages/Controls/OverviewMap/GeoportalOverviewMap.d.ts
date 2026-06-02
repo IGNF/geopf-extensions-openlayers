@@ -10,6 +10,8 @@ declare class GeoportalOverviewMap extends OverviewMap {
     /**
      * @constructor
      * @param {Object} options - ol.control.OverviewMap options (see {@link http://openlayers.org/en/latest/apidoc/ol.control.OverviewMap.html ol.Control.OverviewMap})
+     * @property {Boolean} [options.disableOverviewDragging=true] - Empêche le déplacement de la mini-map par glisser-déposer.
+     * @property {Boolean} [options.disableOverviewBBox=false] - Masque la bbox OpenLayers (rectangle de contexte) dans la mini-map.
      * @fires overviewmap:toggle
      * @example
      * var overviewmap = new ol.control.GeoportalOverviewMap({

@@ -82,6 +82,21 @@ var logger = Logger.getLogger("panoramax");
  * @property {Boolean} [visualizationWindow.display] - Affiche ou masque la fenêtre de visualisation.
  * @property {String|HTMLElement|null} [visualizationWindow.target] - **Experimental** - Cible DOM où injecter le panneau de visualisation.
  * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen", "fullscreen-map").
+ * @property {Object} [viewer] - Options de configuration du visualiseur d'images panoramiques.
+ * @property {String} [viewer.endpoint] - URL de l'endpoint du visualiseur d'images panoramiques.
+ * @property {String} [viewer.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
+ * @property {Boolean} [viewer.widgets] - Affiche ou masque les widgets du visualiseur.
+ * @property {Object} [viewer.psvOptions] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+ * @property {Object} [interactions] - Options de configuration des interactions sur les différentes couches Panoramax. 
+ * @property {Object} [interactions.grid] - Options d'interaction pour la couche de grille.
+ * @property {Boolean} [interactions.grid.active] - Active ou désactive les interactions sur la couche de grille.
+ * @property {Array<String>} [interactions.grid.actions] - Actions disponibles sur la couche de grille ("preview", "zoom").
+ * @property {Object} [interactions.sequences] - Options d'interaction pour la couche de séquences.
+ * @property {Boolean} [interactions.sequences.active] - Active ou désactive les interactions sur la couche de séquences.
+ * @property {Array<String>} [interactions.sequences.actions] - Actions disponibles sur la couche de séquences ("preview", "zoom").
+ * @property {Object} [interactions.pictures] - Options d'interaction pour la couche d'images individuelles.
+ * @property {Boolean} [interactions.pictures.active] - Active ou désactive les interactions sur la couche d'images individuelles.
+ * @property {Array<String>} [interactions.pictures.actions] - Actions disponibles sur la couche d'images individuelles ("preview", "zoom").
  */
 
 /**
@@ -246,7 +261,7 @@ class Panoramax extends Control {
      *     endpoint: "https://explore.panoramax.fr/",
      *     class: "",
      *     widgets: true,
-     *     psv-options: {}
+     *     psvOptions: {}
      * }}});
      * map.addControl(panoramax);
      */
@@ -312,23 +327,24 @@ class Panoramax extends Control {
                 this.addEventsListeners(map);
             }
         } else {
-            // suppression des evenements sur la carte
-            // pour les futurs suppressions de couche
-            if (this.auto) {
-                this.removeEventsListeners();
-            }
+            // c'est une opération de nettoyage déclenchée lors de la fermeture 
+            // et par l'appel à 'reset()'
+            // nettoyer complètement le photoViewer en premier pour éviter les erreurs de lifecycle
+            // lors d'un removeControl suivi d'un addControl
+            this.cleanupPhotoViewer();
+            this.setCollapsed(true);
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
 
         // position
-        if (this.options.position) {
+        if (map && this.options.position) {
             this.setPosition(this.options.position);
         }
 
         // reunion du bouton avec le précédent
-        if (this.options.gutter === false) {
+        if (map && this.options.gutter === false) {
             this.getContainer().classList.add("gpf-button-no-gutter");
         }
     }
@@ -471,10 +487,24 @@ class Panoramax extends Control {
                 "pnxOptions" : { // TODO opts psv ?
                     "class" : "",
                     "widgets" : true,
-                    "psv-options" : {}
+                    "psvOptions" : {}
                     
                 },
             },
+            interactions : {
+                grid : {
+                    active : true,
+                    actions : ["zoom"],
+                },
+                sequences : {
+                    active : true,
+                    actions : ["zoom"],
+                },
+                pictures : {
+                    active : true,
+                    actions : ["preview"],
+                }
+            }
         };
 
         // merge with user options
@@ -483,6 +513,7 @@ class Panoramax extends Control {
         Utils.assign(this.options.buttonsWindow, options.buttonsWindow);
         Utils.assign(this.options.visualizationWindow, options.visualizationWindow);
         Utils.assign(this.options.viewer, options.viewer);
+        Utils.assign(this.options.interactions, options.interactions);
         [
             "collapsed", 
             "draggable", 
@@ -561,6 +592,8 @@ class Panoramax extends Control {
          * Référence des gestionnaires d'événements enregistrés sur la carte.
          */
         this.eventsListeners = {};
+
+        this.isResetEventPropagation = false; // flag pour éviter la propagation des événements de reset des filtres
 
         /**
          * Types de couches Panoramax disponibles dans le TMS vecteur 
@@ -642,6 +675,14 @@ class Panoramax extends Control {
          */
         this.FILTER_RENDER_PANORAMAX_EVENT = "pnx:filter:render";
 
+        /**
+         * Nom de l'événement déclenché quand on change le mode fullscreen.
+         * @event pnx:fullscreen
+         * @defaultValue "pnx:fullscreen"
+         * @group Events
+         */
+        this.FULLSCREEN_PANORAMAX_EVENT = "pnx:fullscreen";
+
         /** 
          * photo viewer 
          * @private
@@ -698,6 +739,24 @@ class Panoramax extends Control {
          * @private 
          */
         this.mapViewportSyncListener = null;
+
+        /**
+         * widget minimap du photoviewer
+         * @private
+         */
+        this.photoViewerMiniMap = null;
+
+        /**
+         * listener de synchro photo -> minimap
+         * @private
+         */
+        this.photoViewerPictureLoadedListener = null;
+
+        /**
+         * instance PSV liée au listener de synchro photo -> minimap
+         * @private
+         */
+        this.photoViewerPictureLoadedTarget = null;
     }
 
     /**
@@ -733,6 +792,7 @@ class Panoramax extends Control {
         var widgetPanelButtons = this.panelPanoramaxButtonsContainer = this._createWidgetPanelButtonsElement();
         var widgetPanelButtonsDiv = this._createWidgetPanelButtonsDivElement();
         widgetPanelButtons.appendChild(widgetPanelButtonsDiv);
+        this.preventPointerMoveOnMap(widgetPanelButtons);
 
         // menu des boutons (ex. Options)
         // INFO : possibilité d'injecter d'autres boutons
@@ -746,6 +806,7 @@ class Panoramax extends Control {
         // panneau pour toutes les filtres et autres boutons optionnels du menu Options
         this.panelPanoramaxOptions = this._createWidgetPanelOptionsElement();
         buttons.appendChild(this.panelPanoramaxOptions);
+        this.preventPointerMoveOnMap(this.panelPanoramaxOptions);
 
         // ajout d'un header
         var widgetPanelButtonsHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
@@ -810,17 +871,17 @@ class Panoramax extends Control {
             }
         }
 
-        if (this.panelPanoramaxOptions) {
-            var panelOptionsTarget = this.panelPanoramaxButtonsContainer.parentElement || container;
-            panelOptionsTarget.appendChild(this.panelPanoramaxOptions);
-        }
-
         // experimental : possibilité d'injecter le panneau des boutons dans une cible spécifique
         var panelButtonsTarget = this.resolveTargetElement(this.options.buttonsWindow.target);
         if (panelButtonsTarget) {
             panelButtonsTarget.appendChild(widgetPanelButtons);
         } else {
             container.appendChild(widgetPanelButtons);
+        }
+
+        if (this.panelPanoramaxOptions) {
+            var panelOptionsTarget = this.panelPanoramaxButtonsContainer.parentElement || container;
+            panelOptionsTarget.appendChild(this.panelPanoramaxOptions);
         }
 
         logger.log(container);
@@ -925,24 +986,28 @@ class Panoramax extends Control {
                 if (type === "grid") {
                     // zoom on the clicked coordinates with a zoom level 
                     // depending on the density of images in the grid
-                    var zoom = e.map.getView().getZoom();
-                    var newZoom = zoom + 4; // FIXME zoom aleatoire !?
-                    e.map.getView().animate({
-                        center : feature.coordinates,
-                        zoom : newZoom,
-                        duration : 500
-                    });
+                    if (self.options.interactions.grid.active && 
+                        self.options.interactions.grid.actions.includes("zoom")) {
+                        var zoom = e.map.getView().getZoom();
+                        var newZoom = zoom + 4; // FIXME zoom facteur aleatoire !?
+                        e.map.getView().animate({
+                            center : feature.pointerCoordinate || feature.coordinates,
+                            zoom : newZoom,
+                            duration : 500
+                        });
+                    }
                 }
                 if (type === "sequences") {
                     // zoom on the clicked coordinates with a zoom level 
                     // depending on the density of images in the sequence
-                    var zoom = e.map.getView().getZoom();
-                    var newZoom = zoom + 2; // FIXME zoom aleatoire !?
-                    e.map.getView().animate({
-                        center : feature.coordinates,
-                        zoom : newZoom,
-                        duration : 500
-                    });
+                    if (self.options.interactions.sequences.active && 
+                        self.options.interactions.sequences.actions.includes("zoom")) {
+                        e.map.getView().animate({
+                            center : feature.pointerCoordinate || feature.coordinates,
+                            zoom : 17,
+                            duration : 500
+                        });
+                    }
                 }
                 return;
             } else {
@@ -966,7 +1031,7 @@ class Panoramax extends Control {
             }
             var options = {
                 layerFilter : (l) => l === self.layerPanoramax,
-                hitTolerance : 5
+                hitTolerance : 0
             };
             var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature, options);
             var mapTarget = e.map.getTargetElement();
@@ -977,6 +1042,7 @@ class Panoramax extends Control {
                 self.resetPreview();
                 return;
             }
+            feature.pointerCoordinate = e.coordinate;
             self.displayPreview(feature);
         };
         this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB] = this.onPointerMoveDebounced(hoverHandler);
@@ -985,16 +1051,23 @@ class Panoramax extends Control {
 
     /**
      * Supprime les écouteurs d'événements de la carte (appelé par `setMap`).
+     * @param {Map} map - Instance de carte.
      * @private
      */
-    removeEventsListeners () {
-        var map = this.getMap();
+    removeEventsListeners (map) {
+        if (!map) {
+            return;
+        }
         this.resetPreview();
 
-        map.un("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
-        delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
-        map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
-        delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
+        if (this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]) {
+            map.un("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
+            delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
+        }
+        if (this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]) {
+            map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
+            delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
+        }
 
         var mapTarget = map.getTargetElement();
         if (mapTarget) {
@@ -1019,7 +1092,7 @@ class Panoramax extends Control {
     // ################################################################### //
 
     /**
-     * Réinitialise le contenu du panneau à la fermeture.
+     * Réinitialise le contenu du panneau à la fermeture.*
      */
     reset () {
         if (this.options.group) {
@@ -1037,10 +1110,13 @@ class Panoramax extends Control {
         this.resetPhotoViewer();
         // - nettoyer l'aperçu au survol
         this.resetPreview();
+        // - reinit des filtres
+        this.resetAllGroupFilters({ isReset : true });
         // - etc.
         this.eventActived = false;
         if (!this.auto) {
-            this.removeEventsListeners();
+            var map = this.getMap();
+            this.removeEventsListeners(map);
         }
     }
 
@@ -1085,12 +1161,6 @@ class Panoramax extends Control {
     }
     /** @private */
     resetButtons () {
-        if (this.panelPanoramaxOptions) {
-            this.panelPanoramaxOptions.classList.replace("gpf-visible", "gpf-hidden");
-        }
-        if (this.btnPanoramaxOptions) {
-            this.btnPanoramaxOptions.setAttribute("aria-pressed", "false");
-        }
         this.unbindFiltersPanelPositioning();
     }
     /** @private */
@@ -1106,6 +1176,26 @@ class Panoramax extends Control {
                 this.photoViewerPanoramax.select();
             }  
             this.hidePhotoViewer();
+        }
+    }
+    /** @private */
+    cleanupPhotoViewer () {
+        // Nettoie complètement le photoViewer du DOM pour éviter les erreurs de lifecycle
+        // lors d'un removeControl/addControl. On retire du DOM SANS réinitialiser les
+        // attributs (ce qui déclencherait attributeChangedCallback pendant le cleanup).
+        if (this.photoViewerPanoramax) {
+            if (this.photoViewerPanoramax.parentElement) {
+                try {
+                    this.photoViewerPanoramax.parentElement.removeChild(this.photoViewerPanoramax);
+                } catch (err) {
+                    logger.warn("Error removing photo viewer from DOM during cleanup", err);
+                }
+            }
+            
+            // Nullifier les références et listeners
+            this.photoViewerPanoramax = null;
+            this.photoViewerPictureLoadedListener = null;
+            this.photoViewerPictureLoadedTarget = null;
         }
     }
     /** @private */
@@ -1254,8 +1344,12 @@ class Panoramax extends Control {
         }
         if (!this.groupPanoramax) {
             this.groupPanoramax = new LayerGroup();
+            this.groupPanoramax.gpResultLayerId = "panoramax:group";
+            this.groupPanoramax.setProperties({
+                "title" : "Panoramax",
+                "description" : "Couche de données Panoramax"
+            });
             map.addLayer(this.groupPanoramax);
-            this.groupPanoramax.set("title", "Panoramax");
         }
     }
 
@@ -1279,6 +1373,7 @@ class Panoramax extends Control {
         });
         // hack pour le gestionnaire de couche
         layer.styleUrl = opts.url;
+        layer.gpResultLayerId = "panoramax:layer";
         
         if (this.options.group) {
             this.setLayerGroup();
@@ -1295,6 +1390,7 @@ class Panoramax extends Control {
             await this.getStyleJsonFromMapboxVectorLayer(layer);
             // mise à jour du nom de la couche du gestionnaire de couche
             layer.set("title", opts.name);
+            layer.set("description", "Couche de données Panoramax");
             // sauvegarde de la référence de la couche
             this.layerPanoramax = layer;
             return layer;
@@ -1328,6 +1424,7 @@ class Panoramax extends Control {
             maxZoom : opts.maxZoom || 21
         });
         layer.styleUrl = opts.url;
+        layer.gpResultLayerId = "panoramax:background";
 
         if (this.groupPanoramax) {
             this.groupPanoramax.getLayers().insertAt(0, layer);
@@ -1397,7 +1494,7 @@ class Panoramax extends Control {
         // options.viewer.endpoint : "https://explore.panoramax.fr/api"
         // options.viewer.class : "..." (TODO)
         // options.viewer.widgets : true/false (TODO)
-        // options.viewer.psv-options : {} (TODO)
+        // options.viewer.psvOptions : {} (TODO)
         var self = this;
         return new Promise((resolve, reject) => {
             logger.debug("initPhotoViewer");
@@ -1409,6 +1506,7 @@ class Panoramax extends Control {
                 self.photoViewerPanoramax.onceReady()
                     .then(() => {
                         console.debug("Panoramax photo viewer is ready", self.photoViewerPanoramax);
+                        self.bindMiniMapToPhotoViewer();
                     });
                 self.photoViewerPanoramax.addEventListener("ready", () => {
                     console.debug("Panoramax photo viewer is ready", self);
@@ -1422,6 +1520,12 @@ class Panoramax extends Control {
                 });
                 self.photoViewerPanoramax.addEventListener("broken", () => {
                     console.warn("Panoramax photo viewer is broken");
+                });
+            } else if (typeof self.photoViewerPanoramax.onceReady === "function") {
+                // Après un removeControl/addControl, le viewer peut déjà exister,
+                // mais la liaison mini-map <-> photo-viewer doit être réassurée.
+                self.photoViewerPanoramax.onceReady().then(() => {
+                    self.bindMiniMapToPhotoViewer();
                 });
             }
             resolve();
@@ -1464,8 +1568,9 @@ class Panoramax extends Control {
             photoViewer.className = "pnx-photo-viewer-container";
             photoViewer.style = "width: 100%; height: 100%";
             // Define plugins list in PSV options
-            photoViewer["psv-options"] = this.options.viewer.pnxOptions["psv-options"];
+            photoViewer["psv-options"] = this.options.viewer.pnxOptions.psvOptions;
             photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
+            photoViewer.setAttribute("url-parameters", "false");
             var widgets = this.options.viewer.widgets && Array.isArray(this.options.viewer.widgets) ? this.options.viewer.widgets : null;
             if (widgets) {
                 // Button back
@@ -1535,7 +1640,7 @@ class Panoramax extends Control {
                 this.photoViewerPanoramax.setAttribute("picture", pictureId);
             }
         }
-        
+        this.resetPreview();
         this.showPhotoViewer();
         this.hideButtonsPanel();
     }
@@ -1550,6 +1655,11 @@ class Panoramax extends Control {
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-hidden", "gpf-visible");
+
+        // init fullscreen icon
+        let btn = this.photoViewerPanoramax.querySelector(".pnx-photo-viewer-fullscreen-button");
+        btn.querySelectorAll("span")[0].removeAttribute("hidden");
+        btn.querySelectorAll("span")[1].setAttribute("hidden", true);
     }
 
     /** @private */
@@ -1563,6 +1673,52 @@ class Panoramax extends Control {
             return;
         }
         this.photoViewerPanoramax.classList.replace("gpf-visible", "gpf-hidden");
+    }
+
+    /** @private */
+    bindMiniMapToPhotoViewer () {
+        if (!this.photoViewerPanoramax || !this.photoViewerPanoramax.psv) {
+            return;
+        }
+
+        var psv = this.photoViewerPanoramax.psv;
+
+        if (this.photoViewerPictureLoadedTarget
+            && this.photoViewerPictureLoadedTarget !== psv
+            && this.photoViewerPictureLoadedListener
+            && typeof this.photoViewerPictureLoadedTarget.removeEventListener === "function") {
+            this.photoViewerPictureLoadedTarget.removeEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
+            this.photoViewerPictureLoadedTarget = null;
+        }
+
+        if (this.photoViewerPictureLoadedTarget === psv && this.photoViewerPictureLoadedListener) {
+            return;
+        }
+
+        if (!this.photoViewerPictureLoadedListener) {
+            this.photoViewerPictureLoadedListener = () => {
+                if (!this.photoViewerMiniMap) {
+                    return;
+                }
+
+                var currentPsv = this.photoViewerPanoramax && this.photoViewerPanoramax.psv
+                    ? this.photoViewerPanoramax.psv
+                    : null;
+                var pictureMetadata = currentPsv && typeof currentPsv.getPictureMetadata === "function"
+                    ? currentPsv.getPictureMetadata()
+                    : null;
+                var gps = pictureMetadata && Array.isArray(pictureMetadata.gps) ? pictureMetadata.gps : null;
+
+                if (typeof this.photoViewerMiniMap.setPhotoCoordinates === "function") {
+                    this.photoViewerMiniMap.setPhotoCoordinates(gps);
+                } else {
+                    this.photoViewerMiniMap.pictureCoordinates = gps;
+                }
+            };
+        }
+
+        psv.addEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
+        this.photoViewerPictureLoadedTarget = psv;
     }
 
     // ################################################################### //
@@ -1638,7 +1794,7 @@ class Panoramax extends Control {
         </svg>`;
         // Button close
         var button = document.createElement("pnx-button");
-        button.className = "pnx-photo-viewer-close-button";
+        button.classList.add("pnx-photo-viewer-close-button", "pnx-mobile-hidden");
         // TODO dsfr
         // button.classList.add("gpf-btn", "gpf-btn--tertiary", "gpf-btn-icon");
         // button.classList.add("icon--ri", "icon--ri--close-line");
@@ -1648,8 +1804,8 @@ class Panoramax extends Control {
         button.setAttribute("size", "md");
         button.title = "Fermer";
         button.innerHTML = svg;
-        button.addEventListener("click", (e) => {
-            this.onClickPnxViewerWidgetClose(e);
+        button.addEventListener("click", () => {
+            this.onClickPnxViewerWidgetBack();
         });
         return button;
     }
@@ -1677,6 +1833,10 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du bouton de plein écran.
      */
     createWidgetBtnFullScreen () {
+        let container = this.panelPanoramaxViewerContainer;
+        if (!container) {
+            return;
+        }
         var svg = `
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -1686,7 +1846,18 @@ class Panoramax extends Control {
             role="img"
             viewBox="0 0 24 24"
         >
-            <path fill='currentColor' d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z" />
+            <path fill="currentColor" d="M8 3V5H4V9H2V3H8ZM2 21V15H4V19H8V21H2ZM22 21H16V19H20V15H22V21ZM22 9H20V5H16V3H22V9Z" />
+        </svg>`;
+        let svgOn = `
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            class="pnx-btn-svg"
+            role="img"
+            viewBox="0 0 24 24"
+        >
+            <path fill="currentColor" d="M18 7H22V9H16V3H18V7ZM8 9H2V7H6V3H8V9ZM18 17V21H16V15H22V17H18ZM8 15V21H6V17H2V15H8Z" />
         </svg>`;
         // Button fullscreen
         var button = document.createElement("pnx-button");
@@ -1699,9 +1870,20 @@ class Panoramax extends Control {
         button.setAttribute("kind", "superflat");
         button.setAttribute("size", "md");
         button.title = "Plein écran";
-        button.innerHTML = svg;
+        button.innerHTML = `
+            <span>${svg}</span>
+            <span hidden>${svgOn}</span>
+        `;
         button.addEventListener("click", (e) => {
             this.onClickPnxViewerWidgetFullScreen(e);
+            // on switch l'icone
+            if (container._pnxFullscreen) {
+                button.querySelectorAll("span")[1].removeAttribute("hidden");
+                button.querySelectorAll("span")[0].setAttribute("hidden", true);
+            } else {
+                button.querySelectorAll("span")[0].removeAttribute("hidden");
+                button.querySelectorAll("span")[1].setAttribute("hidden", true);
+            }
         });
         return button;
     }
@@ -1726,6 +1908,452 @@ class Panoramax extends Control {
      * @returns {HTMLElement} Élément du composant de minimap.
      */
     createWidgetCmpMinimap () {
+        const LAYER_CONFIG = {
+            "name" : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+            "globalConstraint" : {
+                "maxScaleDenominator" : 559082264.0287179,
+                "minScaleDenominator" : 1066.364791924893,
+                "bbox" : {
+                    "left" : -179.9,
+                    "right" : 179.9,
+                    "top" : 85,
+                    "bottom" : -85
+                }
+            },
+            "params" : {
+                "url" : "https://data.geopf.fr/wmts",
+                "styles" : "normal",
+                "version" : "1.0.0",
+                "format" : "image/png",
+                "projection" : "EPSG:3857",
+                "minScale" : 1066.364791924893,
+                "maxScale" : 559082264.0287179,
+                "extent" : {
+                    "left" : -179.9,
+                    "right" : 179.9,
+                    "top" : 85,
+                    "bottom" : -85
+                },
+                "legends" : [
+                    {
+                        "format" : "image/jpeg",
+                        "url" : "https://data.geopf.fr/annexes/ressources/legendes/LEGEND.jpg",
+                        "minScaleDenominator" : "200"
+                    }
+                ],
+                "title" : "Plan IGN",
+                "description" : "<p>Cartographie multi-échelles sur le territoire national, issue des bases de données vecteur de l’IGN, mis à jour régulièrement et réalisée selon un processus entièrement automatisé.</p>\n",
+                "tileMatrixSetLimits" : {
+                    "0" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "0",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "0"
+                    },
+                    "1" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "1",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "1"
+                    },
+                    "2" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "3",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "3"
+                    },
+                    "3" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "7",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "7"
+                    },
+                    "4" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "15",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "15"
+                    },
+                    "5" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "31",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "31"
+                    },
+                    "6" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "63",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "63"
+                    },
+                    "7" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "127",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "127"
+                    },
+                    "8" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "255",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "255"
+                    },
+                    "9" : {
+                        "minTileRow" : "0",
+                        "maxTileRow" : "511",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "511"
+                    },
+                    "10" : {
+                        "minTileRow" : "1",
+                        "maxTileRow" : "1022",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "1023"
+                    },
+                    "11" : {
+                        "minTileRow" : "3",
+                        "maxTileRow" : "2044",
+                        "minTileCol" : "0",
+                        "maxTileCol" : "2047"
+                    },
+                    "12" : {
+                        "minTileRow" : "6",
+                        "maxTileRow" : "4089",
+                        "minTileCol" : "1",
+                        "maxTileCol" : "4094"
+                    },
+                    "13" : {
+                        "minTileRow" : "13",
+                        "maxTileRow" : "8178",
+                        "minTileCol" : "2",
+                        "maxTileCol" : "8189"
+                    },
+                    "14" : {
+                        "minTileRow" : "26",
+                        "maxTileRow" : "16357",
+                        "minTileCol" : "4",
+                        "maxTileCol" : "16379"
+                    },
+                    "15" : {
+                        "minTileRow" : "53",
+                        "maxTileRow" : "32714",
+                        "minTileCol" : "9",
+                        "maxTileCol" : "32758"
+                    },
+                    "16" : {
+                        "minTileRow" : "107",
+                        "maxTileRow" : "65428",
+                        "minTileCol" : "18",
+                        "maxTileCol" : "65517"
+                    },
+                    "17" : {
+                        "minTileRow" : "214",
+                        "maxTileRow" : "130857",
+                        "minTileCol" : "36",
+                        "maxTileCol" : "131035"
+                    },
+                    "18" : {
+                        "minTileRow" : "429",
+                        "maxTileRow" : "261714",
+                        "minTileCol" : "72",
+                        "maxTileCol" : "262071"
+                    },
+                    "19" : {
+                        "minTileRow" : "858",
+                        "maxTileRow" : "523429",
+                        "minTileCol" : "145",
+                        "maxTileCol" : "524142"
+                    }
+                },
+                "TMSLink" : "PM_0_19",
+                "matrixIds" : [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "10",
+                    "11",
+                    "12",
+                    "13",
+                    "14",
+                    "15",
+                    "16",
+                    "17",
+                    "18",
+                    "19"
+                ],
+                "tileMatrices" : {
+                    "0" : {
+                        "matrixId" : "0",
+                        "matrixHeight" : 1,
+                        "matrixWidth" : 1,
+                        "scaleDenominator" : 559082264.0287179,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "1" : {
+                        "matrixId" : "1",
+                        "matrixHeight" : 2,
+                        "matrixWidth" : 2,
+                        "scaleDenominator" : 279541132.01435894,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "2" : {
+                        "matrixId" : "2",
+                        "matrixHeight" : 4,
+                        "matrixWidth" : 4,
+                        "scaleDenominator" : 139770566.0071793,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "3" : {
+                        "matrixId" : "3",
+                        "matrixHeight" : 8,
+                        "matrixWidth" : 8,
+                        "scaleDenominator" : 69885283.00358965,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "4" : {
+                        "matrixId" : "4",
+                        "matrixHeight" : 16,
+                        "matrixWidth" : 16,
+                        "scaleDenominator" : 34942641.50179486,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "5" : {
+                        "matrixId" : "5",
+                        "matrixHeight" : 32,
+                        "matrixWidth" : 32,
+                        "scaleDenominator" : 17471320.75089743,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "6" : {
+                        "matrixId" : "6",
+                        "matrixHeight" : 64,
+                        "matrixWidth" : 64,
+                        "scaleDenominator" : 8735660.375448715,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "7" : {
+                        "matrixId" : "7",
+                        "matrixHeight" : 128,
+                        "matrixWidth" : 128,
+                        "scaleDenominator" : 4367830.1877243575,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "8" : {
+                        "matrixId" : "8",
+                        "matrixHeight" : 256,
+                        "matrixWidth" : 256,
+                        "scaleDenominator" : 2183915.0938621787,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "9" : {
+                        "matrixId" : "9",
+                        "matrixHeight" : 512,
+                        "matrixWidth" : 512,
+                        "scaleDenominator" : 1091957.5469310894,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "10" : {
+                        "matrixId" : "10",
+                        "matrixHeight" : 1024,
+                        "matrixWidth" : 1024,
+                        "scaleDenominator" : 545978.7734655464,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "11" : {
+                        "matrixId" : "11",
+                        "matrixHeight" : 2048,
+                        "matrixWidth" : 2048,
+                        "scaleDenominator" : 272989.38673277217,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "12" : {
+                        "matrixId" : "12",
+                        "matrixHeight" : 4096,
+                        "matrixWidth" : 4096,
+                        "scaleDenominator" : 136494.69336638608,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "13" : {
+                        "matrixId" : "13",
+                        "matrixHeight" : 8192,
+                        "matrixWidth" : 8192,
+                        "scaleDenominator" : 68247.34668319322,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "14" : {
+                        "matrixId" : "14",
+                        "matrixHeight" : 16384,
+                        "matrixWidth" : 16384,
+                        "scaleDenominator" : 34123.673341596535,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "15" : {
+                        "matrixId" : "15",
+                        "matrixHeight" : 32768,
+                        "matrixWidth" : 32768,
+                        "scaleDenominator" : 17061.83667079829,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "16" : {
+                        "matrixId" : "16",
+                        "matrixHeight" : 65536,
+                        "matrixWidth" : 65536,
+                        "scaleDenominator" : 8530.918335399145,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "17" : {
+                        "matrixId" : "17",
+                        "matrixHeight" : 131072,
+                        "matrixWidth" : 131072,
+                        "scaleDenominator" : 4265.459167699572,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "18" : {
+                        "matrixId" : "18",
+                        "matrixHeight" : 262144,
+                        "matrixWidth" : 262144,
+                        "scaleDenominator" : 2132.7295838497826,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    },
+                    "19" : {
+                        "matrixId" : "19",
+                        "matrixHeight" : 524288,
+                        "matrixWidth" : 524288,
+                        "scaleDenominator" : 1066.364791924893,
+                        "tileHeight" : 256,
+                        "tileWidth" : 256,
+                        "topLeftCorner" : {
+                            "x" : -20037508.3427892,
+                            "y" : 20037508.3427892
+                        }
+                    }
+                },
+                "nativeResolutions" : [
+                    "156543.0339280410",
+                    "78271.51696402048",
+                    "39135.75848201023",
+                    "19567.87924100512",
+                    "9783.939620502561",
+                    "4891.969810251280",
+                    "2445.984905125640",
+                    "1222.992452562820",
+                    "611.4962262814100",
+                    "305.7481131407048",
+                    "152.8740565703525",
+                    "76.43702828517624",
+                    "38.21851414258813",
+                    "19.10925707129406",
+                    "9.554628535647032",
+                    "4.777314267823516",
+                    "2.388657133911758",
+                    "1.194328566955879",
+                    "0.5971642834779395",
+                    "0.2985821417389697"
+                ]
+            }
+        };
         var minimap = document.createElement("pnx-mini-map");
         minimap.className = "pnx-photo-viewer-mini-map";
         minimap.setAttribute("slot", "bottom-left");
@@ -1733,13 +2361,25 @@ class Panoramax extends Control {
         minimap.options = {
             layers : [
                 new GeoportalWMTS({
-                    layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+                    layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+                    configuration : LAYER_CONFIG
                 }),
                 this.layerPanoramax
             ],
-            width : 220,
-            height : 180
+            width : 48,
+            height : 48,
+            disableOverviewDragging : true,
+            disableOverviewBBox : true
         };
+        minimap.addEventListener("toggle", (e) => {
+            let status = e.detail.status;
+            if (status) {
+                this.photoViewerPanoramax.classList.add("pnx-photo-viewer-container--minimap-open");
+            } else {
+                this.photoViewerPanoramax.classList.remove("pnx-photo-viewer-container--minimap-open");
+            }
+        });
+        this.photoViewerMiniMap = minimap;
         return minimap;
     }
 
@@ -1873,22 +2513,35 @@ class Panoramax extends Control {
     displayPreview (feature) {
         let properties = feature.getProperties();
         var type = properties.layer || properties["mvt:layer"];
+
+        // stocke la feature survolée
+        this.selectedFeature = feature;
+        var pfeature = this._transformToPanoramaxFeature(feature);
+
         switch (type) {
             case "grid":
-                // preview la feature panoramax
-                feature = this._transformToPanoramaxFeature(feature);
-                this.displayPreviewGrid(feature.coordinates, feature.properties);
+                // preview des statistiques panoramax
+                if (this.options.interactions["grid"].active && 
+                    this.options.interactions["grid"].actions.includes("preview")
+                ) {
+                    this.displayPreviewGrid(pfeature.coordinates, pfeature.properties);
+                }
                 break;
             case "sequences":
-                // FIXME desactive temporairement la prévisualisation des séquences
-                // this.displayPreviewSequence(feature.coordinates, feature.properties);
+                // la prévisualisation d'une image parmis la séquence
+                if (this.options.interactions["sequences"].active && 
+                    this.options.interactions["sequences"].actions.includes("preview")
+                ) {
+                    this.displayPreviewSequence(pfeature.coordinates, pfeature.properties);
+                }
                 break;
             case "pictures":
-                // stocke la feature survolée
-                this.selectedFeature = feature;
-                // preview la feature panoramax
-                feature = this._transformToPanoramaxFeature(feature);
-                this.displayPreviewPicture(feature.coordinates, feature.properties);
+                if (this.options.interactions["pictures"].active && 
+                    this.options.interactions["pictures"].actions.includes("preview")
+                ) {
+                    // preview de l'image panoramax
+                    this.displayPreviewPicture(pfeature.coordinates, pfeature.properties);
+                }
                 break;
             default:
                 logger.warn("Unknown feature type :", type);
@@ -1904,6 +2557,8 @@ class Panoramax extends Control {
     _transformToPanoramaxFeature (feature) {
         return {
             coordinates : feature.getFlatCoordinates(),
+            extent : feature.getExtent(),
+            pointerCoordinate : feature.pointerCoordinate,
             properties : feature.getProperties()
         };
     };
@@ -2039,21 +2694,26 @@ class Panoramax extends Control {
             case "small":
                 container.classList.add("pnx-visualization-window-size-small");
                 this.stopMapViewportSync();
+                container._pnxFullscreen = false;
                 break;
             case "medium":
                 container.classList.add("pnx-visualization-window-size-medium");
                 this.stopMapViewportSync();
+                container._pnxFullscreen = false;
                 break;
             case "large":
                 container.classList.add("pnx-visualization-window-size-large");
                 this.stopMapViewportSync();
+                container._pnxFullscreen = false;
                 break;
             case "fullscreen":
                 container.classList.add("pnx-visualization-window-size-fullscreen");
+                container._pnxFullscreen = true;
                 this.stopMapViewportSync();
                 break;
             case "fullscreen-map":
                 container.classList.add("pnx-visualization-window-size-fullscreen-map");
+                container._pnxFullscreen = false;
                 this.startMapViewportSync();
                 break;
             default:
@@ -2304,7 +2964,7 @@ class Panoramax extends Control {
         return mapboxLayers;
     }
 
-    resetAllGroupFilters () {
+    resetAllGroupFilters (options = {}) {
         var elements = this.panelPanoramaxOptions.elements;
         const groups = [
             "group-filter-dates",
@@ -2313,7 +2973,7 @@ class Panoramax extends Control {
             "group-filter-renders"
         ];
         groups.forEach(group => {
-            this.resetGroupFilter(group);
+            this.resetGroupFilter(group, options);
         });	
     }
 
@@ -2324,6 +2984,9 @@ class Panoramax extends Control {
         if (!groupElements) {
             return;
         }
+        
+        this.isResetEventPropagation = options.isReset === true;
+
         Array.from(groupElements).forEach(el => {
             if (el.type === "input" || el.type === "radio") {
                 el.checked = (el.dataset.default === "true");
@@ -2336,6 +2999,8 @@ class Panoramax extends Control {
                 el.value = "";
             }
         });
+
+        this.isResetEventPropagation = false;
     }
 
     /**
@@ -2487,6 +3152,12 @@ class Panoramax extends Control {
         this.buttonPanoramaxShow.click();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
+        this.dispatchEvent({
+            type : this.FULLSCREEN_PANORAMAX_EVENT,
+            data : {
+                fullscreen : false,
+            },
+        });
         // Bloque l'envoi/rechargement de la page
         e.preventDefault();
     }
@@ -2507,6 +3178,12 @@ class Panoramax extends Control {
         this.showButtonsPanel();
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
+        this.dispatchEvent({
+            type : this.FULLSCREEN_PANORAMAX_EVENT,
+            data : {
+                fullscreen : false,
+            },
+        });
     }
 
     /**
@@ -2544,8 +3221,8 @@ class Panoramax extends Control {
         }
 
         panel.classList.replace("gpf-hidden", "gpf-visible");
-        this.updateFiltersPanelPosition();
-        this.bindFiltersPanelPositioning();
+        //this.updateFiltersPanelPosition();
+        //this.bindFiltersPanelPositioning();
     }
 
     /**
@@ -2578,6 +3255,10 @@ class Panoramax extends Control {
     onChangePanoramaxFilterByType (e, value) {
         logger.debug("onChangePanoramaxFilterByType", e);
         if (!e || !e.target) {
+            return;
+        }
+
+        if (this.isResetEventPropagation) {
             return;
         }
 
@@ -2626,6 +3307,10 @@ class Panoramax extends Control {
             return;
         }
 
+        if (this.isResetEventPropagation) {
+            return;
+        }
+
         var selectedValue = parseInt(e.target.value, 10);
         if (e.target.ariaPressed === "false") {
             selectedValue = null;
@@ -2661,6 +3346,10 @@ class Panoramax extends Control {
      */
     onChangePanoramaxFilterByDates (e) {
         logger.debug("onChangePanoramaxFilterByDates", e);
+
+        if (this.isResetEventPropagation) {
+            return;
+        }
 
         var startInput = document.getElementById(this._addUID("GPpanoramaxFilterDateStart"));
         var endInput = document.getElementById(this._addUID("GPpanoramaxFilterDateEnd"));
@@ -2786,7 +3475,17 @@ class Panoramax extends Control {
         if (!container) {
             return;
         }
-        this.setSizeWindow("fullscreen");
+        if (container._pnxFullscreen) {
+            this.setSizeWindow("fullscreen-map");
+        } else {
+            this.setSizeWindow("fullscreen");
+        }
+        this.dispatchEvent({
+            type : this.FULLSCREEN_PANORAMAX_EVENT,
+            data : {
+                fullscreen : container._pnxFullscreen,
+            },
+        });
     }
 
     /**

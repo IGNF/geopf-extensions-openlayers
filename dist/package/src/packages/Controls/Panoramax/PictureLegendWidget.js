@@ -1,7 +1,26 @@
-import { LitElement, css, nothing } from "lit";
+import { LitElement, nothing } from "lit";
 import { html } from "lit/static-html.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import Gp from "geoportal-access-lib";
+
+const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org";
+
+function onceParentAvailable (comp) {
+    if (comp._parent) {
+        return Promise.resolve(comp._parent);
+    }
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            const parent = comp.closest("pnx-photo-viewer");
+            if (parent) {
+                comp._parent = parent;
+                clearInterval(intervalId);
+                resolve(parent);
+            }
+        }, 100);
+    });
+}
+
 
 function reverseGeocode (lat, lon, mode = "geoplateforme") {
     if (mode === "geoplateforme") {
@@ -37,7 +56,8 @@ function reverseGeocodeGp (lat, lon) {
 }
 
 function reverseGeocodeNominatim (lat, lon) {
-    return fetch(`${Panoramax.utils.services.NominatimBaseUrl()}/reverse?lat=${lat}&lon=${lon}&zoom=18&format=geocodejson`)
+    let nominatimBaseUrl = NOMINATIM_BASE_URL;
+    return fetch(`${nominatimBaseUrl}/reverse?lat=${lat}&lon=${lon}&zoom=18&format=geocodejson`)
         .then(res => res.json())
         .then(res => geocodeJsonToPlaceName(res?.features?.shift()?.properties?.geocoding));
 }
@@ -132,7 +152,8 @@ export default class PictureLegendWidget extends LitElement {
 
     constructor () {
         super();
-        this._expanded = true;
+        this._expanded = window.matchMedia("(min-width: 576px)").matches;
+        this._onLegendClick = this._onLegendClick.bind(this);
     }
 
     createRenderRoot () {
@@ -147,7 +168,7 @@ export default class PictureLegendWidget extends LitElement {
         this._prevSearches = {};
         this._parent = this._parent || this.closest("pnx-photo-viewer");
 
-        Panoramax.utils.widgets.onceParentAvailable(this)
+        onceParentAvailable(this)
             .then(() => this._parent.onceReady())
             .then(() => {
                 //this._onPicChange(this._parent.psv.getPictureMetadata());
@@ -155,6 +176,15 @@ export default class PictureLegendWidget extends LitElement {
                     this._onPicChange(this._parent.psv.getPictureMetadata());
                 });
             });
+
+        // close toggable menu when click on legend
+        this.addEventListener("click", this._onLegendClick);
+    }
+
+    /** @private */
+    disconnectedCallback () {
+        this.removeEventListener("click", this._onLegendClick);
+        super.disconnectedCallback();
     }
 
     /**
@@ -204,21 +234,45 @@ export default class PictureLegendWidget extends LitElement {
     }
 
     /** @private */
+    _closeGroup () {
+        const group = this.querySelector("#pic-legend-headline-menu");
+        if (group && typeof group.close === "function") {
+            group.close();
+        }
+    }
+
+    /** @private */
+    _closeMenu () {
+        this._closeGroup();
+    }
+
+    /** @private */
+    _onLegendClick () {
+        this._closeGroup();
+    }
+
+    /** @private */
     render () {
         if (!this._caption) { return nothing; }
         return html`
             <style>
                 .gpf-picture-legend-widget {
+                    cursor: default;
                     display: flex;
                     box-sizing: border-box;
                     width: 450px;
                     min-width: unset;
-                    max-width: 450px;
+                    max-width: calc(100cqw - 16px);
                     border-radius: 4px;
                     color: var(--text-default-grey);
                     background-color: var(--background-default-grey);
                     box-shadow: var(--raised-shadow);
                     transition: opacity 0.2s 0.1s;
+                }
+                @media (max-width: 576px) {
+                    .gpf-picture-legend-widget {
+                        width: 600px;
+                    }
                 }
                 .gpf-picture-legend-widget.is-expanded {
                     --line-clamp: 2;
@@ -251,14 +305,26 @@ export default class PictureLegendWidget extends LitElement {
                     -webkit-line-clamp: var(--line-clamp, 1);
                     -webkit-box-orient: vertical;
                 }
+                /* menu boutons toggable */
+                .gpf-picture-legend-widget ::part(menu) {
+                    position: absolute !important;
+                    top: 100% !important;
+                    border-radius: 4px;
+                    color: var(--text-default-grey);
+                    background-color: var(--background-default-grey);
+                    border: none;
+                    box-shadow: var(--raised-shadow);
+                }
+                @media (max-width: 768px) {
+                    .gpf-picture-legend-widget ::part(menu) {
+                        right: 0 !important;
+                    }
+                }
                 .gpf-picture-legend-widget .fr-icon-arrow-down-s-line {
                     transition: transform 0.2s ease;
                 }
                 .gpf-picture-legend-widget .fr-icon-arrow-down-s-line.is-rotated {
                     transform: rotate(180deg);
-                }
-                .gpf-picture-legend-widget pnx-panel::part(menu) {
-                    border-radius: 0;
                 }
                 @keyframes animatedBackground {
                     from { background-position: 0 0; }
@@ -304,13 +370,6 @@ export default class PictureLegendWidget extends LitElement {
                                         href=${this._hdUrl}
                                         @click=${this._closeGroup}
                                     >Afficher l’image HD</a>
-                                    <a
-                                        class="fr-px-2v fr-py-3v link"
-                                        download
-                                        target="_blank"
-                                        href="#"
-                                        @click=${this._closeGroup}
-                                    >Un autre lien</a>
                                 </pnx-list-group>
                             </pnx-togglable-group>
                             <pnx-button kind="superflat" size="sm" @click=${this._onExpand}>

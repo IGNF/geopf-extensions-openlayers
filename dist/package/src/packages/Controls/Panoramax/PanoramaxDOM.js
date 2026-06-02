@@ -48,7 +48,7 @@ var PanoramaxDOM = {
         button.classList.add("fr-btn", "fr-btn--tertiary");
         button.setAttribute("tabindex", "0");
         button.setAttribute("aria-pressed", false);
-        button.setAttribute("aria-label", `Afficher ${title}`);
+        button.setAttribute("aria-label", `Parcourir les photos ${title}`);
         button.setAttribute("type", "button");
 
         // Close all results and panels when minimizing the widget
@@ -129,19 +129,22 @@ var PanoramaxDOM = {
     _createWidgetPanelButtonsTitleElement : function () {
         var div = document.createElement("div");
         div.className = "pnx-buttons-panel__title gpf-panel__title";
-        div.innerHTML = "Options";
+        div.innerHTML = "Options Panoramax";
         return div;
     },
     _createWidgetPanelButtonsCloseElement : function () {
-        var self = this;
-
         var btnClose = document.createElement("button");
         btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
         btnClose.title = "Fermer le panneau";
 
         // Link panel close / visibility checkbox
-        btnClose.addEventListener("click", function (e) {
-            self.onClosePanoramaxClick(e);
+        btnClose.addEventListener("click", (e) => {
+            e.preventDefault();
+            // switch aria-pressed on options button
+            let buttonOptions = document.getElementById(this._addUID("GPpanoramaxButtonOptions"));
+            buttonOptions.setAttribute("aria-pressed", "false");
+            // call function to open/close
+            this.onOpenPanoramaxOptionsClick(e);
         }, false);
 
         var span = document.createElement("span");
@@ -196,7 +199,7 @@ var PanoramaxDOM = {
         // TODO : faire un dialog pour les options ? ou un panel classique ? à voir
         var panel = document.createElement("form");
         panel.id = this._addUID("GPpanoramaxPanelOptions");
-        panel.className = "GPpanel pnx-options-panel gpf-panel gpf-hidden";
+        panel.className = "GPpanel pnx-options-panel gpf-panel gpf-hidden fr-modal";
         panel.setAttribute("aria-label", "Panneau des options Panoramax");
         return panel;
     },
@@ -209,13 +212,13 @@ var PanoramaxDOM = {
         // <a href="[url - à modifier]" target="_self" class="fr-btn fr-icon-external-link-fill fr-btn--icon-right fr-btn--secondary">Contribuer</a>
         var href = document.createElement("a");
         href.id = this._addUID("GPpanoramaxButtonContributions");
-        href.className = "fr-btn fr-icon-external-link-fill fr-btn--icon-right fr-btn--secondary";
+        href.className = "fr-btn fr-btn--sm fr-icon-external-link-fill fr-btn--icon-right fr-btn--secondary";
         href.classList.add("gpf-btn");
         href.title = opts.description;
         href.setAttribute("aria-label", opts.description);
-        href.setAttribute("target", "_self");
+        href.setAttribute("target", "_blank");
         href.setAttribute("href", opts.link);
-        href.innerHTML = opts.label;
+        href.textContent = opts.label;
 
         return href;
     },
@@ -357,25 +360,31 @@ var PanoramaxDOM = {
         panel.setAttribute("role", "region");
         panel.setAttribute("aria-label", opts.description || "Panneau des filtres Panoramax");
 
-        if (opts.content.periodes) {
-            var periodes = [
-                { text : "1 mois", value : 1 },
-                { text : "6 mois", value : 6 },
-                { text : "1 an", value : 12 }
-            ];
-            var PeriodeGroup = this._createGroupFiltersByPeriodeElement(periodes);
-            panel.appendChild(PeriodeGroup);
-        }
+        if (opts.content.periodes || opts.content.dates) {
+            let fieldset = this._createGroupFiltersByDateFieldsetElement();
 
-        if (opts.content.dates) {
-            var dateGroup = this._createGroupFiltersByDateElement();
-            panel.appendChild(dateGroup);
+            if (opts.content.periodes) {
+                var periodes = [
+                    { text : "1 mois", value : 1 },
+                    { text : "6 mois", value : 6 },
+                    { text : "1 an", value : 12 }
+                ];
+                var PeriodeGroup = this._createGroupFiltersByPeriodeElement(periodes);
+                fieldset.appendChild(PeriodeGroup);
+            }
 
-            var startDateGroup = this._createGroupFiltersByStartDateElement();
-            dateGroup.appendChild(startDateGroup);
-            
-            var endDateGroup = this._createGroupFiltersByEndDateElement();
-            dateGroup.appendChild(endDateGroup);
+            if (opts.content.dates) {
+                var dateGroup = this._createGroupFiltersByDateElement();
+                fieldset.appendChild(dateGroup);
+
+                var startDateGroup = this._createGroupFiltersByStartDateElement();
+                dateGroup.appendChild(startDateGroup);
+                
+                var endDateGroup = this._createGroupFiltersByEndDateElement();
+                dateGroup.appendChild(endDateGroup);
+            }
+
+            panel.appendChild(fieldset);
         }
         
         if (opts.content.types) {
@@ -402,7 +411,7 @@ var PanoramaxDOM = {
         var button = document.createElement("button");
         button.id = this._addUID("GPpanoramaxButtonResetFilters");
         button.className = "gpf-btn";
-        button.classList.add("fr-btn", "fr-btn--tertiary");
+        button.classList.add("fr-btn", "fr-btn--sm", "fr-btn--tertiary-no-outline");
         button.title = opts.description;
         button.setAttribute("aria-label", opts.description);
         button.setAttribute("aria-pressed", "false");
@@ -422,22 +431,18 @@ var PanoramaxDOM = {
         var self = this;
 
         var PeriodeGroup = document.createElement("div");
-        PeriodeGroup.className = "pnx-filters-panel__date-predefined";
+        PeriodeGroup.className = "fr-fieldset__element pnx-filters-panel__date-predefined";
 
-        var fieldset = document.createElement("fieldset");
-        fieldset.className = "fr-tags-group fr-fieldset";
-
-        var legend = document.createElement("legend");
-        legend.className = "fr-fieldset__legend";
-        legend.innerText = "Date";
-        fieldset.appendChild(legend);
+        let tagGroup = document.createElement("div");
+        tagGroup.classList.add("fr-tags-group");
+        PeriodeGroup.appendChild(tagGroup);
 
         for (var i = 0; i < periodes.length; i++) {
             var fieldsetElement = document.createElement("div");
             fieldsetElement.className = "gpf-fieldset__element";
 
             var buttonPeriode = document.createElement("button");
-            buttonPeriode.className = "fr-tag";
+            buttonPeriode.className = "fr-tag fr-tag--sm";
             buttonPeriode.setAttribute("type", "button");
             buttonPeriode.setAttribute("aria-pressed", "false");
             buttonPeriode.dataset.filters = "group-filter-periodes";
@@ -451,7 +456,7 @@ var PanoramaxDOM = {
                 currentButton.setAttribute("aria-pressed", !status);
 
                 var groupName = currentButton.dataset.filters;
-                var groupButtons = fieldset.querySelectorAll("[data-filters='" + groupName + "']");
+                var groupButtons = PeriodeGroup.querySelectorAll("[data-filters='" + groupName + "']");
 
                 for (var j = 0; j < groupButtons.length; j++) {
                     if (groupButtons[j] !== currentButton) {
@@ -463,16 +468,25 @@ var PanoramaxDOM = {
             });
 
             fieldsetElement.appendChild(buttonPeriode);
-            fieldset.appendChild(fieldsetElement);
+            tagGroup.appendChild(fieldsetElement);
         }
-
-        PeriodeGroup.appendChild(fieldset);
 
         return PeriodeGroup;
     },
+    _createGroupFiltersByDateFieldsetElement : function () {
+        let fieldset = document.createElement("fieldset");
+        fieldset.classList.add("fr-fieldset");
+
+        let legend = document.createElement("legend");
+        legend.classList.add("fr-fieldset__legend", "fr-fieldset__legend--regular");
+        legend.innerText = "Date";
+        fieldset.appendChild(legend);
+
+        return fieldset;
+    },
     _createGroupFiltersByDateElement : function () {
         var dateGroup = document.createElement("div");
-        dateGroup.className = "pnx-filters-panel__date gpf-input-group gpf-mb-1w";
+        dateGroup.className = "fr-fieldset__element pnx-filters-panel__date gpf-input-group fr-pb-2w";
         
         return dateGroup;
     },
@@ -480,15 +494,15 @@ var PanoramaxDOM = {
         var self = this;
 
         var startDateGroup = document.createElement("div");
-        startDateGroup.className = "pnx-filters-panel__date-start gpf-input-group gpf-mb-1w";
-        
-        var fieldset = document.createElement("fieldset");
-        fieldset.className = "fr-fieldset";
+        startDateGroup.className = "pnx-filters-panel__date-start gpf-input-group fr-mb-1w";
 
-        var legend = document.createElement("legend");
-        legend.className = "fr-fieldset__legend";
-        legend.innerText = "De";
-        fieldset.appendChild(legend);
+        let id = this._addUID("GPpanoramaxFilterDateStart");
+
+        var label = document.createElement("label");
+        label.className = "fr-label";
+        label.htmlFor = id;
+        label.innerText = "De";
+        startDateGroup.appendChild(label);
 
         var startDateInput = document.createElement("input");
         startDateInput.id = this._addUID("GPpanoramaxFilterDateStart");
@@ -500,8 +514,7 @@ var PanoramaxDOM = {
             self.onChangePanoramaxFilterByDates(e);
         });
 
-        fieldset.appendChild(startDateInput);
-        startDateGroup.appendChild(fieldset);
+        startDateGroup.appendChild(startDateInput);
 
         return startDateGroup;
     },
@@ -511,16 +524,16 @@ var PanoramaxDOM = {
         var endDateGroup = document.createElement("div");
         endDateGroup.className = "pnx-filters-panel__date-end gpf-input-group fr-mb-1w";
 
-        var fieldset = document.createElement("fieldset");
-        fieldset.className = "fr-fieldset";
+        let id = this._addUID("GPpanoramaxFilterDateEnd");
 
-        var legend = document.createElement("legend");
-        legend.className = "fr-fieldset__legend";
-        legend.innerText = "À";
-        fieldset.appendChild(legend);
+        var label = document.createElement("label");
+        label.className = "fr-label";
+        label.htmlFor = id;
+        label.innerText = "À";
+        endDateGroup.appendChild(label);
 
         var endDateInput = document.createElement("input");
-        endDateInput.id = this._addUID("GPpanoramaxFilterDateEnd");
+        endDateInput.id = id;
         endDateInput.className = "fr-input gpf-input-date";
         endDateInput.setAttribute("type", "date");
         endDateInput.dataset.filters = "group-filter-dates";
@@ -529,8 +542,7 @@ var PanoramaxDOM = {
             self.onChangePanoramaxFilterByDates(e);
         });
 
-        fieldset.appendChild(endDateInput);
-        endDateGroup.appendChild(fieldset);
+        endDateGroup.appendChild(endDateInput);
 
         return endDateGroup;
     },
@@ -538,13 +550,13 @@ var PanoramaxDOM = {
         var self = this;
 
         var typeGroup = document.createElement("div");
-        typeGroup.className = "pnx-filters-panel__type gpf-select-group gpf-mb-1w";
+        typeGroup.className = "pnx-filters-panel__type gpf-select-group fr-mb-8v";
 
         var segmentedFieldset = document.createElement("fieldset");
         segmentedFieldset.className = "gpf-segmented fr-segmented";
 
         var segmentedLegend = document.createElement("legend");
-        segmentedLegend.className = "fr-fieldset__legend fr-segmented__legend";
+        segmentedLegend.className = "fr-segmented__legend";
         segmentedLegend.innerText = "Type d'image";
         segmentedFieldset.appendChild(segmentedLegend);
 

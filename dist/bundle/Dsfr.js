@@ -8,16 +8,23 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.12-519
- * @date 01/06/2026
+ * @version 1.0.0-beta.12-492
+ * @date 02/06/2026
  *
+ */
+/*!
+ * @overview  Panoramax - a web JS viewer library which displays pictures and sequences from a Panoramax server
+ * @copyright Copyright (c) 2022 Adrien Pavie
+ * @license   Licensed under MIT license
+ *            See https://gitlab.com/panoramax/clients/web-viewer/-/raw/develop/LICENSE
+ * @version   
  */
 /*!
  * @overview  ol-mapbox-style - Use Mapbox Style objects with OpenLayers
  * @copyright Copyright (c) 2016 openlayers
  * @license   BSD 2-Clause "Simplified" License
  *            See https://raw.githubusercontent.com/openlayers/ol-mapbox-style/master/LICENSE
- * @version   ^12.3.5
+ * @version   ^13.4.0
  */
 /*!
  * @overview   Sortable -- JavaScript library for reorderable drag-and-drop lists on modern

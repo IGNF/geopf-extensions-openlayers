@@ -16,6 +16,8 @@ import {
  * @property {import("ol/View").default} [options.view] - Vue à utiliser pour la mini-map. Si non fournie, une vue par défaut est créée.
  * @property {number} [options.width=200] - Largeur de la mini-map en pixels
  * @property {number} [options.height=150] - Hauteur de la mini-map en pixels
+ * @property {boolean} [options.disableOverviewDragging=true] - Empêche le déplacement de la mini-map par glisser-déposer.
+ * @property {boolean} [options.disableOverviewBBox=true] - Masque la bbox OpenLayers (rectangle de contexte) dans la mini-map.
  */
 
 /**
@@ -26,16 +28,12 @@ import {
  */
 class MiniMap extends LitElement {
 
-    /**
-     * @constructor
-     * @param {import("ol/Map").default} [map] - Instance de carte OpenLayers à associer à la mini-map.
-     * @param {MiniMapOptions} [options={}] - Options de configuration du contrôle de mini-map.
-     */
     constructor (map, options = {}) {
         super();
 
         this._map = map || null;
         this._options = options && typeof options === "object" ? options : {};
+        this._pictureCoordinates = null;
         this._overviewControl = null;
 
         this._isSyncingView = false;
@@ -49,6 +47,7 @@ class MiniMap extends LitElement {
 
     // Méthode du cycle de vie Web Component :
     // Lorsque le composant est ajouté au DOM
+    /** @private */
     connectedCallback () {
         super.connectedCallback();
 
@@ -61,39 +60,16 @@ class MiniMap extends LitElement {
         }
         this.style.display = "block";
 
-        // recuperer les coordonnées de la picture courante pour centrer la mini-map dessus
-        customElements.whenDefined("pnx-photo-viewer").then(() => {
-            this._parent = this.closest("pnx-photo-viewer");
-            console.warn("MiniMap connected to DOM", this._parent);
-            this._parent.onceReady()
-                .then(() => {
-                    this._parent.psv.addEventListener("picture-loaded", (e) => {
-                        console.warn("Updating mini-map center to picture position", e);
-                        // Récupérer les coordonnées de l'image (généralement en lat/lon EPSG:4326)
-                        const pictureConfig = e.detail;
-                        
-                        if (pictureConfig && pictureConfig.lon !== undefined && pictureConfig.lat !== undefined) {
-                            let coordinates = [pictureConfig.lon, pictureConfig.lat];
-                            
-                            // Transformer dans la projection de la mini-map si nécessaire
-                            const overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
-                            if (overviewMap) {
-                                const overviewProj = overviewMap.getView().getProjection().getCode();
-                                if (overviewProj !== "EPSG:4326") {
-                                    coordinates = olProjTransform(coordinates, "EPSG:4326", overviewProj);
-                                }
-                            }
-                            
-                            // Mettre à jour la position du marker
-                            this._updateCenterMarkerOverlayPosition(coordinates);
-                        }
-                    });
-                });
-        });
+        // Lors d'un removeControl/addControl, le composant peut être réattaché
+        // sans repasser par firstUpdated(). On tente alors de ré-initialiser
+        // le contrôle de mini-map si le conteneur existe déjà.
+        this._container = this.querySelector(".pnx-mini-map__container") || this._container;
+        this._renderOverviewMap();
     }
 
     // Méthode du cycle de vie Web Component :
     // Lorsque le composant est retiré du DOM
+    /** @private */
     disconnectedCallback () {
         this._removeOverviewMap();
         super.disconnectedCallback();
@@ -121,10 +97,6 @@ class MiniMap extends LitElement {
         return this._map;
     }
 
-    /**
-     * Assigne une carte OpenLayers à la mini-map via l'attribut HTML "map" en JSON.
-     * @param {import("ol/Map").default} map - Instance de carte OpenLayers à associer à la mini-map.
-     */
     set map (map) {
         if (this._map === map) {
             return;
@@ -140,15 +112,42 @@ class MiniMap extends LitElement {
         return this._options;
     }
 
-    /**
-     * Assigne des options à la mini-map via l'attribut HTML "options" en JSON.
-     * @param {Object} options - Options à appliquer à la mini-map.
-     */
     set options (options) {
         this._removeOverviewMap();
         this._options = options && typeof options === "object" ? options : {};
         this.requestUpdate();
         this._renderOverviewMap();
+    }
+
+    get pictureCoordinates () {
+        return this._pictureCoordinates;
+    }
+
+    set pictureCoordinates (coordinates) {
+        if (!Array.isArray(coordinates) || coordinates.length < 2) {
+            this._pictureCoordinates = null;
+            return;
+        }
+
+        var lon = Number(coordinates[0]);
+        var lat = Number(coordinates[1]);
+        if (!Number.isFinite(lon) || !Number.isFinite(lat)) {
+            this._pictureCoordinates = null;
+            return;
+        }
+
+        this._pictureCoordinates = [lon, lat];
+        this._syncToPictureCoordinates();
+    }
+
+    /**
+     * Met à jour les coordonnées photo utilisées par la mini-map.
+     * API explicite destinée au parent (ex. contrôle Panoramax).
+     *
+     * @param {Array<Number>|null} coordinates - Coordonnées [lon, lat] en EPSG:4326.
+     */
+    setPhotoCoordinates (coordinates) {
+        this.pictureCoordinates = coordinates;
     }
 
     // ################################################################### //
@@ -184,7 +183,7 @@ class MiniMap extends LitElement {
     }
 
     _updateCenterMarkerOverlayPosition (position) {
-        if (!position || !this._overviewControl || !this._centerMarkerOverlay) {
+        if (!position || !this._overviewControl) {
             return;
         }
 
@@ -197,7 +196,29 @@ class MiniMap extends LitElement {
             this._isSyncingView = false;
         }
 
-        this._centerMarkerOverlay.setPosition(position);
+        if (this._centerMarkerOverlay) {
+            this._centerMarkerOverlay.setPosition(position);
+        }
+    }
+
+    _syncToPictureCoordinates () {
+        if (!this._pictureCoordinates || !this._overviewControl) {
+            return;
+        }
+
+        var overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
+        var miniView = overviewMap && overviewMap.getView && overviewMap.getView();
+        if (!miniView) {
+            return;
+        }
+
+        var overviewProj = miniView.getProjection() && miniView.getProjection().getCode();
+        var coordinates = this._pictureCoordinates.slice();
+        if (overviewProj && overviewProj !== "EPSG:4326") {
+            coordinates = olProjTransform(coordinates, "EPSG:4326", overviewProj);
+        }
+
+        this._updateCenterMarkerOverlayPosition(coordinates);
     }
 
     _removeCenterMarkerOverlay () {
@@ -319,7 +340,7 @@ class MiniMap extends LitElement {
         });
 
         if (options.collapsed === undefined) {
-            options.collapsed = true;
+            options.collapsed = false;
         }
         if (options.collapsible === undefined) {
             options.collapsible = true;
@@ -331,11 +352,30 @@ class MiniMap extends LitElement {
                 maxZoom : 21
             });
         }
+        if (options.disableOverviewDragging === undefined) {
+            options.disableOverviewDragging = true;
+        }
+        if (options.disableOverviewBBox === undefined) {
+            options.disableOverviewBBox = true;
+        }
 
         this._overviewControl = new GeoportalOverviewMap(options);
         this._map.addControl(this._overviewControl);
-        this._initCenterMarkerOverlay(); // FIXME centrer sur la pictureID courrante !
+        this._initCenterMarkerOverlay();
         this._onViewSync();
+        this._syncToPictureCoordinates();
+
+        const _dispatch = (status) => {
+            this.dispatchEvent(new CustomEvent("toggle", { detail : { status } }));
+        };
+
+        if (!options.collapsed) {
+            _dispatch(true);
+        }
+
+        this._overviewControl.on("overviewmap:toggle", (e) => {
+            _dispatch(!e.status);
+        });
     }
 
     _removeOverviewMap () {
@@ -364,33 +404,76 @@ class MiniMap extends LitElement {
                     position: relative;
                 }
                 .pnx-mini-map__container .ol-overviewmap {
-                    width: 100%;
-                    height: 100%;
                     position: relative;
                     left: unset;
                     bottom: unset;
-                }
-                .pnx-mini-map__container .ol-overviewmap .ol-overviewmap-map {
                     width: 100%;
                     height: 100%;
+                    padding: 0;
+                }
+                .pnx-mini-map__container .ol-overviewmap::after {
+                    content: initial !important;
+                }
+                .pnx-mini-map__container .ol-overviewmap .ol-overviewmap-map {
+                    box-sizing: border-box;
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 4px;
+                    border: solid 4px var(--background-default-grey);
+                    background-color: var(--background-default-grey);
+                    box-shadow: var(--raised-shadow);
                 }
                 .pnx-mini-map__container .ol-overviewmap button {
+                    position: absolute !important;
+                    bottom: 0;
+                    left: 0;
                     width: 48px;
                     height: 48px;
                     padding: unset;
+                    opacity: 0;
+                    transition: opacity 0s; /* à la fermeture, masquer sans attendre  */
+                }
+                .pnx-mini-map__container .ol-overviewmap button[aria-pressed="true"] {
+                    bottom: 8px;
+                    left: 8px;
+                    opacity: 1;
+                    transition: opacity .15s .3s; /* à l'ouverture, attendre 0.3s et animer en 0.15s */
                 }
                 .pnx-mini-map__center-marker {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
                     width: 14px;
                     height: 14px;
-                    border: 2px solid #d64f00;
+                    border: 2px solid #fff;
                     border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.9);
+                    background-color: var(--background-action-high-blue-france);
                     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
                     pointer-events: none;
                     z-index: 2;
+                }
+                .pnx-mini-map__container .ol-viewport canvas,
+                .pnx-mini-map__container .ol-overlaycontainer {
+                    cursor: default;
+                }
+                .pnx-mini-map__container .ol-overviewmap.ol-collapsed .ol-overviewmap-map {
+                    display: block;
+                }
+                @media (min-width: 36em) {
+                    .pnx-photo-viewer-mini-map {
+                        transition: width .3s, height .3s;
+                    }
+                }
+                .pnx-photo-viewer-container--minimap-open .pnx-photo-viewer-mini-map {
+                    width: 280px !important;
+                    height: 150px !important;
+                }
+                @media (max-width: 35.99em) {
+                    .pnx-photo-viewer-container--minimap-open .ol-overviewmap .ol-overviewmap-map {
+                        border: none;
+                    }
+                    /* minimap ouverte */
+                    .pnx-photo-viewer-container--minimap-open .pnx-photo-viewer-mini-map {
+                        width: 100cqw !important;
+                    }
                 }
             </style>
             <div class="pnx-mini-map__container"></div>

@@ -17,6 +17,8 @@ export default class PictureLegendWidget extends LitElement {
         };
     };
     _expanded: boolean;
+    /** @private */
+    private _onLegendClick;
     createRenderRoot(): this;
     _prevSearches: {} | undefined;
     _parent: any;
@@ -35,6 +37,10 @@ export default class PictureLegendWidget extends LitElement {
     private _onBackClick;
     /** @private */
     private _onExpand;
+    /** @private */
+    private _closeGroup;
+    /** @private */
+    private _closeMenu;
     /** @private */
     private render;
 }

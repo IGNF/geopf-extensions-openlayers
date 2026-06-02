@@ -44,6 +44,7 @@ export { default as Territories } from "./packages/Controls/Territories/Territor
 export { default as ControlList } from "./packages/Controls/ControlList/ControlList";
 export { default as ContextMenu } from "./packages/Controls/ContextMenu/ContextMenu";
 export { default as Reporting } from "./packages/Controls/Reporting/Reporting";
+export { default as Panoramax } from "./packages/Controls/Panoramax/Panoramax";
 export { default as AbstractSearchService } from "./packages/Services/AbstractSearchService";
 export { default as DefaultSearchService } from "./packages/Services/DefaultSearchService";
 export { default as IGNSearchService } from "./packages/Services/IGNSearchService";
