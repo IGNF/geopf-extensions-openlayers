@@ -327,19 +327,12 @@ class Panoramax extends Control {
                 this.addEventsListeners(map);
             }
         } else {
-            // suppression des evenements sur la carte
-            // pour les futurs suppressions de couche
-            if (this.auto) {
-                this.removeEventsListeners();
-            }
-            // et d'autres nettoyages éventuels :
-            if (this.options.group) {
-                this.resetGroupLayer();
-            }
-            // - vider la couche de fond
-            this.resetBackground();
-            // - vider la couche de données
-            this.resetLayer();
+            // c'est une opération de nettoyage déclenchée lors de la fermeture 
+            // et par l'appel à 'reset()'
+            // nettoyer complètement le photoViewer en premier pour éviter les erreurs de lifecycle
+            // lors d'un removeControl suivi d'un addControl
+            this.cleanupPhotoViewer();
+            this.setCollapsed(true);
         }
 
         // on appelle la méthode setMap originale d'OpenLayers
@@ -758,6 +751,12 @@ class Panoramax extends Control {
          * @private
          */
         this.photoViewerPictureLoadedListener = null;
+
+        /**
+         * instance PSV liée au listener de synchro photo -> minimap
+         * @private
+         */
+        this.photoViewerPictureLoadedTarget = null;
     }
 
     /**
@@ -1052,16 +1051,23 @@ class Panoramax extends Control {
 
     /**
      * Supprime les écouteurs d'événements de la carte (appelé par `setMap`).
+     * @param {Map} map - Instance de carte.
      * @private
      */
-    removeEventsListeners () {
-        var map = this.getMap();
+    removeEventsListeners (map) {
+        if (!map) {
+            return;
+        }
         this.resetPreview();
 
-        map.un("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
-        delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
-        map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
-        delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
+        if (this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]) {
+            map.un("click", this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB]);
+            delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
+        }
+        if (this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]) {
+            map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
+            delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
+        }
 
         var mapTarget = map.getTargetElement();
         if (mapTarget) {
@@ -1086,7 +1092,7 @@ class Panoramax extends Control {
     // ################################################################### //
 
     /**
-     * Réinitialise le contenu du panneau à la fermeture.
+     * Réinitialise le contenu du panneau à la fermeture.*
      */
     reset () {
         if (this.options.group) {
@@ -1109,7 +1115,8 @@ class Panoramax extends Control {
         // - etc.
         this.eventActived = false;
         if (!this.auto) {
-            this.removeEventsListeners();
+            var map = this.getMap();
+            this.removeEventsListeners(map);
         }
     }
 
@@ -1154,12 +1161,6 @@ class Panoramax extends Control {
     }
     /** @private */
     resetButtons () {
-        if (this.panelPanoramaxOptions) {
-            this.panelPanoramaxOptions.classList.replace("gpf-visible", "gpf-hidden");
-        }
-        if (this.btnPanoramaxOptions) {
-            this.btnPanoramaxOptions.setAttribute("aria-pressed", "false");
-        }
         this.unbindFiltersPanelPositioning();
     }
     /** @private */
@@ -1175,6 +1176,26 @@ class Panoramax extends Control {
                 this.photoViewerPanoramax.select();
             }  
             this.hidePhotoViewer();
+        }
+    }
+    /** @private */
+    cleanupPhotoViewer () {
+        // Nettoie complètement le photoViewer du DOM pour éviter les erreurs de lifecycle
+        // lors d'un removeControl/addControl. On retire du DOM SANS réinitialiser les
+        // attributs (ce qui déclencherait attributeChangedCallback pendant le cleanup).
+        if (this.photoViewerPanoramax) {
+            if (this.photoViewerPanoramax.parentElement) {
+                try {
+                    this.photoViewerPanoramax.parentElement.removeChild(this.photoViewerPanoramax);
+                } catch (err) {
+                    logger.warn("Error removing photo viewer from DOM during cleanup", err);
+                }
+            }
+            
+            // Nullifier les références et listeners
+            this.photoViewerPanoramax = null;
+            this.photoViewerPictureLoadedListener = null;
+            this.photoViewerPictureLoadedTarget = null;
         }
     }
     /** @private */
@@ -1324,8 +1345,11 @@ class Panoramax extends Control {
         if (!this.groupPanoramax) {
             this.groupPanoramax = new LayerGroup();
             this.groupPanoramax.gpResultLayerId = "panoramax:group";
+            this.groupPanoramax.setProperties({
+                "title" : "Panoramax",
+                "description" : "Couche de données Panoramax"
+            });
             map.addLayer(this.groupPanoramax);
-            this.groupPanoramax.set("title", "Panoramax");
         }
     }
 
@@ -1366,6 +1390,7 @@ class Panoramax extends Control {
             await this.getStyleJsonFromMapboxVectorLayer(layer);
             // mise à jour du nom de la couche du gestionnaire de couche
             layer.set("title", opts.name);
+            layer.set("description", "Couche de données Panoramax");
             // sauvegarde de la référence de la couche
             this.layerPanoramax = layer;
             return layer;
@@ -1495,6 +1520,12 @@ class Panoramax extends Control {
                 });
                 self.photoViewerPanoramax.addEventListener("broken", () => {
                     console.warn("Panoramax photo viewer is broken");
+                });
+            } else if (typeof self.photoViewerPanoramax.onceReady === "function") {
+                // Après un removeControl/addControl, le viewer peut déjà exister,
+                // mais la liaison mini-map <-> photo-viewer doit être réassurée.
+                self.photoViewerPanoramax.onceReady().then(() => {
+                    self.bindMiniMapToPhotoViewer();
                 });
             }
             resolve();
@@ -1646,23 +1677,48 @@ class Panoramax extends Control {
 
     /** @private */
     bindMiniMapToPhotoViewer () {
-        if (!this.photoViewerPanoramax || !this.photoViewerPanoramax.psv || this.photoViewerPictureLoadedListener) {
+        if (!this.photoViewerPanoramax || !this.photoViewerPanoramax.psv) {
             return;
         }
 
-        this.photoViewerPictureLoadedListener = () => {
-            if (!this.photoViewerMiniMap) {
-                return;
-            }
+        var psv = this.photoViewerPanoramax.psv;
 
-            var pictureMetadata = typeof this.photoViewerPanoramax.psv.getPictureMetadata === "function"
-                ? this.photoViewerPanoramax.psv.getPictureMetadata()
-                : null;
-            var gps = pictureMetadata && Array.isArray(pictureMetadata.gps) ? pictureMetadata.gps : null;
-            this.photoViewerMiniMap.pictureCoordinates = gps;
-        };
+        if (this.photoViewerPictureLoadedTarget
+            && this.photoViewerPictureLoadedTarget !== psv
+            && this.photoViewerPictureLoadedListener
+            && typeof this.photoViewerPictureLoadedTarget.removeEventListener === "function") {
+            this.photoViewerPictureLoadedTarget.removeEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
+            this.photoViewerPictureLoadedTarget = null;
+        }
 
-        this.photoViewerPanoramax.psv.addEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
+        if (this.photoViewerPictureLoadedTarget === psv && this.photoViewerPictureLoadedListener) {
+            return;
+        }
+
+        if (!this.photoViewerPictureLoadedListener) {
+            this.photoViewerPictureLoadedListener = () => {
+                if (!this.photoViewerMiniMap) {
+                    return;
+                }
+
+                var currentPsv = this.photoViewerPanoramax && this.photoViewerPanoramax.psv
+                    ? this.photoViewerPanoramax.psv
+                    : null;
+                var pictureMetadata = currentPsv && typeof currentPsv.getPictureMetadata === "function"
+                    ? currentPsv.getPictureMetadata()
+                    : null;
+                var gps = pictureMetadata && Array.isArray(pictureMetadata.gps) ? pictureMetadata.gps : null;
+
+                if (typeof this.photoViewerMiniMap.setPhotoCoordinates === "function") {
+                    this.photoViewerMiniMap.setPhotoCoordinates(gps);
+                } else {
+                    this.photoViewerMiniMap.pictureCoordinates = gps;
+                }
+            };
+        }
+
+        psv.addEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
+        this.photoViewerPictureLoadedTarget = psv;
     }
 
     // ################################################################### //

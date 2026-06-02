@@ -47,6 +47,7 @@ class MiniMap extends LitElement {
 
     // Méthode du cycle de vie Web Component :
     // Lorsque le composant est ajouté au DOM
+    /** @private */
     connectedCallback () {
         super.connectedCallback();
 
@@ -58,10 +59,17 @@ class MiniMap extends LitElement {
             this.style.height = (this._options.height ? this._options.height + "px" : "150px");
         }
         this.style.display = "block";
+
+        // Lors d'un removeControl/addControl, le composant peut être réattaché
+        // sans repasser par firstUpdated(). On tente alors de ré-initialiser
+        // le contrôle de mini-map si le conteneur existe déjà.
+        this._container = this.querySelector(".pnx-mini-map__container") || this._container;
+        this._renderOverviewMap();
     }
 
     // Méthode du cycle de vie Web Component :
     // Lorsque le composant est retiré du DOM
+    /** @private */
     disconnectedCallback () {
         this._removeOverviewMap();
         super.disconnectedCallback();
@@ -130,6 +138,16 @@ class MiniMap extends LitElement {
 
         this._pictureCoordinates = [lon, lat];
         this._syncToPictureCoordinates();
+    }
+
+    /**
+     * Met à jour les coordonnées photo utilisées par la mini-map.
+     * API explicite destinée au parent (ex. contrôle Panoramax).
+     *
+     * @param {Array<Number>|null} coordinates - Coordonnées [lon, lat] en EPSG:4326.
+     */
+    setPhotoCoordinates (coordinates) {
+        this.pictureCoordinates = coordinates;
     }
 
     // ################################################################### //

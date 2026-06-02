@@ -36,6 +36,8 @@
             <!-- map -->
             <div id="map">
             </div>
+            <button id="btn-close-panoramax" class="gpf-button" type="button">Fermer Panoramax</button>
+            <button id="btn-open-panoramax" class="gpf-button" type="button">Ouvrir Panoramax</button>
 {{/content}}
 
 {{#content "js"}}
@@ -89,8 +91,9 @@
                 collapsed: true,
                 panel : true,
                 auto : false,
+                position : "bottom-left",
                 background : {
-                    active : true
+                    active : false
                 },
                 visualizationWindow : {
                     size : "fullscreen-map"
@@ -110,6 +113,14 @@
             });
             map.addControl(overview);
         };
+        
+        document.getElementById("btn-close-panoramax").addEventListener("click", function () {
+            map.removeControl(panoramax);
+        });
+        document.getElementById("btn-open-panoramax").addEventListener("click", function () {
+            map.addControl(panoramax);
+        });
+        
         Gp.Services.getConfig({
             customConfigFile : "{{ configurl }}",
             callbackSuffix : "",

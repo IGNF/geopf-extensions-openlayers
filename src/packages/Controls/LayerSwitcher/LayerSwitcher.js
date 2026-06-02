@@ -2634,18 +2634,20 @@ class LayerSwitcher extends Control {
      */
     getLayerInfo (layer) {
         var layerInfo = {};
-        if (layer.getProperties !== undefined && layer.getSource !== undefined) {
-            var layerProperties = layer.getProperties();
+        if (layer && layer.getProperties !== undefined) {
+            var layerProperties = layer.getProperties() || {};
             var src = layerProperties.source;
-            if (src) {
-                layerInfo._title = src._title || layerProperties.title || layerProperties.id || "";
-                layerInfo._description = src._description || layerProperties.description || "";
-                layerInfo._producer = src._producer || layerProperties.producer || "";
-                layerInfo._thumbnail = src._thumbnail || layerProperties.thumbnail || "";
-                layerInfo._quicklookUrl = src._quicklookUrl || layerProperties.quicklookUrl || "";
-                layerInfo._metadata = src._metadata || layerProperties.metadata || [];
-                layerInfo._legends = src._legends || layerProperties.legends || [];
+            if (!src && layer.getSource !== undefined) {
+                src = layer.getSource();
             }
+
+            layerInfo._title = (src && src._title) || layerProperties.title || layerProperties.id || "";
+            layerInfo._description = (src && src._description) || layerProperties.description || "";
+            layerInfo._producer = (src && src._producer) || layerProperties.producer || "";
+            layerInfo._thumbnail = (src && src._thumbnail) || layerProperties.thumbnail || "";
+            layerInfo._quicklookUrl = (src && src._quicklookUrl) || layerProperties.quicklookUrl || "";
+            layerInfo._metadata = (src && src._metadata) || layerProperties.metadata || [];
+            layerInfo._legends = (src && src._legends) || layerProperties.legends || [];
         }
         return layerInfo;
     }
