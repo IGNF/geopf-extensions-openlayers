@@ -1,4 +1,6 @@
-import BaseObject from "ol/Object";
+// import CSS
+import "../../CSS/Controls/Toggle/GPFtabNav.scss";
+
 import Logger from "../../Utils/LoggerByDefault";
 import Helper from "../../Utils/Helper";
 import Control from "../Control";
@@ -74,6 +76,9 @@ class TabNav extends Control {
         // UID utilisé dans la suite
         this._uid = options.id || SelectorID.generate();
 
+        /**
+         * @type {Collection<TabNavItem>}
+         */
         this.items = new Collection();
 
         const tabClass = ".fr-tabnav";

@@ -6,16 +6,21 @@
 .GPF-tabnav__list {
   flex-direction: row;
   flex-wrap: nowrap;
+  justify-content: space-evenly;
 
   .GPF-tabnav__item {
     align-items: flex-start;
     position: static;
+    flex: 1 0 auto;
   }
 }
 
 .GPF-tabnav__link {
   padding: 0.75rem;
   min-height: 2rem;
+  justify-content: center;
+  max-width: 100%;
+  width: 100%;
 
   background-repeat: no-repeat, no-repeat;
   transition: background-size 0s;
