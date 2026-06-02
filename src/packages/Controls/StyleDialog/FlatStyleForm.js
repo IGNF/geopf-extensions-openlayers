@@ -8,6 +8,7 @@ import CustomSelect from "../Input/CustomSelect.js";
 import CustomSelectGrid from "../Input/CustomSelectGrid.js";
 import InputColor from "../Input/InputColor.js";
 import SelectorID from "../../Utils/SelectorID.js";
+import Feature from "ol/Feature.js";
 
 /**
  * @typedef {Object} InputConfig Configuration pour un type input
@@ -37,6 +38,13 @@ import SelectorID from "../../Utils/SelectorID.js";
 /**
  * @typedef {Object} FlatStyleFormConfig Configuration d'un formulaire de style.
  * @property {Boolean} [hasbutton] Indique si le formulaire a un bouton de validation.
+ */
+
+/**
+ * @typedef {'Point' | 'LineString' | 'LinearRing' | 'Polygon' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'GeometryCollection' | 'Circle'} GeomType
+ * Type de géométrie parmi : `'Point'`, `'LineString'`, `'LinearRing'`,
+ * `'Polygon'`, `'MultiPoint'`, `'MultiLineString'`, `'MultiPolygon'`,
+ * `'GeometryCollection'`, ou `'Circle'`.
  */
 
 /**
@@ -368,6 +376,43 @@ class FlatStyleForm extends ControlExtended {
     }
 
     /**
+     * Modifie le type de géométrie dans l'attribut `data-geom` du conteneur du formulaire.
+     * L'appel à cette méthode enlève toute autre géométrie qui aurait été affichée.
+     * 
+     * Les éléments affichés dépendent de la propriété flat-style correspondante :
+     * - Type `'Point'` ou `'MultiPoint'` : propriété commençant par `'point'` ou `'circle'`;
+     * - Type `'LineString'` ou `'MultiLineString'` : propriété commençant par `'line'` ou `'stroke'`;
+     * - Type `'Polygon'` ou `'MultiPolygon'` : propriété commençant par `'fill'` ou `'stroke'`;
+     * 
+     * @param {Feature|Array<Feature>|GeomType} featureOrGeomName Feature ou type de géométrie
+     * @param {Boolean} [append = false] Si vrai, ajoute les types de propriétés à la propriété existante. Sinon, remplace.
+     */
+    setGeom (featureOrGeomName) {
+        let feature = featureOrGeomName;
+        const geomTypes = {};
+        let dataGeom = "";
+        // console.log(append, dataGeom)
+        // Cas feature / tableau de feature
+        if (featureOrGeomName instanceof Feature) {
+            // Transforme la feature simple en tableau pour ne gérer que ce cas là
+            feature = [featureOrGeomName];
+        }
+        if (Array.isArray(feature)) {
+            feature.forEach(f => {
+                if (f instanceof Feature) {
+                    geomTypes[f.getGeometry().getType()] = true;
+                }
+            });
+            dataGeom = Object.keys(geomTypes).join(" ");
+        } else if (typeof featureOrGeomName === "string") {
+            dataGeom = featureOrGeomName;
+        }
+        // Met dans le dataset en ajoutant si besoin ce qu'il y'avait avant
+        // this.getElement().dataset.geom = append ? `${this.getElement().dataset.geom} ${dataGeom}` : dataGeom;
+        this.getElement().dataset.geom = dataGeom;
+    }
+
+    /**
      * Récupère un input par sa propriété
      * @param {String} property - Le nom de la propriété
      * @returns {DefaultInput} La configuration de l'input ou undefined si non trouvé
@@ -382,6 +427,14 @@ class FlatStyleForm extends ControlExtended {
      */
     getContent () {
         return this.container;
+    }
+
+    /**
+     * Récupère le contenu global du formulaire
+     * @returns {HTMLElement} L'élément conteneur du formulaire (avec la grille et le bouton)
+     */
+    getElement () {
+        return this.element;
     }
 
 }

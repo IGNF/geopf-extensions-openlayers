@@ -94,8 +94,10 @@
                         addToMap: true,
                         gutter: false
                     });
-
                     map.addControl(draw);
+
+                    window.draw = draw;
+                    draw.getSelect().on("select", (e) => console.log(e))
                 };
            </script>
 {{/content}}

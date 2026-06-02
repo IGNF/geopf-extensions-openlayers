@@ -68,23 +68,23 @@
   }
 }
 
-.GPF-dialog:has(.style-form) {
+.style-form {
   [data-property^='text'] {
     display: block;
   }
-  &.Point {
+  &[data-geom*='Point'] {
     [data-property^='point'],
     [data-property^='circle'] {
       display: block;
     }
   }
-  &.Polygon {
+  &[data-geom*='Polygon'] {
     [data-property^='fill'],
     [data-property^='stroke'] {
       display: block;
     }
   }
-  &.LineString {
+  &[data-geom*='LineString'] {
     [data-property^='line'],
     [data-property^='stroke'] {
       display: block;

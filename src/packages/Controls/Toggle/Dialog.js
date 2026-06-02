@@ -1,3 +1,6 @@
+// import CSS
+import "../../CSS/Controls/Toggle/GPFpanel.scss";
+
 import Helper from "../../Utils/Helper";
 import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";

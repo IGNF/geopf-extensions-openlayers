@@ -124,24 +124,22 @@ class StyleDialog extends Dialog {
         if (options.select instanceof Select) {
             this.select = options.select;
             this.select.on("select", (e) => {
-                if (e.selected && e.selected.length) {
-                    // Récupère les types de géométries
-                    const geomType = e.selected[0].getGeometry().getType();
+                if (this.select.getFeatures().getLength()) {
+                    // Affiche le formulaire adapté aux géométries
+                    this.forms.forEach(form => {
+                        form.form.setGeom(this.select.getFeatures().getArray());
+                    });
+                    // Affiche le nom de la dernière entitée sélectionnée
+                    // Par défaut, prend la dernière entité de la sélection
+                    const lastFeature = e.selected[0] || this.select.getFeatures().getArray()?.at?.(-1);
+
+                    const geomType = lastFeature.getGeometry().getType();
                     this.setDialogTitle(geomType);
                     this.setIcon(this.icons[geomType]);
                     
-                    const gTypes = {};
-                    e.target.getFeatures().forEach(f => {
-                        gTypes[f.getGeometry().getType()] = true;
-                    });
-
-                    // Ajoute les types de géométries en classes CSS
-                    this.getElement().classList.remove(...Object.keys(this.icons));
-                    this.getElement().classList.add(...Object.keys(gTypes));
-
                     this.show();
                 } else {
-                    // Aucune sélection : fermeture du dialog.
+                    // Aucun objet sélectionné : fermeture du dialog.
                     this.close();
                 }
             });
