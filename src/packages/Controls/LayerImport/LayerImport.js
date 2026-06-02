@@ -52,6 +52,7 @@ import Utils from "../../Utils/Helper";
 import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 import ProxyUtils from "../../Utils/ProxyUtils";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 // DOM
 import LayerImportDOM from "./LayerImportDOM";
 // import local with ol dependencies
@@ -1719,7 +1720,21 @@ class LayerImport extends Control {
             );
 
             logger.log("loaded features : ", features);
-
+            
+            // sanitize toutes les properties des features pour éviter les risques de XSS
+            for (let index = 0; index < features.length; index++) {
+                const feature = features[index];
+                var properties = feature.getProperties();
+                for (var key in properties) {
+                    if (properties.hasOwnProperty(key)) {
+                        var value = properties[key];
+                        if (typeof value === "string") {
+                            feature.set(key, sanitizeHtml(value));
+                        }
+                    }
+                }
+            }
+            
             // création d'une couche vectorielle à partir de ces features
             vectorSource = new VectorSource({
                 features : new Collection()

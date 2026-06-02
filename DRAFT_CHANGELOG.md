@@ -9,8 +9,6 @@ __DATE__
 
 ### 🎉 Summary
 
-Homogénéisation du paramètre serverUrl pour brancher un service différent aux widgets.
-
 ### 💥 Breaking changes
 
 ### 📖 Changelog
@@ -21,7 +19,8 @@ Homogénéisation du paramètre serverUrl pour brancher un service différent au
 
 * 🔨 [Changed]
 
-  - UI(Search): ajout d'un séparateur entre la recherche simple et la recherche avancée (#509)
+  - AdvancedSearch : conversion des coordonnées renseignés dans les inputs en changeant de système ou d'unité via les dropdowns (#518) 
+  - LayerSwitcher : le tooltip au survol de l'entrée de la couche affiche son titre (#505)
 
 * 🔥 [Deprecated]
 
@@ -29,11 +28,9 @@ Homogénéisation du paramètre serverUrl pour brancher un service différent au
 
 * 🐛 [Fixed]
 
-  - Interface(widgets) : interfaçage du paramètre serverUrl pour les widgets iti/iso/reversegeocode/mouseposition/search (#503)
-  - Interface(AdvancedSearch) : interfaçage du paramètre serverUrl et geocodeGetCapabilitiesUrl pour le widget de recherche avancée (#504, #508)
-  - Interface(ContextMenu): interfaçage du paramétre serverUrl et resource pour l'alti du menuContextuel (#506, #510)
-  - Search: filtrage plus fin des résultats liés aux codes postaux en cas d'option "pretiffyResults" (#507)
   - DSFR: ne surcharge plus le style fr-tabs global (#512)
+  - LayerSwitcher : le label "éditer" s'affiche au lieu de "style" pour les couches non TMS (#516)
+  - Catalog: correction du nom des icones (#519)
   
 * 🔒 [Security]
 
