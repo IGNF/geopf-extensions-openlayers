@@ -86,7 +86,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {String} [viewer.endpoint] - URL de l'endpoint du visualiseur d'images panoramiques.
  * @property {String} [viewer.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
  * @property {Boolean} [viewer.widgets] - Affiche ou masque les widgets du visualiseur.
- * @property {Object} [viewer.psv-options] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+ * @property {Object} [viewer.psvOptions] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
  * @property {Object} [interactions] - Options de configuration des interactions sur les différentes couches Panoramax. 
  * @property {Object} [interactions.grid] - Options d'interaction pour la couche de grille.
  * @property {Boolean} [interactions.grid.active] - Active ou désactive les interactions sur la couche de grille.
@@ -261,7 +261,7 @@ class Panoramax extends Control {
      *     endpoint: "https://explore.panoramax.fr/",
      *     class: "",
      *     widgets: true,
-     *     psv-options: {}
+     *     psvOptions: {}
      * }}});
      * map.addControl(panoramax);
      */
@@ -487,7 +487,7 @@ class Panoramax extends Control {
                 "pnxOptions" : { // TODO opts psv ?
                     "class" : "",
                     "widgets" : true,
-                    "psv-options" : {}
+                    "psvOptions" : {}
                     
                 },
             },
@@ -1494,7 +1494,7 @@ class Panoramax extends Control {
         // options.viewer.endpoint : "https://explore.panoramax.fr/api"
         // options.viewer.class : "..." (TODO)
         // options.viewer.widgets : true/false (TODO)
-        // options.viewer.psv-options : {} (TODO)
+        // options.viewer.psvOptions : {} (TODO)
         var self = this;
         return new Promise((resolve, reject) => {
             logger.debug("initPhotoViewer");
@@ -1568,7 +1568,7 @@ class Panoramax extends Control {
             photoViewer.className = "pnx-photo-viewer-container";
             photoViewer.style = "width: 100%; height: 100%";
             // Define plugins list in PSV options
-            photoViewer["psv-options"] = this.options.viewer.pnxOptions["psv-options"];
+            photoViewer["psv-options"] = this.options.viewer.pnxOptions.psvOptions;
             photoViewer.setAttribute("endpoint", this.options.viewer.endpoint);
             photoViewer.setAttribute("url-parameters", "false");
             var widgets = this.options.viewer.widgets && Array.isArray(this.options.viewer.widgets) ? this.options.viewer.widgets : null;
