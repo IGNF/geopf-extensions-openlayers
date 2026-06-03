@@ -34,6 +34,7 @@ class MiniMap extends LitElement {
         this._map = map || null;
         this._options = options && typeof options === "object" ? options : {};
         this._pictureCoordinates = null;
+        this._pictureHeading = null;
         this._overviewControl = null;
 
         this._isSyncingView = false;
@@ -119,6 +120,15 @@ class MiniMap extends LitElement {
         this._renderOverviewMap();
     }
 
+    get pictureHeading () {
+        return this._pictureHeading;
+    }
+
+    set pictureHeading (heading) {
+        this._pictureHeading =  heading;
+        this._syncToPictureCoordinates();
+    }
+
     get pictureCoordinates () {
         return this._pictureCoordinates;
     }
@@ -150,6 +160,14 @@ class MiniMap extends LitElement {
         this.pictureCoordinates = coordinates;
     }
 
+    /**
+     * Met à jour la direction de la photo pour orienter le marker
+     * @param {Number} heading - orientation en degres
+     */
+    setPhotoHeading (heading) {
+        this.pictureHeading = heading;
+    }
+
     // ################################################################### //
     // ######################## marker overlay ########################### //
     // ################################################################### //
@@ -173,6 +191,7 @@ class MiniMap extends LitElement {
         markerElement.className = "pnx-mini-map__center-marker";
         markerElement.setAttribute("aria-hidden", "true");
 
+        // TODO heading par defaut
         this._centerMarkerOverlay = new Overlay({
             element : markerElement,
             positioning : "center-center",
@@ -189,6 +208,7 @@ class MiniMap extends LitElement {
 
         var overviewMap = this._overviewControl.getOverviewMap && this._overviewControl.getOverviewMap();
         var miniView = overviewMap && overviewMap.getView && overviewMap.getView();
+        var heading = this._pictureHeading;
 
         if (miniView) {
             this._isSyncingView = true;
@@ -198,11 +218,12 @@ class MiniMap extends LitElement {
 
         if (this._centerMarkerOverlay) {
             this._centerMarkerOverlay.setPosition(position);
+            this._centerMarkerOverlay.getElement().style.transform = `rotate(${heading || 0}deg)`;
         }
     }
 
     _syncToPictureCoordinates () {
-        if (!this._pictureCoordinates || !this._overviewControl) {
+        if (!this._pictureCoordinates || !this._pictureHeading || !this._overviewControl) {
             return;
         }
 
@@ -443,10 +464,9 @@ class MiniMap extends LitElement {
                 .pnx-mini-map__center-marker {
                     width: 14px;
                     height: 14px;
-                    border: 2px solid #fff;
-                    border-radius: 50%;
                     background-color: var(--background-action-high-blue-france);
-                    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+                    clip-path: polygon(50% 0%, 5% 100%, 95% 100%);
+                    filter: drop-shadow(0 0 0 2px #fff) drop-shadow(0 0 1px rgba(0,0,0,0.2));
                     pointer-events: none;
                     z-index: 2;
                 }
