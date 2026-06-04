@@ -827,6 +827,17 @@ declare class Panoramax extends Control {
      */
     OPENED_PANORAMAX_EVENT: string | undefined;
     /**
+     * Événement déclenché à la fermeture de Panoramax.
+     * @event pnx:closed
+     * @defaultValue "pnx:closed"
+     * @group Events
+     * @description
+     * Cet événement est émis quand  Panoramax est fermé.
+     * Il indique que le processus Panoramax est terminé.
+     * Il peut être utilisé pour déclencher des actions complémentaires.
+     */
+    CLOSED_PANORAMAX_EVENT: string | undefined;
+    /**
      * Événement déclenché à l'initialisation du panneau des filtres.
      * @event pnx:filter:init
      * @defaultValue "pnx:filter:init"
