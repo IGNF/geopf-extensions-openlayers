@@ -614,6 +614,18 @@ class Panoramax extends Control {
         this.OPENED_PANORAMAX_EVENT = "pnx:opened";
 
         /**
+         * Événement déclenché à la fermeture de Panoramax.
+         * @event pnx:closed
+         * @defaultValue "pnx:closed"
+         * @group Events
+         * @description
+         * Cet événement est émis quand  Panoramax est fermé.
+         * Il indique que le processus Panoramax est terminé.
+         * Il peut être utilisé pour déclencher des actions complémentaires.
+         */
+        this.CLOSED_PANORAMAX_EVENT = "pnx:closed";
+
+        /**
          * Événement déclenché à l'initialisation du panneau des filtres.
          * @event pnx:filter:init
          * @defaultValue "pnx:filter:init"
@@ -3153,10 +3165,7 @@ class Panoramax extends Control {
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
         this.dispatchEvent({
-            type : this.FULLSCREEN_PANORAMAX_EVENT,
-            data : {
-                fullscreen : false,
-            },
+            type : this.CLOSED_PANORAMAX_EVENT
         });
         // Bloque l'envoi/rechargement de la page
         e.preventDefault();
@@ -3179,10 +3188,7 @@ class Panoramax extends Control {
         // reset du fullscreen si besoin
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
         this.dispatchEvent({
-            type : this.FULLSCREEN_PANORAMAX_EVENT,
-            data : {
-                fullscreen : false,
-            },
+            type : this.CLOSED_PANORAMAX_EVENT
         });
     }
 
