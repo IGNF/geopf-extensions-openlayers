@@ -108,6 +108,14 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
  * @property {Array<Object>} [config.metadata] - Métadonnées associées à la couche.
  * @property {boolean} [config.locked] - Indique si la couche est verrouillée.
+ * @property {boolean} [config.display] - Indique si la couche est affichée dans le gestionnaire de couche. Par défaut, une couche est affichée sauf si `layer.get("display") === false`.
+ *
+ * Les propriétés OpenLayers suivantes sont réactives par défaut dans le LayerSwitcher.
+ * Lorsqu'elles sont modifiées via `layer.set(...)`, le gestionnaire met à jour son interface automatiquement.
+ * @property {string} [layer.title] - Libellé affiché dans le gestionnaire.
+ * @property {string} [layer.description] - Description utilisée dans les info-bulles et le panneau d'information.
+ * @property {string} [layer.producer] - Producteur affiché sous le titre de la couche.
+ * @property {boolean} [layer.display=true] - Visibilité de l'entrée dans le gestionnaire uniquement, sans impact sur le rendu cartographique.
  */
 
 /**
@@ -385,15 +393,35 @@ class LayerSwitcher extends Control {
     }
 
     /**
+     * Indique si la couche doit être affichée dans le gestionnaire de couches.
+     * La couche est toujours rendue sur la carte ; seule sa visibilité dans le
+     * gestionnaire est contrôlée par cette propriété.
+     * Par défaut, une couche est affichée sauf si `layer.get("display") === false`.
+     * Cette propriété n'a aucun effet sur le rendu de la couche sur la carte,
+     * elle ne contrôle que la visibilité de son entrée dans le LayerSwitcher.
+     *
+     * @param {Layer} layer - Couche OpenLayers.
+     * @returns {Boolean} `true` si la couche doit apparaître dans le gestionnaire.
+     */
+    shouldDisplayLayerInSwitcher (layer) {
+        if (!layer || typeof layer.get !== "function") {
+            return true;
+        }
+        return layer.get("display") !== false;
+    }
+    
+    /**
      * Add a new layer to control (when added to map) or add new layer configuration
      *
      * @param {Layer} layer - layer to add to layer switcher
      * @param {Object} [config] - additional options for layer configuration
      * @param {Object} [config.title] - layer title (default is layer identifier)
      * @param {Object} [config.description] - layer description (default is null)
+    * @param {Object} [config.producer] - layer producer (default is null)
      * @param {Object} [config.legends] - layer legends (default is an empty array)
      * @param {Object} [config.metadata] - layer metadata (default is an empty array)
      * @param {Object} [config.quicklookUrl] - layer quicklookUrl (default is null)
+    * @param {Boolean} [config.display=true] - controls the visibility of the layer entry in the LayerSwitcher only.
      * @fires layerswitcher:add {@link LayerSwitcher#ADD_LAYER_EVENT}
      * @example
      *   layerSwitcher.addLayer(
@@ -420,7 +448,6 @@ class LayerSwitcher extends Control {
             return;
         }
 
-        // make sure layer is in map layers
         var isLayerInMap = false;
         map.getLayers().forEach(
             (lyr) => {
@@ -948,12 +975,21 @@ class LayerSwitcher extends Control {
          * @group Events
          * @param {Object} type - event
          * @param {Object} layer - layer
+         * @param {string} key - Nom de la propriété modifiée.
+         * Valeurs documentées et gérées nativement : `title`, `description`, `producer`, `display`.
+         * @param {string|boolean|null} value - Nouvelle valeur de la propriété.
          * @param {Object} target - instance LayerSwitcher
          * @public
          * @example
          * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
          *   console.log(e.layer);
          * })
+         *
+         * @example
+         * layer.set("title", "Orthophoto");
+         * layer.set("description", "Photographies aériennes");
+         * layer.set("producer", "IGN");
+         * layer.set("display", false); // masque uniquement l'entrée du gestionnaire
          */
         this.PROPERTY_CHANGE_EVENT = "layerswitcher:propertychange";
         /**
@@ -1447,6 +1483,11 @@ class LayerSwitcher extends Control {
         // ajout d'une div pour cette layer dans le control
         var layerDiv = this._createContainerLayerElement(layerOptions, this.options.allowTooltips);
 
+        // La propriété "display" ne pilote que la visibilité dans le gestionnaire.
+        if (!this.shouldDisplayLayerInSwitcher(layerOptions.layer)) {
+            layerDiv.classList.add("gpf-hidden");
+        }
+
         if (!layerOptions.inRange) {
             layerDiv.classList.add("outOfRange");
         }
@@ -1485,7 +1526,11 @@ class LayerSwitcher extends Control {
      */
     _updateLayerCounter () {
         if (this._layerSwitcherCounter) {
-            this._layerSwitcherCounter.innerHTML = Object.keys(this._layers).length;
+            // on exclut les couches masquées (display === false) du compteur
+            const count = Object.values(this._layers).filter(
+                (opts) => opts.layer && this.shouldDisplayLayerInSwitcher(opts.layer)
+            ).length;
+            this._layerSwitcherCounter.innerHTML = count;
         }
     }
 
@@ -1660,6 +1705,11 @@ class LayerSwitcher extends Control {
         map.getLayers().forEach(
             (layer) => {
                 id = layer.gpLayerId;
+
+                // on ignore les couches non suivies (ex. display=false dès l'origine)
+                if (!this._layers[id]) {
+                    return;
+                }
 
                 // on commence par désactiver temporairement l'écouteur d'événements sur le changement de zindex.
                 olObservableUnByKey(this._layers[id].onZIndexChangeEvent);
@@ -2220,6 +2270,9 @@ class LayerSwitcher extends Control {
      */
     _updateGenericProperty (e) {
         var id = e.target.gpLayerId;
+        if (!this._layers[id]) {
+            return;
+        }
         var layer = this._layers[id].layer;
         var value = layer.get(e.key);
 
@@ -2245,6 +2298,19 @@ class LayerSwitcher extends Control {
                 if (producerDiv) {
                     producerDiv.innerHTML = value;
                 }
+                break;
+            case "display":
+                // masquer ou afficher uniquement dans le gestionnaire de couches ;
+                // la couche reste rendue sur la carte dans tous les cas.
+                var layerDiv = this._layers[id].div;
+                if (layerDiv) {
+                    if (value === false) {
+                        layerDiv.classList.add("gpf-hidden", "GPelementHidden");
+                    } else {
+                        layerDiv.classList.remove("gpf-hidden", "GPelementHidden");
+                    }
+                }
+                this._updateLayerCounter();
                 break;
             default:
                 break;
