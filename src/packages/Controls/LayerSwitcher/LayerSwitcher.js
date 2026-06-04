@@ -435,11 +435,14 @@ class LayerSwitcher extends Control {
      */
     addLayer (layer, config) {
         var map = this.getMap();
-        config = config || layer.config || {};
 
         if (!layer) {
             logger.log("[ERROR] LayerSwitcher:addLayer - missing layer parameter");
             return;
+        }
+        config = config || layer.config || {};
+        if (Object.prototype.hasOwnProperty.call(config, "display")) {
+            layer.set("display", config.display);
         }
 
         var id = layer.gpLayerId;
