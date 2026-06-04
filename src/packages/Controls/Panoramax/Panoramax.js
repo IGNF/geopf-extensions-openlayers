@@ -1058,19 +1058,34 @@ class Panoramax extends Control {
             if (!self.eventActived || e.dragging) {
                 return;
             }
-            console.warn(e.map.getView().getZoom());
+
             var options = {
                 layerFilter : (l) => l === self.layerPanoramax,
                 hitTolerance : 0
             };
-            var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature, options);
+
+            const features = [];
+            e.map.forEachFeatureAtPixel(e.pixel, (feature) => {
+                features.push(feature);
+            }, options);
+
             var mapTarget = e.map.getTargetElement();
             if (mapTarget) {
-                mapTarget.style.cursor = feature ? "pointer" : "";
+                mapTarget.style.cursor = features.length > 0 ? "pointer" : "";
             }
-            if (!feature) {
+            if (features.length === 0) {
                 self.resetPreview();
                 return;
+            }
+            // Selon le zoom defini (17 ou 18 pour un picture), 
+            // on recherche un feature de type picture pour l'affichage de l'aperçu, 
+            // sinon on prend le premier feature (ex. grid ou sequence)
+            let feature = features[0];
+            if (e.map.getView().getZoom() >= 17) {
+                const pictureFeature = features.find(f => f.get("mvt:layer") === "pictures");
+                if (pictureFeature) {
+                    feature = pictureFeature;
+                }
             }
             feature.pointerCoordinate = e.coordinate;
             self.displayPreview(feature);
@@ -2551,7 +2566,6 @@ class Panoramax extends Control {
         // stocke la feature survolée
         this.selectedFeature = feature;
         var pfeature = this._transformToPanoramaxFeature(feature);
-        console.warn(type);
         switch (type) {
             case "grid":
                 // preview des statistiques panoramax
