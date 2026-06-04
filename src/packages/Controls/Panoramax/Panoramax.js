@@ -1004,7 +1004,7 @@ class Panoramax extends Control {
                         self.options.interactions.sequences.actions.includes("zoom")) {
                         e.map.getView().animate({
                             center : feature.pointerCoordinate || feature.coordinates,
-                            zoom : 17,
+                            zoom : 18, // FIXME zoom niveau fixe !?
                             duration : 500
                         });
                     }
