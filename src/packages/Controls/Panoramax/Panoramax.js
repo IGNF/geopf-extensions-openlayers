@@ -1002,11 +1002,17 @@ class Panoramax extends Control {
                     // depending on the density of images in the sequence
                     if (self.options.interactions.sequences.active && 
                         self.options.interactions.sequences.actions.includes("zoom")) {
-                        e.map.getView().animate({
-                            center : feature.pointerCoordinate || feature.coordinates,
-                            zoom : 18, // FIXME zoom niveau fixe !?
-                            duration : 500
-                        });
+                        var zoom = e.map.getView().getZoom();
+                        var newZoom = 17; // FIXME zoom niveau fixe !?
+                        // si le zoom actuel est inférieur au zoom cible, on zoome, 
+                        // sinon on ne fait rien pour éviter les animations de zoom intempestives
+                        if (zoom < newZoom) {
+                            e.map.getView().animate({
+                                center : feature.pointerCoordinate || feature.coordinates,
+                                zoom : newZoom, 
+                                duration : 500
+                            });
+                        }
                     }
                 }
                 return;
@@ -1029,6 +1035,7 @@ class Panoramax extends Control {
             if (!self.eventActived || e.dragging) {
                 return;
             }
+            console.warn(e.map.getView().getZoom());
             var options = {
                 layerFilter : (l) => l === self.layerPanoramax,
                 hitTolerance : 0
@@ -2517,7 +2524,7 @@ class Panoramax extends Control {
         // stocke la feature survolée
         this.selectedFeature = feature;
         var pfeature = this._transformToPanoramaxFeature(feature);
-
+        console.warn(type);
         switch (type) {
             case "grid":
                 // preview des statistiques panoramax
