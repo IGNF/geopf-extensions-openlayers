@@ -946,14 +946,37 @@ class Panoramax extends Control {
 
     onPointerMoveDebounced (handler) {
         const debounce = (func, delay) => {
-            let timerId;
+            let timerId = null;
+            let isDestroyed = false;
     
-            return function (...args) {
+            const debounced = function (...args) {
+                if (isDestroyed) {
+                    return;
+                }
                 clearTimeout(timerId);
                 timerId = setTimeout(() => {
-                    func.apply(this, args);
+                    if (!isDestroyed) {
+                        func.apply(this, args);
+                        timerId = null;
+                    }
                 }, delay);
             };
+
+            // Permet d'annuler les timeouts en attente
+            debounced.cancel = () => {
+                if (timerId !== null) {
+                    clearTimeout(timerId);
+                    timerId = null;
+                }
+            };
+
+            // Marquer comme détruit pour éviter les appels après suppression
+            debounced.destroy = () => {
+                debounced.cancel();
+                isDestroyed = true;
+            };
+
+            return debounced;
         };
 
         return debounce(handler, 10);
@@ -1072,6 +1095,10 @@ class Panoramax extends Control {
             delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
         }
         if (this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]) {
+            // Annuler les timeouts en attente du debounce
+            if (this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB].destroy) {
+                this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB].destroy();
+            }
             map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
             delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
         }
