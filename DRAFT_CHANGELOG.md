@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - Panoramax : 🎉 nouveau widget !
+  - LayerSwitcher : Possibilité de rendre une couche affichable ou non dans le gestionnaire (#533)
 
 * 🔨 [Changed]
 
