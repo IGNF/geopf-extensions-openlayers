@@ -1485,7 +1485,7 @@ class LayerSwitcher extends Control {
 
         // La propriété "display" ne pilote que la visibilité dans le gestionnaire.
         if (!this.shouldDisplayLayerInSwitcher(layerOptions.layer)) {
-            layerDiv.classList.add("gpf-hidden");
+            layerDiv.classList.add("gpf-hidden", "GPelementHidden");
         }
 
         if (!layerOptions.inRange) {
