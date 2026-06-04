@@ -1082,10 +1082,11 @@ class Panoramax extends Control {
             // sinon on prend le premier feature (ex. grid ou sequence)
             let feature = features[0];
             if (e.map.getView().getZoom() >= 17) {
-                const pictureFeature = features.find(f => f.get("mvt:layer") === "pictures");
+                const pictureFeature = features.find(f => (f.get("mvt:layer") || f.get("layer")) === "pictures");
                 if (pictureFeature) {
                     feature = pictureFeature;
                 }
+            }
             }
             feature.pointerCoordinate = e.coordinate;
             self.displayPreview(feature);
