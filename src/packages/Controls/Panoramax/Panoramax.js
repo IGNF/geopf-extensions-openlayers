@@ -3453,7 +3453,16 @@ class Panoramax extends Control {
     onToggleChoiceDisplayLayerPanoramaxClick (e) {
         logger.debug(e);
         this.displayable = !this.displayable;
-        this.groupPanoramax.set("display", this.displayable);
+
+        if (this.groupPanoramax) {
+            this.groupPanoramax.set("display", this.displayable);
+        }
+        if (this.layerPanoramax) {
+            this.layerPanoramax.set("display", this.displayable);
+        }
+        if (this.backgroundPanoramax) {
+            this.backgroundPanoramax.set("display", this.displayable);
+        }
     }
             
     /**
