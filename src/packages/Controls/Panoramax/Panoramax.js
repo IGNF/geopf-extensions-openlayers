@@ -751,7 +751,7 @@ class Panoramax extends Control {
          * @private
          */
         this.photoViewerPictureLoadedListener = null;
-        this.photoViewerPictureRotatedListener =null;
+        this.photoViewerPictureRotatedListener = null;
 
         /**
          * instance PSV liée au listener de synchro photo -> minimap
