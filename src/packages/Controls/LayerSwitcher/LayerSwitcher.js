@@ -1706,7 +1706,7 @@ class LayerSwitcher extends Control {
             (layer) => {
                 id = layer.gpLayerId;
 
-                // on ignore les couches non suivies (ex. display=false dès l'origine)
+                // on ignore les couches non suivies (par ex. ajoutées à la carte sans passer par le LayerSwitcher)
                 if (!this._layers[id]) {
                     return;
                 }
