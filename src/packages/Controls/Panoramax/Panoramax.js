@@ -1027,12 +1027,17 @@ class Panoramax extends Control {
                         self.options.interactions.sequences.actions.includes("zoom")) {
                         var zoom = e.map.getView().getZoom();
                         var newZoom = 17; // FIXME zoom niveau fixe !?
-                        // si le zoom actuel est inférieur au zoom cible, on zoome, 
-                        // sinon on ne fait rien pour éviter les animations de zoom intempestives
+                        // si le zoom actuel est inférieur au zoom cible, on zoome,
+                        // sinon on recentre uniquement pour éviter les animations de zoom intempestives
                         if (zoom < newZoom) {
                             e.map.getView().animate({
                                 center : feature.pointerCoordinate || feature.coordinates,
-                                zoom : newZoom, 
+                                zoom : newZoom,
+                                duration : 500
+                            });
+                        } else {
+                            e.map.getView().animate({
+                                center : feature.pointerCoordinate || feature.coordinates,
                                 duration : 500
                             });
                         }
