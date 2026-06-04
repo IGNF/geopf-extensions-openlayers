@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - Panoramax : 🎉 nouveau widget !
+  - Panoramax : Ajout de l'orientation du deplacement dans la minimap du PhotoViewer (#532)
 
 * 🔨 [Changed]
 
