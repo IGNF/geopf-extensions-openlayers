@@ -661,6 +661,17 @@ class Panoramax extends Control {
         this.HOVERED_DATA_PANORAMAX_CB = "pnx:data:hovered";
 
         /**
+         * Nom du callback déclenché lors de la suppression de la couche Panoramax active.
+         * @event pnx:layer:removed
+         * @defaultValue "pnx:layer:removed"
+         * @group Callbacks
+         * @description
+         * Ce callback est utilisé pour indiquer que la couche Panoramax a été supprimée de la carte.
+         * Il peut être utilisé pour déclencher des actions complémentaires de nettoyage.
+         */
+        this.LAYER_PANORAMAX_REMOVE_CB = "pnx:layer:removed";
+
+        /**
          * Nom de l'événement déclenché quand une plage de dates est saisie.
          * @event pnx:filter:dates
          * @defaultValue "pnx:filter:dates"
@@ -1073,6 +1084,17 @@ class Panoramax extends Control {
         };
         this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB] = this.onPointerMoveDebounced(hoverHandler);
         map.on("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
+
+        // on met en place un ecouteur sur la suppression de la couche Panoramax
+        // ce qui permet de réinitialiser le panneau Panoramax si la couche 
+        // est supprimée par un autre contrôle de gestion des couches
+        this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB] = (e) => {
+            var layer = e.element;
+            if (layer === self.groupPanoramax || layer === self.layerPanoramax) {
+                self.setCollapsed(true);
+            }
+        };
+        map.getLayers().on("remove", this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]);
     }
 
     /**
@@ -1098,6 +1120,10 @@ class Panoramax extends Control {
         var mapTarget = map.getTargetElement();
         if (mapTarget) {
             mapTarget.style.cursor = "";
+        }
+        if (this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]) {
+            map.getLayers().un("remove", this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]);
+            delete this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB];
         }
     }
 
@@ -1188,6 +1214,13 @@ class Panoramax extends Control {
     /** @private */
     resetButtons () {
         this.unbindFiltersPanelPositioning();
+        if (this.panelPanoramaxOptions) {
+            this.panelPanoramaxOptions.classList.replace("gpf-visible", "gpf-hidden");
+        }
+        if (this.btnPanoramaxOptions) {
+            this.btnPanoramaxOptions.setAttribute("aria-pressed", "false");
+        }
+        this.hideButtonsPanel();
     }
     /** @private */
     resetPhotoViewer () {
