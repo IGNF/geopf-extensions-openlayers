@@ -26,6 +26,7 @@ __DATE__
   - Panoramax : la couche Panoramax n'est pas affiché par défaut dans le gestionnaire de couches (#533)
   - Panoramax : modification de l'icone orientation dans la minimap (#538)
   - ContextMenu : ajout d’une méthode publique pour mettre à jour/ajouter des entrées personnalisées (#517)
+  - ControlList: Catalogue d'outils devient réorganisable + adaptation dsfr
 
 * 🔥 [Deprecated]
 
