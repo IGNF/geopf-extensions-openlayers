@@ -9,13 +9,15 @@ import CustomSelectGrid from "../Input/CustomSelectGrid.js";
 import InputColor from "../Input/InputColor.js";
 import SelectorID from "../../Utils/SelectorID.js";
 import Feature from "ol/Feature.js";
+import BaseEvent from "ol/events/Event.js";
 
 /**
  * @typedef {Object} InputConfig Configuration pour un type input
  * @property {String} label Le label de l'input
  * @property {String} property La propriété flat style correspondante
  * @property {String|Object} type Le type de l'input.
- * Il faut passer par l'attribut `input` pour ajouter un input personnalisé.* En fonction du type, l'input sera soit un élément HTML de type `input` / `select`
+ * Il faut passer par l'attribut `input` pour ajouter un input personnalisé.
+ * En fonction du type, l'input sera soit un élément HTML de type `input` / `select`
  * , ou bien un enfant de {@link DefaultInput}.
  * Certaines valeurs de l'attributs changent le type d'input créé :
  * - `type : number` : Créé un élément de type {@link InputNumber};
@@ -47,6 +49,83 @@ import Feature from "ol/Feature.js";
  * `'GeometryCollection'`, ou `'Circle'`.
  */
 
+
+/**
+ * @enum {string}
+ */
+const FlatStyleFormEventType = {
+    /**
+     * Événement envoyé au changement d'un input de style.
+     * @event FlatStyleFormEventType#style
+     * @api
+     */
+    STYLE : "style",
+
+    /**
+     * Événement envoyé au changement d'un input de style.
+     * @event FlatStyleFormEventType#submit
+     * @api
+     */
+    SUBMIT : "submit"
+};
+
+/**
+ * @classdesc
+ * Les événements envoyés par des instances de {@link FlatStyleForm}
+ * sont des instances de ce type ou de {@link SubmitEvent} (seulement si bouton de validation présent dans le formulaire).
+ */
+export class StyleEvent extends BaseEvent {
+    /**
+     * @param {String} property Propriété flat style.
+     * @param {any} value Valeur correspondante.
+     */
+    constructor(property, value) {
+        super(FlatStyleFormEventType.STYLE);
+        /**
+         * Propriété flatstyle.
+         * @type {String}
+         * @api
+         */
+        this.property = property;
+
+        /**
+         * Valeur correspondante à la propriété flat style.
+         * @type {any}
+         * @api
+         */
+        this.value = value;
+    }
+}
+
+
+/**
+ * @classdesc
+ * Le clic sur le bouton de validation du formulaire de {@link FlatStyleForm} sont des instances de ce type (sinon, voir {@link StyleEvent}).
+ */
+export class SubmitEvent extends BaseEvent {
+    /**
+     * @param {Object} flatStyle Objet flat style au complet.
+     */
+    constructor(flatStyle) {
+        super(FlatStyleFormEventType.SUBMIT);
+        /**
+         * Objet flat style correspondant au formulaire.
+         * @type {Object}
+         * @api
+         */
+        this.flatStyle = flatStyle || {};
+    }
+}
+
+/**
+ * @template Return
+ * @typedef {import("ol/Observable.js").OnSignature<import("ol/Observable.js").EventTypes, import("ol/events/Event.js").default, Return> &
+ *   import("ol/Observable").OnSignature<import("ol/ObjectEventType.js").Types, import("ol/Object").ObjectEvent, Return> &
+ *   import("ol/Observable.js").OnSignature<'style', StyleEvent, Return> &
+ *   import("ol/Observable.js").OnSignature<'submit', SubmitEvent, Return> &
+ *   import("ol/Observable").CombinedOnSignature<import("ol/Observable").EventTypes|import("ol/ObjectEventType.js").Types|'style'|'submit', Return>} FlatStyleFormOnSignature
+ */
+
 /**
  * @classdesc
  * Classe représentant un formulaire de style.
@@ -63,6 +142,8 @@ import Feature from "ol/Feature.js";
  * Créé par défaut un élémént de type {@link CustomSelect}.
  * 
  * @extends ControlExtended
+ * @fires FlatStyleFormEventType#style
+ * @fires FlatStyleFormEventType#submit
  */
 class FlatStyleForm extends ControlExtended {
 
@@ -75,6 +156,14 @@ class FlatStyleForm extends ControlExtended {
 
         // UID utilisé dans la suite
         this._uid = options.id || SelectorID.generate();
+
+        // Pour la doc
+        /** @type {FlatStyleFormOnSignature<import("ol/events").EventsKey>} */
+        this.on;
+        /** @type {FlatStyleFormOnSignature<import("ol/events").EventsKey>} */
+        this.once;
+        /** @type {FlatStyleFormOnSignature<void>} */
+        this.un;
 
         /**
          * Collection des inputs indexés par leur propriété
@@ -143,7 +232,7 @@ class FlatStyleForm extends ControlExtended {
         console.log("Valeurs du formulaire:", values);
 
         // Prévenir que le style a changé
-        this.dispatchEvent({ type : "style", flatStyle : flatStyle });
+        this.dispatchEvent(new SubmitEvent(flatStyle));
 
         return values;
     }
@@ -228,7 +317,7 @@ class FlatStyleForm extends ControlExtended {
 
         // Envoie un événement `style` au changement de l'input
         input.addEventListener("change", (e) => {
-            !e.cancelable && this.dispatchEvent({ type : "style", property : property, value : e.target.value });
+            !e.cancelable && this.dispatchEvent(new StyleEvent(property, e.target.value));
         });
 
         // Garde en mémoire la valeur de retour (elem pour les objets, input pour les balises HTML)
@@ -353,7 +442,7 @@ class FlatStyleForm extends ControlExtended {
 
         // Prevenir que la valeur a changée
         input.addEventListener("change", (e) => {
-            !e.cancelable && this.dispatchEvent({ type : "style", property : property, value : e.target.value });
+            !e.cancelable && this.dispatchEvent(new StyleEvent(property, e.target.value));
         });
 
         return input;
@@ -379,13 +468,18 @@ class FlatStyleForm extends ControlExtended {
      * Modifie le type de géométrie dans l'attribut `data-geom` du conteneur du formulaire.
      * L'appel à cette méthode enlève toute autre géométrie qui aurait été affichée.
      * 
+     * Il est possible de passer une feature ou un array de feature
+     * (les types de géométries sont alors récupérés depuis la méthode
+     * `feature.getGeometry().getType()`) ou bien une chaîne de 
+     * charactère correspondant à un type de géométrie valide
+     * (voir {@link GeomType GeomType})
+     * 
      * Les éléments affichés dépendent de la propriété flat-style correspondante :
      * - Type `'Point'` ou `'MultiPoint'` : propriété commençant par `'point'` ou `'circle'`;
      * - Type `'LineString'` ou `'MultiLineString'` : propriété commençant par `'line'` ou `'stroke'`;
      * - Type `'Polygon'` ou `'MultiPolygon'` : propriété commençant par `'fill'` ou `'stroke'`;
      * 
      * @param {Feature|Array<Feature>|GeomType} featureOrGeomName Feature ou type de géométrie
-     * @param {Boolean} [append = false] Si vrai, ajoute les types de propriétés à la propriété existante. Sinon, remplace.
      */
     setGeom (featureOrGeomName) {
         let feature = featureOrGeomName;
@@ -410,6 +504,17 @@ class FlatStyleForm extends ControlExtended {
         // Met dans le dataset en ajoutant si besoin ce qu'il y'avait avant
         // this.getElement().dataset.geom = append ? `${this.getElement().dataset.geom} ${dataGeom}` : dataGeom;
         this.getElement().dataset.geom = dataGeom;
+
+        // Modifie la valeur de geom en réactif openlayers
+        this.set("geom", dataGeom);
+    }
+
+    /**
+     * Retourne les types de géométries affichés dans le formulaire.
+     * @returns {String} Valeur contenu dans le data-geom de l'élément principal
+     */
+    getGeom() {
+        return this.getElement().dataset.geom;
     }
 
     /**
@@ -444,4 +549,4 @@ export default FlatStyleForm;
 // Expose FlatStyleForm as ol.control.FlatStyleForm (for a build bundle)
 if (window.ol && window.ol.control) {
     window.ol.control.FlatStyleForm = FlatStyleForm;
-} 
+}
