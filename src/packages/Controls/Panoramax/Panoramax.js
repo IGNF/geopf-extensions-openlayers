@@ -1092,7 +1092,6 @@ class Panoramax extends Control {
                     feature = pictureFeature;
                 }
             }
-            }
             feature.pointerCoordinate = e.coordinate;
             self.displayPreview(feature);
         };
