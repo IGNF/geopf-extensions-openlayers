@@ -68,7 +68,7 @@
         { 
             "id" : "oceans",
             "name" : "Océans",
-            "icon" : "fr-icon-fr--submersion-fill"
+            "icon" : "fr-icon-submersion-fill"
         },
         { 
             "id" : "planningCadastre",
@@ -78,7 +78,7 @@
         { 
             "id" : "society",
             "name" : "Société",
-            "icon" : "fr-icon-capsule-fill"
+            "icon" : "fr-icon-team-fill"
         },
         { 
             "id" : "structure",
