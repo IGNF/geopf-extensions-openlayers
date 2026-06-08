@@ -234,7 +234,7 @@ class ContextMenu extends Control {
         if (options.contextMenuItemsOptions instanceof Array
             && options.contextMenuItemsOptions
             && options.contextMenuItemsOptions.length > 0) {
-            this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : "ol-context-menu-custom fr-text--md" }));
+            this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : item.classname ?? "ol-context-menu-custom fr-text--md" }));
         }
         /** @type {olContextMenu} */
         this.contextmenu = new olContextMenu(
