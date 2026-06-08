@@ -223,7 +223,7 @@ class MiniMap extends LitElement {
     }
 
     _syncToPictureCoordinates () {
-        if (!this._pictureCoordinates || !this._pictureHeading || !this._overviewControl) {
+        if (!this._pictureCoordinates || !this._overviewControl) {
             return;
         }
 

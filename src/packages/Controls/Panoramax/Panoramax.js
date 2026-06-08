@@ -1689,7 +1689,7 @@ class Panoramax extends Control {
             && this.photoViewerPictureLoadedTarget !== psv
             && this.photoViewerPictureLoadedListener
             && this.photoViewerPictureRotatedListener
-            && typeof this.photoViewerPictureLoadedTarget.removeEventListener === "function") {
+        ) {
             this.photoViewerPictureLoadedTarget.removeEventListener("view-rotated", this.photoViewerPictureRotatedListener);   
             this.photoViewerPictureLoadedTarget.removeEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
             this.photoViewerPictureLoadedTarget = null;
