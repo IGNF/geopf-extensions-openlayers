@@ -24,6 +24,7 @@ declare class MiniMap extends LitElement {
     _map: any;
     _options: object;
     _pictureCoordinates: any;
+    _pictureHeading: any;
     _overviewControl: GeoportalOverviewMap | null;
     _isSyncingView: boolean;
     _onMainMapMoveEnd: (() => void) | null;
@@ -36,6 +37,8 @@ declare class MiniMap extends LitElement {
     get map(): any;
     set options(options: object);
     get options(): object;
+    set pictureHeading(heading: any);
+    get pictureHeading(): any;
     set pictureCoordinates(coordinates: number[] | null);
     get pictureCoordinates(): number[] | null;
     /**
@@ -45,6 +48,11 @@ declare class MiniMap extends LitElement {
      * @param {Array<Number>|null} coordinates - Coordonnées [lon, lat] en EPSG:4326.
      */
     setPhotoCoordinates(coordinates: Array<number> | null): void;
+    /**
+     * Met à jour la direction de la photo pour orienter le marker
+     * @param {Number} heading - orientation en degres
+     */
+    setPhotoHeading(heading: number): void;
     _initCenterMarkerOverlay(): void;
     _updateCenterMarkerOverlayPosition(position: any): void;
     _syncToPictureCoordinates(): void;

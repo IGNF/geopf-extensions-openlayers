@@ -791,6 +791,7 @@ class Panoramax extends Control {
          * @private
          */
         this.photoViewerPictureLoadedListener = null;
+        this.photoViewerPictureRotatedListener = null;
 
         /**
          * instance PSV liée au listener de synchro photo -> minimap
@@ -1320,6 +1321,7 @@ class Panoramax extends Control {
             // Nullifier les références et listeners
             this.photoViewerPanoramax = null;
             this.photoViewerPictureLoadedListener = null;
+            this.photoViewerPictureRotatedListener = null;
             this.photoViewerPictureLoadedTarget = null;
         }
     }
@@ -1815,12 +1817,16 @@ class Panoramax extends Control {
         if (this.photoViewerPictureLoadedTarget
             && this.photoViewerPictureLoadedTarget !== psv
             && this.photoViewerPictureLoadedListener
-            && typeof this.photoViewerPictureLoadedTarget.removeEventListener === "function") {
+            && this.photoViewerPictureRotatedListener
+        ) {
+            this.photoViewerPictureLoadedTarget.removeEventListener("view-rotated", this.photoViewerPictureRotatedListener);   
             this.photoViewerPictureLoadedTarget.removeEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
             this.photoViewerPictureLoadedTarget = null;
         }
 
-        if (this.photoViewerPictureLoadedTarget === psv && this.photoViewerPictureLoadedListener) {
+        if (this.photoViewerPictureLoadedTarget === psv && 
+            this.photoViewerPictureLoadedListener && 
+            this.photoViewerPictureRotatedListener) {
             return;
         }
 
@@ -1847,6 +1853,31 @@ class Panoramax extends Control {
         }
 
         psv.addEventListener("picture-loaded", this.photoViewerPictureLoadedListener);
+
+        if (!this.photoViewerPictureRotatedListener) {
+            this.photoViewerPictureRotatedListener = () => {
+                if (!this.photoViewerMiniMap) {
+                    return;
+                }
+
+                var currentPsv = this.photoViewerPanoramax && this.photoViewerPanoramax.psv
+                    ? this.photoViewerPanoramax.psv
+                    : null;
+                if (!currentPsv) {
+                    return;
+                }
+                let heading = currentPsv.getPosition().yaw * (180 / Math.PI);
+		        heading += currentPsv.getPictureOriginalHeading();
+		        if (typeof this.photoViewerMiniMap.setPhotoHeading === "function") {
+                    this.photoViewerMiniMap.setPhotoHeading(heading);
+                } else {
+                    this.photoViewerMiniMap.pictureHeading = heading;
+                }
+            };
+        }
+
+        psv.addEventListener("view-rotated", this.photoViewerPictureRotatedListener);
+
         this.photoViewerPictureLoadedTarget = psv;
     }
 
