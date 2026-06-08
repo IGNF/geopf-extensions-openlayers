@@ -132,8 +132,8 @@ class ContextMenu extends Control {
     }
 
     /**
-     * Maj des items lors de l'exécution
-     * Les items sont ajouter après les items détectés par défaut
+     * Mise à jour des items lors de l'exécution
+     * Les items sont ajoutés après les items détectés par défaut
      * @param {Array<Object>} items - Tableau d'items ol
      * @public
      */
