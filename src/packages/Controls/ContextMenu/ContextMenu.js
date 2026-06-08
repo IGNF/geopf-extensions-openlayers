@@ -107,7 +107,7 @@ class ContextMenu extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-    * @param {import("ol/Map").default | null} map - Map
+     * @param {Map} map - Map
      */
     setMap (map) {
         if (map) {
@@ -129,6 +129,20 @@ class ContextMenu extends Control {
 
         // on appelle la méthode setMap originale d'OpenLayers
         super.setMap(map);
+    }
+
+    /**
+     * Maj des items lors de l'exécution
+     * Les items sont ajouter après les items détectés par défaut
+     * @param {Array<Object>} items - Tableau d'items ol
+     * @public
+     */
+    updateContextMenuItems (items) {
+        if (!(items instanceof Array)) { return; }
+        this.contextMenuItemsOptions = items.map((item) => ({
+            ...item,
+            classname : item.classname ?? "ol-context-menu-custom fr-text--md"
+        }));
     }
 
     // ################################################################### //
@@ -409,6 +423,7 @@ class ContextMenu extends Control {
      * Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire 
      * @param {*} evt event
+     * @private
      * 
      */
     defineStartPoint (evt) {
@@ -429,6 +444,7 @@ class ContextMenu extends Control {
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire 
      * 
      * @param {*} evt event
+     * @private
      */
     defineEndPoint (evt) {
         // on récupère les coordonnées du point cliqué
@@ -445,6 +461,7 @@ class ContextMenu extends Control {
      *  
      * @param { Array } coord Coordonnées en 3857
      * @returns { Array } tableau de coordonnées en 4326
+     * @private
      */
     to4326 (coord) {
         return olTransformProj([
@@ -457,6 +474,7 @@ class ContextMenu extends Control {
      * pour les coordonnées sous le clic
      * 
      * @param {*} evt event
+     * @private
      */
     computeIsochrone (evt) {
         var isocurve = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Isocurve")[0];
@@ -473,6 +491,7 @@ class ContextMenu extends Control {
      * pour les coordonnées sous le clic
      * 
      * @param {*} evt event
+     * @private
      */
     getFeatureInfo (evt) {
         var gfi = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "GetFeatureInfo")[0];
@@ -500,6 +519,7 @@ class ContextMenu extends Control {
      * Fonction qui ouvre le widget des légendes
      * 
      * @param {*} evt event
+     * @private
      */
     displayLegend (evt) {
         var legend = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Legends")[0];
@@ -511,6 +531,7 @@ class ContextMenu extends Control {
      * Fonction qui ouvre le widget Catalogue
      * 
      * @param {*} evt event
+     * @private
      */
     openCatalogue (evt) {
         var catalog = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Catalog")[0];
@@ -522,6 +543,7 @@ class ContextMenu extends Control {
      * Fonction qui ouvre un panel qui affiche les coordonnées et l'adresse sous le clic
      * 
      * @param {*} evt event
+     * @private
      */
     displayAdressAndCoordinate (evt) {
         let clickedCoordinate = this.to4326(evt.coordinate);
@@ -659,19 +681,6 @@ class ContextMenu extends Control {
      */
     onCloseContextMenu (e) {
         e.target.clear();
-    }
-    /**
-     * Maj des items lors de l'exécution
-     * Les items sont ajouter après les items détectés par défaut
-     * @param {Array<Object>} items - Tableau d'items ol
-     * @public
-     */
-    updateContextMenuItems (items) {
-        if (!(items instanceof Array)) { return; }
-        this.contextMenuItemsOptions = items.map((item) => ({
-            ...item,
-            classname : item.classname ?? "ol-context-menu-custom fr-text--md"
-        }));
     }
 
     /**
