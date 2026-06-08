@@ -184,7 +184,30 @@ export type LayerSwitcherLayersConfig = {
          * - Indique si la couche est verrouillée.
          */
         locked?: boolean | undefined;
+        /**
+         * - Indique si la couche est affichée dans le gestionnaire de couche. Par défaut, une couche est affichée sauf si `layer.get("display") === false`.
+         *
+         * Les propriétés OpenLayers suivantes sont réactives par défaut dans le LayerSwitcher.
+         * Lorsqu'elles sont modifiées via `layer.set(...)`, le gestionnaire met à jour son interface automatiquement.
+         */
+        display?: boolean | undefined;
     } | undefined;
+    /**
+     * - Libellé affiché dans le gestionnaire.
+     */
+    title?: string | undefined;
+    /**
+     * - Description utilisée dans les info-bulles et le panneau d'information.
+     */
+    description?: string | undefined;
+    /**
+     * - Producteur affiché sous le titre de la couche.
+     */
+    producer?: string | undefined;
+    /**
+     * - Visibilité de l'entrée dans le gestionnaire uniquement, sans impact sur le rendu cartographique.
+     */
+    display?: boolean | undefined;
 };
 /**
  * @typedef {Object} LayerSwitcherOptions
@@ -258,6 +281,14 @@ export type LayerSwitcherLayersConfig = {
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
  * @property {Array<Object>} [config.metadata] - Métadonnées associées à la couche.
  * @property {boolean} [config.locked] - Indique si la couche est verrouillée.
+ * @property {boolean} [config.display] - Indique si la couche est affichée dans le gestionnaire de couche. Par défaut, une couche est affichée sauf si `layer.get("display") === false`.
+ *
+ * Les propriétés OpenLayers suivantes sont réactives par défaut dans le LayerSwitcher.
+ * Lorsqu'elles sont modifiées via `layer.set(...)`, le gestionnaire met à jour son interface automatiquement.
+ * @property {string} [layer.title] - Libellé affiché dans le gestionnaire.
+ * @property {string} [layer.description] - Description utilisée dans les info-bulles et le panneau d'information.
+ * @property {string} [layer.producer] - Producteur affiché sous le titre de la couche.
+ * @property {boolean} [layer.display=true] - Visibilité de l'entrée dans le gestionnaire uniquement, sans impact sur le rendu cartographique.
  */
 /**
  * @classdesc
@@ -390,15 +421,29 @@ declare class LayerSwitcher extends Control {
      */
     setMap(map: Map): void;
     /**
+     * Indique si la couche doit être affichée dans le gestionnaire de couches.
+     * La couche est toujours rendue sur la carte ; seule sa visibilité dans le
+     * gestionnaire est contrôlée par cette propriété.
+     * Par défaut, une couche est affichée sauf si `layer.get("display") === false`.
+     * Cette propriété n'a aucun effet sur le rendu de la couche sur la carte,
+     * elle ne contrôle que la visibilité de son entrée dans le LayerSwitcher.
+     *
+     * @param {Layer} layer - Couche OpenLayers.
+     * @returns {Boolean} `true` si la couche doit apparaître dans le gestionnaire.
+     */
+    shouldDisplayLayerInSwitcher(layer: Layer): boolean;
+    /**
      * Add a new layer to control (when added to map) or add new layer configuration
      *
      * @param {Layer} layer - layer to add to layer switcher
      * @param {Object} [config] - additional options for layer configuration
      * @param {Object} [config.title] - layer title (default is layer identifier)
      * @param {Object} [config.description] - layer description (default is null)
+    * @param {Object} [config.producer] - layer producer (default is null)
      * @param {Object} [config.legends] - layer legends (default is an empty array)
      * @param {Object} [config.metadata] - layer metadata (default is an empty array)
      * @param {Object} [config.quicklookUrl] - layer quicklookUrl (default is null)
+    * @param {Boolean} [config.display=true] - controls the visibility of the layer entry in the LayerSwitcher only.
      * @fires layerswitcher:add {@link LayerSwitcher#ADD_LAYER_EVENT}
      * @example
      *   layerSwitcher.addLayer(
@@ -413,9 +458,11 @@ declare class LayerSwitcher extends Control {
     addLayer(layer: Layer, config?: {
         title?: any;
         description?: any;
+        producer?: any;
         legends?: any;
         metadata?: any;
         quicklookUrl?: any;
+        display?: boolean | undefined;
     }): void;
     /**
      * Remove a layer from control
@@ -560,12 +607,21 @@ declare class LayerSwitcher extends Control {
      * @group Events
      * @param {Object} type - event
      * @param {Object} layer - layer
+     * @param {string} key - Nom de la propriété modifiée.
+     * Valeurs documentées et gérées nativement : `title`, `description`, `producer`, `display`.
+     * @param {string|boolean|null} value - Nouvelle valeur de la propriété.
      * @param {Object} target - instance LayerSwitcher
      * @public
      * @example
      * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
      *   console.log(e.layer);
      * })
+     *
+     * @example
+     * layer.set("title", "Orthophoto");
+     * layer.set("description", "Photographies aériennes");
+     * layer.set("producer", "IGN");
+     * layer.set("display", false); // masque uniquement l'entrée du gestionnaire
      */
     public PROPERTY_CHANGE_EVENT: string | undefined;
     /**

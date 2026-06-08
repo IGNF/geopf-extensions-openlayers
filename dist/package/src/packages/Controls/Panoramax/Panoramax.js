@@ -37,6 +37,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {Boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
  * @property {Boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
  * @property {Boolean} [hover=true] - Active l’interaction au survol (pointermove) sur la couche Panoramax.
+ * @property {Boolean} [displayable=false] - Indique si les couches sont affichables dans le gestionnaire de couches.
  * @property {Boolean} [panel=false] - Affiche un en-tête (header) dans le panneau.
  * @property {String} [id] - Identifiant unique du widget.
  * @property {String} [position] - Position CSS du widget sur la carte.
@@ -65,6 +66,10 @@ var logger = Logger.getLogger("panoramax");
  * @property {Boolean} [buttonsWindow.hover.display] - Affiche ou masque le bouton de survol.
  * @property {String} [buttonsWindow.hover.label] - Libellé du bouton de survol.
  * @property {String} [buttonsWindow.hover.description] - Description du bouton de survol.
+ * @property {Object} [buttonsWindow.layerswitcher] - Options de configuration du bouton de gestion des couches.
+ * @property {Boolean} [buttonsWindow.layerswitcher.display] - Affiche ou masque le bouton de gestion des couches.
+ * @property {String} [buttonsWindow.layerswitcher.label] - Libellé du bouton de gestion des couches.
+ * @property {String} [buttonsWindow.layerswitcher.description] - Description du bouton de gestion des couches.
  * @property {Object} [buttonsWindow.contributions] - Options de configuration des contributions.
  * @property {Boolean} [buttonsWindow.contributions.display] - Affiche ou masque les contributions.
  * @property {String} [buttonsWindow.contributions.label] - Libellé du bouton de contribution.
@@ -413,6 +418,7 @@ class Panoramax extends Control {
             panel : false,
             auto : true,
             hover : true,
+            displayable : false,
             gutter : false,
             position : "bottom-left",
             group : true, // option interne !
@@ -434,7 +440,7 @@ class Panoramax extends Control {
                 display : true,
                 target : null, // experimental !
                 position : "bottom-left", // TODO position ?
-                order : ["filters", "contributions", "hover", "background", "styles"],
+                order : ["filters", "contributions", "hover", "background", "layerswitcher", "styles"],
                 filters : {
                     display : true,
                     label : "Effacer les filtres",
@@ -466,6 +472,11 @@ class Panoramax extends Control {
                     display : true,
                     label : "Fond de carte",
                     description : "Afficher ou masquer un fond de carte de référence"
+                },
+                layerswitcher : {
+                    display : true,
+                    label : "Couches Panoramax",
+                    description : "Afficher ou masquer les différentes couches Panoramax",
                 }
             },
             visualizationWindow : {
@@ -551,6 +562,12 @@ class Panoramax extends Control {
          * Indique si l'interaction au survol est activée.
          */
         this.hover = this.options.hover;
+
+        /**
+         * @type {Boolean}
+         * Indique si les couches sont affichables dans le gestionnaire de couches.
+         */
+        this.displayable = this.options.displayable;
 
         /** @private */
         this.buttonPanoramaxShow = null;
@@ -654,6 +671,17 @@ class Panoramax extends Control {
          * au survol (coordonnées et propriétés) sur la couche Panoramax.
          */
         this.HOVERED_DATA_PANORAMAX_CB = "pnx:data:hovered";
+
+        /**
+         * Nom du callback déclenché lors de la suppression de la couche Panoramax active.
+         * @event pnx:layer:removed
+         * @defaultValue "pnx:layer:removed"
+         * @group Callbacks
+         * @description
+         * Ce callback est utilisé pour indiquer que la couche Panoramax a été supprimée de la carte.
+         * Il peut être utilisé pour déclencher des actions complémentaires de nettoyage.
+         */
+        this.LAYER_PANORAMAX_REMOVE_CB = "pnx:layer:removed";
 
         /**
          * Nom de l'événement déclenché quand une plage de dates est saisie.
@@ -863,6 +891,15 @@ class Panoramax extends Control {
                         if (this.options.buttonsWindow.hover.display) {
                             this.btnPanoramaxHover = this._createButtonChoiceHoverElement(this.options.hover, this.options.buttonsWindow.hover);
                             this.panelPanoramaxOptions.appendChild(this.btnPanoramaxHover);
+                        }
+                        break;
+                    case "layerswitcher":
+                        if (this.options.buttonsWindow.layerswitcher.display) {
+                            this.btnPanoramaxLayerswitcher = this._createButtonChoiceDisplayLayerElement(
+                                this.displayable, 
+                                this.options.buttonsWindow.layerswitcher
+                            );
+                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxLayerswitcher);
                         }
                         break;
                     case "styles":
@@ -1109,6 +1146,17 @@ class Panoramax extends Control {
         };
         this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB] = this.onPointerMoveDebounced(hoverHandler);
         map.on("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
+
+        // on met en place un ecouteur sur la suppression de la couche Panoramax
+        // ce qui permet de réinitialiser le panneau Panoramax si la couche 
+        // est supprimée par un autre contrôle de gestion des couches
+        this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB] = (e) => {
+            var layer = e.element;
+            if (layer === self.groupPanoramax || layer === self.layerPanoramax) {
+                self.setCollapsed(true);
+            }
+        };
+        map.getLayers().on("remove", this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]);
     }
 
     /**
@@ -1138,6 +1186,10 @@ class Panoramax extends Control {
         var mapTarget = map.getTargetElement();
         if (mapTarget) {
             mapTarget.style.cursor = "";
+        }
+        if (this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]) {
+            map.getLayers().un("remove", this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]);
+            delete this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB];
         }
     }
 
@@ -1228,6 +1280,13 @@ class Panoramax extends Control {
     /** @private */
     resetButtons () {
         this.unbindFiltersPanelPositioning();
+        if (this.panelPanoramaxOptions) {
+            this.panelPanoramaxOptions.classList.replace("gpf-visible", "gpf-hidden");
+        }
+        if (this.btnPanoramaxOptions) {
+            this.btnPanoramaxOptions.setAttribute("aria-pressed", "false");
+        }
+        this.hideButtonsPanel();
     }
     /** @private */
     resetPhotoViewer () {
@@ -1411,6 +1470,8 @@ class Panoramax extends Control {
         if (!this.groupPanoramax) {
             this.groupPanoramax = new LayerGroup();
             this.groupPanoramax.gpResultLayerId = "panoramax:group";
+            // on masque le nom du groupe dans le gestionnaire de couche
+            this.groupPanoramax.set("display", this.displayable);
             this.groupPanoramax.setProperties({
                 "title" : "Panoramax",
                 "description" : "Couche de données Panoramax"
@@ -1457,6 +1518,7 @@ class Panoramax extends Control {
             // mise à jour du nom de la couche du gestionnaire de couche
             layer.set("title", opts.name);
             layer.set("description", "Couche de données Panoramax");
+            layer.set("display", this.displayable);
             // sauvegarde de la référence de la couche
             this.layerPanoramax = layer;
             return layer;
@@ -1502,6 +1564,7 @@ class Panoramax extends Control {
             await this.waitForMapboxVectorLayerReady(layer);
             this.backgroundPanoramax = layer;
             this.backgroundPanoramax.set("title", opts.name);
+            this.backgroundPanoramax.set("display", this.displayable);
             if (this.layerPanoramax) {
                 const baseZIndex = this.layerPanoramax.getZIndex() ?? 0;
                 this.backgroundPanoramax.setZIndex(baseZIndex + 1);  
@@ -3472,7 +3535,28 @@ class Panoramax extends Control {
             this.resetBackground();
         }
     }
+ 
+    /**
+     * Gère le clic d'activation/désactivation de l'affichage des couches dans le gestionnaire de couches.
+     *
+     * @param {Event} e - Événement DOM du bouton de gestion des couches.
+     * @private
+     */
+    onToggleChoiceDisplayLayerPanoramaxClick (e) {
+        logger.debug(e);
+        this.displayable = !this.displayable;
 
+        if (this.groupPanoramax) {
+            this.groupPanoramax.set("display", this.displayable);
+        }
+        if (this.layerPanoramax) {
+            this.layerPanoramax.set("display", this.displayable);
+        }
+        if (this.backgroundPanoramax) {
+            this.backgroundPanoramax.set("display", this.displayable);
+        }
+    }
+            
     /**
      * Gère le changement de mode de rendu dans Panoramax.
      *

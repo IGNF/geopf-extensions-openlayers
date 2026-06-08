@@ -17,6 +17,7 @@ declare namespace PanoramaxDOM {
     function _createButtonChoiceHoverElement(active: any, opts: any): HTMLDivElement;
     function _createButtonChoiceStyleElement(opts: any): HTMLElement;
     function _createButtonChoiceBackgroundElement(active: any, opts: any): HTMLDivElement;
+    function _createButtonChoiceDisplayLayerElement(active: any, opts: any): HTMLDivElement;
     function _createWidgetPanelFiltersElement(opts: any): HTMLDivElement;
     function _createButtonResetFiltersElement(opts: any): HTMLButtonElement;
     function _createGroupFiltersByPeriodeElement(periodes: any): HTMLDivElement;

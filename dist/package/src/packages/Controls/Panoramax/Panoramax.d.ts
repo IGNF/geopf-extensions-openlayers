@@ -17,6 +17,10 @@ export type PanoramaxOptions = {
      */
     hover?: boolean | undefined;
     /**
+     * - Indique si les couches sont affichables dans le gestionnaire de couches.
+     */
+    displayable?: boolean | undefined;
+    /**
      * - Affiche un en-tête (header) dans le panneau.
      */
     panel?: boolean | undefined;
@@ -130,6 +134,23 @@ export type PanoramaxOptions = {
             label?: string | undefined;
             /**
              * - Description du bouton de survol.
+             */
+            description?: string | undefined;
+        } | undefined;
+        /**
+         * - Options de configuration du bouton de gestion des couches.
+         */
+        layerswitcher?: {
+            /**
+             * - Affiche ou masque le bouton de gestion des couches.
+             */
+            display?: boolean | undefined;
+            /**
+             * - Libellé du bouton de gestion des couches.
+             */
+            label?: string | undefined;
+            /**
+             * - Description du bouton de gestion des couches.
              */
             description?: string | undefined;
         } | undefined;
@@ -403,6 +424,7 @@ export type PanoramaxPreviewPicturesLayer = {
  * @property {Boolean} [draggable=false] - Permet de déplacer le panneau du catalogue.
  * @property {Boolean} [auto=true] - Active l’ajout automatique des événements sur la carte.
  * @property {Boolean} [hover=true] - Active l’interaction au survol (pointermove) sur la couche Panoramax.
+ * @property {Boolean} [displayable=false] - Indique si les couches sont affichables dans le gestionnaire de couches.
  * @property {Boolean} [panel=false] - Affiche un en-tête (header) dans le panneau.
  * @property {String} [id] - Identifiant unique du widget.
  * @property {String} [position] - Position CSS du widget sur la carte.
@@ -431,6 +453,10 @@ export type PanoramaxPreviewPicturesLayer = {
  * @property {Boolean} [buttonsWindow.hover.display] - Affiche ou masque le bouton de survol.
  * @property {String} [buttonsWindow.hover.label] - Libellé du bouton de survol.
  * @property {String} [buttonsWindow.hover.description] - Description du bouton de survol.
+ * @property {Object} [buttonsWindow.layerswitcher] - Options de configuration du bouton de gestion des couches.
+ * @property {Boolean} [buttonsWindow.layerswitcher.display] - Affiche ou masque le bouton de gestion des couches.
+ * @property {String} [buttonsWindow.layerswitcher.label] - Libellé du bouton de gestion des couches.
+ * @property {String} [buttonsWindow.layerswitcher.description] - Description du bouton de gestion des couches.
  * @property {Object} [buttonsWindow.contributions] - Options de configuration des contributions.
  * @property {Boolean} [buttonsWindow.contributions.display] - Affiche ou masque les contributions.
  * @property {String} [buttonsWindow.contributions.label] - Libellé du bouton de contribution.
@@ -673,6 +699,7 @@ declare class Panoramax extends Control {
         panel: boolean;
         auto: boolean;
         hover: boolean;
+        displayable: boolean;
         gutter: boolean;
         position: string;
         group: boolean;
@@ -727,6 +754,11 @@ declare class Panoramax extends Control {
                 label: string;
                 description: string;
             };
+            layerswitcher: {
+                display: boolean;
+                label: string;
+                description: string;
+            };
         };
         visualizationWindow: {
             display: boolean;
@@ -773,6 +805,11 @@ declare class Panoramax extends Control {
      * Indique si l'interaction au survol est activée.
      */
     hover: boolean | undefined;
+    /**
+     * @type {Boolean}
+     * Indique si les couches sont affichables dans le gestionnaire de couches.
+     */
+    displayable: boolean | undefined;
     /** @private */
     private buttonPanoramaxShow;
     /** @private */
@@ -864,6 +901,16 @@ declare class Panoramax extends Control {
      * au survol (coordonnées et propriétés) sur la couche Panoramax.
      */
     HOVERED_DATA_PANORAMAX_CB: string | undefined;
+    /**
+     * Nom du callback déclenché lors de la suppression de la couche Panoramax active.
+     * @event pnx:layer:removed
+     * @defaultValue "pnx:layer:removed"
+     * @group Callbacks
+     * @description
+     * Ce callback est utilisé pour indiquer que la couche Panoramax a été supprimée de la carte.
+     * Il peut être utilisé pour déclencher des actions complémentaires de nettoyage.
+     */
+    LAYER_PANORAMAX_REMOVE_CB: string | undefined;
     /**
      * Nom de l'événement déclenché quand une plage de dates est saisie.
      * @event pnx:filter:dates
@@ -972,6 +1019,7 @@ declare class Panoramax extends Control {
      * @private
      */
     private initContainer;
+    btnPanoramaxLayerswitcher: any;
     /**
      * Résout une cible DOM à partir
      * - d'un élément,
@@ -1349,6 +1397,13 @@ declare class Panoramax extends Control {
      * @private
      */
     private onToggleChoiceBackgroundPanoramaxClick;
+    /**
+     * Gère le clic d'activation/désactivation de l'affichage des couches dans le gestionnaire de couches.
+     *
+     * @param {Event} e - Événement DOM du bouton de gestion des couches.
+     * @private
+     */
+    private onToggleChoiceDisplayLayerPanoramaxClick;
     /**
      * Gère le changement de mode de rendu dans Panoramax.
      *
