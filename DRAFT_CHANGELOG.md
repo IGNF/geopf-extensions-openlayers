@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - Panoramax : 🎉 nouveau widget !
+  - Panoramax : Ajout de l'orientation du déplacement dans la minimap du PhotoViewer (#532)
   - LayerSwitcher : Possibilité de rendre une couche affichable ou non dans le gestionnaire (#533)
 
 * 🔨 [Changed]
