@@ -983,7 +983,11 @@ declare class Panoramax extends Control {
      * @private
      */
     private resolveTargetElement;
-    onPointerMoveDebounced(handler: any): (...args: any[]) => void;
+    onPointerMoveDebounced(handler: any): {
+        (...args: any[]): void;
+        cancel(): void;
+        destroy(): void;
+    };
     /**
      * Ajoute les écouteurs d'événements sur la carte (appelé par `setMap`).
      *
