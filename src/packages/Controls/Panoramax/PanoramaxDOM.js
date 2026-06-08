@@ -349,6 +349,43 @@ var PanoramaxDOM = {
         return div;
     },
 
+    _createButtonChoiceDisplayLayerElement : function (active, opts) {
+        var self = this;
+
+        var div = document.createElement("div");
+        div.id = this._addUID("GPpanoramaxToggleDisplay");
+        div.className = "pnx-toggle fr-toggle fr-m-2v";
+
+        var messages = document.createElement("div");
+        messages.id = this._addUID("GPpanoramaxToggleDisplayMessages");
+        messages.className = "fr-messages-group";
+        messages.setAttribute("aria-live", "polite");
+        
+        var input = document.createElement("input");
+        input.id = this._addUID("GPpanoramaxToggleDisplayInput");
+        input.className = "pnx-toggle__input fr-toggle__input";
+        input.type = "checkbox";
+        input.checked = active;
+        input.setAttribute("aria-describedby", messages.id);
+
+        input.addEventListener("click", function (e) {
+            self.onToggleChoiceDisplayLayerPanoramaxClick(e);
+        });
+
+        var label = document.createElement("label");
+        label.id = this._addUID("GPpanoramaxToggleDisplayLabel");
+        label.className = "pnx-toggle__label fr-toggle__label";
+        label.setAttribute("title", opts.description);
+        label.setAttribute("for", input.id);
+        label.innerText = opts.label;
+
+        div.appendChild(input);
+        div.appendChild(label);
+        div.appendChild(messages);
+
+        return div;
+    },
+
     // ################################################################### //
     // ####################### Methods for filters ####################### //
     // ################################################################### //
