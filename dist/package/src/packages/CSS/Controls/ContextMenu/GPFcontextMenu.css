@@ -43,7 +43,7 @@ button[id^="GPshowPointInfoPicto-"] {
     line-height: 2em !important;
 }
 .ol-ctx-menu-separator hr {
-    background-image: none !important;
+    display: none;
 }
 
 

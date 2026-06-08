@@ -101,9 +101,17 @@ declare class ContextMenu extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {Map} map - Map.
+     * @param {Map} map - Map
      */
-    setMap(map: Map): void;
+    setMap(map: Map<any, any>): void;
+    /**
+     * Mise à jour des items lors de l'exécution
+     * Les items sont ajoutés après les items détectés par défaut
+     * @param {Array<Object>} items - Tableau d'items ol
+     * @public
+     */
+    public updateContextMenuItems(items: Array<any>): void;
+    contextMenuItemsOptions: any;
     /**
      * Initialize ContextMenu control (called by ContextMenu constructor)
      *
@@ -147,11 +155,17 @@ declare class ContextMenu extends Control {
     /** @private */
     private controlList;
     /** @private */
+    private _listenersAdded;
+    /** @private */
+    private _onContextOpen;
+    /** @private */
+    private _onContextClose;
+    /** @private */
+    private _onDocumentClick;
+    /** @private */
     private itiPoints;
     /** @private */
     private _marker;
-    /** @private */
-    private contextMenuItemsOptions;
     /** @type {olContextMenu} */
     contextmenu: olContextMenu | undefined;
     /**
@@ -167,13 +181,13 @@ declare class ContextMenu extends Control {
     panelPointInfoHeaderContainer: any;
     buttonPointInfoClose: any;
     /**
-     * Add events listeners on map (called by setMap)
+     * Add events listeners on map
      *
      * @private
      */
     private addEventsListeners;
     /**
-     * Remove events listeners on map (called by setMap)
+     * Remove events listeners on map
      * @private
      */
     private removeEventsListeners;
@@ -191,9 +205,10 @@ declare class ContextMenu extends Control {
      * Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire
      * @param {*} evt event
+     * @private
      *
      */
-    defineStartPoint(evt: any): void;
+    private defineStartPoint;
     /**
      * ---- Ajouter un point sur la carte
      *
@@ -202,47 +217,54 @@ declare class ContextMenu extends Control {
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire
      *
      * @param {*} evt event
+     * @private
      */
-    defineEndPoint(evt: any): void;
+    private defineEndPoint;
     /**
      * Convertit les coordonnées en EPSG:4326
      *
      * @param { Array } coord Coordonnées en 3857
      * @returns { Array } tableau de coordonnées en 4326
+     * @private
      */
-    to4326(coord: any[]): any[];
+    private to4326;
     /**
      * Fonction qui lance le calcul d'isochrone
      * pour les coordonnées sous le clic
      *
      * @param {*} evt event
+     * @private
      */
-    computeIsochrone(evt: any): void;
+    private computeIsochrone;
     /**
      * Fonction qui lance le GFI
      * pour les coordonnées sous le clic
      *
      * @param {*} evt event
+     * @private
      */
-    getFeatureInfo(evt: any): void;
+    private getFeatureInfo;
     /**
      * Fonction qui ouvre le widget des légendes
      *
      * @param {*} evt event
+     * @private
      */
-    displayLegend(evt: any): void;
+    private displayLegend;
     /**
      * Fonction qui ouvre le widget Catalogue
      *
      * @param {*} evt event
+     * @private
      */
-    openCatalogue(evt: any): void;
+    private openCatalogue;
     /**
      * Fonction qui ouvre un panel qui affiche les coordonnées et l'adresse sous le clic
      *
      * @param {*} evt event
+     * @private
      */
-    displayAdressAndCoordinate(evt: any): void;
+    private displayAdressAndCoordinate;
     /**
      * ...
      * @param {Event} e - ...
@@ -269,6 +291,5 @@ declare class ContextMenu extends Control {
     private onOpenContextMenu;
 }
 import Control from "../Control";
-import Map from "ol/Map";
 import olContextMenu from "ol-contextmenu";
 //# sourceMappingURL=ContextMenu.d.ts.map
