@@ -958,14 +958,37 @@ class Panoramax extends Control {
 
     onPointerMoveDebounced (handler) {
         const debounce = (func, delay) => {
-            let timerId;
+            let timerId = null;
+            let isDestroyed = false;
     
-            return function (...args) {
+            const debounced = function (...args) {
+                if (isDestroyed) {
+                    return;
+                }
                 clearTimeout(timerId);
                 timerId = setTimeout(() => {
-                    func.apply(this, args);
+                    if (!isDestroyed) {
+                        func.apply(this, args);
+                        timerId = null;
+                    }
                 }, delay);
             };
+
+            // Permet d'annuler les timeouts en attente
+            debounced.cancel = () => {
+                if (timerId !== null) {
+                    clearTimeout(timerId);
+                    timerId = null;
+                }
+            };
+
+            // Marquer comme détruit pour éviter les appels après suppression
+            debounced.destroy = () => {
+                debounced.cancel();
+                isDestroyed = true;
+            };
+
+            return debounced;
         };
 
         return debounce(handler, 10);
@@ -1014,11 +1037,22 @@ class Panoramax extends Control {
                     // depending on the density of images in the sequence
                     if (self.options.interactions.sequences.active && 
                         self.options.interactions.sequences.actions.includes("zoom")) {
-                        e.map.getView().animate({
-                            center : feature.pointerCoordinate || feature.coordinates,
-                            zoom : 17,
-                            duration : 500
-                        });
+                        var zoom = e.map.getView().getZoom();
+                        var newZoom = 17; // FIXME zoom niveau fixe !?
+                        // si le zoom actuel est inférieur au zoom cible, on zoome,
+                        // sinon on recentre uniquement pour éviter les animations de zoom intempestives
+                        if (zoom < newZoom) {
+                            e.map.getView().animate({
+                                center : feature.pointerCoordinate || feature.coordinates,
+                                zoom : newZoom,
+                                duration : 500
+                            });
+                        } else {
+                            e.map.getView().animate({
+                                center : feature.pointerCoordinate || feature.coordinates,
+                                duration : 500
+                            });
+                        }
                     }
                 }
                 return;
@@ -1041,18 +1075,34 @@ class Panoramax extends Control {
             if (!self.eventActived || e.dragging) {
                 return;
             }
+
             var options = {
                 layerFilter : (l) => l === self.layerPanoramax,
                 hitTolerance : 0
             };
-            var feature = e.map.forEachFeatureAtPixel(e.pixel, (feature) => feature, options);
+
+            const features = [];
+            e.map.forEachFeatureAtPixel(e.pixel, (feature) => {
+                features.push(feature);
+            }, options);
+
             var mapTarget = e.map.getTargetElement();
             if (mapTarget) {
-                mapTarget.style.cursor = feature ? "pointer" : "";
+                mapTarget.style.cursor = features.length > 0 ? "pointer" : "";
             }
-            if (!feature) {
+            if (features.length === 0) {
                 self.resetPreview();
                 return;
+            }
+            // Selon le zoom defini (17 ou 18 pour un picture), 
+            // on recherche un feature de type picture pour l'affichage de l'aperçu, 
+            // sinon on prend le premier feature (ex. grid ou sequence)
+            let feature = features[0];
+            if (e.map.getView().getZoom() >= 17) {
+                const pictureFeature = features.find(f => (f.get("mvt:layer") || f.get("layer")) === "pictures");
+                if (pictureFeature) {
+                    feature = pictureFeature;
+                }
             }
             feature.pointerCoordinate = e.coordinate;
             self.displayPreview(feature);
@@ -1077,6 +1127,10 @@ class Panoramax extends Control {
             delete this.eventsListeners[this.CLICKED_DATA_PANORAMAX_CB];
         }
         if (this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]) {
+            // Annuler les timeouts en attente du debounce
+            if (this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB].destroy) {
+                this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB].destroy();
+            }
             map.un("pointermove", this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB]);
             delete this.eventsListeners[this.HOVERED_DATA_PANORAMAX_CB];
         }
@@ -2529,7 +2583,6 @@ class Panoramax extends Control {
         // stocke la feature survolée
         this.selectedFeature = feature;
         var pfeature = this._transformToPanoramaxFeature(feature);
-
         switch (type) {
             case "grid":
                 // preview des statistiques panoramax
