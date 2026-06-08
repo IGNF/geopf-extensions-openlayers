@@ -37,10 +37,13 @@
                     <button type="button" id="addMapsLayer">Ajouter une couche Map</button>
                     <button type="button" id="addOSMLayer">Ajouter une couche OSM</button>
                     <br>
+                    <button type="button" id="modifyTitleOSMLayer">Modifier le titre de la couche OSM</button>
                     <button type="button" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
                     <button type="button" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
                     <button type="button" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
                     <button type="button" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
+                    <button type="button" id="hiddenOSMLayer">Masquer la couche OSM</button>
+                    <button type="button" id="showOSMLayer">Afficher la couche OSM</button>
                 </div>
             </div>
 
@@ -187,12 +190,24 @@
                     var cidx = osm.getZIndex();
                     osm.setZIndex(++cidx);
                 };
+                hiddenOSMLayer = function () {
+                    osm.set("display", false);
+                };
+                showOSMLayer = function () {
+                    osm.set("display", true);
+                };
+                modifyTitleOSMLayer = function () {
+                    osm.set("title", "OpenStreetMap");
+                };
+                document.getElementById("modifyTitleOSMLayer").onclick = modifyTitleOSMLayer;
                 document.getElementById("addMapsLayer").onclick = addMapsLayer;
                 document.getElementById("addOSMLayer").onclick = addOSMLayer;
                 document.getElementById("modifyVisibilityOSMLayer").onclick = modifyVisibilityOSMLayer;
                 document.getElementById("modifyOpacityOSMLayer").onclick = modifyOpacityOSMLayer;
                 document.getElementById("modifyIndexOSMLayerMin").onclick = modifyIndexOSMLayerMin;
                 document.getElementById("modifyIndexOSMLayerMax").onclick = modifyIndexOSMLayerMax;
+                document.getElementById("hiddenOSMLayer").onclick = hiddenOSMLayer;
+                document.getElementById("showOSMLayer").onclick = showOSMLayer;
            </script>
 {{/content}}
 

@@ -16,11 +16,13 @@ __DATE__
 * ✨ [Added]
 
   - Panoramax : 🎉 nouveau widget !
+  - LayerSwitcher : Possibilité de rendre une couche affichable ou non dans le gestionnaire (#533)
 
 * 🔨 [Changed]
 
   - AdvancedSearch : conversion des coordonnées renseignés dans les inputs en changeant de système ou d'unité via les dropdowns (#518) 
   - LayerSwitcher : le tooltip au survol de l'entrée de la couche affiche son titre (#505)
+  - Panoramax : la couche Panoramax n'est pas affiché par défaut dans le gestionnaire de couches (#533)
 
 * 🔥 [Deprecated]
 
