@@ -100,7 +100,7 @@ var PanoramaxDOM = {
     },
     _createWidgetPanelButtonsIconElement : function () {
         var label = document.createElement("label");
-        label.className = "gpf-btn-header-panoramax gpf-icon-color"; // gpf-btn-icon-header-panoramax
+        label.className = "gpf-btn-header-panoramax gpf-icon-color";
         label.classList.add("fr-icon", "fr-icon-equalizer-line");
         label.title = `${title}`;
         label.setAttribute("aria-label", `Afficher ${title}`);
