@@ -37,7 +37,7 @@ __DATE__
   - LayerSwitcher : le label "éditer" s'affiche au lieu de "style" pour les couches non TMS (#516)
   - Catalog: correction du nom des icones (#519)
   - Panoramax : correction sur l'affichage de la previsualisation des images (#534)
-  - Panoramax : fixe l’icone en mode sombre (#527)
+  - Panoramax : fixe l’icone en mode sombre (#539)
   
 * 🔒 [Security]
 
