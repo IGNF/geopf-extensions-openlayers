@@ -191,6 +191,10 @@ class MiniMap extends LitElement {
         markerElement.className = "pnx-mini-map__center-marker";
         markerElement.setAttribute("aria-hidden", "true");
 
+        let markerDirection = document.createElement("div");
+        markerDirection.classList.add("pnx-mini-map__center-marker-direction");
+        markerElement.appendChild(markerDirection);
+
         // TODO heading par defaut
         this._centerMarkerOverlay = new Overlay({
             element : markerElement,
@@ -462,13 +466,19 @@ class MiniMap extends LitElement {
                     transition: opacity .15s .3s; /* à l'ouverture, attendre 0.3s et animer en 0.15s */
                 }
                 .pnx-mini-map__center-marker {
-                    width: 14px;
-                    height: 14px;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
                     background-color: var(--background-action-high-blue-france);
-                    clip-path: polygon(50% 0%, 5% 100%, 95% 100%);
-                    filter: drop-shadow(0 0 0 2px #fff) drop-shadow(0 0 1px rgba(0,0,0,0.2));
+                    box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0, 0, 0, 0.2);
                     pointer-events: none;
                     z-index: 2;
+                }
+                .pnx-mini-map__center-marker-direction {
+                    width: 20px;
+                    height: 20px;
+                    background-color: white;
+                    clip-path: polygon(50% 18%, 25% 75%, 50% 66%, 75% 75%);
                 }
                 .pnx-mini-map__container .ol-viewport canvas,
                 .pnx-mini-map__container .ol-overlaycontainer {
