@@ -707,15 +707,11 @@ declare class Panoramax extends Control {
             url: string;
             source: string;
             name: string;
-            minZoom: number;
-            maxZoom: number;
         };
         background: {
             active: boolean;
             url: string;
             name: string;
-            minZoom: number;
-            maxZoom: number;
         };
         buttonsWindow: {
             display: boolean;
