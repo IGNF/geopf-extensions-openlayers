@@ -39,6 +39,7 @@ __DATE__
   - Catalog: correction du nom des icones (#519)
   - Panoramax : correction sur l'affichage de la previsualisation des images (#534)
   - Panoramax : fixe l’icone en mode sombre (#539)
+  - Interactions : fixe sur le nettoyage des interactions utilisateurs (#537)
   
 * 🔒 [Security]
 
