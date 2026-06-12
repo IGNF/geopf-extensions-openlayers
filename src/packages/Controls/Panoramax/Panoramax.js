@@ -425,16 +425,12 @@ class Panoramax extends Control {
             layer : {
                 url : "https://api.panoramax.xyz/api/map/style.json",
                 source : "geovisio",
-                name : "Panoramax",
-                minZoom : 6,
-                maxZoom : 21
+                name : "Panoramax"
             },
             background : {
                 active : false,
                 url : "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json",
-                name : "Background",
-                minZoom : 6,
-                maxZoom : 21
+                name : "Background"
             },
             buttonsWindow : {
                 display : true,
@@ -1493,13 +1489,17 @@ class Panoramax extends Control {
         if (!map) {
             return;
         }
+        var minZoom = opts.minZoom || 9;
+        var maxZoom = opts.maxZoom || 21;
+
         var layer = new MapboxVectorLayer({ 
             styleUrl : opts.url,
             source : opts.source,
             declutter : true,
-            minZoom : opts.minZoom || 6,
-            maxZoom : opts.maxZoom || 21
+            minZoom : minZoom,
+            maxZoom : maxZoom
         });
+
         // hack pour le gestionnaire de couche
         layer.styleUrl = opts.url;
         layer.gpResultLayerId = "panoramax:layer";
@@ -1512,6 +1512,10 @@ class Panoramax extends Control {
             this.groupPanoramax.getLayers().push(layer);
         } else {
             map.addLayer(layer);
+        }
+        // zoomIn si en dehors de la plage de définition de la couche
+        if (map.getView().getZoom() < minZoom) {
+            map.getView().setZoom(minZoom + 0.5);
         }
 
         try {
@@ -1547,12 +1551,16 @@ class Panoramax extends Control {
             return;
         }
 
+        var minZoom = opts.minZoom || 9;
+        var maxZoom = opts.maxZoom || 21;
+
         var layer = new MapboxVectorLayer({ 
             styleUrl : opts.url,
             declutter : true,
-            minZoom : opts.minZoom || 6,
-            maxZoom : opts.maxZoom || 21
+            minZoom : minZoom,
+            maxZoom : maxZoom
         });
+        
         layer.styleUrl = opts.url;
         layer.gpResultLayerId = "panoramax:background";
 
