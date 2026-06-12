@@ -1616,7 +1616,7 @@ class Panoramax extends Control {
             // appliquer les filtres par défaut définis dans les options (ex. type d'image : 360)
             if (this.options.buttonsWindow && this.options.buttonsWindow.filters) {
                 var filters = this.options.buttonsWindow.filters.content || {};
-                if (typeof filters.types === "object") {
+                if (filters.types && typeof filters.types === "object") {
                     if (filters.types.value) {
                         // appliquer le filtre par défaut pour les types d'images
                         // ex. value = "360" pour n'afficher que les images à 360°
