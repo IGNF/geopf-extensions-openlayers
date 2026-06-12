@@ -29,6 +29,7 @@ __DATE__
   - ContextMenu : ajout d’une méthode publique pour mettre à jour/ajouter des entrées personnalisées (#517)
   - ControlList: Catalogue d'outils devient réorganisable + adaptation dsfr
   - Tooltip: ajoute un délai avant affichage
+  - Tooltip: affichage des tooltips en-dessous de l’élément survolé
 
 * 🔥 [Deprecated]
 
