@@ -37,7 +37,7 @@ var ToolTips = {
             }
             tooltip.innerHTML = content;
             const rect = element.getBoundingClientRect();
-            tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`;
+            tooltip.style.top = `${rect.bottom + 10}px`;
             tooltip.style.left = `${rect.left + rect.width / 2}px`;
             tooltip.style.transform = "translateX(-50%)";
             tooltip.style.transitionDelay = "500ms";
