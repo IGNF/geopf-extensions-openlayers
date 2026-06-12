@@ -9,5 +9,10 @@ declare namespace ControlListDOM {
     function _createControlListPanelContentElement(): HTMLElement;
     function _createControlListPanelFooterElement(controlCatalogelement: HTMLElement): HTMLElement;
     function _createControlListPanelControl(control: ol.Control): HTMLElement;
+    function _createAccessibleSortableElement(): HTMLDivElement;
+    function _onMoveElement(up: boolean, event: KeyboardEvent): void;
+    function _moveElement(element: HTMLElement, direction: up | down): boolean;
+    let _sortables: never[];
+    let _createSortableElement: (arg0: HTMLElement) => any;
 }
 //# sourceMappingURL=ControlListDOM.d.ts.map

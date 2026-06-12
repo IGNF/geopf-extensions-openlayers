@@ -9,6 +9,14 @@ export type ControlListOptions = {
      */
     draggable?: boolean | undefined;
     /**
+     * - Ajoute une interaction pour modifier l'ordre des contrôles
+     */
+    sortable?: boolean | undefined;
+    /**
+     * - Ajoute ou non un header (titre + bouton fermer)
+     */
+    header?: boolean | undefined;
+    /**
      * - Position CSS du widget sur la carte.
      */
     position?: string | undefined;
@@ -29,6 +37,8 @@ export type ControlListOptions = {
  * @typedef {Object} ControlListOptions
  * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
  * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {boolean} [sortable=false] - Ajoute une interaction pour modifier l'ordre des contrôles
+ * @property {boolean} [header=true] - Ajoute ou non un header (titre + bouton fermer)
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {string|number} [id] - Identifiant unique du widget.
  * @property {HTMLElement} [controlCatalogElement] - Élément DOM à afficher en pied de panneau (ex : bouton catalogue).
@@ -96,11 +106,20 @@ declare class ControlList extends Control {
     options: {
         collapsed: boolean;
         draggable: boolean;
+        sortable: boolean;
+        header: boolean;
     } | undefined;
     /**
      * @type {Boolean}
      * specify if control is draggable (true) or not (false) */
     draggable: boolean | undefined;
+    /**
+     * @type {Boolean}
+     * specify if list is sortable (true) or not (false) */
+    sortable: boolean | undefined;
+    _controlsListSorted: any[] | null | undefined;
+    _controlsListStateSync: globalThis.Map<any, any> | undefined;
+    _controlsListStateObserver: MutationObserver | null | undefined;
     /**
      * @private
      * identifiant du contrôle :
@@ -126,6 +145,10 @@ declare class ControlList extends Control {
      * @private
      */
     private onShowControlListPanelClick;
+    _registerControlListStateSync(button: any, listElement: any): void;
+    _startControlListStateObserver(): void;
+    _stopControlListStateObserver(): void;
+    _onSortedEnd(): void;
 }
 import Control from "../Control";
 import Map from "ol/Map";
