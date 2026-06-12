@@ -1515,7 +1515,7 @@ class Panoramax extends Control {
         }
         // zoomIn si en dehors de la plage de définition de la couche
         if (map.getView().getZoom() < minZoom) {
-            map.getView().setZoom(minZoom + 0.5);
+            map.getView().animate({ zoom : minZoom + 0.5 });
         }
 
         try {
