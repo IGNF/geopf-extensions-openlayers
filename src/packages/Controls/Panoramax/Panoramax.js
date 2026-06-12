@@ -541,7 +541,7 @@ class Panoramax extends Control {
             }
         });
 
-        console.warn(this.options);
+        logger.debug("options", this.options);
 
         /**
          * @type {Boolean}
