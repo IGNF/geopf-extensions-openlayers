@@ -60,8 +60,9 @@ var logger = Logger.getLogger("panoramax");
  * @property {Boolean} [buttonsWindow.filters.display] - Affiche ou masque les filtres.
  * @property {String} [buttonsWindow.filters.label] - Libellé du bouton de filtrage.
  * @property {Object} [buttonsWindow.filters.content] - Options de configuration du contenu des filtres.
- * @property {Array} [buttonsWindow.filters.content.types] - Types d'images à filtrer (Tout, classique, 360).
- * @property {Array} [buttonsWindow.filters.content.dates] - Plages de dates à filtrer.
+ * @property {Boolean|Object} [buttonsWindow.filters.content.types] - Affiche le filtre types d'images et selectionne le filtre actif par defaut (Tout, classique, 360).
+ * @property {Boolean} [buttonsWindow.filters.content.dates] - Affiche le filtre les plages de dates.
+ * @property {Boolean} [buttonsWindow.filters.content.periodes] - Affiche le filtre les periodes.
  * @property {Object} [buttonsWindow.hover] - Options de configuration du bouton de survol.
  * @property {Boolean} [buttonsWindow.hover.display] - Affiche ou masque le bouton de survol.
  * @property {String} [buttonsWindow.hover.label] - Libellé du bouton de survol.
@@ -521,10 +522,10 @@ class Panoramax extends Control {
         // merge with user options
         Utils.assign(this.options.layer, options.layer);
         Utils.assign(this.options.background, options.background);
-        Utils.assign(this.options.buttonsWindow, options.buttonsWindow);
         Utils.assign(this.options.visualizationWindow, options.visualizationWindow);
-        Utils.assign(this.options.viewer, options.viewer);
         Utils.assign(this.options.interactions, options.interactions);
+        Utils.assign(this.options.viewer, options.viewer);
+        Utils.assign(this.options.buttonsWindow, options.buttonsWindow);
         [
             "collapsed", 
             "draggable", 
@@ -532,12 +533,15 @@ class Panoramax extends Control {
             "auto", 
             "hover", 
             "gutter", 
-            "position"
+            "position",
+            "displayable"
         ].forEach((key) => {
             if (Object.prototype.hasOwnProperty.call(options, key)) {
                 this.options[key] = options[key];
             }
         });
+
+        console.warn(this.options);
 
         /**
          * @type {Boolean}
@@ -869,7 +873,10 @@ class Panoramax extends Control {
                 switch (buttonKey) {
                     case "filters":
                         if (this.options.buttonsWindow.filters.display) {
+                            // panneau des filtres avec les différents types de filtres (dates, types, periodes)
+                            // à activer selon les options fournies
                             this.panelPanoramaxFilters = this._createWidgetPanelFiltersElement(this.options.buttonsWindow.filters);
+                            // bouton de reset des filtres
                             this.btnPanoramaxResetFilters = this._createButtonResetFiltersElement(this.options.buttonsWindow.filters);
                             this.panelPanoramaxFilters.lastChild.appendChild(this.btnPanoramaxResetFilters);
                             // par defaut, on ajoute le bouton des contributions avec les filtres
@@ -1370,6 +1377,8 @@ class Panoramax extends Control {
             await this.setLayer(this.options.layer);
             // - charger les boutons
             await this.initButtons();
+            // - charger les filtres
+            await this.initFilters();
             // - charger la fenêtre de visualisation (?)
             await this.initVisualizationWindow();
             // - configurer le viewer de photos
@@ -1595,6 +1604,35 @@ class Panoramax extends Control {
         return new Promise((resolve, reject) => {
             logger.debug("initButtons");
             this.showButtonsPanel();
+            resolve();
+        });
+    }
+
+    /** @private */
+    async initFilters () {
+        // activer des filtres par defaut
+        return new Promise((resolve, reject) => {
+            logger.debug("initFilters");
+            // appliquer les filtres par défaut définis dans les options (ex. type d'image : 360)
+            if (this.options.buttonsWindow && this.options.buttonsWindow.filters) {
+                var filters = this.options.buttonsWindow.filters.content || {};
+                if (typeof filters.types === "object") {
+                    if (filters.types.value) {
+                        // appliquer le filtre par défaut pour les types d'images
+                        // ex. value = "360" pour n'afficher que les images à 360°
+                        this.applyGroupFilter("group-filter-types", { value : filters.types.value });
+                    }
+                }
+                if (typeof filters.periodes === "object") {
+                    // TODO appliquer le filtre par défaut pour les périodes
+                }
+                if (typeof filters.dates === "object") {
+                    // TODO appliquer le filtre par défaut pour les dates
+                }
+                if (typeof filters.renders === "object") {
+                    // TODO appliquer le filtre par défaut pour le rendu de la couche
+                }
+            }
             resolve();
         });
     }
@@ -3124,7 +3162,6 @@ class Panoramax extends Control {
     }
 
     resetAllGroupFilters (options = {}) {
-        var elements = this.panelPanoramaxOptions.elements;
         const groups = [
             "group-filter-dates",
             "group-filter-periodes",
@@ -3158,6 +3195,54 @@ class Panoramax extends Control {
                 el.value = "";
             }
         });
+
+        this.isResetEventPropagation = false;
+    }
+
+    applyGroupFilter (group, options = {}) {
+        var silent = options.silent === true;
+        var value = options.value;
+        var elements = this.panelPanoramaxOptions.elements;
+        var groupElements = elements[group];
+        if (!groupElements) {
+            return;
+        }
+
+        this.isResetEventPropagation = options.isReset === true;
+
+        switch (group) {
+            case "group-filter-types":
+                // Si value est fournie, chercher l'élément via le texte du label associé
+                // On compare les valeurs "Tout", "Classique" ou "360°"
+                if (value !== undefined) {
+                    Array.from(groupElements).forEach(el => {
+                        if (el.type === "input" || el.type === "radio") {
+                            var label = this.panelPanoramaxOptions.querySelector("label[for='" + el.id + "']");
+                            var labelValue = label.innerText;
+                            el.checked = (labelValue === value) || (String(el.value) === String(value));
+                        }
+                    });
+                }
+                // Dispatcher l'événement sur les éléments input/radio cochés
+                Array.from(groupElements).forEach(el => {
+                    if ((el.type === "input" || el.type === "radio") && el.checked && !silent) {
+                        el.dispatchEvent(new Event("change", { "bubbles" : true }));
+                    }
+                });
+                break;
+
+            case "group-filter-periodes":
+                // TODO
+                break;
+
+            case "group-filter-dates":
+                // TODO
+                break;
+
+            case "group-filter-renders":
+                // TODO
+                break;
+        }
 
         this.isResetEventPropagation = false;
     }
