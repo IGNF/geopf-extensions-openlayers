@@ -29,6 +29,7 @@ __DATE__
   - Panoramax : affichage de la couche Panoramax qu'à partir du niveau 9 par défaut (#543)
   - ContextMenu : ajout d’une méthode publique pour mettre à jour/ajouter des entrées personnalisées (#517)
   - ControlList: Catalogue d'outils devient réorganisable + adaptation dsfr
+  - Panoramax : filtre 360° activé pour le type d'image (#545)
   - Tooltip: ajoute un délai avant affichage (#546)
   - Tooltip: affichage des tooltips en-dessous de l’élément survolé (#546)
 
