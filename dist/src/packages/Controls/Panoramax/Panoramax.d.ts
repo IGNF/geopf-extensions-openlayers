@@ -111,13 +111,17 @@ export type PanoramaxOptions = {
              */
             content?: {
                 /**
-                 * - Types d'images à filtrer (Tout, classique, 360).
+                 * - Affiche le filtre des types d’images et sélectionne le filtre actif par défaut ("Tout", "Classique", "360°").
                  */
-                types?: any[] | undefined;
+                types?: boolean | any;
                 /**
-                 * - Plages de dates à filtrer.
+                 * - Affiche le filtre des plages de dates.
                  */
-                dates?: any[] | undefined;
+                dates?: boolean | undefined;
+                /**
+                 * - Affiche le filtre des périodes.
+                 */
+                periodes?: boolean | undefined;
             } | undefined;
         } | undefined;
         /**
@@ -447,8 +451,9 @@ export type PanoramaxPreviewPicturesLayer = {
  * @property {Boolean} [buttonsWindow.filters.display] - Affiche ou masque les filtres.
  * @property {String} [buttonsWindow.filters.label] - Libellé du bouton de filtrage.
  * @property {Object} [buttonsWindow.filters.content] - Options de configuration du contenu des filtres.
- * @property {Array} [buttonsWindow.filters.content.types] - Types d'images à filtrer (Tout, classique, 360).
- * @property {Array} [buttonsWindow.filters.content.dates] - Plages de dates à filtrer.
+ * @property {Boolean|Object} [buttonsWindow.filters.content.types] - Affiche le filtre des types d’images et sélectionne le filtre actif par défaut ("Tout", "Classique", "360°").
+ * @property {Boolean} [buttonsWindow.filters.content.dates] - Affiche le filtre des plages de dates.
+ * @property {Boolean} [buttonsWindow.filters.content.periodes] - Affiche le filtre des périodes.
  * @property {Object} [buttonsWindow.hover] - Options de configuration du bouton de survol.
  * @property {Boolean} [buttonsWindow.hover.display] - Affiche ou masque le bouton de survol.
  * @property {String} [buttonsWindow.hover.label] - Libellé du bouton de survol.
@@ -1097,6 +1102,8 @@ declare class Panoramax extends Control {
     /** @private */
     private initButtons;
     /** @private */
+    private initFilters;
+    /** @private */
     private initVisualizationWindow;
     /** @private */
     private initPhotoViewer;
@@ -1299,6 +1306,7 @@ declare class Panoramax extends Control {
     private filterRenderToMapboxLayer;
     resetAllGroupFilters(options?: {}): void;
     resetGroupFilter(group: any, options?: {}): void;
+    applyGroupFilter(group: any, options?: {}): void;
     /**
      * Applique les filtres sélectionnés à la couche Panoramax.
      *
