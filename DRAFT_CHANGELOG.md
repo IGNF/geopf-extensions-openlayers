@@ -27,6 +27,7 @@ __DATE__
   - Panoramax : modification de l'icone orientation dans la minimap (#538)
   - ContextMenu : ajout d’une méthode publique pour mettre à jour/ajouter des entrées personnalisées (#517)
   - ControlList: Catalogue d'outils devient réorganisable + adaptation dsfr
+  - Panoramax : filtre 360° activé pour le type d'image (#545)
 
 * 🔥 [Deprecated]
 
