@@ -59,6 +59,8 @@ var logger = Logger.getLogger("panoramax");
  * @property {Object} [buttonsWindow.filters] - Options de configuration des filtres.
  * @property {Boolean} [buttonsWindow.filters.display] - Affiche ou masque les filtres.
  * @property {String} [buttonsWindow.filters.label] - Libellé du bouton de filtrage.
+ * @property {String} [buttonsWindow.filters.description] - Description du bouton de filtrage.
+ * @property {Boolean} [buttonsWindow.filters.exclusive] - Indique si les filtres sont exclusifs (un seul actif à la fois) ou inclusifs (plusieurs actifs).
  * @property {Object} [buttonsWindow.filters.content] - Options de configuration du contenu des filtres.
  * @property {Boolean|Object} [buttonsWindow.filters.content.types] - Affiche le filtre des types d’images et sélectionne le filtre actif par défaut ("Tout", "Classique", "360°").
  * @property {Boolean} [buttonsWindow.filters.content.dates] - Affiche le filtre des plages de dates.
@@ -442,6 +444,10 @@ class Panoramax extends Control {
                     display : true,
                     label : "Effacer les filtres",
                     description : "Réinitialiser les filtres",
+                    // INFO
+                    // filtres exclusifs : si un est actif, les autres sont désactivés
+                    // filtres inclusifs : peuvent être cumulés
+                    exclusive : true,
                     content : {
                         dates : true,
                         types : true,
@@ -3003,7 +3009,7 @@ class Panoramax extends Control {
      * @returns {Object|null} Objet de style Mapbox de la couche de photos, ou `null` si non trouvé.
      * @private
      */
-    getMapboxLayerByType (type) {
+    _getMapboxLayerByType (type) {
         if (!type) {
             return null;
         }
@@ -3014,7 +3020,9 @@ class Panoramax extends Control {
             return null;
         }
 
-        var mapboxLayers = this.layerPanoramax.get("mapbox-layers");  
+        var mapboxLayers = this.layerPanoramax.get("mapbox-layers");
+        // INFO
+        // On part toujours du style enregistré de la couche Panoramax
         var mapboxStyle = this.layerPanoramax.get("mapbox-style");  
         if (!Array.isArray(mapboxLayers)) {  
             return null;  
@@ -3035,6 +3043,92 @@ class Panoramax extends Control {
     }
 
     /**
+     * Ajoute un filtre sur le type de photo à la couche Mapbox correspondante.
+     * Si le filtre est exclusif, il remplace le filtre existant.
+     * Sinon, il ajoute le filtre au tableau des filtres existants.
+     *
+     * @param {Array|undefined} filter - Filtre existant de la couche Mapbox.
+     * @param {String} value - Type de photo à filtrer : "flat" ou "equirectangular".
+     * @returns {Array} Nouveau tableau de filtres pour la couche Mapbox.
+     * @private
+     */
+    _addFilterTypeToMapboxLayer (filter, value) {
+        var exclusive = this.options.buttonsWindow.filters.exclusive;
+        if (exclusive || !filter) {
+            filter = ["all", ["==", ["get", "type"], value]];
+        } else {
+            if (filter && Array.isArray(filter)) {
+                // on recherche si il existe déjà un element 'field' dans la liste des filtres
+                // si oui, on le remplace
+                // si non, on l'ajoute
+                var typeFilterIndex = filter.findIndex(f => Array.isArray(f) && f[0] === "==" && f[1][1] === "type");
+                if (typeFilterIndex !== -1) {
+                    filter[typeFilterIndex] = ["==", ["get", "type"], value];
+                } else {
+                    filter.push(["==", ["get", "type"], value]);
+                }
+            } else {
+                filter = ["all", ["==", ["get", "type"], value]];
+            }
+        }
+        return filter;
+    }
+
+    /**
+     * Ajoute un filtre sur la plage de dates à la couche Mapbox correspondante.
+     * Si le filtre est exclusif, il remplace le filtre existant.
+     * Sinon, il ajoute le filtre au tableau des filtres existants.
+     *
+     * @param {Array|undefined} filters - Filtres existants de la couche Mapbox.
+     * @param {String} field - Nom du champ de date dans les propriétés de la feature.
+     * @param {Date|null} minDate - Date minimale à filtrer.
+     * @param {Date|null} maxDate - Date maximale à filtrer.
+     * @returns {Array|null} Nouveau tableau de filtres pour la couche Mapbox, ou `null` si aucun filtre n'est appliqué.
+     * @private
+     */
+    _addFilterDateToMapboxLayer (filters, field, minDate, maxDate) {
+        var exclusive = this.options.buttonsWindow.filters.exclusive;
+        var newFilters = [];
+        if (minDate && minDate instanceof Date) {
+            newFilters.push([">=", ["get", field], minDate.toISOString().split("T")[0]]);
+        }
+        if (maxDate && maxDate instanceof Date) {
+            newFilters.push(["<=", ["get", field], maxDate.toISOString().split("T")[0]]);
+        }
+        if (newFilters && newFilters.length > 0) {
+            if (exclusive || !filters) {
+                if (newFilters.length === 2) {
+                    newFilters.unshift("all");
+                }
+                filters = newFilters;
+            } else {
+                if (filters && Array.isArray(filters)) {
+                    var dateMinFilterIndex = filters.findIndex(f => Array.isArray(f) && f[0] === ">=" && f[1][1] === field);
+                    var dateMaxFilterIndex = filters.findIndex(f => Array.isArray(f) && f[0] === "<=" && f[1][1] === field);
+                    if (dateMinFilterIndex !== -1) {
+                        filters[dateMinFilterIndex] = newFilters[0];
+                    } else {
+                        filters.push(newFilters[0]);
+                    }
+                    if (dateMaxFilterIndex !== -1) {
+                        filters[dateMaxFilterIndex] = newFilters[1];
+                    } else {
+                        filters.push(newFilters[1]);
+                    }
+                }
+            }
+            // EVOLUTION :
+            // colorer les séquences contenant des photos prises 
+            // dans la plage de dates sélectionnée (ex. en bleu)
+            // filters.paint["circle-color"] = "#0000FF"; 
+        } else {
+            // si pas de filtre, on supprime les filtres existants
+            return null;
+        }
+        return filters;
+    }
+
+    /**
      * Filtre des couches mapbox selon le type de photo sélectionné.
      * 
      * @param {String|null} value - Type de photo à filtrer : 
@@ -3046,21 +3140,34 @@ class Panoramax extends Control {
         var mapboxLayers = [];
         for (let index = 0; index < this.PANORAMAX_LAYERS_TYPES.length; index++) {
             const type = this.PANORAMAX_LAYERS_TYPES[index];
-            var mapboxLayer = this.getMapboxLayerByType(type);
+            var mapboxLayer = this._getMapboxLayerByType(type);
             if (!mapboxLayer) {
                 continue;
             }
             if (type === "pictures") {
                 if (value === "flat" || value === "equirectangular") {
-                    mapboxLayer.filter = ["all", ["==", ["get", "type"], value]];
+                    mapboxLayer.filter = this._addFilterTypeToMapboxLayer(mapboxLayer.filter, value);
                 } else {
-                    delete mapboxLayer.filter;
+                    // supprimer uniquement le filtre sur le type de photo, 
+                    // et pas tous les filtres existants !
+                    if (mapboxLayer.filter && Array.isArray(mapboxLayer.filter)) {
+                        mapboxLayer.filter = mapboxLayer.filter.filter(f => !(Array.isArray(f) && f[0] === "==" && f[1][1] === "type"));
+                        // si il reste que le filtre ["all"], on supprime tout le filtre
+                        if (Array.isArray(mapboxLayer.filter) && mapboxLayer.filter.length === 1 && mapboxLayer.filter[0] === "all") {
+                            delete mapboxLayer.filter;
+                        }
+                    }
                 }
             } else if (type === "sequences") {
                 if (value === "flat" || value === "equirectangular") {
-                    mapboxLayer.filter = ["all", ["==", ["get", "type"], value]];
+                    mapboxLayer.filter = this._addFilterTypeToMapboxLayer(mapboxLayer.filter, value);
                 } else {
-                    delete mapboxLayer.filter;
+                    if (mapboxLayer.filter && Array.isArray(mapboxLayer.filter)) {
+                        mapboxLayer.filter = mapboxLayer.filter.filter(f => !(Array.isArray(f) && f[0] === "==" && f[1][1] === "type"));
+                        if (Array.isArray(mapboxLayer.filter) && mapboxLayer.filter.length === 1 && mapboxLayer.filter[0] === "all") {
+                            delete mapboxLayer.filter;
+                        }
+                    }
                 }
             } else if (type === "grid") {
                 // TODO filtrer la couche de grille
@@ -3084,47 +3191,36 @@ class Panoramax extends Control {
         var mapboxLayers = [];
         for (let index = 0; index < this.PANORAMAX_LAYERS_TYPES.length; index++) {
             const type = this.PANORAMAX_LAYERS_TYPES[index];
-            var mapboxLayer = this.getMapboxLayerByType(type);
+            var mapboxLayer = this._getMapboxLayerByType(type);
             if (!mapboxLayer) {
                 continue;
             }
             if (type === "pictures") {
-                var picturesFilter = [];
-                if (minDate && minDate instanceof Date) {
-                    picturesFilter.push([">=", ["get", "ts"], minDate.toISOString().split("T")[0]]);
-                }
-                if (maxDate && maxDate instanceof Date) {
-                    picturesFilter.push(["<=", ["get", "ts"], maxDate.toISOString().split("T")[0]]);
-                }
-                if (picturesFilter && picturesFilter.length > 0) {
-                    if (picturesFilter.length === 2) {
-                        picturesFilter.unshift("all");
-                    }
-                    mapboxLayer.filter = picturesFilter;
-                    // colorer les séquences contenant des photos prises 
-                    // dans la plage de dates sélectionnée (ex. en bleu)
-                    // mapboxLayer.paint["circle-color"] = "#0000FF"; 
+                var pictureFilters = this._addFilterDateToMapboxLayer(mapboxLayer.filter, "ts", minDate, maxDate);
+                if (pictureFilters) {
+                    mapboxLayer.filter = pictureFilters;
                 } else {
-                    delete mapboxLayer.filter;
+                    // supprimer uniquement le filtre sur le type de date, 
+                    // et pas tous les filtres existants !
+                    if (mapboxLayer.filter && Array.isArray(mapboxLayer.filter)) {
+                        mapboxLayer.filter = mapboxLayer.filter.filter(f => !(Array.isArray(f) && (f[0] === ">=" || f[0] === "<=") && f[1][1] === "ts"));
+                        // si il reste que le filtre ["all"], on supprime tout le filtre
+                        if (Array.isArray(mapboxLayer.filter) && mapboxLayer.filter.length === 1 && mapboxLayer.filter[0] === "all") {
+                            delete mapboxLayer.filter;
+                        }
+                    }
                 }
             } else if (type === "sequences") {
-                var sequencesFilter = [];
-                if (minDate && minDate instanceof Date) {
-                    sequencesFilter.push([">=", ["get", "date"], minDate.toISOString().split("T")[0]]);
-                }
-                if (maxDate && maxDate instanceof Date) {
-                    sequencesFilter.push(["<=", ["get", "date"], maxDate.toISOString().split("T")[0]]);
-                }
-                if (sequencesFilter && sequencesFilter.length > 0) {
-                    if (sequencesFilter.length === 2) {
-                        sequencesFilter.unshift("all");
-                    }
-                    mapboxLayer.filter = sequencesFilter;
-                    // colorer les séquences contenant des photos prises 
-                    // dans la plage de dates sélectionnée (ex. en bleu)
-                    // mapboxLayer.paint["line-color"] = "#0000FF"; 
+                var sequenceFilters = this._addFilterDateToMapboxLayer(mapboxLayer.filter, "date", minDate, maxDate);
+                if (sequenceFilters) {
+                    mapboxLayer.filter = sequenceFilters;
                 } else {
-                    delete mapboxLayer.filter;
+                    if (mapboxLayer.filter && Array.isArray(mapboxLayer.filter)) {
+                        mapboxLayer.filter = mapboxLayer.filter.filter(f => !(Array.isArray(f) && (f[0] === ">=" || f[0] === "<=") && f[1][1] === "date"));
+                        if (Array.isArray(mapboxLayer.filter) && mapboxLayer.filter.length === 1 && mapboxLayer.filter[0] === "all") {
+                            delete mapboxLayer.filter;
+                        }
+                    }
                 }
             } else if (type === "grid") {
                 // TODO filtrer la couche de grille
@@ -3262,10 +3358,12 @@ class Panoramax extends Control {
      * @returns {Promise} Promise résolue lorsque les filtres sont appliqués.
      */
     async applyFilters (mapboxLayers) {
-        // FIXME les filtres ne sont pas cumulatifs : 
+        // INFO 
+        // par defaut, les filtres ne sont pas cumulatifs : 
         // ex. si on applique un filtre de type de photo, 
         // puis un filtre de date, le second filtre écrase le premier, 
         // au lieu de les cumuler (ex. filtrer par type de photo ET par date)
+        
         logger.debug("applyFilters", mapboxLayers);
 
         if (!this.layerPanoramax) {
@@ -3519,10 +3617,19 @@ class Panoramax extends Control {
 
         var mapboxLayers = this.filterCameraToMapboxLayer(cameraType);
 
+        var self = this;
         this.applyFilters(mapboxLayers)
             .then((mapboxLayers) => {
-                this.dispatchEvent({
-                    type : this.FILTER_TYPE_PANORAMAX_EVENT,
+                if (!self.options.buttonsWindow.filters.exclusive) {
+                    // dans le cas où les filtres ne sont pas exclusifs, 
+                    // on garde les autres filtres appliqués (ex. période, dates, rendu)
+                    var style = self.layerPanoramax.get("mapbox-style");
+                    style.layers = mapboxLayers;
+                    self.layerPanoramax.set("mapbox-style", style);
+                    console.warn(style);
+                }
+                self.dispatchEvent({
+                    type : self.FILTER_TYPE_PANORAMAX_EVENT,
                     data : {
                         value : selectedType,
                         mapboxLayers : mapboxLayers
@@ -3530,11 +3637,12 @@ class Panoramax extends Control {
                 });
             })
             .then(() => {
-                // reset des autres filtres (ex. période, dates, rendu) qui ne sont pas compatibles avec le filtre de type de photo sélectionné
-                // ex. si on sélectionne le type "classique", on réinitialise les autres filtres qui ne sont pas compatibles avec ce type (ex. période "dernier mois", rendu "heatmap", etc.)
-                this.resetGroupFilter("group-filter-periodes", { silent : true });
-                this.resetGroupFilter("group-filter-dates", { silent : true });
-                this.resetGroupFilter("group-filter-render", { silent : true });
+                // reset des autres filtres (ex. période, dates, rendu)
+                if (self.options.buttonsWindow.filters.exclusive) {
+                    self.resetGroupFilter("group-filter-periodes", { silent : true });
+                    self.resetGroupFilter("group-filter-dates", { silent : true });
+                    self.resetGroupFilter("group-filter-render", { silent : true });
+                }
             })
             .catch((err) => {
                 logger.error("Error applying Panoramax type filter", err);
@@ -3563,10 +3671,19 @@ class Panoramax extends Control {
         }
         var mapboxLayers = this.filterPeriodeToMapboxLayer(selectedValue);
 
+        var self = this;
         this.applyFilters(mapboxLayers)
             .then((mapboxLayers) => {
-                this.dispatchEvent({
-                    type : this.FILTER_PERIODE_PANORAMAX_EVENT,
+                if (!self.options.buttonsWindow.filters.exclusive) {
+                    // dans le cas où les filtres ne sont pas exclusifs, 
+                    // on garde les autres filtres appliqués (ex. période, dates, rendu)
+                    var style = self.layerPanoramax.get("mapbox-style");
+                    style.layers = mapboxLayers;
+                    self.layerPanoramax.set("mapbox-style", style);
+                    console.warn(style);
+                }
+                self.dispatchEvent({
+                    type : self.FILTER_PERIODE_PANORAMAX_EVENT,
                     data : {
                         value : selectedValue,
                         mapboxLayers : mapboxLayers
@@ -3574,9 +3691,11 @@ class Panoramax extends Control {
                 });
             })
             .then(() => {
-                // TODO reset des autres filtres 
-                this.resetGroupFilter("group-filter-types", { silent : true });
-                this.resetGroupFilter("group-filter-dates", { silent : true });
+                // reset des autres filtres
+                if (self.options.buttonsWindow.filters.exclusive) {
+                    self.resetGroupFilter("group-filter-types", { silent : true });
+                    self.resetGroupFilter("group-filter-dates", { silent : true });
+                }
             })
             .catch((err) => {
                 logger.error("Error applying Panoramax predefined date filter", err);
@@ -3621,6 +3740,13 @@ class Panoramax extends Control {
 
         this.applyFilters(mapboxLayers)
             .then((mapboxLayers) => {
+                if (!this.options.buttonsWindow.filters.exclusive) {
+                    // dans le cas où les filtres ne sont pas exclusifs, 
+                    // on garde les autres filtres appliqués (ex. période, dates, rendu)
+                    var style = this.layerPanoramax.get("mapbox-style");
+                    style.layers = mapboxLayers;
+                    this.layerPanoramax.set("mapbox-style", style);
+                }
                 this.dispatchEvent({
                     type : this.FILTER_DATES_PANORAMAX_EVENT,
                     data : {
@@ -3631,9 +3757,11 @@ class Panoramax extends Control {
                 });
             })
             .then(() => {
-                // TODO reset des autres filtres
-                this.resetGroupFilter("group-filter-types", { silent : true });
-                this.resetGroupFilter("group-filter-periodes", { silent : true });
+                // reset des autres filtres
+                if (this.options.buttonsWindow.filters.exclusive) {
+                    this.resetGroupFilter("group-filter-types", { silent : true });
+                    this.resetGroupFilter("group-filter-periodes", { silent : true });
+                }
             })
             .catch((err) => {
                 logger.error("Error applying Panoramax start/end date filter", err);
