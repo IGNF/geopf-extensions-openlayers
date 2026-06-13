@@ -3043,6 +3043,16 @@ class Panoramax extends Control {
         return originalMapboxLayer;
     }
 
+    /**
+     * Ajoute un filtre sur le type de photo à la couche Mapbox correspondante.
+     * Si le filtre est exclusif, il remplace le filtre existant.
+     * Sinon, il ajoute le filtre au tableau des filtres existants.
+     *
+     * @param {Array|undefined} filter - Filtre existant de la couche Mapbox.
+     * @param {String} value - Type de photo à filtrer : "flat" ou "equirectangular".
+     * @returns {Array} Nouveau tableau de filtres pour la couche Mapbox.
+     * @private
+     */
     _addFilterTypeToMapboxLayer (filter, value) {
         var exclusive = this.options.buttonsWindow.filters.exclusive;
         if (exclusive || !filter) {
@@ -3065,6 +3075,18 @@ class Panoramax extends Control {
         return filter;
     }
 
+    /**
+     * Ajoute un filtre sur la plage de dates à la couche Mapbox correspondante.
+     * Si le filtre est exclusif, il remplace le filtre existant.
+     * Sinon, il ajoute le filtre au tableau des filtres existants.
+     *
+     * @param {Array|undefined} filters - Filtres existants de la couche Mapbox.
+     * @param {String} field - Nom du champ de date dans les propriétés de la feature.
+     * @param {Date|null} minDate - Date minimale à filtrer.
+     * @param {Date|null} maxDate - Date maximale à filtrer.
+     * @returns {Array|null} Nouveau tableau de filtres pour la couche Mapbox, ou `null` si aucun filtre n'est appliqué.
+     * @private
+     */
     _addFilterDateToMapboxLayer (filters, field, minDate, maxDate) {
         var exclusive = this.options.buttonsWindow.filters.exclusive;
         var newFilters = [];
