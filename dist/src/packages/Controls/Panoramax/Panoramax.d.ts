@@ -107,14 +107,6 @@ export type PanoramaxOptions = {
              */
             label?: string | undefined;
             /**
-             * - Description du bouton de filtrage.
-             */
-            description?: string | undefined;
-            /**
-             * - Indique si les filtres sont exclusifs (un seul actif à la fois) ou inclusifs (plusieurs actifs).
-             */
-            exclusive?: boolean | undefined;
-            /**
              * - Options de configuration du contenu des filtres.
              */
             content?: {
@@ -458,8 +450,6 @@ export type PanoramaxPreviewPicturesLayer = {
  * @property {Object} [buttonsWindow.filters] - Options de configuration des filtres.
  * @property {Boolean} [buttonsWindow.filters.display] - Affiche ou masque les filtres.
  * @property {String} [buttonsWindow.filters.label] - Libellé du bouton de filtrage.
- * @property {String} [buttonsWindow.filters.description] - Description du bouton de filtrage.
- * @property {Boolean} [buttonsWindow.filters.exclusive] - Indique si les filtres sont exclusifs (un seul actif à la fois) ou inclusifs (plusieurs actifs).
  * @property {Object} [buttonsWindow.filters.content] - Options de configuration du contenu des filtres.
  * @property {Boolean|Object} [buttonsWindow.filters.content.types] - Affiche le filtre des types d’images et sélectionne le filtre actif par défaut ("Tout", "Classique", "360°").
  * @property {Boolean} [buttonsWindow.filters.content.dates] - Affiche le filtre des plages de dates.
@@ -737,7 +727,6 @@ declare class Panoramax extends Control {
                 display: boolean;
                 label: string;
                 description: string;
-                exclusive: boolean;
                 content: {
                     dates: boolean;
                     types: boolean;
@@ -1278,9 +1267,7 @@ declare class Panoramax extends Control {
      * @returns {Object|null} Objet de style Mapbox de la couche de photos, ou `null` si non trouvé.
      * @private
      */
-    private _getMapboxLayerByType;
-    _addFilterTypeToMapboxLayer(filter: any, value: any): any;
-    _addFilterDateToMapboxLayer(filters: any, field: any, minDate: any, maxDate: any): any;
+    private getMapboxLayerByType;
     /**
      * Filtre des couches mapbox selon le type de photo sélectionné.
      *
