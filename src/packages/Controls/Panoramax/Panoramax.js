@@ -3095,7 +3095,7 @@ class Panoramax extends Control {
         if (maxDate && maxDate instanceof Date) {
             newFilters.push(["<=", ["get", field], maxDate.toISOString().split("T")[0]]);
         }
-        if (newFilters && newFilters.length > 0) {
+        if (newFilters.length > 0) {
             if (exclusive || !filters) {
                 if (newFilters.length === 2) {
                     newFilters.unshift("all");
