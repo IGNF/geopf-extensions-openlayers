@@ -3505,6 +3505,12 @@ class Panoramax extends Control {
         this.dispatchEvent({
             type : this.CLOSED_PANORAMAX_EVENT
         });
+        this.dispatchEvent({
+            type : this.FULLSCREEN_PANORAMAX_EVENT,
+            data : {
+                fullscreen : false
+            },
+        });
         // Bloque l'envoi/rechargement de la page
         e.preventDefault();
     }
@@ -3527,6 +3533,12 @@ class Panoramax extends Control {
         this.setSizeWindow(this.options.visualizationWindow.size || "medium");
         this.dispatchEvent({
             type : this.CLOSED_PANORAMAX_EVENT
+        });
+        this.dispatchEvent({
+            type : this.FULLSCREEN_PANORAMAX_EVENT,
+            data : {
+                fullscreen : false
+            },
         });
     }
 
