@@ -296,6 +296,7 @@
     font-size: 0.875rem;
     line-height: 1.25rem;
 }
+/* popup preview: mode DEBUG ! */
 .pnx-preview-sequence-popup > samp,
 .pnx-preview-picture-popup > samp {
     display: none;
@@ -354,3 +355,4 @@
         translate: -80px -150px;
     }
 }
+
