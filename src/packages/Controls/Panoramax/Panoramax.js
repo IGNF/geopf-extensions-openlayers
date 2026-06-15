@@ -3057,7 +3057,7 @@ class Panoramax extends Control {
         if (exclusive || !filter) {
             filter = ["all", ["==", ["get", "type"], value]];
         } else {
-            if (filter && Array.isArray(filter)) {
+            if (Array.isArray(filter)) {
                 // on recherche si il existe déjà un element 'field' dans la liste des filtres
                 // si oui, on le remplace
                 // si non, on l'ajoute
