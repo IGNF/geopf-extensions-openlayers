@@ -85,6 +85,19 @@
 
 					// Appel du LayerSwitcher
                     layerSwitcher = new ol.control.LayerSwitcher({
+                        layers : [
+                            {
+                                layer : osm
+                            },
+                            {
+                                layer : ortho,
+                                config : {
+                                    title : "Ortho",
+                                    description : "Ortho",
+                                    thumbnail : "https://www.geoportail.gouv.fr/depot/layers/ORTHOIMAGERY.ORTHOPHOTOS/vignettes/ORTHOIMAGERY.ORTHOPHOTOS-quickViewSMLL.jpg"
+                                }
+                            }
+                        ],
                         options : {
                             position : "bottom-right",
                             collapsed : false,
@@ -161,6 +174,7 @@
                             layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
                         }) // , zIndex : 0
                     });
+                    maps.set("thumbnail", "https://www.geoportail.gouv.fr/depot/layers/GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2/vignettes/GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2-quickViewSMLL.jpg");
                     map.addLayer(maps);
                 };
                 addOSMLayer = function() {
@@ -169,6 +183,8 @@
                         // zIndex : 4,
                         opacity: 0.5
                     });
+                    osm.set("title", "OpenStreetMap");
+                    osm.set("thumbnail", "https://www.openstreetmap.fr/wp-content/uploads/2024/07/cropped-cropped-cropped-Logo-OSM-2024-e1720618276656.png");
                     map.addLayer(osm); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
                 };
                 modifyVisibilityOSMLayer = function () {
