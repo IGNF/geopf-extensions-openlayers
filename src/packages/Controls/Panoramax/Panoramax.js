@@ -3694,8 +3694,9 @@ class Panoramax extends Control {
                 // reset des autres filtres
                 if (self.options.buttonsWindow.filters.exclusive) {
                     self.resetGroupFilter("group-filter-types", { silent : true });
-                    self.resetGroupFilter("group-filter-dates", { silent : true });
+                    self.resetGroupFilter("group-filter-render", { silent : true });
                 }
+                self.resetGroupFilter("group-filter-dates", { silent : true });
             })
             .catch((err) => {
                 logger.error("Error applying Panoramax predefined date filter", err);
@@ -3738,17 +3739,18 @@ class Panoramax extends Control {
             mapboxLayers = this.filterDateToMapboxLayer(startDate, endDate);
         }
 
+        var self = this;
         this.applyFilters(mapboxLayers)
             .then((mapboxLayers) => {
-                if (!this.options.buttonsWindow.filters.exclusive) {
+                if (!self.options.buttonsWindow.filters.exclusive) {
                     // dans le cas où les filtres ne sont pas exclusifs, 
                     // on garde les autres filtres appliqués (ex. période, dates, rendu)
-                    var style = this.layerPanoramax.get("mapbox-style");
+                    var style = self.layerPanoramax.get("mapbox-style");
                     style.layers = mapboxLayers;
-                    this.layerPanoramax.set("mapbox-style", style);
+                    self.layerPanoramax.set("mapbox-style", style);
                 }
-                this.dispatchEvent({
-                    type : this.FILTER_DATES_PANORAMAX_EVENT,
+                self.dispatchEvent({
+                    type : self.FILTER_DATES_PANORAMAX_EVENT,
                     data : {
                         startDate : startValue,
                         endDate : endValue,
@@ -3758,10 +3760,11 @@ class Panoramax extends Control {
             })
             .then(() => {
                 // reset des autres filtres
-                if (this.options.buttonsWindow.filters.exclusive) {
-                    this.resetGroupFilter("group-filter-types", { silent : true });
-                    this.resetGroupFilter("group-filter-periodes", { silent : true });
+                if (self.options.buttonsWindow.filters.exclusive) {
+                    self.resetGroupFilter("group-filter-types", { silent : true });
+                    self.resetGroupFilter("group-filter-render", { silent : true });
                 }
+                self.resetGroupFilter("group-filter-periodes", { silent : true });
             })
             .catch((err) => {
                 logger.error("Error applying Panoramax start/end date filter", err);
