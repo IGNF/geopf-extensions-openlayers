@@ -3102,7 +3102,7 @@ class Panoramax extends Control {
                 }
                 filters = newFilters;
             } else {
-                if (filters && Array.isArray(filters)) {
+                if (Array.isArray(filters)) {
                     var dateMinFilterIndex = filters.findIndex(f => Array.isArray(f) && f[0] === ">=" && f[1][1] === field);
                     var dateMaxFilterIndex = filters.findIndex(f => Array.isArray(f) && f[0] === "<=" && f[1][1] === field);
                     if (dateMinFilterIndex !== -1) {
