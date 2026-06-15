@@ -3680,7 +3680,7 @@ class Panoramax extends Control {
                     var style = self.layerPanoramax.get("mapbox-style");
                     style.layers = mapboxLayers;
                     self.layerPanoramax.set("mapbox-style", style);
-                    console.warn(style);
+                    logger.debug("Panoramax mapbox-style updated");
                 }
                 self.dispatchEvent({
                     type : self.FILTER_PERIODE_PANORAMAX_EVENT,
