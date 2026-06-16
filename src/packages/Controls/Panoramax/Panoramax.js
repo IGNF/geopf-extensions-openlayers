@@ -635,8 +635,8 @@ class Panoramax extends Control {
          * @defaultValue "pnx:ready"
          * @group Events
          * @description
-         * Cet événement est émis quand le panneau Panoramax est initialisé.
-         * Il indique que le processus Panoramax est prêt à être utilisé.
+         * Cet événement est émis quand le PhotoViewer Panoramax est prêt.
+         * Il indique que le viewer de photos est initialisé et peut être utilisé.
          * Il peut être utilisé pour déclencher des actions complémentaires.
          */
         this.READY_PANORAMAX_EVENT = "pnx:ready";
