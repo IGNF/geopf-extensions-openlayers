@@ -1801,7 +1801,7 @@ class Panoramax extends Control {
                     // Suppression "Picture legend Drawer"
                     // INFO on supprime l'original de Panoramax pour le remplacer par notre propre widget
                     self.removeWidgetPictureLegendDrawer();
-                    // Declenchement d'un événement interne pour signaler que le viewer est prêt
+                    // Déclenchement d'un événement interne pour signaler que le viewer est prêt
                     self.dispatchEvent(self.READY_PANORAMAX_EVENT);
                 });
                 self.photoViewerPanoramax.addEventListener("broken", () => {
