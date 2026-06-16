@@ -591,12 +591,17 @@ declare class Panoramax extends Control {
      * @constructor
      * @param {PanoramaxOptions} [options={}] - Options de configuration du contrôle.
      *
+     * @fires pnx:ready
+     * @fires pnx:fullscreen
      * @fires pnx:opened
      * @fires pnx:data:clicked
      * @fires pnx:data:hovered
      * @fires pnx:filter:dates
      * @fires pnx:filter:periode
      * @fires pnx:filter:type
+     * @fires change:picture
+     * @fires change:sequence
+     * @fires change:display
      *
      * @example
      * var panoramax = new ol.control.Panoramax({
@@ -865,6 +870,17 @@ declare class Panoramax extends Control {
      */
     PANORAMAX_LAYERS_TYPES: string[] | undefined;
     /**
+     * Événement déclenché à l'initialisation de Panoramax.
+     * @event pnx:ready
+     * @defaultValue "pnx:ready"
+     * @group Events
+     * @description
+     * Cet événement est émis quand le PhotoViewer Panoramax est prêt.
+     * Il indique que le viewer de photos est initialisé et peut être utilisé.
+     * Il peut être utilisé pour déclencher des actions complémentaires.
+     */
+    READY_PANORAMAX_EVENT: string | undefined;
+    /**
      * Événement déclenché à l'ouverture du panneau Panoramax.
      * @event pnx:opened
      * @defaultValue "pnx:opened"
@@ -886,13 +902,6 @@ declare class Panoramax extends Control {
      * Il peut être utilisé pour déclencher des actions complémentaires.
      */
     CLOSED_PANORAMAX_EVENT: string | undefined;
-    /**
-     * Événement déclenché à l'initialisation du panneau des filtres.
-     * @event pnx:filter:init
-     * @defaultValue "pnx:filter:init"
-     * @group Events
-     */
-    FILTER_INIT_PANORAMAX_EVENT: string | undefined;
     /**
      * Nom du callback déclenché lors d'un clic sur la couche Panoramax active.
      * @event pnx:data:clicked
@@ -923,6 +932,13 @@ declare class Panoramax extends Control {
      * Il peut être utilisé pour déclencher des actions complémentaires de nettoyage.
      */
     LAYER_PANORAMAX_REMOVE_CB: string | undefined;
+    /**
+     * Événement déclenché à l'initialisation du panneau des filtres.
+     * @event pnx:filter:init
+     * @defaultValue "pnx:filter:init"
+     * @group Events
+     */
+    FILTER_INIT_PANORAMAX_EVENT: string | undefined;
     /**
      * Nom de l'événement déclenché quand une plage de dates est saisie.
      * @event pnx:filter:dates
@@ -958,6 +974,42 @@ declare class Panoramax extends Control {
      * @group Events
      */
     FULLSCREEN_PANORAMAX_EVENT: string | undefined;
+    /**
+     * Nom de l'événement déclenché quand on change la property 'picture'.
+     * @event change:picture
+     * @defaultValue "change:picture"
+     * @group Events
+     * @description
+     * Cet événement est émis quand la propriété 'picture' change.
+     * Il peut être utilisé pour déclencher des actions complémentaires.
+     * @example
+     * panoramax.set("picture", "1234567890");
+     */
+    CHANGE_PICTURE_PANORAMAX_EVENT: string | undefined;
+    /**
+     * Nom de l'événement déclenché quand on change de séquence dans le viewer.
+     * @event change:sequence
+     * @defaultValue "change:sequence"
+     * @group Events
+     * @description
+     * Cet événement est émis quand la propriété 'sequence' change.
+     * Il peut être utilisé pour déclencher des actions complémentaires.
+     * @example
+     * panoramax.set("sequence", "1234567890");
+     */
+    CHANGE_SEQUENCE_PANORAMAX_EVENT: string | undefined;
+    /**
+     * Nom de l'événement déclenché quand on change la propriété 'display'.
+     * @event change:display
+     * @defaultValue "change:display"
+     * @group Events
+     * @description
+     * Cet événement est émis quand la propriété 'display' change.
+     * Il peut être utilisé pour déclencher des actions complémentaires.
+     * @example
+     * panoramax.set("display", true);
+     */
+    DISPLAY_PHOTO_PANORAMAX_EVENT: string | undefined;
     /**
      * photo viewer
      * @private
