@@ -196,12 +196,17 @@ class Panoramax extends Control {
      * @constructor
      * @param {PanoramaxOptions} [options={}] - Options de configuration du contrôle.
      * 
+     * @fires pnx:ready
+     * @fires pnx:fullscreen
      * @fires pnx:opened
      * @fires pnx:data:clicked
      * @fires pnx:data:hovered
      * @fires pnx:filter:dates
      * @fires pnx:filter:periode
      * @fires pnx:filter:type
+     * @fires change:picture
+     * @fires change:sequence
+     * @fires change:display
      *
      * @example
      * var panoramax = new ol.control.Panoramax({
@@ -625,6 +630,18 @@ class Panoramax extends Control {
         this.PANORAMAX_LAYERS_TYPES = ["grid", "sequences", "pictures"];
 
         /**
+         * Événement déclenché à l'initialisation de Panoramax.
+         * @event pnx:ready
+         * @defaultValue "pnx:ready"
+         * @group Events
+         * @description
+         * Cet événement est émis quand le panneau Panoramax est initialisé.
+         * Il indique que le processus Panoramax est prêt à être utilisé.
+         * Il peut être utilisé pour déclencher des actions complémentaires.
+         */
+        this.READY_PANORAMAX_EVENT = "pnx:ready";
+
+        /**
          * Événement déclenché à l'ouverture du panneau Panoramax.
          * @event pnx:opened
          * @defaultValue "pnx:opened"
@@ -647,14 +664,6 @@ class Panoramax extends Control {
          * Il peut être utilisé pour déclencher des actions complémentaires.
          */
         this.CLOSED_PANORAMAX_EVENT = "pnx:closed";
-
-        /**
-         * Événement déclenché à l'initialisation du panneau des filtres.
-         * @event pnx:filter:init
-         * @defaultValue "pnx:filter:init"
-         * @group Events
-         */
-        this.FILTER_INIT_PANORAMAX_EVENT = "pnx:filter:init";
 
         /**
          * Nom du callback déclenché lors d'un clic sur la couche Panoramax active.
@@ -689,6 +698,14 @@ class Panoramax extends Control {
          */
         this.LAYER_PANORAMAX_REMOVE_CB = "pnx:layer:removed";
 
+        /**
+         * Événement déclenché à l'initialisation du panneau des filtres.
+         * @event pnx:filter:init
+         * @defaultValue "pnx:filter:init"
+         * @group Events
+         */
+        this.FILTER_INIT_PANORAMAX_EVENT = "pnx:filter:init";
+        
         /**
          * Nom de l'événement déclenché quand une plage de dates est saisie.
          * @event pnx:filter:dates
@@ -728,6 +745,45 @@ class Panoramax extends Control {
          * @group Events
          */
         this.FULLSCREEN_PANORAMAX_EVENT = "pnx:fullscreen";
+
+        /**
+         * Nom de l'événement déclenché quand on change la property 'picture'.
+         * @event change:picture
+         * @defaultValue "change:picture"
+         * @group Events
+         * @description
+         * Cet événement est émis quand la propriété 'picture' change.
+         * Il peut être utilisé pour déclencher des actions complémentaires.
+         * @example
+         * panoramax.set("picture", "1234567890");
+         */
+        this.CHANGE_PICTURE_PANORAMAX_EVENT = "change:picture";
+
+        /**
+         * Nom de l'événement déclenché quand on change de séquence dans le viewer.
+         * @event change:sequence
+         * @defaultValue "change:sequence"
+         * @group Events
+         * @description
+         * Cet événement est émis quand la propriété 'sequence' change.
+         * Il peut être utilisé pour déclencher des actions complémentaires.
+         * @example
+         * panoramax.set("sequence", "1234567890");
+         */
+        this.CHANGE_SEQUENCE_PANORAMAX_EVENT = "change:sequence";
+
+        /**
+         * Nom de l'événement déclenché quand on change la propriété 'display'.
+         * @event change:display
+         * @defaultValue "change:display"
+         * @group Events
+         * @description
+         * Cet événement est émis quand la propriété 'display' change.
+         * Il peut être utilisé pour déclencher des actions complémentaires.
+         * @example
+         * panoramax.set("display", true);
+         */
+        this.DISPLAY_PHOTO_PANORAMAX_EVENT = "change:display";
 
         /** 
          * photo viewer 
@@ -1167,6 +1223,38 @@ class Panoramax extends Control {
             }
         };
         map.getLayers().on("remove", this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]);
+
+        // on met en place des ecouteurs internes sur le changement de la propriété 'picture', 'sequence' et 'display' 
+        // pour afficher le viewer de photos de manière programmatique
+        this.eventsListeners[this.CHANGE_PICTURE_PANORAMAX_EVENT] = (e) => {
+            // some stuff...
+        };
+        this.on("change:picture", this.eventsListeners[this.CHANGE_PICTURE_PANORAMAX_EVENT]);
+
+        this.eventsListeners[this.CHANGE_SEQUENCE_PANORAMAX_EVENT] = (e) => {
+            // some stuff...
+        };
+        this.on("change:sequence", this.eventsListeners[this.CHANGE_SEQUENCE_PANORAMAX_EVENT]);
+
+        this.eventsListeners[this.DISPLAY_PHOTO_PANORAMAX_EVENT] = async (e) => {
+            var status = self.get("display"); // true|false
+            logger.debug("display photo panoramax", status);
+            const sequenceId = self.get("sequence");
+            const pictureId = self.get("picture");
+            if ( status && pictureId && sequenceId) {
+                if (!self.photoViewerPanoramax) {
+                    // on attend que le viewer de photos soit initialisé avant de l'afficher
+                    self.once(self.READY_PANORAMAX_EVENT, () => {
+                        self.displayPhotoViewer(self.get("sequence"), self.get("picture"));
+                    });
+                } else {
+                    self.displayPhotoViewer(sequenceId, pictureId);
+                }
+            } else {
+                self.hidePhotoViewer();
+            }
+        };
+        this.on("change:display", this.eventsListeners[this.DISPLAY_PHOTO_PANORAMAX_EVENT]);
     }
 
     /**
@@ -1200,6 +1288,19 @@ class Panoramax extends Control {
         if (this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]) {
             map.getLayers().un("remove", this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB]);
             delete this.eventsListeners[this.LAYER_PANORAMAX_REMOVE_CB];
+        }
+
+        if (this.eventsListeners[this.CHANGE_PICTURE_PANORAMAX_EVENT]) {
+            this.un("change:picture", this.eventsListeners[this.CHANGE_PICTURE_PANORAMAX_EVENT]);
+            delete this.eventsListeners[this.CHANGE_PICTURE_PANORAMAX_EVENT];
+        }
+        if (this.eventsListeners[this.CHANGE_SEQUENCE_PANORAMAX_EVENT]) {
+            this.un("change:sequence", this.eventsListeners[this.CHANGE_SEQUENCE_PANORAMAX_EVENT]);
+            delete this.eventsListeners[this.CHANGE_SEQUENCE_PANORAMAX_EVENT];
+        }
+        if (this.eventsListeners[this.DISPLAY_PHOTO_PANORAMAX_EVENT]) {
+            this.un("change:display", this.eventsListeners[this.DISPLAY_PHOTO_PANORAMAX_EVENT]);
+            delete this.eventsListeners[this.DISPLAY_PHOTO_PANORAMAX_EVENT];
         }
     }
 
@@ -1700,6 +1801,8 @@ class Panoramax extends Control {
                     // Suppression "Picture legend Drawer"
                     // INFO on supprime l'original de Panoramax pour le remplacer par notre propre widget
                     self.removeWidgetPictureLegendDrawer();
+                    // Declenchement d'un événement interne pour signaler que le viewer est prêt
+                    self.dispatchEvent(self.READY_PANORAMAX_EVENT);
                 });
                 self.photoViewerPanoramax.addEventListener("broken", () => {
                     console.warn("Panoramax photo viewer is broken");
@@ -1709,6 +1812,7 @@ class Panoramax extends Control {
                 // mais la liaison mini-map <-> photo-viewer doit être réassurée.
                 self.photoViewerPanoramax.onceReady().then(() => {
                     self.bindMiniMapToPhotoViewer();
+                    self.dispatchEvent(self.READY_PANORAMAX_EVENT);
                 });
             }
             resolve();
@@ -1826,6 +1930,11 @@ class Panoramax extends Control {
         this.resetPreview();
         this.showPhotoViewer();
         this.hideButtonsPanel();
+        // nettoyage des propriétés pour éviter 
+        // les conflits avec les événements internes
+        this.set("picture", null, true);
+        this.set("sequence", null,true);
+        this.set("display", null,true);
     }
 
     /** @private */
