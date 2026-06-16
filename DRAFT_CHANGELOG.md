@@ -17,6 +17,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]

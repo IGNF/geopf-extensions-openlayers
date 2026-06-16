@@ -38,6 +38,8 @@
             </div>
             <button id="btn-close-panoramax" class="gpf-button" type="button">Fermer Panoramax</button>
             <button id="btn-open-panoramax" class="gpf-button" type="button">Ouvrir Panoramax</button>
+            <button id="btn-show-picture-panoramax" class="gpf-button" type="button">Afficher une photo</button>
+            <button id="btn-hide-picture-panoramax" class="gpf-button" type="button">Fermer la photo</button>
 {{/content}}
 
 {{#content "js"}}
@@ -135,7 +137,15 @@
         document.getElementById("btn-open-panoramax").addEventListener("click", function () {
             map.addControl(panoramax);
         });
-        
+        document.getElementById("btn-show-picture-panoramax").addEventListener("click", function () {
+            panoramax.setCollapsed(false);
+            panoramax.set("sequence", "46480052-0064-401a-96d7-4e3ff001fb56");
+            panoramax.set("picture", "db63cd7e-91f4-49d2-8540-f8d8c4773b52");
+            panoramax.set("display", true);
+        });
+        document.getElementById("btn-hide-picture-panoramax").addEventListener("click", function () {
+            panoramax.set("display", false);
+        });
         Gp.Services.getConfig({
             customConfigFile : "{{ configurl }}",
             callbackSuffix : "",
