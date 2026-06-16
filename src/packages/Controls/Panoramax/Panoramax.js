@@ -1901,6 +1901,15 @@ class Panoramax extends Control {
                 } else {
                     this.photoViewerMiniMap.pictureCoordinates = gps;
                 }
+
+                let heading = currentPsv.getPosition().yaw * (180 / Math.PI);
+		        heading += currentPsv.getPictureOriginalHeading();
+                
+		        if (typeof this.photoViewerMiniMap.setPhotoHeading === "function") {
+                    this.photoViewerMiniMap.setPhotoHeading(heading);
+                } else {
+                    this.photoViewerMiniMap.pictureHeading = heading;
+                }
             };
         }
 
