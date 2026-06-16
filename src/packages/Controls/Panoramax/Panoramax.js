@@ -1934,7 +1934,7 @@ class Panoramax extends Control {
         // les conflits avec les événements internes
         this.unset("picture", true);
         this.unset("sequence", true);
-        this.unset("display", true)
+        this.unset("display", true);
     }
 
     /** @private */
