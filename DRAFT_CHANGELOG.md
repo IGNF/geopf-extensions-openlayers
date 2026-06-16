@@ -35,6 +35,7 @@ Nouveau widget Panoramax, refonte de l'outil "ControlList", corrections d'UI mul
   - Panoramax : filtre 360° activé pour le type d'image (#545)
   - Tooltip: ajoute un délai avant affichage (#546)
   - Tooltip: affichage des tooltips en-dessous de l’élément survolé (#546)
+  - Panoramax : possibilité de declencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
 
 * 🔥 [Deprecated]
 
