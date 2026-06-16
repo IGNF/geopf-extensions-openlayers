@@ -85,8 +85,8 @@ class IGNSearchService extends AbstractSearchService {
         // configuration avec gestion des options surchargées du service
         if (this.options.searchOptions) {
             if (this.options.searchOptions.serviceOptions) {
-                if (this.options.searchOptions.serviceOptions.url) {
-                    Search.setUrl(this.options.searchOptions.serviceOptions.url);
+                if (this.options.searchOptions.serviceOptions.serverUrl) {
+                    Search.setUrl(this.options.searchOptions.serviceOptions.serverUrl);
                 }
                 if (this.options.searchOptions.serviceOptions.fields) {
                     Search.setFields(this.options.searchOptions.serviceOptions.fields);
@@ -332,7 +332,7 @@ class IGNSearchService extends AbstractSearchService {
     _prettifyAutocompleteResults (autocompleteResults) {
         for (let i = autocompleteResults.length - 1; i >= 0; i--) {
             const autocompleteResult = autocompleteResults[i];
-            if ((autocompleteResult.type === "StreetAddress" && autocompleteResult.kind === "municipality") ||
+            if ((autocompleteResult.type === "StreetAddress" && autocompleteResult.kind === "municipality" && ["Lyon", "Marseille", "Paris"].includes(autocompleteResult.commune)) ||
             autocompleteResult.type === "PositionOfInterest" && autocompleteResult.poiType[0] === "lieu-dit habité" && autocompleteResult.poiType[1] === "zone d'habitation") {
                 // on retire les éléments streetAdress - municipality car déjà pris en compte par POI
                 autocompleteResults.splice(i, 1);
@@ -472,8 +472,16 @@ class IGNSearchService extends AbstractSearchService {
             onSuccess : this._onSuccessSearch.bind(this),
             onFailure : this._onFailureSearch.bind(this, location),
         });
-        // on sauvegarde le localisant
-        this._currentGeocodingLocation = label;
+
+        // HACK on retire les deux caractère manquant pour les communes avec des noms courts (ex. "By") 
+        // pour éviter que le service de géocodage IGN (limité à 3 caractères) ne les ignore et ne renvoie aucun résultat
+        // Ici on modifie la chaîne recherchée qui est utilisée pour l'affichage de l'info-bulle
+        if (label.includes("**")) {
+            this._currentGeocodingLocation = label.replace("**", "");
+        } else {
+            // on sauvegarde le localisant
+            this._currentGeocodingLocation = label;
+        }
     }
 
 
@@ -497,25 +505,25 @@ class IGNSearchService extends AbstractSearchService {
 
         var options = {};
         // on recupere les options du service
-        Utils.assign(options, this.options.geocodeOptions.serviceOptions);
+        Utils.assign(options, this.options.searchOptions.serviceOptions);
         // ainsi que la recherche et les callbacks
         Utils.assign(options, settings);
         options.maximumResponses = settings.limit;
         // on redefinie les callbacks si les callbacks de service existent
-        var bOnSuccess = !!(this.options.geocodeOptions.serviceOptions.onSuccess !== null && typeof this.options.geocodeOptions.serviceOptions.onSuccess === "function");
+        var bOnSuccess = !!(this.options.searchOptions.serviceOptions.onSuccess !== null && typeof this.options.searchOptions.serviceOptions.onSuccess === "function");
         if (bOnSuccess) {
             var cbOnSuccess = function (e) {
                 settings.onSuccess.bind(this, e);
-                this.options.geocodeOptions.serviceOptions.onSuccess.bind(this, e);
+                this.options.searchOptions.serviceOptions.onSuccess.bind(this, e);
             };
             options.onSuccess = cbOnSuccess.bind(this);
         }
 
-        var bOnFailure = !!(this.options.geocodeOptions.serviceOptions.onFailure !== null && typeof this.options.geocodeOptions.serviceOptions.onFailure === "function");
+        var bOnFailure = !!(this.options.searchOptions.serviceOptions.onFailure !== null && typeof this.options.searchOptions.serviceOptions.onFailure === "function");
         if (bOnFailure) {
             var cbOnFailure = function (e) {
                 settings.onFailure.bind(this, e);
-                this.options.geocodeOptions.serviceOptions.onFailure.bind(this, e);
+                this.options.searchOptions.serviceOptions.onFailure.bind(this, e);
             };
             options.onFailure = cbOnFailure.bind(this);
         }

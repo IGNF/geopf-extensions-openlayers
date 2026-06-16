@@ -112,7 +112,8 @@ var Interactions = {
                         }
                     }
                 } else {
-                    interactions[i].setActive(false);
+                    // FIXME un peu trop violent !?
+                    // interactions[i].setActive(false);
                 }
             }
         }

@@ -227,7 +227,7 @@ var catalog = new ol.control.Catalog({
 
 ---
 
-## Voici une explication sur la configuration des **catégories**, **sous-catégories** et **sections** dans le widget Catalog
+## Voici une explication sur la configuration des **catégories**, **sous-catégories** et **sections**
 
 ---
 
@@ -338,7 +338,7 @@ Catégorie ("Données")
 - Les sections regroupent dynamiquement les couches selon une propriété (thématique, producteur, etc.).
 - Les icônes DSFR ou SVG peuvent être associées aux sections pour un affichage visuel.
 
-## Voici une explication sur l’option **configuration** du widget Catalog
+## Voici une explication sur l’option **configuration**
 
 ---
 
@@ -391,7 +391,7 @@ configuration: {
 
 ---
 
-## Voici une explication sur la notion de **Topics** dans le widget Catalog
+## Voici une explication sur la notion de **Topics**
 
 ---
 
@@ -469,5 +469,25 @@ const url = "https://cartes.gouv.fr/catalogue/search?organization=" + producerIn
 - Les Topics sont des listes de référence pour enrichir, filtrer et organiser les couches du catalogue.
 - Ils permettent d’associer des icônes, des liens et des regroupements thématiques ou producteurs.
 - Ils sont utilisés dynamiquement pour l’affichage et la navigation dans le widget Catalog.
+
+---
+
+## Voici une explication pour un tri avec un ordre pre defini sur les couches d'une categorie ?
+
+1. Mettre **featured: true** sur la catégorie (ou sous-catégorie) concernée dans la config du widget.
+2. Renseigner la liste **featured** dans le JSON de données dans l’ordre voulu.
+3. Optionnel: mettre **order: true** si on veut trier le reste alphabétiquement après les éléments **featured**.
+
+Comportement exact
+
+- Tri alpha si order=true.
+- Filtre de catégorie.
+- Puis **featured** passe en tête dans l’ordre donné.
+- Les autres couches restent ensuite.
+
+Important :
+
+- Le matching featured se fait par layer.name (pas par clé complète nom+service), donc si on a le même name en WMS et WMTS, ce n’est pas un ordre strict par service.
+- La liste featured est globale, pas spécifique à une catégorie.
 
 ---

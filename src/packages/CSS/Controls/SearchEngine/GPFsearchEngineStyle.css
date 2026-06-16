@@ -63,6 +63,10 @@
   background-position: 0 center;
 }
 
+button[id^=GPsearchInputReset] {
+  right: 3px;
+}
+
 .gpf-select {
   background-color: #FFF;
 }
@@ -117,8 +121,6 @@ form[id^=GPsearchInput-] {
 
 form[id^=GPsearchInput-] input {
   display: block;
-  width: 100%;
-  /* height: 100%; */
   border: 1px solid #999;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;

@@ -1074,7 +1074,7 @@ var RouteDOM = {
         div2.appendChild(inputShortest);
         /* Sélecteur mode d'itinéraire inactif en mode Pieton */
         if (prettify) {
-            div2.style.display = "none";
+            divContainer.style.display = "none";
         }
 
         var labelShortest = document.createElement("label");
@@ -1143,11 +1143,14 @@ var RouteDOM = {
      *
      * @returns {HTMLElement} DOM element
      */
-    _createRoutePanelFormExclusionsElement : function () {
+    _createRoutePanelFormExclusionsElement : function (prettify) {
         var div = document.createElement("div");
         div.id = this._addUID("GProuteExclusions");
         div.className = "fr-mt-2w";
 
+        if (prettify) {
+            div.style.display = "none";
+        }
         var label = document.createElement("label");
         label.className = "GProuteExclusionsLabel fr-label";
         label.innerHTML = "Passages autorisés";

@@ -600,6 +600,8 @@ var MousePositionDOM = {
                     </section>
            `
         );
+        // get first element
+        div = div.firstChild;
         htmlContent.map(content => div.getElementsByClassName("fr-collapse")[0].append(content));
         div.getElementsByTagName("button")[0].addEventListener("click", function (e) {
             var status = (e.target.ariaExpanded === "true");

@@ -607,11 +607,12 @@ var LayerSwitcherDOM = {
         var label = document.createElement("div");
         label.id = this._addUID("GPname_ID_" + obj.id);
         label.className = "GPlayerName";
-        label.title = obj.description || obj.title;
+        label.title = obj.title || obj.description;
         if (tooltips) {
-            label.dataset.tooltip = obj.description || obj.title;
+            label.dataset.tooltip = obj.title || obj.description;
             ToolTips.active(label);
-            label.title = obj.name;
+            // pas de title si tooltip
+            label.removeAttribute("title");
         }
         label.innerHTML = obj.title;
         if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
@@ -635,7 +636,7 @@ var LayerSwitcherDOM = {
         div.innerHTML = obj.producer;
         if (tooltips) {
             div.dataset.tooltip = obj.producer;
-            ToolTips.active(div);
+            //ToolTips.active(div);
         }
 
         return div;
@@ -1071,7 +1072,11 @@ var LayerSwitcherDOM = {
         let label;
         if (checkDsfr()) {
             icon = "fr-icon-pencil-line";
-            label = "Style";
+            if (tms) {
+                label = "Style";
+            } else {
+                label = "Éditer";
+            }
         }
         let className = `GPlayerEdit gpf-btn gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline`;
 

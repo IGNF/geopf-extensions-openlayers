@@ -9,7 +9,13 @@ env:
   MODULE_NAME: modules
   BUNDLE_NAME: bundle
   PACKAGE_NAME: package
-  
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: write  # Required to push to gh-pages and main branches
+  packages: write  # Required to publish to npm
+  actions: write   # Required to create releases and upload assets
+
 jobs:
 
   # - checkout master ou main
@@ -126,7 +132,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add -A
-          git commit -m "[github-actions] deploy project gh-pages"
+          git diff --staged --quiet || git commit -m "[github-actions] deploy project gh-pages"
           git push
 
   # - checkout master or main
@@ -231,10 +237,15 @@ jobs:
   # - download changelog (from release)
   # - download package (from build)
   # - then simply publish repo
+  # NOTE : publish npm with tag next expect to beta version !
   publish: # Only for tags !
     if: github.event_name == 'push' && contains(github.ref, '/tags/') 
     needs: release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC
+      contents: read  # Required to download release assets
+      packages: write  # Required to publish to npm
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -254,15 +265,28 @@ jobs:
       - name: Use registry npm
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
-          
+      
+      - name: Verify npm authentication
+        run: |
+          if npm whoami --registry https://registry.npmjs.org; then
+            echo "✅ Authentification npm OK"
+          else
+            echo "❌ ERREUR: Token npm expiré ou invalide !"
+            echo "Veuillez renouveler le token NPM_GEOPORTAL_TOKEN dans les secrets GitHub"
+            exit 1
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
+
       - name: Publish on npm
         run: |
           cd ./dist/package
-          npm publish
+          npm publish --provenance --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
+
 
   # - checkout master or main
   # - download changelog (from release)
@@ -291,12 +315,12 @@ jobs:
       
       - name: Install Libs
         run: |
-          npm install markdown-toc
+          npm install doctoc
       
       - name: Archive changelog
         run: |
           cat DRAFT_CHANGELOG.md >> CHANGELOG.md
-          ./node_modules/.bin/markdown-toc -i CHANGELOG.md
+          ./node_modules/.bin/doctoc CHANGELOG.md
       
       - name: Reset draft changelog
         run: |

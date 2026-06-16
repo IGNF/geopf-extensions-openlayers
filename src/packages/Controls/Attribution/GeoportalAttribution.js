@@ -36,9 +36,14 @@ class GeoportalAttribution extends Attribution {
     constructor (options) {
         options = options || {};
 
-        // Attributions are not collapsible for ol/source/OSM except if ...
-        options.collapsible = true;
-        options.collapsed = true;
+        // collapsible by default, necessary for ol/source/OSM (see https://github.com/openlayers/openlayers/blob/b0a3a3887aa6baba4f906ede66add06977eec9d5/src/ol/source/OSM.js#L74)
+        if (options.collapsible !== false) {
+            options.collapsible = true;
+        }
+        // collapsed by default, necessary for ol/source/OSM (see https://github.com/openlayers/openlayers/blob/b0a3a3887aa6baba4f906ede66add06977eec9d5/src/ol/source/OSM.js#L74)
+        if (options.collapsed !== false) {
+            options.collapsed = true;
+        }
 
         super(options);
 

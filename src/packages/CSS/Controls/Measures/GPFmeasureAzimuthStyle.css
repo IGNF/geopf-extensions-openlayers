@@ -8,10 +8,6 @@ button[id^="GPshowMeasureAzimuthPicto-"] {
   background-position: 2px center;
 }
   
-button[id^="GPshowMeasureAzimuthPicto-"][aria-pressed="false"] {
-  background-color: rgba(0,60,136,0.5);
-}
-  
 button[id^="GPshowMeasureAzimuthPicto-"][aria-pressed="true"] {
   background-color: rgba(0,60,136,0.7);
 }

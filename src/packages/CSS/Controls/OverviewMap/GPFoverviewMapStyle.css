@@ -1,6 +1,6 @@
-.GPshowOverviewMap {
-    background-image: url("img/overviewmap.svg");
+.GPshowOverviewMapPicto {
+    background-image: url("img/GPoverviewMap.svg");
     background-repeat: no-repeat;
     background-size: auto auto;
-    background-position: 2px center;
+    background-position: 3px center;
 }

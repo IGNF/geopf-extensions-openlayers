@@ -156,6 +156,7 @@ div.drawing-tools-flex-display {
 
 button[id^=drawing-export-] {
     background-position: 2px 0;
+    cursor: pointer;
 }
 
 .drawing-button {

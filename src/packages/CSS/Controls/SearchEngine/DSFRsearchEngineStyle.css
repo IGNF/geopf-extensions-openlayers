@@ -66,6 +66,7 @@ input[name^="inputSex"].gpf-input {
 button[id^=GPsearchInputReset] {
   width: 40px;
   height: 40px;
+  right: 0px;
 }
 
 [id^="GPshowSearchDiv"] {
@@ -415,6 +416,22 @@ button[id^="GPSearchEngine-erase-btn"] {
 form.GPSearchBar > .GPInputGroup > input[data-erase] ~ .GPOptionsContainer > button[id^="GPSearchEngine-erase-btn"] {
   display:block;
 }
+
+form.GPSearchBar > .GPInputGroup > input ~ .GPOptionsContainer::before {
+  content:"";
+  width:1px;
+  height:2rem;
+  margin:8px 0;
+  background-color: var(--border-default-grey);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form.GPSearchBar > .GPInputGroup > input[data-erase] ~ .GPOptionsContainer::before {
+  display: none;
+}
+
 
 form.GPSearchBar > .GPInputGroup > input[data-erase] ~ .GPOptionsContainer > button[id^="GPSearchEngine-advanced-btn"] {
   display:none;

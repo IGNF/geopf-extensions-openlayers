@@ -7,7 +7,6 @@ import "../../CSS/Controls/ContextMenu/GPFcontextMenu.css";
 // import OpenLayers
 import Control from "../Control";
 import Overlay from "ol/Overlay";
-import Map from "ol/Map";
 import {
     transform as olTransformProj,
     fromLonLat as olFromLonLat
@@ -43,6 +42,8 @@ var logger = Logger.getLogger("contextMenu");
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {boolean} [gutter] - Ajoute ou retire l’espace autour du panneau.
  * @property {string|number} [id] - Identifiant unique du widget.
+ * @property {string} [altiServerUrl] - URL vers le service d'altimétrie utilisé (data.geopf.fr par défaut)
+ * @property {string} [reverseGeocodeServerUrl] - URL vers le service de géocodage inverse utilisé (data.geopf.fr par défaut)
  */
 /**
  * @classdesc
@@ -53,7 +54,7 @@ var logger = Logger.getLogger("contextMenu");
  * @module ContextMenu
 */
 class ContextMenu extends Control {
-    
+
     /**
      * @constructor
      * @param {ContextMenuOptions} options - options for function call.
@@ -69,7 +70,7 @@ class ContextMenu extends Control {
      */
     constructor (options) {
         options = options || {};
-        
+
         // call ol.control.Control constructor
         super({
             element : options.element,
@@ -106,7 +107,7 @@ class ContextMenu extends Control {
     /**
      * Overwrite OpenLayers setMap method
      *
-     * @param {Map} map - Map.
+     * @param {Map} map - Map
      */
     setMap (map) {
         if (map) {
@@ -130,6 +131,20 @@ class ContextMenu extends Control {
         super.setMap(map);
     }
 
+    /**
+     * Mise à jour des items lors de l'exécution
+     * Les items sont ajoutés après les items détectés par défaut
+     * @param {Array<Object>} items - Tableau d'items ol
+     * @public
+     */
+    updateContextMenuItems (items) {
+        if (!(items instanceof Array)) { return; }
+        this.contextMenuItemsOptions = items.map((item) => ({
+            ...item,
+            classname : item.classname ?? "ol-context-menu-custom fr-text--md"
+        }));
+    }
+
     // ################################################################### //
     // ################### getters / setters ############################# //
     // ################################################################### //
@@ -138,7 +153,7 @@ class ContextMenu extends Control {
     // ################################################################### //
     // #################### privates methods ############################# //
     // ################################################################### //
-    
+
     /**
      * Initialize ContextMenu control (called by ContextMenu constructor)
      *
@@ -191,11 +206,20 @@ class ContextMenu extends Control {
         /** @private */
         this.eventsListeners = [];
         /** @private */
-        this.controlList = []; 
+        this.controlList = [];
+
+        /** @private */
+        this._listenersAdded = false;
+        /** @private */
+        this._onContextOpen = null;
+        /** @private */
+        this._onContextClose = null;
+        /** @private */
+        this._onDocumentClick = null;
 
         // Point pour le calcul d'itinéraire
         /** @private */
-        this.itiPoints =  new Array(7);
+        this.itiPoints = new Array(7);
 
         /** @private */
         this._marker = new Overlay({
@@ -207,10 +231,10 @@ class ContextMenu extends Control {
         var contextMenuItems = this.getAvailableContextMenuControls.call(this);
         /** @private */
         this.contextMenuItemsOptions = [];
-        if (options.contextMenuItemsOptions instanceof Array 
+        if (options.contextMenuItemsOptions instanceof Array
             && options.contextMenuItemsOptions
             && options.contextMenuItemsOptions.length > 0) {
-            this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : "ol-context-menu-custom fr-text--md"}));
+            this.contextMenuItemsOptions = options.contextMenuItemsOptions.map((item) => ({ ...item, classname : item.classname ?? "ol-context-menu-custom fr-text--md" }));
         }
         /** @type {olContextMenu} */
         this.contextmenu = new olContextMenu(
@@ -268,31 +292,58 @@ class ContextMenu extends Control {
     }
 
     /**
-     * Add events listeners on map (called by setMap)
+     * Add events listeners on map
      * 
      * @private
      */
     addEventsListeners () {
-        this.contextmenu.on("open", (evt) => {
-            evt.this = this; 
+        if (this._listenersAdded) {
+            return;
+        }
+
+        this._onContextOpen = (evt) => {
+            evt.this = this;
             this.onOpenContextMenu(evt);
-        });
-        this.contextmenu.on("close", (evt) => {
-            evt.this = this; 
+        };
+        this._onContextClose = (evt) => {
+            evt.this = this;
             this.onCloseContextMenu(evt);
-        });
-        document.addEventListener("click", (event) => {
+        };
+        this._onDocumentClick = (event) => {
             if (!this.container.contains(event.target)) {
                 this.contextmenu.closeMenu();
             }
-        });
+        };
+
+        this.contextmenu.on("open", this._onContextOpen);
+        this.contextmenu.on("close", this._onContextClose);
+        document.addEventListener("click", this._onDocumentClick);
+        this._listenersAdded = true;
     }
 
     /**
-     * Remove events listeners on map (called by setMap)
+     * Remove events listeners on map
      * @private
      */
     removeEventsListeners () {
+        if (!this._listenersAdded) {
+            return;
+        }
+
+        if (this._onContextOpen) {
+            this.contextmenu.un("open", this._onContextOpen);
+        }
+        if (this._onContextClose) {
+            this.contextmenu.un("close", this._onContextClose);
+        }
+        if (this._onDocumentClick) {
+            document.removeEventListener("click", this._onDocumentClick);
+        }
+
+        this._onContextOpen = null;
+        this._onContextClose = null;
+        this._onDocumentClick = null;
+        this._listenersAdded = false;
     }
 
     /**
@@ -372,6 +423,7 @@ class ContextMenu extends Control {
      * Il s'agit d'afficher un marqueur et de stocker les coordonnées de ce point
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire 
      * @param {*} evt event
+     * @private
      * 
      */
     defineStartPoint (evt) {
@@ -383,7 +435,7 @@ class ContextMenu extends Control {
         this.itiPoints[0] = clickedCoordinate;
         route.setData({ points : this.itiPoints });
     }
-  
+
     /**
      * ---- Ajouter un point sur la carte 
      * 
@@ -392,6 +444,7 @@ class ContextMenu extends Control {
      * Et tout cela en intéragissant avec le formulaire des paramètres de l'itinéraire 
      * 
      * @param {*} evt event
+     * @private
      */
     defineEndPoint (evt) {
         // on récupère les coordonnées du point cliqué
@@ -408,6 +461,7 @@ class ContextMenu extends Control {
      *  
      * @param { Array } coord Coordonnées en 3857
      * @returns { Array } tableau de coordonnées en 4326
+     * @private
      */
     to4326 (coord) {
         return olTransformProj([
@@ -420,6 +474,7 @@ class ContextMenu extends Control {
      * pour les coordonnées sous le clic
      * 
      * @param {*} evt event
+     * @private
      */
     computeIsochrone (evt) {
         var isocurve = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Isocurve")[0];
@@ -436,6 +491,7 @@ class ContextMenu extends Control {
      * pour les coordonnées sous le clic
      * 
      * @param {*} evt event
+     * @private
      */
     getFeatureInfo (evt) {
         var gfi = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "GetFeatureInfo")[0];
@@ -463,6 +519,7 @@ class ContextMenu extends Control {
      * Fonction qui ouvre le widget des légendes
      * 
      * @param {*} evt event
+     * @private
      */
     displayLegend (evt) {
         var legend = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Legends")[0];
@@ -474,6 +531,7 @@ class ContextMenu extends Control {
      * Fonction qui ouvre le widget Catalogue
      * 
      * @param {*} evt event
+     * @private
      */
     openCatalogue (evt) {
         var catalog = this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Catalog")[0];
@@ -485,11 +543,12 @@ class ContextMenu extends Control {
      * Fonction qui ouvre un panel qui affiche les coordonnées et l'adresse sous le clic
      * 
      * @param {*} evt event
+     * @private
      */
     displayAdressAndCoordinate (evt) {
         let clickedCoordinate = this.to4326(evt.coordinate);
-        this.panelPointInfoEntriesContainer.innerHTML = "";   
-    
+        this.panelPointInfoEntriesContainer.innerHTML = "";
+
         this._marker.setPosition(olFromLonLat(clickedCoordinate));
 
         this.buttonPointInfoShow.click();
@@ -512,10 +571,12 @@ class ContextMenu extends Control {
                     altitude.innerHTML = "Altitude : " + json.elevations[0].z + "m";
                 }
             },
-            onFailure : function (error) {},
+            onFailure : function (error) { },
             // spécifique au service
-            positions : [{lon : clickedCoordinate[0], lat : clickedCoordinate[1]}],
-            outputFormat : "json" // json|xml
+            positions : [{ lon : clickedCoordinate[0], lat : clickedCoordinate[1] }],
+            outputFormat : "json", // json|xml
+            serverUrl : this.options.altiServerUrl,
+            resource : this.options.altiResource
         };
         Gp.Services.getAltitude(altiOptions);
 
@@ -525,12 +586,13 @@ class ContextMenu extends Control {
                     parcel.innerHTML = "Parcelle : " + json.locations[0].placeAttributes.districtcode + " / " + json.locations[0].placeAttributes.section + " / " + json.locations[0].placeAttributes.number;
                 }
             },
-            onFailure : function (error) {},
+            onFailure : function (error) { },
             // spécifique au service
-            position : {lon : clickedCoordinate[1], lat : clickedCoordinate[0]},
+            position : { lon : clickedCoordinate[1], lat : clickedCoordinate[0] },
             searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[1], clickedCoordinate[0]], radius : 100 },
             index : "CadastralParcel",
-            maximumResponses : 1
+            maximumResponses : 1,
+            serverUrl : this.options.reverseGeocodeServerUrl
         };
         Gp.Services.reverseGeocode(geocodageParcelOptions);
 
@@ -538,7 +600,7 @@ class ContextMenu extends Control {
             let config = {
                 id : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
                 layer : "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:commune",
-                attributes : ["code_postal","nom_officiel"]
+                attributes : ["code_postal", "nom_officiel"]
             };
             const result = await OGCRequest.computeGenericGPFWFS(
                 config.layer,
@@ -548,7 +610,7 @@ class ContextMenu extends Control {
                 config.additional_cql || "",
                 config.epsg || 4326,
                 config.get_geom || false,
-                clickedCoordinate[0], 
+                clickedCoordinate[0],
                 clickedCoordinate[1]
             );
             if (result.length) {
@@ -569,19 +631,20 @@ class ContextMenu extends Control {
                 getCommuneName();
             },
             // spécifique au service
-            position : {lon : clickedCoordinate[0], lat : clickedCoordinate[1]},
+            position : { lon : clickedCoordinate[0], lat : clickedCoordinate[1] },
             searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
             index : "StreetAddress",
-            maximumResponses : 1
+            maximumResponses : 1,
+            serverUrl : this.options.reverseGeocodeServerUrl
         };
         Gp.Services.reverseGeocode(geocodageAdressOptions);
     }
-    
+
 
     // ################################################################### //
     // ######################## event dom ################################ //
     // ################################################################### //
-    
+
     /**
      * ...
      * @param {Event} e - ...
@@ -626,18 +689,31 @@ class ContextMenu extends Control {
      * @private
      */
     onOpenContextMenu (e) {
-        // Récupère le canvas de la carte
-        const mapViewport = this.getMap().getViewport();
-        const canvas = mapViewport.querySelector("canvas");
-        // Vérifie que le clic droit est bien sur le canvas de la carte
-        if (!canvas || e.originalEvent.target !== canvas) {
-            // On ne fait rien si ce n’est pas sur le canvas de la carte
+        const mapInstance = this.getMap();
+        if (!mapInstance) {
+            return;
+        }
+
+        // Récupère le viewport de la carte
+        const mapViewport = mapInstance.getViewport();
+        const target = e?.originalEvent?.target;
+
+        // Vérifie que le clic droit est bien dans le viewport de la carte
+        if (!mapViewport || (target && !mapViewport.contains(target))) {
+            // On ne fait rien si ce n’est pas sur la carte
+            this.contextmenu.clear();
+            this.contextmenu.closeMenu();
+            return;
+        }
+        if (target && target.closest(".GPwidget, .gpf-widget, .ol-control")) {
+            // On ignore les éléments de la carte générés par geopf extensions
+            // Pas de contextMenu sur le searchEngine par exemple
             this.contextmenu.clear();
             this.contextmenu.closeMenu();
             return;
         }
         var addMenuToolsEventListeners = () => {
-            e.this.controlList = []; 
+            e.this.controlList = [];
             var controlArray = e.this.getMap().getControls().getArray().filter(control => control.CLASSNAME == "Route");
             if (controlArray.length > 0) {
                 controlArray[0].on("route:newresults", () => {
