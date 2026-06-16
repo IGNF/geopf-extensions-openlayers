@@ -22,6 +22,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - Panoramax : correctif sur l'orientation dans la minimap au chargement de la photo (#551)
   
 * 🔒 [Security]
 
