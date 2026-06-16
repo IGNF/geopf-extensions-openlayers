@@ -1932,9 +1932,9 @@ class Panoramax extends Control {
         this.hideButtonsPanel();
         // nettoyage des propriétés pour éviter 
         // les conflits avec les événements internes
-        this.set("picture", null, true);
-        this.set("sequence", null,true);
-        this.set("display", null,true);
+        this.unset("picture", true);
+        this.unset("sequence", true);
+        this.unset("display", true)
     }
 
     /** @private */
