@@ -5,7 +5,6 @@ import LongTouch from "./LongTouch.js";
 import { selectStyle } from "./selectFlatStyle";
 
 /** Modifying interaction 
- * @extends {ol.interaction.Modify}
  * @events delete, cut, copy, paste
  */
 class ModifyingInteraction extends Modify {
@@ -166,12 +165,12 @@ class ModifyingInteraction extends Modify {
      */
     setMap (map) {
         if (this.getMap()) {
-            this.getMap().removeControl(this._menu);
+            this.getMap().removeOverlay(this._menu);
             this.getMap().removeInteraction(this.longtouch);
         } 
         super.setMap(map);
         if (map) {
-            map.addControl(this._menu);
+            this.getMap().addOverlay(this._menu);
             this.getMap().getTargetElement().setAttribute("tabindex", "0");
             this.getMap().getTargetElement().addEventListener("keydown", this._onKey);
             this.getMap().addInteraction(this.longtouch);
@@ -231,10 +230,6 @@ class ModifyingInteraction extends Modify {
         } else if (e.type === "pointerup" && e.originalEvent.button === 2) {
             e.originalEvent.preventDefault();
             this._showContextMenu(e, isPoint);
-        } else if (e.type !== "pointermove") {
-            if (e.originalEvent.target === this.getMap().getTargetElement()) {
-                setTimeout(() => this._menu.hide() );
-            }
         }
         // Dragging feature : show crosshair cursor
         if (e.type==="pointerdrag" && isAdd) { 
@@ -308,13 +303,14 @@ class ModifyingInteraction extends Modify {
             this._menu.setMenu([
                 {
                     text : "Supprimer le point",
+                    className : "fr-icon-delete-line",
                     callback : () => {
                         this.removePoint(e.coordinate);
                     },
                     hide : true
                 },
             ]);
-            this._menu.show(e.pixel);
+            this._menu.show(e.coordinate);
             if (e.stopPropagation) {
                 e.stopPropagation();
             }
@@ -322,6 +318,7 @@ class ModifyingInteraction extends Modify {
             this._menu.setMenu([
                 {
                     text : "Dupliquer",
+                    className : "fr-icon-file-copy-line",
                     callback : () => {
                         const features = this._select.getFeatures().getArray().slice();
                         const sel = [];
@@ -357,6 +354,7 @@ class ModifyingInteraction extends Modify {
                     hide : true
                 },{
                     text : "Supprimer",
+                    className : "fr-icon-delete-line",
                     callback : () => {
                         const deleted = [];
                         this._select.getFeatures().forEach( f => {
@@ -376,7 +374,7 @@ class ModifyingInteraction extends Modify {
                     hide : true
                 },
             ]);
-            this._menu.show(e.pixel);
+            this._menu.show(e.coordinate);
             if (e.stopPropagation) {
                 e.stopPropagation();
             }

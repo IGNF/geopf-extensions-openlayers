@@ -75,11 +75,12 @@ const FlatStyleFormEventType = {
  * sont des instances de ce type ou de {@link SubmitEvent} (seulement si bouton de validation présent dans le formulaire).
  */
 export class StyleEvent extends BaseEvent {
+
     /**
      * @param {String} property Propriété flat style.
      * @param {any} value Valeur correspondante.
      */
-    constructor(property, value) {
+    constructor (property, value) {
         super(FlatStyleFormEventType.STYLE);
         /**
          * Propriété flatstyle.
@@ -95,6 +96,7 @@ export class StyleEvent extends BaseEvent {
          */
         this.value = value;
     }
+
 }
 
 
@@ -103,10 +105,11 @@ export class StyleEvent extends BaseEvent {
  * Le clic sur le bouton de validation du formulaire de {@link FlatStyleForm} sont des instances de ce type (sinon, voir {@link StyleEvent}).
  */
 export class SubmitEvent extends BaseEvent {
+
     /**
      * @param {Object} flatStyle Objet flat style au complet.
      */
-    constructor(flatStyle) {
+    constructor (flatStyle) {
         super(FlatStyleFormEventType.SUBMIT);
         /**
          * Objet flat style correspondant au formulaire.
@@ -115,6 +118,7 @@ export class SubmitEvent extends BaseEvent {
          */
         this.flatStyle = flatStyle || {};
     }
+
 }
 
 /**
@@ -513,7 +517,7 @@ class FlatStyleForm extends ControlExtended {
      * Retourne les types de géométries affichés dans le formulaire.
      * @returns {String} Valeur contenu dans le data-geom de l'élément principal
      */
-    getGeom() {
+    getGeom () {
         return this.getElement().dataset.geom;
     }
 
