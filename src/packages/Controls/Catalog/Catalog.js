@@ -1620,7 +1620,15 @@ class Catalog extends Control {
                 for (let i = 0; i < criteria.length; i++) {
                     const c = criteria[i];
                     if (layer[c]) {
-                        words += layer[c].toLowerCase();
+                        if (Array.isArray(layer[c])) {
+                            words += layer[c]
+                                .flat(Infinity) // tableau imbriqué
+                                .filter(item => item != null) // valeur null ou undefined
+                                .join("")
+                                .toLowerCase();
+                        } else {
+                            words += String(layer[c]).toLowerCase();
+                        }
                     }
                 }
                 layer.hidden = !words.includes(value.toLowerCase());
