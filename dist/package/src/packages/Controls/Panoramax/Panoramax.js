@@ -3415,6 +3415,9 @@ class Panoramax extends Control {
                 el.setAttribute("aria-pressed", "false");
             } else if (el.type === "date") {
                 el.value = "";
+                if (!silent) {
+                    el.dispatchEvent(new Event("change", { "bubbles" : true }));
+                }
             }
         });
 
