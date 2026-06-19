@@ -26,6 +26,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - Panoramax : correctif sur l'orientation dans la minimap au chargement de la photo (#551)
+  - Panoramax : modification du z-index par défaut du photoviewer pour être au-dessus des modales DFSR (#552)
   
 * 🔒 [Security]
 
