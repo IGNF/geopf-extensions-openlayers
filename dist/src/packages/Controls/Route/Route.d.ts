@@ -31,7 +31,6 @@ declare class Route extends Control {
      * @fires route:drawstart
      * @fires route:drawend
      * @fires route:compute
-     * @fires route:compute
      * @fires route:newresults
      * @example
      *  var route = ol.control.Route({

@@ -339,6 +339,7 @@ declare class Drawing extends Control {
      * @param {Boolean} collapsed - True to collapse control, False to display it
      */
     setCollapsed(collapsed: boolean): void;
+    collapsed: boolean | undefined;
     /**
      * Setter for Export Name.
      *
@@ -414,10 +415,6 @@ declare class Drawing extends Control {
     /** @private */
     private _uid;
     options: any;
-    /**
-     * @type {Boolean}
-     * specify if Drawing control is collapsed (true) or not (false) */
-    collapsed: boolean | undefined;
     /**
      * @type {Boolean}
      * specify if Drawing control is draggable (true) or not (false) */
