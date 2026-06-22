@@ -461,9 +461,13 @@ class Drawing extends Control {
         if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
             return;
         }
-        // on simule l'ouverture du panneau après un click
-        this.onShowDrawingClick();
-        this._showDrawingButton.click();
+
+        if (collapsed) {
+            document.getElementById("GPdrawingPanelClose-" + this._uid).click();
+        } else {
+            this._showDrawingButton.click();
+        }
+        this.collapsed = collapsed;
     }
 
     /**
