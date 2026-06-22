@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - Catalog : recherche non sensible à la casse ou aux accents (#558)
+
 * 🔨 [Changed]
 
   - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
