@@ -1,0 +1,132 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+        <link rel="stylesheet" href="{{ resources }}/vendor/panoramax/v4.4.0/photoviewer.css" />
+        <script src="{{ resources }}/vendor/panoramax/v4.4.0/photoviewer.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Panoramax</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100vw;
+                height: calc(100vh - 200px);
+                background-image:url("{{ resources }}/geoportail-waiting.gif");
+                background-position:center center;
+                background-repeat:no-repeat;
+            }
+
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout du widget Panoramax, avec les options par défaut</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+            <button id="btn-close-panoramax" class="gpf-button" type="button">Fermer Panoramax</button>
+            <button id="btn-open-panoramax" class="gpf-button" type="button">Ouvrir Panoramax</button>
+            <button id="btn-show-picture-panoramax" class="gpf-button" type="button">Afficher une photo</button>
+            <button id="btn-hide-picture-panoramax" class="gpf-button" type="button">Fermer la photo</button>
+{{/content}}
+
+{{#content "js"}}
+    <script>
+        if (window.Gp) {
+            localStorage.setItem("loglevel", "debug");
+            localStorage.setItem("loglevel:panoramax", "debug");
+            // activation des loggers
+            Gp.Logger.enableAll();
+        }
+        var map;
+        var panoramax;
+
+        var createMap = function () {
+            document.getElementById('map').style.backgroundImage = 'none';
+
+            // Création de la map
+            map = new ol.Map({
+                target : "map",
+                view : new ol.View({
+                    center : [288074.8449901076, 6247982.515792289],
+                    zoom : 18
+                })
+            });
+
+            var gpMaps = new ol.layer.GeoportalWMTS({
+                layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+            });
+            map.addLayer(gpMaps);
+
+            // Ajout du contrôle Panoramax
+            var options = {
+                collapsed: true,
+                panel : true,
+                auto : false,
+                position : "bottom-left",
+                background : {
+                    active : false
+                },
+                buttonsWindow : {
+                    filters : {
+                        display : true,
+                        label : "Effacer les filtres",
+                        description : "Réinitialiser les filtres",
+                        exclusive : false,
+                        content : {
+                            types : {
+                               value : "360°"
+                            },
+                            dates : true,
+                            periodes : true
+                        }
+                    }
+                },
+                visualizationWindow : {
+                    size : "fullscreen-map"
+                }
+            };
+            panoramax = new ol.control.Panoramax(options);
+            // Gestion de l'événement d'ouverture du formulaire de Panoramax
+            // mais, une seule fois !
+            panoramax.once("pnx:opened", function () {
+                console.log("Panoramax event opened !");
+            });
+            map.addControl(panoramax);
+
+        };
+        
+        document.getElementById("btn-close-panoramax").addEventListener("click", function () {
+            map.removeControl(panoramax);
+        });
+        document.getElementById("btn-open-panoramax").addEventListener("click", function () {
+            map.addControl(panoramax);
+        });
+        document.getElementById("btn-show-picture-panoramax").addEventListener("click", function () {
+            panoramax.setCollapsed(false);
+            panoramax.set("sequence", "46480052-0064-401a-96d7-4e3ff001fb56");
+            panoramax.set("picture", "db63cd7e-91f4-49d2-8540-f8d8c4773b52");
+            panoramax.set("display", true);
+        });
+        document.getElementById("btn-hide-picture-panoramax").addEventListener("click", function () {
+            panoramax.set("display", false);
+        });
+        Gp.Services.getConfig({
+            customConfigFile : "{{ configurl }}",
+            callbackSuffix : "",
+            // apiKey: "{{ apikey }}",
+            timeOut : 20000,
+            onSuccess : createMap,
+            onFailure : (e) => {
+                console.error(e);
+            }
+        });
+    </script>
+{{/content}}
+{{/extend}}
