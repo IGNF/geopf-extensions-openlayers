@@ -29,6 +29,7 @@ __DATE__
   - Panoramax : modification du z-index par défaut du photoviewer pour être au-dessus des modales DFSR (#552)
   - Panoramax : reinitialisation des filtres (#556)
   - Catalog : améliorer la gestion des critères de recherche pour inclure des valeurs issues de tableaux (#555)
+  - Isocurve : correctif sur l'évenement de fin de traitement (#557)
   
 * 🔒 [Security]
 
