@@ -30,6 +30,7 @@ __DATE__
   - Panoramax : reinitialisation des filtres (#556)
   - Catalog : améliorer la gestion des critères de recherche pour inclure des valeurs issues de tableaux (#555)
   - Isocurve : correctif sur l'évenement de fin de traitement (#557)
+  - Drawing : correctif sur l'ouverture du panneau de dessin (#557)
   
 * 🔒 [Security]
 
