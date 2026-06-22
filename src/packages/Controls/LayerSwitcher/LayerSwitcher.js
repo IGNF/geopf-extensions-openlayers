@@ -309,6 +309,8 @@ class LayerSwitcher extends Control {
         // cette méthode est appelée
         // après un map.addControl() ou map.removeControl()
 
+        this.selectedLayer = null;
+
         if (map) { // dans le cas de l'ajout du contrôle à la map
             // on ajoute les couches
             this._addMapLayers(map);
@@ -1424,12 +1426,22 @@ class LayerSwitcher extends Control {
             var layerOptions = this._layersOrder[j];
             var layerDiv = this._createLayerDiv(layerOptions);
             layerDiv.dataset.sortableId = layerOptions.id;
+            const layerDivId = "#" + layerDiv.id;
             // on ajoute la div seulement si elle n'existe pas
-            if (!this._layerListContainer.querySelector("#" + layerDiv.id)) {
+            if (!this._layerListContainer.querySelector(layerDivId)) {
                 this._layerListContainer.appendChild(layerDiv);
+            } else {
+                // La div est déjà ajoutée, on la garde en mémoire
+                layerDiv = this._layerListContainer.querySelector(layerDivId);
             }
             // on stocke la div dans les options de la couche, pour une éventuelle réorganisation (setZIndex par ex)
             this._layers[layerOptions.id].div = layerDiv;
+        }
+
+        // Sélectionne la première couche
+        const layerValues = Object.values(this._layers);
+        if (layerValues.length > 0) {
+            this.setSelectedLayer(layerValues[layerValues.length - 1].layer, true);
         }
     }
 
@@ -2529,7 +2541,8 @@ class LayerSwitcher extends Control {
             if (options) {
                 const layer = this._layers[layerID].layer;
 
-                if (layer !== this.getSelectedLayer()) {
+                // Compare les gpLayerId au lieu de comparer les objets
+                if (layer.gpLayerId !== this.getSelectedLayer()?.gpLayerId) {
                     this.setSelectedLayer(layer, true);
                 }
             }
