@@ -27,6 +27,7 @@
             </div>
             <button id="btn-close-ls" class="gpf-button" type="button">Fermer le gestionnaire</button>
             <button id="btn-open-ls" class="gpf-button" type="button">Ouvrir le gestionnaire</button>
+            <button id="btn-remove-layers" class="gpf-button" type="button">Supprimer toutes les couches</button>
             <button id="btn-reload-layers" class="gpf-button" type="button">Recharger les couches</button>
             
 {{/content}}
@@ -94,6 +95,9 @@
                 });
                 document.getElementById("btn-open-ls").addEventListener("click", function () {
                     map.addControl(layerSwitcher);
+                });
+                document.getElementById("btn-remove-layers").addEventListener("click", function () {
+                    map.getLayers().clear();
                 });
                 document.getElementById("btn-reload-layers").addEventListener("click", function () {
                     map.removeLayer(plan);
