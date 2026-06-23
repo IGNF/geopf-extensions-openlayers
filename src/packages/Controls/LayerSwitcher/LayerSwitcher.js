@@ -309,7 +309,8 @@ class LayerSwitcher extends Control {
         // cette méthode est appelée
         // après un map.addControl() ou map.removeControl()
 
-        this.selectedLayer = null;
+        // Déselectionne la couche sélectionnée
+        this.getSelectedLayer() && this.setSelectedLayer(this.getSelectedLayer(), false);
 
         if (map) { // dans le cas de l'ajout du contrôle à la map
             // on ajoute les couches
@@ -1438,9 +1439,9 @@ class LayerSwitcher extends Control {
             this._layers[layerOptions.id].div = layerDiv;
         }
 
-        // Sélectionne la première couche
+        // Sélectionne la première couche (si aucune couche sélectionnée)
         const layerValues = Object.values(this._layers);
-        if (layerValues.length > 0) {
+        if (!this.getSelectedLayer() && layerValues.length > 0) {
             this.setSelectedLayer(layerValues[layerValues.length - 1].layer, true);
         }
     }

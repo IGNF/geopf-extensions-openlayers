@@ -69,6 +69,10 @@
                     layerSwitcher.on("layerswitcher:change:style", (e) => {
                         console.log(e);
                     });
+
+                    layerSwitcher.on(layerSwitcher.CHANGE_LAYER_SELECTED_EVENT, (e) => {
+                        console.log(e)
+                    })
                     // Couches TMS
                     plan = new ol.layer.GeoportalMapBox({
                         layer : "PLAN.IGN"
@@ -92,6 +96,8 @@
                     map.addControl(layerSwitcher);
                 });
                 document.getElementById("btn-reload-layers").addEventListener("click", function () {
+                    map.removeLayer(plan);
+                    map.removeLayer(bdtopo);
                     map.addLayer(plan);
                     map.addLayer(bdtopo);
                 });
