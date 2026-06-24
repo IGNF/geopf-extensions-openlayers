@@ -4,6 +4,11 @@
     if (document.getElementById("slider")) {
         document.getElementById("slider").checked = true;
     }
+    // FIX ME - on cache panoramax en mode classique en attendant son implémentation
+    const div = document.querySelector('div[id^="GPpanoramax"]');
+    if (div) {
+        div.style.display = 'none';
+    }
 })();
 
 function toggleTheme () {
