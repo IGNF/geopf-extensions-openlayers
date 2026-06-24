@@ -1,13 +1,8 @@
-/* theme par defaut : portail */
+/* theme par defaut : dsfr */
 (function () {
-    localStorage.setItem("theme", "portail");
+    localStorage.setItem("theme", "dsfr");
     if (document.getElementById("slider")) {
         document.getElementById("slider").checked = true;
-    }
-    // FIX ME - on cache panoramax en mode classique en attendant son implémentation
-    const div = document.querySelector('div[id^="GPpanoramax"]');
-    if (div) {
-        div.style.display = 'none';
     }
 })();
 
