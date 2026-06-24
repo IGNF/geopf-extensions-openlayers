@@ -2,7 +2,7 @@
 (function () {
     localStorage.setItem("theme", "dsfr");
     if (document.getElementById("slider")) {
-        document.getElementById("slider").checked = true;
+        document.getElementById("slider").checked = false;
     }
 })();
 
