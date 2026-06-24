@@ -25,11 +25,18 @@
             <!-- map -->
             <div id="map">
             </div>
+            <button id="btn-close-ls" class="gpf-button" type="button">Fermer le gestionnaire</button>
+            <button id="btn-open-ls" class="gpf-button" type="button">Ouvrir le gestionnaire</button>
+            <button id="btn-remove-layers" class="gpf-button" type="button">Supprimer toutes les couches</button>
+            <button id="btn-reload-layers" class="gpf-button" type="button">Recharger les couches</button>
+            
 {{/content}}
 
 {{#content "js"}}
             <script type="text/javascript">
                 var map;
+                var layerSwitcher;
+                var plan, bdtopo;
                 var createMap = function () {
                     // on cache l'image de chargement du Géoportail.
                     document.getElementById('map').style.backgroundImage = 'none';
@@ -51,7 +58,7 @@
                         ]
                     });
 
-                    var layerSwitcher = new ol.control.LayerSwitcher({
+                    layerSwitcher = new ol.control.LayerSwitcher({
                         options :{
                             panel: true,
                         }
@@ -64,14 +71,14 @@
                         console.log(e);
                     });
                     // Couches TMS
-                    var plan = new ol.layer.GeoportalMapBox({
+                    plan = new ol.layer.GeoportalMapBox({
                         layer : "PLAN.IGN"
                     });
                     plan.on("mapbox:style:loaded", (e) => {
                         console.log(e);
                     });
                     map.addLayer(plan);
-                    var bdtopo = new ol.layer.GeoportalMapBox({
+                    bdtopo = new ol.layer.GeoportalMapBox({
                         layer : "BDTOPO"
                     });
                     bdtopo.on("mapbox:style:loaded", (e) => {
@@ -79,6 +86,19 @@
                     });
                     map.addLayer(bdtopo);
                 };
+                document.getElementById("btn-close-ls").addEventListener("click", function () {
+                    map.removeControl(layerSwitcher);
+                });
+                document.getElementById("btn-open-ls").addEventListener("click", function () {
+                    map.addControl(layerSwitcher);
+                });
+                document.getElementById("btn-remove-layers").addEventListener("click", function () {
+                    map.getLayers().clear();
+                });
+                document.getElementById("btn-reload-layers").addEventListener("click", function () {
+                    map.addLayer(plan);
+                    map.addLayer(bdtopo);
+                });
                 Gp.Services.getConfig({
                     customConfigFile : "{{ configurl }}",
                     callbackSuffix : "",
