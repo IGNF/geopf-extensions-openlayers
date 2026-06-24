@@ -15,11 +15,21 @@ function toggleTheme () {
         document.getElementById("labelSlider").innerHTML = "DSFR";
         enableStylesheet(dsfr);
         disableStylesheet(portail);
+        // FIX ME - on cache panoramax en mode classique en attendant son implémentation
+        const div = document.querySelector('div[id^="GPpanoramax"]');
+        if (div) {
+            div.style.display = '';
+        }
     } else {
         localStorage.setItem("theme", "portail");
         document.getElementById("labelSlider").innerHTML = "Classique";
         enableStylesheet(portail);
         disableStylesheet(dsfr);
+        // FIX ME - on cache panoramax en mode classique en attendant son implémentation
+        const div = document.querySelector('div[id^="GPpanoramax"]');
+        if (div) {
+            div.style.display = 'none';
+        }
     }
 }
 
