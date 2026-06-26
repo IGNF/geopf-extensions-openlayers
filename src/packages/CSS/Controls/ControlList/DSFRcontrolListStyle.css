@@ -20,50 +20,80 @@ div[id^="GPcontrolList-"] .GPshowOpen > span {
   /* transform: translate(-5px, -2px); */
 }
 
+dialog[id^="GPcontrolListPanel-"] .gpf-panel__body {
+  border-radius: 4px;
+  overflow-x: hidden;
+}
+
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__content {
   display: flex;
   flex-direction: column;
-  padding: 0 1.5rem;
-  overflow: auto;
+  padding: 1.5rem;
+  transform: rotate(0); /* utile pour que sortable détecte le bon containing block O_o */
 }
 
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__content:not(:has(~ .gpf-panel__footer)) {
   padding-bottom: 2rem;
 }
 
-dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div {
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element {
   display: flex;
-  flex-direction: row;
-  column-gap: 1rem;
   align-items: center;
-  padding: 0.5rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div:hover {
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element:hover {
   background-color: var(--hover);
 }
 
-dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div:hover > button {
-  background-color: var(--hover);
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element:active {
+  background-color: var(--active);
 }
 
-dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > button {
-  height: 40px;
-  width: 40px;
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element--active {
+  background-color: var(--background-open-blue-france);
 }
 
-dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > button::after {
-  background-color: var(--text-default-grey);
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element--active:hover {
+  color: var(--text-title-blue-france);
+  background-color: var(--background-open-blue-france-hover);
+/*  box-shadow: inset 0 0 0 1px var(--background-action-high-blue-france);*/
 }
 
-dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > div {
-  display: flex;
-  flex-direction: column;
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element--active:active {
+  color: var(--text-title-blue-france);
+  background-color: var(--background-open-blue-france-active);
+/*  box-shadow: inset 0 0 0 1px var(--background-action-high-blue-france);*/
 }
 
-dialog[id^="GPcontrolListPanel-"] .gpf-panel__content > div > div > span:nth-child(2) {
-  color: var(--text-mention-grey);
-  font-size: 0.75rem;
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element--ghost {
+  color: var(--text-title-blue-france);
+  background-color: var(--background-open-blue-france);
+  box-shadow: inset 0 0 0 1px var(--background-action-high-blue-france);
+  opacity: 0;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element--drag {
+  color: var(--text-title-blue-france);
+  box-shadow: inset 0 0 0 1px var(--background-action-high-blue-france);
+  background-color: var(--background-open-blue-france) !important;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element-icon {
+  box-shadow: none;
+  background: none;
+  width: auto;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element-icon::after {
+  background: var(--text-default-grey);
+}
+
+dialog[id^="GPcontrolListPanel-"]
+:is(.gpf-list-element--active:hover,.gpf-list-element--active:active,.gpf-list-element--ghost,.gpf-list-element--drag)
+.gpf-list-element-icon::after {
+  background-color: var(--background-action-high-blue-france) !important;
 }
 
 dialog[id^="GPcontrolListPanel-"] .gpf-panel__footer {
@@ -75,6 +105,20 @@ dialog[id^="GPcontrolListPanel-"] .gpf-panel__footer > button {
   width: 100%;
   justify-content: center;
 }
+
+dialog[id^="GPcontrolListPanel-"] .gpf-btn-icon-ls-draggable {
+  margin-left: auto;
+}
+
+dialog[id^="GPcontrolListPanel-"] div.keyboard-navigation:focus-within {
+  margin-left: -0.25em;
+}
+
+/* Cache les options de drag and drop */
+/*dialog[id^="GPcontrolListPanel-"] .gpf-list-element:first-child [data-direction="up"],
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element:last-child [data-direction="down"] {
+    display: none;
+}*/
 
 .gpf-button-no-gutter + [id^="GPcontrolList-"] > .gpf-btn-icon-controllist > span::before {
     display: block;

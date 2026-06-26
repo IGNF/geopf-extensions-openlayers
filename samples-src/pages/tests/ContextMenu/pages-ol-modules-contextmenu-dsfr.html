@@ -99,6 +99,26 @@
             });
             map.addControl(contextMenu);
 
+            contextMenu.updateContextMenuItems([
+                {
+                    text : "ITEM 1",
+                    callback : () => {
+                        alert("fonction à ajouter pour afficher des informations !")
+                    },
+                },
+                {
+                    text : "ITEM 2",
+                    callback : () => {
+                        alert("fonction à ajouter pour afficher des informations !")
+                    },
+                },
+                {
+                    text : "ITEM 3",
+                    callback : () => {
+                        alert("fonction à ajouter pour afficher des informations !")
+                    },
+                }
+            ]);
 
             // 5. Ajout du contrôle de gestion de l'empilement des couches (layerSwitcher)
             var layerSwitcher = new ol.control.LayerSwitcher({

@@ -614,7 +614,8 @@ var LayerSwitcherDOM = {
         if (tooltips) {
             label.dataset.tooltip = obj.title || obj.description;
             ToolTips.active(label);
-            label.title = obj.name;
+            // pas de title si tooltip
+            label.removeAttribute("title");
         }
         label.innerHTML = obj.title;
         // FIXME Hack temporaire pour TMS
@@ -640,7 +641,7 @@ var LayerSwitcherDOM = {
         div.innerHTML = obj.producer;
         if (tooltips) {
             div.dataset.tooltip = obj.producer;
-            ToolTips.active(div);
+            //ToolTips.active(div);
         }
 
         return div;
@@ -1049,7 +1050,11 @@ var LayerSwitcherDOM = {
         let label;
         if (checkDsfr()) {
             icon = "fr-icon-pencil-line";
-            label = "Style";
+            if (tms) {
+                label = "Style";
+            } else {
+                label = "Éditer";
+            }
         }
         let className = `GPlayerEdit gpf-btn gpf-btn--tertiary fr-btn fr-btn--tertiary-no-outline`;
 
