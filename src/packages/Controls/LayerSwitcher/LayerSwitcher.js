@@ -316,10 +316,16 @@ class LayerSwitcher extends Control {
             // on ajoute les couches
             this._addMapLayers(map);
 
+            
             // mode "collapsed"
             if (!this.collapsed) {
                 this._showLayerSwitcherButton.setAttribute("aria-pressed", true);
             }
+            
+            // Forget listeners (prevent adding them twice)
+            olObservableUnByKey(this._listeners.onMoveListener);
+            olObservableUnByKey(this._listeners.onAddListener);
+            olObservableUnByKey(this._listeners.onRemoveListener);
 
             // At every map movement, layer switcher may be updated,
             // according to layers on map, and their range.
