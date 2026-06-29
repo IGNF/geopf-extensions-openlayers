@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - Catalog : recherche non sensible à la casse ou aux accents (#558)
+
 * 🔨 [Changed]
 
   - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
@@ -31,6 +33,7 @@ __DATE__
   - Catalog : améliorer la gestion des critères de recherche pour inclure des valeurs issues de tableaux (#555)
   - Isocurve : correctif sur l'évenement de fin de traitement (#557)
   - Drawing : correctif sur l'ouverture du panneau de dessin (#557)
+  - MousePosition : conservation de l'ordre lat/lon y/x pour l'affichage des coordonnées (#560)
   
 * 🔒 [Security]
 
