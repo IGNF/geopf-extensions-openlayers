@@ -1638,7 +1638,7 @@ class Catalog extends Control {
                                 .filter(item => item != null) // valeur null ou undefined
                                 .join(" "));
                         } else {
-                            words += normalizeSearchText(layer[c]);
+                            words += " " + normalizeSearchText(layer[c]);
                         }
                     }
                 }
