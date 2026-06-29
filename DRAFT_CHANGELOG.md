@@ -19,16 +19,21 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
 
-  - Interface(widgets) : interfaçage du paramètre serverUrl pour les widgets iti/iso/reversegeocode/mouseposition/search (#503)
-  - Interface(AdvancedSearch) : interfaçage du paramètre serverUrl pour le widget de recherche avancée (#504)
-  - Interface(ContextMenu): interfacçage du paramétre serverUrl pour le menuContextuel (#506)
-  - Search: filtrage plus fin des résultats liés aux codes postaux en cas d'option "pretiffyResults" (#507) 
+  - Panoramax : correctif sur l'orientation dans la minimap au chargement de la photo (#551)
+  - Panoramax : modification du z-index par défaut du photoviewer pour être au-dessus des modales DFSR (#552)
+  - Panoramax : reinitialisation des filtres (#556)
+  - Catalog : améliorer la gestion des critères de recherche pour inclure des valeurs issues de tableaux (#555)
+  - Isocurve : correctif sur l'évenement de fin de traitement (#557)
+  - Drawing : correctif sur l'ouverture du panneau de dessin (#557)
+  - MousePosition : conservation de l'ordre lat/lon y/x pour l'affichage des coordonnées (#560)
   
 * 🔒 [Security]
 

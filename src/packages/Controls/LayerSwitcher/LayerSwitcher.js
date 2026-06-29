@@ -108,6 +108,14 @@ var logger = Logger.getLogger("layerswitcher");
  * @property {Array<Object>} [config.legends] - Légendes associées à la couche.
  * @property {Array<Object>} [config.metadata] - Métadonnées associées à la couche.
  * @property {boolean} [config.locked] - Indique si la couche est verrouillée.
+ * @property {boolean} [config.display] - Indique si la couche est affichée dans le gestionnaire de couche. Par défaut, une couche est affichée sauf si `layer.get("display") === false`.
+ *
+ * Les propriétés OpenLayers suivantes sont réactives par défaut dans le LayerSwitcher.
+ * Lorsqu'elles sont modifiées via `layer.set(...)`, le gestionnaire met à jour son interface automatiquement.
+ * @property {string} [layer.title] - Libellé affiché dans le gestionnaire.
+ * @property {string} [layer.description] - Description utilisée dans les info-bulles et le panneau d'information.
+ * @property {string} [layer.producer] - Producteur affiché sous le titre de la couche.
+ * @property {boolean} [layer.display=true] - Visibilité de l'entrée dans le gestionnaire uniquement, sans impact sur le rendu cartographique.
  */
 
 /**
@@ -301,14 +309,23 @@ class LayerSwitcher extends Control {
         // cette méthode est appelée
         // après un map.addControl() ou map.removeControl()
 
+        // Déselectionne la couche sélectionnée
+        this.getSelectedLayer() && this.setSelectedLayer(this.getSelectedLayer(), false);
+
         if (map) { // dans le cas de l'ajout du contrôle à la map
             // on ajoute les couches
             this._addMapLayers(map);
 
+            
             // mode "collapsed"
             if (!this.collapsed) {
                 this._showLayerSwitcherButton.setAttribute("aria-pressed", true);
             }
+            
+            // Forget listeners (prevent adding them twice)
+            olObservableUnByKey(this._listeners.onMoveListener);
+            olObservableUnByKey(this._listeners.onAddListener);
+            olObservableUnByKey(this._listeners.onRemoveListener);
 
             // At every map movement, layer switcher may be updated,
             // according to layers on map, and their range.
@@ -397,15 +414,35 @@ class LayerSwitcher extends Control {
     }
 
     /**
+     * Indique si la couche doit être affichée dans le gestionnaire de couches.
+     * La couche est toujours rendue sur la carte ; seule sa visibilité dans le
+     * gestionnaire est contrôlée par cette propriété.
+     * Par défaut, une couche est affichée sauf si `layer.get("display") === false`.
+     * Cette propriété n'a aucun effet sur le rendu de la couche sur la carte,
+     * elle ne contrôle que la visibilité de son entrée dans le LayerSwitcher.
+     *
+     * @param {Layer} layer - Couche OpenLayers.
+     * @returns {Boolean} `true` si la couche doit apparaître dans le gestionnaire.
+     */
+    shouldDisplayLayerInSwitcher (layer) {
+        if (!layer || typeof layer.get !== "function") {
+            return true;
+        }
+        return layer.get("display") !== false;
+    }
+    
+    /**
      * Add a new layer to control (when added to map) or add new layer configuration
      *
      * @param {Layer} layer - layer to add to layer switcher
      * @param {Object} [config] - additional options for layer configuration
      * @param {Object} [config.title] - layer title (default is layer identifier)
      * @param {Object} [config.description] - layer description (default is null)
+    * @param {Object} [config.producer] - layer producer (default is null)
      * @param {Object} [config.legends] - layer legends (default is an empty array)
      * @param {Object} [config.metadata] - layer metadata (default is an empty array)
      * @param {Object} [config.quicklookUrl] - layer quicklookUrl (default is null)
+    * @param {Boolean} [config.display=true] - controls the visibility of the layer entry in the LayerSwitcher only.
      * @fires layerswitcher:add {@link LayerSwitcher#ADD_LAYER_EVENT}
      * @example
      *   layerSwitcher.addLayer(
@@ -419,11 +456,14 @@ class LayerSwitcher extends Control {
      */
     addLayer (layer, config) {
         var map = this.getMap();
-        config = config || layer.config || {};
 
         if (!layer) {
             logger.log("[ERROR] LayerSwitcher:addLayer - missing layer parameter");
             return;
+        }
+        config = config || layer.config || {};
+        if (Object.prototype.hasOwnProperty.call(config, "display")) {
+            layer.set("display", config.display);
         }
 
         var id = layer.gpLayerId;
@@ -432,7 +472,6 @@ class LayerSwitcher extends Control {
             return;
         }
 
-        // make sure layer is in map layers
         var isLayerInMap = false;
         map.getLayers().forEach(
             (lyr) => {
@@ -960,12 +999,21 @@ class LayerSwitcher extends Control {
          * @group Events
          * @param {Object} type - event
          * @param {Object} layer - layer
+         * @param {string} key - Nom de la propriété modifiée.
+         * Valeurs documentées et gérées nativement : `title`, `description`, `producer`, `display`.
+         * @param {string|boolean|null} value - Nouvelle valeur de la propriété.
          * @param {Object} target - instance LayerSwitcher
          * @public
          * @example
          * LayerSwitcher.on("layerswitcher:propertychange", function (e) {
          *   console.log(e.layer);
          * })
+         *
+         * @example
+         * layer.set("title", "Orthophoto");
+         * layer.set("description", "Photographies aériennes");
+         * layer.set("producer", "IGN");
+         * layer.set("display", false); // masque uniquement l'entrée du gestionnaire
          */
         this.PROPERTY_CHANGE_EVENT = "layerswitcher:propertychange";
         /**
@@ -1397,12 +1445,22 @@ class LayerSwitcher extends Control {
             var layerOptions = this._layersOrder[j];
             var layerDiv = this._createLayerDiv(layerOptions);
             layerDiv.dataset.sortableId = layerOptions.id;
+            const layerDivId = "#" + layerDiv.id;
             // on ajoute la div seulement si elle n'existe pas
-            if (!this._layerListContainer.querySelector("#" + layerDiv.id)) {
+            if (!this._layerListContainer.querySelector(layerDivId)) {
                 this._layerListContainer.appendChild(layerDiv);
+            } else {
+                // La div est déjà ajoutée, on la garde en mémoire
+                layerDiv = this._layerListContainer.querySelector(layerDivId);
             }
             // on stocke la div dans les options de la couche, pour une éventuelle réorganisation (setZIndex par ex)
             this._layers[layerOptions.id].div = layerDiv;
+        }
+
+        // Sélectionne la première couche (si aucune couche sélectionnée)
+        const layerValues = Object.values(this._layers);
+        if (!this.getSelectedLayer() && layerValues.length > 0) {
+            this.setSelectedLayer(layerValues[layerValues.length - 1].layer, true);
         }
     }
 
@@ -1459,6 +1517,11 @@ class LayerSwitcher extends Control {
         // ajout d'une div pour cette layer dans le control
         var layerDiv = this._createContainerLayerElement(layerOptions, this.options.allowTooltips);
 
+        // La propriété "display" ne pilote que la visibilité dans le gestionnaire.
+        if (!this.shouldDisplayLayerInSwitcher(layerOptions.layer)) {
+            layerDiv.classList.add("gpf-hidden", "GPelementHidden");
+        }
+
         if (!layerOptions.inRange) {
             layerDiv.classList.add("outOfRange");
         }
@@ -1497,7 +1560,11 @@ class LayerSwitcher extends Control {
      */
     _updateLayerCounter () {
         if (this._layerSwitcherCounter) {
-            this._layerSwitcherCounter.innerHTML = Object.keys(this._layers).length;
+            // on exclut les couches masquées (display === false) du compteur
+            const count = Object.values(this._layers).filter(
+                (opts) => opts.layer && this.shouldDisplayLayerInSwitcher(opts.layer)
+            ).length;
+            this._layerSwitcherCounter.innerHTML = count;
         }
     }
 
@@ -1672,6 +1739,11 @@ class LayerSwitcher extends Control {
         map.getLayers().forEach(
             (layer) => {
                 id = layer.gpLayerId;
+
+                // on ignore les couches non suivies (par ex. ajoutées à la carte sans passer par le LayerSwitcher)
+                if (!this._layers[id]) {
+                    return;
+                }
 
                 // on commence par désactiver temporairement l'écouteur d'événements sur le changement de zindex.
                 olObservableUnByKey(this._layers[id].onZIndexChangeEvent);
@@ -2123,6 +2195,10 @@ class LayerSwitcher extends Control {
         // abonnement/desabonnement aux evenements permettant la conversion en n/b
         var id = e.target.gpLayerId;
         var layer = this._layers[id].layer;
+        if (layer.getLayers && layer.getLayers().getArray().length > 0) {
+            console.warn("Grayscale not implemented for layer groups");
+            return;
+        }
         var source = layer.getSource();
 
         if (!(source instanceof ImageSource || source instanceof TileWMSSource || source instanceof WMTSSource || source instanceof VectorTileSource)) {
@@ -2228,6 +2304,9 @@ class LayerSwitcher extends Control {
      */
     _updateGenericProperty (e) {
         var id = e.target.gpLayerId;
+        if (!this._layers[id]) {
+            return;
+        }
         var layer = this._layers[id].layer;
         var value = layer.get(e.key);
 
@@ -2253,6 +2332,19 @@ class LayerSwitcher extends Control {
                 if (producerDiv) {
                     producerDiv.innerHTML = value;
                 }
+                break;
+            case "display":
+                // masquer ou afficher uniquement dans le gestionnaire de couches ;
+                // la couche reste rendue sur la carte dans tous les cas.
+                var layerDiv = this._layers[id].div;
+                if (layerDiv) {
+                    if (value === false) {
+                        layerDiv.classList.add("gpf-hidden", "GPelementHidden");
+                    } else {
+                        layerDiv.classList.remove("gpf-hidden", "GPelementHidden");
+                    }
+                }
+                this._updateLayerCounter();
                 break;
             default:
                 break;
@@ -2468,7 +2560,8 @@ class LayerSwitcher extends Control {
             if (options) {
                 const layer = this._layers[layerID].layer;
 
-                if (layer !== this.getSelectedLayer()) {
+                // Compare les gpLayerId au lieu de comparer les objets
+                if (layer.gpLayerId !== this.getSelectedLayer()?.gpLayerId) {
                     this.setSelectedLayer(layer, true);
                 }
             }
@@ -2642,18 +2735,20 @@ class LayerSwitcher extends Control {
      */
     getLayerInfo (layer) {
         var layerInfo = {};
-        if (layer.getProperties !== undefined && layer.getSource !== undefined) {
-            var layerProperties = layer.getProperties();
+        if (layer && layer.getProperties !== undefined) {
+            var layerProperties = layer.getProperties() || {};
             var src = layerProperties.source;
-            if (src) {
-                layerInfo._title = src._title || layerProperties.title || layerProperties.id || "";
-                layerInfo._description = src._description || layerProperties.description || "";
-                layerInfo._producer = src._producer || layerProperties.producer || "";
-                layerInfo._thumbnail = src._thumbnail || layerProperties.thumbnail || "";
-                layerInfo._quicklookUrl = src._quicklookUrl || layerProperties.quicklookUrl || "";
-                layerInfo._metadata = src._metadata || layerProperties.metadata || [];
-                layerInfo._legends = src._legends || layerProperties.legends || [];
+            if (!src && layer.getSource !== undefined) {
+                src = layer.getSource();
             }
+
+            layerInfo._title = (src && src._title) || layerProperties.title || layerProperties.id || "";
+            layerInfo._description = (src && src._description) || layerProperties.description || "";
+            layerInfo._producer = (src && src._producer) || layerProperties.producer || "";
+            layerInfo._thumbnail = (src && src._thumbnail) || layerProperties.thumbnail || "";
+            layerInfo._quicklookUrl = (src && src._quicklookUrl) || layerProperties.quicklookUrl || "";
+            layerInfo._metadata = (src && src._metadata) || layerProperties.metadata || [];
+            layerInfo._legends = (src && src._legends) || layerProperties.legends || [];
         }
         return layerInfo;
     }

@@ -36,6 +36,8 @@
                 <button type="button" class="fr-btn" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
                 <button type="button" class="fr-btn" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
                 <button type="button" class="fr-btn" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
+                <button type="button" class="fr-btn" id="hiddenOSMLayer">Masquer la couche OSM</button>
+                <button type="button" class="fr-btn" id="showOSMLayer">Afficher la couche OSM</button>
             </div>
 {{/content}}
 
@@ -206,6 +208,12 @@
                 modifyDescriptionOSMLayer = function () {
                     osm.set('description', "Couche Osm");
                 }
+                hiddenOSMLayer = function () {
+                    osm.set("display", false);
+                };
+                showOSMLayer = function () {
+                    osm.set("display", true);
+                };
                 document.getElementById("addMapsLayer").onclick = addMapsLayer;
                 document.getElementById("addOSMLayer").onclick = addOSMLayer;
                 document.getElementById("addVTLayer").onclick = addVTLayer;
@@ -215,6 +223,8 @@
                 document.getElementById("modifyOpacityOSMLayer").onclick = modifyOpacityOSMLayer;
                 document.getElementById("modifyIndexOSMLayerMin").onclick = modifyIndexOSMLayerMin;
                 document.getElementById("modifyIndexOSMLayerMax").onclick = modifyIndexOSMLayerMax;
+                document.getElementById("hiddenOSMLayer").onclick = hiddenOSMLayer;
+                document.getElementById("showOSMLayer").onclick = showOSMLayer;
            </script>
 {{/content}}
 

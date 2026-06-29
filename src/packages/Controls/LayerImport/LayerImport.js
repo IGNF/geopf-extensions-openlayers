@@ -52,6 +52,7 @@ import Utils from "../../Utils/Helper";
 import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 import ProxyUtils from "../../Utils/ProxyUtils";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 // DOM
 import LayerImportDOM from "./LayerImportDOM";
 // import local with ol dependencies
@@ -1490,7 +1491,7 @@ class LayerImport extends Control {
                         // TODO ajouter le style de type background !
                         // fonction de style de la couche
                         var setStyle = () => {
-                            applyStyleOlms(p.layer, p.styles, { source : p.id })
+                            applyStyleOlms(p.layer, p.styles, { source : p.id, updateSource : false })
                                 .then(function () {
                                     var visibility = true;
                                     p.layer.setVisible(visibility);
@@ -1719,7 +1720,21 @@ class LayerImport extends Control {
             );
 
             logger.log("loaded features : ", features);
-
+            
+            // sanitize toutes les properties des features pour éviter les risques de XSS
+            for (let index = 0; index < features.length; index++) {
+                const feature = features[index];
+                var properties = feature.getProperties();
+                for (var key in properties) {
+                    if (properties.hasOwnProperty(key)) {
+                        var value = properties[key];
+                        if (typeof value === "string") {
+                            feature.set(key, sanitizeHtml(value));
+                        }
+                    }
+                }
+            }
+            
             // création d'une couche vectorielle à partir de ces features
             vectorSource = new VectorSource({
                 features : new Collection()
@@ -1978,6 +1993,12 @@ class LayerImport extends Control {
         if (layer.get("mapbox-source") === data.source && layer.get("mapbox-editor") === e.target.editorID) {
             // reload style with new param : layout.visibility : "visible" or "none"...
             var styles = layer.get("mapbox-styles");
+            if (styles.id) {
+                // on supprime l'id du style pour éviter les problèmes de cache 
+                // de MapBox GL JS (il considère que c'est le même style et 
+                // ne recharge pas la couche)
+                delete styles.id; 
+            }
             var layerMapBox;
             var layers = styles.layers;
             for (var i = 0; i < layers.length; i++) {
@@ -1994,13 +2015,11 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            updateMapboxLayerOlms(map, layerMapBox);
-            Promise.resolve();
-            // applyStyleOlms(layer, styles, { source : data.source })
-            //     .then(function () {})
-            //     .catch(function (error) {
-            //         logger.error(error);
-            //     });
+            applyStyleOlms(layer, styles, { source : data.source, updateSource : false })
+                .then(function () {})
+                .catch(function (error) {
+                    logger.error(error);
+                });
         }
     }
 
@@ -2020,6 +2039,12 @@ class LayerImport extends Control {
         if (layer.get("mapbox-source") === data.source && layer.get("mapbox-editor") === e.target.editorID) {
             // reload style with new param : minZoom = ...
             var styles = layer.get("mapbox-styles");
+            if (styles.id) {
+                // on supprime l'id du style pour éviter les problèmes de cache 
+                // de MapBox GL JS (il considère que c'est le même style et 
+                // ne recharge pas la couche)
+                delete styles.id; 
+            }
             var layerMapBox;
             var layers = styles.layers;
             for (var i = 0; i < layers.length; i++) {
@@ -2030,13 +2055,11 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            updateMapboxLayerOlms(map, layerMapBox);
-            Promise.resolve();
-            // applyStyleOlms(layer, styles, { source : data.source })
-            //     .then(function () {})
-            //     .catch(function (error) {
-            //         logger.error(error);
-            //     });
+            applyStyleOlms(layer, styles, { source : data.source, updateSource : false })
+                .then(function () {})
+                .catch(function (error) {
+                    logger.error(error);
+                });
         }
     }
 
@@ -2057,6 +2080,9 @@ class LayerImport extends Control {
         if (layer.get("mapbox-source") === data.source && layer.get("mapbox-editor") === e.target.editorID) {
             // reload style with new param : minZoom = ...
             var styles = layer.get("mapbox-styles");
+            if (styles.id) {    
+                delete styles.id;
+            }
             var layerMapBox;
             var layers = styles.layers;
             for (var i = 0; i < layers.length; i++) {
@@ -2067,13 +2093,11 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            updateMapboxLayerOlms(map, layerMapBox);
-            Promise.resolve();
-            // applyStyleOlms(layer, styles, { source : data.source })
-            //     .then(function () {})
-            //     .catch(function (error) {
-            //         logger.error(error);
-            //     });
+            applyStyleOlms(layer, styles, { source : data.source, updateSource : false })
+                .then(function () {})
+                .catch(function (error) {
+                    logger.error(error);
+                });
         }
     }
 
@@ -2094,6 +2118,9 @@ class LayerImport extends Control {
         if (layer.get("mapbox-source") === data.source && layer.get("mapbox-editor") === e.target.editorID) {
             // reload style with new param :
             var styles = layer.get("mapbox-styles");
+            if (styles.id) {
+                delete styles.id;
+            }
             var layerMapBox;
             var layers = styles.layers;
             for (var i = 0; i < layers.length; i++) {
@@ -2106,13 +2133,12 @@ class LayerImport extends Control {
                     break;
                 }
             }
-            updateMapboxLayerOlms(map, layerMapBox);
-            Promise.resolve();
-            // applyStyleOlms(layer, styles, { source : data.source })
-            //     .then(function () {})
-            //     .catch(function (error) {
-            //         logger.error(error);
-            //     });
+            
+            applyStyleOlms(layer, styles, { source : data.source, updateSource : false })
+                .then(function () {})
+                .catch(function (error) {
+                    logger.error(error);
+                });
         }
     }
 

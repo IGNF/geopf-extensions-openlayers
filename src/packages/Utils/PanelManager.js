@@ -29,9 +29,10 @@ function getSameSideOpenedPanel (position, openedPanelID) {
 
 var PanelManager = function (position, openedPanelID) {
     var openedPanel = getSameSideOpenedPanel(position, openedPanelID);
-    if (openedPanel.length > 0) {
-        openedPanel[0].getElementsByTagName("button")[0].click();
-    }
+    // on ferme tous les panels ouverts
+    openedPanel.forEach((panel) => {
+        panel.getElementsByTagName("button")[0].click();
+    });
 };
 
 export default PanelManager;

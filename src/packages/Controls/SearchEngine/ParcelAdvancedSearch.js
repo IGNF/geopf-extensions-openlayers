@@ -1,4 +1,3 @@
-import def from "ajv/dist/vocabularies/discriminator";
 import InseeSearchService from "../../Services/InseeSearchService";
 import Helper from "../../Utils/Helper";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";

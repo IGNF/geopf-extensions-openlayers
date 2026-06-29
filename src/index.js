@@ -80,6 +80,7 @@ export { default as labelForm } from "./packages/Controls/StyleDialog/labelForm"
 export { default as DrawingInteraction } from "./packages/Interactions/Drawing";
 export { default as SelectingInteraction } from "./packages/Interactions/Selecting";
 export { default as ModifyingInteraction } from "./packages/Interactions/Modifying";
+export { default as Panoramax } from "./packages/Controls/Panoramax/Panoramax";
 
 // Services
 export { default as AbstractSearchService } from "./packages/Services/AbstractSearchService";

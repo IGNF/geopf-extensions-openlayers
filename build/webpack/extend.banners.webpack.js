@@ -37,6 +37,12 @@ module.exports = (env, argv) => {
                 raw : true,
                 entryOnly : true
             }),
+            new BannerWebPackPlugin({
+                banner : header(fs.readFileSync(path.join(rootdir, "build/licences", "licence-panoramax.tmpl"), "utf8"), {
+                    __VERSION__ : pkg.dependencies["@panoramax/web-viewer"],
+                }),
+                raw : true
+            }),
         ]
     };
 };

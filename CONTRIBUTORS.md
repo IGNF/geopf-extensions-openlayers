@@ -20,3 +20,5 @@ Le fichier [CONTRIBUTING.md](CONTRIBUTING.md) définit les règles et pratiques 
 * [sylvainpolletvillard](https://github.com/sylvainpolletvillard)
 * [ThomasG77](https://github.com/ThomasG77)
 * [RupertBarrow](https://github.com/RupertBarrow)
+* [ibrahim-sall](https://github.com/ibrahim-sall)
+* [MatRouillard](https://github.com/MatRouillard)

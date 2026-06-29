@@ -1612,6 +1612,18 @@ class Catalog extends Control {
     setFilteredLayersList (value) {
         // on rend invisible les couches qui ne respecte pas la valeur 
         // selon le critère de recherche
+        
+        const normalizeSearchText = (input) => {
+            return String(input || "")
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[_-]+/g, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+        };
+
+        var normalizedValue = normalizeSearchText(value);
         var criteria = this.options.search.criteria;
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
@@ -1620,10 +1632,17 @@ class Catalog extends Control {
                 for (let i = 0; i < criteria.length; i++) {
                     const c = criteria[i];
                     if (layer[c]) {
-                        words += layer[c].toLowerCase();
+                        if (Array.isArray(layer[c])) {
+                            words += normalizeSearchText(layer[c]
+                                .flat(Infinity) // tableau imbriqué
+                                .filter(item => item != null) // valeur null ou undefined
+                                .join(" "));
+                        } else {
+                            words += " " + normalizeSearchText(layer[c]);
+                        }
                     }
                 }
-                layer.hidden = !words.includes(value.toLowerCase());
+                layer.hidden = !words.includes(normalizedValue);
                 if (!layer.hidden) {
                     logger.info(`Filtering layer ${layer.name} with words : ${words}`);
                 }
