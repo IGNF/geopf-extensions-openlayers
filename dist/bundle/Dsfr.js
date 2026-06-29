@@ -8,7 +8,7 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.12-557
+ * @version 1.0.0-beta.12-558
  * @date 22/06/2026
  *
  */
@@ -59,5 +59,5 @@
  *            See https://raw.githubusercontent.com/proj4js/proj4js/master/LICENSE.md
  * @version   2.15.0
  */
-var Gp;(()=>{"use strict";var e={r:e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})}},r={};e.r(r),Gp=r})();
+var Gp;(()=>{"use strict";const e={r:e=>{Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})}};let t={};e.r(t),Gp=t})();
 //# sourceMappingURL=Dsfr.js.map
