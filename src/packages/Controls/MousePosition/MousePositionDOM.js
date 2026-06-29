@@ -690,10 +690,10 @@ var MousePositionDOM = {
     _resetLabelElements : function (currentProjectionType) {
         // Changement des labels dans le formulaire de saisie
         var spanLat = document.getElementById(this._addUID("GPmousePositionLatLabel"));
-        spanLat.innerHTML = currentProjectionType === "Geographical" ? "Latitude :" : "X :";
+        spanLat.innerHTML = currentProjectionType === "Geographical" ? "Latitude :" : "Y :";
 
         var spanLon = document.getElementById(this._addUID("GPmousePositionLonLabel"));
-        spanLon.innerHTML = currentProjectionType === "Geographical" ? "Longitude :" : "Y :";
+        spanLon.innerHTML = currentProjectionType === "Geographical" ? "Longitude :" : "X :";
     },
 
     /**
@@ -868,8 +868,8 @@ var MousePositionDOM = {
             var labelLat = document.getElementById(this._addUID("GPmousePositionLatLabel"));
 
             if (coordinate.x || coordinate.y) {
-                labelLat.innerHTML = "X : ";
-                labelLon.innerHTML = "Y : ";
+                labelLat.innerHTML = "Y : ";
+                labelLon.innerHTML = "X : ";
             } else if (coordinate.e || coordinate.n) {
                 labelLat.innerHTML = "E : ";
                 labelLon.innerHTML = "N : ";
@@ -899,8 +899,8 @@ var MousePositionDOM = {
                 var elLat = document.getElementById(this._addUID("GPmousePositionLat"));
                 var elLon = document.getElementById(this._addUID("GPmousePositionLon"));
 
-                elLat.value = coordinate.x || coordinate.lat || coordinate.e || "0";
-                elLon.value = coordinate.y || coordinate.lng || coordinate.lon || coordinate.n || "0";
+                elLat.value = coordinate.y || coordinate.lat || coordinate.e || "0";
+                elLon.value = coordinate.x || coordinate.lng || coordinate.lon || coordinate.n || "0";
 
                 elLat.title = "Latitude";
                 elLon.title = "Longitude";
