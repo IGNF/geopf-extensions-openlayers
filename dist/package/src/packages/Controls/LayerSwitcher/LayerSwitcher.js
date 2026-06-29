@@ -309,14 +309,23 @@ class LayerSwitcher extends Control {
         // cette méthode est appelée
         // après un map.addControl() ou map.removeControl()
 
+        // Déselectionne la couche sélectionnée
+        this.getSelectedLayer() && this.setSelectedLayer(this.getSelectedLayer(), false);
+
         if (map) { // dans le cas de l'ajout du contrôle à la map
             // on ajoute les couches
             this._addMapLayers(map);
 
+            
             // mode "collapsed"
             if (!this.collapsed) {
                 this._showLayerSwitcherButton.setAttribute("aria-pressed", true);
             }
+            
+            // Forget listeners (prevent adding them twice)
+            olObservableUnByKey(this._listeners.onMoveListener);
+            olObservableUnByKey(this._listeners.onAddListener);
+            olObservableUnByKey(this._listeners.onRemoveListener);
 
             // At every map movement, layer switcher may be updated,
             // according to layers on map, and their range.
@@ -1424,12 +1433,22 @@ class LayerSwitcher extends Control {
             var layerOptions = this._layersOrder[j];
             var layerDiv = this._createLayerDiv(layerOptions);
             layerDiv.dataset.sortableId = layerOptions.id;
+            const layerDivId = "#" + layerDiv.id;
             // on ajoute la div seulement si elle n'existe pas
-            if (!this._layerListContainer.querySelector("#" + layerDiv.id)) {
+            if (!this._layerListContainer.querySelector(layerDivId)) {
                 this._layerListContainer.appendChild(layerDiv);
+            } else {
+                // La div est déjà ajoutée, on la garde en mémoire
+                layerDiv = this._layerListContainer.querySelector(layerDivId);
             }
             // on stocke la div dans les options de la couche, pour une éventuelle réorganisation (setZIndex par ex)
             this._layers[layerOptions.id].div = layerDiv;
+        }
+
+        // Sélectionne la première couche (si aucune couche sélectionnée)
+        const layerValues = Object.values(this._layers);
+        if (!this.getSelectedLayer() && layerValues.length > 0) {
+            this.setSelectedLayer(layerValues[layerValues.length - 1].layer, true);
         }
     }
 
@@ -2529,7 +2548,8 @@ class LayerSwitcher extends Control {
             if (options) {
                 const layer = this._layers[layerID].layer;
 
-                if (layer !== this.getSelectedLayer()) {
+                // Compare les gpLayerId au lieu de comparer les objets
+                if (layer.gpLayerId !== this.getSelectedLayer()?.gpLayerId) {
                     this.setSelectedLayer(layer, true);
                 }
             }
