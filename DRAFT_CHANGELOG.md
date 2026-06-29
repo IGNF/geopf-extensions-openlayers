@@ -15,7 +15,7 @@ __DATE__
 
 * ✨ [Added]
 
-  - Catalog : recherche non sensible à la casse ou aux accents (#558)
+  - Draw(Widget): nouveau widget de dessin plus poussé qui utilise des composants de DOM génériques (#490)
 
 * 🔨 [Changed]
 
