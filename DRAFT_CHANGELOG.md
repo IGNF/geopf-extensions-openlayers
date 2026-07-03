@@ -9,6 +9,8 @@ __DATE__
 
 ### 🎉 Summary
 
+Résolution d'alertes de sécurité remontées par codeQL.
+
 ### 💥 Breaking changes
 
 ### 📖 Changelog
