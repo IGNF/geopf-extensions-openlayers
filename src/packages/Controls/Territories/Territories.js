@@ -262,12 +262,12 @@ class Territories extends Control {
         validatedTerritory.id = String(territory.id);
         validatedTerritory.title = sanitizeHtml(title, { strict : true });
         // options facultatives
-        validatedTerritory.description = sanitizeHtml(String(territory.description ?? ""));
+        validatedTerritory.description = sanitizeHtml(String(territory.description ?? ""), { strict : true });
         validatedTerritory.bbox = hasBbox ? territory.bbox : null;
         validatedTerritory.point = hasPoint ? territory.point : null;
         validatedTerritory.zoom = (typeof territory.zoom === "number" && !Number.isNaN(territory.zoom)) ? territory.zoom : null;
-        validatedTerritory.thumbnail = territory.thumbnail || null;
-        validatedTerritory.icon = territory.icon || null;
+        validatedTerritory.thumbnail = sanitizeHtml(String(territory.thumbnail ?? ""), { strict : true });
+        validatedTerritory.icon = sanitizeHtml(String(territory.icon ?? ""), { strict : true });
 
         return validatedTerritory;
     }
@@ -847,6 +847,10 @@ class Territories extends Control {
     onAddTerritoriesViewClick (e, viewName) {
         logger.trace(e, viewName);
         var name = sanitizeHtml(viewName, { strict : true });
+        if (!name || !name.length) {
+            logger.error("Invalid view name !");
+            return;
+        }
         var id = Math.abs(Array.from(name).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
         var view = this.getMap().getView();
         var proj = view.getProjection().getCode();
