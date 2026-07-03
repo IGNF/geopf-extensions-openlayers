@@ -846,7 +846,8 @@ class Territories extends Control {
      */
     onAddTerritoriesViewClick (e, viewName) {
         logger.trace(e, viewName);
-        var name = sanitizeHtml(viewName, { strict: true });
+        var name = sanitizeHtml(viewName, { strict : true });
+        var id = Math.abs(Array.from(name).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
         var view = this.getMap().getView();
         var proj = view.getProjection().getCode();
         var coord = olTransformProj(view.getCenter(), proj, "EPSG:4326");
