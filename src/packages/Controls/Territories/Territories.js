@@ -344,7 +344,8 @@ class Territories extends Control {
     removeTerritory (territory, force = false) {
         var found = false;
         if (territory) {
-            this.territories.forEach((o, i) => {
+            for (let i = 0; i < this.territories.length; i++) {
+                const o = this.territories[i];
                 if (o.data.id === territory.data.id) {
                     if (!force) {
                         // on ne le supprime pas de la liste des territoires
@@ -365,7 +366,7 @@ class Territories extends Control {
                         count.innerText = nb;
                     }
                 }
-            });
+            }
         }
         return found;
     }
