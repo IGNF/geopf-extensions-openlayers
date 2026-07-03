@@ -37,5 +37,6 @@ __DATE__
   
 * 🔒 [Security]
 
+  - Territories : correctifs sur les failles XSS (#563)
 
 ---
