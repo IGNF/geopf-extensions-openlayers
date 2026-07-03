@@ -9,6 +9,8 @@ __DATE__
 
 ### 🎉 Summary
 
+Résolution d'alertes de sécurité remontées par codeQL.
+
 ### 💥 Breaking changes
 
 ### 📖 Changelog
@@ -37,5 +39,6 @@ __DATE__
   
 * 🔒 [Security]
 
+  - Territories : correctifs sur les failles XSS (#563)
 
 ---
