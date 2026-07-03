@@ -68,10 +68,6 @@ button[id^=GPcollapseLegend_ID_] {
     overflow: hidden;
 }
 
-.legend-entry-container {
-    background-color: var(--background-overlap-grey);
-}
-
 .gpf-label-legends-name {
     width: calc(100% - 40px);
     line-height: 56px;
@@ -94,9 +90,43 @@ button[id^=GPcollapseLegend_ID_][aria-pressed="true"] + .legend-entry-image {
 
 .legend-entry-image {
     display: block;
+    position: relative;
     max-height: 0;
     opacity: 0;
     transition: max-height 0.5s ease-out 0s, opacity 0.5s ease-out 0s;
+}
+
+.legend-entry-image img {
+    position: relative;
+    z-index: 1;
+    min-height: 30px;
+}
+
+.placeholder {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+}
+
+.placeholder::after {
+    content: "";
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--border-default-grey);
+    border-top-color: var(--text-action-high-blue-france);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .legends-entries {

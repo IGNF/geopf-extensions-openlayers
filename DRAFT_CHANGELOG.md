@@ -28,6 +28,7 @@ __DATE__
 * 🔨 [Changed]
 
   - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
+  - Legends : chargement asynchrone des images de légende (#)
 
 * 🔥 [Deprecated]
 

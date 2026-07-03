@@ -203,7 +203,10 @@ var LegendsDOM = {
                             tabindex="0"
                             aria-pressed="false"></button>
                         <div id="GPlegend_ID_${o.id}" class="legend-entry-image gpf-hidden">
-                            <img src="${url}" alt="${o.desc}">
+                            <div>
+                                <div class="placeholder"></div>
+                                <img class="fr-fluid-img" src="${url}" alt="${o.desc}" loading="lazy" />
+                            </div>
                         </div>
                     </div>
                 `);
