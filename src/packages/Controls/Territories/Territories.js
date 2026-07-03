@@ -15,6 +15,7 @@ import Utils from "../../Utils/Helper";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 
 import TerritoriesJson from "./Territories.json";
 
@@ -152,8 +153,7 @@ class Territories extends Control {
 
             // Ajout des territoires par defaut ou customisés
             var territories = (this.auto) ? TerritoriesJson : this.options.territories;
-            for (let index = 0; index < territories.length; index++) {
-                const territory = territories[index];
+            for (const territory of territories) {
                 this.setTerritory(territory);
             }
         } else {
@@ -221,6 +221,32 @@ class Territories extends Control {
     }
 
     /**
+     * Validate a territory object
+     * @param {Territory} territory - territory to validate
+     * @returns {Territory|null} - validated territory or null if invalid
+     */
+    validateTerritory (territory) {
+        if (!territory || !territory.id || !territory.title || (!territory.bbox && !territory.point)) {
+            logger.error("Invalid territory object. Must have id, title and bbox or point.");
+            return null;
+        }
+        // on valide chaque entrée
+        var validatedTerritory = {};
+        // options obligatoires
+        validatedTerritory.id = territory.id;
+        validatedTerritory.title = sanitizeHtml(territory.title);
+        // options facultatives
+        validatedTerritory.description = sanitizeHtml(territory.description || "");
+        validatedTerritory.bbox = territory.bbox;
+        validatedTerritory.point = territory.point || null;
+        validatedTerritory.zoom = territory.zoom || null;
+        validatedTerritory.thumbnail = territory.thumbnail || null;
+        validatedTerritory.icon = territory.icon || null;
+
+        return validatedTerritory;
+    }
+
+    /**
      * Add a territory
      *
      * @param {Territory} territory  - territory
@@ -237,9 +263,13 @@ class Territories extends Control {
      * });
      */
     setTerritory (territory, isAdded = false) {
+        territory = this.validateTerritory(territory);
+        if (!territory) {
+            return false;
+        }
         // Test if a territory already exist
         var founded = this.territories.some(e => e.data.id === territory.id);
-        if (territory && !founded) {
+        if (!founded) {
             var entry = this._createTerritoryEntry(territory);
             var view = this._createTerritoryView(territory);
             if (entry && view) {
@@ -270,10 +300,9 @@ class Territories extends Control {
      * @param {Array<Territory>} territories - file config
      */
     setTerritories (territories) {
-        for (let j = 0; j < territories.length; j++) {
-            const territory = territories[j];
+        territories.forEach((territory) => {
             this.setTerritory(territory);
-        }
+        });
     }
 
     /**
@@ -289,19 +318,18 @@ class Territories extends Control {
     removeTerritory (territory, force = false) {
         var found = false;
         if (territory) {
-            for (let i = 0; i < this.territories.length; i++) {
-                const o = this.territories[i];
+            this.territories.forEach((o, i) => {
                 if (o.data.id === territory.data.id) {
                     if (!force) {
                         // on ne le supprime pas de la liste des territoires
                         // mais on le masque uniquement
-                        this.territories[i].isRemoved = true;
-                        this.territories[i].domEntry.classList.add("gpf-hidden");
-                        this.territories[i].domView.style.display = "none";
+                        o.isRemoved = true;
+                        o.domEntry.classList.add("gpf-hidden");
+                        o.domView.style.display = "none";
                     } else {
                         // on le supprime de la liste des territoires
-                        this.territories[i].domEntry.remove();
-                        this.territories[i].domView.remove();
+                        o.domEntry.remove();
+                        o.domView.remove();
                         this.territories.splice(i, 1);
                     }
                     found = true;
@@ -310,9 +338,8 @@ class Territories extends Control {
                         var nb = this.territories.filter(t => !t.isRemoved).length;
                         count.innerText = nb;
                     }
-                    break;
                 }
-            }
+            });
         }
         return found;
     }
@@ -321,8 +348,7 @@ class Territories extends Control {
      * Remove all territories
      */
     removeTerritories () {
-        for (let i = 0; i < this.territories.length; i++) {
-            const territory = this.territories[i];
+        for (const territory of this.territories) {
             territory.domEntry.remove();
             territory.domView.remove();
         }
@@ -793,14 +819,15 @@ class Territories extends Control {
      */
     onAddTerritoriesViewClick (e, viewName) {
         logger.trace(e, viewName);
-        var id = Math.abs(Array.from(viewName).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
+        var name = sanitizeHtml(viewName);
+        var id = Math.abs(Array.from(name).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
         var view = this.getMap().getView();
         var proj = view.getProjection().getCode();
         var coord = olTransformProj(view.getCenter(), proj, "EPSG:4326");
         var zoom = view.getZoom();
         var territory = {
             "id" : id.toString(),
-            "title" : viewName,
+            "title" : name,
             "description" : "Vue personnalisée",
             "point" : coord,
             "zoom" : zoom,
