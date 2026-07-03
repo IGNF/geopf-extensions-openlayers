@@ -260,7 +260,7 @@ class Territories extends Control {
         var validatedTerritory = {};
         // options obligatoires
         validatedTerritory.id = String(territory.id);
-        validatedTerritory.title = sanitizeHtml(title, { strict: true });
+        validatedTerritory.title = sanitizeHtml(title, { strict : true });
         // options facultatives
         validatedTerritory.description = sanitizeHtml(String(territory.description ?? ""));
         validatedTerritory.bbox = hasBbox ? territory.bbox : null;
