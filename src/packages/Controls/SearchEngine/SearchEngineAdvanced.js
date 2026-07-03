@@ -640,6 +640,21 @@ class SearchEngineAdvanced extends Control {
         locationBtn.addEventListener("click", () => {
             this.geolocation.setTracking(true);
             console.log("tracking", this.geolocation);
+            /**
+             * @event searchengineadvanced:geolocation:click
+             * @property {Object} type - event
+             * @property {Object} coordinates - coordinates
+             * @property {Object} target - instance SearchEngineAdvanced
+             * @example
+             * SearchEngineAdvanced.on("searchengineadvanced:geolocation:click", function (e) {
+             *   console.log(e.coordinates);
+             * })
+            */
+            const position = this.geolocation.getPosition();
+            this.dispatchEvent({
+                type : "searchengineadvanced:geolocation:click",
+                coordinates : position
+            });
         });
         return locationBtn;
     }
