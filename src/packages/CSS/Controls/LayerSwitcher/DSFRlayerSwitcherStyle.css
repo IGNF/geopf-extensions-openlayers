@@ -512,4 +512,5 @@ div[id^="GPlayerSwitcher_ID_"]:only-child .GPlayerDragNDrop {
 img[id^=GPtitleImage] {
     width: 44px;
     height: 44px;
+    background: var(--background-alt-blue-france);
 }

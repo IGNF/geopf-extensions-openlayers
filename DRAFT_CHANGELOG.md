@@ -41,6 +41,7 @@ __DATE__
   - Panoramax : modification du z-index par défaut du photoviewer pour être au-dessus des modales DFSR (#552)
   - Panoramax : reinitialisation des filtres (#556)
   - Catalog : améliorer la gestion des critères de recherche pour inclure des valeurs issues de tableaux (#555)
+  - Catalog : amélioration des vignettes de couches (chargement, tailles, couleurs, dark mode) (#)
   - Isocurve : correctif sur l'évenement de fin de traitement (#557)
   - Drawing : correctif sur l'ouverture du panneau de dessin (#557)
   - MousePosition : conservation de l'ordre lat/lon y/x pour l'affichage des coordonnées (#560)

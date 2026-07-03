@@ -664,19 +664,8 @@ var CatalogDOM = {
                     // on utilise la vignette fournie
                     if (thumbnail.startsWith("data:") || thumbnail.startsWith("http")) {
                         return `
-                        <div class="catalog-thumbnail" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                            <img src="${thumbnail}" alt="Aperçu de la couche" style="min-width:100%;min-height:100%;object-fit:cover;"/>
-                        </div>
+                            <img src="${thumbnail}" alt="" />
                         `;
-                    } else {
-                        // TODO
-                        // sinon, on considère que c'est une URL relative
-                        // ex. img/thumbnail.png
-                        thumbnail = "default";
-                    }
-                    // si thumbnail = "default", on utilise l'icone par defaut
-                    if (thumbnail === "default") {
-                        return `<div class="catalog-thumbnail-default" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>`;
                     }
                 }
                 return "";
@@ -758,7 +747,9 @@ var CatalogDOM = {
                         style="position: relative; bottom: 12px;">
                     </label>
                     <div class="catalog-thumbnail-container" style="">
-                        ${tmplThumbnail(thumbnail)}
+                        <div class="catalog-thumbnail-default">
+                            ${tmplThumbnail(thumbnail)}
+                        </div>
                     </div>
                     <div style="width: 100%;">
                         <label 
