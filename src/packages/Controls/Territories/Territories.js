@@ -365,6 +365,7 @@ class Territories extends Control {
                         var nb = this.territories.filter(t => !t.isRemoved).length;
                         count.innerText = nb;
                     }
+                    break;
                 }
             }
         }
