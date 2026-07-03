@@ -1,6 +1,7 @@
 import ID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("RouteDOM");
@@ -367,9 +368,9 @@ var RouteDOM = {
                 var elementCoords = document.getElementById(this._addUID("GPlocationOriginCoords_" + id));
                 var stageCoords = elementCoords.value;
                 if (stageCoords !== null && stageCoords !== "") {
-                    resultStageValue.innerHTML = stageCoords;
+                    resultStageValue.innerHTML = sanitizeHtml(stageCoords, { strict : true});
                 } else {
-                    resultStageValue.innerHTML = document.getElementById(this._addUID("GPlocationOrigin_" + id)).value;
+                    resultStageValue.innerHTML = sanitizeHtml(document.getElementById(this._addUID("GPlocationOrigin_" + id)).value, { strict : true});
                 }
                 resultStage.appendChild(resultStageValue);
                 if (resultStageValue.innerHTML !== "") {
