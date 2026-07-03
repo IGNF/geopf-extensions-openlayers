@@ -216,6 +216,12 @@ declare class Territories extends Control {
      */
     findTerritoryById(id: string): Territory | null;
     /**
+     * Validate a territory object
+     * @param {Territory} territory - territory to validate
+     * @returns {Territory|null} - validated territory or null if invalid
+     */
+    validateTerritory(territory: Territory): Territory | null;
+    /**
      * Add a territory
      *
      * @param {Territory} territory  - territory
