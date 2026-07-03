@@ -205,8 +205,11 @@ var LegendsDOM = {
                         <div id="GPlegend_ID_${o.id}" class="legend-entry-image gpf-hidden">
                             <div>
                                 <div class="placeholder"></div>
-                                <img class="fr-fluid-img" src="${url}" alt="${o.desc}" loading="lazy" />
+                                <img class="fr-fluid-img" src="${url}" alt="" loading="lazy" />
                             </div>
+                            <p>
+                                <a href="${url}" target="_blank" class="fr-link fr-text--xs">Ouvrir la légende dans un nouvel onglet</a>
+                            </p>
                         </div>
                     </div>
                 `);
