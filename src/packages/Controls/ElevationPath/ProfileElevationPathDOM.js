@@ -1,4 +1,5 @@
 import checkDsfr from "../Utils/CheckDsfr";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 
 /* globals AmCharts, d3 */
 var ProfileElevationPathDOM = {
@@ -966,7 +967,7 @@ var ProfileElevationPathDOM = {
                 }
                 _message += "<br/> (Lat : " + d.lat + "/ Lon : " + d.lon + ")";
 
-                div.html(_message)
+                div.html(sanitizeHtml(_message))
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             });
