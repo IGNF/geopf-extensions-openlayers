@@ -226,20 +226,46 @@ class Territories extends Control {
      * @returns {Territory|null} - validated territory or null if invalid
      */
     validateTerritory (territory) {
-        if (!territory || !territory.id || !territory.title || (!territory.bbox && !territory.point)) {
-            logger.error("Invalid territory object. Must have id, title and bbox or point.");
+        if (!territory || territory.id === undefined || territory.id === null || territory.id === "") {
+            logger.error("Invalid territory object. Must have a non-empty id.");
             return null;
         }
+
+        const title = String(territory.title ?? "");
+        const hasBbox = territory.bbox !== undefined && territory.bbox !== null;
+        const hasPoint = territory.point !== undefined && territory.point !== null;
+
+        if (!title || (!hasBbox && !hasPoint)) {
+            logger.error("Invalid territory object. Must have title and bbox or point.");
+            return null;
+        }
+
+        if (hasBbox) {
+            const bbox = territory.bbox;
+            if (!Array.isArray(bbox) || bbox.length !== 4 || bbox.some(n => typeof n !== "number" || Number.isNaN(n))) {
+                logger.error("Invalid territory bbox. Must be an array of 4 numbers in EPSG:4326.");
+                return null;
+            }
+        }
+
+        if (hasPoint) {
+            const point = territory.point;
+            if (!Array.isArray(point) || point.length !== 2 || point.some(n => typeof n !== "number" || Number.isNaN(n))) {
+                logger.error("Invalid territory point. Must be an array of 2 numbers in EPSG:4326.");
+                return null;
+            }
+        }
+
         // on valide chaque entrée
         var validatedTerritory = {};
         // options obligatoires
-        validatedTerritory.id = territory.id;
-        validatedTerritory.title = sanitizeHtml(territory.title);
+        validatedTerritory.id = String(territory.id);
+        validatedTerritory.title = sanitizeHtml(title, { strict: true });
         // options facultatives
-        validatedTerritory.description = sanitizeHtml(territory.description || "");
-        validatedTerritory.bbox = territory.bbox;
-        validatedTerritory.point = territory.point || null;
-        validatedTerritory.zoom = territory.zoom || null;
+        validatedTerritory.description = sanitizeHtml(String(territory.description ?? ""));
+        validatedTerritory.bbox = hasBbox ? territory.bbox : null;
+        validatedTerritory.point = hasPoint ? territory.point : null;
+        validatedTerritory.zoom = (typeof territory.zoom === "number" && !Number.isNaN(territory.zoom)) ? territory.zoom : null;
         validatedTerritory.thumbnail = territory.thumbnail || null;
         validatedTerritory.icon = territory.icon || null;
 
