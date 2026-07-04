@@ -3,7 +3,7 @@ import checkDsfr from "../Utils/CheckDsfr";
 import ToolTips from "../../Utils/ToolTips";
 import Utils from "../../Utils/Helper";
 import BaseLayer from "ol/layer/Base";
-import { log } from "loglevel";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 
 var LayerSwitcherDOM = {
 
@@ -612,7 +612,7 @@ var LayerSwitcherDOM = {
         label.className = "GPlayerName";
         label.title = obj.title || obj.description;
         if (tooltips) {
-            label.dataset.tooltip = obj.title || obj.description;
+            label.dataset.tooltip = sanitizeHtml(obj.title || obj.description);
             ToolTips.active(label);
             // pas de title si tooltip
             label.removeAttribute("title");
@@ -621,7 +621,7 @@ var LayerSwitcherDOM = {
         // FIXME Hack temporaire pour TMS
         // en attendant une meilleure gestion des titres de couches
         if (obj.layer.config && obj.layer.config.serviceParams.id === "GPP:TMS") {
-            label.innerHTML = obj.title || obj.description;
+            label.innerHTML = sanitizeHtml(obj.title || obj.description);
         }
         return label;
     },
@@ -640,7 +640,7 @@ var LayerSwitcherDOM = {
 
         div.innerHTML = obj.producer;
         if (tooltips) {
-            div.dataset.tooltip = obj.producer;
+            div.dataset.tooltip = sanitizeHtml(obj.producer);
             //ToolTips.active(div);
         }
 
@@ -1352,7 +1352,7 @@ var LayerSwitcherDOM = {
         var span = document.createElement("span");
         span.id = this._addUID("GPopacityValue_ID_" + id);
         span.className = "gpf-range__output fr-range__output gpf-visible";
-        span.innerHTML = _opacity + "%";
+        span.innerText = _opacity + "%";
 
         divC.appendChild(span);
 
