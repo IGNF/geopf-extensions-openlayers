@@ -84,7 +84,6 @@ declare class ControlList extends Control {
      * @param {Boolean} collapsed - True to collapse widget, False to display it
      */
     setCollapsed(collapsed: boolean): void;
-    collapsed: boolean | undefined;
     /**
      * Get container
      *
@@ -109,6 +108,10 @@ declare class ControlList extends Control {
         sortable: boolean;
         header: boolean;
     } | undefined;
+    /**
+     * @type {Boolean}
+     * specify if control is collapsed (true) or not (false) */
+    collapsed: boolean | undefined;
     /**
      * @type {Boolean}
      * specify if control is draggable (true) or not (false) */
