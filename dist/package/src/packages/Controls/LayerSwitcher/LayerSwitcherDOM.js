@@ -18,7 +18,7 @@ var LayerSwitcherDOM = {
         if (checkDsfr()) {
             handleClass.push(".GPlayerDragNDrop");
         }
-        const forceFallback = !!navigator.userAgent.match(/chrome|chromium|crios/i);
+        // const forceFallback = !!navigator.userAgent.match(/chrome|chromium|crios/i);
 
         // Voir lien suivant pour dragndrop avec tab
         // https://robbymacdonell.medium.com/refactoring-a-sortable-list-for-keyboard-accessibility-2176b34a07f4
@@ -455,6 +455,15 @@ var LayerSwitcherDOM = {
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher_ID_" + obj.id);
         container.className = "GPlayerSwitcher_layer gpf-panel__content fr-modal__content draggable-layer";
+        container.ondragstart = (e) => {
+            // Empêche les problèmes sur Chrome
+            if (e.target.draggable === false) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                e.stopPropagation();
+                return false;
+            }
+        };
 
         // ajout des outils basiques (visibility / layer name)
         container.appendChild(this._createBasicToolElement(obj, tooltips));
