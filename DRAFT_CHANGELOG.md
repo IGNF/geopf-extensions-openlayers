@@ -37,6 +37,7 @@ Résolution d'alertes de sécurité remontées par codeQL.
   - Drawing : correctif sur l'ouverture du panneau de dessin (#557)
   - MousePosition : conservation de l'ordre lat/lon y/x pour l'affichage des coordonnées (#560)
   - LayerSwitcher : correctif sur le drag n' drop en conflit avec le slider d'opacité (#562)
+  - ControlList : fixe l’événement change:collapsed (#561)
   
 * 🔒 [Security]
 
