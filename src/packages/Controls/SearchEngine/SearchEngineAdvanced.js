@@ -173,7 +173,7 @@ class SearchEngineAdvanced extends Control {
     _initEvents (options) {
         this.geolocation.on("change:position", () => {
             const coords = this.geolocation.getPosition();
-            const content = "Ma localisation"
+            const content = "Ma localisation";
             this._createMarker (coords, content);
             this.geolocation.setTracking(false);
         });
@@ -578,9 +578,9 @@ class SearchEngineAdvanced extends Control {
             layer.getSource().removeFeature(f);
 
             this.dispatchEvent({
-                type : this.REMOVE_FEATURE_EVENT,
+                type : "searchengineadvanced:feature:remove",
                 feature : f,
-                layer : layer,
+                layer : layer
             });
 
             // Ferme le popup
