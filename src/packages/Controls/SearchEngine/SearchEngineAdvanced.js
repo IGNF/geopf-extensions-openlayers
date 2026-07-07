@@ -174,7 +174,7 @@ class SearchEngineAdvanced extends Control {
         this.geolocation.on("change:position", () => {
             const coords = this.geolocation.getPosition();
             const content = "Ma localisation";
-            this._createMarker (coords, content);
+            this._createMarker (coords, content, "geolocate");
             this.geolocation.setTracking(false);
         });
 
@@ -630,12 +630,20 @@ class SearchEngineAdvanced extends Control {
      * Positionne un marker sur la carte.
      * @param {coords} coords - Coordonnées où positionner le marker
      * @param {String} content - Contenu à afficher dans la popup
+     * @param {String} origin - Origine de la feature
      * @private
      */
-    _createMarker (coords, content) {
+    _createMarker (coords, content, origin) {
         const pt = new Point(coords);
         pt.transform("EPSG:4326", this.getMap().getView().getProjection());
-        const evt = this.createEvent(pt, content);
+
+        const f = new OlFeature(pt);
+        if (origin) {
+            f.set("origin", origin);
+        }
+
+        const evt = this.createEvent(f, content);
+
         this.addResultToMap(evt);
         this.dispatchEvent(evt);
     }
