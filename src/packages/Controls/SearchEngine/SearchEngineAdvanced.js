@@ -172,11 +172,9 @@ class SearchEngineAdvanced extends Control {
      */
     _initEvents (options) {
         this.geolocation.on("change:position", () => {
-            const pt = new Point(this.geolocation.getPosition());
-            pt.transform("EPSG:4326", this.getMap().getView().getProjection());
-            const evt = this.createEvent(pt, "Ma localisation");
-            this.addResultToMap(evt);
-            this.dispatchEvent(evt);
+            const coords = this.geolocation.getPosition();
+            const content = "Ma localisation"
+            this._createMarker (coords, content);
             this.geolocation.setTracking(false);
         });
 
@@ -626,6 +624,20 @@ class SearchEngineAdvanced extends Control {
             }
         };
         return btn;
+    }
+
+    /**
+     * Positionne un marker sur la carte.
+     * @param {coords} coords - Coordonnées où positionner le marker
+     * @param {String} content - Contenu à afficher dans la popup
+     * @private
+     */
+    _createMarker (coords, content) {
+        const pt = new Point(coords);
+        pt.transform("EPSG:4326", this.getMap().getView().getProjection());
+        const evt = this.createEvent(pt, content);
+        this.addResultToMap(evt);
+        this.dispatchEvent(evt);
     }
 
     /**
