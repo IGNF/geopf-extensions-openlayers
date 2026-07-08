@@ -56,6 +56,7 @@ var ControlListDOM = {
         // gestionnaire d'evenement :
         // on ouvre le menu
         button.addEventListener("click", function (e) {
+            e.stopPropagation(); // empeche l'event de remonter
             var status = (e.target.ariaPressed === "true");
             e.target.setAttribute("aria-pressed", !status);
             context.onShowControlListPanelClick(e);
@@ -224,9 +225,7 @@ var ControlListDOM = {
             showButton.click();
 
             // on force la fermeture de controlllist si encore ouvert
-            if (this._pictoControlListButton.getAttribute("aria-pressed") === "true") {
-                this._pictoControlListButton.click();
-            }
+            this.setCollapsed(true);
         };
 
         listElement.addEventListener("click", handler);

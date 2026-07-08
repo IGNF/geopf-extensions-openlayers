@@ -1570,7 +1570,7 @@ class LayerSwitcher extends Control {
 
         var opacityValue = e.target.value;
         var opacityId = document.getElementById(this._addUID("GPopacityValue_ID_" + layerID));
-        opacityId.innerHTML = opacityValue + "%";
+        opacityId.innerText = opacityValue + "%";
 
         layer.setOpacity(opacityValue / 100);
     }
