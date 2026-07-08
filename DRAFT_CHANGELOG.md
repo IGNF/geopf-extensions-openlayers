@@ -9,7 +9,13 @@ __DATE__
 
 ### 🎉 Summary
 
-Résolution d'alertes de sécurité remontées par codeQL.
+- Résolution d'alertes de sécurité remontées par codeQL.
+- Export de la fonction utilitaire : **sanitizeHtml()**
+  ```js
+  import { sanitizeHtml } from "geopf-extensions-openlayers";
+  (...)
+  label.innerHTML = sanitizeHtml(value, { strict : true });
+  ```
 
 ### 💥 Breaking changes
 
