@@ -922,10 +922,6 @@ class Catalog extends Control {
 
         // panel
         var widgetPanel = this.panelCatalogContainer = this._createCatalogPanelElement();
-        var widgetPanelSize = this._createCatalogPanelDivSizeElement(this.options.size);
-        widgetPanel.appendChild(widgetPanelSize);
-        var widgetPanelDiv = this._createCatalogPanelDivElement();
-        widgetPanelSize.appendChild(widgetPanelDiv);
 
         // header
         var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createCatalogPanelHeaderElement();
@@ -938,8 +934,10 @@ class Catalog extends Control {
         // close picto
         var widgetCloseBtn = this.buttonCatalogClose = this._createCatalogPanelCloseElement();
         widgetPanelHeader.appendChild(widgetCloseBtn);
-        widgetPanelDiv.appendChild(widgetPanelHeader);
+        widgetPanel.appendChild(widgetPanelHeader);
 
+        var widgetPanelBody = this._createCatalogPanelBodyElement();
+        widgetPanel.appendChild(widgetPanelBody);
         var widgetContentDiv = this._createCatalogPanelContentDivElement();
 
         // container for the custom dynamic code (cf. initConfigData())
@@ -954,7 +952,7 @@ class Catalog extends Control {
         widgetContentElementDiv.appendChild(waiting);
 
         widgetContentDiv.appendChild(widgetContentElementDiv);
-        widgetPanelDiv.appendChild(widgetContentDiv);
+        widgetPanelBody.appendChild(widgetContentDiv);
 
         container.appendChild(widgetPanel);
 

@@ -109,56 +109,37 @@ var CatalogDOM = {
 
     /**
      * Create Container Panel
-     *
+     * @param {String} size - sm, md, lg, xl
      * @returns {HTMLElement} DOM element
      */
-    _createCatalogPanelElement : function () {
-        var dialog = document.createElement("dialog");
-        dialog.id = this._addUID("GPcatalogPanel");
-        dialog.className = "GPpanel gpf-panel fr-modal";
-
-        return dialog;
-    },
-
-    /**
-     * Container Panel Size
-     * @param {*} size - sm, md, lg
-     * @returns  {HTMLElement} DOM element
-     * @fixme revoir le fonctionnement des tailles !?
-     * @description
-     * - sm : small (default)
-     * - md : medium
-     * - lg : large
-     * - xl : extra large
-     * cf. https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/modale#taille
-     */
-    _createCatalogPanelDivSizeElement : function (size) {
-        if (!size) {
-            size = "md";
-        }
-        var className = "";
+    _createCatalogPanelElement : function (size = "md") {
+        // set size
+        let classNameSize = "";
         switch (size) {
             case "sm":
-                className = "fr-col-8";
+                classNameSize = "fr-col-8";
                 break;
             case "md":
-                className = "fr-col-10";
+                classNameSize = "fr-col-10";
                 break;
             case "lg":
-                className = "fr-col-12";
+                classNameSize = "fr-col-12";
                 break;
             case "xl":
-                className = "fr-col-14";
+                classNameSize = "fr-col-14";
                 break;
             default:
                 break;
         }
-        var div = document.createElement("div");
-        div.className = className;
-        return div;
+
+        let dialog = document.createElement("dialog");
+        dialog.id = this._addUID("GPcatalogPanel");
+        dialog.classList.add("GPpanel", "gpf-panel", "fr-modal", classNameSize);
+
+        return dialog;
     },
 
-    _createCatalogPanelDivElement : function () {
+    _createCatalogPanelBodyElement : function () {
         var div = document.createElement("div");
         div.className = "gpf-panel__body fr-modal__body";
         return div;
@@ -464,15 +445,6 @@ var CatalogDOM = {
                 // sauf si la catégorie a des sous catégories
                 strTabContent = tmplSubCategoriesRadios(id, subcategories);
             }
-            // INFO
-            // le max height est fixé à 250px pour éviter que le panneau soit trop grand
-            // mais il faudrait pouvoir le configurer dynamiquement en fonction de la presence
-            // ou non de la barre de recherche spécifique qui decale le panneau vers le bas
-            // cf. var tabHeight dans le main container
-            var height = "330px";
-            if (active && !search) {
-                height = "390px";
-            }
             return `
             <!-- panneaux -->
             <div id="tabpanel-${i}-panel_${id}" 
@@ -480,7 +452,7 @@ var CatalogDOM = {
                 role="tabpanel" 
                 aria-labelledby="tabbutton-${i}_${id}" 
                 tabindex="${tabindex}" 
-                style="max-height: ${height};overflow-y: auto; padding: 1em; contain: content;">
+            >
                 ${strTabContent}
             </div>
             `;
