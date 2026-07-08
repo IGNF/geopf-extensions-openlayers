@@ -200,10 +200,10 @@ var TerritoriesDOM = {
         var idBtnApply = "gpf-territories-apply-id";
 
         var strContainer = `
-        <div>
+        <div class="fr-ml-auto">
             <button type="button" 
                 id="${idButton}"
-                class="fr-btn fr-btn--tertiary-no-outline" 
+                class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline" 
                 role="territories-button-options" 
                 aria-expanded="false" 
                 aria-controls="gpf-territories-upload-container-id">

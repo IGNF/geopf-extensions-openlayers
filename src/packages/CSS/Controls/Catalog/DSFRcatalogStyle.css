@@ -156,6 +156,15 @@
     --active: unset;
 }
 
+.catalog-layer-info {
+    user-select: text;
+}
+.catalog-layer-description * {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    margin-bottom: 1em;
+}
+
 button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
     max-width: 450px;
 }

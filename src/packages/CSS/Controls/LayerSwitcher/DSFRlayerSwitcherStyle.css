@@ -306,7 +306,7 @@ div[id^=GPlayerStyleContent] {
 }
 
 div[id^=GPlayerSwitcher_ID_]:hover {
-    background-color: var(--background-default-grey-hover);
+    background: var(--background-default-grey);
 }
 div[id^=GPlayerSwitcher_ID_].sortable-chosen {
     background-color: var(--background-default-grey-active);

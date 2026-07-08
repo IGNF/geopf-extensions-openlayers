@@ -228,7 +228,7 @@ var CatalogDOM = {
         var strContainer = `
         <!-- barre de recherche globale -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
-        <div class="catalog-container-search-global" style="padding:10px;">
+        <div class="catalog-container-search-global fr-mb-1w">
             <div class="fr-search-bar" id="catalog-header-search-global" role="search" style="justify-content: center;">
                 <label class="fr-label" for="catalog-input-search-global">
                     Recherche
@@ -448,7 +448,7 @@ var CatalogDOM = {
             return `
             <!-- panneaux -->
             <div id="tabpanel-${i}-panel_${id}" 
-                class="${className}" 
+                class="${className} fr-p-0" 
                 role="tabpanel" 
                 aria-labelledby="tabbutton-${i}_${id}" 
                 tabindex="${tabindex}" 
@@ -675,7 +675,7 @@ var CatalogDOM = {
                     // 2 routes possibles pour la fiche de donnée
                     if (metadata.includes("catalogue/dataset") || metadata.includes("rechercher-une-donnee/dataset")) {
                         return `
-                            <a href="${metadata}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                            <a href="${metadata}" target="_blank" class="fr-link fr-link--sm fr-icon-arrow-right-line fr-link--icon-right">
                                 Voir la fiche détaillée
                             </a>
                         `;
@@ -703,11 +703,12 @@ var CatalogDOM = {
             };
 
             return `
-            <div 
-                class="fr-fieldset__element" 
+            <div
+                data-layeritem
+                class="fr-fieldset__element fr-toggle--border-bottom fr-py-2w fr-px-1w fr-mb-0" 
                 id="fieldset-${categoryId}_${name}-${service}"
-                style="contain: content;">
-                <div class="fr-checkbox-group gpf-flex" style="justify-content:flex-start;padding-top:5px;padding-bottom:5px;box-shadow: inset 0 1px 0 0 var(--border-default-grey),0 0 0 0 var(--border-default-grey);">
+            >
+                <div class="fr-checkbox-group gpf-flex" style="justify-content:flex-start">
                     <input
                         class="fr-input"
                         name="checkboxes-${categoryId}"
@@ -729,10 +730,10 @@ var CatalogDOM = {
                             role="label-collapse-more-${categoryId}"
                             aria-controls="catalog-collapse-more-${i}-${categoryId}"
                             title="${title}"
-                            style="display: -webkit-box; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: normal; cursor: pointer; line-height: 1.9em; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                            style="display: -webkit-box; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: normal; cursor: pointer; line-height: 1.5em; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word;">
                             ${title}
                         </label>
-                        <span class="GPlabelActive fr-label fr-hint-text">${producerName}</span>
+                        <span class="GPlabelActive fr-label fr-hint-text fr-text--xs fr-m-0">${producerName}</span>
                     </div>
                     <button 
                         id="catalog-collapse-more-${i}-${categoryId}"
@@ -746,14 +747,16 @@ var CatalogDOM = {
                         style="position: relative;">
                     </button>
                 </div>
-                <div class="gpf-hidden" id="catalog-info-more-${i}-${categoryId}">
-                    <p>
-                        <span class="fr-label fr-message" style="word-break: break-all;">${name} - ${service}</span>
+                <div class="gpf-hidden catalog-layer-info fr-mt-2w" id="catalog-info-more-${i}-${categoryId}">
+                    <p class="fr-hint-text" style="word-break: break-all;">
+                        ${name} - ${service}
+                    </p>
+                    <p class="fr-hint-text">
                         ${tmplProducers(informations.producers)}
                     </p>
-                    <p>
+                    <div class="catalog-layer-description fr-hint-text">
                         ${description}
-                    </p>
+                    </div>
                     ${tmplMetadatas(informations.metadatas)}
                 </div>
             </div>
@@ -889,7 +892,7 @@ var CatalogDOM = {
             for (const [title, data] of sectionsArray) {
                 if (Object.prototype.hasOwnProperty.call(sections, title)) {
                     var lstElementsBySection = [];
-                    var array = [...data.matchAll(/"fr-fieldset__element"/g)];
+                    var array = [...data.matchAll(/data-layeritem/g)];
                     for (let index = 0; index < array.length; index++) {
                         const el = array[index];
                         lstElementsBySection.push(el.input);
