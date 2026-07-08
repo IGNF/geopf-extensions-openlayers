@@ -64,6 +64,7 @@ export { default as ColorUtils } from "./packages/Utils/ColorUtils";
 export { default as MathUtils } from "./packages/Utils/MathUtils";
 export { default as LoggerUtils } from "./packages/Utils/LoggerByDefault";
 export { default as JsonValidatorUtils } from "./packages/Utils/JsonValidatorUtils";
+export { sanitizeHtml } from "./packages/Utils/Sanitize";
 export { default as CRS } from "./packages/CRS/CRS";
 /** Version */
 export const version: any;
