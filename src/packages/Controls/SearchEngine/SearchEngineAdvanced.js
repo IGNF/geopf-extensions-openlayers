@@ -4,6 +4,7 @@ import OlFeature from "ol/Feature";
 import Point from "ol/geom/Point";
 import SearchEngineGeocodeIGN from "./SearchEngineGeocodeIGN";
 import Helper from "../../Utils/Helper";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 import Select, { SelectEvent } from "ol/interaction/Select";
 import Map from "ol/Map";
 
@@ -381,7 +382,6 @@ class SearchEngineAdvanced extends Control {
             // Notifie l'input du changement
             this.baseSearchEngine.input.dispatchEvent(new Event("input"));
             // Met le focus sur l'input
-            console.log("click");
             setTimeout(() => {
                 this.baseSearchEngine.input.focus();
             }, 50);
@@ -600,6 +600,7 @@ class SearchEngineAdvanced extends Control {
      * Crée un bouton personnalisé pour le popup.
      * @param {PopupButton} popupButton - Configuration du bouton.
      * @returns {HTMLButtonElement} Bouton HTML
+     * @private
      */
     _createCustomPopupButton (popupButton) {
         const btn = document.createElement("button");
@@ -640,6 +641,7 @@ class SearchEngineAdvanced extends Control {
      * @param {String} content - Contenu à afficher dans la popup
      * @param {String} origin - Origine de la feature
      * @param {Boolean} center - La vue se centre sur la feature ajoutée
+     * @public
      */
     createMarker (coords, content, origin, center) {
         const pt = new Point(coords);
@@ -649,8 +651,8 @@ class SearchEngineAdvanced extends Control {
         if (origin) {
             f.set("origin", origin);
         }
-
-        const evt = this.createEvent(f, content, center);
+        const cleanContent = sanitizeHtml(content);
+        const evt = this.createEvent(f, cleanContent, center);
         
         this.addResultToMap(evt);
         this.dispatchEvent(evt);
@@ -667,7 +669,6 @@ class SearchEngineAdvanced extends Control {
         locationBtn.className = "GPSearchEngine-locate fr-btn fr-btn--sm fr-icon-crosshair-2-line fr-btn--icon-left fr-btn--tertiary-no-outline";
         locationBtn.addEventListener("click", () => {
             this.geolocation.setTracking(true);
-            console.log("tracking", this.geolocation);
             const onPosition = () => {
                 /**
                  * @event searchengineadvanced:geolocation:click
