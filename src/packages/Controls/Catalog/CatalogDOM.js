@@ -674,7 +674,7 @@ var CatalogDOM = {
                         <label 
                             class="GPlabelActive fr-label"
                             role="label-collapse-more-${categoryId}"
-                            aria-controls="catalog-collapse-more-${i}-${categoryId}"
+                            aria-controls="checkboxes-${categoryId}-${i}_${name}-${service}"
                             title="${title}"
                             style="display: -webkit-box; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: normal; cursor: pointer; line-height: 1.5em; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word;">
                             ${title}
