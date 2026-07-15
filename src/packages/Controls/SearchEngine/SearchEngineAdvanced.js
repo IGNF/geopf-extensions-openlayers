@@ -670,6 +670,7 @@ class SearchEngineAdvanced extends Control {
         locationBtn.addEventListener("click", () => {
             this.geolocation.setTracking(true);
             const onPosition = () => {
+                const position = this.geolocation.getPosition();
                 /**
                  * @event searchengineadvanced:geolocation:click
                  * @property {Object} type - event
@@ -680,16 +681,14 @@ class SearchEngineAdvanced extends Control {
                  *   console.log(e.coordinates);
                  * })
                 */
-                const position = this.geolocation.getPosition();
                 this.dispatchEvent({
                     type : "searchengineadvanced:geolocation:click",
                     coordinates : position
                 });
-                // On ne veut être notifié qu'une seule fois
-                this.geolocation.un("change:position", onPosition);
             };
-            this.geolocation.on("change:position", onPosition);
+            this.geolocation.once("change:position", onPosition);
         });
+
         return locationBtn;
     }
 
