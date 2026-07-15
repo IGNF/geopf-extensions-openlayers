@@ -9,7 +9,7 @@
  * @license AGPL-3.0
  * @author IGN
  * @version 1.0.0-beta.12-562
- * @date 03/07/2026
+ * @date 16/07/2026
  *
  */
 /*!
