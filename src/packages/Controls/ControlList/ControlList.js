@@ -134,12 +134,7 @@ class ControlList extends Control {
         if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
             return;
         }
-        if (collapsed) {
-            document.getElementById("GPcontrolListPanelClose-" + this._uid).click();
-        } else {
-            this._pictoIsoButton.click();
-        }
-        this.collapsed = collapsed;
+        this._pictoControlListButton.click();
     }
 
     /**
@@ -289,9 +284,6 @@ class ControlList extends Control {
         var map = this.getMap();
         var opened = this._pictoControlListButton.ariaPressed;
         this.collapsed = !(opened === "true");
-        // on génère nous même l'evenement OpenLayers de changement de propriété
-        // (utiliser ol.control.ControlList.on("change:collapsed", function ) pour s'abonner à cet évènement)
-        this.dispatchEvent("change:collapsed");
         // on recalcule la position
         if (this.options.position && !this.collapsed) {
             this.updatePosition(this.options.position);
@@ -321,6 +313,9 @@ class ControlList extends Control {
             this._stopControlListStateObserver();
             this._ControlListPanelContentContainer.innerHTML = "";
         }
+        // on génère nous même l'evenement OpenLayers de changement de propriété
+        // (utiliser ol.control.ControlList.on("change:collapsed", function ) pour s'abonner à cet évènement)
+        this.dispatchEvent("change:collapsed");
     }
 
     _registerControlListStateSync (button, listElement) {
