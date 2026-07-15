@@ -279,56 +279,6 @@ var LayerSwitcherDOM = {
     // ######################### Layer container ######################### //
     // ################################################################### //
 
-    _createLayersPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        // on n'utilise pas le dsfr !
-        // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
-        container.className = "GPpanelHeader gpf-panel__header_ls";
-        return container;
-    },
-    _createLayersPanelIconElement : function () {
-        var label = document.createElement("label");
-        label.className = "GPpanelIcon gpf-btn-header gpf-btn-icon-layers";
-        label.title = "Couches";
-        return label;
-    },
-    _createLayersPanelTitleElement : function () {
-        var div = document.createElement("div");
-        // on n'utilise pas le dsfr !
-        div.className = "GPpanelTitle gpf-panel__title_ls";
-        div.id = this._addUID("GPlayersHeaderTitle");
-        div.innerHTML = "Couches";
-        return div;
-    },
-    _createLayersPanelCloseElement : function () {
-        // contexte
-        var self = this;
-
-        var btnClose = document.createElement("button");
-        btnClose.id = this._addUID("GPlayersPanelClose");
-        btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        btnClose.title = "Fermer le panneau";
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible fr-mx-1w"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        btnClose.appendChild(span);
-
-        // Link panel close / visibility checkbox
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowLayersListPicto")).click();
-            }, false);
-        } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowLayersListPicto")).click();
-            });
-        }
-
-        return btnClose;
-    },
-
     /**
      * Créé le conteneur du header
      * @returns {HTMLDivElement} Conteneur
@@ -454,7 +404,7 @@ var LayerSwitcherDOM = {
         // <!-- Every item is marked with layerID, which is defined at layer import -->
         var container = document.createElement("div");
         container.id = this._addUID("GPlayerSwitcher_ID_" + obj.id);
-        container.className = "GPlayerSwitcher_layer gpf-panel__content fr-modal__content draggable-layer";
+        container.className = "GPlayerSwitcher_layer draggable-layer";
         container.ondragstart = (e) => {
             // Empêche les problèmes sur Chrome
             if (e.target.draggable === false) {
@@ -1526,50 +1476,26 @@ var LayerSwitcherDOM = {
     _createContainerLayerInfoElement : function (obj) {
         var container = document.createElement("div");
 
-        var header = document.createElement("div");
-        // FIXME on n'utilise pas le dsfr !
-        // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
-        header.className = "gpf-panel__header_ls";
+        let header = this._createPanelHeaderElement({
+            icon : "ign-layerswitcher",
+            title : "Informations",
+        });
+
         container.appendChild(header);
 
-        var label = document.createElement("label");
-        label.className = "GPlayerInfo gpf-btn-header gpf-btn-icon-ls-info";
-        label.title = "Informations";
-        header.appendChild(label);
-
-        var title = document.createElement("div");
-        title.id = this._addUID("GPlayerInfoTitle");
-        title.innerHTML = obj.title;
-        title.className = "gpf-panel__title_ls";
-        header.appendChild(title);
-
-        var btnClose = document.createElement("button");
-        btnClose.id = this._addUID("GPlayerInfoClose");
-        btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        btnClose.title = "Fermer la fenêtre";
-
-        var self = this;
-        /** Call event function on close click */
-        var onCloseClick = function () {
-            document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
-            document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
+        header._closeBtn.addEventListener("click", () => {
+            document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+            document.getElementById(this._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
             document.getElementById(obj.id).classList.add("GPlayerInfoClosed");
             document.getElementById(obj.id).classList.remove("GPlayerInfoOpened");
-        };
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", onCloseClick);
-        } else if (btnClose.attachEvent) {
-            // internet explorer
-            btnClose.attachEvent("onclick", onCloseClick);
-        }
+        });
+
         this.addEventListener("layerswitcher:remove", (e) => {
             if (parseInt(obj.id.split("-")[0].split("GPinfo_ID_")[1]) === e.layer.id) {
-                document.getElementById(self._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
-                document.getElementById(self._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
+                document.getElementById(this._addUID("GPlayerInfoPanel")).classList.add("GPlayerInfoPanelClosed", "gpf-hidden");
+                document.getElementById(this._addUID("GPlayerInfoPanel")).classList.remove("GPlayerInfoPanelOpened", "gpf-visible");
             }
         });
-        header.appendChild(btnClose);
-        container.appendChild(header);
 
         var content = document.createElement("div");
         content.id = this._addUID("GPlayerInfoContent");
@@ -1688,50 +1614,26 @@ var LayerSwitcherDOM = {
     _createContainerLayerStyleElement : function (obj) {
         var container = document.createElement("div");
 
-        var header = document.createElement("div");
-        // FIXME on n'utilise pas le dsfr !
-        // container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
-        header.className = "gpf-panel__header_ls";
+        let header = this._createPanelHeaderElement({
+            icon : "ign-layerswitcher",
+            title : "Options de style",
+        });
+
         container.appendChild(header);
 
-        var label = document.createElement("label");
-        label.className = "GPlayerStyle gpf-btn-header gpf-btn-icon-ls-info";
-        label.title = "Informations";
-        header.appendChild(label);
-
-        var title = document.createElement("div");
-        title.id = this._addUID("GPlayerStyleTitle");
-        title.innerHTML = "Options de style";
-        title.className = "gpf-panel__title_ls";
-        header.appendChild(title);
-
-        var btnClose = document.createElement("button");
-        btnClose.id = this._addUID("GPlayerStyleClose");
-        btnClose.className = "GPpanelClose GPlayersPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        btnClose.title = "Fermer la fenêtre";
-
-        var self = this;
-        /** Call event function on close click */
-        var onCloseClick = function () {
-            document.getElementById(self._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
-            document.getElementById(self._addUID("GPlayerStylePanel")).classList.remove("GPlayerStylePanelOpened", "gpf-visible");
+        header._closeBtn.addEventListener("click", () => {
+            document.getElementById(this._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
+            document.getElementById(this._addUID("GPlayerStylePanel")).classList.remove("GPlayerStylePanelOpened", "gpf-visible");
             document.getElementById(obj.div).classList.add("GPlayerStyleClosed");
             document.getElementById(obj.div).classList.remove("GPlayerStyleOpened");
-        };
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", onCloseClick);
-        } else if (btnClose.attachEvent) {
-            // internet explorer
-            btnClose.attachEvent("onclick", onCloseClick);
-        }
+        });
+
         this.addEventListener("layerswitcher:remove", (e) => {
             if (parseInt(obj.id.split("-")[0].split("GPinfo_ID_")[1]) === e.layer.id) {
                 document.getElementById(self._addUID("GPlayerStylePanel")).classList.add("GPlayerStylePanelClosed", "gpf-hidden");
                 document.getElementById(self._addUID("GPlayerStylePanel")).classList.remove("GPlayerStylePanelOpened", "gpf-visible");
             }
         });
-        header.appendChild(btnClose);
-        container.appendChild(header);
 
         var content = document.createElement("div");
         content.id = this._addUID("GPlayerStyleContent");
@@ -1770,7 +1672,7 @@ var LayerSwitcherDOM = {
                 input.checked = true;
             }
             input.addEventListener("change", (e) => {
-                self._onChangeStyleLayerClick(e);
+                this._onChangeStyleLayerClick(e);
             });
         }
         content.appendChild(list);

@@ -12,24 +12,6 @@
     background-position: center center;
 }
 
-.gpf-panel__title_catalog {
-    color: #101092;
-    padding: 12px 15px;
-    position: relative;
-    font-size: 1rem;
-    font-weight: normal;
-    margin: 0;
-    right: -16px;
-}
-.gpf-panel__header_catalog {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    align-content: center;
-    background: #E3E3FD;
-    height: 48px;
-}
-
 .gpf-btn-icon-catalog::after {
     -webkit-mask: url("img/dsfr/catalog.svg") center no-repeat;
     mask: url("img/dsfr/catalog.svg") center no-repeat;
@@ -64,9 +46,6 @@
     flex-direction: column;
 }
 
-.catalog-container-tabs {
-    padding: 0.75rem;
-}
 .catalog-collapse-show {
     position: absolute;
     right: 0;
@@ -167,6 +146,8 @@
 
 button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
     max-width: 450px;
+    min-width: 450px;
+    min-height: 200px;
 }
 
 .catalog-section-full {

@@ -90,56 +90,6 @@ var LegendsDOM = {
         return div;
     },
 
-    /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createLegendsPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        container.className = "gpf-panel__header_legends";
-        return container;
-    },
-    _createLegendsPanelIconElement : function () {
-        var label = document.createElement("label");
-        label.className = "gpf-btn-header-legends gpf-btn-icon-header-legends";
-        label.title = "Légendes";
-        return label;
-    },
-    _createLegendsPanelTitleElement : function () {
-        var div = document.createElement("div");
-        div.className = "gpf-panel__title_legends";
-        div.innerHTML = "Légendes";
-        return div;
-    },
-    _createLegendsPanelCloseElement : function () {
-        // contexte
-        var self = this;
-
-        var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
-        btnClose.title = "Fermer le panneau";
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        btnClose.appendChild(span);
-
-        // Link panel close / visibility checkbox
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowLegendsPicto")).click();
-            }, false);
-        } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowLegendsPicto")).click();
-            });
-        }
-
-        return btnClose;
-    },
-
     // ################################################################### //
     // ####################### Methods dynamics ########################## //
     // ################################################################### //
@@ -193,7 +143,7 @@ var LegendsDOM = {
                 var entry = stringToHTML(`
                     <div
                         id="${o.id}"
-                        class="legend-entry-container gpf-panel__content fr-modal__content">
+                        class="legend-entry-container">
                         <label class="legend-entry-title gpf-label-legends-name fr-label">${o.title}</label>
                         <button
                             id="GPcollapseLegend_ID_${o.id}"

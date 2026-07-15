@@ -39,6 +39,7 @@ import GeoJSONExtended from "../../Formats/GeoJSON";
 // DOM
 import ElevationPathDOM from "./ElevationPathDOM";
 import ProfileElevationPathDOM from "./ProfileElevationPathDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("elevationpath");
 
@@ -882,12 +883,17 @@ class ElevationPath extends Control {
 
         // panneau
         var panel = this._panelContainer = this._createElevationPathPanelElement();
-        var panelDiv = this._createElevationPathPanelDivElement();
-        panel.appendChild(panelDiv);
 
         // header
-        var header = this._createElevationPathPanelHeaderElement();
-        panelDiv.appendChild(header);
+        var header = this._createPanelHeaderElement({
+            icon : "ign-elevationpath",
+            title : "Profil Altimétrique",
+            btnClassForClose : "GPshowElevationPathPicto",
+        });
+        panel.appendChild(header);
+
+        var panelDiv = this._createElevationPathPanelDivElement();
+        panel.appendChild(panelDiv);
 
         // profile
         var profile = this._createElevationPathPanelProfilElement();
@@ -1742,6 +1748,7 @@ class ElevationPath extends Control {
 };
 
 // on récupère les méthodes de la classe commune ElevationPath
+Object.assign(ElevationPath.prototype, PanelDOM);
 Object.assign(ElevationPath.prototype, ElevationPathDOM);
 Object.assign(ElevationPath.prototype, Widget);
 

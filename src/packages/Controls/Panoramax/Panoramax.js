@@ -14,6 +14,7 @@ import GeoportalWMTS from "../../Layers/LayerWMTS";
 
 // DOM
 import PanoramaxDOM from "./PanoramaxDOM";
+import PanelDOM from "../PanelDOM";
 import "./PnxMiniMapWidget";
 
 // lib ol
@@ -912,18 +913,15 @@ class Panoramax extends Control {
         this.preventPointerMoveOnMap(this.panelPanoramaxOptions);
 
         // ajout d'un header
-        var widgetPanelButtonsHeader = this.panelPanoramaxButtonsHeaderContainer = this._createWidgetPanelButtonsHeaderElement(this.options.panel);
-        // avec icone
-        var widgetPanelButtonsIcon = this._createWidgetPanelButtonsIconElement();
-        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsIcon);
-        // avec title
-        var widgetPanelButtonsTitle = this._createWidgetPanelButtonsTitleElement();
-        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsTitle);
-        // avec close picto
-        var widgetPanelButtonsClose = this._createWidgetPanelButtonsCloseElement();
-        widgetPanelButtonsHeader.appendChild(widgetPanelButtonsClose);
-        
+        var widgetPanelButtonsHeader = this.panelPanoramaxButtonsHeaderContainer = this._createPanelHeaderElement({
+            icon : "equalizer-line",
+            title : "Options Panoramax",
+            btnClassForClose : "GPpanoramaxButtonOptions",
+        });
         this.panelPanoramaxOptions.appendChild(widgetPanelButtonsHeader);
+
+        let panelPanoramaxOptionsBody = this._createPanelBodyElement();
+        this.panelPanoramaxOptions.appendChild(panelPanoramaxOptionsBody);
 
         // panneau des filtres et divers boutons optionnels du menu Options
         if (this.options.buttonsWindow.display) {
@@ -943,20 +941,20 @@ class Panoramax extends Control {
                                 this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttonsWindow.contributions);
                                 this.panelPanoramaxFilters.lastChild.appendChild(this.btnPanoramaxContributions);
                             }
-                            this.panelPanoramaxOptions.appendChild(this.panelPanoramaxFilters);
+                            panelPanoramaxOptionsBody.appendChild(this.panelPanoramaxFilters);
                         }
                         break;
                     case "contributions":
                         // si les filtres sont absents, on ajoute le bouton Contributions dans le panneau
                         if (this.options.buttonsWindow.contributions.display && !this.options.buttonsWindow.filters.display) {
                             this.btnPanoramaxContributions = this._createButtonContributionsElement(this.options.buttonsWindow.contributions);
-                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxContributions);
+                            panelPanoramaxOptionsBody.appendChild(this.btnPanoramaxContributions);
                         }
                         break;
                     case "hover":
                         if (this.options.buttonsWindow.hover.display) {
                             this.btnPanoramaxHover = this._createButtonChoiceHoverElement(this.options.hover, this.options.buttonsWindow.hover);
-                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxHover);
+                            panelPanoramaxOptionsBody.appendChild(this.btnPanoramaxHover);
                         }
                         break;
                     case "layerswitcher":
@@ -965,19 +963,19 @@ class Panoramax extends Control {
                                 this.displayable, 
                                 this.options.buttonsWindow.layerswitcher
                             );
-                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxLayerswitcher);
+                            panelPanoramaxOptionsBody.appendChild(this.btnPanoramaxLayerswitcher);
                         }
                         break;
                     case "styles":
                         if (this.options.buttonsWindow.styles.display) {
                             this.btnPanoramaxStyles = this._createButtonChoiceStyleElement(this.options.buttonsWindow.styles);
-                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxStyles);
+                            panelPanoramaxOptionsBody.appendChild(this.btnPanoramaxStyles);
                         }
                         break;
                     case "background":
                         if (this.options.buttonsWindow.background.display) {
                             this.btnPanoramaxBackground = this._createButtonChoiceBackgroundElement(this.options.background.active, this.options.buttonsWindow.background);
-                            this.panelPanoramaxOptions.appendChild(this.btnPanoramaxBackground);
+                            panelPanoramaxOptionsBody.appendChild(this.btnPanoramaxBackground);
                         }
                         break;
                     default:
@@ -4032,6 +4030,7 @@ class Panoramax extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(Panoramax.prototype, PanelDOM);
 Object.assign(Panoramax.prototype, PanoramaxDOM);
 Object.assign(Panoramax.prototype, Widget);
 

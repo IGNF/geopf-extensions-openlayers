@@ -107,17 +107,6 @@ var LayerImportDOM = {
     },
 
     /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createImportPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        container.className = "GPpanelHeader GPelementVisible gpf-visible gpf-panel__header fr-modal__header";
-        return container;
-    },
-
-    /**
      * Create Return PIcto into Panel
      *
      * @returns {HTMLElement} DOM element
@@ -153,53 +142,6 @@ var LayerImportDOM = {
             });
         }
         return returnDiv;
-    },
-
-    /**
-     * Create Header Title Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createImportPanelTitleElement : function () {
-        var div = document.createElement("div");
-        div.id = this._addUID("GPimportHeaderTitle");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-        div.innerHTML = "Import de données";
-        return div;
-    },
-
-    /**
-     * Create Header close div
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createImportPanelCloseElement : function () {
-        // contexte
-        var self = this;
-
-        var divClose = document.createElement("button");
-        divClose.id = this._addUID("GPimportPanelClose");
-        divClose.className = "GPpanelClose GPimportPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
-        divClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (divClose.addEventListener) {
-            divClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowImportPicto")).click();
-            }, false);
-        } else if (divClose.attachEvent) {
-            divClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowImportPicto")).click();
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        divClose.appendChild(span);
-
-        return divClose;
     },
 
     // ################################################################### //
@@ -657,11 +599,11 @@ var LayerImportDOM = {
         var context = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header";
 
         // panel title
         var panelTitle = document.createElement("div");
-        panelTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+        panelTitle.className = "GPpanelTitle gpf-panel__title";
         panelTitle.innerHTML = "Couches accessibles";
         panelTitle.title = "Couches accessibles";
         container.appendChild(panelTitle);
@@ -799,7 +741,7 @@ var LayerImportDOM = {
         var context = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header";
 
         // return picto
         var returnDiv = document.createElement("button");
@@ -821,7 +763,7 @@ var LayerImportDOM = {
 
         // panel title
         var panelTitle = document.createElement("div");
-        panelTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+        panelTitle.className = "GPpanelTitle gpf-panel__title";
         panelTitle.innerHTML = "Edition des styles";
         panelTitle.title = "Edition des styles";
         container.appendChild(panelTitle);

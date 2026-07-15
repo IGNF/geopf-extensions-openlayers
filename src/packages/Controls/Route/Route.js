@@ -35,6 +35,7 @@ import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 import GeoJSONExtended from "../../Formats/GeoJSON";
 // DOM
 import RouteDOM from "./RouteDOM";
+import PanelDOM from "../PanelDOM";
 import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("route");
@@ -219,7 +220,7 @@ class Route extends Control {
             return;
         }
         if (collapsed) {
-            document.getElementById("GProutePanelClose-" + this._uid).click();
+            this._panelCloseBtn.click();
         } else {
             this._showRouteButton.click();
         }
@@ -551,6 +552,8 @@ class Route extends Control {
         /** @private */
         this._showRouteButton = null;
         /** @private */
+        this._panelBtnClose = null;
+        /** @private */
         this._panelRouteContainer = null;
         /** @private */
         this._panelHeaderRouteContainer = null;
@@ -720,12 +723,18 @@ class Route extends Control {
         container.appendChild(picto);
 
         var routePanel = this._panelRouteContainer = this._createRoutePanelElement();
+
+        // header
+        var routeHeader = this._panelHeaderRouteContainer = this._createPanelHeaderElement({
+            icon : "ign-route",
+            title : "Calcul d’itinéraire",
+            btnClassForClose : "GPshowRoutePicto",
+        });
+        routePanel.appendChild(routeHeader);
+        this._panelCloseBtn = routeHeader._closeBtn;
+
         var routePanelDiv = this._createRoutePanelDivElement();
         routePanel.appendChild(routePanelDiv);
-
-        // header form
-        var routeHeader = this._panelHeaderRouteContainer = this._createRoutePanelHeaderElement();
-        routePanelDiv.appendChild(routeHeader);
 
         // form
         var routeForm = this._formRouteContainer = this._createRoutePanelFormElement();
@@ -2279,6 +2288,7 @@ class Route extends Control {
 };
 
 // on récupère les méthodes de la classe commune ReverseGeocodingDOM
+Object.assign(Route.prototype, PanelDOM);
 Object.assign(Route.prototype, RouteDOM);
 Object.assign(Route.prototype, Widget);
 

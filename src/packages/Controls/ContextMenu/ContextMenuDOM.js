@@ -94,7 +94,7 @@ var ContextMenuDOM = {
  */
     _createPointInfoPanelHeaderElement : function () {
         var container = document.createElement("div");
-        container.className = "GPpointInfoHeader gpf-panel__header_pointInfo";
+        container.className = "GPpointInfoHeader gpf-panel__header gpf-panel__header_pointInfo";
         return container;
     },
     _createPointInfoPanelIconElement : function () {

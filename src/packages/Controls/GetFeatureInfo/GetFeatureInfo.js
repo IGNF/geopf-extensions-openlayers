@@ -20,6 +20,7 @@ import AsyncData from "../Utils/AsyncData";
 
 // DOM
 import GetFeatureInfoDOM from "./GetFeatureInfoDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("getFeatureInfo");
 
@@ -212,21 +213,19 @@ class GetFeatureInfo extends Control {
         // panel
         var getFeatureInfoPanel = this.panelGetFeatureInfoContainer = this._createGetFeatureInfoPanelElement();
         var getFeatureInfoPanelDiv = this.getFeatureInfoPanelDiv = this._createGetFeatureInfoPanelDivElement();
-        getFeatureInfoPanel.appendChild(getFeatureInfoPanelDiv);
 
         // header
-        var getFeatureInfoPanelHeader = this.panelGetFeatureInfoHeaderContainer = this._createGetFeatureInfoPanelHeaderElement();
-        // icone
-        var getFeatureInfoPanelIcon = this._createGetFeatureInfoPanelIconElement();
-        getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelIcon);
-        // title
-        var getFeatureInfoPanelTitle = this._createGetFeatureInfoPanelTitleElement();
-        getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelTitle);
+        var getFeatureInfoPanelHeader = this.panelGetFeatureInfoHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-getfeatureinfo",
+            title : "Infos sur les couches",
+            btnClassForClose : "GPgetFeatureInfoPicto",
+        });
         // close picto
-        var getFeatureInfoCloseBtn = this.buttonGetFeatureInfoClose = this._createGetFeatureInfoPanelCloseElement();
-        getFeatureInfoPanelHeader.appendChild(getFeatureInfoCloseBtn);
+        this.buttonGetFeatureInfoClose = getFeatureInfoPanelHeader._closeBtn;
+        this.buttonGetFeatureInfoClose.classList.add("GPcloseGetFeatureInfo");
 
-        getFeatureInfoPanelDiv.appendChild(getFeatureInfoPanelHeader);
+        getFeatureInfoPanel.appendChild(getFeatureInfoPanelHeader);
+        getFeatureInfoPanel.appendChild(getFeatureInfoPanelDiv);
 
         // container for the custom code
         var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
@@ -712,6 +711,7 @@ class GetFeatureInfo extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(GetFeatureInfo.prototype, PanelDOM);
 Object.assign(GetFeatureInfo.prototype, GetFeatureInfoDOM);
 Object.assign(GetFeatureInfo.prototype, Widget);
 

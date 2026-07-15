@@ -15,6 +15,7 @@ import checkDsfr from "../Utils/CheckDsfr";
 
 // DOM
 import ControlListDOM from "./ControlListDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("controlList");
 /**
@@ -244,14 +245,18 @@ class ControlList extends Control {
 
         // panneau
         var panel = this._ControlListPanelContainer = this._createControlListPanelElement();
-        var panelDiv = this._createControlListPanelDivElement();
-        panel.appendChild(panelDiv);
 
         // header
         if (this.options.header) {
-            var header = this._ControlListPanelHeaderContainer = this._createControlListPanelHeaderElement();
-            panelDiv.appendChild(header);
+            var header = this._ControlListPanelHeaderContainer = this._createPanelHeaderElement({
+                title : "Mes outils",
+                btnClassForClose : "GPshowControlListPicto",
+            });
+            panel.appendChild(header);
         }
+
+        var panelDiv = this._createControlListPanelDivElement();
+        panel.appendChild(panelDiv);
 
         // content
         var content = this._createControlListPanelContentElement();
@@ -370,6 +375,7 @@ class ControlList extends Control {
 };
 
 // on récupère les méthodes de la classe commune ControlList
+Object.assign(ControlList.prototype, PanelDOM);
 Object.assign(ControlList.prototype, ControlListDOM);
 Object.assign(ControlList.prototype, Widget);
 

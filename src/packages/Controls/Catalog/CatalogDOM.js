@@ -151,60 +151,6 @@ var CatalogDOM = {
         return div;
     },
 
-    /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createCatalogPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        // on n'utilise pas le dsfr !
-        container.className = "GPpanelHeader gpf-panel__header_catalog";
-        return container;
-    },
-    _createCatalogPanelTitleElement : function (title) {
-        var div = document.createElement("div");
-        // on n'utilise pas le dsfr !
-        div.className = "GPpanelTitle gpf-panel__title_catalog";
-        div.innerHTML = title;
-        return div;
-    },
-    _createCatalogPanelIconElement : function (title) {
-        var label = document.createElement("label");
-        label.className = "gpf-btn-header-catalog gpf-btn-icon-header-catalog";
-        label.title = title;
-        return label;
-    },
-    _createCatalogPanelCloseElement : function () {
-        var self = this;
-
-        var btnClose = document.createElement("button");
-        btnClose.id = this._addUID("GPcatalogPanelClose");
-        btnClose.className = "GPpanelClose GPcatalogPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
-        btnClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowCatalogPicto")).click();
-                self.onCloseCatalogClick();
-            }, false);
-        } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowCatalogPicto")).click();
-                self.onCloseCatalogClick();
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-hidden";
-        span.innerText = "Fermer";
-
-        btnClose.appendChild(span);
-
-        return btnClose;
-    },
-
     // ################################################################### //
     // ####################### Methods for panel ######################### //
     // ################################################################### //

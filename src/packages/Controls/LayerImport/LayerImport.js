@@ -55,6 +55,7 @@ import ProxyUtils from "../../Utils/ProxyUtils";
 import { sanitizeHtml } from "../../Utils/Sanitize";
 // DOM
 import LayerImportDOM from "./LayerImportDOM";
+import PanelDOM from "../PanelDOM";
 // import local with ol dependencies
 import KMLExtended from "../../Formats/KML";
 import GeoJSONExtended from "../../Formats/GeoJSON";
@@ -735,21 +736,25 @@ class LayerImport extends Control {
         // panel
         var importPanel = this._importPanel = this._createImportPanelElement();
         var importPanelPanelDiv = this._createImportPanelDivElement();
-        importPanel.appendChild(importPanelPanelDiv);
 
         // header
-        var panelHeader = this._importPanelHeader = this._createImportPanelHeaderElement();
+        var panelHeader = this._importPanelHeader = this._createPanelHeaderElement({
+            icon : "ign-layerimport",
+            title : "Import de données",
+            btnClassForClose : "GPshowImportPicto",
+        });
+
+        importPanel.appendChild(panelHeader);
+        importPanel.appendChild(importPanelPanelDiv);
+
         // return
         var panelReturn = this._importPanelReturnPicto = this._createImportPanelReturnPictoElement();
-        panelHeader.appendChild(panelReturn);
+        importPanelPanelDiv.appendChild(panelReturn);
 
         // panel title
-        var panelTitle = this._importPanelTitle = this._createImportPanelTitleElement();
-        panelHeader.appendChild(panelTitle);
+        this._importPanelTitle = panelHeader._title;
         // close picto
-        var panelClose = this._panelCloseButton = this._createImportPanelCloseElement();
-        panelHeader.appendChild(panelClose);
-        importPanelPanelDiv.appendChild(panelHeader);
+        this._panelCloseButton = panelHeader._closeBtn;
 
         // form : initialisation du formulaire d'import des couches (types d'import et saisie de l'url / du fichier)
         var importForm = this._formContainer = this._initInputFormElement();
@@ -3345,6 +3350,7 @@ class LayerImport extends Control {
 };
 
 // on récupère les méthodes de la classe commune LayerImport
+Object.assign(LayerImport.prototype, PanelDOM);
 Object.assign(LayerImport.prototype, LayerImportDOM);
 Object.assign(LayerImport.prototype, Widget);
 

@@ -84,78 +84,6 @@ var PanoramaxDOM = {
         return div;
     },
 
-    /**
-     * Create Header Panel
-     *
-     * @param {Boolean} display - true if the header must be displayed, false otherwise
-     * @returns {DOMElement} DOM element
-     */
-    _createWidgetPanelButtonsHeaderElement : function (display) {
-        var container = document.createElement("div");
-        container.className = "pnx-buttons-panel__header gpf-panel__header";
-        if (!display) {
-            container.classList.add("gpf-hidden");
-        }
-        return container;
-    },
-    _createWidgetPanelButtonsIconElement : function () {
-        var label = document.createElement("label");
-        label.className = "gpf-btn-header-panoramax gpf-icon-color";
-        label.classList.add("fr-icon", "fr-icon-equalizer-line");
-        label.title = `${title}`;
-        label.setAttribute("aria-label", `Afficher ${title}`);
-        return label;
-    },
-    _createWidgetPanelButtonsReturnElement : function () {
-        var self = this;
-
-        var btnReturn = document.createElement("button");
-        btnReturn.className = "gpf-btn gpf-btn-icon-return fr-btn--return fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        btnReturn.title = "Retour au panneau de contrôle";
-
-        // Link panel return / visibility checkbox
-        btnReturn.addEventListener("click", function (e) {
-            self.onReturnPanoramaxClick(e);
-        }, false);
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Retour";
-
-        btnReturn.appendChild(span);
-
-        return btnReturn;
-    },
-    _createWidgetPanelButtonsTitleElement : function () {
-        var div = document.createElement("div");
-        div.className = "pnx-buttons-panel__title gpf-panel__title";
-        div.innerHTML = "Options Panoramax";
-        return div;
-    },
-    _createWidgetPanelButtonsCloseElement : function () {
-        var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        btnClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        btnClose.addEventListener("click", (e) => {
-            e.preventDefault();
-            // switch aria-pressed on options button
-            let buttonOptions = document.getElementById(this._addUID("GPpanoramaxButtonOptions"));
-            buttonOptions.setAttribute("aria-pressed", "false");
-            // call function to open/close
-            this.onOpenPanoramaxOptionsClick(e);
-        }, false);
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-hidden";
-        span.innerText = "Fermer";
-
-        btnClose.appendChild(span);
-
-        return btnClose;
-    },
-
     // ################################################################### //
     // ####################### Methods for buttons ####################### //
     // ################################################################### //
@@ -168,7 +96,7 @@ var PanoramaxDOM = {
      */
     _createWidgetButtonsElement : function () {
         var div = document.createElement("div");
-        div.className = "pnx-buttons-panel__content gpf-panel__content fr-modal__content";
+        div.className = "pnx-buttons-panel__content";
 
         return div;
     },
@@ -201,7 +129,14 @@ var PanoramaxDOM = {
         panel.id = this._addUID("GPpanoramaxPanelOptions");
         panel.className = "GPpanel pnx-options-panel gpf-panel gpf-hidden fr-modal";
         panel.setAttribute("aria-label", "Panneau des options Panoramax");
+
         return panel;
+    },
+
+    _createWidgetPanelOptionsDivElement : function () {
+        let div = document.createElement("div");
+        div.className = "gpf-panel__body fr-modal__body";
+        return div;
     },
 
     // ################################################################### //
@@ -393,7 +328,7 @@ var PanoramaxDOM = {
     _createWidgetPanelFiltersElement : function (opts) {
         var panel = document.createElement("div");
         panel.id = this._addUID("GPpanoramaxPanelFilters");
-        panel.className = "pnx-filters-panel fr-p-2w";
+        panel.className = "pnx-filters-panel gpf-panel__content";
         panel.setAttribute("role", "region");
         panel.setAttribute("aria-label", opts.description || "Panneau des filtres Panoramax");
 

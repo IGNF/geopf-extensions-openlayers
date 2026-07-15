@@ -22,6 +22,7 @@ import GeoportalMapBox from "../../Layers/LayerMapBox";
 
 // DOM
 import CatalogDOM from "./CatalogDOM";
+import PanelDOM from "../PanelDOM";
 
 // Gestion des topics en local : themes et services et producteurs
 import Topics from "./topics.json";
@@ -924,17 +925,14 @@ class Catalog extends Control {
         var widgetPanel = this.panelCatalogContainer = this._createCatalogPanelElement();
 
         // header
-        var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createCatalogPanelHeaderElement();
-        // icone
-        var widgetPanelIcon = this._createCatalogPanelIconElement(this.options.titlePrimary);
-        widgetPanelHeader.appendChild(widgetPanelIcon);
-        // title
-        var widgetPanelTitle = this._createCatalogPanelTitleElement(this.options.titlePrimary);
-        widgetPanelHeader.appendChild(widgetPanelTitle);
-        // close picto
-        var widgetCloseBtn = this.buttonCatalogClose = this._createCatalogPanelCloseElement();
-        widgetPanelHeader.appendChild(widgetCloseBtn);
+        var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-catalog",
+            title : this.options.titlePrimary,
+            btnClassForClose : "GPshowCatalogPicto",
+        });
         widgetPanel.appendChild(widgetPanelHeader);
+        // close picto
+        this.buttonCatalogClose = widgetPanelHeader._closeBtn;
 
         var widgetPanelBody = this._createCatalogPanelBodyElement();
         widgetPanel.appendChild(widgetPanelBody);
@@ -2205,6 +2203,7 @@ class Catalog extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(Catalog.prototype, PanelDOM);
 Object.assign(Catalog.prototype, CatalogDOM);
 Object.assign(Catalog.prototype, Widget);
 

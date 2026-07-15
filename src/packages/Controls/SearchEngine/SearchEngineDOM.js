@@ -812,10 +812,10 @@ var SearchEngineDOM = {
         var self = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+        divTitle.className = "GPpanelTitle gpf-panel__title";
         divTitle.innerHTML = "Recherche avancée";
         container.appendChild(divTitle);
 
@@ -1131,10 +1131,10 @@ var SearchEngineDOM = {
         var self = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+        divTitle.className = "GPpanelTitle gpf-panel__title";
         divTitle.innerHTML = "Résultats de la recherche";
         container.appendChild(divTitle);
 
@@ -1238,10 +1238,10 @@ var SearchEngineDOM = {
         var self = this;
 
         var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
+        container.className = "GPpanelHeader gpf-panel__header";
 
         var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
+        divTitle.className = "GPpanelTitle gpf-panel__title";
         divTitle.innerHTML = "Recherche par coordonnées";
         container.appendChild(divTitle);
 

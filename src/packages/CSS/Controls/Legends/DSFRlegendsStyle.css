@@ -22,24 +22,6 @@
     max-height: 300px !important;
 }
 
-.gpf-panel__title_legends {
-    color: #101092;
-    padding: 12px 15px;
-    position: relative;
-    font-size: 1rem;
-    font-weight: normal;
-    margin: 0;
-    right: -16px;
-}
-.gpf-panel__header_legends {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    align-content: center;
-    background: #E3E3FD;
-    height: 48px;
-}
-
 button[id^=GPcollapseLegend_ID_] {
     position: absolute;
     top: 8px;

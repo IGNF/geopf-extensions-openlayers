@@ -35,6 +35,7 @@ import checkDsfr from "../Utils/CheckDsfr";
 
 // DOM
 import IsocurveDOM from "./IsocurveDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("isocurve");
 
@@ -212,7 +213,7 @@ class Isocurve extends Control {
             return;
         }
         if (collapsed) {
-            document.getElementById("GPisochronPanelClose-" + this._uid).click();
+            this._panelCloseBtn.click();
         } else {
             this._pictoIsoButton.click();
         }
@@ -561,6 +562,8 @@ class Isocurve extends Control {
         // containers principaux
         /** @private */
         this._pictoIsoButton = null;
+        /** @private */
+        this._panelCloseBtn = null;
         /** @private */
         this._waitingContainer = null;
         /** @private */
@@ -922,11 +925,16 @@ class Isocurve extends Control {
         // panneau
         var panel = this._IsoPanelContainer = this._createIsoPanelElement();
         var panelDiv = this._createIsoPanelDivElement();
-        panel.appendChild(panelDiv);
 
-        // header
-        var header = this._IsoPanelHeaderContainer = this._createIsoPanelHeaderElement();
-        panelDiv.appendChild(header);
+        var header = this._IsoPanelHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-isocurve",
+            title : "Calcul d’isochrone",
+            btnClassForClose : "GPshowIsochronPicto",
+        });
+        this._panelCloseBtn = header._closeBtn;
+
+        panel.appendChild(header);
+        panel.appendChild(panelDiv);
 
         // form
         var form = this._formContainer = this._createIsoPanelFormElement();
@@ -1774,6 +1782,7 @@ class Isocurve extends Control {
 };
 
 // on récupère les méthodes de la classe commune MousePosition
+Object.assign(Isocurve.prototype, PanelDOM);
 Object.assign(Isocurve.prototype, IsocurveDOM);
 Object.assign(Isocurve.prototype, Widget);
 

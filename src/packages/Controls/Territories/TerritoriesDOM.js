@@ -137,57 +137,6 @@ var TerritoriesDOM = {
         return div;
     },
 
-    /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createTerritoriesPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        container.className = "gpf-panel__header_territories";
-        return container;
-    },
-    _createTerritoriesPanelIconElement : function () {
-        var label = document.createElement("label");
-        label.className = "gpf-btn-header-territories gpf-btn-icon-header-territories";
-        label.title = "Selecteur de territoires";
-        return label;
-    },
-    _createTerritoriesPanelTitleElement : function (title) {
-        var div = document.createElement("div");
-        div.className = "gpf-panel__title_territories";
-        div.innerHTML = title;
-        return div;
-    },
-    _createTerritoriesPanelCloseElement : function () {
-        var self = this;
-
-        var btnClose = document.createElement("button");
-        btnClose.id = "GPterritoriesPanelClose";
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        btnClose.title = "Fermer le panneau";
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        btnClose.appendChild(span);
-
-        // Link panel close / visibility checkbox
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowTerritoriesPicto")).click();
-                self.onCloseTerritoriesClick();
-            }, false);
-        } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowTerritoriesPicto")).click();
-                self.onCloseTerritoriesClick();
-            });
-        }
-
-        return btnClose;
-    },
     _createTerritoriesPanelOptionsElement : function (title, description) {
         var self = this;
 

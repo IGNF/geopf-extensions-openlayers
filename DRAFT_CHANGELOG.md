@@ -30,6 +30,7 @@ __DATE__
   - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
   - Legends : chargement asynchrone des images de légende (#)
   - Legends : modification texte alternatif et ajout d’un lien pour ouvrir dans un nouvel onglet (#)
+  - Widgets : uniformisation des entêtes/corps des panels (#)
 
 * 🔥 [Deprecated]
 

@@ -89,49 +89,6 @@ var ControlListDOM = {
     },
 
     /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createControlListPanelHeaderElement : function () {
-        var self = this;
-
-        var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header fr-pb-0";
-
-        var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-        div.innerHTML = "Mes outils";
-        container.appendChild(div);
-
-        var divClose = document.createElement("button");
-        divClose.id = this._addUID("GPcontrolListPanelClose");
-        divClose.className = "GPpanelClose GPcontrolListPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        divClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (divClose.addEventListener) {
-            divClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowControlListPicto")).click();
-            }, false);
-        } else if (divClose.attachEvent) {
-            divClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowControlListPicto")).click();
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        divClose.appendChild(span);
-
-        container.appendChild(divClose);
-
-        return container;
-    },
-
-    /**
      * Create Content Panel
      *
      * @returns {HTMLElement} DOM element

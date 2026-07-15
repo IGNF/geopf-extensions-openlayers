@@ -17,7 +17,7 @@ button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
     visibility: visible;
     opacity: 100%;
     height: initial;
-    /* max-height: inherit; */
+    max-height: 500px;
 }
 
 dialog[id^="GPcatalogPanel-"] {

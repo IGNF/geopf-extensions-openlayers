@@ -23,7 +23,11 @@
   max-height: 100%;
 }
 
-.gpf-panel form {
+.gpf-widget > .gpf-panel {
+  box-shadow: var(--lifted-shadow);
+}
+
+.gpf-panel form:not(.gpf-panel__content) {
   overflow: auto;
   padding: 0 2rem 2rem 2rem;
 }
@@ -40,12 +44,17 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
+  filter: none;
 }
 
-.gpf-panel__header {}
-
-.gpf-panel__title {
-  text-align: left;
+.gpf-panel__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  color: var(--text-title-blue-france);
+  background: var(--background-open-blue-france);
+  height: 48px;
 }
 
 .gpf-panel__footer {
@@ -60,7 +69,7 @@
 }
 
 .gpf-panel__content {
-  padding: unset;
+  padding: 1rem;
   margin-bottom: unset;
 }
 
@@ -283,10 +292,13 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
 
 /* positionnement absolu en haut à droite du bouton "fermer" */
 .gpf-btn-icon-close {
-  float: right;
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  margin-left: auto;
+  margin-right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.gpf-btn-icon-close::after {
+  margin-left: 0;
 }
 
 .gpf-btn-icon-return {
@@ -330,6 +342,84 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
 .gpf-btn-icon-info {
   width: 40px;
   height: 40px;
+}
+
+.fr-icon-ign-catalog::before,
+.fr-icon-ign-catalog::after {
+  -webkit-mask-image: url("./Controls/Catalog/img/dsfr/catalog.svg");
+  mask-image: url("./Controls/Catalog/img/dsfr/catalog.svg");
+}
+
+.fr-icon-ign-drawing::before,
+.fr-icon-ign-drawing::after {
+  -webkit-mask-image: url("./Controls/Drawing/img/modifier.svg");
+  mask-image: url("./Controls/Drawing/img/modifier.svg");
+}
+
+.fr-icon-ign-elevationpath::before,
+.fr-icon-ign-elevationpath::after {
+  -webkit-mask-image: url("./Controls/ElevationPath/img/altipath.svg");
+  mask-image: url("./Controls/ElevationPath/img/altipath.svg");
+}
+
+.fr-icon-ign-getfeatureinfo::before,
+.fr-icon-ign-getfeatureinfo::after {
+  -webkit-mask-image: url("./Controls/GetFeatureInfo/img/NoGFI.svg");
+  mask-image: url("./Controls/GetFeatureInfo/img/NoGFI.svg");
+}
+
+.fr-icon-ign-isocurve::before,
+.fr-icon-ign-isocurve::after {
+  -webkit-mask-image: url("./Controls/Isochron/img/isochrone.svg");
+  mask-image: url("./Controls/Isochron/img/isochrone.svg");
+}
+
+.fr-icon-ign-layerimport::before,
+.fr-icon-ign-layerimport::after {
+  -webkit-mask-image: url("./Controls/LayerImport/img/layerimport.svg");
+  mask-image: url("./Controls/LayerImport/img/layerimport.svg");
+}
+
+.fr-icon-ign-layerswitcher::before,
+.fr-icon-ign-layerswitcher::after {
+  -webkit-mask-image: url("./Controls/LayerSwitcher/img/dsfr/layerswitcher.svg");
+  mask-image: url("./Controls/LayerSwitcher/img/dsfr/layerswitcher.svg");
+}
+
+.fr-icon-ign-legends::before,
+.fr-icon-ign-legends::after {
+  -webkit-mask-image: url("./Controls/Legends/img/dsfr/legends.svg");
+  mask-image: url("./Controls/Legends/img/dsfr/legends.svg");
+}
+
+.fr-icon-ign-mouseposition::before,
+.fr-icon-ign-mouseposition::after {
+  -webkit-mask-image: url("./Controls/MousePosition/img/position.svg");
+  mask-image: url("./Controls/MousePosition/img/position.svg");
+}
+
+.fr-icon-ign-reporting::before,
+.fr-icon-ign-reporting::after {
+  -webkit-mask-image: url("./Controls/Reporting/img/dsfr/reporting.svg");
+  mask-image: url("./Controls/Reporting/img/dsfr/reporting.svg");
+}
+
+.fr-icon-ign-reversegeocode::before,
+.fr-icon-ign-reversegeocode::after {
+  -webkit-mask-image: url("./Controls/ReverseGeocoding/img/reversegeocode.svg");
+  mask-image: url("./Controls/ReverseGeocoding/img/reversegeocode.svg");
+}
+
+.fr-icon-ign-route::before,
+.fr-icon-ign-route::after {
+  -webkit-mask-image: url("./Controls/Route/img/route.svg");
+  mask-image: url("./Controls/Route/img/route.svg");
+}
+
+.fr-icon-ign-territories::before,
+.fr-icon-ign-territories::after {
+  -webkit-mask-image: url("./Controls/Territories/img/dsfr/territories.svg");
+  mask-image: url("./Controls/Territories/img/dsfr/territories.svg");
 }
 
 /*************/
@@ -645,7 +735,7 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
       width: 100vw !important;
   }
 
-  .gpf-mobile-fullscreen form div, .gpf-mobile-fullscreen form p {
+  .gpf-mobile-fullscreen form:not(.gpf-panel) div, .gpf-mobile-fullscreen form:not(.gpf-panel) p {
     margin: auto;
     text-align: center;
   }
