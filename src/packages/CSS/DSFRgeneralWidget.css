@@ -183,7 +183,7 @@
 }
 
 /* Affichage du tooltip au survol du bouton */
-
+.gpf-widget > .gpf-btn-icon[aria-label]:focus:focus-visible::before,
 .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   content: attr(aria-label);
   position: absolute;
@@ -202,11 +202,15 @@
   background-image: conic-gradient(from 56.31deg at 0% 50%,transparent 0deg,var(--background-overlap-grey) 0deg,var(--background-overlap-grey) 67.38deg,transparent 67.38deg),conic-gradient(from 56.31deg at 0% 50%,transparent 0deg,var(--border-default-grey) 0deg,var(--border-default-grey) 67.38deg,transparent 67.38deg),linear-gradient(90deg,var(--border-default-grey),var(--border-default-grey)),linear-gradient(90deg,var(--background-overlap-grey),var(--background-overlap-grey));
 }
 
+.position-container-top-left .gpf-widget > .gpf-btn-icon[aria-label]:focus:focus-visible::before,
+.position-container-bottom-left .gpf-widget > .gpf-btn-icon[aria-label]:focus:focus-visible::before,
 .position-container-top-left .gpf-widget > .gpf-btn-icon[aria-label]:hover::before,
 .position-container-bottom-left .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   transform: translateX(24px);
 }
 
+.position-container-top-right .gpf-widget > .gpf-btn-icon[aria-label]:focus:focus-visible::before,
+.position-container-bottom-right .gpf-widget > .gpf-btn-icon[aria-label]:focus:focus-visible::before,
 .position-container-top-right .gpf-widget > .gpf-btn-icon[aria-label]:hover::before,
 .position-container-bottom-right .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
   transform: translateX(calc(-100% - 16px));
@@ -216,7 +220,8 @@
   background-image: conic-gradient(from 236.31deg at 100% 50%, transparent 0deg, var(--background-overlap-grey) 0deg, var(--background-overlap-grey) 67.38deg, transparent 67.38deg), conic-gradient(from 236.31deg at 100% 50%, transparent 0deg, var(--border-default-grey) 0deg, var(--border-default-grey) 67.38deg, transparent 67.38deg), linear-gradient(90deg, var(--border-default-grey), var(--border-default-grey)), linear-gradient(90deg, var(--background-overlap-grey), var(--background-overlap-grey));
 }
 
-div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover::before {
+div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:focus:focus-visible::before,
+div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover:not(:focus:focus-visible)::before {
   display: none;
 }
 

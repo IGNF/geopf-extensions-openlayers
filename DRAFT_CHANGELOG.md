@@ -46,6 +46,7 @@ __DATE__
   - LayerSwitcher : correctif sur le drag n' drop en conflit avec le slider d'opacité (#562)
   - ControlList : fixe l’événement change:collapsed (#561)
   - SearchEngineAdvanced : refactorisation et amélioration de la géolocalisation et des mécanismes qui y sont liés (#565)
+  - Tooltip : affichage des tooltip DSFR au survol ainsi qu'au focus (#515)
   
 * 🔒 [Security]
 
