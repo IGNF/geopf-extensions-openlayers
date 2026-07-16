@@ -52,6 +52,7 @@ __DATE__
   - ControlList : fixe l’événement change:collapsed (#561)
   - SearchEngineAdvanced : refactorisation et amélioration de la géolocalisation et des mécanismes qui y sont liés (#565)
   - Tooltip : affichage des tooltip DSFR au survol ainsi qu'au focus (#515)
+  - Zoom/OverviewMap/Fullscreen : initialisation du composant dans le constructeur (fix #568) (#570)
   
 * 🔒 [Security]
 
