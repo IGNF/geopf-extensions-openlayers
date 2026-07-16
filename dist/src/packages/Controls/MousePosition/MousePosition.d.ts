@@ -270,8 +270,6 @@ declare class MousePosition extends Control {
     private _initContainer;
     _showMousePositionButton: any;
     _panelHeaderContainer: any;
-    _panelTitleContainer: any;
-    _panelCloseButton: any;
     _projectionSystemsContainer: any;
     /**
      * this method is called by this.()

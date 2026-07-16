@@ -15,16 +15,10 @@
 }
 
 [id^=GPelevationPathProfil] > #profileElevationByDefault > svg {
-  position: absolute;
-  left: 10px;
+  transform: translateY(20px);
 }
 
 div[id^=GPelevationPathInformationsContainer] {
-  position: absolute;
-  top: 32px;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 4px;
   overflow: hidden;

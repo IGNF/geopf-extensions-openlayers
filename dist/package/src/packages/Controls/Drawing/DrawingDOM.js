@@ -100,7 +100,7 @@ var DrawingDOM = {
 
     _createDrawingToolsDivSections : function () {
         var div = document.createElement("div");
-        div.className = "gpf-panel__content fr-px-3w fr-modal__content";
+        div.className = "gpf-panel__content fr-modal__content";
         return div;
     },
 
@@ -112,54 +112,6 @@ var DrawingDOM = {
     // ################################################################### //
     // ####################### Panel container ########################### //
     // ################################################################### //
-
-    /**
-    * Creates drawing Panel header DOM structure
-    * @returns {HTMLElement} DOM element
-    */
-    _createDrawingPanelHeaderElement : function () {
-        /*
-         * <div class="GPpanelHeader">
-         *     <div class="GPpanelTitle">Annoter la carte</div>
-         *     <div id="GPdrawingPanelClose" class="GPpanelClose" title="Fermer le panneau"></div>
-         * </div>
-         */
-
-        var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header fr-m-1w";
-
-        var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-        divTitle.innerHTML = this.options.controlLabel || "Annoter la carte";
-        container.appendChild(divTitle);
-
-        var divClose = document.createElement("button");
-        divClose.id = this._addUID("GPdrawingPanelClose");
-        divClose.className = "GPpanelClose GPdrawingPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        divClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        var dtObj = this;
-        if (divClose.addEventListener) {
-            divClose.addEventListener("click", function () {
-                document.getElementById(dtObj._addUID("GPshowDrawingPicto")).click();
-            }, false);
-        } else if (divClose.attachEvent) {
-            divClose.attachEvent("onclick", function () {
-                document.getElementById(dtObj._addUID("GPshowDrawingPicto")).click();
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        divClose.appendChild(span);
-
-        container.appendChild(divClose);
-
-        return container;
-    },
 
     /**
      * Creates drawing tools section.
@@ -490,38 +442,13 @@ var DrawingDOM = {
 
         // header DSFR
         if (checkDsfr()) {
-            var header = document.createElement("div");
-            header.className = "GPpanelHeader gpf-panel__header fr-modal__header fr-m-1w";
+            var header = this._createPanelHeaderElement({
+                title : "Modifier le style",
+            });
 
-            var divTitle = document.createElement("div");
-            divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-            divTitle.innerHTML = "Modifier le style";
-            header.appendChild(divTitle);
-
-            var divClose = document.createElement("button");
-            divClose.id = this._addUID("GPdrawingStylePanelClose");
-            divClose.className = "GPpanelClose GPdrawingStylePanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-            divClose.title = "Fermer le panneau";
-
-            // Link panel close / visibility checkbox
-            var dtObj = this;
-            if (divClose.addEventListener) {
-                divClose.addEventListener("click", function () {
-                    options.applyFunc.call(this, "cancel");
-                }, false);
-            } else if (divClose.attachEvent) {
-                divClose.attachEvent("onclick", function () {
-                    options.applyFunc.call(this, "cancel");
-                });
-            }
-
-            var span = document.createElement("span");
-            span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-            span.innerText = "Fermer";
-
-            divClose.appendChild(span);
-
-            header.appendChild(divClose);
+            header._closeBtn.addEventListener("click", (e) => {
+                options.applyFunc.call(this, "cancel");
+            });
 
             mainDiv.appendChild(header);
         }
@@ -738,41 +665,17 @@ var DrawingDOM = {
         popup.appendChild(mainDiv);
         // header DSFR
         if (checkDsfr()) {
-            var header = document.createElement("div");
-            header.className = "GPpanelHeader gpf-panel__header fr-modal__header fr-m-1w";
-
-            var divTitle = document.createElement("div");
-            divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-            divTitle.innerHTML = "Ajouter une description";
+            let title = "Ajouter une description";
             if (options.geomType === "Text") {
-                divTitle.innerHTML = "Texte de l'annotation";
+                title = "Texte de l’annotation";
             }
-            header.appendChild(divTitle);
+            var header = this._createPanelHeaderElement({
+                title,
+            });
 
-            var divClose = document.createElement("button");
-            divClose.id = this._addUID("GPdrawingStylePanelClose");
-            divClose.className = "GPpanelClose GPdrawingStylePanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-            divClose.title = "Fermer le panneau";
-
-            // Link panel close / visibility checkbox
-            var dtObj = this;
-            if (divClose.addEventListener) {
-                divClose.addEventListener("click", function () {
-                    options.applyFunc.call(this, "cancel");
-                }, false);
-            } else if (divClose.attachEvent) {
-                divClose.attachEvent("onclick", function () {
-                    options.applyFunc.call(this, "cancel");
-                });
-            }
-
-            var span = document.createElement("span");
-            span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-            span.innerText = "Fermer";
-
-            divClose.appendChild(span);
-
-            header.appendChild(divClose);
+            header._closeBtn.addEventListener("click", (e) => {
+                options.applyFunc.call(this, "cancel");
+            });
 
             mainDiv.appendChild(header);
         }

@@ -116,50 +116,6 @@ var RouteDOM = {
         div.className = "container-buttons-plugin fr-mx-2w";
         return div;
     },
-    
-    /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createRoutePanelHeaderElement : function () {
-        // contexte d'execution
-        var self = this;
-
-        var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
-
-        var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-        div.innerHTML = "Calcul d'itinéraire";
-        container.appendChild(div);
-
-        var divClose = document.createElement("button");
-        divClose.id = this._addUID("GProutePanelClose");
-        divClose.className = "GPpanelClose GProutePanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        divClose.title = "Masquer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (divClose.addEventListener) {
-            divClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowRoutePicto")).click();
-            }, false);
-        } else if (divClose.attachEvent) {
-            divClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowRoutePicto")).click();
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        divClose.appendChild(span);
-
-        container.appendChild(divClose);
-
-        return container;
-    },
 
     /**
      * Create Footer Panel

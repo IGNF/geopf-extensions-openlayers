@@ -5,14 +5,10 @@ declare namespace PanoramaxDOM {
     function _createShowWidgetPictoElement(): DOMElement;
     function _createWidgetPanelButtonsElement(): DOMElement;
     function _createWidgetPanelButtonsDivElement(): HTMLDivElement;
-    function _createWidgetPanelButtonsHeaderElement(display: boolean): DOMElement;
-    function _createWidgetPanelButtonsIconElement(): HTMLLabelElement;
-    function _createWidgetPanelButtonsReturnElement(): HTMLButtonElement;
-    function _createWidgetPanelButtonsTitleElement(): HTMLDivElement;
-    function _createWidgetPanelButtonsCloseElement(): HTMLButtonElement;
     function _createWidgetButtonsElement(): DOMElement;
     function _createButtonOptionsElement(): HTMLButtonElement;
     function _createWidgetPanelOptionsElement(): HTMLFormElement;
+    function _createWidgetPanelOptionsDivElement(): HTMLDivElement;
     function _createButtonContributionsElement(opts: any): HTMLAnchorElement;
     function _createButtonChoiceHoverElement(active: any, opts: any): HTMLDivElement;
     function _createButtonChoiceStyleElement(opts: any): HTMLElement;

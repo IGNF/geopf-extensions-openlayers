@@ -193,7 +193,7 @@ declare class Reporting extends Control {
     /** @private */
     private divReportingTitle;
     /** @private */
-    private labelReportingIcon;
+    private backBtnIcon;
     /** @private */
     private buttonReportingSubmit;
     /** @private */

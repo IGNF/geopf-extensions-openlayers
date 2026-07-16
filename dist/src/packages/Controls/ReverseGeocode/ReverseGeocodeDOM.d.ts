@@ -9,10 +9,6 @@ declare namespace ReverseGeocodeDOM {
     function _createReverseGeocodingResultElement(locationDescription: string, id: number): void;
     function _createReverseGeocodingPanelElement(): HTMLElement;
     function _createReverseGeocodingPanelDivElement(): HTMLDivElement;
-    function _createReverseGeocodingPanelHeaderElement(): HTMLElement;
-    function _createReverseGeocodingPanelReturnPictoElement(): HTMLElement;
-    function _createReverseGeocodingPanelTitleElement(): HTMLElement;
-    function _createReverseGeocodingPanelCloseElement(): HTMLElement;
     function _createReverseGeocodingPanelFormElement(): HTMLElement;
     function _createReverseGeocodingFormModeChoiceGeocodingTypeElement(resources: any[]): HTMLElement;
     function _createReverseGeocodingFormModeChoiceGeocodingDelimitationElement(delimitations: any[]): HTMLElement;

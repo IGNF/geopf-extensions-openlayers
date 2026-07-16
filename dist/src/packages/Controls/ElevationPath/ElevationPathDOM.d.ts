@@ -6,7 +6,6 @@ declare namespace ElevationPathDOM {
     function _createElevationPathPanelElement(): HTMLElement;
     function _createElevationPathPanelDivElement(): HTMLDivElement;
     function _createDrawingButtonsPluginDiv(): HTMLDivElement;
-    function _createElevationPathPanelHeaderElement(): HTMLElement;
     function _createElevationPathPanelProfilElement(): HTMLElement;
     function _createElevationPathWaitingElement(): HTMLElement;
     function _createElevationPathInformationsElement(): HTMLElement;

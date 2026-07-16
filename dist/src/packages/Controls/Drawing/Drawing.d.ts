@@ -432,6 +432,8 @@ declare class Drawing extends Control {
     /** @private */
     private tooltipElem;
     /** @private */
+    private panelCloseBtn;
+    /** @private */
     private _isDesktop;
     /**
      * event triggered after an layer is added

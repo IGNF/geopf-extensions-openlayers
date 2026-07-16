@@ -15,10 +15,6 @@ declare namespace LayerSwitcherDOM {
     function _createMainInfoDivElement(): HTMLDivElement;
     function _createMainStyleElement(): HTMLElement;
     function _createMainStyleDivElement(): HTMLDivElement;
-    function _createLayersPanelHeaderElement(): HTMLDivElement;
-    function _createLayersPanelIconElement(): HTMLLabelElement;
-    function _createLayersPanelTitleElement(): HTMLDivElement;
-    function _createLayersPanelCloseElement(): HTMLButtonElement;
     function _createHeaderButtonsDivElement(): HTMLDivElement;
     function _createButtonsGroupElement(options: {
         className?: string | undefined;

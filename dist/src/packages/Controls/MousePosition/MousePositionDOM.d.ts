@@ -6,9 +6,6 @@ declare namespace MousePositionDOM {
     function _createMousePositionPanelElement(): HTMLElement;
     function _createMousePositionPanelDivElement(): HTMLDivElement;
     function _createMapCenter(): HTMLElement;
-    function _createMousePositionPanelTitleElement(): HTMLElement;
-    function _createMousePositionPanelHeaderElement(): HTMLElement;
-    function _createMousePositionPanelCloseElement(): HTMLElement;
     function _createMousePositionPanelBasicElement(displayAltitude?: boolean, displayCoordinates?: boolean, editCoordinates?: boolean, currentProjectionUnits?: boolean): HTMLElement;
     function _createCoordinateElement(coordType: string, editCoordinates?: boolean): any[];
     function _createDMSCoordinateElement(coordType: string, editCoordinates?: boolean): any[];

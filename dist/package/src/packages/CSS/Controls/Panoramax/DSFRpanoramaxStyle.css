@@ -29,7 +29,6 @@
 .pnx-toggle__input {}
 .pnx-toggle {
     background: var(--background-default-grey);
-    width: 100%;
     margin-inline: auto;
     border-radius: 10px;
 }
@@ -41,6 +40,8 @@
     top: initial;
     bottom: 48px;
     left: 54px;
+    display: flex;
+    flex-direction: column;
     width: 350px;
     background-color: var(--background-default-grey);
 }
@@ -54,6 +55,7 @@
     background: #E3E3FD;
     height: 48px;
     padding-left: 4px;
+    margin: initial !important;
 }
 
 .pnx-buttons-panel__title {

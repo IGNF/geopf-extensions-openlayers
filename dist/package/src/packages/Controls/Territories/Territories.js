@@ -21,6 +21,7 @@ import TerritoriesJson from "./Territories.json";
 
 // DOM
 import TerritoriesDOM from "./TerritoriesDOM";
+import PanelDOM from "../PanelDOM";
 
 let logger = Logger.getLogger("territories");
 
@@ -399,7 +400,7 @@ class Territories extends Control {
             return;
         }
         if (collapsed) {
-            document.getElementById("GPterritoriesPanelClose").click();
+            this._panelBtnClose.click();
         } else {
             this.buttonTerritoriesShow.click();
         }
@@ -518,11 +519,11 @@ class Territories extends Control {
         /** @private */
         this.buttonTerritoriesShow = null;
         /** @private */
+        this._panelBtnClose = null;
+        /** @private */
         this.panelTerritoriesContainer = null;
         /** @private */
         this.panelTerritoriesHeaderContainer = null; // usefull for the dragNdrop
-        /** @private */
-        this.buttonTerritoriesClose = null;
         /** @private */
         this.containerTerritoriesOptions = null;
         /** @private */
@@ -548,6 +549,23 @@ class Territories extends Control {
         var territoriesPanel = this.panelTerritoriesContainer = this._createTerritoriesPanelElement();
         territoriesPanel.classList.add("tiles-direction");
         territoriesPanel.classList.add("tiles-" + this.options.tiles);
+
+        // header ?
+        if (this.options.panel) {
+            var territoriesPanelHeader = this.panelTerritoriesHeaderContainer = this._createPanelHeaderElement({
+                icon : "ign-territories",
+                title : "Sélecteur de territoires",
+                btnClassForClose : "GPshowTerritoriesPicto",
+            });
+            // options
+            if (this.options.upload && this.options.upload.active) {
+                var territoriesPanelOptions = this.containerTerritoriesOptions = this._createTerritoriesPanelOptionsElement(this.options.upload.title, this.options.upload.description);
+                territoriesPanelHeader.insertBefore(territoriesPanelOptions, territoriesPanelHeader._closeBtn);
+                territoriesPanelHeader._closeBtn.classList.remove("fr-ml-auto");
+            }
+            territoriesPanel.appendChild(territoriesPanelHeader);
+            this._panelBtnClose = territoriesPanelHeader._closeBtn;
+        }
         
         var territoriesPanelDiv = this._createTerritoriesPanelDivElement();
         territoriesPanel.appendChild(territoriesPanelDiv);
@@ -579,26 +597,6 @@ class Territories extends Control {
             territoriesEntriesDiv.classList.add("tiles-icon");
         }
         territoriesPanel.appendChild(territoriesEntriesDiv);
-        
-        // header ?
-        if (this.options.panel) {
-            var territoriesPanelHeader = this.panelTerritoriesHeaderContainer = this._createTerritoriesPanelHeaderElement();
-            // icone
-            var territoriesPanelIcon = this._createTerritoriesPanelIconElement();
-            territoriesPanelHeader.appendChild(territoriesPanelIcon);
-            // title
-            var territoriesPanelTitle = this._createTerritoriesPanelTitleElement(this.options.title);
-            territoriesPanelHeader.appendChild(territoriesPanelTitle);
-            // options
-            if (this.options.upload && this.options.upload.active) {
-                var territoriesPanelOptions = this.containerTerritoriesOptions = this._createTerritoriesPanelOptionsElement(this.options.upload.title, this.options.upload.description);
-                territoriesPanelHeader.appendChild(territoriesPanelOptions);
-            }
-            // close picto
-            var territoriesCloseBtn = this.buttonTerritoriesClose = this._createTerritoriesPanelCloseElement();
-            territoriesPanelHeader.appendChild(territoriesCloseBtn);
-            territoriesPanelDiv.appendChild(territoriesPanelHeader);
-        }
 
         container.appendChild(territoriesPanel);
 
@@ -1037,6 +1035,7 @@ class Territories extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(Territories.prototype, PanelDOM);
 Object.assign(Territories.prototype, TerritoriesDOM);
 Object.assign(Territories.prototype, Widget);
 

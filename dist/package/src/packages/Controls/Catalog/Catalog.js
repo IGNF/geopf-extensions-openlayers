@@ -22,6 +22,7 @@ import GeoportalMapBox from "../../Layers/LayerMapBox";
 
 // DOM
 import CatalogDOM from "./CatalogDOM";
+import PanelDOM from "../PanelDOM";
 
 // Gestion des topics en local : themes et services et producteurs
 import Topics from "./topics.json";
@@ -922,24 +923,19 @@ class Catalog extends Control {
 
         // panel
         var widgetPanel = this.panelCatalogContainer = this._createCatalogPanelElement();
-        var widgetPanelSize = this._createCatalogPanelDivSizeElement(this.options.size);
-        widgetPanel.appendChild(widgetPanelSize);
-        var widgetPanelDiv = this._createCatalogPanelDivElement();
-        widgetPanelSize.appendChild(widgetPanelDiv);
 
         // header
-        var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createCatalogPanelHeaderElement();
-        // icone
-        var widgetPanelIcon = this._createCatalogPanelIconElement(this.options.titlePrimary);
-        widgetPanelHeader.appendChild(widgetPanelIcon);
-        // title
-        var widgetPanelTitle = this._createCatalogPanelTitleElement(this.options.titlePrimary);
-        widgetPanelHeader.appendChild(widgetPanelTitle);
+        var widgetPanelHeader = this.panelCatalogHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-catalog",
+            title : this.options.titlePrimary,
+            btnClassForClose : "GPshowCatalogPicto",
+        });
+        widgetPanel.appendChild(widgetPanelHeader);
         // close picto
-        var widgetCloseBtn = this.buttonCatalogClose = this._createCatalogPanelCloseElement();
-        widgetPanelHeader.appendChild(widgetCloseBtn);
-        widgetPanelDiv.appendChild(widgetPanelHeader);
+        this.buttonCatalogClose = widgetPanelHeader._closeBtn;
 
+        var widgetPanelBody = this._createCatalogPanelBodyElement();
+        widgetPanel.appendChild(widgetPanelBody);
         var widgetContentDiv = this._createCatalogPanelContentDivElement();
 
         // container for the custom dynamic code (cf. initConfigData())
@@ -954,7 +950,7 @@ class Catalog extends Control {
         widgetContentElementDiv.appendChild(waiting);
 
         widgetContentDiv.appendChild(widgetContentElementDiv);
-        widgetPanelDiv.appendChild(widgetContentDiv);
+        widgetPanelBody.appendChild(widgetContentDiv);
 
         container.appendChild(widgetPanel);
 
@@ -2207,6 +2203,7 @@ class Catalog extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(Catalog.prototype, PanelDOM);
 Object.assign(Catalog.prototype, CatalogDOM);
 Object.assign(Catalog.prototype, Widget);
 

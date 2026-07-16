@@ -331,11 +331,11 @@ declare class Territories extends Control {
     /** @private */
     private buttonTerritoriesShow;
     /** @private */
+    private _panelBtnClose;
+    /** @private */
     private panelTerritoriesContainer;
     /** @private */
     private panelTerritoriesHeaderContainer;
-    /** @private */
-    private buttonTerritoriesClose;
     /** @private */
     private containerTerritoriesOptions;
     /** @private */

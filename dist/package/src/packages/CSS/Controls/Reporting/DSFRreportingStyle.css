@@ -10,17 +10,7 @@
     background-position: center center;
 }
 
-.gpf-btn-icon-header-reporting {
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iY3VycmVudENvbG9yIj48cGF0aCBkPSJNNy44Mjg0MyAxMC45OTk5SDIwVjEyLjk5OTlINy44Mjg0M0wxMy4xOTI0IDE4LjM2MzhMMTEuNzc4MiAxOS43NzhMNCAxMS45OTk5TDExLjc3ODIgNC4yMjE2OEwxMy4xOTI0IDUuNjM1ODlMNy44Mjg0MyAxMC45OTk5WiI+PC9wYXRoPjwvc3ZnPg==');
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
-    cursor: pointer;
-    position: relative;
-}
-
-.gpf-panel__footer_reporting,
-.gpf-panel__header_reporting {
+.gpf-panel__footer_reporting {
     display: flex;
     flex-direction: row;
     align-items: center;

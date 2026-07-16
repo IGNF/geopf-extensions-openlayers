@@ -6,7 +6,6 @@ declare namespace IsoDOM {
     function _createIsoPanelElement(): HTMLElement;
     function _createIsoPanelDivElement(): HTMLDivElement;
     function _createDrawingButtonsPluginDiv(): HTMLDivElement;
-    function _createIsoPanelHeaderElement(): HTMLElement;
     function _createIsoPanelFormElement(): HTMLElement;
     function _createIsoPanelResultsElement(): HTMLElement;
     function _addIsoResultsValuesElement(results: any, computeOptions: any, fconvert: Function): HTMLElement;

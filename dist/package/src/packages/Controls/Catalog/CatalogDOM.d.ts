@@ -4,14 +4,9 @@ declare namespace CatalogDOM {
     function _addUID(id: string): string;
     function _createMainContainerElement(): HTMLElement;
     function _createShowCatalogPictoElement(): HTMLElement;
-    function _createCatalogPanelElement(): HTMLElement;
-    function _createCatalogPanelDivSizeElement(size: any): HTMLElement;
-    function _createCatalogPanelDivElement(): HTMLDivElement;
+    function _createCatalogPanelElement(size?: string): HTMLElement;
+    function _createCatalogPanelBodyElement(): HTMLDivElement;
     function _createCatalogPanelContentDivElement(): HTMLDivElement;
-    function _createCatalogPanelHeaderElement(): HTMLElement;
-    function _createCatalogPanelTitleElement(title: any): HTMLDivElement;
-    function _createCatalogPanelIconElement(title: any): HTMLLabelElement;
-    function _createCatalogPanelCloseElement(): HTMLButtonElement;
     function _createCatalogContentDivElement(): ChildNode | null;
     function _createCatalogContentTitleElement(title: any): ChildNode | null;
     function _createCatalogContentSearchGlobalElement(label: any): ShadowRoot;

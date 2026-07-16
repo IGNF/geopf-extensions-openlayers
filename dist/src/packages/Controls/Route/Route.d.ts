@@ -231,6 +231,8 @@ declare class Route extends Control {
     /** @private */
     private _showRouteButton;
     /** @private */
+    private _panelBtnClose;
+    /** @private */
     private _panelRouteContainer;
     /** @private */
     private _panelHeaderRouteContainer;
@@ -286,6 +288,7 @@ declare class Route extends Control {
      * @private
      */
     private _initContainer;
+    _panelCloseBtn: any;
     /**
      * this method is called by the constructor and initialize transport mode
      * ("Voiture" ou "Pieton")

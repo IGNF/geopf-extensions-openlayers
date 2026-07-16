@@ -251,6 +251,8 @@ declare class Isocurve extends Control {
     /** @private */
     private _pictoIsoButton;
     /** @private */
+    private _panelCloseBtn;
+    /** @private */
     private _waitingContainer;
     /** @private */
     private _formContainer;
