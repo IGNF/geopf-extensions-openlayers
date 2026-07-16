@@ -15,6 +15,7 @@ import Draggable from "../../Utils/Draggable";
 
 // DOM
 import LegendsDOM from "./LegendsDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("legends");
 
@@ -337,27 +338,23 @@ class Legends extends Control {
 
         // panel
         var legendsPanel = this.panelLegendsContainer = this._createLegendsPanelElement();
+
+        // header ?
+        if (this.options.panel) {
+            var legendsPanelHeader = this.panelLegendsHeaderContainer = this._createPanelHeaderElement({
+                icon : "ign-legends",
+                title : "Légendes",
+                btnClassForClose : "GPshowLegendsPicto",
+            });
+            legendsPanel.appendChild(legendsPanelHeader);
+            this.buttonLegendsClose = legendsPanelHeader._closeBtn;
+        }
+
         var legendsPanelDiv = this._createLegendsPanelDivElement();
         legendsPanel.appendChild(legendsPanelDiv);
 
         var legendsEntriesDiv = this.panelLegendsEntriesContainer = this._createLegendElement();
         legendsPanel.appendChild(legendsEntriesDiv);
-
-
-        // header ?
-        if (this.options.panel) {
-            var legendsPanelHeader = this.panelLegendsHeaderContainer = this._createLegendsPanelHeaderElement();
-            // icone
-            var legendsPanelIcon = this._createLegendsPanelIconElement();
-            legendsPanelHeader.appendChild(legendsPanelIcon);
-            // title
-            var legendsPanelTitle = this._createLegendsPanelTitleElement();
-            legendsPanelHeader.appendChild(legendsPanelTitle);
-            // close picto
-            var legendsCloseBtn = this.buttonLegendsClose = this._createLegendsPanelCloseElement();
-            legendsPanelHeader.appendChild(legendsCloseBtn);
-            legendsPanelDiv.appendChild(legendsPanelHeader);
-        }
 
         container.appendChild(legendsPanel);
 
@@ -503,6 +500,7 @@ class Legends extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(Legends.prototype, PanelDOM);
 Object.assign(Legends.prototype, LegendsDOM);
 Object.assign(Legends.prototype, Widget);
 

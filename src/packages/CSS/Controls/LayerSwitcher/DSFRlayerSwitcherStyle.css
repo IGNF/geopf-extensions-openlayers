@@ -178,24 +178,6 @@ div:not(.position) > div[id^="GPlayerSwitcher-"] > dialog[id^="GPlayersList"] .g
     max-height: 450px;
 }
 
-.gpf-panel__title_ls {
-    color: #101092;
-    padding: 12px 15px;
-    position: relative;
-    font-size: 1rem;
-    font-weight: normal;
-    margin: 0;
-    right: -16px;
-}
-.gpf-panel__header_ls {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    align-content: center;
-    background: #E3E3FD;
-    height: 48px;
-}
-
 .gpf-btn-icon-ls-info {
     box-shadow: none;
 }
@@ -306,7 +288,7 @@ div[id^=GPlayerStyleContent] {
 }
 
 div[id^=GPlayerSwitcher_ID_]:hover {
-    background-color: var(--background-default-grey-hover);
+    background: var(--background-default-grey);
 }
 div[id^=GPlayerSwitcher_ID_].sortable-chosen {
     background-color: var(--background-default-grey-active);
@@ -512,4 +494,5 @@ div[id^="GPlayerSwitcher_ID_"]:only-child .GPlayerDragNDrop {
 img[id^=GPtitleImage] {
     width: 44px;
     height: 44px;
+    background: var(--background-alt-blue-france);
 }

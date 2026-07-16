@@ -16,6 +16,7 @@ import Draggable from "../../Utils/Draggable";
 
 // DOM
 import ReportingDOM from "./ReportingDOM";
+import PanelDOM from "../PanelDOM";
 import Drawing from "../Drawing/Drawing";
 
 var logger = Logger.getLogger("reporting");
@@ -980,7 +981,7 @@ class Reporting extends Control {
         /** @private */
         this.divReportingTitle = null;
         /** @private */
-        this.labelReportingIcon = null;
+        this.backBtnIcon = null;
 
         /** @private */
         this.buttonReportingSubmit = null;
@@ -1093,20 +1094,25 @@ class Reporting extends Control {
 
         // panel
         var reportingPanel = this.panelReportingContainer = this._createReportingPanelElement();
-        var reportingPanelDiv = this._createReportingPanelDivElement();
-        reportingPanel.appendChild(reportingPanelDiv);
 
         // header
-        var reportingPanelHeader = this.panelReportingHeaderContainer = this._createReportingPanelHeaderElement();
-        // icone
-        var reportingPanelIcon = this.labelReportingIcon = this._createReportingPanelIconElement();
-        reportingPanelHeader.appendChild(reportingPanelIcon);
-        // title
-        var reportingPanelTitle = this.divReportingTitle = this._createReportingPanelTitleElement();
-        reportingPanelHeader.appendChild(reportingPanelTitle);
-        // close picto
-        var reportingCloseBtn = this.buttonReportingClose = this._createReportingPanelCloseElement();
-        reportingPanelHeader.appendChild(reportingCloseBtn);
+        var reportingPanelHeader = this.panelReportingHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-reporting",
+            title : "",
+            btnClassForClose : "GPshowReportingPicto",
+            backBtn : true,
+        });
+        reportingPanel.appendChild(reportingPanelHeader);
+
+        this.backBtnIcon = reportingPanelHeader._backBtn;
+        this.backBtnIcon.addEventListener("click", (e) => {
+            this.onPrevReportingClick(e);
+        });
+        this.divReportingTitle = reportingPanelHeader._title;
+        this.buttonReportingClose = reportingPanelHeader._closeBtn;
+
+        var reportingPanelDiv = this._createReportingPanelDivElement();
+        reportingPanel.appendChild(reportingPanelDiv);
 
         // footer
         var reportingPanelFooter = this.panelReportingFooterContainer = this._createReportingPanelFooterElement();
@@ -1218,7 +1224,11 @@ class Reporting extends Control {
         this.panelReportingFooterContainer.style.display = (this.stepContainer[num].footer) ? "flex" : "none";
         this.reportingBtnAnnulerFooter.style.display = (this.stepContainer[num].prev === -1) ? "none" : "flex";
         this.reportingBtnSuivantFooter.style.display = (this.stepContainer[num].next === -1) ? "none" : "flex";
-        this.labelReportingIcon.style.display = (this.stepContainer[num].prev === -1) ? "none" : "flex";
+        if (this.stepContainer[num].prev !== -1) {
+            this.backBtnIcon.classList.remove("gpf-hidden");
+        } else {
+            this.backBtnIcon.classList.add("gpf-hidden");
+        }
     }
 
     /**
@@ -1521,6 +1531,7 @@ class Reporting extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(Reporting.prototype, PanelDOM);
 Object.assign(Reporting.prototype, ReportingDOM);
 Object.assign(Reporting.prototype, Widget);
 

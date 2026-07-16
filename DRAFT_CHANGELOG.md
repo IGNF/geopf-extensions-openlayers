@@ -28,6 +28,10 @@ __DATE__
 * 🔨 [Changed]
 
   - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
+  - Legends : chargement asynchrone des images de légende (#567)
+  - Legends : modification texte alternatif et ajout d’un lien pour ouvrir dans un nouvel onglet (#567)
+  - Widgets : uniformisation des entêtes/corps des panels (#567)
+  - Catalog : sélectionne la couche au clic sur son nom (#567)
   - SearchEngineAdvanced : ajout d'events sur l'ajout et la suppression de pop-up et de features et refacto de la geolocalisation (#565) 
 
 * 🔥 [Deprecated]
@@ -40,6 +44,7 @@ __DATE__
   - Panoramax : modification du z-index par défaut du photoviewer pour être au-dessus des modales DFSR (#552)
   - Panoramax : reinitialisation des filtres (#556)
   - Catalog : améliorer la gestion des critères de recherche pour inclure des valeurs issues de tableaux (#555)
+  - Catalog : amélioration des vignettes de couches (chargement, tailles, couleurs, dark mode) (#567)
   - Isocurve : correctif sur l'évenement de fin de traitement (#557)
   - Drawing : correctif sur l'ouverture du panneau de dessin (#557)
   - MousePosition : conservation de l'ordre lat/lon y/x pour l'affichage des coordonnées (#560)

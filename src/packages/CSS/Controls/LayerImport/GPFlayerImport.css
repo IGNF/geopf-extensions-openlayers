@@ -54,10 +54,6 @@ button[id^="GPshowImportPicto-"][aria-pressed="true"] + dialog {
 /***************/
 /* Import form */
 /***************/
-form[id^=GPimportForm-] {
-    padding: 15px;
-}
-
 div[id^="GPimportChoice-"] {
     display: -ms-flexbox;
     display: -webkit-box;

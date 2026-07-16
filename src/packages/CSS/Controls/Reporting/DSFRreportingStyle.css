@@ -10,17 +10,7 @@
     background-position: center center;
 }
 
-.gpf-btn-icon-header-reporting {
-    background-image: url("img/dsfr/header-return.svg");
-    background-repeat: no-repeat;
-    background-size: auto auto;
-    background-position: center center;
-    cursor: pointer;
-    position: relative;
-}
-
-.gpf-panel__footer_reporting,
-.gpf-panel__header_reporting {
+.gpf-panel__footer_reporting {
     display: flex;
     flex-direction: row;
     align-items: center;

@@ -110,6 +110,7 @@
 }
 
 .GPpanelTitle {
+  display: block;
   width: 100%;
   height: 100%;
   text-align: center;
@@ -140,7 +141,18 @@
 .GPpanelClose {
   top: 3px;
   right: 3px;
-  background-position: -27px 0;
+  background-image: url("./img/GPclose.png");
+/*  background-position: -27px 0;*/
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.GPpanelClose::before {
+  content: "";
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  white-space: nowrap;
 }
 
 .GPreturnPicto {
@@ -570,4 +582,8 @@ input[type="checkbox"]:checked + .GPshowMoreOptions {
 
 .gpf-btn-icon {
   caret-color: transparent;
+}
+
+.gpf-panel__body {
+  overflow: auto;
 }
