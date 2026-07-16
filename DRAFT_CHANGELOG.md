@@ -28,6 +28,7 @@ __DATE__
 * 🔨 [Changed]
 
   - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
+  - SearchEngineAdvanced : ajout d'events sur l'ajout et la suppression de pop-up et de features et refacto de la geolocalisation (#565) 
 
 * 🔥 [Deprecated]
 
@@ -44,6 +45,7 @@ __DATE__
   - MousePosition : conservation de l'ordre lat/lon y/x pour l'affichage des coordonnées (#560)
   - LayerSwitcher : correctif sur le drag n' drop en conflit avec le slider d'opacité (#562)
   - ControlList : fixe l’événement change:collapsed (#561)
+  - SearchEngineAdvanced : refactorisation et amélioration de la géolocalisation et des mécanismes qui y sont liés (#565)
   - Tooltip : affichage des tooltip DSFR au survol ainsi qu'au focus (#515)
   
 * 🔒 [Security]
