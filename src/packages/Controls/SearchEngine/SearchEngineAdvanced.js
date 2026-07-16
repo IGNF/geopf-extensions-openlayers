@@ -4,6 +4,7 @@ import OlFeature from "ol/Feature";
 import Point from "ol/geom/Point";
 import SearchEngineGeocodeIGN from "./SearchEngineGeocodeIGN";
 import Helper from "../../Utils/Helper";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 import Select, { SelectEvent } from "ol/interaction/Select";
 import Map from "ol/Map";
 
@@ -172,11 +173,9 @@ class SearchEngineAdvanced extends Control {
      */
     _initEvents (options) {
         this.geolocation.on("change:position", () => {
-            const pt = new Point(this.geolocation.getPosition());
-            pt.transform("EPSG:4326", this.getMap().getView().getProjection());
-            const evt = this.createEvent(pt, "Ma localisation");
-            this.addResultToMap(evt);
-            this.dispatchEvent(evt);
+            const coords = this.geolocation.getPosition();
+            const content = "Ma localisation";
+            this.createMarker (coords, content, "geolocate", true);
             this.geolocation.setTracking(false);
         });
 
@@ -225,9 +224,10 @@ class SearchEngineAdvanced extends Control {
      * Crée un événement de recherche à partir d'un objet (Feature ou Point).
      * @param {Object|Point|OlFeature} obj Objet à afficher (Feature ou Point)
      * @param {String} [info] Texte affiché dans la popup
+     * @param {Boolean} [center=true] Indique si le résultat doit être centré
      * @returns {Object} Événement normalisé de type "search"
      */
-    createEvent (obj, info) {
+    createEvent (obj, info, center) {
         let evt = obj;
         if (obj instanceof OlFeature) {
             evt = {
@@ -244,6 +244,7 @@ class SearchEngineAdvanced extends Control {
             evt.result.set("infoPopup", info);
         }
         evt.type = "search";
+        evt.center = center !== false; // center = true par défaut
         return evt;
     }
 
@@ -381,7 +382,6 @@ class SearchEngineAdvanced extends Control {
             // Notifie l'input du changement
             this.baseSearchEngine.input.dispatchEvent(new Event("input"));
             // Met le focus sur l'input
-            console.log("click");
             setTimeout(() => {
                 this.baseSearchEngine.input.focus();
             }, 50);
@@ -409,10 +409,10 @@ class SearchEngineAdvanced extends Control {
 
     /**
      * Ajoute les résultats (features) sur la carte et ajuste la vue.
-     * @param {Object} e Événement de recherche contenant result/extent
+     * @param {Object} e Événement de recherche contenant result/extent/center
      */
     addResultToMap (e) {
-        this._closePopup();
+        this._closePopup(e);
         this.layer.getSource().clear();
         let extent;
         if (!!e.result) {
@@ -425,7 +425,7 @@ class SearchEngineAdvanced extends Control {
             this.layer.getSource().addFeature(e.extent);
             extent = e.extent.getGeometry().getExtent();
         }
-        if (this.getMap()) {
+        if (this.getMap() && e.center !== false) {
             let view = this.getMap().getView();
             if (extent) {
                 view.fit(extent);
@@ -458,6 +458,7 @@ class SearchEngineAdvanced extends Control {
             this.setPopupContent(feature.get("infoPopup") || "");
             this.popup.set("feature", feature);
             this.popup.set("layer", this.layer);
+            this.popup.set("origin", feature.get("origin"));
         } else {
             this.popup.setPosition(undefined);
             this.setPopupContent("");
@@ -540,13 +541,18 @@ class SearchEngineAdvanced extends Control {
 
     /**
      * Ferme le popup et désélectionne la feature.
+     * @param {Object} evt - event ayant déclenché la fermeture de la popup
      * @returns {Boolean} false
      * @private
      */
-    _closePopup () {
+    _closePopup (evt) {
         this.selectInteraction.getFeatures().clear();
         if (this.popup !== null) {
             this.popup.setPosition(undefined);
+            this.dispatchEvent({
+                type : "searchengineadvanced:popup:close",
+                evt : evt
+            });
         }
         return false;
     }
@@ -580,9 +586,9 @@ class SearchEngineAdvanced extends Control {
             layer.getSource().removeFeature(f);
 
             this.dispatchEvent({
-                type : this.REMOVE_FEATURE_EVENT,
+                type : "searchengineadvanced:feature:remove",
                 feature : f,
-                layer : layer,
+                layer : layer
             });
 
             // Ferme le popup
@@ -594,6 +600,7 @@ class SearchEngineAdvanced extends Control {
      * Crée un bouton personnalisé pour le popup.
      * @param {PopupButton} popupButton - Configuration du bouton.
      * @returns {HTMLButtonElement} Bouton HTML
+     * @private
      */
     _createCustomPopupButton (popupButton) {
         const btn = document.createElement("button");
@@ -629,6 +636,29 @@ class SearchEngineAdvanced extends Control {
     }
 
     /**
+     * Positionne un marker sur la carte.
+     * @param {coords} coords - Coordonnées où positionner le marker
+     * @param {String} content - Contenu à afficher dans la popup
+     * @param {String} origin - Origine de la feature
+     * @param {Boolean} center - La vue se centre sur la feature ajoutée
+     * @public
+     */
+    createMarker (coords, content, origin, center) {
+        const pt = new Point(coords);
+        pt.transform("EPSG:4326", this.getMap().getView().getProjection());
+
+        const f = new OlFeature(pt);
+        if (origin) {
+            f.set("origin", origin);
+        }
+        const cleanContent = sanitizeHtml(content);
+        const evt = this.createEvent(f, cleanContent, center);
+        
+        this.addResultToMap(evt);
+        this.dispatchEvent(evt);
+    }
+
+    /**
      * Crée le bouton de géolocalisation.
      * @returns {HTMLButtonElement} Bouton de géolocalisation
      * @private
@@ -639,8 +669,26 @@ class SearchEngineAdvanced extends Control {
         locationBtn.className = "GPSearchEngine-locate fr-btn fr-btn--sm fr-icon-crosshair-2-line fr-btn--icon-left fr-btn--tertiary-no-outline";
         locationBtn.addEventListener("click", () => {
             this.geolocation.setTracking(true);
-            console.log("tracking", this.geolocation);
+            const onPosition = () => {
+                const position = this.geolocation.getPosition();
+                /**
+                 * @event searchengineadvanced:geolocation:click
+                 * @property {Object} type - event
+                 * @property {Object} coordinates - coordinates
+                 * @property {Object} target - instance SearchEngineAdvanced
+                 * @example
+                 * SearchEngineAdvanced.on("searchengineadvanced:geolocation:click", function (e) {
+                 *   console.log(e.coordinates);
+                 * })
+                */
+                this.dispatchEvent({
+                    type : "searchengineadvanced:geolocation:click",
+                    coordinates : position
+                });
+            };
+            this.geolocation.once("change:position", onPosition);
         });
+
         return locationBtn;
     }
 
