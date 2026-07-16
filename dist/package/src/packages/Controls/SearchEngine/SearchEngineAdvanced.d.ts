@@ -57,9 +57,10 @@ declare class SearchEngineAdvanced extends Control {
      * Crée un événement de recherche à partir d'un objet (Feature ou Point).
      * @param {Object|Point|OlFeature} obj Objet à afficher (Feature ou Point)
      * @param {String} [info] Texte affiché dans la popup
+     * @param {Boolean} [center=true] Indique si le résultat doit être centré
      * @returns {Object} Événement normalisé de type "search"
      */
-    createEvent(obj: any | Point | OlFeature, info?: string): any;
+    createEvent(obj: any | Point | OlFeature, info?: string, center?: boolean): any;
     /**
      * Initialise le conteneur principal du contrôle et les sous-composants.
      * @param {SearchEngineAdvancedOptions} options Options du constructeur
@@ -78,7 +79,7 @@ declare class SearchEngineAdvanced extends Control {
     _onDocumentClick(e: PointerEvent): void;
     /**
      * Ajoute les résultats (features) sur la carte et ajuste la vue.
-     * @param {Object} e Événement de recherche contenant result/extent
+     * @param {Object} e Événement de recherche contenant result/extent/center
      */
     addResultToMap(e: any): void;
     /**
@@ -116,6 +117,7 @@ declare class SearchEngineAdvanced extends Control {
     private _addCloseButton;
     /**
      * Ferme le popup et désélectionne la feature.
+     * @param {Object} evt - event ayant déclenché la fermeture de la popup
      * @returns {Boolean} false
      * @private
      */
@@ -135,8 +137,18 @@ declare class SearchEngineAdvanced extends Control {
      * Crée un bouton personnalisé pour le popup.
      * @param {PopupButton} popupButton - Configuration du bouton.
      * @returns {HTMLButtonElement} Bouton HTML
+     * @private
      */
-    _createCustomPopupButton(popupButton: PopupButton): HTMLButtonElement;
+    private _createCustomPopupButton;
+    /**
+     * Positionne un marker sur la carte.
+     * @param {coords} coords - Coordonnées où positionner le marker
+     * @param {String} content - Contenu à afficher dans la popup
+     * @param {String} origin - Origine de la feature
+     * @param {Boolean} center - La vue se centre sur la feature ajoutée
+     * @public
+     */
+    public createMarker(coords: any, content: string, origin: string, center: boolean): void;
     /**
      * Crée le bouton de géolocalisation.
      * @returns {HTMLButtonElement} Bouton de géolocalisation
