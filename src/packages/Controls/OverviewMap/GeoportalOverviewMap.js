@@ -286,6 +286,7 @@ class GeoportalOverviewMap extends OverviewMap {
         this.CLASSNAME = "OverviewMap";
         this.container = null;
         this.options = options;
+        this._initContainer();
     }
 
     /**
@@ -383,7 +384,6 @@ class GeoportalOverviewMap extends OverviewMap {
     setMap (map) {
         if (map) {
             this._createContainerPosition(map);
-            this._initContainer();
             if (this.options.disableOverviewDragging) {
                 const ovDiv = this.ovmapDiv_;
                 if (ovDiv) {
