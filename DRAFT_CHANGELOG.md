@@ -11,11 +11,8 @@ __DATE__
 
 - Résolution d'alertes de sécurité remontées par codeQL.
 - Export de la fonction utilitaire : **sanitizeHtml()**
-  ```js
-  import { sanitizeHtml } from "geopf-extensions-openlayers";
-  (...)
-  label.innerHTML = sanitizeHtml(value, { strict : true });
-  ```
+- Amélriorations et corrections sur l'UX du widget Panoramax
+- Multiples correctifs
 
 ### 💥 Breaking changes
 
