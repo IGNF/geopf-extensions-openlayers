@@ -141,6 +141,7 @@ div.GPbuttonsContainer > button {
 } */
 
 button[id^="GPshowSearchEnginePicto-"][aria-pressed="false"] + form[id^=GPsearchInput-] {
+  padding: 0;
   max-width: 0px;
   border: none;
 }
