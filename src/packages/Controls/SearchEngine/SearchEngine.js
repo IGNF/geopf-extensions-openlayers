@@ -35,6 +35,7 @@ import GeoportalMapBox from "../../Layers/LayerMapBox";
 import Search from "../../Services/Search";
 // DOM
 import SearchEngineDOM from "./SearchEngineDOM";
+import PanelDOM from "../PanelDOM";
 import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("searchengine");
@@ -2773,6 +2774,7 @@ class SearchEngine extends Control {
 };
 
 // on récupère les méthodes de la classe commune ReverseGeocoding
+Object.assign(SearchEngine.prototype, PanelDOM);
 Object.assign(SearchEngine.prototype, SearchEngineDOM);
 Object.assign(SearchEngine.prototype, Widget);
 
