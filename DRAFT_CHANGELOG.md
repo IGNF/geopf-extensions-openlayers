@@ -17,6 +17,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - Tooltips : les tooltips au survol des boutons ne peuvent pas être survolées (#571)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
