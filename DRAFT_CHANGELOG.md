@@ -9,27 +9,13 @@ __DATE__
 
 ### 🎉 Summary
 
-- Résolution d'alertes de sécurité remontées par codeQL.
-- Export de la fonction utilitaire : **sanitizeHtml()**
-- Amélriorations et corrections sur l'UX du widget Panoramax
-- Multiples correctifs
-
 ### 💥 Breaking changes
 
 ### 📖 Changelog
 
 * ✨ [Added]
 
-  - Catalog : recherche non sensible à la casse ou aux accents (#558)
-
 * 🔨 [Changed]
-
-  - Panoramax : possibilité de déclencher l'ouverture du _PhotoViewer_ programmatiquement (#550)
-  - Legends : chargement asynchrone des images de légende (#567)
-  - Legends : modification texte alternatif et ajout d’un lien pour ouvrir dans un nouvel onglet (#567)
-  - Widgets : uniformisation des entêtes/corps des panels (#567)
-  - Catalog : sélectionne la couche au clic sur son nom (#567)
-  - SearchEngineAdvanced : ajout d'events sur l'ajout et la suppression de pop-up et de features et refacto de la geolocalisation (#565) 
 
 * 🔥 [Deprecated]
 
@@ -37,22 +23,6 @@ __DATE__
 
 * 🐛 [Fixed]
 
-  - Panoramax : correctif sur l'orientation dans la minimap au chargement de la photo (#551)
-  - Panoramax : modification du z-index par défaut du photoviewer pour être au-dessus des modales DFSR (#552)
-  - Panoramax : reinitialisation des filtres (#556)
-  - Catalog : améliorer la gestion des critères de recherche pour inclure des valeurs issues de tableaux (#555)
-  - Catalog : amélioration des vignettes de couches (chargement, tailles, couleurs, dark mode) (#567)
-  - Isocurve : correctif sur l'évenement de fin de traitement (#557)
-  - Drawing : correctif sur l'ouverture du panneau de dessin (#557)
-  - MousePosition : conservation de l'ordre lat/lon y/x pour l'affichage des coordonnées (#560)
-  - LayerSwitcher : correctif sur le drag n' drop en conflit avec le slider d'opacité (#562)
-  - ControlList : fixe l’événement change:collapsed (#561)
-  - SearchEngineAdvanced : refactorisation et amélioration de la géolocalisation et des mécanismes qui y sont liés (#565)
-  - Tooltip : affichage des tooltip DSFR au survol ainsi qu'au focus (#515)
-  - Zoom/OverviewMap/Fullscreen : initialisation du composant dans le constructeur (fix #568) (#570)
-  
 * 🔒 [Security]
-
-  - Territories : correctifs sur les failles XSS (#563)
 
 ---
