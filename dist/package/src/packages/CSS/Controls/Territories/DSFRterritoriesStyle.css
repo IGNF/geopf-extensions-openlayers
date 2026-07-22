@@ -123,6 +123,7 @@
 .gpf-territories-header-upload {
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
     align-items: center;
     align-content: center;
     height: 30px;

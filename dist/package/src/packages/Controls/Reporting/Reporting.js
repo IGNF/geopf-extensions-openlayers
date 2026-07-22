@@ -1137,7 +1137,6 @@ class Reporting extends Control {
         var error = this.spanReportingError = this._createReportingErrorSendElement();
         send.appendChild(error);
 
-        reportingPanelDiv.appendChild(reportingPanelHeader);
         reportingPanelDiv.appendChild(input);
         reportingPanelDiv.appendChild(form);
         reportingPanelDiv.appendChild(send);

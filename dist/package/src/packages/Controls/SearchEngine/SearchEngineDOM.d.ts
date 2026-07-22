@@ -43,7 +43,7 @@ declare namespace SearchEngineDOM {
     function _createGeocodeResultsHeaderElement(): HTMLElement;
     function _createGeocodeResultsListElement(): HTMLElement;
     function _createGeocodedLocationElement(location: any, id: number): void;
-    function _createCoordinateSearchPanelHeaderElement(): HTMLDivElement;
+    function _createCoordinateSearchPanelHeaderElement(): any;
     function _createCoordinateSearchPanelFormElement(): HTMLFormElement;
     function __createCoordinateSearchDivElement(): HTMLDivElement;
     function _createCoordinateSearchSystemsLabelElement(): HTMLLabelElement;

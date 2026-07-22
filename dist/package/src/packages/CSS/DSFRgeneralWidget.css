@@ -58,7 +58,6 @@
 }
 
 .gpf-panel__footer {
-  background-color: transparent;
   padding: 0;
   margin-top: 0;
   justify-content: center;
@@ -209,6 +208,7 @@
   filter: drop-shadow(0 2px 6px rgba(0,0,18,.16));
   filter: drop-shadow(var(--overlap-shadow));
   background-image: conic-gradient(from 56.31deg at 0% 50%,transparent 0deg,var(--background-overlap-grey) 0deg,var(--background-overlap-grey) 67.38deg,transparent 67.38deg),conic-gradient(from 56.31deg at 0% 50%,transparent 0deg,var(--border-default-grey) 0deg,var(--border-default-grey) 67.38deg,transparent 67.38deg),linear-gradient(90deg,var(--border-default-grey),var(--border-default-grey)),linear-gradient(90deg,var(--background-overlap-grey),var(--background-overlap-grey));
+  pointer-events: none;
 }
 
 .position-container-top-left .gpf-widget > .gpf-btn-icon[aria-label]:focus:focus-visible::before,
