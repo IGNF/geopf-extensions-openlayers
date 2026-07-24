@@ -74,6 +74,8 @@ dialog[id^=GPlayersList] {
 button[id^=GPshowLayersListPicto][aria-pressed="true"] + dialog[id^=GPlayersList] {
   max-height: inherit;
   opacity: 1;
+  /* max-height: calc(var(--map-height) - 8px); */
+  /* height:unset; */
 }
 
 .GPlayerCounter {
