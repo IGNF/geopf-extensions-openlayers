@@ -1700,7 +1700,10 @@ class LayerImport extends Control {
                 // lecture du fichier GPX : création d'un format ol.format.GPX, qui possède une méthode readFeatures (et readProjection)
                 vectorStyle = this.options.vectorStyleOptions.GPX.defaultStyle;
                 vectorFormat = new GPXExtended({
-                    defaultStyle : vectorStyle
+                    defaultStyle : vectorStyle,
+                    readExtensions : function (feature, node) {
+                        this.readExtensions(feature, node);
+                    }
                 });
             } else if (this._currentImportType === "GeoJSON") {
                 // lecture du fichier GeoJSON : création d'un format ol.format.GeoJSON, qui possède une méthode readFeatures (et readProjection)
@@ -1878,7 +1881,10 @@ class LayerImport extends Control {
             } else if (this._currentImportType === "GPX") {
                 // lecture du fichier GPX : création d'un format ol.format.GPX, qui possède une méthode readFeatures (et readProjection)
                 vectorFormat = new GPXExtended({
-                    defaultStyle : this.options.vectorStyleOptions.GPX.defaultStyle
+                    defaultStyle : this.options.vectorStyleOptions.GPX.defaultStyle,
+                    readExtensions : function (feature, node) {
+                        this.readExtensions(feature, node);
+                    }
                 });
             } else if (this._currentImportType === "GeoJSON") {
                 // lecture du fichier GeoJSON : création d'un format ol.format.GeoJSON, qui possède une méthode readFeatures (et readProjection)
