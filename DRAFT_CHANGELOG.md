@@ -33,6 +33,7 @@ __DATE__
 
   - LayerImport : fixe la hauteur du contenu dans certains cas (#575)
   - GFI : empêche que l’ouverture de l’accordéon déplace le site en entier (#580)
+  - Drawing / Measures : sur Safari, le clic ne permettait pas de tracer et le double-clic sélectionnait le texte de l'infobulle ("Double-cliquer pour terminer", mesures) au lieu de terminer la saisie
 
 * 🔒 [Security]
 
