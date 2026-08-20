@@ -95,6 +95,7 @@ module.exports = (env, argv) => {
             libraryTarget : "assign",
             library : "[name]"
         },
+        externalsType : "var",
         resolve : {},
         externals : [
             function ({ context, request }, callback) {
