@@ -25,6 +25,8 @@ __DATE__
 
 * 🐛 [Fixed]
 
+  - Drawing / Measures : sur Safari, le clic ne permettait pas de tracer et le double-clic sélectionnait le texte de l'infobulle ("Double-cliquer pour terminer", mesures) au lieu de terminer la saisie
+
 * 🔒 [Security]
 
 ---
