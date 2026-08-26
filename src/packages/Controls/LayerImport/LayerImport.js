@@ -742,19 +742,26 @@ class LayerImport extends Control {
             icon : "ign-layerimport",
             title : "Import de données",
             btnClassForClose : "GPshowImportPicto",
+            backBtn : true,
         });
 
         importPanel.appendChild(panelHeader);
         importPanel.appendChild(importPanelPanelDiv);
 
-        // return
-        var panelReturn = this._importPanelReturnPicto = this._createImportPanelReturnPictoElement();
-        importPanelPanelDiv.appendChild(panelReturn);
-
         // panel title
         this._importPanelTitle = panelHeader._title;
         // close picto
         this._panelCloseButton = panelHeader._closeBtn;
+        // return btn
+        this._importPanelReturnPicto = panelHeader._backBtn;
+        this._importPanelReturnPicto.addEventListener("click", (e) => {
+            // on ferme le panneau
+            document.getElementById(this._addUID("GPshowImportPicto")).click();
+            // on nettoie la fenêtre de résultats
+            this._onReturnPictoClick(e);
+            // on rouvre le panneau vierge
+            document.getElementById(this._addUID("GPshowImportPicto")).click();
+        });
 
         // form : initialisation du formulaire d'import des couches (types d'import et saisie de l'url / du fichier)
         var importForm = this._formContainer = this._initInputFormElement();
@@ -966,8 +973,7 @@ class LayerImport extends Control {
     _onMapBoxPanelClose () {
         this.cleanMapBoxResultsList();
         this._loadingContainer.className = "";
-        this._importPanelReturnPicto.classList.replace("GPelementVisible", "GPelementHidden");
-        this._importPanelReturnPicto.classList.replace("gpf-visible", "gpf-hidden");
+        this._importPanelReturnPicto.classList.add("GPelementHidden", "gpf-hidden");
         this._mapBoxPanel.classList.replace("GPelementVisible", "GPelementHidden");
         this._mapBoxPanel.classList.replace("gpf-visible", "gpf-hidden");
     }
@@ -1570,8 +1576,7 @@ class LayerImport extends Control {
                                                 self._importPanelHeader.classList.replace("gpf-hidden", "gpf-visible");
                                                 self._mapBoxPanel.classList.replace("GPelementHidden", "GPelementVisible");
                                                 self._mapBoxPanel.classList.replace("gpf-hidden", "gpf-visible");
-                                                self._importPanelReturnPicto.classList.replace("GPelementHidden", "GPelementVisible");
-                                                self._importPanelReturnPicto.classList.replace("gpf-hidden", "gpf-visible");
+                                                self._importPanelReturnPicto.classList.remove("GPelementHidden", "gpf-hidden");
                                             }
                                         })
                                         .then(function () {
@@ -2267,8 +2272,7 @@ class LayerImport extends Control {
         this._getCapPanel.classList.replace("GPelementHidden", "GPelementVisible");
         this._getCapPanel.classList.replace("gpf-hidden", "gpf-visible");
         this._importPanelTitle.innerHTML = "Couches accessibles";
-        this._importPanelReturnPicto.classList.replace("GPelementHidden", "GPelementVisible");
-        this._importPanelReturnPicto.classList.replace("gpf-hidden", "gpf-visible");
+        this._importPanelReturnPicto.classList.remove("GPelementHidden", "gpf-hidden");
         this._hasGetCapResults = true;
         // Parse GetCapabilities Response
         if (this._currentImportType === "WMS") {

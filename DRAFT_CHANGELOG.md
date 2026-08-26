@@ -18,6 +18,7 @@ __DATE__
 * 🔨 [Changed]
 
   - Tooltips : les tooltips au survol des boutons ne peuvent pas être survolées (#571)
+  - LayerImport : le bouton retour est inclut dans le panel header (#575)
 
 * 🔥 [Deprecated]
 
