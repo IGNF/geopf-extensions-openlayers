@@ -547,7 +547,7 @@ var LayerImportDOM = {
     _createImportGetCapPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportGetCapPanel");
-        div.className = "GPpanel GPelementHidden gpf-panel fr-modal gpf-hidden";
+        div.className = "GPpanel GPelementHidden gpf-hidden";
         return div;
     },
 
@@ -609,7 +609,7 @@ var LayerImportDOM = {
      */
     _createImportGetCapResultsContainer : function () {
         var container = document.createElement("div");
-        container.className = "GPimportGetCapRoot gpf-panel__list";
+        container.className = "GPimportGetCapRoot";
         container.id = this._addUID("GPimportGetCapResults");
 
         return container;
@@ -689,7 +689,7 @@ var LayerImportDOM = {
     _createImportMapBoxPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportMapBoxPanel");
-        div.className = "GPpanel GPelementHidden gpf-panel fr-modal gpf-hidden";
+        div.className = "GPpanel GPelementHidden gpf-hidden";
         return div;
     },
 

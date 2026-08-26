@@ -26,6 +26,8 @@ __DATE__
 
 * 🐛 [Fixed]
 
+  - LayerImport : fixe la hauteur du contenu dans certains cas (#575)
+
 * 🔒 [Security]
 
 ---
