@@ -66,6 +66,22 @@ input[id^="GPimportSubmit-"] {
     margin-top: 20px;
 }
 
+div[id^="GPimportDropZone-"] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px dashed var(--light-decisions-border-border-contrast-grey, #929292);
+    background: var(--light-decisions-background-background-contrast-grey, #EEE);
+}
+
+div[id^="GPimportDropZone-"].GPimportDropZoneHover {
+    border-color: #000091;
+    background-color: #ECECFE;
+}
+
 /*******************/
 /* Get cap results */
 /*******************/
