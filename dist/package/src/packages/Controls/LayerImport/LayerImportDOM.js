@@ -106,44 +106,6 @@ var LayerImportDOM = {
         return div;
     },
 
-    /**
-     * Create Return PIcto into Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createImportPanelReturnPictoElement : function () {
-        var self = this;
-        // return picto
-        var returnDiv = document.createElement("button");
-        returnDiv.id = this._addUID("GPimportPanelReturnPicto");
-        returnDiv.title = "Masquer le panneau";
-        returnDiv.className = "GPreturnPicto GPimportPanelReturnPicto GPelementHidden gpf-hidden gpf-btn gpf-btn-icon-return fr-btn fr-btn--close fr-btn--tertiary-no-outline";
-        
-        if (checkDsfr()) {
-            var returnSpan = document.createElement("span");
-            returnSpan.className = "GPelementHidden";
-            returnSpan.innerHTML = "Retour";
-            returnDiv.appendChild(returnSpan);
-        }
-        if (returnDiv.addEventListener) {
-            returnDiv.addEventListener("click", function (e) {
-                // on ferme le panneau
-                document.getElementById(self._addUID("GPshowImportPicto")).click();
-                // on nettoie la fenêtre de résultats
-                self._onReturnPictoClick(e);
-                // on rouvre le panneau vierge
-                document.getElementById(self._addUID("GPshowImportPicto")).click();
-            });
-        } else if (returnDiv.attachEvent) {
-            returnDiv.attachEvent("onclick", function (e) {
-                document.getElementById(self._addUID("GPshowImportPicto")).click();
-                self._onReturnPictoClick(e);
-                document.getElementById(self._addUID("GPshowImportPicto")).click();
-            });
-        }
-        return returnDiv;
-    },
-
     // ################################################################### //
     // ########################### Form panel ############################ //
     // ################################################################### //
@@ -585,7 +547,7 @@ var LayerImportDOM = {
     _createImportGetCapPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportGetCapPanel");
-        div.className = "GPpanel GPelementHidden gpf-panel fr-modal gpf-hidden";
+        div.className = "GPpanel GPelementHidden gpf-hidden";
         return div;
     },
 
@@ -647,7 +609,7 @@ var LayerImportDOM = {
      */
     _createImportGetCapResultsContainer : function () {
         var container = document.createElement("div");
-        container.className = "GPimportGetCapRoot gpf-panel__list";
+        container.className = "GPimportGetCapRoot";
         container.id = this._addUID("GPimportGetCapResults");
 
         return container;
@@ -727,7 +689,7 @@ var LayerImportDOM = {
     _createImportMapBoxPanelElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportMapBoxPanel");
-        div.className = "GPpanel GPelementHidden gpf-panel fr-modal gpf-hidden";
+        div.className = "GPpanel GPelementHidden gpf-hidden";
         return div;
     },
 

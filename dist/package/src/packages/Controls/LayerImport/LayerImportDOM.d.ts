@@ -6,7 +6,6 @@ declare namespace LayerImportDOM {
     function _createShowImportPictoElement(): HTMLElement;
     function _createImportPanelElement(): HTMLElement;
     function _createImportPanelDivElement(): HTMLDivElement;
-    function _createImportPanelReturnPictoElement(): HTMLElement;
     function _createImportPanelFormElement(): HTMLElement;
     function _createImportTypeLineElement(importTypes: any[]): HTMLElement;
     function _createImportWaitingElement(): HTMLElement;
