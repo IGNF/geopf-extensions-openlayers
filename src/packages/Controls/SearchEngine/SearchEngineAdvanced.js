@@ -2,6 +2,7 @@ import Control from "../Control";
 import Geolocation from "ol/Geolocation";
 import OlFeature from "ol/Feature";
 import Point from "ol/geom/Point";
+import { getCenter } from "ol/extent";
 import SearchEngineGeocodeIGN from "./SearchEngineGeocodeIGN";
 import Helper from "../../Utils/Helper";
 import { sanitizeHtml } from "../../Utils/Sanitize";
@@ -119,6 +120,12 @@ class SearchEngineAdvanced extends Control {
          * @type {Boolean}
          */
         this.listenToClick = false;
+
+        /**
+         * Géométrie sélectionnée après une recherche.
+         * @type {String}
+         */
+        this.selectGeometry = options.selectGeometry === "extent" ? "extent" : "point";
 
         if (options.advancedSearch && options.advancedSearch instanceof Array) {
             this._searchForms = options.advancedSearch;
@@ -415,15 +422,22 @@ class SearchEngineAdvanced extends Control {
         this._closePopup(e);
         this.layer.getSource().clear();
         let extent;
+        let selectedFeature;
         if (!!e.result) {
             this.layer.getSource().addFeature(e.result);
             extent = e.result.getGeometry().getExtent();
-            this.selectInteraction.getFeatures().push(e.result);
-            this._setPopupInfo(e.result);
-        }
+            selectedFeature = e.result;
+        }SearchEngineAdvanced
         if (!!e.extent) {
             this.layer.getSource().addFeature(e.extent);
             extent = e.extent.getGeometry().getExtent();
+            if (this.selectGeometry === "extent") {
+                selectedFeature = e.extent;
+            }
+        }
+        if (selectedFeature) {
+            this.selectInteraction.getFeatures().push(selectedFeature);
+            this._setPopupInfo(selectedFeature);
         }
         if (this.getMap() && e.center !== false) {
             let view = this.getMap().getView();
@@ -447,11 +461,14 @@ class SearchEngineAdvanced extends Control {
             this.popup.setPosition(undefined);
             let offset = null;
             // Ajoute le popup
-            if (feature.getGeometry()?.getType() === "Point") {
+            const geometry = feature.getGeometry();
+            if (geometry?.getType() === "Point") {
                 // Place le popup sur le point
-                position = feature.getGeometry()?.getCoordinates();
+                position = geometry.getCoordinates();
                 // TODO : AMÉLIORER L'OFFSET
                 offset = [0, -20];
+            } else if (!position && geometry) {
+                position = geometry.getInteriorPoint?.()?.getCoordinates() || getCenter(geometry.getExtent());
             }
             this.popup.setPosition(position);
             offset && this.popup.setOffset(offset);
@@ -659,7 +676,7 @@ class SearchEngineAdvanced extends Control {
     }
 
     /**
-     * Crée le bouton de géolocalisation.
+            if (!!e.result && (this.selectGeometry !== "extent" || !e.extent)) {
      * @returns {HTMLButtonElement} Bouton de géolocalisation
      * @private
      */
