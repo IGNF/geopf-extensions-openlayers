@@ -1287,6 +1287,8 @@ class Route extends Control {
         var opened = this._showRouteButton.ariaPressed;
         if (opened === "true") {
             this.onPanelOpen();
+        } else {
+            this.onPanelClose();
         }
         var map = this.getMap();
         // on supprime toutes les interactions

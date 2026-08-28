@@ -7,6 +7,18 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawing.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawing.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlRoute.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlRoute.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlElevationPath.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlElevationPath.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlMeasureLength.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlMeasureLength.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlMeasureArea.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlMeasureArea.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlMeasureAzimuth.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlMeasureAzimuth.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
@@ -96,6 +108,42 @@
                 position : "top-left"
             });
             map.addControl(drawing);
+
+            var iso = new ol.control.Isocurve({
+                collapsed : true,
+                position : "top-left"
+            });
+            map.addControl(iso);
+
+            var route = new ol.control.Route({
+                collapsed : true,
+                position : "top-left"
+            });
+            map.addControl(route);
+
+            var elevationPath = new ol.control.ElevationPath({
+                collapsed : true,
+                position : "top-left"
+            });
+            map.addControl(elevationPath);
+
+            var measureLength = new ol.control.MeasureLength({
+                collapsed : true,
+                position : "top-left"
+            });
+            map.addControl(measureLength);
+
+            var measureArea = new ol.control.MeasureArea({
+                collapsed : true,
+                position : "top-left"
+            });
+            map.addControl(measureArea);
+
+            var measureAzimuth = new ol.control.MeasureAzimuth({
+                collapsed : true,
+                position : "top-left"
+            });
+            map.addControl(measureAzimuth);
 
             var getFeatureInfo = new ol.control.GetFeatureInfo({
                 position : "bottom-left",

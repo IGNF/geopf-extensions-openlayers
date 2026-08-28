@@ -1,7 +1,7 @@
 const exceptions = ["GPoverviewMap", "GPfullScreen"];
 
 // widgets dont l'ouverture doit désactiver le GetFeatureInfo
-const gfiIncompatiblePanels = ["GPdrawing"];
+const gfiIncompatiblePanels = ["GPdrawing", "GPisochron", "GPmeasureArea", "GPmeasureAzimuth", "GPmeasureLength", "GProute", "GPelevationPath"];
 
 // état du GetFeatureInfo avant sa désactivation par un widget incompatible
 var gfiActiveBeforePanel = false;
