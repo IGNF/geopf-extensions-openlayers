@@ -66,6 +66,11 @@ input[id^="GPimportSubmit-"] {
     margin-top: 20px;
 }
 
+input[id^="GPimportSubmit-"].GPimportSubmitRight {
+    display: block;
+    margin-left: auto;
+}
+
 div[id^="GPimportDropZone-"] {
     display: flex;
     flex-direction: column;
@@ -73,13 +78,26 @@ div[id^="GPimportDropZone-"] {
     justify-content: center;
     text-align: center;
     border-radius: 4px;
-    border: 1px dashed var(--light-decisions-border-border-contrast-grey, #929292);
-    background: var(--light-decisions-background-background-contrast-grey, #EEE);
+    border: 2px dashed var(--border-default-grey, #929292);
+    background: var(--background-contrast-grey, #EEE);
 }
 
 div[id^="GPimportDropZone-"].GPimportDropZoneHover {
     border-color: #000091;
     background-color: #ECECFE;
+}
+
+.GPimportDropZoneIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--text-action-high-blue-france, #000091);
+    background-color: currentColor;
+    -webkit-mask: url("img/share-2-fill.svg") center no-repeat;
+    mask: url("img/share-2-fill.svg") center no-repeat;
+}
+
+.GPimportDropZoneTextSecondary {
+    color: var(--text-mention-grey, #666);
 }
 
 /*******************/
