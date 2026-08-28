@@ -43,7 +43,6 @@ var PanelManager = function (position, openedPanelID, widget) {
     var openedPanel = getSameSideOpenedPanel(position, openedPanelID);
     // on ferme tous les panels ouverts
     openedPanel.forEach((panel) => {
-        console.log("Fermeture du panel : ", panel);
         // Si panel du GFI, on ferme le panel en cliquant sur le bouton de fermeture du panel
         var closeButton = panel.querySelector(".GPcloseGetFeatureInfo") || panel.getElementsByTagName("button")[0];
         closeButton.click();
