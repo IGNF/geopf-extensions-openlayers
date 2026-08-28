@@ -1,7 +1,6 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-                 
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.css" />
@@ -12,7 +11,7 @@
 {{/content}}
 
 {{#content "head"}}
-        <title>Sample openlayers GetFeatureInfo</title>
+        <title>Sample OpenLayers GetFeatureInfo actif sans bouton</title>
 {{/content}}
 
 {{#content "style"}}
@@ -28,10 +27,8 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout des widgets GetFeatureInfo et Drawing avec DSFR</h2>
-            <!-- map -->
-            <div id="map">
-            </div>
+            <h2>GetFeatureInfo actif sans bouton et outils Drawing avec DSFR</h2>
+            <div id="map"></div>
             <button type="button" id="addVectorKml">Ajouter une couche vecteur kml</button>
             <button type="button" id="addVectorGpx">Ajouter une couche vecteur gpx</button>
             <button type="button" id="addWms">Ajouter une couche WMS</button>
@@ -44,7 +41,6 @@
         var createMap = function () {
             document.getElementById('map').style.backgroundImage = 'none';
 
-            // 1. Création de la map
             map = new ol.Map({
                 target : "map",
                 view : new ol.View({
@@ -53,7 +49,6 @@
                 })
             });
 
-            // 2. Ajout de plusieurs couches différentes.
             var gpMaps = new ol.layer.Tile({
                 source : new ol.source.GeoportalWMTS({
                     layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
@@ -96,122 +91,77 @@
             });
             map.addLayer(mapbox);
 
-            // 3. Ajout des outils de dessin
             var drawing = new ol.control.Drawing({
                 collapsed : false,
-                position : "bottom-right"
+                position : "top-left"
             });
             map.addControl(drawing);
-            
-            // 4. Ajout du GetFeatureInfo
+
             var getFeatureInfo = new ol.control.GetFeatureInfo({
-                position: "bottom-left",
-                button: true,
+                position : "bottom-left",
+                button : false,
                 active : true,
                 noDataMessage : "<h6 style='text-align: center;'> Pas d'infos disponibles </h6> <p style='text-align: center;'> Il n'y a pas de données interrogeables ici </p>"
             });
             map.addControl(getFeatureInfo);
 
-            // 4. Quelques évènements pour tester...
-            document.getElementById("addVectorKml").onclick = function(e) {
-                if ( !this.kmlUrls )
-                {
-                  this.kmlUrls = [
+            document.getElementById("addVectorKml").onclick = function() {
+                var kmlUrls = [
                     '{{ resources }}/data/kml/bassin_bleu.kml',
                     '{{ resources }}/data/kml/croquis-simple.kml'
-                  ];
-                }
-                if ( !this.index )
-                {
+                ];
+                this.index = (this.index || 0) + 1;
+                if (this.index === kmlUrls.length) {
                     this.index = 0;
                 }
-                ++this.index;
-                if ( this.index ==  this.kmlUrls.length ) {
-                    this.index = 0;
-                }
-                map.addLayer(
-                    new ol.layer.Vector({
-                        source: new ol.source.Vector({
-                            url: this.kmlUrls[this.index],
-                            format: new ol.format.KML()
-                        })
+                map.addLayer(new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        url: kmlUrls[this.index],
+                        format: new ol.format.KML()
                     })
-                );
-            }
+                }));
+            };
 
-            document.getElementById("addVectorGpx").onclick = function(e) {
-                if ( !this.gpxUrls )
-                {
-                  this.gpxUrls = [
-                    '{{ resources }}/data/gpx/Campomoro-Tizzano-Sartene_3029.gpx',
-                  ];
-                }
-                if ( !this.index )
-                {
+            document.getElementById("addVectorGpx").onclick = function() {
+                var gpxUrls = ['{{ resources }}/data/gpx/Campomoro-Tizzano-Sartene_3029.gpx'];
+                this.index = (this.index || 0) + 1;
+                if (this.index === gpxUrls.length) {
                     this.index = 0;
                 }
-                ++this.index;
-                if ( this.index ==  this.gpxUrls.length ) {
-                    this.index = 0;
-                }
-                map.addLayer(
-                    new ol.layer.Vector({
-                        source: new ol.source.Vector({
-                            url: this.gpxUrls[this.index],
-                            format: new ol.format.GPX()
-                        })
+                map.addLayer(new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        url: gpxUrls[this.index],
+                        format: new ol.format.GPX()
                     })
-                );
-            }
-            document.getElementById("addWms").onclick = function(e) {
-                if ( !this.wmsLayers )
-                {
-                  this.wmsLayers = [
-                    "TN.RoadTransportNetwork",
-                    "HY.PhysicalWaters"
-                  ];
-                }
-                if ( !this.index )
-                {
-                    this.index = 0;
-                }
-                ++this.index;
-                if ( this.index ==  this.wmsLayers.length ) {
-                    this.index = 0;
-                }
-                map.addLayer(
-                    new ol.layer.Tile({
-                        source : new ol.source.GeoportalWMS({
-                            layer: this.wmsLayers[this.index]
-                        })
-                    })
-                );
-            }
-            document.getElementById("addWtms").onclick = function(e) {
-                if ( !this.wtmsLayers )
-                {
-                  this.wtmsLayers = [
-                    "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
-                  ];
-                }
-                if ( !this.index )
-                {
-                    this.index = 0;
-                }
-                ++this.index;
-                if ( this.index ==  this.wtmsLayers.length ) {
-                    this.index = 0;
-                }
-                map.addLayer(
-                    new ol.layer.Tile({
-                        source : new ol.source.GeoportalWMTS({
-                            layer: this.wtmsLayers[this.index]
-                        })
-                    })
-                );
-            }
+                }));
+            };
 
-            // 5. Ajout du contrôle de gestion de l'empilement des couches (layerSwitcher)
+            document.getElementById("addWms").onclick = function() {
+                var wmsLayers = ["TN.RoadTransportNetwork", "HY.PhysicalWaters"];
+                this.index = (this.index || 0) + 1;
+                if (this.index === wmsLayers.length) {
+                    this.index = 0;
+                }
+                map.addLayer(new ol.layer.Tile({
+                    source : new ol.source.GeoportalWMS({
+                        layer: wmsLayers[this.index]
+                    })
+                }));
+            };
+
+            document.getElementById("addWtms").onclick = function() {
+                var wtmsLayers = ["GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"];
+                this.index = (this.index || 0) + 1;
+                if (this.index === wtmsLayers.length) {
+                    this.index = 0;
+                }
+                map.addLayer(new ol.layer.Tile({
+                    source : new ol.source.GeoportalWMTS({
+                        layer: wtmsLayers[this.index]
+                    })
+                }));
+            };
+
             var layerSwitcher = new ol.control.LayerSwitcher({
                 options : {
                     collapsed: false,
@@ -223,7 +173,6 @@
         Gp.Services.getConfig({
             customConfigFile : "{{ configurl }}",
             callbackSuffix : "",
-            // apiKey: "{{ apikey }}",
             timeOut : 20000,
             onSuccess : createMap,
             onFailure : (e) => {
