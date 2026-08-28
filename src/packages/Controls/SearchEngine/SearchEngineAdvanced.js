@@ -423,11 +423,13 @@ class SearchEngineAdvanced extends Control {
         this.layer.getSource().clear();
         let extent;
         let selectedFeature;
-        if (!!e.result) {
+
+        // Ajoute le résultat principal sauf si seule l'emprise doit être affichée.
+        if (!!e.result && (this.selectGeometry !== "extent" || !e.extent)) {
             this.layer.getSource().addFeature(e.result);
             extent = e.result.getGeometry().getExtent();
             selectedFeature = e.result;
-        }SearchEngineAdvanced
+        }
         if (!!e.extent) {
             this.layer.getSource().addFeature(e.extent);
             extent = e.extent.getGeometry().getExtent();
