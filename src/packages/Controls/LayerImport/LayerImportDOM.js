@@ -469,7 +469,7 @@ var LayerImportDOM = {
         // l'input reste le point d'entrée du fichier, mais il n'est pas affiché
         input.classList.add("GPelementHidden", "gpf-hidden");
         input.addEventListener("change", function () {
-            filename.innerHTML = (input.files && input.files[0]) ? input.files[0].name : "";
+            filename.textContent = (input.files && input.files[0]) ? input.files[0].name : "";
         });
         div.appendChild(input);
 
@@ -493,7 +493,7 @@ var LayerImportDOM = {
                 var dataTransfer = new DataTransfer();
                 dataTransfer.items.add(e.dataTransfer.files[0]);
                 input.files = dataTransfer.files;
-                filename.innerHTML = input.files[0].name;
+                filename.textContent = input.files[0].name;
             }
         });
 
