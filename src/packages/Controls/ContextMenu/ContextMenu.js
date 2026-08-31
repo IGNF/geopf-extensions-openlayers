@@ -353,12 +353,6 @@ class ContextMenu extends Control {
      */
     getAvailableContextMenuControls () {
         var allItems = [
-            // {
-            //     text : "Informations sur des couches",
-            //     classname : "ol-context-menu-custom fr-text--md",
-            //     callback : this.getFeatureInfo.bind(this),
-            //     control_CLASSNAME : "GetFeatureInfo"
-            // },
             {
                 text : "Adresse / Coordonnées",
                 classname : "ol-context-menu-custom fr-text--md",
@@ -382,20 +376,7 @@ class ContextMenu extends Control {
                 classname : "ol-context-menu-custom fr-text--md",
                 callback : this.computeIsochrone.bind(this),
                 control_CLASSNAME : "Isocurve"
-            },
-            // {
-            //     text : "Ajouter des cartes / données",
-            //     classname : "ol-context-menu-custom fr-text--md",
-            //     callback : this.openCatalogue.bind(this),
-            //     control_CLASSNAME : "Catalog"
-            // },
-            // "separator",
-            // {
-            //     text : "Afficher la légende",
-            //     classname : "ol-context-menu-custom fr-text--md",
-            //     callback : this.displayLegend.bind(this),
-            //     control_CLASSNAME : "Legends"
-            // }
+            }
         ];
         var map = this.getMap();
         var controls = [];
