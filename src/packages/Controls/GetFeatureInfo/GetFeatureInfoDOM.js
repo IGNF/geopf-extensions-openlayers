@@ -169,10 +169,10 @@ var GetFeatureInfoDOM = {
      * Create accordeon
      * see evenement !
      * @param { String } layername nom du layer
-     * @param { String } content contenu du gfi
+     * @param { HTMLElement } scrollableContainer conteneur scrollable de l'accordeon
      * @returns {HTMLElement} DOM element
      */
-    _createGetFeatureInfoLayerAccordion : function (layername) {
+    _createGetFeatureInfoLayerAccordion : function (layername, scrollableContainer) {
         var dsfrTemplate = this.stringToHTML(`
             <section class="fr-accordion">
                 <h3 class="fr-accordion__title">
@@ -194,14 +194,19 @@ var GetFeatureInfoDOM = {
             if (e.currentTarget.ariaExpanded === "true") {
                 collapse.classList.add("fr-collapse--expanded");
                 collapse.classList.remove("GPelementHidden");
-                // on centre la vue dans le dialog sur le bouton cliqué
-                requestAnimationFrame(() => {
-                    button.scrollIntoView({
-                        behavior : "smooth",
-                        block : "start",
-                        inline : "nearest"
-                    });
-                });
+                // on déplace la section dans le panel
+                setTimeout(() => {
+                    const elementRect = button.parentNode.parentNode.getBoundingClientRect();
+                    const containerRect = scrollableContainer.getBoundingClientRect();
+
+                    // si le bas n'est pas visible, on aligne le haut de la section
+                    if (elementRect.bottom > containerRect.bottom) {
+                        scrollableContainer.scrollTo({
+                            top : scrollableContainer.scrollTop - (containerRect.top - elementRect.top),
+                            behavior : "smooth"
+                        });
+                    }
+                }, 50); // ajoute un délai
             } else {
                 collapse.classList.remove("fr-collapse--expanded");
                 collapse.classList.add("GPelementHidden");
