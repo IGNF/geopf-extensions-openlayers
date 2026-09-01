@@ -92,7 +92,7 @@ class LayerImport extends Control {
     * @param {String} [options.title = "Import de données"] - Title of the widget panel
     * @param {Boolean} [options.collapsed = true] - Specify if LayerImport control should be collapsed at startup. Default is true.
     * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
-    * @param {Boolean} [options.importExtent = false] - Specify if the static import form is displayed with a drag and drop area (without name input nor local/url choice). Default is false.
+    * @param {Boolean} [options.dragAndDropUI = false] - Specify if the static import form is displayed with a drag and drop area (without name input nor local/url choice). Default is false.
     * @param {Array} [options.layerTypes = ["KML", "GPX", "GeoJSON", "WMS", "WMTS", "MAPBOX"]] - data types that could be imported : "KML", "GPX", "GeoJSON", "WMS", "WMTS" and "MAPBOX". Values will be displayed in the same order in widget list.
     * @param {Object} [options.webServicesOptions = {}] - Options to import WMS or WMTS layers
     * @param {String} [options.webServicesOptions.proxyUrl] - Proxy URL to avoid cross-domain problems. Mandatory to import WMS and WMTS layer.
@@ -386,7 +386,7 @@ class LayerImport extends Control {
             title : "Import de données",
             collapsed : true,
             draggable : false,
-            importExtent : false,
+            dragAndDropUI : false,
             layerTypes : ["KML", "GPX", "GeoJSON", "WMS", "WMTS", "MAPBOX"],
             webServicesOptions : {},
             vectorStyleOptions : {
@@ -819,7 +819,7 @@ class LayerImport extends Control {
 
         var importStaticParamsContainer = this._createImportStaticParamsContainer(this.options.layerTypes[0]);
 
-        if (!this.options.importExtent) {
+        if (!this.options.dragAndDropUI) {
             // static file name
             var staticNameLabel = this._createStaticNameLabel();
             importStaticParamsContainer.appendChild(staticNameLabel);
@@ -837,7 +837,7 @@ class LayerImport extends Control {
         var staticLocalInputDiv = this._createStaticLocalInputDiv();
         // file input
         this._staticLocalImportInput = this._createStaticLocalInput();
-        if (this.options.importExtent) {
+        if (this.options.dragAndDropUI) {
             // zone de glisser/déposer avec un bouton "Parcourir"
             staticLocalInputDiv.appendChild(this._createStaticLocalDropZone(this._staticLocalImportInput));
         } else {
@@ -848,7 +848,7 @@ class LayerImport extends Control {
         // append div to params container
         importStaticParamsContainer.appendChild(staticLocalInputDiv);
 
-        if (!this.options.importExtent) {
+        if (!this.options.dragAndDropUI) {
             // div for url input (info: séparation pour récupérer l'élément input)
             var staticUrlInputDiv = this._createStaticUrlInputDiv();
             // label

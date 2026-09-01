@@ -165,8 +165,8 @@ var LayerImportDOM = {
         select.setAttribute("aria-labelledby", this._addUID("GPimportTypeLabel"));
         select.className = "GPselect gpf-select fr-select";
         // gestionnaire d'evenement : on stocke la valeur du type d'import
-        // pas de marge basse sur la zone de glisser/déposer (option importExtent)
-        var staticParamsClassName = "GPelementVisible gpf-visible" + ((context.options && context.options.importExtent) ? "" : " fr-my-4w");
+        // pas de marge basse sur la zone de glisser/déposer (option dragAndDropUI)
+        var staticParamsClassName = "GPelementVisible gpf-visible" + ((context.options && context.options.dragAndDropUI) ? "" : " fr-my-4w");
         if (select.addEventListener) {
             select.addEventListener("change", function (e) {
                 if (this.value === "KML" || this.value === "GPX" || this.value === "GeoJSON" || this.value === "MAPBOX") {
@@ -252,8 +252,8 @@ var LayerImportDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportStaticParams");
         if (currentType === "KML" || currentType === "GPX" || currentType === "GeoJSON" || currentType === "MAPBOX") {
-            // marge basse supprimée sur la zone de glisser/déposer (option importExtent), marge haute conservée
-            div.className = "GPelementVisible gpf-visible fr-mt-4w" + ((this.options && this.options.importExtent) ? "" : " fr-mb-4w");
+            // marge basse supprimée sur la zone de glisser/déposer (option dragAndDropUI), marge haute conservée
+            div.className = "GPelementVisible gpf-visible fr-mt-4w" + ((this.options && this.options.dragAndDropUI) ? "" : " fr-mb-4w");
         } else {
             div.className = "GPelementHidden gpf-hidden";
         }
@@ -423,7 +423,7 @@ var LayerImportDOM = {
 
     /**
      * Create drag and drop area for KML/GPX/GeoJSON parameters local import
-     * (option importExtent)
+     * (option dragAndDropUI)
      *
      * @param {HTMLElement} input - file input element
      * @returns {HTMLElement} DOM element
@@ -611,8 +611,8 @@ var LayerImportDOM = {
         var input = document.createElement("input");
         input.id = this._addUID("GPimportSubmit");
         input.className = "GPsubmit gpf-btn fr-btn";
-        // alignement à droite du bouton (option importExtent)
-        if (this.options && this.options.importExtent) {
+        // alignement à droite du bouton (option dragAndDropUI)
+        if (this.options && this.options.dragAndDropUI) {
             input.classList.add("GPimportSubmitRight");
         }
         input.type = "submit";
