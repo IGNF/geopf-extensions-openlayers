@@ -212,8 +212,10 @@ var Measures = {
      * @private
      */
     onShowMeasureClick : function (e, type) {
-        if (e.target.ariaPressed === "true") {
+        if (this._pictoContainer.ariaPressed === "true") {
             this.onPanelOpen();
+        } else {
+            this.onPanelClose();
         }
         var map = this.getMap();
         var currentMapId = map.getTargetElement().id;

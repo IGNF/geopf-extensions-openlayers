@@ -82,14 +82,14 @@ var GetFeatureInfoDOM = {
         // Close all results and panels when minimizing the getFeatureInfo
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
+                var status = self.getActive();
+                self.setActive(!status);
                 self.onShowGetFeatureInfoClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
+                var status = self.getActive();
+                self.setActive(!status);
                 self.onShowGetFeatureInfoClick(e);
             });
         }
