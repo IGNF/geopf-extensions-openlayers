@@ -43,6 +43,11 @@ declare class SearchEngineAdvanced extends Control {
      */
     listenToClick: boolean | undefined;
     /**
+     * Géométrie sélectionnée après une recherche.
+     * @type {String}
+     */
+    selectGeometry: string | undefined;
+    /**
      * Retourne la couche utilisée pour afficher les résultats.
      * @returns {Layer} Couche des résultats
      */

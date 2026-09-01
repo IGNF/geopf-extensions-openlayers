@@ -157,6 +157,7 @@
  * @property {String} [label] - Label affiché.
  * @property {String} [hint] - Texte d'aide.
  * @property {Boolean} [search] - Comportement en tant que barre de recherche.
+ * @property {String} [selectGeometry="point"] - Géométrie sélectionnée après une recherche ("point" ou "extent").
  * @property {String} [ariaLabel] - Libellé ARIA.
  * @property {String} [placeholder] - Placeholder de l'input.
  * @property {Number} [minChars] - Nombre minimal de caractères pour autocomplétion.

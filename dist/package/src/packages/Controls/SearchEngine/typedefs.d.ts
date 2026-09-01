@@ -337,6 +337,10 @@ type SearchEngineAdvancedOptions = {
      */
     search?: boolean | undefined;
     /**
+     * - Géométrie sélectionnée après une recherche ("point" ou "extent").
+     */
+    selectGeometry?: string | undefined;
+    /**
      * - Libellé ARIA.
      */
     ariaLabel?: string | undefined;
