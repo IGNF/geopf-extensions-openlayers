@@ -21,6 +21,8 @@ __DATE__
   - LayerImport : le bouton retour est inclut dans le panel header (#575)
   - GFI : activation du GFI au clic gauche et selon panels incompatibles (#1167)
   - ContextMenu : modification des paramètres par défaut (#1167)
+  - SearchBar : option selectGeometry : permet de sélectionner uniquement l'extent plutot que le point si existant (besoin extraction)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
