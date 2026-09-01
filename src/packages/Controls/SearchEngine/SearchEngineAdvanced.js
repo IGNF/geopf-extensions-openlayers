@@ -678,7 +678,7 @@ class SearchEngineAdvanced extends Control {
     }
 
     /**
-            if (!!e.result && (this.selectGeometry !== "extent" || !e.extent)) {
+     * Crée le bouton de géolocalisation.
      * @returns {HTMLButtonElement} Bouton de géolocalisation
      * @private
      */
