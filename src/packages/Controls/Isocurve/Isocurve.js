@@ -1218,6 +1218,8 @@ class Isocurve extends Control {
         var opened = this._pictoIsoButton.ariaPressed;
         if (opened === "true") {
             this.onPanelOpen();
+        } else {
+            this.onPanelClose();
         }
 
         var map = this.getMap();
