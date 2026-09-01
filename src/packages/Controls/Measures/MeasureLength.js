@@ -312,9 +312,6 @@ class MeasureLength extends Control {
      * @private
      */
     onShowMeasureLengthClick (e) {
-        if (e.target.ariaPressed === "true") {
-            this.onPanelOpen();
-        }
         logger.trace("call MeasureLength::onShowMeasureLengthClick()", e);
 
         // appel de la methode commune
