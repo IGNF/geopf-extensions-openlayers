@@ -19,6 +19,8 @@ __DATE__
 
   - Tooltips : les tooltips au survol des boutons ne peuvent pas être survolées (#571)
   - LayerImport : le bouton retour est inclut dans le panel header (#575)
+  - GFI : activation du GFI au clic gauche et selon panels incompatibles (#1167)
+  - SearchBar : option selectGeometry : permet de sélectionner uniquement l'extent plutot que le point si existant (besoin extraction)
 
 * 🔥 [Deprecated]
 

@@ -1668,6 +1668,8 @@ class ElevationPath extends Control {
         var opened = this._pictoButton.ariaPressed;
         if (opened === "true") {
             this.onPanelOpen();
+        } else {
+            this.onPanelClose();
         }
 
         var map = this.getMap();

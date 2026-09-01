@@ -1,4 +1,4 @@
-import PanelManager from "../Utils/PanelManager";
+import PanelManager, { PanelManagerClose } from "../Utils/PanelManager";
 // Mixin pour ajouter des méthodes communes à tous les widgets.
 
 // voir fichiers DOM  et assign
@@ -10,7 +10,15 @@ var Widget = {
      */
     onPanelOpen : function () {
         // On récupère l'id du widget à partir de l'id du DOM de la forme GPwidgetName-1876465465
-        PanelManager(this.options.position, this.element.id.match(/(\w+)-[0-9]+/)[1]);
+        PanelManager(this.options.position, this.element.id.match(/(\w+)-[0-9]+/)[1], this);
+    },
+
+    /**
+     * This method is called when a widget closes its panel
+     * It lets the panelManager restore the state of the other widgets
+     */
+    onPanelClose : function () {
+        PanelManagerClose(this.element.id.match(/(\w+)-[0-9]+/)[1], this);
     }
 };
 
