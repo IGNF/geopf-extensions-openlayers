@@ -12,11 +12,16 @@ declare class GetFeatureInfo extends Control {
     /**
      * @constructor
     * @param {Object} options - options for function call.
+    * @param {Boolean} [options.button = true] - display the activation button. If false, the control is active by default.
+    * @param {Boolean} [options.active] - set the initial active state. This value takes precedence over the button default.
     * @example
     * var getFeatureInfo = new ol.control.GetFeatureInfo();
     * map.addControl(getFeatureInfo);
     */
-    constructor(options: any);
+    constructor(options: {
+        button?: boolean | undefined;
+        active?: boolean | undefined;
+    });
     /**
      * Nom de la classe (heritage)
      * @private
@@ -30,6 +35,20 @@ declare class GetFeatureInfo extends Control {
      */
     setMap(map: ol.Map): void;
     /**
+     * Returns whether the control is active.
+     *
+     * @returns {Boolean} true if active, false otherwise
+     */
+    getActive(): boolean;
+    /**
+     * Sets whether the control is active.
+     *
+     * @param {Boolean} active - true to activate the control
+     */
+    setActive(active: boolean): void;
+    active: boolean | undefined;
+    activeExplicit: boolean | undefined;
+    /**
      * Initialize GetFeatureInfo control (called by GetFeatureInfo constructor)
      *
      * @param {Object} options - constructor options
@@ -41,7 +60,10 @@ declare class GetFeatureInfo extends Control {
         collapsed: boolean;
         draggable: boolean;
         auto: boolean;
+        button: boolean;
+        active: boolean;
     } | undefined;
+    button: boolean | undefined;
     /**
      * @type {Boolean}
      * specify if control is collapsed (true) or not (false) */

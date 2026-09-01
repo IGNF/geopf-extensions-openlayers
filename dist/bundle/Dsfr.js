@@ -59,5 +59,5 @@
  *            See https://raw.githubusercontent.com/proj4js/proj4js/master/LICENSE.md
  * @version   2.15.0
  */
-var Gp;(()=>{"use strict";const e={r:e=>{Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})}};let t={};e.r(t),Gp=t})();
+var Gp;(()=>{"use strict";const e={r:e=>{Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})}};let t={};e.r(t),Gp=t})();
 //# sourceMappingURL=Dsfr.js.map
