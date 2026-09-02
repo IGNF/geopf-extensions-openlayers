@@ -9,6 +9,6 @@ declare namespace GetFeatureInfoDOM {
     function _createGetFeatureInfoWaitingDiv(): HTMLElement;
     function _createGetFeatureInfoNoData(noDataMessage: string): DOMElement;
     function _createGetFeatureInfoAccordionGroup(): HTMLElement;
-    function _createGetFeatureInfoLayerAccordion(layername: string): HTMLElement;
+    function _createGetFeatureInfoLayerAccordion(layername: string, scrollableContainer: HTMLElement): HTMLElement;
 }
 //# sourceMappingURL=GetFeatureInfoDOM.d.ts.map

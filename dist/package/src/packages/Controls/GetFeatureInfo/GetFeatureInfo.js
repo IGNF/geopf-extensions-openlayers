@@ -510,7 +510,7 @@ class GetFeatureInfo extends Control {
             var layername = this.getLayerTitle(gfiLayer);
 
             var content = null;
-            var accordeon = this._createGetFeatureInfoLayerAccordion(layername);
+            var accordeon = this._createGetFeatureInfoLayerAccordion(layername, this.getFeatureInfoPanelDiv);
             // on affiche pas l'entrée avant d'être confirmation qu'elle aura du contenu renvoyé
             accordeon.style.display = "none";
             var pending = true;
