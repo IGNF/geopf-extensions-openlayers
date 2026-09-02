@@ -26,8 +26,10 @@ declare class LayerImport extends Control {
     * @fires render:failure
     * @param {Object} options - options for function call.
     * @param {Number} [options.id] - Ability to add an identifier on the widget (advanced option)
+    * @param {String} [options.title = "Import de données"] - Title of the widget panel
     * @param {Boolean} [options.collapsed = true] - Specify if LayerImport control should be collapsed at startup. Default is true.
     * @param {Boolean} [options.draggable = false] - Specify if widget is draggable
+    * @param {Boolean} [options.dragAndDropUI = false] - Specify if the static import form is displayed with a drag and drop area (without name input nor local/url choice). Default is false.
     * @param {Array} [options.layerTypes = ["KML", "GPX", "GeoJSON", "WMS", "WMTS", "MAPBOX"]] - data types that could be imported : "KML", "GPX", "GeoJSON", "WMS", "WMTS" and "MAPBOX". Values will be displayed in the same order in widget list.
     * @param {Object} [options.webServicesOptions = {}] - Options to import WMS or WMTS layers
     * @param {String} [options.webServicesOptions.proxyUrl] - Proxy URL to avoid cross-domain problems. Mandatory to import WMS and WMTS layer.
@@ -99,8 +101,10 @@ declare class LayerImport extends Control {
      */
     constructor(options: {
         id?: number | undefined;
+        title?: string | undefined;
         collapsed?: boolean | undefined;
         draggable?: boolean | undefined;
+        dragAndDropUI?: boolean | undefined;
         layerTypes?: any[] | undefined;
         webServicesOptions?: {
             proxyUrl?: string | undefined;
@@ -182,8 +186,10 @@ declare class LayerImport extends Control {
      */
     private _initialize;
     options: {
+        title: string;
         collapsed: boolean;
         draggable: boolean;
+        dragAndDropUI: boolean;
         layerTypes: string[];
         webServicesOptions: {};
         vectorStyleOptions: {

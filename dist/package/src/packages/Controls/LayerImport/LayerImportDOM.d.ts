@@ -17,6 +17,7 @@ declare namespace LayerImportDOM {
     function _createStaticLocalInputDiv(): HTMLElement;
     function _createStaticLocalInputLabel(): HTMLElement;
     function _createStaticLocalInput(): HTMLElement;
+    function _createStaticLocalDropZone(input: HTMLElement): HTMLElement;
     function _createStaticUrlInputDiv(): HTMLElement;
     function _createStaticUrlInputLabel(): HTMLElement;
     function _createStaticUrlInput(): HTMLElement;
