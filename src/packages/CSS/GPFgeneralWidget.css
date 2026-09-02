@@ -614,7 +614,7 @@ input[type="checkbox"]:checked + .GPshowMoreOptions {
 .GPwidget textarea,
 .gpf-widget input,
 .gpf-widget textarea,
-[contenteditable="true"] {
+[contenteditable]:not([contenteditable="false"]) {
   -webkit-touch-callout: default;
   -webkit-user-select: text;
   -moz-user-select: text;
