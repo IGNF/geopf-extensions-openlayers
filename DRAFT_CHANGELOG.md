@@ -22,6 +22,7 @@ __DATE__
   - GFI : activation du GFI au clic gauche et selon panels incompatibles (#1167)
   - ContextMenu : modification des paramètres par défaut (#1167)
   - SearchBar : option selectGeometry : permet de sélectionner uniquement l'extent plutot que le point si existant (besoin extraction)
+  - LayerImport : alternative UI pour importer avec un drag and drop de fichier (#576)
 
 * 🔥 [Deprecated]
 
