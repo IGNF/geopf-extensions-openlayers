@@ -165,11 +165,13 @@ var LayerImportDOM = {
         select.setAttribute("aria-labelledby", this._addUID("GPimportTypeLabel"));
         select.className = "GPselect gpf-select fr-select";
         // gestionnaire d'evenement : on stocke la valeur du type d'import
+        // pas de marge basse sur la zone de glisser/déposer (option dragAndDropUI)
+        var staticParamsClassName = "GPelementVisible gpf-visible" + ((context.options && context.options.dragAndDropUI) ? "" : " fr-my-4w");
         if (select.addEventListener) {
             select.addEventListener("change", function (e) {
                 if (this.value === "KML" || this.value === "GPX" || this.value === "GeoJSON" || this.value === "MAPBOX") {
                     // static import
-                    document.getElementById(context._addUID("GPimportStaticParams")).className = "GPelementVisible gpf-visible fr-my-4w";
+                    document.getElementById(context._addUID("GPimportStaticParams")).className = staticParamsClassName;
                     document.getElementById(context._addUID("GPimportServiceParams")).className = "GPelementHidden gpf-hidden";
                 } else if (this.value === "WMS" || this.value === "WMTS" || this.value === "WFS") {
                     // service import
@@ -182,7 +184,7 @@ var LayerImportDOM = {
             select.attachEvent("onchange", function () {
                 if (this.value === "KML" || this.value === "GPX" || this.value === "GeoJSON" || this.value === "MAPBOX") {
                     // static import
-                    document.getElementById(context._addUID("GPimportStaticParams")).className = "GPelementVisible gpf-visible fr-my-4w";
+                    document.getElementById(context._addUID("GPimportStaticParams")).className = staticParamsClassName;
                     document.getElementById(context._addUID("GPimportServiceParams")).className = "GPelementHidden gpf-hidden";
                 } else if (this.value === "WMS" || this.value === "WMTS" || this.value === "WFS") {
                     // service import
@@ -250,7 +252,8 @@ var LayerImportDOM = {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportStaticParams");
         if (currentType === "KML" || currentType === "GPX" || currentType === "GeoJSON" || currentType === "MAPBOX") {
-            div.className = "GPelementVisible gpf-visible fr-my-4w";
+            // marge basse supprimée sur la zone de glisser/déposer (option dragAndDropUI), marge haute conservée
+            div.className = "GPelementVisible gpf-visible fr-mt-4w" + ((this.options && this.options.dragAndDropUI) ? "" : " fr-mb-4w");
         } else {
             div.className = "GPelementHidden gpf-hidden";
         }
@@ -419,6 +422,85 @@ var LayerImportDOM = {
     },
 
     /**
+     * Create drag and drop area for KML/GPX/GeoJSON parameters local import
+     * (option dragAndDropUI)
+     *
+     * @param {HTMLElement} input - file input element
+     * @returns {HTMLElement} DOM element
+     */
+    _createStaticLocalDropZone : function (input) {
+        var div = document.createElement("div");
+        div.id = this._addUID("GPimportDropZone");
+        div.className = "GPimportDropZone fr-p-3w";
+
+        var icon = document.createElement("div");
+        icon.className = "GPimportDropZoneIcon";
+        icon.setAttribute("aria-hidden", "true");
+        div.appendChild(icon);
+
+        var text = document.createElement("p");
+        text.className = "GPimportDropZoneText fr-mb-2w";
+        text.innerHTML = "Glissez-déposez votre fichier ici";
+        div.appendChild(text);
+
+        var text2 = document.createElement("p");
+        text2.className = "GPimportDropZoneTextSecondary fr-mb-2w";
+        text2.innerHTML = "ou";
+        div.appendChild(text2);
+
+
+
+        var button = document.createElement("button");
+        button.type = "button";
+        button.id = this._addUID("GPimportBrowse");
+        button.className = "GPimportDropZoneBrowse fr-btn fr-btn--secondary";
+        button.innerHTML = "Parcourir";
+        button.title = "Parcourir";
+        button.addEventListener("click", function () {
+            input.click();
+        });
+        div.appendChild(button);
+
+        var filename = document.createElement("p");
+        filename.id = this._addUID("GPimportDropZoneFileName");
+        filename.className = "GPimportDropZoneFileName fr-mt-2w";
+        div.appendChild(filename);
+
+        // l'input reste le point d'entrée du fichier, mais il n'est pas affiché
+        input.classList.add("GPelementHidden", "gpf-hidden");
+        input.addEventListener("change", function () {
+            filename.textContent = (input.files && input.files[0]) ? input.files[0].name : "";
+        });
+        div.appendChild(input);
+
+        ["dragenter", "dragover"].forEach(function (type) {
+            div.addEventListener(type, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                div.classList.add("GPimportDropZoneHover");
+            });
+        });
+        ["dragleave", "drop"].forEach(function (type) {
+            div.addEventListener(type, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                div.classList.remove("GPimportDropZoneHover");
+            });
+        });
+        div.addEventListener("drop", function (e) {
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+                // on transmet le fichier déposé à l'input pour la suite du traitement
+                var dataTransfer = new DataTransfer();
+                dataTransfer.items.add(e.dataTransfer.files[0]);
+                input.files = dataTransfer.files;
+                filename.textContent = input.files[0].name;
+            }
+        });
+
+        return div;
+    },
+
+    /**
      * Create input div for KML/GPX/GeoJSON parameters url import
      *
      * @returns {HTMLElement} DOM element
@@ -529,6 +611,10 @@ var LayerImportDOM = {
         var input = document.createElement("input");
         input.id = this._addUID("GPimportSubmit");
         input.className = "GPsubmit gpf-btn fr-btn";
+        // alignement à droite du bouton (option dragAndDropUI)
+        if (this.options && this.options.dragAndDropUI) {
+            input.classList.add("GPimportSubmitRight");
+        }
         input.type = "submit";
         input.value = "Importer";
 
