@@ -94,7 +94,9 @@ var logger = Logger.getLogger("panoramax");
  * @property {Object} [viewer] - Options de configuration du visualiseur d'images panoramiques.
  * @property {String} [viewer.endpoint] - URL de l'endpoint du visualiseur d'images panoramiques.
  * @property {Array} [viewer.widgets] - Liste des widgets à afficher dans le visualiseur.
- * @property {String} [viewer.share] - Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
+ * @property {Object} [viewer.share] - Options de configuration du partage du visualiseur.
+ * @property {String} [viewer.share.url] - URL de l'endpoint de partage du visualiseur.
+ * @property {String} [viewer.share.type] - Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
  * @property {Object} [viewer.pnxOptions] - Options de configuration spécifiques au visualiseur Panoramax.
  * @property {String} [viewer.pnxOptions.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
  * @property {Boolean} [viewer.pnxOptions.widgets] - Affiche ou masque les widgets du visualiseur.
@@ -276,7 +278,10 @@ class Panoramax extends Control {
      *   },
      *   viewer: {
      *     endpoint: "https://explore.panoramax.fr/",
-     *     share: "panoramax",
+     *     share: {
+     *       url: "https://explore.panoramax.fr/",
+     *       type: "panoramax"
+     *     },
      *     widgets : [
      *      "btnBack",
      *      "btnClose",
@@ -510,7 +515,10 @@ class Panoramax extends Control {
             },
             viewer : {
                 "endpoint" : "https://explore.panoramax.fr/api",
-                "share" : "",
+                "share" : {
+                    "url" : "https://explore.panoramax.fr/",
+                    "type" : "panoramax"
+                },
                 "widgets" : [
                     "btnBack",
                     "btnClose",
@@ -2234,14 +2242,14 @@ class Panoramax extends Control {
     /**
      * Crée un composant de légende des photos personnalisé pour le viewer 
      * de photos de Panoramax.
-     * @param {String} share - Type de partage du visualiseur : panoramax (défaut) ou geopf.
+     * @param {Object} share - Url et Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
      * @returns {HTMLElement} Élément du composant de légende des photos.
      */
     createWidgetCmpPictureLegend (share) {
         var pnxPictureLegend = document.createElement("gpf-picture-legend-widget");
         //var pnxPictureLegend = document.createElement("pnx-picture-legend");
         pnxPictureLegend.setAttribute("slot", "top-left");
-        pnxPictureLegend.typeShare = share;
+        pnxPictureLegend.share = share;
         pnxPictureLegend.addEventListener("close", () => {
             this.onClickPnxViewerWidgetBack();
         });

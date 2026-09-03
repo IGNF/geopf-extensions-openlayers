@@ -4,24 +4,26 @@ import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import Gp from "geoportal-access-lib";
 
 const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org";
+
+// endpoint de partage
 const PANORAMAX_DEFAULT_ENDPOINT = "https://explore.panoramax.fr/";
 const GEOPLATEFORME_DEFAULT_ENDPOINT = "https://cartes.gouv.fr/explorer-les-cartes/";
 
 // l'URL de partage se construit a partir de l'instance et de l'id de l'image
 // ex. carte.gouv.fr/photo/:sequenceID/:pictureID/:center/:zoom/
 // ex. panoramax https://explore.panoramax.fr/fr/index?focus=pic&map=<zoom>/<lat>/<lon>&pic=<pictureID>&seq=<sequenceID>
-function buildShareUrl (typeShare, endpoint, pictureId, sequenceId, center, zoom = 17) {
+function buildShareUrl (share, endpoint, pictureId, sequenceId, center, zoom = 17) {
     if (!pictureId) { return null; }
 
     var base = endpoint?.replace(/\/+$/, "").replace(/\/api$/, "");
-    if (typeShare === "geoplateforme") {
-        base = GEOPLATEFORME_DEFAULT_ENDPOINT.replace(/\/+$/, "");
+    if (share.type === "geoplateforme") {
+        base = (share.url || GEOPLATEFORME_DEFAULT_ENDPOINT).replace(/\/+$/, "");
         return sequenceId
             ? `${base}/photo/${encodeURIComponent(sequenceId)}/${encodeURIComponent(pictureId)}/${encodeURIComponent(center?.lat)},${encodeURIComponent(center?.lon)}/${encodeURIComponent(zoom)}`
             : `${base}/photo//${encodeURIComponent(pictureId)}/${encodeURIComponent(center?.lat)},${encodeURIComponent(center?.lon)}/${encodeURIComponent(zoom)}`;
     }
-    if (typeShare === "panoramax") {
-        base = PANORAMAX_DEFAULT_ENDPOINT.replace(/\/+$/, "");
+    if (share.type === "panoramax") {
+        base = (share.url || PANORAMAX_DEFAULT_ENDPOINT).replace(/\/+$/, "");
         return `${base}/fr/index?focus=pic&map=${encodeURIComponent(zoom)}/${encodeURIComponent(center?.lat)}/${encodeURIComponent(center?.lon)}&pic=${encodeURIComponent(pictureId)}&seq=${encodeURIComponent(sequenceId)}`;
     }
     
@@ -173,19 +175,19 @@ export default class PictureLegendWidget extends LitElement {
         _expanded : { state : true },
     };
 
-    constructor (typeShare) {
+    constructor (share) {
         super();
-        this._typeShare = typeShare;
+        this._share = share;
         this._expanded = window.matchMedia("(min-width: 576px)").matches;
         this._onLegendClick = this._onLegendClick.bind(this);
     }
 
-    get typeShare () {
-        return this._typeShare;
+    get share () {
+        return this._share;
     }
 
-    set typeShare (typeShare) {
-        this._typeShare =  typeShare;
+    set share (share) {
+        this._share =  share;
     }
 
     createRenderRoot () {
@@ -229,7 +231,7 @@ export default class PictureLegendWidget extends LitElement {
         this._caption = picMeta?.caption;
         this._hdUrl = picMeta?.panorama?.hdUrl;
         this._shareUrl = buildShareUrl(
-            this._typeShare, 
+            this._share, 
             this._parent?.endpoint, 
             picMeta?.id, 
             picMeta?.sequence?.id, 
@@ -433,8 +435,8 @@ export default class PictureLegendWidget extends LitElement {
                                         type="button"
                                         @click=${this._onCopyShareUrl}
                                     >
-                                        <span class="fr-icon-clipboard-line fr-mr-1v" aria-hidden="true"></span>
                                         Copier le lien de partage
+                                        <span class="pnx-share-copy-icon fr-mr-1v" aria-hidden="true"></span>
                                     </button>
                                 </pnx-list-group>
                             </pnx-togglable-group>

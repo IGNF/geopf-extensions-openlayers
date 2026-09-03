@@ -116,7 +116,10 @@
                     size : "fullscreen-map"
                 },
                 viewer : {
-                    share : "geoplateforme"
+                    share : {
+                        url : "https://localhost:5173/cartes.gouv.fr-entree-carto/",
+                        type : "geoplateforme"
+                    }
                 }
             };
             panoramax = new ol.control.Panoramax(options);
