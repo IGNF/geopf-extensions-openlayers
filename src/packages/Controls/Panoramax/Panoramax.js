@@ -95,7 +95,7 @@ var logger = Logger.getLogger("panoramax");
  * @property {String} [viewer.endpoint] - URL de l'endpoint du visualiseur d'images panoramiques.
  * @property {Array} [viewer.widgets] - Liste des widgets à afficher dans le visualiseur.
  * @property {Object} [viewer.share] - Options de configuration du partage du visualiseur.
- * @property {String} [viewer.share.url] - URL de l'endpoint de partage du visualiseur.
+ * @property {String} [viewer.share.url] - URL de base utilisée pour construire le lien de partage du visualiseur.
  * @property {String} [viewer.share.type] - Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
  * @property {Object} [viewer.pnxOptions] - Options de configuration spécifiques au visualiseur Panoramax.
  * @property {String} [viewer.pnxOptions.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
