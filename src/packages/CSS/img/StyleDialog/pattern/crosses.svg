@@ -1,0 +1,43 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="24" height="24" rx="2" fill="url(#pattern0_6060_12683)"/>
+<defs>
+<pattern id="pattern0_6060_12683" patternUnits="userSpaceOnUse" patternTransform="matrix(28 0 0 28 -2.3501 -2.34998)" preserveAspectRatio="none" viewBox="-0.350098 -0.349976 28 28" width="1" height="1">
+<use xlink:href="#pattern0_6060_12683_inner" transform="translate(-28 -28)"/>
+<use xlink:href="#pattern0_6060_12683_inner" transform="translate(0 -28)"/>
+<use xlink:href="#pattern0_6060_12683_inner" transform="translate(-28 0)"/>
+<g id="pattern0_6060_12683_inner">
+<path d="M0 2H4" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M2 0L2 4" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M8 2H12" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M10 0L10 4" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M16 2H20" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M18 0L18 4" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M24 2H28" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M26 0L26 4" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M0 10H4" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M2 8L2 12" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M8 10H12" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M10 8L10 12" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M16 10H20" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M18 8L18 12" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M24 10H28" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M26 8L26 12" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M0 18H4" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M2 16L2 20" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M8 18H12" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M10 16L10 20" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M16 18H20" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M18 16L18 20" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M24 18H28" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M26 16L26 20" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M0 26H4" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M2 24L2 28" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M8 26H12" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M10 24L10 28" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M16 26H20" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M18 24L18 28" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M24 26H28" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+<path d="M26 24L26 28" stroke="#161616" stroke-width="0.7" stroke-linecap="round"/>
+</g>
+</pattern></defs>
+</svg>

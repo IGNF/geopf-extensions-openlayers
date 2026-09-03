@@ -1,0 +1,19 @@
+.style-form {
+  &-container {
+
+    .fr-select-group,
+    .fr-input-group {
+
+      .fr-input {
+        display: block;
+        width:100%;
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+    }
+    hr {
+      margin: 0;
+      border: 0;
+    }
+  }
+}

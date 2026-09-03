@@ -310,13 +310,15 @@ class KML extends olKML {
                         // On est sur un Point mais sans style dans le DOM.
                         // On regarde le style dans le Feature : Icon ou Circle ?
                         if (point && style) {
-                            var image = style.getImage();
+                            const st = Array.isArray(style) ? style[0] : style;
+                            var image = st.getImage();
                             if (image && image instanceof Circle) {
                                 var fctCircle = process.circleStyle;
                                 if (fctCircle && typeof fctCircle === "function") {
                                     fctCircle(features[index], hdlDomStyle);
                                 }
                             } else if (image && image instanceof Icon) {
+                                console.log("is icon");
                                 var fctPoint = process.pointStyle;
                                 if (fctPoint && typeof fctPoint === "function") {
                                     fctPoint(features[index], hdlDomStyle);
@@ -600,8 +602,9 @@ class KML extends olKML {
             }
 
             // Si pas de style defini, c'est donc que l'on va utiliser celui par defaut...
-            if (feature.getStyle() instanceof Style) {
-                var fImageStyle = feature.getStyle().getImage();
+            const style = Array.isArray(feature.getStyle()) ? feature.getStyle()[0] : feature.getStyle();
+            if (style instanceof Style) {
+                var fImageStyle = style.getImage();
                 if (!fImageStyle) {
                     return;
                 }

@@ -1,0 +1,143 @@
+@use '../../mixins.scss' as mix;
+
+.input-style-select {
+  .input-style {
+    &__container {
+      --hover: var(--background-default-grey-hover);
+      --active: var(--background-default-grey-active);
+      --hover-tint: var(--hover);
+      --active-tint: var(--active);
+
+      @include mix.button-state();
+
+      &[aria-expanded='true'] {
+        background-color: var(--background-default-grey-active);
+      }
+
+      &::after {
+        background-color: var(--text-action-high-blue-france);
+      }
+    }
+  }
+}
+
+.input-style {
+  &__options-container {
+    box-shadow: var(--overlap-shadow);
+
+    background-color: rgba(0, 0, 0, 0.08);
+    @include mix.respond-from('sm') {
+      background-color: var(--background-overlap-grey);
+    }
+
+    // Drag en mobile
+    & > &-drag {
+      background-color: var(--background-overlap-grey);
+      > .input-style__options-container-drag-handle {
+        border: 0.125rem solid var(--border-default-grey);
+      }
+    }
+
+    &-content {
+      gap: 0.75rem;
+      padding: 1rem;
+      background-color: var(--background-overlap-grey);
+      // Bouton d'une option
+      > *:not(.input-style__options-container-drag) {
+        padding: 0 0.5rem 0 0.25rem;
+        gap: 0.5rem;
+        // Bouton de séléction
+        &[role='option'] {
+          &:focus:focus-visible {
+            outline: 1px solid var(--border-default-blue-france);
+            outline-offset: 0;
+          }
+
+          &[aria-selected='true'] {
+            outline: 1px solid var(--border-default-blue-france);
+            outline-offset: 0;
+          }
+        }
+      }
+    }
+  }
+
+  [role='option'],
+  [role='combobox'] {
+    // Cas du "sans" (couleur, bordure etc.)
+    &[data-value='none'],
+    &[data-value='null'],
+    &[data-value='transparent'],
+    &[data-value='#0000000'],
+    &[data-value=''],
+    &[data-value=' '] {
+      > span.input-style__option-value {
+        background-color: var(--background-default-grey);
+        background-image: url('../../img/StyleDialog/sans.svg');
+        border: 1px solid var(--border-default-grey);
+      }
+    }
+
+    // Bordures
+    &[data-type='stroke'] {
+      > span.input-style__option-value {
+        background-color: var(--text-label-grey);
+      }
+    }
+
+    // Terminaison
+    &[data-type='arrow'] {
+      > span.input-style__option-value {
+        background-color: var(--text-label-grey);
+      }
+    }
+
+    // Terminaison
+    &[data-type='form'] {
+      &:not([data-value='none']) > span.input-style__option-value {
+        background-color: var(--text-label-grey);
+      }
+    }
+
+    // Motif
+    &[data-type='pattern'] {
+      &:not([data-value='']) > span.input-style__option-value {
+        // On utilise before et after pour afficher le masque en premier lieu
+        &::before {
+          background-color: var(--text-label-grey);
+        }
+        // Et une bordure dessus (border et mask ne fonctionnent pas ensemble)
+        &::after {
+          border: 1px solid var(--border-default-grey);
+        }
+      }
+      &[data-value=''] > span.input-style__option-value {
+        background-color: var(--text-label-grey);
+        box-shadow:
+          inset 1px 0 var(--border-default-grey),
+          inset 0 1px var(--border-default-grey),
+          inset -1px 0 var(--border-default-grey),
+          inset 0 -1px var(--border-default-grey),
+          inset 3px 0 var(--background-default-grey),
+          inset 0 3px var(--background-default-grey),
+          inset -3px 0 var(--background-default-grey),
+          inset 0 -3px var(--background-default-grey);
+      }
+    }
+
+    // Icônes
+    &[data-type='icon'] {
+      > span.input-style__option-value::before {
+        font-size: 1.5rem;
+        margin: 0;
+      }
+    }
+  }
+
+  &__option-value {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.25rem;
+    // color: blue;
+  }
+}

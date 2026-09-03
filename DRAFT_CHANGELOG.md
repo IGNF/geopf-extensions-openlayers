@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - Draw(Widget): nouveau widget de dessin plus poussé qui utilise des composants de DOM génériques (#490)
+
 * 🔨 [Changed]
 
   - Tooltips : les tooltips au survol des boutons ne peuvent pas être survolées (#571)
