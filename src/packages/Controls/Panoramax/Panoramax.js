@@ -93,9 +93,14 @@ var logger = Logger.getLogger("panoramax");
  * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen", "fullscreen-map").
  * @property {Object} [viewer] - Options de configuration du visualiseur d'images panoramiques.
  * @property {String} [viewer.endpoint] - URL de l'endpoint du visualiseur d'images panoramiques.
- * @property {String} [viewer.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
- * @property {Boolean} [viewer.widgets] - Affiche ou masque les widgets du visualiseur.
- * @property {Object} [viewer.psvOptions] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+ * @property {Array} [viewer.widgets] - Liste des widgets à afficher dans le visualiseur.
+ * @property {Object} [viewer.share] - Options de configuration du partage du visualiseur.
+ * @property {String} [viewer.share.url] - URL de base utilisée pour construire le lien de partage du visualiseur.
+ * @property {String} [viewer.share.type] - Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
+ * @property {Object} [viewer.pnxOptions] - Options de configuration spécifiques au visualiseur Panoramax.
+ * @property {String} [viewer.pnxOptions.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
+ * @property {Boolean} [viewer.pnxOptions.widgets] - Affiche ou masque les widgets du visualiseur.
+ * @property {Object} [viewer.pnxOptions.psvOptions] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
  * @property {Object} [interactions] - Options de configuration des interactions sur les différentes couches Panoramax. 
  * @property {Object} [interactions.grid] - Options d'interaction pour la couche de grille.
  * @property {Boolean} [interactions.grid.active] - Active ou désactive les interactions sur la couche de grille.
@@ -273,9 +278,23 @@ class Panoramax extends Control {
      *   },
      *   viewer: {
      *     endpoint: "https://explore.panoramax.fr/",
-     *     class: "",
-     *     widgets: true,
-     *     psvOptions: {}
+     *     share: {
+     *       url: "https://explore.panoramax.fr/",
+     *       type: "panoramax"
+     *     },
+     *     widgets : [
+     *      "btnBack",
+     *      "btnClose",
+     *      "btnZoom",
+     *      "btnFullscreen",
+     *      "cmpPictureLegend",
+     *      "cmpMinimap",
+     *     ],
+     *     pnxOptions: {
+     *      class: "",
+     *      widgets: true,
+     *      psvOptions: {}
+     *     },
      * }}});
      * map.addControl(panoramax);
      */
@@ -496,6 +515,10 @@ class Panoramax extends Control {
             },
             viewer : {
                 "endpoint" : "https://explore.panoramax.fr/api",
+                "share" : {
+                    "url" : "https://explore.panoramax.fr/",
+                    "type" : "panoramax"
+                },
                 "widgets" : [
                     "btnBack",
                     "btnClose",
@@ -1877,7 +1900,7 @@ class Panoramax extends Control {
                 }
                 // Component Picture Legend
                 if (widgets.includes("cmpPictureLegend")) {
-                    this.addWidget(this.createWidgetCmpPictureLegend(), photoViewer);
+                    this.addWidget(this.createWidgetCmpPictureLegend(this.options.viewer.share), photoViewer);
                 }
                 // Component Minimap
                 if (widgets.includes("cmpMinimap")) {
@@ -2219,12 +2242,14 @@ class Panoramax extends Control {
     /**
      * Crée un composant de légende des photos personnalisé pour le viewer 
      * de photos de Panoramax.
+     * @param {Object} share - Url et Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
      * @returns {HTMLElement} Élément du composant de légende des photos.
      */
-    createWidgetCmpPictureLegend () {
+    createWidgetCmpPictureLegend (share) {
         var pnxPictureLegend = document.createElement("gpf-picture-legend-widget");
         //var pnxPictureLegend = document.createElement("pnx-picture-legend");
         pnxPictureLegend.setAttribute("slot", "top-left");
+        pnxPictureLegend.share = share;
         pnxPictureLegend.addEventListener("close", () => {
             this.onClickPnxViewerWidgetBack();
         });
