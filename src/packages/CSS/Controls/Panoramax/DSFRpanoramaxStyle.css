@@ -267,11 +267,8 @@
 }
 
 .pnx-share-copy-icon {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    background: url("img/dsfr/copy.svg") center / contain no-repeat;
-    vertical-align: text-bottom;
+    -webkit-mask: url("img/dsfr/copy.svg") center no-repeat;
+    mask: url("img/dsfr/copy.svg") center no-repeat;
 }
 
 /* popup */

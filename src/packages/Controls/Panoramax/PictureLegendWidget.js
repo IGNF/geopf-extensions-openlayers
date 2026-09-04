@@ -436,7 +436,7 @@ export default class PictureLegendWidget extends LitElement {
                                         @click=${this._onCopyShareUrl}
                                     >
                                         Copier le lien de partage
-                                        <span class="pnx-share-copy-icon fr-mr-1v" aria-hidden="true"></span>
+                                        <span class="pnx-share-copy-icon fr-icon--sm fr-ml-1v" aria-hidden="true"></span>
                                     </button>
                                 </pnx-list-group>
                             </pnx-togglable-group>
