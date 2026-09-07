@@ -698,7 +698,11 @@ var MousePositionDOM = {
         if (editing === true) {
             locateElt.classList.remove("gpf-btn-icon-mp-edit");
             locateElt.classList.add("gpf-btn-icon-mp-edit-center");
-            document.getElementById(this._addUID("GPmousePositionLat")).focus();
+            // focus on the latitude input field
+            // select the text inside the latitude input field
+            var latInput = document.getElementById(this._addUID("GPmousePositionLat")) || document.getElementById(this._addUID("GPmousePositionLatDegrees"));
+            latInput.select();
+            latInput.focus();
         } else {
             locateElt.classList.remove("gpf-btn-icon-mp-edit-center");
             locateElt.classList.add("gpf-btn-icon-mp-edit");
