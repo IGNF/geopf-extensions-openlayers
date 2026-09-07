@@ -35,6 +35,7 @@ __DATE__
 
   - LayerImport : fixe la hauteur du contenu dans certains cas (#575)
   - GFI : empêche que l’ouverture de l’accordéon déplace le site en entier (#580)
+  - MousePosition : fixe sur le focus pour l'edition des coordonnées type DMS (#583)
 
 * 🔒 [Security]
 
