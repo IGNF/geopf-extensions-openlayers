@@ -15,7 +15,7 @@ __DATE__
 
 * ✨ [Added]
 
- - Panoramax : Ajout de la fonctionnalité de partage d'URL pour le visualiseur d'images (#581)
+  - Panoramax : Ajout de la fonctionnalité de partage d'URL pour le visualiseur d'images (#581)
 
 * 🔨 [Changed]
 
