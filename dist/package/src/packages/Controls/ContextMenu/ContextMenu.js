@@ -211,6 +211,8 @@ class ContextMenu extends Control {
         /** @private */
         this._listenersAdded = false;
         /** @private */
+        this._onContextBeforeOpen = null;
+        /** @private */
         this._onContextOpen = null;
         /** @private */
         this._onContextClose = null;
@@ -301,6 +303,10 @@ class ContextMenu extends Control {
             return;
         }
 
+        this._onContextBeforeOpen = (evt) => {
+            evt.this = this;
+            this.onBeforeOpenContextMenu(evt);
+        };
         this._onContextOpen = (evt) => {
             evt.this = this;
             this.onOpenContextMenu(evt);
@@ -315,6 +321,7 @@ class ContextMenu extends Control {
             }
         };
 
+        this.contextmenu.on("beforeopen", this._onContextBeforeOpen);
         this.contextmenu.on("open", this._onContextOpen);
         this.contextmenu.on("close", this._onContextClose);
         document.addEventListener("click", this._onDocumentClick);
@@ -330,6 +337,9 @@ class ContextMenu extends Control {
             return;
         }
 
+        if (this._onContextBeforeOpen) {
+            this.contextmenu.un("beforeopen", this._onContextBeforeOpen);
+        }
         if (this._onContextOpen) {
             this.contextmenu.un("open", this._onContextOpen);
         }
@@ -340,6 +350,7 @@ class ContextMenu extends Control {
             document.removeEventListener("click", this._onDocumentClick);
         }
 
+        this._onContextBeforeOpen = null;
         this._onContextOpen = null;
         this._onContextClose = null;
         this._onDocumentClick = null;
@@ -658,6 +669,35 @@ class ContextMenu extends Control {
      */
     onCloseContextMenu (e) {
         e.target.clear();
+    }
+
+    /**
+     * Déclenché avant l'ouverture du menu contextuel (avant l'appel à preventDefault()
+     * par la librairie ol-contextmenu) : active ou désactive le menu personnalisé
+     * selon la cible du clic droit, afin de laisser le menu contextuel système
+     * s'afficher sur les éléments des widgets (boutons, panneaux, ...)
+     * @param {Event} e - ...
+     * @private
+     */
+    onBeforeOpenContextMenu (e) {
+        const mapInstance = this.getMap();
+        if (!mapInstance) {
+            return;
+        }
+
+        const mapViewport = mapInstance.getViewport();
+        const target = e?.originalEvent?.target;
+
+        var isOutsideViewport = !mapViewport || (target && !mapViewport.contains(target));
+        var isOnWidgetOrControl = target && target.closest(".GPwidget, .gpf-widget, .ol-control");
+
+        if (isOutsideViewport || isOnWidgetOrControl) {
+            // désactive le menu contextuel personnalisé pour laisser
+            // le navigateur afficher son propre menu contextuel
+            this.contextmenu.disable();
+        } else {
+            this.contextmenu.enable();
+        }
     }
 
     /**

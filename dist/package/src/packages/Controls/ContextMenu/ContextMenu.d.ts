@@ -157,6 +157,8 @@ declare class ContextMenu extends Control {
     /** @private */
     private _listenersAdded;
     /** @private */
+    private _onContextBeforeOpen;
+    /** @private */
     private _onContextOpen;
     /** @private */
     private _onContextClose;
@@ -283,6 +285,15 @@ declare class ContextMenu extends Control {
      * @private
      */
     private onCloseContextMenu;
+    /**
+     * Déclenché avant l'ouverture du menu contextuel (avant l'appel à preventDefault()
+     * par la librairie ol-contextmenu) : active ou désactive le menu personnalisé
+     * selon la cible du clic droit, afin de laisser le menu contextuel système
+     * s'afficher sur les éléments des widgets (boutons, panneaux, ...)
+     * @param {Event} e - ...
+     * @private
+     */
+    private onBeforeOpenContextMenu;
     /**
      * ...
      * @param {Event} e - ...
