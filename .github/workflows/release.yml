@@ -306,7 +306,6 @@ jobs:
         with:
           repository: ${{ github.repository }}
           ref: main
-          token: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
       
       - name: Download ChangeLog artifacts
         uses: actions/download-artifact@v4
@@ -354,4 +353,3 @@ jobs:
       - name: ras
         run: |
           echo "not yet implemented !"
-
