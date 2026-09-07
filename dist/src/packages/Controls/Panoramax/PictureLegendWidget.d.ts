@@ -16,9 +16,13 @@ export default class PictureLegendWidget extends LitElement {
             state: boolean;
         };
     };
+    constructor(share: any);
+    _share: any;
     _expanded: boolean;
     /** @private */
     private _onLegendClick;
+    set share(share: any);
+    get share(): any;
     createRenderRoot(): this;
     _prevSearches: {} | undefined;
     _parent: any;
@@ -30,6 +34,7 @@ export default class PictureLegendWidget extends LitElement {
     private _onPicChange;
     _caption: any;
     _hdUrl: any;
+    _shareUrl: string | null | undefined;
     _visibility: any;
     _addr: any;
     _addrTimer1: NodeJS.Timeout | undefined;
@@ -41,6 +46,8 @@ export default class PictureLegendWidget extends LitElement {
     private _closeGroup;
     /** @private */
     private _closeMenu;
+    /** @private */
+    private _onCopyShareUrl;
     /** @private */
     private render;
 }

@@ -31,28 +31,197 @@
 <li><a href="#fonctionnalit%C3%A9s">Fonctionnalités</a>
 <ul>
 <li><a href="#syst%C3%A8mes-de-coordonn%C3%A9es">Systèmes de coordonnées</a></li>
-<li><a href="#WMTS">Affichage des couches WMTS Géoplateforme</a></li>
-<li><a href="#WMS">Affichage des couches WMS Géoplateforme</a></li>
-<li><a href="#VT">Affichage d'une couche Vecteur Tuilé Géoplateforme</a></li>
-<li><a href="#attributions">Affichage dynamique des attributions</a></li>
-<li><a href="#layerswitcher">Widget de gestion d'empilement des couches</a></li>
-<li><a href="#geocode">Barre de recherche utilisant le service de géocodage IGN</a></li>
-<li><a href="#reverse">Obtention d'une adresse, d'un nom de lieu, ... au clic sur la carte</a></li>
-<li><a href="#route">Calculs d'itinéraires à partir du service de la Géoplateforme</a></li>
-<li><a href="#isocurve">Calculs d'isochrones / isodistances à partir du service de la Géoplateforme</a></li>
-<li><a href="#mp">Coordonnées et altitude en un point de la carte à l'aide du service d'altimétrie de la Géoplateforme</a></li>
-<li><a href="#drawing">Outils de croquis</a></li>
-<li><a href="#layerimport">Import de couches</a></li>
-<li><a href="#ep">Profil altimétrique d'un traçé à l'aide du service d'altimétrie de la Géoplateforme</a></li>
-<li><a href="#measure">Outils de mesures</a></li>
-<li><a href="#getfeatureinfo">Accès aux informations attributaires des couches</a></li>
-<li><a href="#export">Widget d'export</a></li>
-<li><a href="#catalog">Widget de catalogue de couche</a></li>
-<li><a href="#legends">Widget de legendes</a></li>
-<li><a href="#territories">Widget de centrage sur territoire</a></li>
-<li><a href="#overviewMap">Widget de mini carte</a></li>
-<li><a href="#zoom">Widget de zoom</a></li>
-<li><a href="#fullscreen">Widget de plein écran</a></li>
+<li><a href="#affichage-des-couches-wmts-g%C3%A9oplateforme">Affichage des couches WMTS Géoplateforme</a>
+<ul>
+<li><a href="#utilisation-dun-layer-wmts-g%C3%A9oplateforme">Utilisation d'un layer WMTS Géoplateforme</a>
+<ul>
+<li><a href="#exemple-dutilisation">Exemple d'utilisation</a></li>
+<li><a href="#affichage-en-lambert-93-epsg2154">Affichage en Lambert 93 (EPSG:2154)</a></li>
+</ul>
+</li>
+<li><a href="#utilisation-dune-source-wmts-g%C3%A9oplateforme">Utilisation d'une source WMTS Géoplateforme</a>
+<ul>
+<li><a href="#exemple-dutilisation-1">Exemple d'utilisation</a></li>
+<li><a href="#affichage-en-lambert-93-epsg2154-1">Affichage en Lambert 93 (EPSG:2154)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#affichage-des-couches-wms-g%C3%A9oplateforme">Affichage des couches WMS Géoplateforme</a>
+<ul>
+<li><a href="#utilisation-dun-layer-wms-g%C3%A9oplateforme">Utilisation d'un layer WMS Géoplateforme</a>
+<ul>
+<li><a href="#exemple-dutilisation-2">Exemple d'utilisation</a></li>
+</ul>
+</li>
+<li><a href="#utilisation-dune-source-wms-g%C3%A9oplateforme">Utilisation d'une source WMS Géoplateforme</a>
+<ul>
+<li><a href="#exemple-dutilisation-3">Exemple d'utilisation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#affichage-dune-couche-vecteur-tuil%C3%A9-g%C3%A9oplateforme">Affichage d'une couche Vecteur Tuilé Géoplateforme</a></li>
+<li><a href="#widget-de-gestion-dempilement-des-couches">Widget de gestion d'empilement des couches</a>
+<ul>
+<li><a href="#exemples-dutilisation">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#barre-de-recherche">Barre de recherche</a>
+<ul>
+<li><a href="#exemples-dutilisation-1">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-1">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#calculs-ditin%C3%A9raires">Calculs d'itinéraires</a>
+<ul>
+<li><a href="#exemples-dutilisation-2">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-2">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#calculs-disochrones--isodistances">Calculs d'isochrones / isodistances</a>
+<ul>
+<li><a href="#exemples-dutilisation-3">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-3">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#coordonn%C3%A9es-et-altitude-en-un-point-de-la-carte">Coordonnées et altitude en un point de la carte</a>
+<ul>
+<li><a href="#exemples-dutilisation-4">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-4">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#affichage-dynamique-des-attributions">Affichage dynamique des attributions</a>
+<ul>
+<li><a href="#exemples-dutilisation-5">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-5">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#adresse-ou-lieu-en-un-point-de-la-carte">Adresse ou lieu en un point de la carte</a>
+<ul>
+<li><a href="#exemples-dutilisation-6">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-6">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#outils-de-croquis">Outils de croquis</a>
+<ul>
+<li><a href="#exemples-dutilisation-7">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-7">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#widget-dimport-de-couches">Widget d'import de couches</a>
+<ul>
+<li><a href="#exemples-dutilisation-8">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-8">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#profil-altim%C3%A9trique-le-long-dun-tra%C3%A7%C3%A9">Profil altimétrique le long d'un traçé</a>
+<ul>
+<li><a href="#exemples-dutilisation-9">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-9">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#outils-de-mesures">Outils de mesures</a>
+<ul>
+<li><a href="#exemples-dutilisation-10">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-10">Utilisation simple</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#acc%C3%A8s-aux-informations-attributaires-des-couches">Accès aux informations attributaires des couches</a>
+<ul>
+<li><a href="#exemples-dutilisation-11">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-simple-pour-une-seule-couche">Utilisation simple pour une seule couche</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#widget-dexport">Widget d'export</a>
+<ul>
+<li><a href="#exemples-dutilisation-12">Exemples d'utilisation</a>
+<ul>
+<li><a href="#utilisation-via-les-setters">Utilisation via les setters</a></li>
+<li><a href="#utilisation-via-les-options">Utilisation via les options</a></li>
+<li><a href="#utilisation-directement-dans-le-contr%C3%B4le-associ%C3%A9">Utilisation directement dans le contrôle associé</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#widget-de-catalogue-de-couche">widget de catalogue de couche</a>
+<ul>
+<li><a href="#les-options">Les options</a></li>
+<li><a href="#les-%C3%A9venements">Les évenements</a></li>
+<li><a href="#exemples-dutilisation-13">Exemples d'utilisation</a></li>
+<li><a href="#constituer-le-fichier-de-configuration-des-couches">Constituer le fichier de configuration des couches</a></li>
+<li><a href="#sp%C3%A9cification-du-ficher-de-configuration">Spécification du ficher de configuration</a></li>
+</ul>
+</li>
+<li><a href="#widget-des-l%C3%A9gendes">Widget des légendes</a>
+<ul>
+<li><a href="#les-%C3%A9v%C3%A9nements">Les événements</a></li>
+<li><a href="#comment-obtenir-la-l%C3%A9gende-dune-couche-">Comment obtenir la légende d'une couche ?</a></li>
+<li><a href="#exemples-dutilisation-14">Exemples d'utilisation</a></li>
+</ul>
+</li>
+<li><a href="#widget-de-centrage-sur-territoires">Widget de centrage sur territoires</a>
+<ul>
+<li><a href="#exemples-dutilisation-15">Exemples d'utilisation</a></li>
+</ul>
+</li>
+<li><a href="#widget-de-mini-carte">Widget de mini carte</a>
+<ul>
+<li><a href="#exemples-dutilisation-16">Exemples d'utilisation</a></li>
+</ul>
+</li>
+<li><a href="#widget-de-zoom">Widget de zoom</a>
+<ul>
+<li><a href="#exemples-dutilisation-17">Exemples d'utilisation</a></li>
+</ul>
+</li>
+<li><a href="#widget-de-plein-%C3%A9cran">Widget de plein écran</a>
+<ul>
+<li><a href="#exemples-dutilisation-18">Exemples d'utilisation</a></li>
+</ul>
+</li>
+<li><a href="#widget-panoramax">Widget Panoramax</a>
+<ul>
+<li><a href="#exemples-dutilisation-19">Exemples d'utilisation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -936,4 +1105,14 @@ est présent pour ajouter ou retirer une legende</p>
 <a id="exemples-dutilisation-18" class="tsd-anchor"></a><h4 class="tsd-anchor-link">Exemples d'utilisation<a href="#exemples-dutilisation-18" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><pre><code class="js"><span class="hl-3">var</span><span class="hl-1"> </span><span class="hl-4">fullscreen</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-4">ol</span><span class="hl-1">.</span><span class="hl-4">control</span><span class="hl-1">.</span><span class="hl-0">GeoportalFullScreen</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-4">position :</span><span class="hl-1"> </span><span class="hl-2">&quot;top-right&quot;</span><br/><span class="hl-1">});</span><br/><span class="hl-4">map</span><span class="hl-1">.</span><span class="hl-0">addControl</span><span class="hl-1">(</span><span class="hl-4">fullscreen</span><span class="hl-1">);</span>
 </code><button type="button">Copy</button></pre>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p></div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#extension-géoplateforme-pour-openlayers"><span>Extension <wbr/>Géoplateforme pour <wbr/>Open<wbr/>Layers</span></a><ul><li><a href="#mise-en-oeuvre"><span>Mise en oeuvre</span></a></li><li><ul><li><a href="#téléchargement"><span>Téléchargement</span></a></li><li><ul><li><a href="#téléchargement-direct"><span>Téléchargement direct</span></a></li><li><a href="#récupération-avec-npm"><span>Récupération avec NPM</span></a></li><li><a href="#accès-direct"><span>Accès direct</span></a></li></ul></li><li><a href="#intégration-dans-une-page-web"><span>Intégration dans une page web</span></a></li><li><a href="#configuration-de-laccès-à-la-géoplateforme"><span>Configuration de l&#39;accès à la <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#optimisation-du-chargement--configuration-locale"><span>Optimisation du chargement : configuration locale</span></a></li></ul></li><li><a href="#appel-de-lextension-dans-un-module-es6"><span>Appel de l&#39;extension dans un module ES6</span></a></li></ul></li><li><a href="#compatibilités"><span>Compatibilités</span></a></li><li><ul><li><a href="#versions-de-openlayers-supportées"><span>Versions de <wbr/>Open<wbr/>Layers supportées</span></a></li><li><a href="#navigateurs-supportés"><span>Navigateurs supportés</span></a></li></ul></li><li><a href="#fonctionnalités"><span>Fonctionnalités</span></a></li><li><ul><li><a href="#systèmes-de-coordonnées"><span>Systèmes de coordonnées</span></a></li><li><a href="#affichage-des-couches-wmts-géoplateforme"><span>Affichage des couches WMTS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#utilisation-dun-layer-wmts-géoplateforme"><span>Utilisation d&#39;un layer WMTS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#exemple-dutilisation"><span>Exemple d&#39;utilisation</span></a></li><li><a href="#affichage-en-lambert-93-epsg2154"><span>Affichage en <wbr/>Lambert 93 (EPSG:2154)</span></a></li></ul></li><li><a href="#utilisation-dune-source-wmts-géoplateforme"><span>Utilisation d&#39;une source WMTS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#exemple-dutilisation-1"><span>Exemple d&#39;utilisation</span></a></li><li><a href="#affichage-en-lambert-93-epsg2154-1"><span>Affichage en <wbr/>Lambert 93 (EPSG:2154)</span></a></li></ul></li></ul></li><li><a href="#affichage-des-couches-wms-géoplateforme"><span>Affichage des couches WMS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#utilisation-dun-layer-wms-géoplateforme"><span>Utilisation d&#39;un layer WMS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#exemple-dutilisation-2"><span>Exemple d&#39;utilisation</span></a></li></ul></li><li><a href="#utilisation-dune-source-wms-géoplateforme"><span>Utilisation d&#39;une source WMS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#exemple-dutilisation-3"><span>Exemple d&#39;utilisation</span></a></li></ul></li></ul></li><li><a href="#affichage-dune-couche-vecteur-tuilé-géoplateforme"><span>Affichage d&#39;une couche <wbr/>Vecteur <wbr/>Tuilé <wbr/>Géoplateforme</span></a></li><li><a href="#widget-de-gestion-dempilement-des-couches"><span>Widget de gestion d&#39;empilement des couches</span></a></li><li><ul><li><a href="#exemples-dutilisation"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#barre-de-recherche"><span>Barre de recherche</span></a></li><li><ul><li><a href="#exemples-dutilisation-1"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-1"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#calculs-ditinéraires"><span>Calculs d&#39;itinéraires</span></a></li><li><ul><li><a href="#exemples-dutilisation-2"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-2"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#calculs-disochrones--isodistances"><span>Calculs d&#39;isochrones / isodistances</span></a></li><li><ul><li><a href="#exemples-dutilisation-3"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-3"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#coordonnées-et-altitude-en-un-point-de-la-carte"><span>Coordonnées et altitude en un point de la carte</span></a></li><li><ul><li><a href="#exemples-dutilisation-4"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-4"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#affichage-dynamique-des-attributions"><span>Affichage dynamique des attributions</span></a></li><li><ul><li><a href="#exemples-dutilisation-5"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-5"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#adresse-ou-lieu-en-un-point-de-la-carte"><span>Adresse ou lieu en un point de la carte</span></a></li><li><ul><li><a href="#exemples-dutilisation-6"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-6"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#outils-de-croquis"><span>Outils de croquis</span></a></li><li><ul><li><a href="#exemples-dutilisation-7"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-7"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#widget-dimport-de-couches"><span>Widget d&#39;import de couches</span></a></li><li><ul><li><a href="#exemples-dutilisation-8"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-8"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#profil-altimétrique-le-long-dun-traçé"><span>Profil altimétrique le long d&#39;un traçé</span></a></li><li><ul><li><a href="#exemples-dutilisation-9"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-9"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#outils-de-mesures"><span>Outils de mesures</span></a></li><li><ul><li><a href="#exemples-dutilisation-10"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-10"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#accès-aux-informations-attributaires-des-couches"><span>Accès aux informations attributaires des couches</span></a></li><li><ul><li><a href="#exemples-dutilisation-11"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-pour-une-seule-couche"><span>Utilisation simple pour une seule couche</span></a></li></ul></li></ul></li><li><a href="#widget-dexport"><span>Widget d&#39;export</span></a></li><li><ul><li><a href="#exemples-dutilisation-12"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-via-les-setters"><span>Utilisation via les setters</span></a></li><li><a href="#utilisation-via-les-options"><span>Utilisation via les options</span></a></li><li><a href="#utilisation-directement-dans-le-contrôle-associé"><span>Utilisation directement dans le contrôle associé</span></a></li></ul></li></ul></li><li><a href="#widget-de-catalogue-de-couche"><span>widget de catalogue de couche</span></a></li><li><ul><li><a href="#les-options"><span>Les options</span></a></li><li><a href="#les-évenements"><span>Les évenements</span></a></li><li><a href="#exemples-dutilisation-13"><span>Exemples d&#39;utilisation</span></a></li><li><a href="#constituer-le-fichier-de-configuration-des-couches"><span>Constituer le fichier de configuration des couches</span></a></li><li><a href="#spécification-du-ficher-de-configuration"><span>Spécification du ficher de configuration</span></a></li></ul></li><li><a href="#widget-des-légendes"><span>Widget des légendes</span></a></li><li><ul><li><a href="#les-événements"><span>Les événements</span></a></li><li><a href="#comment-obtenir-la-légende-dune-couche-"><span>Comment obtenir la légende d&#39;une couche ?</span></a></li><li><a href="#exemples-dutilisation-14"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-de-centrage-sur-territoires"><span>Widget de centrage sur territoires</span></a></li><li><ul><li><a href="#exemples-dutilisation-15"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-de-mini-carte"><span>Widget de mini carte</span></a></li><li><ul><li><a href="#exemples-dutilisation-16"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-de-zoom"><span>Widget de zoom</span></a></li><li><ul><li><a href="#exemples-dutilisation-17"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-de-plein-écran"><span>Widget de plein écran</span></a></li><li><ul><li><a href="#exemples-dutilisation-18"><span>Exemples d&#39;utilisation</span></a></li></ul></li></ul></li></ul></div></details></div><div class="site-menu"><nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://cartes.gouv.fr/cartes">cartes.gouv.fr</a><a href="https://geoportail.gouv.fr/">geoportail</a><a href="https://github.com/IGNF/geopf-extensions-openlayers">github</a></nav><nav class="tsd-navigation"><a href="../modules.html">geopf-extensions-openlayers</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p><a id="panoramax"></a></p>
+<a id="widget-panoramax" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Widget Panoramax<a href="#widget-panoramax" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Ce widget affiche les couvertures Panoramax sur la carte et permet de visualiser les photos associées. Il repose sur le web component <code>&lt;pnx-photo-viewer&gt;</code> de <code>@panoramax/web-viewer</code>, qui doit être chargé avec sa feuille de style avant l'extension.</p>
+<a id="exemples-dutilisation-19" class="tsd-anchor"></a><h4 class="tsd-anchor-link">Exemples d'utilisation<a href="#exemples-dutilisation-19" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><pre><code class="html"><span class="hl-10">&lt;</span><span class="hl-11">link</span><span class="hl-1"> </span><span class="hl-12">rel</span><span class="hl-1">=</span><span class="hl-13">&quot;stylesheet&quot;</span><span class="hl-1"> </span><span class="hl-12">href</span><span class="hl-1">=</span><span class="hl-13">&quot;photoviewer.css&quot;</span><span class="hl-1"> </span><span class="hl-10">/&gt;</span><br/><span class="hl-10">&lt;</span><span class="hl-11">script</span><span class="hl-14"> </span><span class="hl-12">src</span><span class="hl-14">=</span><span class="hl-13">&quot;photoviewer.js&quot;</span><span class="hl-10">&gt;&lt;/</span><span class="hl-11">script</span><span class="hl-10">&gt;</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="js"><span class="hl-3">var</span><span class="hl-1"> </span><span class="hl-4">panoramax</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-4">ol</span><span class="hl-1">.</span><span class="hl-4">control</span><span class="hl-1">.</span><span class="hl-0">Panoramax</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-4">position:</span><span class="hl-1"> </span><span class="hl-2">&quot;bottom-left&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">visualizationWindow:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-4">size:</span><span class="hl-1"> </span><span class="hl-2">&quot;fullscreen-map&quot;</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-4">viewer:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-4">share:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-4">url:</span><span class="hl-1"> </span><span class="hl-2">&quot;https://cartes.gouv.fr/explorer-les-cartes/&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-4">type:</span><span class="hl-1"> </span><span class="hl-2">&quot;geoplateforme&quot;</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span><br/><span class="hl-4">map</span><span class="hl-1">.</span><span class="hl-0">addControl</span><span class="hl-1">(</span><span class="hl-4">panoramax</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p>La configuration des couches, interactions, filtres, modes de fenêtre, événements et liens de partage est décrite dans la <a href="../media/NOTE-PANORAMAX.md">note du widget Panoramax</a>.</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p></div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#extension-géoplateforme-pour-openlayers"><span>Extension <wbr/>Géoplateforme pour <wbr/>Open<wbr/>Layers</span></a><ul><li><a href="#mise-en-oeuvre"><span>Mise en oeuvre</span></a></li><li><ul><li><a href="#téléchargement"><span>Téléchargement</span></a></li><li><ul><li><a href="#téléchargement-direct"><span>Téléchargement direct</span></a></li><li><a href="#récupération-avec-npm"><span>Récupération avec NPM</span></a></li><li><a href="#accès-direct"><span>Accès direct</span></a></li></ul></li><li><a href="#intégration-dans-une-page-web"><span>Intégration dans une page web</span></a></li><li><a href="#configuration-de-laccès-à-la-géoplateforme"><span>Configuration de l&#39;accès à la <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#optimisation-du-chargement--configuration-locale"><span>Optimisation du chargement : configuration locale</span></a></li></ul></li><li><a href="#appel-de-lextension-dans-un-module-es6"><span>Appel de l&#39;extension dans un module ES6</span></a></li></ul></li><li><a href="#compatibilités"><span>Compatibilités</span></a></li><li><ul><li><a href="#versions-de-openlayers-supportées"><span>Versions de <wbr/>Open<wbr/>Layers supportées</span></a></li><li><a href="#navigateurs-supportés"><span>Navigateurs supportés</span></a></li></ul></li><li><a href="#fonctionnalités"><span>Fonctionnalités</span></a></li><li><ul><li><a href="#systèmes-de-coordonnées"><span>Systèmes de coordonnées</span></a></li><li><a href="#affichage-des-couches-wmts-géoplateforme"><span>Affichage des couches WMTS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#utilisation-dun-layer-wmts-géoplateforme"><span>Utilisation d&#39;un layer WMTS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#exemple-dutilisation"><span>Exemple d&#39;utilisation</span></a></li><li><a href="#affichage-en-lambert-93-epsg2154"><span>Affichage en <wbr/>Lambert 93 (EPSG:2154)</span></a></li></ul></li><li><a href="#utilisation-dune-source-wmts-géoplateforme"><span>Utilisation d&#39;une source WMTS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#exemple-dutilisation-1"><span>Exemple d&#39;utilisation</span></a></li><li><a href="#affichage-en-lambert-93-epsg2154-1"><span>Affichage en <wbr/>Lambert 93 (EPSG:2154)</span></a></li></ul></li></ul></li><li><a href="#affichage-des-couches-wms-géoplateforme"><span>Affichage des couches WMS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#utilisation-dun-layer-wms-géoplateforme"><span>Utilisation d&#39;un layer WMS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#exemple-dutilisation-2"><span>Exemple d&#39;utilisation</span></a></li></ul></li><li><a href="#utilisation-dune-source-wms-géoplateforme"><span>Utilisation d&#39;une source WMS <wbr/>Géoplateforme</span></a></li><li><ul><li><a href="#exemple-dutilisation-3"><span>Exemple d&#39;utilisation</span></a></li></ul></li></ul></li><li><a href="#affichage-dune-couche-vecteur-tuilé-géoplateforme"><span>Affichage d&#39;une couche <wbr/>Vecteur <wbr/>Tuilé <wbr/>Géoplateforme</span></a></li><li><a href="#widget-de-gestion-dempilement-des-couches"><span>Widget de gestion d&#39;empilement des couches</span></a></li><li><ul><li><a href="#exemples-dutilisation"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#barre-de-recherche"><span>Barre de recherche</span></a></li><li><ul><li><a href="#exemples-dutilisation-1"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-1"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#calculs-ditinéraires"><span>Calculs d&#39;itinéraires</span></a></li><li><ul><li><a href="#exemples-dutilisation-2"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-2"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#calculs-disochrones--isodistances"><span>Calculs d&#39;isochrones / isodistances</span></a></li><li><ul><li><a href="#exemples-dutilisation-3"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-3"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#coordonnées-et-altitude-en-un-point-de-la-carte"><span>Coordonnées et altitude en un point de la carte</span></a></li><li><ul><li><a href="#exemples-dutilisation-4"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-4"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#affichage-dynamique-des-attributions"><span>Affichage dynamique des attributions</span></a></li><li><ul><li><a href="#exemples-dutilisation-5"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-5"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#adresse-ou-lieu-en-un-point-de-la-carte"><span>Adresse ou lieu en un point de la carte</span></a></li><li><ul><li><a href="#exemples-dutilisation-6"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-6"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#outils-de-croquis"><span>Outils de croquis</span></a></li><li><ul><li><a href="#exemples-dutilisation-7"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-7"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#widget-dimport-de-couches"><span>Widget d&#39;import de couches</span></a></li><li><ul><li><a href="#exemples-dutilisation-8"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-8"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#profil-altimétrique-le-long-dun-traçé"><span>Profil altimétrique le long d&#39;un traçé</span></a></li><li><ul><li><a href="#exemples-dutilisation-9"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-9"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#outils-de-mesures"><span>Outils de mesures</span></a></li><li><ul><li><a href="#exemples-dutilisation-10"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-10"><span>Utilisation simple</span></a></li></ul></li></ul></li><li><a href="#accès-aux-informations-attributaires-des-couches"><span>Accès aux informations attributaires des couches</span></a></li><li><ul><li><a href="#exemples-dutilisation-11"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-simple-pour-une-seule-couche"><span>Utilisation simple pour une seule couche</span></a></li></ul></li></ul></li><li><a href="#widget-dexport"><span>Widget d&#39;export</span></a></li><li><ul><li><a href="#exemples-dutilisation-12"><span>Exemples d&#39;utilisation</span></a></li><li><ul><li><a href="#utilisation-via-les-setters"><span>Utilisation via les setters</span></a></li><li><a href="#utilisation-via-les-options"><span>Utilisation via les options</span></a></li><li><a href="#utilisation-directement-dans-le-contrôle-associé"><span>Utilisation directement dans le contrôle associé</span></a></li></ul></li></ul></li><li><a href="#widget-de-catalogue-de-couche"><span>widget de catalogue de couche</span></a></li><li><ul><li><a href="#les-options"><span>Les options</span></a></li><li><a href="#les-évenements"><span>Les évenements</span></a></li><li><a href="#exemples-dutilisation-13"><span>Exemples d&#39;utilisation</span></a></li><li><a href="#constituer-le-fichier-de-configuration-des-couches"><span>Constituer le fichier de configuration des couches</span></a></li><li><a href="#spécification-du-ficher-de-configuration"><span>Spécification du ficher de configuration</span></a></li></ul></li><li><a href="#widget-des-légendes"><span>Widget des légendes</span></a></li><li><ul><li><a href="#les-événements"><span>Les événements</span></a></li><li><a href="#comment-obtenir-la-légende-dune-couche-"><span>Comment obtenir la légende d&#39;une couche ?</span></a></li><li><a href="#exemples-dutilisation-14"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-de-centrage-sur-territoires"><span>Widget de centrage sur territoires</span></a></li><li><ul><li><a href="#exemples-dutilisation-15"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-de-mini-carte"><span>Widget de mini carte</span></a></li><li><ul><li><a href="#exemples-dutilisation-16"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-de-zoom"><span>Widget de zoom</span></a></li><li><ul><li><a href="#exemples-dutilisation-17"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-de-plein-écran"><span>Widget de plein écran</span></a></li><li><ul><li><a href="#exemples-dutilisation-18"><span>Exemples d&#39;utilisation</span></a></li></ul></li><li><a href="#widget-panoramax"><span>Widget <wbr/>Panoramax</span></a></li><li><ul><li><a href="#exemples-dutilisation-19"><span>Exemples d&#39;utilisation</span></a></li></ul></li></ul></li></ul></div></details></div><div class="site-menu"><nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://cartes.gouv.fr/cartes">cartes.gouv.fr</a><a href="https://geoportail.gouv.fr/">geoportail</a><a href="https://github.com/IGNF/geopf-extensions-openlayers">github</a></nav><nav class="tsd-navigation"><a href="../modules.html">geopf-extensions-openlayers</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

@@ -248,17 +248,39 @@ export type PanoramaxOptions = {
          */
         endpoint?: string | undefined;
         /**
-         * - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
+         * - Liste des widgets à afficher dans le visualiseur.
          */
-        class?: string | undefined;
+        widgets?: any[] | undefined;
         /**
-         * - Affiche ou masque les widgets du visualiseur.
+         * - Options de configuration du partage du visualiseur.
          */
-        widgets?: boolean | undefined;
+        share?: {
+            /**
+             * - URL de base utilisée pour construire le lien de partage du visualiseur.
+             */
+            url?: string | undefined;
+            /**
+             * - Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
+             */
+            type?: string | undefined;
+        } | undefined;
         /**
-         * - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+         * - Options de configuration spécifiques au visualiseur Panoramax.
          */
-        psvOptions?: any;
+        pnxOptions?: {
+            /**
+             * - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
+             */
+            class?: string | undefined;
+            /**
+             * - Affiche ou masque les widgets du visualiseur.
+             */
+            widgets?: boolean | undefined;
+            /**
+             * - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+             */
+            psvOptions?: any;
+        } | undefined;
     } | undefined;
     /**
      * - Options de configuration des interactions sur les différentes couches Panoramax.
@@ -491,9 +513,14 @@ export type PanoramaxPreviewPicturesLayer = {
  * @property {String} [visualizationWindow.size] - Taille de la fenêtre de visualisation ("small", "medium", "large", "fullscreen", "fullscreen-map").
  * @property {Object} [viewer] - Options de configuration du visualiseur d'images panoramiques.
  * @property {String} [viewer.endpoint] - URL de l'endpoint du visualiseur d'images panoramiques.
- * @property {String} [viewer.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
- * @property {Boolean} [viewer.widgets] - Affiche ou masque les widgets du visualiseur.
- * @property {Object} [viewer.psvOptions] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
+ * @property {Array} [viewer.widgets] - Liste des widgets à afficher dans le visualiseur.
+ * @property {Object} [viewer.share] - Options de configuration du partage du visualiseur.
+ * @property {String} [viewer.share.url] - URL de base utilisée pour construire le lien de partage du visualiseur.
+ * @property {String} [viewer.share.type] - Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
+ * @property {Object} [viewer.pnxOptions] - Options de configuration spécifiques au visualiseur Panoramax.
+ * @property {String} [viewer.pnxOptions.class] - Classe CSS personnalisée à appliquer au conteneur du visualiseur.
+ * @property {Boolean} [viewer.pnxOptions.widgets] - Affiche ou masque les widgets du visualiseur.
+ * @property {Object} [viewer.pnxOptions.psvOptions] - **Experimental** Options de configuration du visualiseur d'images panoramiques (ex. pour PhotoSphereViewer).
  * @property {Object} [interactions] - Options de configuration des interactions sur les différentes couches Panoramax.
  * @property {Object} [interactions.grid] - Options d'interaction pour la couche de grille.
  * @property {Boolean} [interactions.grid.active] - Active ou désactive les interactions sur la couche de grille.
@@ -667,9 +694,23 @@ declare class Panoramax extends Control {
      *   },
      *   viewer: {
      *     endpoint: "https://explore.panoramax.fr/",
-     *     class: "",
-     *     widgets: true,
-     *     psvOptions: {}
+     *     share: {
+     *       url: "https://explore.panoramax.fr/",
+     *       type: "panoramax"
+     *     },
+     *     widgets : [
+     *      "btnBack",
+     *      "btnClose",
+     *      "btnZoom",
+     *      "btnFullscreen",
+     *      "cmpPictureLegend",
+     *      "cmpMinimap",
+     *     ],
+     *     pnxOptions: {
+     *      class: "",
+     *      widgets: true,
+     *      psvOptions: {}
+     *     },
      * }}});
      * map.addControl(panoramax);
      */
@@ -785,6 +826,10 @@ declare class Panoramax extends Control {
         };
         viewer: {
             endpoint: string;
+            share: {
+                url: string;
+                type: string;
+            };
             widgets: string[];
             pnxOptions: {
                 class: string;
@@ -1222,9 +1267,10 @@ declare class Panoramax extends Control {
     /**
      * Crée un composant de légende des photos personnalisé pour le viewer
      * de photos de Panoramax.
+     * @param {Object} share - Url et Type de partage du visualiseur : panoramax (défaut) ou geoplateforme.
      * @returns {HTMLElement} Élément du composant de légende des photos.
      */
-    createWidgetCmpPictureLegend(): HTMLElement;
+    createWidgetCmpPictureLegend(share: any): HTMLElement;
     /**
      * Crée un composant de minimap personnalisé pour le viewer de photos de Panoramax.
      * @returns {HTMLElement} Élément du composant de minimap.
