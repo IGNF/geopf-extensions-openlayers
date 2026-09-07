@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+ - Panoramax : Ajout de la fonctionnalité de partage d'URL pour le visualiseur d'images (#581)
+
 * 🔨 [Changed]
 
   - Tooltips : les tooltips au survol des boutons ne peuvent pas être survolées (#571)
