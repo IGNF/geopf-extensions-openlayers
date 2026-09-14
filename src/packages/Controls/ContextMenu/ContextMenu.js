@@ -576,8 +576,8 @@ class ContextMenu extends Control {
             },
             onFailure : function (error) { },
             // spécifique au service
-            position : { lon : clickedCoordinate[1], lat : clickedCoordinate[0] },
-            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[1], clickedCoordinate[0]], radius : 100 },
+            position : { lon : clickedCoordinate[0], lat : clickedCoordinate[1] },
+            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
             index : "CadastralParcel",
             maximumResponses : 1,
             serverUrl : this.options.reverseGeocodeServerUrl
