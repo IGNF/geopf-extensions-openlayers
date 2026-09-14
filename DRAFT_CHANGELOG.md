@@ -23,7 +23,7 @@ __DATE__
 
 * 🐛 [Fixed]
 
-  - ContextMenu : correction de l'affichage de numéro de parcelle cadastrale lorsqu'on clique sur "Adresse & Coordonnées du lieu"
+  - ContextMenu : correction de l'affichage de numéro de parcelle cadastrale lorsqu'on clique sur "Adresse & Coordonnées du lieu" (#587)
   
 * 🔒 [Security]
 
