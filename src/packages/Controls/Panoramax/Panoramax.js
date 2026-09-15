@@ -3615,6 +3615,9 @@ class Panoramax extends Control {
         if (opened === "true") {
             this.onPanelOpen();
         }
+        else {
+            this.onPanelClose();
+        }
         this.collapsed = !(opened === "true");
         this.dispatchEvent("change:collapsed");
 
