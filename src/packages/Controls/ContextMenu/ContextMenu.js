@@ -24,6 +24,7 @@ import Logger from "../../Utils/LoggerByDefault";
 
 // DOM
 import ContextMenuDOM from "./ContextMenuDOM";
+import PanelDOM from "../PanelDOM";
 import olContextMenu from "ol-contextmenu";
 import Widget from "../Widget";
 
@@ -263,28 +264,21 @@ class ContextMenu extends Control {
 
         // panel
         var pointInfoPanel = this.panelPointInfoContainer = this._createPointInfoPanelElement();
+
+        // header
+        var pointInfoPanelHeader = this.panelPointInfoHeaderContainer = this._createPanelHeaderElement({
+            title : "Adresse et coordonnées",
+            btnClassForClose : "GPshowPointInfoPicto",
+        });
+        pointInfoPanel.appendChild(pointInfoPanelHeader);
+
+
         var pointInfoPanelDiv = this._createPointInfoPanelDivElement();
         pointInfoPanel.appendChild(pointInfoPanelDiv);
 
         // container for the custom code
         var pointInfoEntriesDiv = this.panelPointInfoEntriesContainer = this._createEntriesElement();
-        pointInfoPanel.appendChild(pointInfoEntriesDiv);
-
-
-        // header ?
-        // if (this.options.panel) {
-        var pointInfoPanelHeader = this.panelPointInfoHeaderContainer = this._createPointInfoPanelHeaderElement();
-        // icone
-        var pointInfoPanelIcon = this._createPointInfoPanelIconElement();
-        pointInfoPanelHeader.appendChild(pointInfoPanelIcon);
-        // title
-        var pointInfoPanelTitle = this._createPointInfoPanelTitleElement();
-        pointInfoPanelHeader.appendChild(pointInfoPanelTitle);
-        // close picto
-        var pointInfoCloseBtn = this.buttonPointInfoClose = this._createPointInfoPanelCloseElement();
-        pointInfoPanelHeader.appendChild(pointInfoCloseBtn);
-        pointInfoPanelDiv.appendChild(pointInfoPanelHeader);
-        // }
+        pointInfoPanelDiv.appendChild(pointInfoEntriesDiv);
 
         container.appendChild(pointInfoPanel);
 
@@ -748,6 +742,7 @@ class ContextMenu extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(ContextMenu.prototype, ContextMenuDOM);
+Object.assign(ContextMenu.prototype, PanelDOM);
 // on récupère les méthodes d'une classe applicable à tous les contextMenus'
 Object.assign(ContextMenu.prototype, ContextMenu);
 Object.assign(ContextMenu.prototype, Widget);
