@@ -1,5 +1,17 @@
 var title = "reporting";
 
+// Escape HTML special characters to avoid DOM injection when values are
+// interpolated into HTML template literals before being parsed/rendered.
+const escapeHtml = (str) => {
+    return String(str).replace(/[&<>"']/g, (match) => ({
+        "&" : "&amp;",
+        "<" : "&lt;",
+        ">" : "&gt;",
+        "\"" : "&quot;",
+        "'" : "&#39;"
+    }[match]));
+};
+
 const stringToHTML = (str) => {
     var support = function () {
         if (!window.DOMParser) {
@@ -228,17 +240,21 @@ var ReportingDOM = {
         `;
 
         var idTheme = this._addUID("GPreportingFormSelectTheme");
-        var divTheme = `
-        <div class="fr-select-group">
-            <label class="gpf-label fr-label" for="${idTheme}">
-                Objet du signalement (obligatoire)
-            </label>
-            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme" required>
-                <option value="" selected disabled >Sélectionner une option</option>
-                ${thematics.map((theme) => { return `<option value="${theme}">${theme}</option>`; }).join("")}
-            </select>
-        </div>
-        `;
+        var themeOptions = thematics.map(function (theme) {
+            var safeTheme = escapeHtml(theme);
+            return "<option value=\"" + safeTheme + "\">" + safeTheme + "</option>";
+        }).join("");
+        var divTheme = [
+            "<div class=\"fr-select-group\">",
+            "<label class=\"gpf-label fr-label\" for=\"" + idTheme + "\">",
+            "Objet du signalement (obligatoire)",
+            "</label>",
+            "<" + "select class=\"gpf-select fr-select\" name=\"GPreportingSelectTheme\" required>",
+            "<option value=\"\" selected disabled >Sélectionner une option</option>",
+            themeOptions,
+            "</" + "select>",
+            "</div>"
+        ].join("\n");
 
         var idDesc = this._addUID("GPreportingFormTextDesc");
         var divDesc = `
@@ -293,8 +309,9 @@ var ReportingDOM = {
         }
 
         // utile ?
-        var select = shadow.getElementById(idTheme);
+        var select = shadow.querySelector("select[name=\"GPreportingSelectTheme\"]");
         if (select) {
+            select.id = idTheme;
             select.addEventListener("change", (e) => {
                 this.onSelectFormThemeReportingChange(e);
             });
