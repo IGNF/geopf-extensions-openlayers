@@ -15,6 +15,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - Reporting : affichage des messages d’erreurs potentiels (#592)
+
 * 🔨 [Changed]
 
 * 🔥 [Deprecated]
