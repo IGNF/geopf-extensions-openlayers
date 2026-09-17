@@ -179,9 +179,8 @@ declare class ContextMenu extends Control {
     private initContainer;
     buttonPointInfoShow: any;
     panelPointInfoContainer: any;
-    panelPointInfoEntriesContainer: any;
     panelPointInfoHeaderContainer: any;
-    buttonPointInfoClose: any;
+    panelPointInfoEntriesContainer: any;
     /**
      * Add events listeners on map
      *
