@@ -25,7 +25,8 @@ __DATE__
 
   - ContextMenu : correction de l'affichage de numéro de parcelle cadastrale lorsqu'on clique sur "Adresse & Coordonnées du lieu" (#587)
   - ContextMenu : correction de l’affichage de l’entête du panel (#589)
-  
+  - Drawing / Measures : sur Safari, le clic ne permettait pas de tracer et le double-clic sélectionnait le texte de l'infobulle ("Double-cliquer pour terminer", mesures) au lieu de terminer la saisie (#574)
+
 * 🔒 [Security]
 
 ---
