@@ -359,7 +359,7 @@ class FormActionByDefaut {
     // ######################### privates ##################### //
 
     _addEventsListeners () {
-        this.form.addEventListener("submit", this._handler.bind(this), {once : true});
+        this.form.addEventListener("submit", this._handler.bind(this), { once : true });
     }
     _handler (e) {
         logger.info("FormActionByDefaut handler", e);
@@ -701,7 +701,7 @@ class ServiceActionByDefaut {
  * @module Reporting
 */
 class Reporting extends Control {
-    
+
     /**
      * @constructor
      * @param {Object} [options] - options
@@ -1313,7 +1313,7 @@ class Reporting extends Control {
         }
         // on supprime la couche de signalement
         // créée par l'outil de dessin
-        var drawing =  this.iocDrawing.Drawing;
+        var drawing = this.iocDrawing.Drawing;
         if (drawing) {
             var layer = drawing.getLayer();
             var map = this.getMap();
@@ -1505,7 +1505,7 @@ class Reporting extends Control {
             .then(() => {
                 // clear data after sending
                 this.data = null;
-                var drawing =  this.iocDrawing.Drawing;
+                var drawing = this.iocDrawing.Drawing;
                 if (drawing) {
                     var layer = drawing.getLayer();
                     var map = this.getMap();
