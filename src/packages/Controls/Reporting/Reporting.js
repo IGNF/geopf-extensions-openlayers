@@ -1473,6 +1473,15 @@ class Reporting extends Control {
      */
     onShowSendReportingClick (e) {
         logger.trace("onShowSendReportingClick", e);
+
+        // remove current errors (= init)
+        this.spanReportingError.classList.replace("gpf-visible", "gpf-hidden");
+        this.spanReportingError.removeAttribute("role");
+        if (this.spanReportingError._tmpInnerText) {
+            this.spanReportingError.textContent = this.spanReportingError._tmpInnerText;
+            this.spanReportingError._tmpInnerText = null;
+        }
+
         // get the mail from the event
         this.data = Object.assign({}, this.data, {
             mail : e.mail
@@ -1521,11 +1530,13 @@ class Reporting extends Control {
                 });
             })
             .catch((e) => {
-            // UI error message !
+                // UI error message !
                 this.spanReportingError.classList.replace("gpf-hidden", "gpf-visible");
-                setTimeout(() => {
-                    this.spanReportingError.classList.replace("gpf-visible", "gpf-hidden");
-                }, 5000);
+                this.spanReportingError.setAttribute("role", "alert");
+                if (e.message) {
+                    this.spanReportingError._tmpInnerText = this.spanReportingError.textContent;
+                    this.spanReportingError.textContent = e.message;
+                }
                 logger.error(e);
             });
     }
