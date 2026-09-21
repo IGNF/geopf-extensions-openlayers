@@ -1,0 +1,422 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+
+{{/content}}
+
+{{#content "head"}}
+<title>Sample openlayers LayerSwitcher</title>
+{{/content}}
+
+{{#content "style"}}
+<style id="style-application">
+    div#map {
+        width: 100%;
+        height: 400px;
+    }
+
+    div[id^=GPcatalog-] {
+        top: 1rem;
+        left: 2px
+    }
+
+
+    /* Remet le CSS initial */
+    div:not(.position) > div[id^="GPlayerSwitcher-"] > dialog[id^="GPlayersList"].toggle-css .gpf-panel__body_ls {
+        max-height: unset;
+        flex: inherit;
+    }
+
+
+    div[id^=GPlayerSwitcher-] > button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"].toggle-css {
+        height:unset;
+        max-height: calc(var(--map-height) - 16px)
+    }
+
+
+    div[id^=GPcatalog-] > dialog {
+        left: calc(40px + 4px)
+    }
+</style>
+{{/content}}
+
+{{#content "body"}}
+<h2>Ajout du gestionnaire de couches avec formulaire d'ajout de couche</h2>
+<!-- map -->
+<div class="fr-m-2v">
+    <div style="display: flex;flex-direction: row;align-items: center;gap:24px;">
+        <div class="fr-select-group">
+            <label class="fr-label" for="height"> Hauteur de la carte </label>
+            <select class="fr-select" id="height" name="height">
+                <option value=300 selected>300 px</option>
+                <option value=400>400 px</option>
+                <option value=500>500 px</option>
+                <option value=600>600 px</option>
+                <option value=700>700 px</option>
+                <option value=800>800 px</option>
+                <option value=900>900 px</option>
+                <option value=1000>1000 px</option>
+            </select>
+        </div>
+        <div class="fr-toggle">
+            <input type="checkbox" class="fr-toggle__input" id="toggle-css-tokens"
+                aria-describedby="toggle-css-tokens-hint toggle-css-tokens-messages">
+            <label class="fr-toggle__label" for="toggle-css-tokens">Adapter la taille des modales à la carte</label>
+            <p class="fr-hint-text" id="toggle-css-tokens-hint">Sans ça, la taille des modales est fixe/ (pré)définie par l'utilisateur·ice</p>
+            <div class="fr-messages-group" id="toggle-css-tokens-messages" aria-live="polite">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="map">
+</div>
+{{/content}}
+
+{{#content "js"}}
+<script type="text/javascript">
+    var map;
+    var layerSwitcher;
+    var catalog;
+    var addMapsLayer, addOSMLayer;
+    var osm, maps, ortho;
+
+    const styleApp = document.querySelector("#style-application");
+    console.log(styleApp)
+    const selectHeight = document.querySelector("select#height");
+    const toggleCSSTokens = document.querySelector("input#toggle-css-tokens");
+
+    selectHeight.addEventListener("change", (e) => {
+        const height = e.target.value;
+        map.getTargetElement().style = `height: ${height}px`;
+    })
+    
+    toggleCSSTokens.addEventListener("change", (e) => {
+        const selected = e.target.checked;
+        
+        const dialogSwitch = document.querySelector(`[id^=GPlayerSwitcher-] > button[id^="GPshowLayersListPicto"][aria-pressed="true"] + dialog[id^="GPlayersList"]`);
+        dialogSwitch?.classList.toggle("toggle-css", selected)
+        // map.getTargetElement()?.style = `height: ${height}px`;
+    })
+
+    // Récupère une alerte
+    var callBackBtn = function (e, layerSwitcher, layer, options) {
+        console.log(e, layerSwitcher, layer, options)
+        alert(options.title);
+    }
+
+    // Renomme la couche
+    var rename = function (e, layerSwitcher, layer, options) {
+        let infos = layerSwitcher.getLayerInfo(layer);
+        let rename = prompt("Renommer la couche", infos._title);
+        if (rename && rename.trim()) {
+            layerSwitcher.addLayer(layer, { title: rename });
+        } else {
+            console.log("empty string")
+        }
+    }
+
+    var getLayer = function (e, layerSwitcher, layer, options) {
+        console.log(layer)
+    }
+
+    var lockLayer = function (e, layerSwitcher, layer, options) {
+        layerSwitcher.lockLayer(layer, !layer.get('locked'))
+    }
+
+    var createMap = function () {
+        // on cache l'image de chargement du Géoportail.
+        document.getElementById('map').style.backgroundImage = 'none';
+
+        osm = new ol.layer.Tile({
+            source: new ol.source.OSM(),
+            opacity: 0.8,
+            producer: '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+        });
+        ortho = new ol.layer.GeoportalWMTS({
+            layer: "ORTHOIMAGERY.ORTHOPHOTOS",
+            olParams: {
+                visible: true,
+                opacity: 0.8,
+                grayscale: true
+            }
+        });
+
+        // Création de la map
+        map = new ol.Map({
+            target: "map",
+            view: new ol.View({
+                center: [288074.8449901076, 6247982.515792289],
+                zoom: 6
+            }),
+            layers: [
+                osm,
+                ortho
+            ]
+        });
+
+        // Appel du LayerSwitcher
+        layerSwitcher = new ol.control.LayerSwitcher(
+            {
+                layers: [
+                    {
+                        layer: osm,
+                        config: {
+                            title: 'open street',
+                            thumbnail: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'
+                        }
+                    },
+                    {
+                        layer: ortho,
+                        config: {
+                            locked: true,
+                            producer: 'IGN',
+                            thumbnail: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/IGN_logo_2012.svg'
+                        }
+                    }
+                ],
+                options: {
+                    collapsed: false,
+                    panel: true,
+                    counter: true,
+                    // allowDraggable: false,
+                    // allowTooltips: true,
+                    allowDelete: true,
+                    headerButtons: [
+                        {
+                            label: 'Ajouter',
+                            title: 'Ajouter une couche',
+                            icon: "fr-icon-add-line",
+                            cb: (e, switcher) => { addVectorLayer(switcher.getMap()); },
+                        },
+                        {
+                            label: 'Créer un groupe',
+                            icon: "fr-icon-folder-2-line",
+                            cb: (e, switcher) => { console.log(e, switcher); },
+                        },
+                    ],
+                    advancedTools: [
+                        // Bouton de base
+                        {
+                            key: ol.control.LayerSwitcher.switcherButtons.INFO,
+                        },
+                        // Surcharge bouton existant
+                        {
+                            key: ol.control.LayerSwitcher.switcherButtons.GREYSCALE,
+                            label: 'Tiles (N&B)',
+                            icon: 'fr-icon-france-fill',
+                            className: 'style-action',
+                            accepted: ["Tile"],
+                            cb: callBackBtn,
+                            attributes: {
+                                'data-action': 'grey-scale'
+                            }
+                        },
+                        // // Classe DSFR
+                        {
+                            label: 'Verrouiler',
+                            icon: 'fr-icon-lock-fill',
+                            accepted: [ol.layer.Vector, ol.layer.GeoportalWMTS],
+                            cb: lockLayer,
+                        },
+                    ]
+                }
+            });
+
+        catalog = new ol.control.Catalog({
+            collapsed: false,
+            // position: "top-left",
+            titlePrimary: "Catalogue des cartes",
+            layerLabel: "title",
+            layerThumbnail: true,
+            size: "lg",
+            search: {
+                display: false,
+                // criteria : ["name","title","description"]
+            },
+            categories: [
+                {
+                    title: "Cartes de références",
+                    id: "base",
+                    filter: {
+                        field: "base",
+                        value: "true"
+                    }
+                },
+                {
+                    title: "Toutes les cartes",
+                    id: "data",
+                    search: true,
+                    items: [
+                        {
+                            title: "Thème",
+                            default: true,
+                            section: true,
+                            icon: true,
+                            iconJson: [
+                                { "id": "biota", "name": "Biologie, faune et flore", "icon": "fr-icon-leaf-fill" },
+                                { "id": "boundaries", "name": "Limites politiques et administratives", "icon": "fr-icon-france-line" },
+                                { "id": "climatologyMeteorologyAtmosphere", "name": "Climatologie, météorologie, atmosphère", "icon": "fr-icon-heavy-showers-fill" },
+                                { "id": "economy", "name": "Économie", "icon": "fr-icon-line-chart-fill" },
+                                { "id": "elevation", "name": "Altimétrie", "icon": "fr-icon-map-pin-2-fill" },
+                                { "id": "environment", "name": "Environnement", "icon": "fr-icon-seedling-fill" },
+                                { "id": "farming", "name": "Agriculture", "icon": "fr-icon-plant-fill" },
+                                { "id": "geoscientificInformation", "name": "Sciences de la terre, géosciences", "icon": "fr-icon-earth-fill" },
+                                { "id": "health", "name": "Santé", "icon": "fr-icon-capsule-fill" },
+                                { "id": "imageryBaseMapsEarthCover", "name": "Carte de référence de la couverture terrestre", "icon": "fr-icon-france-fill" },
+                                { "id": "intelligenceMilitary", "name": "Infrastructures militaires", "icon": "fr-icon-medal-fill" },
+                                { "id": "inlandWaters", "name": "Eaux intérieures, Hydrographie", "icon": "fr-icon-flood-fill" },
+                                { "id": "location", "name": "Localisation", "icon": "fr-icon-road-map-fill" },
+                                { "id": "oceans", "name": "Océans", "icon": "fr-icon-fr--submersion-fill" },
+                                { "id": "planningCadastre", "name": "Cadastre, aménagement", "icon": "fr-icon-community-fill" },
+                                { "id": "society", "name": "Société", "icon": "fr-icon-group-fill" },
+                                { "id": "structure", "name": "Constructions et ouvrages", "icon": "fr-icon-compasses-2-fill" },
+                                { "id": "transportation", "name": "Infrastructures de transport", "icon": "fr-icon-bus-fill" },
+                                { "id": "utilitiesCommunication", "name": "Télécommunication, approvisionnement et énergie", "icon": "fr-icon-radar-fill" }],
+                            filter: {
+                                field: "thematic",
+                                value: "*"
+                                // value : ["Hydrologie", "Agriculture", "Transports"] // all : "*"
+                            }
+                        },
+                        {
+                            title: "Producteur",
+                            section: true,
+                            icon: true,
+                            iconJson: [
+                                { "id": "ign", "name": "IGN", "icon": "fr-icon-government-fill" }
+                            ],
+                            filter: {
+                                field: "producer",
+                                value: "*"
+                            }
+                        },
+                        {
+                            title: "Service",
+                            section: true,
+                            icon: true,
+                            iconJson: [
+                                { id: "wmts", name: "WMTS", icon: "fr-icon-earth-line" },
+                                { id: "wfs", name: "WFS", icon: "fr-icon-earth-fill" },
+                                { id: "wms", name: "WMS", icon: "fr-icon-earth-line" },
+                                { id: "tms", name: "TMS", icon: "fr-icon-earth-fill" }
+                            ],
+                            filter: {
+                                field: "service",
+                                value: "*"
+                            }
+                        }
+                    ]
+                },
+            ]
+        });
+
+        // Evenement
+        layerSwitcher.on("layerswitcher:add", function (e) {
+            console.warn("layer", e, e.layer);
+        });
+        layerSwitcher.on("layerswitcher:remove", function (e) {
+            console.warn("layer", e, e.layer);
+        });
+        layerSwitcher.on("layerswitcher:change:opacity", function (e) {
+            console.warn("layer", e, e.layer, e.opacity);
+        });
+        layerSwitcher.on("layerswitcher:change:visibility", function (e) {
+            console.warn("layer", e, e.layer, e.visibility);
+        });
+        layerSwitcher.on("layerswitcher:change:grayscale", function (e) {
+            console.warn("layer", e, e.layer, e.grayscale);
+        });
+        layerSwitcher.on("layerswitcher:extent", function (e) {
+            console.warn("layer", e);
+        });
+
+        layerSwitcher.on("layerswitcher:lock", function (e) {
+            console.warn("layer", e, e.layer, e.locked);
+        });
+        layerSwitcher.on("layerswitcher:change:locked", function (e) {
+            console.warn("layer", e, e.layer, e.locked);
+        });
+        layerSwitcher.on("layerswitcher:change:selected", function (e) {
+            console.warn("layer", e, e.layer, e.previous);
+        });
+        layerSwitcher.on("layerswitcher:change:position", function (e) {
+            console.warn("layer", e, e.position, e.layer, e.layers);
+        });
+
+        window.layerSwitcher = layerSwitcher;
+
+        map.once("loadend", (e) => {
+            // Ajout du LayerSwitcher à la carte
+            map.addControl(layerSwitcher);
+            // Ajout du cartalogue
+            map.addControl(catalog);
+
+            addVectorLayer(map)
+            addMapsLayer(map)
+            addOSMLayer(map)
+        })
+    };
+
+    Gp.Services.getConfig({
+        customConfigFile: "{{ configurl }}",
+        callbackSuffix: "",
+        // apiKey: "{{ apikey }}",
+        timeOut: 20000,
+        onSuccess: createMap,
+        onFailure: (e) => {
+            console.log(e)
+            console.error(e.stack)
+        }
+    });
+
+    addVectorLayer = (map) => {
+        const vector = new ol.layer.Vector({
+            source: new ol.source.Vector(),
+            title: 'Dessin',
+            producer: 'Moi',
+            thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(0,0,145,1)'%3E%3Cpath d='M21 1.99669C6 1.99669 4 15.9967 3 21.9967C3.66667 21.9967 4.33275 21.9967 4.99824 21.9967C5.66421 18.6636 7.33146 16.8303 10 16.4967C14 15.9967 17 12.4967 18 9.49669L16.5 8.49669C16.8333 8.16336 17.1667 7.83002 17.5 7.49669C18.5 6.49669 19.5042 4.99669 21 1.99669Z'%3E%3C/path%3E%3C/svg%3E"
+        });
+        map.addLayer(vector);
+    };
+
+    addMapsLayer = (map) => {
+        const tile = new ol.layer.Tile({
+            source: new ol.source.GeoportalWMTS({
+                layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+            }), // , zIndex : 0
+            grayscale: true
+        });
+        map.addLayer(tile);
+    };
+
+    addOSMLayer = (map) => {
+        const osm = new ol.layer.Tile({
+            source: new ol.source.OSM(),
+            // zIndex : 4,
+            opacity: 0.5,
+            producer: 'Open Street Map'
+        });
+        map.addLayer(osm); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
+    };
+    addVTLayer = (map) => {
+        const layer = new ol.layer.GeoportalMapBox({
+            layer: "PLAN.IGN",
+            style: "standard"
+        }, {
+            visible: true,
+            opacity: 0.8,
+            grayscale: true
+        });
+        map.addLayer(layer); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
+    };
+
+</script>
+{{/content}}
+
+{{/extend}}
