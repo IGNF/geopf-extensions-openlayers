@@ -1973,7 +1973,7 @@ class SearchEngine extends Control {
         Gp.Services.geocode({
             apiKey : this.options.apiKey,
             ssl : this.options.ssl,
-            q : GeocodeUtils.getSuggestedLocationFreeform(suggestedLocation),
+            q : GeocodeUtils.getSuggestedLocationQuery(suggestedLocation),
             index : suggestedLocation.type,
             // callback onSuccess
             onSuccess : function (response) {
@@ -2038,7 +2038,9 @@ class SearchEngine extends Control {
         };
 
         // on ajoute le texte de l'autocomplétion dans l'input
-        var label = GeocodeUtils.getSuggestedLocationFreeform(this._locationsToBeDisplayed[idx]);
+        var location = this._locationsToBeDisplayed[idx];
+        var label = GeocodeUtils.getSuggestedLocationFreeform(location);
+        var query = GeocodeUtils.getSuggestedLocationQuery(location);
         this._setLabel(label);
 
         // on sauvegarde le localisant
@@ -2056,7 +2058,7 @@ class SearchEngine extends Control {
             index : "address,poi",
             limit : 1,
             returnTrueGeometry : true,
-            location : label,
+            location : query,
             onSuccess : (results) => {
                 if (results.locations[0].placeAttributes.truegeometry) {
                     var geom = JSON.parse(results.locations[0].placeAttributes.truegeometry);
