@@ -57,7 +57,7 @@
     "doctoc": "^2.4.0",
     "dompurify": "^3.4.5",
     "eventbusjs": "0.2.0",
-    "geoportal-access-lib": "3.4.6",
+    "geoportal-access-lib": "file:geoportal-access-lib-3.4.7-pr-94.tgz",
     "lit": "^3.2.1",
     "loglevel": "^1.9.1",
     "marked": "^16.2.1",

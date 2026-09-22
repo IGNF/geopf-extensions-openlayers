@@ -25,7 +25,8 @@ __DATE__
 
   - ContextMenu : correction de l'affichage de numéro de parcelle cadastrale lorsqu'on clique sur "Adresse & Coordonnées du lieu" (#587)
   - ContextMenu : correction de l’affichage de l’entête du panel (#589)
-  
+  - SearchEngine : correction de la recherche de POI des communes de 3 caractères ()
+ 
 * 🔒 [Security]
 
 ---
