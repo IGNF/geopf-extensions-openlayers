@@ -42,6 +42,20 @@
             <!-- map -->
             <div id="map">
             </div>
+            <div style="margin:1rem">
+                <button class="fr-btn" id="addLayer">Ajouter une couche</button>
+            </div>
+            <div id="description" style="margin:1rem">
+                <p>
+                    Si <code>draw.addToMap = false</code> la gestion de la couche sur laquelle dessiner est gérée par le client. C'est le cas dans cet exemple : la sélection d'une couche dans le gestionnaire de couche modifie la couche à modifier.
+                </p>
+                <p>
+                    Il est possible d'ajouter une couche à la carte et de vérifier si la sélection d'une couche se répercute bien sur le widget de dessin.
+                </p>
+                <p>
+                    Si la couche n'est pas modifiable (source n'est pas un ol.source.Vector), une alerte est envoyée.
+                </p>
+            </div>
 {{/content}}
 
 {{#content "js"}}
@@ -80,30 +94,49 @@
                             counter : true
                         }
                     });
-                    map.addControl(layerSwitcher);
 
                     const iso = new ol.control.Isocurve({
                         draggable: true,
                         position: "top-right",
                     });
-                    map.addControl(iso);
 
                     const draw = new ol.control.Draw({
                         position: "top-right",
                         style: true,
-                        addToMap: true,
+                        addToMap: false,
                         gutter: false
                     });
+
+                    layerSwitcher.on("layerswitcher:change:selected", (e) => {
+                        console.log("change selected layer", e)
+                        draw.setLayer(e.layer);
+                    })
+
+                    draw.on("drawing:add:layer", (e) => {
+                        console.log("drawing add layer", e)
+                    })
+
+                    draw.on("drawstart", (e) => {
+                        if (!(e.target?.getSource?.() instanceof ol.source.Vector)) {
+                            alert("Couche non éditable")
+                        }
+                    })
+
+                    map.addControl(layerSwitcher);
+                    map.addControl(iso);
                     map.addControl(draw);
 
-                    // Ouvre l'éditeur de style au clic sur "éditer"
-                    layerSwitcher.on("layerswitcher:edit", (e) => {
-                        draw.setLayer(e.layer);
-                        draw.setActive(true);
+                    document.getElementById("addLayer")?.addEventListener("click", () => {
+                        const title = prompt("Nom de la couche ?", "Croquis");
+                        const source = new ol.source.Vector({})
+                        const layer = new ol.layer.Vector({
+                            source: source,
+                            title: title ?? "Croquis"
+                        });
+                        map.addLayer(layer);
                     })
 
                     window.draw = draw;
-                    draw.getSelect().on("select", (e) => console.log(e))
                 };
            </script>
 {{/content}}

@@ -42,6 +42,14 @@
             <!-- map -->
             <div id="map">
             </div>
+            <div id="description" style="margin:1rem">
+                <p>
+                    Dans cet exemple, la fermeture du contrôle de dessin (draw.on("change:active")) effectue un draw.setLayer() afin de créer une nouvelle couche de dessin à chaque fois qu'on rouvre le contrôle.
+                </p>
+                <p>
+                    À l'appui sur le bouton "éditer" d'une couche, cela modifie la couche à modifier dans le widget de dessin (draw.setLayer(layer))
+                </p>
+            </div>
 {{/content}}
 
 {{#content "js"}}
@@ -96,10 +104,21 @@
                     });
                     map.addControl(draw);
 
-                    // Ouvre l'éditeur de style au clic sur "éditer"
+                    draw.on("change:active", (e) => {
+                        // Désactive la couche lorsqu'on ferme le contrôle pour en rajouter une après
+                        if (e.target.get(e.key) === false) {
+                            e.target.setLayer();
+                        }
+                    });
+
                     layerSwitcher.on("layerswitcher:edit", (e) => {
                         draw.setLayer(e.layer);
                         draw.setActive(true);
+                    })
+
+                    map.getLayers().on("add", (e) => {
+                        console.info("Ajout d'une couche de dessin")
+                        console.log(e);
                     })
 
                     window.draw = draw;

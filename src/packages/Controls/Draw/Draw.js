@@ -33,7 +33,9 @@ import { SelectEvent } from "ol/interaction/Select";
  * @property {VectorSource} [source] Source à ajouter au contrôle initialement. Peut-être fait après via la méthode `setSource`. Si aucune source n'est donnée, en ajoute une de base.
  * @property {Boolean|Modify} [modify=true] Si faux, n'ajoute pas d'interaction pour modifier les objets. Sinon, ajoute une interaction de type {@link ModifyingInteraction ModifyingInteraction}, héritant de {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html Modify}, qui s'active à la sélection d'un objet. Une interaction de type `Modify` peut aussi être passée en paramètre (auquel cas ).
  * @property {Boolean|Snap} [snap=false] Si vrai, ajoute une interaction {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Snap-Snap.html Snap}, qui s'active au moment du dessin. La source utilisée est celle définie via la méthode `setSource` du contrôle. Une interaction de type `Snap` peut aussi être passée en paramètre.
- * @property {Boolean} [addToMap=true] Si vrai, ajoute une couche par défaut à la carte. Cela n'a pas d'effet si une source est donnée via le paramètrr `source`.
+ * @property {Boolean} [addToMap=true] Si vrai, la gestion de la couche de dessin est gérée par le widget. Sinon, la gestion de cette couche doit être faite par le client directement, via l'écoute à l'événement `drawing:add:layer`.
+ * @property {String} [layerTitle = "Croquis"] Titre de la couche (seulement si `addToMap=true`).
+ * @property {String} [layerDescription = "Mon croquis"] Description de la couche (seulement si `addToMap=true`).
  * @property {Boolean|Dialog} [style=true] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Si faux, n'ajoute aucun style.
  * Le contenu de ce panneau est géré par les formulaires donné dans le paramètre `forms`.
  * Un dialogue peut aussi être mis directement sur ce paramètre.
@@ -149,6 +151,7 @@ var logger = Logger.getLogger("draw");
  * Contrôle de dessin.
  *
  * @alias ol.control.Draw
+ * @fires drawing:add:layer À l'ajout d'une couche
  * @module Draw
  */
 class Draw extends ToggleContent {
@@ -215,6 +218,8 @@ class Draw extends ToggleContent {
         options.addToMap ??= true;
         options.modify ??= true;
         options.snap ??= false;
+        options.layerTitle ??= "Croquis";
+        options.layerDescription ??= "Mon croquis";
 
         // Tableau vide par défaut, les interactions sont ajoutés à la fin du constructeur
         options.drawingInteractions ??= [];
@@ -233,19 +238,8 @@ class Draw extends ToggleContent {
             });
         }
 
-        if (!(options.source instanceof VectorSource)) {
-            this.source = new VectorSource({});
-            if (options.addToMap) {
-                // On ajoute la source à une couche, que l'on ajoutera sur la carte.
-                this.layer = new VectorLayer({
-                    source : this.source
-                });
-                // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant.
-                this.layer.gpResultLayerId = "drawing";
-            }
-        } else {
-            this.source = options.source;
-        }
+        this.layer = null;
+        this.source = options.source;
 
         this.snap = options.snap;
         // Création de l'interaction snap
@@ -254,7 +248,6 @@ class Draw extends ToggleContent {
                 source : this.source,
             });
         }
-
 
         super._initialize(options);
         /**
@@ -329,7 +322,6 @@ class Draw extends ToggleContent {
         super._initEvents(options);
         // Gère les interactions (une seule active à la fois)
         this.toggleInteractions.on("add", function (e) {
-            const array = e.target;
             const toggle = e.element;
             toggle.on("change:active", (e) => {
                 // Désactive le toggle actif
@@ -342,6 +334,36 @@ class Draw extends ToggleContent {
                 }
             });
             toggle.getInteraction()?.on(["drawstart", "drawend", "drawabort"], this.dispatchEvent.bind(this));
+            if (toggle.getInteraction() instanceof DrawInteraction) {
+                // Envoie un événement seulement si c'est une interaction de dessin
+                toggle.getInteraction()?.on(["change:active"], (e) => {
+                    // Vérifie si une couche est ajoutée ou non si le toggle est actif
+                    if (e.target.get(e.key) === true) {
+                        if (options.addToMap) {
+                            if (this.layer === null) {
+                                const source = new VectorSource({});
+                                // On ajoute la source à une couche, que l'on ajoutera sur la carte.
+                                const layer = new VectorLayer({
+                                    source : source,
+                                    title : options.layerTitle,
+                                    description : options.layerDescription
+                                });
+                                // on rajoute le champ gpResultLayerId permettant d'identifier une couche crée par le composant.
+                                layer.gpResultLayerId = "drawing";
+                                this.setLayer(layer);
+                                try {
+                                    this.getMap().addLayer(this.layer);
+                                } catch {
+                                    console.info("Couche déjà ajoutée à la carte");
+                                }
+                            }
+                        } else {
+                            // Envoi un événement sur lequel écouter
+                            this.dispatchEvent("drawing:add:layer");
+                        }
+                    }
+                });
+            }
         }.bind(this));
 
         // Ferme l'interaction si on ferme la modale
@@ -531,12 +553,6 @@ class Draw extends ToggleContent {
 
             this.styleDialog && map.addControl(this.styleDialog);
 
-            try {
-                this.layer && map.addLayer(this.layer);
-            } catch (error) {
-                console.warn("[DRAW] : Couche déjà ajoutée à la carte");
-            }
-
             this.snap && map.addInteraction(this.snap);
         }
     }
@@ -551,15 +567,10 @@ class Draw extends ToggleContent {
 
     /**
      * Modifie la source pour les interactions de dessins
-     * @param {VectorSource} source Source à ajouter
+     * @param {VectorSource} [source] Source à ajouter
      */
     setSource (source) {
-        if (!(source instanceof VectorSource)) {
-            // La source n'est pas valide, on remplace par une source vide
-            this.source = new VectorSource({});
-        } else {
-            this.source = source;
-        }
+        this.source = source;
         // Applique la nouvelle source sur chaque interaction
         this.toggleInteractions.forEach(toggle => {
             toggle.getInteraction().setSource?.(this.source);
@@ -619,6 +630,9 @@ class Draw extends ToggleContent {
             } else {
                 console.warn("La source de la couche n'est pas de type VectorSource", layer);
             }
+        } else {
+            this.layer = null;
+            this.setSource();
         }
     }
 
