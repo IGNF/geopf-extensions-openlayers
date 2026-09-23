@@ -266,6 +266,11 @@
     height: 24px;
 }
 
+.pnx-share-copy-icon {
+    -webkit-mask: url("img/dsfr/copy.svg") center no-repeat;
+    mask: url("img/dsfr/copy.svg") center no-repeat;
+}
+
 /* popup */
 .pnx-popup-content {
   bottom: 20px;

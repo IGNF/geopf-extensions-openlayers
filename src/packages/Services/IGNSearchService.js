@@ -269,7 +269,7 @@ class IGNSearchService extends AbstractSearchService {
      * @returns {String} Titre à afficher
      */
     getItemTitle (obj) {
-        return obj.fullText;
+        return obj && obj.fullText ? obj.fullText : "";
     }
 
     /**
@@ -463,7 +463,7 @@ class IGNSearchService extends AbstractSearchService {
         Gp.Services.geocode({
             apiKey : this.options.apiKey,
             ssl : this.options.ssl,
-            q : GeocodeUtils.getSuggestedLocationFreeform(suggestedLocation),
+            q : GeocodeUtils.getSuggestedLocationQuery(suggestedLocation),
             index : suggestedLocation.type,
             // callback onSuccess
             onSuccess : function (response) {
@@ -513,17 +513,20 @@ class IGNSearchService extends AbstractSearchService {
         }
         // on ajoute le texte de l'autocomplétion dans l'input
         let label;
+        let query = null;
         let index = this.get("index");
         let truegeometry = this.get("returnTrueGeometry");
         if (typeof location === "string") {
             // Location est un texte, on prend les valeurs par défaut
             label = location;
+            query = location;
         } else {
             // location est un objet : on vérifie les informations qu'il comporte
 
             // Récupère les infos (s'il y'en a)
             index = location.type ? location.type : index;
             label = GeocodeUtils.getSuggestedLocationFreeform(location);
+            query = GeocodeUtils.getSuggestedLocationQuery(location);
             // TODO : AMÉLIORER CETTE PARTIE (REDONDANTE)
             // Enlève l'ajout du prettify
             if ((location.type === "PositionOfInterest" && location.poiType[0] === "administratif" &&
@@ -569,7 +572,7 @@ class IGNSearchService extends AbstractSearchService {
             index : index,
             limit : this.get("limit"),
             returnTrueGeometry : truegeometry,
-            location : label,
+            location : query,
             filters : filters,
             onSuccess : this._onSuccessSearch.bind(this),
             onFailure : this._onFailureSearch.bind(this, location),

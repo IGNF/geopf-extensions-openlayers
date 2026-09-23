@@ -19,23 +19,16 @@ __DATE__
 
 * 🔨 [Changed]
 
-  - Tooltips : les tooltips au survol des boutons ne peuvent pas être survolées (#571)
-  - LayerImport : le bouton retour est inclut dans le panel header (#575)
-  - GFI : activation du GFI au clic gauche et selon panels incompatibles (#1167)
-  - GFI : suppression des animations à l’ouverture des accordéons (#580)
-  - ContextMenu : modification des paramètres par défaut (#1167)
-  - SearchBar : option selectGeometry : permet de sélectionner uniquement l'extent plutot que le point si existant (besoin extraction)
-  - LayerImport : alternative UI pour importer avec un drag and drop de fichier (#576)
-
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
 
-  - LayerImport : fixe la hauteur du contenu dans certains cas (#575)
-  - GFI : empêche que l’ouverture de l’accordéon déplace le site en entier (#580)
-
+  - ContextMenu : correction de l'affichage de numéro de parcelle cadastrale lorsqu'on clique sur "Adresse & Coordonnées du lieu" (#587)
+  - ContextMenu : correction de l’affichage de l’entête du panel (#589)
+  - SearchEngine : correction de la recherche de POI des communes de 3 caractères (#593)
+ 
 * 🔒 [Security]
 
 ---

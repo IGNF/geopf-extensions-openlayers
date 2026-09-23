@@ -5,6 +5,31 @@ import Gp from "geoportal-access-lib";
 
 const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org";
 
+// endpoint de partage
+const PANORAMAX_DEFAULT_ENDPOINT = "https://explore.panoramax.fr/";
+const GEOPLATEFORME_DEFAULT_ENDPOINT = "https://cartes.gouv.fr/explorer-les-cartes/";
+
+// l'URL de partage se construit a partir de l'instance et de l'id de l'image
+// ex. carte.gouv.fr/photo/:sequenceID/:pictureID/:center/:zoom/
+// ex. panoramax https://explore.panoramax.fr/fr/index?focus=pic&map=<zoom>/<lat>/<lon>&pic=<pictureID>&seq=<sequenceID>
+function buildShareUrl (share, endpoint, pictureId, sequenceId, center, zoom = 17) {
+    if (!pictureId) { return null; }
+
+    var base = endpoint?.replace(/\/+$/, "").replace(/\/api$/, "");
+    if (share.type === "geoplateforme") {
+        base = (share.url || GEOPLATEFORME_DEFAULT_ENDPOINT).replace(/\/+$/, "");
+        return sequenceId
+            ? `${base}/photo/${encodeURIComponent(sequenceId)}/${encodeURIComponent(pictureId)}/${encodeURIComponent(center?.lat)},${encodeURIComponent(center?.lon)}/${encodeURIComponent(zoom)}`
+            : `${base}/photo//${encodeURIComponent(pictureId)}/${encodeURIComponent(center?.lat)},${encodeURIComponent(center?.lon)}/${encodeURIComponent(zoom)}`;
+    }
+    if (share.type === "panoramax") {
+        base = (share.url || PANORAMAX_DEFAULT_ENDPOINT).replace(/\/+$/, "");
+        return `${base}/fr/index?focus=pic&map=${encodeURIComponent(zoom)}/${encodeURIComponent(center?.lat)}/${encodeURIComponent(center?.lon)}&pic=${encodeURIComponent(pictureId)}&seq=${encodeURIComponent(sequenceId)}`;
+    }
+    
+    return `${base}/?pic=${encodeURIComponent(pictureId)}`;
+}
+
 function onceParentAvailable (comp) {
     if (comp._parent) {
         return Promise.resolve(comp._parent);
@@ -150,10 +175,19 @@ export default class PictureLegendWidget extends LitElement {
         _expanded : { state : true },
     };
 
-    constructor () {
+    constructor (share) {
         super();
+        this._share = share;
         this._expanded = window.matchMedia("(min-width: 576px)").matches;
         this._onLegendClick = this._onLegendClick.bind(this);
+    }
+
+    get share () {
+        return this._share;
+    }
+
+    set share (share) {
+        this._share =  share;
     }
 
     createRenderRoot () {
@@ -196,6 +230,14 @@ export default class PictureLegendWidget extends LitElement {
         clearTimeout(this._addrTimer1);
         this._caption = picMeta?.caption;
         this._hdUrl = picMeta?.panorama?.hdUrl;
+        this._shareUrl = buildShareUrl(
+            this._share, 
+            this._parent?.endpoint, 
+            picMeta?.id, 
+            picMeta?.sequence?.id, 
+            { lat : picMeta?.gps[1], lon : picMeta?.gps[0] }, 
+            17
+        );
 
         if (picMeta) {
             this._visibility = picMeta.properties?.["geovisio:visibility"] || null;
@@ -248,6 +290,14 @@ export default class PictureLegendWidget extends LitElement {
 
     /** @private */
     _onLegendClick () {
+        this._closeGroup();
+    }
+
+    /** @private */
+    _onCopyShareUrl () {
+        if (this._shareUrl) {
+            navigator.clipboard?.writeText(this._shareUrl);
+        }
         this._closeGroup();
     }
 
@@ -345,6 +395,16 @@ export default class PictureLegendWidget extends LitElement {
                     background-color: var(--background-default-grey);
                     --hover-tint: var(--hover);
                 }
+                button.link {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    border: none;
+                    cursor: pointer;
+                    text-align: left;
+                    font: inherit;
+                    color: inherit;
+                }
             </style>
             <div class="gpf-picture-legend-widget fr-p-1v ${this._expanded ? "is-expanded" : ""}">
                 <div class="column fixed">
@@ -370,6 +430,14 @@ export default class PictureLegendWidget extends LitElement {
                                         href=${this._hdUrl}
                                         @click=${this._closeGroup}
                                     >Afficher l’image HD</a>
+                                    <button
+                                        class="fr-px-2v fr-py-3v link"
+                                        type="button"
+                                        @click=${this._onCopyShareUrl}
+                                    >
+                                        Copier le lien de partage
+                                        <span class="pnx-share-copy-icon fr-icon--sm fr-ml-1v" aria-hidden="true"></span>
+                                    </button>
                                 </pnx-list-group>
                             </pnx-togglable-group>
                             <pnx-button kind="superflat" size="sm" @click=${this._onExpand}>

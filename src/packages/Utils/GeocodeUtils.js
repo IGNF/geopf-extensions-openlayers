@@ -53,18 +53,34 @@ var GeocodeUtils = {
     getSuggestedLocationFreeform : function (suggestedLocation) {
         if (suggestedLocation.fullText) {
             return suggestedLocation.fullText;
-        } else {
-            var values = [];
-            values.push(suggestedLocation.street || "");
-            values.push(suggestedLocation.postalCode || "");
-            values.push(suggestedLocation.commune || "");
-
-            if (suggestedLocation.type === "PositionOfInterest") {
-                values.push(suggestedLocation.poi || "");
-                values.push(suggestedLocation.kind || "");
-            }
-            return values.join(" - ");
         }
+        if (suggestedLocation.type === "PositionOfInterest" && Array.isArray(suggestedLocation.names) && suggestedLocation.names.length > 0 && suggestedLocation.names[0]) {
+            return suggestedLocation.names[0];
+        }
+        var values = [];
+        values.push(suggestedLocation.street || "");
+        values.push(suggestedLocation.postalCode || "");
+        values.push(suggestedLocation.commune || "");
+
+        if (suggestedLocation.type === "PositionOfInterest") {
+            values.push(suggestedLocation.poi || "");
+            values.push(suggestedLocation.kind || "");
+        }
+        return values.join(" - ");
+    },
+
+    /**
+     * Return the geocoding query term of a structured suggested item.
+     * Prefer the POI display name when available, while keeping the fullText label for UI display.
+     *
+     * @param {Object} suggestedLocation - Suggested location
+     * @returns {String} query string for geocoding
+     */
+    getSuggestedLocationQuery : function (suggestedLocation) {
+        if (suggestedLocation.type === "PositionOfInterest" && Array.isArray(suggestedLocation.names) && suggestedLocation.names.length > 0 && suggestedLocation.names[0]) {
+            return suggestedLocation.names[0];
+        }
+        return GeocodeUtils.getSuggestedLocationFreeform(suggestedLocation);
     }
 };
 

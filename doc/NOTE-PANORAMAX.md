@@ -1,92 +1,118 @@
 # Fonctionnement du widget **Panoramax**
 
----
+## Architecture et cycle de vie
 
-## Architecture générale
+`ol.control.Panoramax` étend `ol.control.Control`. Son implémentation se trouve dans `src/packages/Controls/Panoramax/` :
 
-Le widget est une classe `Panoramax extends Control` (OpenLayers) composée de
-deux fichiers :
+- `Panoramax.js` pilote les couches OpenLayers, le viewer et les interactions ;
+- `PanoramaxDOM.js` construit les panneaux et boutons ;
+- `PictureLegendWidget.js` fournit la légende, le géocodage inverse et le lien de partage ;
+- `PnxMiniMapWidget.js` ajoute une mini-carte au viewer.
 
-- Panoramax.js — logique principale (~2800 lignes)
-- PanoramaxDOM.js — génération du DOM
+À la construction, le contrôle initialise ses options et son DOM. Lors de l'ouverture, il charge le groupe de couches Panoramax, le fond optionnel, le panneau d'options, la fenêtre de visualisation et le composant `<pnx-photo-viewer>`. Le viewer est créé une seule fois par instance ; son cycle de vie est nettoyé lors d'un retrait de la carte afin de permettre un `map.removeControl()` suivi d'un `map.addControl()`.
 
----
+`collapsed: false` ouvre le contrôle dès son attachement. Avec `auto: true` (valeur par défaut), les écouteurs de clic et de survol sont ajoutés automatiquement à la carte.
 
-## Cycle de vie
+## Configuration utile
 
-### 1. Construction
+```js
+var panoramax = new ol.control.Panoramax({
+  collapsed: true,
+  auto: true,
+  hover: true,
+  position: "bottom-left",
+  layer: {
+    url: "https://api.panoramax.xyz/api/map/style.json",
+    name: "Panoramax"
+  },
+  background: {
+    active: false
+  },
+  buttonsWindow: {
+    filters: {
+      display: true,
+      exclusive: false,
+      content: { types: true, dates: true, periodes: true }
+    }
+  },
+  visualizationWindow: {
+    size: "fullscreen-map"
+  },
+  viewer: {
+    endpoint: "https://explore.panoramax.fr/api",
+    share: {
+      url: "https://cartes.gouv.fr/explorer-les-cartes/",
+      type: "geoplateforme"
+    },
+    pnxOptions: {
+      psvOptions: {}
+    }
+  }
+});
 
+map.addControl(panoramax);
 ```
-constructor → initialize() → initContainer()
-```
 
-- `initialize()` : stocke les options, crée les propriétés d'état (`collapsed`, `hover`, `auto`, références DOM, listeners…)
-- `initContainer()` : construit tout le DOM — deux panneaux principaux :
-  - **`panelPanoramaxViewerContainer`** : le visualiseur de photos
-  - **`panelPanoramaxButtonsContainer`** : les boutons de contrôle (filtres, contributions, fond de carte…)
+Les cibles expérimentales `buttonsWindow.target` et `visualizationWindow.target` acceptent un `HTMLElement`, un identifiant ou un sélecteur CSS. L'option `viewer.pnxOptions.psvOptions` est affectée à la propriété `psv-options` du web component ; ne pas la transmettre avec `setAttribute`.
 
-### 2. Attachement à la carte (`setMap`)
+## Interactions avec la carte
 
-- Active le mode **draggable** si besoin
-- Déclenche l'ouverture si `collapsed: false`
-- Appelle `addEventsListeners(map)` si `auto: true` (écoute `click` et `pointermove`)
-
-### 3. Ouverture du panneau (`onShowPanoramaxClick`)
-
-Appelle `load()` qui enchaîne de façon asynchrone :
-
-1. `setLayerGroup()` — crée un `LayerGroup` OL pour regrouper les couches
-2. `setBackground()` — charge une couche de fond (style Mapbox Vector)
-3. `setLayer()` — charge la couche Panoramax (TMS vecteur `MapboxVectorLayer`)
-4. `initButtons()` — affiche le panneau des boutons
-5. `initVisualizationWindow()` → `setSizeWindow()` — applique la taille (small/medium/large/fullscreen/fullscreen-map)
-6. `initPhotoViewer()` — crée le web component `<pnx-photo-viewer>` et ses widgets
-
-### 4. Fermeture (`reset`)
-
-Supprime les couches, réinitialise le viewer, les boutons, les overlays de prévisualisation.
-
----
-
-## Interactions carte
-
-| Événement | Comportement |
+| Couche | Comportement par défaut au clic |
 |---|---|
-| `click` sur `pictures` | Ouvre le viewer avec `displayPhotoViewer(sequenceId, pictureId)` |
-| `click` sur `grid` | Zoom +4 niveaux |
-| `click` sur `sequences` | Zoom +2 niveaux |
-| `pointermove` (debounce 300ms) | Affiche une popup de prévisualisation (`displayPreview`) si `hover: true` |
+| `grid` | Zoom sur la position sélectionnée |
+| `sequences` | Zoom ou recentrage vers le niveau 17 |
+| `pictures` | Ouvre l'image dans le viewer |
 
----
+Les interactions se configurent avec `interactions.grid`, `interactions.sequences` et `interactions.pictures`, chacun possédant `active` et `actions`. Le survol affiche une prévisualisation lorsque `hover: true`.
 
-## Viewer de photos
+## Ouverture programmée
 
-Basé sur le web component `<pnx-photo-viewer>` de `@panoramax/web-viewer`. Des widgets personnalisés y sont injectés via des slots :
+Une image peut être ouverte depuis une URL ou une action externe en définissant, dans cet ordre, les propriétés OpenLayers `sequence`, `picture` et `display` :
 
-- `pnx-button` (retour, fermeture, plein écran) → slots `top-left`/`top-right`/`bottom-right`
-- `pnx-widget-zoom`
-- `pnx-picture-legend`
+```js
+panoramax.setCollapsed(false);
+panoramax.set("sequence", sequenceId);
+panoramax.set("picture", pictureId);
+panoramax.set("display", true);
+```
 
-Au `ready`, certains widgets natifs sont supprimés (`pnx-widget-player`, `pnx-annotations-switch`, `pnx-bottom-drawer`).
+Si le viewer n'est pas encore prêt, le contrôle attend l'événement `pnx:ready` avant de sélectionner l'image. Pour fermer le viewer sans fermer le contrôle, utiliser `panoramax.set("display", false)`.
 
----
+## Viewer et partage
 
-## Filtres (couche Mapbox)
+Le widget repose sur `<pnx-photo-viewer>` de `@panoramax/web-viewer`. Les widgets optionnels sont `btnBack`, `btnClose`, `btnZoom`, `btnFullscreen`, `cmpPictureLegend` et `cmpMinimap`. Au signal `ready` du viewer, les widgets natifs Player, annotations et légende basse sont retirés au profit des composants intégrés au contrôle.
 
-Les filtres modifient directement le JSON de style Mapbox de la couche, puis rappellent `applyStyle()` de `ol-mapbox-style` :
-- **Type** : filtre `["==", ["get", "type"], "flat"|"equirectangular"]` sur les couches `pictures` et `sequences`
-- **Dates** : filtre `[">=", "ts", ...]` / `["<=", "ts", ...]`
-- **Période** : calcule un intervalle de dates avec `date-fns/subMonths`
-- **Reset** : réapplique `originalStyleLayerPanoramax` (snapshot du style initial)
+`viewer.share` configure le lien affiché dans la légende personnalisée :
 
-> ⚠️ Limites connues : les filtres ne sont **pas cumulatifs** (chaque filtre écrase le précédent).
+| `type` | URL produite |
+|---|---|
+| `panoramax` (défaut) | URL Explore Panoramax avec `pic`, `seq` et la position courante |
+| `geoplateforme` | URL `.../photo/{sequence}/{picture}/{lat},{lon}/{zoom}` |
 
----
+`viewer.share.url` permet de remplacer la base utilisée pour le type choisi. Les identifiants et les coordonnées sont encodés lors de la construction du lien.
 
-## Modes de fenêtre (`setSizeWindow`)
+## Filtres
+
+Les filtres modifient le style Mapbox de la couche puis appliquent le style mis à jour avec `applyStyle()` : type d'image, intervalle de dates et période relative. Le bouton de réinitialisation restaure le style initial de la couche.
+
+`buttonsWindow.filters.exclusive` contrôle leur combinaison : à `true` (défaut), l'activation d'un filtre désactive les autres ; à `false`, les filtres actifs sont cumulés.
+
+## Événements publics
+
+| Événement | Déclenchement |
+|---|---|
+| `pnx:opened` / `pnx:closed` | Ouverture ou fermeture du contrôle |
+| `pnx:ready` | Viewer initialisé et prêt à être utilisé |
+| `pnx:fullscreen` | Changement du mode plein écran |
+| `pnx:data:clicked` / `pnx:data:hovered` | Interaction avec une entité Panoramax |
+| `pnx:filter:init`, `pnx:filter:dates`, `pnx:filter:periode`, `pnx:filter:type`, `pnx:filter:render` | Initialisation ou application d'un filtre |
+
+Les changements des propriétés `picture`, `sequence` et `display` émettent respectivement `change:picture`, `change:sequence` et `change:display`.
+
+## Modes de fenêtre
 
 | Mode | Comportement |
 |---|---|
-| `small/medium/large` | Classes CSS fixes, `stopMapViewportSync()` |
-| `fullscreen` | `<dialog>` en position fixe 100vw×100vh |
-| `fullscreen-map` | Synchronise position/taille avec `map.getViewport().getBoundingClientRect()` via `startMapViewportSync()` (écoute `resize`, `scroll`, `change:size`) |
+| `small`, `medium`, `large` | Taille fixe via classe CSS |
+| `fullscreen` | `<dialog>` fixe sur toute la fenêtre (`100dvw` x `100dvh`) |
+| `fullscreen-map` | Fenêtre calée sur `map.getViewport()` et resynchronisée lors de `resize`, `scroll` et `change:size` |

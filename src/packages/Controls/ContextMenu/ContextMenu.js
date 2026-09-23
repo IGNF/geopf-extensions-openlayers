@@ -24,6 +24,7 @@ import Logger from "../../Utils/LoggerByDefault";
 
 // DOM
 import ContextMenuDOM from "./ContextMenuDOM";
+import PanelDOM from "../PanelDOM";
 import olContextMenu from "ol-contextmenu";
 import Widget from "../Widget";
 
@@ -211,6 +212,8 @@ class ContextMenu extends Control {
         /** @private */
         this._listenersAdded = false;
         /** @private */
+        this._onContextBeforeOpen = null;
+        /** @private */
         this._onContextOpen = null;
         /** @private */
         this._onContextClose = null;
@@ -261,28 +264,21 @@ class ContextMenu extends Control {
 
         // panel
         var pointInfoPanel = this.panelPointInfoContainer = this._createPointInfoPanelElement();
+
+        // header
+        var pointInfoPanelHeader = this.panelPointInfoHeaderContainer = this._createPanelHeaderElement({
+            title : "Adresse et coordonnées",
+            btnClassForClose : "GPshowPointInfoPicto",
+        });
+        pointInfoPanel.appendChild(pointInfoPanelHeader);
+
+
         var pointInfoPanelDiv = this._createPointInfoPanelDivElement();
         pointInfoPanel.appendChild(pointInfoPanelDiv);
 
         // container for the custom code
         var pointInfoEntriesDiv = this.panelPointInfoEntriesContainer = this._createEntriesElement();
-        pointInfoPanel.appendChild(pointInfoEntriesDiv);
-
-
-        // header ?
-        // if (this.options.panel) {
-        var pointInfoPanelHeader = this.panelPointInfoHeaderContainer = this._createPointInfoPanelHeaderElement();
-        // icone
-        var pointInfoPanelIcon = this._createPointInfoPanelIconElement();
-        pointInfoPanelHeader.appendChild(pointInfoPanelIcon);
-        // title
-        var pointInfoPanelTitle = this._createPointInfoPanelTitleElement();
-        pointInfoPanelHeader.appendChild(pointInfoPanelTitle);
-        // close picto
-        var pointInfoCloseBtn = this.buttonPointInfoClose = this._createPointInfoPanelCloseElement();
-        pointInfoPanelHeader.appendChild(pointInfoCloseBtn);
-        pointInfoPanelDiv.appendChild(pointInfoPanelHeader);
-        // }
+        pointInfoPanelDiv.appendChild(pointInfoEntriesDiv);
 
         container.appendChild(pointInfoPanel);
 
@@ -301,6 +297,10 @@ class ContextMenu extends Control {
             return;
         }
 
+        this._onContextBeforeOpen = (evt) => {
+            evt.this = this;
+            this.onBeforeOpenContextMenu(evt);
+        };
         this._onContextOpen = (evt) => {
             evt.this = this;
             this.onOpenContextMenu(evt);
@@ -315,6 +315,7 @@ class ContextMenu extends Control {
             }
         };
 
+        this.contextmenu.on("beforeopen", this._onContextBeforeOpen);
         this.contextmenu.on("open", this._onContextOpen);
         this.contextmenu.on("close", this._onContextClose);
         document.addEventListener("click", this._onDocumentClick);
@@ -330,6 +331,9 @@ class ContextMenu extends Control {
             return;
         }
 
+        if (this._onContextBeforeOpen) {
+            this.contextmenu.un("beforeopen", this._onContextBeforeOpen);
+        }
         if (this._onContextOpen) {
             this.contextmenu.un("open", this._onContextOpen);
         }
@@ -340,6 +344,7 @@ class ContextMenu extends Control {
             document.removeEventListener("click", this._onDocumentClick);
         }
 
+        this._onContextBeforeOpen = null;
         this._onContextOpen = null;
         this._onContextClose = null;
         this._onDocumentClick = null;
@@ -565,8 +570,8 @@ class ContextMenu extends Control {
             },
             onFailure : function (error) { },
             // spécifique au service
-            position : { lon : clickedCoordinate[1], lat : clickedCoordinate[0] },
-            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[1], clickedCoordinate[0]], radius : 100 },
+            position : { lon : clickedCoordinate[0], lat : clickedCoordinate[1] },
+            searchGeometry : { type : "Circle", coordinates : [clickedCoordinate[0], clickedCoordinate[1]], radius : 100 },
             index : "CadastralParcel",
             maximumResponses : 1,
             serverUrl : this.options.reverseGeocodeServerUrl
@@ -661,6 +666,35 @@ class ContextMenu extends Control {
     }
 
     /**
+     * Déclenché avant l'ouverture du menu contextuel (avant l'appel à preventDefault()
+     * par la librairie ol-contextmenu) : active ou désactive le menu personnalisé
+     * selon la cible du clic droit, afin de laisser le menu contextuel système
+     * s'afficher sur les éléments des widgets (boutons, panneaux, ...)
+     * @param {Event} e - ...
+     * @private
+     */
+    onBeforeOpenContextMenu (e) {
+        const mapInstance = this.getMap();
+        if (!mapInstance) {
+            return;
+        }
+
+        const mapViewport = mapInstance.getViewport();
+        const target = e?.originalEvent?.target;
+
+        var isOutsideViewport = !mapViewport || (target && !mapViewport.contains(target));
+        var isOnWidgetOrControl = target && target.closest(".GPwidget, .gpf-widget, .ol-control");
+
+        if (isOutsideViewport || isOnWidgetOrControl) {
+            // désactive le menu contextuel personnalisé pour laisser
+            // le navigateur afficher son propre menu contextuel
+            this.contextmenu.disable();
+        } else {
+            this.contextmenu.enable();
+        }
+    }
+
+    /**
      * ...
      * @param {Event} e - ...
      * @private
@@ -708,6 +742,7 @@ class ContextMenu extends Control {
 
 // on récupère les méthodes de la classe DOM
 Object.assign(ContextMenu.prototype, ContextMenuDOM);
+Object.assign(ContextMenu.prototype, PanelDOM);
 // on récupère les méthodes d'une classe applicable à tous les contextMenus'
 Object.assign(ContextMenu.prototype, ContextMenu);
 Object.assign(ContextMenu.prototype, Widget);
