@@ -1,10 +1,16 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
+        <link rel="stylesheet" href="{{ resources }}/vendor/panoramax/v4.4.0/photoviewer.css" />
+        <script src="{{ resources }}/vendor/panoramax/v4.4.0/photoviewer.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlPanoramax.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlReporting.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlReporting.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawing.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawing.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.css" />
@@ -153,6 +159,33 @@
             });
             map.addControl(getFeatureInfo);
 
+            var reporting = new ol.control.Reporting({
+                collapsed: false,
+                position: "top-left",
+                thematics: [
+                    "Réseau routier",
+                    "Bâtiment",
+                    "Toponyme",
+                    "Touristique/randonnée",
+                    "Environnement",
+                    "Urbanisme",
+                    "Risques naturels",
+                    "Risques technologiques",
+                    "Infrastructures",
+                    "Énergie",
+                    "Agriculture",
+                    "Forêt",
+                    "Hydrologie",
+                    "Hydrographie",
+                    "Végétation",
+                    "Autre"
+                ]
+            });
+            reporting.once("reporting:opened", function () {
+                console.log("Reporting event opened !");
+            });
+            map.addControl(reporting);
+
             document.getElementById("addVectorKml").onclick = function() {
                 var kmlUrls = [
                     '{{ resources }}/data/kml/bassin_bleu.kml',
@@ -217,6 +250,13 @@
                 }
             });
             map.addControl(layerSwitcher);
+
+            var panoramax = new ol.control.Panoramax({
+                collapsed : true,
+                panel : true,
+                position : "bottom-left"
+            });
+            map.addControl(panoramax);
         };
         Gp.Services.getConfig({
             customConfigFile : "{{ configurl }}",
