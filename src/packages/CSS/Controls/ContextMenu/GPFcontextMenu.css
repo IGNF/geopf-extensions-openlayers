@@ -4,7 +4,7 @@
     padding: 20px 20px 20px 20px;
     user-select: text;
 }
-.point-info-content div{
+.point-info-content div:not(:empty) {
     margin-bottom: 10px;
 }
 
