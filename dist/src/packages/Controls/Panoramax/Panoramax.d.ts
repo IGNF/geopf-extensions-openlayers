@@ -1280,16 +1280,16 @@ declare class Panoramax extends Control {
      * Supprime le positionnement du widget "Annotations switch" du viewer
      * de photos de Panoramax
      */
-    removeWidgetAnnotationsSwitch(): void;
+    removeWidgetAnnotationsSwitch(): Promise<void>;
     /**
      * Supprime le widget "Picture legend" du viewer de photos de Panoramax
      * On supprime le mode drawer pour le widget de légende des photos
      */
-    removeWidgetPictureLegendDrawer(): void;
+    removeWidgetPictureLegendDrawer(): Promise<void>;
     /**
      * Supprime le widget de player de séquence du viewer de photos de Panoramax
      */
-    removeWidgetPlayer(): void;
+    removeWidgetPlayer(): Promise<void>;
     /**
       Affiche ou met à jour le marqueur de prévisualisation.
      *
