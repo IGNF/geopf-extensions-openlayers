@@ -380,7 +380,7 @@ declare class Reporting extends Control {
      * It retrieves the mail from the event, updates the data object,
      * and sends the reporting data to the server or processes it as needed.
      * If the sending is successful, it clears the data and resets the step to the first step.
-     * If there is an error during the sending process, it displays an error message for a limited time.
+     * If there is an error during the sending process, it displays an error message.
      * @private
      */
     private onShowSendReportingClick;
