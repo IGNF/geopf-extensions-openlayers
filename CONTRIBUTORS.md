@@ -23,5 +23,4 @@ Le fichier [CONTRIBUTING.md](CONTRIBUTING.md) définit les règles et pratiques 
 * [ibrahim-sall](https://github.com/ibrahim-sall)
 * [MatRouillard](https://github.com/MatRouillard)
 * [cde-barros](https://github.com/cde-barros)
-* [jean-philippe.bazonnais](https://github.com/jean-philippe.bazonnais)
 * [viglino](https://github.com/viglino)
