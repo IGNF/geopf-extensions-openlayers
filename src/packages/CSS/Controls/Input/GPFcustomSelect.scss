@@ -1,0 +1,303 @@
+@use '../../mixins.scss' as mx;
+
+.input-style-select {
+  .input-style {
+    &__container {
+      padding: 0;
+      align-items: center;
+      justify-content: center;
+
+      &[aria-expanded='true'] {
+        ~ .input-style__options-container {
+          display: flex;
+        }
+      }
+
+      &::after {
+        --icon-size: 1.5rem;
+        height: var(--icon-size);
+        width: var(--icon-size);
+        content: '';
+        display: inline;
+        flex: 0 0 auto;
+        margin: 0.5rem 0.5rem 0.5rem 0;
+        top: 4px;
+
+        -webkit-mask-image: url('../../img/StyleDialog/arrow-s-line.svg');
+        mask-image: url('../../img/StyleDialog/arrow-s-line.svg');
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+      }
+    }
+
+    &__input {
+      width: 0;
+      height: 0;
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      padding: 0;
+    }
+
+    &__choice-container {
+      display: flex;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.25rem 0rem 0rem 0.25rem;
+    }
+  }
+}
+
+.input-style {
+  &__options-container {
+    position: fixed;
+    display: none;
+    flex-direction: column;
+    justify-content: end;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    border-radius: 1.5rem 1.5rem 0 0;
+    left: 0;
+
+    @include mx.respond-from('sm') {
+      width: 13.25rem;
+      border-radius: 0.25rem;
+      bottom: unset;
+      height: fit-content;
+      max-height: 404px;
+
+      justify-content: normal;
+      left: unset;
+    }
+
+    // Drag en mobile
+    & > &-drag {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.25rem 1rem 0.5rem;
+      border-radius: 1.5rem 1.5rem 0 0;
+      > .input-style__options-container-drag-handle {
+        width: 5rem;
+        border-radius: 0.25rem;
+      }
+
+      @include mx.respond-from('sm') {
+        display: none;
+      }
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      overflow-y: auto;
+      height: fit-content;
+      max-height: 404px;
+      transition: height 100ms;
+
+      @include mx.respond-from('sm') {
+        max-height: 300px;
+        border-radius: 0.25rem;
+      }
+
+      // Bouton d'une option
+      > *:not(.input-style__options-container-drag) {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 0.25rem;
+      }
+    }
+  }
+
+  [role='combobox'] {
+    // Seulement à l'intérieur du bouton
+    &[aria-selected='true'] > span.input-style__option-value {
+      margin: 0.5rem;
+    }
+  }
+
+  [role='option'] {
+    > span.input-style__option-value {
+      margin: 0.25rem;
+    }
+  }
+
+  [role='option'],
+  [role='combobox'] {
+    // Pour tous, on met un masque
+    &[data-type] {
+      > span.input-style__option-value {
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
+      }
+    }
+
+    // Cas du "sans" (couleur, bordure etc.)
+    &[data-value='none'],
+    &[data-value='null'],
+    &[data-value='transparent'],
+    &[data-value='#00000000'],
+    &[data-value=''],
+    &[data-value=' '] {
+      > span.input-style__option-value {
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size:
+          100% 100%,
+          auto;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+
+    // Bordures
+    &[data-type='stroke'] {
+      &[data-value=''] > span.input-style__option-value {
+        background-image: unset;
+        border: unset;
+        -webkit-mask-image: url('../../img/StyleDialog/arrow/continuous.svg');
+        mask-image: url('../../img/StyleDialog/arrow/continuous.svg');
+      }
+
+      &[data-value='5,5'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/stroke/dash.svg');
+        mask-image: url('../../img/StyleDialog/stroke/dash.svg');
+      }
+      &[data-value='0,5'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/stroke/dot.svg');
+        mask-image: url('../../img/StyleDialog/stroke/dot.svg');
+      }
+      &[data-value='10,5,0,5'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/stroke/irregular-dash.svg');
+        mask-image: url('../../img/StyleDialog/stroke/irregular-dash.svg');
+      }
+    }
+
+    // Terminaison
+    &[data-type='arrow'] {
+      &[data-value=''] > span.input-style__option-value {
+        background-image: unset;
+        border: unset;
+        -webkit-mask-image: url('../../img/StyleDialog/arrow/continuous.svg');
+        mask-image: url('../../img/StyleDialog/arrow/continuous.svg');
+      }
+      &[data-value='triangle'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/arrow/arrow.svg');
+        mask-image: url('../../img/StyleDialog/arrow/arrow.svg');
+      }
+      &[data-value='circle'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/arrow/circle.svg');
+        mask-image: url('../../img/StyleDialog/arrow/circle.svg');
+      }
+      &[data-value='square'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/arrow/square.svg');
+        mask-image: url('../../img/StyleDialog/arrow/square.svg');
+      }
+    }
+
+    // Terminaison
+    &[data-type='form'] {
+      &[data-value='marker'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/form/form-marker.svg');
+        mask-image: url('../../img/StyleDialog/form/form-marker.svg');
+      }
+      &[data-value='circle'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/form/form-circle.svg');
+        mask-image: url('../../img/StyleDialog/form/form-circle.svg');
+      }
+      &[data-value='square'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/form/form-square.svg');
+        mask-image: url('../../img/StyleDialog/form/form-square.svg');
+      }
+      &[data-value='triangle'] > span.input-style__option-value {
+        -webkit-mask-image: url('../../img/StyleDialog/form/form-triangle.svg');
+        mask-image: url('../../img/StyleDialog/form/form-triangle.svg');
+      }
+    }
+
+    // Motif
+    &[data-type='pattern'] {
+      &:not([data-value='']) > span.input-style__option-value {
+        // On utilise before et after pour afficher le masque en premier lieu
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          width: 24px;
+          height: 24px;
+          border-radius: 0.25rem;
+        }
+        // Et une bordure dessus (border et mask ne fonctionnent pas ensemble)
+        &::after {
+          content: '';
+          display: block;
+          position: relative;
+          width: 100%;
+          height: 100%;
+          border-radius: 0.25rem;
+        }
+      }
+      &[data-value=''] > span.input-style__option-value {
+        background-image: unset;
+        background-image: unset;
+        background-repeat: unset;
+        background-position: unset;
+        background-size: unset;
+        // Hack des border de 1px pour ne pas voir de couleur sur les angles
+        border: unset;
+      }
+      &[data-value='hatch;0'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/vertical.svg');
+      }
+      &[data-value='hatch;90'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/horizontal.svg');
+      }
+      &[data-value='hatch;45'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/right.svg');
+      }
+      &[data-value='hatch;135'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/left.svg');
+      }
+      &[data-value='cross;1'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/cross.svg');
+      }
+      &[data-value='dot;1'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/dot.svg');
+      }
+      &[data-value='tile;1'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/tile.svg');
+      }
+      &[data-value='caps'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/caps.svg');
+      }
+      &[data-value='crosses'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/crosses.svg');
+      }
+      &[data-value='wave'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/wave.svg');
+      }
+      &[data-value='forest2'] > span.input-style__option-value::before {
+        mask-image: url('../../img/StyleDialog/pattern/forest2.svg');
+      }
+    }
+
+    // Icônes
+    &[data-type='icon'] {
+      > span.input-style__option-value::before {
+        font-size: 1.5rem;
+        margin: 0;
+      }
+    }
+  }
+
+  &__option-value {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.25rem;
+  }
+}

@@ -1,0 +1,203 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSimpleMenu.css" />
+
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlModifyingInteraction.js"></script>
+
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Drawing interaction</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+            [id^="GPsearchEngine-"] {
+                top: 8px;
+            }
+            #myDialog {
+                top: 10px;
+                left: 10px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Outil de dessin avec style</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                window.onload = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
+					// 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
+                            }),
+                            layer
+                        ]
+                    });
+
+                    // Création du Dialog avec navigation tertiaire
+                    const dialog = new ol.control.Dialog({
+                        id: "myDialog",
+                        title: "Dialog",
+                        position: "left",
+                        onOpen: function (e) {
+                            console.log(e)
+                            console.log(this)
+                        },
+                        onClose: function (e) {
+                            console.log(e)
+                            console.log(this);
+                        },
+                        items: [
+                            {
+                                label: "Style",
+                                content: "<p>Onglet Style</p>",
+                                onOpen: function (e) {
+                                    console.log("on open style")
+                                    console.log(e)
+                                    console.log(this)
+                                },
+                                onClose: function (e) {
+                                    console.log("on close style")
+                                    console.log(e)
+                                    console.log(this);
+                                },
+                                title: "Configuration du style"
+                            },
+                            {
+                                label: "Texte",
+                                content: "<p>Onglet Texte</p>",
+                                onOpen: function (e) {
+                                    console.log("on open texte")
+                                    console.log(e)
+                                    console.log(this)
+                                },
+                                onClose: function (e) {
+                                    console.log("on close texte")
+                                    console.log(e)
+                                    console.log(this);
+                                },
+                                title: "Configuration du texte"
+                            },
+                            {
+                                label: "Infobulle",
+                                content: "<p>Onglet Infobulle</p>",
+                                title: "Configuration de l'infobulle"
+                            },
+                            {
+                                label: "Attributs",
+                                content: "<p>Onglet Attributs</p>",
+                                title: "Configuration des attributs"
+                            }
+                        ],
+                        labelTabNav: "Navigation de configuration"
+                    });
+
+                    map.addControl(dialog);
+
+                    const draw = new ol.control.Draw({
+                        position: "right",
+                    });
+
+                    const icons = {
+                        "Point" : "fr-icon-map-pin-2-line",
+                        "LineString" : "fr-icon-git-merge-line",
+                        "Polygon" : "fr-icon-france-line",
+                        "Circle" : "fr-icon-circle-line",
+                        "Box" : "fr-icon-rectangle-line",
+                    }
+
+                    map.addControl(draw);
+
+                    // Modify interaction
+                    const modify = new ol.interaction.Modifying({ 
+                        select : draw.select,
+                    });
+                    map.addInteraction(modify);
+
+                    // Show points on modifying
+                    draw.select.showPoints(() => modify.getActive());
+
+                    // Copy / past
+                    modify.on(["copy", "cut", "paste"], console.log);
+                    modify.on("paste", e => {
+                        e.features.forEach(elt => {
+                            elt.layer.getSource().addFeature(elt.feature.clone());
+                        });
+                    });
+
+                    const drawing = window.drawing = [];
+                    // ["Point", "Point", "Point", "LineString", "LineString", "LineString", "Polygon", "Polygon", "Polygon"].forEach((k, index) => {
+                    ["Point", "LineString", "Polygon", "Circle", "Box" ].forEach((k, index) => {
+                        drawing.push(new ol.interaction.Drawing({
+                            type : k,
+                            source : source,
+                            select : draw.select,
+                            selectOnDrawEnd : true,
+                        }));
+                        drawing[index].setActive(false);
+                    })
+
+                    drawing.forEach(interaction => {
+                        draw.addInteraction({
+                            interaction : interaction,
+                            label: interaction._type,
+                            icon: icons[interaction._type],
+                        });
+                    });
+
+                    draw.getSelect().on("select", (e) => {
+                        // console.log(e)
+                        if (e.selected.length) {
+                            const geomType = e.selected[0].getGeometry().getType();
+                            dialog.setDialogTitle(geomType);
+                            dialog.setIcon(icons[geomType]);
+                            
+                            dialog.show();
+                        } else {
+                            dialog.close();
+                        }
+                    })
+
+                    window.dialog = dialog;
+
+                    draw.on(["drawstart", "drawend", "drawabort"], console.log)
+                };
+           </script>
+{{/content}}
+
+{{/extend}}

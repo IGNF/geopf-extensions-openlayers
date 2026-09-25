@@ -6,7 +6,11 @@ import Helper from "../../Utils/Helper";
 import Map from "ol/Map";
 var logger = Logger.getLogger("abstractAdvancedSearch");
 
-// Typedefs partagés disponibles dans ./typedefs.js (AbstractAdvancedSearchOptions, ...)
+/**
+ * Options pour AbstractAdvancedSearch (formulaires avancés).
+ * @typedef {Object} AbstractAdvancedSearchOptions
+ * @property {String} name - Nom du formulaire de recherche avancée.
+ */
 
 /** 
  * @classdesc

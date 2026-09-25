@@ -1,0 +1,15 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="24" height="24" rx="2" fill="url(#pattern0_6060_12685)"/>
+<defs>
+<pattern id="pattern0_6060_12685" patternUnits="userSpaceOnUse" patternTransform="matrix(32 0 0 24 -4.70703 -0.740723)" preserveAspectRatio="none" viewBox="-0.707031 -0.740723 32 24" width="1" height="1">
+<use xlink:href="#pattern0_6060_12685_inner" transform="translate(-32 -24)"/>
+<use xlink:href="#pattern0_6060_12685_inner" transform="translate(0 -24)"/>
+<use xlink:href="#pattern0_6060_12685_inner" transform="translate(-32 0)"/>
+<g id="pattern0_6060_12685_inner">
+<path d="M0 3L3 0L5.5 3L8.5 0L11.5 3L14.5 0L17.5 3L20.5 0L23.5 3L26.5 0L29 3L32 0" stroke="#161616" stroke-linecap="square"/>
+<path d="M0 10L3 7L5.5 10L8.5 7L11.5 10L14.5 7L17.5 10L20.5 7L23.5 10L26.5 7L29 10L32 7" stroke="#161616" stroke-linecap="square"/>
+<path d="M0 17L3 14L5.5 17L8.5 14L11.5 17L14.5 14L17.5 17L20.5 14L23.5 17L26.5 14L29 17L32 14" stroke="#161616" stroke-linecap="square"/>
+<path d="M0 24L3 21L5.5 24L8.5 21L11.5 24L14.5 21L17.5 24L20.5 21L23.5 24L26.5 21L29 24L32 21" stroke="#161616" stroke-linecap="square"/>
+</g>
+</pattern></defs>
+</svg>

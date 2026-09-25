@@ -15,7 +15,7 @@ __DATE__
 
 * ✨ [Added]
 
-  - Reporting : affichage des messages d’erreurs potentiels (#592)
+  - Draw(Widget): nouveau widget de dessin plus poussé qui utilise des composants de DOM génériques (#490)
 
 * 🔨 [Changed]
 

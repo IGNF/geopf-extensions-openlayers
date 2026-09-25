@@ -1,0 +1,144 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+
+    <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.css" />
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.js"></script>
+
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
+    <script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Drawing interaction</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+            [id^="GPsearchEngine-"] {
+                top: 8px;
+            }
+            #myDialog {
+                top: 10px;
+                left: 10px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Outil de dessin avec style</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+            <div style="margin:1rem">
+                <button class="fr-btn" id="addLayer">Ajouter une couche</button>
+            </div>
+            <div id="description" style="margin:1rem">
+                <p>
+                    Si <code>draw.addToMap = false</code> la gestion de la couche sur laquelle dessiner est gérée par le client. C'est le cas dans cet exemple : la sélection d'une couche dans le gestionnaire de couche modifie la couche à modifier.
+                </p>
+                <p>
+                    Il est possible d'ajouter une couche à la carte et de vérifier si la sélection d'une couche se répercute bien sur le widget de dessin.
+                </p>
+                <p>
+                    Si la couche n'est pas modifiable (source n'est pas un ol.source.Vector), une alerte est envoyée.
+                </p>
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                window.onload = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
+					// 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
+                            }),
+                            layer
+                        ]
+                    });
+
+                    const layerSwitcher = new ol.control.LayerSwitcher({
+                        options :{
+                            position : "top-right",
+                            collapsed : false,
+                            panel : true,
+                            counter : true
+                        }
+                    });
+
+                    const iso = new ol.control.Isocurve({
+                        draggable: true,
+                        position: "top-right",
+                    });
+
+                    const draw = new ol.control.Draw({
+                        position: "top-right",
+                        style: true,
+                        addToMap: false,
+                        gutter: false
+                    });
+
+                    layerSwitcher.on("layerswitcher:change:selected", (e) => {
+                        console.log("change selected layer", e)
+                        draw.setLayer(e.layer);
+                    })
+
+                    draw.on("drawing:add:layer", (e) => {
+                        console.log("drawing add layer", e)
+                    })
+
+                    draw.on("drawstart", (e) => {
+                        if (!(e.target?.getSource?.() instanceof ol.source.Vector)) {
+                            alert("Couche non éditable")
+                        }
+                    })
+
+                    map.addControl(layerSwitcher);
+                    map.addControl(iso);
+                    map.addControl(draw);
+
+                    document.getElementById("addLayer")?.addEventListener("click", () => {
+                        const title = prompt("Nom de la couche ?", "Croquis");
+                        const source = new ol.source.Vector({})
+                        const layer = new ol.layer.Vector({
+                            source: source,
+                            title: title ?? "Croquis"
+                        });
+                        map.addLayer(layer);
+                    })
+
+                    window.draw = draw;
+                };
+           </script>
+{{/content}}
+
+{{/extend}}

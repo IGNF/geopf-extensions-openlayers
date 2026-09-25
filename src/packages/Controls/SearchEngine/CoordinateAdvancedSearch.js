@@ -13,6 +13,35 @@ import Point from "ol/geom/Point.js";
 
 let logger = Logger.getLogger("abstractAdvancedSearch");
 
+
+/**
+ * Description d'un système de projection utilisable par le contrôle CoordinateAdvancedSearch.
+ * @typedef {Object} CoordinateSearchSystem
+ * @property {String} crs - Alias CRS (ex. "EPSG:4326").
+ * @property {String} [label] - Libellé affiché pour le système.
+ * @property {String} [type] - Type d'unités ("Geographical"|"Metric").
+ */
+
+/**
+ * Options spécifiques à la recherche par coordonnées.
+ * @typedef {Object} CoordinateSearchOptions
+ * @property {CoordinateSearchSystem[]} [systems] - Liste de systèmes de projection personnalisés.
+ * @property {String[]} [units] - Liste de codes d'unités à afficher (ex. ["DEC","DMS","M","KM"]).
+ */
+
+/**
+ * Options pour AbstractAdvancedSearch (formulaires avancés).
+ * Voir AbstractAdvancedSearch.js.
+ * @typedef {Object} AbstractAdvancedSearchOptions
+ * @property {String} name - Nom du formulaire de recherche avancée.
+ */
+
+/**
+ * Options pour le contrôle CoordinateAdvancedSearch.
+ * Étend AbstractAdvancedSearchOptions et ajoute les options spécifiques du service IGN.
+ * @typedef {AbstractAdvancedSearchOptions & {coordinateSearch?: CoordinateSearchOptions}} CoordinateAdvancedSearchOptions
+ */
+
 /**
  * @classdesc
  * Contrôle de recherche avancée par coordonnées
