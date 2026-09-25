@@ -19,6 +19,8 @@ __DATE__
 
 * 🔨 [Changed]
 
+  - SearchEngine : wfs requetes limitées à 5000 features au lieu de 1000 lors d'une recherche avancée de parcelle par section (#594)
+
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
