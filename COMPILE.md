@@ -50,5 +50,5 @@ Créé le dossier */dist/package/*, et le fichier *.tgz* nommé à partir de la 
 ``` bash
 npm run eslint
 npm run generate-types
-npm run generate-jsdoc
+npm run generate-tsdoc
 ```
