@@ -537,12 +537,8 @@ class LayerSwitcher extends Control {
 
             // 3. Add listeners for opacity and visibility changes
             this._bindLayerListeners(id);
-            if (this._layers[id].onZIndexChangeEvent == null) {
-                this._layers[id].onZIndexChangeEvent = layer.on(
-                    "change:zIndex",
-                    () => this._updateLayersOrder()
-                );
-            }
+            this._bindLayerZIndexListener(id, "addLayer");
+            this._getLayerListenersReport();
 
             // user may also add a new configuration for an already added layer
         } else {
@@ -668,6 +664,7 @@ class LayerSwitcher extends Control {
 
         // on retire la couche de la liste des layers
         delete this._layers[layerID];
+        this._getLayerListenersReport();
 
         // on met à jour le compteur
         this._updateLayerCounter();
@@ -901,6 +898,12 @@ class LayerSwitcher extends Control {
          * @private
          */
         this._listeners = {};
+        /**
+         * compteur d'abonnements actifs par couche : { <gpLayerId> : { layer : Number, zindex : Number } }
+         * @type {Object}
+         * @private
+         */
+        this._listenersTrace = {};
 
         // add options layers to layerlist.
         // (seulement les couches configurées dans les options du layerSwitcher par l'utilisateur),
@@ -1375,12 +1378,7 @@ class LayerSwitcher extends Control {
                     // et on réordonne les couches avec des zindex, uniques.
                     this._lastZIndex++;
                     layers[l].layer.setZIndex(this._lastZIndex);
-                    if (this._layers[layers[l].layer.gpLayerId].onZIndexChangeEvent == null) {
-                        this._layers[layers[l].layer.gpLayerId].onZIndexChangeEvent = layers[l].layer.on(
-                            "change:zIndex",
-                            () => this._updateLayersOrder()
-                        );
-                    }
+                    this._bindLayerZIndexListener(layers[l].layer.gpLayerId, "_initContainer");
                 }
             }
         }
@@ -1545,7 +1543,9 @@ class LayerSwitcher extends Control {
             return;
         }
         // on stocke les clés sur la couche, pour pouvoir les supprimer au retrait de cette couche
-        olObservableUnByKey(layerOptions.listenerKeys || []);
+        var previous = layerOptions.listenerKeys || [];
+        olObservableUnByKey(previous);
+        this._traceLayerListeners("unbind", id, "layer", previous.length, "_bindLayerListeners (nettoyage)");
         var layer = layerOptions.layer;
         layerOptions.listenerKeys = [
             layer.on("change:opacity", (e) => this._updateLayerOpacity(e)),
@@ -1554,6 +1554,7 @@ class LayerSwitcher extends Control {
             layer.on("change:locked", (e) => this._updateLayerLocked(e)),
             layer.on("propertychange", (e) => this._updateGenericProperty(e))
         ];
+        this._traceLayerListeners("bind", id, "layer", layerOptions.listenerKeys.length, "_bindLayerListeners");
     }
 
     /**
@@ -1565,14 +1566,155 @@ class LayerSwitcher extends Control {
     _unbindLayerListeners (id) {
         var layerOptions = this._layers[id];
         if (!layerOptions) {
+            logger.warn("[LayerSwitcher] ANOMALIE " + this._getLayerLabel(id) + " : désabonnement demandé sur une couche non suivie");
             return;
         }
-        olObservableUnByKey(layerOptions.listenerKeys || []);
+        var keys = layerOptions.listenerKeys || [];
+        olObservableUnByKey(keys);
         layerOptions.listenerKeys = null;
-        if (layerOptions.onZIndexChangeEvent) {
-            olObservableUnByKey(layerOptions.onZIndexChangeEvent);
+        this._traceLayerListeners("unbind", id, "layer", keys.length, "_unbindLayerListeners");
+        this._unbindLayerZIndexListener(id, "_unbindLayerListeners");
+    }
+
+    /**
+     * Add the zIndex listener on a layer, only if it is not already bound.
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @param {String} [origin] - calling context, for logging purpose
+     * @private
+     */
+    _bindLayerZIndexListener (id, origin) {
+        var layerOptions = this._layers[id];
+        if (!layerOptions || layerOptions.onZIndexChangeEvent != null) {
+            return;
         }
+        layerOptions.onZIndexChangeEvent = layerOptions.layer.on(
+            "change:zIndex",
+            () => this._updateLayersOrder()
+        );
+        this._traceLayerListeners("bind", id, "zindex", 1, origin);
+    }
+
+    /**
+     * Remove the zIndex listener of a layer.
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @param {String} [origin] - calling context, for logging purpose
+     * @private
+     */
+    _unbindLayerZIndexListener (id, origin) {
+        var layerOptions = this._layers[id];
+        if (!layerOptions) {
+            return;
+        }
+        var bound = layerOptions.onZIndexChangeEvent != null;
+        olObservableUnByKey(layerOptions.onZIndexChangeEvent);
         layerOptions.onZIndexChangeEvent = null;
+        this._traceLayerListeners("unbind", id, "zindex", bound ? 1 : 0, origin);
+    }
+
+    /**
+     * Trace des abonnements (ajout / retrait) posés sur une couche,
+     * afin de vérifier leur cohérence : les compteurs doivent revenir à 0 au retrait de la couche.
+     *
+     * @param {String} action - "bind" ou "unbind"
+     * @param {Number} id - layer id (gpLayerId)
+     * @param {String} kind - "layer" (évènements de la couche) ou "zindex"
+     * @param {Number} count - nombre d'abonnements concernés
+     * @param {String} [origin] - méthode appelante
+     * @private
+     */
+    _traceLayerListeners (action, id, kind, count, origin) {
+        if (!this._listenersTrace) {
+            this._listenersTrace = {};
+        }
+        var trace = this._listenersTrace[id] = this._listenersTrace[id] || {
+            layer : 0,
+            zindex : 0
+        };
+        if (count === 0) {
+            return;
+        }
+        trace[kind] += (action === "bind") ? count : -count;
+
+        var verbe = (action === "bind") ? "ABONNEMENT   " : "DESABONNEMENT";
+        var signe = (action === "bind") ? "+" : "-";
+        var cible = (kind === "zindex") ? "zIndex" : "evt couche";
+        logger.debug(
+            "[LayerSwitcher] " + verbe + " " + this._getLayerLabel(id) +
+            " : " + signe + count + " " + cible +
+            " (via " + (origin || "?") + ")" +
+            " => reste " + trace.layer + " evt + " + trace.zindex + " zIndex"
+        );
+
+        if (trace.layer < 0 || trace.zindex < 0) {
+            logger.warn("[LayerSwitcher] ANOMALIE " + this._getLayerLabel(id) + " : plus de désabonnements que d'abonnements", trace);
+        }
+        if (trace.zindex > 1) {
+            logger.warn("[LayerSwitcher] ANOMALIE " + this._getLayerLabel(id) + " : abonnement zIndex dupliqué", trace);
+        }
+    }
+
+    /**
+     * Libellé lisible d'une couche pour les traces : `couche 12 "Plan IGN"`
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @returns {String} libellé
+     * @private
+     */
+    _getLayerLabel (id) {
+        var layerOptions = this._layers[id];
+        var title = layerOptions ? (layerOptions.title || layerOptions.name || "?") : "couche retirée";
+        return "couche " + id + " \"" + title + "\"";
+    }
+
+    /**
+     * Bilan lisible des abonnements posés par le contrôle sur les couches :
+     * une couche suivie doit avoir 5 evt + 1 zIndex, une couche retirée doit être à 0.
+     * Les traces des couches retirées et soldées sont purgées.
+     *
+     * @returns {Array} détail par couche : { id, title, events, zindex, tracked, status }
+     * @private
+     */
+    _getLayerListenersReport () {
+        var lines = [];
+        var anomalies = 0;
+        for (var id in this._listenersTrace) {
+            var trace = this._listenersTrace[id];
+            var tracked = !!this._layers[id];
+            var status = "OK";
+            if (tracked && (trace.layer !== 5 || trace.zindex !== 1)) {
+                status = "ANOMALIE : couche suivie mais abonnements incomplets";
+            }
+            if (!tracked && (trace.layer !== 0 || trace.zindex !== 0)) {
+                status = "ANOMALIE : couche retirée mais abonnements résiduels (fuite)";
+            }
+            if (status !== "OK") {
+                anomalies++;
+            }
+            lines.push({
+                id : id,
+                title : this._getLayerLabel(id),
+                events : trace.layer,
+                zindex : trace.zindex,
+                tracked : tracked,
+                status : status
+            });
+            // purge des couches retirées et soldées
+            if (!tracked && trace.layer === 0 && trace.zindex === 0) {
+                delete this._listenersTrace[id];
+            }
+        }
+
+        logger.debug("[LayerSwitcher] BILAN abonnements : " + Object.keys(this._layers).length +
+            " couche(s) suivie(s), " + anomalies + " anomalie(s)");
+        lines.forEach((line) => {
+            logger.debug("    " + line.title +
+                " : " + line.events + " evt + " + line.zindex + " zIndex" +
+                " | " + (line.tracked ? "suivie" : "retirée") +
+                " | " + line.status);
+        });
+        return lines;
     }
 
     /**
@@ -1740,8 +1882,7 @@ class LayerSwitcher extends Control {
                 }
 
                 // on commence par désactiver temporairement l'écouteur d'événements sur le changement de zindex.
-                olObservableUnByKey(this._layers[id].onZIndexChangeEvent);
-                this._layers[id].onZIndexChangeEvent = null;
+                this._unbindLayerZIndexListener(id, "_updateLayersOrder");
 
                 // on ajoute la couche dans le tableau (de l'objet this._layersIndex) correspondant à son zindex
                 layerIndex = null;
@@ -1768,12 +1909,7 @@ class LayerSwitcher extends Control {
                     this._lastZIndex++;
                     // layers[l].layer.setZIndex(lastZIndex);
                     // et on réactive l'écouteur d'événement sur les zindex
-                    if (this._layers[layers[l].layer.gpLayerId].onZIndexChangeEvent == null) {
-                        this._layers[layers[l].layer.gpLayerId].onZIndexChangeEvent = layers[l].layer.on(
-                            "change:zIndex",
-                            () => this._updateLayersOrder()
-                        );
-                    }
+                    this._bindLayerZIndexListener(layers[l].layer.gpLayerId, "_updateLayersOrder");
                 }
             }
         }
@@ -1991,8 +2127,7 @@ class LayerSwitcher extends Control {
             var layer = this._layers[id].layer;
 
             // on commence par désactiver temporairement l'écouteur d'événements sur le changement de zindex.
-            olObservableUnByKey(this._layers[id].onZIndexChangeEvent);
-            this._layers[id].onZIndexChangeEvent = null;
+            this._unbindLayerZIndexListener(id, "_onDragAndDropLayerClick");
 
             if (layer.setZIndex) {
                 // maxZIndex--;
@@ -2002,12 +2137,7 @@ class LayerSwitcher extends Control {
             }
 
             // et on réactive l'écouteur d'événement sur les zindex
-            if (this._layers[id].onZIndexChangeEvent == null) {
-                this._layers[id].onZIndexChangeEvent = layer.on(
-                    "change:zIndex",
-                    () => this._updateLayersOrder()
-                );
-            }
+            this._bindLayerZIndexListener(id, "_onDragAndDropLayerClick");
         }
 
         // mise à jour de la visu
