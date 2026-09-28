@@ -15,24 +15,24 @@
 <a id="ouverture-dun-ticket-issue" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Ouverture d'un ticket (issue)<a href="#ouverture-dun-ticket-issue" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Vous pouvez ouvrir un ticket dans les situations suivantes :</p>
 <ul>
 <li>Signaler une erreur que vous ne pouvez pas résoudre vous-même</li>
-<li>Discuter d'un sujet ou d'une idée relatives au projet</li>
+<li>Discuter d'un sujet ou d'une idée relative au projet</li>
 <li>Proposer une nouvelle fonctionnalité ou une évolution de fonctionnalité</li>
 </ul>
-<p>Votre ticket est ensuite pris en compte par les membres de l'équipe ou de la communauté. Et une action peut vous être demandée telle qu'<strong>ouvrir une Pull Request</strong> afin de contribuer...</p>
+<p>Votre ticket est ensuite pris en compte par les membres de l'équipe ou de la communauté. Une action peut alors vous être demandée, telle qu'<strong>ouvrir une Pull Request</strong> afin de contribuer...</p>
 <a id="ouvrir-une-pull-request-pr" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Ouvrir une pull request (PR)<a href="#ouvrir-une-pull-request-pr" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Une pull request vous permet de soumettre une proposition d'évolution du code source à l'équipe en charge du projet. Voici comment soumettre une <strong>pull request</strong> !</p>
 <a id="on-«fork»-le-projet" class="tsd-anchor"></a><h3 class="tsd-anchor-link">On «fork» le projet<a href="#on-«fork»-le-projet" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>Créez un <code>fork</code> du projet sur le Github.</li>
-<li>Cloner le en local. Ce <code>dépôt distant</code> sur le Github s'appelle <code>origin</code>.</li>
-<li>Ajoutez le dépôt d'origine en tant que <code>dépôt distant</code> avec le mot cléf : <code>upstream</code> (cf. <a href="https://help.github.com/articles/configuring-a-remote-for-a-fork/">https://help.github.com/articles/configuring-a-remote-for-a-fork/</a>).</li>
+<li>Créez un <code>fork</code> du projet sur GitHub.</li>
+<li>Clonez-le en local. Ce <code>dépôt distant</code> sur GitHub s'appelle <code>origin</code>.</li>
+<li>Ajoutez le dépôt d'origine en tant que <code>dépôt distant</code> avec le mot clé : <code>upstream</code> (cf. <a href="https://help.github.com/articles/configuring-a-remote-for-a-fork/">https://help.github.com/articles/configuring-a-remote-for-a-fork/</a>).</li>
 <li>Si vous avez créé votre <code>fork</code> il y a quelque temps, assurez-vous de récupérer les modifications dans votre dépôt local (cf. <a href="https://help.github.com/articles/syncing-a-fork/">https://help.github.com/articles/syncing-a-fork/</a>).</li>
-<li>Récupérez les modification le plus souvent possible de &quot;upstream&quot; afin d'être le plus à jour possible, de sorte que lorsque vous soumettez votre demande (PR), les conflits de fusion seront plus faciles à résoudre !</li>
+<li>Récupérez les modifications le plus souvent possible depuis &quot;upstream&quot; afin d'être le plus à jour possible, de sorte que lorsque vous soumettez votre demande (PR), les conflits de fusion seront plus faciles à résoudre !</li>
 </ul>
 <a id="on-code" class="tsd-anchor"></a><h3 class="tsd-anchor-link">On code...<a href="#on-code" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
 <li>
 <p>Créez une <code>nouvelle branche</code> pour travailler. Nommez la :</p>
 <ul>
-<li>feature-nom-de-la-feature (ex. feature-widget-draw-circle) dans le cas d'une branche qui propose une nouvelle fonctionnalité</li>
-<li>fix-problème (ex. fix-mouse-position-projection-dropdown) dans le cas d'une branche qui propose une correction à un problème. Si le problème corrigé est lié à une issue, ne pas hésiter à mettre son numéro dans le titre de la branche (ex. fix-152-mouse-position-projection-dropdown)</li>
+<li>feat/nom-de-la-fonctionnalité ou feature/nom-de-la-fonctionnalité (ex. feat/update-open-source-documents, feature/poi_names_interface) dans le cas d'une branche qui propose une nouvelle fonctionnalité</li>
+<li>fix/nom-du-problème (ex. fix/1214-search-engine-autocomplete-cadastre, fix/context-menu-parcel) dans le cas d'une branche qui propose une correction à un problème. Si le problème corrigé est lié à une issue, ne pas hésiter à mettre son numéro dans le titre de la branche</li>
 </ul>
 </li>
 <li>
@@ -44,16 +44,16 @@
 
 <p>cf. <a href="COMPILE.html">COMPILE.md</a> pour plus d'infos.</p>
 <ul>
-<li>Ecrivez testez, corrigez votre <code>code</code> sur votre copie locale de votre fork.</li>
+<li>Écrivez, testez, corrigez votre <code>code</code> sur votre copie locale de votre fork.</li>
 </ul>
 <p>Les commandes pour lancer les exemples en mode modules ou bundle:</p>
 <pre><code><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-5">sample</span><span class="hl-1">:</span><span class="hl-4">modules</span><br/><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-5">sample</span><span class="hl-1">:</span><span class="hl-4">bundle</span>
 </code><button>Copy</button></pre>
 
-<p>Lance un navigateur avec les pages d'exemples servies sur l'adresse <a href="https://localhost:8080/samples/index-modules.html">https://localhost:8080/samples/index-modules.html</a> ou <a href="https://localhost:8080/samples/index-bundle.html">https://localhost:8080/samples/index-bundle.html</a>
-Les pages html de test d'utilisation sont dans le répertoire <em>samples-src/</em>.</p>
+<p>Lancez un navigateur avec les pages d'exemples servies à l'adresse <a href="https://localhost:8080/samples/index-modules.html">https://localhost:8080/samples/index-modules.html</a> ou <a href="https://localhost:8080/samples/index-bundle.html">https://localhost:8080/samples/index-bundle.html</a>
+Les pages HTML de test d'utilisation sont dans le répertoire <em>samples-src/</em>.</p>
 <ul>
-<li>Suivez les règles de codage du projet. Elles sont définies dans le fichier : .eslintrc (style et convention de codage + syntaxe JavaScript). Vous pouvez vérifier le bon respect de ces règles en lançant la tache :</li>
+<li>Suivez les règles de codage du projet. Elles sont définies dans le fichier : .eslintrc (style et convention de codage + syntaxe JavaScript). Vous pouvez vérifier le bon respect de ces règles en lançant la tâche :</li>
 </ul>
 <pre><code><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">eslint</span>
 </code><button>Copy</button></pre>
@@ -66,30 +66,55 @@ Les pages html de test d'utilisation sont dans le répertoire <em>samples-src/</
 </ul>
 </li>
 <li>
-<p>Ajoutez ou modifiez la <code>documentation</code> si nécessaire. Si votre PR apporte une modification d'interface à la bibliothèque, mettez à jour la jsDoc en conséquences et vérifiez quelle est bien prise en compte.</p>
+<p>Ajoutez ou modifiez la <code>documentation</code> si nécessaire. Si votre PR apporte une modification d'interface à la bibliothèque, mettez à jour la jsDoc en conséquence et vérifiez qu'elle est bien prise en compte.</p>
 </li>
 </ul>
 <p>La commande</p>
-<pre><code><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">generate</span><span class="hl-1">-</span><span class="hl-4">jsdoc</span>
+<pre><code><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">generate</span><span class="hl-1">-</span><span class="hl-4">tsdoc</span>
 </code><button>Copy</button></pre>
 
-<p>Vous permet de générer la jsDoc du projet dans le répertoire <em>jsdoc/</em>.
+<p>Vous permet de générer la documentation technique du projet dans le répertoire <em>jsdoc/</em>.
 Ouvrez ensuite dans votre navigateur le fichier <em>jsdoc/index.html</em> et vérifiez que vos modifications sont bien prises en compte.</p>
 <ul>
 <li>
-<p>Rajoutez vous dans le fichier <a href="CONTRIBUTORS.md%5D">CONTRIBUTORS.md</a> si vous n'y êtes pas déjà.</p>
+<p>Ajoutez-vous dans le fichier <a href="CONTRIBUTORS.html">CONTRIBUTORS.md</a> si vous n'y êtes pas déjà.</p>
 </li>
 <li>
-<p><code>Squash</code> vos commit en un seul avec le <code>rebase interactif</code> (cf. <a href="https://help.github.com/articles/interactive-rebase">https://help.github.com/articles/interactive-rebase</a>) ou via d'autre méthodes (cf. <a href="https://gist.github.com/patik/b8a9dc5cd356f9f6f980">https://gist.github.com/patik/b8a9dc5cd356f9f6f980</a> par exemple)</p>
+<p>Suivez le formalisme <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a> pour rédiger vos commits.</p>
+</li>
+<li>
+<p><strong>feature</strong> or <strong>feat</strong> : pour l'ajout de nouvelles fonctionnalités ;</p>
+</li>
+<li>
+<p><strong>fix</strong> : pour les corrections de bogues ;</p>
+</li>
+<li>
+<p><strong>refactor</strong> : pour le refactoring du code ;</p>
+</li>
+<li>
+<p><strong>test</strong> : pour les changements liés aux tests ;</p>
+</li>
+<li>
+<p><strong>doc</strong> : pour les changements liés à la documentation ;</p>
+</li>
+<li>
+<p><strong>chore</strong> : pour les tâches de maintenance sans impact sur le code source ou les tests
+(dépendances, configuration, outils...).</p>
+</li>
+</ul>
+<p>Le scope entre parenthèses est le nom du widget impacté.</p>
+<ul>
+<li>
+<p>Squashez vos commits en un seul avec le <code>rebase interactif</code> (cf. <a href="https://help.github.com/articles/interactive-rebase">https://help.github.com/articles/interactive-rebase</a>) ou via d'autres méthodes (cf. <a href="https://gist.github.com/patik/b8a9dc5cd356f9f6f980">https://gist.github.com/patik/b8a9dc5cd356f9f6f980</a> par exemple)</p>
 </li>
 <li>
 <p>Poussez cette branche sur votre dépôt, sur le dépôt marqué <code>origin</code>.</p>
 </li>
 </ul>
 <a id="on-soumet-une-pr" class="tsd-anchor"></a><h3 class="tsd-anchor-link">On soumet une PR...<a href="#on-soumet-une-pr" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>De votre <code>fork</code>, ouvrez une demande de <code>pull request</code> sur cette branche (cf. <a href="https://help.github.com/articles/creating-a-pull-request/">https://help.github.com/articles/creating-a-pull-request/</a>). Et ciblez sur la branche <code>main</code> du dépôt d'origine...</li>
+<li>Depuis votre <code>fork</code>, ouvrez une demande de <code>pull request</code> sur cette branche (cf. <a href="https://help.github.com/articles/creating-a-pull-request/">https://help.github.com/articles/creating-a-pull-request/</a>) et ciblez la branche <code>main</code> du dépôt d'origine...</li>
 <li>Référencez tous les problèmes ainsi que la documentation sur votre PR.</li>
-<li>Ajoutez un ou plusieurs label(s) à votre PR</li>
+<li>Ajoutez un ou plusieurs labels à votre PR</li>
 <li>Utilisez dans vos <code>commit</code> des fonctionnalités de GitHub (ex. &quot;Fix #37.&quot;).</li>
 <li>Si le responsable demande des modifications supplémentaires, il suffit de les pousser vers votre branche locale, la <code>pull request</code> se met à jour automatiquement.</li>
 <li>Une fois que la <code>pull request</code> est approuvée, les responsables du projet effectueront le merge (cf. <a href="https://help.github.com/articles/merging-a-pull-request/">https://help.github.com/articles/merging-a-pull-request/</a>).</li>
