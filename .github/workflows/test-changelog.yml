@@ -1,0 +1,43 @@
+name: Test token changelog
+
+on:
+  push:
+    branches: [test/changelog-token]
+
+permissions:
+  contents: write
+
+jobs:
+  test-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Le secret arrive-t-il ?
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Le secret arrive VIDE dans ce job"
+            exit 1
+          fi
+          echo "Secret présent, longueur : ${#TOKEN}"
+        env:
+          TOKEN: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
+
+      - name: Le token est-il accepté par l'API ?
+        run: |
+          curl -s -D headers.txt -o repo.json \
+            -H "Authorization: Bearer $TOKEN" \
+            https://api.github.com/repos/${{ github.repository }}
+          head -n 1 headers.txt
+          grep -i "x-github-sso" headers.txt || echo "Pas de blocage SSO"
+          jq '.permissions' repo.json
+        env:
+          TOKEN: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
+
+      - name: Checkout main avec le token
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: main
+          token: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
+
+      - name: Accès en écriture (dry-run)
+        run: git push --dry-run origin HEAD:main
