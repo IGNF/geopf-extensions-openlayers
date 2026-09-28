@@ -28,6 +28,7 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}
           head -n 1 headers.txt
           grep -i "x-github-sso" headers.txt || echo "Pas de blocage SSO"
+          cat repo.json
           jq '.permissions' repo.json
         env:
           TOKEN: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
