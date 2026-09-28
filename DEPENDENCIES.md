@@ -3,6 +3,20 @@
 
 The Geoplatform Extensions include the following third party code :
 
+## DSFR -- The French State Design System
+
+Released under the Etalab 2.0 licence
+
+Copyright Service d'Information du Gouvernement
+<https://github.com/GouvernementFR/dsfr/>
+
+## OpenLayers -- A high-performance, feature-packed library for all your mapping needs
+
+Released under the BSD 2-Clause License
+
+Copyright 2005-present, OpenLayers contributors
+<https://openlayers.org/>
+
 ## Sortable - is a JavaScript library for reorderable drag-and-drop lists on modern browsers and touch devices
 
 Released under MIT LICENCE
