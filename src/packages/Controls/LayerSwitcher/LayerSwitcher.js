@@ -375,7 +375,13 @@ class LayerSwitcher extends Control {
             olObservableUnByKey(this._listeners.onMoveListener);
             olObservableUnByKey(this._listeners.onAddListener);
             olObservableUnByKey(this._listeners.onRemoveListener);
-            
+            // and the listeners linked to each layer
+            for (var layerId in this._layers) {
+                if (this._layers.hasOwnProperty(layerId)) {
+                    this._unbindLayerListeners(layerId);
+                }
+            }
+
             // we put all the layers at Zindex = 0, without changing the visual order
             // in order that the next added layers are not hidden by layers with Zindex > 0
             for (var i = this._layersOrder.length - 1; i >= 0; i--) {
@@ -530,26 +536,7 @@ class LayerSwitcher extends Control {
             }
 
             // 3. Add listeners for opacity and visibility changes
-            this._listeners.updateLayerOpacity = layer.on(
-                "change:opacity",
-                (e) => this._updateLayerOpacity(e)
-            );
-            this._listeners.updateLayerVisibility = layer.on(
-                "change:visible",
-                (e) => this._updateLayerVisibility(e)
-            );
-            this._listeners.updateLayerGrayScale = layer.on(
-                "change:grayscale",
-                (e) => this._updateLayerGrayScale(e)
-            );
-            this._listeners.updateLayerLocked = layer.on(
-                "change:locked",
-                (e) => this._updateLayerLocked(e)
-            );
-            this._listeners.updateProperties = layer.on(
-                "propertychange",
-                (e) => this._updateGenericProperty(e)
-            );
+            this._bindLayerListeners(id);
             if (this._layers[id].onZIndexChangeEvent == null) {
                 this._layers[id].onZIndexChangeEvent = layer.on(
                     "change:zIndex",
@@ -634,16 +621,10 @@ class LayerSwitcher extends Control {
             return;
         }
 
-        olObservableUnByKey(this._listeners.updateLayerOpacity);
-        olObservableUnByKey(this._listeners.updateLayerVisibility);
-        olObservableUnByKey(this._listeners.updateLayerGrayScale);
-        olObservableUnByKey(this._listeners.updateLayerLocked);
-        olObservableUnByKey(this._listeners.updateProperties);
-        // olObservableUnByKey(this._listeners.updateLayersOrder);
-
         logger.trace(layer);
 
         var layerID = layer.gpLayerId;
+        this._unbindLayerListeners(layerID);
         // var layerList = document.getElementById(this._addUID("GPlayersList")).firstChild;
         // close layer info element if open.
         var infodiv = document.getElementById(this._addUID("GPinfo_ID_" + layerID));
@@ -1365,26 +1346,7 @@ class LayerSwitcher extends Control {
             this._updateLayerCounter();
 
             // Ajout de listeners sur les changements d'opacité, visibilité
-            this._listeners.updateLayerOpacity = layer.on(
-                "change:opacity",
-                (e) => this._updateLayerOpacity(e)
-            );
-            this._listeners.updateLayerVisibility = layer.on(
-                "change:visible",
-                (e) => this._updateLayerVisibility(e)
-            );
-            this._listeners.updateLayerGrayScale = layer.on(
-                "change:grayscale",
-                (e) => this._updateLayerGrayScale(e)
-            );
-            this._listeners.updateLayerLocked = layer.on(
-                "change:locked",
-                (e) => this._updateLayerLocked(e)
-            );
-            this._listeners.updateProperties = layer.on(
-                "propertychange",
-                (e) => this._updateGenericProperty(e)
-            );
+            this._bindLayerListeners(id);
             var self = this;
             setTimeout(() => {
                 self._updateLayerGrayScale({
@@ -1571,6 +1533,49 @@ class LayerSwitcher extends Control {
     }
 
     /**
+     * Add listeners on layer changes (opacity, visibility, grayscale, locked, properties).
+     * Listeners already added for this layer are removed first, to avoid duplicates.
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @private
+     */
+    _bindLayerListeners (id) {
+        var layerOptions = this._layers[id];
+        if (!layerOptions) {
+            return;
+        }
+        // on stocke les clés sur la couche, pour pouvoir les supprimer au retrait de cette couche
+        olObservableUnByKey(layerOptions.listenerKeys || []);
+        var layer = layerOptions.layer;
+        layerOptions.listenerKeys = [
+            layer.on("change:opacity", (e) => this._updateLayerOpacity(e)),
+            layer.on("change:visible", (e) => this._updateLayerVisibility(e)),
+            layer.on("change:grayscale", (e) => this._updateLayerGrayScale(e)),
+            layer.on("change:locked", (e) => this._updateLayerLocked(e)),
+            layer.on("propertychange", (e) => this._updateGenericProperty(e))
+        ];
+    }
+
+    /**
+     * Remove all listeners added on a layer by the control (including zIndex listener).
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @private
+     */
+    _unbindLayerListeners (id) {
+        var layerOptions = this._layers[id];
+        if (!layerOptions) {
+            return;
+        }
+        olObservableUnByKey(layerOptions.listenerKeys || []);
+        layerOptions.listenerKeys = null;
+        if (layerOptions.onZIndexChangeEvent) {
+            olObservableUnByKey(layerOptions.onZIndexChangeEvent);
+        }
+        layerOptions.onZIndexChangeEvent = null;
+    }
+
+    /**
      * Update picto opacity value on layer opacity change
      *
      * @param {Object} e - event
@@ -1578,6 +1583,10 @@ class LayerSwitcher extends Control {
      * @private
      */
     _updateLayerOpacity (e) {
+        var id = e.target.gpLayerId;
+        if (!this._layers[id]) {
+            return;
+        }
         var opacity = e.target.getOpacity();
         if (opacity > 1) {
             opacity = 1;
@@ -1585,7 +1594,6 @@ class LayerSwitcher extends Control {
         if (opacity < 0) {
             opacity = 0;
         }
-        var id = e.target.gpLayerId;
 
         var layerOpacityInput = document.getElementById(this._addUID("GPopacityValueDiv_ID_" + id));
         if (layerOpacityInput) {
@@ -1629,8 +1637,11 @@ class LayerSwitcher extends Control {
      * @private
      */
     _updateLayerVisibility (e) {
-        var visible = e.target.getVisible();
         var id = e.target.gpLayerId;
+        if (!this._layers[id]) {
+            return;
+        }
+        var visible = e.target.getVisible();
         var layerVisibility = document.getElementById(this._addUID("GPvisibilityPicto_ID_" + id));
         if (layerVisibility) {
             layerVisibility.ariaPressed = visible;
@@ -2177,6 +2188,10 @@ class LayerSwitcher extends Control {
 
         // abonnement/desabonnement aux evenements permettant la conversion en n/b
         var id = e.target.gpLayerId;
+        // la couche a pu être retirée avant l'appel différé de addLayer (setTimeout)
+        if (!this._layers[id]) {
+            return;
+        }
         var layer = this._layers[id].layer;
         if (layer.getLayers && layer.getLayers().getArray().length > 0) {
             console.warn("Grayscale not implemented for layer groups");
@@ -2260,6 +2275,9 @@ class LayerSwitcher extends Control {
      */
     _updateLayerLocked (e) {
         var id = e.target.gpLayerId;
+        if (!this._layers[id]) {
+            return;
+        }
         var layer = this._layers[id].layer;
         var locked = layer.get("locked");
 
