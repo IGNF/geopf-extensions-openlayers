@@ -1,3 +1,5 @@
+import { sanitizeHtml } from "../../Utils/Sanitize";
+
 var title = "reporting";
 
 const stringToHTML = (str) => {
@@ -228,17 +230,21 @@ var ReportingDOM = {
         `;
 
         var idTheme = this._addUID("GPreportingFormSelectTheme");
-        var divTheme = `
-        <div class="fr-select-group">
-            <label class="gpf-label fr-label" for="${idTheme}">
-                Objet du signalement (obligatoire)
-            </label>
-            <select class="gpf-select fr-select" id="${idTheme}" name="GPreportingSelectTheme" required>
-                <option value="" selected disabled >Sélectionner une option</option>
-                ${thematics.map((theme) => { return `<option value="${theme}">${theme}</option>`; }).join("")}
-            </select>
-        </div>
-        `;
+        var themeOptions = thematics.map(function (theme) {
+            var safeTheme = sanitizeHtml(theme, { strict : true });
+            return "<option value=\"" + safeTheme + "\">" + safeTheme + "</option>";
+        }).join("");
+        var divTheme = [
+            "<div class=\"fr-select-group\">",
+            "<label class=\"gpf-label fr-label\" for=\"" + idTheme + "\">",
+            "Objet du signalement (obligatoire)",
+            "</label>",
+            "<" + "select class=\"gpf-select fr-select\" name=\"GPreportingSelectTheme\" required>",
+            "<option value=\"\" selected disabled >Sélectionner une option</option>",
+            themeOptions,
+            "</" + "select>",
+            "</div>"
+        ].join("\n");
 
         var idDesc = this._addUID("GPreportingFormTextDesc");
         var divDesc = `
@@ -293,8 +299,9 @@ var ReportingDOM = {
         }
 
         // utile ?
-        var select = shadow.getElementById(idTheme);
+        var select = shadow.querySelector("select[name=\"GPreportingSelectTheme\"]");
         if (select) {
+            select.id = idTheme;
             select.addEventListener("change", (e) => {
                 this.onSelectFormThemeReportingChange(e);
             });
