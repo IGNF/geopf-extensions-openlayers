@@ -1,16 +1,6 @@
-var title = "reporting";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 
-// Escape HTML special characters to avoid DOM injection when values are
-// interpolated into HTML template literals before being parsed/rendered.
-const escapeHtml = (str) => {
-    return String(str).replace(/[&<>"']/g, (match) => ({
-        "&" : "&amp;",
-        "<" : "&lt;",
-        ">" : "&gt;",
-        "\"" : "&quot;",
-        "'" : "&#39;"
-    }[match]));
-};
+var title = "reporting";
 
 const stringToHTML = (str) => {
     var support = function () {
@@ -241,7 +231,7 @@ var ReportingDOM = {
 
         var idTheme = this._addUID("GPreportingFormSelectTheme");
         var themeOptions = thematics.map(function (theme) {
-            var safeTheme = escapeHtml(theme);
+            var safeTheme = sanitizeHtml(theme, { strict : true });
             return "<option value=\"" + safeTheme + "\">" + safeTheme + "</option>";
         }).join("");
         var divTheme = [
