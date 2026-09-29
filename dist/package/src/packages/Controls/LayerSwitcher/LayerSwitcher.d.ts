@@ -591,6 +591,12 @@ declare class LayerSwitcher extends Control {
      */
     private _listeners;
     /**
+     * compteur d'abonnements actifs par couche : { <gpLayerId> : { layer : Number, zindex : Number } }
+     * @type {Object}
+     * @private
+     */
+    private _listenersTrace;
+    /**
      * counter of layers in layerSwitcher control
      * @private
      */
@@ -857,6 +863,66 @@ declare class LayerSwitcher extends Control {
      * @private
      */
     private _onChangeLayerOpacity;
+    /**
+     * Add listeners on layer changes (opacity, visibility, grayscale, locked, properties).
+     * Listeners already added for this layer are removed first, to avoid duplicates.
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @private
+     */
+    private _bindLayerListeners;
+    /**
+     * Remove all listeners added on a layer by the control (including zIndex listener).
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @private
+     */
+    private _unbindLayerListeners;
+    /**
+     * Add the zIndex listener on a layer, only if it is not already bound.
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @param {String} [origin] - calling context, for logging purpose
+     * @private
+     */
+    private _bindLayerZIndexListener;
+    /**
+     * Remove the zIndex listener of a layer.
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @param {String} [origin] - calling context, for logging purpose
+     * @private
+     */
+    private _unbindLayerZIndexListener;
+    /**
+     * Trace des abonnements (ajout / retrait) posés sur une couche,
+     * afin de vérifier leur cohérence : les compteurs doivent revenir à 0 au retrait de la couche.
+     *
+     * @param {String} action - "bind" ou "unbind"
+     * @param {Number} id - layer id (gpLayerId)
+     * @param {String} kind - "layer" (évènements de la couche) ou "zindex"
+     * @param {Number} count - nombre d'abonnements concernés
+     * @param {String} [origin] - méthode appelante
+     * @private
+     */
+    private _traceLayerListeners;
+    /**
+     * Libellé lisible d'une couche pour les traces : `couche 12 "Plan IGN"`
+     *
+     * @param {Number} id - layer id (gpLayerId)
+     * @returns {String} libellé
+     * @private
+     */
+    private _getLayerLabel;
+    /**
+     * Bilan lisible des abonnements posés par le contrôle sur les couches :
+     * une couche suivie doit avoir 5 evt + 1 zIndex, une couche retirée doit être à 0.
+     * Les traces des couches retirées et soldées sont purgées.
+     *
+     * @returns {Array} détail par couche : { id, title, events, zindex, tracked, status }
+     * @private
+     */
+    private _getLayerListenersReport;
     /**
      * Update picto opacity value on layer opacity change
      *
