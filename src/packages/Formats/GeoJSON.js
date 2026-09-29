@@ -122,7 +122,19 @@ class GeoJSON extends olGeoJSON {
             Object.assign(geoJSONObject, this.options.extensions);
         }
 
-        return JSON.stringify(geoJSONObject);
+        // FIXME
+        // cela ne contourne pas la limite native de V8 (le JSON final reste trop gros 
+        // pour être stocké en String), il n'existe pas de moyen de stringifier un objet 
+        // dont la sortie dépasse la taille max d'une chaîne JS. 
+        // Si ce cas se présente réellement en production, il faudrait plutôt écrire le 
+        // GeoJSON par flux (streaming) vers un fichier/Blob au lieu de retourner une 
+        // String, ou paginer/découper les features en plusieurs exports. 
+        try {
+            return JSON.stringify(geoJSONObject);
+        } catch (e) {
+            // ex. RangeError: Invalid string length (trop de features / résultat trop volumineux pour tenir dans une chaine de caracteres)
+            throw new Error("GeoJSON.writeFeatures() : impossible de generer le GeoJSON, le resultat est trop volumineux (" + features.length + " feature(s)). Reduisez le nombre de features ou exportez par lots. Erreur d'origine : " + e.message);
+        }
     }
 
     /**
