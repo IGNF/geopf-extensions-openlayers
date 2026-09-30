@@ -1113,6 +1113,11 @@ class Catalog extends Control {
                         return doc.childNodes.length > 0 && doc.firstChild.nodeType === 1;
                     };
 
+                    // ajoute une description vide si non présente
+                    if (!layer.description) {
+                        layer.description = "";
+                    }
+
                     if (isHTML(layer.description)) {
                         logger.error(`layer description contains HTML code, which is not allowed. Layer: ${key}`);
                         logger.error("Please use Markdown syntax for layer descriptions instead.");
