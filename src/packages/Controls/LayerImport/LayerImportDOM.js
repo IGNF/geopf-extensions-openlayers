@@ -599,6 +599,24 @@ var LayerImportDOM = {
     },
 
     // ################################################################### //
+    // ########################## Error message ########################## //
+    // ################################################################### //
+
+    /**
+     * Create error messages container (empty by default)
+     *
+     * @returns {HTMLElement} DOM element
+     */
+    _createImportErrorContainer : function () {
+        var div = document.createElement("div");
+        div.id = this._addUID("GPimportMessagesGroup");
+        div.className = "GPimportMessagesGroup fr-messages-group";
+        div.setAttribute("role", "alert");
+        div.setAttribute("aria-live", "polite");
+        return div;
+    },
+
+    // ################################################################### //
     // ########################### Submit Form ########################### //
     // ################################################################### //
 
