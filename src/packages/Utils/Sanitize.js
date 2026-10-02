@@ -92,6 +92,21 @@ export function sanitizeHtml (input, options = {}) {
     return purify.sanitize(input, finalConfig);
 }
 
+/**
+ * Sanitize a string extracted from an XML payload (WMS/WMTS GetCapabilities).
+ * This is safer than sanitizing the whole XML because XML parsing must remain
+ * intact; only the text values that are later inserted in the DOM are cleaned.
+ *
+ * @param {String|Number|undefined|null} input
+ * @returns {String}
+ */
+export function sanitizeXmlText (input) {
+    if (input === null || input === undefined) {return "";}
+
+    const safeString = String(input).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "");
+    return sanitizeHtml(safeString, { strict : true });
+}
+
 // ─── Hook DOMPurify : sécuriser les liens ────────────────────────────────────
 //
 // Interdit les href commençant par javascript: ou data:

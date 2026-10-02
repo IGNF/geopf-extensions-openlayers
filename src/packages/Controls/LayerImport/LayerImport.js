@@ -52,7 +52,7 @@ import Utils from "../../Utils/Helper";
 import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 import ProxyUtils from "../../Utils/ProxyUtils";
-import { sanitizeHtml } from "../../Utils/Sanitize";
+import { sanitizeHtml, sanitizeXmlText } from "../../Utils/Sanitize";
 // DOM
 import LayerImportDOM from "./LayerImportDOM";
 import PanelDOM from "../PanelDOM";
@@ -2421,8 +2421,8 @@ class LayerImport extends Control {
                             // si la projection de la couche est connue par ol.proj,
                             // on ajoute chaque couche de la réponse dans la liste des couches accessibles
                             layerDescription = {
-                                content : layers[j].Title,
-                                title : layers[j].Abstract || layers[j].Title
+                                content : sanitizeXmlText(layers[j].Title),
+                                title : sanitizeXmlText(layers[j].Abstract || layers[j].Title)
                             };
                             if (this._getCapResultsListContainer) {
                                 this._addImportGetCapResultLayer(layerDescription, j, this._getCapResultsListContainer);
@@ -2576,8 +2576,8 @@ class LayerImport extends Control {
                 layerObj._projection = projection;
                 // on ajoute chaque couche de la réponse dans la liste des couches accessibles
                 layerDescription = {
-                    content : layerObj.Title,
-                    title : layerObj.Abstract || layerObj.Title
+                    content : sanitizeXmlText(layerObj.Title),
+                    title : sanitizeXmlText(layerObj.Abstract || layerObj.Title)
                 };
                 // FIXME beurk !?
                 var _isGoodContainer = layerObj._container;

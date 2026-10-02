@@ -743,8 +743,8 @@ var LayerImportDOM = {
         var label = document.createElement("label");
         label.className = "GPimportGetCapRubriqueTitle gpf-label fr-btn fr-btn--secondary";
         label.htmlFor = input.id;
-        label.innerHTML = title;
-        label.title = title;
+        label.textContent = String(title ?? "");
+        label.title = String(title ?? "");
         li.appendChild(label);
 
         container.appendChild(li);
@@ -762,8 +762,8 @@ var LayerImportDOM = {
     _addImportGetCapResultLayer : function (description, id, container) {
         var li = document.createElement("li");
         li.className = "GPimportGetCapProposal gpf-panel__items_layerimport gpf-panel__items";
-        li.innerHTML = description.content;
-        li.title = description.title;
+        li.textContent = String(description.content ?? "");
+        li.title = String(description.title ?? "");
         li.id = "GPimportGetCapProposal_" + id;
 
         var context = this;
