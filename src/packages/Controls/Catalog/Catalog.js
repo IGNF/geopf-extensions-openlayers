@@ -1171,7 +1171,7 @@ class Catalog extends Control {
                 // - interdit le HTML
                 // - transforme le markdown en HTML avec https://marked.js.org/
                 layer.description = typeof layer.description === "string" ? layer.description : "";
-                layer.description = layer.description.replaceAll(/<br\s*\/?>/gi, "  \n");
+                layer.description = layer.description.replaceAll(/<\/?\s*br\s*\/?>/gi, "  \n"); // double espace devant \n = saut de ligne explicite en md
                 if (isHTML(layer.description)) {
                     throw new Error(`Layer description contains HTML code, which is not allowed. Please use Markdown syntax instead.`);
                 }
