@@ -87,6 +87,14 @@ div[id^="GPimportDropZone-"].GPimportDropZoneHover {
     background-color: #ECECFE;
 }
 
+div[id^="GPimportDropZone-"].GPimportDropZoneError {
+    border-color: var(--border-plain-error, #CE0500);
+}
+
+div[id^="GPimportMessagesGroup-"]:not(:empty) {
+    margin-top: 1rem;
+}
+
 .GPimportDropZoneIcon {
     width: 1.5rem;
     height: 1.5rem;
