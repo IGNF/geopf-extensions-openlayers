@@ -13,6 +13,7 @@ import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
 import Config from "../../Utils/Config";
 import LayerConfig from "../../Utils/LayerConfigUtils";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 
 // import local des layers
 import GeoportalWFS from "../../Layers/LayerWFS";
@@ -1086,11 +1087,26 @@ class Catalog extends Control {
      * It also adds additional properties to each layer, such as `service`, `categories`, and URLs for producers and thematics.
      * It cleans the list of layers by removing those without valid configuration and adds a default thumbnail if enabled and not present.
      * 
-     * @param {Array<ConfigLayer>} layers - list of layers
+     * @param {Object<String, ConfigLayer>} layers - layers indexed by configuration key
      * @private
      */
     checkConfigLayers (layers) {
-        // TEST
+        // Vérification de la validité de l'objet layers
+        if (!layers || typeof layers !== "object" || Array.isArray(layers)) {
+            logger.error("Invalid configuration: layers must be an object.");
+            return;
+        }
+
+        // Fonction utilitaire pour normaliser une liste de valeurs en tableau de chaînes de caractères
+        const normalizeList = (value) => {
+            const entries = Array.isArray(value) ? value : [value];
+            return entries
+                .filter(entry => typeof entry === "string")
+                .map(entry => entry.trim())
+                .filter(Boolean);
+        };
+
+        // Fonction utilitaire pour vérifier si une chaîne de caractères contient du HTML
         const isHTML = (str) => {
             if (typeof str !== "string" || !str.trim()) {
                 return false;
@@ -1099,6 +1115,7 @@ class Catalog extends Control {
             element.innerHTML = str.trim();
             return element.querySelector("*") !== null;
         };
+
         // INFO
         // on en profite pour ajouter des properties :
         // - service : utile pour identifier la couche
@@ -1110,57 +1127,75 @@ class Catalog extends Control {
         // cf. serviceParams obligatoire
         // on en profite aussi pour ajouter une vignette par défaut
         // si la couche n'en a pas et que l'option est activée
-        for (const key in layers) {
-            if (Object.prototype.hasOwnProperty.call(layers, key)) {
+        for (const key of Object.keys(layers)) {
+            try {
                 const layer = layers[key];
-                if (layer.serviceParams) {
-                    // ajoute une description vide si non présente
-                    if (!layer.description) {
-                        layer.description = "";
-                    }
 
-                    if (isHTML(layer.description)) {
-                        logger.error(`layer description contains HTML code, which is not allowed. Layer: ${key}`);
-                        logger.error("Please use Markdown syntax for layer descriptions instead.");
-                        logger.error(layer.description);
-                        delete layers[key];
-                        continue;
-                    }
-                    // si la couche a bien une configuration valide liée au service
-                    var service = layer.serviceParams.id.split(":").slice(-1)[0]; // beurk!
-                    layer.service = service; // new proprerty !
-                    layer.categories = []; // new property ! vide pour le moment
-                    layer.key = key; // new property ! clef de la couche dans la config
-                    layer.producer_urls = this.createCatalogProducerLinks(layer.producer); // plus d'info
-                    layer.thematic_urls = this.createCatalogThematicLinks(layer.thematic); // plus d'info
-                    // label de la couche
-                    layer.label = (this.options.layerLabel) ? (layer[this.options.layerLabel] || layer.title) : layer.title;
-                    // INFO
-                    // On transforme le markdown en HTML
-                    // et on nettoie le HTML pour éviter les injections XSS
-                    // cf. https://marked.js.org/
-                    // Le markdown ne doit pas être échappé pour realiser une transformation !
-                    layer.description = Marked.parse(layer.description);
-                    // les vignettes !
-                    if (this.options.layerThumbnail) {
-                        // si on souhaite afficher une vignette
-                        // et que la couche n'en a pas
-                        // on met une vignette par défaut
-                        if (!layer.thumbnail) {
-                            layer.thumbnail = "default";
-                        }
-                    } else {
-                        // sinon pas de vignette
-                        if (layer.thumbnail) {
-                            // FIXME 
-                            // suppression !?
-                            delete layer.thumbnail;
-                        }
+                // Vérifications générales
+                // couche valide
+                if (!layer || typeof layer !== "object" || Array.isArray(layer)) {
+                    throw new Error("Layer must be an object.");
+                }
+                // id de service (serviceParams.id)
+                const serviceId = layer.serviceParams?.id;
+                if (typeof serviceId !== "string" || !serviceId.trim()) {
+                    throw new Error("Missing or invalid serviceParams.id.");
+                }
+                // nom de la couche (name)
+                if (typeof layer.name !== "string" || !layer.name.trim()) {
+                    throw new Error("Missing or invalid name.");
+                }
+                // type de service (WMTS, WMS, WFS, TMS)
+                const service = serviceId.split(":").pop().trim();
+                if (!["WMTS", "WMS", "WFS", "TMS"].includes(service)) {
+                    throw new Error(`Unsupported service: ${service}`);
+                }
+
+                // Nettoyage et normalisation
+                layer.name = layer.name.trim();
+                layer.title = typeof layer.title === "string" && layer.title.trim()
+                    ? layer.title.trim()
+                    : layer.name;
+                layer.producer = normalizeList(layer.producer);
+                layer.thematic = normalizeList(layer.thematic);
+                layer.service = service; // new proprerty !
+                layer.categories = []; // new property ! vide pour le moment
+                layer.key = key; // new property ! clef de la couche dans la config
+                layer.producer_urls = this.createCatalogProducerLinks(layer.producer); // plus d'info
+                layer.thematic_urls = this.createCatalogThematicLinks(layer.thematic); // plus d'info
+                layer.label = this.options.layerLabel && (this.options.layerLabel !== "description" || typeof layer.description === "string")
+                    ? (layer[this.options.layerLabel] || layer.title)
+                    : layer.title;
+                // description
+                // - remplace les <br>
+                // - interdit le HTML
+                // - transforme le markdown en HTML avec https://marked.js.org/
+                layer.description = typeof layer.description === "string" ? layer.description : "";
+                layer.description = layer.description.replaceAll(/<br\s*\/?>/gi, "  \n");
+                if (isHTML(layer.description)) {
+                    throw new Error(`Layer description contains HTML code, which is not allowed. Please use Markdown syntax instead.`);
+                }
+                layer.description = sanitizeHtml(Marked.parse(layer.description));
+
+                // les vignettes !
+                if (this.options.layerThumbnail) {
+                    // si on souhaite afficher une vignette
+                    // et que la couche n'en a pas
+                    // on met une vignette par défaut
+                    if (!layer.thumbnail) {
+                        layer.thumbnail = "default";
                     }
                 } else {
-                    // sinon on supprime l'entrée car pas de configuration valide
-                    delete layers[key];
+                    // sinon pas de vignette
+                    if (layer.thumbnail) {
+                        // FIXME 
+                        // suppression !?
+                        delete layer.thumbnail;
+                    }
                 }
+            } catch (error) {
+                logger.warn(`Layer ignored (${key}): ${error.message}`);
+                delete layers[key];
             }
         }
     }
