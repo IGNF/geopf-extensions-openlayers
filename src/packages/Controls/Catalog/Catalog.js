@@ -1090,6 +1090,15 @@ class Catalog extends Control {
      * @private
      */
     checkConfigLayers (layers) {
+        // TEST
+        const isHTML = (str) => {
+            if (typeof str !== "string" || !str.trim()) {
+                return false;
+            }
+            const element = document.createElement("div");
+            element.innerHTML = str.trim();
+            return element.querySelector("*") !== null;
+        };
         // INFO
         // on en profite pour ajouter des properties :
         // - service : utile pour identifier la couche
@@ -1105,16 +1114,6 @@ class Catalog extends Control {
             if (Object.prototype.hasOwnProperty.call(layers, key)) {
                 const layer = layers[key];
                 if (layer.serviceParams) {
-                    // TEST
-                    const isHTML = (str) => {
-                        if (typeof str !== "string" || !str.trim()) {
-                            return false;
-                        }
-                        const element = document.createElement("div");
-                        element.innerHTML = str.trim();
-                        return element.querySelector("*") !== null;
-                    };
-
                     // ajoute une description vide si non présente
                     if (!layer.description) {
                         layer.description = "";
