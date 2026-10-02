@@ -1107,10 +1107,12 @@ class Catalog extends Control {
                 if (layer.serviceParams) {
                     // TEST
                     const isHTML = (str) => {
-                        const doc = document.createElement("div");
-                        doc.innerHTML = str.trim();
-                        // Si le premier enfant est un élément HTML, c'est du HTML
-                        return doc.childNodes.length > 0 && doc.firstChild.nodeType === 1;
+                        if (typeof str !== "string" || !str.trim()) {
+                            return false;
+                        }
+                        const element = document.createElement("div");
+                        element.innerHTML = str.trim();
+                        return element.querySelector("*") !== null;
                     };
 
                     // ajoute une description vide si non présente
