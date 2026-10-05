@@ -223,6 +223,7 @@ declare class ElevationPath extends Control {
     }> | null;
     _marker: any;
     _container: HTMLElement;
+    element: HTMLElement;
     /**
      * Attach control to map. Overloaded ol.control.Control.setMap() method.
      *

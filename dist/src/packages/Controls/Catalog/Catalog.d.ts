@@ -387,6 +387,7 @@ declare class Catalog extends Control {
      */
     private CLASSNAME;
     container: HTMLElement;
+    element: HTMLElement;
     configData: any;
     /**
      * Overwrite OpenLayers setMap method
@@ -750,7 +751,7 @@ declare class Catalog extends Control {
      * It also adds additional properties to each layer, such as `service`, `categories`, and URLs for producers and thematics.
      * It cleans the list of layers by removing those without valid configuration and adds a default thumbnail if enabled and not present.
      *
-     * @param {Array<ConfigLayer>} layers - list of layers
+     * @param {Object<String, ConfigLayer>} layers - layers indexed by configuration key
      * @private
      */
     private checkConfigLayers;

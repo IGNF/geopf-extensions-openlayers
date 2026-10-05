@@ -47,6 +47,7 @@ declare class Legends extends Control {
      * @private
      * Widget main DOM container */
     private container;
+    element: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *

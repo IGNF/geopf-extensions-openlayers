@@ -53,6 +53,7 @@ declare class ReverseGeocode extends Control {
      */
     private CLASSNAME;
     container: HTMLElement;
+    element: HTMLElement;
     /**
      * Returns true if widget is collapsed (minimized), false otherwise
      *

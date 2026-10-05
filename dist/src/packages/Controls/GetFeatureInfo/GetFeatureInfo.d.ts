@@ -28,6 +28,7 @@ declare class GetFeatureInfo extends Control {
      */
     private CLASSNAME;
     container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *

@@ -98,6 +98,7 @@ declare class ContextMenu extends Control {
     */
     private CLASSNAME;
     container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *

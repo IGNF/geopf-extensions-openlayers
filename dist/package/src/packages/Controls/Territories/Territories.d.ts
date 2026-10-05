@@ -198,6 +198,7 @@ declare class Territories extends Control {
      */
     private CLASSNAME;
     container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *

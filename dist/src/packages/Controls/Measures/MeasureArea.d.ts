@@ -49,6 +49,7 @@ declare class MeasureArea extends Control {
     _uid: number;
     _pictoContainer: any;
     _container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *

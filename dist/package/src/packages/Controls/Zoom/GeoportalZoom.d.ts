@@ -19,7 +19,7 @@ declare class GeoportalZoom extends Zoom {
      * map.addControl(zoom);
      */
     constructor(options: any);
-    container: HTMLElement | null;
+    container: HTMLElement | null | undefined;
     options: any;
     /**
      * ...

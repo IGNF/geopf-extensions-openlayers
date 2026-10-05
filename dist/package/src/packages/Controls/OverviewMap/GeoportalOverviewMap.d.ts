@@ -25,7 +25,7 @@ declare class GeoportalOverviewMap extends OverviewMap {
      * @private
      */
     private CLASSNAME;
-    container: HTMLElement | null;
+    container: HTMLElement | null | undefined;
     options: any;
     /**
      * ...

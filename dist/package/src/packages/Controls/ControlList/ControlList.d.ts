@@ -66,6 +66,7 @@ declare class ControlList extends Control {
      */
     private CLASSNAME;
     _container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *

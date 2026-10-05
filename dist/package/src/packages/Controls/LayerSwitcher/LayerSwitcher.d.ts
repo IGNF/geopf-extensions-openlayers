@@ -414,6 +414,7 @@ declare class LayerSwitcher extends Control {
      */
     private CLASSNAME;
     container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overload setMap function, that enables to catch map events, such as movend events.
      * @inheritdoc {@link https://openlayers.org/en/latest/apidoc/module-ol_control_Control-Control.html#setMap}

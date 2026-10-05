@@ -22,7 +22,7 @@ declare class GeoportalFullScreen extends FullScreen {
      * @private
      */
     private CLASSNAME;
-    container: HTMLElement | null;
+    container: HTMLElement | null | undefined;
     options: any;
     /**
      * ...

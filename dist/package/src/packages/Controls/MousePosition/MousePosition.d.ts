@@ -105,6 +105,7 @@ declare class MousePosition extends Control {
      */
     private CLASSNAME;
     container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overload ol.control.Control setMap method, called when
      *

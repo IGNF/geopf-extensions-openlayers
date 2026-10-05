@@ -716,6 +716,7 @@ declare class Panoramax extends Control {
      */
     constructor(options?: PanoramaxOptions);
     container: HTMLElement;
+    element: HTMLElement;
     /**
      * Surcharge la méthode `setMap` d'OpenLayers.
      *

@@ -318,6 +318,7 @@ declare class Drawing extends Control {
      */
     private CLASSNAME;
     _container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overload of {@link http://openlayers.org/en/latest/apidoc/ol.control.Control.html#setMap ol.control.Control.setMap()} method, called when control is added to or removed from map.
      *

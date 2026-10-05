@@ -107,6 +107,7 @@ declare class Reporting extends Control {
         render?: Function | undefined;
     });
     container: HTMLElement;
+    element: HTMLElement;
     /**
      * Overwrite OpenLayers setMap method
      *

@@ -65,6 +65,7 @@ declare class LocationSelector extends Control {
      */
     private CLASSNAME;
     _container: HTMLElement;
+    element: HTMLElement;
     /**
      * initialize component
      *
