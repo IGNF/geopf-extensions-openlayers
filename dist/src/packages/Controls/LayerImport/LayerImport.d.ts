@@ -17,6 +17,12 @@ declare class LayerImport extends Control {
     */
     private static DefaultStyles;
     /**
+     * Extensions de fichier acceptées pour chaque type d'import statique.
+     *
+     * @private
+     */
+    private static AllowedExtensions;
+    /**
     * @constructor
     * @fires layerimport:mapbox:added
     * @fires layerimport:vector:added
@@ -239,6 +245,8 @@ declare class LayerImport extends Control {
     /** @private */
     private _formContainer;
     /** @private */
+    private _errorContainer;
+    /** @private */
     private _staticLocalImportInput;
     /** @private */
     private _staticUrlImportInput;
@@ -272,6 +280,8 @@ declare class LayerImport extends Control {
     private _getCapResponseWMTS;
     /** @private */
     private _getCapResponseWMTSLayers;
+    /** @private */
+    private _getCapResultsCount;
     /** @private */
     private _hasMapBoxResults;
     /** @private */
@@ -415,6 +425,7 @@ declare class LayerImport extends Control {
      *
      * @param {String} fileContent - content file
      * @param {String} layerName - imported layer name
+     * @throws {Error} if the content cannot be used to build a layer
      * @private
      */
     private _addFeaturesFromImportStaticLayer;
@@ -486,6 +497,7 @@ declare class LayerImport extends Control {
      * and display layers list from getcapabilities response
      *
      * @param {Object} xmlResponse - getCapabilities response (xml format)
+     * @throws {Error} if the response is not a usable getCapabilities document
      * @private
      */
     private _displayGetCapResponseLayers;
@@ -607,6 +619,42 @@ declare class LayerImport extends Control {
      * @private
      */
     private _getWMTSLayerExtent;
+    /**
+     * displays an error message in the import form and keeps the panel open
+     *
+     * @param {String} message - user message
+     * @private
+     */
+    private _showImportError;
+    /**
+     * removes the error message from the import form
+     *
+     * @private
+     */
+    private _clearImportError;
+    /**
+     * checks the file (or url) extension against the current import type
+     *
+     * @param {String} name - file name or url
+     * @returns {Boolean} true if the extension is missing or matches the current import type
+     * @private
+     */
+    private _checkFileExtension;
+    /**
+     * builds the message used when the extension does not match the current import type
+     *
+     * @returns {String} message
+     * @private
+     */
+    private _getExtensionErrorMessage;
+    /**
+     * checks that the content can be parsed with the current import type
+     *
+     * @param {String} fileContent - content file
+     * @throws {Error} if the content does not match the expected format
+     * @private
+     */
+    private _checkStaticContent;
     /**
      * gets control map projection code
      *

@@ -24,4 +24,13 @@ export function sanitizeHtml(input: string, options?: {
     config?: any;
     purify?: any;
 }): string;
+/**
+ * Sanitize a string extracted from an XML payload (WMS/WMTS GetCapabilities).
+ * This is safer than sanitizing the whole XML because XML parsing must remain
+ * intact; only the text values that are later inserted in the DOM are cleaned.
+ *
+ * @param {String|Number|undefined|null} input
+ * @returns {String}
+ */
+export function sanitizeXmlText(input: string | number | undefined | null): string;
 //# sourceMappingURL=Sanitize.d.ts.map

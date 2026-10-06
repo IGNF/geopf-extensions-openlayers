@@ -25,6 +25,7 @@ declare namespace LayerImportDOM {
     function _createServiceUrlDiv(): HTMLElement;
     function _createServiceUrlInputLabel(): HTMLElement;
     function _createServiceUrlInput(): HTMLElement;
+    function _createImportErrorContainer(): HTMLElement;
     function _createImportSubmitFormElement(): HTMLElement;
     function _createImportGetCapPanelElement(): HTMLElement;
     function _createImportGetCapPanelHeaderElement(): HTMLElement;
