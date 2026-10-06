@@ -1290,7 +1290,7 @@ class LayerImport extends Control {
             var _glStyles = JSON.parse(fileContent);
 
             // liste des sources
-            var _glSources = _glStyles.sources;
+            var _glSources = _glStyles && _glStyles.sources;
 
             if (!_glSources || Object.keys(_glSources).length === 0) {
                 this._hasMapBoxResults = false;
