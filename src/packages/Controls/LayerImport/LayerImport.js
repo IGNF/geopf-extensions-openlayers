@@ -52,7 +52,7 @@ import Utils from "../../Utils/Helper";
 import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 import ProxyUtils from "../../Utils/ProxyUtils";
-import { sanitizeHtml } from "../../Utils/Sanitize";
+import { sanitizeHtml, sanitizeXmlText } from "../../Utils/Sanitize";
 // DOM
 import LayerImportDOM from "./LayerImportDOM";
 import PanelDOM from "../PanelDOM";
@@ -220,6 +220,18 @@ class LayerImport extends Control {
                 width : 2
             })
         })
+    };
+
+    /**
+     * Extensions de fichier acceptées pour chaque type d'import statique.
+     *
+     * @private
+     */
+    static AllowedExtensions = {
+        KML : ["kml"],
+        GPX : ["gpx"],
+        GeoJSON : ["geojson", "json"],
+        MAPBOX : ["json"]
     };
 
     // ################################################################### //
@@ -550,6 +562,8 @@ class LayerImport extends Control {
         /** @private */
         this._formContainer = null;
         /** @private */
+        this._errorContainer = null;
+        /** @private */
         this._staticLocalImportInput = null;
         /** @private */
         this._staticUrlImportInput = null;
@@ -587,6 +601,8 @@ class LayerImport extends Control {
         this._getCapResponseWMTS = null;
         /** @private */
         this._getCapResponseWMTSLayers = [];
+        /** @private */
+        this._getCapResultsCount = 0;
 
         // ################################################################## //
         // ########################### MapBox ############################### //
@@ -878,9 +894,21 @@ class LayerImport extends Control {
         // append service params container to form container
         importForm.appendChild(importServiceParamsContainer);
 
+        // zone des messages d'erreur, juste au dessus du bouton "Importer"
+        this._errorContainer = this._createImportErrorContainer();
+        importForm.appendChild(this._errorContainer);
+
         // submit (bouton "Importer")
         var submit = this._createImportSubmitFormElement();
         importForm.appendChild(submit);
+
+        // l'erreur affichée n'est plus valable dès que l'utilisateur modifie une saisie
+        var clear = () => this._clearImportError();
+        this._staticLocalImportInput.addEventListener("change", clear);
+        if (this._staticUrlImportInput) {
+            this._staticUrlImportInput.addEventListener("input", clear);
+        }
+        this._serviceUrlImportInput.addEventListener("input", clear);
 
         return importForm;
     }
@@ -941,6 +969,7 @@ class LayerImport extends Control {
      * @private
      */
     _onImportTypeChange (e) {
+        this._clearImportError();
         this._currentImportType = e.target.value;
         if (this._currentImportType === "KML" || this._currentImportType === "GPX" || this._currentImportType === "GeoJSON" || this._currentImportType === "MAPBOX") {
             this._isCurrentImportTypeStatic = true;
@@ -958,6 +987,7 @@ class LayerImport extends Control {
      * @private
      */
     _onStaticImportTypeChange (e) {
+        this._clearImportError();
         this._currentStaticImportType = e.target.value;
     }
 
@@ -1001,6 +1031,7 @@ class LayerImport extends Control {
      * @private
      */
     _onReturnPictoClick (e) {
+        this._clearImportError();
         // on bascule sur l'icone d'ouverture du composant
         this._onGetCapPanelClose();
         this._onMapBoxPanelClose();
@@ -1027,9 +1058,9 @@ class LayerImport extends Control {
         // - service (WMS, ...)
         this.contentService = null;
 
+        this._clearImportError();
+
         if (this._isCurrentImportTypeStatic) {
-            // on ferme le widget à l'import d'une couche statique
-            this.setCollapsed(true);
             this._importStaticLayer();
         } else {
             this._importServiceLayers();
@@ -1074,13 +1105,17 @@ class LayerImport extends Control {
         // 1. Récupération de l'url
         var url = this._staticUrlImportInput.value;
         logger.log("url : ", url);
-        if (url.length === 0) {
-            logger.error("[ol.control.LayerImport] url parameter is mandatory");
-            return;
-        }
         // on supprime les éventuels espaces avant ou après
         if (url.trim) {
             url = url.trim();
+        }
+        if (url.length === 0) {
+            this._showImportError("Veuillez saisir l'URL du fichier à importer.");
+            return;
+        }
+        if (!this._checkFileExtension(url)) {
+            this._showImportError(this._getExtensionErrorMessage());
+            return;
         }
 
         // sauvegarde
@@ -1104,6 +1139,7 @@ class LayerImport extends Control {
         // this._addFeaturesFromImportStaticLayerUrl(url, layerName);
 
         var context = this;
+        this._displayWaitingContainer();
         Gp.Protocols.XHR.call({
             url : url,
             method : "GET",
@@ -1111,13 +1147,18 @@ class LayerImport extends Control {
             // on success callback : display results in container
             onResponse : function (response) {
                 context._hideWaitingContainer();
-                context._addFeaturesFromImportStaticLayer(response, layerName);
+                try {
+                    context._addFeaturesFromImportStaticLayer(response, layerName);
+                } catch (e) {
+                    context._showImportError(e.message);
+                }
             },
             // on error callback : log error
             onFailure : function (error) {
                 // en cas d'erreur, on revient au panel initial et on cache la patience
                 context._hideWaitingContainer();
                 logger.error("[ol.control.LayerImport] KML/GPX/GeoJSON/MapBox request failed : ", error);
+                context._showImportError("Le fichier n'a pas pu être récupéré à cette URL (vérifiez l'adresse ou le proxy).");
             }
         });
     }
@@ -1132,7 +1173,11 @@ class LayerImport extends Control {
     _importStaticLayerFromLocalFile (layerName) {
         var file = this._staticLocalImportInput.files[0];
         if (!file) {
-            logger.warn("[ol.control.LayerImport] missing file");
+            this._showImportError("Veuillez sélectionner un fichier à importer.");
+            return;
+        }
+        if (!this._checkFileExtension(file.name)) {
+            this._showImportError(this._getExtensionErrorMessage());
             return;
         }
 
@@ -1158,6 +1203,7 @@ class LayerImport extends Control {
             // en cas d'erreur, on revient au panel initial et on cache la patience
             context._hideWaitingContainer();
             logger.error("error fileReader : ", e);
+            context._showImportError("Le fichier n'a pas pu être lu.");
         };
         /** on readAsText progress */
         fReader.onprogress = () => {
@@ -1174,6 +1220,7 @@ class LayerImport extends Control {
             // en cas d'erreur, on revient au panel initial et on cache la patience
             context._hideWaitingContainer();
             logger.log("onabort");
+            context._showImportError("La lecture du fichier a été interrompue.");
         };
         // on readAsText loadend
         fReader.onloadend = (e) => {
@@ -1189,7 +1236,11 @@ class LayerImport extends Control {
 
             // on cache la patience
             context._hideWaitingContainer();
-            context._addFeaturesFromImportStaticLayer(e.target.result, layerName);
+            try {
+                context._addFeaturesFromImportStaticLayer(e.target.result, layerName);
+            } catch (error) {
+                context._showImportError(error.message);
+            }
         };
 
         // Lecture du fichier chargé à l'aide de fileReader
@@ -1202,14 +1253,20 @@ class LayerImport extends Control {
      *
      * @param {String} fileContent - content file
      * @param {String} layerName - imported layer name
+     * @throws {Error} if the content cannot be used to build a layer
      * @private
      */
     _addFeaturesFromImportStaticLayer (fileContent, layerName) {
         // récupération du contenu du fichier
         var map = this.getMap();
-        if (!map || !fileContent) {
+        if (!map) {
             return;
         }
+        if (!fileContent) {
+            throw new Error("Le fichier importé est vide.");
+        }
+
+        this._checkStaticContent(fileContent);
 
         var vectorLayer = null;
         var vectorSource = null;
@@ -1232,11 +1289,16 @@ class LayerImport extends Control {
             // style mapbox
             var _glStyles = JSON.parse(fileContent);
 
+            // liste des sources
+            var _glSources = _glStyles && _glStyles.sources;
+
+            if (!_glSources || Object.keys(_glSources).length === 0) {
+                this._hasMapBoxResults = false;
+                throw new Error("Aucune source exploitable n'a été trouvée dans ce style MapBox.");
+            }
+
             // enregistrement initial
             map.set("mapbox-style", _glStyles);
-
-            // liste des sources
-            var _glSources = _glStyles.sources;
 
             // FIXME a t on du multi-sources ?
             // mais comment doit on les traiter ?
@@ -1470,8 +1532,7 @@ class LayerImport extends Control {
                         vectorLayer.id = _glSourceId;
                         vectorLayer.gpResultLayerId = "layerimport:" + this._currentImportType;
                     } else {
-                        logger.warn("Type MapBox format unknown !");
-                        return;
+                        throw new Error("Le type de source MapBox '" + _glType + "' n'est pas géré.");
                     }
 
                     // clone
@@ -1632,6 +1693,7 @@ class LayerImport extends Control {
                                 })
                                 .catch(function (e) {
                                     logger.error(e);
+                                    self._showImportError("Le style MapBox n'a pas pu être appliqué : " + e.message);
                                     // envoi d'un evenement !
                                     map.dispatchEvent({
                                         id : p.id,
@@ -1739,15 +1801,24 @@ class LayerImport extends Control {
 
             // récupération des entités avec reprojection éventuelle des géométries
             var features = null;
-            features = vectorFormat.readFeatures(
-                fileContent, {
-                    dataProjection : fileProj,
-                    featureProjection : mapProj
-                }
-            );
+            try {
+                features = vectorFormat.readFeatures(
+                    fileContent, {
+                        dataProjection : fileProj,
+                        featureProjection : mapProj
+                    }
+                );
+            } catch (e) {
+                logger.error("[ol.control.LayerImport] readFeatures failed : ", e);
+                throw new Error("Le contenu importé n'a pas pu être lu comme un fichier " + this._currentImportType + " valide.");
+            }
 
             logger.log("loaded features : ", features);
-            
+
+            if (!features || features.length === 0) {
+                throw new Error("Aucune donnée à afficher n'a été trouvée dans ce fichier " + this._currentImportType + ".");
+            }
+
             // sanitize toutes les properties des features pour éviter les risques de XSS
             for (let index = 0; index < features.length; index++) {
                 const feature = features[index];
@@ -1863,6 +1934,9 @@ class LayerImport extends Control {
                 layer : vectorLayer,
                 format : this._currentImportType.toLowerCase()
             });
+
+            // l'import a abouti, on peut replier le widget
+            this.setCollapsed(true);
         }
     }
 
@@ -2203,7 +2277,7 @@ class LayerImport extends Control {
      */
     _importServiceLayers () {
         if (this._currentImportType === "WFS") {
-            logger.warn("[ol.control.LayerImport] WFS layer import is not implemented yet");
+            this._showImportError("L'import de couches WFS n'est pas encore disponible.");
             return;
         }
 
@@ -2212,16 +2286,16 @@ class LayerImport extends Control {
 
         // 1. récupération de l'url renseignée
         var url = this._getCapRequestUrl = this._serviceUrlImportInput.value;
+        // on supprime les éventuels espaces avant ou après
+        if (url && url.trim) {
+            url = this._getCapRequestUrl = url.trim();
+        }
         if (!url) {
-            logger.error("[ol.control.LayerImport] url parameter is mandatory");
+            this._showImportError("Veuillez saisir l'URL du service " + this._currentImportType + ".");
             return;
         }
         logger.log("url : ", url);
 
-        // on supprime les éventuels espaces avant ou après
-        if (url.trim) {
-            url = url.trim();
-        }
         // Info : on ajoute des paramètres uniquement si l'utilisateur n'en a pas déjà saisi (on vérifie la position du caractère "?")
         var questionMarkIndex = url.indexOf("?");
         if (questionMarkIndex < 0) {
@@ -2250,13 +2324,18 @@ class LayerImport extends Control {
             // on success callback : display results in container
             onResponse : function (response) {
                 context._hideWaitingContainer();
-                context._displayGetCapResponseLayers(response);
+                try {
+                    context._displayGetCapResponseLayers(response);
+                } catch (e) {
+                    context._showImportError(e.message);
+                }
             },
             // on error callback : log error
             onFailure : function (error) {
                 // en cas d'erreur, on revient au panel initial et on cache la patience
                 context._hideWaitingContainer();
                 logger.error("[ol.control.LayerImport] getCapabilities request failed : ", error);
+                context._showImportError("Le service n'a pas répondu (vérifiez l'URL ou le proxy).");
             }
         });
     }
@@ -2266,6 +2345,7 @@ class LayerImport extends Control {
      * and display layers list from getcapabilities response
      *
      * @param {Object} xmlResponse - getCapabilities response (xml format)
+     * @throws {Error} if the response is not a usable getCapabilities document
      * @private
      */
     _displayGetCapResponseLayers (xmlResponse) {
@@ -2277,9 +2357,92 @@ class LayerImport extends Control {
         };
         var projection;
         this._getCapResponseWMSLayers = [];
+        // nombre de couches réellement proposées à l'utilisateur
+        this._getCapResultsCount = 0;
 
         // sauvegarde du content d'un GetCapabilities
         this.contentService = xmlResponse;
+
+        // Parse GetCapabilities Response
+        if (this._currentImportType === "WMS") {
+            parser = new WMSCapabilities();
+            var getCapResponseWMS;
+            try {
+                getCapResponseWMS = this._getCapResponseWMS = parser.read(xmlResponse);
+            } catch (e) {
+                logger.error("[ol.control.LayerImport] WMS getCapabilities parsing failed : ", e);
+            }
+            logger.log("getCapabilities response : ", getCapResponseWMS);
+
+            if (!getCapResponseWMS || !getCapResponseWMS.Capability || !getCapResponseWMS.Capability.Layer) {
+                throw new Error("La réponse du service n'est pas un GetCapabilities WMS valide.");
+            }
+
+            // info: le parser Openlayers récupère la première layer de <Capability> comme un unique objet (il écrase les précédents s'il y a pls <Layer> à la racine de <Capability>)
+            // /!\ être vigilant si le parser est modifié (notamment pour récupérer les différentes layers à la racine. ex  http://geoservices.brgm.fr/geologie?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities)
+
+            var getCapLayer = getCapResponseWMS.Capability.Layer;
+            // on va lire le contenu de la (ou les) <Layer> pour l'afficher ou en afficher les couches disponibles
+            if (Array.isArray(getCapLayer)) {
+                // cas où on a plusieurs <Layer> à la racine, mais non géré encore par ol.format.WMSCapabilities jusqu'à la v3.18.2.
+                for (var i = 0; i < getCapLayer.length; i++) {
+                    this._displayGetCapResponseWMSLayer(getCapLayer[i]);
+                }
+            } else {
+                // cas du parser ol.format.WMSCapabilities jusqu'à la v3.18.2.
+                this._displayGetCapResponseWMSLayer(getCapLayer);
+            }
+        } else if (this._currentImportType === "WMTS") {
+            parser = new WMTSCapabilities();
+            var getCapResponseWMTS;
+            try {
+                getCapResponseWMTS = this._getCapResponseWMTS = parser.read(xmlResponse);
+            } catch (e) {
+                logger.error("[ol.control.LayerImport] WMTS getCapabilities parsing failed : ", e);
+            }
+            logger.log("getCapabilities response : ", getCapResponseWMTS);
+
+            if (!getCapResponseWMTS || !getCapResponseWMTS.Contents || !getCapResponseWMTS.Contents.Layer) {
+                throw new Error("La réponse du service n'est pas un GetCapabilities WMTS valide.");
+            }
+
+            layers = getCapResponseWMTS.Contents.Layer;
+
+            if (Array.isArray(layers)) {
+                // on stocke la liste des couches pour faire le lien avec le DOM
+                this._getCapResponseWMTSLayers = layers;
+
+                for (var j = 0; j < layers.length; j++) {
+                    // on vérifie que la projection de la couche WMTS est compatible avec celle de la carte
+                    // (ie elle doit être connue par ol.proj)
+                    projection = this._getWMTSLayerProjection(layers[j], getCapResponseWMTS);
+                    if (projection && typeof projection === "string") {
+                        if (olGetProj(projection) || olGetProj(projection.toUpperCase())) {
+                            // si la projection de la couche est connue par ol.proj,
+                            // on ajoute chaque couche de la réponse dans la liste des couches accessibles
+                            layerDescription = {
+                                content : sanitizeXmlText(layers[j].Title),
+                                title : sanitizeXmlText(layers[j].Abstract || layers[j].Title)
+                            };
+                            if (this._getCapResultsListContainer) {
+                                this._addImportGetCapResultLayer(layerDescription, j, this._getCapResultsListContainer);
+                                this._getCapResultsCount++;
+                            }
+                        } else {
+                            // si la projection de la couche n'est pas connue par ol.proj,
+                            // on n'affiche pas la couche dans le panel des résultats
+                            logger.warn("[ol.control.LayerImport] wmts layer cannot be added to map : unknown projection", layers[j]);
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (this._getCapResultsCount === 0) {
+            this.cleanGetCapResultsList();
+            throw new Error("Aucune couche compatible avec la projection de la carte n'a été trouvée sur ce service.");
+        }
 
         // Affichage du panel des couches accessibles
         this._hideFormContainer();
@@ -2288,66 +2451,6 @@ class LayerImport extends Control {
         this._importPanelTitle.innerHTML = "Couches accessibles";
         this._importPanelReturnPicto.classList.remove("GPelementHidden", "gpf-hidden");
         this._hasGetCapResults = true;
-        // Parse GetCapabilities Response
-        if (this._currentImportType === "WMS") {
-            parser = new WMSCapabilities();
-            var getCapResponseWMS = this._getCapResponseWMS = parser.read(xmlResponse);
-            logger.log("getCapabilities response : ", getCapResponseWMS);
-
-            if (getCapResponseWMS && getCapResponseWMS.Capability && getCapResponseWMS.Capability.Layer) {
-                // info: le parser Openlayers récupère la première layer de <Capability> comme un unique objet (il écrase les précédents s'il y a pls <Layer> à la racine de <Capability>)
-                // /!\ être vigilant si le parser est modifié (notamment pour récupérer les différentes layers à la racine. ex  http://geoservices.brgm.fr/geologie?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities)
-
-                var getCapLayer = getCapResponseWMS.Capability.Layer;
-                // on va lire le contenu de la (ou les) <Layer> pour l'afficher ou en afficher les couches disponibles
-                if (Array.isArray(getCapLayer)) {
-                    // cas où on a plusieurs <Layer> à la racine, mais non géré encore par ol.format.WMSCapabilities jusqu'à la v3.18.2.
-                    for (var i = 0; i < getCapLayer.length; i++) {
-                        this._displayGetCapResponseWMSLayer(getCapLayer[i]);
-                    }
-                } else {
-                    // cas du parser ol.format.WMSCapabilities jusqu'à la v3.18.2.
-                    this._displayGetCapResponseWMSLayer(getCapLayer);
-                }
-            }
-        } else if (this._currentImportType === "WMTS") {
-            parser = new WMTSCapabilities();
-            var getCapResponseWMTS = this._getCapResponseWMTS = parser.read(xmlResponse);
-            logger.log("getCapabilities response : ", getCapResponseWMTS);
-
-            if (getCapResponseWMTS && getCapResponseWMTS.Contents && getCapResponseWMTS.Contents.Layer) {
-                layers = getCapResponseWMTS.Contents.Layer;
-
-                if (Array.isArray(layers)) {
-                    // on stocke la liste des couches pour faire le lien avec le DOM
-                    this._getCapResponseWMTSLayers = layers;
-
-                    for (var j = 0; j < layers.length; j++) {
-                        // on vérifie que la projection de la couche WMTS est compatible avec celle de la carte
-                        // (ie elle doit être connue par ol.proj)
-                        projection = this._getWMTSLayerProjection(layers[j], getCapResponseWMTS);
-                        if (projection && typeof projection === "string") {
-                            if (olGetProj(projection) || olGetProj(projection.toUpperCase())) {
-                                // si la projection de la couche est connue par ol.proj,
-                                // on ajoute chaque couche de la réponse dans la liste des couches accessibles
-                                layerDescription = {
-                                    content : layers[j].Title,
-                                    title : layers[j].Abstract || layers[j].Title
-                                };
-                                if (this._getCapResultsListContainer) {
-                                    this._addImportGetCapResultLayer(layerDescription, j, this._getCapResultsListContainer);
-                                }
-                            } else {
-                                // si la projection de la couche n'est pas connue par ol.proj,
-                                // on n'affiche pas la couche dans le panel des résultats
-                                logger.warn("[ol.control.LayerImport] wmts layer cannot be added to map : unknown projection", layers[j]);
-                                continue;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -2473,8 +2576,8 @@ class LayerImport extends Control {
                 layerObj._projection = projection;
                 // on ajoute chaque couche de la réponse dans la liste des couches accessibles
                 layerDescription = {
-                    content : layerObj.Title,
-                    title : layerObj.Abstract || layerObj.Title
+                    content : sanitizeXmlText(layerObj.Title),
+                    title : sanitizeXmlText(layerObj.Abstract || layerObj.Title)
                 };
                 // FIXME beurk !?
                 var _isGoodContainer = layerObj._container;
@@ -2482,6 +2585,7 @@ class LayerImport extends Control {
                     _isGoodContainer = _isGoodContainer.lastChild;
                 }
                 this._addImportGetCapResultLayer(layerDescription, lastIndex, _isGoodContainer);
+                this._getCapResultsCount++;
 
                 // puis on stoke la couche dans la liste pour faire le lien avec le DOM
                 this._getCapResponseWMSLayers[lastIndex] = layerObj;
@@ -3240,6 +3344,108 @@ class LayerImport extends Control {
     // ################################################################### //
 
     /**
+     * displays an error message in the import form and keeps the panel open
+     *
+     * @param {String} message - user message
+     * @private
+     */
+    _showImportError (message) {
+        this._hideWaitingContainer();
+        this._clearImportError();
+        if (!this._errorContainer) {
+            return;
+        }
+        var p = document.createElement("p");
+        p.className = "fr-message fr-message--error";
+        p.textContent = message;
+        this._errorContainer.appendChild(p);
+
+        var dropZone = document.getElementById(this._addUID("GPimportDropZone"));
+        if (dropZone) {
+            dropZone.classList.add("GPimportDropZoneError");
+        }
+    }
+
+    /**
+     * removes the error message from the import form
+     *
+     * @private
+     */
+    _clearImportError () {
+        if (this._errorContainer) {
+            this._errorContainer.innerHTML = "";
+        }
+        var dropZone = document.getElementById(this._addUID("GPimportDropZone"));
+        if (dropZone) {
+            dropZone.classList.remove("GPimportDropZoneError");
+        }
+    }
+
+    /**
+     * checks the file (or url) extension against the current import type
+     *
+     * @param {String} name - file name or url
+     * @returns {Boolean} true if the extension is missing or matches the current import type
+     * @private
+     */
+    _checkFileExtension (name) {
+        var allowed = LayerImport.AllowedExtensions[this._currentImportType];
+        if (!allowed) {
+            return true;
+        }
+        // on ne garde que le chemin, sans les paramètres ni l'ancre
+        var path = name.split("?")[0].split("#")[0];
+        var lastPart = path.substring(path.lastIndexOf("/") + 1);
+        var dotIndex = lastPart.lastIndexOf(".");
+        if (dotIndex === -1) {
+            // sans extension (cas fréquent des urls de service), seul le parsing pourra trancher
+            return true;
+        }
+        return allowed.indexOf(lastPart.substring(dotIndex + 1).toLowerCase()) !== -1;
+    }
+
+    /**
+     * builds the message used when the extension does not match the current import type
+     *
+     * @returns {String} message
+     * @private
+     */
+    _getExtensionErrorMessage () {
+        var allowed = LayerImport.AllowedExtensions[this._currentImportType] || [];
+        var extensions = allowed.map(function (extension) {
+            return "." + extension;
+        }).join(", ");
+        return "Le fichier ne correspond pas au format " + this._currentImportType + " attendu (" + extensions + ").";
+    }
+
+    /**
+     * checks that the content can be parsed with the current import type
+     *
+     * @param {String} fileContent - content file
+     * @throws {Error} if the content does not match the expected format
+     * @private
+     */
+    _checkStaticContent (fileContent) {
+        var type = this._currentImportType;
+        if (type === "GeoJSON" || type === "MAPBOX") {
+            try {
+                JSON.parse(fileContent);
+            } catch (e) {
+                throw new Error("Le contenu importé n'est pas un JSON valide.");
+            }
+            return;
+        }
+        if (type === "KML" || type === "GPX") {
+            var doc = new DOMParser().parseFromString(fileContent, "application/xml");
+            var root = doc.documentElement;
+            if (doc.getElementsByTagName("parsererror").length !== 0 || !root ||
+                root.localName.toLowerCase() !== type.toLowerCase()) {
+                throw new Error("Le contenu importé ne correspond pas au format " + type + " attendu.");
+            }
+        }
+    }
+
+    /**
      * gets control map projection code
      *
      * @returns {String} mapProjCode - control map projection code (e.g. "EPSG:3857")
@@ -3327,6 +3533,7 @@ class LayerImport extends Control {
     cleanGetCapResultsList () {
         this._hasGetCapResults = false;
         this._getCapRequestUrl = null;
+        this._getCapResultsCount = 0;
         this._getCapResponseWMS = null;
         this._getCapResponseWMTS = null;
         this._getCapResponseWMSLayers = null;
