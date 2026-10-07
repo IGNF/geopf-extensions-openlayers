@@ -31,6 +31,8 @@ __DATE__
   - ContextMenu : correction de l’affichage de l’entête du panel (#589)
   - SearchEngine : correction de la recherche de POI des communes de 3 caractères (#593)
   - Panoramax : correctif sur la synchronisation de l'affichage des widgets (#588)
+  - LayerSwitcher : les écouteurs d’événements de chaque couche sont bien supprimés au retrait de la couche ou du contrôle (#586)
+  - Catalog : ne plante pas si un layer n’a pas de description (#597)
 
 * 🔒 [Security]
 
