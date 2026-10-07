@@ -1813,15 +1813,15 @@ class Panoramax extends Control {
                         console.debug("Panoramax photo viewer is ready", self.photoViewerPanoramax);
                         self.bindMiniMapToPhotoViewer();
                     });
-                self.photoViewerPanoramax.addEventListener("ready", () => {
+                self.photoViewerPanoramax.addEventListener("ready", async () => {
                     console.debug("Panoramax photo viewer is ready", self);
                     // Suppression "Player"
-                    self.removeWidgetPlayer();
+                    await self.removeWidgetPlayer();
                     // Suppression "Annotations switch"
-                    self.removeWidgetAnnotationsSwitch();
+                    await self.removeWidgetAnnotationsSwitch();
                     // Suppression "Picture legend Drawer"
                     // INFO on supprime l'original de Panoramax pour le remplacer par notre propre widget
-                    self.removeWidgetPictureLegendDrawer();
+                    await self.removeWidgetPictureLegendDrawer();
                     // Déclenchement d'un événement interne pour signaler que le viewer est prêt
                     self.dispatchEvent(self.READY_PANORAMAX_EVENT);
                 });
@@ -2740,10 +2740,13 @@ class Panoramax extends Control {
      * Supprime le positionnement du widget "Annotations switch" du viewer 
      * de photos de Panoramax
      */
-    removeWidgetAnnotationsSwitch () {
+    async removeWidgetAnnotationsSwitch () {
         if (!this.photoViewerPanoramax) {
             logger.warn("Panoramax photo viewer is not available");
             return;
+        }
+        if (this.photoViewerPanoramax.updateComplete) {
+            await this.photoViewerPanoramax.updateComplete;
         }
         // on supprime le switch d'annotations, qui n'est pas pertinent pour notre usage,
         var pnxAnnotationsSwitch = this.photoViewerPanoramax.querySelector("pnx-annotations-switch");
@@ -2756,10 +2759,13 @@ class Panoramax extends Control {
      * Supprime le widget "Picture legend" du viewer de photos de Panoramax
      * On supprime le mode drawer pour le widget de légende des photos
      */
-    removeWidgetPictureLegendDrawer () {
+    async removeWidgetPictureLegendDrawer () {
         if (!this.photoViewerPanoramax) {
             logger.warn("Panoramax photo viewer is not available");
             return;
+        }
+        if (this.photoViewerPanoramax.updateComplete) {
+            await this.photoViewerPanoramax.updateComplete;
         }
         // on supprime le mode drawer pour le widget de légende des photos,
         // pour l'afficher directement dans le viewer, en haut à gauche
@@ -2772,10 +2778,13 @@ class Panoramax extends Control {
     /**
      * Supprime le widget de player de séquence du viewer de photos de Panoramax
      */
-    removeWidgetPlayer () {
+    async removeWidgetPlayer () {
         if (!this.photoViewerPanoramax) {
             logger.warn("Panoramax photo viewer is not available");
             return;
+        }
+        if (this.photoViewerPanoramax.updateComplete) {
+            await this.photoViewerPanoramax.updateComplete;
         }
         // on supprime le player de séquence, qui n'est pas pertinent pour notre usage,
         var pnxPlayer = this.photoViewerPanoramax.querySelector("pnx-widget-player");
