@@ -33,7 +33,7 @@ import { SelectEvent } from "ol/interaction/Select";
  * @property {VectorSource} [source] Source à ajouter au contrôle initialement. Peut-être fait après via la méthode `setSource`. Si aucune source n'est donnée, en ajoute une de base.
  * @property {Boolean|Modify} [modify=true] Si faux, n'ajoute pas d'interaction pour modifier les objets. Sinon, ajoute une interaction de type {@link ModifyingInteraction ModifyingInteraction}, héritant de {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html Modify}, qui s'active à la sélection d'un objet. Une interaction de type `Modify` peut aussi être passée en paramètre (auquel cas ).
  * @property {Boolean|Snap} [snap=false] Si vrai, ajoute une interaction {@link https://openlayers.org/en/latest/apidoc/module-ol_interaction_Snap-Snap.html Snap}, qui s'active au moment du dessin. La source utilisée est celle définie via la méthode `setSource` du contrôle. Une interaction de type `Snap` peut aussi être passée en paramètre.
- * @property {Boolean} [addToMap=true] Si vrai, la gestion de la couche de dessin est gérée par le widget. Sinon, la gestion de cette couche doit être faite par le client directement, via l'écoute à l'événement `drawing:add:layer`.
+ * @property {Boolean} [addToMap=true] Si vrai, la gestion de la couche de dessin est gérée par le widget (nouvelle couche ajoutée lorsqu'on active le widget). Sinon, la gestion de cette couche doit être faite par le client directement, via l'écoute à l'événement `drawing:add:layer`.
  * @property {String} [layerTitle = "Croquis"] Titre de la couche (seulement si `addToMap=true`).
  * @property {String} [layerDescription = "Mon croquis"] Description de la couche (seulement si `addToMap=true`).
  * @property {Boolean|Dialog} [style=true] Si vrai, ajoute un panneau de style qui sera contrôlé par la sélection liée à ce contrôle. Si faux, n'ajoute aucun style.
@@ -321,7 +321,7 @@ class Draw extends ToggleContent {
     _initEvents (options) {
         super._initEvents(options);
         // Gère les interactions (une seule active à la fois)
-        this.toggleInteractions.on("add", function (e) {
+        this.toggleInteractions.on("add", (e) => {
             const toggle = e.element;
             toggle.on("change:active", (e) => {
                 // Désactive le toggle actif
@@ -364,7 +364,7 @@ class Draw extends ToggleContent {
                     }
                 });
             }
-        }.bind(this));
+        });
 
         // Ferme l'interaction si on ferme la modale
         this.dialog.on("dialog:close", () => {
@@ -384,6 +384,13 @@ class Draw extends ToggleContent {
                 }
             }
             this.select.setActive(e.target.getActive());
+
+            // Si addToMap est vrai, à la fermeture du widget on "déselectionne" la couche
+            if (options.addToMap) {
+                if (e.target.get(e.key) === false) {
+                    e.target.setLayer();
+                }
+            }
         });
 
         if (options.style) {

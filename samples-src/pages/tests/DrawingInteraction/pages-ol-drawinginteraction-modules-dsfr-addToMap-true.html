@@ -104,13 +104,6 @@
                     });
                     map.addControl(draw);
 
-                    draw.on("change:active", (e) => {
-                        // Désactive la couche lorsqu'on ferme le contrôle pour en rajouter une après
-                        if (e.target.get(e.key) === false) {
-                            e.target.setLayer();
-                        }
-                    });
-
                     layerSwitcher.on("layerswitcher:edit", (e) => {
                         draw.setLayer(e.layer);
                         draw.setActive(true);
