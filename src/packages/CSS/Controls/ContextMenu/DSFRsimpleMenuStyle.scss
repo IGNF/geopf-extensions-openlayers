@@ -1,0 +1,18 @@
+.gpf-simple-menu {
+    background-color: var(--background-default-grey);
+
+    button,
+    a {
+        color: var(--text-action-high-blue-france);
+    }
+
+    > button,
+    > a {
+        border: 0;
+        border-top: 1px solid var(--border-default-grey);
+
+        &:first-child {
+            border-top: none;
+        }
+    }
+}

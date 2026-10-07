@@ -1,0 +1,25 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="24" height="24" rx="2" fill="url(#pattern0_6060_12675)"/>
+<defs>
+<pattern id="pattern0_6060_12675" patternUnits="userSpaceOnUse" patternTransform="matrix(78 0 0 28.2843 -28.4141 -2.14214)" preserveAspectRatio="none" viewBox="-1.41406 0 78 28.2843" width="1" height="1">
+<use xlink:href="#pattern0_6060_12675_inner" transform="translate(-78 -28.2843)"/>
+<use xlink:href="#pattern0_6060_12675_inner" transform="translate(0 -28.2843)"/>
+<use xlink:href="#pattern0_6060_12675_inner" transform="translate(-78 0)"/>
+<g id="pattern0_6060_12675_inner">
+<line y1="-1" x2="40" y2="-1" transform="matrix(0.707107 0.707107 0.707107 -0.707107 0 0)" stroke="#161616" stroke-width="2"/>
+<line y1="-1" x2="40" y2="-1" transform="matrix(0.707107 0.707107 0.707107 -0.707107 8.28418 0)" stroke="#161616" stroke-width="2"/>
+<line y1="-1" x2="40" y2="-1" transform="matrix(0.707107 0.707107 0.707107 -0.707107 16.5684 0)" stroke="#161616" stroke-width="2"/>
+<line y1="-1" x2="40" y2="-1" transform="matrix(0.707107 0.707107 0.707107 -0.707107 24.853 0)" stroke="#161616" stroke-width="2"/>
+<line y1="-1" x2="40" y2="-1" transform="matrix(0.707107 0.707107 0.707107 -0.707107 33.1372 0)" stroke="#161616" stroke-width="2"/>
+<line y1="-1" x2="40" y2="-1" transform="matrix(0.707107 0.707107 0.707107 -0.707107 41.4214 0)" stroke="#161616" stroke-width="2"/>
+<line y1="-1" x2="40" y2="-1" transform="matrix(0.707107 0.707107 0.707107 -0.707107 49.7056 0)" stroke="#161616" stroke-width="2"/>
+<line x1="78.7071" y1="0.707107" x2="50.4228" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="70.4229" y1="0.707107" x2="42.1387" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="62.1387" y1="0.707107" x2="33.8545" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="53.8541" y1="0.707107" x2="25.5698" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="45.5699" y1="0.707107" x2="17.2856" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="37.2857" y1="0.707107" x2="9.00145" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="29.0015" y1="0.707107" x2="0.71727" y2="28.9914" stroke="#161616" stroke-width="2"/>
+</g>
+</pattern></defs>
+</svg>

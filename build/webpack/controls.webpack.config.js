@@ -90,6 +90,13 @@ module.exports = (env, argv) => {
                 // ras
                 moduledir = "Measures";
                 break;
+            case "Toggle":
+            case "ToggleContent":
+            case "ToggleInteraction":
+            case "Dialog":
+            case "TabNav":
+                moduledir = "Toggle";
+                break;
             case "Legends":
                 // ras
                 break;
@@ -117,6 +124,20 @@ module.exports = (env, argv) => {
                 break;
             case "GeoportalOverviewMap":
                 moduledir = "OverviewMap";
+                // ras
+                break;
+            case "InputColor":
+            case "InputNumber":
+            case "CustomSelect":
+            case "CustomSelectGrid":
+            case "DefaultInput":
+                moduledir = "Input";
+                // ras
+                break;
+            case "FlatStyleForm":
+            case "styleForm":
+            case "labelForm":
+                moduledir = "StyleDialog";
                 // ras
                 break;
             default:

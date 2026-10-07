@@ -3,6 +3,14 @@ import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
 import IGNSearchService from "../../Services/IGNSearchService";
 
 /**
+ * Options pour AbstractAdvancedSearch (formulaires avancés).
+ * Voir AbstractAdvancedSearch.js.
+ * 
+ * @typedef {Object} AbstractAdvancedSearchOptions
+ * @property {String} name - Nom du formulaire de recherche avancée.
+ */
+
+/**
  * @classdesc
  * Recherche avancée par lieu / toponyme (formulaire pour filtrer par type, code postal, INSEE).
  *
