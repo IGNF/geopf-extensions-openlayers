@@ -15,9 +15,11 @@ __DATE__
 
 * ✨ [Added]
 
+  - Reporting : affichage des messages d’erreurs potentiels (#592)
+
 * 🔨 [Changed]
 
-  - UI(Search): ajout d'un séparateur entre la recherche simple et la recherche avancée (#509)
+  - SearchEngine : wfs requetes limitées à 5000 features au lieu de 1000 lors d'une recherche avancée de parcelle par section (#594)
 
 * 🔥 [Deprecated]
 
@@ -25,12 +27,14 @@ __DATE__
 
 * 🐛 [Fixed]
 
-  - Interface(widgets) : interfaçage du paramètre serverUrl pour les widgets iti/iso/reversegeocode/mouseposition/search (#503)
-  - Interface(AdvancedSearch) : interfaçage du paramètre serverUrl et geocodeGetCapabilitiesUrl pour le widget de recherche avancée (#504, #508)
-  - Interface(ContextMenu): interfacçage du paramétre serverUrl pour le menuContextuel (#506)
-  - Search: filtrage plus fin des résultats liés aux codes postaux en cas d'option "pretiffyResults" (#507) 
-  
-* 🔒 [Security]
+  - ContextMenu : correction de l'affichage de numéro de parcelle cadastrale lorsqu'on clique sur "Adresse & Coordonnées du lieu" (#587)
+  - ContextMenu : correction de l’affichage de l’entête du panel (#589)
+  - SearchEngine : correction de la recherche de POI des communes de 3 caractères (#593)
+  - Panoramax : correctif sur la synchronisation de l'affichage des widgets (#588)
+  - Drawing / Measures : sur Safari, le clic ne permettait pas de tracer et le double-clic sélectionnait le texte de l'infobulle ("Double-cliquer pour terminer", mesures) au lieu de terminer la saisie (#574)
+  - LayerSwitcher : les écouteurs d’événements de chaque couche sont bien supprimés au retrait de la couche ou du contrôle (#586)
+  - Catalog : ne plante pas si un layer n’a pas de description (#597)
 
+* 🔒 [Security]
 
 ---

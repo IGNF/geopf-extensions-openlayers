@@ -103,6 +103,7 @@ import ControlList from "./Controls/ControlList/ControlList";
 import Catalog from "./Controls/Catalog/Catalog";
 import ContextMenu from "./Controls/ContextMenu/ContextMenu";
 import Reporting from "./Controls/Reporting/Reporting";
+import Panoramax from "./Controls/Panoramax/Panoramax";
 
 import Proj4 from "proj4";
 
@@ -292,6 +293,7 @@ Ol.control.Territories = Territories;
 Ol.control.ControlList = ControlList;
 Ol.control.ContextMenu = ContextMenu;
 Ol.control.Reporting = Reporting;
+Ol.control.Panoramax = Panoramax;
 
 export {
     /**
@@ -322,6 +324,7 @@ export {
      * @see ol.control.ControlList
      * @see ol.control.ContextMenu
      * @see ol.control.Reporting
+     * @see ol.control.Panoramax
      * @see ol.control.LayerImport
      * @see ol.layer.GeoportalWMTS
      * @see ol.layer.GeoportalWMS

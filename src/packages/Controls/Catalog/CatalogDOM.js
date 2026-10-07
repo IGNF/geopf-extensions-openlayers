@@ -109,56 +109,37 @@ var CatalogDOM = {
 
     /**
      * Create Container Panel
-     *
+     * @param {String} size - sm, md, lg, xl
      * @returns {HTMLElement} DOM element
      */
-    _createCatalogPanelElement : function () {
-        var dialog = document.createElement("dialog");
-        dialog.id = this._addUID("GPcatalogPanel");
-        dialog.className = "GPpanel gpf-panel fr-modal";
-
-        return dialog;
-    },
-
-    /**
-     * Container Panel Size
-     * @param {*} size - sm, md, lg
-     * @returns  {HTMLElement} DOM element
-     * @fixme revoir le fonctionnement des tailles !?
-     * @description
-     * - sm : small (default)
-     * - md : medium
-     * - lg : large
-     * - xl : extra large
-     * cf. https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/modale#taille
-     */
-    _createCatalogPanelDivSizeElement : function (size) {
-        if (!size) {
-            size = "md";
-        }
-        var className = "";
+    _createCatalogPanelElement : function (size = "md") {
+        // set size
+        let classNameSize = "";
         switch (size) {
             case "sm":
-                className = "fr-col-8";
+                classNameSize = "fr-col-8";
                 break;
             case "md":
-                className = "fr-col-10";
+                classNameSize = "fr-col-10";
                 break;
             case "lg":
-                className = "fr-col-12";
+                classNameSize = "fr-col-12";
                 break;
             case "xl":
-                className = "fr-col-14";
+                classNameSize = "fr-col-14";
                 break;
             default:
                 break;
         }
-        var div = document.createElement("div");
-        div.className = className;
-        return div;
+
+        let dialog = document.createElement("dialog");
+        dialog.id = this._addUID("GPcatalogPanel");
+        dialog.classList.add("GPpanel", "gpf-panel", "fr-modal", classNameSize);
+
+        return dialog;
     },
 
-    _createCatalogPanelDivElement : function () {
+    _createCatalogPanelBodyElement : function () {
         var div = document.createElement("div");
         div.className = "gpf-panel__body fr-modal__body";
         return div;
@@ -168,60 +149,6 @@ var CatalogDOM = {
         var div = document.createElement("div");
         div.className = "gpf-panel__content fr-modal__content";
         return div;
-    },
-
-    /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createCatalogPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        // on n'utilise pas le dsfr !
-        container.className = "GPpanelHeader gpf-panel__header_catalog";
-        return container;
-    },
-    _createCatalogPanelTitleElement : function (title) {
-        var div = document.createElement("div");
-        // on n'utilise pas le dsfr !
-        div.className = "GPpanelTitle gpf-panel__title_catalog";
-        div.innerHTML = title;
-        return div;
-    },
-    _createCatalogPanelIconElement : function (title) {
-        var label = document.createElement("label");
-        label.className = "gpf-btn-header-catalog gpf-btn-icon-header-catalog";
-        label.title = title;
-        return label;
-    },
-    _createCatalogPanelCloseElement : function () {
-        var self = this;
-
-        var btnClose = document.createElement("button");
-        btnClose.id = this._addUID("GPcatalogPanelClose");
-        btnClose.className = "GPpanelClose GPcatalogPanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
-        btnClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowCatalogPicto")).click();
-                self.onCloseCatalogClick();
-            }, false);
-        } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowCatalogPicto")).click();
-                self.onCloseCatalogClick();
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-hidden";
-        span.innerText = "Fermer";
-
-        btnClose.appendChild(span);
-
-        return btnClose;
     },
 
     // ################################################################### //
@@ -247,7 +174,7 @@ var CatalogDOM = {
         var strContainer = `
         <!-- barre de recherche globale -->
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
-        <div class="catalog-container-search-global" style="padding:10px;">
+        <div class="catalog-container-search-global fr-mb-1w">
             <div class="fr-search-bar" id="catalog-header-search-global" role="search" style="justify-content: center;">
                 <label class="fr-label" for="catalog-input-search-global">
                     Recherche
@@ -464,23 +391,14 @@ var CatalogDOM = {
                 // sauf si la catégorie a des sous catégories
                 strTabContent = tmplSubCategoriesRadios(id, subcategories);
             }
-            // INFO
-            // le max height est fixé à 250px pour éviter que le panneau soit trop grand
-            // mais il faudrait pouvoir le configurer dynamiquement en fonction de la presence
-            // ou non de la barre de recherche spécifique qui decale le panneau vers le bas
-            // cf. var tabHeight dans le main container
-            var height = "330px";
-            if (active && !search) {
-                height = "390px";
-            }
             return `
             <!-- panneaux -->
             <div id="tabpanel-${i}-panel_${id}" 
-                class="${className}" 
+                class="${className} fr-p-0" 
                 role="tabpanel" 
                 aria-labelledby="tabbutton-${i}_${id}" 
                 tabindex="${tabindex}" 
-                style="max-height: ${height};overflow-y: auto; padding: 1em; contain: content;">
+            >
                 ${strTabContent}
             </div>
             `;
@@ -664,19 +582,8 @@ var CatalogDOM = {
                     // on utilise la vignette fournie
                     if (thumbnail.startsWith("data:") || thumbnail.startsWith("http")) {
                         return `
-                        <div class="catalog-thumbnail" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                            <img src="${thumbnail}" alt="Aperçu de la couche" style="min-width:100%;min-height:100%;object-fit:cover;"/>
-                        </div>
+                            <img src="${thumbnail}" alt="" />
                         `;
-                    } else {
-                        // TODO
-                        // sinon, on considère que c'est une URL relative
-                        // ex. img/thumbnail.png
-                        thumbnail = "default";
-                    }
-                    // si thumbnail = "default", on utilise l'icone par defaut
-                    if (thumbnail === "default") {
-                        return `<div class="catalog-thumbnail-default" style="width:50px; height:50px; margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>`;
                     }
                 }
                 return "";
@@ -714,7 +621,7 @@ var CatalogDOM = {
                     // 2 routes possibles pour la fiche de donnée
                     if (metadata.includes("catalogue/dataset") || metadata.includes("rechercher-une-donnee/dataset")) {
                         return `
-                            <a href="${metadata}" target="_blank" class="fr-link fr-icon-arrow-right-line fr-link--icon-right">
+                            <a href="${metadata}" target="_blank" class="fr-link fr-link--sm fr-icon-arrow-right-line fr-link--icon-right">
                                 Voir la fiche détaillée
                             </a>
                         `;
@@ -742,11 +649,12 @@ var CatalogDOM = {
             };
 
             return `
-            <div 
-                class="fr-fieldset__element" 
+            <div
+                data-layeritem
+                class="fr-fieldset__element fr-toggle--border-bottom fr-py-2w fr-px-1w fr-mb-0" 
                 id="fieldset-${categoryId}_${name}-${service}"
-                style="contain: content;">
-                <div class="fr-checkbox-group gpf-flex" style="justify-content:flex-start;padding-top:5px;padding-bottom:5px;box-shadow: inset 0 1px 0 0 var(--border-default-grey),0 0 0 0 var(--border-default-grey);">
+            >
+                <div class="fr-checkbox-group gpf-flex" style="justify-content:flex-start">
                     <input
                         class="fr-input"
                         name="checkboxes-${categoryId}"
@@ -758,18 +666,20 @@ var CatalogDOM = {
                         style="position: relative; bottom: 12px;">
                     </label>
                     <div class="catalog-thumbnail-container" style="">
-                        ${tmplThumbnail(thumbnail)}
+                        <div class="catalog-thumbnail-default">
+                            ${tmplThumbnail(thumbnail)}
+                        </div>
                     </div>
                     <div style="width: 100%;">
                         <label 
                             class="GPlabelActive fr-label"
                             role="label-collapse-more-${categoryId}"
-                            aria-controls="catalog-collapse-more-${i}-${categoryId}"
+                            aria-controls="checkboxes-${categoryId}-${i}_${name}-${service}"
                             title="${title}"
-                            style="display: -webkit-box; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: normal; cursor: pointer; line-height: 1.9em; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                            style="display: -webkit-box; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: normal; cursor: pointer; line-height: 1.5em; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word;">
                             ${title}
                         </label>
-                        <span class="GPlabelActive fr-label fr-hint-text">${producerName}</span>
+                        <span class="GPlabelActive fr-label fr-hint-text fr-text--xs fr-m-0">${producerName}</span>
                     </div>
                     <button 
                         id="catalog-collapse-more-${i}-${categoryId}"
@@ -783,14 +693,16 @@ var CatalogDOM = {
                         style="position: relative;">
                     </button>
                 </div>
-                <div class="gpf-hidden" id="catalog-info-more-${i}-${categoryId}">
-                    <p>
-                        <span class="fr-label fr-message" style="word-break: break-all;">${name} - ${service}</span>
+                <div class="gpf-hidden catalog-layer-info fr-mt-2w" id="catalog-info-more-${i}-${categoryId}">
+                    <p class="fr-hint-text" style="word-break: break-all;">
+                        ${name} - ${service}
+                    </p>
+                    <p class="fr-hint-text">
                         ${tmplProducers(informations.producers)}
                     </p>
-                    <p>
+                    <div class="catalog-layer-description fr-hint-text">
                         ${description}
-                    </p>
+                    </div>
                     ${tmplMetadatas(informations.metadatas)}
                 </div>
             </div>
@@ -926,7 +838,7 @@ var CatalogDOM = {
             for (const [title, data] of sectionsArray) {
                 if (Object.prototype.hasOwnProperty.call(sections, title)) {
                     var lstElementsBySection = [];
-                    var array = [...data.matchAll(/"fr-fieldset__element"/g)];
+                    var array = [...data.matchAll(/data-layeritem/g)];
                     for (let index = 0; index < array.length; index++) {
                         const el = array[index];
                         lstElementsBySection.push(el.input);

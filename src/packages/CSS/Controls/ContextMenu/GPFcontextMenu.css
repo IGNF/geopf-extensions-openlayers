@@ -4,7 +4,7 @@
     padding: 20px 20px 20px 20px;
     user-select: text;
 }
-.point-info-content div{
+.point-info-content div:not(:empty) {
     margin-bottom: 10px;
 }
 
@@ -43,7 +43,7 @@ button[id^="GPshowPointInfoPicto-"] {
     line-height: 2em !important;
 }
 .ol-ctx-menu-separator hr {
-    background-image: none !important;
+    display: none;
 }
 
 

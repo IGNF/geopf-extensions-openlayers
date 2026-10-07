@@ -15,11 +15,13 @@ import Utils from "../../Utils/Helper";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
+import { sanitizeHtml } from "../../Utils/Sanitize";
 
 import TerritoriesJson from "./Territories.json";
 
 // DOM
 import TerritoriesDOM from "./TerritoriesDOM";
+import PanelDOM from "../PanelDOM";
 
 let logger = Logger.getLogger("territories");
 
@@ -152,8 +154,7 @@ class Territories extends Control {
 
             // Ajout des territoires par defaut ou customisés
             var territories = (this.auto) ? TerritoriesJson : this.options.territories;
-            for (let index = 0; index < territories.length; index++) {
-                const territory = territories[index];
+            for (const territory of territories) {
                 this.setTerritory(territory);
             }
         } else {
@@ -221,6 +222,58 @@ class Territories extends Control {
     }
 
     /**
+     * Validate a territory object
+     * @param {Territory} territory - territory to validate
+     * @returns {Territory|null} - validated territory or null if invalid
+     */
+    validateTerritory (territory) {
+        if (!territory || territory.id === undefined || territory.id === null || territory.id === "") {
+            logger.error("Invalid territory object. Must have a non-empty id.");
+            return null;
+        }
+
+        const title = String(territory.title ?? "");
+        const hasBbox = territory.bbox !== undefined && territory.bbox !== null;
+        const hasPoint = territory.point !== undefined && territory.point !== null;
+
+        if (!title || (!hasBbox && !hasPoint)) {
+            logger.error("Invalid territory object. Must have title and bbox or point.");
+            return null;
+        }
+
+        if (hasBbox) {
+            const bbox = territory.bbox;
+            if (!Array.isArray(bbox) || bbox.length !== 4 || bbox.some(n => typeof n !== "number" || Number.isNaN(n))) {
+                logger.error("Invalid territory bbox. Must be an array of 4 numbers in EPSG:4326.");
+                return null;
+            }
+        }
+
+        if (hasPoint) {
+            const point = territory.point;
+            if (!Array.isArray(point) || point.length !== 2 || point.some(n => typeof n !== "number" || Number.isNaN(n))) {
+                logger.error("Invalid territory point. Must be an array of 2 numbers in EPSG:4326.");
+                return null;
+            }
+        }
+
+        // on valide chaque entrée
+        var validatedTerritory = {};
+        // options obligatoires
+        validatedTerritory.id = String(territory.id);
+        validatedTerritory.title = sanitizeHtml(title, { strict : true });
+        // options facultatives
+        validatedTerritory.description = sanitizeHtml(String(territory.description ?? ""), { strict : true });
+        validatedTerritory.bbox = hasBbox ? territory.bbox : null;
+        validatedTerritory.point = hasPoint ? territory.point : null;
+        validatedTerritory.zoom = (typeof territory.zoom === "number" && !Number.isNaN(territory.zoom)) ? territory.zoom : null;
+        validatedTerritory.thumbnail = sanitizeHtml(String(territory.thumbnail ?? ""), { strict : true });
+        validatedTerritory.icon = sanitizeHtml(String(territory.icon ?? ""), { strict : true });
+
+        return validatedTerritory;
+    }
+
+    /**
      * Add a territory
      *
      * @param {Territory} territory  - territory
@@ -237,9 +290,13 @@ class Territories extends Control {
      * });
      */
     setTerritory (territory, isAdded = false) {
+        territory = this.validateTerritory(territory);
+        if (!territory) {
+            return false;
+        }
         // Test if a territory already exist
         var founded = this.territories.some(e => e.data.id === territory.id);
-        if (territory && !founded) {
+        if (!founded) {
             var entry = this._createTerritoryEntry(territory);
             var view = this._createTerritoryView(territory);
             if (entry && view) {
@@ -270,10 +327,9 @@ class Territories extends Control {
      * @param {Array<Territory>} territories - file config
      */
     setTerritories (territories) {
-        for (let j = 0; j < territories.length; j++) {
-            const territory = territories[j];
+        territories.forEach((territory) => {
             this.setTerritory(territory);
-        }
+        });
     }
 
     /**
@@ -295,13 +351,13 @@ class Territories extends Control {
                     if (!force) {
                         // on ne le supprime pas de la liste des territoires
                         // mais on le masque uniquement
-                        this.territories[i].isRemoved = true;
-                        this.territories[i].domEntry.classList.add("gpf-hidden");
-                        this.territories[i].domView.style.display = "none";
+                        o.isRemoved = true;
+                        o.domEntry.classList.add("gpf-hidden");
+                        o.domView.style.display = "none";
                     } else {
                         // on le supprime de la liste des territoires
-                        this.territories[i].domEntry.remove();
-                        this.territories[i].domView.remove();
+                        o.domEntry.remove();
+                        o.domView.remove();
                         this.territories.splice(i, 1);
                     }
                     found = true;
@@ -321,8 +377,7 @@ class Territories extends Control {
      * Remove all territories
      */
     removeTerritories () {
-        for (let i = 0; i < this.territories.length; i++) {
-            const territory = this.territories[i];
+        for (const territory of this.territories) {
             territory.domEntry.remove();
             territory.domView.remove();
         }
@@ -345,7 +400,7 @@ class Territories extends Control {
             return;
         }
         if (collapsed) {
-            document.getElementById("GPterritoriesPanelClose").click();
+            this._panelBtnClose.click();
         } else {
             this.buttonTerritoriesShow.click();
         }
@@ -464,11 +519,11 @@ class Territories extends Control {
         /** @private */
         this.buttonTerritoriesShow = null;
         /** @private */
+        this._panelBtnClose = null;
+        /** @private */
         this.panelTerritoriesContainer = null;
         /** @private */
         this.panelTerritoriesHeaderContainer = null; // usefull for the dragNdrop
-        /** @private */
-        this.buttonTerritoriesClose = null;
         /** @private */
         this.containerTerritoriesOptions = null;
         /** @private */
@@ -494,6 +549,23 @@ class Territories extends Control {
         var territoriesPanel = this.panelTerritoriesContainer = this._createTerritoriesPanelElement();
         territoriesPanel.classList.add("tiles-direction");
         territoriesPanel.classList.add("tiles-" + this.options.tiles);
+
+        // header ?
+        if (this.options.panel) {
+            var territoriesPanelHeader = this.panelTerritoriesHeaderContainer = this._createPanelHeaderElement({
+                icon : "ign-territories",
+                title : "Sélecteur de territoires",
+                btnClassForClose : "GPshowTerritoriesPicto",
+            });
+            // options
+            if (this.options.upload && this.options.upload.active) {
+                var territoriesPanelOptions = this.containerTerritoriesOptions = this._createTerritoriesPanelOptionsElement(this.options.upload.title, this.options.upload.description);
+                territoriesPanelHeader.insertBefore(territoriesPanelOptions, territoriesPanelHeader._closeBtn);
+                territoriesPanelHeader._closeBtn.classList.remove("fr-ml-auto");
+            }
+            territoriesPanel.appendChild(territoriesPanelHeader);
+            this._panelBtnClose = territoriesPanelHeader._closeBtn;
+        }
         
         var territoriesPanelDiv = this._createTerritoriesPanelDivElement();
         territoriesPanel.appendChild(territoriesPanelDiv);
@@ -525,26 +597,6 @@ class Territories extends Control {
             territoriesEntriesDiv.classList.add("tiles-icon");
         }
         territoriesPanel.appendChild(territoriesEntriesDiv);
-        
-        // header ?
-        if (this.options.panel) {
-            var territoriesPanelHeader = this.panelTerritoriesHeaderContainer = this._createTerritoriesPanelHeaderElement();
-            // icone
-            var territoriesPanelIcon = this._createTerritoriesPanelIconElement();
-            territoriesPanelHeader.appendChild(territoriesPanelIcon);
-            // title
-            var territoriesPanelTitle = this._createTerritoriesPanelTitleElement(this.options.title);
-            territoriesPanelHeader.appendChild(territoriesPanelTitle);
-            // options
-            if (this.options.upload && this.options.upload.active) {
-                var territoriesPanelOptions = this.containerTerritoriesOptions = this._createTerritoriesPanelOptionsElement(this.options.upload.title, this.options.upload.description);
-                territoriesPanelHeader.appendChild(territoriesPanelOptions);
-            }
-            // close picto
-            var territoriesCloseBtn = this.buttonTerritoriesClose = this._createTerritoriesPanelCloseElement();
-            territoriesPanelHeader.appendChild(territoriesCloseBtn);
-            territoriesPanelDiv.appendChild(territoriesPanelHeader);
-        }
 
         container.appendChild(territoriesPanel);
 
@@ -793,14 +845,19 @@ class Territories extends Control {
      */
     onAddTerritoriesViewClick (e, viewName) {
         logger.trace(e, viewName);
-        var id = Math.abs(Array.from(viewName).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
+        var name = sanitizeHtml(viewName, { strict : true });
+        if (!name || !name.length) {
+            logger.error("Invalid view name !");
+            return;
+        }
+        var id = Math.abs(Array.from(name).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0));
         var view = this.getMap().getView();
         var proj = view.getProjection().getCode();
         var coord = olTransformProj(view.getCenter(), proj, "EPSG:4326");
         var zoom = view.getZoom();
         var territory = {
             "id" : id.toString(),
-            "title" : viewName,
+            "title" : name,
             "description" : "Vue personnalisée",
             "point" : coord,
             "zoom" : zoom,
@@ -978,6 +1035,7 @@ class Territories extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(Territories.prototype, PanelDOM);
 Object.assign(Territories.prototype, TerritoriesDOM);
 Object.assign(Territories.prototype, Widget);
 

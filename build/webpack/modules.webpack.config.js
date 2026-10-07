@@ -66,6 +66,8 @@ module.exports = (env, argv) => {
             "GpfExtOlControlList" : path.join(rootdir, "src", "packages", "Controls/ControlList", "ControlList.js"),
             "GpfExtOlContextMenu" : path.join(rootdir, "src", "packages", "Controls/ContextMenu", "ContextMenu.js"),
             "GpfExtOlReporting" : path.join(rootdir, "src", "packages", "Controls/Reporting", "Reporting.js"),
+            "GpfExtOlPanoramax" : path.join(rootdir, "src", "packages", "Controls/Panoramax", "Panoramax.js"),
+
             // Formats étendus
             "GpfExtOlFormats" : [
                 path.join(rootdir, "src", "packages", "Formats", "GeoJSON.js"),
@@ -93,6 +95,7 @@ module.exports = (env, argv) => {
             libraryTarget : "assign",
             library : "[name]"
         },
+        externalsType : "var",
         resolve : {},
         externals : [
             function ({ context, request }, callback) {
@@ -115,17 +118,27 @@ module.exports = (env, argv) => {
             },
             {
                 ol : {
+                    var : "ol",
                     commonjs : "ol",
                     commonjs2 : "ol",
                     amd : "ol",
                     root : "ol"
                 },
+                "@panoramax/web-viewer/build/photoviewer" : {
+                    var : "Panoramax",
+                    commonjs : "@panoramax/web-viewer/build/photoviewer",
+                    commonjs2 : "@panoramax/web-viewer/build/photoviewer",
+                    amd : "Panoramax",
+                    root : "Panoramax"
+                },
                 request : {
+                    var : "require",
                     commonjs2 : "request",
                     commonjs : "request",
                     amd : "require"
                 },
                 xmldom : {
+                    var : "xmldom",
                     commonjs2 : "xmldom",
                     commonjs : "xmldom",
                     amd : "require"
@@ -134,7 +147,7 @@ module.exports = (env, argv) => {
         ],
         devtool : "source-map",
         devServer : {
-            webSocketServer: false,
+            webSocketServer : false,
             server : "https",
             open : ["samples/index-modules.html"],
             static : {
@@ -223,6 +236,9 @@ module.exports = (env, argv) => {
                     include : [
                         path.join(rootdir, "src", "packages", "CSS"),
                         /node_modules\/@gouvfr\/dsfr\/dist/,
+                        /node_modules\/@panoramax\/web-viewer\/build/,
+                        /node_modules\/@photo-sphere-viewer\/compass-plugin\//,
+                        /node_modules\/@photo-sphere-viewer\/plan2-plugin\//
                     ],
                     use : [
                         MiniCssExtractPlugin.loader,

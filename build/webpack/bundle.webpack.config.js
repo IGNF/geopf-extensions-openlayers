@@ -64,17 +64,27 @@ module.exports = (env, argv) => {
             },
             {
                 ol : {
+                    var : "ol",
                     commonjs : "ol",
                     commonjs2 : "ol",
                     amd : "ol",
                     root : "ol"
                 },
+                "@panoramax/web-viewer/build/photoviewer" : {
+                    var : "Panoramax",
+                    commonjs : "@panoramax/web-viewer/build/photoviewer",
+                    commonjs2 : "@panoramax/web-viewer/build/photoviewer",
+                    amd : "Panoramax",
+                    root : "Panoramax"
+                },
                 request : {
+                    var : "require",
                     commonjs2 : "request",
                     commonjs : "request",
                     amd : "require"
                 },
                 xmldom : {
+                    var : "xmldom",
                     commonjs2 : "xmldom",
                     commonjs : "xmldom",
                     amd : "require"
@@ -171,7 +181,7 @@ module.exports = (env, argv) => {
                     test : /\.css$/,
                     include : [
                         path.join(rootdir, "src", "packages", "CSS"),
-                        /node_modules\/@gouvfr\/dsfr\/dist/,
+                        /node_modules\/@gouvfr\/dsfr\/dist/
                     ],
                     use : [
                         MiniCssExtractPlugin.loader,

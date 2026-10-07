@@ -108,93 +108,6 @@ var ElevationPathDOM = {
         div.className = "container-buttons-plugin fr-mx-2w";
         return div;
     },
-    
-    /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createElevationPathPanelHeaderElement : function () {
-        var self = this;
-
-        var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
-
-        if (!checkDsfr()) {
-            var divInfo = document.createElement("button");
-            divInfo.id = this._addUID("GPelevationPathPanelInfo");
-            divInfo.className = "GPpanelInfo gpf-btn gpf-btn-icon-info fr-btn fr-btn--secondary gpf-btn--secondary fr-m-1w";
-            divInfo.title = "Informations";
-            // add event on click
-            if (divInfo.addEventListener) {
-                divInfo.addEventListener(
-                    "click",
-                    function () {
-                        self.onOpenElevationPathInfoClick();
-                    }
-                );
-            } else if (divInfo.attachEvent) {
-                // internet explorer
-                divInfo.attachEvent(
-                    "onclick",
-                    function () {
-                        self.onOpenElevationPathInfoClick();
-                    }
-                );
-            }
-            container.appendChild(divInfo);
-        }
-
-        var divTitle = document.createElement("div");
-        divTitle.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-        divTitle.innerHTML = "Profil Altimétrique";
-        container.appendChild(divTitle);
-
-        var buttonReduce = document.createElement("button");
-        buttonReduce.id = this._addUID("GPelevationPathPanelReduce");
-        buttonReduce.className = "GPpanelReduce gpf-btn gpf-btn-icon-reduce fr-btn fr-btn--secondary gpf-btn--secondary";
-        buttonReduce.title = "Masquer le panneau";
-
-        if (buttonReduce.addEventListener) {
-            buttonReduce.addEventListener("click", function (e) {
-                if (typeof self.onReduceElevationPathPanelClick === "function") {
-                    self.onReduceElevationPathPanelClick();
-                }
-            }, false);
-        } else if (buttonReduce.attachEvent) {
-            buttonReduce.attachEvent("onclick", function (e) {
-                if (typeof self.onReduceElevationPathPanelClick === "function") {
-                    self.onReduceElevationPathPanelClick();
-                }
-            });
-        }
-        container.appendChild(buttonReduce);
-
-        var buttonClose = document.createElement("button");
-        buttonClose.id = this._addUID("GPelevationPathPanelClose");
-        buttonClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        buttonClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (buttonClose.addEventListener) {
-            buttonClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowElevationPathPicto")).click();
-            }, false);
-        } else if (buttonClose.attachEvent) {
-            buttonClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowElevationPathPicto")).click();
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        buttonClose.appendChild(span);
-        container.appendChild(buttonClose);
-
-        return container;
-    },
 
     /**
      * Create Form
@@ -239,9 +152,6 @@ var ElevationPathDOM = {
     _createElevationPathInformationsElement : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPelevationPathInformationsContainer");
-        if (!checkDsfr()) {
-            div.className = "GPelementHidden gpf-hidden";
-        }
 
         var p = document.createElement("p");
         p.className = "GPelevationPathInformations";

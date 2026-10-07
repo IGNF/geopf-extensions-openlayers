@@ -46,6 +46,7 @@ class GeoportalFullScreen extends FullScreen {
         this.CLASSNAME = "FullScreen";
         this.container = null;
         this.options = options;
+        this._initContainer();
     }
 
     /**
@@ -129,7 +130,6 @@ class GeoportalFullScreen extends FullScreen {
     setMap (map) {
         if (map) {
             this._createContainerPosition(map);
-            this._initContainer();
             // INFO
             // on ne supprime pas le zoom par defaut,
             // on le desactive simplement pour éviter des effets de bords

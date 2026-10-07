@@ -6,6 +6,8 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlGetFeatureInfo.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawing.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawing.js"></script>
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
 {{/content}}
 
@@ -26,7 +28,7 @@
 {{/content}}
 
 {{#content "body"}}
-            <h2>Ajout du widget du GetFeatureInfo, avec les options par défaut</h2>
+            <h2>Ajout des widgets GetFeatureInfo et Drawing avec DSFR</h2>
             <!-- map -->
             <div id="map">
             </div>
@@ -93,10 +95,19 @@
                 style  : "gris"
             });
             map.addLayer(mapbox);
+
+            // 3. Ajout des outils de dessin
+            var drawing = new ol.control.Drawing({
+                collapsed : false,
+                position : "bottom-right"
+            });
+            map.addControl(drawing);
             
-            // 3. Ajout du GetFeatureInfo
+            // 4. Ajout du GetFeatureInfo
             var getFeatureInfo = new ol.control.GetFeatureInfo({
                 position: "bottom-left",
+                button: true,
+                active : true,
                 noDataMessage : "<h6 style='text-align: center;'> Pas d'infos disponibles </h6> <p style='text-align: center;'> Il n'y a pas de données interrogeables ici </p>"
             });
             map.addControl(getFeatureInfo);

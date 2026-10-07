@@ -38,7 +38,7 @@ jobs:
       - name: Use nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
 
       - name: Install dependencies
         run: npm install
@@ -132,7 +132,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add -A
-          git commit -m "[github-actions] deploy project gh-pages"
+          git diff --staged --quiet || git commit -m "[github-actions] deploy project gh-pages"
           git push
 
   # - checkout master or main
@@ -265,13 +265,25 @@ jobs:
       - name: Use registry npm
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
-          
+      
+      - name: Verify npm authentication
+        run: |
+          if npm whoami --registry https://registry.npmjs.org; then
+            echo "✅ Authentification npm OK"
+          else
+            echo "❌ ERREUR: Token npm expiré ou invalide !"
+            echo "Veuillez renouveler le token NPM_GEOPORTAL_TOKEN dans les secrets GitHub"
+            exit 1
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
+
       - name: Publish on npm
         run: |
           cd ./dist/package
-          npm publish --provenance --access public --tag next
+          npm publish --provenance --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GEOPORTAL_TOKEN }}
 
@@ -289,6 +301,15 @@ jobs:
     needs: [release, publish]
     runs-on: ubuntu-latest
     steps:
+      - name: Debug token
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "Le secret arrive VIDE dans ce job"
+          else
+            echo "Secret présent, longueur : ${#TOKEN}"
+          fi
+        env:
+          TOKEN: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v4
         with:

@@ -43,6 +43,7 @@ import Interactions from "../Utils/Interactions";
 import LayerSwitcher from "../LayerSwitcher/LayerSwitcher";
 // DOM
 import ReverseGeocodeDOM from "./ReverseGeocodeDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("reversegeocoding");
 
@@ -533,22 +534,29 @@ class ReverseGeocode extends Control {
 
         // panel
         var reverseGeocodingPanel = this._panelContainer = this._createReverseGeocodingPanelElement();
-        var reverseGeocodingPanelDiv = this._createReverseGeocodingPanelDivElement();
-        reverseGeocodingPanel.appendChild(reverseGeocodingPanelDiv);
 
         // header
-        var panelHeader = this._panelHeaderContainer = this._createReverseGeocodingPanelHeaderElement();
+        var panelHeader = this._panelHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-reversegeocode",
+            title : "Trouver une adresse",
+            btnClassForClose : "GPshowReverseGeocodingPicto",
+            backBtn : true,
+        });
+        reverseGeocodingPanel.appendChild(panelHeader);
 
-        // return picto (hidden at start)
-        var returnPicto = this._returnPictoContainer = this._createReverseGeocodingPanelReturnPictoElement();
-        panelHeader.appendChild(returnPicto);
-        // title
-        var panelTitle = this._panelTitleContainer = this._createReverseGeocodingPanelTitleElement();
-        panelHeader.appendChild(panelTitle);
-        // close picto
-        var closeDiv = this._panelCloseButton = this._createReverseGeocodingPanelCloseElement();
-        panelHeader.appendChild(closeDiv);
-        reverseGeocodingPanelDiv.appendChild(panelHeader);
+        this._returnPictoContainer = panelHeader._backBtn;
+        this._panelTitleContainer = panelHeader._title;
+        this._panelCloseButton = panelHeader._closeBtn;
+        this._returnPictoContainer.addEventListener("click", (e) => {
+            document.getElementById(this._addUID("GPreverseGeocodingResultsPanel")).className = "GPelementHidden gpf-panel--hidden";
+            document.getElementById(this._addUID("GPreverseGeocodingForm")).className = "GPform gpf-panel__content fr-modal__content";
+            this._panelTitleContainer.innerText = "Trouver une adresse";
+            this._returnPictoContainer.classList.add("gpf-hidden", "GPelementHidden");
+            this.onGPreverseGeocodingReturnPictoClick(e);
+        });
+
+        var reverseGeocodingPanelDiv = this._createReverseGeocodingPanelDivElement();
+        reverseGeocodingPanel.appendChild(reverseGeocodingPanelDiv);
 
         // form
         var reverseGeocodingForm = this._formContainer = this._createReverseGeocodingPanelFormElement();
@@ -1869,6 +1877,7 @@ class ReverseGeocode extends Control {
 };
 
 // on récupère les méthodes de la classe commune ReverseGeocodeDOM
+Object.assign(ReverseGeocode.prototype, PanelDOM);
 Object.assign(ReverseGeocode.prototype, ReverseGeocodeDOM);
 Object.assign(ReverseGeocode.prototype, Widget);
 

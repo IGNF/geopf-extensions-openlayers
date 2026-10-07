@@ -133,76 +133,6 @@ var MousePositionDOM = {
      */
 
     /**
-     * Create Header Title Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createMousePositionPanelTitleElement : function () {
-        var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title fr-modal__title fr-pt-4w";
-        div.id = this._addUID("GPmousePositionHeaderTitle");
-        div.innerHTML = "Coordonnées";
-        return div;
-    },
-
-    /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createMousePositionPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header fr-modal__header";
-        // info: on sépare les appels pour la création du picto de retour,
-        // du titre et de la croix de fermeture pour les récupérer dans le composant
-        return container;
-    },
-
-    /**
-     * Create Header close div
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createMousePositionPanelCloseElement : function () {
-        // contexte
-        var self = this;
-
-        var divClose = document.createElement("button");
-        divClose.id = this._addUID("GPmousePositionPanelClose");
-        divClose.className = "GPpanelClose gpf-btn gpf-btn-icon-close  fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        divClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (divClose.addEventListener) {
-            divClose.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPshowMousePositionPicto")).click();
-            }, false);
-            divClose.addEventListener("keydown", function (event) {
-                if (event.keyCode === 13) {
-                    document.getElementById(self._addUID("GPshowMousePositionPicto")).click();
-                }
-            }, false);
-        } else if (divClose.attachEvent) {
-            divClose.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPshowMousePositionPicto")).click();
-            });
-            divClose.attachEvent("onkeydown", function (event) {
-                if (event.keyCode === 13) {
-                    document.getElementById(self._addUID("GPshowMousePositionPicto")).click();
-                }
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        divClose.appendChild(span);
-
-        return divClose;
-    },
-
-    /**
      * coordinate panel
      * @param {Boolean} [displayAltitude] - specifies if the altitude panel must be displayed
      * @param {Boolean} [displayCoordinates] - specifies if the coordinates panel must be displayed
@@ -690,10 +620,10 @@ var MousePositionDOM = {
     _resetLabelElements : function (currentProjectionType) {
         // Changement des labels dans le formulaire de saisie
         var spanLat = document.getElementById(this._addUID("GPmousePositionLatLabel"));
-        spanLat.innerHTML = currentProjectionType === "Geographical" ? "Latitude :" : "X :";
+        spanLat.innerHTML = currentProjectionType === "Geographical" ? "Latitude :" : "Y :";
 
         var spanLon = document.getElementById(this._addUID("GPmousePositionLonLabel"));
-        spanLon.innerHTML = currentProjectionType === "Geographical" ? "Longitude :" : "Y :";
+        spanLon.innerHTML = currentProjectionType === "Geographical" ? "Longitude :" : "X :";
     },
 
     /**
@@ -768,7 +698,11 @@ var MousePositionDOM = {
         if (editing === true) {
             locateElt.classList.remove("gpf-btn-icon-mp-edit");
             locateElt.classList.add("gpf-btn-icon-mp-edit-center");
-            document.getElementById(this._addUID("GPmousePositionLat")).focus();
+            // focus on the latitude input field
+            // select the text inside the latitude input field
+            var latInput = document.getElementById(this._addUID("GPmousePositionLat")) || document.getElementById(this._addUID("GPmousePositionLatDegrees"));
+            latInput.select();
+            latInput.focus();
         } else {
             locateElt.classList.remove("gpf-btn-icon-mp-edit-center");
             locateElt.classList.add("gpf-btn-icon-mp-edit");
@@ -868,8 +802,8 @@ var MousePositionDOM = {
             var labelLat = document.getElementById(this._addUID("GPmousePositionLatLabel"));
 
             if (coordinate.x || coordinate.y) {
-                labelLat.innerHTML = "X : ";
-                labelLon.innerHTML = "Y : ";
+                labelLat.innerHTML = "Y : ";
+                labelLon.innerHTML = "X : ";
             } else if (coordinate.e || coordinate.n) {
                 labelLat.innerHTML = "E : ";
                 labelLon.innerHTML = "N : ";
@@ -899,8 +833,8 @@ var MousePositionDOM = {
                 var elLat = document.getElementById(this._addUID("GPmousePositionLat"));
                 var elLon = document.getElementById(this._addUID("GPmousePositionLon"));
 
-                elLat.value = coordinate.x || coordinate.lat || coordinate.e || "0";
-                elLon.value = coordinate.y || coordinate.lng || coordinate.lon || coordinate.n || "0";
+                elLat.value = coordinate.y || coordinate.lat || coordinate.e || "0";
+                elLon.value = coordinate.x || coordinate.lng || coordinate.lon || coordinate.n || "0";
 
                 elLat.title = "Latitude";
                 elLon.title = "Longitude";

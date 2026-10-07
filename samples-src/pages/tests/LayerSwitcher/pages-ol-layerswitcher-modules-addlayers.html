@@ -37,10 +37,13 @@
                     <button type="button" id="addMapsLayer">Ajouter une couche Map</button>
                     <button type="button" id="addOSMLayer">Ajouter une couche OSM</button>
                     <br>
+                    <button type="button" id="modifyTitleOSMLayer">Modifier le titre de la couche OSM</button>
                     <button type="button" id="modifyVisibilityOSMLayer">Visibilité sur la couche OSM</button>
                     <button type="button" id="modifyOpacityOSMLayer">Opacité sur la couche OSM</button>
                     <button type="button" id="modifyIndexOSMLayerMin">Position (-) de la couche OSM</button>
                     <button type="button" id="modifyIndexOSMLayerMax">Position (+) de la couche OSM</button>
+                    <button type="button" id="hiddenOSMLayer">Masquer la couche OSM</button>
+                    <button type="button" id="showOSMLayer">Afficher la couche OSM</button>
                 </div>
             </div>
 
@@ -82,6 +85,19 @@
 
 					// Appel du LayerSwitcher
                     layerSwitcher = new ol.control.LayerSwitcher({
+                        layers : [
+                            {
+                                layer : osm
+                            },
+                            {
+                                layer : ortho,
+                                config : {
+                                    title : "Ortho",
+                                    description : "Ortho",
+                                    thumbnail : "https://www.geoportail.gouv.fr/depot/layers/ORTHOIMAGERY.ORTHOPHOTOS/vignettes/ORTHOIMAGERY.ORTHOPHOTOS-quickViewSMLL.jpg"
+                                }
+                            }
+                        ],
                         options : {
                             position : "bottom-right",
                             collapsed : false,
@@ -158,6 +174,7 @@
                             layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
                         }) // , zIndex : 0
                     });
+                    maps.set("thumbnail", "https://www.geoportail.gouv.fr/depot/layers/GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2/vignettes/GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2-quickViewSMLL.jpg");
                     map.addLayer(maps);
                 };
                 addOSMLayer = function() {
@@ -166,6 +183,8 @@
                         // zIndex : 4,
                         opacity: 0.5
                     });
+                    osm.set("title", "OpenStreetMap");
+                    osm.set("thumbnail", "https://www.openstreetmap.fr/wp-content/uploads/2024/07/cropped-cropped-cropped-Logo-OSM-2024-e1720618276656.png");
                     map.addLayer(osm); // pas d'autoconf sur une couche utilisateur donc description et nom par defaut !
                 };
                 modifyVisibilityOSMLayer = function () {
@@ -187,12 +206,24 @@
                     var cidx = osm.getZIndex();
                     osm.setZIndex(++cidx);
                 };
+                hiddenOSMLayer = function () {
+                    osm.set("display", false);
+                };
+                showOSMLayer = function () {
+                    osm.set("display", true);
+                };
+                modifyTitleOSMLayer = function () {
+                    osm.set("title", "OpenStreetMap");
+                };
+                document.getElementById("modifyTitleOSMLayer").onclick = modifyTitleOSMLayer;
                 document.getElementById("addMapsLayer").onclick = addMapsLayer;
                 document.getElementById("addOSMLayer").onclick = addOSMLayer;
                 document.getElementById("modifyVisibilityOSMLayer").onclick = modifyVisibilityOSMLayer;
                 document.getElementById("modifyOpacityOSMLayer").onclick = modifyOpacityOSMLayer;
                 document.getElementById("modifyIndexOSMLayerMin").onclick = modifyIndexOSMLayerMin;
                 document.getElementById("modifyIndexOSMLayerMax").onclick = modifyIndexOSMLayerMax;
+                document.getElementById("hiddenOSMLayer").onclick = hiddenOSMLayer;
+                document.getElementById("showOSMLayer").onclick = showOSMLayer;
            </script>
 {{/content}}
 

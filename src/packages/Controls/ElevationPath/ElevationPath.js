@@ -39,6 +39,7 @@ import GeoJSONExtended from "../../Formats/GeoJSON";
 // DOM
 import ElevationPathDOM from "./ElevationPathDOM";
 import ProfileElevationPathDOM from "./ProfileElevationPathDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("elevationpath");
 
@@ -510,8 +511,7 @@ class ElevationPath extends Control {
             if (this.options.active) {
                 // on n'affiche pas la fenetre de profile s'il n'existe pas...
                 if (this._profile === null) {
-                    this._panelContainer.style.display = "none";
-                    // this._panelContainer.style.visibility = "hidden";
+                    this._panelContainer.classList.add("GPelementHidden", "gpf-hidden");
                 }
                 this._initMeasureInteraction(map);
                 this._addMeasureInteraction(map);
@@ -702,8 +702,7 @@ class ElevationPath extends Control {
         var map = this.getMap();
 
         // fenetre du profil
-        this._panelContainer.style.display = "none";
-        // this._panelContainer.style.visibility = "hidden";
+        this._panelContainer.classList.add("GPelementHidden", "gpf-hidden");
 
         // picto
         this._pictoButton.setAttribute("aria-pressed", false);
@@ -726,7 +725,7 @@ class ElevationPath extends Control {
         // car le profil est calculé en fonction de la taille du panneau (clientHeight / clientWidth),
         // et ces valeurs sont à 0 !?
         this._pictoButton.setAttribute("aria-pressed", true);
-        this._panelContainer.style.display = "block";
+        this._panelContainer.classList.remove("GPelementHidden", "gpf-hidden");
         this._displayProfile(this._data);
         this._waitingContainer.className = "GPwaitingContainer GPwaitingContainerHidden gpf-waiting gpf-waiting--hidden";
     }
@@ -882,12 +881,17 @@ class ElevationPath extends Control {
 
         // panneau
         var panel = this._panelContainer = this._createElevationPathPanelElement();
-        var panelDiv = this._createElevationPathPanelDivElement();
-        panel.appendChild(panelDiv);
 
         // header
-        var header = this._createElevationPathPanelHeaderElement();
-        panelDiv.appendChild(header);
+        var header = this._createPanelHeaderElement({
+            icon : "ign-elevationpath",
+            title : "Profil Altimétrique",
+            btnClassForClose : "GPshowElevationPathPicto",
+        });
+        panel.appendChild(header);
+
+        var panelDiv = this._createElevationPathPanelDivElement();
+        panel.appendChild(panelDiv);
 
         // profile
         var profile = this._createElevationPathPanelProfilElement();
@@ -1134,8 +1138,7 @@ class ElevationPath extends Control {
             // Si il n'y a pas de surcharge utilisateur de la fonction de recuperation des
             // resultats, on realise l'affichage du panneau
             if (typeof this.options.elevationPathOptions.onSuccess === "undefined" && this.options.displayProfileOptions.target === null) {
-                this._panelContainer.style.display = "block";
-                // self._panelContainer.style.visibility = "visible";
+                this._panelContainer.classList.remove("GPelementHidden", "gpf-hidden");
             }
 
             // set an alti request and display results
@@ -1332,8 +1335,7 @@ class ElevationPath extends Control {
         var _requestServiceOnSuccess = function (result) {
             logger.trace(result);
             if (result) {
-                self._panelContainer.style.display = "block";
-                // self._panelContainer.style.visibility = "visible";
+                self._panelContainer.classList.remove("GPelementHidden", "gpf-hidden");
                 if (self._data) {
                     self._data = {};
                 }
@@ -1351,8 +1353,7 @@ class ElevationPath extends Control {
         // callback _requestServiceOnFailure
         var _requestServiceOnFailure = function (error) {
             // on ferme le panneau en cas d'erreur !
-            self._panelContainer.style.display = "none";
-            // self._panelContainer.style.visibility = "hidden";
+            self._panelContainer.classList.add("GPelementHidden", "gpf-hidden");
             logger.error(error.message);
             self._waitingContainer.className = "GPwaitingContainer GPwaitingContainerHidden gpf-waiting gpf-waiting--hidden";
             self._waiting = false;
@@ -1667,6 +1668,8 @@ class ElevationPath extends Control {
         var opened = this._pictoButton.ariaPressed;
         if (opened === "true") {
             this.onPanelOpen();
+        } else {
+            this.onPanelClose();
         }
 
         var map = this.getMap();
@@ -1678,13 +1681,12 @@ class ElevationPath extends Control {
         if (opened === "true") {
             // on n'affiche pas la fenetre de profile s'il n'existe pas...
             if (this._profile === null) {
-                this._panelContainer.style.display = "none";
-                // this._panelContainer.style.visibility = "hidden";
+                this._panelContainer.classList.add("GPelementHidden", "gpf-hidden");
             }
             this._initMeasureInteraction(map);
             this._addMeasureInteraction(map);
         } else {
-            this._panelContainer.style.display = "none";
+            this._panelContainer.classList.add("GPelementHidden", "gpf-hidden");
             // HACK
             // il est possible de faire passer une instruction via le DOM et les dataset :
             // * data-remove-measure : true|false
@@ -1742,6 +1744,7 @@ class ElevationPath extends Control {
 };
 
 // on récupère les méthodes de la classe commune ElevationPath
+Object.assign(ElevationPath.prototype, PanelDOM);
 Object.assign(ElevationPath.prototype, ElevationPathDOM);
 Object.assign(ElevationPath.prototype, Widget);
 

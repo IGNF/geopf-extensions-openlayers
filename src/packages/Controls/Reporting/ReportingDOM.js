@@ -117,63 +117,6 @@ var ReportingDOM = {
     },
 
     /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createReportingPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        container.className = "gpf-panel__header fr-modal__header gpf-panel__header_reporting";
-        return container;
-    },
-    _createReportingPanelIconElement : function () {
-        // contexte d'execution
-        var self = this;
-
-        var label = document.createElement("label");
-        label.className = "gpf-btn-header gpf-btn-icon-header-reporting";
-        label.title = "Retour à l'étape précédente";
-        label.addEventListener("click", function (e) {
-            self.onPrevReportingClick(e);
-        });
-        return label;
-    },
-    _createReportingPanelTitleElement : function (title) {
-        var div = document.createElement("div");
-        div.className = "gpf-panel__title fr-modal__title fr-pt-4w";
-        div.innerHTML = title || "";
-        return div;
-    },
-    _createReportingPanelCloseElement : function () {
-        var self = this;
-
-        var btnClose = document.createElement("button");
-        btnClose.className = "gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline fr-m-1w";
-        btnClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function (e) {
-                document.getElementById(self._addUID("GPshowReportingPicto")).click();
-                self.onCloseReportingClick(e);
-            }, false);
-        } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function (e) {
-                document.getElementById(self._addUID("GPshowReportingPicto")).click();
-                self.onCloseReportingClick(e);
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        btnClose.appendChild(span);
-
-        return btnClose;
-    },
-
-    /**
      * Create Reporting Panel Footer
      * @returns {HTMLElement} DOM element
      * @todo

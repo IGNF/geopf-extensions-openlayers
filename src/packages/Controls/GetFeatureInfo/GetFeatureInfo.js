@@ -20,6 +20,7 @@ import AsyncData from "../Utils/AsyncData";
 
 // DOM
 import GetFeatureInfoDOM from "./GetFeatureInfoDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("getFeatureInfo");
 
@@ -37,6 +38,8 @@ class GetFeatureInfo extends Control {
     /**
      * @constructor
     * @param {Object} options - options for function call.
+    * @param {Boolean} [options.button = true] - display the activation button. If false, the control is active by default.
+    * @param {Boolean} [options.active] - set the initial active state. This value takes precedence over the button default.
     * @example
     * var getFeatureInfo = new ol.control.GetFeatureInfo();
     * map.addControl(getFeatureInfo);
@@ -86,8 +89,8 @@ class GetFeatureInfo extends Control {
                 );
             }
             // mode "collapsed"
-            if (!this.collapsed) {
-                this.buttonGetFeatureInfoShow.setAttribute("aria-pressed", true);
+            if (!this.collapsed && !this.activeExplicit && this.buttonGetFeatureInfoShow) {
+                this.setActive(true);
             }
 
             // some stuff
@@ -122,6 +125,28 @@ class GetFeatureInfo extends Control {
     // ################### getters / setters ############################# //
     // ################################################################### //
 
+    /**
+     * Returns whether the control is active.
+     *
+     * @returns {Boolean} true if active, false otherwise
+     */
+    getActive () {
+        return this.active;
+    }
+
+    /**
+     * Sets whether the control is active.
+     *
+     * @param {Boolean} active - true to activate the control
+     */
+    setActive (active) {
+        this.active = active === true;
+        this.activeExplicit = true;
+        if (this.buttonGetFeatureInfoShow) {
+            this.buttonGetFeatureInfoShow.setAttribute("aria-pressed", this.active);
+        }
+    }
+
 
     // ################################################################### //
     // #################### privates methods ############################# //
@@ -140,11 +165,17 @@ class GetFeatureInfo extends Control {
         this.options = {
             collapsed : true,
             draggable : false,
-            auto : true
+            auto : true,
+            button : true,
+            active : false
         };
 
         // merge with user options
         Utils.assign(this.options, options);
+
+        this.button = this.options.button;
+        this.activeExplicit = options.active !== undefined;
+        this.active = options.active === undefined ? !this.button : options.active === true;
 
         /** 
          * @type {Boolean} 
@@ -206,27 +237,32 @@ class GetFeatureInfo extends Control {
         // create main container
         var container = this._createMainContainerElement();
 
-        var picto = this.buttonGetFeatureInfoShow = this._createShowGetFeatureInfoPictoElement();
-        container.appendChild(picto);
+        if (this.button) {
+            var picto = this.buttonGetFeatureInfoShow = this._createShowGetFeatureInfoPictoElement();
+            picto.setAttribute("aria-pressed", this.active);
+            container.appendChild(picto);
+        }
 
         // panel
         var getFeatureInfoPanel = this.panelGetFeatureInfoContainer = this._createGetFeatureInfoPanelElement();
         var getFeatureInfoPanelDiv = this.getFeatureInfoPanelDiv = this._createGetFeatureInfoPanelDivElement();
-        getFeatureInfoPanel.appendChild(getFeatureInfoPanelDiv);
 
         // header
-        var getFeatureInfoPanelHeader = this.panelGetFeatureInfoHeaderContainer = this._createGetFeatureInfoPanelHeaderElement();
-        // icone
-        var getFeatureInfoPanelIcon = this._createGetFeatureInfoPanelIconElement();
-        getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelIcon);
-        // title
-        var getFeatureInfoPanelTitle = this._createGetFeatureInfoPanelTitleElement();
-        getFeatureInfoPanelHeader.appendChild(getFeatureInfoPanelTitle);
+        var getFeatureInfoPanelHeader = this.panelGetFeatureInfoHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-getfeatureinfo",
+            title : "Infos sur les couches"
+        });
         // close picto
-        var getFeatureInfoCloseBtn = this.buttonGetFeatureInfoClose = this._createGetFeatureInfoPanelCloseElement();
-        getFeatureInfoPanelHeader.appendChild(getFeatureInfoCloseBtn);
+        this.buttonGetFeatureInfoClose = getFeatureInfoPanelHeader._closeBtn;
+        this.buttonGetFeatureInfoClose.classList.add("GPcloseGetFeatureInfo");
+        // la fermeture du panneau ne doit pas désactiver le GFI (le singleclick doit rester actif)
+        this.buttonGetFeatureInfoClose.addEventListener("click", (e) => {
+            this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
+            this.onCloseGetFeatureInfoClick(e);
+        });
 
-        getFeatureInfoPanelDiv.appendChild(getFeatureInfoPanelHeader);
+        getFeatureInfoPanel.appendChild(getFeatureInfoPanelHeader);
+        getFeatureInfoPanel.appendChild(getFeatureInfoPanelDiv);
 
         // container for the custom code
         var accordionGroup = this.getFeatureInfoAccordionGroup = this._createGetFeatureInfoAccordionGroup();
@@ -273,7 +309,7 @@ class GetFeatureInfo extends Control {
      * @returns { Boolean } true if active false if not
      */
     getFeatureInfoIsActive () {
-        return this.buttonGetFeatureInfoShow.getAttribute("aria-pressed");
+        return this.getActive();
     }
 
 
@@ -283,12 +319,14 @@ class GetFeatureInfo extends Control {
      * @private
      */
     onMapClick (e) {
-        if (this.getFeatureInfoIsActive() === "true") {
+        if (this.getFeatureInfoIsActive()) {
             this.getFeatureInfoAccordionGroup.remove();
             if (this.noDataMessage) {
                 this.noDataMessageDiv.remove();
             }
             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
+            // le panel est réellement ouvert ici (suite au clic sur la carte) donc on prévient les autres panels
+            this.onPanelOpen();
             this.layers = e.map.getLayers().getArray().filter((l) => {
                 // On ne passe au GFI que les layers visibles
                 if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
@@ -472,7 +510,7 @@ class GetFeatureInfo extends Control {
             var layername = this.getLayerTitle(gfiLayer);
 
             var content = null;
-            var accordeon = this._createGetFeatureInfoLayerAccordion(layername);
+            var accordeon = this._createGetFeatureInfoLayerAccordion(layername, this.getFeatureInfoPanelDiv);
             // on affiche pas l'entrée avant d'être confirmation qu'elle aura du contenu renvoyé
             accordeon.style.display = "none";
             var pending = true;
@@ -495,10 +533,17 @@ class GetFeatureInfo extends Control {
             data.subscribe((key, value) => {
                 if (key == "content") {
                     data.set("pending", false);
+                    // On affiche le contenu du GFI s'il est actif
+                    // Evite le callback d'ouverture si la réponse arrive après l'ouverture d'un autre widget
+                    if (!this.getActive()) {
+                        data.get("contentDiv").remove();
+                        return;
+                    }
                     if (data.get("content")) {
                         data.get("contentDiv").querySelector("div.fr-collapse").innerHTML = data.get("content");
                         // on affiche la pop-up car il y a au moins une entrée à afficher
                         this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
+                        this.onPanelOpen();
                         // du contenu est renvoyé : on affiche l'entrée
                         data.get("contentDiv").style.display = "block";
                     }
@@ -712,6 +757,7 @@ class GetFeatureInfo extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(GetFeatureInfo.prototype, PanelDOM);
 Object.assign(GetFeatureInfo.prototype, GetFeatureInfoDOM);
 Object.assign(GetFeatureInfo.prototype, Widget);
 

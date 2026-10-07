@@ -52,6 +52,7 @@ import SelectorID from "../../Utils/SelectorID";
 import Color from "../../Utils/ColorUtils";
 // DOM
 import DrawingDOM from "./DrawingDOM";
+import PanelDOM from "../PanelDOM";
 // import local with ol dependencies
 import KMLExtended from "../../Formats/KML";
 import GeoJSONExtended from "../../Formats/GeoJSON";
@@ -461,9 +462,13 @@ class Drawing extends Control {
         if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
             return;
         }
-        // on simule l'ouverture du panneau après un click
-        this.onShowDrawingClick();
-        this._showDrawingButton.click();
+
+        if (collapsed) {
+            this.panelCloseBtn.click();
+        } else {
+            this._showDrawingButton.click();
+        }
+        this.collapsed = collapsed;
     }
 
     /**
@@ -808,6 +813,8 @@ class Drawing extends Control {
         this.tooltipOvl = null;
         /** @private */
         this.tooltipElem = null;
+        /** @private */
+        this.panelCloseBtn = null;
 
         this.layer = null;
         if (this.options.layer && this.options.layer instanceof VectorLayer) {
@@ -946,11 +953,17 @@ class Drawing extends Control {
         container.appendChild(picto);
 
         var panel = this._drawingPanel = this._createDrawingPanelElement();
+
+        var header = this._drawingPanelHeader = this._createPanelHeaderElement({
+            icon : "ign-drawing",
+            title : this.options.controlLabel || "Annoter la carte",
+            btnClassForClose : "GPshowDrawingPicto",
+        });
+        panel.appendChild(header);
+        this.panelCloseBtn = header._closeBtn;
+
         var panelDiv = this._createDrawingPanelDivElement();
         panel.appendChild(panelDiv);
-
-        var header = this._drawingPanelHeader = this._createDrawingPanelHeaderElement();
-        panelDiv.appendChild(header);
 
         var sections = this._createDrawingToolsDivSections();
         panelDiv.appendChild(sections);
@@ -1814,6 +1827,8 @@ class Drawing extends Control {
                     context.tootlTipElem.innerText = "Double-cliquer pour terminer";
                     context.tooltipOvl = new Overlay({
                         element : context.tootlTipElem,
+                        stopEvent : false,
+                        className : "ol-overlay-container",
                         positioning : "top-right"
                     });
 
@@ -1864,6 +1879,8 @@ class Drawing extends Control {
                     context.tootlTipElem.innerText = "Double-cliquer pour terminer";
                     context.tooltipOvl = new Overlay({
                         element : context.tootlTipElem,
+                        stopEvent : false,
+                        className : "ol-overlay-container",
                         positioning : "top-right"
                     });
                     context.interactionCurrent.on("drawend", function (deEv) {
@@ -2127,6 +2144,7 @@ class Drawing extends Control {
             if (this.popupOvl) {
                 this.getMap().removeOverlay(this.popupOvl);
             }
+            this.onPanelClose();
         }
         
         this.disable();
@@ -2168,6 +2186,7 @@ class Drawing extends Control {
 };
 
 // on récupère les méthodes de la classe commune Drawing
+Object.assign(Drawing.prototype, PanelDOM);
 Object.assign(Drawing.prototype, DrawingDOM);
 Object.assign(Drawing.prototype, Widget);
 

@@ -33,6 +33,7 @@ import CRS from "../../CRS/CRS";
 
 // DOM
 import MousePositionDOM from "./MousePositionDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("GeoportalMousePosition");
 
@@ -839,20 +840,17 @@ class MousePosition extends Control {
 
         // panel
         var mousePositionPanel = this._panelMousePositionContainer = this._createMousePositionPanelElement();
-        var mousePositionPanelDiv = this._createMousePositionPanelDivElement();
-        mousePositionPanel.appendChild(mousePositionPanelDiv);
 
         // header
-        var panelHeader = this._panelHeaderContainer = this._createMousePositionPanelHeaderElement();
+        var panelHeader = this._panelHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-mouseposition",
+            title : "Coordonnées",
+            btnClassForClose : "GPshowMousePositionPicto",
+        });
+        mousePositionPanel.appendChild(panelHeader);
 
-        // panel title
-        var panelTitle = this._panelTitleContainer = this._createMousePositionPanelTitleElement();
-        panelHeader.appendChild(panelTitle);
-
-        // close picto
-        var closeDiv = this._panelCloseButton = this._createMousePositionPanelCloseElement();
-        panelHeader.appendChild(closeDiv);
-        mousePositionPanelDiv.appendChild(panelHeader);
+        var mousePositionPanelDiv = this._createMousePositionPanelDivElement();
+        mousePositionPanel.appendChild(mousePositionPanelDiv);
 
         var basic = this._createMousePositionPanelBasicElement(
             this.options.displayAltitude,
@@ -1755,6 +1753,7 @@ class MousePosition extends Control {
 };
 
 // on récupère les méthodes de la classe commune MousePosition
+Object.assign(MousePosition.prototype, PanelDOM);
 Object.assign(MousePosition.prototype, MousePositionDOM);
 Object.assign(MousePosition.prototype, Widget);
 

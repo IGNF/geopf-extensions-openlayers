@@ -1,4 +1,3 @@
-import def from "ajv/dist/vocabularies/discriminator";
 import InseeSearchService from "../../Services/InseeSearchService";
 import Helper from "../../Utils/Helper";
 import AbstractAdvancedSearch from "./AbstractAdvancedSearch";
@@ -695,7 +694,7 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
             typename : "CADASTRALPARCELS.PARCELLAIRE_EXPRESS:" + (section ? "parcelle" : "feuille"),
             outputFormat : "application/json",
             srsName : "CRS:84",
-            count : "1000",
+            count : "5000",
             propertyName : section ? "com_abs,section,numero" : "com_abs,section,code_arr",
             cql_filter : `code_dep='${dep}' and code_com='${com}'` + (arrond ? `and code_arr='${arrond.slice(2)}'` : "") + (section ? ` and com_abs='${prefix}' and section='${section}'` : "")
         };

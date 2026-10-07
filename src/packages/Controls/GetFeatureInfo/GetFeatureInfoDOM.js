@@ -82,14 +82,14 @@ var GetFeatureInfoDOM = {
         // Close all results and panels when minimizing the getFeatureInfo
         if (button.addEventListener) {
             button.addEventListener("click", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
+                var status = self.getActive();
+                self.setActive(!status);
                 self.onShowGetFeatureInfoClick(e);
             });
         } else if (button.attachEvent) {
             button.attachEvent("onclick", function (e) {
-                var status = (e.target.ariaPressed === "true");
-                e.target.setAttribute("aria-pressed", !status);
+                var status = self.getActive();
+                self.setActive(!status);
                 self.onShowGetFeatureInfoClick(e);
             });
         }
@@ -116,59 +116,8 @@ var GetFeatureInfoDOM = {
 
     _createGetFeatureInfoPanelDivElement : function () {
         var div = document.createElement("div");
-        div.className = "GPpanelBody fr-modal__body";
+        div.className = "GPpanelBody gpf-panel__body fr-modal__body";
         return div;
-    },
-
-    /**
-     * Create Header Panel
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createGetFeatureInfoPanelHeaderElement : function () {
-        var container = document.createElement("div");
-        container.className = "GPpanelHeader gpf-panel__header_gfi";
-        return container;
-    },
-    _createGetFeatureInfoPanelIconElement : function () {
-        var label = document.createElement("label");
-        label.className = "GPpanelIcon gpf-btn-header_gfi gpf-btn-icon-header_gfi";
-        label.title = "Get Feature Info";
-        return label;
-    },
-    _createGetFeatureInfoPanelTitleElement : function () {
-        var div = document.createElement("div");
-        div.className = "GPpanelTitle gpf-panel__title_gfi fr-modal__title";
-        div.innerHTML = "Infos sur les couches";
-        return div;
-    },
-    _createGetFeatureInfoPanelCloseElement : function () {
-        var self = this;
-
-        var btnClose = document.createElement("button");
-        btnClose.className = "GPpanelClose GPcloseGetFeatureInfo gpf-btn gpf-btn-icon-close fr-btn--close fr-btn fr-btn--tertiary-no-outline";
-        btnClose.title = "Fermer le panneau";
-
-        // Link panel close / visibility checkbox
-        if (btnClose.addEventListener) {
-            btnClose.addEventListener("click", function (e) {
-                btnClose.setAttribute("aria-pressed", false);
-                self.onCloseGetFeatureInfoClick();
-            }, false);
-        } else if (btnClose.attachEvent) {
-            btnClose.attachEvent("onclick", function (e) {
-                btnClose.setAttribute("aria-pressed", false);
-                self.onCloseGetFeatureInfoClick();
-            });
-        }
-
-        var span = document.createElement("span");
-        span.className = "GPelementHidden gpf-visible"; // afficher en dsfr
-        span.innerText = "Fermer";
-
-        btnClose.appendChild(span);
-
-        return btnClose;
     },
 
     /**
@@ -220,10 +169,10 @@ var GetFeatureInfoDOM = {
      * Create accordeon
      * see evenement !
      * @param { String } layername nom du layer
-     * @param { String } content contenu du gfi
+     * @param { HTMLElement } scrollableContainer conteneur scrollable de l'accordeon
      * @returns {HTMLElement} DOM element
      */
-    _createGetFeatureInfoLayerAccordion : function (layername) {
+    _createGetFeatureInfoLayerAccordion : function (layername, scrollableContainer) {
         var dsfrTemplate = this.stringToHTML(`
             <section class="fr-accordion">
                 <h3 class="fr-accordion__title">
@@ -245,14 +194,19 @@ var GetFeatureInfoDOM = {
             if (e.currentTarget.ariaExpanded === "true") {
                 collapse.classList.add("fr-collapse--expanded");
                 collapse.classList.remove("GPelementHidden");
-                // on centre la vue dans le dialog sur le bouton cliqué
-                requestAnimationFrame(() => {
-                    button.scrollIntoView({
-                        behavior : "smooth",
-                        block : "start",
-                        inline : "nearest"
-                    });
-                });
+                // on déplace la section dans le panel
+                setTimeout(() => {
+                    const elementRect = button.parentNode.parentNode.getBoundingClientRect();
+                    const containerRect = scrollableContainer.getBoundingClientRect();
+
+                    // si le bas n'est pas visible, on aligne le haut de la section
+                    if (elementRect.bottom > containerRect.bottom) {
+                        scrollableContainer.scrollTo({
+                            top : scrollableContainer.scrollTop - (containerRect.top - elementRect.top),
+                            behavior : "smooth"
+                        });
+                    }
+                }, 50); // ajoute un délai
             } else {
                 collapse.classList.remove("fr-collapse--expanded");
                 collapse.classList.add("GPelementHidden");

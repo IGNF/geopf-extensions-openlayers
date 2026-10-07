@@ -15,12 +15,15 @@ import checkDsfr from "../Utils/CheckDsfr";
 
 // DOM
 import ControlListDOM from "./ControlListDOM";
+import PanelDOM from "../PanelDOM";
 
 var logger = Logger.getLogger("controlList");
 /**
  * @typedef {Object} ControlListOptions
  * @property {boolean} [collapsed=true] - Définit si le widget est replié au chargement.
  * @property {boolean} [draggable=false] - Permet de déplacer le panneau du widget.
+ * @property {boolean} [sortable=false] - Ajoute une interaction pour modifier l'ordre des contrôles
+ * @property {boolean} [header=true] - Ajoute ou non un header (titre + bouton fermer)
  * @property {string} [position] - Position CSS du widget sur la carte.
  * @property {string|number} [id] - Identifiant unique du widget.
  * @property {HTMLElement} [controlCatalogElement] - Élément DOM à afficher en pied de panneau (ex : bouton catalogue).
@@ -132,12 +135,7 @@ class ControlList extends Control {
         if ((collapsed && this.collapsed) || (!collapsed && !this.collapsed)) {
             return;
         }
-        if (collapsed) {
-            document.getElementById("GPcontrolListPanelClose-" + this._uid).click();
-        } else {
-            this._pictoIsoButton.click();
-        }
-        this.collapsed = collapsed;
+        this._pictoControlListButton.click();
     }
 
     /**
@@ -192,6 +190,8 @@ class ControlList extends Control {
         this.options = {
             collapsed : true,
             draggable : false,
+            sortable : false,
+            header : true,
         };
 
         // merge with user options
@@ -206,6 +206,17 @@ class ControlList extends Control {
          * @type {Boolean} 
          * specify if control is draggable (true) or not (false) */
         this.draggable = this.options.draggable;
+
+        /** 
+         * @type {Boolean} 
+         * specify if list is sortable (true) or not (false) */
+        this.sortable = this.options.sortable;
+
+        if (this.sortable) {
+            this._controlsListSorted = null;
+            this._controlsListStateSync = new globalThis.Map();
+            this._controlsListStateObserver = null;
+        }
 
         /**
          * @private
@@ -234,16 +245,24 @@ class ControlList extends Control {
 
         // panneau
         var panel = this._ControlListPanelContainer = this._createControlListPanelElement();
+
+        // header
+        if (this.options.header) {
+            var header = this._ControlListPanelHeaderContainer = this._createPanelHeaderElement({
+                title : "Mes outils",
+                btnClassForClose : "GPshowControlListPicto",
+            });
+            panel.appendChild(header);
+        }
+
         var panelDiv = this._createControlListPanelDivElement();
         panel.appendChild(panelDiv);
 
-        // header
-        var header = this._ControlListPanelHeaderContainer = this._createControlListPanelHeaderElement();
-        panelDiv.appendChild(header);
-
         // content
-        var content = this._ControlListPanelContentContainer = this._createControlListPanelContentElement();
+        var content = this._createControlListPanelContentElement();
         panelDiv.appendChild(content);
+        // list element
+        this._ControlListPanelContentContainer = content.children[0];
 
         if (this.controlCatalogElement) {
             // footer
@@ -266,38 +285,97 @@ class ControlList extends Control {
      * @param { Event } e évènement associé au clic
      * @private
      */
-    onShowControlListPanelClick (e) {
-        if (e.target.ariaPressed === "true") {
-            this.onPanelOpen();
-        }
+    onShowControlListPanelClick () {
         var map = this.getMap();
-        // on supprime toutes les interactions
-        Interactions.unset(map);
         var opened = this._pictoControlListButton.ariaPressed;
         this.collapsed = !(opened === "true");
-        // on génère nous même l'evenement OpenLayers de changement de propriété
-        // (utiliser ol.control.ControlList.on("change:collapsed", function ) pour s'abonner à cet évènement)
-        this.dispatchEvent("change:collapsed");
         // on recalcule la position
         if (this.options.position && !this.collapsed) {
             this.updatePosition(this.options.position);
         }
         if (!this.collapsed) {
-            const controls = this.getMap().getControls().getArray();
+            let controls = this.getMap().getControls().getArray().filter(control => control.listable);
+            if (this.sortable && this._controlsListSorted) {
+                // si on a déjà trié la liste, on trie les controles de la map
+                let positions = Object.fromEntries(
+                    this._controlsListSorted.map((name, index) => [name, index])
+                );
+                controls.sort((a, b) => positions[a.CLASSNAME] - positions[b.CLASSNAME]);
+            }
+
             controls.forEach(control => {
-                if (control.listable) {
-                    let element = this._createControlListPanelControl(control);
-                    this._ControlListPanelContentContainer.appendChild(element);
-                }
+                let element = this._createControlListPanelControl(control);
+                this._ControlListPanelContentContainer.appendChild(element);
             });
+
+            // mode "sortable"
+            if (this.sortable) {
+                this._createSortableElement(this._ControlListPanelContentContainer);
+            }
+
+            this._startControlListStateObserver();
         } else {
+            this._stopControlListStateObserver();
             this._ControlListPanelContentContainer.innerHTML = "";
         }
+        // on génère nous même l'evenement OpenLayers de changement de propriété
+        // (utiliser ol.control.ControlList.on("change:collapsed", function ) pour s'abonner à cet évènement)
+        this.dispatchEvent("change:collapsed");
+    }
+
+    _registerControlListStateSync (button, listElement) {
+        this._controlsListStateSync.set(button, listElement);
+    }
+
+    _startControlListStateObserver () {
+        if (this._controlsListStateObserver) {
+            this._controlsListStateObserver.disconnect();
+        }
+
+        this._controlsListStateObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type !== "attributes" || mutation.attributeName !== "aria-pressed") {
+                    return;
+                }
+                const button = mutation.target;
+                const listElement = this._controlsListStateSync.get(button);
+                if (!listElement) {
+                    return;
+                }
+                const isActive = button.getAttribute("aria-pressed") === "true";
+                listElement.classList.toggle("gpf-list-element--active", isActive);
+            });
+        });
+
+        this._controlsListStateSync.forEach((_, button) => {
+            this._controlsListStateObserver.observe(button, {
+                attributes : true,
+                attributeFilter : ["aria-pressed"]
+            });
+        });
+    }
+
+    _stopControlListStateObserver () {
+        if (this._controlsListStateObserver) {
+            this._controlsListStateObserver.disconnect();
+            this._controlsListStateObserver = null;
+        }
+        this._controlsListStateSync.clear();
+    }
+
+    _onSortedEnd () {
+        let listControls = [...this._ControlListPanelContentContainer.children].map(element => element.dataset.name);
+        this._controlsListSorted = listControls;
+        this.dispatchEvent({
+            type : "controllist:sorted",
+            list : listControls,
+        });
     }
 
 };
 
 // on récupère les méthodes de la classe commune ControlList
+Object.assign(ControlList.prototype, PanelDOM);
 Object.assign(ControlList.prototype, ControlListDOM);
 Object.assign(ControlList.prototype, Widget);
 

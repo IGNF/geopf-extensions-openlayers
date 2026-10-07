@@ -16,6 +16,7 @@ import Draggable from "../../Utils/Draggable";
 
 // DOM
 import ReportingDOM from "./ReportingDOM";
+import PanelDOM from "../PanelDOM";
 import Drawing from "../Drawing/Drawing";
 
 var logger = Logger.getLogger("reporting");
@@ -358,7 +359,7 @@ class FormActionByDefaut {
     // ######################### privates ##################### //
 
     _addEventsListeners () {
-        this.form.addEventListener("submit", this._handler.bind(this), {once : true});
+        this.form.addEventListener("submit", this._handler.bind(this), { once : true });
     }
     _handler (e) {
         logger.info("FormActionByDefaut handler", e);
@@ -700,7 +701,7 @@ class ServiceActionByDefaut {
  * @module Reporting
 */
 class Reporting extends Control {
-    
+
     /**
      * @constructor
      * @param {Object} [options] - options
@@ -980,7 +981,7 @@ class Reporting extends Control {
         /** @private */
         this.divReportingTitle = null;
         /** @private */
-        this.labelReportingIcon = null;
+        this.backBtnIcon = null;
 
         /** @private */
         this.buttonReportingSubmit = null;
@@ -1093,20 +1094,25 @@ class Reporting extends Control {
 
         // panel
         var reportingPanel = this.panelReportingContainer = this._createReportingPanelElement();
-        var reportingPanelDiv = this._createReportingPanelDivElement();
-        reportingPanel.appendChild(reportingPanelDiv);
 
         // header
-        var reportingPanelHeader = this.panelReportingHeaderContainer = this._createReportingPanelHeaderElement();
-        // icone
-        var reportingPanelIcon = this.labelReportingIcon = this._createReportingPanelIconElement();
-        reportingPanelHeader.appendChild(reportingPanelIcon);
-        // title
-        var reportingPanelTitle = this.divReportingTitle = this._createReportingPanelTitleElement();
-        reportingPanelHeader.appendChild(reportingPanelTitle);
-        // close picto
-        var reportingCloseBtn = this.buttonReportingClose = this._createReportingPanelCloseElement();
-        reportingPanelHeader.appendChild(reportingCloseBtn);
+        var reportingPanelHeader = this.panelReportingHeaderContainer = this._createPanelHeaderElement({
+            icon : "ign-reporting",
+            title : "",
+            btnClassForClose : "GPshowReportingPicto",
+            backBtn : true,
+        });
+        reportingPanel.appendChild(reportingPanelHeader);
+
+        this.backBtnIcon = reportingPanelHeader._backBtn;
+        this.backBtnIcon.addEventListener("click", (e) => {
+            this.onPrevReportingClick(e);
+        });
+        this.divReportingTitle = reportingPanelHeader._title;
+        this.buttonReportingClose = reportingPanelHeader._closeBtn;
+
+        var reportingPanelDiv = this._createReportingPanelDivElement();
+        reportingPanel.appendChild(reportingPanelDiv);
 
         // footer
         var reportingPanelFooter = this.panelReportingFooterContainer = this._createReportingPanelFooterElement();
@@ -1131,7 +1137,6 @@ class Reporting extends Control {
         var error = this.spanReportingError = this._createReportingErrorSendElement();
         send.appendChild(error);
 
-        reportingPanelDiv.appendChild(reportingPanelHeader);
         reportingPanelDiv.appendChild(input);
         reportingPanelDiv.appendChild(form);
         reportingPanelDiv.appendChild(send);
@@ -1218,7 +1223,11 @@ class Reporting extends Control {
         this.panelReportingFooterContainer.style.display = (this.stepContainer[num].footer) ? "flex" : "none";
         this.reportingBtnAnnulerFooter.style.display = (this.stepContainer[num].prev === -1) ? "none" : "flex";
         this.reportingBtnSuivantFooter.style.display = (this.stepContainer[num].next === -1) ? "none" : "flex";
-        this.labelReportingIcon.style.display = (this.stepContainer[num].prev === -1) ? "none" : "flex";
+        if (this.stepContainer[num].prev !== -1) {
+            this.backBtnIcon.classList.remove("gpf-hidden");
+        } else {
+            this.backBtnIcon.classList.add("gpf-hidden");
+        }
     }
 
     /**
@@ -1304,7 +1313,7 @@ class Reporting extends Control {
         }
         // on supprime la couche de signalement
         // créée par l'outil de dessin
-        var drawing =  this.iocDrawing.Drawing;
+        var drawing = this.iocDrawing.Drawing;
         if (drawing) {
             var layer = drawing.getLayer();
             var map = this.getMap();
@@ -1328,6 +1337,9 @@ class Reporting extends Control {
         var opened = this.buttonReportingShow.ariaPressed;
         if (opened === "true") {
             this.onPanelOpen();
+        }
+        else {
+            this.onPanelClose();
         }
         this.collapsed = !(opened === "true");
         this.dispatchEvent("change:collapsed");
@@ -1456,11 +1468,20 @@ class Reporting extends Control {
      * It retrieves the mail from the event, updates the data object,
      * and sends the reporting data to the server or processes it as needed.
      * If the sending is successful, it clears the data and resets the step to the first step.
-     * If there is an error during the sending process, it displays an error message for a limited time.
+     * If there is an error during the sending process, it displays an error message.
      * @private
      */
     onShowSendReportingClick (e) {
         logger.trace("onShowSendReportingClick", e);
+
+        // remove current errors (= init)
+        this.spanReportingError.classList.replace("gpf-visible", "gpf-hidden");
+        this.spanReportingError.removeAttribute("role");
+        if (this.spanReportingError._tmpInnerText) {
+            this.spanReportingError.textContent = this.spanReportingError._tmpInnerText;
+            this.spanReportingError._tmpInnerText = null;
+        }
+
         // get the mail from the event
         this.data = Object.assign({}, this.data, {
             mail : e.mail
@@ -1484,7 +1505,7 @@ class Reporting extends Control {
             .then(() => {
                 // clear data after sending
                 this.data = null;
-                var drawing =  this.iocDrawing.Drawing;
+                var drawing = this.iocDrawing.Drawing;
                 if (drawing) {
                     var layer = drawing.getLayer();
                     var map = this.getMap();
@@ -1509,11 +1530,13 @@ class Reporting extends Control {
                 });
             })
             .catch((e) => {
-            // UI error message !
+                // UI error message !
                 this.spanReportingError.classList.replace("gpf-hidden", "gpf-visible");
-                setTimeout(() => {
-                    this.spanReportingError.classList.replace("gpf-visible", "gpf-hidden");
-                }, 5000);
+                this.spanReportingError.setAttribute("role", "alert");
+                if (e.message) {
+                    this.spanReportingError._tmpInnerText = this.spanReportingError.textContent;
+                    this.spanReportingError.textContent = e.message;
+                }
                 logger.error(e);
             });
     }
@@ -1521,6 +1544,7 @@ class Reporting extends Control {
 };
 
 // on récupère les méthodes de la classe DOM
+Object.assign(Reporting.prototype, PanelDOM);
 Object.assign(Reporting.prototype, ReportingDOM);
 Object.assign(Reporting.prototype, Widget);
 

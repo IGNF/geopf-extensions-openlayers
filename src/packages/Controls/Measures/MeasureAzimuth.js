@@ -345,9 +345,6 @@ class MeasureAzimuth extends Control {
      * @private
      */
     onShowMeasureAzimuthClick (e) {
-        if (e.target.ariaPressed === "true") {
-            this.onPanelOpen();
-        }
         logger.trace("call MeasureAzimuth::onShowMeasureAzimuthClick()", e);
 
         // appel de la methode commune

@@ -3,6 +3,20 @@
 
 The Geoplatform Extensions include the following third party code :
 
+## DSFR -- The French State Design System
+
+Released under the Etalab 2.0 licence
+
+Copyright Service d'Information du Gouvernement
+<https://github.com/GouvernementFR/dsfr/>
+
+## OpenLayers -- A high-performance, feature-packed library for all your mapping needs
+
+Released under the BSD 2-Clause License
+
+Copyright 2005-present, OpenLayers contributors
+<https://openlayers.org/>
+
 ## Sortable - is a JavaScript library for reorderable drag-and-drop lists on modern browsers and touch devices
 
 Released under MIT LICENCE
@@ -107,3 +121,27 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE._
+
+## Panoramax - The Panoramax viewer is a web JS library which displays pictures and sequences from a Panoramax server, or any STAC API offering geolocated pictures.
+
+MIT License
+
+Copyright (c) 2022 Adrien Pavie
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+_THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE._

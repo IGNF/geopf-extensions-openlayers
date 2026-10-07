@@ -37,9 +37,11 @@ var ToolTips = {
             }
             tooltip.innerHTML = content;
             const rect = element.getBoundingClientRect();
-            tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`;
+            tooltip.style.top = `${rect.bottom + 10}px`;
             tooltip.style.left = `${rect.left + rect.width / 2}px`;
             tooltip.style.transform = "translateX(-50%)";
+            tooltip.style.transitionDelay = "500ms";
+            tooltip.style.transitionDuration = "250ms";
             tooltip.style.opacity = "1";
         });
 
@@ -48,6 +50,8 @@ var ToolTips = {
             if (!tooltip) {
                 return;
             }
+            tooltip.style.transitionDelay = "0ms";
+            tooltip.style.transitionDuration = "0ms";
             tooltip.style.opacity = "0";
         });
     }

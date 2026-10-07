@@ -5,13 +5,12 @@ div[id^=GPgetFeatureInfo-] {
   
 div[id^=GPgetFeatureInfoAccordionGroup-] {
   user-select: text;
-  max-height: 300px;
 }
 
 /* Showing/hiding */
 
 dialog:has(button.GPcloseGetFeatureInfo[aria-pressed="true"]) {
-  display: block;
+  display: flex;
   visibility: visible;
   opacity: 100%;
   width: 350px;
@@ -32,14 +31,17 @@ dialog[id^="GPgetFeatureInfoPanel-"] {
     overflow-x: hidden;
 }
 
-.GPgetFeatureInfoAccordionGroup {
-  overflow-y: auto;
-  scrollbar-width: thin;
-}
 
 .GPgetFeatureInfoAccordionContent {
-  overflow-x: scroll;
+  overflow-x: auto;
   scrollbar-width: thin;
+  padding-inline: 1rem;
+  /* désactive l'animation du fr-collapse car on ne connait pas la hauteur du contenu */
+  transition: none !important;
+}
+
+.GPgetFeatureInfoAccordionContent::before {
+  transition: none !important;
 }
 
 .waiting-div-container {

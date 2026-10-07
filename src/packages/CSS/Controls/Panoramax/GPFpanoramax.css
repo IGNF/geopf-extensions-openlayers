@@ -1,0 +1,75 @@
+div[id^=GPpanoramax-] {
+    top: 0px;
+    right: 0px;
+}
+
+/* Showing/hiding */
+
+button[id^=GPshowPanoramaxPicto][aria-pressed="false"] ~ dialog {
+    display: none;
+    visibility: hidden;
+    opacity: 0%;
+}
+
+button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] ~ dialog {}
+
+button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] ~ dialog[id^="GPpanoramaxPanelButtons-"] {
+    display: flex;
+    visibility: visible;
+    opacity: 100%;
+}
+
+button[id^="GPshowPanoramaxPicto-"][aria-pressed="true"] ~ dialog[id^="GPpanoramaxPanelViewer-"] {}
+
+dialog[id^="GPpanoramaxPanelButtons-"] {
+    position: absolute;
+    left: 34px;
+    bottom: 2px !important;
+    top: unset !important;  /* neutralise la règle top:0px du fr-modal DSFR */
+    height: auto !important;
+}
+
+dialog[id^="GPpanoramaxPanelViewer-"] {
+    position: absolute;
+    left: 34px;
+    top: 0px;
+    /* height: inherit; */
+}
+
+dialog[id^="GPpanoramaxPanelViewer-"].pnx-visualization-window-size-fullscreen {
+    position: fixed;
+    /* 
+    inset: 0;
+    left: 0;
+    top: 0;
+    width: 100dvw;
+    height: 100dvh;
+    min-width: 100dvw;
+    min-height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    z-index: 1000; */
+}
+
+dialog[id^="GPpanoramaxPanelViewer-"].pnx-visualization-window-size-fullscreen-map {
+    position: fixed;
+    /* 
+    top: var(--pnx-map-top, 0px);
+    left: var(--pnx-map-left, 0px);
+    width: var(--pnx-map-width, 100%);
+    height: var(--pnx-map-height, 100%);
+    min-width: unset;
+    min-height: unset;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    transform: none !important;
+    z-index: 10000 !important; */
+}

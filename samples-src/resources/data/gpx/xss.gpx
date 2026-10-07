@@ -1,0 +1,11 @@
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="OpenLayers">
+	<metadata xmlns="http://www.w3.org/1999/xhtml">
+		<extensions>
+			<data name="geoportail:compute">{"test":"&lt;img src=x onerror=alert(1)&gt;texte"}</data>
+		</extensions>
+	</metadata>
+	<rte>
+		<rtept lat="48.96403916928628" lon="2.43505660416429"/>
+		<rtept lat="48.72698921172872" lon="2.3553643245170104"/>
+	</rte>
+</gpx>

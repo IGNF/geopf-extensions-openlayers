@@ -21,28 +21,80 @@
     - [Navigateurs supportés](#navigateurs-supportés)
   - [Fonctionnalités](#fonctionnalités)
     - [Systèmes de coordonnées](#systèmes-de-coordonnées)
-    - [Affichage des couches WMTS Géoplateforme](#WMTS)
-    - [Affichage des couches WMS Géoplateforme](#WMS)
-    - [Affichage d'une couche Vecteur Tuilé Géoplateforme](#VT)
-    - [Affichage dynamique des attributions](#attributions)
-    - [Widget de gestion d'empilement des couches](#layerswitcher)
-    - [Barre de recherche utilisant le service de géocodage IGN](#geocode)
-    - [Obtention d'une adresse, d'un nom de lieu, ... au clic sur la carte](#reverse)
-    - [Calculs d'itinéraires à partir du service de la Géoplateforme](#route)
-    - [Calculs d'isochrones / isodistances à partir du service de la Géoplateforme](#isocurve)
-    - [Coordonnées et altitude en un point de la carte à l'aide du service d'altimétrie de la Géoplateforme](#mp)
-    - [Outils de croquis](#drawing)
-    - [Import de couches](#layerimport)
-    - [Profil altimétrique d'un traçé à l'aide du service d'altimétrie de la Géoplateforme](#ep)
-    - [Outils de mesures](#measure)
-    - [Accès aux informations attributaires des couches](#getfeatureinfo)
-    - [Widget d'export](#export)
-    - [Widget de catalogue de couche](#catalog)
-    - [Widget de legendes](#legends)
-    - [Widget de centrage sur territoire](#territories)
-    - [Widget de mini carte](#overviewMap)
-    - [Widget de zoom](#zoom)
-    - [Widget de plein écran](#fullscreen)
+    - [Affichage des couches WMTS Géoplateforme](#affichage-des-couches-wmts-géoplateforme)
+      - [Utilisation d'un layer WMTS Géoplateforme](#utilisation-dun-layer-wmts-géoplateforme)
+        - [Exemple d'utilisation](#exemple-dutilisation)
+        - [Affichage en Lambert 93 (EPSG:2154)](#affichage-en-lambert-93-epsg2154)
+      - [Utilisation d'une source WMTS Géoplateforme](#utilisation-dune-source-wmts-géoplateforme)
+        - [Exemple d'utilisation](#exemple-dutilisation-1)
+        - [Affichage en Lambert 93 (EPSG:2154)](#affichage-en-lambert-93-epsg2154-1)
+    - [Affichage des couches WMS Géoplateforme](#affichage-des-couches-wms-géoplateforme)
+      - [Utilisation d'un layer WMS Géoplateforme](#utilisation-dun-layer-wms-géoplateforme)
+        - [Exemple d'utilisation](#exemple-dutilisation-2)
+      - [Utilisation d'une source WMS Géoplateforme](#utilisation-dune-source-wms-géoplateforme)
+        - [Exemple d'utilisation](#exemple-dutilisation-3)
+    - [Affichage d'une couche Vecteur Tuilé Géoplateforme](#affichage-dune-couche-vecteur-tuilé-géoplateforme)
+    - [Widget de gestion d'empilement des couches](#widget-de-gestion-dempilement-des-couches)
+      - [Exemples d'utilisation](#exemples-dutilisation)
+        - [Utilisation simple](#utilisation-simple)
+    - [Barre de recherche](#barre-de-recherche)
+      - [Exemples d'utilisation](#exemples-dutilisation-1)
+        - [Utilisation simple](#utilisation-simple-1)
+    - [Calculs d'itinéraires](#calculs-ditinéraires)
+      - [Exemples d'utilisation](#exemples-dutilisation-2)
+        - [Utilisation simple](#utilisation-simple-2)
+    - [Calculs d'isochrones / isodistances](#calculs-disochrones--isodistances)
+      - [Exemples d'utilisation](#exemples-dutilisation-3)
+        - [Utilisation simple](#utilisation-simple-3)
+    - [Coordonnées et altitude en un point de la carte](#coordonnées-et-altitude-en-un-point-de-la-carte)
+      - [Exemples d'utilisation](#exemples-dutilisation-4)
+        - [Utilisation simple](#utilisation-simple-4)
+    - [Affichage dynamique des attributions](#affichage-dynamique-des-attributions)
+      - [Exemples d'utilisation](#exemples-dutilisation-5)
+        - [Utilisation simple](#utilisation-simple-5)
+    - [Adresse ou lieu en un point de la carte](#adresse-ou-lieu-en-un-point-de-la-carte)
+      - [Exemples d'utilisation](#exemples-dutilisation-6)
+        - [Utilisation simple](#utilisation-simple-6)
+    - [Outils de croquis](#outils-de-croquis)
+      - [Exemples d'utilisation](#exemples-dutilisation-7)
+        - [Utilisation simple](#utilisation-simple-7)
+    - [Widget d'import de couches](#widget-dimport-de-couches)
+      - [Exemples d'utilisation](#exemples-dutilisation-8)
+        - [Utilisation simple](#utilisation-simple-8)
+    - [Profil altimétrique le long d'un traçé](#profil-altimétrique-le-long-dun-traçé)
+      - [Exemples d'utilisation](#exemples-dutilisation-9)
+        - [Utilisation simple](#utilisation-simple-9)
+    - [Outils de mesures](#outils-de-mesures)
+      - [Exemples d'utilisation](#exemples-dutilisation-10)
+        - [Utilisation simple](#utilisation-simple-10)
+    - [Accès aux informations attributaires des couches](#accès-aux-informations-attributaires-des-couches)
+      - [Exemples d'utilisation](#exemples-dutilisation-11)
+        - [Utilisation simple pour une seule couche](#utilisation-simple-pour-une-seule-couche)
+    - [Widget d'export](#widget-dexport)
+      - [Exemples d'utilisation](#exemples-dutilisation-12)
+        - [Utilisation via les setters](#utilisation-via-les-setters)
+        - [Utilisation via les options](#utilisation-via-les-options)
+        - [Utilisation directement dans le contrôle associé](#utilisation-directement-dans-le-contrôle-associé)
+    - [widget de catalogue de couche](#widget-de-catalogue-de-couche)
+      - [Les options](#les-options)
+      - [Les évenements](#les-évenements)
+      - [Exemples d'utilisation](#exemples-dutilisation-13)
+      - [Constituer le fichier de configuration des couches](#constituer-le-fichier-de-configuration-des-couches)
+      - [Spécification du ficher de configuration](#spécification-du-ficher-de-configuration)
+    - [Widget des légendes](#widget-des-légendes)
+      - [Les événements](#les-événements)
+      - [Comment obtenir la légende d'une couche ?](#comment-obtenir-la-légende-dune-couche-)
+      - [Exemples d'utilisation](#exemples-dutilisation-14)
+    - [Widget de centrage sur territoires](#widget-de-centrage-sur-territoires)
+      - [Exemples d'utilisation](#exemples-dutilisation-15)
+    - [Widget de mini carte](#widget-de-mini-carte)
+      - [Exemples d'utilisation](#exemples-dutilisation-16)
+    - [Widget de zoom](#widget-de-zoom)
+      - [Exemples d'utilisation](#exemples-dutilisation-17)
+    - [Widget de plein écran](#widget-de-plein-écran)
+      - [Exemples d'utilisation](#exemples-dutilisation-18)
+    - [Widget Panoramax](#widget-panoramax)
+      - [Exemples d'utilisation](#exemples-dutilisation-19)
 
 Les fonctionnalités proposées par l'extension Géoplateforme pour OpenLayers sont à utiliser en complément de la bibliothèque [OpenLayers dans ses versions 8 et
 supérieures](https://openlayers.org/)
@@ -2101,5 +2153,38 @@ var fullscreen = new ol.control.GeoportalFullScreen({
 });
 map.addControl(fullscreen);
 ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<a id="panoramax"></a>
+
+### Widget Panoramax
+
+Ce widget affiche les couvertures Panoramax sur la carte et permet de visualiser les photos associées. Il repose sur le web component `<pnx-photo-viewer>` de `@panoramax/web-viewer`, qui doit être chargé avec sa feuille de style avant l'extension.
+
+#### Exemples d'utilisation
+
+```html
+<link rel="stylesheet" href="photoviewer.css" />
+<script src="photoviewer.js"></script>
+```
+
+```js
+var panoramax = new ol.control.Panoramax({
+    position: "bottom-left",
+    visualizationWindow: {
+        size: "fullscreen-map"
+    },
+    viewer: {
+        share: {
+            url: "https://cartes.gouv.fr/explorer-les-cartes/",
+            type: "geoplateforme"
+        }
+    }
+});
+map.addControl(panoramax);
+```
+
+La configuration des couches, interactions, filtres, modes de fenêtre, événements et liens de partage est décrite dans la [note du widget Panoramax](NOTE-PANORAMAX.md).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
