@@ -1211,6 +1211,9 @@ class Catalog extends Control {
      */
     createCatalogContentEntries (data) {
         var container = this.contentCatalogContainer;
+        this._searchTextIndex = null;
+        this._prepareSearchTextIndex();
+        this._searchFragmentIndex = new WeakMap();
 
         var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories, this.options.tabHeightAuto);
         container.appendChild(widgetContentEntryTabs);
@@ -1635,13 +1638,100 @@ class Catalog extends Control {
         // l'affichage des couches filtrées est realisé en cachant
         // les couches non conforme au critère.
         // le parametre pour masquer les couches : hidden
+        clearTimeout(this._searchTimeout);
+        const elements = this._indexSearchElements();
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
                 layer.hidden = false;
-                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden, elements);
             }
         }
+    }
+
+    /**
+     * Normalise le texte pour la recherche : conversion en minuscules,
+     * suppression des accents, remplacement des underscores et tirets par des espaces,
+     * réduction des espaces consécutifs et suppression des espaces en début et fin.
+     * @param {*} input - Texte à normaliser.
+     * @returns {String} Texte normalisé.
+     * @private
+     */
+    _normalizeSearchText (input) {
+        return String(input || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[_-]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+    }
+
+    /**
+     * Prépare et met en cache le texte de chaque couche selon les critères de recherche configurés.
+     * Ce cache accélère la recherche et le filtrage des couches à partir de la saisie utilisateur.
+     * Exemple : criteria = ["name", "description"] donne "nom de la couche description de la couche".
+     * @private
+     */
+    _prepareSearchTextIndex () {
+        const criteria = this.options.search.criteria;
+        const signature = JSON.stringify(criteria);
+        if (!this._searchTextIndex || this._searchCriteria !== signature) {
+            this._searchTextIndex = new WeakMap();
+            this._searchCriteria = signature;
+        }
+        for (const layer of Object.values(this.layersList)) {
+            if (!this._searchTextIndex.has(layer)) {
+                const words = criteria.map((criterion) => {
+                    const value = layer[criterion];
+                    return this._normalizeSearchText(Array.isArray(value)
+                        ? value.flat(Infinity).filter(item => item != null).join(" ")
+                        : value);
+                }).join(" ");
+                this._searchTextIndex.set(layer, words);
+            }
+        }
+    }
+
+    /**
+     * Regroupe toutes les représentations HTML d'une couche par clé "name:service".
+     * Une couche peut apparaître dans plusieurs catégories et, en mode on-demand,
+     * dans le fragment stocké ainsi que dans sa copie affichée.
+     * Le filtrage doit mettre à jour toutes ces représentations pour conserver
+     * un affichage cohérent, y compris lors de la réouverture d'une section.
+     * L'index est reconstruit à chaque recherche pour intégrer les copies montées
+     * ou supprimées ; les références des fragments sont mises en cache.
+     * Cela évite de rechercher chaque couche dans chaque catégorie et fragment.
+     * @returns {globalThis.Map<string, Array<HTMLElement>>} Éléments regroupés par nom de couche et service.
+     * @private
+     */
+    _indexSearchElements () {
+        const elements = new globalThis.Map();
+        const readElements = (root) => Array.from(root.querySelectorAll("[data-layeritem] input[data-layer]"), (input) => {
+            return [input.dataset.layer, input.closest("[data-layeritem]")];
+        });
+        const addElements = (entries) => {
+            for (const [key, element] of entries) {
+                if (!elements.has(key)) {
+                    elements.set(key, []);
+                }
+                elements.get(key).push(element);
+            }
+        };
+        addElements(readElements(this.contentCatalogContainer));
+        if (this.options.optimisation === "on-demand") {
+            this._searchFragmentIndex = this._searchFragmentIndex || new WeakMap();
+            for (const data of Object.values(this.dataOnDemand)) {
+                const fragments = typeof data.querySelectorAll === "function" ? [data] : Object.values(data);
+                for (const fragment of fragments) {
+                    if (!this._searchFragmentIndex.has(fragment)) {
+                        this._searchFragmentIndex.set(fragment, readElements(fragment));
+                    }
+                    addElements(this._searchFragmentIndex.get(fragment));
+                }
+            }
+        }
+        return elements;
     }
 
     /**
@@ -1654,41 +1744,15 @@ class Catalog extends Control {
         // on rend invisible les couches qui ne respecte pas la valeur 
         // selon le critère de recherche
         
-        const normalizeSearchText = (input) => {
-            return String(input || "")
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .replace(/[_-]+/g, " ")
-                .replace(/\s+/g, " ")
-                .trim();
-        };
-
-        var normalizedValue = normalizeSearchText(value);
-        var criteria = this.options.search.criteria;
+        this._prepareSearchTextIndex();
+        const normalizedValue = this._normalizeSearchText(value);
+        const elements = this._indexSearchElements();
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
-                var words = "";
-                for (let i = 0; i < criteria.length; i++) {
-                    const c = criteria[i];
-                    if (layer[c]) {
-                        if (Array.isArray(layer[c])) {
-                            words += normalizeSearchText(layer[c]
-                                .flat(Infinity) // tableau imbriqué
-                                .filter(item => item != null) // valeur null ou undefined
-                                .join(" "));
-                        } else {
-                            words += " " + normalizeSearchText(layer[c]);
-                        }
-                    }
-                }
-                layer.hidden = !words.includes(normalizedValue);
-                if (!layer.hidden) {
-                    logger.info(`Filtering layer ${layer.name} with words : ${words}`);
-                }
+                layer.hidden = !this._searchTextIndex.get(layer).includes(normalizedValue);
                 // on met à jour pour chaque couche la visibilité
-                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden, elements);
             }
         }
         // on rend invisible les sections qui ne possède plus de couches visibles
@@ -1701,59 +1765,15 @@ class Catalog extends Control {
      * @param {*} name - ...
      * @param {*} service  - ...
      * @param {*} hidden  - ...
+     * @param {globalThis.Map<string, Array<HTMLElement>>} [elements] - Éléments HTML des couches indexés.
      * @private
      */
-    updateVisibilityFilteredLayers (name, service, hidden) {
-        const escapeSelector = (str) => {
-            return str.replace(/\./g, "\\.");
-        };
-
-        var categories = []; // remise à plat des catégories / sous-categories
-        this.categories.forEach((category) => {
-            if (category.items) {
-                for (let i = 0; i < category.items.length; i++) {
-                    const element = category.items[i];
-                    categories.push(element);
-                }
-            } else {
-                categories.push(category);
-            }
-        });
-
-        // FIXME
-        // performance de la recherche du container : querySelector !
-        const findContainerLayer = (category, name, service) => {
-            var container = document.getElementById(`fieldset-${category.id}_${name}-${service}`);
-            if (this.options.optimisation === "on-demand") {
-                // en mode on-demand, on doit chercher dans les fragments
-                if (category.section) {
-                    for (const sectionId in this.dataOnDemand[category.id]) {
-                        const fragment = this.dataOnDemand[category.id][sectionId];
-                        if (fragment) {
-                            var id = escapeSelector(`#fieldset-${category.id}_${name}-${service}`);
-                            container = fragment.querySelector(id);
-                            if (container) {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            return container;
-        };
-
-        for (let i = 0; i < categories.length; i++) {
-            const category = categories[i];
-            // on modifie la visibilité du container pour chaque couche
-            var container = findContainerLayer(category, name, service);
-            if (container) {
-                if (hidden) {
-                    container.classList.add("gpf-hidden");
-                    container.classList.add("GPelementHidden");
-                } else {
-                    container.classList.remove("gpf-hidden");
-                    container.classList.remove("GPelementHidden");
-                    logger.info(`Layer ${name}:${service} visibility updated to hidden=${hidden} in category ${category.id} (${container.id}).`);
+    updateVisibilityFilteredLayers (name, service, hidden, elements) {
+        const index = elements || this._indexSearchElements();
+        for (const container of index.get(`${name}:${service}`) || []) {
+            for (const className of ["gpf-hidden", "GPelementHidden"]) {
+                if (container.classList.contains(className) !== hidden) {
+                    container.classList.toggle(className, hidden);
                 }
             }
         }
@@ -1773,24 +1793,18 @@ class Catalog extends Control {
         // avec id = this.generateID(title) où title est le titre de la section
         // le title d'une section est disponible pour une category qui possède des sections
 
-        // on compte le nombre de couches encore visible, 
-        // si 0 alors la section est hidden : 
-        // var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
-        // avec data est la liste des couches (DOM)
-
         const countLayersInSection = (categoryId, sectionId) => {
             var count = 0;
             // en mode on-demand, on doit chercher dans le fragment
             if (this.options.optimisation === "on-demand") {
-                var fragment = this.dataOnDemand[categoryId][sectionId];
+                var fragment = this.dataOnDemand[categoryId] && this.dataOnDemand[categoryId][sectionId];
                 if (fragment) {
                     count = fragment.querySelectorAll(".fr-fieldset__element:not(.gpf-hidden):not(.GPelementHidden)").length;
                 }
             } else {
                 var container = document.getElementById(sectionId);
                 if (container) {
-                    var data = container.innerHTML;
-                    count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                    count = container.querySelectorAll(".fr-fieldset__element:not(.gpf-hidden):not(.GPelementHidden)").length;
                 }
             }
             return count;
