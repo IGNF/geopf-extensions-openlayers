@@ -38,3 +38,19 @@ form[id^=GPcatalogForm] {
     display: flex;
 }
 
+.catalog-layer-title-producer {
+    width: 100%;
+}
+
+.catalog-layer-title {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
+    cursor: pointer;
+    line-height: 1.5em;
+}
+

@@ -111,6 +111,10 @@ export type Categories = {
      */
     id: string;
     /**
+     * - Affiche le producteur sous le titre des couches.
+     */
+    producer?: boolean | undefined;
+    /**
      * - Indique si c'est la catégorie par défaut.
      */
     default?: boolean | undefined;
@@ -165,6 +169,10 @@ export type SubCategories = {
      * - Identifiant unique de la sous-catégorie.
      */
     id: string;
+    /**
+     * - Affiche le producteur sous le titre des couches.
+     */
+    producer?: boolean | undefined;
     /**
      * - Indique si la sous-catégorie utilise des sections.
      */
@@ -260,6 +268,7 @@ export type ConfigLayer = any;
  * @typedef {Object} Categories - Catégories principales du catalogue sous forme d'onglets
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
+ * @property {boolean} [producer=true] - Affiche le producteur sous le titre des couches.
  * @property {boolean} [default=false] - Indique si c'est la catégorie par défaut.
  * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
  * @property {boolean} [featured=false] - Indique si les données mises en avant doivent être affichées en premier.
@@ -277,6 +286,7 @@ export type ConfigLayer = any;
  * ex. : regrouper les couches par "thématique" (voir propriété "thematic" dans la conf. des couches)
  * @property {string} title - Titre de la sous-catégorie.
  * @property {string} id - Identifiant unique de la sous-catégorie.
+ * @property {boolean} [producer=true] - Affiche le producteur sous le titre des couches.
  * @property {boolean} [section] - Indique si la sous-catégorie utilise des sections.
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} [collapsible] - **TODO** Indique si les sections sont repliables.
