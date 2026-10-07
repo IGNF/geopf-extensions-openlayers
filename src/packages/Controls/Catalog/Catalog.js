@@ -67,6 +67,7 @@ var logger = Logger.getLogger("widget");
  * @typedef {Object} Categories - Catégories principales du catalogue sous forme d'onglets
  * @property {string} title - Titre de la catégorie.
  * @property {string} id - Identifiant unique de la catégorie.
+ * @property {boolean} [producer=true] - Affiche le producteur sous le titre des couches.
  * @property {boolean} [default=false] - Indique si c'est la catégorie par défaut.
  * @property {boolean} [order=false] - Indique si les données doivent être ordonnées.
  * @property {boolean} [featured=false] - Indique si les données mises en avant doivent être affichées en premier.
@@ -85,6 +86,7 @@ var logger = Logger.getLogger("widget");
  * ex. : regrouper les couches par "thématique" (voir propriété "thematic" dans la conf. des couches)
  * @property {string} title - Titre de la sous-catégorie.
  * @property {string} id - Identifiant unique de la sous-catégorie.
+ * @property {boolean} [producer=true] - Affiche le producteur sous le titre des couches.
  * @property {boolean} [section] - Indique si la sous-catégorie utilise des sections.
  * @property {Array<string>} sections - Liste des sections (remplie ultérieurement).
  * @property {boolean} [collapsible] - **TODO** Indique si les sections sont repliables.
@@ -800,6 +802,7 @@ class Catalog extends Control {
                     return {
                         title : i.title,
                         id : i.id || this.generateID(i.title),
+                        producer : i.hasOwnProperty("producer") ? i.producer : true,
                         default : i.hasOwnProperty("default") ? i.default : false,
                         order : i.hasOwnProperty("order") ? i.order : false,
                         featured : i.hasOwnProperty("featured") ? i.featured : false,
@@ -817,6 +820,7 @@ class Catalog extends Control {
             return {
                 title : cat.title,
                 id : cat.id || this.generateID(cat.title),
+                producer : cat.hasOwnProperty("producer") ? cat.producer : true,
                 default : cat.hasOwnProperty("default") ? cat.default : false,
                 order : cat.hasOwnProperty("order") ? cat.order : false,
                 featured : cat.hasOwnProperty("featured") ? cat.featured : false,

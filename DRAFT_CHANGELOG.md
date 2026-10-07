@@ -16,6 +16,7 @@ __DATE__
 * ✨ [Added]
 
   - Reporting : affichage des messages d’erreurs potentiels (#592)
+  - Catalog : ajout de l’option `producer` pour afficher/masquer le nom du producteur d’une couche (#600)
 
 * 🔨 [Changed]
 
