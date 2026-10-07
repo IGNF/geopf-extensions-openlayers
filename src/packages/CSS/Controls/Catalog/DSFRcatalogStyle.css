@@ -82,11 +82,23 @@
     background-image: url("img/dsfr/image-dark.svg");
 }
 .catalog-thumbnail-default img {
+    position: relative;
     width: 44px;
     height: 44px;
     background: var(--background-alt-blue-france);
     border-radius: 4px;
     object-fit: cover; /* images pas forcément carrées */
+}
+/* placeholder si image non chargée */
+.catalog-thumbnail-default img::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("img/dsfr/image-light.svg");
+    color: transparent;
+}
+:root[data-fr-theme="dark"] .catalog-thumbnail-default img::after {
+    background-image: url("img/dsfr/image-dark.svg");
 }
 
 .input-wrapper {
