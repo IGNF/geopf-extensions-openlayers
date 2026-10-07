@@ -1,22 +1,3 @@
-
-.gpf-btn-header-pointInfo {
-  z-index: 2;
-  position: absolute;
-  width: 26px;
-  height: 26px;
-}
-
-.gpf-btn-icon-header-pointInfo {
-  background-repeat: no-repeat;
-  background-size: auto auto;
-  background-position: center center;
-}
-
-.gpf-panel__body_pointInfo {
-  overflow: auto;
-  max-height: 300px !important;
-}
-
 div[id^=GPpointInfo-] {
   top: 4px;
   bottom: unset;

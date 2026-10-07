@@ -301,6 +301,15 @@ jobs:
     needs: [release, publish]
     runs-on: ubuntu-latest
     steps:
+      - name: Debug token
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "Le secret arrive VIDE dans ce job"
+          else
+            echo "Secret présent, longueur : ${#TOKEN}"
+          fi
+        env:
+          TOKEN: ${{ secrets.ADMIN_GEOPORTAL_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v4
         with:

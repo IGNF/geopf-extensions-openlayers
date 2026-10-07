@@ -533,6 +533,12 @@ class GetFeatureInfo extends Control {
             data.subscribe((key, value) => {
                 if (key == "content") {
                     data.set("pending", false);
+                    // On affiche le contenu du GFI s'il est actif
+                    // Evite le callback d'ouverture si la réponse arrive après l'ouverture d'un autre widget
+                    if (!this.getActive()) {
+                        data.get("contentDiv").remove();
+                        return;
+                    }
                     if (data.get("content")) {
                         data.get("contentDiv").querySelector("div.fr-collapse").innerHTML = data.get("content");
                         // on affiche la pop-up car il y a au moins une entrée à afficher

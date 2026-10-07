@@ -651,7 +651,7 @@ var CatalogDOM = {
             return `
             <div
                 data-layeritem
-                class="fr-fieldset__element fr-toggle--border-bottom fr-py-2w fr-px-1w fr-mb-0" 
+                class="fr-fieldset__element fr-toggle--border-bottom fr-py-1w fr-px-1w fr-mb-0" 
                 id="fieldset-${categoryId}_${name}-${service}"
             >
                 <div class="fr-checkbox-group gpf-flex" style="justify-content:flex-start">
@@ -670,16 +670,21 @@ var CatalogDOM = {
                             ${tmplThumbnail(thumbnail)}
                         </div>
                     </div>
-                    <div style="width: 100%;">
+                    <div class="catalog-layer-title-producer">
                         <label 
-                            class="GPlabelActive fr-label"
+                            class="GPlabelActive catalog-layer-title fr-label"
                             role="label-collapse-more-${categoryId}"
                             aria-controls="checkboxes-${categoryId}-${i}_${name}-${service}"
                             title="${title}"
-                            style="display: -webkit-box; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: normal; cursor: pointer; line-height: 1.5em; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word;">
+                        >
                             ${title}
                         </label>
-                        <span class="GPlabelActive fr-label fr-hint-text fr-text--xs fr-m-0">${producerName}</span>
+                        ${category.producer !== false ? `<span
+                            class="GPlabelActive catalog-layer-producer fr-label fr-hint-text fr-text--xs fr-m-0"
+                            title="${producerName}"
+                        >
+                            ${producerName}
+                        </span>` : ""}
                     </div>
                     <button 
                         id="catalog-collapse-more-${i}-${categoryId}"
