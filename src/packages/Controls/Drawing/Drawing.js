@@ -1827,6 +1827,8 @@ class Drawing extends Control {
                     context.tootlTipElem.innerText = "Double-cliquer pour terminer";
                     context.tooltipOvl = new Overlay({
                         element : context.tootlTipElem,
+                        stopEvent : false,
+                        className : "ol-overlay-container",
                         positioning : "top-right"
                     });
 
@@ -1877,6 +1879,8 @@ class Drawing extends Control {
                     context.tootlTipElem.innerText = "Double-cliquer pour terminer";
                     context.tooltipOvl = new Overlay({
                         element : context.tootlTipElem,
+                        stopEvent : false,
+                        className : "ol-overlay-container",
                         positioning : "top-right"
                     });
                     context.interactionCurrent.on("drawend", function (deEv) {

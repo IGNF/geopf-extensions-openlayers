@@ -24,3 +24,4 @@ Le fichier [CONTRIBUTING.md](CONTRIBUTING.md) définit les règles et pratiques 
 * [MatRouillard](https://github.com/MatRouillard)
 * [cde-barros](https://github.com/cde-barros)
 * [viglino](https://github.com/viglino)
+* [julsql](https://github.com/julsql)
