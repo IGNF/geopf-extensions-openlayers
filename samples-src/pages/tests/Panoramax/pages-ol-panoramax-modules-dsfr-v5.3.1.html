@@ -1,21 +1,7 @@
 {{#extend "ol-sample-modules-dsfr-layout"}}
 
 {{#content "vendor"}}
-        <script>
-            window.panoramaxReady = fetch("https://cdn.jsdelivr.net/npm/@panoramax/web-viewer@5.3.1/build/cjs/index_photoviewer.js")
-                .then(function (response) {
-                    if (!response.ok) {
-                        throw new Error("Panoramax load failed: " + response.status);
-                    }
-                    return response.text();
-                })
-                .then(function (source) {
-                    var exports = {};
-                    new Function("exports", source)(exports);
-                    window.Panoramax = exports;
-                    return exports;
-                });
-        </script>
+        <script src="{{ resources }}/vendor/panoramax/v5.3.1/photoviewer.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.css" />
@@ -155,9 +141,7 @@
             customConfigFile : "{{ configurl }}",
             callbackSuffix : "",
             timeOut : 20000,
-            onSuccess : function () {
-                window.panoramaxReady.then(createMap).catch(console.error);
-            },
+            onSuccess : createMap,
             onFailure : (error) => {
                 console.error(error);
             }

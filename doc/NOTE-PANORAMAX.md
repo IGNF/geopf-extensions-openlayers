@@ -117,31 +117,23 @@ Les changements des propriétés `picture`, `sequence` et `display` émettent re
 | `fullscreen` | `<dialog>` fixe sur toute la fenêtre (`100dvw` x `100dvh`) |
 | `fullscreen-map` | Fenêtre calée sur `map.getViewport()` et resynchronisée lors de `resize`, `scroll` et `change:size` |
 
-## Essai de migration v4 vers v5.3.1
+## Migration de Panoramax v4.4.0 vers v5.3.1
 
-La page [Panoramax v5.3.1](../samples-src/pages/tests/Panoramax/pages-ol-panoramax-modules-dsfr-v5.3.1.html) utilise le bundle photo `build/cjs/index_photoviewer.js` publié sur jsDelivr. L'exemple v4.4.0 et la `peerDependency` restent inchangés : cet essai ne déclare pas encore une compatibilité générale avec v5.
+Le widget requiert `@panoramax/web-viewer` `^5.3.1` (`peerDependency`). Le code du contrôle n'importe pas la bibliothèque : l'application doit enregistrer les web components `pnx-*` avant la création du contrôle.
 
-Le bundle CJS v5.3.1 n'est pas directement interchangeable avec le script standalone v4 :
+La v5 n'est plus distribuée en script autonome `photoviewer.js` + `photoviewer.css` : le CSS est embarqué dans les composants et le champ `exports` du package ne publie que `.` (ESM). Selon l'environnement :
 
-- Il attend un objet `exports` fourni par son environnement.
-- Chargé comme script classique, sa variable globale `ol` écrase celle d'OpenLayers.
-- La page de test le charge dans une fonction isolée avec un objet `exports` local, puis attend la promesse `panoramaxReady` avant de créer la carte.
-- Aucun ancien fichier `photoviewer.css` n'est chargé dans cette page.
-
-Ce chargeur est expérimental : il nécessite le réseau et `new Function`, incompatible avec une CSP qui interdit `unsafe-eval`. Pour une intégration de production, préférer un import npm traité par le bundler ou le mode ESM avec une import map adaptée, plutôt que d'assouplir la CSP.
-
-### Résultats du test navigateur du 9 octobre 2026
-
-| Vérification | Résultat |
+| Environnement | Chargement |
 |---|---|
-| Enregistrement de `pnx-photo-viewer`, conservation de `ol.Map` | OK avec le chargeur isolé |
-| Initialisation de la carte et du contrôle | OK |
-| Ouverture de la photo, métadonnées et rendu du panorama | OK |
-| Mini-carte OpenLayers | Affichée |
-| Masquer puis afficher la photo | OK |
-| Retirer puis réinsérer le contrôle et recharger la photo | OK, sans exception JavaScript pendant le scénario v5 |
-| Viewport réduit | Photo chargée ; mise en page mobile non validée, légende encombrante et débordement observés |
+| Application avec bundler (Vite, Webpack) | `import "@panoramax/web-viewer";` |
+| Page HTML sans bundler | Bundle `build/cjs/index_photoviewer.js` encapsulé, voir ci-dessous |
+| Page HTML avec modules ES | `build/esm/index.js` et import map ([documentation Panoramax](https://docs.panoramax.fr/web-viewer/)) |
 
-Le scénario de retrait/réinsertion duplique les widgets de zoom en v4 comme en v5. L'avertissement Photo Sphere Viewer concernant `shouldGoFast` est également présent en v4. Ces problèmes préexistants ne sont pas corrigés par cet essai. Des réponses HTTP 404 de ressources externes ont été observées ; leur impact complet n'a pas été évalué.
+Le bundle CJS ne peut pas être chargé tel quel par `<script>` : il attend un objet `exports` et sa variable globale `ol` écrase OpenLayers. Les exemples utilisent donc [photoviewer.js](../samples-src/resources/vendor/panoramax/v5.3.1/photoviewer.js), généré à partir de `node_modules/@panoramax/web-viewer/build/cjs/index_photoviewer.js` : le code est placé dans une IIFE qui définit `exports` localement et expose `window.Panoramax`, sans `eval` ni CSS séparé.
 
-Les filtres, le partage, le plein écran et la navigation entre photos n'ont pas été validés. Une compilation de développement des modules a été effectuée via `npm run sample:modules -- --port 8096 --no-open`. ESLint termine sans erreur, avec 959 avertissements sur les sources existantes. Le build de production et la génération de documentation/types n'ont pas été exécutés pour cet essai limité à une page d'exemple.
+```html
+<script src="photoviewer.js"></script>
+```
+
+Les exemples [v4.4.0](../samples-src/pages/tests/Panoramax/pages-ol-panoramax-modules-dsfr-v4.4.0.html) et [v5.3.1](../samples-src/pages/tests/Panoramax/pages-ol-panoramax-modules-dsfr-v5.3.1.html) permettent de comparer les deux versions.
+

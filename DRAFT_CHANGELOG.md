@@ -11,6 +11,8 @@ __DATE__
 
 ### 💥 Breaking changes
 
+  - Panoramax : `@panoramax/web-viewer` 4.x n'est plus supporté, la version 5.3.1 ou supérieure est requise
+
 ### 📖 Changelog
 
 * ✨ [Added]
@@ -19,6 +21,8 @@ __DATE__
   - Catalog : ajout de l’option `producer` pour afficher/masquer le nom du producteur d’une couche (#600)
 
 * 🔨 [Changed]
+
+  - Panoramax : migration vers `@panoramax/web-viewer` 5.3.1 (`peerDependency` `^5.3.1`) ; le viewer n'est plus fourni en script autonome avec feuille de style séparée, voir `doc/NOTE-PANORAMAX.md`
 
   - SearchEngine : wfs requetes limitées à 5000 features au lieu de 1000 lors d'une recherche avancée de parcelle par section (#594)
 

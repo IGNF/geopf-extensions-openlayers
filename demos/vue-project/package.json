@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@panoramax/web-viewer": "4.4.0",
+    "@panoramax/web-viewer": "5.3.1",
     "geopf-extensions-openlayers": "../../dist/package/geopf-extensions-openlayers.tgz",
     "ol": "^10.3.1",
     "vue": "^3.4.21",

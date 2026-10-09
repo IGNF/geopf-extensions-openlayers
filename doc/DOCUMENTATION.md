@@ -2160,12 +2160,11 @@ map.addControl(fullscreen);
 
 ### Widget Panoramax
 
-Ce widget affiche les couvertures Panoramax sur la carte et permet de visualiser les photos associées. Il repose sur le web component `<pnx-photo-viewer>` de `@panoramax/web-viewer`, qui doit être chargé avec sa feuille de style avant l'extension.
+Ce widget affiche les couvertures Panoramax sur la carte et permet de visualiser les photos associées. Il repose sur le web component `<pnx-photo-viewer>` de `@panoramax/web-viewer` (version `^5.3.1`), qui doit être chargé avant l'extension. Avec un bundler, utiliser `import "@panoramax/web-viewer";` ; sans bundler, voir la [note du widget Panoramax](NOTE-PANORAMAX.md#migration-de-panoramax-v440-vers-v531).
 
 #### Exemples d'utilisation
 
 ```html
-<link rel="stylesheet" href="photoviewer.css" />
 <script src="photoviewer.js"></script>
 ```
 

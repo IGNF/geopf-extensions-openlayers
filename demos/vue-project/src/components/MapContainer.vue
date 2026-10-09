@@ -8,8 +8,7 @@ import ScaleLine from 'ol/control/ScaleLine';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 
-import "@panoramax/web-viewer/build/photoviewer.js";
-import "@panoramax/web-viewer/build/photoviewer.css";
+import "@panoramax/web-viewer";
 
 import {
   Catalog,

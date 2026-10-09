@@ -70,13 +70,6 @@ module.exports = (env, argv) => {
                     amd : "ol",
                     root : "ol"
                 },
-                "@panoramax/web-viewer/build/photoviewer" : {
-                    var : "Panoramax",
-                    commonjs : "@panoramax/web-viewer/build/photoviewer",
-                    commonjs2 : "@panoramax/web-viewer/build/photoviewer",
-                    amd : "Panoramax",
-                    root : "Panoramax"
-                },
                 request : {
                     var : "require",
                     commonjs2 : "request",
