@@ -22,7 +22,7 @@ __DATE__
 
 * 🔨 [Changed]
 
-  - Panoramax : migration vers `@panoramax/web-viewer` 5.3.1 (`peerDependency` `^5.3.1`) ; le viewer n'est plus fourni en script autonome avec feuille de style séparée, voir `doc/NOTE-PANORAMAX.md`
+  - Panoramax : migration vers `@panoramax/web-viewer` 5.3.1 (`peerDependency` `^5.3.1`) ; le viewer n'est plus fourni en script autonome avec feuille de style séparée, voir `doc/NOTE-PANORAMAX.md` (#602)
 
   - SearchEngine : wfs requetes limitées à 5000 features au lieu de 1000 lors d'une recherche avancée de parcelle par section (#594)
 
