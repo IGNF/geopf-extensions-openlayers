@@ -8,6 +8,9 @@ import ScaleLine from 'ol/control/ScaleLine';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 
+import "@panoramax/web-viewer/build/photoviewer.js";
+import "@panoramax/web-viewer/build/photoviewer.css";
+
 import {
   Catalog,
   CRS,
@@ -26,6 +29,7 @@ import {
   LayerImport,
   LayerSwitcher,
   Legends,
+  Panoramax,
   ReverseGeocode,
   Route,
   SearchEngine,
@@ -88,6 +92,19 @@ onMounted(() => {
             info: true
       });
       map.addControl(legends);
+
+      var panoramax = new Panoramax({
+        collapsed: true,
+        panel: true,
+        position: "bottom-left",
+        background: {
+          active: false
+        },
+        visualizationWindow: {
+          size: "fullscreen-map"
+        }
+      });
+      map.addControl(panoramax);
 
       var catalog = new Catalog({
             position: "top-left",
