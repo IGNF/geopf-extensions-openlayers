@@ -9,6 +9,8 @@ import ScaleLine from 'ol/control/ScaleLine';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 
+import "@panoramax/web-viewer";
+
 import 'ol/ol.css';
 import "@gouvfr/dsfr/dist/dsfr.css";
 import "@gouvfr/dsfr/dist/utility/icons/icons.css";
