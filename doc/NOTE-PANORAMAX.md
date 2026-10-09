@@ -116,3 +116,24 @@ Les changements des propriétés `picture`, `sequence` et `display` émettent re
 | `small`, `medium`, `large` | Taille fixe via classe CSS |
 | `fullscreen` | `<dialog>` fixe sur toute la fenêtre (`100dvw` x `100dvh`) |
 | `fullscreen-map` | Fenêtre calée sur `map.getViewport()` et resynchronisée lors de `resize`, `scroll` et `change:size` |
+
+## Migration de Panoramax v4.4.0 vers v5.3.1
+
+Le widget requiert `@panoramax/web-viewer` `^5.3.1` (`peerDependency`). Le code du contrôle n'importe pas la bibliothèque : l'application doit enregistrer les web components `pnx-*` avant la création du contrôle.
+
+La v5 n'est plus distribuée en script autonome `photoviewer.js` + `photoviewer.css` : le CSS est embarqué dans les composants et le champ `exports` du package ne publie que `.` (ESM). Selon l'environnement :
+
+| Environnement | Chargement |
+|---|---|
+| Application avec bundler (Vite, Webpack) | `import "@panoramax/web-viewer";` |
+| Page HTML sans bundler | Bundle `build/cjs/index_photoviewer.js` encapsulé, voir ci-dessous |
+| Page HTML avec modules ES | `build/esm/index.js` et import map ([documentation Panoramax](https://docs.panoramax.fr/web-viewer/)) |
+
+Le bundle CJS ne peut pas être chargé tel quel par `<script>` : il attend un objet `exports` et sa variable globale `ol` écrase OpenLayers. Les exemples utilisent donc [photoviewer.js](../samples-src/resources/vendor/panoramax/v5.3.1/photoviewer.js), généré à partir de `node_modules/@panoramax/web-viewer/build/cjs/index_photoviewer.js` : le code est placé dans une IIFE qui définit `exports` localement et expose `window.Panoramax`, sans `eval` ni CSS séparé.
+
+```html
+<script src="photoviewer.js"></script>
+```
+
+Les exemples [v4.4.0](../samples-src/pages/tests/Panoramax/pages-ol-panoramax-modules-dsfr-v4.4.0.html) et [v5.3.1](../samples-src/pages/tests/Panoramax/pages-ol-panoramax-modules-dsfr-v5.3.1.html) permettent de comparer les deux versions.
+

@@ -10,6 +10,7 @@
     "vite": "^6.4.3"
   },
   "dependencies": {
+    "@panoramax/web-viewer": "5.3.1",
     "geopf-extensions-openlayers": "../../dist/package/geopf-extensions-openlayers.tgz",
     "ol": "10.3.1",
     "@gouvfr/dsfr": "^1.11.0"
