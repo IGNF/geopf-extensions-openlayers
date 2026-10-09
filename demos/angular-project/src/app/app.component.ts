@@ -24,10 +24,12 @@ import {
   LayerImport,
   LayerSwitcher,
   Legends,
+  Panoramax,
   ReverseGeocode,
   Route,
   SearchEngine,
-  Territories
+  Territories,
+  ControlList
 } from "../../node_modules/geopf-extensions-openlayers/src/index";
 
 @Component({
@@ -93,6 +95,19 @@ export class AppComponent implements OnInit {
           info: true
     });
     this.map.addControl(legends);
+
+    var panoramax = new Panoramax({
+        collapsed: true,
+        panel: true,
+        position: "bottom-left",
+        background: {
+          active: false
+        },
+        visualizationWindow: {
+          size: "fullscreen-map"
+        }
+    });
+    this.map.addControl(panoramax);
 
     var catalog = new Catalog({
           position: "top-left",
@@ -204,5 +219,11 @@ export class AppComponent implements OnInit {
 
     var attributions = new GeoportalAttribution();
     this.map.addControl(attributions);
+
+    var controlList = new ControlList({
+      draggable: false,
+      position: "bottom-right"
+    });
+    this.map.addControl(controlList);
   }
 }

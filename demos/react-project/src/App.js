@@ -31,6 +31,7 @@ import {
   LayerImport,
   LayerSwitcher,
   Legends,
+  Panoramax,
   ReverseGeocode,
   Route,
   SearchEngine,
@@ -94,6 +95,19 @@ function App() {
     });
     map.addControl(legends);
   
+    var panoramax = new Panoramax({
+      collapsed: true,
+      panel: true,
+      position: "bottom-left",
+      background: {
+        active: false
+      },
+      visualizationWindow: {
+        size: "fullscreen-map"
+      }
+    });
+    map.addControl(panoramax);
+
     var catalog = new Catalog({
           position: "top-left",
           categories : [
