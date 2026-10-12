@@ -142,6 +142,12 @@ var ControlListDOM = {
         listElement.setAttribute("role", "button");
         listElement.setAttribute("tabindex", 0);
 
+        if (controlContainer.firstChild.getAttribute("disabled") !== null) {
+            listElement.classList.add("gpf-list-element--disabled");
+            listElement.setAttribute("aria-disabled", "true");
+            listElement.setAttribute("tabindex", -1);
+        }
+
         let showButton = controlContainer.querySelector(".GPshowOpen");
         let btnWidget = showButton.cloneNode();
         // is active ?
@@ -170,7 +176,12 @@ var ControlListDOM = {
         }
         listElement.appendChild(listText);
 
-        let handler = () => {
+        let handler = (event) => {
+            if (listElement.classList.contains("gpf-list-element--disabled")) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
             let isActive = listElement.classList.contains("gpf-list-element--active");
             listElement.parentNode.querySelectorAll(".gpf-list-element").forEach((el) => {
                 el.classList.remove("gpf-list-element--active");
@@ -188,7 +199,7 @@ var ControlListDOM = {
         listElement.addEventListener("click", handler);
         listElement.addEventListener("keydown", (e) => {
             if (["Enter", "Space"].includes(e.code)) {
-                handler();
+                handler(e);
             }
         });
         return listElement;

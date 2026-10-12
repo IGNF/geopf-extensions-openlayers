@@ -57,6 +57,8 @@ declare class ControlList extends Control {
     /**
      * @constructor
      * @param {ControlListOptions} options - ControlList control options
+     * @fires controllist:loaded
+     * @fires controllist:sorted
      */
     constructor(options: ControlListOptions);
     controlCatalogElement: HTMLElement | null;

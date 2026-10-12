@@ -67,6 +67,15 @@ dialog[id^="GPcontrolListPanel-"] .gpf-list-element--active:active {
 /*  box-shadow: inset 0 0 0 1px var(--background-action-high-blue-france);*/
 }
 
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+dialog[id^="GPcontrolListPanel-"] .gpf-list-element--disabled * {
+  cursor: not-allowed;
+}
+
 dialog[id^="GPcontrolListPanel-"] .gpf-list-element--ghost {
   color: var(--text-title-blue-france);
   background-color: var(--background-open-blue-france);
