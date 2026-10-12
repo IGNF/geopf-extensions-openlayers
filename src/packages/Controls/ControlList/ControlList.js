@@ -9,9 +9,6 @@ import Logger from "../../Utils/LoggerByDefault";
 import Utils from "../../Utils/Helper";
 import SelectorID from "../../Utils/SelectorID";
 import Draggable from "../../Utils/Draggable";
-import Interactions from "../Utils/Interactions";
-// import local with ol dependencies
-import checkDsfr from "../Utils/CheckDsfr";
 
 // DOM
 import ControlListDOM from "./ControlListDOM";
@@ -44,6 +41,8 @@ class ControlList extends Control {
     /**
      * @constructor
      * @param {ControlListOptions} options - ControlList control options
+     * @fires controllist:loaded
+     * @fires controllist:sorted
      */
     constructor (options) {
         options = options || {};
@@ -106,6 +105,18 @@ class ControlList extends Control {
         // position
         if (this.options.position) {
             this.setPosition(this.options.position);
+        }
+
+        if (map) {
+            /**
+             * Event fired when the control list is ready on the map.
+             * @event controllist:loaded
+             * @type {Object}
+             * @property {Object} target - ControlList instance.
+             */
+            this.dispatchEvent({
+                type : "controllist:loaded"
+            });
         }
     }
 
@@ -366,6 +377,12 @@ class ControlList extends Control {
     _onSortedEnd () {
         let listControls = [...this._ControlListPanelContentContainer.children].map(element => element.dataset.name);
         this._controlsListSorted = listControls;
+        /**
+         * Event fired when the control list has been sorted.
+         * @event controllist:sorted
+         * @type {Object}
+         * @property {Array} list - The new order of the control list elements.
+         */
         this.dispatchEvent({
             type : "controllist:sorted",
             list : listControls,
