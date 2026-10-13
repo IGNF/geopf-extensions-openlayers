@@ -21,6 +21,7 @@ __DATE__
 * 🔨 [Changed]
 
   - Documentation : mise à jour de la documentation opensource du projet (#595)
+  - GetFeatureInfo : ouverture par défaut des items (#605)
 
 * 🔥 [Deprecated]
 
