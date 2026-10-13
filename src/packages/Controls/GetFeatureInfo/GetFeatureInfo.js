@@ -320,6 +320,14 @@ class GetFeatureInfo extends Control {
      */
     onMapClick (e) {
         if (this.getFeatureInfoIsActive()) {
+            var currentAccordionGroup = this.getFeatureInfoAccordionGroup;
+            // Mémoriser les couches ouvertes avant de reconstruire les résultats du clic.
+            this.previouslyExpandedLayers = currentAccordionGroup.parentNode ? Array.from(
+                currentAccordionGroup.querySelectorAll(".fr-accordion")
+            ).filter((accordion) => {
+                var button = accordion.querySelector("button.fr-accordion__btn");
+                return button && button.getAttribute("aria-expanded") === "true";
+            }).map((accordion) => accordion.gfiLayer) : [];
             this.getFeatureInfoAccordionGroup.remove();
             if (this.noDataMessage) {
                 this.noDataMessageDiv.remove();
@@ -504,6 +512,22 @@ class GetFeatureInfo extends Control {
         var gfiLayers = this.layers.map((l) => {
             return this.getGetFeatureInfoLayer(l);
         });
+        // Ne restaurer que les couches encore présentes, en s'appuyant sur leur référence plutôt que leur titre.
+        var previouslyExpandedLayers = this.previouslyExpandedLayers || [];
+        var layersToRestore = previouslyExpandedLayers.filter((layer) => {
+            return gfiLayers.some((gfiLayer) => gfiLayer.layer === layer);
+        });
+        var restoredPreviousLayer = false;
+        this.previouslyExpandedLayers = [];
+
+        // Synchroniser l'état accessible du bouton et l'affichage du contenu de l'accordéon.
+        var expandAccordion = (accordion) => {
+            var button = accordion.querySelector("button.fr-accordion__btn");
+            var collapse = accordion.querySelector(".fr-collapse");
+            button.setAttribute("aria-expanded", "true");
+            collapse.classList.add("fr-collapse--expanded");
+            collapse.classList.remove("GPelementHidden");
+        };
 
         // Structuration de l'objet pour afficher les GFI par layer
         var gfiContent = gfiLayers.map((gfiLayer) => {
@@ -511,6 +535,8 @@ class GetFeatureInfo extends Control {
 
             var content = null;
             var accordeon = this._createGetFeatureInfoLayerAccordion(layername, this.getFeatureInfoPanelDiv);
+            // Conserver la référence de couche sur l'accordéon pour identifier son état au prochain clic.
+            accordeon.gfiLayer = gfiLayer.layer;
             // on affiche pas l'entrée avant d'être confirmation qu'elle aura du contenu renvoyé
             accordeon.style.display = "none";
             var pending = true;
@@ -541,6 +567,10 @@ class GetFeatureInfo extends Control {
                     }
                     if (data.get("content")) {
                         data.get("contentDiv").querySelector("div.fr-collapse").innerHTML = data.get("content");
+                        if (layersToRestore.includes(data.get("layer"))) {
+                            restoredPreviousLayer = true;
+                            expandAccordion(data.get("contentDiv"));
+                        }
                         // on affiche la pop-up car il y a au moins une entrée à afficher
                         this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
                         this.onPanelOpen();
@@ -560,6 +590,20 @@ class GetFeatureInfo extends Control {
                         } else {
                             // on n'affiche pas la pop-up car pas de données
                             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
+                        }
+                    }
+                    else if (!restoredPreviousLayer && !gfiContent.some((gfi) => {
+                        return layersToRestore.includes(gfi.get("layer")) && gfi.get("pending");
+                    })) {
+                        // Aucune couche précédemment ouverte n'a de résultat : ouvrir la plus haute couche renseignée.
+                        var firstLayerWithContent = gfiContent.find((gfi) => gfi.get("content"));
+                        if (firstLayerWithContent) {
+                            var firstLayerWithContentIndex = gfiContent.indexOf(firstLayerWithContent);
+                            var higherLayerIsPending = gfiContent.slice(0, firstLayerWithContentIndex)
+                                .some((gfi) => gfi.get("pending"));
+                            if (!higherLayerIsPending) {
+                                expandAccordion(firstLayerWithContent.get("contentDiv"));
+                            }
                         }
                     }
                 }
