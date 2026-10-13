@@ -138,6 +138,7 @@ declare class GetFeatureInfo extends Control {
      * @private
      */
     private onMapClick;
+    previouslyExpandedLayers: any[] | undefined;
     map: any;
     /**
      * Main render function
@@ -173,6 +174,21 @@ declare class GetFeatureInfo extends Control {
      * @returns {String} layerTitle - layer title
      */
     getLayerTitle(gfiLayer: Layer): string;
+    /**
+     * Returns layers that were expanded before the GFI refresh.
+     *
+     * @param {HTMLElement} accordionGroup - the current accordion group
+     * @returns {Array} expanded layers
+     * @private
+     */
+    private getPreviouslyExpandedLayers;
+    /**
+     * Synchronize accessible state and displayed content for an accordion.
+     *
+     * @param {HTMLElement} accordion - accordion element
+     * @private
+     */
+    private expandAccordionElement;
     /**
      * Main render function
      * @private
