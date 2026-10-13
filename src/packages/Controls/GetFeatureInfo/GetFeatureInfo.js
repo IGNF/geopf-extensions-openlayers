@@ -322,12 +322,7 @@ class GetFeatureInfo extends Control {
         if (this.getFeatureInfoIsActive()) {
             var currentAccordionGroup = this.getFeatureInfoAccordionGroup;
             // Mémoriser les couches ouvertes avant de reconstruire les résultats du clic.
-            this.previouslyExpandedLayers = currentAccordionGroup.parentNode ? Array.from(
-                currentAccordionGroup.querySelectorAll(".fr-accordion")
-            ).filter((accordion) => {
-                var button = accordion.querySelector("button.fr-accordion__btn");
-                return button && button.getAttribute("aria-expanded") === "true";
-            }).map((accordion) => accordion.gfiLayer) : [];
+            this.previouslyExpandedLayers = this.getPreviouslyExpandedLayers(currentAccordionGroup);
             this.getFeatureInfoAccordionGroup.remove();
             if (this.noDataMessage) {
                 this.noDataMessageDiv.remove();
@@ -505,6 +500,37 @@ class GetFeatureInfo extends Control {
     }
 
     /**
+     * Returns layers that were expanded before the GFI refresh.
+     *
+     * @param {HTMLElement} accordionGroup - the current accordion group
+     * @returns {Array} expanded layers
+     * @private
+     */
+    getPreviouslyExpandedLayers (accordionGroup) {
+        if (!accordionGroup || !accordionGroup.parentNode) {
+            return [];
+        }
+        return Array.from(accordionGroup.querySelectorAll(".fr-accordion")).filter((accordion) => {
+            var button = accordion.querySelector("button.fr-accordion__btn");
+            return button && button.getAttribute("aria-expanded") === "true";
+        }).map((accordion) => accordion.gfiLayer);
+    }
+
+    /**
+     * Synchronize accessible state and displayed content for an accordion.
+     *
+     * @param {HTMLElement} accordion - accordion element
+     * @private
+     */
+    expandAccordionElement (accordion) {
+        var button = accordion.querySelector("button.fr-accordion__btn");
+        var collapse = accordion.querySelector(".fr-collapse");
+        button.setAttribute("aria-expanded", "true");
+        collapse.classList.add("fr-collapse--expanded");
+        collapse.classList.remove("GPelementHidden");
+    }
+
+    /**
      * Main render function
      * @private
      */
@@ -514,20 +540,11 @@ class GetFeatureInfo extends Control {
         });
         // Ne restaurer que les couches encore présentes, en s'appuyant sur leur référence plutôt que leur titre.
         var previouslyExpandedLayers = this.previouslyExpandedLayers || [];
-        var layersToRestore = previouslyExpandedLayers.filter((layer) => {
+        var layersToRestore = new Set(previouslyExpandedLayers.filter((layer) => {
             return gfiLayers.some((gfiLayer) => gfiLayer.layer === layer);
-        });
+        }));
         var restoredPreviousLayer = false;
         this.previouslyExpandedLayers = [];
-
-        // Synchroniser l'état accessible du bouton et l'affichage du contenu de l'accordéon.
-        var expandAccordion = (accordion) => {
-            var button = accordion.querySelector("button.fr-accordion__btn");
-            var collapse = accordion.querySelector(".fr-collapse");
-            button.setAttribute("aria-expanded", "true");
-            collapse.classList.add("fr-collapse--expanded");
-            collapse.classList.remove("GPelementHidden");
-        };
 
         // Structuration de l'objet pour afficher les GFI par layer
         var gfiContent = gfiLayers.map((gfiLayer) => {
@@ -567,9 +584,9 @@ class GetFeatureInfo extends Control {
                     }
                     if (data.get("content")) {
                         data.get("contentDiv").querySelector("div.fr-collapse").innerHTML = data.get("content");
-                        if (layersToRestore.includes(data.get("layer"))) {
+                        if (layersToRestore.has(data.get("layer"))) {
                             restoredPreviousLayer = true;
-                            expandAccordion(data.get("contentDiv"));
+                            this.expandAccordionElement(data.get("contentDiv"));
                         }
                         // on affiche la pop-up car il y a au moins une entrée à afficher
                         this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
@@ -593,7 +610,7 @@ class GetFeatureInfo extends Control {
                         }
                     }
                     else if (!restoredPreviousLayer && !gfiContent.some((gfi) => {
-                        return layersToRestore.includes(gfi.get("layer")) && gfi.get("pending");
+                        return layersToRestore.has(gfi.get("layer")) && gfi.get("pending");
                     })) {
                         // Aucune couche précédemment ouverte n'a de résultat : ouvrir la plus haute couche renseignée.
                         var firstLayerWithContent = gfiContent.find((gfi) => gfi.get("content"));
@@ -602,7 +619,7 @@ class GetFeatureInfo extends Control {
                             var higherLayerIsPending = gfiContent.slice(0, firstLayerWithContentIndex)
                                 .some((gfi) => gfi.get("pending"));
                             if (!higherLayerIsPending) {
-                                expandAccordion(firstLayerWithContent.get("contentDiv"));
+                                this.expandAccordionElement(firstLayerWithContent.get("contentDiv"));
                             }
                         }
                     }
