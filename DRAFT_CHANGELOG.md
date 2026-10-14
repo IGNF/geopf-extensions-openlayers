@@ -29,5 +29,6 @@ __DATE__
   
 * 🔒 [Security]
 
+  - Reporting : correctif sur injection HTML dans les paramètres `thematics` (#606)
 
 ---
