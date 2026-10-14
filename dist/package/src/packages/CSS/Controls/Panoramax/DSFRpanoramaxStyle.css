@@ -238,10 +238,6 @@
 }
 
 /* buttons */
-
-::part(btn-group) {
-    width: 48px;
-}
 ::part(btn) {
     width: 48px;
     height: 48px !important;
