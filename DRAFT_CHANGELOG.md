@@ -11,11 +11,15 @@ __DATE__
 
 ### 💥 Breaking changes
 
+  - Panoramax : `@panoramax/web-viewer` 4.x n'est plus supporté, la version 5.3.1 ou supérieure est requise
+
 ### 📖 Changelog
 
 * ✨ [Added]
 
 * 🔨 [Changed]
+
+  - Panoramax : migration vers `@panoramax/web-viewer` 5.3.1 (`peerDependency` `^5.3.1`) ; le viewer n'est plus fourni en script autonome avec feuille de style séparée, voir `doc/NOTE-PANORAMAX.md` (#602)
 
 * 🔥 [Deprecated]
 
