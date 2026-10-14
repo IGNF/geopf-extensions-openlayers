@@ -5,6 +5,7 @@ import "../../CSS/Controls/GetFeatureInfo/GPFgetFeatureInfo.css";
 import Widget from "../Widget";
 import Control from "../Control";
 import Map from "ol/Map";
+import Overlay from "ol/Overlay";
 import Layer from "ol/layer/Layer";
 import VectorTileSource from "ol/source/VectorTile";
 import VectorSource from "ol/source/Vector";
@@ -17,6 +18,7 @@ import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
 import AsyncData from "../Utils/AsyncData";
+import Markers from "../Utils/Markers";
 
 // DOM
 import GetFeatureInfoDOM from "./GetFeatureInfoDOM";
@@ -80,6 +82,14 @@ class GetFeatureInfo extends Control {
      */
     setMap (map) {
         if (map) {
+            if (!this.getFeatureInfoMarkerOverlay) {
+                this.getFeatureInfoMarkerOverlay = new Overlay({
+                    offset : Markers.defaultOffset,
+                    element : this._createGetFeatureInfoMarkerElement(),
+                    stopEvent : false
+                });
+            }
+            map.addOverlay(this.getFeatureInfoMarkerOverlay);
             // mode "draggable"
             if (this.draggable) {
                 Draggable.dragElement(
@@ -100,6 +110,11 @@ class GetFeatureInfo extends Control {
                 this.addEventsListeners(map);
             }
         } else {
+            if (this.getMap()) {
+                this._clearGetFeatureInfoMarker();
+                this.getMap().removeOverlay(this.getFeatureInfoMarkerOverlay);
+                this.getFeatureInfoMarkerOverlay = null;
+            }
             // suppression des evenements sur la carte
             // pour les futurs suppressions de couche
             if (this.auto) {
@@ -142,6 +157,10 @@ class GetFeatureInfo extends Control {
     setActive (active) {
         this.active = active === true;
         this.activeExplicit = true;
+        if (!this.active) {
+            // Nettoie aussi le marqueur lors d'une désactivation programmatique.
+            this._clearGetFeatureInfoMarker();
+        }
         if (this.buttonGetFeatureInfoShow) {
             this.buttonGetFeatureInfoShow.setAttribute("aria-pressed", this.active);
         }
@@ -213,6 +232,8 @@ class GetFeatureInfo extends Control {
         this.panelGetFeatureInfoEntriesContainer = null;
         /** @private */
         this.noDataMessageDiv = null;
+        /** @private */
+        this.getFeatureInfoMarkerOverlay = null;
 
         /** {Array} specify some events listeners */
         this.eventsListeners = [];
@@ -312,6 +333,42 @@ class GetFeatureInfo extends Control {
         return this.getActive();
     }
 
+    /**
+     * Create the DOM element used to display the queried location marker.
+     *
+     * @returns {HTMLElement} marker element
+     * @private
+     */
+    _createGetFeatureInfoMarkerElement () {
+        var markerElement = document.createElement("img");
+        markerElement.src = Markers["lightOrange"];
+        markerElement.alt = "";
+        return markerElement;
+    }
+
+    /**
+     * Display the marker at the given GetFeatureInfo coordinates.
+     *
+     * @param {Array<Number>} coordinate - map coordinate
+     * @private
+     */
+    _showGetFeatureInfoMarker (coordinate) {
+        if (this.getFeatureInfoMarkerOverlay) {
+            this.getFeatureInfoMarkerOverlay.setPosition(coordinate);
+        }
+    }
+
+    /**
+     * Hide the marker associated with the last GetFeatureInfo request.
+     *
+     * @private
+     */
+    _clearGetFeatureInfoMarker () {
+        if (this.getFeatureInfoMarkerOverlay) {
+            this.getFeatureInfoMarkerOverlay.setPosition(undefined);
+        }
+    }
+
 
     /**
      * event handler
@@ -330,6 +387,7 @@ class GetFeatureInfo extends Control {
             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", true);
             // le panel est réellement ouvert ici (suite au clic sur la carte) donc on prévient les autres panels
             this.onPanelOpen();
+            this._showGetFeatureInfoMarker(e.coordinate);
             this.layers = e.map.getLayers().getArray().filter((l) => {
                 // On ne passe au GFI que les layers visibles
                 if (l.isVisible(e.map.getView()) && l.getOpacity() > 0){
@@ -793,6 +851,8 @@ class GetFeatureInfo extends Control {
         // donc on doit fermer explicitement le panel quand on désactive le GFI
         if (e.target.ariaPressed === "false"){
             this.buttonGetFeatureInfoClose.setAttribute("aria-pressed", false);
+            this._clearGetFeatureInfoMarker();
+            this.onPanelClose();
         }
         logger.trace(e);
     }
@@ -803,6 +863,8 @@ class GetFeatureInfo extends Control {
      * @private
      */
     onCloseGetFeatureInfoClick (e) {
+        this._clearGetFeatureInfoMarker();
+        this.onPanelClose();
         logger.trace(e);
     }
 
