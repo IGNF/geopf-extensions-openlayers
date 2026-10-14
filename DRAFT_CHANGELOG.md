@@ -9,6 +9,8 @@ __DATE__
 
 ### 🎉 Summary
 
+Amelioration de l'UX/UI et de la gestion des erreurs du widget d'import, mise à jour de la documentation du projet, changement de comportement de l'affichage des résultats de getFeatureInfo, et corrections/robustification de certaines parties du code du Cartalogue, LayerSwitcher et barre de recherche.
+
 ### 💥 Breaking changes
 
 ### 📖 Changelog
