@@ -25,3 +25,4 @@ Le fichier [CONTRIBUTING.md](CONTRIBUTING.md) définit les règles et pratiques 
 * [cde-barros](https://github.com/cde-barros)
 * [viglino](https://github.com/viglino)
 * [julsql](https://github.com/julsql)
+* [anupamme](https://github.com/anupamme)
