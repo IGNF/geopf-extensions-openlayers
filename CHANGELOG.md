@@ -8,77 +8,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [CHANGELOG EXTENSION GEOPORTAL](#changelog-extension-geoportal)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0](#extension-geoplateforme-openlayers--version-100-beta0)
-    - [Unreleased](#unreleased)
-    - [🎉 Summary](#-summary)
-    - [💥 Breaking changes](#-breaking-changes)
-    - [📖 Changelog](#-changelog)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.1](#extension-geoplateforme-openlayers--version-100-beta1)
-    - [Unreleased](#unreleased-1)
-    - [🎉 Summary](#-summary-1)
-    - [💥 Breaking changes](#-breaking-changes-1)
-    - [📖 Changelog](#-changelog-1)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.2](#extension-geoplateforme-openlayers--version-100-beta2)
-    - [Unreleased](#unreleased-2)
-    - [🎉 Summary](#-summary-2)
-    - [💥 Breaking changes](#-breaking-changes-2)
-    - [📖 Changelog](#-changelog-2)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.3](#extension-geoplateforme-openlayers--version-100-beta3)
-    - [Unreleased](#unreleased-3)
-    - [🎉 Summary](#-summary-3)
-    - [💥 Breaking changes](#-breaking-changes-3)
-    - [📖 Changelog](#-changelog-3)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.4](#extension-geoplateforme-openlayers--version-100-beta4)
-    - [Unreleased](#unreleased-4)
-    - [🎉 Summary](#-summary-4)
-    - [💥 Breaking changes](#-breaking-changes-4)
-    - [📖 Changelog](#-changelog-4)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.5](#extension-geoplateforme-openlayers--version-100-beta5)
-    - [Unreleased](#unreleased-5)
-    - [🎉 Summary](#-summary-5)
-    - [💥 Breaking changes](#-breaking-changes-5)
-    - [📖 Changelog](#-changelog-5)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.6](#extension-geoplateforme-openlayers--version-100-beta6)
-    - [Unreleased](#unreleased-6)
-    - [🎉 Summary](#-summary-6)
-    - [💥 Breaking changes](#-breaking-changes-6)
-    - [📖 Changelog](#-changelog-6)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.7](#extension-geoplateforme-openlayers--version-100-beta7)
-    - [Unreleased](#unreleased-7)
-    - [🎉 Summary](#-summary-7)
-    - [💥 Breaking changes](#-breaking-changes-7)
-    - [📖 Changelog](#-changelog-7)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.8](#extension-geoplateforme-openlayers--version-100-beta8)
-    - [Unreleased](#unreleased-8)
-    - [🎉 Summary](#-summary-8)
-    - [💥 Breaking changes](#-breaking-changes-8)
-    - [📖 Changelog](#-changelog-8)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.9](#extension-geoplateforme-openlayers--version-100-beta9)
-    - [Unreleased](#unreleased-9)
-    - [🎉 Summary](#-summary-9)
-    - [💥 Breaking changes](#-breaking-changes-9)
-    - [📖 Changelog](#-changelog-9)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.10](#extension-geoplateforme-openlayers--version-100-beta10)
-    - [Unreleased](#unreleased-10)
-    - [🎉 Summary](#-summary-10)
-    - [💥 Breaking changes](#-breaking-changes-10)
-    - [📖 Changelog](#-changelog-10)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.12](#extension-geoplateforme-openlayers--version-100-beta12)
-    - [Unreleased](#unreleased-11)
-    - [🎉 Summary](#-summary-11)
-    - [💥 Breaking changes](#-breaking-changes-11)
-    - [📖 Changelog](#-changelog-11)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.13](#extension-geoplateforme-openlayers--version-100-beta13)
-    - [Unreleased](#unreleased-12)
-    - [🎉 Summary](#-summary-12)
-    - [💥 Breaking changes](#-breaking-changes-12)
-    - [📖 Changelog](#-changelog-12)
-  - [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.14](#extension-geoplateforme-openlayers--version-100-beta14)
-    - [Unreleased](#unreleased-13)
-    - [🎉 Summary](#-summary-13)
-    - [💥 Breaking changes](#-breaking-changes-13)
-    - [📖 Changelog](#-changelog-13)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.0](#extension-geoplateforme-openlayers--version-100-beta0)
+  - [Unreleased](#unreleased)
+  - [🎉 Summary](#-summary)
+  - [💥 Breaking changes](#-breaking-changes)
+  - [📖 Changelog](#-changelog)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.1](#extension-geoplateforme-openlayers--version-100-beta1)
+  - [Unreleased](#unreleased-1)
+  - [🎉 Summary](#-summary-1)
+  - [💥 Breaking changes](#-breaking-changes-1)
+  - [📖 Changelog](#-changelog-1)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.2](#extension-geoplateforme-openlayers--version-100-beta2)
+  - [Unreleased](#unreleased-2)
+  - [🎉 Summary](#-summary-2)
+  - [💥 Breaking changes](#-breaking-changes-2)
+  - [📖 Changelog](#-changelog-2)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.3](#extension-geoplateforme-openlayers--version-100-beta3)
+  - [Unreleased](#unreleased-3)
+  - [🎉 Summary](#-summary-3)
+  - [💥 Breaking changes](#-breaking-changes-3)
+  - [📖 Changelog](#-changelog-3)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.4](#extension-geoplateforme-openlayers--version-100-beta4)
+  - [Unreleased](#unreleased-4)
+  - [🎉 Summary](#-summary-4)
+  - [💥 Breaking changes](#-breaking-changes-4)
+  - [📖 Changelog](#-changelog-4)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.5](#extension-geoplateforme-openlayers--version-100-beta5)
+  - [Unreleased](#unreleased-5)
+  - [🎉 Summary](#-summary-5)
+  - [💥 Breaking changes](#-breaking-changes-5)
+  - [📖 Changelog](#-changelog-5)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.6](#extension-geoplateforme-openlayers--version-100-beta6)
+  - [Unreleased](#unreleased-6)
+  - [🎉 Summary](#-summary-6)
+  - [💥 Breaking changes](#-breaking-changes-6)
+  - [📖 Changelog](#-changelog-6)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.7](#extension-geoplateforme-openlayers--version-100-beta7)
+  - [Unreleased](#unreleased-7)
+  - [🎉 Summary](#-summary-7)
+  - [💥 Breaking changes](#-breaking-changes-7)
+  - [📖 Changelog](#-changelog-7)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.8](#extension-geoplateforme-openlayers--version-100-beta8)
+  - [Unreleased](#unreleased-8)
+  - [🎉 Summary](#-summary-8)
+  - [💥 Breaking changes](#-breaking-changes-8)
+  - [📖 Changelog](#-changelog-8)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.9](#extension-geoplateforme-openlayers--version-100-beta9)
+  - [Unreleased](#unreleased-9)
+  - [🎉 Summary](#-summary-9)
+  - [💥 Breaking changes](#-breaking-changes-9)
+  - [📖 Changelog](#-changelog-9)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.10](#extension-geoplateforme-openlayers--version-100-beta10)
+  - [Unreleased](#unreleased-10)
+  - [🎉 Summary](#-summary-10)
+  - [💥 Breaking changes](#-breaking-changes-10)
+  - [📖 Changelog](#-changelog-10)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.12](#extension-geoplateforme-openlayers--version-100-beta12)
+  - [Unreleased](#unreleased-11)
+  - [🎉 Summary](#-summary-11)
+  - [💥 Breaking changes](#-breaking-changes-11)
+  - [📖 Changelog](#-changelog-11)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.13](#extension-geoplateforme-openlayers--version-100-beta13)
+  - [Unreleased](#unreleased-12)
+  - [🎉 Summary](#-summary-12)
+  - [💥 Breaking changes](#-breaking-changes-12)
+  - [📖 Changelog](#-changelog-12)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.14](#extension-geoplateforme-openlayers--version-100-beta14)
+  - [Unreleased](#unreleased-13)
+  - [🎉 Summary](#-summary-13)
+  - [💥 Breaking changes](#-breaking-changes-13)
+  - [📖 Changelog](#-changelog-13)
+- [Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.16](#extension-geoplateforme-openlayers--version-100-beta16)
+  - [Unreleased](#unreleased-14)
+  - [🎉 Summary](#-summary-14)
+  - [💥 Breaking changes](#-breaking-changes-14)
+  - [📖 Changelog](#-changelog-14)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -804,6 +808,47 @@ Ajout d'une fonctionnalité de partage sur Panoramax, changement de comportement
   - LayerImport : fixe la hauteur du contenu dans certains cas (#575)
   - GFI : empêche que l’ouverture de l’accordéon déplace le site en entier (#580)
   - MousePosition : fixe sur le focus pour l'edition des coordonnées type DMS (#583)
+
+* 🔒 [Security]
+
+---
+## Extension Geoplateforme OpenLayers, 🔖 version 1.0.0-beta.16
+
+2026-10-14
+> 🚀 Release Extension Geoplateforme openlayers
+
+### Unreleased
+
+<https://github.com/IGNF/geopf-extensions-openlayers/compare/1.0.0-beta.16...HEAD>
+
+### 🎉 Summary
+
+Amelioration de l'UX/UI et de la gestion des erreurs du widget d'import, mise à jour de la documentation du projet, changement de comportement de l'affichage des résultats de getFeatureInfo, et corrections/robustification de certaines parties du code du Cartalogue, LayerSwitcher et barre de recherche.
+
+### 💥 Breaking changes
+
+### 📖 Changelog
+
+* ✨ [Added]
+
+  - Catalog : ajout de l’option `producer` pour afficher/masquer le nom du producteur d’une couche (#600)
+  - LayerImport : affichage de messages d'erreurs en cas d'import invalide (#598)
+
+* 🔨 [Changed]
+
+  - Documentation : mise à jour de la documentation opensource du projet (#595)
+  - GetFeatureInfo : ouverture par défaut des items (#605)
+
+* 🔥 [Deprecated]
+
+* 🔥 [Removed]
+
+* 🐛 [Fixed]
+
+  - Drawing / Measures : sur Safari, le clic ne permettait pas de tracer et le double-clic sélectionnait le texte de l'infobulle ("Double-cliquer pour terminer", mesures) au lieu de terminer la saisie (#574)
+  - LayerSwitcher : les écouteurs d’événements de chaque couche sont bien supprimés au retrait de la couche ou du contrôle (#596)
+  - Catalog : ne plante pas si un layer n’a pas de description (#597)
+  - Search : utilisation du bon paramètre ("postcode") en paramètre de requete geocodage pour le code postal (#604)
 
 * 🔒 [Security]
 
