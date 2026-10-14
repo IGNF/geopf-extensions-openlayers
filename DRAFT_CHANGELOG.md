@@ -9,33 +9,21 @@ __DATE__
 
 ### 🎉 Summary
 
-Amelioration de l'UX/UI et de la gestion des erreurs du widget d'import, mise à jour de la documentation du projet, changement de comportement de l'affichage des résultats de getFeatureInfo, et corrections/robustification de certaines parties du code du Cartalogue, LayerSwitcher et barre de recherche.
-
 ### 💥 Breaking changes
 
 ### 📖 Changelog
 
 * ✨ [Added]
 
-  - Catalog : ajout de l’option `producer` pour afficher/masquer le nom du producteur d’une couche (#600)
-  - LayerImport : affichage de messages d'erreurs en cas d'import invalide (#598)
-
 * 🔨 [Changed]
-
-  - Documentation : mise à jour de la documentation opensource du projet (#595)
-  - GetFeatureInfo : ouverture par défaut des items (#605)
 
 * 🔥 [Deprecated]
 
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
-
-  - Drawing / Measures : sur Safari, le clic ne permettait pas de tracer et le double-clic sélectionnait le texte de l'infobulle ("Double-cliquer pour terminer", mesures) au lieu de terminer la saisie (#574)
-  - LayerSwitcher : les écouteurs d’événements de chaque couche sont bien supprimés au retrait de la couche ou du contrôle (#596)
-  - Catalog : ne plante pas si un layer n’a pas de description (#597)
-  - Search : utilisation du bon paramètre ("postcode") en paramètre de requete geocodage pour le code postal (#604)
-
+  
 * 🔒 [Security]
+
 
 ---
