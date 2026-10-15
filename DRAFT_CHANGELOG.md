@@ -20,6 +20,7 @@ __DATE__
 * 🔨 [Changed]
 
   - Panoramax : migration vers `@panoramax/web-viewer` 5.3.1 (`peerDependency` `^5.3.1`) ; le viewer n'est plus fourni en script autonome avec feuille de style séparée, voir `doc/NOTE-PANORAMAX.md` (#602)
+  - ControlList : modification du aria-label "Afficher tout" en "Afficher tous les outils" (#609)
 
 * 🔥 [Deprecated]
 
