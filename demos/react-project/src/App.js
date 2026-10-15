@@ -9,6 +9,8 @@ import ScaleLine from 'ol/control/ScaleLine';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 
+import "@panoramax/web-viewer";
+
 import 'ol/ol.css';
 import "@gouvfr/dsfr/dist/dsfr.css";
 import "@gouvfr/dsfr/dist/utility/icons/icons.css";
@@ -31,6 +33,7 @@ import {
   LayerImport,
   LayerSwitcher,
   Legends,
+  Panoramax,
   ReverseGeocode,
   Route,
   SearchEngine,
@@ -94,6 +97,19 @@ function App() {
     });
     map.addControl(legends);
   
+    var panoramax = new Panoramax({
+      collapsed: true,
+      panel: true,
+      position: "bottom-left",
+      background: {
+        active: false
+      },
+      visualizationWindow: {
+        size: "fullscreen-map"
+      }
+    });
+    map.addControl(panoramax);
+
     var catalog = new Catalog({
           position: "top-left",
           categories : [
