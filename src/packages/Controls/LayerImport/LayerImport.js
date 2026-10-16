@@ -603,6 +603,10 @@ class LayerImport extends Control {
         this._getCapResponseWMTSLayers = [];
         /** @private */
         this._getCapResultsCount = 0;
+        /** @private */
+        this._getCapPrivateGeoPlateforme = false;
+        /** @private */
+        this._getCapPrivateGeoPlateformeApiKey = null;
 
         // ################################################################## //
         // ########################### MapBox ############################### //
@@ -2296,6 +2300,8 @@ class LayerImport extends Control {
         }
         logger.log("url : ", url);
 
+        this._setGetCapPrivateGeoPlateformeAccess(url);
+
         // Info : on ajoute des paramètres uniquement si l'utilisateur n'en a pas déjà saisi (on vérifie la position du caractère "?")
         var questionMarkIndex = url.indexOf("?");
         if (questionMarkIndex < 0) {
@@ -2338,6 +2344,74 @@ class LayerImport extends Control {
                 context._showImportError("Le service n'a pas répondu (vérifiez l'URL ou le proxy).");
             }
         });
+    }
+
+    /**
+     * Détecte si l'URL de GetCapabilities correspond a un flux prive GeoPlateforme
+     * et memorise l'apiKey associee pour reutilisation lors des requetes de couches.
+     * Si l'URL est relative, on la resout par rapport a l'URL de la page courante.
+     *
+     * @param {String} url - service url entered by user
+     * @private
+     */
+    _setGetCapPrivateGeoPlateformeAccess (url) {
+        this._getCapPrivateGeoPlateforme = false;
+        this._getCapPrivateGeoPlateformeApiKey = null;
+
+        if (!url || typeof url !== "string") {
+            return;
+        }
+
+        try {
+            var baseUrl = "https://data.geopf.fr/";
+            if (typeof window !== "undefined" && window.location && window.location.href) {
+                baseUrl = window.location.href;
+            }
+            var parsedUrl = new URL(url, baseUrl);
+            var apiKey = parsedUrl.searchParams.get("apikey");
+            var isPrivateGeoPlateforme = parsedUrl.hostname === "data.geopf.fr"
+                && parsedUrl.pathname.indexOf("/private/") === 0;
+
+            if (isPrivateGeoPlateforme && apiKey) {
+                this._getCapPrivateGeoPlateforme = true;
+                this._getCapPrivateGeoPlateformeApiKey = apiKey;
+                logger.info("[ol.control.LayerImport] GeoPlateforme private service detected with apiKey", parsedUrl.toString());
+                return;
+            }
+
+            if (!isPrivateGeoPlateforme) {
+                logger.info("[ol.control.LayerImport] service url is not detected as a GeoPlateforme private service", parsedUrl.toString());
+                return;
+            }
+
+            logger.warn("[ol.control.LayerImport] GeoPlateforme private service detected without apiKey", parsedUrl.toString());
+        } catch (e) {
+            logger.warn("[ol.control.LayerImport] unable to parse service url for GeoPlateforme private access detection", url, e);
+        }
+    }
+
+    /**
+     * Ajoute l'apiKey memorisee sur l'URL cible d'une requete de couche.
+     *
+     * @param {String} url - target service url
+     * @returns {String} url - url completed with apikey when needed
+     * @private
+     */
+    _appendPrivateGeoPlateformeApiKeyToUrl (url) {
+        if (!this._getCapPrivateGeoPlateforme || !this._getCapPrivateGeoPlateformeApiKey || !url) {
+            return url;
+        }
+
+        try {
+            // Cas nominal : on parse l'URL pour injecter ou remplacer proprement le parametre apikey.
+            var parsedUrl = new URL(url);
+            parsedUrl.searchParams.set("apikey", this._getCapPrivateGeoPlateformeApiKey);
+            return parsedUrl.toString();
+        } catch (e) {
+            // Repli : si l'URL n'est pas parsable, on concatene simplement le parametre a la chaine.
+            var separator = url.indexOf("?") === -1 ? "?" : "&";
+            return url + separator + "apikey=" + encodeURIComponent(this._getCapPrivateGeoPlateformeApiKey);
+        }
     }
 
     /**
@@ -2665,7 +2739,8 @@ class LayerImport extends Control {
                 wmsSourceOptions.url = this._getCapRequestUrl;
             }
         }
-        layerInfo.Url = getMapUrl || wmsSourceOptions.url;
+        wmsSourceOptions.url = this._appendPrivateGeoPlateformeApiKeyToUrl(wmsSourceOptions.url);
+        layerInfo.Url = wmsSourceOptions.url;
 
         wmsSourceOptions.params = {};
         if (layerInfo.Name) {
@@ -2675,6 +2750,9 @@ class LayerImport extends Control {
             return;
         }
         wmsSourceOptions.params["SERVICE"] = "WMS";
+        if (this._getCapPrivateGeoPlateforme && this._getCapPrivateGeoPlateformeApiKey) {
+            wmsSourceOptions.params["apikey"] = this._getCapPrivateGeoPlateformeApiKey;
+        }
         if (this._getCapResponseWMS.version) {
             wmsSourceOptions.params["VERSION"] = this._getCapResponseWMS.version;
         }
@@ -3029,7 +3107,8 @@ class LayerImport extends Control {
                 wmtsSourceOptions.url = this._getCapRequestUrl;
             }
         }
-        layerInfo.Url = getMapUrl || wmtsSourceOptions.url;
+        wmtsSourceOptions.url = this._appendPrivateGeoPlateformeApiKeyToUrl(wmtsSourceOptions.url);
+        layerInfo.Url = wmtsSourceOptions.url;
 
         // Récupération des informations de la pyramide (tileGrid information) : matrixIds, resolutions, origin et projection
         var tmsOptions = this._getTMSParams(layerInfo);
@@ -3538,6 +3617,8 @@ class LayerImport extends Control {
         this._getCapResponseWMTS = null;
         this._getCapResponseWMSLayers = null;
         this._getCapResponseWMTSLayers = null;
+        this._getCapPrivateGeoPlateforme = false;
+        this._getCapPrivateGeoPlateformeApiKey = null;
         if (this._getCapResultsListContainer) {
             while (this._getCapResultsListContainer.firstChild) {
                 this._getCapResultsListContainer.removeChild(this._getCapResultsListContainer.firstChild);
