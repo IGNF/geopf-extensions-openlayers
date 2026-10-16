@@ -61,6 +61,7 @@
     "lit": "^3.2.1",
     "loglevel": "^1.9.1",
     "marked": "^16.2.1",
+    "minisearch": "^7.2.0",
     "ol": "^10.8.0",
     "ol-contextmenu": "^5.5.0",
     "ol-mapbox-style": "^13.4.0",
