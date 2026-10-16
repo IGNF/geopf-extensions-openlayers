@@ -32,9 +32,71 @@ import Topics from "./topics.json";
 import { marked as Marked } from "marked";
 
 import Clusterize from "clusterize.js";
+import MiniSearch from "minisearch";
 const Test = Clusterize.default;
 
 var logger = Logger.getLogger("widget");
+
+/**
+ * Convertit une valeur de configuration (chaîne, tableau, objet) en texte.
+ * @param {*} value - Valeur à convertir.
+ * @returns {String} Texte indexable.
+ * @private
+ */
+const toSearchText = (value) => {
+    if (value == null) {
+        return "";
+    }
+    if (Array.isArray(value)) {
+        return value.flat(Infinity).map(toSearchText).filter(Boolean).join(" ");
+    }
+    if (typeof value === "object") {
+        // ex. producer_urls : [{ name, url }]
+        return toSearchText(value.name ?? value.title ?? "");
+    }
+    return String(value);
+};
+
+/**
+ * Extrait le texte d'un fragment HTML sans charger de ressources (document inerte).
+ * @param {String} html - HTML à convertir.
+ * @returns {String} Texte brut.
+ * @private
+ */
+const htmlToText = (html) => {
+    return new DOMParser().parseFromString(html, "text/html").body.textContent || "";
+};
+
+/**
+ * Trie les lettres d'une chaîne pour obtenir une signature indépendante de leur ordre.
+ * Exemple : "paris" => "aiprs", "prais" => "aiprs", etc.
+ * @param {String} value - Chaîne à convertir en signature.
+ * @returns {String} Lettres triées de la chaîne.
+ * @private
+ */
+const letterSignature = (value) => [...value].sort().join("");
+
+/**
+ * Vérifie si le mot contient une séquence de lettres consécutives
+ * composées exactement des mêmes lettres que la requête, quel que soit leur ordre.
+ * Les requêtes de moins de quatre lettres ne sont pas considérées.
+ * @param {String} query - Terme recherché.
+ * @param {String} word - Mot dans lequel chercher.
+ * @returns {Boolean} Vrai si une séquence de lettres consécutives correspond à la signature du terme.
+ * @private
+ */
+const matchesAnagramSequence = (query, word) => {
+    if (query.length < 4 || query.length > word.length) {
+        return false;
+    }
+    const signature = letterSignature(query);
+    for (let start = 0; start <= word.length - query.length; start++) {
+        if (letterSignature(word.slice(start, start + query.length)) === signature) {
+            return true;
+        }
+    }
+    return false;
+};
 
 /**
  * @typedef {Object} CatalogOptions - Liste des options du widget Catalog
@@ -50,7 +112,9 @@ var logger = Logger.getLogger("widget");
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
  * @property {string} [search.label="Rechercher une donnée"] - Label du champ de recherche.
- * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
+ * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche (champs des couches, notation pointée acceptée : "serviceParams.id").
+ * @property {Array<string>} [search.fuzzyFields=["name","title"]] - Champs où les fautes de frappe et permutations de lettres sont tolérées. Les champs doivent aussi figurer dans search.criteria.
+ * @property {Object<string, number>} [search.boost={title:3,name:2}] - Poids de chaque champ dans le classement des résultats.
  * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
  * @property {Array<Categories>} [categories] - Liste des catégories et sous-catégories.
  * @property {Object} [configuration] - Configuration des sources de données.
@@ -609,7 +673,15 @@ class Catalog extends Control {
                     "name",
                     "title",
                     "description"
-                ]
+                ],
+                fuzzyFields : [
+                    "name",
+                    "title"
+                ],
+                boost : {
+                    title : 3,
+                    name : 2
+                }
             },
             addToMap : true,
             categories : [
@@ -1211,8 +1283,8 @@ class Catalog extends Control {
      */
     createCatalogContentEntries (data) {
         var container = this.contentCatalogContainer;
-        this._searchTextIndex = null;
-        this._prepareSearchTextIndex();
+        // construction de l'index de recherche
+        this._buildSearchIndex();
         this._searchFragmentIndex = new WeakMap();
 
         var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories, this.options.tabHeightAuto);
@@ -1668,29 +1740,166 @@ class Catalog extends Control {
     }
 
     /**
-     * Prépare et met en cache le texte de chaque couche selon les critères de recherche configurés.
-     * Ce cache accélère la recherche et le filtrage des couches à partir de la saisie utilisateur.
-     * Exemple : criteria = ["name", "description"] donne "nom de la couche description de la couche".
+     * Extrait le texte indexable d'un champ de couche (notation pointée acceptée).
+     * La description est du HTML (cf. checkConfigLayers) : seul son texte est indexé.
+     * @param {Object} layer - Couche.
+     * @param {String} field - Nom du champ.
+     * @returns {String} Texte indexable.
      * @private
      */
-    _prepareSearchTextIndex () {
-        const criteria = this.options.search.criteria;
-        const signature = JSON.stringify(criteria);
-        if (!this._searchTextIndex || this._searchCriteria !== signature) {
-            this._searchTextIndex = new WeakMap();
-            this._searchCriteria = signature;
+    _extractSearchText (layer, field) {
+        const value = field.split(".").reduce((obj, key) => (obj == null ? undefined : obj[key]), layer);
+        if (field === "description" && typeof value === "string") {
+            return htmlToText(value);
         }
-        for (const layer of Object.values(this.layersList)) {
-            if (!this._searchTextIndex.has(layer)) {
-                const words = criteria.map((criterion) => {
-                    const value = layer[criterion];
-                    return this._normalizeSearchText(Array.isArray(value)
-                        ? value.flat(Infinity).filter(item => item != null).join(" ")
-                        : value);
-                }).join(" ");
-                this._searchTextIndex.set(layer, words);
+        return toSearchText(value);
+    }
+
+    /**
+     * Construit l'index de recherche (MiniSearch) selon les critères configurés.
+     * Les champs tolérants (fautes de frappe et permutations de lettres) sont déclarés
+     * dans `search.fuzzyFields` et doivent aussi figurer dans `search.criteria`.
+     * @private
+     */
+    _buildSearchIndex () {
+        const criteria = this.options.search.criteria || [];
+        const layers = Object.values(this.layersList || {});
+
+        // extraction du texte indexable de chaque critère, par clef de couche
+        const texts = new globalThis.Map();
+        for (const layer of layers) {
+            const entry = {};
+            for (const field of criteria) {
+                entry[field] = this._extractSearchText(layer, field);
+            }
+            texts.set(layer.key, entry);
+        }
+        const indexedLayers = layers.filter(layer => layer.key !== undefined);
+
+        // champs tolérants, limités aux critères de recherche
+        const fuzzyFields = Array.isArray(this.options.search.fuzzyFields)
+            ? this.options.search.fuzzyFields.filter(field => criteria.includes(field))
+            : [];
+
+        // découpage en termes : découpage MiniSearch (espaces et ponctuation) puis normalisation,
+        // partagé par l'indexation, la recherche et la construction du vocabulaire
+        const tokenize = MiniSearch.getDefault("tokenize");
+        const processTerm = (term) => this._normalizeSearchText(term).split(" ").filter(Boolean);
+
+        // vocabulaire des champs tolérants : mots candidats pour la recherche par permutation de lettres
+        const vocabulary = new Set();
+        for (const layer of indexedLayers) {
+            const entry = texts.get(layer.key);
+            for (const field of fuzzyFields) {
+                tokenize(entry[field]).flatMap(processTerm).forEach(term => vocabulary.add(term));
             }
         }
+
+        // index MiniSearch de toutes les couches identifiées
+        this._searchIndex = new MiniSearch({
+            idField : "key",
+            fields : criteria,
+            extractField : (layer, field) => (field === "key") ? layer.key : texts.get(layer.key)[field],
+            processTerm : processTerm
+        });
+        this._searchIndex.addAll(indexedLayers);
+
+        // état utilisé par la recherche approchée (champs tolérants, vocabulaire et cache des permutations)
+        this._searchFuzzyFields = fuzzyFields;
+        this._searchVocabulary = vocabulary;
+        this._searchFuzzyCache = new globalThis.Map();
+
+        // texte complet conservé pour la recherche par sous-chaîne (ex. "ign" dans "planignv2")
+        this._searchTexts = new globalThis.Map(Array.from(texts, ([key, entry]) => {
+            return [key, this._normalizeSearchText(Object.values(entry).join(" "))];
+        }));
+    }
+
+    /**
+     * Retourne les mots contenant une séquence contiguë composée des mêmes lettres que le terme, quel que soit leur ordre.
+     * Met le résultat en cache pour réutiliser cette liste lors des recherches suivantes avec le même terme.
+     * @param {String} term - Mot saisi (normalisé).
+     * @returns {Array<String>} Mots proches.
+     * @private
+     */
+    _expandFuzzyTerm (term) {
+        if (this._searchFuzzyCache.has(term)) {
+            return this._searchFuzzyCache.get(term);
+        }
+        const words = [];
+        for (const word of this._searchVocabulary) {
+            if (matchesAnagramSequence(term, word)) {
+                words.push(word);
+            }
+        }
+        this._searchFuzzyCache.set(term, words);
+        return words;
+    }
+
+    /**
+     * Recherche les couches correspondant à la saisie.
+     * - Chaque mot saisi doit être trouvé (ET entre les termes)
+     * - Pour chaque terme, on recherche :
+     *   - en début de mot, sur tous les critères,
+     *   - ou avec une faute de frappe (termes de 5 lettres ou plus), sur les champs tolérants (fuzzy fields),
+     *     ex. "marseile" ou "pariss",
+     *   - ou avec les mêmes lettres réordonnées dans une séquence de lettres, sur les champs tolérants (fuzzy fields),
+     *   - ou par sous-chaîne, sur tous les critères (ex. "ign" dans "planignv2", "photo" dans "orthophoto").
+     * - Les nombres doivent correspondre exactement (ex. 25 ≠ 250).
+     * @param {String} value - Saisie utilisateur.
+     * @returns {globalThis.Map<String, Number>} Score par clef de couche.
+     * @private
+     */
+    _searchLayers (value) {
+        const scores = new globalThis.Map();
+        const query = this._normalizeSearchText(value);
+        if (!this._searchIndex || !query) {
+            return scores;
+        }
+        const criteria = this.options.search.criteria;
+        const fuzzyFields = this._searchFuzzyFields;
+
+        // poids des champs : une correspondance approchée pèse moitié moins qu'une correspondance exacte
+        const boost = Object.fromEntries(Object.entries(this.options.search.boost || {})
+            .filter(([field]) => criteria.includes(field)));
+        const fuzzyBoost = Object.fromEntries(fuzzyFields.map(field => [field, (boost[field] || 1) * 0.5]));
+
+        // une requête par terme saisi, chacune combinant (OU) plusieurs façons de le trouver
+        const queries = query.split(" ").map((term) => {
+            const isNumber = /^\d+$/.test(term);
+
+            // correspondance exacte, ou en début de mot (prefix activé explicitement, sauf pour les nombres)
+            const subqueries = [{ queries : [term], fields : criteria, prefix : !isNumber }];
+
+            // correspondances approchées, sur les champs tolérants uniquement :
+            // - une faute de frappe (insertion, suppression ou substitution), à partir de 5 lettres,
+            //   ex. "marseile" ou "pariss" (MiniSearch compte une inversion de lettres comme 2 fautes),
+            // - les mêmes lettres dans un autre ordre, à partir de 4 lettres, ex. "prais"
+            if (!isNumber && fuzzyFields.length) {
+                const approximate = [
+                    ...(term.length >= 5 ? [{ queries : [term], fuzzy : 1 }] : []),
+                    ...(term.length >= 4 ? this._expandFuzzyTerm(term) : [])
+                ];
+                if (approximate.length) {
+                    subqueries.push({ combineWith : "OR", queries : approximate, fields : fuzzyFields, boost : fuzzyBoost });
+                }
+            }
+            return { combineWith : "OR", queries : subqueries };
+        });
+
+        // exécution de la recherche : chaque terme saisi doit être trouvé (ET)
+        const results = this._searchIndex.search({ combineWith : "AND", queries : queries }, { boost : boost });
+        for (const result of results) {
+            scores.set(result.id, result.score);
+        }
+
+        // la recherche par sous-chaîne d'origine reste valable (sans score)
+        for (const [key, text] of this._searchTexts) {
+            if (!scores.has(key) && text.includes(query)) {
+                scores.set(key, 0);
+            }
+        }
+        return scores;
     }
 
     /**
@@ -1702,7 +1911,7 @@ class Catalog extends Control {
      * L'index est reconstruit à chaque recherche pour intégrer les copies montées
      * ou supprimées ; les références des fragments sont mises en cache.
      * Cela évite de rechercher chaque couche dans chaque catégorie et fragment.
-     * @returns {globalThis.Map<string, Array<HTMLElement>>} Éléments regroupés par nom de couche et service.
+     * @returns {globalThis.Map<String, Array<HTMLElement>>} Éléments regroupés par nom de couche et service.
      * @private
      */
     _indexSearchElements () {
@@ -1744,13 +1953,13 @@ class Catalog extends Control {
         // on rend invisible les couches qui ne respecte pas la valeur 
         // selon le critère de recherche
         
-        this._prepareSearchTextIndex();
-        const normalizedValue = this._normalizeSearchText(value);
+        const empty = this._normalizeSearchText(value) === "";
+        const matches = empty ? null : this._searchLayers(value);
         const elements = this._indexSearchElements();
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
-                layer.hidden = !this._searchTextIndex.get(layer).includes(normalizedValue);
+                layer.hidden = !empty && !matches.has(layer.key);
                 // on met à jour pour chaque couche la visibilité
                 this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden, elements);
             }
