@@ -114,7 +114,9 @@ class SourceWMS extends TileWMSSource {
                 STYLES : wmsParams.styles,
                 FORMAT : wmsParams.format
             },
-            crossOrigin : "anonymous"
+            crossOrigin : "anonymous",
+            // multiWorld : répétition des tuiles (surchargeable via olParams)
+            wrapX : true
             // ,
             // attributions : [
             //     new ol.Attribution({

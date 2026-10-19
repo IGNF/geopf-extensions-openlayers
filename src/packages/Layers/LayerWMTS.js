@@ -314,16 +314,22 @@ class LayerWMTS extends TileLayer {
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
         if (wmtsSource.getLayer() !== undefined) {
             if (layerCfg.globalConstraint) {
-                /* INFO : désactivation temporaire de l'étendue, car certaines étendues (trop grandes ?)
-                provoquent quelques bugs d'affichage (zoom > 16 par exemple) */
-                // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj de la couche
-                var geobbox = [
-                    layerCfg.globalConstraint.bbox.left,
-                    layerCfg.globalConstraint.bbox.bottom,
-                    layerCfg.globalConstraint.bbox.right,
-                    layerCfg.globalConstraint.bbox.top
-                ];
-                layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", layerCfg.globalConstraint.projection || "EPSG:3857");
+                // multiWorld / wrapX : pas d'emprise catalogue (sinon couches absentes hors monde 0)
+                var skipCatalogueExtent = options.noConstraint === true
+                    || layerCfg.globalConstraint.noConstraint === true
+                    || (olSourceParams && olSourceParams.wrapX === true)
+                    || (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null);
+
+                if (!skipCatalogueExtent) {
+                    // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj de la couche
+                    var geobbox = [
+                        layerCfg.globalConstraint.bbox.left,
+                        layerCfg.globalConstraint.bbox.bottom,
+                        layerCfg.globalConstraint.bbox.right,
+                        layerCfg.globalConstraint.bbox.top
+                    ];
+                    layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", layerCfg.globalConstraint.projection || "EPSG:3857");
+                }
                 
                 // récupération des résolutions min et max
                 var p;
@@ -359,6 +365,9 @@ class LayerWMTS extends TileLayer {
         
         // récupération des autres paramètres passés par l'utilisateur
         Utils.mergeParams(layerTileOptions, options.olParams);
+        if (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null) {
+            delete layerTileOptions.extent;
+        }
         
         // création d'une ol.layer.Tile avec les options récupérées ci-dessus.
         super(layerTileOptions);
