@@ -126,22 +126,42 @@ const flatStyleTransformers = {
 // Libellés des boutons pour les interactions par défaut
 const defaultInteractionsLabel = {
     "Point" : "Point",
+    "MultiPoint" : "Point (multiple)",
     "LineString" : "Ligne",
+    "MultiLineString" : "Ligne (multiple)",
     "Polygon" : "Surface",
+    "MultiPolygon" : "Surface (multiple)",
 };
 
 // Icônes DSFR des interactions par défaut
-const dsfrDefaultIcons = {
+const dsfrIcons = {
     "Point" : "fr-icon-map-pin-2-line",
     "LineString" : "fr-icon-ign-dessiner-trace-line",
     "Polygon" : "fr-icon-ign-shape-3-fill",
 };
+const dsfrDefaultIcons = {
+    "Point" : dsfrIcons.Point,
+    "MultiPoint" : dsfrIcons.Point,
+    "LineString" : dsfrIcons.LineString,
+    "MultiLineString" : dsfrIcons.LineString,
+    "Polygon" : dsfrIcons.Polygon,
+    "MultiPolygon" : dsfrIcons.Polygon,
+};
 
 // Icônes non-DSFR des interactions par défaut
-const defaultIcons = {
+const icons = {
     "Point" : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.8995L16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995ZM12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM12 13C13.1046 13 14 12.1046 14 11C14 9.89543 13.1046 9 12 9C10.8954 9 10 9.89543 10 11C10 12.1046 10.8954 13 12 13ZM12 15C9.79086 15 8 13.2091 8 11C8 8.79086 9.79086 7 12 7C14.2091 7 16 8.79086 16 11C16 13.2091 14.2091 15 12 15Z"></path></svg>`,
     "LineString" : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 11H4V13H2V11ZM6 11H18V13H6V11ZM20 11H22V13H20V11Z"></path></svg>`,
     "Polygon" : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7.82929 20C7.41746 21.1652 6.30622 22 5 22C3.34315 22 2 20.6569 2 19C2 17.6938 2.83481 16.5825 4 16.1707V7.82929C2.83481 7.41746 2 6.30622 2 5C2 3.34315 3.34315 2 5 2C6.30622 2 7.41746 2.83481 7.82929 4H16.1707C16.5825 2.83481 17.6938 2 19 2C20.6569 2 22 3.34315 22 5C22 6.30622 21.1652 7.41746 20 7.82929V16.1707C21.1652 16.5825 22 17.6938 22 19C22 20.6569 20.6569 22 19 22C17.6938 22 16.5825 21.1652 16.1707 20H7.82929ZM7.82929 18H16.1707C16.472 17.1476 17.1476 16.472 18 16.1707V7.82929C17.1476 7.52801 16.472 6.85241 16.1707 6H7.82929C7.52801 6.85241 6.85241 7.52801 6 7.82929V16.1707C6.85241 16.472 7.52801 17.1476 7.82929 18ZM5 6C5.55228 6 6 5.55228 6 5C6 4.44772 5.55228 4 5 4C4.44772 4 4 4.44772 4 5C4 5.55228 4.44772 6 5 6ZM19 6C19.5523 6 20 5.55228 20 5C20 4.44772 19.5523 4 19 4C18.4477 4 18 4.44772 18 5C18 5.55228 18.4477 6 19 6ZM19 20C19.5523 20 20 19.5523 20 19C20 18.4477 19.5523 18 19 18C18.4477 18 18 18.4477 18 19C18 19.5523 18.4477 20 19 20ZM5 20C5.55228 20 6 19.5523 6 19C6 18.4477 5.55228 18 5 18C4.44772 18 4 18.4477 4 19C4 19.5523 4.44772 20 5 20Z"></path></svg>`,
+};
+
+const defaultIcons = {
+    "Point" : icons.Point,
+    "MultiPoint" : icons.Point,
+    "LineString" : icons.LineString,
+    "MultiLineString" : icons.LineString,
+    "Polygon" : icons.Polygon,
+    "MultiPolygon" : icons.Polygon,
 };
 
 var logger = Logger.getLogger("draw");
@@ -656,7 +676,7 @@ class Draw extends ToggleContent {
 }
 
 export default Draw;
-export { dsfrDefaultIcons, defaultIcons };
+export { defaultInteractionsLabel, dsfrDefaultIcons, defaultIcons };
 
 // Expose Draw as ol.control.Draw (for a build bundle)
 if (window.ol && window.ol.control) {

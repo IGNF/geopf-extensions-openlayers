@@ -4,7 +4,7 @@ import FlatStyleForm from "./FlatStyleForm.js";
 import checkDsfr from "../Utils/CheckDsfr.js";
 import styleForm from "./styleForm.js";
 import labelForm from "./labelForm.js";
-import { defaultIcons, dsfrDefaultIcons } from "../Draw/Draw.js";
+import { defaultIcons, defaultInteractionsLabel, dsfrDefaultIcons } from "../Draw/Draw.js";
 import DefaultInput from "../Input/DefaultInput.js";
 
 /**
@@ -134,7 +134,7 @@ class StyleDialog extends Dialog {
                     const lastFeature = e.selected[0] || this.select.getFeatures().getArray()?.at?.(-1);
 
                     const geomType = lastFeature.getGeometry().getType();
-                    this.setDialogTitle(geomType);
+                    this.setDialogTitle(defaultInteractionsLabel[geomType] ?? geomType);
                     this.setIcon(this.icons[geomType]);
                     
                     this.show();
