@@ -55,6 +55,11 @@ div[id^=GPdrawingBasicPanel-] {
 
 .gpf-draw-linestring-tooltip {
   transform: translate(calc(100% + 35px), -14px);
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
 }
 
 .gpf-draw-linestring-tooltip::before {

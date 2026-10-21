@@ -46,6 +46,18 @@
     flex-direction: column;
 }
 
+.catalog-layer-title-producer {
+    margin: 0.28em 0;
+}
+
+.catalog-layer-producer {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    font-size: 0.6875rem !important; /* 11px car bcp de majuscules */
+}
+
 .catalog-collapse-show {
     position: absolute;
     right: 0;

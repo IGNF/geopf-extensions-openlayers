@@ -553,7 +553,7 @@ class IGNSearchService extends AbstractSearchService {
                     }
                 }
             }
-            filters.postalCode = location.postalCode ? location.postalCode : null;
+            filters.postcode = location.postalCode ? location.postalCode : null;
 
             // Retire chaque valeurs nulles
             for (const key in filters) {

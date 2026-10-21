@@ -587,3 +587,37 @@ input[type="checkbox"]:checked + .GPshowMoreOptions {
 .gpf-panel__body {
   overflow: auto;
 }
+
+/*******************************/
+/* selection de texte / carte  */
+/*******************************/
+/*
+ * Filet de sécurité si la feuille de style d'OpenLayers (ol/ol.css) n'est pas
+ * chargée par l'application hôte : sans `user-select: none` sur le viewport,
+ * un clic sur la carte démarre une sélection de texte. Safari émet alors un
+ * `pointercancel` et l'interaction de dessin ne reçoit jamais le `pointerup`
+ * (le tracé ne se fait pas), et le double-clic sélectionne le texte au lieu de
+ * terminer la saisie.
+ */
+.ol-viewport,
+.ol-unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* on rétablit la sélection là où l'utilisateur saisit du texte */
+.ol-selectable,
+.GPwidget input,
+.GPwidget textarea,
+.gpf-widget input,
+.gpf-widget textarea,
+[contenteditable]:not([contenteditable="false"]) {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}

@@ -1,8 +1,8 @@
 {
   "name": "geopf-extensions-openlayers",
   "description": "French Geoportal Extensions for OpenLayers libraries",
-  "version": "1.0.0-beta.15-490",
-  "date": "07/10/2026",
+  "version": "1.0.0-beta.16-490",
+  "date": "15/10/2026",
   "module": "src/index.js",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -44,7 +44,7 @@
   },
   "homepage": "https://github.com/IGNF/geopf-extensions-openlayers#readme",
   "peerDependencies": {
-    "@panoramax/web-viewer": "^4.4.0"
+    "@panoramax/web-viewer": "^5.3.1"
   },
   "dependencies": {
     "@gouvfr/dsfr": "1.14.4",
@@ -53,7 +53,7 @@
     "ajv-formats": "^3.0.1",
     "clusterize.js": "^1.0.0",
     "date-fns": "^4.1.0",
-    "doctoc": "^2.4.0",
+    "doctoc": "^2.5.0",
     "dompurify": "^3.4.5",
     "eventbusjs": "0.2.0",
     "geoportal-access-lib": "3.4.7",
@@ -99,7 +99,7 @@
     "string-template": "^1.0.0",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.10",
-    "typedoc": "^0.27.9",
+    "typedoc": "^0.28.0",
     "typedoc-plugin-rename-defaults": "^0.7.3",
     "url-loader": "^4.1.1",
     "webpack": "^5.91.0",
