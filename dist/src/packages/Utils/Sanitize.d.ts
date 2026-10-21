@@ -33,4 +33,20 @@ export function sanitizeHtml(input: string, options?: {
  * @returns {String}
  */
 export function sanitizeXmlText(input: string | number | undefined | null): string;
+/**
+ * Validate an imported link or image URL and encode it for display as HTML text.
+ * Relative URLs keep the same document base as DOM href/src assignments.
+ *
+ * @param {String|undefined|null} input - Imported URL.
+ * @returns {String|undefined|null} Validated HTTP(S) URL.
+ * @throws {Error} If the URL is invalid or uses an unsupported protocol.
+ */
+export function sanitizeUrl(input: string | undefined | null): string | undefined | null;
+/**
+ * Clean static or dynamic OpenLayers attributions while preserving their shape.
+ *
+ * @param {String|Array<String>|Function|undefined|null} input - Source attributions.
+ * @returns {String|Array<String>|Function|undefined|null} Sanitized attributions.
+ */
+export function sanitizeAttributions(input: string | Array<string> | Function | undefined | null): string | Array<string> | Function | undefined | null;
 //# sourceMappingURL=Sanitize.d.ts.map

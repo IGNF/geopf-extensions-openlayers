@@ -52,7 +52,7 @@ import Utils from "../../Utils/Helper";
 import Logger from "../../Utils/LoggerByDefault";
 import SelectorID from "../../Utils/SelectorID";
 import ProxyUtils from "../../Utils/ProxyUtils";
-import { sanitizeHtml, sanitizeXmlText } from "../../Utils/Sanitize";
+import { sanitizeHtml, sanitizeXmlText, sanitizeUrl, sanitizeAttributions } from "../../Utils/Sanitize";
 // DOM
 import LayerImportDOM from "./LayerImportDOM";
 import PanelDOM from "../PanelDOM";
@@ -1333,19 +1333,32 @@ class LayerImport extends Control {
                                         continue;
                                     }
                                     if (key === "quicklookUrl") {
-                                        _quicklookUrl = _glStyles.metadata[ns];
+                                        _quicklookUrl = sanitizeUrl(_glStyles.metadata[ns]);
                                         continue;
                                     }
                                     if (key === "legends") {
-                                        _legends = _glStyles.metadata[ns];
+                                        _legends = _glStyles.metadata[ns] && _glStyles.metadata[ns].map((legend) => ({
+                                            ...legend,
+                                            url : sanitizeUrl(legend.url),
+                                            maxScaleDenominator : typeof legend.maxScaleDenominator === "string" ? sanitizeXmlText(legend.maxScaleDenominator) : legend.maxScaleDenominator
+                                        }));
                                         continue;
                                     }
                                     if (key === "metadata") {
-                                        _metadata = _glStyles.metadata[ns];
+                                        _metadata = _glStyles.metadata[ns] && _glStyles.metadata[ns].map((metadata) => ({
+                                            ...metadata,
+                                            url : sanitizeUrl(metadata.url)
+                                        }));
                                         continue;
                                     }
                                     if (key === "originators") {
-                                        _originators = _glStyles.metadata[ns];
+                                        _originators = _glStyles.metadata[ns] && _glStyles.metadata[ns].map((originator) => ({
+                                            ...originator,
+                                            name : sanitizeXmlText(originator.name),
+                                            attribution : sanitizeHtml(originator.attribution),
+                                            url : sanitizeUrl(originator.url),
+                                            logo : sanitizeUrl(originator.logo)
+                                        }));
                                         continue;
                                     }
                                 }
@@ -1363,6 +1376,8 @@ class LayerImport extends Control {
                     }
                     // cas des multisources
                     _title = (_multiSources) ? _title + "(" + _glSourceId + ")" : _title;
+                    _title = sanitizeXmlText(_title);
+                    _description = sanitizeHtml(_description);
 
                     // source mapbox
                     var _glSource = _glSources[_glSourceId];
@@ -1408,7 +1423,7 @@ class LayerImport extends Control {
                                 featureClass : Feature
                             });
                             vectorSource = new VectorTileSource({
-                                attributions : _glSource.attribution,
+                                attributions : sanitizeAttributions(_glSource.attribution),
                                 format : vectorFormat,
                                 // INFO
                                 // on supprime la grille pour forcer l'utilisation par defaut des tuiles en 512
@@ -1476,7 +1491,7 @@ class LayerImport extends Control {
                                         }
                                     }
                                     vectorSource = new VectorTileSource({
-                                        attributions : vectorTileJson.getAttributions() || _tileJSONDoc.attribution,
+                                        attributions : sanitizeAttributions(vectorTileJson.getAttributions() || _tileJSONDoc.attribution),
                                         format : vectorFormat,
                                         // tileGrid : olCreateXYZTileGrid({
                                         //     extent : _glSource.bounds, // [minx, miny, maxx, maxy]
@@ -1513,7 +1528,7 @@ class LayerImport extends Control {
 
                         vectorFormat = new GeoJSONExtended();
                         vectorSource = new VectorTileSource({
-                            attributions : _glSource.attribution,
+                            attributions : sanitizeAttributions(_glSource.attribution),
                             format : vectorFormat,
                             url : _glData
                         });
@@ -1564,7 +1579,7 @@ class LayerImport extends Control {
                         styles : _glStyle,
                         layer : vectorLayer,
                         options : {
-                            title : layerName || _title,
+                            title : sanitizeXmlText(layerName) || _title,
                             description : _description,
                             quicklookUrl : _quicklookUrl,
                             metadata : _metadata,
@@ -1842,7 +1857,7 @@ class LayerImport extends Control {
             logger.trace(vectorSource);
 
             // ajout des informations pour le layerSwitcher (titre, description)
-            vectorSource._title = vectorSource._description = layerName;
+            vectorSource._title = vectorSource._description = sanitizeXmlText(layerName);
 
             vectorLayer = new VectorLayer({
                 source : vectorSource,
@@ -2020,7 +2035,7 @@ class LayerImport extends Control {
             }
 
             // ajout des informations pour le layerSwitcher (titre, description)
-            vectorSource._title = vectorSource._description = layerName;
+            vectorSource._title = vectorSource._description = sanitizeXmlText(layerName);
 
             vectorLayer = new VectorLayer({
                 source : vectorSource
@@ -2413,6 +2428,12 @@ class LayerImport extends Control {
                 this._getCapResponseWMTSLayers = layers;
 
                 for (var j = 0; j < layers.length; j++) {
+                    if (layers[j].Title !== undefined) {
+                        layers[j].Title = sanitizeXmlText(layers[j].Title);
+                    }
+                    if (layers[j].Abstract !== undefined) {
+                        layers[j].Abstract = sanitizeXmlText(layers[j].Abstract);
+                    }
                     // on vérifie que la projection de la couche WMTS est compatible avec celle de la carte
                     // (ie elle doit être connue par ol.proj)
                     projection = this._getWMTSLayerProjection(layers[j], getCapResponseWMTS);
@@ -2421,8 +2442,8 @@ class LayerImport extends Control {
                             // si la projection de la couche est connue par ol.proj,
                             // on ajoute chaque couche de la réponse dans la liste des couches accessibles
                             layerDescription = {
-                                content : sanitizeXmlText(layers[j].Title),
-                                title : sanitizeXmlText(layers[j].Abstract || layers[j].Title)
+                                content : layers[j].Title,
+                                title : layers[j].Abstract || layers[j].Title
                             };
                             if (this._getCapResultsListContainer) {
                                 this._addImportGetCapResultLayer(layerDescription, j, this._getCapResultsListContainer);
@@ -2537,6 +2558,17 @@ class LayerImport extends Control {
             }
         }
 
+        // Nettoyer les textes apres heritage, avant leur affichage et leur stockage pour le LayerSwitcher.
+        if (layerObj.Title !== undefined) {
+            layerObj.Title = sanitizeXmlText(layerObj.Title);
+        }
+        if (layerObj.Abstract !== undefined) {
+            layerObj.Abstract = sanitizeXmlText(layerObj.Abstract);
+        }
+        if (layerObj.Attribution && layerObj.Attribution.Title !== undefined) {
+            layerObj.Attribution.Title = sanitizeXmlText(layerObj.Attribution.Title);
+        }
+
         // 2. si on a d'autres couches <Layer> imbriquées, on descend d'un niveau, sinon on affiche la couche dans la liste des résultats
         if (layerObj.Layer) {
             if (Array.isArray(layerObj.Layer)) {
@@ -2576,8 +2608,8 @@ class LayerImport extends Control {
                 layerObj._projection = projection;
                 // on ajoute chaque couche de la réponse dans la liste des couches accessibles
                 layerDescription = {
-                    content : sanitizeXmlText(layerObj.Title),
-                    title : sanitizeXmlText(layerObj.Abstract || layerObj.Title)
+                    content : layerObj.Title,
+                    title : layerObj.Abstract || layerObj.Title
                 };
                 // FIXME beurk !?
                 var _isGoodContainer = layerObj._container;
@@ -2948,8 +2980,8 @@ class LayerImport extends Control {
             wmsSource._title = layerInfo.Title;
             wmsSource._description = layerInfo.Abstract ? layerInfo.Abstract : layerInfo.Title;
         } else {
-            wmsSource._title = layerInfo.Name;
-            wmsSource._description = layerInfo.Abstract ? layerInfo.Abstract : layerInfo.Name;
+            wmsSource._title = sanitizeXmlText(layerInfo.Name);
+            wmsSource._description = sanitizeXmlText(layerInfo.Abstract || layerInfo.Name);
         }
         // ajout de légende si on en a trouvé
         if (legend) {
@@ -3087,8 +3119,8 @@ class LayerImport extends Control {
             wmtsSource._title = layerInfo.Title;
             wmtsSource._description = layerInfo.Abstract ? layerInfo.Abstract : layerInfo.Title;
         } else {
-            wmtsSource._title = layerInfo.Identifier;
-            wmtsSource._description = layerInfo.Abstract ? layerInfo.Abstract : layerInfo.Identifier;
+            wmtsSource._title = sanitizeXmlText(layerInfo.Identifier);
+            wmtsSource._description = sanitizeXmlText(layerInfo.Abstract || layerInfo.Identifier);
         }
         // ajout d'une éventuelle légende
         if (legend) {
