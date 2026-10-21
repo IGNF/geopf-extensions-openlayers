@@ -9,6 +9,12 @@
         <script src="{{ baseurl }}/dist/modules/GpfExtOlLayerSwitcher.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawing.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawing.js"></script>
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.css" />
         <script src="{{ baseurl }}/dist/modules/GpfExtOlIsocurve.js"></script>
         <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlLayerImport.css" />
@@ -117,6 +123,14 @@
                   gutter : false
                 });
                 map.addControl(fullscreen);
+
+                const draw = new ol.control.Draw({
+                    position: "top-right",
+                    style: true,
+                    addToMap: true,
+                    gutter: false
+                })
+                map.addControl(draw);
 
                 var overview = new ol.control.GeoportalOverviewMap({
                   position : "bottom-left",

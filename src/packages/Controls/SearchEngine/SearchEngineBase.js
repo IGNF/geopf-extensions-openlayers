@@ -5,8 +5,62 @@ import Logger from "../../Utils/LoggerByDefault";
 import DefaultSearchService from "../../Services/DefaultSearchService";
 import Helper from "../../Utils/Helper";
 import { getExceptionParams, isException } from "./SearchEngineException";
+import AbstractSearchService from "../../Services/AbstractSearchService";
 
-// Voir les typedefs partagés dans ./typedefs.js (SearchEngineBaseOptions, SearchServiceOptions, ...)
+/**
+ * @typedef {Object} SearchServiceOptions
+ * @property {Boolean} [autocomplete] - Active/désactive l'autocomplétion côté service.
+ * @property {Object} [searchOptions] - Options passées au service de recherche.
+ * @property {Object} [searchOptions.serviceOptions] - Options spécifiques au service.
+ * @property {String[]} [searchOptions.serviceOptions.fields] - Liste de champs à demander au service.
+ */
+
+/**
+ * @typedef {Object} SearchEngineOptions
+ * @property {String} [label] - Libellé associé à l'input.
+ * @property {String} [hint] - Texte d'aide / placeholder.
+ * @property {SearchServiceOptions|Object} [searchService] - Configuration du service de recherche.
+ */
+
+/**
+ * Options pour le contrôle SearchEngineBase.
+ * @typedef {Object} SearchEngineBaseOptions
+ * @property {HTMLElement|String} [target] - Élément DOM ou sélecteur cible.
+ * @property {String} [title="Rechercher"] - Texte du titre du bouton.
+ * @property {String} [label=""] - Label affiché.
+ * @property {String} [hint=""] - Texte d'aide.
+ * @property {Boolean} [search=false] - Comportement en tant que barre de recherche.
+ * @property {String} [collapsible=false] - Si vrai, le contrôle est repliable.
+ * @property {String} [ariaLabel="Rechercher"] - Libellé ARIA.
+ * @property {String} [placeholder=""] - Placeholder de l'input.
+ * @property {Number} [minChars=0] - Nombre minimal de caractères pour autocomplétion.
+ * @property {Number} [maximumEntries=5] - Nombre maximal d'entrées affichées.
+ * @property {Boolean|String} [historic=true] - Gestion historique local (false|true|string).
+ * @property {AbstractSearchService} [searchService] - Service de recherche.
+ */
+
+/**
+ * Position dans un système de coordonnées.
+ * @typedef {Object} Position
+ * @property {Number} x - Longitude.
+ * @property {Number} y - Latitude.
+ */
+
+/**
+ * Résultat d'une autocomplétion (voir {@link https://ignf.github.io/geoportal-access-lib/latest/jsdoc/Gp.Services.AutoComplete.SuggestedLocation.html})
+ * Voir src/Services/AbstractSearchService.js
+ * 
+ * @typedef {Object} AutocompleteResult
+ * @property {"StreetAddress"|"PositionOfInterest"} type - Type de suggestion.
+ * @property {Position} position - Coordonnées du point, dans le système de coordonnées spécifiées.
+ * @property {String} commune - Nom de la commune.
+ * @property {String} fullText - Texte complet représentant la suggestion.
+ * @property {String} postalCode - Code postal de la suggestion.
+ * @property {Number} classification - Nombre utilisé pour classigier l'importance de l'endroit suggéré de 1 (plus important) à 7 (moins important)
+ * @property {Array<String>} [poiType] - Types POI détaillés.
+ * @property {String} [street] - Nom de la rue (types "StreetAddress" seulement).
+ * @property {String} [kind] - Nature du point d'intérêt, e.g. "prefecture", "municipality"... (types "PositionOfInterest" seulement).
+ */
 
 const history = "fr-icon-history-line";
 const defaultIcon = "fr-icon-map-pin-2-line";

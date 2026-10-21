@@ -6,7 +6,13 @@ import InseeSearchService from "../../Services/InseeSearchService";
 
 var logger = Logger.getLogger("abstractAdvancedSearch");
 
-// Voir les typedefs réutilisables (types partagés) dans le dossier SearchEngine si nécessaire.
+/**
+ * Options pour AbstractAdvancedSearch (formulaires avancés).
+ * Voir AbstractAdvancedSearch.js.
+ * 
+ * @typedef {Object} AbstractAdvancedSearchOptions
+ * @property {String} name - Nom du formulaire de recherche avancée.
+ */
 
 /**
  * @classdesc
