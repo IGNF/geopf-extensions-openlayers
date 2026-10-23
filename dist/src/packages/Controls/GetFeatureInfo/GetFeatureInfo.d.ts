@@ -35,6 +35,7 @@ declare class GetFeatureInfo extends Control {
      * @param {ol.Map} map - Map.
      */
     setMap(map: ol.Map): void;
+    getFeatureInfoMarkerOverlay: Overlay | null | undefined;
     /**
      * Returns whether the control is active.
      *
@@ -133,6 +134,26 @@ declare class GetFeatureInfo extends Control {
      */
     private getFeatureInfoIsActive;
     /**
+     * Create the DOM element used to display the queried location marker.
+     *
+     * @returns {HTMLElement} marker element
+     * @private
+     */
+    private _createGetFeatureInfoMarkerElement;
+    /**
+     * Display the marker at the given GetFeatureInfo coordinates.
+     *
+     * @param {Array<Number>} coordinate - map coordinate
+     * @private
+     */
+    private _showGetFeatureInfoMarker;
+    /**
+     * Hide the marker associated with the last GetFeatureInfo request.
+     *
+     * @private
+     */
+    private _clearGetFeatureInfoMarker;
+    /**
      * event handler
      * @param {Event} e évènement de click
      * @private
@@ -229,5 +250,6 @@ declare class GetFeatureInfo extends Control {
     private onGetFeatureInfoComputationSubmit;
 }
 import Control from "../Control";
+import Overlay from "ol/Overlay";
 import Layer from "ol/layer/Layer";
 //# sourceMappingURL=GetFeatureInfo.d.ts.map
