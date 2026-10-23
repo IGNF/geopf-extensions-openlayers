@@ -283,6 +283,10 @@ declare class LayerImport extends Control {
     /** @private */
     private _getCapResultsCount;
     /** @private */
+    private _getCapPrivateGeoPlateforme;
+    /** @private */
+    private _getCapPrivateGeoPlateformeApiKey;
+    /** @private */
     private _hasMapBoxResults;
     /** @private */
     private contentStatic;
@@ -492,6 +496,23 @@ declare class LayerImport extends Control {
      * @private
      */
     private _importServiceLayers;
+    /**
+     * Détecte si l'URL de GetCapabilities correspond a un flux prive GeoPlateforme
+     * et memorise l'apiKey associee pour reutilisation lors des requetes de couches.
+     * Si l'URL est relative, on la resout par rapport a l'URL de la page courante.
+     *
+     * @param {String} url - service url entered by user
+     * @private
+     */
+    private _setGetCapPrivateGeoPlateformeAccess;
+    /**
+     * Ajoute l'apiKey memorisee sur l'URL cible d'une requete de couche.
+     *
+     * @param {String} url - target service url
+     * @returns {String} url - url completed with apikey when needed
+     * @private
+     */
+    private _appendPrivateGeoPlateformeApiKeyToUrl;
     /**
      * this method is called by this._importServiceLayers method
      * and display layers list from getcapabilities response
