@@ -28,6 +28,8 @@ __DATE__
 * 🔥 [Removed]
 
 * 🐛 [Fixed]
+
+  - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
   
 * 🔒 [Security]
 
