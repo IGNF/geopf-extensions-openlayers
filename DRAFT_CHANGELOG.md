@@ -31,5 +31,6 @@ __DATE__
 * 🔒 [Security]
 
   - Reporting : correctif sur injection HTML dans les paramètres `thematics` (#606)
+  - LayerImport : nettoyage des titres, descriptions, attributions et URLs contenus dans les flux WMS/WMTS/KML/GPX/GeoJSON/MapBox (#644)
 
 ---
