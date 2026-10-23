@@ -750,11 +750,20 @@ var CatalogDOM = {
         // les couches par catégorie sont filtrées au préalable
         // on ajoute la repartition des couches par section (regroupement) !
         var isSection = category.section;
+        // FIXME on ne gère que le premier élément du tableau
+        // ex. thematics : ["Réseau routier", "Transport"]
+        var getSectionValue = (layer) => {
+            var value = layer[category.filter.field];
+            if (Array.isArray(value)) {
+                value = value[0];
+            }
+            return (value === undefined || value === null) ? "" : String(value);
+        };
         if (isSection) {
             // on procède à un tri
             // ex. tri sur le champ 'thematic'
             layersFiltered = layersFiltered.sort((a, b) => {
-                return a[category.filter.field][0].localeCompare(b[category.filter.field][0]);
+                return getSectionValue(a).localeCompare(getSectionValue(b));
             });
         }
 
@@ -776,12 +785,7 @@ var CatalogDOM = {
                 //   sinon, on ecarte cette couche (normalement, dans la section "Autres")
                 // - non, on ajoute directement la couche dans la sous categorie
                 if (isSection) {
-                    var value = layer[category.filter.field];
-                    if (Array.isArray(value)) {
-                        // FIXME on ne gère que le premier élément du tableau
-                        // ex. thematics : ["Réseau routier", "Transport"]
-                        value = value[0];
-                    }
+                    var value = getSectionValue(layer);
                     if (value) {
                         if (!sections.hasOwnProperty(value)) {
                             sections[value] = "";
