@@ -8,7 +8,7 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.16-611
+ * @version 1.0.0-beta.16-610
  * @date 23/10/2026
  *
  */(()=>{var t={6964(t,e,s){
