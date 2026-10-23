@@ -314,10 +314,11 @@ class LayerWMTS extends TileLayer {
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
         if (wmtsSource.getLayer() !== undefined) {
             if (layerCfg.globalConstraint) {
-                // multiWorld / wrapX : pas d'emprise catalogue (sinon couches absentes hors monde 0)
+                /* Emprise catalogue conservée : les tuiles d'une couche régionale
+                 * ne sont demandées que sur cette emprise (y compris avec wrapX /
+                 * multiWorld — override via noConstraint ou olParams.extent = null). */
                 var skipCatalogueExtent = options.noConstraint === true
                     || layerCfg.globalConstraint.noConstraint === true
-                    || (olSourceParams && olSourceParams.wrapX === true)
                     || (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null);
 
                 if (!skipCatalogueExtent) {
