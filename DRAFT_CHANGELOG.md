@@ -17,6 +17,8 @@ __DATE__
 
 * ✨ [Added]
 
+  - GetFeatureInfo : un marker s'affiche là où la requête d'informations a été réalisée (#607)
+
 * 🔨 [Changed]
 
   - Panoramax : migration vers `@panoramax/web-viewer` 5.3.1 (`peerDependency` `^5.3.1`) ; le viewer n'est plus fourni en script autonome avec feuille de style séparée, voir `doc/NOTE-PANORAMAX.md` (#602)
