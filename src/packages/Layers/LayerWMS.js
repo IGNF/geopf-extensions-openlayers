@@ -121,17 +121,6 @@ class LayerWMS extends TileLayer {
                     && Object.prototype.hasOwnProperty.call(options.olParams, "extent")
                     && options.olParams.extent == null;
 
-                if (!skipCatalogueExtent && layerCfg.globalConstraint && layerCfg.globalConstraint.bbox) {
-                    var geobbox = [
-                        layerCfg.globalConstraint.bbox.left,
-                        layerCfg.globalConstraint.bbox.bottom,
-                        layerCfg.globalConstraint.bbox.right,
-                        layerCfg.globalConstraint.bbox.top
-                    ];
-                    catalogueExtent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
-                    LayerUtils.constrainSourceToCatalogueExtent(wmsSource, catalogueExtent);
-                }
-
                 // récupération des résolutions min et max
                 var p;
                 // on récupère tout d'abord la projection
@@ -139,6 +128,21 @@ class LayerWMS extends TileLayer {
                     p = olGetProj(olSourceParams.projection);
                 } else if (typeof olSourceParams.projection === "object" && olSourceParams.projection.getCode()) {
                     p = olGetProj(olSourceParams.projection.getCode());
+                }
+
+                if (!skipCatalogueExtent && layerCfg.globalConstraint && layerCfg.globalConstraint.bbox) {
+                    var geobbox = [
+                        layerCfg.globalConstraint.bbox.left,
+                        layerCfg.globalConstraint.bbox.bottom,
+                        layerCfg.globalConstraint.bbox.right,
+                        layerCfg.globalConstraint.bbox.top
+                    ];
+                    var candidateExtent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
+                    var worldExtent = p && typeof p.getExtent === "function" ? p.getExtent() : null;
+                    if (LayerUtils.isRegionalCatalogueExtent(candidateExtent, worldExtent)) {
+                        catalogueExtent = candidateExtent;
+                        LayerUtils.constrainSourceToCatalogueExtent(wmsSource, catalogueExtent);
+                    }
                 }
                  
                 if (options.noConstraint !== true && layerCfg.globalConstraint.noConstraint !== true) {
@@ -178,7 +182,7 @@ class LayerWMS extends TileLayer {
         this.config = layerCfg;
 
         if (catalogueExtent) {
-            LayerUtils.enableWrapAwareExtentClip(this, catalogueExtent);
+            LayerUtils.enableRepeatingExtentClip(this, catalogueExtent);
         }
 
         return this;

@@ -1,3 +1,5 @@
+import { apply as applyTransform } from "ol/transform";
+
 /**
 * @module LayerUtils
 * @alias module:~utils/LayerUtils
@@ -316,11 +318,38 @@ var LayerUtils = {
     },
 
     /**
+     * True si l'emprise catalogue est régionale (pas ≈ monde entier).
+     * Les couches globales (PLANIGN, ortho…) ne doivent PAS recevoir de
+     * `layer.extent` : ça coupe les copies multiWorld.
+     *
+     * @function isRegionalCatalogueExtent
+     * @param {Array.<Number>} extent - [minx, miny, maxx, maxy]
+     * @param {Array.<Number>} worldExtent - emprise projection
+     * @returns {Boolean}
+     */
+    isRegionalCatalogueExtent : function (extent, worldExtent) {
+        if (!extent || !worldExtent) {
+            return !!extent;
+        }
+        var worldW = worldExtent[2] - worldExtent[0];
+        var worldH = worldExtent[3] - worldExtent[1];
+        if (!worldW || !worldH) {
+            return true;
+        }
+        var w = extent[2] - extent[0];
+        var h = extent[3] - extent[1];
+        return (w / worldW) < 0.95 || (h / worldH) < 0.95;
+    },
+
+    /**
      * multiWorld / wrapX : borne les GetTile à l'emprise catalogue sans poser
      * `layer.extent` absolu seul (sinon pas de répétition hors monde 0).
      *
-     * Skip URL hors bbox (après wrapX, tileCoord en monde 0). Le clip
-     * d'affichage exact est géré par enableWrapAwareExtentClip.
+     * Skip URL hors bbox (après wrapX, tileCoord en monde 0) — même rôle
+     * que `bounds` MapLibre. Le dessin exact (toutes les copies en X, Y fixe)
+     * est fait par enableRepeatingExtentClip. Pas de `layer.extent` :
+     * OL n'en accepte qu'un, incompatible avec multiWorld (#10387).
+     * À n'utiliser que pour les couches régionales (voir isRegionalCatalogueExtent).
      *
      * @function constrainSourceToCatalogueExtent
      * @param {Object} source - ol.source.TileImage (WMTS / TileWMS)
@@ -359,85 +388,94 @@ var LayerUtils = {
     },
 
     /**
-     * Clip d'affichage = emprise catalogue, décalée sur le monde visible
-     * (même rectangle que la prod, tout en gardant le wrap multiWorld).
+     * Clip d'affichage répété : même rectangle catalogue sur chaque copie
+     * de monde en longitude, latitude fixe (pas de wrap Y).
      *
-     * @function enableWrapAwareExtentClip
+     * Équivalent visuel de `layer.extent` en prod sur le monde 0, sans
+     * casser la répétition multiWorld (OL : un seul extent par couche).
+     * Même principe que MapLibre `renderWorldCopies` + `source.bounds`.
+     *
+     * @function enableRepeatingExtentClip
      * @param {Object} layer - ol.layer.Tile
      * @param {Array.<Number>} catalogueExtent - [minx, miny, maxx, maxy]
      * @returns {undefined}
      */
-    enableWrapAwareExtentClip : function (layer, catalogueExtent) {
-        if (!layer || !catalogueExtent || typeof layer.setExtent !== "function") {
+    enableRepeatingExtentClip : function (layer, catalogueExtent) {
+        if (!layer || !catalogueExtent || typeof layer.on !== "function") {
             return;
         }
         layer.set("_catalogueExtent", catalogueExtent.slice());
+        var clipped = false;
 
-        var syncExtent = function () {
-            var map = (typeof layer.getMapInternal === "function" && layer.getMapInternal())
-                || (typeof layer.getMap === "function" && layer.getMap())
-                || null;
-            if (!map || !map.getView) {
-                layer.setExtent(catalogueExtent.slice());
-                return;
-            }
-            var view = map.getView();
-            var projExtent = view.getProjection().getExtent();
-            if (!projExtent) {
-                layer.setExtent(catalogueExtent.slice());
-                return;
-            }
-            var worldWidth = projExtent[2] - projExtent[0];
-            var center = view.getCenter();
-            if (!center || !worldWidth) {
-                layer.setExtent(catalogueExtent.slice());
-                return;
-            }
-            var catCenterX = (catalogueExtent[0] + catalogueExtent[2]) / 2;
-            var world = Math.round((center[0] - catCenterX) / worldWidth);
-            var dx = world * worldWidth;
-            var next = [
+        var addWorldPolygon = function (context, frameState, inverse, dx) {
+            var extent = [
                 catalogueExtent[0] + dx,
                 catalogueExtent[1],
                 catalogueExtent[2] + dx,
                 catalogueExtent[3]
             ];
-            var prev = layer.getExtent();
-            var changed = !prev ||
-                Math.abs(prev[0] - next[0]) > 1 ||
-                Math.abs(prev[2] - next[2]) > 1;
-            layer.setExtent(next);
-            // Forcer un redraw quand on change de copie du monde
-            if (changed && layer.getSource && layer.getSource()) {
-                layer.changed();
+            var corners = [
+                [extent[0], extent[3]],
+                [extent[2], extent[3]],
+                [extent[2], extent[1]],
+                [extent[0], extent[1]]
+            ];
+            var transform = frameState.coordinateToPixelTransform;
+            for (var i = 0; i < corners.length; i++) {
+                applyTransform(transform, corners[i]);
+                if (inverse) {
+                    applyTransform(inverse, corners[i]);
+                }
             }
+            context.moveTo(Math.round(corners[0][0]), Math.round(corners[0][1]));
+            context.lineTo(Math.round(corners[1][0]), Math.round(corners[1][1]));
+            context.lineTo(Math.round(corners[2][0]), Math.round(corners[2][1]));
+            context.lineTo(Math.round(corners[3][0]), Math.round(corners[3][1]));
+            context.closePath();
         };
 
-        layer.setExtent(catalogueExtent.slice());
-
-        var bound = false;
-        var bind = function () {
-            if (bound) {
+        layer.on("prerender", function (event) {
+            var context = event.context;
+            var frameState = event.frameState;
+            if (!context || !frameState || !frameState.viewState) {
                 return;
             }
-            var map = (typeof layer.getMapInternal === "function" && layer.getMapInternal())
-                || (typeof layer.getMap === "function" && layer.getMap())
-                || null;
-            if (!map) {
+            var projection = frameState.viewState.projection;
+            var projExtent = projection && projection.getExtent && projection.getExtent();
+            var viewExtent = frameState.extent;
+            if (!projExtent || !viewExtent) {
                 return;
             }
-            bound = true;
-            map.on("moveend", syncExtent);
-            syncExtent();
-        };
+            var worldWidth = projExtent[2] - projExtent[0];
+            if (!worldWidth) {
+                return;
+            }
+            var minWorld = Math.floor((viewExtent[0] - catalogueExtent[2]) / worldWidth);
+            var maxWorld = Math.ceil((viewExtent[2] - catalogueExtent[0]) / worldWidth);
+            if (maxWorld < minWorld) {
+                return;
+            }
+            if (maxWorld - minWorld > 8) {
+                var centerX = frameState.viewState.center[0];
+                var mid = Math.round((centerX - (catalogueExtent[0] + catalogueExtent[2]) / 2) / worldWidth);
+                minWorld = mid - 4;
+                maxWorld = mid + 4;
+            }
+            context.save();
+            context.beginPath();
+            for (var w = minWorld; w <= maxWorld; w++) {
+                addWorldPolygon(context, frameState, event.inversePixelTransform, w * worldWidth);
+            }
+            context.clip();
+            clipped = true;
+        });
 
-        // Bind dès le premier rendu (map dispo), puis sync à chaque moveend
-        var onFirstRender = function () {
-            layer.un("postrender", onFirstRender);
-            bind();
-        };
-        layer.on("postrender", onFirstRender);
-        setTimeout(bind, 0);
+        layer.on("postrender", function (event) {
+            if (clipped && event.context) {
+                event.context.restore();
+                clipped = false;
+            }
+        });
     }
 };
 

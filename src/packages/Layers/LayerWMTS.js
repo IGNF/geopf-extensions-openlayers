@@ -324,21 +324,6 @@ class LayerWMTS extends TileLayer {
                     && Object.prototype.hasOwnProperty.call(options.olParams, "extent")
                     && options.olParams.extent == null;
 
-                if (!skipCatalogueExtent && layerCfg.globalConstraint.bbox) {
-                    var geobbox = [
-                        layerCfg.globalConstraint.bbox.left,
-                        layerCfg.globalConstraint.bbox.bottom,
-                        layerCfg.globalConstraint.bbox.right,
-                        layerCfg.globalConstraint.bbox.top
-                    ];
-                    catalogueExtent = olTransformExtentProj(
-                        geobbox,
-                        "EPSG:4326",
-                        layerCfg.globalConstraint.projection || "EPSG:3857"
-                    );
-                    LayerUtils.constrainSourceToCatalogueExtent(wmtsSource, catalogueExtent);
-                }
-
                 // récupération des résolutions min et max
                 var p;
                 // on récupère tout d'abord la projection
@@ -346,6 +331,26 @@ class LayerWMTS extends TileLayer {
                     p = olGetProj(layerCfg.globalConstraint.projection);
                 } else {
                     p = olGetProj("EPSG:3857");
+                }
+
+                if (!skipCatalogueExtent && layerCfg.globalConstraint.bbox) {
+                    var geobbox = [
+                        layerCfg.globalConstraint.bbox.left,
+                        layerCfg.globalConstraint.bbox.bottom,
+                        layerCfg.globalConstraint.bbox.right,
+                        layerCfg.globalConstraint.bbox.top
+                    ];
+                    var candidateExtent = olTransformExtentProj(
+                        geobbox,
+                        "EPSG:4326",
+                        layerCfg.globalConstraint.projection || "EPSG:3857"
+                    );
+                    // Couches globales : pas d'extent (sinon multiWorld cassé)
+                    var worldExtent = p && typeof p.getExtent === "function" ? p.getExtent() : null;
+                    if (LayerUtils.isRegionalCatalogueExtent(candidateExtent, worldExtent)) {
+                        catalogueExtent = candidateExtent;
+                        LayerUtils.constrainSourceToCatalogueExtent(wmtsSource, catalogueExtent);
+                    }
                 }
 
                 if (options.noConstraint !== true && layerCfg.globalConstraint.noConstraint !== true) {
@@ -385,9 +390,9 @@ class LayerWMTS extends TileLayer {
         this.service = "WMTS";
         this.config = layerCfg;
 
-        // Clip d'affichage = bbox catalogue (comme la prod), décalée par monde
+        // Clip répété en X (latitude fixe) — pas de layer.extent (casse multiWorld)
         if (catalogueExtent) {
-            LayerUtils.enableWrapAwareExtentClip(this, catalogueExtent);
+            LayerUtils.enableRepeatingExtentClip(this, catalogueExtent);
         }
 
         return this;
