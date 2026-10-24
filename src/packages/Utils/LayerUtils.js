@@ -313,6 +313,45 @@ var LayerUtils = {
         var intersectsX = (extent1[1] <= extent2[3]) && (extent2[1] <= extent1[3]);
         var intersectsY = (extent1[2] <= extent2[0]) && (extent2[2] <= extent1[0]);
         return intersectsX && intersectsY;
+    },
+
+    /**
+     * multiWorld / wrapX : borne les GetTile à l'emprise catalogue sans poser
+     * `layer.extent` (absolu → couche absente hors monde 0).
+     * Après wrapX, `tileCoord` est en monde 0 : intersection avec la bbox catalogue.
+     *
+     * @function constrainSourceToCatalogueExtent
+     * @param {Object} source - ol.source.TileImage (WMTS / TileWMS)
+     * @param {Array.<Number>} catalogueExtent - [minx, miny, maxx, maxy] en proj source
+     * @returns {undefined}
+     */
+    constrainSourceToCatalogueExtent : function (source, catalogueExtent) {
+        if (!source || !catalogueExtent || typeof source.getTileUrlFunction !== "function") {
+            return;
+        }
+        var originalTileUrlFunction = source.getTileUrlFunction();
+        if (typeof originalTileUrlFunction !== "function") {
+            return;
+        }
+        source.setTileUrlFunction(function (tileCoord, pixelRatio, projection) {
+            if (!tileCoord) {
+                return undefined;
+            }
+            var tileGrid = source.getTileGridForProjection
+                ? source.getTileGridForProjection(projection)
+                : source.getTileGrid();
+            if (tileGrid && typeof tileGrid.getTileCoordExtent === "function") {
+                var tileExtent = tileGrid.getTileCoordExtent(tileCoord);
+                // OL : [minx, miny, maxx, maxy]
+                if (tileExtent[2] < catalogueExtent[0] ||
+                    tileExtent[0] > catalogueExtent[2] ||
+                    tileExtent[3] < catalogueExtent[1] ||
+                    tileExtent[1] > catalogueExtent[3]) {
+                    return undefined;
+                }
+            }
+            return originalTileUrlFunction.call(source, tileCoord, pixelRatio, projection);
+        });
     }
 };
 

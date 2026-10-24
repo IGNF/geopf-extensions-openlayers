@@ -76,7 +76,8 @@
             <h2>MultiWorld — widgets + wrapX / antimeridien</h2>
             <p>
               Vue <code>multiWorld: true</code> : pan horizontal libre autour du globe.
-              Sources GeoPF en <code>wrapX</code> ; emprise catalogue conservée pour les couches régionales.
+              Sources GeoPF en <code>wrapX</code> ; emprise catalogue via filtre GetTile
+              (répétition régionale sans <code>layer.extent</code> absolu).
             </p>
             <!-- map -->
             <div id="map">

@@ -6,6 +6,7 @@ import {
 import TileLayer from "ol/layer/Tile";
 // import local
 import Utils from "../Utils/Helper";
+import LayerUtils from "../Utils/LayerUtils";
 import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMS from "./SourceWMS";
@@ -113,21 +114,21 @@ class LayerWMS extends TileLayer {
                Idem pour les résolutions : il faut connaitre l'unité de la projection (metres ou degrés) pour pouvoir calculer la résolution.
             */
             if (olSourceParams && olSourceParams.projection) {
-                /* Emprise catalogue conservée : couche régionale → tuiles uniquement
-                 * sur cette emprise (override via noConstraint ou olParams.extent = null). */
+                /* multiWorld : pas de layer.extent ; filtre GetTile wrapX-aware
+                 * (override : noConstraint ou olParams.extent = null). */
                 var skipCatalogueExtent = options.noConstraint === true
                     || (layerCfg.globalConstraint && layerCfg.globalConstraint.noConstraint === true)
                     || (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null);
 
                 if (!skipCatalogueExtent && layerCfg.globalConstraint && layerCfg.globalConstraint.bbox) {
-                    // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj spécifiée
                     var geobbox = [
                         layerCfg.globalConstraint.bbox.left,
                         layerCfg.globalConstraint.bbox.bottom,
                         layerCfg.globalConstraint.bbox.right,
                         layerCfg.globalConstraint.bbox.top
                     ];
-                    layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
+                    var catalogueExtent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
+                    LayerUtils.constrainSourceToCatalogueExtent(wmsSource, catalogueExtent);
                 }
 
                 // récupération des résolutions min et max

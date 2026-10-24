@@ -6,6 +6,7 @@ import {
 import TileLayer from "ol/layer/Tile";
 // import local
 import Utils from "../Utils/Helper";
+import LayerUtils from "../Utils/LayerUtils";
 import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMTS from "./SourceWMTS";
@@ -314,24 +315,28 @@ class LayerWMTS extends TileLayer {
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
         if (wmtsSource.getLayer() !== undefined) {
             if (layerCfg.globalConstraint) {
-                /* Emprise catalogue conservée : les tuiles d'une couche régionale
-                 * ne sont demandées que sur cette emprise (y compris avec wrapX /
-                 * multiWorld — override via noConstraint ou olParams.extent = null). */
+                /* multiWorld : pas de layer.extent (absolu → pas de répétition).
+                 * Emprise catalogue appliquée via filtre GetTile (wrapX-aware).
+                 * Override : noConstraint ou olParams.extent = null. */
                 var skipCatalogueExtent = options.noConstraint === true
                     || layerCfg.globalConstraint.noConstraint === true
                     || (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null);
 
-                if (!skipCatalogueExtent) {
-                    // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj de la couche
+                if (!skipCatalogueExtent && layerCfg.globalConstraint.bbox) {
                     var geobbox = [
                         layerCfg.globalConstraint.bbox.left,
                         layerCfg.globalConstraint.bbox.bottom,
                         layerCfg.globalConstraint.bbox.right,
                         layerCfg.globalConstraint.bbox.top
                     ];
-                    layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", layerCfg.globalConstraint.projection || "EPSG:3857");
+                    var catalogueExtent = olTransformExtentProj(
+                        geobbox,
+                        "EPSG:4326",
+                        layerCfg.globalConstraint.projection || "EPSG:3857"
+                    );
+                    LayerUtils.constrainSourceToCatalogueExtent(wmtsSource, catalogueExtent);
                 }
-                
+
                 // récupération des résolutions min et max
                 var p;
                 // on récupère tout d'abord la projection
