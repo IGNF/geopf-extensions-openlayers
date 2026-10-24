@@ -310,13 +310,14 @@ class LayerWMTS extends TileLayer {
         var layerTileOptions = {
             source : wmtsSource
         };
+        var catalogueExtent = null;
         
         // si le param layer n'a pas été renseigné lors de la création de la source,
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
         if (wmtsSource.getLayer() !== undefined) {
             if (layerCfg.globalConstraint) {
-                /* multiWorld : pas de layer.extent (absolu → pas de répétition).
-                 * Emprise catalogue appliquée via filtre GetTile (wrapX-aware).
+                /* multiWorld : filtre GetTile + clip extent décalé par monde
+                 * (même bbox catalogue que la prod, sans casser le wrap).
                  * Override : noConstraint ou olParams.extent = null. */
                 var skipCatalogueExtent = options.noConstraint === true
                     || layerCfg.globalConstraint.noConstraint === true
@@ -329,7 +330,7 @@ class LayerWMTS extends TileLayer {
                         layerCfg.globalConstraint.bbox.right,
                         layerCfg.globalConstraint.bbox.top
                     ];
-                    var catalogueExtent = olTransformExtentProj(
+                    catalogueExtent = olTransformExtentProj(
                         geobbox,
                         "EPSG:4326",
                         layerCfg.globalConstraint.projection || "EPSG:3857"
@@ -373,6 +374,7 @@ class LayerWMTS extends TileLayer {
         Utils.mergeParams(layerTileOptions, options.olParams);
         if (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null) {
             delete layerTileOptions.extent;
+            catalogueExtent = null;
         }
         
         // création d'une ol.layer.Tile avec les options récupérées ci-dessus.
@@ -381,6 +383,11 @@ class LayerWMTS extends TileLayer {
         this.name = options.layer;
         this.service = "WMTS";
         this.config = layerCfg;
+
+        // Clip d'affichage = bbox catalogue (comme la prod), décalée par monde
+        if (catalogueExtent) {
+            LayerUtils.enableWrapAwareExtentClip(this, catalogueExtent);
+        }
 
         return this;
     }

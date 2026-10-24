@@ -104,6 +104,7 @@ class LayerWMS extends TileLayer {
         var layerTileOptions = {
             source : wmsSource
         };
+        var catalogueExtent = null;
 
         // si le param LAYERS n'a pas été renseigné lors de la création de la source,
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
@@ -114,7 +115,7 @@ class LayerWMS extends TileLayer {
                Idem pour les résolutions : il faut connaitre l'unité de la projection (metres ou degrés) pour pouvoir calculer la résolution.
             */
             if (olSourceParams && olSourceParams.projection) {
-                /* multiWorld : pas de layer.extent ; filtre GetTile wrapX-aware
+                /* multiWorld : filtre GetTile + clip extent décalé par monde
                  * (override : noConstraint ou olParams.extent = null). */
                 var skipCatalogueExtent = options.noConstraint === true
                     || (layerCfg.globalConstraint && layerCfg.globalConstraint.noConstraint === true)
@@ -127,7 +128,7 @@ class LayerWMS extends TileLayer {
                         layerCfg.globalConstraint.bbox.right,
                         layerCfg.globalConstraint.bbox.top
                     ];
-                    var catalogueExtent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
+                    catalogueExtent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
                     LayerUtils.constrainSourceToCatalogueExtent(wmsSource, catalogueExtent);
                 }
 
@@ -166,6 +167,7 @@ class LayerWMS extends TileLayer {
         Utils.mergeParams(layerTileOptions, options.olParams);
         if (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null) {
             delete layerTileOptions.extent;
+            catalogueExtent = null;
         }
 
         // création d'une ol.layer.Tile avec les options récupérées ci-dessus.
@@ -174,6 +176,10 @@ class LayerWMS extends TileLayer {
         this.name = options.layer;
         this.service = "WMS";
         this.config = layerCfg;
+
+        if (catalogueExtent) {
+            LayerUtils.enableWrapAwareExtentClip(this, catalogueExtent);
+        }
 
         return this;
     }

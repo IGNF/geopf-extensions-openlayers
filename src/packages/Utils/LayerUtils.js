@@ -318,9 +318,12 @@ var LayerUtils = {
     /**
      * multiWorld / wrapX : borne les GetTile à l'emprise catalogue sans poser
      * `layer.extent` (absolu → couche absente hors monde 0).
-     * Après wrapX, `tileCoord` est en monde 0 : intersection avec la bbox catalogue.
-     * Les pixels quasi-blancs (nodata fréquent hors emprise utile mais dans la
-     * bbox rectangulaire) sont rendus transparents pour ne pas masquer le fond.
+     *
+     * - Skip URL hors bbox (après wrapX, tileCoord en monde 0).
+     * - Clip chaque tuile à l'intersection exacte avec la bbox (évite le
+     *   débordement des grosses tuiles aux faibles zooms — jusqu'à ~1 tuile
+     *   hors emprise si on se contentait d'intersects).
+     * - Chromakey blanc nodata → transparent.
      *
      * @function constrainSourceToCatalogueExtent
      * @param {Object} source - ol.source.TileImage (WMTS / TileWMS)
@@ -335,6 +338,8 @@ var LayerUtils = {
         if (typeof originalTileUrlFunction !== "function") {
             return;
         }
+        source._catalogueExtent = catalogueExtent;
+
         source.setTileUrlFunction(function (tileCoord, pixelRatio, projection) {
             if (!tileCoord) {
                 return undefined;
@@ -355,8 +360,8 @@ var LayerUtils = {
             return originalTileUrlFunction.call(source, tileCoord, pixelRatio, projection);
         });
 
-        // Nodata blanc opaque dans la bbox (ex. océan autour Cassini) → transparent
-        var whiteThreshold = 250;
+        // Nodata / voile beige-blanc (seuil bas : tuiles Cassini ~230–255)
+        var whiteThreshold = 230;
         source.setTileLoadFunction(function (tile, src) {
             var image = tile.getImage();
             if (!src || !image) {
@@ -387,6 +392,88 @@ var LayerUtils = {
             };
             img.src = src;
         });
+    },
+
+    /**
+     * Clip d'affichage = emprise catalogue, décalée sur le monde visible
+     * (même rectangle que la prod, tout en gardant le wrap multiWorld).
+     *
+     * @function enableWrapAwareExtentClip
+     * @param {Object} layer - ol.layer.Tile
+     * @param {Array.<Number>} catalogueExtent - [minx, miny, maxx, maxy]
+     * @returns {undefined}
+     */
+    enableWrapAwareExtentClip : function (layer, catalogueExtent) {
+        if (!layer || !catalogueExtent || typeof layer.setExtent !== "function") {
+            return;
+        }
+        layer.set("_catalogueExtent", catalogueExtent.slice());
+
+        var syncExtent = function () {
+            var map = (typeof layer.getMapInternal === "function" && layer.getMapInternal())
+                || (typeof layer.getMap === "function" && layer.getMap())
+                || null;
+            if (!map || !map.getView) {
+                layer.setExtent(catalogueExtent.slice());
+                return;
+            }
+            var view = map.getView();
+            var projExtent = view.getProjection().getExtent();
+            if (!projExtent) {
+                layer.setExtent(catalogueExtent.slice());
+                return;
+            }
+            var worldWidth = projExtent[2] - projExtent[0];
+            var center = view.getCenter();
+            if (!center || !worldWidth) {
+                layer.setExtent(catalogueExtent.slice());
+                return;
+            }
+            var catCenterX = (catalogueExtent[0] + catalogueExtent[2]) / 2;
+            var world = Math.round((center[0] - catCenterX) / worldWidth);
+            var dx = world * worldWidth;
+            var next = [
+                catalogueExtent[0] + dx,
+                catalogueExtent[1],
+                catalogueExtent[2] + dx,
+                catalogueExtent[3]
+            ];
+            var prev = layer.getExtent();
+            var changed = !prev ||
+                Math.abs(prev[0] - next[0]) > 1 ||
+                Math.abs(prev[2] - next[2]) > 1;
+            layer.setExtent(next);
+            // Forcer un redraw quand on change de copie du monde
+            if (changed && layer.getSource && layer.getSource()) {
+                layer.changed();
+            }
+        };
+
+        layer.setExtent(catalogueExtent.slice());
+
+        var bound = false;
+        var bind = function () {
+            if (bound) {
+                return;
+            }
+            var map = (typeof layer.getMapInternal === "function" && layer.getMapInternal())
+                || (typeof layer.getMap === "function" && layer.getMap())
+                || null;
+            if (!map) {
+                return;
+            }
+            bound = true;
+            map.on("moveend", syncExtent);
+            syncExtent();
+        };
+
+        // Bind dès le premier rendu (map dispo), puis sync à chaque moveend
+        var onFirstRender = function () {
+            layer.un("postrender", onFirstRender);
+            bind();
+        };
+        layer.on("postrender", onFirstRender);
+        setTimeout(bind, 0);
     }
 };
 
