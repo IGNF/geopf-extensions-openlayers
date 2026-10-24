@@ -45,6 +45,7 @@ import {
 } from "ol/sphere";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
+import MathUtils from "../../Utils/MathUtils";
 import Interactions from "../Utils/Interactions";
 import MarkersOther from "../Utils/MarkersOther";
 import Draggable from "../../Utils/Draggable";
@@ -1661,7 +1662,7 @@ class Drawing extends Control {
         switch (type) {
             case "Point":
                 var coordinatesPoint = (feature.getGeometry()).getCoordinates();
-                var c = olTransformProj(coordinatesPoint, projection, "EPSG:4326");
+                var c = MathUtils.wrapLonLat(olTransformProj(coordinatesPoint, projection, "EPSG:4326"));
                 measure = "lon : ";
                 measure += __roundDecimal(c[0], 4) + "°";
                 measure += " / ";
@@ -1673,8 +1674,8 @@ class Drawing extends Control {
                 var measureLength = 0;
                 var coordinatesLine = (feature.getGeometry()).getCoordinates();
                 for (var i = 0, ii = coordinatesLine.length - 1; i < ii; ++i) {
-                    var c1 = olTransformProj(coordinatesLine[i], projection, "EPSG:4326");
-                    var c2 = olTransformProj(coordinatesLine[i + 1], projection, "EPSG:4326");
+                    var c1 = MathUtils.wrapLonLat(olTransformProj(coordinatesLine[i], projection, "EPSG:4326"));
+                    var c2 = MathUtils.wrapLonLat(olTransformProj(coordinatesLine[i + 1], projection, "EPSG:4326"));
                     measureLength += olGetDistanceSphere(c1, c2);
                 }
                 measure = (measureLength > 1000)

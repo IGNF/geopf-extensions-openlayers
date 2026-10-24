@@ -6,6 +6,9 @@
 *
 * @example
 * modulo();
+* wrapLongitude();
+* wrapLonLat();
+* snapToNearestWorld();
 * decimalToDMS();
 * coordinateTo();
 * toInteger();
@@ -27,6 +30,50 @@ var MathUtils = {
     },
 
     /**
+     * Ramène une longitude dans [-180, 180] (vue multiWorld).
+     *
+     * @function wrapLongitude
+     * @param {Number} lon - longitude en degrés
+     * @returns {Number} longitude normalisée
+     */
+    wrapLongitude : function (lon) {
+        return this.modulo(lon + 180, 360) - 180;
+    },
+
+    /**
+     * Normalise [lon, lat] : longitude dans [-180, 180].
+     *
+     * @function wrapLonLat
+     * @param {Array} coord - [lon, lat]
+     * @returns {Array} [lon, lat] normalisé
+     */
+    wrapLonLat : function (coord) {
+        if (!coord || coord.length < 2) {
+            return coord;
+        }
+        return [this.wrapLongitude(coord[0]), coord[1]];
+    },
+
+    /**
+     * Ramène une coordonnée carte (ex. EPSG:3857) dans la copie du monde
+     * la plus proche de `ref` (ex. centre de vue). Utile après fromLonLat
+     * quand la vue est en world+N.
+     *
+     * @function snapToNearestWorld
+     * @param {Array} coord - [x, y] en projection carte
+     * @param {Array} ref - [x, y] référence (centre de vue)
+     * @param {Number} worldWidth - largeur d'un monde dans la projection
+     * @returns {Array} [x, y] snappé
+     */
+    snapToNearestWorld : function (coord, ref, worldWidth) {
+        if (!coord || !ref || !worldWidth) {
+            return coord;
+        }
+        var x = coord[0] - worldWidth * Math.round((coord[0] - ref[0]) / worldWidth);
+        return [x, coord[1]];
+    },
+
+    /**
      * Transform degrees, minutes, seconds form decimal degrees -
      * Largely inspired by the private function degreesToStringHDMS from ol/coordinate.js
      *
@@ -37,7 +84,7 @@ var MathUtils = {
      * @returns {Object} DMS coordinate
      */
     decimalToDMS : function (degrees, hemispheres, numDigits) {
-        var normalizedDegrees = this.modulo(degrees + 180, 360) - 180;
+        var normalizedDegrees = this.wrapLongitude(degrees);
         var x = Math.abs(3600 * normalizedDegrees);
         var dflPrecision = numDigits || 0;
         var precision = Math.pow(10, dflPrecision);

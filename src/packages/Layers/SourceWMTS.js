@@ -123,7 +123,9 @@ class SourceWMTS extends WMTSExtended {
                 matrixIds : wmtsParams.matrixIds,
                 origin : [Object.values(wmtsParams.tileMatrices)[0].topLeftCorner.x, Object.values(wmtsParams.tileMatrices)[0].topLeftCorner.y]
             }),
-            crossOrigin : "anonymous"
+            crossOrigin : "anonymous",
+            // multiWorld : répétition des tuiles (surchargeable via olParams)
+            wrapX : true
         };
 
         // récupération des autres paramètres passés par l'utilisateur

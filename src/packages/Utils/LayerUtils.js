@@ -1,3 +1,5 @@
+import { apply as applyTransform } from "ol/transform";
+
 /**
 * @module LayerUtils
 * @alias module:~utils/LayerUtils
@@ -313,6 +315,167 @@ var LayerUtils = {
         var intersectsX = (extent1[1] <= extent2[3]) && (extent2[1] <= extent1[3]);
         var intersectsY = (extent1[2] <= extent2[0]) && (extent2[2] <= extent1[0]);
         return intersectsX && intersectsY;
+    },
+
+    /**
+     * True si l'emprise catalogue est régionale (pas ≈ monde entier).
+     * Les couches globales (PLANIGN, ortho…) ne doivent PAS recevoir de
+     * `layer.extent` : ça coupe les copies multiWorld.
+     *
+     * @function isRegionalCatalogueExtent
+     * @param {Array.<Number>} extent - [minx, miny, maxx, maxy]
+     * @param {Array.<Number>} worldExtent - emprise projection
+     * @returns {Boolean}
+     */
+    isRegionalCatalogueExtent : function (extent, worldExtent) {
+        if (!extent || !worldExtent) {
+            return !!extent;
+        }
+        var worldW = worldExtent[2] - worldExtent[0];
+        var worldH = worldExtent[3] - worldExtent[1];
+        if (!worldW || !worldH) {
+            return true;
+        }
+        var w = extent[2] - extent[0];
+        var h = extent[3] - extent[1];
+        return (w / worldW) < 0.95 || (h / worldH) < 0.95;
+    },
+
+    /**
+     * multiWorld / wrapX : borne les GetTile à l'emprise catalogue sans poser
+     * `layer.extent` absolu seul (sinon pas de répétition hors monde 0).
+     *
+     * Skip URL hors bbox (après wrapX, tileCoord en monde 0) — même rôle
+     * que `bounds` MapLibre. Le dessin exact (toutes les copies en X, Y fixe)
+     * est fait par enableRepeatingExtentClip. Pas de `layer.extent` :
+     * OL n'en accepte qu'un, incompatible avec multiWorld (#10387).
+     * À n'utiliser que pour les couches régionales (voir isRegionalCatalogueExtent).
+     *
+     * @function constrainSourceToCatalogueExtent
+     * @param {Object} source - ol.source.TileImage (WMTS / TileWMS)
+     * @param {Array.<Number>} catalogueExtent - [minx, miny, maxx, maxy] en proj source
+     * @returns {undefined}
+     */
+    constrainSourceToCatalogueExtent : function (source, catalogueExtent) {
+        if (!source || !catalogueExtent || typeof source.getTileUrlFunction !== "function") {
+            return;
+        }
+        var originalTileUrlFunction = source.getTileUrlFunction();
+        if (typeof originalTileUrlFunction !== "function") {
+            return;
+        }
+        source._catalogueExtent = catalogueExtent;
+
+        source.setTileUrlFunction(function (tileCoord, pixelRatio, projection) {
+            if (!tileCoord) {
+                return undefined;
+            }
+            var tileGrid = source.getTileGridForProjection
+                ? source.getTileGridForProjection(projection)
+                : source.getTileGrid();
+            if (tileGrid && typeof tileGrid.getTileCoordExtent === "function") {
+                var tileExtent = tileGrid.getTileCoordExtent(tileCoord);
+                // OL : [minx, miny, maxx, maxy]
+                if (tileExtent[2] < catalogueExtent[0] ||
+                    tileExtent[0] > catalogueExtent[2] ||
+                    tileExtent[3] < catalogueExtent[1] ||
+                    tileExtent[1] > catalogueExtent[3]) {
+                    return undefined;
+                }
+            }
+            return originalTileUrlFunction.call(source, tileCoord, pixelRatio, projection);
+        });
+    },
+
+    /**
+     * Clip d'affichage répété : même rectangle catalogue sur chaque copie
+     * de monde en longitude, latitude fixe (pas de wrap Y).
+     *
+     * Équivalent visuel de `layer.extent` en prod sur le monde 0, sans
+     * casser la répétition multiWorld (OL : un seul extent par couche).
+     * Même principe que MapLibre `renderWorldCopies` + `source.bounds`.
+     *
+     * @function enableRepeatingExtentClip
+     * @param {Object} layer - ol.layer.Tile
+     * @param {Array.<Number>} catalogueExtent - [minx, miny, maxx, maxy]
+     * @returns {undefined}
+     */
+    enableRepeatingExtentClip : function (layer, catalogueExtent) {
+        if (!layer || !catalogueExtent || typeof layer.on !== "function") {
+            return;
+        }
+        layer.set("_catalogueExtent", catalogueExtent.slice());
+        var clipped = false;
+
+        var addWorldPolygon = function (context, frameState, inverse, dx) {
+            var extent = [
+                catalogueExtent[0] + dx,
+                catalogueExtent[1],
+                catalogueExtent[2] + dx,
+                catalogueExtent[3]
+            ];
+            var corners = [
+                [extent[0], extent[3]],
+                [extent[2], extent[3]],
+                [extent[2], extent[1]],
+                [extent[0], extent[1]]
+            ];
+            var transform = frameState.coordinateToPixelTransform;
+            for (var i = 0; i < corners.length; i++) {
+                applyTransform(transform, corners[i]);
+                if (inverse) {
+                    applyTransform(inverse, corners[i]);
+                }
+            }
+            context.moveTo(Math.round(corners[0][0]), Math.round(corners[0][1]));
+            context.lineTo(Math.round(corners[1][0]), Math.round(corners[1][1]));
+            context.lineTo(Math.round(corners[2][0]), Math.round(corners[2][1]));
+            context.lineTo(Math.round(corners[3][0]), Math.round(corners[3][1]));
+            context.closePath();
+        };
+
+        layer.on("prerender", function (event) {
+            var context = event.context;
+            var frameState = event.frameState;
+            if (!context || !frameState || !frameState.viewState) {
+                return;
+            }
+            var projection = frameState.viewState.projection;
+            var projExtent = projection && projection.getExtent && projection.getExtent();
+            var viewExtent = frameState.extent;
+            if (!projExtent || !viewExtent) {
+                return;
+            }
+            var worldWidth = projExtent[2] - projExtent[0];
+            if (!worldWidth) {
+                return;
+            }
+            var minWorld = Math.floor((viewExtent[0] - catalogueExtent[2]) / worldWidth);
+            var maxWorld = Math.ceil((viewExtent[2] - catalogueExtent[0]) / worldWidth);
+            if (maxWorld < minWorld) {
+                return;
+            }
+            if (maxWorld - minWorld > 8) {
+                var centerX = frameState.viewState.center[0];
+                var mid = Math.round((centerX - (catalogueExtent[0] + catalogueExtent[2]) / 2) / worldWidth);
+                minWorld = mid - 4;
+                maxWorld = mid + 4;
+            }
+            context.save();
+            context.beginPath();
+            for (var w = minWorld; w <= maxWorld; w++) {
+                addWorldPolygon(context, frameState, event.inversePixelTransform, w * worldWidth);
+            }
+            context.clip();
+            clipped = true;
+        });
+
+        layer.on("postrender", function (event) {
+            if (clipped && event.context) {
+                event.context.restore();
+                clipped = false;
+            }
+        });
     }
 };
 
