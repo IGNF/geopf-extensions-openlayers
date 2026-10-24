@@ -317,13 +317,10 @@ var LayerUtils = {
 
     /**
      * multiWorld / wrapX : borne les GetTile à l'emprise catalogue sans poser
-     * `layer.extent` (absolu → couche absente hors monde 0).
+     * `layer.extent` absolu seul (sinon pas de répétition hors monde 0).
      *
-     * - Skip URL hors bbox (après wrapX, tileCoord en monde 0).
-     * - Clip chaque tuile à l'intersection exacte avec la bbox (évite le
-     *   débordement des grosses tuiles aux faibles zooms — jusqu'à ~1 tuile
-     *   hors emprise si on se contentait d'intersects).
-     * - Chromakey blanc nodata → transparent.
+     * Skip URL hors bbox (après wrapX, tileCoord en monde 0). Le clip
+     * d'affichage exact est géré par enableWrapAwareExtentClip.
      *
      * @function constrainSourceToCatalogueExtent
      * @param {Object} source - ol.source.TileImage (WMTS / TileWMS)
@@ -358,39 +355,6 @@ var LayerUtils = {
                 }
             }
             return originalTileUrlFunction.call(source, tileCoord, pixelRatio, projection);
-        });
-
-        // Nodata / voile beige-blanc (seuil bas : tuiles Cassini ~230–255)
-        var whiteThreshold = 230;
-        source.setTileLoadFunction(function (tile, src) {
-            var image = tile.getImage();
-            if (!src || !image) {
-                return;
-            }
-            var img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = function () {
-                var canvas = document.createElement("canvas");
-                canvas.width = img.width;
-                canvas.height = img.height;
-                var ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0);
-                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                var data = imageData.data;
-                for (var i = 0; i < data.length; i += 4) {
-                    if (data[i] >= whiteThreshold &&
-                        data[i + 1] >= whiteThreshold &&
-                        data[i + 2] >= whiteThreshold) {
-                        data[i + 3] = 0;
-                    }
-                }
-                ctx.putImageData(imageData, 0, 0);
-                image.src = canvas.toDataURL("image/png");
-            };
-            img.onerror = function () {
-                image.src = src;
-            };
-            img.src = src;
         });
     },
 
