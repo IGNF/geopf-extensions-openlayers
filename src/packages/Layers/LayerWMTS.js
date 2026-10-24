@@ -318,10 +318,11 @@ class LayerWMTS extends TileLayer {
             if (layerCfg.globalConstraint) {
                 /* multiWorld : filtre GetTile + clip extent décalé par monde
                  * (même bbox catalogue que la prod, sans casser le wrap).
-                 * Override : noConstraint ou olParams.extent = null. */
-                var skipCatalogueExtent = options.noConstraint === true
-                    || layerCfg.globalConstraint.noConstraint === true
-                    || (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null);
+                 * noConstraint ne saute plus l'emprise (sinon Cassini BNF = voile blanc) :
+                 * il ne désactive que min/max résolution. Override : olParams.extent = null. */
+                var skipCatalogueExtent = options.olParams
+                    && Object.prototype.hasOwnProperty.call(options.olParams, "extent")
+                    && options.olParams.extent == null;
 
                 if (!skipCatalogueExtent && layerCfg.globalConstraint.bbox) {
                     var geobbox = [

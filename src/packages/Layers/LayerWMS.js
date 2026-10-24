@@ -115,11 +115,11 @@ class LayerWMS extends TileLayer {
                Idem pour les résolutions : il faut connaitre l'unité de la projection (metres ou degrés) pour pouvoir calculer la résolution.
             */
             if (olSourceParams && olSourceParams.projection) {
-                /* multiWorld : filtre GetTile + clip extent décalé par monde
-                 * (override : noConstraint ou olParams.extent = null). */
-                var skipCatalogueExtent = options.noConstraint === true
-                    || (layerCfg.globalConstraint && layerCfg.globalConstraint.noConstraint === true)
-                    || (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null);
+                /* multiWorld : filtre GetTile + clip extent décalé par monde.
+                 * noConstraint → résolutions seulement ; override emprise : olParams.extent = null. */
+                var skipCatalogueExtent = options.olParams
+                    && Object.prototype.hasOwnProperty.call(options.olParams, "extent")
+                    && options.olParams.extent == null;
 
                 if (!skipCatalogueExtent && layerCfg.globalConstraint && layerCfg.globalConstraint.bbox) {
                     var geobbox = [
