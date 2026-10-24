@@ -319,6 +319,8 @@ var LayerUtils = {
      * multiWorld / wrapX : borne les GetTile à l'emprise catalogue sans poser
      * `layer.extent` (absolu → couche absente hors monde 0).
      * Après wrapX, `tileCoord` est en monde 0 : intersection avec la bbox catalogue.
+     * Les pixels quasi-blancs (nodata fréquent hors emprise utile mais dans la
+     * bbox rectangulaire) sont rendus transparents pour ne pas masquer le fond.
      *
      * @function constrainSourceToCatalogueExtent
      * @param {Object} source - ol.source.TileImage (WMTS / TileWMS)
@@ -351,6 +353,39 @@ var LayerUtils = {
                 }
             }
             return originalTileUrlFunction.call(source, tileCoord, pixelRatio, projection);
+        });
+
+        // Nodata blanc opaque dans la bbox (ex. océan autour Cassini) → transparent
+        var whiteThreshold = 250;
+        source.setTileLoadFunction(function (tile, src) {
+            var image = tile.getImage();
+            if (!src || !image) {
+                return;
+            }
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function () {
+                var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                var data = imageData.data;
+                for (var i = 0; i < data.length; i += 4) {
+                    if (data[i] >= whiteThreshold &&
+                        data[i + 1] >= whiteThreshold &&
+                        data[i + 2] >= whiteThreshold) {
+                        data[i + 3] = 0;
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+                image.src = canvas.toDataURL("image/png");
+            };
+            img.onerror = function () {
+                image.src = src;
+            };
+            img.src = src;
         });
     }
 };
