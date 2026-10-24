@@ -107,6 +107,43 @@ export function sanitizeXmlText (input) {
     return sanitizeHtml(safeString, { strict : true });
 }
 
+/**
+ * Validate an imported link or image URL and encode it for display as HTML text.
+ * Relative URLs keep the same document base as DOM href/src assignments.
+ *
+ * @param {String|undefined|null} input - Imported URL.
+ * @returns {String|undefined|null} Validated HTTP(S) URL.
+ * @throws {Error} If the URL is invalid or uses an unsupported protocol.
+ */
+export function sanitizeUrl (input) {
+    if (input === null || input === undefined || input === "") {return input;}
+    if (typeof input !== "string") {
+        throw new Error("L'URL importée doit être une chaîne de caractères.");
+    }
+
+    const url = new URL(input, document.baseURI);
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+        throw new Error("L'URL importée doit utiliser le protocole HTTP ou HTTPS.");
+    }
+    return url.href;
+}
+
+/**
+ * Clean static or dynamic OpenLayers attributions while preserving their shape.
+ *
+ * @param {String|Array<String>|Function|undefined|null} input - Source attributions.
+ * @returns {String|Array<String>|Function|undefined|null} Sanitized attributions.
+ */
+export function sanitizeAttributions (input) {
+    if (typeof input === "function") {
+        return (frameState) => sanitizeAttributions(input(frameState));
+    }
+    if (Array.isArray(input)) {
+        return input.map((attribution) => sanitizeHtml(attribution));
+    }
+    return sanitizeHtml(input);
+}
+
 // ─── Hook DOMPurify : sécuriser les liens ────────────────────────────────────
 //
 // Interdit les href commençant par javascript: ou data:

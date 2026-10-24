@@ -535,8 +535,10 @@ class ContextMenu extends Control {
 
         this._marker.setPosition(olFromLonLat(clickedCoordinate));
 
-        this.buttonPointInfoShow.click();
-        this.buttonPointInfoShow.setAttribute("aria-pressed", true);
+        var isPointInfoOpen = this.buttonPointInfoShow.getAttribute("aria-pressed") === "true";
+        if (!isPointInfoOpen) {
+            this.buttonPointInfoShow.click();
+        }
         var coordinate = document.createElement("div");
         coordinate.innerHTML = clickedCoordinate[1].toFixed(6) + ", " + clickedCoordinate[0].toFixed(6);
         var address = document.createElement("div");
@@ -641,6 +643,9 @@ class ContextMenu extends Control {
         logger.trace(e);
         var opened = this.buttonPointInfoShow.ariaPressed;
         this.collapsed = !(opened === "true");
+        if (this.collapsed) {
+            this._marker.setPosition(undefined);
+        }
         this.dispatchEvent("change:collapsed");
         // on recalcule la position
         if (this.options.position && !this.collapsed) {
