@@ -33,6 +33,7 @@ __DATE__
 
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
   - Catalog : les sous-catégories avec sections n'échouent plus lorsque des couches n'ont pas de thème ou de producteur (regroupées dans « Autres »)
+  - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
   
 * 🔒 [Security]
 
