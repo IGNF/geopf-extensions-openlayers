@@ -25,7 +25,7 @@ import TileLayer from "ol/layer/Tile";
 import VectorTileSource from "ol/source/VectorTile";
 import VectorSource from "ol/source/Vector";
 import TileWMSSource from "ol/source/TileWMS";
-import WMTSSource from "ol/source/WMTS";
+import WMTSSource from "../../Sources/WMTS";
 import TileJSONSource from "ol/source/TileJSON";
 import {
     Fill,

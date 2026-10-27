@@ -32,6 +32,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
+  - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
   
 * 🔒 [Security]
 
