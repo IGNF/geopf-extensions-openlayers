@@ -120,7 +120,14 @@ class WMTS extends WMTSSource {
 
         var url = this.urls[0];
 
-        var featureInfoUrl = Gp.Helper.normalyzeUrl(url, baseParams);
+        // normalyzeUrl traite le nombre 0 comme une valeur vide : convertir les nombres
+        // en chaines conserve les indices de tuile (TILECOL, TILEROW) et de pixel (I, J) nuls.
+        var queryParams = {};
+        Object.keys(baseParams).forEach(function (key) {
+            var value = baseParams[key];
+            queryParams[key] = typeof value === "number" ? String(value) : value;
+        });
+        var featureInfoUrl = Gp.Helper.normalyzeUrl(url, queryParams);
 
         return featureInfoUrl;
     };
