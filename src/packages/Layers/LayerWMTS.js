@@ -6,6 +6,7 @@ import {
 import TileLayer from "ol/layer/Tile";
 // import local
 import Utils from "../Utils/Helper";
+import LayerUtils from "../Utils/LayerUtils";
 import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMTS from "./SourceWMTS";
@@ -309,22 +310,20 @@ class LayerWMTS extends TileLayer {
         var layerTileOptions = {
             source : wmtsSource
         };
+        var catalogueExtent = null;
         
         // si le param layer n'a pas été renseigné lors de la création de la source,
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
         if (wmtsSource.getLayer() !== undefined) {
             if (layerCfg.globalConstraint) {
-                /* INFO : désactivation temporaire de l'étendue, car certaines étendues (trop grandes ?)
-                provoquent quelques bugs d'affichage (zoom > 16 par exemple) */
-                // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj de la couche
-                var geobbox = [
-                    layerCfg.globalConstraint.bbox.left,
-                    layerCfg.globalConstraint.bbox.bottom,
-                    layerCfg.globalConstraint.bbox.right,
-                    layerCfg.globalConstraint.bbox.top
-                ];
-                layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", layerCfg.globalConstraint.projection || "EPSG:3857");
-                
+                /* multiWorld : filtre GetTile + clip extent décalé par monde
+                 * (même bbox catalogue que la prod, sans casser le wrap).
+                 * noConstraint ne saute plus l'emprise (sinon Cassini BNF = voile blanc) :
+                 * il ne désactive que min/max résolution. Override : olParams.extent = null. */
+                var skipCatalogueExtent = options.olParams
+                    && Object.prototype.hasOwnProperty.call(options.olParams, "extent")
+                    && options.olParams.extent == null;
+
                 // récupération des résolutions min et max
                 var p;
                 // on récupère tout d'abord la projection
@@ -332,6 +331,26 @@ class LayerWMTS extends TileLayer {
                     p = olGetProj(layerCfg.globalConstraint.projection);
                 } else {
                     p = olGetProj("EPSG:3857");
+                }
+
+                if (!skipCatalogueExtent && layerCfg.globalConstraint.bbox) {
+                    var geobbox = [
+                        layerCfg.globalConstraint.bbox.left,
+                        layerCfg.globalConstraint.bbox.bottom,
+                        layerCfg.globalConstraint.bbox.right,
+                        layerCfg.globalConstraint.bbox.top
+                    ];
+                    var candidateExtent = olTransformExtentProj(
+                        geobbox,
+                        "EPSG:4326",
+                        layerCfg.globalConstraint.projection || "EPSG:3857"
+                    );
+                    // Couches globales : pas d'extent (sinon multiWorld cassé)
+                    var worldExtent = p && typeof p.getExtent === "function" ? p.getExtent() : null;
+                    if (LayerUtils.isRegionalCatalogueExtent(candidateExtent, worldExtent)) {
+                        catalogueExtent = candidateExtent;
+                        LayerUtils.constrainSourceToCatalogueExtent(wmtsSource, catalogueExtent);
+                    }
                 }
 
                 if (options.noConstraint !== true && layerCfg.globalConstraint.noConstraint !== true) {
@@ -359,6 +378,10 @@ class LayerWMTS extends TileLayer {
         
         // récupération des autres paramètres passés par l'utilisateur
         Utils.mergeParams(layerTileOptions, options.olParams);
+        if (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null) {
+            delete layerTileOptions.extent;
+            catalogueExtent = null;
+        }
         
         // création d'une ol.layer.Tile avec les options récupérées ci-dessus.
         super(layerTileOptions);
@@ -366,6 +389,11 @@ class LayerWMTS extends TileLayer {
         this.name = options.layer;
         this.service = "WMTS";
         this.config = layerCfg;
+
+        // Clip répété en X (latitude fixe) — pas de layer.extent (casse multiWorld)
+        if (catalogueExtent) {
+            LayerUtils.enableRepeatingExtentClip(this, catalogueExtent);
+        }
 
         return this;
     }

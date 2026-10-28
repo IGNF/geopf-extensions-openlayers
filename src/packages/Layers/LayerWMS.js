@@ -6,6 +6,7 @@ import {
 import TileLayer from "ol/layer/Tile";
 // import local
 import Utils from "../Utils/Helper";
+import LayerUtils from "../Utils/LayerUtils";
 import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMS from "./SourceWMS";
@@ -103,6 +104,7 @@ class LayerWMS extends TileLayer {
         var layerTileOptions = {
             source : wmsSource
         };
+        var catalogueExtent = null;
 
         // si le param LAYERS n'a pas été renseigné lors de la création de la source,
         // c'est que l'identifiant de la couche n'a pas été trouvé. on passe donc la recherche des paramètres.
@@ -113,14 +115,11 @@ class LayerWMS extends TileLayer {
                Idem pour les résolutions : il faut connaitre l'unité de la projection (metres ou degrés) pour pouvoir calculer la résolution.
             */
             if (olSourceParams && olSourceParams.projection) {
-                // récupération de l'étendue (en EPSG:4326), et reprojection dans la proj spécifiée
-                var geobbox = [
-                    layerCfg.globalConstraint.bbox.left,
-                    layerCfg.globalConstraint.bbox.bottom,
-                    layerCfg.globalConstraint.bbox.right,
-                    layerCfg.globalConstraint.bbox.top
-                ];
-                layerTileOptions.extent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
+                /* multiWorld : filtre GetTile + clip extent décalé par monde.
+                 * noConstraint → résolutions seulement ; override emprise : olParams.extent = null. */
+                var skipCatalogueExtent = options.olParams
+                    && Object.prototype.hasOwnProperty.call(options.olParams, "extent")
+                    && options.olParams.extent == null;
 
                 // récupération des résolutions min et max
                 var p;
@@ -129,6 +128,21 @@ class LayerWMS extends TileLayer {
                     p = olGetProj(olSourceParams.projection);
                 } else if (typeof olSourceParams.projection === "object" && olSourceParams.projection.getCode()) {
                     p = olGetProj(olSourceParams.projection.getCode());
+                }
+
+                if (!skipCatalogueExtent && layerCfg.globalConstraint && layerCfg.globalConstraint.bbox) {
+                    var geobbox = [
+                        layerCfg.globalConstraint.bbox.left,
+                        layerCfg.globalConstraint.bbox.bottom,
+                        layerCfg.globalConstraint.bbox.right,
+                        layerCfg.globalConstraint.bbox.top
+                    ];
+                    var candidateExtent = olTransformExtentProj(geobbox, "EPSG:4326", olSourceParams.projection);
+                    var worldExtent = p && typeof p.getExtent === "function" ? p.getExtent() : null;
+                    if (LayerUtils.isRegionalCatalogueExtent(candidateExtent, worldExtent)) {
+                        catalogueExtent = candidateExtent;
+                        LayerUtils.constrainSourceToCatalogueExtent(wmsSource, catalogueExtent);
+                    }
                 }
                  
                 if (options.noConstraint !== true && layerCfg.globalConstraint.noConstraint !== true) {
@@ -155,6 +169,10 @@ class LayerWMS extends TileLayer {
         }
         // récupération des autres paramètres passés par l'utilisateur
         Utils.mergeParams(layerTileOptions, options.olParams);
+        if (options.olParams && Object.prototype.hasOwnProperty.call(options.olParams, "extent") && options.olParams.extent == null) {
+            delete layerTileOptions.extent;
+            catalogueExtent = null;
+        }
 
         // création d'une ol.layer.Tile avec les options récupérées ci-dessus.
         super(layerTileOptions);
@@ -162,6 +180,10 @@ class LayerWMS extends TileLayer {
         this.name = options.layer;
         this.service = "WMS";
         this.config = layerCfg;
+
+        if (catalogueExtent) {
+            LayerUtils.enableRepeatingExtentClip(this, catalogueExtent);
+        }
 
         return this;
     }

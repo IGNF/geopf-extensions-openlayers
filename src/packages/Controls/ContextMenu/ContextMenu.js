@@ -17,6 +17,7 @@ import Gp from "geoportal-access-lib";
 
 // import local
 import Utils from "../../Utils/Helper";
+import MathUtils from "../../Utils/MathUtils";
 import Markers from "../Utils/Markers";
 import OGCRequest from "../Utils/OGCRequest";
 import SelectorID from "../../Utils/SelectorID";
@@ -450,9 +451,10 @@ class ContextMenu extends Control {
      * @private
      */
     to4326 (coord) {
-        return olTransformProj([
+        // multiWorld : longitude dans [-180, 180]
+        return MathUtils.wrapLonLat(olTransformProj([
             parseFloat(coord[0]), parseFloat(coord[1])
-        ], "EPSG:3857", "EPSG:4326");
+        ], "EPSG:3857", "EPSG:4326"));
     }
 
     /**

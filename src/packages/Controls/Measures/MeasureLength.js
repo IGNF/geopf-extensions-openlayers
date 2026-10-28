@@ -11,6 +11,7 @@ import { transform as olTransformProj } from "ol/proj";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
+import MathUtils from "../../Utils/MathUtils";
 import ID from "../../Utils/SelectorID";
 // DOM
 import MeasureLengthDOM from "./MeasureLengthDOM";
@@ -275,8 +276,8 @@ class MeasureLength extends Control {
             measure = 0;
             var sourceProj = map.getView().getProjection();
             for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-                var c1 = olTransformProj(coordinates[i], sourceProj, "EPSG:4326");
-                var c2 = olTransformProj(coordinates[i + 1], sourceProj, "EPSG:4326");
+                var c1 = MathUtils.wrapLonLat(olTransformProj(coordinates[i], sourceProj, "EPSG:4326"));
+                var c2 = MathUtils.wrapLonLat(olTransformProj(coordinates[i + 1], sourceProj, "EPSG:4326"));
                 measure += olGetDistanceSphere(c1, c2);
             }
         } else {
