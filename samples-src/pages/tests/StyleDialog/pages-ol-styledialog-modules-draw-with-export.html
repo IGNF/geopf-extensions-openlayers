@@ -1,0 +1,144 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDraw.css" />
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.css" />
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlSimpleMenu.css" />
+
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlInputNumber.css" />
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCustomSelect.css" />
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCustomSelectGrid.css" />
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlDefaultInput.css" />
+<link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlFlatStyleForm.css" />
+
+<script src="{{ baseurl }}/dist/modules/GpfExtOlDrawingInteraction.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlSelectingInteraction.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlModifyingInteraction.js"></script>
+
+<script src="{{ baseurl }}/dist/modules/GpfExtOlDraw.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlDialog.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlTabNav.js"></script>
+
+<!-- StyleDialog Controls -->
+<script src="{{ baseurl }}/dist/modules/GpfExtOlStyleForm.js"></script>
+<script src="{{ baseurl }}/dist/modules/GpfExtOlLabelForm.js"></script>
+{{/content}}
+
+{{#content "head"}}
+<title>Sample openlayers StyleDialog</title>
+{{/content}}
+
+{{#content "style"}}
+<style>
+    div#map {
+        width: 100%;
+        height: 500px;
+    }
+</style>
+{{/content}}
+
+{{#content "body"}}
+<h2>Outil de dessin avec dialogue de style</h2>
+<!-- map -->
+<div id="map">
+</div>
+<div>
+    <button class="fr-btn fr-btn--secondary" id="toggleActive">Active / désactive input forme</button>
+</div>
+<div>
+    <button class="fr-btn fr-btn--secondary" id="changeSource">Change la source</button>
+</div>
+{{/content}}
+
+{{#content "js"}}
+<script type="text/javascript">
+    var map;
+    window.onload = function () {
+        // on cache l'image de chargement du Géoportail.
+        document.getElementById('map').style.backgroundImage = 'none';
+
+        let source = new ol.source.Vector({})
+        let layer = new ol.layer.Vector({
+            source: source
+        })
+        // 1. Création de la map
+        map = new ol.Map({
+            target: "map",
+            view: new ol.View({
+                center: [288074.8449901076, 6247982.515792289],
+                zoom: 6
+            }),
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM(),
+                    // zIndex : 4,
+                    opacity: 0.5
+                }),
+                layer
+            ]
+        });
+
+        const saveDrawing = function (e) {
+            alert("Enregistrement dans l'espace perso");
+        }
+
+        const exportDrawing = function (e) {
+            // Récupère le nom
+            const input = this.getFooterContent().firstChild?.querySelector("input");
+            const name = input.value || "export_dessin";
+
+            // Récupère la source
+            const source = draw.getSource();
+            const featProj = draw.getSource().getProjection() || draw.getMap().getView().getProjection();
+            if (!featProj) {
+                alert("pas de projection");
+                return;
+            }
+
+            // Transforme en KML
+            const format = new ol.format.KML({});
+            const result = format.writeFeatures(source.getFeatures(), {
+                dataProjection: "EPSG:4326",
+                featureProjection: featProj
+            });
+
+            // Exporte le fichier
+            const link = document.createElement("a");
+            const charset = "utf-8";
+            link.href = "data:application/vnd.google-earth.kml+xml;charset=" + charset + "," + encodeURIComponent(result);
+            link.download = `${name}.kml`;
+            link.click();
+        }
+
+        const draw = new ol.control.Draw({
+            // position: "right",
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.7279 9.57627L14.3137 8.16206L5 17.4758V18.89H6.41421L15.7279 9.57627ZM17.1421 8.16206L18.5563 6.74785L17.1421 5.33363L15.7279 6.74785L17.1421 8.16206ZM7.24264 20.89H3V16.6473L16.435 3.21231C16.8256 2.82179 17.4587 2.82179 17.8492 3.21231L20.6777 6.04074C21.0682 6.43126 21.0682 7.06443 20.6777 7.45495L7.24264 20.89Z"></path></svg>`,
+            title: "Dessiner",
+            style: true,
+            source: source,
+            footer: {
+                content: `<div class="fr-input-group">
+                    <label class="GPlabel gpf-label fr-label" for="fileName">Nom du fichier</label>
+                    <input type="text" id="fileName" class="GPinput gpf-input fr-input">
+                </div>`,
+                buttons: [
+                    {
+                        label: "Exporter",
+                        icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 2L21 7V21.0082C21 21.556 20.5551 22 20.0066 22H3.9934C3.44476 22 3 21.5447 3 21.0082V2.9918C3 2.44405 3.44495 2 3.9934 2H16ZM13 12V8H11V12H8L12 16L16 12H13Z"></path></svg>`,
+                        callback: exportDrawing,
+                    },
+                    {
+                        label: "Enregistrer",
+                        title: "Enregistrer le calque",
+                        callback: saveDrawing
+                    },
+                ]
+            }
+        });
+
+        map.addControl(draw);
+    };
+</script>
+{{/content}}
+
+{{/extend}}

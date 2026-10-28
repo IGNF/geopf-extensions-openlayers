@@ -17,6 +17,7 @@ __DATE__
 
 * ✨ [Added]
 
+  - Draw(Widget): nouveau widget de dessin plus poussé qui utilise des composants de DOM génériques (#490)
   - GetFeatureInfo : un marker s'affiche là où la requête d'informations a été réalisée (#607)
 
 * 🔨 [Changed]
