@@ -33,7 +33,8 @@ __DATE__
 
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
   - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
-  
+  - Mode Classic : corrections générale des entêtes et positionnements des panels, navigabilité des formulaires, en mode "classique" (#651)
+ 
 * 🔒 [Security]
 
   - Reporting : correctif sur injection HTML dans les paramètres `thematics` (#606)
