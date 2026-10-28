@@ -14,6 +14,18 @@
 <p>Questions / Réponses realisées avec Copilot</p>
 </blockquote>
 <h2 id="exemples" class="tsd-anchor-link">Exemples<a href="#exemples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="exemple-dsfr-pour-un-éditeur" class="tsd-anchor-link">Exemple DSFR pour un éditeur<a href="#exemple-dsfr-pour-un-éditeur" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>L'<a href="../media/pages-ol-catalog-modules-dsfr-editor.html">exemple de catalogue DSFR avec gestion externe des couches</a>
+présente un catalogue en haut à droite, au format <code>xl</code>, avec vignettes et chargement <code>on-demand</code>.
+Il propose les cartes de référence et les regroupements par thème, producteur et service,
+avec une recherche limitée à l'onglet « Toutes les cartes ».</p>
+<p>L'option <code>addToMap: false</code> laisse la gestion des couches à l'application : les événements
+<code>catalog:layer:add</code> et <code>catalog:layer:remove</code> sont journalisés dans la console dans cet exemple.
+Aucun éditeur n'est instancié et les sélections ne modifient pas les couches de la carte.
+L'exemple n'appelle pas <code>Gp.Services.getConfig</code> : le catalogue utilise sa configuration éditoriale
+par défaut, dont les couches sont renseignées avec un thème et un producteur.</p>
+<p>Après lancement de <code>npm run sample:modules</code>, ouvrir
+<code>/samples/tests/Catalog/pages-ol-catalog-modules-dsfr-editor.html</code>.</p>
 <h3 id="exemple-minimal" class="tsd-anchor-link">Exemple minimal<a href="#exemple-minimal" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <pre><code class="js"><span class="hl-3">var</span><span class="hl-1"> </span><span class="hl-4">catalog</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-4">ol</span><span class="hl-1">.</span><span class="hl-4">control</span><span class="hl-1">.</span><span class="hl-0">Catalog</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-4">position:</span><span class="hl-1"> </span><span class="hl-2">&quot;top-left&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">collapsed :</span><span class="hl-1"> </span><span class="hl-3">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">draggable :</span><span class="hl-1"> </span><span class="hl-3">true</span><br/><span class="hl-1">});</span><br/><span class="hl-4">catalog</span><span class="hl-1">.</span><span class="hl-0">on</span><span class="hl-1">(</span><span class="hl-2">&quot;catalog:loaded&quot;</span><span class="hl-1">, (</span><span class="hl-4">e</span><span class="hl-1">) </span><span class="hl-3">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-4">e</span><span class="hl-1">);</span><br/><span class="hl-1">});</span><br/><span class="hl-4">catalog</span><span class="hl-1">.</span><span class="hl-0">on</span><span class="hl-1">(</span><span class="hl-2">&quot;catalog:layer:add&quot;</span><span class="hl-1">, (</span><span class="hl-4">e</span><span class="hl-1">) </span><span class="hl-3">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-4">e</span><span class="hl-1">);</span><br/><span class="hl-1">});</span><br/><span class="hl-4">catalog</span><span class="hl-1">.</span><span class="hl-0">on</span><span class="hl-1">(</span><span class="hl-2">&quot;catalog:layer:remove&quot;</span><span class="hl-1">, (</span><span class="hl-4">e</span><span class="hl-1">) </span><span class="hl-3">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-4">e</span><span class="hl-1">);</span><br/><span class="hl-1">});</span>
 </code><button type="button">Copy</button></pre>
@@ -292,6 +304,7 @@ Les Topics permettent de filtrer les couches selon leur thématique ou producteu
 <li><a href="#exemples"><span>Exemples</span></a></li>
 <li>
 <ul>
+<li><a href="#exemple-dsfr-pour-un-éditeur"><span>Exemple <wbr/>DSFR pour un éditeur</span></a></li>
 <li><a href="#exemple-minimal"><span>Exemple minimal</span></a></li>
 <li><a href="#exemple-sur-la-configuration"><span>Exemple sur la configuration</span></a></li>
 <li><a href="#exemple-sur-la-barre-de-recherche-globale"><span>Exemple sur la barre de recherche globale</span></a></li>
