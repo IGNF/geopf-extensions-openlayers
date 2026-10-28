@@ -1,0 +1,132 @@
+{{#extend "ol-sample-modules-dsfr-layout"}}
+
+{{#content "vendor"}}
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlCatalog.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlCatalog.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Catalogue des cartes DSFR pour un éditeur</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 700px;
+                background-image:url("{{ resources }}/geoportail-waiting.gif");
+                background-position:center center;
+                background-repeat:no-repeat;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Catalogue des cartes DSFR avec gestion externe des couches</h2>
+            <p>
+                Le catalogue est positionné en haut à droite, au format XL, avec un chargement à la demande.
+                La recherche est disponible dans « Toutes les cartes », par thème, producteur ou service.
+                Avec <code>addToMap: false</code>, les couches ne sont pas ajoutées automatiquement à la carte :
+                les événements d'ajout et de retrait sont affichés dans la console et peuvent être pris en charge par un éditeur.
+            </p>
+            <div id="map"></div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                var createMap = function() {
+                    document.getElementById("map").style.backgroundImage = "none";
+
+                    map = new ol.Map({
+                        target: "map",
+                        layers: [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                opacity: 0.5
+                            })
+                        ],
+                        view: new ol.View({
+                            center: [288074.8449901076, 6247982.515792289],
+                            zoom: 8
+                        })
+                    });
+
+                    const catalog = new ol.control.Catalog({
+                        position: "top-right",
+                        listable: false,
+                        titlePrimary: "Catalogue des cartes",
+                        layerLabel: "title",
+                        layerThumbnail: true,
+                        optimisation: "on-demand",
+                        tabHeightAuto: false,
+                        size: "xl",
+                        addToMap: false, // Gestion directement dans l'éditeur
+                        search: {
+                            display: false
+                        },
+                        categories: [
+                            {
+                                title: "Cartes de références",
+                                id: "base",
+                                order: false,
+                                featured: true,
+                                filter: {
+                                    field: "base",
+                                    value: "true"
+                                }
+                            },
+                            {
+                                title: "Toutes les cartes",
+                                id: "data",
+                                search: true,
+                                items: [
+                                    {
+                                        title: "Thème",
+                                        default: true,
+                                        order: true,
+                                        section: true,
+                                        icon: true,
+                                        filter: {
+                                            field: "thematic",
+                                            value: "*"
+                                        }
+                                    },
+                                    {
+                                        title: "Producteur",
+                                        section: true,
+                                        order: true,
+                                        icon: false,
+                                        filter: {
+                                            field: "producer",
+                                            value: "*"
+                                        }
+                                    },
+                                    {
+                                        title: "Service",
+                                        section: true,
+                                        order: true,
+                                        featured: true,
+                                        icon: false,
+                                        filter: {
+                                            field: "service",
+                                            value: "*"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+                    catalog.on("catalog:layer:add", function(event) {
+                        console.info("Ajout de couche à gérer dans l'éditeur :", event);
+                    });
+                    catalog.on("catalog:layer:remove", function(event) {
+                        console.info("Retrait de couche à gérer dans l'éditeur :", event);
+                    });
+                    map.addControl(catalog);
+                };
+                createMap();
+            </script>
+{{/content}}
+
+{{/extend}}

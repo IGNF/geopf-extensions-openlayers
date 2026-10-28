@@ -4,6 +4,22 @@
 
 ## Exemples
 
+### Exemple DSFR pour un éditeur
+
+L'[exemple de catalogue DSFR avec gestion externe des couches](../samples-src/pages/tests/Catalog/pages-ol-catalog-modules-dsfr-editor.html)
+présente un catalogue en haut à droite, au format `xl`, avec vignettes et chargement `on-demand`.
+Il propose les cartes de référence et les regroupements par thème, producteur et service,
+avec une recherche limitée à l'onglet « Toutes les cartes ».
+
+L'option `addToMap: false` laisse la gestion des couches à l'application : les événements
+`catalog:layer:add` et `catalog:layer:remove` sont journalisés dans la console dans cet exemple.
+Aucun éditeur n'est instancié et les sélections ne modifient pas les couches de la carte.
+L'exemple n'appelle pas `Gp.Services.getConfig` : le catalogue utilise sa configuration éditoriale
+par défaut, dont les couches sont renseignées avec un thème et un producteur.
+
+Après lancement de `npm run sample:modules`, ouvrir
+`/samples/tests/Catalog/pages-ol-catalog-modules-dsfr-editor.html`.
+
 ### Exemple minimal
 
 ```js
