@@ -255,7 +255,7 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             return (lon.length === 6 && lat.length === 6) ? [lon, lat] : undefined;
         }
 
-        const coords = [parseFloat(lon), parseFloat(lat)];
+        const coords = [parseFloat(lon.replace(",", ".")), parseFloat(lat.replace(",", "."))];
 
         // si une des deux coordonnées n'a pu être récupéré correctement, on renvoie undefined
         if (Number.isNaN(coords[0]) || Number.isNaN(coords[1])) {
@@ -609,7 +609,8 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
                     }
                     input.value = dmsCoord;
                 } else {
-                    input.value = input.value === "" || isNaN(input.value) ? "" : parseFloat(input.value) * factor;
+                    const value = input.value.replace(",", ".");
+                    input.value = value === "" || isNaN(value) ? "" : parseFloat(value) * factor;
                 }
                 input.removeAttribute("minLength");
                 input.removeAttribute("maxLength");
@@ -677,8 +678,8 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @returns {Array<Number>} Tableau normalisé contenant [lon, lat]
      */
     _normalizeCoordinatesUnit (coords) {
-        let lon = coords[0];
-        let lat = coords[1];
+        let lon = String(coords[0]).replace(",", ".");
+        let lat = String(coords[1]).replace(",", ".");
         if (this.get("unit") === "DMS") {
             // Transforme les DMS en degrés décimaux
             lon = MathUtils.dmsToDecimal(
@@ -752,11 +753,12 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * -48.8566 (lat) -> { value: "485124", cardinal: "S" }
      *
      * @private
-     * @param {Number} decimal Coordonnée décimale
+        * @param {String|Number} decimal Coordonnée décimale
      * @param {"lon"|"lat"} type Type de coordonnée
      * @returns {{value: String, cardinal: String}}
      */
     _decimalToCompactDMS (decimal, type) {
+        decimal = String(decimal).replace(",", ".");
         const abs = Math.abs(decimal);
 
         const degres = Math.floor(abs);
