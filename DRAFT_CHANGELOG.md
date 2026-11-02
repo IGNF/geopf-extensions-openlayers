@@ -34,7 +34,8 @@ __DATE__
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
   - Catalog : les sous-catégories avec sections n'échouent plus lorsque des couches n'ont pas de thème ou de producteur (regroupées dans « Autres »)
   - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
-  
+  - AdvancedSearch : gestion de la recherche par coordonnées avec virgule comme séparateur décimal (#654)
+ 
 * 🔒 [Security]
 
   - Reporting : correctif sur injection HTML dans les paramètres `thematics` (#606)
