@@ -1171,7 +1171,7 @@ class Isocurve extends Control {
             smoothing : options.smoothing || true,
             timeOut : _timeout,
             protocol : _protocol,
-            resource : options.resource || "bd-topo-valhalla",
+            resource : options.resource || "bdtopo-valhalla",
             // callback onSuccess
             onSuccess : function (results) {
                 logger.log(results);

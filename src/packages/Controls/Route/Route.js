@@ -1161,7 +1161,7 @@ class Route extends Control {
             distanceUnit : "m",
             timeOut : _timeout,
             protocol : _protocol,
-            resource : routeOptions.resource || "bd-topo-valhalla",
+            resource : routeOptions.resource || "bdtopo-valhalla",
             // callback onSuccess
             onSuccess : function (results) {
                 logger.log(results);
