@@ -406,30 +406,6 @@ class LocationAdvancedSearch extends AbstractAdvancedSearch {
         };
     }
 
-    /** Clear error messages in the form
-     * @private
-     */
-    _clearMessages () {
-        this.element.querySelectorAll(".fr-message--error").forEach(msg => msg.remove());
-    }
-
-    /** Show error message for a given input
-     * @param {String} name Input name
-     * @param {String} [message] Message to show (if none remove message)
-     * @private
-     */
-    _showMessage (name, message) {
-        const div = this.element.querySelector("input[name='" + name + "']").nextSibling;
-        if (message) {
-            const msg = document.createElement("p");
-            msg.className = "fr-message fr-message--error";
-            msg.textContent = message;
-            div.appendChild(msg);
-        } else {
-            div.innerHTML = "";
-        }
-    }
-
     /**
      * @protected
      * @override
