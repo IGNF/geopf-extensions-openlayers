@@ -1719,6 +1719,8 @@ class Catalog extends Control {
                 this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden, elements);
             }
         }
+        // retour à l'ordre initial des couches
+        this._sortSearchElements(elements, null);
     }
 
     /**
@@ -1859,9 +1861,10 @@ class Catalog extends Control {
         const criteria = this.options.search.criteria;
         const fuzzyFields = this._searchFuzzyFields;
 
-        // poids des champs : une correspondance approchée pèse moitié moins qu'une correspondance exacte
+        // poids des champs pour correspondance exacte
         const boost = Object.fromEntries(Object.entries(this.options.search.boost || {})
             .filter(([field]) => criteria.includes(field)));
+        // poids des champs pour correspondance approchée (fuzzy) = on divise par 2
         const fuzzyBoost = Object.fromEntries(fuzzyFields.map(field => [field, (boost[field] || 1) * 0.5]));
 
         // une requête par terme saisi, chacune combinant (OU) plusieurs façons de le trouver
@@ -1944,7 +1947,50 @@ class Catalog extends Control {
     }
 
     /**
-     * Set filtered layers
+     * Réordonne les couches de chaque liste (catégorie ou section) :
+     * par pertinence pendant une recherche, sinon dans l'ordre initial (attribut data-index).
+     * Seules les couches sont déplacées : l'ordre des sections n'est pas modifié.
+     * En mode on-demand, les fragments stockés sont aussi triés, pour qu'une section
+     * ouverte après la recherche soit déjà ordonnée.
+     * Le mode clusterize n'est pas trié.
+     * @param {globalThis.Map<String, Array<HTMLElement>>} elements - Éléments HTML des couches indexés par "name:service".
+     * @param {globalThis.Map<String, Number>|null} scores - Score par clé "name:service", ou null pour l'ordre initial.
+     * @private
+     */
+    _sortSearchElements (elements, scores) {
+        if (this.options.optimisation === "clusterize") {
+            return;
+        }
+
+        // score de chaque élément et listes parentes concernées (DOM affiché ou fragment on-demand)
+        const elementScores = new globalThis.Map();
+        const parents = new Set();
+        for (const [key, list] of elements) {
+            const score = scores && scores.has(key) ? scores.get(key) : -1;
+            for (const element of list) {
+                elementScores.set(element, score);
+                if (element.parentNode) {
+                    parents.add(element.parentNode);
+                }
+            }
+        }
+
+        // tri par score décroissant, puis ordre initial en cas d'égalité
+        const initial = (element) => Number(element.dataset.index) || 0;
+        const compare = (a, b) => (elementScores.get(b) - elementScores.get(a)) || (initial(a) - initial(b));
+        for (const parent of parents) {
+            const items = Array.from(parent.children).filter(child => elementScores.has(child));
+            const sorted = [...items].sort(compare);
+            // on ne touche au DOM que si l'ordre change
+            if (sorted.some((item, i) => item !== items[i])) {
+                parent.append(...sorted);
+            }
+        }
+    }
+
+    /**
+     * Filtre les couches selon la saisie, puis les ordonne par pertinence
+     * dans chaque liste (catégorie ou section).
      *
      * @param {*} value - value
      * @private
@@ -1956,14 +2002,21 @@ class Catalog extends Control {
         const empty = this._normalizeSearchText(value) === "";
         const matches = empty ? null : this._searchLayers(value);
         const elements = this._indexSearchElements();
+        // scores indexés par "name:service", la clé utilisée dans le DOM
+        const scores = empty ? null : new globalThis.Map();
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
                 layer.hidden = !empty && !matches.has(layer.key);
+                if (!layer.hidden && scores) {
+                    scores.set(`${layer.name}:${layer.service}`, matches.get(layer.key));
+                }
                 // on met à jour pour chaque couche la visibilité
                 this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden, elements);
             }
         }
+        // on ordonne les couches par pertinence (ordre initial si la saisie est vide)
+        this._sortSearchElements(elements, scores);
         // on rend invisible les sections qui ne possède plus de couches visibles
         this.updateVisibilityFilteredSections();
     }
