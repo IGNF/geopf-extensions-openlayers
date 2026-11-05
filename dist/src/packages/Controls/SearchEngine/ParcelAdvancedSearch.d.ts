@@ -17,17 +17,6 @@ declare class ParcelAdvancedSearch extends AbstractAdvancedSearch {
      * @param {Object} e Event
      */
     handleSearch(e: any): void;
-    /** Clear error messages in the form
-     * @private
-     */
-    private _clearMessages;
-    /** Show error message for a given input
-     * @param {String} name Input name
-     * @param {String} [message] Message to show (if none remove message)
-     * @param {String} [what="error"] Message type (error, warning, info)
-     * @private
-     */
-    private _showMessage;
     /** Change the section
      * @param {Obj} options serviceOptions for WFS call
      * @private

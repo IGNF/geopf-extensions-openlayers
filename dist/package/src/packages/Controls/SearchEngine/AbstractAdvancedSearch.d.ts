@@ -78,6 +78,20 @@ declare class AbstractAdvancedSearch extends Control {
      * @protected
      */
     protected _onSearch(e: SubmitEvent | PointerEvent): void;
+    /**
+     * Supprime les messages d'erreur du formulaire.
+     * @protected
+     */
+    protected _clearMessages(): void;
+    /**
+     * Affiche un message pour un champ donné, dans le premier conteneur
+     * parent possédant un groupe de messages (.GPMessagesGroup).
+     * @param {String} name Nom (attribut name) du champ
+     * @param {String} [message] Message à afficher (si vide, efface le message)
+     * @param {String} [what="error"] Type de message (error, warning, info)
+     * @protected
+     */
+    protected _showMessage(name: string, message?: string, what?: string): void;
 }
 import Control from "../Control";
 //# sourceMappingURL=AbstractAdvancedSearch.d.ts.map

@@ -241,6 +241,11 @@ type CoordinateSearchSystem = {
      * - Type d'unités ("Geographical"|"Metric").
      */
     type?: string | undefined;
+    /**
+     * - Bornes de saisie [minX, minY, maxX, maxY] dans l'unité native du CRS
+     * (degrés ou mètres). Par défaut, l'étendue de la projection OpenLayers (si définie).
+     */
+    extent?: number[] | undefined;
 };
 /**
  * Options spécifiques à la recherche par coordonnées.

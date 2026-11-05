@@ -52,16 +52,6 @@ declare class LocationAdvancedSearch extends AbstractAdvancedSearch {
         postcode: string;
         citycode: string;
     } | undefined;
-    /** Clear error messages in the form
-     * @private
-     */
-    private _clearMessages;
-    /** Show error message for a given input
-     * @param {String} name Input name
-     * @param {String} [message] Message to show (if none remove message)
-     * @private
-     */
-    private _showMessage;
     /**
      * @protected
      * @override

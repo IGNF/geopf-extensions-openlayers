@@ -156,6 +156,37 @@ declare class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     private _updateInputs;
     /**
+     * Réinitialise les masques DMS des inputs.
+     *
+     * @private
+     */
+    private _resetMasks;
+    /**
+     * Nombre de chiffres attendus pour une coordonnée DMS compacte.
+     *
+     * @private
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {Number} 7 (DDDMMSS) pour la longitude, 6 (DDMMSS) pour la latitude
+     */
+    private _dmsLength;
+    /**
+     * Valeur initiale d'un input DMS vide.
+     *
+     * @private
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {String} "0" pour la longitude, "" sinon
+     */
+    private _emptyDMSValue;
+    /**
+     * Découpe une coordonnée DMS compacte en degrés, minutes, secondes.
+     *
+     * @private
+     * @param {String} dms Chaîne DMS compacte (DDDMMSS ou DDMMSS)
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {Array<Number>} [degrés, minutes, secondes]
+     */
+    private _splitCompactDMS;
+    /**
      * Validation avant saisie pour les formats DMS : n'autorise que les chiffres (évite les lettres).
      *
      * @private
@@ -163,11 +194,12 @@ declare class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     private _onlonLatBeforeInput;
     /**
-     * Formate une chaîne de 6 caractères en DMS (DD°MM'SS").
+     * Formate une chaîne compacte en DMS (DDD°MM'SS" ou DD°MM'SS").
      *
      * @private
-     * @param {String} value Valeur brute (6 caractères numériques)
-     * @returns {String} Chaîne formatée (ex. "12°34'56\"")
+     * @param {String} value Valeur brute (caractères numériques)
+     * @param {"lon"|"lat"} type Type de coordonnées
+     * @returns {String} Chaîne formatée (ex. "012°34'56\"")
      */
     private _format;
     /**
@@ -191,17 +223,17 @@ declare class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     private _normalizeCoordinatesUnit;
     /**
-     * Convertit une coordonnée DMS compacte (DDMMSS + cardinal)
+     * Convertit une coordonnée DMS compacte (DDDMMSS ou DDMMSS + cardinal)
      * en degrés décimaux.
      *
      * Exemple :
-     * "022108", "E" -> 2.3522
-     * "022108", "O" -> -2.3522
+     * "0022108", "E" -> 2.3522
+     * "0022108", "O" -> -2.3522
      * "485124", "N" -> 48.8566
      * "485124", "S" -> -48.8566
      *
      * @private
-     * @param {String} dms Chaîne DMS compacte (6 chiffres DDMMSS)
+     * @param {String} dms Chaîne DMS compacte (7 chiffres DDDMMSS en longitude, 6 chiffres DDMMSS en latitude)
      * @param {"lon"|"lat"} type Type de coordonnée
      * @param {String} cardinal Point cardinal ("N","S","E","O")
      * @returns {Number} Coordonnée en degrés décimaux
@@ -209,16 +241,16 @@ declare class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     private _decimalCompactDMSToDecimal;
     /**
      * Convertit une coordonnée décimale en format DMS compact :
-     * DDMMSS + point cardinal.
+     * DDDMMSS (longitude) ou DDMMSS (latitude) + point cardinal.
      *
      * Exemple :
-     *  2.3522  (lon) -> { value: "022108", cardinal: "E" }
-     * -2.3522  (lon) -> { value: "022108", cardinal: "O" }
+     *  2.3522  (lon) -> { value: "0022108", cardinal: "E" }
+     * -2.3522  (lon) -> { value: "0022108", cardinal: "O" }
      * 48.8566  (lat) -> { value: "485124", cardinal: "N" }
      * -48.8566 (lat) -> { value: "485124", cardinal: "S" }
      *
      * @private
-     * @param {Number} decimal Coordonnée décimale
+     * @param {String|Number} decimal Coordonnée décimale
      * @param {"lon"|"lat"} type Type de coordonnée
      * @returns {{value: String, cardinal: String}}
      */
@@ -229,6 +261,40 @@ declare class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @param {PointerEvent} e Événement de soumission
      */
     protected override _onSearch(e: PointerEvent): void;
+    /**
+     * Vérifie le format et les bornes des coordonnées saisies,
+     * et affiche les messages d'erreur sous les champs concernés.
+     *
+     * @private
+     * @returns {Boolean} true si les coordonnées sont valides
+     */
+    private _validateCoordinates;
+    /**
+     * Vérifie le format d'une coordonnée selon l'unité courante.
+     *
+     * @private
+     * @param {String} value Valeur saisie
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {Boolean} true si le format est correct
+     */
+    private _isValidCoordinateFormat;
+    /**
+     * Description du format attendu pour l'unité courante.
+     *
+     * @private
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {String} Description du format
+     */
+    private _getFormatHint;
+    /**
+     * Formate une borne (exprimée dans l'unité native du CRS) dans l'unité courante.
+     *
+     * @private
+     * @param {Number} value Borne en degrés ou en mètres
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {String} Borne formatée
+     */
+    private _formatBound;
     /**
      * Construit le contenu HTML à afficher dans la popup à partir des coordonnées fournies.
      *
