@@ -71,6 +71,10 @@ var catalog = new ol.control.Catalog({
 
 La recherche est active à partir du 3eme caractère saisi dans la barre de recherche.
 
+Les couches trouvées sont ordonnées par pertinence dans chaque catégorie ou section ;
+l'ordre des sections reste inchangé, et l'ordre initial est rétabli quand la recherche est effacée.
+En mode `optimisation : "clusterize"`, l'ordre initial est conservé.
+
 ---
 
 ### Exemple sur les categories
