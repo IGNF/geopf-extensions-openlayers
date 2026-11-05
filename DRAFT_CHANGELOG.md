@@ -27,6 +27,7 @@ __DATE__
   - LayerImport : possibilité d'importer un flux privé Géoplateforme (#611)
   - AdvancedSearch : la longitude en degrés sexagésimaux se saisit sur 7 chiffres (DDDMMSS, préremplie avec « 0 ») pour permettre les longitudes ≥ 100° (#654)
   - AdvancedSearch : factorisation de l'affichage des messages d'erreur (`_showMessage` / `_clearMessages`) dans `AbstractAdvancedSearch` (#654)
+  - Route & Isocurve : utilisation par défaut de la ressource bdtopo-valhalla pour tous les calculs (#652)
 
 * 🔥 [Deprecated]
 
@@ -35,7 +36,7 @@ __DATE__
 * 🐛 [Fixed]
 
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
-  - Catalog : les sous-catégories avec sections n'échouent plus lorsque des couches n'ont pas de thème ou de producteur (regroupées dans « Autres »)
+  - Catalog : les sous-catégories avec sections n'échouent plus lorsque des couches n'ont pas de thème ou de producteur (regroupées dans « Autres ») (#648)
   - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
   - AdvancedSearch : gestion de la recherche par coordonnées avec virgule comme séparateur décimal (#654)
  
