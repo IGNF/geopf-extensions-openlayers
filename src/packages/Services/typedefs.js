@@ -15,6 +15,21 @@
  * @property {String} [index="address,poi"]
  * @property {Number} [limit=1]
  * @property {Boolean} [returnTrueGeometry=false]
+ * @property {Boolean|CoordinateDetectionOptions} [coordinateDetection=false] - Détection locale d'un couple de coordonnées (IGNSearchService).
+ */
+
+/**
+ * Options de détection locale d'un couple de coordonnées saisi dans la recherche simple.
+ * Lorsqu'un couple est reconnu (ex. "48.502496, 3.384179", "48° 30.1497' N, 3° 23.0507' E",
+ * "48°30'08.9\"N 3°23'03.0\"E", "48, 2"), il est proposé en suggestion et aucune requête
+ * d'autocomplétion / de géocodage Géoplateforme n'est envoyée (les requêtes en cours sont ignorées).
+ * Les deux interprétations latitude/longitude puis longitude/latitude sont proposées si elles sont valides.
+ * Les coordonnées ne sont pas enregistrées dans l'historique.
+ * Les valeurs entières sans symbole ni point cardinal ne sont reconnues qu'avec un séparateur `,`, `;` ou `/` ("48, 2" oui, "48 2" non).
+ * La saisie est réanalysée à chaque modification du contenu (frappe, effacement, coller...).
+ * @typedef {Object} CoordinateDetectionOptions
+ * @property {Boolean} [active=true] - Active la détection.
+ * @property {Number|Function} [zoom=15] - Niveau de zoom appliqué sur le point (ou fonction recevant l'événement "search" et retournant un niveau de zoom).
  */
 
 /**
@@ -31,7 +46,7 @@
 /**
  * Résultat d'une autocomplétion (voir {@link https://ignf.github.io/geoportal-access-lib/latest/jsdoc/Gp.Services.AutoComplete.SuggestedLocation.html})
  * @typedef {Object} AutocompleteResult
- * @property {"StreetAddress"|"PositionOfInterest"} type - Type de suggestion.
+ * @property {"StreetAddress"|"PositionOfInterest"|"Coordinates"} type - Type de suggestion ("Coordinates" : couple de coordonnées détecté localement, voir {@link CoordinateDetectionOptions}).
  * @property {Position} position - Coordonnées du point, dans le système de coordonnées spécifiées.
  * @property {String} commune - Nom de la commune.
  * @property {String} fullText - Texte complet représentant la suggestion.

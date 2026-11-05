@@ -91,6 +91,12 @@
                         advancedSearch : [insee, location, coordinates, parcel],
                         returnTrueGeometry : true,
                         selectGeometry : 'extent',
+                        // Détection locale des coordonnées saisies dans la recherche simple, ex. :
+                        // 48.50249550131934, 3.384179137330703 | 48.502496, 3.384179 | +48.502496, +3.384179
+                        // 48° 30.1497' N, 3° 23.0507' E | 48°30'08.9"N 3°23'03.0"E
+                        coordinateDetection : {
+                            zoom : 15
+                        },
                         autocompleteOptions : {
                             serviceOptions : {
                                 maximumResponses : 10

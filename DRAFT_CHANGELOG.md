@@ -18,6 +18,8 @@ __DATE__
 * ✨ [Added]
 
   - GetFeatureInfo : un marker s'affiche là où la requête d'informations a été réalisée (#607)
+  - SearchEngineAdvanced / SearchEngineGeocodeIGN : option `coordinateDetection` (désactivée par défaut) pour reconnaître localement un couple de coordonnées saisi dans la recherche simple (degrés décimaux, degrés minutes décimales, DMS, points cardinaux), le proposer en suggestion et centrer la carte dessus, sans requête d'autocomplétion / de géocodage Géoplateforme ; la saisie est réanalysée à chaque modification du contenu (frappe, effacement, coller, couper...) et les coordonnées sont prioritaires sur les résultats des services
+  - Ajout de tests unitaires (`npm run test:unit`, runner natif `node:test`) pour le parseur de coordonnées
 
 * 🔨 [Changed]
 
@@ -31,6 +33,7 @@ __DATE__
 
 * 🐛 [Fixed]
 
+  - IGNSearchService : le géocodage de repli (`triggerGeocode`) utilisait une variable non définie et perdait son contexte ; les réponses périmées des services d'autocomplétion / de géocodage sont désormais ignorées
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
   - Catalog : les sous-catégories avec sections n'échouent plus lorsque des couches n'ont pas de thème ou de producteur (regroupées dans « Autres »)
   - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
