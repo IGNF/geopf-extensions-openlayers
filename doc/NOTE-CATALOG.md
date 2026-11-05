@@ -75,6 +75,97 @@ Les couches trouvées sont ordonnées par pertinence dans chaque catégorie ou s
 l'ordre des sections reste inchangé, et l'ordre initial est rétabli quand la recherche est effacée.
 En mode `optimisation : "clusterize"`, l'ordre initial est conservé.
 
+#### Recherche floue et critères
+
+La recherche utilise MiniSearch. Voici la configuration par défaut :
+
+```js
+var catalog = new ol.control.Catalog({
+    search : {
+        display : true,
+        label : "Rechercher une donnée",
+        criteria : ["name", "title", "description"],
+        fuzzyFields : ["name", "title"],
+        boost : {
+            title : 3,
+            name : 2
+        }
+    }
+});
+```
+
+- `criteria` définit les champs indexés. La notation pointée est acceptée, par exemple `serviceParams.id`.
+  Pour la description, seul le texte est recherché, sans les balises HTML.
+- `fuzzyFields` définit les champs tolérant les fautes de frappe et les permutations de lettres.
+  Ces champs doivent aussi figurer dans `criteria` ; les autres sont ignorés.
+  Avec `fuzzyFields : []`, ces deux formes de recherche approchée sont désactivées,
+  mais la recherche par préfixe et par sous-chaîne reste active.
+- `boost` définit le poids de chaque champ dans le classement, uniquement parmi les champs de `criteria`.
+  Un champ sans poids explicite reçoit le poids `1`.
+
+Ainsi, dans l'exemple précédent limité au critère `service`, les champs tolérants par défaut
+(`name` et `title`) ne sont pas utilisés. Pour rendre `service` tolérant, il faut aussi
+le déclarer dans `fuzzyFields`.
+
+#### Correspondances recherchées
+
+La recherche ignore la casse et les accents, remplace les tirets et underscores par des espaces
+et réduit les espaces consécutifs.
+
+Pour chaque terme saisi, plusieurs correspondances sont recherchées :
+
+- **Mot exact ou début de mot**, sur tous les champs de `criteria`.
+- **Faute de frappe**, uniquement sur les champs de `fuzzyFields` et pour les termes d'au moins
+  5 caractères : une insertion, une suppression ou une substitution est autorisée,
+  par exemple `marseile` pour `marseille`. Une inversion de lettres compte comme deux fautes
+  dans MiniSearch ; elle peut être couverte par la règle de permutation ci-dessous.
+- **Permutation de lettres**, uniquement sur les champs de `fuzzyFields` et dès 4 caractères :
+  le mot indexé doit contenir une séquence contiguë composée des mêmes lettres que le terme,
+  quel que soit leur ordre. Par exemple, `prais` retrouve `paris`.
+
+Chaque terme doit être trouvé dans la couche (combinaison **ET** entre les termes),
+mais les termes peuvent correspondre à des champs différents. Les différentes façons de
+retrouver un même terme sont combinées par **OU**.
+Les termes entièrement numériques ne bénéficient ni du préfixe ni de la recherche approchée.
+
+En complément des résultats MiniSearch, une recherche par sous-chaîne de la **saisie complète normalisée**
+ajoute les couches correspondantes qui ne figurent pas déjà dans les résultats,
+même si MiniSearch a trouvé d'autres couches. Elle porte sur le texte des critères réunis :
+`ign` peut ainsi retrouver `planignv2`, et `photo` retrouver `orthophoto`.
+Les couches ainsi ajoutées reçoivent un score de `0` ; celles déjà trouvées par MiniSearch conservent leur score.
+Cette recherche complémentaire s'applique aussi aux saisies numériques ;
+il peut donc retrouver `250` à partir de `2500`, malgré l'absence de préfixe numérique dans MiniSearch.
+
+#### Poids des champs et classement
+
+Pour la branche exacte ou par préfixe, les poids configurés dans `boost` sont transmis à MiniSearch.
+Pour la branche approchée (faute de frappe ou permutation), ils sont divisés par deux :
+
+```js
+(boost[field] || 1) * 0.5
+```
+
+Le `1` est une valeur de repli, pas un remplacement systématique du poids configuré :
+pour `title`, le calcul donne bien `3 * 0.5 = 1.5`.
+
+| Champ par défaut | Poids exact / préfixe | Poids approché |
+| --- | --- | --- |
+| `title` | 3 | 1,5 |
+| `name` | 2 | 1 |
+| `description` | 1 | Non activé par défaut |
+
+Ces poids multiplient les contributions au score, mais ne constituent pas le score final.
+MiniSearch tient aussi compte de la fréquence des termes et de la longueur des champs,
+et applique ses propres pénalités aux correspondances par préfixe et par faute de frappe.
+Les contributions des branches combinées par **OU** peuvent se cumuler, y compris lorsqu'un mot
+exact est aussi retrouvé par la branche approchée. Un résultat approché n'a donc pas
+nécessairement un score égal à la moitié de celui d'un résultat exact.
+
+Avec `|| 1`, un poids de `0` est également remplacé par `1` :
+pour exclure un champ de la recherche, il faut le retirer de `criteria`, et non lui attribuer `0`.
+Les résultats sont triés par score décroissant, puis selon leur ordre initial en cas d'égalité,
+sauf en mode `clusterize` qui conserve l'ordre initial.
+
 ---
 
 ### Exemple sur les categories
