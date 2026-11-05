@@ -89,7 +89,8 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             label : "Web Mercator",
             crs : "EPSG:3857",
             type : "Metric",
-            extent : [-20037508.34, -20037508.34, 20037508.34, 20037508.34]
+            // projected bounds EPSG (https://epsg.io/3857)
+            extent : [-20037508.34, -20048966.10, 20037508.34, 20048966.10]
         }, {
             label : "Lambert 93",
             crs : "EPSG:2154",
