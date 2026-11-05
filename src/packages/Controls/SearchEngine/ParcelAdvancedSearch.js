@@ -75,32 +75,6 @@ class ParcelAdvancedSearch extends AbstractAdvancedSearch {
     }
 
 
-    /** Clear error messages in the form
-     * @private
-     */
-    _clearMessages () {
-        this.element.querySelectorAll(".fr-message--error").forEach(msg => msg.remove());
-    }
-
-    /** Show error message for a given input
-     * @param {String} name Input name
-     * @param {String} [message] Message to show (if none remove message)
-     * @param {String} [what="error"] Message type (error, warning, info)
-     * @private
-     */
-    _showMessage (name, message, what) {
-        const div = this.element.querySelector("[name='" + name + "']").parentElement.querySelector(".GPMessagesGroup");
-        if (message) {
-            const msg = document.createElement("p");
-            msg.className = "fr-message fr-message--" + (what || "error");
-            msg.textContent = message;
-            div.innerHTML = "";
-            div.appendChild(msg);
-        } else {
-            div.innerHTML = "";
-        }
-    }
-
     /** Change the section
      * @param {Obj} options serviceOptions for WFS call
      * @private
