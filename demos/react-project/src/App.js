@@ -267,7 +267,7 @@ function App() {
 
   const getMap = async () => {
     var cfg = new Gp.Services.Config({
-      customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/fullConfig.json",
+      customConfigFile : "https://raw.githubusercontent.com/IGNF/geoportal-configuration/dist/dist/fullConfig.json",
       onSuccess : () => {
         createMap();
       },

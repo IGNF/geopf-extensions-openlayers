@@ -168,14 +168,14 @@ const matchesAnagramSequence = (query, word) => {
 
 /**
  * @typedef {Object} Config - Configuration des sources de données
- * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
- * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
  */
 
 /**
  * @typedef {Object} ConfigLayer - Configuration d'une couche
- * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
- * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
  * @description
  * Un objet de type ConfigLayer est un objet qui contient la configuration d'une couche.
  * Il est issu de la configuration globale (Config) et enrichi de propriétés supplémentaires
@@ -201,8 +201,8 @@ class Catalog extends Control {
      * @fires catalog:loaded
      * @fires catalog:layer:add
      * @fires catalog:layer:remove
-     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
-     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
      * @example
      * var widget = new ol.control.Catalog({
      *           collapsed : true,
@@ -728,7 +728,7 @@ class Catalog extends Control {
                     // ex.
                     // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
                     // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json",
-                    "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/entreeCarto.json"
+                    "https://raw.githubusercontent.com/IGNF/geoportal-configuration/dist/dist/entreeCarto.json"
                 ]
             }
         };
