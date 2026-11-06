@@ -21,6 +21,7 @@ __DATE__
   - SearchEngineAdvanced / SearchEngineGeocodeIGN : option `coordinateDetection` (désactivée par défaut) pour reconnaître localement un couple de coordonnées saisi dans la recherche simples (#655)
   - AdvancedSearch : contrôle du format et des bornes du système de référence des coordonnées saisies dans la recherche par coordonnées, avec messages d'erreur (#654)
   - LayerWMTS / SourceWMTS : option `urlTemplate` permettant de personnaliser la construction de l'url WMTS (ordre et casse des KVP) (#661)
+  - Catalog : optimisation de la recherche, plus efficace, tolérante aux fautes de frappe et tri des couches trouvées par pertinence dans chaque catégorie ou section (sauf en mode `clusterize`) (#657)
 
 * 🔨 [Changed]
 
