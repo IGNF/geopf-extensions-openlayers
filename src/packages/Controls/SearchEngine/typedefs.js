@@ -96,6 +96,8 @@
  * @property {String} crs - Alias CRS (ex. "EPSG:4326").
  * @property {String} [label] - Libellé affiché pour le système.
  * @property {String} [type] - Type d'unités ("Geographical"|"Metric").
+ * @property {Array<Number>} [extent] - Bornes de saisie [minX, minY, maxX, maxY] dans l'unité native du CRS
+ * (degrés ou mètres). Par défaut, l'étendue de la projection OpenLayers (si définie).
  */
 
 /**
