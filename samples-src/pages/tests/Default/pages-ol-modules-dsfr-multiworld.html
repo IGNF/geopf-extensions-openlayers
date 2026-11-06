@@ -76,8 +76,9 @@
             <h2>MultiWorld — widgets + wrapX / antimeridien</h2>
             <p>
               Vue <code>multiWorld: true</code> : pan horizontal libre autour du globe.
-              Sources GeoPF en <code>wrapX</code> ; emprise catalogue via filtre GetTile
-              (répétition régionale sans <code>layer.extent</code> absolu).
+              <code>wrapX</code> est opt-in sur la couche de fond. Catalogue et import
+              ajoutés ensuite héritent de la répétition. Emprise catalogue : filtre GetTile
+              et clip répété en longitude.
             </p>
             <!-- map -->
             <div id="map">
@@ -102,7 +103,10 @@
                   target : "map",
                   layers : [
                     new ol.layer.GeoportalWMTS({
-                      layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+                      layer : "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+                      olParams : {
+                        sourceParams : { wrapX : true }
+                      }
                     })
                   ],
                   view : new ol.View({

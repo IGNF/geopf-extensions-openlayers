@@ -7,6 +7,7 @@ import TileLayer from "ol/layer/Tile";
 // import local
 import Utils from "../Utils/Helper";
 import LayerUtils from "../Utils/LayerUtils";
+import "../Utils/WorldRepeat";
 import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMS from "./SourceWMS";

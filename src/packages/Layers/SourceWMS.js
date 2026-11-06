@@ -114,9 +114,8 @@ class SourceWMS extends TileWMSSource {
                 STYLES : wmsParams.styles,
                 FORMAT : wmsParams.format
             },
-            crossOrigin : "anonymous",
-            // multiWorld : répétition des tuiles (surchargeable via olParams)
-            wrapX : true
+            crossOrigin : "anonymous"
+            // wrapX : opt-in via olParams (défaut OpenLayers : false)
             // ,
             // attributions : [
             //     new ol.Attribution({
@@ -135,6 +134,9 @@ class SourceWMS extends TileWMSSource {
 
         // returns a WMS object, that inherits from ol.source.TileWMS.
         super(wmsSourceOptions);
+        if (wmsSourceOptions.wrapX) {
+            this._gpWrapOptIn = true;
+        }
 
         // save originators (to be updated by Originators control)
         this._originators = wmsParams.originators;

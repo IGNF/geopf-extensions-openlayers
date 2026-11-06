@@ -875,6 +875,7 @@ class Drawing extends Control {
         var features = new Collection();
         var layer = new VectorLayer({
             source : new VectorSource({
+                wrapX : true,
                 features : features
             }),
             title : this.options.layerDescription.title,
@@ -1781,6 +1782,7 @@ class Drawing extends Control {
             case this._addUID("drawing-tool-point"):
                 if (context.dtOptions["points"].active) {
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         // features : context.layer.getSource().getFeaturesCollection(),
                         source : context.layer.getSource(),
@@ -1799,6 +1801,7 @@ class Drawing extends Control {
             case this._addUID("drawing-tool-line"):
                 if (context.dtOptions["lines"].active) {
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         // features : context.layer.getSource().getFeaturesCollection(),
                         source : context.layer.getSource(),
@@ -1845,6 +1848,7 @@ class Drawing extends Control {
             case this._addUID("drawing-tool-polygon"):
                 if (context.dtOptions["polygons"].active) {
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         // features : context.layer.getSource().getFeaturesCollection(),
                         source : context.layer.getSource(),
@@ -1909,6 +1913,7 @@ class Drawing extends Control {
 
                     // saisie
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         features : this.interactionSelectEdit.getFeatures(),
                         style : new Style({
@@ -1972,6 +1977,7 @@ class Drawing extends Control {
                 // text : creation de points invisibles avec un label.
                 if (context.dtOptions["text"].active) {
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         // features : context.layer.getSource().getFeaturesCollection(),
                         source : context.layer.getSource(),

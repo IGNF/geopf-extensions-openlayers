@@ -2825,6 +2825,8 @@ class LayerImport extends Control {
         this._getWMSLayerMinMaxResolution(layerInfo, mapProjCode, layerTileOptions);
         // récupération de l'étendue (bbox)
         this._getWMSLayerExtent(layerInfo, mapProjCode, layerTileOptions);
+        // conservée avant addLayer : une carte qui wrap remplace layer.extent par un clip répété
+        var fitExtent = layerTileOptions.extent;
 
         // création de la couche à partir de la source
         var wmsLayer = new TileLayer(layerTileOptions);
@@ -2845,11 +2847,8 @@ class LayerImport extends Control {
         map.addLayer(wmsLayer);
 
         // zoom sur l'étendue des entités récupérées (si possible)
-        if (map.getView() && map.getSize() && wmsLayer.getExtent) {
-            var sourceExtent = wmsLayer.getExtent();
-            if (sourceExtent && sourceExtent[0] !== Infinity) {
-                map.getView().fit(sourceExtent, map.getSize());
-            }
+        if (map.getView() && map.getSize() && fitExtent && fitExtent[0] !== Infinity) {
+            map.getView().fit(fitExtent, map.getSize());
         }
 
         /**
@@ -3212,6 +3211,8 @@ class LayerImport extends Control {
         layerTileOptions.source = wmtsSource;
         // récupération de l'étendue (bbox)
         layerTileOptions.extent = this._getWMTSLayerExtent(layerInfo);
+        // conservée avant addLayer : une carte qui wrap remplace layer.extent par un clip répété
+        var fitExtent = layerTileOptions.extent;
         var wmtsLayer;
         try {
             wmtsLayer = new TileLayer(layerTileOptions);
@@ -3226,11 +3227,8 @@ class LayerImport extends Control {
         map.addLayer(wmtsLayer);
 
         // zoom sur l'étendue des entités récupérées (si possible)
-        if (map.getView() && map.getSize() && wmtsLayer.getExtent) {
-            var sourceExtent = wmtsLayer.getExtent();
-            if (sourceExtent && sourceExtent[0] !== Infinity) {
-                map.getView().fit(sourceExtent, map.getSize());
-            }
+        if (map.getView() && map.getSize() && fitExtent && fitExtent[0] !== Infinity) {
+            map.getView().fit(fitExtent, map.getSize());
         }
 
         /**
