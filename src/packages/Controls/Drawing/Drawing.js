@@ -45,6 +45,7 @@ import {
 } from "ol/sphere";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
+import MathUtils from "../../Utils/MathUtils";
 import Interactions from "../Utils/Interactions";
 import MarkersOther from "../Utils/MarkersOther";
 import Draggable from "../../Utils/Draggable";
@@ -874,6 +875,7 @@ class Drawing extends Control {
         var features = new Collection();
         var layer = new VectorLayer({
             source : new VectorSource({
+                wrapX : true,
                 features : features
             }),
             title : this.options.layerDescription.title,
@@ -1661,7 +1663,7 @@ class Drawing extends Control {
         switch (type) {
             case "Point":
                 var coordinatesPoint = (feature.getGeometry()).getCoordinates();
-                var c = olTransformProj(coordinatesPoint, projection, "EPSG:4326");
+                var c = MathUtils.wrapLonLat(olTransformProj(coordinatesPoint, projection, "EPSG:4326"));
                 measure = "lon : ";
                 measure += __roundDecimal(c[0], 4) + "°";
                 measure += " / ";
@@ -1673,8 +1675,8 @@ class Drawing extends Control {
                 var measureLength = 0;
                 var coordinatesLine = (feature.getGeometry()).getCoordinates();
                 for (var i = 0, ii = coordinatesLine.length - 1; i < ii; ++i) {
-                    var c1 = olTransformProj(coordinatesLine[i], projection, "EPSG:4326");
-                    var c2 = olTransformProj(coordinatesLine[i + 1], projection, "EPSG:4326");
+                    var c1 = MathUtils.wrapLonLat(olTransformProj(coordinatesLine[i], projection, "EPSG:4326"));
+                    var c2 = MathUtils.wrapLonLat(olTransformProj(coordinatesLine[i + 1], projection, "EPSG:4326"));
                     measureLength += olGetDistanceSphere(c1, c2);
                 }
                 measure = (measureLength > 1000)
@@ -1780,6 +1782,7 @@ class Drawing extends Control {
             case this._addUID("drawing-tool-point"):
                 if (context.dtOptions["points"].active) {
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         // features : context.layer.getSource().getFeaturesCollection(),
                         source : context.layer.getSource(),
@@ -1798,6 +1801,7 @@ class Drawing extends Control {
             case this._addUID("drawing-tool-line"):
                 if (context.dtOptions["lines"].active) {
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         // features : context.layer.getSource().getFeaturesCollection(),
                         source : context.layer.getSource(),
@@ -1844,6 +1848,7 @@ class Drawing extends Control {
             case this._addUID("drawing-tool-polygon"):
                 if (context.dtOptions["polygons"].active) {
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         // features : context.layer.getSource().getFeaturesCollection(),
                         source : context.layer.getSource(),
@@ -1908,6 +1913,7 @@ class Drawing extends Control {
 
                     // saisie
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         features : this.interactionSelectEdit.getFeatures(),
                         style : new Style({
@@ -1971,6 +1977,7 @@ class Drawing extends Control {
                 // text : creation de points invisibles avec un label.
                 if (context.dtOptions["text"].active) {
                     context.interactionCurrent = new DrawInteraction({
+                        wrapX : true,
                         stopClick : true,
                         // features : context.layer.getSource().getFeaturesCollection(),
                         source : context.layer.getSource(),

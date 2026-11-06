@@ -448,6 +448,7 @@ var Measures = {
         // Creates and adds the interaction
         var self = this;
         this.measureDraw = new DrawInteraction({
+            wrapX : true,
             source : this.measureSource,
             // condition : permet de gerer la suppression des derniers points saisis
             condition : function (event) {
@@ -513,7 +514,9 @@ var Measures = {
     initMeasureInteraction : function () {
         var map = this.getMap();
 
-        this.measureSource = new VectorSource();
+        this.measureSource = new VectorSource({
+            wrapX : true
+        });
 
         this.measureVector = new VectorLayer({
             source : this.measureSource,

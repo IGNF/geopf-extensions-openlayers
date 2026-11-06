@@ -11,6 +11,7 @@ import Gp from "geoportal-access-lib";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
 import Utils from "../../Utils/Helper";
+import MathUtils from "../../Utils/MathUtils";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
 import SelectorID from "../../Utils/SelectorID";
 import Markers from "../Utils/Markers";
@@ -249,6 +250,16 @@ class LocationSelector extends Control {
 
         // on utilise toujours la projection de la carte pour placer le marker
         coordinate = olTransformProj(coordinate, crs, proj);
+        // multiWorld : placer le marker dans la copie du monde visible
+        var view = map.getView();
+        var worldExtent = view.getProjection().getExtent();
+        if (view.getCenter() && worldExtent) {
+            coordinate = MathUtils.snapToNearestWorld(
+                coordinate,
+                view.getCenter(),
+                worldExtent[2] - worldExtent[0]
+            );
+        }
         this._setMarker([
             coordinate[0],
             coordinate[1]
@@ -443,7 +454,7 @@ class LocationSelector extends Control {
             this._suggestedLocations[idx].position.y
         ];
         // on sauvegarde le point courant (en EPSG:4326, [lon, lat])
-        this._coordinate = position;
+        this._coordinate = MathUtils.wrapLonLat(position);
 
         var info = {
             type : this._suggestedLocations[idx].type,
@@ -459,7 +470,16 @@ class LocationSelector extends Control {
         var mapProj = view.getProjection().getCode();
         if (mapProj !== "EPSG:4326") {
             // on retransforme les coordonnées de la position dans la projection de la carte
-            position = olTransformProj(position, "EPSG:4326", mapProj);
+            position = olTransformProj(this._coordinate, "EPSG:4326", mapProj);
+        }
+        // multiWorld : marker / centre dans la copie du monde visible
+        var worldExtent = view.getProjection().getExtent();
+        if (view.getCenter() && worldExtent) {
+            position = MathUtils.snapToNearestWorld(
+                position,
+                view.getCenter(),
+                worldExtent[2] - worldExtent[0]
+            );
         }
         // on centre la vue et positionne le marker, à la position reprojetée dans la projection de la carte
         this._setPosition(position);
@@ -604,7 +624,8 @@ class LocationSelector extends Control {
         //      ]
 
         // on transforme olCoodinate (dont la projection est celle de la carte) en EPSG:4326
-        this._coordinate = olTransformProj(olCoordinate, crs, "EPSG:4326");
+        // multiWorld : longitude dans [-180, 180] (affichage + API)
+        this._coordinate = MathUtils.wrapLonLat(olTransformProj(olCoordinate, crs, "EPSG:4326"));
 
         // INFO : si on veut des DMS
         // var coords = ol.coordinate.toStringHDMS(this._coordinate, 2).split("N ");
