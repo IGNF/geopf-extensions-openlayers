@@ -152,6 +152,8 @@
  * @property {Boolean} [search] - Comportement en tant que barre de recherche.
  * @property {String} [selectGeometry="point"] - Géométrie sélectionnée après une recherche ("point" ou "extent").
  * @property {Boolean|CoordinateDetectionOptions} [coordinateDetection=false] - Détection locale d'un couple de coordonnées saisi dans la recherche simple.
+ * Désactivée par défaut (option absente ou `false`). `true` ou `{}` l'activent avec un zoom de 15 ;
+ * `{ zoom : 12 }` (nombre ou fonction) personnalise le zoom. Voir {@link CoordinateDetectionOptions}.
  * @property {String} [ariaLabel] - Libellé ARIA.
  * @property {String} [placeholder] - Placeholder de l'input.
  * @property {Number} [minChars] - Nombre minimal de caractères pour autocomplétion.
