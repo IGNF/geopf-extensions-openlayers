@@ -140,6 +140,11 @@ var LegendsDOM = {
         if (o) {
             if (o.legends && o.legends.length) {
                 var url = o.legends[0].url; // 1ere valeur par defaut
+                var title = o.title || o.id;
+                // description détaillée de l'image (RGAA 1.6) : texte brut, sans HTML
+                // > description propre à la légende si fournie, sinon description de la couche
+                var desc = stringToHTML(o.legends[0].description || o.desc || "").textContent.trim();
+                var hasDesc = !!desc && desc !== title;
                 var entry = stringToHTML(`
                     <div
                         id="${o.id}"
@@ -155,7 +160,9 @@ var LegendsDOM = {
                         <div id="GPlegend_ID_${o.id}" class="legend-entry-image gpf-hidden">
                             <div>
                                 <div class="placeholder"></div>
-                                <img class="fr-fluid-img" src="${url}" alt="" loading="lazy" />
+                                <img class="fr-fluid-img" src="${url}" alt="" loading="lazy"
+                                    ${hasDesc ? `aria-describedby="GPlegendDesc_ID_${o.id}"` : ""} />
+                                <p id="GPlegendDesc_ID_${o.id}" class="legend-entry-desc fr-sr-only"></p>
                             </div>
                             <p>
                                 <a href="${url}" target="_blank" class="fr-link fr-text--xs">Ouvrir la légende dans un nouvel onglet</a>
@@ -163,6 +170,15 @@ var LegendsDOM = {
                         </div>
                     </div>
                 `);
+                // alternative et description posées via le DOM (échappement automatique)
+                var img = entry.firstChild.querySelector("img");
+                if (img) {
+                    img.alt = "Légende de la couche " + title;
+                }
+                var descElement = entry.firstChild.querySelector(".legend-entry-desc");
+                if (descElement && hasDesc) {
+                    descElement.textContent = "Description de la légende : " + desc;
+                }
                 // add event click button
                 var button = entry.firstChild.querySelector("button");
                 if (button) {
