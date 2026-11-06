@@ -552,7 +552,10 @@ class ContextMenu extends Control {
             scope : null, // this
             onSuccess : function (json) {
                 if (json.elevations.length > 0 && json.elevations[0].z) {
-                    altitude.innerHTML = "Altitude : " + json.elevations[0].z + "m";
+                    const z = json.elevations[0].z;
+                    if (typeof z === "number") {
+                        altitude.innerHTML = "Altitude: " + (z <= -9999 ? "---" : z + "m");
+                    }
                 }
             },
             onFailure : function (error) { },
