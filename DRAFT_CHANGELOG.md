@@ -39,6 +39,7 @@ __DATE__
   - ContextMenu : l'altitude « sans donnée » du service (-99999) s'affiche « --- » au lieu de « -99999m » (#658)
   - Catalog : les sous-catégories avec sections n'échouent plus lorsque des couches n'ont pas de thème ou de producteur (regroupées dans « Autres ») (#648)
   - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
+  - Legends : ajout d'une alternative textuelle et d'une description détaillée (`aria-describedby`) à l'image de légende (RGAA 1.6) (#656)
   - AdvancedSearch : gestion de la recherche par coordonnées avec virgule comme séparateur décimal (#654)
  
 * 🔒 [Security]

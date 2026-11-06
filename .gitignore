@@ -39,6 +39,7 @@ nb-configuration.xml
 /bower_components/
 /bower_dependencies/
 /coverage/
+/.claude/
 /dist/
 /jsdoc/
 /jsdoc_new/
