@@ -32,9 +32,71 @@ import Topics from "./topics.json";
 import { marked as Marked } from "marked";
 
 import Clusterize from "clusterize.js";
+import MiniSearch from "minisearch";
 const Test = Clusterize.default;
 
 var logger = Logger.getLogger("widget");
+
+/**
+ * Convertit une valeur de configuration (chaîne, tableau, objet) en texte.
+ * @param {*} value - Valeur à convertir.
+ * @returns {String} Texte indexable.
+ * @private
+ */
+const toSearchText = (value) => {
+    if (value == null) {
+        return "";
+    }
+    if (Array.isArray(value)) {
+        return value.flat(Infinity).map(toSearchText).filter(Boolean).join(" ");
+    }
+    if (typeof value === "object") {
+        // ex. producer_urls : [{ name, url }]
+        return toSearchText(value.name ?? value.title ?? "");
+    }
+    return String(value);
+};
+
+/**
+ * Extrait le texte d'un fragment HTML sans charger de ressources (document inerte).
+ * @param {String} html - HTML à convertir.
+ * @returns {String} Texte brut.
+ * @private
+ */
+const htmlToText = (html) => {
+    return new DOMParser().parseFromString(html, "text/html").body.textContent || "";
+};
+
+/**
+ * Trie les lettres d'une chaîne pour obtenir une signature indépendante de leur ordre.
+ * Exemple : "paris" => "aiprs", "prais" => "aiprs", etc.
+ * @param {String} value - Chaîne à convertir en signature.
+ * @returns {String} Lettres triées de la chaîne.
+ * @private
+ */
+const letterSignature = (value) => [...value].sort().join("");
+
+/**
+ * Vérifie si le mot contient une séquence de lettres consécutives
+ * composées exactement des mêmes lettres que la requête, quel que soit leur ordre.
+ * Les requêtes de moins de quatre lettres ne sont pas considérées.
+ * @param {String} query - Terme recherché.
+ * @param {String} word - Mot dans lequel chercher.
+ * @returns {Boolean} Vrai si une séquence de lettres consécutives correspond à la signature du terme.
+ * @private
+ */
+const matchesAnagramSequence = (query, word) => {
+    if (query.length < 4 || query.length > word.length) {
+        return false;
+    }
+    const signature = letterSignature(query);
+    for (let start = 0; start <= word.length - query.length; start++) {
+        if (letterSignature(word.slice(start, start + query.length)) === signature) {
+            return true;
+        }
+    }
+    return false;
+};
 
 /**
  * @typedef {Object} CatalogOptions - Liste des options du widget Catalog
@@ -50,7 +112,9 @@ var logger = Logger.getLogger("widget");
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
  * @property {string} [search.label="Rechercher une donnée"] - Label du champ de recherche.
- * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
+ * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche (champs des couches, notation pointée acceptée : "serviceParams.id").
+ * @property {Array<string>} [search.fuzzyFields=["name","title"]] - Champs où les fautes de frappe et permutations de lettres sont tolérées. Les champs doivent aussi figurer dans search.criteria.
+ * @property {Object<string, number>} [search.boost={title:3,name:2}] - Poids de chaque champ dans le classement des résultats.
  * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
  * @property {Array<Categories>} [categories] - Liste des catégories et sous-catégories.
  * @property {Object} [configuration] - Configuration des sources de données.
@@ -104,14 +168,14 @@ var logger = Logger.getLogger("widget");
 
 /**
  * @typedef {Object} Config - Configuration des sources de données
- * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
- * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
  */
 
 /**
  * @typedef {Object} ConfigLayer - Configuration d'une couche
- * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
- * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
  * @description
  * Un objet de type ConfigLayer est un objet qui contient la configuration d'une couche.
  * Il est issu de la configuration globale (Config) et enrichi de propriétés supplémentaires
@@ -137,8 +201,8 @@ class Catalog extends Control {
      * @fires catalog:loaded
      * @fires catalog:layer:add
      * @fires catalog:layer:remove
-     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
-     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
      * @example
      * var widget = new ol.control.Catalog({
      *           collapsed : true,
@@ -609,7 +673,15 @@ class Catalog extends Control {
                     "name",
                     "title",
                     "description"
-                ]
+                ],
+                fuzzyFields : [
+                    "name",
+                    "title"
+                ],
+                boost : {
+                    title : 3,
+                    name : 2
+                }
             },
             addToMap : true,
             categories : [
@@ -656,7 +728,7 @@ class Catalog extends Control {
                     // ex.
                     // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/layers.json",
                     // "https://raw.githubusercontent.com/IGNF/cartes.gouv.fr-entree-carto/main/public/data/edito.json",
-                    "https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/dist/entreeCarto.json"
+                    "https://raw.githubusercontent.com/IGNF/geoportal-configuration/dist/dist/entreeCarto.json"
                 ]
             }
         };
@@ -1211,6 +1283,9 @@ class Catalog extends Control {
      */
     createCatalogContentEntries (data) {
         var container = this.contentCatalogContainer;
+        // construction de l'index de recherche
+        this._buildSearchIndex();
+        this._searchFragmentIndex = new WeakMap();
 
         var widgetContentEntryTabs = this._createCatalogContentCategoriesTabs(this.categories, this.options.tabHeightAuto);
         container.appendChild(widgetContentEntryTabs);
@@ -1635,17 +1710,287 @@ class Catalog extends Control {
         // l'affichage des couches filtrées est realisé en cachant
         // les couches non conforme au critère.
         // le parametre pour masquer les couches : hidden
+        clearTimeout(this._searchTimeout);
+        const elements = this._indexSearchElements();
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
                 layer.hidden = false;
-                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden, elements);
+            }
+        }
+        // retour à l'ordre initial des couches
+        this._sortSearchElements(elements, null);
+    }
+
+    /**
+     * Normalise le texte pour la recherche : conversion en minuscules,
+     * suppression des accents, remplacement des underscores et tirets par des espaces,
+     * réduction des espaces consécutifs et suppression des espaces en début et fin.
+     * @param {*} input - Texte à normaliser.
+     * @returns {String} Texte normalisé.
+     * @private
+     */
+    _normalizeSearchText (input) {
+        return String(input || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[_-]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+    }
+
+    /**
+     * Extrait le texte indexable d'un champ de couche (notation pointée acceptée).
+     * La description est du HTML (cf. checkConfigLayers) : seul son texte est indexé.
+     * @param {Object} layer - Couche.
+     * @param {String} field - Nom du champ.
+     * @returns {String} Texte indexable.
+     * @private
+     */
+    _extractSearchText (layer, field) {
+        const value = field.split(".").reduce((obj, key) => (obj == null ? undefined : obj[key]), layer);
+        if (field === "description" && typeof value === "string") {
+            return htmlToText(value);
+        }
+        return toSearchText(value);
+    }
+
+    /**
+     * Construit l'index de recherche (MiniSearch) selon les critères configurés.
+     * Les champs tolérants (fautes de frappe et permutations de lettres) sont déclarés
+     * dans `search.fuzzyFields` et doivent aussi figurer dans `search.criteria`.
+     * @private
+     */
+    _buildSearchIndex () {
+        const criteria = this.options.search.criteria || [];
+        const layers = Object.values(this.layersList || {});
+
+        // extraction du texte indexable de chaque critère, par clef de couche
+        const texts = new globalThis.Map();
+        for (const layer of layers) {
+            const entry = {};
+            for (const field of criteria) {
+                entry[field] = this._extractSearchText(layer, field);
+            }
+            texts.set(layer.key, entry);
+        }
+        const indexedLayers = layers.filter(layer => layer.key !== undefined);
+
+        // champs tolérants, limités aux critères de recherche
+        const fuzzyFields = Array.isArray(this.options.search.fuzzyFields)
+            ? this.options.search.fuzzyFields.filter(field => criteria.includes(field))
+            : [];
+
+        // découpage en termes : découpage MiniSearch (espaces et ponctuation) puis normalisation,
+        // partagé par l'indexation, la recherche et la construction du vocabulaire
+        const tokenize = MiniSearch.getDefault("tokenize");
+        const processTerm = (term) => this._normalizeSearchText(term).split(" ").filter(Boolean);
+
+        // vocabulaire des champs tolérants : mots candidats pour la recherche par permutation de lettres
+        const vocabulary = new Set();
+        for (const layer of indexedLayers) {
+            const entry = texts.get(layer.key);
+            for (const field of fuzzyFields) {
+                tokenize(entry[field]).flatMap(processTerm).forEach(term => vocabulary.add(term));
+            }
+        }
+
+        // index MiniSearch de toutes les couches identifiées
+        this._searchIndex = new MiniSearch({
+            idField : "key",
+            fields : criteria,
+            extractField : (layer, field) => (field === "key") ? layer.key : texts.get(layer.key)[field],
+            processTerm : processTerm
+        });
+        this._searchIndex.addAll(indexedLayers);
+
+        // état utilisé par la recherche approchée (champs tolérants, vocabulaire et cache des permutations)
+        this._searchFuzzyFields = fuzzyFields;
+        this._searchVocabulary = vocabulary;
+        this._searchFuzzyCache = new globalThis.Map();
+
+        // texte complet conservé pour la recherche par sous-chaîne (ex. "ign" dans "planignv2")
+        this._searchTexts = new globalThis.Map(Array.from(texts, ([key, entry]) => {
+            return [key, this._normalizeSearchText(Object.values(entry).join(" "))];
+        }));
+    }
+
+    /**
+     * Retourne les mots contenant une séquence contiguë composée des mêmes lettres que le terme, quel que soit leur ordre.
+     * Met le résultat en cache pour réutiliser cette liste lors des recherches suivantes avec le même terme.
+     * @param {String} term - Mot saisi (normalisé).
+     * @returns {Array<String>} Mots proches.
+     * @private
+     */
+    _expandFuzzyTerm (term) {
+        if (this._searchFuzzyCache.has(term)) {
+            return this._searchFuzzyCache.get(term);
+        }
+        const words = [];
+        for (const word of this._searchVocabulary) {
+            if (matchesAnagramSequence(term, word)) {
+                words.push(word);
+            }
+        }
+        this._searchFuzzyCache.set(term, words);
+        return words;
+    }
+
+    /**
+     * Recherche les couches correspondant à la saisie.
+     * - Chaque mot saisi doit être trouvé (ET entre les termes)
+     * - Pour chaque terme, on recherche :
+     *   - en début de mot, sur tous les critères,
+     *   - ou avec une faute de frappe (termes de 5 lettres ou plus), sur les champs tolérants (fuzzy fields),
+     *     ex. "marseile" ou "pariss",
+     *   - ou avec les mêmes lettres réordonnées dans une séquence de lettres, sur les champs tolérants (fuzzy fields),
+     *   - ou par sous-chaîne, sur tous les critères (ex. "ign" dans "planignv2", "photo" dans "orthophoto").
+     * - Les nombres doivent correspondre exactement (ex. 25 ≠ 250).
+     * @param {String} value - Saisie utilisateur.
+     * @returns {globalThis.Map<String, Number>} Score par clef de couche.
+     * @private
+     */
+    _searchLayers (value) {
+        const scores = new globalThis.Map();
+        const query = this._normalizeSearchText(value);
+        if (!this._searchIndex || !query) {
+            return scores;
+        }
+        const criteria = this.options.search.criteria;
+        const fuzzyFields = this._searchFuzzyFields;
+
+        // poids des champs pour correspondance exacte
+        const boost = Object.fromEntries(Object.entries(this.options.search.boost || {})
+            .filter(([field]) => criteria.includes(field)));
+        // poids des champs pour correspondance approchée (fuzzy) = on divise par 2
+        const fuzzyBoost = Object.fromEntries(fuzzyFields.map(field => [field, (boost[field] || 1) * 0.5]));
+
+        // une requête par terme saisi, chacune combinant (OU) plusieurs façons de le trouver
+        const queries = query.split(" ").map((term) => {
+            const isNumber = /^\d+$/.test(term);
+
+            // correspondance exacte, ou en début de mot (prefix activé explicitement, sauf pour les nombres)
+            const subqueries = [{ queries : [term], fields : criteria, prefix : !isNumber }];
+
+            // correspondances approchées, sur les champs tolérants uniquement :
+            // - une faute de frappe (insertion, suppression ou substitution), à partir de 5 lettres,
+            //   ex. "marseile" ou "pariss" (MiniSearch compte une inversion de lettres comme 2 fautes),
+            // - les mêmes lettres dans un autre ordre, à partir de 4 lettres, ex. "prais"
+            if (!isNumber && fuzzyFields.length) {
+                const approximate = [
+                    ...(term.length >= 5 ? [{ queries : [term], fuzzy : 1 }] : []),
+                    ...(term.length >= 4 ? this._expandFuzzyTerm(term) : [])
+                ];
+                if (approximate.length) {
+                    subqueries.push({ combineWith : "OR", queries : approximate, fields : fuzzyFields, boost : fuzzyBoost });
+                }
+            }
+            return { combineWith : "OR", queries : subqueries };
+        });
+
+        // exécution de la recherche : chaque terme saisi doit être trouvé (ET)
+        const results = this._searchIndex.search({ combineWith : "AND", queries : queries }, { boost : boost });
+        for (const result of results) {
+            scores.set(result.id, result.score);
+        }
+
+        // la recherche par sous-chaîne d'origine reste valable (sans score)
+        for (const [key, text] of this._searchTexts) {
+            if (!scores.has(key) && text.includes(query)) {
+                scores.set(key, 0);
+            }
+        }
+        return scores;
+    }
+
+    /**
+     * Regroupe toutes les représentations HTML d'une couche par clé "name:service".
+     * Une couche peut apparaître dans plusieurs catégories et, en mode on-demand,
+     * dans le fragment stocké ainsi que dans sa copie affichée.
+     * Le filtrage doit mettre à jour toutes ces représentations pour conserver
+     * un affichage cohérent, y compris lors de la réouverture d'une section.
+     * L'index est reconstruit à chaque recherche pour intégrer les copies montées
+     * ou supprimées ; les références des fragments sont mises en cache.
+     * Cela évite de rechercher chaque couche dans chaque catégorie et fragment.
+     * @returns {globalThis.Map<String, Array<HTMLElement>>} Éléments regroupés par nom de couche et service.
+     * @private
+     */
+    _indexSearchElements () {
+        const elements = new globalThis.Map();
+        const readElements = (root) => Array.from(root.querySelectorAll("[data-layeritem] input[data-layer]"), (input) => {
+            return [input.dataset.layer, input.closest("[data-layeritem]")];
+        });
+        const addElements = (entries) => {
+            for (const [key, element] of entries) {
+                if (!elements.has(key)) {
+                    elements.set(key, []);
+                }
+                elements.get(key).push(element);
+            }
+        };
+        addElements(readElements(this.contentCatalogContainer));
+        if (this.options.optimisation === "on-demand") {
+            this._searchFragmentIndex = this._searchFragmentIndex || new WeakMap();
+            for (const data of Object.values(this.dataOnDemand)) {
+                const fragments = typeof data.querySelectorAll === "function" ? [data] : Object.values(data);
+                for (const fragment of fragments) {
+                    if (!this._searchFragmentIndex.has(fragment)) {
+                        this._searchFragmentIndex.set(fragment, readElements(fragment));
+                    }
+                    addElements(this._searchFragmentIndex.get(fragment));
+                }
+            }
+        }
+        return elements;
+    }
+
+    /**
+     * Réordonne les couches de chaque liste (catégorie ou section) :
+     * par pertinence pendant une recherche, sinon dans l'ordre initial (attribut data-index).
+     * Seules les couches sont déplacées : l'ordre des sections n'est pas modifié.
+     * En mode on-demand, les fragments stockés sont aussi triés, pour qu'une section
+     * ouverte après la recherche soit déjà ordonnée.
+     * Le mode clusterize n'est pas trié.
+     * @param {globalThis.Map<String, Array<HTMLElement>>} elements - Éléments HTML des couches indexés par "name:service".
+     * @param {globalThis.Map<String, Number>|null} scores - Score par clé "name:service", ou null pour l'ordre initial.
+     * @private
+     */
+    _sortSearchElements (elements, scores) {
+        if (this.options.optimisation === "clusterize") {
+            return;
+        }
+
+        // score de chaque élément et listes parentes concernées (DOM affiché ou fragment on-demand)
+        const elementScores = new globalThis.Map();
+        const parents = new Set();
+        for (const [key, list] of elements) {
+            const score = scores && scores.has(key) ? scores.get(key) : -1;
+            for (const element of list) {
+                elementScores.set(element, score);
+                if (element.parentNode) {
+                    parents.add(element.parentNode);
+                }
+            }
+        }
+
+        // tri par score décroissant, puis ordre initial en cas d'égalité
+        const initial = (element) => Number(element.dataset.index) || 0;
+        const compare = (a, b) => (elementScores.get(b) - elementScores.get(a)) || (initial(a) - initial(b));
+        for (const parent of parents) {
+            const items = Array.from(parent.children).filter(child => elementScores.has(child));
+            const sorted = [...items].sort(compare);
+            // on ne touche au DOM que si l'ordre change
+            if (sorted.some((item, i) => item !== items[i])) {
+                parent.append(...sorted);
             }
         }
     }
 
     /**
-     * Set filtered layers
+     * Filtre les couches selon la saisie, puis les ordonne par pertinence
+     * dans chaque liste (catégorie ou section).
      *
      * @param {*} value - value
      * @private
@@ -1654,43 +1999,24 @@ class Catalog extends Control {
         // on rend invisible les couches qui ne respecte pas la valeur 
         // selon le critère de recherche
         
-        const normalizeSearchText = (input) => {
-            return String(input || "")
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .replace(/[_-]+/g, " ")
-                .replace(/\s+/g, " ")
-                .trim();
-        };
-
-        var normalizedValue = normalizeSearchText(value);
-        var criteria = this.options.search.criteria;
+        const empty = this._normalizeSearchText(value) === "";
+        const matches = empty ? null : this._searchLayers(value);
+        const elements = this._indexSearchElements();
+        // scores indexés par "name:service", la clé utilisée dans le DOM
+        const scores = empty ? null : new globalThis.Map();
         for (const key in this.layersList) {
             if (Object.prototype.hasOwnProperty.call(this.layersList, key)) {
                 const layer = this.layersList[key];
-                var words = "";
-                for (let i = 0; i < criteria.length; i++) {
-                    const c = criteria[i];
-                    if (layer[c]) {
-                        if (Array.isArray(layer[c])) {
-                            words += normalizeSearchText(layer[c]
-                                .flat(Infinity) // tableau imbriqué
-                                .filter(item => item != null) // valeur null ou undefined
-                                .join(" "));
-                        } else {
-                            words += " " + normalizeSearchText(layer[c]);
-                        }
-                    }
-                }
-                layer.hidden = !words.includes(normalizedValue);
-                if (!layer.hidden) {
-                    logger.info(`Filtering layer ${layer.name} with words : ${words}`);
+                layer.hidden = !empty && !matches.has(layer.key);
+                if (!layer.hidden && scores) {
+                    scores.set(`${layer.name}:${layer.service}`, matches.get(layer.key));
                 }
                 // on met à jour pour chaque couche la visibilité
-                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden);
+                this.updateVisibilityFilteredLayers(layer.name, layer.service, layer.hidden, elements);
             }
         }
+        // on ordonne les couches par pertinence (ordre initial si la saisie est vide)
+        this._sortSearchElements(elements, scores);
         // on rend invisible les sections qui ne possède plus de couches visibles
         this.updateVisibilityFilteredSections();
     }
@@ -1701,59 +2027,15 @@ class Catalog extends Control {
      * @param {*} name - ...
      * @param {*} service  - ...
      * @param {*} hidden  - ...
+     * @param {globalThis.Map<string, Array<HTMLElement>>} [elements] - Éléments HTML des couches indexés.
      * @private
      */
-    updateVisibilityFilteredLayers (name, service, hidden) {
-        const escapeSelector = (str) => {
-            return str.replace(/\./g, "\\.");
-        };
-
-        var categories = []; // remise à plat des catégories / sous-categories
-        this.categories.forEach((category) => {
-            if (category.items) {
-                for (let i = 0; i < category.items.length; i++) {
-                    const element = category.items[i];
-                    categories.push(element);
-                }
-            } else {
-                categories.push(category);
-            }
-        });
-
-        // FIXME
-        // performance de la recherche du container : querySelector !
-        const findContainerLayer = (category, name, service) => {
-            var container = document.getElementById(`fieldset-${category.id}_${name}-${service}`);
-            if (this.options.optimisation === "on-demand") {
-                // en mode on-demand, on doit chercher dans les fragments
-                if (category.section) {
-                    for (const sectionId in this.dataOnDemand[category.id]) {
-                        const fragment = this.dataOnDemand[category.id][sectionId];
-                        if (fragment) {
-                            var id = escapeSelector(`#fieldset-${category.id}_${name}-${service}`);
-                            container = fragment.querySelector(id);
-                            if (container) {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            return container;
-        };
-
-        for (let i = 0; i < categories.length; i++) {
-            const category = categories[i];
-            // on modifie la visibilité du container pour chaque couche
-            var container = findContainerLayer(category, name, service);
-            if (container) {
-                if (hidden) {
-                    container.classList.add("gpf-hidden");
-                    container.classList.add("GPelementHidden");
-                } else {
-                    container.classList.remove("gpf-hidden");
-                    container.classList.remove("GPelementHidden");
-                    logger.info(`Layer ${name}:${service} visibility updated to hidden=${hidden} in category ${category.id} (${container.id}).`);
+    updateVisibilityFilteredLayers (name, service, hidden, elements) {
+        const index = elements || this._indexSearchElements();
+        for (const container of index.get(`${name}:${service}`) || []) {
+            for (const className of ["gpf-hidden", "GPelementHidden"]) {
+                if (container.classList.contains(className) !== hidden) {
+                    container.classList.toggle(className, hidden);
                 }
             }
         }
@@ -1773,24 +2055,18 @@ class Catalog extends Control {
         // avec id = this.generateID(title) où title est le titre de la section
         // le title d'une section est disponible pour une category qui possède des sections
 
-        // on compte le nombre de couches encore visible, 
-        // si 0 alors la section est hidden : 
-        // var count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
-        // avec data est la liste des couches (DOM)
-
         const countLayersInSection = (categoryId, sectionId) => {
             var count = 0;
             // en mode on-demand, on doit chercher dans le fragment
             if (this.options.optimisation === "on-demand") {
-                var fragment = this.dataOnDemand[categoryId][sectionId];
+                var fragment = this.dataOnDemand[categoryId] && this.dataOnDemand[categoryId][sectionId];
                 if (fragment) {
                     count = fragment.querySelectorAll(".fr-fieldset__element:not(.gpf-hidden):not(.GPelementHidden)").length;
                 }
             } else {
                 var container = document.getElementById(sectionId);
                 if (container) {
-                    var data = container.innerHTML;
-                    count = [...data.matchAll(/"fr-fieldset__element"/g)].length;
+                    count = container.querySelectorAll(".fr-fieldset__element:not(.gpf-hidden):not(.GPelementHidden)").length;
                 }
             }
             return count;

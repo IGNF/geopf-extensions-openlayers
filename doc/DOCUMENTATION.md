@@ -1986,9 +1986,9 @@ Il existe plusieurs modes :
 Les informations sur le fichier de configuration sont disponible sur le projet :
 <https://github.com/IGNF/geoportal-configuration>
 
-- schema : <https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json>
-- jsdoc : <https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc>
-- exemples : <https://github.com/IGNF/geoportal-configuration/tree/new-url/dist>
+- schema : <https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json>
+- jsdoc : <https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc>
+- exemples : <https://github.com/IGNF/geoportal-configuration/tree/dist/dist>
 
 D'autres informations sont disponible dans la jsdoc du projet : <https://github.com/IGNF/geoportal-access-lib>
 
@@ -2028,7 +2028,7 @@ est présent pour ajouter ou retirer une legende
 > Les légendes sont extraites du fichier d'aggregat des getcapabilities
 
 ```json
-    // ex. https://github.com/IGNF/geoportal-configuration/blob/new-url/dist/transportsConfig.json
+    // ex. https://github.com/IGNF/geoportal-configuration/blob/dist/dist/transportsConfig.json
     "legends": [
             {
             "format": "image/png",

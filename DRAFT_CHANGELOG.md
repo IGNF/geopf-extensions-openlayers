@@ -19,6 +19,7 @@ __DATE__
 
   - GetFeatureInfo : un marker s'affiche là où la requête d'informations a été réalisée (#607)
   - AdvancedSearch : contrôle du format et des bornes du système de référence des coordonnées saisies dans la recherche par coordonnées, avec messages d'erreur ; option `extent` sur les systèmes de `coordinateSearch.systems` (#654)
+  - Catalog : optimisation de la recherche, plus efficace, tolérante aux fautes de frappe et tri des couches trouvées par pertinence dans chaque catégorie ou section (sauf en mode `clusterize`) (#657)
 
 * 🔨 [Changed]
 

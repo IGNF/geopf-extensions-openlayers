@@ -651,6 +651,7 @@ var CatalogDOM = {
             return `
             <div
                 data-layeritem
+                data-index="${i}"
                 class="fr-fieldset__element fr-toggle--border-bottom fr-py-1w fr-px-1w fr-mb-0" 
                 id="fieldset-${categoryId}_${name}-${service}"
             >
