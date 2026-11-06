@@ -116,6 +116,33 @@ class AbstractSearchService extends BaseObject {
         return obj;
     }
 
+    /**
+     * Retourne un résultat résolu localement pour une saisie, sans appel à un service distant
+     * (ex. couple de coordonnées). Utilisé lors de la validation du formulaire.
+     * Méthode à surcharger dans les services concrets.
+     * @param {String} text Saisie utilisateur
+     * @returns {Object|null} Élément à sélectionner, ou null si aucun résultat local
+     */
+    getDirectResult (text) {
+        return null;
+    }
+
+    /**
+     * Indique si un élément sélectionné peut être enregistré dans l'historique de recherche.
+     * Méthode à surcharger dans les services concrets.
+     * @param {Object} item Élément sélectionné
+     * @returns {Boolean} true si l'élément peut être historisé
+     */
+    isHistorizable (item) {
+        return true;
+    }
+
+    /**
+     * Invalide les requêtes en cours : leurs réponses ultérieures seront ignorées.
+     * Méthode à surcharger dans les services concrets.
+     */
+    cancel () {}
+
 }
 
 export default AbstractSearchService;
