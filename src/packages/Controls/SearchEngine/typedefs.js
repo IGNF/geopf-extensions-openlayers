@@ -27,19 +27,7 @@
  * @property {(type:string, listener:Function)=>void} [addEventListener] - Ajout d'écouteur.
  */
 
-/**
- * Résultat d'une autocomplétion (voir {@link https://ignf.github.io/geoportal-access-lib/latest/jsdoc/Gp.Services.AutoComplete.SuggestedLocation.html})
- * @typedef {Object} AutocompleteResult
- * @property {"StreetAddress"|"PositionOfInterest"} type - Type de suggestion.
- * @property {Position} position - Coordonnées du point, dans le système de coordonnées spécifiées.
- * @property {String} commune - Nom de la commune.
- * @property {String} fullText - Texte complet représentant la suggestion.
- * @property {String} postalCode - Code postal de la suggestion.
- * @property {Number} classification - Nombre utilisé pour classigier l'importance de l'endroit suggéré de 1 (plus important) à 7 (moins important)
- * @property {Array<String>} [poiType] - Types POI détaillés.
- * @property {String} [street] - Nom de la rue (types "StreetAddress" seulement).
- * @property {String} [kind] - Nature du point d'intérêt, e.g. "prefecture", "municipality"... (types "PositionOfInterest" seulement).
- */
+// AutocompleteResult et CoordinateDetectionOptions : voir ../../Services/typedefs.js
 
 /**
  * Position dans un système de coordonnées.
@@ -96,6 +84,10 @@
  * @typedef {Object} SearchEvent
  * @property {String} type - Type d'événement (ex. "search").
  * @property {Object} [detail] - Payload détaillé.
+ * @property {import("ol/Feature").default} [result] - Feature du résultat.
+ * @property {import("ol/Feature").default} [extent] - Feature de l'emprise du résultat.
+ * @property {String} [projection] - Projection des géométries fournies par le service (reprojetées dans celle de la carte par le contrôle). Absente : projection de la carte.
+ * @property {Number|Function} [zoom] - Niveau de zoom à appliquer sur un résultat ponctuel (ex. coordonnées saisies).
  */
 
 /**
@@ -119,7 +111,8 @@
  * Options pour le contrôle SearchEngineGeocodeIGN.
  * Étend SearchEngineBaseOptions et ajoute les options spécifiques du service IGN.
  * @typedef {SearchEngineBaseOptions & {
- *   serviceOptions?: AbstractSearchServiceOptions
+ *   serviceOptions?: AbstractSearchServiceOptions,
+ *   coordinateDetection?: Boolean|CoordinateDetectionOptions
  * }} SearchEngineGeocodeIGNOptions
  */
 
@@ -160,6 +153,9 @@
  * @property {String} [hint] - Texte d'aide.
  * @property {Boolean} [search] - Comportement en tant que barre de recherche.
  * @property {String} [selectGeometry="point"] - Géométrie sélectionnée après une recherche ("point" ou "extent").
+ * @property {Boolean|CoordinateDetectionOptions} [coordinateDetection=false] - Détection locale d'un couple de coordonnées saisi dans la recherche simple.
+ * Désactivée par défaut (option absente ou `false`). `true` ou `{}` l'activent avec un zoom de 15 ;
+ * `{ zoom : 12 }` (nombre ou fonction) personnalise le zoom. Voir {@link CoordinateDetectionOptions}.
  * @property {String} [ariaLabel] - Libellé ARIA.
  * @property {String} [placeholder] - Placeholder de l'input.
  * @property {Number} [minChars] - Nombre minimal de caractères pour autocomplétion.

@@ -15,6 +15,42 @@
  * @property {String} [index="address,poi"]
  * @property {Number} [limit=1]
  * @property {Boolean} [returnTrueGeometry=false]
+ * @property {Boolean|CoordinateDetectionOptions} [coordinateDetection=false] - Détection locale d'un couple de coordonnées (IGNSearchService).
+ * Désactivée par défaut (option absente ou `false`). `true` ou `{}` l'activent avec un zoom de 15.
+ * Voir {@link CoordinateDetectionOptions} pour les valeurs possibles.
+ */
+
+/**
+ * Options de détection locale d'un couple de coordonnées saisi dans la recherche simple.
+ * Lorsqu'un couple est reconnu (ex. "48.502496, 3.384179", "48° 30.1497' N, 3° 23.0507' E",
+ * "48°30'08.9\"N 3°23'03.0\"E", "48, 2"), il est proposé en suggestion et aucune requête
+ * d'autocomplétion / de géocodage Géoplateforme n'est envoyée (les requêtes en cours sont ignorées).
+ * Les deux interprétations latitude/longitude puis longitude/latitude sont proposées si elles sont valides.
+ * Les coordonnées ne sont pas enregistrées dans l'historique.
+ * Les valeurs entières sans symbole ni point cardinal ne sont reconnues qu'avec un séparateur `,`, `;` ou `/` ("48, 2" oui, "48 2" non).
+ * La saisie est réanalysée à chaque modification du contenu (frappe, effacement, coller...).
+ *
+ * Valeurs possibles de l'option `coordinateDetection` :
+ * - non renseignée, `null` ou `false` (défaut) : détection désactivée ;
+ * - `true` : détection activée, zoom par défaut (15) ;
+ * - `{}` : équivaut à `true` (détection activée, zoom par défaut 15) ;
+ * - `{ zoom : 12 }` : détection activée, la carte est centrée sur les coordonnées au zoom 12 ;
+ * - `{ zoom : (e) => ... }` : détection activée, le zoom est calculé par la fonction à chaque recherche ;
+ * - `{ active : false, ... }` : détection désactivée (les autres propriétés sont ignorées).
+ *
+ * @example
+ * coordinateDetection : true                 // activée, zoom 15
+ * coordinateDetection : {}                   // activée, zoom 15
+ * coordinateDetection : { zoom : 18 }        // activée, zoom 18
+ * coordinateDetection : { zoom : (e) => 12 } // activée, zoom calculé
+ * coordinateDetection : { active : false }   // désactivée
+ *
+ * @typedef {Object} CoordinateDetectionOptions
+ * @property {Boolean} [active=true] - Active la détection. Seul `false` la désactive explicitement.
+ * @property {Number|Function} [zoom=15] - Niveau de zoom sur lequel la carte se centre lorsqu'on sélectionne
+ * des coordonnées détectées. Peut être un nombre, ou une fonction recevant l'événement "search"
+ * et retournant un niveau de zoom. Si la propriété est absente ou n'est ni un nombre ni une fonction,
+ * la valeur par défaut (15) est utilisée.
  */
 
 /**
@@ -31,7 +67,7 @@
 /**
  * Résultat d'une autocomplétion (voir {@link https://ignf.github.io/geoportal-access-lib/latest/jsdoc/Gp.Services.AutoComplete.SuggestedLocation.html})
  * @typedef {Object} AutocompleteResult
- * @property {"StreetAddress"|"PositionOfInterest"} type - Type de suggestion.
+ * @property {"StreetAddress"|"PositionOfInterest"|"Coordinates"} type - Type de suggestion ("Coordinates" : couple de coordonnées détecté localement, voir {@link CoordinateDetectionOptions}).
  * @property {Position} position - Coordonnées du point, dans le système de coordonnées spécifiées.
  * @property {String} commune - Nom de la commune.
  * @property {String} fullText - Texte complet représentant la suggestion.

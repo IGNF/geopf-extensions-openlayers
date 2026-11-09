@@ -18,7 +18,8 @@ __DATE__
 * ✨ [Added]
 
   - GetFeatureInfo : un marker s'affiche là où la requête d'informations a été réalisée (#607)
-  - AdvancedSearch : contrôle du format et des bornes du système de référence des coordonnées saisies dans la recherche par coordonnées, avec messages d'erreur ; option `extent` sur les systèmes de `coordinateSearch.systems` (#654)
+  - SearchEngineAdvanced / SearchEngineGeocodeIGN : option `coordinateDetection` (désactivée par défaut) pour reconnaître localement un couple de coordonnées saisi dans la recherche simples (#655)
+  - AdvancedSearch : contrôle du format et des bornes du système de référence des coordonnées saisies dans la recherche par coordonnées, avec messages d'erreur (#654)
 
 * 🔨 [Changed]
 
@@ -35,6 +36,7 @@ __DATE__
 
 * 🐛 [Fixed]
 
+  - IGNSearchService : le géocodage de repli (`triggerGeocode`) utilisait une variable non définie et perdait son contexte ; les réponses périmées des services d'autocomplétion / de géocodage sont désormais ignorées
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
   - Catalog : les sous-catégories avec sections n'échouent plus lorsque des couches n'ont pas de thème ou de producteur (regroupées dans « Autres ») (#648)
   - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
