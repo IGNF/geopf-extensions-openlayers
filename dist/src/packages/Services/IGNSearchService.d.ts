@@ -30,6 +30,18 @@ declare class IGNSearchService extends AbstractSearchService {
         };
     } | undefined;
     /**
+     * Détection locale des coordonnées (désactivée par défaut)
+     * @type {Object}
+     * @private
+     */
+    private _coordinateDetection;
+    /**
+     * Versions des requêtes par type, utilisées pour ignorer les réponses devenues obsolètes
+     * (voir _ignoreIfStale). Elles n'annulent pas les requêtes réseau.
+     * @private
+     */
+    private _requestVersions;
+    /**
      * Label du géocodage / de la recherche
      * @type {String}
      */
@@ -39,6 +51,55 @@ declare class IGNSearchService extends AbstractSearchService {
      * @type {Array<AutocompleteResult>}
      */
     _suggestedLocations: Array<AutocompleteResult>;
+    /**
+     * Enveloppe un callback de requête pour qu'il soit ignoré si une requête plus récente
+     * du même type a été lancée entre-temps, ou si `cancel()` a été appelé.
+     * @private
+     * @param {"autocomplete"|"search"} kind Type de requête
+     * @param {Function} callback Callback à protéger (appelé avec `this` = le service)
+     * @returns {Function} Callback qui ne s'exécute que si la réponse est toujours d'actualité
+     */
+    private _ignoreIfStale;
+    /**
+     * Annule le géocodage de repli programmé (option triggerGeocode) s'il n'a pas encore démarré.
+     * @private
+     */
+    private _clearScheduledGeocode;
+    _triggerHandler: any;
+    /**
+     * Normalise l'option de détection des coordonnées.
+     * @private
+     * @param {Boolean|CoordinateDetectionOptions} option Option fournie
+     * @returns {Object} Option normalisée ({active: Boolean, zoom: Number|Function})
+     */
+    private _normalizeCoordinateDetection;
+    /**
+     * Détecte localement un couple de coordonnées dans la saisie.
+     * @private
+     * @param {String} text Saisie utilisateur
+     * @returns {Array<AutocompleteResult>} Suggestions locales (vide si non reconnu ou détection inactive)
+     */
+    private _detectCoordinates;
+    /**
+     * Retourne la première interprétation de la saisie en tant que coordonnées.
+     * @override
+     * @param {String} text Saisie utilisateur
+     * @returns {AutocompleteResult|null} Suggestion locale, ou null
+     */
+    override getDirectResult(text: string): AutocompleteResult | null;
+    /**
+     * Les coordonnées ne sont pas enregistrées dans l'historique.
+     * @override
+     * @param {AutocompleteResult} item Élément sélectionné
+     * @returns {Boolean} false pour des coordonnées
+     */
+    override isHistorizable(item: AutocompleteResult): boolean;
+    /**
+     * Recherche locale d'un couple de coordonnées : aucun appel aux services GPF.
+     * @private
+     * @param {AutocompleteResult} location Suggestion de type "Coordinates"
+     */
+    private _searchCoordinates;
     /**
      * Exécute une requête d'autocomplétion auprès du service IGN.
      * @private
@@ -56,12 +117,12 @@ declare class IGNSearchService extends AbstractSearchService {
     _onSuccessAutoComplete(results: {
         suggestedLocations: Array<AutocompleteResult>;
     }): void;
-    _triggerHandler: NodeJS.Timeout | null | undefined;
     /**
      * Fonction appelée en cas d'erreur sur le service d'autocomplétion
      * @param {ErrorService} error Erreur renvoyée par le service
+     * @param {String} [value] Texte saisi ayant donné lieu à l'autocomplétion
      */
-    _onFailureAutoComplete(error: ErrorService): void;
+    _onFailureAutoComplete(error: ErrorService, value?: string): void;
     /**
      * this method is called by this.onAutoCompleteSearchText()
      * and it clears suggested location from duplicate entries and improve unprecise fulltext entries.

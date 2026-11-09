@@ -55,47 +55,6 @@ type TextInputElement = {
     addEventListener?: ((type: string, listener: Function) => void) | undefined;
 };
 /**
- * Résultat d'une autocomplétion (voir {@link https://ignf.github.io/geoportal-access-lib/latest/jsdoc/Gp.Services.AutoComplete.SuggestedLocation.html})
- */
-type AutocompleteResult = {
-    /**
-     * - Type de suggestion.
-     */
-    type: "StreetAddress" | "PositionOfInterest";
-    /**
-     * - Coordonnées du point, dans le système de coordonnées spécifiées.
-     */
-    position: Position;
-    /**
-     * - Nom de la commune.
-     */
-    commune: string;
-    /**
-     * - Texte complet représentant la suggestion.
-     */
-    fullText: string;
-    /**
-     * - Code postal de la suggestion.
-     */
-    postalCode: string;
-    /**
-     * - Nombre utilisé pour classigier l'importance de l'endroit suggéré de 1 (plus important) à 7 (moins important)
-     */
-    classification: number;
-    /**
-     * - Types POI détaillés.
-     */
-    poiType?: string[] | undefined;
-    /**
-     * - Nom de la rue (types "StreetAddress" seulement).
-     */
-    street?: string | undefined;
-    /**
-     * - Nature du point d'intérêt, e.g. "prefecture", "municipality"... (types "PositionOfInterest" seulement).
-     */
-    kind?: string | undefined;
-};
-/**
  * Position dans un système de coordonnées.
  */
 type Position = {
@@ -224,6 +183,26 @@ type SearchEvent = {
      * - Payload détaillé.
      */
     detail?: any;
+    /**
+     * - Feature du résultat.
+     */
+    result?: import("ol/Feature").default<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }> | undefined;
+    /**
+     * - Feature de l'emprise du résultat.
+     */
+    extent?: import("ol/Feature").default<import("ol/geom").Geometry, {
+        [x: string]: any;
+    }> | undefined;
+    /**
+     * - Projection des géométries fournies par le service (reprojetées dans celle de la carte par le contrôle). Absente : projection de la carte.
+     */
+    projection?: string | undefined;
+    /**
+     * - Niveau de zoom à appliquer sur un résultat ponctuel (ex. coordonnées saisies).
+     */
+    zoom?: number | Function | undefined;
 };
 /**
  * Description d'un système de projection utilisable par le contrôle CoordinateAdvancedSearch.
@@ -266,6 +245,7 @@ type CoordinateSearchOptions = {
  */
 type SearchEngineGeocodeIGNOptions = SearchEngineBaseOptions & {
     serviceOptions?: AbstractSearchServiceOptions;
+    coordinateDetection?: boolean | CoordinateDetectionOptions;
 };
 /**
  * Options pour le contrôle SearchEngineGeocodeIGN.
@@ -345,6 +325,12 @@ type SearchEngineAdvancedOptions = {
      * - Géométrie sélectionnée après une recherche ("point" ou "extent").
      */
     selectGeometry?: string | undefined;
+    /**
+     * - Détection locale d'un couple de coordonnées saisi dans la recherche simple.
+     * Désactivée par défaut (option absente ou `false`). `true` ou `{}` l'activent avec un zoom de 15 ;
+     * `{ zoom : 12 }` (nombre ou fonction) personnalise le zoom. Voir {@link CoordinateDetectionOptions}.
+     */
+    coordinateDetection?: boolean | CoordinateDetectionOptions | undefined;
     /**
      * - Libellé ARIA.
      */

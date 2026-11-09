@@ -67,6 +67,26 @@ declare class AbstractSearchService extends BaseObject<{
      * @returns {String} Titre du résultat
      */
     getItemTitle(obj: AutocompleteResult): string;
+    /**
+     * Retourne un résultat résolu localement pour une saisie, sans appel à un service distant
+     * (ex. couple de coordonnées). Utilisé lors de la validation du formulaire.
+     * Méthode à surcharger dans les services concrets.
+     * @param {String} text Saisie utilisateur
+     * @returns {Object|null} Élément à sélectionner, ou null si aucun résultat local
+     */
+    getDirectResult(text: string): any | null;
+    /**
+     * Indique si un élément sélectionné peut être enregistré dans l'historique de recherche.
+     * Méthode à surcharger dans les services concrets.
+     * @param {Object} item Élément sélectionné
+     * @returns {Boolean} true si l'élément peut être historisé
+     */
+    isHistorizable(item: any): boolean;
+    /**
+     * Invalide les requêtes en cours : leurs réponses ultérieures seront ignorées.
+     * Méthode à surcharger dans les services concrets.
+     */
+    cancel(): void;
 }
 import BaseObject from "ol/Object";
 //# sourceMappingURL=AbstractSearchService.d.ts.map

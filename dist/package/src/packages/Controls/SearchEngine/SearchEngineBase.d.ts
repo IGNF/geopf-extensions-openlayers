@@ -62,6 +62,19 @@ declare class SearchEngineBase extends Control {
     autocompleteList: HTMLUListElement | undefined;
     autocompleteFooter: HTMLDivElement | undefined;
     /**
+     * Analyse la saisie après chaque modification du contenu par l'utilisateur :
+     * - résultat résolu localement (ex. coordonnées) : suggestion immédiate, prioritaire sur
+     *   les services distants dont les requêtes en cours sont ignorées ;
+     * - sinon, à partir de `minChars` : autocomplétion classique du service ;
+     * - sinon : la liste est vidée (ou l'historique affiché si le champ est vide)
+     *   et les requêtes en cours sont ignorées.
+     * @private
+     * @param {String} value Contenu du champ
+     * @param {SearchEngineBaseOptions} options Options du constructeur
+     */
+    private _onUserInput;
+    _directListShown: boolean | undefined;
+    /**
      * Active ou désactive le contrôle (désactive l'input / bouton).
      * @param {Boolean} active Indique si le contrôle doit être désactivé
      * @returns {void}
@@ -93,12 +106,18 @@ declare class SearchEngineBase extends Control {
      */
     onSearch(e: any): void;
     /**
+     * Reprojette les géométries d'un événement de recherche dans la projection de la carte,
+     * lorsque le service précise la projection de ses résultats (`e.projection`).
+     * @private
+     * @param {Object} e Événement de recherche
+     */
+    private _reprojectSearchEvent;
+    /**
      * Callback sur sélection d'un item.
      * @param {Object} item Élément sélectionné
      * @api
      */
     select(item: any): void;
-    _currentValue: string | undefined;
     /**
      * Affiche la liste de l'historique.
      * @api
