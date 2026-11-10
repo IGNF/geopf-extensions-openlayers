@@ -17,22 +17,6 @@ div[id^=GPmousePositionCoordinate-] input {
   font-size: 1rem
 }
 
-/* Garde les inputs sur la même ligne que le symbole d'unité ° */
-div[id^=GPmousePositionCoordinate-] input.fr-input {
-  display: inline-block;
-  width: 120px;
-}
-
-div[id^=GPmousePositionCoordinate-] input.fr-input.GPSexagesimal {
-  width: 30px;
-  padding-inline: 2px;
-}
-
-div[id^=GPmousePositionCoordinate-] input.fr-input.GPSexagesimalsec {
-  width: 45px;
-  padding-inline: 2px;
-}
-
 /* EDIT COORDINATES TOOLS */
 
 .GPmousePositionPanelEditTools {
