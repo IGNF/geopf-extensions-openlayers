@@ -6,6 +6,7 @@ import {
 import TileLayer from "ol/layer/Tile";
 // import local
 import Utils from "../Utils/Helper";
+import LayerUtils from "../Utils/LayerUtils";
 import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMS from "./SourceWMS";
@@ -129,6 +130,10 @@ class LayerWMS extends TileLayer {
                     p = olGetProj(olSourceParams.projection);
                 } else if (typeof olSourceParams.projection === "object" && olSourceParams.projection.getCode()) {
                     p = olGetProj(olSourceParams.projection.getCode());
+                }
+
+                if (layerTileOptions.extent && LayerUtils.isRegionalCatalogueExtent(layerTileOptions.extent, p && p.getExtent && p.getExtent())) {
+                    LayerUtils.enableNodataWhiteChromakey(wmsSource);
                 }
                  
                 if (options.noConstraint !== true && layerCfg.globalConstraint.noConstraint !== true) {

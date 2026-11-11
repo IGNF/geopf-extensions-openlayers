@@ -6,6 +6,7 @@ import {
 import TileLayer from "ol/layer/Tile";
 // import local
 import Utils from "../Utils/Helper";
+import LayerUtils from "../Utils/LayerUtils";
 import Config from "../Utils/Config";
 // import local with ol dependencies
 import SourceWMTS from "./SourceWMTS";
@@ -332,6 +333,10 @@ class LayerWMTS extends TileLayer {
                     p = olGetProj(layerCfg.globalConstraint.projection);
                 } else {
                     p = olGetProj("EPSG:3857");
+                }
+
+                if (layerTileOptions.extent && LayerUtils.isRegionalCatalogueExtent(layerTileOptions.extent, p && p.getExtent && p.getExtent())) {
+                    LayerUtils.enableNodataWhiteChromakey(wmtsSource);
                 }
 
                 if (options.noConstraint !== true && layerCfg.globalConstraint.noConstraint !== true) {
