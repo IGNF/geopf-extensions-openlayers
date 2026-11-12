@@ -1981,9 +1981,44 @@ class Catalog extends Control {
         for (const parent of parents) {
             const items = Array.from(parent.children).filter(child => elementScores.has(child));
             const sorted = [...items].sort(compare);
-            // on ne touche au DOM que si l'ordre change
-            if (sorted.some((item, i) => item !== items[i])) {
-                parent.append(...sorted);
+            // si l'ordre est déjà correct, on ne fait rien
+            if (!sorted.some((item, i) => item !== items[i])) {
+                continue;
+            }
+            // Principe: on ne déplace que les éléments hors de la plus longue suite déjà bien ordonnée
+            // (plus longue sous-séquence croissante des positions actuelles, dans l'ordre cible)
+            // position actuelle de chaque élément dans le DOM
+            const position = new globalThis.Map(items.map((item, i) => [item, i]));
+            const tails = []; // tails[k] = indice (dans sorted) de la fin de la meilleure suite de longueur k+1
+            const previous = new Array(sorted.length); // indice du précédent élément dans la sous-séquence croissante optimale se terminant à i
+            // recherche de la plus longue sous-séquence croissante des positions actuelles
+            for (let i = 0; i < sorted.length; i++) {
+                const current = position.get(sorted[i]);
+                let low = 0;
+                let high = tails.length;
+                while (low < high) {
+                    const mid = Math.floor((low + high) / 2);
+                    if (position.get(sorted[tails[mid]]) < current) {
+                        low = mid + 1;
+                    } else {
+                        high = mid;
+                    }
+                }
+                previous[i] = low > 0 ? tails[low - 1] : -1;
+                tails[low] = i;
+            }
+            // reconstruction de la plus longue sous-séquence croissante à partir des indices précédents
+            const kept = new Set();
+            for (let i = tails[tails.length - 1]; i !== undefined && i !== -1; i = previous[i]) {
+                kept.add(sorted[i]);
+            }
+            // parcours inverse : chaque élément déplacé est inséré devant son successeur déjà en place
+            let next = null;
+            for (let i = sorted.length - 1; i >= 0; i--) {
+                if (!kept.has(sorted[i])) {
+                    parent.insertBefore(sorted[i], next);
+                }
+                next = sorted[i];
             }
         }
     }
