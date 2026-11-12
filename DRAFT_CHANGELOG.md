@@ -20,6 +20,7 @@ __DATE__
   - GetFeatureInfo : un marker s'affiche là où la requête d'informations a été réalisée (#607)
   - SearchEngineAdvanced / SearchEngineGeocodeIGN : option `coordinateDetection` (désactivée par défaut) pour reconnaître localement un couple de coordonnées saisi dans la recherche simples (#655)
   - AdvancedSearch : contrôle du format et des bornes du système de référence des coordonnées saisies dans la recherche par coordonnées, avec messages d'erreur (#654)
+  - LayerWMTS / SourceWMTS : option `urlTemplate` permettant de personnaliser la construction de l'url WMTS (ordre et casse des KVP) (#661)
 
 * 🔨 [Changed]
 

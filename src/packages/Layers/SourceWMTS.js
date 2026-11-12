@@ -14,6 +14,16 @@ import Config from "../Utils/Config";
 var logger = Logger.getLogger("sourcewmts");
 
 /**
+ * Template par defaut de la query string de l'url WMTS
+ * (reproduit les KVP historiques de SourceWMTS)
+ * - les placeholders en minuscules ({version}, {style}, {format}, {tilematrixset}, {apikey})
+ *   sont résolus à la construction de la source
+ * - les placeholders OGC ({Layer}, {TileMatrix}, {TileCol}, {TileRow})
+ *   sont résolus par OpenLayers (requestEncoding : "REST")
+ */
+const DEFAULT_WMTS_URL_TEMPLATE = "Service=WMTS&Request=GetTile&Version={version}&Layer={Layer}&Style={style}&Format={format}&TileMatrixSet={tilematrixset}&TileMatrix={TileMatrix}&TileCol={TileCol}&TileRow={TileRow}";
+
+/**
  * @classdesc
  * Geoportal WMTS source creation (inherit from ol.source.WMTS)
  *
@@ -37,10 +47,19 @@ class SourceWMTS extends WMTSExtended {
     * @param {String} [options.quicklookUrl]   - quicklookUrl of the layer
     * @param {String} [options.thumbnail]   - thumbnail of the layer
     * @param {String} [options.producer]   - producer of the layer
+    * @param {String} [options.urlTemplate] - template of the WMTS url query string, useful to change the order or the case of the KVP.
+    *      The placeholders {version}, {style}, {format}, {tilematrixset} and {apikey} are resolved at source creation,
+    *      whereas the OGC placeholders {Layer}, {TileMatrix}, {TileCol} and {TileRow} are resolved by OpenLayers (REST request encoding).
+    *      By default : "Service=WMTS&Request=GetTile&Version={version}&Layer={Layer}&Style={style}&Format={format}&TileMatrixSet={tilematrixset}&TileMatrix={TileMatrix}&TileCol={TileCol}&TileRow={TileRow}"
     * @param {Object} [options.olParams] - other options for ol.source.WMTS function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.WMTS.html ol.source.WMTS})
     * @example
     * var sourceWMTS = new ol.source.GeoportalWMTS({
     *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
+    * });
+    * // avec un template personnalisé (ordre et casse des KVP modifiés)
+    * var sourceWMTS = new ol.source.GeoportalWMTS({
+    *      layer : "ORTHOIMAGERY.ORTHOPHOTOS",
+    *      urlTemplate : "service=WMTS&request=GetTile&version={version}&layer={Layer}&style={style}&format={format}&tilematrixset={tilematrixset}&tilematrix={TileMatrix}&tilerow={TileRow}&tilecol={TileCol}"
     * });
      */
     constructor (options) {
@@ -101,34 +120,43 @@ class SourceWMTS extends WMTSExtended {
         //   Format=image/jpeg&
         //   TileMatrixSet=PM_0_19&
         //   TileMatrix=6&TileCol=32&TileRow=22
-        var urlParams = {
-            // tracker extension openlayers
-            // "gp-ol-ext" : Pkg.olExtVersion || Pkg.version,
-            Service : "WMTS",
-            Request : "GetTile",
-            Version : options.olParams && options.olParams.version !== undefined ? options.olParams.version : wmtsParams.version,
-            Layer : "{Layer}",
-            Style : options.olParams && options.olParams.style !== undefined ? options.olParams.style : wmtsParams.styles,
-            Format : options.olParams && options.olParams.format !== undefined ? options.olParams.format : wmtsParams.format,
-            TileMatrixSet : options.olParams && options.olParams.matrixSet !== undefined ? options.olParams.matrixSet : wmtsParams.TMSLink,
-            TileMatrix : "{TileMatrix}",
-            TileCol : "{TileCol}",
-            TileRow : "{TileRow}"
-            
+        //
+        // L'ordre et la casse des KVP sont modifiables via options.urlTemplate
+        var urlTemplate = options.urlTemplate || DEFAULT_WMTS_URL_TEMPLATE;
+
+        // valeurs des placeholders résolus à la construction de la source
+        var templateValues = {
+            version : options.olParams && options.olParams.version !== undefined ? options.olParams.version : wmtsParams.version,
+            style : options.olParams && options.olParams.style !== undefined ? options.olParams.style : wmtsParams.styles,
+            format : options.olParams && options.olParams.format !== undefined ? options.olParams.format : wmtsParams.format,
+            tilematrixset : options.olParams && options.olParams.matrixSet !== undefined ? options.olParams.matrixSet : wmtsParams.TMSLink
         };
+
         if (wmtsParams.url.includes("/private/")) {
             // si l'url est privée
             // Ajout de la clef d'API fournie par l'utilisateur en prioritée
             // ou récupérée depuis la configuration
             var key = options.apiKey || apiKey;
             if (!key) {
-                throw new Error("ERROR : WMS Layer apiKey cannot be found in Geoportal Configuration.");
+                throw new Error("ERROR : WMTS Layer apiKey cannot be found in Geoportal Configuration.");
             }
-            urlParams["apikey"] = key;
+            templateValues.apikey = key;
+            // on ajoute le KVP apikey au template s'il n'y figure pas déjà
+            if (!/\{apikey\}/i.test(urlTemplate) && !/apikey=/i.test(urlTemplate)) {
+                urlTemplate += "&apikey={apikey}";
+            }
         }
 
+        // résolution des placeholders (insensible à la casse) ;
+        // les placeholders OGC ({Layer}, {TileMatrix}, {TileCol}, {TileRow})
+        // sont laissés tels quels pour OpenLayers (requestEncoding : "REST")
+        var urlQuery = urlTemplate.replace(/\{(version|style|format|tilematrixset|apikey)\}/gi, function (match, name) {
+            var value = templateValues[name.toLowerCase()];
+            return value !== undefined ? value : match;
+        });
+
         var wmtsSourceOptions = {
-            url : Gp.Helper.normalyzeUrl(wmtsParams.url.replace(/(http|https):\/\//, protocol), urlParams, false),
+            url : Gp.Helper.normalyzeUrl(wmtsParams.url.replace(/(http|https):\/\//, protocol), urlQuery, false),
             requestEncoding : "REST",
             version : wmtsParams.version,
             style : wmtsParams.styles,
