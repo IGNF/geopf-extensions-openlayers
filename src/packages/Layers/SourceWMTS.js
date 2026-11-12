@@ -9,7 +9,7 @@ import LayerUtils from "../Utils/LayerUtils";
 import Logger from "../Utils/LoggerByDefault";
 import Config from "../Utils/Config";
 // package.json (extract version)
-import Pkg from "../../../package.json";
+// import Pkg from "../../../package.json";
 
 var logger = Logger.getLogger("sourcewmts");
 
@@ -93,8 +93,28 @@ class SourceWMTS extends WMTSExtended {
         // par défaut, ssl = true, on fait du https
         var protocol = options.ssl === false ? "http://" : "https://";
 
+        // Ex de normalisation de l'url WMTS selon recommandation OGC
+        // https://data.geopf.fr/wmts?
+        //   Service=WMTS&Request=GetTile&Version=1.0.0&
+        //   Layer=ORTHOIMAGERY.ORTHOPHOTOS&
+        //   Style=normal&
+        //   Format=image/jpeg&
+        //   TileMatrixSet=PM_0_19&
+        //   TileMatrix=6&TileCol=32&TileRow=22
         var urlParams = {
-            "gp-ol-ext" : Pkg.olExtVersion || Pkg.version
+            // tracker extension openlayers
+            // "gp-ol-ext" : Pkg.olExtVersion || Pkg.version,
+            Service : "WMTS",
+            Request : "GetTile",
+            Version : wmtsParams.version,
+            Layer : "{Layer}",
+            Style : wmtsParams.styles,
+            Format : wmtsParams.format,
+            TileMatrixSet : wmtsParams.TMSLink,
+            TileMatrix : "{TileMatrix}",
+            TileCol : "{TileCol}",
+            TileRow : "{TileRow}"
+            
         };
         if (wmtsParams.url.includes("/private/")) {
             // si l'url est privée
@@ -108,12 +128,8 @@ class SourceWMTS extends WMTSExtended {
         }
 
         var wmtsSourceOptions = {
-            // tracker extension openlayers
-            // FIXME : gp-ext version en mode AMD
             url : Gp.Helper.normalyzeUrl(wmtsParams.url.replace(/(http|https):\/\//, protocol), urlParams, false),
-            version : wmtsParams.version,
-            style : wmtsParams.styles,
-            format : wmtsParams.format,
+            requestEncoding : "REST",
             projection : wmtsParams.projection,
             maxZoom : LayerUtils.getZoomLevelFromScaleDenominator(wmtsParams.minScale),
             layer : options.layer,

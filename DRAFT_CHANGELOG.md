@@ -29,6 +29,7 @@ __DATE__
   - AdvancedSearch : la longitude en degrés sexagésimaux se saisit sur 7 chiffres (DDDMMSS, préremplie avec « 0 ») pour permettre les longitudes ≥ 100° (#654)
   - AdvancedSearch : factorisation de l'affichage des messages d'erreur (`_showMessage` / `_clearMessages`) dans `AbstractAdvancedSearch` (#654)
   - Route & Isocurve : utilisation par défaut de la ressource bdtopo-valhalla pour tous les calculs (#652)
+  - WMTS : normalisation des KVP des urls WMTS (#661)
 
 * 🔥 [Deprecated]
 
