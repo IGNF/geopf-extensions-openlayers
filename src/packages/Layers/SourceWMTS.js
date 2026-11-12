@@ -130,6 +130,9 @@ class SourceWMTS extends WMTSExtended {
         var wmtsSourceOptions = {
             url : Gp.Helper.normalyzeUrl(wmtsParams.url.replace(/(http|https):\/\//, protocol), urlParams, false),
             requestEncoding : "REST",
+            version : wmtsParams.version,
+            style : wmtsParams.styles,
+            format : wmtsParams.format,
             projection : wmtsParams.projection,
             maxZoom : LayerUtils.getZoomLevelFromScaleDenominator(wmtsParams.minScale),
             layer : options.layer,
