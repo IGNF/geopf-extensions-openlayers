@@ -85,3 +85,66 @@ Ajoute dans ton CSS :
 
 **En résumé** :  
 Le positionnement peut être géré uniquement en CSS, sans l’option JS, en ciblant le conteneur du contrôle et en appliquant les règles de positionnement souhaitées.
+
+## Ancrage haut des panneaux Classic et DSFR
+
+Pour les contrôles utilisant `position`, la position du bouton et celle du panneau
+sont distinctes. Les boutons conservent leur coin et leur ordre dans leur colonne.
+Le panneau s'ouvre en haut de la carte, à gauche pour `top-left` et `bottom-left`,
+ou à droite pour `top-right` et `bottom-right`, à côté de la colonne de boutons.
+Il s'agit du haut de la carte, pas du haut de la fenêtre du navigateur.
+
+### Répartition des responsabilités
+
+- `PositionFactory` dans `Control.js` applique `top: 0` aux dialogues `GPpanel`
+    qu'il positionne. Le calcul du côté et des décalages horizontaux est commun aux
+    deux thèmes ; les dialogues associés conservent leur décalage horizontal cumulé.
+- En Classic, les colonnes occupent toute la hauteur de la carte. Les colonnes
+    hautes alignent leurs boutons avec `flex-start`, les colonnes basses avec
+    `flex-end`. Leur largeur de 32 px et leurs marges existantes sont conservées.
+- Les dimensions, marges et styles DSFR restent dans leur feuille de thème,
+    inchangée. La fonction `checkDsfr()` est conservée ; le calcul d'ancrage n'en a
+    plus besoin et son import inutilisé est retiré de `Control.js` uniquement.
+- `PanelManager` ferme déjà les panneaux d'un même côté, en regroupant les
+    colonnes hautes et basses : aucune nouvelle gestion d'ouverture n'est ajoutée.
+
+Les éléments `GPpanel` qui ne sont pas des dialogues ne sont pas repositionnés
+par cette logique. Les contrôles sans `position` restent régis par leur CSS ou
+leur intégration dans une cible externe. Les règles mobiles et les mécanismes de
+déplacement manuel ne sont pas remplacés par une nouvelle politique globale.
+
+### Vérifications du 28 octobre 2026
+
+La recette utilise une carte locale vide de 700 × 600 px, décalée de 24 px dans
+la page, avec Route et LayerImport dans chacune des quatre colonnes. Elle compare
+le calcul compilé précédent avec la source modifiée de `Control.js`, chargée dans
+le navigateur avec un adaptateur des imports pour réutiliser les contrôles des
+exemples générés. La feuille source Classic modifiée est chargée séparément.
+
+- Les huit panneaux Classic s'ouvrent à la coordonnée verticale 0 de la carte,
+    avec un retrait horizontal de 32 px du côté de leur bouton.
+- Les coordonnées des boutons sont identiques à celles précédant le changement.
+- Après réduction de la hauteur de la carte à 430 px, les huit panneaux restent
+    ancrés en haut à l'ouverture.
+- Les espaces vides des colonnes laissent la carte recevoir les événements de
+    pointeur. Ouvrir un panneau ferme toujours celui déjà ouvert du même côté.
+- Deux dialogues associés conservent leurs décalages horizontaux cumulés ; un
+    panneau secondaire non-dialogue conserve ses coordonnées.
+- Après stabilisation des polices, les coordonnées DSFR comparées avant/après
+    sont identiques. Les positions mobiles comparées à 390 px de largeur restent
+    également inchangées en Classic et DSFR.
+
+Cette recette valide le calcul source et les consommateurs retenus, pas une
+nouvelle distribution compilée ni tous les widgets. L'exécution terminal n'étant
+pas disponible pendant cette intervention, les commandes suivantes restent à
+exécuter avant validation des distributions :
+
+```sh
+npx eslint src/packages/Controls/Control.js
+npm run build:modules
+npm run build:bundle
+```
+
+Les cas multi-cartes, les déplacements manuels et les positionnements spécialisés
+nécessitent une recette complémentaire. Les sélecteurs globaux du gestionnaire
+de panneaux multi-cartes ne sont pas refondus dans cette modification.

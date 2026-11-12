@@ -48,11 +48,12 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   /* crée un décalage sur le searchEngine */
   /* align-items: center; */
   width: var(--size-per-row);
   min-height: var(--size-per-row);
+  height: 100%;
   /* padding: 5px; */
 }
 
@@ -73,6 +74,7 @@
 #position-container-bottom-left,
 #position-container-bottom-right {
   bottom: 0px;
+  justify-content: flex-end;
 }
 
 #position-container-bottom-right {
@@ -104,7 +106,7 @@
   width: 100%;
   height: 32px;
   padding: 3px;
-  background-color: #9DB1BD;
+  background-color: #366291;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
@@ -174,6 +176,109 @@
 .GPreturnPicto {
   border-radius: 3px;
   opacity: 1;
+}
+
+.GPpanelHeader.gpf-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding-left: 8px;
+  padding-right: 8px;
+  height: auto;
+  min-height: 32px;
+}
+
+.GPpanelHeader.gpf-panel__header > .GPpanelTitle {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  height: auto;
+  overflow-wrap: anywhere;
+}
+
+.GPpanelHeader.gpf-panel__header > .GPpanelClose,
+.GPpanelHeader.gpf-panel__header > .GPreturnPicto {
+  position: static;
+  flex: 0 0 26px;
+  padding: 0;
+  overflow: hidden;
+  font-size: 0;
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+
+.GPpanelHeader.gpf-panel__header > .GPreturnPicto {
+  background-image: url("./img/GPreturn.png");
+  background-position: center;
+}
+
+.GPpanelHeader.gpf-panel__header > span[class*="fr-icon-"] {
+  display: block;
+  flex: 0 0 20px;
+  height: 20px;
+  background-color: #FFF;
+  -webkit-mask: var(--gp-panel-icon, linear-gradient(transparent, transparent)) center / contain no-repeat;
+  mask: var(--gp-panel-icon, linear-gradient(transparent, transparent)) center / contain no-repeat;
+}
+
+.GPpanelHeader.gpf-panel__header > span.fr-icon-ign-catalog {
+  --gp-panel-icon: url("./Controls/Catalog/img/GPcatalogOpen.png");
+  -webkit-mask-size: auto 20px;
+  mask-size: auto 20px;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+
+.GPpanelHeader > .fr-icon-ign-drawing {
+  --gp-panel-icon: url("./Controls/Drawing/img/modifier.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-elevationpath {
+  --gp-panel-icon: url("./Controls/ElevationPath/img/altipath.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-getfeatureinfo {
+  --gp-panel-icon: url("./Controls/GetFeatureInfo/img/NoGFI.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-isocurve {
+  --gp-panel-icon: url("./Controls/Isochron/img/isochrone.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-layerimport {
+  --gp-panel-icon: url("./Controls/LayerImport/img/layerimport.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-layerswitcher {
+  --gp-panel-icon: url("./Controls/LayerSwitcher/img/layers.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-legends {
+  --gp-panel-icon: url("./Controls/Legends/img/legends.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-mouseposition {
+  --gp-panel-icon: url("./Controls/MousePosition/img/position.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-reporting {
+  --gp-panel-icon: url("./Controls/Reporting/img/reporting.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-reversegeocode {
+  --gp-panel-icon: url("./Controls/ReverseGeocoding/img/reversegeocode.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-route {
+  --gp-panel-icon: url("./Controls/Route/img/route.svg");
+}
+
+.GPpanelHeader > .fr-icon-ign-territories {
+  --gp-panel-icon: url("./Controls/Territories/img/territories.svg");
+}
+
+.GPpanelHeader > .fr-icon-equalizer-line {
+  --gp-panel-icon: url("./Controls/Panoramax/img/panoramax.svg");
 }
 
 /**********************************/
@@ -370,12 +475,71 @@ input.GPsubmit:hover {
 
 }
 
+.gpf-widget :is(.GPinput, .gpf-input, .GPselect, .gpf-select, textarea) {
+  max-width: 100%;
+  min-width: 0;
+  color: #333;
+  background-color: #FFF;
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 3px 5px;
+  font: inherit;
+}
+
+.gpf-widget :is(.gpf-radio-group, .gpf-checkbox-group, .fr-checkbox-group) {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.gpf-widget .gpf-radio-group > label {
+  color: #333;
+}
+
+.gpf-widget :is(.gpf-radio-group, .gpf-checkbox-group, .fr-checkbox-group) > input:is([type="radio"], [type="checkbox"]) {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 3px;
+  accent-color: #366291;
+}
+
+.gpf-widget :is(button, input, select, textarea, a[href], [tabindex]):focus-visible {
+  outline: 2px solid #366291;
+  outline-offset: 2px;
+}
+
+.gpf-widget :is(button, input, select, textarea):disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.gpf-widget [aria-invalid="true"] {
+  border-color: #B34000;
+}
+
+.gpf-widget .fr-message {
+  margin: 8px 0;
+  padding: 8px;
+  overflow-wrap: anywhere;
+  border-left: 3px solid #366291;
+}
+
+.gpf-widget .fr-message--error {
+  color: #8F2900;
+  background-color: #FFF0EA;
+  border-color: #B34000;
+}
+
 .GPform {
   padding: 15px;
 }
 
 .GPelementInvisible,
-.GPelementHidden {
+.GPelementHidden,
+.gpf-widget .gpf-hidden,
+.gpf-widget .gpf-panel--hidden {
   display: none;
   visibility: hidden;
   opacity: 0%;
@@ -586,6 +750,37 @@ input[type="checkbox"]:checked + .GPshowMoreOptions {
 
 .gpf-panel__body {
   overflow: auto;
+  min-height: 0;
+}
+
+.GPpanel.gpf-panel {
+  max-width: calc(100vw - 48px);
+  max-height: calc(100dvh - 16px);
+}
+
+.GPpanel.gpf-panel > .GPpanelHeader {
+  flex-shrink: 0;
+}
+
+.GPpanel.gpf-panel .gpf-panel__body,
+.GPpanel.gpf-panel .gpf-panel__content {
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  overflow: auto;
+}
+
+@media (max-width: 40rem) {
+  .gpf-widget.gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog.GPpanel {
+    position: fixed;
+    inset: 8px !important;
+    width: calc(100% - 16px);
+    max-width: none;
+    height: auto;
+    max-height: calc(100dvh - 16px);
+    margin: 0;
+    z-index: 2000;
+  }
 }
 
 /*******************************/

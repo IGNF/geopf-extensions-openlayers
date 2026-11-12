@@ -1,5 +1,4 @@
 import Control from "ol/control/Control";
-import checkDsfr from "./Utils/CheckDsfr";
 
 class ControlExtended extends Control {
 
@@ -111,38 +110,14 @@ class PositionFactory {
     /**
      * ...
      * @param {*} pos - ...
-     * @param {*} update - ...
      * @todo fonctionnement à tester !
      */
-    #setAnchor (pos, update) {
+    #setAnchor (pos) {
         var self = this;
-        const position = (pos) => {
-            var element = self.container.children["position-container-" + pos];
-            return element.children.length;
-        };
         const sizeW = (pos) => {
             var element = self.container.children["position-container-" + pos];
             var width = element.offsetWidth;
             return width;
-        };
-        const sizeH = (pos) => {
-            var element = self.container.children["position-container-" + pos];
-            var height = element.offsetHeight;
-            if (update) {
-                if (pos.includes("top")) {
-                    height = 0;
-                }
-                // on recalcule la position en hauteur
-                for (let index = 0; index < element.children.length; index++) {
-                    const id = element.children[index].id;
-                    if (id === self.caller.element.id) {
-                        height = (pos.includes("bottom")) ? height - self.caller.element.offsetHeight : height * (-1);
-                        break;
-                    }
-                    height -= element.children[index].offsetHeight;
-                }
-            }
-            return height;
         };
         const clear = (element) => {
             element.style.top = "unset";
@@ -175,38 +150,15 @@ class PositionFactory {
             clear(panel);
             // on modifie le positionnement du menu (dialog ou div : panel)
             // en fonction du bouton
-            // ex. bouton : bottom-left, menu : bottom:0px; left:50px
+            // ex. bouton : bottom-left, menu : top:0px; left:50px
+            panel.style.top = "0px";
             switch (pos.toLowerCase()) {
                 case "top-left":
-                    if (checkDsfr()) {
-                        panel.style.top = "0px";
-                    } else {
-                        panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
-                    }
-                    panel.style.left = sizeW(pos) + offset + "px";
-                    break;
                 case "bottom-left":
-                    if (checkDsfr()) {
-                        panel.style.top = "0px";
-                    } else {
-                        panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
-                    }
                     panel.style.left = sizeW(pos) + offset + "px";
                     break;
                 case "top-right":
-                    if (checkDsfr()) {
-                        panel.style.top = "0px";
-                    } else {
-                        panel.style.top = position(pos) ? sizeH(pos) + "px" : "0px";
-                    }
-                    panel.style.right = sizeW(pos) + offset + "px";
-                    break;
                 case "bottom-right":
-                    if (checkDsfr()) {
-                        panel.style.top = "0px";
-                    } else {
-                        panel.style.bottom = position(pos) ? sizeH(pos) + "px" : "0px";
-                    }
                     panel.style.right = sizeW(pos) + offset + "px";
                     break;
                 default:
@@ -226,7 +178,7 @@ class PositionFactory {
             return;
         }
         // positionnement de l'element
-        this.#setAnchor(pos, false);
+        this.#setAnchor(pos);
 
         if (pos.includes("bottom")) {
             this.container.children["position-container-" + pos].prepend(this.caller.element);
@@ -246,7 +198,7 @@ class PositionFactory {
         }
         // positionnement de l'element
         // mais, il faut prendre en compte la position !
-        this.#setAnchor(pos, true);
+        this.#setAnchor(pos);
     }
 
 };
