@@ -42,6 +42,7 @@ __DATE__
   - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
   - Legends : ajout d'une alternative textuelle et d'une description détaillée (`aria-describedby`) à l'image de légende (RGAA 1.6) (#656)
   - AdvancedSearch : gestion de la recherche par coordonnées avec virgule comme séparateur décimal (#654)
+  - MousePosition / Isocurve : les champs de saisie conservent le style DSFR (`fr-input`) en édition et après fermeture du panel (RGAA 3.3) (#659)
  
 * 🔒 [Security]
 
