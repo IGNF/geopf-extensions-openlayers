@@ -466,8 +466,8 @@ class Isocurve extends Control {
         document.getElementById("GPlocationOrigin_1-" + this._uid).value = "";
         document.getElementById("GPlocationPoint_1-" + this._uid).style.cssText = "";
         document.getElementById("GPlocationOriginPointer_1-" + this._uid).checked = false;
-        document.getElementById("GPlocationOrigin_1-" + this._uid).className = "GPlocationOriginVisible gpf-visible";
-        document.getElementById("GPlocationOriginCoords_1-" + this._uid).className = "GPlocationOriginHidden gpf-hidden";
+        document.getElementById("GPlocationOrigin_1-" + this._uid).className = "GPlocationOriginVisible gpf-visible gpf-input fr-input";
+        document.getElementById("GPlocationOriginCoords_1-" + this._uid).className = "GPlocationOriginHidden gpf-hidden gpf-input fr-input";
         this._currentIsoResults = null;
         this.setLayer();
 
@@ -1171,7 +1171,7 @@ class Isocurve extends Control {
             smoothing : options.smoothing || true,
             timeOut : _timeout,
             protocol : _protocol,
-            resource : options.resource,
+            resource : options.resource || "bdtopo-valhalla",
             // callback onSuccess
             onSuccess : function (results) {
                 logger.log(results);

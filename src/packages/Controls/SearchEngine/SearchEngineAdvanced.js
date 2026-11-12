@@ -441,14 +441,11 @@ class SearchEngineAdvanced extends Control {
             this.selectInteraction.getFeatures().push(selectedFeature);
             this._setPopupInfo(selectedFeature);
         }
-        if (this.getMap() && e.center !== false) {
-            let view = this.getMap().getView();
-            if (extent) {
-                view.fit(extent);
-                if (view.getZoom() > 15) {
-                    view.setZoom(15);
-                }
-            }
+        if (this.getMap() && e.center !== false && extent) {
+            // Zoom maximal : imposé par le service (ex. coordonnées saisies) ou 15 par défaut.
+            // Pour un point, fit() centre la vue et applique directement ce zoom.
+            const maxZoom = (typeof e.zoom === "function" ? e.zoom(e) : e.zoom) ?? 15;
+            this.getMap().getView().fit(extent, { maxZoom : maxZoom });
         }
     }
 

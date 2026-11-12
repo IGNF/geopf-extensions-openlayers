@@ -32,6 +32,8 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     constructor (options) {
         super(options);
 
+        // validation gérée par _validateCoordinates
+        this.element.setAttribute("novalidate", "");
         this.element.dataset.unitType = this.get("unitType");
         this.element.dataset.unit = this.unit.value;
     }
@@ -77,18 +79,24 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         // Ex. this.options.coordinateSearch.systems
 
         // systemes de projection disponible par defaut
+        // (extent : bornes [minX, minY, maxX, maxY] dans l'unité native du CRS)
         let projectionSystemsByDefault = [{
             label : "G\u00e9ographique",
             crs : "EPSG:4326",
-            type : "Geographical"
+            type : "Geographical",
+            extent : [-180, -90, 180, 90]
         }, {
             label : "Web Mercator",
             crs : "EPSG:3857",
-            type : "Metric"
+            type : "Metric",
+            // projected bounds EPSG (https://epsg.io/3857)
+            extent : [-20037508.34, -20048966.10, 20037508.34, 20048966.10]
         }, {
             label : "Lambert 93",
             crs : "EPSG:2154",
-            type : "Metric"
+            type : "Metric",
+            // projected bounds EPSG (https://epsg.io/2154)
+            extent : [-378305.81, 6005281.21, 1320649.57, 7235612.72]
         }];
 
         if (options && options.coordinateSearch && options.coordinateSearch.systems) {
@@ -206,6 +214,10 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             return;
         }
 
+        if (!system.extent) {
+            system.extent = olProjGet(system.crs).getExtent() || undefined;
+        }
+
         // add system to control systems
         for (var j = 0; j < this._coordinateSearchSystems.length; j++) {
             var obj = this._coordinateSearchSystems[j];
@@ -252,10 +264,10 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
 
         // Cas DMS : on conserve les strings
         if (this.get("unit") === "DMS") {
-            return (lon.length === 6 && lat.length === 6) ? [lon, lat] : undefined;
+            return (lon.length === this._dmsLength("lon") && lat.length === this._dmsLength("lat")) ? [lon, lat] : undefined;
         }
 
-        const coords = [parseFloat(lon), parseFloat(lat)];
+        const coords = [parseFloat(lon.replace(",", ".")), parseFloat(lat.replace(",", "."))];
 
         // si une des deux coordonnées n'a pu être récupéré correctement, on renvoie undefined
         if (Number.isNaN(coords[0]) || Number.isNaN(coords[1])) {
@@ -418,12 +430,17 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         // Mask
         const mask = document.createElement("div");
         mask.className = "display-mask";
-        mask.textContent = "__°__'__\"";
-        // inputContainer.appendChild(mask);
+        mask.textContent = this._format("", type);
         div.appendChild(mask);
 
         // Cardinal points
         inputContainer.appendChild(this._createSelectCardinals(type));
+
+        // Error message
+        const messages = document.createElement("div");
+        messages.className = "GPMessagesGroup fr-messages-group";
+        messages.setAttribute("aria-live", "polite");
+        wrapper.appendChild(messages);
 
         return wrapper;
     }
@@ -483,6 +500,7 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     _updateSystem (e) {
         const crs = this._coordinateSearchSystems[e.target.value].crs;
+        this._clearMessages();
 
         if (crs !== this._currentCoordinateSystem.crs) {
             // transformation des coordonnées dans le nouveau système selectionné
@@ -526,6 +544,7 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     _updateUnits (e) {
         const value = e.target.value;
+        this._clearMessages();
         if (this.get("unit") !== value) {
             e.target.closest("form").dataset.unit = value;
             this.set("unit", value);
@@ -566,22 +585,16 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
         // TODO : Faire convertion ?!
         if (unit === "DMS") {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
-                let decCoord;
-                if (input.id.includes("-lon-")) {
-                    decCoord = this._decimalToCompactDMS(input.value, "lon");
-                }
-
-                if (input.id.includes("-lat-")) {
-                    decCoord = this._decimalToCompactDMS(input.value, "lat");
-                }
+                const type = input.name;
+                const decCoord = this._decimalToCompactDMS(input.value, type);
                 
-                // Remplit l'input avec la valeur DMS
-                input.value = decCoord.value;
+                // Remplit l'input avec la valeur DMS (longitude vide préremplie à "0" pour DDDMMSS)
+                input.value = input.value === "" ? this._emptyDMSValue(type) : decCoord.value;
 
                 // Met à jour le mask visuel
                 const mask = input.parentElement.querySelector(".display-mask");
                 if (mask) {
-                    mask.textContent = this._format(decCoord.value);
+                    mask.textContent = this._format(input.value, type);
                 }
 
                 // Met à jour le select cardinal juste après l'input
@@ -590,37 +603,81 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
                     cardinalSelect.value = decCoord.cardinal;
                 }
 
-                input.minLength = "6";
-                input.maxLength = "6";
+                input.minLength = String(this._dmsLength(type));
+                input.maxLength = String(this._dmsLength(type));
                 input.addEventListener("beforeinput", this._boundOnLonLatBeforeInput);
                 input.addEventListener("input", this._boundOnLonLatInput);
             });
         } else {
             this.lonLatInputs.querySelectorAll("input").forEach(input => {
                 if (unit === "DEC") {
-                    let dmsCoord;
                     const cardinal = input.closest(".GPCoordinateInputs").querySelector("select").value;
-                    if (input.id.includes("-lon-")) {
-                        dmsCoord = this._decimalCompactDMSToDecimal(input.value, "lon", cardinal);
-                    }
-
-                    if (input.id.includes("-lat-")) {
-                        dmsCoord = this._decimalCompactDMSToDecimal(input.value, "lat", cardinal);
-                    }
-                    input.value = dmsCoord;
+                    input.value = input.value === this._emptyDMSValue(input.name) ? "" : this._decimalCompactDMSToDecimal(input.value, input.name, cardinal);
                 } else {
-                    input.value = input.value === "" || isNaN(input.value) ? "" : parseFloat(input.value) * factor;
+                    const value = input.value.replace(",", ".");
+                    input.value = value === "" || isNaN(value) ? "" : parseFloat(value) * factor;
                 }
                 input.removeAttribute("minLength");
                 input.removeAttribute("maxLength");
                 input.removeEventListener("beforeinput", this._boundOnLonLatBeforeInput);
                 input.removeEventListener("input", this._boundOnLonLatInput);
             });
-            // Réinitialise le mask de l'input 
-            this.getContent().querySelectorAll(".display-mask").forEach(mask => {
-                mask.textContent = "__°__'__\"";
-            });
+            this._resetMasks();
         }
+    }
+
+    /**
+     * Réinitialise les masques DMS des inputs.
+     *
+     * @private
+     */
+    _resetMasks () {
+        this.lonLatInputs.querySelectorAll("input").forEach(input => {
+            const mask = input.parentElement.querySelector(".display-mask");
+            if (mask) {
+                mask.textContent = this._format(input.value, input.name);
+            }
+        });
+    }
+
+    /**
+     * Nombre de chiffres attendus pour une coordonnée DMS compacte.
+     *
+     * @private
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {Number} 7 (DDDMMSS) pour la longitude, 6 (DDMMSS) pour la latitude
+     */
+    _dmsLength (type) {
+        return type === "lon" ? 7 : 6;
+    }
+
+    /**
+     * Valeur initiale d'un input DMS vide.
+     *
+     * @private
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {String} "0" pour la longitude, "" sinon
+     */
+    _emptyDMSValue (type) {
+        return type === "lon" ? "0" : "";
+    }
+
+    /**
+     * Découpe une coordonnée DMS compacte en degrés, minutes, secondes.
+     *
+     * @private
+     * @param {String} dms Chaîne DMS compacte (DDDMMSS ou DDMMSS)
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {Array<Number>} [degrés, minutes, secondes]
+     */
+    _splitCompactDMS (dms, type) {
+        const clean = String(dms).padStart(this._dmsLength(type), "0");
+        const n = clean.length;
+        return [
+            parseInt(clean.slice(0, n - 4), 10),
+            parseInt(clean.slice(n - 4, n - 2), 10),
+            parseInt(clean.slice(n - 2), 10)
+        ];
     }
 
     /**
@@ -640,15 +697,17 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * Formate une chaîne de 6 caractères en DMS (DD°MM'SS").
+     * Formate une chaîne compacte en DMS (DDD°MM'SS" ou DD°MM'SS").
      *
      * @private
-     * @param {String} value Valeur brute (6 caractères numériques)
-     * @returns {String} Chaîne formatée (ex. "12°34'56\"")
+     * @param {String} value Valeur brute (caractères numériques)
+     * @param {"lon"|"lat"} type Type de coordonnées
+     * @returns {String} Chaîne formatée (ex. "012°34'56\"")
      */
-    _format (value) {
-        const v = value.padEnd(6, "_");
-        return `${v.slice(0,2)}°${v.slice(2,4)}'${v.slice(4,6)}"`;
+    _format (value, type) {
+        const n = this._dmsLength(type);
+        const v = value.padEnd(n, "_");
+        return `${v.slice(0, n - 4)}°${v.slice(n - 4, n - 2)}'${v.slice(n - 2, n)}"`;
     }
 
     /**
@@ -658,10 +717,9 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @param {InputEvent} e Événement input
      */
     _onlonLatInput (e) {
-        console.log("on lon lat inputs");
         const value = e.target.value;
         const mask = e.target.parentElement.querySelector(".display-mask");
-        mask.textContent = this._format(value);
+        mask.textContent = this._format(value, e.target.name);
     }
 
     /**
@@ -677,22 +735,12 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      * @returns {Array<Number>} Tableau normalisé contenant [lon, lat]
      */
     _normalizeCoordinatesUnit (coords) {
-        let lon = coords[0];
-        let lat = coords[1];
+        let lon = String(coords[0]).replace(",", ".");
+        let lat = String(coords[1]).replace(",", ".");
         if (this.get("unit") === "DMS") {
             // Transforme les DMS en degrés décimaux
-            lon = MathUtils.dmsToDecimal(
-                parseInt(lon.substring(0, 2)),
-                parseInt(lon.substring(2, 4)),
-                parseInt(lon.substring(4, 6)),
-                this.lon.querySelector("select").value
-            );
-            lat = MathUtils.dmsToDecimal(
-                parseInt(lat.substring(0, 2)),
-                parseInt(lat.substring(2, 4)),
-                parseInt(lat.substring(4, 6)),
-                this.lat.querySelector("select").value
-            );
+            lon = this._decimalCompactDMSToDecimal(lon, "lon", this.lon.querySelector("select").value);
+            lat = this._decimalCompactDMSToDecimal(lat, "lat", this.lat.querySelector("select").value);
         } else if (this.get("unit") === "KM") {
             // Transforme les kilomètres en mètre
             lon = parseFloat(lon) * 1000;
@@ -706,27 +754,23 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
-     * Convertit une coordonnée DMS compacte (DDMMSS + cardinal)
+     * Convertit une coordonnée DMS compacte (DDDMMSS ou DDMMSS + cardinal)
      * en degrés décimaux.
      *
      * Exemple :
-     * "022108", "E" -> 2.3522
-     * "022108", "O" -> -2.3522
+     * "0022108", "E" -> 2.3522
+     * "0022108", "O" -> -2.3522
      * "485124", "N" -> 48.8566
      * "485124", "S" -> -48.8566
      *
      * @private
-     * @param {String} dms Chaîne DMS compacte (6 chiffres DDMMSS)
+     * @param {String} dms Chaîne DMS compacte (7 chiffres DDDMMSS en longitude, 6 chiffres DDMMSS en latitude)
      * @param {"lon"|"lat"} type Type de coordonnée
      * @param {String} cardinal Point cardinal ("N","S","E","O")
      * @returns {Number} Coordonnée en degrés décimaux
      */
     _decimalCompactDMSToDecimal (dms, type, cardinal) {
-        const clean = String(dms).padStart(6, "0");
-
-        const degres = parseInt(clean.slice(0, 2), 10);
-        const minutes = parseInt(clean.slice(2, 4), 10);
-        const secondes = parseInt(clean.slice(4, 6), 10);
+        const [degres, minutes, secondes] = this._splitCompactDMS(dms, type);
 
         let decimal = degres + minutes / 60 + secondes / 3600;
 
@@ -743,20 +787,21 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
 
     /**
      * Convertit une coordonnée décimale en format DMS compact :
-     * DDMMSS + point cardinal.
+     * DDDMMSS (longitude) ou DDMMSS (latitude) + point cardinal.
      *
      * Exemple :
-     *  2.3522  (lon) -> { value: "022108", cardinal: "E" }
-     * -2.3522  (lon) -> { value: "022108", cardinal: "O" }
+     *  2.3522  (lon) -> { value: "0022108", cardinal: "E" }
+     * -2.3522  (lon) -> { value: "0022108", cardinal: "O" }
      * 48.8566  (lat) -> { value: "485124", cardinal: "N" }
      * -48.8566 (lat) -> { value: "485124", cardinal: "S" }
      *
      * @private
-     * @param {Number} decimal Coordonnée décimale
+     * @param {String|Number} decimal Coordonnée décimale
      * @param {"lon"|"lat"} type Type de coordonnée
      * @returns {{value: String, cardinal: String}}
      */
     _decimalToCompactDMS (decimal, type) {
+        decimal = String(decimal).replace(",", ".");
         const abs = Math.abs(decimal);
 
         const degres = Math.floor(abs);
@@ -777,7 +822,7 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
 
         return {
             value : [
-                String(degres).padStart(2, "0"),
+                String(degres).padStart(this._dmsLength(type) - 4, "0"),
                 String(minutes).padStart(2, "0"),
                 String(secondes).padStart(2, "0")
             ].join(""),
@@ -792,6 +837,10 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     _onSearch (e) {
         super._onSearch(e);
+        this._clearMessages();
+        if (!this._validateCoordinates()) {
+            return;
+        }
         // Récupère les valeurs des inputs
         let coords = this.getCoordinates();
         let normalizedCoords = this._normalizeCoordinatesUnit(coords);
@@ -815,6 +864,120 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
     }
 
     /**
+     * Vérifie le format et les bornes des coordonnées saisies,
+     * et affiche les messages d'erreur sous les champs concernés.
+     *
+     * @private
+     * @returns {Boolean} true si les coordonnées sont valides
+     */
+    _validateCoordinates () {
+        const geographical = this.get("unitType") === "Geographical";
+        const labels = {
+            lon : geographical ? "La longitude" : "La valeur X",
+            lat : geographical ? "La latitude" : "La valeur Y"
+        };
+        const types = ["lon", "lat"];
+        let valid = true;
+
+        types.forEach(type => {
+            const value = this[type].querySelector("input").value.trim();
+            if (!value) {
+                this._showMessage(type, `${labels[type]} est obligatoire.`);
+                valid = false;
+            } else if (!this._isValidCoordinateFormat(value, type)) {
+                this._showMessage(type, `${labels[type]} saisie ne correspond pas au format attendu (${this._getFormatHint(type)}).`);
+                valid = false;
+            }
+        });
+        if (!valid) {
+            return false;
+        }
+
+        const system = this._currentCoordinateSystem;
+        if (!system.extent) {
+            return true;
+        }
+        const coords = this._normalizeCoordinatesUnit(this.getCoordinates());
+        types.forEach((type, i) => {
+            const min = system.extent[i];
+            const max = system.extent[i + 2];
+            if (coords[i] < min || coords[i] > max) {
+                this._showMessage(type, `${labels[type]} saisie est en dehors du champ de définition du système ${system.label} : [${this._formatBound(min, type)} ; ${this._formatBound(max, type)}].`);
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    /**
+     * Vérifie le format d'une coordonnée selon l'unité courante.
+     *
+     * @private
+     * @param {String} value Valeur saisie
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {Boolean} true si le format est correct
+     */
+    _isValidCoordinateFormat (value, type) {
+        if (this.get("unit") === "DMS") {
+            if (!new RegExp(`^\\d{${this._dmsLength(type)}}$`).test(value)) {
+                return false;
+            }
+            const [, minutes, secondes] = this._splitCompactDMS(value, type);
+            return minutes < 60 && secondes < 60;
+        }
+        return /^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value);
+    }
+
+    /**
+     * Description du format attendu pour l'unité courante.
+     *
+     * @private
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {String} Description du format
+     */
+    _getFormatHint (type) {
+        switch (this.get("unit")) {
+            case "DMS":
+                return type === "lon"
+                    ? "7 chiffres DDDMMSS, minutes et secondes inférieures à 60"
+                    : "6 chiffres DDMMSS, minutes et secondes inférieures à 60";
+            case "DEC":
+                return "nombre décimal en degrés";
+            case "KM":
+                return "nombre en kilomètres";
+            case "M":
+                return "nombre en mètres";
+            default:
+                return "nombre";
+        }
+    }
+
+    /**
+     * Formate une borne (exprimée dans l'unité native du CRS) dans l'unité courante.
+     *
+     * @private
+     * @param {Number} value Borne en degrés ou en mètres
+     * @param {"lon"|"lat"} type Type de coordonnée
+     * @returns {String} Borne formatée
+     */
+    _formatBound (value, type) {
+        const fmt = (n) => n.toLocaleString("fr-FR", { maximumFractionDigits : 2 });
+        switch (this.get("unit")) {
+            case "DMS": {
+                const dms = this._decimalToCompactDMS(value, type);
+                const [d, m, s] = this._splitCompactDMS(dms.value, type);
+                return `${d}°${String(m).padStart(2, "0")}'${String(s).padStart(2, "0")}" ${dms.cardinal}`;
+            }
+            case "DEC":
+                return `${fmt(value)}°`;
+            case "KM":
+                return `${fmt(value / 1000)} km`;
+            default:
+                return `${fmt(value)} m`;
+        }
+    }
+
+    /**
      * Construit le contenu HTML à afficher dans la popup à partir des coordonnées fournies.
      *
      * @private
@@ -829,13 +992,13 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             y = "Latitude";
 
             if (this.get("unit") === "DMS") {
-                const lon = this.lon.querySelector("input").value;
+                const [lonD, lonM, lonS] = this._splitCompactDMS(this.lon.querySelector("input").value, "lon");
                 const lonCardinal = this.lon.querySelector("select").value;
-                valueX = `${parseInt(lon.substring(0, 2))}°${parseInt(lon.substring(2, 4))}'${parseInt(lon.substring(4, 6))}" ${lonCardinal}`;
+                valueX = `${lonD}°${lonM}'${lonS}" ${lonCardinal}`;
 
-                const lat = this.lat.querySelector("input").value;
+                const [latD, latM, latS] = this._splitCompactDMS(this.lat.querySelector("input").value, "lat");
                 const latCardinal = this.lat.querySelector("select").value;
-                valueY = `${parseInt(lat.substring(0, 2))}°${parseInt(lat.substring(2, 4))}'${parseInt(lat.substring(4, 6))}" ${latCardinal}`;
+                valueY = `${latD}°${latM}'${latS}" ${latCardinal}`;
             } else {
                 valueX = `${lon.toFixed(2)} °`;
                 valueY = `${lat.toFixed(2)} °`;
@@ -858,9 +1021,13 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     _onErase (e) {
         super._onErase(e);
-        this.getContent().querySelectorAll(".display-mask").forEach(mask => {
-            mask.textContent = "__°__'__\"";
-        });
+        if (this.get("unit") === "DMS") {
+            this.lonLatInputs.querySelectorAll("input").forEach(input => {
+                input.value = this._emptyDMSValue(input.name);
+            });
+        }
+        this._resetMasks();
+        this._clearMessages();
     }
 
 }
