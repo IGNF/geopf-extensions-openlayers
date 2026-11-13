@@ -1369,7 +1369,7 @@ class Route extends Control {
             shortestDiv.style.display = "none";
             exclusionDiv.style.display = "none";
         } else {
-            shortestDiv.style.display = "block";
+            shortestDiv.style.display = "";
             exclusionDiv.style.display = "block";
         }
         this._currentTransport = value;

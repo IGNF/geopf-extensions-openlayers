@@ -50,10 +50,6 @@ p[id^=GPisochronPointLabelP], p[id^=GPisochronValueChronLabelP] {
   margin: 2px 0 5px 0;
 }
 
-.GProuteComputationLabel {
-  margin-bottom: 5px;
-}
-
 .GPisochronChoiceAlt input:checked + label + span {
   color: #366291;
 }
