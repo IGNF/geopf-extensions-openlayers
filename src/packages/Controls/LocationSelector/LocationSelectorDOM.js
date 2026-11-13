@@ -162,6 +162,9 @@ var LocationSelectorDOM = {
 
         inputOrigin.addEventListener("keydown", function (e) {
             var charCode = e.which || e.keyCode;
+            if (charCode !== 13 && charCode !== 38 && charCode !== 40) {
+                return;
+            }
 
             var container = document.getElementById(self._addUID("GPlocationAutoCompleteResult_" + id));
 
@@ -184,7 +187,7 @@ var LocationSelectorDOM = {
             // si aucun item courant, on prend le 1er !
             if (!curr.length) {
                 current = list[0];
-                current.className = "GPautoCompleteProposal current";
+                current.classList.add("current");
                 current.style.color = "#000000";
                 current.style["background-color"] = "#CEDBEF";
                 return;
@@ -206,15 +209,15 @@ var LocationSelectorDOM = {
             switch (charCode) {
                 case 38: // arrow up
                     logger.log("arrow up");
-                    current.className = "GPautoCompleteProposal";
-                    prev.className = "GPautoCompleteProposal current";
+                    current.classList.remove("current");
+                    prev.classList.add("current");
                     prev.style.color = "#000000";
                     prev.style["background-color"] = "#CEDBEF";
                     break;
                 case 40: // arrow down
                     logger.log("arrow down");
-                    current.className = "GPautoCompleteProposal";
-                    next.className = "GPautoCompleteProposal current";
+                    current.classList.remove("current");
+                    next.classList.add("current");
                     next.style.color = "#000000";
                     next.style["background-color"] = "#CEDBEF";
                     break;
