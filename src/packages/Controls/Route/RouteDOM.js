@@ -884,22 +884,22 @@ var RouteDOM = {
         // contexte d'execution
         var context = this;
 
-        var divContainer = document.createElement("div");
+        var divContainer = document.createElement("fieldset");
         divContainer.id = this._addUID("GProuteTransportChoice");
+        divContainer.className = "fr-fieldset";
 
-        var label = document.createElement("label");
-        label.className = "GProuteModeLabel gpf-label fr-label";
-        label.innerHTML = "Choisir un mode de déplacement";
-        divContainer.appendChild(label);
+        var legend = document.createElement("legend");
+        legend.id = this._addUID("GProuteTransportLegend");
+        legend.className = "GProuteModeLabel fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Choisir un mode de déplacement";
+        divContainer.appendChild(legend);
 
-        var divRadio = document.createElement("div");
-        divRadio.className = "gpf-radio-btn-group";
         /* jshint -W083 */
         for (var i = 0; i < transports.length; i++) {
             var transport = transports[i];
 
             var div = document.createElement("div");
-            div.className = "GProuteTransportChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+            div.className = "fr-radio-group";
 
             if (transport === "Voiture") {
                 var inputCar = document.createElement("input");
@@ -925,7 +925,7 @@ var RouteDOM = {
                 div.appendChild(inputCar);
 
                 var labelCar = document.createElement("label");
-                labelCar.className = "GProuteTransportImg gpf-label fr-label";
+                labelCar.className = "GProuteTransportImg fr-label";
                 labelCar.htmlFor = this._addUID("GProuteTransportCar");
                 labelCar.title = "Voiture";
                 labelCar.innerHTML = "Voiture";
@@ -956,17 +956,18 @@ var RouteDOM = {
                 div.appendChild(inputPedestrian);
 
                 var labelPedestrian = document.createElement("label");
-                labelPedestrian.className = "GProuteTransportImg gpf-label fr-label";
+                labelPedestrian.className = "GProuteTransportImg fr-label";
                 labelPedestrian.htmlFor = this._addUID("GProuteTransportPedestrian");
                 labelPedestrian.title = "Piéton";
                 labelPedestrian.innerHTML = "Piéton";
                 div.appendChild(labelPedestrian);
             }
 
-            divRadio.appendChild(div);
+            var element = document.createElement("div");
+            element.className = "fr-fieldset__element fr-fieldset__element--inline";
+            element.appendChild(div);
+            divContainer.appendChild(element);
         }
-        divContainer.appendChild(divRadio);
-
         return divContainer;
     },
 

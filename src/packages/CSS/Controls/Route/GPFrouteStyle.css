@@ -70,6 +70,8 @@ div[id^=GProuteStageAdd],
 
 .GProuteModeLabel {
   display: block;
+  width: 100%;
+  padding: 0;
   text-align: center;
   margin-bottom: 5px;
 }
@@ -103,12 +105,19 @@ input[id^=GProuteTransportPedestrian]:checked + .GProuteTransportImg {
   background-position: -196px 0;
 }
 
-div[id^=GProuteTransportChoice] input {
-  display: none;
+fieldset[id^=GProuteTransportChoice] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-div[id^=GProuteTransportChoice] .gpf-radio-btn-group {
-  justify-content: center;
+fieldset[id^=GProuteTransportChoice] input {
+  display: none;
 }
 
 select[id^=GProuteComputationSelect] {
