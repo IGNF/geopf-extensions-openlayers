@@ -75,6 +75,11 @@ var LocationSelectorDOM = {
         var label = point.parentElement.querySelector(":scope > .GPlocationInputLabel");
         label.classList.toggle("GPelementHidden", !visible);
         label.classList.toggle("gpf-hidden", !visible);
+        this.dispatchEvent({
+            type : "location:visibilitychange",
+            id : id,
+            visible : visible
+        });
     },
 
     /**
@@ -452,7 +457,7 @@ var LocationSelectorDOM = {
     _createLocationAutoCompleteElement : function (id) {
         var div = document.createElement("div");
         div.id = this._addUID("GPlocationAutoCompleteList_" + id);
-        div.className = "GPlocationAutoCompleteList GPelementHidden gpf-panel gpf-hidden fr-modal"; // GPpanel ?
+        div.className = "GPlocationAutoCompleteList GPelementHidden gpf-panel gpf-hidden"; // GPpanel ?
 
         // FIXME on decompose la fonction pour les besoins du controle,
         // on ajoutera ces childs à la main...

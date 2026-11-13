@@ -77,7 +77,8 @@ div[id^=GProuteStageAdd] {
 .GProuteFormMini button[id^=GPshowRouteExclusionsPicto],
 .GProuteFormMini .GProuteStageRemove,
 .GProuteFormMini div[id^=GProuteStageAdd],
-.GProuteFormMini > *:not(.selected),
+.GProuteFormMini > *:not(.selected):not(.GProutePoints),
+.GProuteFormMini > .GProutePoints > *:not(.selected),
 .GProuteFormMini div[id^="GProuteModeChoice"],
 .GProuteFormMini button[id^="GPshowRouteExclusions"][aria-pressed="true"] + div[id^="GProuteExclusions"],
 .GProuteFormMini .GPpanelFooter {

@@ -130,6 +130,38 @@ var RouteDOM = {
     },
 
     /**
+     * Create the location points fieldset.
+     *
+     * @returns {HTMLElement} DOM element
+     */
+    _createRoutePanelFormPointsGroupElement : function () {
+        var fieldset = document.createElement("fieldset");
+        fieldset.className = "GProutePoints fr-fieldset";
+        var legend = document.createElement("legend");
+        legend.id = this._addUID("GProutePointsLegend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend fr-sr-only";
+        legend.textContent = "Départ, étapes et arrivée";
+        fieldset.setAttribute("aria-labelledby", legend.id);
+        fieldset.appendChild(legend);
+        return fieldset;
+    },
+
+    /**
+     * Create a location point fieldset element.
+     *
+     * @param {Boolean} display - whether to show the point
+     * @returns {HTMLElement} DOM element
+     */
+    _createRoutePanelFormPointFieldsetElement : function (display) {
+        var div = document.createElement("div");
+        div.className = "fr-fieldset__element";
+        if (!display) {
+            div.classList.add("GPelementHidden", "gpf-hidden");
+        }
+        return div;
+    },
+
+    /**
      * Create Form
      * see evenement !
      *
