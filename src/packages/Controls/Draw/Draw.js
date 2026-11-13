@@ -253,6 +253,7 @@ class Draw extends ToggleContent {
         options.snap ??= false;
         options.layerTitle ??= "Croquis";
         options.layerDescription ??= "Mon croquis";
+        options.source ??= new VectorSource({});
 
         // Tableau vide par défaut, les interactions sont ajoutés à la fin du constructeur
         options.drawingInteractions ??= [];
