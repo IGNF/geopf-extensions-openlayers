@@ -1,0 +1,72 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlLayers.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Ajout d'une couche WMTS avec un template d'url personnalisé</h2>
+            <p>
+                L'option <code>urlTemplate</code> permet de modifier l'ordre ou la casse des KVP de l'url WMTS.
+                <br>
+                Ex. d'url de tuile obtenue :
+                <code>https://data.geopf.fr/wmts?LAYER=ORTHOIMAGERY.ORTHOPHOTOS&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX=12&TILEROW=1461&TILECOL=2123</code>
+            </p>
+            <!-- map -->
+            <div id="map">
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                var createMap = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.GeoportalWMTS({
+                                layer : "ORTHOIMAGERY.ORTHOPHOTOS",
+                                // template de construction de l'url WMTS :
+                                // * les placeholders {version}, {style}, {format} et {tilematrixset}
+                                //   sont résolus à la création de la couche,
+                                // * les placeholders OGC {Layer}, {TileMatrix}, {TileRow} et {TileCol}
+                                //   sont résolus par OpenLayers à chaque requête de tuile
+                                urlTemplate : "LAYER={Layer}&FORMAT={format}&SERVICE=WMTS&VERSION={version}&REQUEST=GetTile&STYLE={style}&TILEMATRIXSET={tilematrixset}&TILEMATRIX={TileMatrix}&TILEROW={TileRow}&TILECOL={TileCol}"
+                            })
+                        ]
+                    });
+                };
+                Gp.Services.getConfig({
+                    customConfigFile : "{{ configurl }}",
+                    callbackSuffix : "",
+                    // apiKey: "{{ apikey }}",
+                    timeOut : 20000,
+                    onSuccess : createMap,
+                    onFailure : (e) => {
+                        console.error(e);
+                    }
+                });
+           </script>
+{{/content}}
+
+{{/extend}}
