@@ -22,10 +22,19 @@ declare class SourceWMTS extends WMTSExtended {
     * @param {String} [options.quicklookUrl]   - quicklookUrl of the layer
     * @param {String} [options.thumbnail]   - thumbnail of the layer
     * @param {String} [options.producer]   - producer of the layer
+    * @param {String} [options.urlTemplate] - template of the WMTS url query string, useful to change the order or the case of the KVP.
+    *      The placeholders {version}, {style}, {format}, {tilematrixset} and {apikey} are resolved at source creation,
+    *      whereas the OGC placeholders {Layer}, {TileMatrix}, {TileCol} and {TileRow} are resolved by OpenLayers (REST request encoding).
+    *      By default : "Service=WMTS&Request=GetTile&Version={version}&Layer={Layer}&Style={style}&Format={format}&TileMatrixSet={tilematrixset}&TileMatrix={TileMatrix}&TileCol={TileCol}&TileRow={TileRow}"
     * @param {Object} [options.olParams] - other options for ol.source.WMTS function (see {@link http://openlayers.org/en/latest/apidoc/ol.source.WMTS.html ol.source.WMTS})
     * @example
     * var sourceWMTS = new ol.source.GeoportalWMTS({
     *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
+    * });
+    * // avec un template personnalisé (ordre et casse des KVP modifiés)
+    * var sourceWMTS = new ol.source.GeoportalWMTS({
+    *      layer : "ORTHOIMAGERY.ORTHOPHOTOS",
+    *      urlTemplate : "service=WMTS&request=GetTile&version={version}&layer={Layer}&style={style}&format={format}&tilematrixset={tilematrixset}&tilematrix={TileMatrix}&tilerow={TileRow}&tilecol={TileCol}"
     * });
      */
     constructor(options: {
@@ -40,6 +49,7 @@ declare class SourceWMTS extends WMTSExtended {
         quicklookUrl?: string | undefined;
         thumbnail?: string | undefined;
         producer?: string | undefined;
+        urlTemplate?: string | undefined;
         olParams?: any;
     });
     _originators: any;

@@ -17,6 +17,10 @@ import SourceWMTS from "./SourceWMTS";
  * @property {boolean} [ssl] - Forcer le protocole https (pour nodejs)
  * @property {string} [apiKey] - Clé d'accès à la plateforme
  * @property {boolean} [noConstraint] - Désactive les contraintes d'affichage (étendue, résolutions)
+ * @property {string} [urlTemplate] - Template de la query string de l'URL WMTS, permettant de modifier l'ordre ou la casse des KVP.
+ * Les placeholders {version}, {style}, {format}, {tilematrixset} et {apikey} sont résolus à la création de la source,
+ * tandis que les placeholders OGC {Layer}, {TileMatrix}, {TileCol} et {TileRow} sont résolus par OpenLayers (requestEncoding "REST").
+ * Par défaut : "Service=WMTS&Request=GetTile&Version={version}&Layer={Layer}&Style={style}&Format={format}&TileMatrixSet={tilematrixset}&TileMatrix={TileMatrix}&TileCol={TileCol}&TileRow={TileRow}"
  * @property {Object} [olParams] - Options supplémentaires pour ol.layer.Tile {@link https://openlayers.org/en/latest/apidoc/module-ol_layer_Tile-TileLayer.html ol.layer.Tile options}
  * et options supplémentaires pour ol.source.WMTS dans olParams.sourceParams {@link https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html ol.source.WMTS options}
  */
@@ -36,6 +40,11 @@ class LayerWMTS extends TileLayer {
      * @example
      * var layerWMTS = new ol.layer.GeoportalWMTS({
      *      layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
+     * });
+     * // avec un template personnalisé (ordre et casse des KVP modifiés)
+     * var layerWMTS = new ol.layer.GeoportalWMTS({
+     *      layer : "ORTHOIMAGERY.ORTHOPHOTOS",
+     *      urlTemplate : "service=WMTS&request=GetTile&version={version}&layer={Layer}&style={style}&format={format}&tilematrixset={tilematrixset}&tilematrix={TileMatrix}&tilerow={TileRow}&tilecol={TileCol}"
      * });
      * layerWMTS.getLegends();
      * layerWMTS.getMetadata();
@@ -303,6 +312,7 @@ class LayerWMTS extends TileLayer {
             configuration : options.configuration,
             ssl : options.ssl,
             apiKey : options.apiKey,
+            urlTemplate : options.urlTemplate,
             olParams : olSourceParams
         });
         
