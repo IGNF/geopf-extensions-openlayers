@@ -342,7 +342,7 @@ class Route extends Control {
                 // document.getElementById("GPlocationPoint_" + id).style.cssText = "";
                 if (i > 0 && i < 6) {
                     // on masque les points intermediaires
-                    document.getElementById("GPlocationPoint_" + id).className = "GPflexInput GPelementHidden gpf-flex gpf-hidden ";
+                    point._setLocationPointVisibility(point.options.tag.id, false);
                 }
             }
         }
@@ -386,7 +386,7 @@ class Route extends Control {
                 var input = document.getElementById("GPlocationOrigin_" + id + "-" + this._uid);
                 input.value = coordinate[1].toFixed(4) + " / " + coordinate[0].toFixed(4);
                 if (index > 0 && index < 6) {
-                    document.getElementById("GPlocationPoint_" + id + "-" + this._uid).className = "GPflexInput GPlocationStageFlexInput gpf-flex";
+                    point._setLocationPointVisibility(point.options.tag.id, true);
                 }
             }
         }
