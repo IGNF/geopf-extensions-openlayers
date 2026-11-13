@@ -15,6 +15,10 @@
   margin-bottom: 0.5rem;
 }
 
+dialog[id^=GProutePanel-] {
+  width: 380px;
+}
+
 [id^=GProuteForm-] p.gpf-label {
   margin-top: 0;
   margin-bottom: 0.2rem;
@@ -28,7 +32,7 @@
   width: 80%;
 }
 
-[id^="GProuteForm-"] > [class^="GPlocationPoint-"] {
+[id^="GProuteForm-"] > .GProutePoints > .fr-fieldset__element > [class^="GPlocationPoint-"] {
   margin-top: 0;
 }
 

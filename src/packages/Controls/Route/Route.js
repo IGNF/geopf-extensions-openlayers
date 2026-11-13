@@ -743,10 +743,14 @@ class Route extends Control {
         routeForm.appendChild(this._createRoutePanelFormModeChoiceTransportElement(this.options.graphs));
 
         // form: menu des points
+        var pointsGroup = this._createRoutePanelFormPointsGroupElement();
         var points = this._createRoutePanelFormPointsElement(map);
         for (var i = 0; i < points.length; i++) {
-            routeForm.appendChild(points[i]);
+            var pointElement = this._createRoutePanelFormPointFieldsetElement(this._currentPoints[i].options.tag.display);
+            pointElement.appendChild(points[i]);
+            pointsGroup.appendChild(pointElement);
         }
+        routeForm.appendChild(pointsGroup);
 
         routeForm.appendChild(this._createRoutePanelFormModeChoiceComputeElement(this.options.prettifyCompute));
 
@@ -995,6 +999,13 @@ class Route extends Control {
             return;
         }
 
+        formPoint.on("location:visibilitychange", (e) => {
+            var point = this._currentPoints.find((point) => String(point.options.tag.id) === String(e.id));
+            var fieldsetElement = point._container.parentElement;
+            fieldsetElement.classList.toggle("GPelementHidden", !e.visible);
+            fieldsetElement.classList.toggle("gpf-hidden", !e.visible);
+        });
+
         if (formPoint._buttonLabel.addEventListener) {
             // display form on origin label click
             formPoint._buttonLabel.addEventListener(
@@ -1217,12 +1228,12 @@ class Route extends Control {
         if (locationSelector._inputShowPointerContainer.checked) {
             // au click sur l'input pour pointer sur la carte: on minimise le formulaire
             this._formRouteContainer.className = "GProuteFormMini gpf-panel__content fr-modal__content";
-            e.target.parentElement.parentElement.classList.add("selected");
+            locationSelector._container.parentElement.classList.add("selected");
             // et au clic sur la carte, on réaffichera le formulaire "normal"
             this.listenerKey = map.on(
                 "click",
                 () => {
-                    e.target.parentElement.parentElement.classList.remove("selected");
+                    locationSelector._container.parentElement.classList.remove("selected");
                     // on ne rétablit pas le mode "normal" si on est dans le panel des résultats (où className = "GProuteComponentHidden")
                     if (this._formRouteContainer.className === "GProuteFormMini gpf-panel__content fr-modal__content") {
                         this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
