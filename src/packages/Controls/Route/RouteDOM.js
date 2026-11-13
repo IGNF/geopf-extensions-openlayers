@@ -130,22 +130,6 @@ var RouteDOM = {
     },
 
     /**
-     * Create Point label
-     *
-     * @param {String} innerHTML text to display
-     * @param {Boolean} display should the label be dsiplayed?
-     * @returns {HTMLElement} DOM element
-     */
-    _createRoutePanelFormPointLabel : function (innerHTML, display = true) {
-        var p = document.createElement("p");
-        p.innerHTML = innerHTML;
-        var classesToAdd = !display ? " GPelementHidden gpf-hidden" : "";
-        p.className = "GProutePointLabelP gpf-label fr-label" + classesToAdd;
-
-        return p;
-    },
-
-    /**
      * Create Form
      * see evenement !
      *

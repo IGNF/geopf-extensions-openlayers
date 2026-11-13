@@ -29,10 +29,6 @@ form[id^=GProuteForm] {
   overflow: hidden;
 }
 
-.GProutePointLabelP {
-  margin: 2px 0 5px 0;
-}
-
 .GProuteComputationLabel {
   margin-bottom: 5px;
 }

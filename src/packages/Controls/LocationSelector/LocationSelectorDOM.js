@@ -379,7 +379,6 @@ var LocationSelectorDOM = {
                 document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).value = "";
                 document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).className = "GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPlocationStageAdd")).style.display = "";
-                document.getElementById(self._addUID("GPlocationPoint_" + i)).parentElement.previousSibling.classList.add("GPelementHidden", "gpf-hidden");
                 // Moving up exclusions picto
                 // var exclusionsPictoTop = document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top;
                 // document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top = (parseInt(exclusionsPictoTop) - 33).toString() + "px";
@@ -433,7 +432,6 @@ var LocationSelectorDOM = {
             // FIXME algo à revoir : lastStage = id hors si id = 300 sur 3 points !?
             if (lastStage < points.length) {
                 self._setLocationPointVisibility(lastStage, true);
-                document.getElementById(self._addUID("GPlocationPoint_" + lastStage)).parentElement.previousSibling.classList.remove("GPelementHidden", "gpf-hidden");
                 // Moving down exclusions picto
                 // var exclusionsPictoTop = document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top;
                 // document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top = (parseInt(exclusionsPictoTop) + 33).toString() + "px";

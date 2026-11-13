@@ -940,7 +940,6 @@ class Route extends Control {
         // on ajoute des écouteurs d'évènements (en plus de ceux de LocationSelector),
         // pour prendre en compte les CSS spécifiques de GProuteForm
         this._addFormPointsEventListeners(start);
-        points.push(this._createRoutePanelFormPointLabel("Départ"));
         points.push(start._container);
         this._currentPoints.push(start);
 
@@ -960,7 +959,6 @@ class Route extends Control {
             });
             step.setMap(map);
             this._addFormPointsEventListeners(step);
-            points.push(this._createRoutePanelFormPointLabel("Étape", false));
             points.push(step._container);
             this._currentPoints.push(step);
         }
@@ -980,7 +978,6 @@ class Route extends Control {
         });
         end.setMap(map);
         this._addFormPointsEventListeners(end);
-        points.push(this._createRoutePanelFormPointLabel("Arrivée"));
         points.push(end._container);
         this._currentPoints.push(end);
 
