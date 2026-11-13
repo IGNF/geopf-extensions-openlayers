@@ -11,10 +11,6 @@
   color: var(--grey-200-850);
 }
 
-.GProuteModeLabel {
-  margin-bottom: 0.5rem;
-}
-
 dialog[id^=GProutePanel-] {
   width: 380px;
 }
