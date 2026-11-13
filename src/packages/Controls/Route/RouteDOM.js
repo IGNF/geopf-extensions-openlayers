@@ -982,20 +982,17 @@ var RouteDOM = {
         // contexte d'execution
         var context = this;
 
-        var divContainer = document.createElement("div");
+        var divContainer = document.createElement("fieldset");
         divContainer.id = this._addUID("GProuteComputationChoice");
-        divContainer.className = "fr-mt-2w";
+        divContainer.className = "fr-fieldset";
 
-        var label = document.createElement("label");
-        label.className = "GProuteComputationLabel gpf-label fr-label";
-        label.innerHTML = "Mode de calcul";
-        divContainer.appendChild(label);
-
-        var divRadio = document.createElement("div");
-        divRadio.className = "gpf-radio-btn-group";
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Mode de calcul";
+        divContainer.appendChild(legend);
 
         var div = document.createElement("div");
-        div.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        div.className = "fr-radio-group";
         div.id = this._addUID("GProuteComputeFastest");
         var inputFastest = document.createElement("input");
         inputFastest.id = this._addUID("GProuteComputationFastest");
@@ -1023,10 +1020,13 @@ var RouteDOM = {
         labelFastest.title = "Plus rapide";
         labelFastest.innerHTML = "Plus rapide";
         div.appendChild(labelFastest);
-        divRadio.appendChild(div);
+        var fastestElement = document.createElement("div");
+        fastestElement.className = "fr-fieldset__element fr-fieldset__element--inline";
+        fastestElement.appendChild(div);
+        divContainer.appendChild(fastestElement);
 
         var div2 = document.createElement("div");
-        div2.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        div2.className = "fr-radio-group";
         div2.id = this._addUID("GProuteComputeShortest");
         var inputShortest = document.createElement("input");
         inputShortest.id = this._addUID("GProuteComputationShortest");
@@ -1058,8 +1058,10 @@ var RouteDOM = {
         labelShortest.innerHTML = "Plus court";
         div2.appendChild(labelShortest);
 
-        divRadio.appendChild(div2);
-        divContainer.appendChild(divRadio);
+        var shortestElement = document.createElement("div");
+        shortestElement.className = "fr-fieldset__element fr-fieldset__element--inline";
+        shortestElement.appendChild(div2);
+        divContainer.appendChild(shortestElement);
 
         return divContainer;
     },
