@@ -651,6 +651,7 @@ var CatalogDOM = {
             return `
             <div
                 data-layeritem
+                data-index="${i}"
                 class="fr-fieldset__element fr-toggle--border-bottom fr-py-1w fr-px-1w fr-mb-0" 
                 id="fieldset-${categoryId}_${name}-${service}"
             >
@@ -739,7 +740,7 @@ var CatalogDOM = {
                         <span class="catalog-section-count" role="section-count-collapse-${categoryId}" id="section-count-${categoryId}-${id}" style="position: absolute; right: 1.25rem;">${count}</span>
                     </button>
                 </h3>
-                <div class="fr-collapse GPelementHidden" id="${idCollapseSection}">
+                <div class="fr-collapse GPelementHidden gpf-hidden" id="${idCollapseSection}">
                     ${data}
                 </div>
             </section>
@@ -954,6 +955,7 @@ var CatalogDOM = {
                     if (e.target.ariaExpanded === "true") {
                         collapse.classList.add("fr-collapse--expanded");
                         collapse.classList.remove("GPelementHidden");
+                        collapse.classList.remove("gpf-hidden");
                         if (section) {
                             section.classList.add("catalog-section-full");
                             this.updateVisibilitySectionsByCategory(sectionId, categoryId, false);
@@ -971,6 +973,7 @@ var CatalogDOM = {
                     } else {
                         collapse.classList.remove("fr-collapse--expanded");
                         collapse.classList.add("GPelementHidden");
+                        collapse.classList.add("gpf-hidden");
                         if (section) {
                             section.classList.remove("catalog-section-full");
                             this.updateVisibilitySectionsByCategory(sectionId, categoryId, true);
