@@ -6,6 +6,7 @@ import Gp from "geoportal-access-lib";
 // import local
 import Utils from "../Utils/Helper";
 import GeocodeUtils from "../Utils/GeocodeUtils";
+import { parseCoordinates, formatCoordinateLabel } from "../Utils/CoordinateParser";
 // Service
 import Search from "./Search";
 import Feature from "ol/Feature.js";
@@ -184,6 +185,22 @@ class IGNSearchService extends AbstractSearchService {
 
         Utils.mergeParams(this.options, options);
 
+        /**
+         * Détection locale des coordonnées (désactivée par défaut)
+         * @type {Object}
+         * @private
+         */
+        this._coordinateDetection = this._normalizeCoordinateDetection(options ? options.coordinateDetection : null);
+        /**
+         * Versions des requêtes par type, utilisées pour ignorer les réponses devenues obsolètes
+         * (voir _ignoreIfStale). Elles n'annulent pas les requêtes réseau.
+         * @private
+         */
+        this._requestVersions = {
+            autocomplete : 0,
+            search : 0
+        };
+
         // configuration avec gestion des options surchargées du service
         if (this.options.searchOptions) {
             if (this.options.searchOptions.serviceOptions) {
@@ -252,14 +269,158 @@ class IGNSearchService extends AbstractSearchService {
             return;
         }
 
+        const coordinates = this._detectCoordinates(value);
+        if (coordinates.length) {
+            // invalide toute autocomplétion / recherche GPF en cours
+            this.cancel();
+            this._currentGeocodingLocation = value;
+            this._autocompleteLocations = coordinates;
+            this.dispatchEvent({
+                type : this.AUTOCOMPLETE_EVENT,
+                result : this._autocompleteLocations,
+            });
+            return;
+        }
+
         // on sauvegarde le localisant
         this._currentGeocodingLocation = value;
+
+        this._requestVersions.autocomplete += 1;
 
         // On effectue la requête au service d'autocompletion.
         this._requestAutoComplete({
             text : value,
-            onSuccess : this._onSuccessAutoComplete.bind(this),
-            onFailure : this._onFailureAutoComplete.bind(this)
+            onSuccess : this._ignoreIfStale("autocomplete", this._onSuccessAutoComplete),
+            onFailure : this._ignoreIfStale("autocomplete", (error) => this._onFailureAutoComplete(error, value))
+        });
+    }
+
+    /**
+     * Enveloppe un callback de requête pour qu'il soit ignoré si une requête plus récente
+     * du même type a été lancée entre-temps, ou si `cancel()` a été appelé.
+     * @private
+     * @param {"autocomplete"|"search"} kind Type de requête
+     * @param {Function} callback Callback à protéger (appelé avec `this` = le service)
+     * @returns {Function} Callback qui ne s'exécute que si la réponse est toujours d'actualité
+     */
+    _ignoreIfStale (kind, callback) {
+        const version = this._requestVersions[kind];
+        return (...args) => {
+            if (version === this._requestVersions[kind]) {
+                callback.apply(this, args);
+            }
+        };
+    }
+
+    /**
+     * Annule le géocodage de repli programmé (option triggerGeocode) s'il n'a pas encore démarré.
+     * @private
+     */
+    _clearScheduledGeocode () {
+        if (this._triggerHandler) {
+            clearTimeout(this._triggerHandler);
+            this._triggerHandler = null;
+            logger.warn("Cancel the scheduled geocode request !");
+        }
+    }
+
+    /**
+     * Normalise l'option de détection des coordonnées.
+     * @private
+     * @param {Boolean|CoordinateDetectionOptions} option Option fournie
+     * @returns {Object} Option normalisée ({active: Boolean, zoom: Number|Function})
+     */
+    _normalizeCoordinateDetection (option) {
+        const DEFAULT_ZOOM = 15;
+        if (option === true) {
+            return { active : true, zoom : DEFAULT_ZOOM };
+        }
+        if (option && typeof option === "object" && option.active !== false) {
+            const zoom = (typeof option.zoom === "number" || typeof option.zoom === "function") ? option.zoom : DEFAULT_ZOOM;
+            return { active : true, zoom : zoom };
+        }
+        return { active : false, zoom : DEFAULT_ZOOM };
+    }
+
+    /**
+     * Invalide les réponses des requêtes GPF en cours (autocomplétion, géocodage de repli et recherche)
+     * en changeant leur version. Les requêtes réseau ne sont pas nécessairement annulées.
+     * Annule également le géocodage différé s'il n'a pas encore démarré.
+     * @override
+     */
+    cancel () {
+        this._requestVersions.autocomplete += 1;
+        this._requestVersions.search += 1;
+        this._clearScheduledGeocode();
+    }
+
+    /**
+     * Détecte localement un couple de coordonnées dans la saisie.
+     * @private
+     * @param {String} text Saisie utilisateur
+     * @returns {Array<AutocompleteResult>} Suggestions locales (vide si non reconnu ou détection inactive)
+     */
+    _detectCoordinates (text) {
+        if (!this._coordinateDetection.active || typeof text !== "string") {
+            return [];
+        }
+        return parseCoordinates(text).map((coordinate) => {
+            return {
+                type : "Coordinates",
+                fullText : formatCoordinateLabel(coordinate),
+                position : {
+                    x : coordinate.lon,
+                    y : coordinate.lat
+                }
+            };
+        });
+    }
+
+    /**
+     * Retourne la première interprétation de la saisie en tant que coordonnées.
+     * @override
+     * @param {String} text Saisie utilisateur
+     * @returns {AutocompleteResult|null} Suggestion locale, ou null
+     */
+    getDirectResult (text) {
+        const coordinates = this._detectCoordinates(text);
+        return coordinates.length ? coordinates[0] : null;
+    }
+
+    /**
+     * Les coordonnées ne sont pas enregistrées dans l'historique.
+     * @override
+     * @param {AutocompleteResult} item Élément sélectionné
+     * @returns {Boolean} false pour des coordonnées
+     */
+    isHistorizable (item) {
+        return !(item && item.type === "Coordinates");
+    }
+
+    /**
+     * Recherche locale d'un couple de coordonnées : aucun appel aux services GPF.
+     * @private
+     * @param {AutocompleteResult} location Suggestion de type "Coordinates"
+     */
+    _searchCoordinates (location) {
+        this.cancel();
+        const lon = location.position.x;
+        const lat = location.position.y;
+        // libellé construit uniquement à partir de nombres (pas de réinjection de la saisie)
+        const label = formatCoordinateLabel({ lon : lon, lat : lat });
+        this._currentGeocodingLocation = label;
+        this._locations = [];
+
+        const feature = new Feature({ geometry : new Point([lon, lat]) });
+        feature.set("infoPopup", label);
+
+        this.dispatchEvent({
+            type : this.SEARCH_EVENT,
+            result : feature,
+            extent : null,
+            projection : "EPSG:4326",
+            zoom : this._coordinateDetection.zoom,
+            nbResults : 1
         });
     }
 
@@ -353,11 +514,7 @@ class IGNSearchService extends AbstractSearchService {
 
             // on annule eventuellement une requete de geocodage en cours car on obtient des
             // de nouveau des resultats d'autocompletion...
-            if (this._triggerHandler) {
-                clearTimeout(this._triggerHandler);
-                this._triggerHandler = null;
-                logger.warn("Cancel a geocode request !");
-            }
+            this._clearScheduledGeocode();
             this.dispatchEvent({
                 type : this.AUTOCOMPLETE_EVENT,
                 result : this._autocompleteLocations,
@@ -368,12 +525,14 @@ class IGNSearchService extends AbstractSearchService {
     /**
      * Fonction appelée en cas d'erreur sur le service d'autocomplétion
      * @param {ErrorService} error Erreur renvoyée par le service
+     * @param {String} [value] Texte saisi ayant donné lieu à l'autocomplétion
      */
-    _onFailureAutoComplete (error) {
+    _onFailureAutoComplete (error, value) {
         let _triggerGeocode = this.options.autocompleteOptions.triggerGeocode;
         let _triggerDelay = this.options.autocompleteOptions.triggerDelay;
 
-        let onSuccess = function (results) {
+        // ignoré si une nouvelle autocomplétion est lancée d'ici la réponse du géocodage
+        const onSuccess = this._ignoreIfStale("autocomplete", function (results) {
             logger.log("request from Geocoding", results);
             if (results) {
                 this._clearResults();
@@ -394,33 +553,31 @@ class IGNSearchService extends AbstractSearchService {
                 type : this.AUTOCOMPLETE_EVENT,
                 result : this._autocompleteLocations,
             });
-        };
+        });
 
         // FIXME
         // où affiche t on les messages : ex. 'No suggestion matching the search' ?
         this._clearResults();
         logger.log(error.message);
-        // on envoie une requete de geocodage si aucun resultat d'autocomplétion
-        // n'a été trouvé ! Et on n'oublie pas d'annuler celle qui est en cours !
-        if (error.message === "No suggestion matching the search" && _triggerGeocode /* && value.length === 5 */) {
-            if (this._triggerHandler) {
-                clearTimeout(this._triggerHandler);
-                logger.warn("Cancel the last geocode request !");
-            }
-            this._triggerHandler = setTimeout(
-                function () {
-                    logger.warn("Launch a geocode request !");
-                    this._requestGeocoding({
-                        location : value,
-                        // callback onSuccess
-                        onSuccess : onSuccess.bind(this),
-                        // callback onFailure
-                        onFailure : function (error) {
-                            logger.log(error.message);
-                        }
-                    });
-                }, _triggerDelay
-            );
+        // On envoie une requête de géocodage si aucune suggestion n'est trouvée,
+        // en remplaçant le géocodage différé précédent s'il n'a pas encore démarré.
+        if (error.message === "No suggestion matching the search" && _triggerGeocode && value /* && value.length === 5 */) {
+            this._clearScheduledGeocode();
+            // pas de requête si une nouvelle autocomplétion est lancée pendant le délai
+            const launchGeocode = this._ignoreIfStale("autocomplete", function () {
+                logger.warn("Launch a geocode request !");
+                this._requestGeocoding({
+                    location : value,
+                    onSuccess : onSuccess,
+                    onFailure : function (error) {
+                        logger.log(error.message);
+                    }
+                });
+            });
+            this._triggerHandler = setTimeout(() => {
+                this._triggerHandler = null;
+                launchGeocode();
+            }, _triggerDelay);
         }
     }
 
@@ -466,7 +623,7 @@ class IGNSearchService extends AbstractSearchService {
             q : GeocodeUtils.getSuggestedLocationQuery(suggestedLocation),
             index : suggestedLocation.type,
             // callback onSuccess
-            onSuccess : function (response) {
+            onSuccess : this._ignoreIfStale("autocomplete", function (response) {
                 logger.log("request from Geocoding (coordinates null)", response);
                 if (response.locations && response.locations.length !== 0 && response.locations[0].position) {
                     // on modifie les coordonnées du résultat en EPSG:4326 donc lat,lon
@@ -481,14 +638,14 @@ class IGNSearchService extends AbstractSearchService {
                         context._fillAutoCompletedLocationListContainer(context._locationsToBeDisplayed);
                     }
                 }
-            },
+            }),
             // callback onFailure
-            onFailure : function () {
+            onFailure : this._ignoreIfStale("autocomplete", function () {
                 // si on n'a pas réussi à récupérer les coordonnées, on affiche quand même le résultat
                 if (context._suggestedLocations && context._suggestedLocations[i]) {
                     context._createAutoCompletedLocationElement(context._suggestedLocations[i], i);
                 }
-            }
+            })
         });
     }
 
@@ -511,6 +668,21 @@ class IGNSearchService extends AbstractSearchService {
         if (location === undefined) {
             return;
         }
+
+        if (location && typeof location === "object" && location.type === "Coordinates" && location.position) {
+            this._searchCoordinates(location);
+            return;
+        }
+        if (typeof location === "string") {
+            const direct = this.getDirectResult(location);
+            if (direct) {
+                this._searchCoordinates(direct);
+                return;
+            }
+        }
+
+        this._requestVersions.search += 1;
+
         // on ajoute le texte de l'autocomplétion dans l'input
         let label;
         let query = null;
@@ -574,8 +746,8 @@ class IGNSearchService extends AbstractSearchService {
             returnTrueGeometry : truegeometry,
             location : query,
             filters : filters,
-            onSuccess : this._onSuccessSearch.bind(this),
-            onFailure : this._onFailureSearch.bind(this, location),
+            onSuccess : this._ignoreIfStale("search", this._onSuccessSearch),
+            onFailure : this._ignoreIfStale("search", (error) => this._onFailureSearch(location, error)),
         });
 
         // HACK on retire les deux caractère manquant pour les communes avec des noms courts (ex. "By") 
@@ -656,6 +828,9 @@ class IGNSearchService extends AbstractSearchService {
      * @param {Number} index Index of the result
      * @returns {Object} Object containing feature and extent (if any)
      */
+    // TODO : ne plus convertir en dur vers EPSG:3857 ; renvoyer du EPSG:4326 et ajouter
+    // `projection : "EPSG:4326"` à l'événement, comme _searchCoordinates (reprojection par
+    // SearchEngineBase._reprojectSearchEvent). Appelant à adapter : LocationAdvancedSearch.
     getResultFeatures (index) {
         let location = this.getResult(index);
         if (!location) {

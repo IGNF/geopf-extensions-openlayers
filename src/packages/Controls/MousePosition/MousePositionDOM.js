@@ -711,9 +711,13 @@ var MousePositionDOM = {
         var selector = "div[id^=" + this._addUID("GPmousePositionCoordinate") + "]";
         var inputs = document.querySelectorAll(selector + " input");
         for (var i = 0; i < inputs.length; i++) {
-            inputs[i].readOnly = !editing;
+            var input = inputs[i];
+            input.readOnly = !editing;
+            input.classList.toggle("GPinput", editing);
+            input.classList.toggle("gpf-input", editing);
+            input.classList.toggle("fr-input", editing);
             if (editing) {
-                inputs[i].classList.remove("error");
+                input.classList.remove("error");
             }
         }
         var selects = document.querySelectorAll(selector + " select");

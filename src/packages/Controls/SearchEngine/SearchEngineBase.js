@@ -6,6 +6,7 @@ import DefaultSearchService from "../../Services/DefaultSearchService";
 import Helper from "../../Utils/Helper";
 import { getExceptionParams, isException } from "./SearchEngineException";
 import AbstractSearchService from "../../Services/AbstractSearchService";
+import { equivalent as equivalentProjection, get as getProjection } from "ol/proj";
 
 /**
  * @typedef {Object} SearchServiceOptions
@@ -65,6 +66,7 @@ import AbstractSearchService from "../../Services/AbstractSearchService";
 const history = "fr-icon-history-line";
 const defaultIcon = "fr-icon-map-pin-2-line";
 const typeClasses = {
+    "Coordinates" : "fr-icon-compass-3-line",
     "StreetAddress" : "fr-icon-map-pin-2-line",
     "PositionOfInterest" : {
         "administratif" : "fr-icon-france-line",
@@ -200,14 +202,21 @@ class SearchEngineBase extends Control {
      */
     _initEvents (options) {
         if (this.searchService.get("autocomplete") !== false) {
-            // Empty input
+            // Toute modification du contenu met à jour le bouton d'effacement.
+            // Si elle vient de l'utilisateur (frappe, y compris en composition IME comme sur les claviers
+            // Android, effacement, coller, déposer, couper, annuler, remplissage automatique...), la saisie
+            // est réanalysée. Les événements "input" synthétiques (navigation clavier, sélection,
+            // bouton Effacer) affichent seulement l'historique lorsque le champ est vide.
             this.input.addEventListener("input", function (e) {
-                if (e.target.value.length > 0) {
+                const value = e.target.value;
+                if (value) {
                     e.target.dataset.erase = true;
                 } else {
                     delete e.target.dataset.erase;
                 }
-                if (!e.target.value) {
+                if (e.isTrusted) {
+                    this._onUserInput(value, options);
+                } else if (!value) {
                     this.showHistoric();
                 }
             }.bind(this));
@@ -262,12 +271,8 @@ class SearchEngineBase extends Control {
 
                         break;
                     default:
-                        if (e.target.value.length && e.target.value.length >= options.minChars && e.target.value !== this._currentValue) {
-                            this.autocomplete(e.target.value);
-                        }
                         break;
                 }
-                this._currentValue = e.target.value;
             }.bind(this), false);
         }
 
@@ -275,6 +280,22 @@ class SearchEngineBase extends Control {
         this.container.addEventListener("submit", function (e) {
             e.preventDefault();
             const list = Array.from(this.autocompleteList.querySelectorAll("li"));
+
+            // Résultat résolu localement (ex. coordonnées) : prioritaire sur une liste
+            // éventuellement vide ou obsolète, sauf si un élément est choisi au clavier.
+            // Indispensable quand l'autocomplétion est désactivée (aucune liste à valider).
+            if (!list.some(li => li.classList.contains("active"))) {
+                const direct = this.searchService.getDirectResult(this.input.value);
+                if (direct) {
+                    clearTimeout(this._completeDelay);
+                    this.searchService.cancel();
+                    this.select(direct);
+                    this.search({
+                        location : direct
+                    });
+                    return false;
+                }
+            }
 
             if (e && e.submitter && e.submitter.type === "submit") {
                 // Si on appuie sur le bouton, on vérifie que l'input ne soit pas vide
@@ -493,6 +514,44 @@ class SearchEngineBase extends Control {
     }
 
     /**
+     * Analyse la saisie après chaque modification du contenu par l'utilisateur :
+     * - résultat résolu localement (ex. coordonnées) : suggestion immédiate, prioritaire sur
+     *   les services distants dont les requêtes en cours sont ignorées ;
+     * - sinon, à partir de `minChars` : autocomplétion classique du service ;
+     * - sinon : la liste est vidée (ou l'historique affiché si le champ est vide)
+     *   et les requêtes en cours sont ignorées.
+     * @private
+     * @param {String} value Contenu du champ
+     * @param {SearchEngineBaseOptions} options Options du constructeur
+     */
+    _onUserInput (value, options) {
+        if (value && typeof this.searchService.getDirectResult === "function" && this.searchService.getDirectResult(value)) {
+            clearTimeout(this._completeDelay);
+            this._directListShown = true;
+            this.searchService.autocomplete(value);
+            return;
+        }
+        // La saisie ne correspond plus à un résultat local : on retire aussitôt ces suggestions
+        if (this._directListShown) {
+            this._directListShown = false;
+            this._updateList([]);
+        }
+        if (value && value.length >= options.minChars) {
+            this.autocomplete(value);
+            return;
+        }
+        clearTimeout(this._completeDelay);
+        if (typeof this.searchService.cancel === "function") {
+            this.searchService.cancel();
+        }
+        if (value) {
+            this._updateList([]);
+        } else {
+            this.showHistoric();
+        }
+    }
+
+    /**
      * Active ou désactive le contrôle (désactive l'input / bouton).
      * @param {Boolean} active Indique si le contrôle doit être désactivé
      * @returns {void}
@@ -545,8 +604,37 @@ class SearchEngineBase extends Control {
      */
     onSearch (e) {
         clearTimeout(this._completeDelay);
-        // Update list}
+        this._reprojectSearchEvent(e);
         this.dispatchEvent(e);
+    }
+
+    /**
+     * Reprojette les géométries d'un événement de recherche dans la projection de la carte,
+     * lorsque le service précise la projection de ses résultats (`e.projection`).
+     * @private
+     * @param {Object} e Événement de recherche
+     */
+    _reprojectSearchEvent (e) {
+        const map = this.getMap();
+        if (!e || !e.projection || !map) {
+            return;
+        }
+        const source = getProjection(e.projection);
+        const target = map.getView().getProjection();
+        if (!source || equivalentProjection(source, target)) {
+            return;
+        }
+        const reproject = (feature) => {
+            if (!feature || typeof feature.clone !== "function" || !feature.getGeometry()) {
+                return feature;
+            }
+            const clone = feature.clone();
+            clone.getGeometry().transform(source, target);
+            return clone;
+        };
+        e.result = reproject(e.result);
+        e.extent = reproject(e.extent);
+        e.projection = target.getCode();
     }
 
     /**
@@ -559,7 +647,6 @@ class SearchEngineBase extends Control {
         const title = this.getItemTitle(item);
         this.input.value = title;
         this.input.dispatchEvent(new Event("input"));
-        this._currentValue = title;
         this._updateHistoric(item);
         this._updateList();
         this.dispatchEvent({
@@ -677,6 +764,9 @@ class SearchEngineBase extends Control {
      * @param {Object} value Valeur à ajouter
      */
     _updateHistoric (value) {
+        if (typeof this.searchService.isHistorizable === "function" && this.searchService.isHistorizable(value) === false) {
+            return;
+        }
         if (this._historic) {
             let index = -1;
             for (let i = 0; i < this._historic.length; i++) {

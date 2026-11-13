@@ -183,6 +183,45 @@ class AbstractAdvancedSearch extends Control {
         e.preventDefault();
     }
 
+    /**
+     * Supprime les messages d'erreur du formulaire.
+     * @protected
+     */
+    _clearMessages () {
+        this.element.querySelectorAll(".fr-message--error").forEach(msg => msg.remove());
+    }
+
+    /**
+     * Affiche un message pour un champ donné, dans le premier conteneur
+     * parent possédant un groupe de messages (.GPMessagesGroup).
+     * @param {String} name Nom (attribut name) du champ
+     * @param {String} [message] Message à afficher (si vide, efface le message)
+     * @param {String} [what="error"] Type de message (error, warning, info)
+     * @protected
+     */
+    _showMessage (name, message, what) {
+        const input = this.element.querySelector("[name='" + name + "']");
+        let parent = input ? input.parentElement : null;
+        let div = null;
+        while (parent && parent !== this.element.parentElement) {
+            div = parent.querySelector(":scope > .GPMessagesGroup");
+            if (div) {
+                break;
+            }
+            parent = parent.parentElement;
+        }
+        if (!div) {
+            return;
+        }
+        div.innerHTML = "";
+        if (message) {
+            const msg = document.createElement("p");
+            msg.className = "fr-message fr-message--" + (what || "error");
+            msg.textContent = message;
+            div.appendChild(msg);
+        }
+    }
+
 }
 
 export default AbstractAdvancedSearch;
