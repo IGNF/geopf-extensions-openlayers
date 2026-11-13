@@ -168,8 +168,8 @@ var RouteDOM = {
             var points = document.getElementsByClassName(self._addUID("GPlocationPoint"));
 
             // Must have at least two origin points
-            var start = points[0].childNodes[0].id;
-            var end = points[points.length - 1].childNodes[0].id;
+            var start = points[0].querySelector(":scope > [id^='GPlocationPoint_']").id;
+            var end = points[points.length - 1].querySelector(":scope > [id^='GPlocationPoint_']").id;
             var startID = ID.index(start);
             var endID = ID.index(end);
 
@@ -310,7 +310,7 @@ var RouteDOM = {
     _addRouteResultsStagesValuesElement : function (points) {
         document.getElementById(this._addUID("GProuteResultsStages")).innerHTML = "";
         for (var i = 0; i < points.length; i++) {
-            var tag = points[i].childNodes[0].id;
+            var tag = points[i].querySelector(":scope > [id^='GPlocationPoint_']").id;
             var id = ID.index(tag);
             if (document.getElementById(this._addUID("GPlocationPoint_" + id)).className === "GPflexInput GPlocationStageFlexInput gpf-flex") {
                 var resultStage = document.createElement("div");
