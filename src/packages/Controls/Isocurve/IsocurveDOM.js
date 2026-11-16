@@ -866,42 +866,31 @@ var IsoDOM = {
     },
 
     /**
-     * Create Container to Exclusions
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createIsoPanelFormExclusionsElement : function () {
-        var div = document.createElement("div");
-        div.id = this._addUID("GPisoExclusions");
-
-        var label = document.createElement("label");
-        label.className = "GPisoExclusionsLabel gpf-label fr-label";
-        label.innerHTML = "Passages autorisés";
-        div.appendChild(label);
-
-        // div.appendChild(this._createIsoPanelFormExclusionOptionsElement());
-
-        return div;
-    },
-
-    /**
      * Create Exclusions Options
      * see event !
      * FIXME event not useful
-     * @param {Array} exclusions - exclusions to display in list
+     * @param {Object} exclusions - exclusions
      * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormExclusionOptionsElement : function (exclusions) {
         // contexte d'execution
         var context = this;
 
-        var div = document.createElement("div");
-        div.className = "GPisoExclusionsOptions gpf-flex fr-checkbox-group fr-m-1w";
+        var fieldset = document.createElement("fieldset");
+        fieldset.id = this._addUID("GPisoExclusions");
+        fieldset.className = "GPisoExclusionsOptions fr-fieldset";
+
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Passages autorisés";
+        fieldset.appendChild(legend);
 
         /* jshint -W083 */
         for (var value in exclusions) {
             if (exclusions.hasOwnProperty(value)) {
                 var status = exclusions[value];
+                var div = document.createElement("div");
+                div.className = "fr-checkbox-group";
                 switch (value) {
                     case "toll":
                         var inputToll = document.createElement("input");
@@ -926,7 +915,7 @@ var IsoDOM = {
                         div.appendChild(inputToll);
 
                         var labelToll = document.createElement("label");
-                        labelToll.className = "GPisoExclusionsOption";
+                        labelToll.className = "GPisoExclusionsOption fr-label";
                         labelToll.htmlFor = this._addUID("GPisoExclusionsToll");
                         labelToll.innerHTML = "Péages";
                         div.appendChild(labelToll);
@@ -955,7 +944,7 @@ var IsoDOM = {
                         div.appendChild(inputTunnel);
 
                         var labelTunnel = document.createElement("label");
-                        labelTunnel.className = "GPisoExclusionsOption";
+                        labelTunnel.className = "GPisoExclusionsOption fr-label";
                         labelTunnel.htmlFor = this._addUID("GPisoExclusionsTunnel");
                         labelTunnel.innerHTML = "Tunnels";
                         div.appendChild(labelTunnel);
@@ -984,16 +973,22 @@ var IsoDOM = {
                         div.appendChild(inputBridge);
 
                         var labelBridge = document.createElement("label");
-                        labelBridge.className = "GPisoExclusionsOption";
+                        labelBridge.className = "GPisoExclusionsOption fr-label";
                         labelBridge.htmlFor = this._addUID("GPisoExclusionsBridge");
                         labelBridge.innerHTML = "Ponts";
                         div.appendChild(labelBridge);
                         break;
                 }
+                if (div.querySelector("input")) {
+                    var element = document.createElement("div");
+                    element.className = "fr-fieldset__element fr-fieldset__element--inline";
+                    element.appendChild(div);
+                    fieldset.appendChild(element);
+                }
             }
         }
 
-        return div;
+        return fieldset;
     },
 
     // ################################################################### //
