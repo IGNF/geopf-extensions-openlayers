@@ -70,8 +70,6 @@ div[id^=GProuteStageAdd] {
 
 .GProuteFormMini {
   overflow: hidden;
-  -webkit-transform: translateY(-5px);
-  transform: translateY(-5px);
 }
 
 .GProuteFormMini button[id^=GPshowRouteExclusionsPicto],
