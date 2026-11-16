@@ -279,14 +279,14 @@ var ReverseGeocodeDOM = {
         div.className = "GPflexInput gpf-flex gpf-flex-reverse fr-mb-1w";
 
         var label = document.createElement("label");
-        label.id = "label-recherche-par";
+        label.htmlFor = this._addUID("GPreverseGeocodingType");
         label.className = "GPlabel gpf-label fr-label";
         label.innerHTML = "Recherche par";
         label.title = "Recherche par";
         div.appendChild(label);
 
         var select = document.createElement("select");
-        select.setAttribute("aria-labelledby", "label-recherche-par");
+        select.id = this._addUID("GPreverseGeocodingType");
         select.className = "GPselect gpf-select fr-select";
         // gestionnaire d'evenement : on stocke la valeur du type de geocodage,
         // utilisé dans la requête de géocodage inverse
@@ -348,14 +348,14 @@ var ReverseGeocodeDOM = {
         div.className = "GPflexInput gpf-flex gpf-flex-reverse fr-mb-2w";
 
         var label = document.createElement("label");
-        label.id = "label-delimitation";
+        label.htmlFor = this._addUID("GPreverseGeocodingDelimitation");
         label.className = "GPlabel gpf-label fr-label";
         label.innerHTML = "Délimitation";
         label.title = "Délimitation";
         div.appendChild(label);
 
         var select = document.createElement("select");
-        select.setAttribute("aria-labelledby", "label-delimitation");
+        select.id = this._addUID("GPreverseGeocodingDelimitation");
         select.className = "GPselect gpf-select fr-select";
         // gestionnaire d'evenement : on stocke la valeur du type de délimitation,
         // et on modifie l'événement de pointage sur la carte en fonction
