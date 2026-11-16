@@ -475,6 +475,70 @@ input.GPsubmit:hover {
 
 }
 
+.gpf-widget :is(.GPinput, .gpf-input, .GPselect, .gpf-select, textarea) {
+  max-width: 100%;
+  min-width: 0;
+  color: #333;
+  background-color: #FFF;
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 3px 5px;
+  font: inherit;
+}
+
+.gpf-widget .gpf-radio-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.gpf-widget .gpf-radio-group > label {
+  color: #333;
+}
+
+.gpf-widget .gpf-radio-group > input[type="radio"] {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 3px;
+  accent-color: #366291;
+}
+
+/* les cases à cocher restent masquées (le libellé sert de commande) mais focalisables au clavier */
+.gpf-widget .fr-checkbox-group > input[type="checkbox"] {
+  display: block;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+
+.gpf-widget :is(button, input, select, textarea, a[href], [tabindex]):focus-visible,
+.gpf-widget .fr-checkbox-group > input[type="checkbox"]:focus-visible + label {
+  outline: 2px solid #366291;
+  outline-offset: 2px;
+}
+
+.gpf-widget :is(button, input, select, textarea):disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.gpf-widget .fr-message {
+  margin: 8px 0;
+  padding: 8px;
+  overflow-wrap: anywhere;
+  border-left: 3px solid #366291;
+}
+
+.gpf-widget .fr-message--error {
+  color: #8F2900;
+  background-color: #FFF0EA;
+  border-color: #B34000;
+}
+
 .GPform {
   padding: 15px;
 }
