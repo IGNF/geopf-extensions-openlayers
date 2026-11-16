@@ -346,20 +346,6 @@ var IsoDOM = {
         return container;
     },
 
-    /**
-     * Create Point label
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createIsoPanelFormPointLabel : function () {
-        var p = document.createElement("p");
-        p.id = this._addUID("GPisochronPointLabelP");
-        p.className = "gpf-label fr-label";
-        p.innerHTML = "Départ";
-
-        return p;
-    },
-
     // ################################################################### //
     // ############# Methods to the type choice into form ################ //
     // ################################################################### //

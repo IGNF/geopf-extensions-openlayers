@@ -46,7 +46,7 @@ div[id^=GPisochronChoice] {
   justify-content: space-between;
 }
 
-p[id^=GPisochronPointLabelP], p[id^=GPisochronValueChronLabelP] {
+p[id^=GPisochronValueChronLabelP] {
   margin: 2px 0 5px 0;
 }
 
