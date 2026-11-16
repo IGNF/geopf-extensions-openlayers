@@ -757,9 +757,7 @@ class Route extends Control {
         // form: menu des exclusions
         this._showRouteExclusionsElement = this._createShowRouteExclusionsPictoElement();
         routeForm.appendChild(this._showRouteExclusionsElement);
-        var exclusion = this._createRoutePanelFormExclusionsElement(this.options.prettifyCompute);
-        exclusion.appendChild(this._createRoutePanelFormExclusionOptionsElement(this.options.exclusions));
-        routeForm.appendChild(exclusion);
+        routeForm.appendChild(this._createRoutePanelFormExclusionOptionsElement(this.options.exclusions, this.options.prettifyCompute));
 
         var panelFooter = this._createRoutePanelFooterElement();
         routeForm.appendChild(panelFooter);
@@ -1360,17 +1358,17 @@ class Route extends Control {
     onRouteModeTransportChange (e) {
         var value = e.target.value;
         var shortestDiv = document.getElementById("GProuteComputationChoice-" + this._uid);
-        var exclusionDiv = document.getElementById("GProuteExclusions-" + this._uid);
+        var exclusionFieldset = document.getElementById("GProuteExclusions-" + this._uid);
         if (!value) {
             return;
         }
         /* Sélecteur mode d'itinéraire inactif en mode Pieton */
         if (value === "Pieton" && this.options.prettifyCompute === true) {
             shortestDiv.style.display = "none";
-            exclusionDiv.style.display = "none";
+            exclusionFieldset.style.display = "none";
         } else {
             shortestDiv.style.display = "";
-            exclusionDiv.style.display = "block";
+            exclusionFieldset.style.display = "";
         }
         this._currentTransport = value;
     }

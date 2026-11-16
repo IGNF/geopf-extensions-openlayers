@@ -95,11 +95,6 @@ div[id^=GProuteResultsDetails-] {
   vertical-align: top;
 }
 
-.GProuteExclusionsOptions {
-  gap: 0.5rem;
-  color: var(--text-label-grey);
-}
-
 /* Mode Mobile */
 
 @media (max-width: 576px) {
