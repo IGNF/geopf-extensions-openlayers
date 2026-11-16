@@ -111,6 +111,8 @@ input[id^=GPisochronChoiceAltChron] {
 
 .GPisochronModeLabel {
   display: block;
+  width: 100%;
+  padding: 0;
   text-align: center;
   margin-bottom: 5px;
 }
@@ -135,11 +137,18 @@ input[id^=GPisochronTransportPedestrian]:checked + .GPisochronTransportImg {
   background-position: -252px 0;
 }
 
-.GPisochronTransportChoice input {
-  display: none;
+fieldset[id^=GPisochronTransportChoice] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-div[id^=GPisochronTransportChoice] > div {
+.GPisochronTransportChoice {
   width: 100%;
   justify-content: center;
 }

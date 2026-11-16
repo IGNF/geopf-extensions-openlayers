@@ -25,10 +25,6 @@ div[id^="GPisochronChoice"] {
   gap: 1em;
 }
 
-div[id^=GPisochronTransportChoice] > div {
-  margin-top: 0.5rem;
-}
-
 div[id^=GPisochronValueChron],
 div[id^=GPisochronValueDist] {
   width: 281px;
