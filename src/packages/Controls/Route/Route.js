@@ -1008,7 +1008,7 @@ class Route extends Control {
             // display form on origin label click
             formPoint._buttonLabel.addEventListener(
                 "click",
-                (e) => this.onRouteOriginLabelClick(e)
+                () => this.onRouteOriginLabelClick(formPoint)
             );
             // minimize form on input show pointer, and set map event listeners (see this.onRouteOriginPointerClick)
             formPoint._inputShowPointer.addEventListener(
@@ -1041,7 +1041,7 @@ class Route extends Control {
             // attachEvent: Internet explorer event listeners management
             formPoint._buttonLabel.attachEvent(
                 "onclick",
-                (e) => this.onRouteOriginLabelClick(e)
+                () => this.onRouteOriginLabelClick(formPoint)
             );
             formPoint._inputShowPointer.attachEvent(
                 "onclick",
@@ -1191,24 +1191,15 @@ class Route extends Control {
     }
 
     /**
-     * this method is called by event 'click' on 'GPlocationOriginLabel' label
-     * and set 'GProuteForm' CSS class to "" (normal)
+     * Restore the route form when a location is cleared.
      *
-     * @param {Object} routeControl - context : route Control (this)
+     * @param {Object} locationSelector - selected location input
      * @private
      */
-    onRouteOriginLabelClick () {
-        this._formRouteContainer.className = "gpf-panel__content gpf-mobile-form fr-modal__content";
-        // on désactive l'écouteur d'événements sur la carte (pour ne pas placer un marker au clic)
-        // map.un(
-        //     "click",
-        //     () => {
-        //         // on ne rétablit pas le mode "normal" si on est dans le panel des résultats (où className = "GProuteComponentHidden")
-        //         if (this._formRouteContainer.className === "GProuteFormMini") {
-        //             this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
-        //         }
-        //     }
-        // );
+    onRouteOriginLabelClick (locationSelector) {
+        this._formRouteContainer.classList.remove("GProuteFormMini");
+        this._formRouteContainer.classList.add("gpf-mobile-form");
+        locationSelector._container.parentElement.classList.remove("selected");
         olObservableUnByKey(this.listenerKey);
         this.dispatchEvent("route:drawend");
     }
@@ -1225,17 +1216,14 @@ class Route extends Control {
         var map = this.getMap();
         if (locationSelector._inputShowPointerContainer.checked) {
             // au click sur l'input pour pointer sur la carte: on minimise le formulaire
-            this._formRouteContainer.className = "GProuteFormMini gpf-panel__content fr-modal__content";
+            this._formRouteContainer.classList.add("GProuteFormMini");
             locationSelector._container.parentElement.classList.add("selected");
             // et au clic sur la carte, on réaffichera le formulaire "normal"
             this.listenerKey = map.on(
                 "click",
                 () => {
                     locationSelector._container.parentElement.classList.remove("selected");
-                    // on ne rétablit pas le mode "normal" si on est dans le panel des résultats (où className = "GProuteComponentHidden")
-                    if (this._formRouteContainer.className === "GProuteFormMini gpf-panel__content fr-modal__content") {
-                        this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
-                    }
+                    this._formRouteContainer.classList.remove("GProuteFormMini");
                     olObservableUnByKey(this.listenerKey);
                     /**
                     * event triggered at the end of drawing input
@@ -1253,17 +1241,8 @@ class Route extends Control {
             this.dispatchEvent("route:drawstart");
         } else {
             // si on déselectionne le pointer, on rétablit le formulaire en mode normal
-            this._formRouteContainer.className = "";
-            // et on enlève l'écouteur d'évènement sur la carte
-            // map.un(
-            //     "click",
-            //     () => {
-            //         // on ne rétablit pas le mode "normal" si on est dans le panel des résultats (où className = "GProuteComponentHidden")
-            //         if (this._formRouteContainer.className === "GProuteFormMini") {
-            //             this._formRouteContainer.className = "gpf-panel__content fr-modal__content";
-            //         }
-            //     }
-            // );
+            this._formRouteContainer.classList.remove("GProuteFormMini");
+            locationSelector._container.parentElement.classList.remove("selected");
             olObservableUnByKey(this.listenerKey);
             this.dispatchEvent("route:drawend");
         }
