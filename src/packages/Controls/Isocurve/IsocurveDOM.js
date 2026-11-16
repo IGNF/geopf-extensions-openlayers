@@ -776,11 +776,12 @@ var IsoDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronDirectionChoice");
-        div.className = "fr-my-2w";
+        div.className = "fr-select-group";
 
         var label = document.createElement("label");
         label.innerHTML = "Définir un sens de parcours";
         label.className = "fr-label";
+        label.htmlFor = this._addUID("GPisochronDirectionSelect");
         div.appendChild(label);
 
         var select = document.createElement("select");
