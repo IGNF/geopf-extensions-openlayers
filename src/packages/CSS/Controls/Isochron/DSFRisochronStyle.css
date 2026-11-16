@@ -38,10 +38,6 @@ div[id^=GPisochronValueDist] {
   margin-top: 0;
 }
 
-.GPisoExclusionsOptions {
-  gap: 1rem;
-}
-
 [id^=GPisochronForm-] > .GPpanelFooter {
   position: unset;
 }

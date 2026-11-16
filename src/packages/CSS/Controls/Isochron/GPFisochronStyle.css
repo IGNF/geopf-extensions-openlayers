@@ -182,22 +182,30 @@ select[id^=GPisochronDirectionSelect] {
   transition: all 0.5s ease-out 0s;
 }
 
-.GPisoExclusionsLabel {
-  display: block;
+fieldset.GPisoExclusionsOptions > legend {
+  width: 100%;
+  padding: 0;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  margin-top: 0;
   font-weight: bold;
   line-height: 16px;
 }
 
-.GPisoExclusionsOptions {
+fieldset.GPisoExclusionsOptions {
   display: -webkit-flex;
-  display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  flex-wrap: wrap;
+  column-gap: 5px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .GPisoExclusionsOption {
