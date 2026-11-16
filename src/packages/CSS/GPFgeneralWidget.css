@@ -48,11 +48,12 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   /* crée un décalage sur le searchEngine */
   /* align-items: center; */
   width: var(--size-per-row);
   min-height: var(--size-per-row);
+  height: 100%;
   /* padding: 5px; */
 }
 
@@ -73,6 +74,7 @@
 #position-container-bottom-left,
 #position-container-bottom-right {
   bottom: 0px;
+  justify-content: flex-end;
 }
 
 #position-container-bottom-right {
