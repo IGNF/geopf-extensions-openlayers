@@ -972,9 +972,7 @@ class Isocurve extends Control {
         // form: menu des exclusions
         if (this.options.exclusions && (typeof this.options.exclusions === "object") && (Object.keys(this.options.exclusions).length !== 0)) {
             form.appendChild(this._createShowIsoExclusionsPictoElement());
-            var exclusion = this._createIsoPanelFormExclusionsElement();
-            exclusion.appendChild(this._createIsoPanelFormExclusionOptionsElement(this.options.exclusions));
-            form.appendChild(exclusion);
+            form.appendChild(this._createIsoPanelFormExclusionOptionsElement(this.options.exclusions));
         }
 
         // footer
