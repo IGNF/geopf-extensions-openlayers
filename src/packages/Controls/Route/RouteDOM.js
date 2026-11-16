@@ -1115,47 +1115,36 @@ var RouteDOM = {
     },
 
     /**
-     * Create Container to Exclusions
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createRoutePanelFormExclusionsElement : function (prettify) {
-        var div = document.createElement("div");
-        div.id = this._addUID("GProuteExclusions");
-        div.className = "fr-mt-2w";
-
-        if (prettify) {
-            div.style.display = "none";
-        }
-        var label = document.createElement("label");
-        label.className = "GProuteExclusionsLabel fr-label";
-        label.innerHTML = "Passages autorisés";
-        div.appendChild(label);
-
-        // div.appendChild(this._createRoutePanelFormExclusionOptionsElement());
-
-        return div;
-    },
-
-    /**
      * Create Exclusions Options
      * see event !
      * FIXME event not useful
-     * @param {Object[]} exclusions - exclusions
+     * @param {Object} exclusions - exclusions
+     * @param {Boolean} prettify - option to hide exclusions for pedestrians
      *
      * @returns {HTMLElement} DOM element
      */
-    _createRoutePanelFormExclusionOptionsElement : function (exclusions) {
+    _createRoutePanelFormExclusionOptionsElement : function (exclusions, prettify) {
         // contexte d'execution
         var context = this;
 
-        var div = document.createElement("div");
-        div.className = "GProuteExclusionsOptions gpf-flex fr-checkbox-group fr-m-1w";
+        var fieldset = document.createElement("fieldset");
+        fieldset.id = this._addUID("GProuteExclusions");
+        fieldset.className = "GProuteExclusionsOptions fr-fieldset";
+        if (prettify) {
+            fieldset.style.display = "none";
+        }
+
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Passages autorisés";
+        fieldset.appendChild(legend);
 
         /* jshint -W083 */
         for (var value in exclusions) {
             if (exclusions.hasOwnProperty(value)) {
                 var status = exclusions[value];
+                var div = document.createElement("div");
+                div.className = "fr-checkbox-group";
                 switch (value) {
                     case "toll":
                         var inputToll = document.createElement("input");
@@ -1179,7 +1168,7 @@ var RouteDOM = {
                         div.appendChild(inputToll);
 
                         var labelToll = document.createElement("label");
-                        labelToll.className = "GProuteExclusionsOption";
+                        labelToll.className = "GProuteExclusionsOption fr-label";
                         labelToll.htmlFor = this._addUID("GProuteExclusionsToll");
                         labelToll.innerHTML = "Péages";
                         div.appendChild(labelToll);
@@ -1207,7 +1196,7 @@ var RouteDOM = {
                         div.appendChild(inputTunnel);
 
                         var labelTunnel = document.createElement("label");
-                        labelTunnel.className = "GProuteExclusionsOption";
+                        labelTunnel.className = "GProuteExclusionsOption fr-label";
                         labelTunnel.htmlFor = this._addUID("GProuteExclusionsTunnel");
                         labelTunnel.innerHTML = "Tunnels";
                         div.appendChild(labelTunnel);
@@ -1235,16 +1224,22 @@ var RouteDOM = {
                         div.appendChild(inputBridge);
 
                         var labelBridge = document.createElement("label");
-                        labelBridge.className = "GProuteExclusionsOption";
+                        labelBridge.className = "GProuteExclusionsOption fr-label";
                         labelBridge.htmlFor = this._addUID("GProuteExclusionsBridge");
                         labelBridge.innerHTML = "Ponts";
                         div.appendChild(labelBridge);
                         break;
                 }
+                if (div.querySelector("input")) {
+                    var element = document.createElement("div");
+                    element.className = "fr-fieldset__element fr-fieldset__element--inline";
+                    element.appendChild(div);
+                    fieldset.appendChild(element);
+                }
             }
         }
 
-        return div;
+        return fieldset;
     },
 
     // ################################################################### //

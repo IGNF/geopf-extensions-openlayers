@@ -173,16 +173,17 @@ select[id^=GProuteComputationSelect] {
   transform: translateY(-100%);
 }
 
-.GProuteExclusionsLabel {
-  display: block;
+fieldset.GProuteExclusionsOptions > legend {
+  width: 100%;
+  padding: 0;
   text-align: center;
   margin-bottom: 8px;
-  margin-top: 8px;
+  margin-top: 0;
   font-weight: bold;
   line-height: 16px;
 }
 
-.GProuteExclusionsOptions {
+fieldset.GProuteExclusionsOptions {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: -webkit-box;
@@ -190,6 +191,12 @@ select[id^=GProuteComputationSelect] {
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  flex-wrap: wrap;
+  column-gap: 5px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .GProuteExclusionsOption {

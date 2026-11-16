@@ -80,7 +80,7 @@ div[id^=GProuteStageAdd] {
 .GProuteFormMini > *:not(.selected):not(.GProutePoints),
 .GProuteFormMini > .GProutePoints > *:not(.selected),
 .GProuteFormMini div[id^="GProuteModeChoice"],
-.GProuteFormMini button[id^="GPshowRouteExclusions"][aria-pressed="true"] + div[id^="GProuteExclusions"],
+.GProuteFormMini button[id^="GPshowRouteExclusions"][aria-pressed="true"] + fieldset[id^="GProuteExclusions"],
 .GProuteFormMini .GPpanelFooter {
   display: none;
 }
@@ -124,22 +124,27 @@ button[id^="GPshowRouteExclusions"][aria-pressed="true"] {
   transform: translateY(-100%) rotateX(180deg);
 }
 
-button[id^=GPshowRouteExclusions][aria-pressed="false"]  + div[id^=GProuteExclusions] {
+button[id^=GPshowRouteExclusions][aria-pressed="false"]  + fieldset[id^=GProuteExclusions] {
   max-height: 0;
   opacity: 0;
   margin-bottom: 0;
 }
 
-button[id^=GPshowRouteExclusions][aria-pressed="true"] + div[id^=GProuteExclusions] {
-  display: block;
-  max-height: 76px;
+button[id^=GPshowRouteExclusions][aria-pressed="true"] + fieldset[id^=GProuteExclusions] {
+  max-height: 300px;
   opacity: 1;
   margin-bottom: 15px;
 }
 
-div[id^=GProuteExclusions] {
+fieldset[id^=GProuteExclusions] {
   transition: max-height 0.5s ease-in-out 0.25s, opacity 0.5s ease-in-out 0.25s, margin 0.3s ease-in-out 0.25s;
   overflow: hidden;
+}
+
+fieldset[id^=GProuteExclusions] > legend {
+  /* Keep the legend inside the animated height instead of the fieldset border. */
+  float: left;
+  width: 100%;
 }
 
 /* Result panel */
