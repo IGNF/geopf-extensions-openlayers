@@ -3,10 +3,6 @@
   mask: url("img/route.svg") center no-repeat;
 }
 
-.GProuteFormMini {
-  max-height: 78px;
-}
-
 .GProuteFormMini .GPelementShow {
   color: var(--grey-200-850);
 }
@@ -98,6 +94,10 @@ div[id^=GProuteResultsDetails-] {
 /* Mode Mobile */
 
 @media (max-width: 576px) {
+  .gpf-mobile-fullscreen .GProuteFormMini {
+    height: auto;
+  }
+
   .gpf-mobile-fullscreen div[id^="GProuteResultsDetails-"] {
     max-width: unset;
   }
