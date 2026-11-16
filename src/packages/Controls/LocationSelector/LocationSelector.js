@@ -133,6 +133,9 @@ class LocationSelector extends Control {
         /** container du label du point 
          * @private*/
         this._buttonLabel = null;
+        /** label associé au champ de saisie
+         * @private */
+        this._inputLabel = null;
 
         /** container de la saisi de l'autocompletion  
          * @private */
@@ -276,6 +279,17 @@ class LocationSelector extends Control {
         olObservableUnByKey(this.listenerKey);
     }
 
+    /**
+     * Set the label associated with the location input.
+     *
+     * @param {String} label - label text
+     */
+    setTagLabel (label) {
+        this.options.tag.label = label;
+        this._inputLabel.textContent = label;
+        this._buttonLabel.textContent = label;
+    }
+
     // ################################################################### //
     // ##################### init component (private) #################### //
     // ################################################################### //
@@ -293,7 +307,8 @@ class LocationSelector extends Control {
         var container = this._createMainContainerElement();
 
         // label
-        container.appendChild(this._createLocationInputLabelElement(id, this.options.tag.label));
+        this._inputLabel = this._createLocationInputLabelElement(id, this.options.tag.label);
+        container.appendChild(this._inputLabel);
 
         var inputs = this._inputsContainer = this._createLocationPointElement(id, this.options.tag.display);
         container.appendChild(inputs);
