@@ -45,6 +45,7 @@ var logger = Logger.getLogger("contextMenu");
  * @property {string|number} [id] - Identifiant unique du widget.
  * @property {string} [altiServerUrl] - URL vers le service d'altimétrie utilisé (data.geopf.fr par défaut)
  * @property {string} [reverseGeocodeServerUrl] - URL vers le service de géocodage inverse utilisé (data.geopf.fr par défaut)
+ * @property {number} [minElevation=-1000] - Seuil minimal d'altitude. Toute valeur inférieure à ce seuil sera affichée comme "---".
  */
 /**
  * @classdesc
@@ -170,7 +171,8 @@ class ContextMenu extends Control {
             draggable : false,
             auto : true,
             panel : true,
-            contextMenuItemsOptions : []
+            contextMenuItemsOptions : [],
+            minElevation : -1000
         };
 
         // merge with user options
@@ -551,13 +553,14 @@ class ContextMenu extends Control {
             rawResponse : false, // true|false
             scope : null, // this
             onSuccess : function (json) {
-                if (json.elevations.length > 0 && json.elevations[0].z) {
+                if (json.elevations.length > 0 && json.elevations[0].z !== undefined) {
                     const z = json.elevations[0].z;
+
                     if (typeof z === "number") {
-                        altitude.innerHTML = "Altitude: " + (z <= -9999 ? "---" : z + "m");
+                        altitude.innerHTML = "Altitude : " + (z < this.options.minElevation ? "---" : z) + " m";
                     }
                 }
-            },
+            }.bind(this),
             onFailure : function (error) { },
             // spécifique au service
             positions : [{ lon : clickedCoordinate[0], lat : clickedCoordinate[1] }],
