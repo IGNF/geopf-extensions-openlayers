@@ -942,7 +942,6 @@ class Isocurve extends Control {
         form.appendChild(this._createIsoPanelFormModeChoiceTransportElement(this.options.graphs));
 
         // form: input de saisie de la localisation (fonction de Isocurve, voir ci-dessous)
-        form.appendChild(this._createIsoPanelFormPointLabel());
         var point = this._createIsoPanelFormPointElement(map);
         form.appendChild(point);
 
@@ -1028,6 +1027,7 @@ class Isocurve extends Control {
             tag : {
                 id : 1,
                 groupId : this._uid,
+                label : this._currentDirection === "arrival" ? "Arrivée" : "Départ",
                 markerOpts : this.options.markerOpts,
                 display : true
             },
@@ -1042,21 +1042,26 @@ class Isocurve extends Control {
             var map = self.getMap();
             if (self._originPoint._inputShowPointerContainer.checked) {
                 // au click sur l'input pour pointer sur la carte: on minimise le formulaire
-                self._formContainer.className = "GPisochronFormMini gpf-panel__content fr-modal__content";
+                self._formContainer.classList.add("GPisochronFormMini");
+                self._originPoint._container.classList.add("selected");
                 // et au clic sur la carte, on réaffichera le formulaire "normal"
-                this.listenerKey = map.on(
+                self.listenerKey = map.on(
                     "click",
                     () => {
-                        self._formContainer.className = "gpf-panel__content fr-modal__content";
+                        self._formContainer.classList.remove("GPisochronFormMini");
+                        self._originPoint._container.classList.remove("selected");
+                        olObservableUnByKey(self.listenerKey);
+                        self.listenerKey = null;
                         self.dispatchEvent(self.DRAW_END_ISOCURVE_EVENT);
                     }
                 );
             } else {
                 // si on déselectionne le pointer, on rétablit le formulaire en mode normal
-                self._formContainer.className = "gpf-panel__content fr-modal__content";
+                self._formContainer.classList.remove("GPisochronFormMini");
+                self._originPoint._container.classList.remove("selected");
                 // et on enlève l'écouteur d'évènement sur la carte
-                // map.un("click", () => { self._formContainer.className = ""; });
-                olObservableUnByKey(this.listenerKey);
+                olObservableUnByKey(self.listenerKey);
+                self.listenerKey = null;
             }
             /**
             * event triggered at the start of drawing input
@@ -1066,14 +1071,11 @@ class Isocurve extends Control {
         // click sur le label
         document.getElementById("GPlocationOriginLabel_1-" + this._uid).onclick = function () {
             self._clearGeojsonLayer();
-            self._formContainer.className = "gpf-panel__content fr-modal__content";
+            self._formContainer.classList.remove("GPisochronFormMini");
+            self._originPoint._container.classList.remove("selected");
             // on désactive l'écouteur d'événements sur la carte (pour ne pas placer un marker au clic)
-            map.un(
-                "click",
-                () => {
-                    self._formContainer.className = "gpf-panel__content fr-modal__content";
-                }
-            );
+            olObservableUnByKey(self.listenerKey);
+            self.listenerKey = null;
             self.dispatchEvent(self.DRAW_END_ISOCURVE_EVENT);
         };
         // click sur la zone de saisie
@@ -1285,12 +1287,18 @@ class Isocurve extends Control {
         if (!value) {
             return;
         }
-        if (value.toLowerCase() === "arrival") {
-            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Arrivée";
-        } else {
-            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Départ";
-        }
         this._currentDirection = value;
+        this._updateIsoDirectionLabel();
+    }
+
+    /**
+     * Update the location label to match the selected direction.
+     *
+     * @private
+     */
+    _updateIsoDirectionLabel () {
+        var label = this._currentDirection.toLowerCase() === "arrival" ? "Arrivée" : "Départ";
+        this._originPoint.setTagLabel(label);
     }
 
     /**
@@ -1666,11 +1674,7 @@ class Isocurve extends Control {
         if (directionSelect) {
             directionSelect.value = this._currentDirection;
         }
-        if (directionSelect.value.toLowerCase() === "arrival") {
-            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Arrivée";
-        } else {
-            document.getElementById("GPisochronPointLabelP-" + this._uid).innerHTML = "Départ";
-        }
+        this._updateIsoDirectionLabel();
 
         // 6. set exclusions to default
         var tollInput = document.getElementById("GPisoExclusionsToll-" + this._uid);
