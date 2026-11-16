@@ -590,6 +590,37 @@ input[type="checkbox"]:checked + .GPshowMoreOptions {
   overflow: auto;
 }
 
+.GPpanel.gpf-panel {
+  flex-direction: column;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100dvh - 16px);
+}
+
+.GPpanel.gpf-panel > .GPpanelHeader {
+  flex-shrink: 0;
+}
+
+.GPpanel.gpf-panel .gpf-panel__body,
+.GPpanel.gpf-panel .gpf-panel__content {
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  overflow: auto;
+}
+
+@media (max-width: 576px) {
+  .gpf-widget.gpf-mobile-fullscreen > button[aria-pressed="true"] ~ dialog.GPpanel {
+    position: fixed;
+    inset: 8px !important;
+    width: calc(100% - 16px);
+    max-width: none;
+    height: auto;
+    max-height: calc(100dvh - 16px);
+    margin: 0;
+    z-index: 2000;
+  }
+}
+
 /*******************************/
 /* selection de texte / carte  */
 /*******************************/
