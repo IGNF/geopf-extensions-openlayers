@@ -96,7 +96,7 @@ input[id^=GPisochronChoiceAltDist]:checked + .GPisochronChoiceAltImg {
   color: var(--grey-200-850);
 }
 
-div[id^=GPisochronTransportChoice] > div {
+.GPisochronTransportChoice {
   display: inline-flex;
   gap: 1rem;
 }

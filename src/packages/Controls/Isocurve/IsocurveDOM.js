@@ -687,15 +687,15 @@ var IsoDOM = {
         // contexte d'execution
         var context = this;
 
-        var divContainer = document.createElement("div");
+        var divContainer = document.createElement("fieldset");
         divContainer.id = this._addUID("GPisochronTransportChoice");
+        divContainer.className = "fr-fieldset";
 
-        var label = document.createElement("label");
-        label.className = "GPisochronModeLabel gpf-label fr-label";
-        label.innerHTML = "Choisir un mode de déplacement";
-        divContainer.appendChild(label);
-
-        var radioContainer = document.createElement("div");
+        var legend = document.createElement("legend");
+        legend.id = this._addUID("GPisochronTransportLegend");
+        legend.className = "GPisochronModeLabel fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Choisir un mode de déplacement";
+        divContainer.appendChild(legend);
 
         /* jshint -W083 */
         for (var i = 0; i < transports.length; i++) {
@@ -768,9 +768,11 @@ var IsoDOM = {
                 div.appendChild(labelPedestrian);
             }
 
-            radioContainer.appendChild(div);
+            var element = document.createElement("div");
+            element.className = "fr-fieldset__element fr-fieldset__element--inline";
+            element.appendChild(div);
+            divContainer.appendChild(element);
         }
-        divContainer.appendChild(radioContainer);
 
         return divContainer;
     },
