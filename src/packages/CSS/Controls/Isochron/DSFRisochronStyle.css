@@ -1,3 +1,7 @@
+dialog[id^="GPisochronPanel-"] {
+  width: 380px;
+}
+
 .gpf-btn-icon-isocurve::after {
   -webkit-mask: url("img/isochrone.svg") center no-repeat;
   mask: url("img/isochrone.svg") center no-repeat;
