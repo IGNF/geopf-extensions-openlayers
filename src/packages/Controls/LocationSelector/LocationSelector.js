@@ -316,7 +316,10 @@ class LocationSelector extends Control {
 
         if (this.options.tag.addOption) {
             var _inputAddStage = this._addPointElement = this._createLocationAddPointElement();
-            inputs.appendChild(_inputAddStage);
+            var addStageContainer = document.createElement("div");
+            addStageContainer.className = "GPlocationStageAddContainer fr-col-12 fr-grid-row fr-grid-row--right fr-mt-2w";
+            addStageContainer.appendChild(_inputAddStage);
+            inputs.appendChild(addStageContainer);
         }
 
         if (this.options.tag.removeOption) {

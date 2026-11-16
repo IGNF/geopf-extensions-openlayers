@@ -33,13 +33,6 @@
     mask: url("img/dsfr/close-line.svg") center no-repeat;
 }
 
-.gpf-btn-icon-add::after {
-    -webkit-mask: url("img/GPlocationOptions.png") -51px center no-repeat;
-    mask: url("img/GPlocationOptions.png") -51px center no-repeat;
-    width: 2.5rem;
-    height: 2.5rem;
-}
-
 .GPlocationOriginLabel {
   display: none;
   pointer-events: none;
@@ -55,14 +48,6 @@
 
 .GPlocationStageFlexInput {
   flex-wrap: wrap;
-}
-
-.GPlocationStageAdd {
-  flex-basis: 65%;
-  width: 0px;
-  min-height: 40px;
-  padding: 0.25rem 0.75rem 0.25rem 2.5rem;
-  text-align: left;
 }
 
 .GPlocationOriginLabel {

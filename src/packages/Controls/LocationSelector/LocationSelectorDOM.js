@@ -1,7 +1,6 @@
 import ID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
-import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("LocationSelectorDOM");
 
@@ -15,6 +14,17 @@ var LocationSelectorDOM = {
     _addUID : function (id) {
         var uid = (this._uid) ? id + "-" + this._uid : id;
         return uid;
+    },
+
+    /**
+     * @returns {HTMLElement|null} Add point button container
+     */
+    _getLocationAddPointContainer : function () {
+        var button = document.getElementById(this._addUID("GPlocationStageAdd"));
+        if (!button) {
+            return null;
+        }
+        return button.parentElement;
     },
 
     /**
@@ -114,8 +124,9 @@ var LocationSelectorDOM = {
             if (document.getElementById(self._addUID("GPlocationStageRemove_" + i))) {
                 document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary gpf-btn--secondary";
             }
-            if (document.getElementById(self._addUID("GPlocationStageAdd"))) {
-                document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-mt-2w";
+            var addPoint = self._getLocationAddPointContainer();
+            if (addPoint) {
+                addPoint.classList.remove("GPelementHidden", "gpf-hidden");
             }
             // document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).disabled = true;
             self.onLocationClearPointClick(e);
@@ -314,8 +325,9 @@ var LocationSelectorDOM = {
                 if (document.getElementById(self._addUID("GPlocationStageRemove_" + i))) {
                     document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPlocationStageRemove  gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary gpf-btn--secondary";
                 }
-                if (document.getElementById(self._addUID("GPlocationStageAdd"))) {
-                    document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-mt-2w";
+                var addPoint = self._getLocationAddPointContainer();
+                if (addPoint) {
+                    addPoint.classList.remove("GPelementHidden", "gpf-hidden");
                 }
                 document.getElementById(self._addUID("GPlocationOriginPointer_" + i)).checked = false;
                 document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementShow gpf-show  gpf-input fr-input";
@@ -334,8 +346,9 @@ var LocationSelectorDOM = {
                 if (document.getElementById(self._addUID("GPlocationStageRemove_" + i))) {
                     document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPelementHidden gpf-hidden";
                 }
-                if (document.getElementById(self._addUID("GPlocationStageAdd"))) {
-                    document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPelementHidden gpf-hidden";
+                var addPointToHide = self._getLocationAddPointContainer();
+                if (addPointToHide) {
+                    addPointToHide.classList.add("GPelementHidden", "gpf-hidden");
                 }
                 document.getElementById(self._addUID("GPlocationOriginPointer_" + i)).checked = true;
                 document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementHidden gpf-hidden";
@@ -386,7 +399,7 @@ var LocationSelectorDOM = {
                 document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementShow gpf-show gpf-input fr-input";
                 document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).value = "";
                 document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).className = "GPelementHidden gpf-hidden";
-                document.getElementById(self._addUID("GPlocationStageAdd")).style.display = "";
+                self._getLocationAddPointContainer().style.display = "";
                 // Moving up exclusions picto
                 // var exclusionsPictoTop = document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top;
                 // document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top = (parseInt(exclusionsPictoTop) - 33).toString() + "px";
@@ -412,13 +425,10 @@ var LocationSelectorDOM = {
 
         var buttonAdd = document.createElement("button");
         buttonAdd.id = this._addUID("GPlocationStageAdd");
-        buttonAdd.className = "GPlocationOpen GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-mt-2w";
         buttonAdd.title = "Ajouter une étape";
-        if (checkDsfr()) {
-            buttonAdd.innerText = "Ajouter une étape";
-        }
+        buttonAdd.className = "GPlocationOpen GPlocationStageAdd fr-btn fr-btn--sm fr-btn--secondary fr-icon-add-line fr-btn--icon-left";
+        buttonAdd.textContent = "Ajouter une étape";
         buttonAdd.setAttribute("tabindex", "0");
-        buttonAdd.setAttribute("aria-pressed", false);
         buttonAdd.setAttribute("type", "button");
         buttonAdd.addEventListener("click", function (e) {
             var lastStage = 1;
@@ -445,12 +455,10 @@ var LocationSelectorDOM = {
                 // document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top = (parseInt(exclusionsPictoTop) + 33).toString() + "px";
             }
             if (nbStages === 4) {
-                document.getElementById(self._addUID("GPlocationStageAdd")).style.display = "none";
+                self._getLocationAddPointContainer().style.display = "none";
             }
             // gestionnaire d'evenement :
             // on ajoute le point, utilisé pour la requête sur le service d'itiniraire
-            var status = (e.target.ariaPressed === "true");
-            e.target.setAttribute("aria-pressed", !status);
             self.onLocationAddPointClick(e);
         });
 
@@ -544,8 +552,9 @@ var LocationSelectorDOM = {
                     }
                 }
                 document.getElementById(this._addUID("GPlocationOriginPointer_" + id1)).checked = false;
-                if (document.getElementById(this._addUID("GPlocationStageAdd"))) {
-                    document.getElementById(this._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm";
+                var addPoint = this._getLocationAddPointContainer();
+                if (addPoint) {
+                    addPoint.classList.remove("GPelementHidden", "gpf-hidden");
                 }
                 return;
             }
