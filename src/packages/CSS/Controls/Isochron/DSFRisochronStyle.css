@@ -29,12 +29,9 @@ div[id^="GPisochronChoice"] {
   gap: 1em;
 }
 
-div[id^=GPisochronValueChron] {
-  width: 281px;
-}
-
-.GPflexInput > input[id^="GPisochronValueChronInput2"] {
-  margin-top: 0;
+[id^="GPisochronValueChron-"] > .fr-fieldset__element {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 [id^=GPisochronForm-] > .GPpanelFooter {

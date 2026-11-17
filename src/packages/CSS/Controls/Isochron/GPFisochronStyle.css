@@ -46,10 +46,6 @@ div[id^=GPisochronChoice] {
   justify-content: space-between;
 }
 
-p[id^=GPisochronValueChronLabelP] {
-  margin: 2px 0 5px 0;
-}
-
 .GPisochronChoiceAlt input:checked + label + span {
   color: #366291;
 }
@@ -156,14 +152,34 @@ fieldset[id^=GPisochronTransportChoice] {
   justify-content: center;
 }
 
-div[id^=GPisochronValueChron] {
-  width: 220px;
-  margin: 5px auto;
+fieldset[id^=GPisochronValueChron] {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset[id^=GPisochronValueChron] > legend {
+  padding: 0;
+  margin-bottom: 5px;
+}
+
+fieldset[id^=GPisochronValueChron] > div {
+  flex: 1;
+  min-width: 0;
 }
 
 [id^=GPisochronValueDist-] .fr-hint-text {
   display: block;
   color: #666;
+}
+
+fieldset[id^=GPisochronValueChron] input {
+  width: 100%;
+  min-width: 0;
 }
 
 .GPisochronTransportImg {
