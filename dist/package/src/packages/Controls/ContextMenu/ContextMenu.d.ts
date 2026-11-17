@@ -52,6 +52,10 @@ export type ContextMenuOptions = {
      * - URL vers le service de géocodage inverse utilisé (data.geopf.fr par défaut)
      */
     reverseGeocodeServerUrl?: string | undefined;
+    /**
+     * - Seuil minimal d'altitude. Toute valeur inférieure à ce seuil sera affichée comme "---".
+     */
+    minElevation?: number | undefined;
 };
 /**
  * @typedef {Object} ContextMenuOptions
@@ -68,6 +72,7 @@ export type ContextMenuOptions = {
  * @property {string|number} [id] - Identifiant unique du widget.
  * @property {string} [altiServerUrl] - URL vers le service d'altimétrie utilisé (data.geopf.fr par défaut)
  * @property {string} [reverseGeocodeServerUrl] - URL vers le service de géocodage inverse utilisé (data.geopf.fr par défaut)
+ * @property {number} [minElevation=-1000] - Seuil minimal d'altitude. Toute valeur inférieure à ce seuil sera affichée comme "---".
  */
 /**
  * @classdesc
@@ -127,6 +132,7 @@ declare class ContextMenu extends Control {
         auto: boolean;
         panel: boolean;
         contextMenuItemsOptions: never[];
+        minElevation: number;
     } | undefined;
     /**
      * @type {Boolean}
