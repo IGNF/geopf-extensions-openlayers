@@ -961,7 +961,6 @@ class Isocurve extends Control {
         form.appendChild(typeChoice);
 
         // form: menu du choix des valeurs
-        form.appendChild(this._createIsoPanelFormLabelIsochronElement(isoChronChecked));
         form.appendChild(this._createIsoPanelFormValueIsochronElement(isoChronChecked));
         form.appendChild(this._createIsoPanelFormValueIsodistanceElement(isoDistChecked));
 
@@ -1651,7 +1650,7 @@ class Isocurve extends Control {
                 document.getElementById("GPisochronValueDist-" + this._uid).className = "fr-input-group";
             }
             if (document.getElementById("GPisochronValueChron-" + this._uid)) {
-                document.getElementById("GPisochronValueChron-" + this._uid).className = "GPelementHidden gpf-hidden";
+                document.getElementById("GPisochronValueChron-" + this._uid).className = "fr-fieldset GPelementHidden gpf-hidden";
             }
         } else {
             computationdiv = document.getElementById("GPisochronChoiceAltChron-" + this._uid);
@@ -1659,7 +1658,7 @@ class Isocurve extends Control {
                 computationdiv.checked = "true";
             }
             if (document.getElementById("GPisochronValueChron-" + this._uid)) {
-                document.getElementById("GPisochronValueChron-" + this._uid).className = "GPflexInput gpf-flex";
+                document.getElementById("GPisochronValueChron-" + this._uid).className = "fr-fieldset";
             }
             if (document.getElementById("GPisochronValueDist-" + this._uid)) {
                 document.getElementById("GPisochronValueDist-" + this._uid).className = "fr-input-group GPelementHidden gpf-hidden";
