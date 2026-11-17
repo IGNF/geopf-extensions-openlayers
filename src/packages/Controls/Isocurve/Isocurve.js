@@ -941,6 +941,9 @@ class Isocurve extends Control {
 
         form.appendChild(this._createIsoPanelFormModeChoiceTransportElement(this.options.graphs));
 
+        // FIXME : doit on passer le paramètre defaultDirection ?
+        form.appendChild(this._createIsoPanelFormModeChoiceDirectionElement(this.options.directions));
+
         // form: input de saisie de la localisation (fonction de Isocurve, voir ci-dessous)
         var point = this._createIsoPanelFormPointElement(map);
         form.appendChild(point);
@@ -963,9 +966,6 @@ class Isocurve extends Control {
         // form: menu du choix des valeurs
         form.appendChild(this._createIsoPanelFormValueIsochronElement(isoChronChecked));
         form.appendChild(this._createIsoPanelFormValueIsodistanceElement(isoDistChecked));
-
-        // FIXME : doit on passer le paramètre defaultDirection ?
-        form.appendChild(this._createIsoPanelFormModeChoiceDirectionElement(this.options.directions));
 
         // form: menu des exclusions
         if (this.options.exclusions && (typeof this.options.exclusions === "object") && (Object.keys(this.options.exclusions).length !== 0)) {
