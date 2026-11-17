@@ -149,14 +149,17 @@ fieldset[id^=GPisochronTransportChoice] {
 }
 
 .GPisochronTransportChoice {
-  width: 100%;
   justify-content: center;
 }
 
-div[id^=GPisochronValueChron],
-div[id^=GPisochronValueDist] {
+div[id^=GPisochronValueChron] {
   width: 220px;
   margin: 5px auto;
+}
+
+[id^=GPisochronValueDist-] .fr-hint-text {
+  display: block;
+  color: #666;
 }
 
 .GPisochronTransportImg {

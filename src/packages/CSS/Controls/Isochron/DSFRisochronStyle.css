@@ -29,8 +29,7 @@ div[id^="GPisochronChoice"] {
   gap: 1em;
 }
 
-div[id^=GPisochronValueChron],
-div[id^=GPisochronValueDist] {
+div[id^=GPisochronValueChron] {
   width: 281px;
 }
 
