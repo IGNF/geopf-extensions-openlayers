@@ -7,10 +7,6 @@ dialog[id^="GPisochronPanel-"] {
   mask: url("img/isochrone.svg") center no-repeat;
 }
 
-.gpf-flex-isocurve {
-    justify-content: unset;
-}
-
 .gpf-btn-icon-isocurve-reset {
     background-position: -29px center;
 }
@@ -22,11 +18,6 @@ dialog[id^="GPisochronPanel-"] {
 
 [id^="GPisochronPanel-"] p.gpf-label:first-child {
   margin-top: 0;
-}
-
-div[id^="GPisochronChoice"] {
-  justify-content: left;
-  gap: 1em;
 }
 
 [id^="GPisochronValueChron-"] > .fr-fieldset__element {

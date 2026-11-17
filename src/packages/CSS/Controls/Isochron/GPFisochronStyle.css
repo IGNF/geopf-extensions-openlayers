@@ -35,7 +35,12 @@ form[id^=GPisochronForm] {
   padding: 15px;
 }
 
-div[id^=GPisochronChoice] {
+fieldset[id^=GPisochronChoice-] {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+  padding: 0;
+  border: 0;
   margin: auto;
   margin-top: 10px;
   margin-bottom: 5px;
@@ -46,8 +51,16 @@ div[id^=GPisochronChoice] {
   justify-content: space-between;
 }
 
-.GPisochronChoiceAlt input:checked + label + span {
-  color: #366291;
+fieldset[id^=GPisochronChoice-] > legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 input[id^=GPisochronChoiceAltChron] + .GPisochronChoiceAltImg {
@@ -87,8 +100,21 @@ input[id^=GPisochronChoiceAltChron] {
   cursor: pointer;
 }
 
+.GPisochronChoiceAlt {
+  position: relative;
+}
+
 .GPisochronChoiceAlt input {
-  display: none;
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  opacity: 0;
+}
+
+.GPisochronChoiceAlt input:focus-visible + label {
+  outline: 2px solid #366291;
+  outline-offset: 2px;
 }
 
 .GPisochronChoiceAltImg {
@@ -97,12 +123,6 @@ input[id^=GPisochronChoiceAltChron] {
   height: 28px;
   margin: auto;
   cursor: pointer;
-}
-
-.GPisochronChoiceAlt span {
-  cursor: pointer;
-  display:block;
-  color: #999;
 }
 
 .GPisochronModeLabel {
@@ -152,7 +172,7 @@ fieldset[id^=GPisochronTransportChoice] {
   justify-content: center;
 }
 
-fieldset[id^=GPisochronValueChron] {
+fieldset[id^=GPisochronValueChron]:not(.GPelementHidden):not(.gpf-hidden) {
   display: flex;
   flex-wrap: wrap;
   column-gap: 1em;
