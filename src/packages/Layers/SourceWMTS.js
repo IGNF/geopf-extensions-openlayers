@@ -171,6 +171,7 @@ class SourceWMTS extends WMTSExtended {
                 origin : [Object.values(wmtsParams.tileMatrices)[0].topLeftCorner.x, Object.values(wmtsParams.tileMatrices)[0].topLeftCorner.y]
             }),
             crossOrigin : "anonymous"
+            // wrapX : opt-in via olParams (défaut OpenLayers : false)
         };
 
         // récupération des autres paramètres passés par l'utilisateur
@@ -183,6 +184,9 @@ class SourceWMTS extends WMTSExtended {
         
         // returns a WMTS object, that inherits from WMTSExtended.
         super(wmtsSourceOptions);
+        if (wmtsSourceOptions.wrapX) {
+            this._gpWrapOptIn = true;
+        }
 
         // add originators to layer source (to be updated by Originators control)
         this._originators = wmtsParams.originators;

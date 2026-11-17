@@ -11,6 +11,7 @@ import { transform as olTransformProj } from "ol/proj";
 import { unByKey as olObservableUnByKey } from "ol/Observable";
 // import local
 import Logger from "../../Utils/LoggerByDefault";
+import MathUtils from "../../Utils/MathUtils";
 import ID from "../../Utils/SelectorID";
 // DOM
 import MeasureAzimuthDOM from "./MeasureAzimuthDOM";
@@ -295,8 +296,8 @@ class MeasureAzimuth extends Control {
 
         var sourceProj = map.getView().getProjection();
 
-        var c1 = olTransformProj(line.getFirstCoordinate(), sourceProj, "EPSG:4326");
-        var c2 = olTransformProj(line.getLastCoordinate(), sourceProj, "EPSG:4326");
+        var c1 = MathUtils.wrapLonLat(olTransformProj(line.getFirstCoordinate(), sourceProj, "EPSG:4326"));
+        var c2 = MathUtils.wrapLonLat(olTransformProj(line.getLastCoordinate(), sourceProj, "EPSG:4326"));
 
         if (!this.options.geodesic) {
             // TODO calcul sur une petite distance (>500m) afin de simuler un cap !
@@ -305,7 +306,7 @@ class MeasureAzimuth extends Control {
             if (lengthGeodesic > 500) {
                 var fraction = 500.0 / lengthGeodesic;
                 logger.trace("%", fraction);
-                c2 = olTransformProj(line.getCoordinateAt(fraction), sourceProj, "EPSG:4326");
+                c2 = MathUtils.wrapLonLat(olTransformProj(line.getCoordinateAt(fraction), sourceProj, "EPSG:4326"));
             }
         }
 

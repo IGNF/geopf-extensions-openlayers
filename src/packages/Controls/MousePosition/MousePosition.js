@@ -1008,6 +1008,11 @@ class MousePosition extends Control {
         // type de systeme : Geographical ou Metric
         var type = this._currentProjectionSystems.type;
 
+        // multiWorld : longitude dans [-180, 180] en système géographique
+        if (type === "Geographical") {
+            olCoordinate = MathUtils.wrapLonLat(olCoordinate);
+        }
+
         // on recherche la fonction de formatage dans l'unité demandée
         var format = null;
         var units = this._projectionUnits[type];

@@ -1,4 +1,5 @@
 import Pkg from "../package.json";
+import "./packages/Utils/WorldRepeat";
 
 // utilitaires liés à OpenLayers
 export {default as GfiUtils} from "./packages/Controls/Utils/Gfi";
