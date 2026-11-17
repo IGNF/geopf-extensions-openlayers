@@ -351,23 +351,23 @@ var IsoDOM = {
     // ################################################################### //
 
     /**
-     * Create Container to type choice
-     *
-     * FIXME
-     * don't call this._createIsoPanelFormTypeChoiceChronElement
-     * don't call this._createIsoPanelFormTypeChoiceDistElement
+     * Create Container to type choice.
      *
      * @returns {HTMLElement} DOM element
      */
     _createIsoPanelFormTypeChoiceElement : function () {
-        var div = document.createElement("div");
-        div.id = this._addUID("GPisochronChoice");
-        div.className = "fr-mt-2w";
+        var fieldset = document.createElement("fieldset");
+        fieldset.id = this._addUID("GPisochronChoice");
+        fieldset.className = "fr-fieldset";
 
-        // div.appendChild(this._createIsoPanelFormTypeChoiceChronElement());
-        // div.appendChild(this._createIsoPanelFormTypeChoiceDistElement());
+        var legend = document.createElement("legend");
+        legend.id = this._addUID("GPisochronChoiceLegend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend fr-sr-only";
+        legend.textContent = "Mode de calcul";
+        fieldset.setAttribute("aria-labelledby", legend.id);
+        fieldset.appendChild(legend);
 
-        return div;
+        return fieldset;
     },
 
     /**
@@ -381,11 +381,11 @@ var IsoDOM = {
         var self = this;
 
         var div = document.createElement("div");
-        div.className = "GPisochronChoiceAlt gpf-flex gpf-flex-isocurve gpf-radio-group fr-radio-group";
+        div.className = "GPisochronChoiceAlt gpf-radio-group fr-radio-group";
 
         var input = document.createElement("input");
         input.id = this._addUID("GPisochronChoiceAltChron");
-        input.name = "GPisochronChoiceMode";
+        input.name = this._addUID("GPisochronChoiceMode");
         input.type = "radio";
         input.checked = !!(checked);
         if (input.addEventListener) {
@@ -408,28 +408,16 @@ var IsoDOM = {
         div.appendChild(input);
 
         var label = document.createElement("label");
-        label.className = "GPisochronChoiceAltImg gpf-label fr-label";
+        label.className = "GPisochronChoiceAltImg fr-label";
         label.htmlFor = this._addUID("GPisochronChoiceAltChron");
         label.innerHTML = "Durée";
         label.title = "Durée";
         div.appendChild(label);
 
-        var span = document.createElement("span");
-        span.id = this._addUID("GPisochronChoiceAltChronTxt");
-        span.className = "gpf-hidden";
-        span.innerHTML = "Durée";
-        if (span.addEventListener) {
-            span.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPisochronChoiceAltChron")).click();
-            }, false);
-        } else if (span.attachEvent) {
-            span.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPisochronChoiceAltChron")).click();
-            });
-        }
-        div.appendChild(span);
-
-        return div;
+        var element = document.createElement("div");
+        element.className = "fr-fieldset__element fr-fieldset__element--inline";
+        element.appendChild(div);
+        return element;
     },
 
     /**
@@ -443,11 +431,11 @@ var IsoDOM = {
         var self = this;
 
         var div = document.createElement("div");
-        div.className = "GPisochronChoiceAlt gpf-flex gpf-flex-isocurve gpf-radio-group fr-radio-group";
+        div.className = "GPisochronChoiceAlt gpf-radio-group fr-radio-group";
 
         var input = document.createElement("input");
         input.id = this._addUID("GPisochronChoiceAltDist");
-        input.name = "GPisochronChoiceMode";
+        input.name = this._addUID("GPisochronChoiceMode");
         input.type = "radio";
         input.checked = !!(checked);
         if (input.addEventListener) {
@@ -470,29 +458,17 @@ var IsoDOM = {
         div.appendChild(input);
 
         var label = document.createElement("label");
-        label.className = "GPisochronChoiceAltImg gpf-label fr-label";
+        label.className = "GPisochronChoiceAltImg fr-label";
         label.htmlFor = this._addUID("GPisochronChoiceAltDist");
         label.innerHTML = "Distance";
         label.title = "Distance";
 
         div.appendChild(label);
 
-        var span = document.createElement("span");
-        span.id = this._addUID("GPisochronChoiceAltDistTxt");
-        span.className = "gpf-hidden";
-        span.innerHTML = "Distance";
-        if (span.addEventListener) {
-            span.addEventListener("click", function () {
-                document.getElementById(self._addUID("GPisochronChoiceAltDist")).click();
-            }, false);
-        } else if (span.attachEvent) {
-            span.attachEvent("onclick", function () {
-                document.getElementById(self._addUID("GPisochronChoiceAltDist")).click();
-            });
-        }
-        div.appendChild(span);
-
-        return div;
+        var element = document.createElement("div");
+        element.className = "fr-fieldset__element fr-fieldset__element--inline";
+        element.appendChild(div);
+        return element;
     },
 
     // ################################################################### //
