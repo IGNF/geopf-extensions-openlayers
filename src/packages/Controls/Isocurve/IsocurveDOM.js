@@ -390,17 +390,15 @@ var IsoDOM = {
         input.checked = !!(checked);
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
-                document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex fr-mt-1w";
+                document.getElementById(self._addUID("GPisochronValueChron")).className = "fr-fieldset";
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "fr-input-group GPelementHidden gpf-hidden";
-                document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "gpf-label fr-label";
                 document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isochrone";
                 self.onIsoTypeChoiceChange(e);
             }, false);
         } else if (input.attachEvent) {
             input.attachEvent("onchange", function () {
-                document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex fr-mt-1w";
+                document.getElementById(self._addUID("GPisochronValueChron")).className = "fr-fieldset";
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "fr-input-group GPelementHidden gpf-hidden";
-                document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "gpf-label fr-label";
                 document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isochrone";
                 self.onIsoTypeChoiceChange();
             });
@@ -455,16 +453,14 @@ var IsoDOM = {
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "fr-input-group";
-                document.getElementById(self._addUID("GPisochronValueChron")).className = "GPelementHidden gpf-hidden";
-                document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronValueChron")).className = "fr-fieldset GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isodistance";
                 self.onIsoTypeChoiceChange(e);
             }, false);
         } else if (input.attachEvent) {
             input.attachEvent("onchange", function () {
                 document.getElementById(self._addUID("GPisochronValueDist")).className = "fr-input-group";
-                document.getElementById(self._addUID("GPisochronValueChron")).className = "GPelementHidden gpf-hidden";
-                document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronValueChron")).className = "fr-fieldset GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isodistance";
                 self.onIsoTypeChoiceChange();
             });
@@ -504,22 +500,6 @@ var IsoDOM = {
     // ################################################################### //
 
     /**
-     * Create isochron inputs label
-     * see event !
-     * @param {Boolean} checked - checked
-     * @returns {HTMLElement} DOM element
-     */
-    _createIsoPanelFormLabelIsochronElement : function (checked) {
-        var context = this;
-        var p = document.createElement("p");
-        p.id = this._addUID("GPisochronValueChronLabelP");
-        p.className = (checked) ? "gpf-label fr-label" : "GPelementHidden gpf-hidden";
-        p.innerHTML = "Définir un temps de trajet";
-
-        return p;
-    },
-
-    /**
      * Create isochron inputs values
      * see event !
      * @param {Boolean} checked - checked
@@ -529,9 +509,29 @@ var IsoDOM = {
         // contexte
         var context = this;
 
-        var div = document.createElement("div");
+        var div = document.createElement("fieldset");
         div.id = this._addUID("GPisochronValueChron");
-        div.className = (checked) ? "GPflexInput gpf-flex fr-mt-1w" : "GPelementHidden gpf-hidden";
+        div.className = (checked) ? "fr-fieldset" : "fr-fieldset GPelementHidden gpf-hidden";
+
+        var legend = document.createElement("legend");
+        legend.id = this._addUID("GPisochronValueChronLegend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Définir un temps de trajet";
+        div.appendChild(legend);
+
+        var hoursElement = document.createElement("div");
+        hoursElement.className = "fr-fieldset__element fr-fieldset__element--inline";
+        var hoursGroup = document.createElement("div");
+        hoursGroup.className = "fr-input-group";
+        hoursElement.appendChild(hoursGroup);
+        div.appendChild(hoursElement);
+
+        var label1 = document.createElement("label");
+        label1.id = this._addUID("GPisochronValueChronHoursLabel");
+        label1.htmlFor = this._addUID("GPisochronValueChronInput1");
+        label1.textContent = "Heures";
+        label1.className = "fr-label";
+        hoursGroup.appendChild(label1);
 
         var input1 = document.createElement("input");
         input1.id = this._addUID("GPisochronValueChronInput1");
@@ -540,26 +540,35 @@ var IsoDOM = {
         input1.step = "1";
         input1.value = "0";
         input1.type = "number";
-        input1.title = "Temps";
+        input1.setAttribute("aria-labelledby", legend.id + " " + label1.id);
         if (input1.addEventListener) {
             input1.addEventListener("change", function (e) {
-                if (typeof context.onIsoValueChronTimeMinuteChange === "function") {
+                if (typeof context.onIsoValueChronTimeHourChange === "function") {
                     context.onIsoValueChronTimeHourChange(e);
                 }
             });
         } else if (input1.attachEvent) {
             input1.attachEvent("onchange", function (e) {
-                if (typeof context.onIsoValueChronTimeMinuteChange === "function") {
+                if (typeof context.onIsoValueChronTimeHourChange === "function") {
                     context.onIsoValueChronTimeHourChange(e);
                 }
             });
         }
-        div.appendChild(input1);
+        hoursGroup.appendChild(input1);
 
-        var label1 = document.createElement("label");
-        label1.innerHTML = "h";
-        label1.className = "gpf-label fr-label";
-        div.appendChild(label1);
+        var minutesElement = document.createElement("div");
+        minutesElement.className = "fr-fieldset__element fr-fieldset__element--inline";
+        var minutesGroup = document.createElement("div");
+        minutesGroup.className = "fr-input-group";
+        minutesElement.appendChild(minutesGroup);
+        div.appendChild(minutesElement);
+
+        var label2 = document.createElement("label");
+        label2.id = this._addUID("GPisochronValueChronMinutesLabel");
+        label2.htmlFor = this._addUID("GPisochronValueChronInput2");
+        label2.textContent = "Minutes";
+        label2.className = "fr-label";
+        minutesGroup.appendChild(label2);
 
         var input2 = document.createElement("input");
         input2.id = this._addUID("GPisochronValueChronInput2");
@@ -569,7 +578,7 @@ var IsoDOM = {
         input2.step = "1";
         input2.value = "0";
         input2.type = "number";
-        input2.title = "Heures";
+        input2.setAttribute("aria-labelledby", legend.id + " " + label2.id);
         if (input2.addEventListener) {
             input2.addEventListener("change", function (e) {
                 if (typeof context.onIsoValueChronTimeMinuteChange === "function") {
@@ -583,12 +592,7 @@ var IsoDOM = {
                 }
             });
         }
-        div.appendChild(input2);
-
-        var label2 = document.createElement("label");
-        label2.innerHTML = "min";
-        label2.className = "gpf-label fr-label";
-        div.appendChild(label2);
+        minutesGroup.appendChild(input2);
 
         return div;
     },
