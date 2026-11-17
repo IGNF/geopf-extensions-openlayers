@@ -42,13 +42,6 @@ input[id^="GPisochronOriginPointer"]:checked + .GPisochronOriginPointerImg {
 
 /* Alternative choice */
 
-div[id^=GPisochronChoice] {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-}
-
 /*
 input[id^=GPisochronChoiceAltChron] + .GPisochronChoiceAltImg {
   background-position: -56px 0;
@@ -153,4 +146,3 @@ div[id^=GPisoResultsPanel-].GPelementHidden  + .container-buttons-plugin,
 div[id^=GPisoResultsPanel-].gpf-hidden + .container-buttons-plugin {
   display: none;
 }
-
