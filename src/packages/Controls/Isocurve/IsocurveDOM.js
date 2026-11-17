@@ -391,18 +391,16 @@ var IsoDOM = {
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex fr-mt-1w";
-                document.getElementById(self._addUID("GPisochronValueDist")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronValueDist")).className = "fr-input-group GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "gpf-label fr-label";
-                document.getElementById(self._addUID("GPisochronValueDistLabelP")).className = "GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isochrone";
                 self.onIsoTypeChoiceChange(e);
             }, false);
         } else if (input.attachEvent) {
             input.attachEvent("onchange", function () {
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPflexInput gpf-flex fr-mt-1w";
-                document.getElementById(self._addUID("GPisochronValueDist")).className = "GPelementHidden gpf-hidden";
+                document.getElementById(self._addUID("GPisochronValueDist")).className = "fr-input-group GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "gpf-label fr-label";
-                document.getElementById(self._addUID("GPisochronValueDistLabelP")).className = "GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isochrone";
                 self.onIsoTypeChoiceChange();
             });
@@ -456,18 +454,16 @@ var IsoDOM = {
         input.checked = !!(checked);
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
-                document.getElementById(self._addUID("GPisochronValueDist")).className = "GPflexInput gpf-flex fr-mt-1w";
+                document.getElementById(self._addUID("GPisochronValueDist")).className = "fr-input-group";
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPelementHidden gpf-hidden";
-                document.getElementById(self._addUID("GPisochronValueDistLabelP")).className = "gpf-label fr-label";
                 document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isodistance";
                 self.onIsoTypeChoiceChange(e);
             }, false);
         } else if (input.attachEvent) {
             input.attachEvent("onchange", function () {
-                document.getElementById(self._addUID("GPisochronValueDist")).className = "GPflexInput gpf-flex fr-mt-1w";
+                document.getElementById(self._addUID("GPisochronValueDist")).className = "fr-input-group";
                 document.getElementById(self._addUID("GPisochronValueChron")).className = "GPelementHidden gpf-hidden";
-                document.getElementById(self._addUID("GPisochronValueDistLabelP")).className = "gpf-label fr-label";
                 document.getElementById(self._addUID("GPisochronValueChronLabelP")).className = "GPelementHidden gpf-hidden";
                 document.getElementById(self._addUID("GPisochronSubmit")).value = "Calculer l'isodistance";
                 self.onIsoTypeChoiceChange();
@@ -600,17 +596,20 @@ var IsoDOM = {
     /**
      * Create isodistance inputs label
      * see event !
-     * @param {Boolean} checked - checked
      * @returns {HTMLElement} DOM element
      */
-    _createIsoPanelFormLabelIsodistanceElement : function (checked) {
-        var context = this;
-        var p = document.createElement("p");
-        p.id = this._addUID("GPisochronValueDistLabelP");
-        p.className = (checked) ? "gpf-label fr-label" : "GPelementHidden gpf-hidden";
-        p.innerHTML = "Définir une distance";
+    _createIsoPanelFormLabelIsodistanceElement : function () {
+        var label = document.createElement("label");
+        label.htmlFor = this._addUID("GPisochronValueDistInput");
+        label.className = "fr-label";
+        label.textContent = "Définir une distance";
 
-        return p;
+        var hint = document.createElement("span");
+        hint.className = "fr-hint-text";
+        hint.textContent = "En kilomètres";
+        label.appendChild(hint);
+
+        return label;
     },
 
     /**
@@ -625,11 +624,12 @@ var IsoDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPisochronValueDist");
-        div.className = (checked) ? "GPflexInput gpf-flex fr-mt-1w" : "GPelementHidden gpf-hidden";
+        div.className = (checked) ? "fr-input-group" : "fr-input-group GPelementHidden gpf-hidden";
+        div.appendChild(this._createIsoPanelFormLabelIsodistanceElement());
 
         var input1 = document.createElement("input");
         input1.id = this._addUID("GPisochronValueDistInput");
-        input1.className = "gpf-input fr-input fr-ml-1w";
+        input1.className = "gpf-input fr-input";
         input1.min = "0";
         input1.step = "any";
         input1.value = "0";
@@ -649,11 +649,6 @@ var IsoDOM = {
             });
         }
         div.appendChild(input1);
-
-        var label1 = document.createElement("label");
-        label1.innerHTML = "km";
-        label1.className = "gpf-label fr-label";
-        div.appendChild(label1);
 
         return div;
     },
@@ -688,7 +683,7 @@ var IsoDOM = {
             var transport = transports[i];
 
             var div = document.createElement("div");
-            div.className = "GPisochronTransportChoice gpf-flex gpf-radio-group fr-radio-group";
+            div.className = "GPisochronTransportChoice fr-radio-group";
 
             if (transport === "Voiture") {
                 var inputCar = document.createElement("input");

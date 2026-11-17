@@ -963,7 +963,6 @@ class Isocurve extends Control {
         // form: menu du choix des valeurs
         form.appendChild(this._createIsoPanelFormLabelIsochronElement(isoChronChecked));
         form.appendChild(this._createIsoPanelFormValueIsochronElement(isoChronChecked));
-        form.appendChild(this._createIsoPanelFormLabelIsodistanceElement(isoDistChecked));
         form.appendChild(this._createIsoPanelFormValueIsodistanceElement(isoDistChecked));
 
         // FIXME : doit on passer le paramètre defaultDirection ?
@@ -1649,7 +1648,7 @@ class Isocurve extends Control {
                 computationdiv.checked = "true";
             }
             if (document.getElementById("GPisochronValueDist-" + this._uid)) {
-                document.getElementById("GPisochronValueDist-" + this._uid).className = "GPflexInput gpf-flex";
+                document.getElementById("GPisochronValueDist-" + this._uid).className = "fr-input-group";
             }
             if (document.getElementById("GPisochronValueChron-" + this._uid)) {
                 document.getElementById("GPisochronValueChron-" + this._uid).className = "GPelementHidden gpf-hidden";
@@ -1663,7 +1662,7 @@ class Isocurve extends Control {
                 document.getElementById("GPisochronValueChron-" + this._uid).className = "GPflexInput gpf-flex";
             }
             if (document.getElementById("GPisochronValueDist-" + this._uid)) {
-                document.getElementById("GPisochronValueDist-" + this._uid).className = "GPelementHidden gpf-hidden";
+                document.getElementById("GPisochronValueDist-" + this._uid).className = "fr-input-group GPelementHidden gpf-hidden";
             }
         }
 
