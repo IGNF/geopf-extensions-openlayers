@@ -199,6 +199,8 @@ var MousePositionDOM = {
 
         var span = document.createElement("span");
         span.className = "GPmousePositionUnits";
+        span.id = this._addUID("GPmousePosition" + coordType + "Units");
+        input.setAttribute("aria-describedby", span.id);
         list.push(span);
 
         return list;
@@ -401,7 +403,7 @@ var MousePositionDOM = {
 
         var spanUnits = document.createElement("span");
         spanUnits.className = "GPmousePositionAltitudeUnits";
-        spanUnits.innerHTML = "m";
+        this._setUnitText(spanUnits, "m");
         div.appendChild(spanUnits);
 
         return div;
@@ -627,6 +629,34 @@ var MousePositionDOM = {
     },
 
     /**
+     * @param {HTMLElement} element - unit container
+     * @param {String} unit - displayed unit
+     */
+    _setUnitText : function (element, unit) {
+        if (element.dataset.unit === unit) {
+            return;
+        }
+
+        element.dataset.unit = unit;
+        element.textContent = "";
+        var labels = { m : "mètres", km : "kilomètres" };
+        if (unit !== "m" && unit !== "km") {
+            element.textContent = unit;
+            return;
+        }
+
+        var symbol = document.createElement("span");
+        symbol.setAttribute("aria-hidden", "true");
+        symbol.textContent = unit;
+        element.appendChild(symbol);
+
+        var description = document.createElement("span");
+        description.className = "GPmousePositionUnitDescription";
+        description.textContent = labels[unit];
+        element.appendChild(description);
+    },
+
+    /**
      * @param {String} currentProjectionUnits - projection units
      */
     _resetUnitElements : function (currentProjectionUnits) {
@@ -635,9 +665,9 @@ var MousePositionDOM = {
             value = currentProjectionUnits.toLowerCase();
         }
 
-        var elts = document.getElementsByClassName("GPmousePositionUnits");
+        var elts = document.getElementById(this._addUID("GPmousePositionCoordinate")).getElementsByClassName("GPmousePositionUnits");
         for (var e = 0; e < elts.length; e++) {
-            elts[e].innerHTML = value;
+            this._setUnitText(elts[e], value);
         }
     },
 
@@ -848,9 +878,9 @@ var MousePositionDOM = {
 
                 // les unites
                 var unit = (coordinate.unit === undefined) ? "" : coordinate.unit;
-                var elements = document.getElementsByClassName("GPmousePositionUnits");
+                var elements = document.getElementById(this._addUID("GPmousePositionCoordinate")).getElementsByClassName("GPmousePositionUnits");
                 for (var n = 0; n < elements.length; ++n) {
-                    elements[n].innerHTML = unit;
+                    this._setUnitText(elements[n], unit);
                 }
             }
         }
