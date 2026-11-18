@@ -651,7 +651,7 @@ var MousePositionDOM = {
         element.appendChild(symbol);
 
         var description = document.createElement("span");
-        description.className = "GPmousePositionUnitDescription";
+        description.className = "fr-sr-only";
         description.textContent = labels[unit];
         element.appendChild(description);
     },
