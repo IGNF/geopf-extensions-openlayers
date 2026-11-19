@@ -61,6 +61,23 @@ Tu peux personnaliser la position en modifiant la valeur de position ou les styl
 <hr>
 <p><strong>En résumé</strong> :<br>
 Le positionnement peut être géré uniquement en CSS, sans l’option JS, en ciblant le conteneur du contrôle et en appliquant les règles de positionnement souhaitées.</p>
+<h2 id="ancrage-haut-des-panneaux-classic-et-dsfr" class="tsd-anchor-link">Ancrage haut des panneaux Classic et DSFR<a href="#ancrage-haut-des-panneaux-classic-et-dsfr" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Pour les contrôles utilisant <code>position</code>, la position du bouton et celle du panneau
+sont distinctes. Les boutons conservent leur coin et leur ordre dans leur colonne.
+Le panneau s'ouvre en haut de la carte, à gauche pour <code>top-left</code> et <code>bottom-left</code>,
+ou à droite pour <code>top-right</code> et <code>bottom-right</code>, à côté de la colonne de boutons.
+Il s'agit du haut de la carte, pas du haut de la fenêtre du navigateur.</p>
+<ul>
+<li><code>PositionFactory</code> (<code>Control.js</code>) applique <code>top: 0</code> aux panneaux <code>dialog.GPpanel</code>
+et calcule leur décalage horizontal (largeur de la colonne, puis panneaux
+précédents), de la même façon dans les deux thèmes.</li>
+<li>Les colonnes <code>position-container-*</code> occupent toute la hauteur de la carte : les
+colonnes hautes alignent leurs boutons avec <code>flex-start</code>, les colonnes basses
+avec <code>flex-end</code> (<code>GPFgeneralWidget.css</code> et <code>DSFRgeneralWidget.css</code>).</li>
+<li><code>PanelManager</code> ferme les panneaux déjà ouverts du même côté.</li>
+</ul>
+<p>Les éléments <code>GPpanel</code> qui ne sont pas des <code>dialog</code> ne sont pas repositionnés par
+cette logique. Les contrôles sans <code>position</code> restent régis par leur CSS.</p>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -86,7 +103,8 @@ Le positionnement peut être géré uniquement en CSS, sans l’option JS, en ci
 <li><a href="#pour-personnaliser"><span>Pour personnaliser</span></a></li>
 <li><a href="#résumé"><span>Résumé</span></a></li>
 <li><a href="#exemple-de-positionnement-absolu-en-css"><span>Exemple de positionnement absolu en <wbr/>CSS</span></a></li>
-<li><a href="#à-retenir"><span>À retenir</span></a></li></ul></li></ul></div></details></div>
+<li><a href="#à-retenir"><span>À retenir</span></a></li></ul></li>
+<li><a href="#ancrage-haut-des-panneaux-classic-et-dsfr"><span>Ancrage haut des panneaux <wbr/>Classic et <wbr/>DSFR</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://cartes.gouv.fr/cartes">cartes.gouv.fr</a><a href="https://geoportail.gouv.fr/">geoportail</a><a href="https://github.com/IGNF/geopf-extensions-openlayers">github</a></nav>
 <nav class="tsd-navigation"><a href="../modules.html">geopf-extensions-openlayers</a>
