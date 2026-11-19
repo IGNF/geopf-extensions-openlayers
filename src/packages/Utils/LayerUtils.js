@@ -313,6 +313,74 @@ var LayerUtils = {
         var intersectsX = (extent1[1] <= extent2[3]) && (extent2[1] <= extent1[3]);
         var intersectsY = (extent1[2] <= extent2[0]) && (extent2[2] <= extent1[0]);
         return intersectsX && intersectsY;
+    },
+
+    /**
+     * True si l'emprise catalogue est régionale (pas ≈ monde entier).
+     * Évite le chromakey sur les fonds globaux (PLANIGN, ortho…).
+     *
+     * @function isRegionalCatalogueExtent
+     * @param {Array.<Number>} extent - [minx, miny, maxx, maxy]
+     * @param {Array.<Number>} worldExtent - emprise de la projection
+     * @returns {Boolean}
+     */
+    isRegionalCatalogueExtent : function (extent, worldExtent) {
+        if (!extent || !worldExtent) {
+            return false;
+        }
+        var worldW = worldExtent[2] - worldExtent[0];
+        var worldH = worldExtent[3] - worldExtent[1];
+        if (!worldW || !worldH) {
+            return false;
+        }
+        var w = extent[2] - extent[0];
+        var h = extent[3] - extent[1];
+        return (w / worldW) < 0.95 || (h / worldH) < 0.95;
+    },
+
+    /**
+     * Pixels quasi-blancs (nodata, ex. Cassini ~230–255) → alpha 0.
+     * Expérimental : un aplat clair intentionnel peut devenir transparent.
+     *
+     * @function enableNodataWhiteChromakey
+     * @param {Object} source - ol.source.TileImage (WMTS / TileWMS)
+     * @returns {undefined}
+     */
+    enableNodataWhiteChromakey : function (source) {
+        if (!source || typeof source.setTileLoadFunction !== "function") {
+            return;
+        }
+        var whiteThreshold = 230;
+        source.setTileLoadFunction(function (tile, src) {
+            var image = tile.getImage();
+            if (!src || !image) {
+                return;
+            }
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function () {
+                var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                var data = imageData.data;
+                for (var i = 0; i < data.length; i += 4) {
+                    if (data[i] >= whiteThreshold &&
+                        data[i + 1] >= whiteThreshold &&
+                        data[i + 2] >= whiteThreshold) {
+                        data[i + 3] = 0;
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+                image.src = canvas.toDataURL("image/png");
+            };
+            img.onerror = function () {
+                image.src = src;
+            };
+            img.src = src;
+        });
     }
 };
 
