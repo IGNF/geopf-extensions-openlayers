@@ -1004,6 +1004,7 @@ class Reporting extends Control {
                 footer : true,
                 header : true,
                 next : 1,
+                nextLabel : "Commencer le signalement",
                 prev : -1,
                 action : null, // this.iocInput
                 container : null // this.inputReportingContainer
@@ -1013,6 +1014,7 @@ class Reporting extends Control {
                 footer : true,
                 header : true,
                 next : 2,
+                nextLabel : "Continuer",
                 prev : 0,
                 action : null, // this.iocForm
                 container : null // this.formReportingContainer
@@ -1031,6 +1033,7 @@ class Reporting extends Control {
                 footer : true,
                 header : true,
                 next : 1,
+                nextLabel : "Valider le dessin",
                 prev : 1,
                 action : null, // this.iocDrawing
                 container : null // this.drawingReportingContainer
@@ -1117,7 +1120,7 @@ class Reporting extends Control {
         // footer
         var reportingPanelFooter = this.panelReportingFooterContainer = this._createReportingPanelFooterElement();
         var BtnAnnulerFooter = this.reportingBtnAnnulerFooter = this._createReportingButtonAnnulerFooterElement();
-        var BtnSuivantFooter = this.reportingBtnSuivantFooter = this._createReportingButtonSuivantFooterElement();
+        var BtnSuivantFooter = this.reportingBtnSuivantFooter = this._createReportingButtonSuivantFooterElement(this.stepContainer[0].nextLabel);
         reportingPanelFooter.appendChild(BtnAnnulerFooter);
         reportingPanelFooter.appendChild(BtnSuivantFooter);
 
@@ -1187,7 +1190,7 @@ class Reporting extends Control {
      * This method sets the current step of the reporting process.
      * It updates the visibility of the step containers,
      * activates the corresponding IoC action,
-     * and updates the reporting title and footer display.
+     * and updates the reporting title, footer display and next button label.
      * It is typically called when the user navigates to a different step in the reporting process,
      * such as moving from the input step to the form step or the send step.
      */
@@ -1209,21 +1212,25 @@ class Reporting extends Control {
 
         // étape active
         this.step = num;
-        var panel = this.stepContainer[num].container;
+        var currentStep = this.stepContainer[num];
+        var panel = currentStep.container;
         panel.classList.replace("gpf-hidden", "gpf-visible");
         // on active l'action IoC
-        var action = this.stepContainer[num].action;
+        var action = currentStep.action;
         if (action) {
             // puis, on active l'action IoC courrante
             action.active();
         }
         // on modifie le titre
-        this.divReportingTitle.innerHTML = this.stepContainer[num].name;
+        this.divReportingTitle.innerHTML = currentStep.name;
         // on modifie l'affichage du footer
-        this.panelReportingFooterContainer.style.display = (this.stepContainer[num].footer) ? "flex" : "none";
-        this.reportingBtnAnnulerFooter.style.display = (this.stepContainer[num].prev === -1) ? "none" : "flex";
-        this.reportingBtnSuivantFooter.style.display = (this.stepContainer[num].next === -1) ? "none" : "flex";
-        if (this.stepContainer[num].prev !== -1) {
+        this.panelReportingFooterContainer.style.display = currentStep.footer ? "flex" : "none";
+        this.reportingBtnAnnulerFooter.style.display = (currentStep.prev === -1) ? "none" : "flex";
+        this.reportingBtnSuivantFooter.style.display = (currentStep.next === -1) ? "none" : "flex";
+        if (currentStep.next !== -1) {
+            this.reportingBtnSuivantFooter.textContent = currentStep.nextLabel;
+        }
+        if (currentStep.prev !== -1) {
             this.backBtnIcon.classList.remove("gpf-hidden");
         } else {
             this.backBtnIcon.classList.add("gpf-hidden");
