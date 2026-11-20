@@ -844,7 +844,7 @@ class LayerImport extends Control {
             var staticNameLabel = this._createStaticNameLabel();
             importStaticParamsContainer.appendChild(staticNameLabel);
             // static import choice (local / url)
-            var staticImportChoice = this._createStaticModeChoiceDiv();
+            var staticImportChoice = this._createStaticModeChoiceFieldset();
             // TODO : passer un paramètre "checked" ??
             var staticLocalImportChoice = this._createStaticLocalChoiceDiv();
             staticImportChoice.appendChild(staticLocalImportChoice);
