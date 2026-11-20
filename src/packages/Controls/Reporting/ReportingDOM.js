@@ -369,12 +369,16 @@ var ReportingDOM = {
         panel.className = "gpf-panel__content fr-modal__content fr-px-3w gpf-hidden";
 
         var idMail = this._addUID("GPreportingLabelEmail");
+        var idMailHint = this._addUID("GPreportingEmailHint");
+        var idMailError = this._addUID("GPreportingEmailError");
         var divMail = `
         <div class="fr-input-group">
-            <label class="gpf-label fr-label" for="${idMail}">Adresse courriel
-                <span class="fr-hint-text">Pour valider le signalement, renseignez votre adresse courriel. Nous vous tiendrons informés de sa prise en compte.</span>
-            </label>
-            <input class="gpf-input fr-input" type="text" id="${idMail}" name="GPreportingLabelEmail" required>
+            <label class="gpf-label fr-label" for="${idMail}">Adresse courriel (obligatoire)</label>
+            <p class="fr-hint-text" id="${idMailHint}">Format attendu : nom@exemple.fr. Nous vous tiendrons informés de la prise en compte du signalement.</p>
+            <input class="gpf-input fr-input" type="email" id="${idMail}" name="GPreportingLabelEmail" required autocomplete="email" aria-describedby="${idMailHint}">
+            <div class="fr-messages-group" aria-live="polite">
+                <p class="fr-message fr-message--error GPelementHidden gpf-hidden" id="${idMailError}"></p>
+            </div>
         </div>
         `;
 
@@ -393,9 +397,6 @@ var ReportingDOM = {
             <legend id="${idLegend}" class="fr-fieldset__legend--regular fr-fieldset__legend fr-sr-only">Envoyer un signalement</legend>
             ${divMail}
             ${divBtn}
-            <div class="fr-messages-group gpf-hidden" id="GPreportingSendFieldsetMessages" aria-live="polite">
-                <p class="fr-message fr-message--error" id="GPreportingSendFieldsetMessage">Le champ est obligatoire</p>
-            </div>
         </fieldset>
         `;
         var container = stringToHTML(strContainer);
@@ -404,24 +405,46 @@ var ReportingDOM = {
         const shadow = container.attachShadow({ mode : "open" });
         shadow.innerHTML = strContainer.trim();
 
-        // listener sur le DOM
-        var button = shadow.getElementById(idBtn);
-        if (button) {
-            button.addEventListener("click", (e) => {
-                this.onShowSendReportingClick({
-                    target : e.target,
-                    mail : document.getElementById(idMail).value
-                });
-            });
-        }
-
-        // utile ?
         var input = shadow.getElementById(idMail);
-        if (input) {
-            input.addEventListener("change", (e) => {
-                this.onEntrySendMailReportingChange(e);
+        var error = shadow.getElementById(idMailError);
+        var setMailError = (message) => {
+            input.closest(".fr-input-group").classList.toggle("fr-input-group--error", Boolean(message));
+            if (message) {
+                input.setAttribute("aria-invalid", "true");
+                input.setAttribute("aria-describedby", `${idMailHint} ${idMailError}`);
+                error.classList.remove("GPelementHidden", "gpf-hidden");
+            } else {
+                input.removeAttribute("aria-invalid");
+                input.setAttribute("aria-describedby", idMailHint);
+                error.classList.add("GPelementHidden", "gpf-hidden");
+            }
+            if (error.textContent !== message) {
+                error.textContent = message;
+            }
+        };
+
+        var button = shadow.getElementById(idBtn);
+        button.addEventListener("click", (e) => {
+            if (!input.validity.valid) {
+                setMailError(input.validity.valueMissing
+                    ? "Renseignez votre adresse courriel."
+                    : "Adresse courriel invalide. Saisissez une adresse au format nom@exemple.fr.");
+                input.focus();
+                return;
+            }
+
+            setMailError("");
+            this.onShowSendReportingClick({
+                target : e.target,
+                mail : input.value
             });
-        }
+        });
+
+        input.addEventListener("input", () => {
+            if (input.hasAttribute("aria-invalid") && input.validity.valid) {
+                setMailError("");
+            }
+        });
 
         panel.appendChild(shadow);
 
