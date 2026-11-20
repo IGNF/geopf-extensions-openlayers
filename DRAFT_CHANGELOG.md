@@ -32,6 +32,7 @@ __DATE__
   - AdvancedSearch : factorisation de l'affichage des messages d'erreur (`_showMessage` / `_clearMessages`) dans `AbstractAdvancedSearch` (#654)
   - Route & Isocurve : utilisation par défaut de la ressource bdtopo-valhalla pour tous les calculs (#652)
   - WMTS : normalisation des KVP des urls WMTS (#661)
+  - RGAA: Amélioration de l’accessibilité des champs de formulaires (#662)
 
 * 🔥 [Deprecated]
 
