@@ -54,14 +54,6 @@ button[id^="GPshowImportPicto-"][aria-pressed="true"] + dialog {
 /***************/
 /* Import form */
 /***************/
-div[id^="GPimportChoice-"] {
-    display: -ms-flexbox;
-    display: -webkit-box;
-    display: flex;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-}
-
 input[id^="GPimportSubmit-"] {
     margin-top: 20px;
 }
@@ -139,4 +131,3 @@ input[id^="GPimportGetCapRubrique-"]~ul {
 input[id^="GPimportGetCapRubrique-"]:checked~ul {
     display: none;
 }
-
