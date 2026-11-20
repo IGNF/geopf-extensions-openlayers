@@ -52,9 +52,19 @@ export type CatalogOptions = {
          */
         label?: string | undefined;
         /**
-         * - Critères de recherche.
+         * - Critères de recherche (champs des couches, notation pointée acceptée : "serviceParams.id").
          */
         criteria?: string[] | undefined;
+        /**
+         * - Champs où les fautes de frappe et permutations de lettres sont tolérées. Les champs doivent aussi figurer dans search.criteria.
+         */
+        fuzzyFields?: string[] | undefined;
+        /**
+         * - Poids de chaque champ dans le classement des résultats.
+         */
+        boost?: {
+            [x: string]: number;
+        } | undefined;
     } | undefined;
     /**
      * - Ajoute automatiquement la couche à la carte lors de la sélection.
@@ -228,14 +238,14 @@ export type SubCategories = {
 };
 /**
  * - Configuration des sources de données
- * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
- * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
  */
 export type Config = any;
 /**
  * - Configuration d'une couche
- * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
- * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
  */
 export type ConfigLayer = any;
 /**
@@ -252,7 +262,9 @@ export type ConfigLayer = any;
  * @property {Object} [search] - Options de recherche.
  * @property {boolean} [search.display=true] - Affiche le champ de recherche.
  * @property {string} [search.label="Rechercher une donnée"] - Label du champ de recherche.
- * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche.
+ * @property {Array<string>} [search.criteria=["name","title","description"]] - Critères de recherche (champs des couches, notation pointée acceptée : "serviceParams.id").
+ * @property {Array<string>} [search.fuzzyFields=["name","title"]] - Champs où les fautes de frappe et permutations de lettres sont tolérées. Les champs doivent aussi figurer dans search.criteria.
+ * @property {Object<string, number>} [search.boost={title:3,name:2}] - Poids de chaque champ dans le classement des résultats.
  * @property {boolean} [addToMap=true] - Ajoute automatiquement la couche à la carte lors de la sélection.
  * @property {Array<Categories>} [categories] - Liste des catégories et sous-catégories.
  * @property {Object} [configuration] - Configuration des sources de données.
@@ -303,13 +315,13 @@ export type ConfigLayer = any;
  */
 /**
  * @typedef {Object} Config - Configuration des sources de données
- * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
- * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
  */
 /**
  * @typedef {Object} ConfigLayer - Configuration d'une couche
- * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
- * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+ * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+ * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
  * @description
  * Un objet de type ConfigLayer est un objet qui contient la configuration d'une couche.
  * Il est issu de la configuration globale (Config) et enrichi de propriétés supplémentaires
@@ -333,8 +345,8 @@ declare class Catalog extends Control {
      * @fires catalog:loaded
      * @fires catalog:layer:add
      * @fires catalog:layer:remove
-     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.json}
-     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/new-url/doc/schema.jsdoc}
+     * * {@link schema | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.json}
+     * * {@link jsdoc | https://raw.githubusercontent.com/IGNF/geoportal-configuration/main/doc/schema.jsdoc}
      * @example
      * var widget = new ol.control.Catalog({
      *           collapsed : true,
@@ -538,6 +550,11 @@ declare class Catalog extends Control {
             display: boolean;
             label: string;
             criteria: string[];
+            fuzzyFields: string[];
+            boost: {
+                title: number;
+                name: number;
+            };
         };
         addToMap: boolean;
         categories: {
@@ -771,6 +788,7 @@ declare class Catalog extends Control {
      * @private
      */
     private createCatalogContentEntries;
+    _searchFragmentIndex: any;
     /**
      * Create links information to the catalog for thematic
      * @param {*} value - ...
@@ -848,7 +866,86 @@ declare class Catalog extends Control {
      */
     private resetFilteredLayersList;
     /**
-     * Set filtered layers
+     * Normalise le texte pour la recherche : conversion en minuscules,
+     * suppression des accents, remplacement des underscores et tirets par des espaces,
+     * réduction des espaces consécutifs et suppression des espaces en début et fin.
+     * @param {*} input - Texte à normaliser.
+     * @returns {String} Texte normalisé.
+     * @private
+     */
+    private _normalizeSearchText;
+    /**
+     * Extrait le texte indexable d'un champ de couche (notation pointée acceptée).
+     * La description est du HTML (cf. checkConfigLayers) : seul son texte est indexé.
+     * @param {Object} layer - Couche.
+     * @param {String} field - Nom du champ.
+     * @returns {String} Texte indexable.
+     * @private
+     */
+    private _extractSearchText;
+    /**
+     * Construit l'index de recherche (MiniSearch) selon les critères configurés.
+     * Les champs tolérants (fautes de frappe et permutations de lettres) sont déclarés
+     * dans `search.fuzzyFields` et doivent aussi figurer dans `search.criteria`.
+     * @private
+     */
+    private _buildSearchIndex;
+    _searchIndex: MiniSearch<any> | undefined;
+    _searchFuzzyFields: string[] | undefined;
+    _searchVocabulary: Set<any> | undefined;
+    _searchFuzzyCache: globalThis.Map<any, any> | undefined;
+    _searchTexts: globalThis.Map<any, string> | undefined;
+    /**
+     * Retourne les mots contenant une séquence contiguë composée des mêmes lettres que le terme, quel que soit leur ordre.
+     * Met le résultat en cache pour réutiliser cette liste lors des recherches suivantes avec le même terme.
+     * @param {String} term - Mot saisi (normalisé).
+     * @returns {Array<String>} Mots proches.
+     * @private
+     */
+    private _expandFuzzyTerm;
+    /**
+     * Recherche les couches correspondant à la saisie.
+     * - Chaque mot saisi doit être trouvé (ET entre les termes)
+     * - Pour chaque terme, on recherche :
+     *   - en début de mot, sur tous les critères,
+     *   - ou avec une faute de frappe (termes de 5 lettres ou plus), sur les champs tolérants (fuzzy fields),
+     *     ex. "marseile" ou "pariss",
+     *   - ou avec les mêmes lettres réordonnées dans une séquence de lettres, sur les champs tolérants (fuzzy fields),
+     *   - ou par sous-chaîne, sur tous les critères (ex. "ign" dans "planignv2", "photo" dans "orthophoto").
+     * - Les nombres doivent correspondre exactement (ex. 25 ≠ 250).
+     * @param {String} value - Saisie utilisateur.
+     * @returns {globalThis.Map<String, Number>} Score par clef de couche.
+     * @private
+     */
+    private _searchLayers;
+    /**
+     * Regroupe toutes les représentations HTML d'une couche par clé "name:service".
+     * Une couche peut apparaître dans plusieurs catégories et, en mode on-demand,
+     * dans le fragment stocké ainsi que dans sa copie affichée.
+     * Le filtrage doit mettre à jour toutes ces représentations pour conserver
+     * un affichage cohérent, y compris lors de la réouverture d'une section.
+     * L'index est reconstruit à chaque recherche pour intégrer les copies montées
+     * ou supprimées ; les références des fragments sont mises en cache.
+     * Cela évite de rechercher chaque couche dans chaque catégorie et fragment.
+     * @returns {globalThis.Map<String, Array<HTMLElement>>} Éléments regroupés par nom de couche et service.
+     * @private
+     */
+    private _indexSearchElements;
+    /**
+     * Réordonne les couches de chaque liste (catégorie ou section) :
+     * par pertinence pendant une recherche, sinon dans l'ordre initial (attribut data-index).
+     * Seules les couches sont déplacées : l'ordre des sections n'est pas modifié.
+     * En mode on-demand, les fragments stockés sont aussi triés, pour qu'une section
+     * ouverte après la recherche soit déjà ordonnée.
+     * Le mode clusterize n'est pas trié.
+     * @param {globalThis.Map<String, Array<HTMLElement>>} elements - Éléments HTML des couches indexés par "name:service".
+     * @param {globalThis.Map<String, Number>|null} scores - Score par clé "name:service", ou null pour l'ordre initial.
+     * @private
+     */
+    private _sortSearchElements;
+    /**
+     * Filtre les couches selon la saisie, puis les ordonne par pertinence
+     * dans chaque liste (catégorie ou section).
      *
      * @param {*} value - value
      * @private
@@ -860,6 +957,7 @@ declare class Catalog extends Control {
      * @param {*} name - ...
      * @param {*} service  - ...
      * @param {*} hidden  - ...
+     * @param {globalThis.Map<string, Array<HTMLElement>>} [elements] - Éléments HTML des couches indexés.
      * @private
      */
     private updateVisibilityFilteredLayers;
@@ -949,4 +1047,5 @@ declare class Catalog extends Control {
 }
 import Control from "../Control";
 import Map from "ol/Map";
+import MiniSearch from "minisearch";
 //# sourceMappingURL=Catalog.d.ts.map

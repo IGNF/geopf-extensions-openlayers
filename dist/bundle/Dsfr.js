@@ -8,8 +8,8 @@
  * @copyright copyright (c) IGN 
  * @license AGPL-3.0
  * @author IGN
- * @version 1.0.0-beta.16-651
- * @date 16/11/2026
+ * @version 1.0.0-beta.16-657
+ * @date 06/11/2026
  *
  */
 /*!
@@ -25,6 +25,31 @@
  * @license   BSD 2-Clause "Simplified" License
  *            See https://raw.githubusercontent.com/openlayers/ol-mapbox-style/master/LICENSE
  * @version   ^13.4.0
+ */
+/*!
+ * @overview  MiniSearch - Full-text search engine for browser and Node
+ * @version   ^7.2.0
+ * @license   MIT
+ *
+ * Copyright 2022 Luca Ongaro
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 /*!
  * @overview   Sortable -- JavaScript library for reorderable drag-and-drop lists on modern
@@ -59,5 +84,5 @@
  *            See https://raw.githubusercontent.com/proj4js/proj4js/master/LICENSE.md
  * @version   2.15.0
  */
-var Gp;(()=>{"use strict";const e={r:e=>{Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})}};let t={};e.r(t),Gp=t})();
+var Gp;(()=>{"use strict";const e={r:e=>{Object.defineProperties(e,{[Symbol.toStringTag]:{value:"Module"},__esModule:{value:!0}})}};let t={};e.r(t),Gp=t})();
 //# sourceMappingURL=Dsfr.js.map

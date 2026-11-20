@@ -43,6 +43,96 @@ par défaut, dont les couches sont renseignées avec un thème et un producteur.
 </code><button type="button">Copy</button></pre>
 
 <p>La recherche est active à partir du 3eme caractère saisi dans la barre de recherche.</p>
+<p>Les couches trouvées sont ordonnées par pertinence dans chaque catégorie ou section ;
+l'ordre des sections reste inchangé, et l'ordre initial est rétabli quand la recherche est effacée.
+En mode <code>optimisation : &quot;clusterize&quot;</code>, l'ordre initial est conservé.</p>
+<h4 id="recherche-floue-et-critères" class="tsd-anchor-link">Recherche floue et critères<a href="#recherche-floue-et-critères" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>La recherche utilise MiniSearch. Voici la configuration par défaut :</p>
+<pre><code class="js"><span class="hl-3">var</span><span class="hl-1"> </span><span class="hl-4">catalog</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-4">ol</span><span class="hl-1">.</span><span class="hl-4">control</span><span class="hl-1">.</span><span class="hl-0">Catalog</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-4">search :</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-4">display :</span><span class="hl-1"> </span><span class="hl-3">true</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-4">label :</span><span class="hl-1"> </span><span class="hl-2">&quot;Rechercher une donnée&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-4">criteria :</span><span class="hl-1"> [</span><span class="hl-2">&quot;name&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;title&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;description&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">        </span><span class="hl-4">fuzzyFields :</span><span class="hl-1"> [</span><span class="hl-2">&quot;name&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;title&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">        </span><span class="hl-4">boost :</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-4">title :</span><span class="hl-1"> </span><span class="hl-8">3</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-4">name :</span><span class="hl-1"> </span><span class="hl-8">2</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<ul>
+<li><code>criteria</code> définit les champs indexés. La notation pointée est acceptée, par exemple <code>serviceParams.id</code>.
+Pour la description, seul le texte est recherché, sans les balises HTML.</li>
+<li><code>fuzzyFields</code> définit les champs tolérant les fautes de frappe et les permutations de lettres.
+Ces champs doivent aussi figurer dans <code>criteria</code> ; les autres sont ignorés.
+Avec <code>fuzzyFields : []</code>, ces deux formes de recherche approchée sont désactivées,
+mais la recherche par préfixe et par sous-chaîne reste active.</li>
+<li><code>boost</code> définit le poids de chaque champ dans le classement, uniquement parmi les champs de <code>criteria</code>.
+Un champ sans poids explicite reçoit le poids <code>1</code>.</li>
+</ul>
+<p>Ainsi, dans l'exemple précédent limité au critère <code>service</code>, les champs tolérants par défaut
+(<code>name</code> et <code>title</code>) ne sont pas utilisés. Pour rendre <code>service</code> tolérant, il faut aussi
+le déclarer dans <code>fuzzyFields</code>.</p>
+<h4 id="correspondances-recherchées" class="tsd-anchor-link">Correspondances recherchées<a href="#correspondances-recherchées" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>La recherche ignore la casse et les accents, remplace les tirets et underscores par des espaces
+et réduit les espaces consécutifs.</p>
+<p>Pour chaque terme saisi, plusieurs correspondances sont recherchées :</p>
+<ul>
+<li><strong>Mot exact ou début de mot</strong>, sur tous les champs de <code>criteria</code>.</li>
+<li><strong>Faute de frappe</strong>, uniquement sur les champs de <code>fuzzyFields</code> et pour les termes d'au moins
+5 caractères : une insertion, une suppression ou une substitution est autorisée,
+par exemple <code>marseile</code> pour <code>marseille</code>. Une inversion de lettres compte comme deux fautes
+dans MiniSearch ; elle peut être couverte par la règle de permutation ci-dessous.</li>
+<li><strong>Permutation de lettres</strong>, uniquement sur les champs de <code>fuzzyFields</code> et dès 4 caractères :
+le mot indexé doit contenir une séquence contiguë composée des mêmes lettres que le terme,
+quel que soit leur ordre. Par exemple, <code>prais</code> retrouve <code>paris</code>.</li>
+</ul>
+<p>Chaque terme doit être trouvé dans la couche (combinaison <strong>ET</strong> entre les termes),
+mais les termes peuvent correspondre à des champs différents. Les différentes façons de
+retrouver un même terme sont combinées par <strong>OU</strong>.
+Les termes entièrement numériques ne bénéficient ni du préfixe ni de la recherche approchée.</p>
+<p>En complément des résultats MiniSearch, une recherche par sous-chaîne de la <strong>saisie complète normalisée</strong>
+ajoute les couches correspondantes qui ne figurent pas déjà dans les résultats,
+même si MiniSearch a trouvé d'autres couches. Elle porte sur le texte des critères réunis :
+<code>ign</code> peut ainsi retrouver <code>planignv2</code>, et <code>photo</code> retrouver <code>orthophoto</code>.
+Les couches ainsi ajoutées reçoivent un score de <code>0</code> ; celles déjà trouvées par MiniSearch conservent leur score.
+Cette recherche complémentaire s'applique aussi aux saisies numériques ;
+il peut donc retrouver <code>250</code> à partir de <code>2500</code>, malgré l'absence de préfixe numérique dans MiniSearch.</p>
+<h4 id="poids-des-champs-et-classement" class="tsd-anchor-link">Poids des champs et classement<a href="#poids-des-champs-et-classement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>Pour la branche exacte ou par préfixe, les poids configurés dans <code>boost</code> sont transmis à MiniSearch.
+Pour la branche approchée (faute de frappe ou permutation), ils sont divisés par deux :</p>
+<pre><code class="js"><span class="hl-1">(</span><span class="hl-4">boost</span><span class="hl-1">[</span><span class="hl-4">field</span><span class="hl-1">] || </span><span class="hl-8">1</span><span class="hl-1">) * </span><span class="hl-8">0.5</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Le <code>1</code> est une valeur de repli, pas un remplacement systématique du poids configuré :
+pour <code>title</code>, le calcul donne bien <code>3 * 0.5 = 1.5</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Champ par défaut</th>
+<th>Poids exact / préfixe</th>
+<th>Poids approché</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>3</td>
+<td>1,5</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>1</td>
+<td>Non activé par défaut</td>
+</tr>
+</tbody>
+</table>
+<p>Ces poids multiplient les contributions au score, mais ne constituent pas le score final.
+MiniSearch tient aussi compte de la fréquence des termes et de la longueur des champs,
+et applique ses propres pénalités aux correspondances par préfixe et par faute de frappe.
+Les contributions des branches combinées par <strong>OU</strong> peuvent se cumuler, y compris lorsqu'un mot
+exact est aussi retrouvé par la branche approchée. Un résultat approché n'a donc pas
+nécessairement un score égal à la moitié de celui d'un résultat exact.</p>
+<p>Avec <code>|| 1</code>, un poids de <code>0</code> est également remplacé par <code>1</code> :
+pour exclure un champ de la recherche, il faut le retirer de <code>criteria</code>, et non lui attribuer <code>0</code>.
+Les résultats sont triés par score décroissant, puis selon leur ordre initial en cas d'égalité,
+sauf en mode <code>clusterize</code> qui conserve l'ordre initial.</p>
 <hr>
 <h3 id="exemple-sur-les-categories" class="tsd-anchor-link">Exemple sur les categories<a href="#exemple-sur-les-categories" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>Le filtre sur les catégories permet de regrouper et d’afficher dynamiquement les couches selon un critère, rendant la navigation plus claire et adaptée à chaque besoin utilisateur.</p>
@@ -308,6 +398,11 @@ Les Topics permettent de filtrer les couches selon leur thématique ou producteu
 <li><a href="#exemple-minimal"><span>Exemple minimal</span></a></li>
 <li><a href="#exemple-sur-la-configuration"><span>Exemple sur la configuration</span></a></li>
 <li><a href="#exemple-sur-la-barre-de-recherche-globale"><span>Exemple sur la barre de recherche globale</span></a></li>
+<li>
+<ul>
+<li><a href="#recherche-floue-et-critères"><span>Recherche floue et critères</span></a></li>
+<li><a href="#correspondances-recherchées"><span>Correspondances recherchées</span></a></li>
+<li><a href="#poids-des-champs-et-classement"><span>Poids des champs et classement</span></a></li></ul></li>
 <li><a href="#exemple-sur-les-categories"><span>Exemple sur les categories</span></a></li>
 <li><a href="#exemple-sur-les-sous-categories"><span>Exemple sur les sous-<wbr/>categories</span></a></li>
 <li><a href="#exemple-sur-les-sections"><span>Exemple sur les sections</span></a></li></ul></li>
