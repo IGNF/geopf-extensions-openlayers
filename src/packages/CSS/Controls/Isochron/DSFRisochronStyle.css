@@ -1,10 +1,10 @@
+dialog[id^="GPisochronPanel-"] {
+  width: 380px;
+}
+
 .gpf-btn-icon-isocurve::after {
   -webkit-mask: url("img/isochrone.svg") center no-repeat;
   mask: url("img/isochrone.svg") center no-repeat;
-}
-
-.gpf-flex-isocurve {
-    justify-content: unset;
 }
 
 .gpf-btn-icon-isocurve-reset {
@@ -20,26 +20,9 @@
   margin-top: 0;
 }
 
-div[id^="GPisochronChoice"] {
-  justify-content: left;
-  gap: 1em;
-}
-
-div[id^=GPisochronTransportChoice] > div {
-  margin-top: 0.5rem;
-}
-
-div[id^=GPisochronValueChron],
-div[id^=GPisochronValueDist] {
-  width: 281px;
-}
-
-.GPflexInput > input[id^="GPisochronValueChronInput2"] {
-  margin-top: 0;
-}
-
-.GPisoExclusionsOptions {
-  gap: 1rem;
+[id^="GPisochronValueChron-"] > .fr-fieldset__element {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 [id^=GPisochronForm-] > .GPpanelFooter {

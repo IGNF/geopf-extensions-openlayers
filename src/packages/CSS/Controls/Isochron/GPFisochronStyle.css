@@ -35,7 +35,12 @@ form[id^=GPisochronForm] {
   padding: 15px;
 }
 
-div[id^=GPisochronChoice] {
+fieldset[id^=GPisochronChoice-] {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+  padding: 0;
+  border: 0;
   margin: auto;
   margin-top: 10px;
   margin-bottom: 5px;
@@ -44,18 +49,6 @@ div[id^=GPisochronChoice] {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-}
-
-p[id^=GPisochronPointLabelP], p[id^=GPisochronValueChronLabelP] {
-  margin: 2px 0 5px 0;
-}
-
-.GProuteComputationLabel {
-  margin-bottom: 5px;
-}
-
-.GPisochronChoiceAlt input:checked + label + span {
-  color: #366291;
 }
 
 input[id^=GPisochronChoiceAltChron] + .GPisochronChoiceAltImg {
@@ -95,8 +88,21 @@ input[id^=GPisochronChoiceAltChron] {
   cursor: pointer;
 }
 
+.GPisochronChoiceAlt {
+  position: relative;
+}
+
 .GPisochronChoiceAlt input {
-  display: none;
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  opacity: 0;
+}
+
+.GPisochronChoiceAlt input:focus-visible + label {
+  outline: 2px solid #366291;
+  outline-offset: 2px;
 }
 
 .GPisochronChoiceAltImg {
@@ -107,14 +113,10 @@ input[id^=GPisochronChoiceAltChron] {
   cursor: pointer;
 }
 
-.GPisochronChoiceAlt span {
-  cursor: pointer;
-  display:block;
-  color: #999;
-}
-
 .GPisochronModeLabel {
   display: block;
+  width: 100%;
+  padding: 0;
   text-align: center;
   margin-bottom: 5px;
 }
@@ -143,15 +145,49 @@ input[id^=GPisochronTransportPedestrian]:checked + .GPisochronTransportImg {
   display: none;
 }
 
-div[id^=GPisochronTransportChoice] > div {
-  width: 100%;
+fieldset[id^=GPisochronTransportChoice] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.GPisochronTransportChoice {
   justify-content: center;
 }
 
-div[id^=GPisochronValueChron],
-div[id^=GPisochronValueDist] {
-  width: 220px;
-  margin: 5px auto;
+fieldset[id^=GPisochronValueChron]:not(.GPelementHidden):not(.gpf-hidden) {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset[id^=GPisochronValueChron] > legend {
+  padding: 0;
+  margin-bottom: 5px;
+}
+
+fieldset[id^=GPisochronValueChron] > div {
+  flex: 1;
+  min-width: 0;
+}
+
+[id^=GPisochronValueDist-] .fr-hint-text {
+  display: block;
+  color: #666;
+}
+
+fieldset[id^=GPisochronValueChron] input {
+  width: 100%;
+  min-width: 0;
 }
 
 .GPisochronTransportImg {
@@ -177,22 +213,30 @@ select[id^=GPisochronDirectionSelect] {
   transition: all 0.5s ease-out 0s;
 }
 
-.GPisoExclusionsLabel {
-  display: block;
+fieldset.GPisoExclusionsOptions > legend {
+  width: 100%;
+  padding: 0;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  margin-top: 0;
   font-weight: bold;
   line-height: 16px;
 }
 
-.GPisoExclusionsOptions {
+fieldset.GPisoExclusionsOptions {
   display: -webkit-flex;
-  display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  flex-wrap: wrap;
+  column-gap: 5px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .GPisoExclusionsOption {

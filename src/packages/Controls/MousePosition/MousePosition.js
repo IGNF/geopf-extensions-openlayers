@@ -1670,13 +1670,13 @@ class MousePosition extends Control {
 
         // Mise a jour des elements lebels et unites
         this._resetLabelElements(this._currentProjectionType);
-        this._resetUnitElements(this._currentProjectionUnits);
 
         // mise a jour des inputs pour les coordonnees
         if (oldProjectionUnits === "DMS" || this._currentProjectionUnits === "DMS") {
             this._resetCoordinateElements(this.options.editCoordinates, this._currentProjectionType, this._currentProjectionUnits);
             this._setEditMode(this.editing);
         }
+        this._resetUnitElements(this._currentProjectionUnits);
 
         // on simule un deplacement en mode tactile pour mettre à jour les
         // resultats

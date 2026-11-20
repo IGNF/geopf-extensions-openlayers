@@ -1,7 +1,6 @@
 import ID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import GeocodeUtils from "../../Utils/GeocodeUtils";
-import checkDsfr from "../Utils/CheckDsfr";
 
 var logger = Logger.getLogger("LocationSelectorDOM");
 
@@ -18,13 +17,24 @@ var LocationSelectorDOM = {
     },
 
     /**
+     * @returns {HTMLElement|null} Add point button container
+     */
+    _getLocationAddPointContainer : function () {
+        var button = document.getElementById(this._addUID("GPlocationStageAdd"));
+        if (!button) {
+            return null;
+        }
+        return button.parentElement;
+    },
+
+    /**
      * Main container (DOM)
      * @returns {HTMLElement} DOM element
      */
     _createMainContainerElement : function () {
         var container = document.createElement("div");
         container.className = this._addUID("GPlocationPoint"); // ceci permet de gerer les groupes de points !
-        container.className += " GPwidget gpf-widget ";
+        container.className += " GPwidget gpf-widget fr-input-group";
         return container;
     },
 
@@ -39,10 +49,47 @@ var LocationSelectorDOM = {
     _createLocationPointElement : function (id, display) {
         var div = document.createElement("div");
         div.id = this._addUID("GPlocationPoint_" + id);
-        div.className = (display) ? "GPflexInput GPlocationStageFlexInput gpf-flex" : "GPflexInput GPelementHidden gpf-flex gpf-hidden";
+        div.className = (display) ? "GPflexInput GPlocationStageFlexInput gpf-flex fr-input-wrap" : "GPflexInput GPelementHidden gpf-flex gpf-hidden";
         div.style.cssText = "";
 
         return div;
+    },
+
+    /**
+     * Create the label for the autocomplete input.
+     *
+     * @param {Number} id - tag ID
+     * @param {String} text - label text
+     * @returns {HTMLElement} DOM element
+     */
+    _createLocationInputLabelElement : function (id, text) {
+        var label = document.createElement("label");
+        label.className = "GPlocationInputLabel fr-label";
+        if (!this.options.tag.display) {
+            label.classList.add("GPelementHidden", "gpf-hidden");
+        }
+        label.htmlFor = this._addUID("GPlocationOrigin_" + id);
+        label.textContent = text;
+        return label;
+    },
+
+    /**
+     * Show or hide a location point and its label.
+     *
+     * @param {Number|String} id - tag ID
+     * @param {Boolean} visible - whether to show the point
+     */
+    _setLocationPointVisibility : function (id, visible) {
+        var point = document.getElementById(this._addUID("GPlocationPoint_" + id));
+        point.className = visible ? "GPflexInput GPlocationStageFlexInput gpf-flex" : "GPflexInput GPelementHidden gpf-flex gpf-hidden";
+        var label = point.parentElement.querySelector(":scope > .GPlocationInputLabel");
+        label.classList.toggle("GPelementHidden", !visible);
+        label.classList.toggle("gpf-hidden", !visible);
+        this.dispatchEvent({
+            type : "location:visibilitychange",
+            id : id,
+            visible : visible
+        });
     },
 
     /**
@@ -66,21 +113,20 @@ var LocationSelectorDOM = {
             var i = ID.index(this.id);
             var points = document.getElementsByClassName(self._addUID("GPlocationPoint"));
             for (var j = 0; j < points.length; j++) {
-                var tag = points[j].childNodes[0].id;
-                var id = ID.index(tag);
-                document.getElementById(self._addUID("GPlocationPoint_" + id)).style.cssText = "";
+                points[j].style.display = "";
             }
             document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).value = "";
             document.getElementById(self._addUID("GPlocationOrigin_" + i)).value = "";
-            document.getElementById(self._addUID("GPlocationPoint_" + i)).style.cssText = "";
+            document.getElementById(self._addUID("GPlocationPoint_" + i)).parentElement.style.display = "";
             document.getElementById(self._addUID("GPlocationOriginPointer_" + i)).checked = false;
             document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementShow gpf-show  gpf-input fr-input";
             document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).className = "GPelementHidden gpf-hidden";
             if (document.getElementById(self._addUID("GPlocationStageRemove_" + i))) {
                 document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary gpf-btn--secondary";
             }
-            if (document.getElementById(self._addUID("GPlocationStageAdd"))) {
-                document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-mt-2w";
+            var addPoint = self._getLocationAddPointContainer();
+            if (addPoint) {
+                addPoint.classList.remove("GPelementHidden", "gpf-hidden");
             }
             // document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).disabled = true;
             self.onLocationClearPointClick(e);
@@ -127,6 +173,9 @@ var LocationSelectorDOM = {
 
         inputOrigin.addEventListener("keydown", function (e) {
             var charCode = e.which || e.keyCode;
+            if (charCode !== 13 && charCode !== 38 && charCode !== 40) {
+                return;
+            }
 
             var container = document.getElementById(self._addUID("GPlocationAutoCompleteResult_" + id));
 
@@ -149,7 +198,7 @@ var LocationSelectorDOM = {
             // si aucun item courant, on prend le 1er !
             if (!curr.length) {
                 current = list[0];
-                current.className = "GPautoCompleteProposal current";
+                current.classList.add("current");
                 current.style.color = "#000000";
                 current.style["background-color"] = "#CEDBEF";
                 return;
@@ -171,15 +220,15 @@ var LocationSelectorDOM = {
             switch (charCode) {
                 case 38: // arrow up
                     logger.log("arrow up");
-                    current.className = "GPautoCompleteProposal";
-                    prev.className = "GPautoCompleteProposal current";
+                    current.classList.remove("current");
+                    prev.classList.add("current");
                     prev.style.color = "#000000";
                     prev.style["background-color"] = "#CEDBEF";
                     break;
                 case 40: // arrow down
                     logger.log("arrow down");
-                    current.className = "GPautoCompleteProposal";
-                    next.className = "GPautoCompleteProposal current";
+                    current.classList.remove("current");
+                    next.classList.add("current");
                     next.style.color = "#000000";
                     next.style["background-color"] = "#CEDBEF";
                     break;
@@ -257,7 +306,7 @@ var LocationSelectorDOM = {
             var tag;
             var id;
             for (j = 0; j < points.length; j++) {
-                tag = points[j].childNodes[0].id;
+                tag = points[j].querySelector(":scope > [id^='GPlocationPoint_']").id;
                 id = ID.index(tag);
                 if (i !== id) {
                     document.getElementById(self._addUID("GPlocationOriginPointer_" + id)).checked = false;
@@ -271,15 +320,14 @@ var LocationSelectorDOM = {
             if (document.getElementById(self._addUID("GPlocationOriginPointer_" + i)).checked) {
                 document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).value = "";
                 for (j = 0; j < points.length; j++) {
-                    tag = points[j].childNodes[0].id;
-                    id = ID.index(tag);
-                    document.getElementById(self._addUID("GPlocationPoint_" + id)).style.cssText = "";
+                    points[j].style.display = "";
                 }
                 if (document.getElementById(self._addUID("GPlocationStageRemove_" + i))) {
                     document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPlocationStageRemove  gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary gpf-btn--secondary";
                 }
-                if (document.getElementById(self._addUID("GPlocationStageAdd"))) {
-                    document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-mt-2w";
+                var addPoint = self._getLocationAddPointContainer();
+                if (addPoint) {
+                    addPoint.classList.remove("GPelementHidden", "gpf-hidden");
                 }
                 document.getElementById(self._addUID("GPlocationOriginPointer_" + i)).checked = false;
                 document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementShow gpf-show  gpf-input fr-input";
@@ -287,19 +335,20 @@ var LocationSelectorDOM = {
             } else {
                 document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).value = "Pointer un lieu sur la carte";
                 for (j = 0; j < points.length; j++) {
-                    tag = points[j].childNodes[0].id;
+                    tag = points[j].querySelector(":scope > [id^='GPlocationPoint_']").id;
                     id = ID.index(tag);
                     if (i === id) {
-                        document.getElementById(self._addUID("GPlocationPoint_" + id)).style.cssText = "";
+                        points[j].style.display = "";
                     } else {
-                        document.getElementById(self._addUID("GPlocationPoint_" + id)).style.display = "none";
+                        points[j].style.display = "none";
                     }
                 }
                 if (document.getElementById(self._addUID("GPlocationStageRemove_" + i))) {
                     document.getElementById(self._addUID("GPlocationStageRemove_" + i)).className = "GPelementHidden gpf-hidden";
                 }
-                if (document.getElementById(self._addUID("GPlocationStageAdd"))) {
-                    document.getElementById(self._addUID("GPlocationStageAdd")).className = "GPelementHidden gpf-hidden";
+                var addPointToHide = self._getLocationAddPointContainer();
+                if (addPointToHide) {
+                    addPointToHide.classList.add("GPelementHidden", "gpf-hidden");
                 }
                 document.getElementById(self._addUID("GPlocationOriginPointer_" + i)).checked = true;
                 document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementHidden gpf-hidden";
@@ -337,21 +386,20 @@ var LocationSelectorDOM = {
             e.target.setAttribute("aria-pressed", !status);
             var points = document.getElementsByClassName(self._addUID("GPlocationPoint"));
             var last = points.length - 1;
-            var start = points[0].childNodes[0].id;
-            var end = points[last].childNodes[0].id;
+            var start = points[0].querySelector(":scope > [id^='GPlocationPoint_']").id;
+            var end = points[last].querySelector(":scope > [id^='GPlocationPoint_']").id;
 
             var startID = ID.index(start);
             var endID = ID.index(end);
 
             if (id !== startID && id !== endID) {
                 var i = ID.index(this.id);
-                document.getElementById(self._addUID("GPlocationPoint_" + i)).className = "GPflexInput GPelementHidden gpf-flex gpf-hidden";
+                self._setLocationPointVisibility(i, false);
                 document.getElementById(self._addUID("GPlocationOrigin_" + i)).value = "";
                 document.getElementById(self._addUID("GPlocationOrigin_" + i)).className = "GPelementShow gpf-show gpf-input fr-input";
                 document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).value = "";
                 document.getElementById(self._addUID("GPlocationOriginCoords_" + i)).className = "GPelementHidden gpf-hidden";
-                document.getElementById(self._addUID("GPlocationStageAdd")).style.display = "";
-                document.getElementById(self._addUID("GPlocationPoint_" + i)).parentElement.previousSibling.classList.add("GPelementHidden", "gpf-hidden");
+                self._getLocationAddPointContainer().style.display = "";
                 // Moving up exclusions picto
                 // var exclusionsPictoTop = document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top;
                 // document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top = (parseInt(exclusionsPictoTop) - 33).toString() + "px";
@@ -377,20 +425,17 @@ var LocationSelectorDOM = {
 
         var buttonAdd = document.createElement("button");
         buttonAdd.id = this._addUID("GPlocationStageAdd");
-        buttonAdd.className = "GPlocationOpen GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm fr-btn--secondary gpf-btn--secondary fr-mt-2w";
         buttonAdd.title = "Ajouter une étape";
-        if (checkDsfr()) {
-            buttonAdd.innerText = "Ajouter une étape";
-        }
+        buttonAdd.className = "GPlocationOpen GPlocationStageAdd fr-btn fr-btn--sm fr-btn--secondary fr-icon-add-line fr-btn--icon-left";
+        buttonAdd.textContent = "Ajouter une étape";
         buttonAdd.setAttribute("tabindex", "0");
-        buttonAdd.setAttribute("aria-pressed", false);
         buttonAdd.setAttribute("type", "button");
         buttonAdd.addEventListener("click", function (e) {
             var lastStage = 1;
             var nbStages = 0;
             var points = document.getElementsByClassName(self._addUID("GPlocationPoint"));
             for (var i = 1; i < points.length - 1; i++) {
-                var tag = points[i].childNodes[0].id;
+                var tag = points[i].querySelector(":scope > [id^='GPlocationPoint_']").id;
                 var id = ID.index(tag);
                 if (document.getElementById(self._addUID("GPlocationPoint_" + id))) {
                     if (document.getElementById(self._addUID("GPlocationPoint_" + id)).className === "GPflexInput GPelementHidden gpf-flex gpf-hidden") {
@@ -404,19 +449,16 @@ var LocationSelectorDOM = {
             }
             // FIXME algo à revoir : lastStage = id hors si id = 300 sur 3 points !?
             if (lastStage < points.length) {
-                document.getElementById(self._addUID("GPlocationPoint_" + lastStage)).className = "GPflexInput GPlocationStageFlexInput gpf-flex";
-                document.getElementById(self._addUID("GPlocationPoint_" + lastStage)).parentElement.previousSibling.classList.remove("GPelementHidden", "gpf-hidden");
+                self._setLocationPointVisibility(lastStage, true);
                 // Moving down exclusions picto
                 // var exclusionsPictoTop = document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top;
                 // document.getElementById(self._addUID("GPshowLocationExclusionsPicto")).style.top = (parseInt(exclusionsPictoTop) + 33).toString() + "px";
             }
             if (nbStages === 4) {
-                document.getElementById(self._addUID("GPlocationStageAdd")).style.display = "none";
+                self._getLocationAddPointContainer().style.display = "none";
             }
             // gestionnaire d'evenement :
             // on ajoute le point, utilisé pour la requête sur le service d'itiniraire
-            var status = (e.target.ariaPressed === "true");
-            e.target.setAttribute("aria-pressed", !status);
             self.onLocationAddPointClick(e);
         });
 
@@ -426,7 +468,7 @@ var LocationSelectorDOM = {
     _createLocationAutoCompleteElement : function (id) {
         var div = document.createElement("div");
         div.id = this._addUID("GPlocationAutoCompleteList_" + id);
-        div.className = "GPlocationAutoCompleteList GPelementHidden gpf-panel gpf-hidden fr-modal"; // GPpanel ?
+        div.className = "GPlocationAutoCompleteList GPelementHidden gpf-panel gpf-hidden"; // GPpanel ?
 
         // FIXME on decompose la fonction pour les besoins du controle,
         // on ajoutera ces childs à la main...
@@ -496,22 +538,23 @@ var LocationSelectorDOM = {
     GPdisplayCoordinate : function (value) {
         var points = document.getElementsByClassName(this._addUID("GPlocationPoint"));
         for (var i = 0; i < points.length; i++) {
-            var tag = points[i].childNodes[0].id;
+            var tag = points[i].querySelector(":scope > [id^='GPlocationPoint_']").id;
             var id1 = ID.index(tag);
             if (document.getElementById(this._addUID("GPlocationOriginPointer_" + id1)).checked) {
                 document.getElementById(this._addUID("GPlocationOriginCoords_" + id1)).value = value;
                 document.getElementById(this._addUID("GPlocationOriginCoords_" + id1)).disabled = false;
                 for (var j = 0; j < points.length; j++) {
-                    tag = points[j].childNodes[0].id;
+                    tag = points[j].querySelector(":scope > [id^='GPlocationPoint_']").id;
                     var id2 = ID.index(tag);
-                    document.getElementById(this._addUID("GPlocationPoint_" + id2)).style.cssText = "";
+                    points[j].style.display = "";
                     if (document.getElementById(this._addUID("GPlocationStageRemove_" + id2))) {
                         document.getElementById(this._addUID("GPlocationStageRemove_" + id2)).className = "GPlocationStageRemove gpf-btn gpf-btn-icon-remove fr-btn--sm fr-btn--secondary gpf-btn--secondary";
                     }
                 }
                 document.getElementById(this._addUID("GPlocationOriginPointer_" + id1)).checked = false;
-                if (document.getElementById(this._addUID("GPlocationStageAdd"))) {
-                    document.getElementById(this._addUID("GPlocationStageAdd")).className = "GPlocationStageAdd gpf-btn gpf-btn-icon-add fr-btn--sm";
+                var addPoint = this._getLocationAddPointContainer();
+                if (addPoint) {
+                    addPoint.classList.remove("GPelementHidden", "gpf-hidden");
                 }
                 return;
             }
