@@ -367,7 +367,8 @@ var CatalogDOM = {
             }
             return `
             <!-- boutons radio des sous categories -->
-            <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend radio-inline-messages" style="margin:unset;">
+            <fieldset class="fr-fieldset" id="radio-inline_${id}" aria-labelledby="radio-inline-legend_${id}" style="margin:unset;">
+                <legend id="radio-inline-legend_${id}" class="fr-fieldset__legend--regular fr-fieldset__legend fr-sr-only">Sous catégories</legend>
                 ${strSubCategoriesRadios}
                 <div class="fr-messages-group" id="radio-inline-messages" aria-live="assertive"></div>
             </fieldset>
