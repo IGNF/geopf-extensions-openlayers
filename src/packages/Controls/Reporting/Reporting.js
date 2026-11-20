@@ -1450,17 +1450,8 @@ class Reporting extends Control {
     // ############# Panel Send ################ //
 
     /**
-     * Handle the change event on the "Send Mail Reporting" input element.
-     * @param {*} e - The change event object.
-     * @private
-     */
-    onEntrySendMailReportingChange (e) {
-        logger.trace("onEntrySendMailReportingChange", e);
-    }
-
-    /**
      * Handle the click event on the "Send Reporting" button.
-     * @param {*} e - {mail, name, desc, theme, drawing, location}
+     * @param {*} e - Event data containing the validated email address.
      * @fires reporting:send
      * @description
      * This method is called when the user clicks on the "Send Reporting" button.
@@ -1487,16 +1478,6 @@ class Reporting extends Control {
             mail : e.mail
         });
 
-        var errorDom = this.sendReportingContainer.querySelector("#GPreportingSendFieldset");
-        var messDom = this.sendReportingContainer.querySelector("#GPreportingSendFieldsetMessages");
-        if (!e.mail) {
-            errorDom.classList.add("fr-fieldset--error");
-            messDom.classList.replace("gpf-hidden", "gpf-visible");
-            return;
-        } else {
-            errorDom.classList.remove("fr-fieldset--error");
-            messDom.classList.replace("gpf-visible", "gpf-hidden");
-        }
         // send the reporting data to the server or process it as needed
         logger.info("Reporting data to send:", this.data);
 
