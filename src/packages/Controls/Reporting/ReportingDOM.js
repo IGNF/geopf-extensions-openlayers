@@ -146,12 +146,11 @@ var ReportingDOM = {
         }
         return btnAnnuler;
     },
-    _createReportingButtonSuivantFooterElement : function () {
+    _createReportingButtonSuivantFooterElement : function (label) {
         var self = this;
         var btnSuivant = document.createElement("button");
         btnSuivant.className = "gpf-btn gpf-btn--primary gpf-btn-icon-suivant fr-btn fr-btn--primary fr-m-1w";
-        btnSuivant.title = "Suivant";
-        btnSuivant.textContent = "Suivant";
+        btnSuivant.textContent = label;
 
         if (btnSuivant.addEventListener) {
             btnSuivant.addEventListener("click", function (e) {
@@ -329,7 +328,7 @@ var ReportingDOM = {
      * @description Create the submit button for the reporting form.
      * This button is used to submit the reporting form.
      * It is hidden.
-     * The form will be submitted when the user clicks on the button "Suivant".
+     * The form will be submitted when the user proceeds to enter their email address.
      */
     _createReportingSubmitFormElement : function () {
         var input = document.createElement("input");
@@ -386,7 +385,7 @@ var ReportingDOM = {
         var divBtn =`
         <div class="gpf-btn-group fr-pb-1w">
             <button id="${idBtn}" class="gpf-btn fr-btn fr-btn--primary">
-                Envoyer
+                Envoyer le signalement
             </button>
         </div>
         `;
