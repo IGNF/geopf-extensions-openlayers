@@ -265,8 +265,10 @@ var ReportingDOM = {
         </div>
         `;
 
+        var idLegend = this._addUID("GPreportingFormFieldsetLegend");
         var strContainer = `
-        <fieldset class="fr-fieldset" id="GPreportingFormFieldset" role="group" aria-labelledby="GPreportingFormFieldsetMessages">
+        <fieldset class="fr-fieldset" id="GPreportingFormFieldset" aria-labelledby="${idLegend}">
+            <legend id="${idLegend}" class="fr-fieldset__legend--regular fr-fieldset__legend fr-sr-only">Décrire le signalement</legend>
             ${divName}
             ${divTheme}
             ${divDesc}
@@ -385,8 +387,10 @@ var ReportingDOM = {
         </div>
         `;
 
+        var idLegend = this._addUID("GPreportingSendFieldsetLegend");
         var strContainer = `
-        <fieldset class="fr-fieldset" id="GPreportingSendFieldset" role="group" aria-labelledby="GPreportingSendFieldsetMessages">
+        <fieldset class="fr-fieldset" id="GPreportingSendFieldset" aria-labelledby="${idLegend}">
+            <legend id="${idLegend}" class="fr-fieldset__legend--regular fr-fieldset__legend fr-sr-only">Envoyer un signalement</legend>
             ${divMail}
             ${divBtn}
             <div class="fr-messages-group gpf-hidden" id="GPreportingSendFieldsetMessages" aria-live="polite">
