@@ -26,6 +26,7 @@ import VectorSource from "ol/source/Vector";
 import Gp from "geoportal-access-lib";
 // import local
 import Utils from "../../Utils/Helper";
+import MathUtils from "../../Utils/MathUtils";
 import Logger from "../../Utils/LoggerByDefault";
 import ID from "../../Utils/SelectorID";
 import Markers from "../Utils/Markers";
@@ -1210,6 +1211,8 @@ class ElevationPath extends Control {
             if (projSrc !== projDest) {
                 ll = olTransformProj(xy, projSrc, projDest);
             }
+            // multiWorld : longitude dans [-180, 180]
+            ll = MathUtils.wrapLonLat(ll);
             geometry.push({
                 lon : Math.round(ll[0] * 1e8) / 1e8,
                 lat : Math.round(ll[1] * 1e8) / 1e8
@@ -1240,8 +1243,8 @@ class ElevationPath extends Control {
 
         var coordinates = this._currentSketch.getGeometry().getCoordinates();
         for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-            var c1 = olTransformProj(coordinates[i], projSrc, projDest);
-            var c2 = olTransformProj(coordinates[i + 1], projSrc, projDest);
+            var c1 = MathUtils.wrapLonLat(olTransformProj(coordinates[i], projSrc, projDest));
+            var c2 = MathUtils.wrapLonLat(olTransformProj(coordinates[i + 1], projSrc, projDest));
             c1[0] = Math.round(c1[0] * 1e8) / 1e8;
             c1[1] = Math.round(c1[1] * 1e8) / 1e8;
             c2[0] = Math.round(c2[0] * 1e8) / 1e8;
@@ -1273,7 +1276,7 @@ class ElevationPath extends Control {
 
         var coordinates = this._currentSketch.getGeometry().getCoordinates();
         for (var i = 0; i < coordinates.length; i++) {
-            var c1 = olTransformProj(coordinates[i], projSrc, projDest);
+            var c1 = MathUtils.wrapLonLat(olTransformProj(coordinates[i], projSrc, projDest));
             c1[0] = Math.round(c1[0] * 1e8) / 1e8;
             c1[1] = Math.round(c1[1] * 1e8) / 1e8;
             pointCoords.push(c1);

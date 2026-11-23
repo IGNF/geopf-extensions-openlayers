@@ -1365,6 +1365,16 @@ class SearchEngine extends Control {
      */
     _setPosition (position, zoom) {
         var view = this.getMap().getView();
+        // multiWorld : centrer dans la copie du monde actuellement visible
+        var center = view.getCenter();
+        var worldExtent = view.getProjection().getExtent();
+        if (center && worldExtent && position) {
+            position = MathUtils.snapToNearestWorld(
+                position,
+                center,
+                worldExtent[2] - worldExtent[0]
+            );
+        }
         view.setCenter(position);
         view.setZoom(zoom);
     }

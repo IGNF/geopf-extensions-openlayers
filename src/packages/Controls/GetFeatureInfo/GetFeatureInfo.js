@@ -14,6 +14,7 @@ import WMTSSource from "ol/source/WMTS";
 import ImageWMSSource from "ol/source/ImageWMS";
 // import local
 import Utils from "../../Utils/Helper";
+import { wrapToWorld0 } from "../../Utils/WorldRepeat";
 import SelectorID from "../../Utils/SelectorID";
 import Logger from "../../Utils/LoggerByDefault";
 import Draggable from "../../Utils/Draggable";
@@ -400,7 +401,8 @@ class GetFeatureInfo extends Control {
                 this.getFeatureInfoPanelDiv.appendChild(accordionGroup);
                 this.map = e.map;
                 this.pixel = e.pixel;
-                this.coordinates = e.coordinate;
+                // Requête monde 0. Le marqueur reste sur le clic (e.coordinate).
+                this.coordinates = wrapToWorld0(e.coordinate, e.map.getView().getProjection());
                 this.res = e.map.getView().getResolution();
                 this.displayGetFeatureInfo();
             }
