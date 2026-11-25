@@ -42,13 +42,6 @@ input[id^="GPisochronOriginPointer"]:checked + .GPisochronOriginPointerImg {
 
 /* Alternative choice */
 
-div[id^=GPisochronChoice] {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-}
-
 /*
 input[id^=GPisochronChoiceAltChron] + .GPisochronChoiceAltImg {
   background-position: -56px 0;
@@ -70,33 +63,18 @@ input[id^=GPisochronChoiceAltDist]:checked + .GPisochronChoiceAltImg {
 /* Mode choice */
 
 .GPisochronFormMini {
-  max-height: 58px;
   overflow: hidden;
 }
 
-.GPisochronFormMini .GPpanelFooter button[id^="GPisochronReset-"],
-.GPisochronFormMini .GPpanelFooter input[id^="GPisochronSubmit-"],
-.GPisochronFormMini [id^="GPisochronPointLabelP-"],
-.GPisochronFormMini [id^="GPisochronChoice-"],
-.GPisochronFormMini [id^="GPisochronValueChronLabelP-"],
-.GPisochronFormMini [id^="GPisochronValueChron-"],
-.GPisochronFormMini [id^="GPisochronTransportChoice-"],
-.GPisochronFormMini [id^="GPisochronDirectionChoice-"],
-.GPisochronFormMini [id^="GPisoExclusions-"],
-.GPisochronFormMini .GPpanelFooter,
-.GPisochronFormMini button[id^="GPshowIsoExclusionsPicto-"] {
-    display: none;
-}
-
-.GPisochronFormMini {
-  max-height: 78px;
+.GPisochronFormMini > *:not(.selected) {
+  display: none;
 }
 
 .GPisochronFormMini .GPelementShow {
   color: var(--grey-200-850);
 }
 
-div[id^=GPisochronTransportChoice] > div {
+.GPisochronTransportChoice {
   display: inline-flex;
   gap: 1rem;
 }
@@ -116,26 +94,31 @@ button[id^="GPshowIsoExclusions"][aria-pressed="true"] {
   transform: translateY(-100%) rotateX(180deg);
 }
 
-button[id^=GPshowIsoExclusions][aria-pressed="false"] + div[id^=GPisoExclusions] {
+button[id^=GPshowIsoExclusions][aria-pressed="false"] + fieldset[id^=GPisoExclusions] {
   max-height: 0;
   opacity: 0;
   margin-bottom: 0;
 }
 
-button[id^=GPshowIsoExclusions][aria-pressed="true"] + div[id^=GPisoExclusions] {
-  display: block;
-  max-height: 76px;
+button[id^=GPshowIsoExclusions][aria-pressed="true"] + fieldset[id^=GPisoExclusions] {
+  max-height: 300px;
   opacity: 1;
   margin-bottom: 15px;
 }
 
-.GPisochronFormMini button[id^=GPshowIsoExclusions][aria-pressed="true"] + div[id^=GPisoExclusions] {
+.GPisochronFormMini button[id^=GPshowIsoExclusions][aria-pressed="true"] + fieldset[id^=GPisoExclusions] {
   display: none;
 }
 
-div[id^=GPisoExclusions] {
+fieldset[id^=GPisoExclusions] {
   transition: max-height 0.5s ease-in-out 0.25s, opacity 0.5s ease-in-out 0.25s, margin 0.3s ease-in-out 0.25s;
   overflow: hidden;
+}
+
+fieldset[id^=GPisoExclusions] > legend {
+  /* Keep the legend inside the animated height instead of the fieldset border. */
+  float: left;
+  width: 100%;
 }
 
 /* Reset picto */
@@ -163,6 +146,4 @@ div[id^=GPisoResultsPanel-].GPelementHidden  + .container-buttons-plugin,
 div[id^=GPisoResultsPanel-].gpf-hidden + .container-buttons-plugin {
   display: none;
 }
-
-
 

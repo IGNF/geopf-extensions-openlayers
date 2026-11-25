@@ -18,6 +18,13 @@ form[id^=GProuteForm] {
   padding: 15px;
 }
 
+fieldset.GProutePoints {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 .GProuteStageFlexInput {
   max-height: 28px;
   opacity: 1;
@@ -29,11 +36,18 @@ form[id^=GProuteForm] {
   overflow: hidden;
 }
 
-.GProutePointLabelP {
-  margin: 2px 0 5px 0;
+fieldset[id^=GProuteComputationChoice] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-.GProuteComputationLabel {
+fieldset[id^=GProuteComputationChoice] > legend {
+  padding: 0;
   margin-bottom: 5px;
 }
 
@@ -45,16 +59,14 @@ div[id^=GProuteStageAdd],
   font-size: 0;
 }
 
-.GProuteFormMini {
-  max-height: 58px;
-}
-
 .GProuteExclusionsOption {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAA4CAYAAADuMJi0AAAE60lEQVRYw+2YWWxUZRTHz/fd7y4zzAzTbaAdpgtQWsBiYVxYGpcEMCwRQkx48KHGhKg0WhESNYglwSUgWCKGTaMRBF4MwShpECUshlJqay2U0LCUwrRAp+0Ms997v8UnEl8Gp9Ppg2Z+bzfnn+/knHvud865AFmy/GfZVVZW/vvb9eduNn7Wc+ixGQ3/pm+UcO735VP3/rpsyc39TudHyXQ4maF61cqfZi97ocbjmVi6YGHNxoOeor3JtDskae606uqzFfPmvRqLxFg4EetIpiXJDJqqOHBwEEjIDyXjiVw4t/S1XD34TKs/MX+z4EEAgK0SwhPtjh+qq6tXBjGOtTY11a31D371qEygRxn3F3vWPVE1deN0G82T+m5BbCAIF+8lBttifLoFQeV0Wf7R7XbndsXird19/TUfAhgZeZ8H7eoXHYVWwzdBFTedsmhScfg0wfQPTRF7FfLdmBRRo4Q9RzTS8aeKRaeERAsC8TmRto30HJKqMCrhIcMUMuMcmADQJAQ5GJ4fqUMpFdE2mXgqOe+ewXhJFCHoJNJxu4omz7bhScVMyj/BeFPGUrlZIROOYRT4C0C0S0h8qUhHAAC2yGTFpUka7Skfx9/DZFZGnH2gEHxYwnc6EIguBYnDqtTzT3uDTFb3VdrEcZfWk5GUrgZxaI4QCyyaBAME04sUzTvL+dBD+xnOu8qiwrIgV1leEuf9JxhvTzu6Bgm5ThXkmNcciriaS8R2lXySTHvUqXb/lqsNp3Ju0qstx2Z7sfTZGuKsLAFkV4RK0J5k2s4wXYqYsO6WyYq0HUYN06c9XgX5SxcBuIt4gvJ40sJi7MaVONtVhGHmqIrmyLPzm29tqqf7ilwHUtHvVAjO9tksWbJkyQzehd7xo5ppUqW2tlbzLp380rhxitdB8q/4fD6acnsaKfX19c7Ji+QNJU/at7mmWaaZpklHNSY+irq6urzSxbBBy1PqEoJZfFdYoK2tjY2Jw4aGBpurJvKOmme8xWTTmgjq1DApAwAxoo6fIkieEnoF2+NvUDVqCekRiNIY4ip1eb1ekvEI39/65nOyO7hWtyWc0biOogkDooYOBhhujLEDAIZG4xADAH/4sH796y42ZWBNxBGrCEZMlNBNER1k8fBtdixwwzzY2toaTCtCr9drLXzKthgSiv7ztycfjvQo4O5fpWqR5eGojg2DCX1IBHUf3n2nSey5cOpCXzrfIXp6WZXXMtdYh8pi74JTL3WTijO913tDq2qXVxplA5vijgdTIvE4RO6zYOwO3t5/GhpbTrYMjnh78nq9VlwRfRmVRdewArM6rgJBTLbxErYEAL4J5vetwFJ4jghQxMNSSAyoO42Ttl0Xz58PpzXqS5JE7G5tqrAbM6lMiyljkimoQg1m8VhK7xrFwTpdixcbAaGz2/I+ekba0dzc/iDt3SIUCtH+Lv+lArWwjWPOOeMVJjI1imgRsyXKDas+mxoc83vKUfOC/dO2lst3M7LM3L816LdLBedlTIKU05lUNfJM2ZzEBZORXzuHrtk+vnSu63JGF9LhvmH9/uVAu8s9MUQFnWUSIweHFJ90z7qlq+n6L2OyAQMA918NdLrcrqgwoQrHyAHWqX49PDzMxsohAIAUuZ0YsHJHSO+G5t7eXj+k8ZsEjfCmsQGABgAmAMQBIJEdN7L8//gb3FshBGMt81oAAAAASUVORK5CYII=');
 }
 
 .GProuteModeLabel {
   display: block;
+  width: 100%;
+  padding: 0;
   text-align: center;
   margin-bottom: 5px;
 }
@@ -64,7 +76,6 @@ div[id^=GProuteStageAdd],
   width: 28px;
   height: 28px;
   cursor: pointer;
-  content-visibility: hidden;
 }
 
 .GProuteTransportImg:first-of-type {
@@ -88,12 +99,15 @@ input[id^=GProuteTransportPedestrian]:checked + .GProuteTransportImg {
   background-position: -196px 0;
 }
 
-div[id^=GProuteTransportChoice] input {
-  display: none;
-}
-
-div[id^=GProuteTransportChoice] .gpf-radio-btn-group {
+fieldset[id^=GProuteTransportChoice] {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  column-gap: 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 select[id^=GProuteComputationSelect] {
@@ -143,16 +157,17 @@ select[id^=GProuteComputationSelect] {
   transform: translateY(-100%);
 }
 
-.GProuteExclusionsLabel {
-  display: block;
+fieldset.GProuteExclusionsOptions > legend {
+  width: 100%;
+  padding: 0;
   text-align: center;
   margin-bottom: 8px;
-  margin-top: 8px;
+  margin-top: 0;
   font-weight: bold;
   line-height: 16px;
 }
 
-.GProuteExclusionsOptions {
+fieldset.GProuteExclusionsOptions {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: -webkit-box;
@@ -160,6 +175,12 @@ select[id^=GProuteComputationSelect] {
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  flex-wrap: wrap;
+  column-gap: 5px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .GProuteExclusionsOption {

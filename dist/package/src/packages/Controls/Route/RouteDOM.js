@@ -130,19 +130,35 @@ var RouteDOM = {
     },
 
     /**
-     * Create Point label
+     * Create the location points fieldset.
      *
-     * @param {String} innerHTML text to display
-     * @param {Boolean} display should the label be dsiplayed?
      * @returns {HTMLElement} DOM element
      */
-    _createRoutePanelFormPointLabel : function (innerHTML, display = true) {
-        var p = document.createElement("p");
-        p.innerHTML = innerHTML;
-        var classesToAdd = !display ? " GPelementHidden gpf-hidden" : "";
-        p.className = "GProutePointLabelP gpf-label fr-label" + classesToAdd;
+    _createRoutePanelFormPointsGroupElement : function () {
+        var fieldset = document.createElement("fieldset");
+        fieldset.className = "GProutePoints fr-fieldset";
+        var legend = document.createElement("legend");
+        legend.id = this._addUID("GProutePointsLegend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend fr-sr-only";
+        legend.textContent = "Départ, étapes et arrivée";
+        fieldset.setAttribute("aria-labelledby", legend.id);
+        fieldset.appendChild(legend);
+        return fieldset;
+    },
 
-        return p;
+    /**
+     * Create a location point fieldset element.
+     *
+     * @param {Boolean} display - whether to show the point
+     * @returns {HTMLElement} DOM element
+     */
+    _createRoutePanelFormPointFieldsetElement : function (display) {
+        var div = document.createElement("div");
+        div.className = "fr-fieldset__element";
+        if (!display) {
+            div.classList.add("GPelementHidden", "gpf-hidden");
+        }
+        return div;
     },
 
     /**
@@ -168,8 +184,8 @@ var RouteDOM = {
             var points = document.getElementsByClassName(self._addUID("GPlocationPoint"));
 
             // Must have at least two origin points
-            var start = points[0].childNodes[0].id;
-            var end = points[points.length - 1].childNodes[0].id;
+            var start = points[0].querySelector(":scope > [id^='GPlocationPoint_']").id;
+            var end = points[points.length - 1].querySelector(":scope > [id^='GPlocationPoint_']").id;
             var startID = ID.index(start);
             var endID = ID.index(end);
 
@@ -310,7 +326,7 @@ var RouteDOM = {
     _addRouteResultsStagesValuesElement : function (points) {
         document.getElementById(this._addUID("GProuteResultsStages")).innerHTML = "";
         for (var i = 0; i < points.length; i++) {
-            var tag = points[i].childNodes[0].id;
+            var tag = points[i].querySelector(":scope > [id^='GPlocationPoint_']").id;
             var id = ID.index(tag);
             if (document.getElementById(this._addUID("GPlocationPoint_" + id)).className === "GPflexInput GPlocationStageFlexInput gpf-flex") {
                 var resultStage = document.createElement("div");
@@ -868,22 +884,22 @@ var RouteDOM = {
         // contexte d'execution
         var context = this;
 
-        var divContainer = document.createElement("div");
+        var divContainer = document.createElement("fieldset");
         divContainer.id = this._addUID("GProuteTransportChoice");
+        divContainer.className = "fr-fieldset";
 
-        var label = document.createElement("label");
-        label.className = "GProuteModeLabel gpf-label fr-label";
-        label.innerHTML = "Choisir un mode de déplacement";
-        divContainer.appendChild(label);
+        var legend = document.createElement("legend");
+        legend.id = this._addUID("GProuteTransportLegend");
+        legend.className = "GProuteModeLabel fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Choisir un mode de déplacement";
+        divContainer.appendChild(legend);
 
-        var divRadio = document.createElement("div");
-        divRadio.className = "gpf-radio-btn-group";
         /* jshint -W083 */
         for (var i = 0; i < transports.length; i++) {
             var transport = transports[i];
 
             var div = document.createElement("div");
-            div.className = "GProuteTransportChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+            div.className = "gpf-radio-group fr-radio-group";
 
             if (transport === "Voiture") {
                 var inputCar = document.createElement("input");
@@ -909,7 +925,7 @@ var RouteDOM = {
                 div.appendChild(inputCar);
 
                 var labelCar = document.createElement("label");
-                labelCar.className = "GProuteTransportImg gpf-label fr-label";
+                labelCar.className = "GProuteTransportImg fr-label";
                 labelCar.htmlFor = this._addUID("GProuteTransportCar");
                 labelCar.title = "Voiture";
                 labelCar.innerHTML = "Voiture";
@@ -940,17 +956,18 @@ var RouteDOM = {
                 div.appendChild(inputPedestrian);
 
                 var labelPedestrian = document.createElement("label");
-                labelPedestrian.className = "GProuteTransportImg gpf-label fr-label";
+                labelPedestrian.className = "GProuteTransportImg fr-label";
                 labelPedestrian.htmlFor = this._addUID("GProuteTransportPedestrian");
                 labelPedestrian.title = "Piéton";
                 labelPedestrian.innerHTML = "Piéton";
                 div.appendChild(labelPedestrian);
             }
 
-            divRadio.appendChild(div);
+            var element = document.createElement("div");
+            element.className = "fr-fieldset__element fr-fieldset__element--inline";
+            element.appendChild(div);
+            divContainer.appendChild(element);
         }
-        divContainer.appendChild(divRadio);
-
         return divContainer;
     },
 
@@ -965,20 +982,17 @@ var RouteDOM = {
         // contexte d'execution
         var context = this;
 
-        var divContainer = document.createElement("div");
+        var divContainer = document.createElement("fieldset");
         divContainer.id = this._addUID("GProuteComputationChoice");
-        divContainer.className = "fr-mt-2w";
+        divContainer.className = "fr-fieldset";
 
-        var label = document.createElement("label");
-        label.className = "GProuteComputationLabel gpf-label fr-label";
-        label.innerHTML = "Mode de calcul";
-        divContainer.appendChild(label);
-
-        var divRadio = document.createElement("div");
-        divRadio.className = "gpf-radio-btn-group";
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Mode de calcul";
+        divContainer.appendChild(legend);
 
         var div = document.createElement("div");
-        div.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        div.className = "fr-radio-group";
         div.id = this._addUID("GProuteComputeFastest");
         var inputFastest = document.createElement("input");
         inputFastest.id = this._addUID("GProuteComputationFastest");
@@ -1006,10 +1020,13 @@ var RouteDOM = {
         labelFastest.title = "Plus rapide";
         labelFastest.innerHTML = "Plus rapide";
         div.appendChild(labelFastest);
-        divRadio.appendChild(div);
+        var fastestElement = document.createElement("div");
+        fastestElement.className = "fr-fieldset__element fr-fieldset__element--inline";
+        fastestElement.appendChild(div);
+        divContainer.appendChild(fastestElement);
 
         var div2 = document.createElement("div");
-        div2.className = "GProuteComputationChoice gpf-flex gpf-radio-group fr-radio-group fr-my-1w";
+        div2.className = "fr-radio-group";
         div2.id = this._addUID("GProuteComputeShortest");
         var inputShortest = document.createElement("input");
         inputShortest.id = this._addUID("GProuteComputationShortest");
@@ -1041,8 +1058,10 @@ var RouteDOM = {
         labelShortest.innerHTML = "Plus court";
         div2.appendChild(labelShortest);
 
-        divRadio.appendChild(div2);
-        divContainer.appendChild(divRadio);
+        var shortestElement = document.createElement("div");
+        shortestElement.className = "fr-fieldset__element fr-fieldset__element--inline";
+        shortestElement.appendChild(div2);
+        divContainer.appendChild(shortestElement);
 
         return divContainer;
     },
@@ -1096,47 +1115,36 @@ var RouteDOM = {
     },
 
     /**
-     * Create Container to Exclusions
-     *
-     * @returns {HTMLElement} DOM element
-     */
-    _createRoutePanelFormExclusionsElement : function (prettify) {
-        var div = document.createElement("div");
-        div.id = this._addUID("GProuteExclusions");
-        div.className = "fr-mt-2w";
-
-        if (prettify) {
-            div.style.display = "none";
-        }
-        var label = document.createElement("label");
-        label.className = "GProuteExclusionsLabel fr-label";
-        label.innerHTML = "Passages autorisés";
-        div.appendChild(label);
-
-        // div.appendChild(this._createRoutePanelFormExclusionOptionsElement());
-
-        return div;
-    },
-
-    /**
      * Create Exclusions Options
      * see event !
      * FIXME event not useful
-     * @param {Object[]} exclusions - exclusions
+     * @param {Object} exclusions - exclusions
+     * @param {Boolean} prettify - option to hide exclusions for pedestrians
      *
      * @returns {HTMLElement} DOM element
      */
-    _createRoutePanelFormExclusionOptionsElement : function (exclusions) {
+    _createRoutePanelFormExclusionOptionsElement : function (exclusions, prettify) {
         // contexte d'execution
         var context = this;
 
-        var div = document.createElement("div");
-        div.className = "GProuteExclusionsOptions gpf-flex fr-checkbox-group fr-m-1w";
+        var fieldset = document.createElement("fieldset");
+        fieldset.id = this._addUID("GProuteExclusions");
+        fieldset.className = "GProuteExclusionsOptions fr-fieldset";
+        if (prettify) {
+            fieldset.style.display = "none";
+        }
+
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Passages autorisés";
+        fieldset.appendChild(legend);
 
         /* jshint -W083 */
         for (var value in exclusions) {
             if (exclusions.hasOwnProperty(value)) {
                 var status = exclusions[value];
+                var div = document.createElement("div");
+                div.className = "fr-checkbox-group";
                 switch (value) {
                     case "toll":
                         var inputToll = document.createElement("input");
@@ -1160,7 +1168,7 @@ var RouteDOM = {
                         div.appendChild(inputToll);
 
                         var labelToll = document.createElement("label");
-                        labelToll.className = "GProuteExclusionsOption";
+                        labelToll.className = "GProuteExclusionsOption fr-label";
                         labelToll.htmlFor = this._addUID("GProuteExclusionsToll");
                         labelToll.innerHTML = "Péages";
                         div.appendChild(labelToll);
@@ -1188,7 +1196,7 @@ var RouteDOM = {
                         div.appendChild(inputTunnel);
 
                         var labelTunnel = document.createElement("label");
-                        labelTunnel.className = "GProuteExclusionsOption";
+                        labelTunnel.className = "GProuteExclusionsOption fr-label";
                         labelTunnel.htmlFor = this._addUID("GProuteExclusionsTunnel");
                         labelTunnel.innerHTML = "Tunnels";
                         div.appendChild(labelTunnel);
@@ -1216,16 +1224,22 @@ var RouteDOM = {
                         div.appendChild(inputBridge);
 
                         var labelBridge = document.createElement("label");
-                        labelBridge.className = "GProuteExclusionsOption";
+                        labelBridge.className = "GProuteExclusionsOption fr-label";
                         labelBridge.htmlFor = this._addUID("GProuteExclusionsBridge");
                         labelBridge.innerHTML = "Ponts";
                         div.appendChild(labelBridge);
                         break;
                 }
+                if (div.querySelector("input")) {
+                    var element = document.createElement("div");
+                    element.className = "fr-fieldset__element fr-fieldset__element--inline";
+                    element.appendChild(div);
+                    fieldset.appendChild(element);
+                }
             }
         }
 
-        return div;
+        return fieldset;
     },
 
     // ################################################################### //

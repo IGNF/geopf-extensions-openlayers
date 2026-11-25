@@ -11,7 +11,7 @@ declare namespace LayerImportDOM {
     function _createImportWaitingElement(): HTMLElement;
     function _createImportStaticParamsContainer(currentType: string): HTMLElement;
     function _createStaticNameLabel(): HTMLElement;
-    function _createStaticModeChoiceDiv(): HTMLElement;
+    function _createStaticModeChoiceFieldset(): HTMLElement;
     function _createStaticLocalChoiceDiv(): HTMLElement;
     function _createStaticUrlChoiceDiv(): HTMLElement;
     function _createStaticLocalInputDiv(): HTMLElement;

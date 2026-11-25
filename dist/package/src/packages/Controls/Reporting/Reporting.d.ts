@@ -208,7 +208,16 @@ declare class Reporting extends Control {
     /** @private */
     private drawingReportingContainer;
     step: any;
-    stepContainer: {
+    stepContainer: ({
+        name: string;
+        footer: boolean;
+        header: boolean;
+        next: number;
+        nextLabel: string;
+        prev: number;
+        action: null;
+        container: null;
+    } | {
         name: string;
         footer: boolean;
         header: boolean;
@@ -216,7 +225,8 @@ declare class Reporting extends Control {
         prev: number;
         action: null;
         container: null;
-    }[] | undefined;
+        nextLabel?: undefined;
+    })[] | undefined;
     /** {Object} raw data */
     data: any;
     /** {Array} specify some events listener */
@@ -265,7 +275,7 @@ declare class Reporting extends Control {
      * This method sets the current step of the reporting process.
      * It updates the visibility of the step containers,
      * activates the corresponding IoC action,
-     * and updates the reporting title and footer display.
+     * and updates the reporting title, footer display and next button label.
      * It is typically called when the user navigates to a different step in the reporting process,
      * such as moving from the input step to the form step or the send step.
      */
@@ -366,14 +376,8 @@ declare class Reporting extends Control {
      */
     private onEntryFormDescReportingChange;
     /**
-     * Handle the change event on the "Send Mail Reporting" input element.
-     * @param {*} e - The change event object.
-     * @private
-     */
-    private onEntrySendMailReportingChange;
-    /**
      * Handle the click event on the "Send Reporting" button.
-     * @param {*} e - {mail, name, desc, theme, drawing, location}
+     * @param {*} e - Event data containing the validated email address.
      * @fires reporting:send
      * @description
      * This method is called when the user clicks on the "Send Reporting" button.

@@ -343,10 +343,9 @@ declare class Route extends Control {
      */
     private onRouteComputationSubmit;
     /**
-     * this method is called by event 'click' on 'GPlocationOriginLabel' label
-     * and set 'GProuteForm' CSS class to "" (normal)
+     * Restore the route form when a location is cleared.
      *
-     * @param {Object} routeControl - context : route Control (this)
+     * @param {Object} locationSelector - selected location input
      * @private
      */
     private onRouteOriginLabelClick;

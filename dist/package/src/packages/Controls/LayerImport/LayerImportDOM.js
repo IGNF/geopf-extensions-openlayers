@@ -152,7 +152,7 @@ var LayerImportDOM = {
 
         var div = document.createElement("div");
         div.id = this._addUID("GPimportTypeLine");
-        div.className = "GPimportInputLine";
+        div.className = "GPimportInputLine fr-input-group";
 
         var label = document.createElement("label");
         label.id = this._addUID("GPimportTypeLabel");
@@ -253,7 +253,7 @@ var LayerImportDOM = {
         div.id = this._addUID("GPimportStaticParams");
         if (currentType === "KML" || currentType === "GPX" || currentType === "GeoJSON" || currentType === "MAPBOX") {
             // marge basse supprimée sur la zone de glisser/déposer (option dragAndDropUI), marge haute conservée
-            div.className = "GPelementVisible gpf-visible fr-mt-4w" + ((this.options && this.options.dragAndDropUI) ? "" : " fr-mb-4w");
+            div.className = "GPelementVisible gpf-visible";
         } else {
             div.className = "GPelementHidden gpf-hidden";
         }
@@ -268,7 +268,7 @@ var LayerImportDOM = {
      */
     _createStaticNameLabel : function () {
         var div = document.createElement("div");
-        div.className = "GPimportInputLine fr-mb-1w";
+        div.className = "GPimportInputLine fr-input-group";
 
         var label = document.createElement("label");
         label.className = "GPlabel gpf-label fr-label";
@@ -291,11 +291,17 @@ var LayerImportDOM = {
      *
      * @returns {HTMLElement} DOM element
      */
-    _createStaticModeChoiceDiv : function () {
-        var div = document.createElement("div");
-        div.id = this._addUID("GPimportChoice");
-        div.className = "fr-my-1w";
-        return div;
+    _createStaticModeChoiceFieldset : function () {
+        var fieldset = document.createElement("fieldset");
+        fieldset.id = this._addUID("GPimportChoice");
+        fieldset.className = "fr-fieldset";
+
+        var legend = document.createElement("legend");
+        legend.className = "fr-fieldset__legend--regular fr-fieldset__legend";
+        legend.textContent = "Mode d'import";
+        fieldset.appendChild(legend);
+
+        return fieldset;
     },
 
     /**
@@ -313,18 +319,18 @@ var LayerImportDOM = {
         input.type = "radio";
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
-                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-mb-1w";
+                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-upload-group";
                 document.getElementById(context._addUID("GPimportValueUrl")).className = "GPelementHidden gpf-hidden";
                 context._onStaticImportTypeChange(e);
             });
         } else if (input.appendChild) {
             input.appendChild("onchange", function () {
-                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-mb-1w";
+                document.getElementById(context._addUID("GPimportValueLocal")).className = "GPimportInputLine fr-upload-group";
                 document.getElementById(context._addUID("GPimportValueUrl")).className = "GPelementHidden gpf-hidden";
                 context._onStaticImportTypeChange();
             });
         }
-        input.name = "GPimportChoiceMode";
+        input.name = this._addUID("GPimportChoiceMode");
         input.value = "local";
         input.checked = true;
         input.id = this._addUID("GPimportChoiceAltLocal");
@@ -337,7 +343,10 @@ var LayerImportDOM = {
         label.title = "par fichier local";
         div.appendChild(label);
 
-        return div;
+        var element = document.createElement("div");
+        element.className = "fr-fieldset__element fr-fieldset__element--inline";
+        element.appendChild(div);
+        return element;
     },
 
     /**
@@ -355,19 +364,19 @@ var LayerImportDOM = {
         input.type = "radio";
         if (input.addEventListener) {
             input.addEventListener("change", function (e) {
-                document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportInputLine";
+                document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportInputLine fr-input-group";
                 document.getElementById(context._addUID("GPimportValueLocal")).className = "GPelementHidden gpf-hidden";
                 context._onStaticImportTypeChange(e);
             });
         } else if (input.appendChild) {
             input.appendChild("onchange", function () {
-                document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportInputLine";
+                document.getElementById(context._addUID("GPimportValueUrl")).className = "GPimportInputLine fr-input-group";
                 document.getElementById(context._addUID("GPimportValueLocal")).className = "GPelementHidden gpf-hidden";
                 context._onStaticImportTypeChange();
             });
         }
         input.id = this._addUID("GPimportChoiceAltUrl");
-        input.name = "GPimportChoiceMode";
+        input.name = this._addUID("GPimportChoiceMode");
         input.value = "url";
         input.checked = false;
         div.appendChild(input);
@@ -379,7 +388,10 @@ var LayerImportDOM = {
         label.title = "par URL";
         div.appendChild(label);
 
-        return div;
+        var element = document.createElement("div");
+        element.className = "fr-fieldset__element fr-fieldset__element--inline";
+        element.appendChild(div);
+        return element;
     },
 
     /**
@@ -390,7 +402,7 @@ var LayerImportDOM = {
     _createStaticLocalInputDiv : function () {
         var div = document.createElement("div");
         div.id = this._addUID("GPimportValueLocal");
-        div.className = "GPimportInputLine";
+        div.className = "GPimportInputLine fr-upload-group";
         return div;
     },
 
@@ -401,7 +413,7 @@ var LayerImportDOM = {
      */
     _createStaticLocalInputLabel : function () {
         var label = document.createElement("label");
-        label.className = "GPlabel gpf-label fr-label fr-mb-1w";
+        label.className = "GPlabel gpf-label fr-label";
         label.htmlFor = this._addUID("GPimportFile");
         label.innerHTML = "Fichier local";
         label.title = "Fichier local";
@@ -567,7 +579,7 @@ var LayerImportDOM = {
      */
     _createServiceUrlDiv : function () {
         var div = document.createElement("div");
-        div.className = "GPimportInputLine";
+        div.className = "GPimportInputLine fr-input-group";
         return div;
     },
 

@@ -18,6 +18,7 @@ declare namespace MousePositionDOM {
     function _createMousePositionSettingsSystemsElement(systems: any[]): HTMLElement;
     function _createMousePositionSettingsUnitsElement(units: any[]): HTMLElement;
     function _resetLabelElements(currentProjectionType?: string): void;
+    function _setUnitText(element: HTMLElement, unit: string): void;
     function _resetUnitElements(currentProjectionUnits: string): void;
     function _resetCoordinateElements(editCoordinates: boolean, currentProjectionType: string, currentProjectionUnits: string): void;
     function _setEditMode(editing: boolean): void;

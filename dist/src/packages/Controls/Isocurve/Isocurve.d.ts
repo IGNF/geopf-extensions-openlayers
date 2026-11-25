@@ -421,6 +421,12 @@ declare class Isocurve extends Control {
      */
     private onIsoModeDirectionChange;
     /**
+     * Update the location label to match the selected direction.
+     *
+     * @private
+     */
+    private _updateIsoDirectionLabel;
+    /**
      * this method is called by event 'change' on 'GPIsoExclusionsToll'
      * or 'GPIsoeExclusionsTunnel' or 'GPIsoExclusionsBridge' tag input
      * (cf. this._createIsoPanelFormExclusionOptionsElement).

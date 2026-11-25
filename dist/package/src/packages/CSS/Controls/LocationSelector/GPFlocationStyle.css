@@ -26,6 +26,11 @@
 }
 .GPlocationStageAdd {
   background-position: -56px center;
+  font-size: 0;
+}
+
+.GPlocationStageAddContainer:not(.GPelementHidden) {
+  display: contents;
 }
 
 [id*="GPlocationOriginPointer"] + .GPlocationOriginPointerImg {

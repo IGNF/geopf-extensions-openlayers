@@ -1,10 +1,10 @@
+dialog[id^="GPisochronPanel-"] {
+  width: 380px;
+}
+
 .gpf-btn-icon-isocurve::after {
   -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiPgogICAgPHBhdGgKICAgICAgICBkPSJNMTYuOTQ5NyAxNS45NDk3QzE5LjY4MzQgMTMuMjE2MSAxOS42ODM0IDguNzgzOTIgMTYuOTQ5NyA2LjA1MDI1QzE0LjIxNjEgMy4zMTY1OCA5Ljc4MzkyIDMuMzE2NTggNy4wNTAyNSA2LjA1MDI1QzQuMzE2NTggOC43ODM5MiA0LjMxNjU4IDEzLjIxNjEgNy4wNTAyNSAxNS45NDk3TDEyIDIwLjg5OTVMMTYuOTQ5NyAxNS45NDk3Wk0xMiAyMy43Mjc5TDUuNjM2MDQgMTcuMzY0QzIuMTIxMzIgMTMuODQ5MiAyLjEyMTMyIDguMTUwNzYgNS42MzYwNCA0LjYzNjA0QzkuMTUwNzYgMS4xMjEzMiAxNC44NDkyIDEuMTIxMzIgMTguMzY0IDQuNjM2MDRDMjEuODc4NyA4LjE1MDc2IDIxLjg3ODcgMTMuODQ5MiAxOC4zNjQgMTcuMzY0TDEyIDIzLjcyNzlaTTEzIDExSDE3VjEzSDExVjZIMTNWMTFaIj4KICAgIDwvcGF0aD4KPC9zdmc+') center no-repeat;
   mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiPgogICAgPHBhdGgKICAgICAgICBkPSJNMTYuOTQ5NyAxNS45NDk3QzE5LjY4MzQgMTMuMjE2MSAxOS42ODM0IDguNzgzOTIgMTYuOTQ5NyA2LjA1MDI1QzE0LjIxNjEgMy4zMTY1OCA5Ljc4MzkyIDMuMzE2NTggNy4wNTAyNSA2LjA1MDI1QzQuMzE2NTggOC43ODM5MiA0LjMxNjU4IDEzLjIxNjEgNy4wNTAyNSAxNS45NDk3TDEyIDIwLjg5OTVMMTYuOTQ5NyAxNS45NDk3Wk0xMiAyMy43Mjc5TDUuNjM2MDQgMTcuMzY0QzIuMTIxMzIgMTMuODQ5MiAyLjEyMTMyIDguMTUwNzYgNS42MzYwNCA0LjYzNjA0QzkuMTUwNzYgMS4xMjEzMiAxNC44NDkyIDEuMTIxMzIgMTguMzY0IDQuNjM2MDRDMjEuODc4NyA4LjE1MDc2IDIxLjg3ODcgMTMuODQ5MiAxOC4zNjQgMTcuMzY0TDEyIDIzLjcyNzlaTTEzIDExSDE3VjEzSDExVjZIMTNWMTFaIj4KICAgIDwvcGF0aD4KPC9zdmc+') center no-repeat;
-}
-
-.gpf-flex-isocurve {
-    justify-content: unset;
 }
 
 .gpf-btn-icon-isocurve-reset {
@@ -20,26 +20,9 @@
   margin-top: 0;
 }
 
-div[id^="GPisochronChoice"] {
-  justify-content: left;
-  gap: 1em;
-}
-
-div[id^=GPisochronTransportChoice] > div {
-  margin-top: 0.5rem;
-}
-
-div[id^=GPisochronValueChron],
-div[id^=GPisochronValueDist] {
-  width: 281px;
-}
-
-.GPflexInput > input[id^="GPisochronValueChronInput2"] {
-  margin-top: 0;
-}
-
-.GPisoExclusionsOptions {
-  gap: 1rem;
+[id^="GPisochronValueChron-"] > .fr-fieldset__element {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 [id^=GPisochronForm-] > .GPpanelFooter {

@@ -1,8 +1,11 @@
 export default LocationSelectorDOM;
 declare namespace LocationSelectorDOM {
     function _addUID(id: string): string;
+    function _getLocationAddPointContainer(): HTMLElement | null;
     function _createMainContainerElement(): HTMLElement;
     function _createLocationPointElement(id: number, display: number): HTMLElement;
+    function _createLocationInputLabelElement(id: number, text: string): HTMLElement;
+    function _setLocationPointVisibility(id: number | string, visible: boolean): void;
     function _createLocationPointLabelElement(id: number, text: string): HTMLElement;
     function _createLocationAutoCompleteteInputElement(id: number): HTMLElement;
     function _createLocationCoordinateInputElement(id: number): HTMLElement;

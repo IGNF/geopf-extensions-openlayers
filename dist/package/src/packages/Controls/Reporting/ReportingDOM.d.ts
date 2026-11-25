@@ -7,7 +7,7 @@ declare namespace ReportingDOM {
     function _createReportingPanelDivElement(): HTMLDivElement;
     function _createReportingPanelFooterElement(): HTMLElement;
     function _createReportingButtonAnnulerFooterElement(): HTMLButtonElement;
-    function _createReportingButtonSuivantFooterElement(): HTMLButtonElement;
+    function _createReportingButtonSuivantFooterElement(label: any): HTMLButtonElement;
     function _createReportingPanelInputElement(): HTMLElement;
     function _createReportingPanelFormElement(thematics: any[]): HTMLElement;
     function _createReportingSubmitFormElement(): HTMLElement;

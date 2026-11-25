@@ -15,8 +15,19 @@ div[id^="GPimportTypeLine-"] {
   margin-bottom: 15px;
 }
 
-div[id^="GPimportChoice-"] {
-  margin-top: 5px;
+fieldset[id^="GPimportChoice-"] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset[id^="GPimportChoice-"] > legend {
+  width: 100%;
+  padding: 0;
   margin-bottom: 5px;
 }
 

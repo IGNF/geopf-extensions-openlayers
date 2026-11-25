@@ -38,7 +38,7 @@ class LocationSelector extends Control {
      * @param {Object} [options.tag] - tag options
      * @param {Number} [options.tag.id = 1] - order id number in a locations group, in case several LocationSelector are used. For instance in route case : departure tag id should be 0, arrival tag id should be 1, and other ones : 2, 3, ...
      * @param {Number} [options.tag.groupId = null] - locationSelector global component id (in case locationSelector is called by another graphic component, e.g. route control)
-     * @param {String} [options.tag.label] - text to display in component (e.g. "Departure"). Default is ">"
+     * @param {String} [options.tag.label] - label displayed above the location input (e.g. "Departure"). Default is ">"
      * @param {Object} [options.tag.markerOpts] - options to use your own marker. Default is a lightOrange marker.
      * @param {String} [options.tag.markerOpts.url] - marker base64 encoded url (ex "data:image/png;base64,...""). Mandatory for a custom marker
      * @param {Array} [options.tag.markerOpts.offset] - Offsets in pixels used when positioning the overlay. The first element in the array is the horizontal offset. A positive value shifts the overlay right. The second element in the array is the vertical offset. A positive value shifts the overlay down. Default is [0, 0]. (see {@link http://openlayers.org/en/latest/apidoc/ol.Overlay.html ol.Overlay})
@@ -133,6 +133,9 @@ class LocationSelector extends Control {
         /** container du label du point 
          * @private*/
         this._buttonLabel = null;
+        /** label associé au champ de saisie
+         * @private */
+        this._inputLabel = null;
 
         /** container de la saisi de l'autocompletion  
          * @private */
@@ -276,6 +279,17 @@ class LocationSelector extends Control {
         olObservableUnByKey(this.listenerKey);
     }
 
+    /**
+     * Set the label associated with the location input.
+     *
+     * @param {String} label - label text
+     */
+    setTagLabel (label) {
+        this.options.tag.label = label;
+        this._inputLabel.textContent = label;
+        this._buttonLabel.textContent = label;
+    }
+
     // ################################################################### //
     // ##################### init component (private) #################### //
     // ################################################################### //
@@ -291,6 +305,10 @@ class LocationSelector extends Control {
 
         // create main container
         var container = this._createMainContainerElement();
+
+        // label
+        this._inputLabel = this._createLocationInputLabelElement(id, this.options.tag.label);
+        container.appendChild(this._inputLabel);
 
         var inputs = this._inputsContainer = this._createLocationPointElement(id, this.options.tag.display);
         container.appendChild(inputs);
@@ -313,7 +331,10 @@ class LocationSelector extends Control {
 
         if (this.options.tag.addOption) {
             var _inputAddStage = this._addPointElement = this._createLocationAddPointElement();
-            inputs.appendChild(_inputAddStage);
+            var addStageContainer = document.createElement("div");
+            addStageContainer.className = "GPlocationStageAddContainer fr-col-12 fr-grid-row fr-grid-row--right fr-mt-2w";
+            addStageContainer.appendChild(_inputAddStage);
+            inputs.appendChild(addStageContainer);
         }
 
         if (this.options.tag.removeOption) {
