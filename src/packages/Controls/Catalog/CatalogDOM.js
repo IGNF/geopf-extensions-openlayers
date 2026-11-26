@@ -176,11 +176,11 @@ var CatalogDOM = {
         <!-- https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/barre-de-recherche -->
         <div class="catalog-container-search-global fr-mb-1w">
             <div class="fr-search-bar" id="catalog-header-search-global" role="search" style="justify-content: center;">
-                <label class="fr-label" for="catalog-input-search-global">
+                <label class="fr-label fr-sr-only" for="catalog-input-search-global">
                     Recherche
                 </label>
                 <div class="input-wrapper" style="width:100%;">
-                    <input class="fr-input" placeholder="${label}" type="text" id="catalog-input-search-global" name="search-input" incremental>
+                    <input class="GPinput fr-input" placeholder="${label}" type="text" id="catalog-input-search-global" name="search-input" incremental>
                     <button type="button" id="catalog-button-reset-search-global" class="clear-btn" aria-label="Effacer le texte">
                         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-opacity="0.8"/>
@@ -189,7 +189,7 @@ var CatalogDOM = {
                         </svg>
                     </button>
                 </div>
-                <button id="catalog-button-search-global" class="fr-btn" title="${label}">
+                <button id="catalog-button-search-global" class="GPsubmit fr-btn" title="${label}">
                     Rechercher
                 </button>
             </div>
@@ -309,11 +309,11 @@ var CatalogDOM = {
             <!-- barre de recherche spécifique à la catégorie -->
             <div id="catalog-container-search-specific" class="fr-tabs__list ${className}" style="padding:10px;justify-content:center;">
                 <div class="fr-search-bar" id="catalog-header-search-specific" role="search" style="width:100%;">
-                    <label class="fr-label" for="catalog-input-search-specific">
+                    <label class="fr-label fr-sr-only" for="catalog-input-search-specific">
                         Recherche dans la catégorie
                     </label>
                     <div class="input-wrapper" style="width:100%">
-                        <input class="fr-input" placeholder="${title}" type="text" id="catalog-input-search-specific" name="search-input-specific" incremental>
+                        <input class="GPinput fr-input" placeholder="${title}" type="text" id="catalog-input-search-specific" name="search-input-specific" incremental>
                         <button type="button" id="catalog-button-reset-search-specific" class="clear-btn" aria-label="Effacer le texte">
                             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-opacity="0.8"/>
@@ -322,7 +322,7 @@ var CatalogDOM = {
                             </svg>
                         </button>
                     </div>
-                    <button id="catalog-button-search-specific" class="fr-btn" title="${title}">
+                    <button id="catalog-button-search-specific" class="GPsubmit fr-btn" title="${title}">
                         Rechercher
                     </button>
                 </div>
