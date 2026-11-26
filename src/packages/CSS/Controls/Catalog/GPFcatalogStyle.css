@@ -57,10 +57,6 @@ button[id^="GPshowCatalogPicto-"][aria-pressed="true"] + dialog {
 .GPlabelActive:hover {
     background-color:  #ccc;
 }
-.GPcatalogButtonSection {
-    border: unset;
-    background: unset;
-}
 button[aria-expanded="true"].GPcatalogButtonSection span.GPshowCatalogAdvancedTools {
     -webkit-transform: rotateX(180deg);
     transform: rotateX(180deg);
@@ -150,6 +146,67 @@ dialog[id^="GPcatalogPanel-"] .fr-search-bar > .GPsubmit {
     width: auto;
     margin: 0;
     padding: 0 10px;
+}
+
+/* sous-catégories : boutons radio sur une ligne */
+dialog[id^="GPcatalogPanel-"] .catalog-container-tabs .fr-fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 8px 10px;
+    border: none;
+    border-bottom: 1px solid #CCC;
+}
+
+dialog[id^="GPcatalogPanel-"] .catalog-container-tabs .fr-radio-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+dialog[id^="GPcatalogPanel-"] .catalog-container-tabs .fr-radio-group > input[type="radio"] {
+    margin: 0;
+    accent-color: #366291;
+}
+
+/* regroupements (sections) */
+dialog[id^="GPcatalogPanel-"] .fr-accordion {
+    border-bottom: 1px solid #CCC;
+}
+
+dialog[id^="GPcatalogPanel-"] .fr-accordion__title {
+    margin: 0;
+    font-size: inherit;
+}
+
+dialog[id^="GPcatalogPanel-"] .GPcatalogButtonSection {
+    position: relative;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    min-height: 32px;
+    padding: 2px 40px 2px 4px;
+    border: none;
+    background: none;
+    font: inherit;
+    font-weight: bold;
+    text-align: left;
+    color: #366291;
+    cursor: pointer;
+}
+
+dialog[id^="GPcatalogPanel-"] .GPcatalogButtonSection:hover {
+    background-color: #F1F1F1;
+}
+
+dialog[id^="GPcatalogPanel-"] .GPcatalogButtonSection > .GPshowCatalogAdvancedTools {
+    flex: none;
+}
+
+/* la largeur en ligne du titre est remplacée par la base flex */
+dialog[id^="GPcatalogPanel-"] .GPcatalogButtonSection > .catalog-section-icon {
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 /* couches */
