@@ -78,3 +78,70 @@ button[aria-expanded="true"].GPcatalogButtonSection span.GPshowCatalogAdvancedTo
 #header-search > label {
     display: none;
 }
+
+/*****************************************************************/
+/* Contenu du panneau                                            */
+/* Règles limitées au panneau du catalogue (classes fr-* et      */
+/* gpf-* partagées avec d'autres widgets) ; les primitives       */
+/* communes (GPinput, GPsubmit, fr-sr-only, focus) restent dans  */
+/* GPFgeneralWidget.css.                                         */
+/*****************************************************************/
+
+/* recherche dans une catégorie sans option search : masquée par le widget avec .gpf-hidden */
+dialog[id^="GPcatalogPanel-"] #catalog-container-search-specific.gpf-hidden {
+    display: none;
+}
+
+/* barres de recherche (globale et par catégorie) */
+dialog[id^="GPcatalogPanel-"] .catalog-container-search-global {
+    padding: 10px 10px 0;
+}
+
+dialog[id^="GPcatalogPanel-"] .fr-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+dialog[id^="GPcatalogPanel-"] .fr-search-bar .input-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+dialog[id^="GPcatalogPanel-"] .fr-search-bar .input-wrapper > input {
+    width: 100%;
+    height: 28px;
+    padding-right: 26px;
+}
+
+dialog[id^="GPcatalogPanel-"] .fr-search-bar .clear-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #366291;
+    cursor: pointer;
+}
+
+dialog[id^="GPcatalogPanel-"] .fr-search-bar .clear-btn svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+dialog[id^="GPcatalogPanel-"] .fr-search-bar input:placeholder-shown + .clear-btn {
+    display: none;
+}
+
+dialog[id^="GPcatalogPanel-"] .fr-search-bar > .GPsubmit {
+    flex: none;
+    width: auto;
+    margin: 0;
+    padding: 0 10px;
+}
