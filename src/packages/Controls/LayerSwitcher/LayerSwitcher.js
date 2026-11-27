@@ -553,7 +553,7 @@ class LayerSwitcher extends Control {
                 var nameDiv = document.getElementById(this._addUID("GPname_ID_" + id));
                 if (nameDiv) {
                     nameDiv.innerHTML = config.title;
-                    nameDiv.title = config.description || config.title;
+                    nameDiv.title = config.title || config.description;
                 }
             }
             // set new title in layer div
@@ -2454,7 +2454,8 @@ class LayerSwitcher extends Control {
                 this._layers[id].description = value;
                 var nameDiv = document.getElementById(this._addUID("GPname_ID_" + id));
                 if (nameDiv) {
-                    nameDiv.title = value;
+                    // le titre reste prioritaire pour le survol
+                    nameDiv.title = this._layers[id].title || value;
                 }
                 break;
             case "producer":
@@ -2776,13 +2777,10 @@ class LayerSwitcher extends Control {
                         layerOptions.inRange = true;
                         layerDiv = document.getElementById(this._addUID("GPlayerSwitcher_ID_" + id));
                         layerDiv.classList.remove("outOfRange");
-                        var infos = this.getLayerInfo(layer);
-                        var title = infos._title;
-                        var description = infos._description;
                         var label = document.getElementById(this._addUID("GPname_ID_" + id));
                         if (label) {
                             // on remet le label à jour
-                            label.title =  description || title;
+                            label.title = layerOptions.title || layerOptions.description;
                         }
                     } else if (!this.isInRange(layer, map) && layerOptions.inRange) {
                         layerOptions.inRange = false;
