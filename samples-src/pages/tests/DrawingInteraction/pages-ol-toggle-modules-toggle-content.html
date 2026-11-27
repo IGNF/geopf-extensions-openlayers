@@ -1,0 +1,97 @@
+{{#extend "ol-sample-modules-layout"}}
+
+{{#content "vendor"}}
+        
+        <link rel="stylesheet" href="{{ baseurl }}/dist/modules/GpfExtOlToggle.css" />
+        <script src="{{ baseurl }}/dist/modules/GpfExtOlToggleContent.js"></script>
+{{/content}}
+
+{{#content "head"}}
+        <title>Sample openlayers Toggle</title>
+{{/content}}
+
+{{#content "style"}}
+        <style>
+            div#map {
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+{{/content}}
+
+{{#content "body"}}
+            <h2>Outil de dessin avec style</h2>
+            <!-- map -->
+            <div id="map">
+            </div>
+
+            <div class="fr-m-2v">
+                <button id="toggle-button" class="fr-btn fr-btn--secondary">Toggle le toggle</button>
+                <button id="force-active" class="fr-btn fr-btn--secondary">Forcer activation toggle</button>
+                <button id="force-deactive" class="fr-btn fr-btn--secondary">Forcer désactivation toggle</button>
+            </div>
+{{/content}}
+
+{{#content "js"}}
+            <script type="text/javascript">
+                var map;
+                window.onload = function() {
+                    // on cache l'image de chargement du Géoportail.
+                    document.getElementById('map').style.backgroundImage = 'none';
+
+                    let source = new ol.source.Vector({})
+                    let layer = new ol.layer.Vector({
+                        source: source
+                    })
+					// 1. Création de la map
+                    map = new ol.Map({
+                        target : "map",
+                        view : new ol.View({
+                            center : [288074.8449901076, 6247982.515792289],
+                            zoom : 6
+                        }),
+                        layers : [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                // zIndex : 4,
+                                opacity: 0.5
+                            }),
+                            layer
+                        ]
+                    });
+
+                    const toggle = new ol.control.ToggleContent({
+                        icon: "fr-icon-pen-nib-line",
+                        title: "Dessiner",
+                        size: "sm",
+                        position: "right",
+                    });
+
+                    map.addControl(toggle);
+
+                    toggleBtn = document.querySelector("#toggle-button");
+                    toggleBtn.addEventListener("click", () => {
+                        const bool = toggle.toggleActive();
+                        console.log(`État toggle : ${bool ? "activé" : "désactivé"}`)
+                    });
+
+                    activeForce = document.querySelector("#force-active");
+                    activeForce.addEventListener("click", () => {
+                        const bool = toggle.toggleActive(true);
+                        console.log(`État toggle : ${bool ? "activé" : "désactivé"}`)
+                    });
+                    deactiveForce = document.querySelector("#force-deactive");
+                    deactiveForce.addEventListener("click", () => {
+                        const bool = toggle.toggleActive(false);
+                        console.log(`État toggle : ${bool ? "activé" : "désactivé"}`)
+                    });
+
+                    toggle.on("dialog:open", console.log)
+                    toggle.on("dialog:change:content", console.log)
+                    toggle.on("dialog:close", console.log)
+
+                };
+           </script>
+{{/content}}
+
+{{/extend}}

@@ -1,0 +1,27 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="24" height="24" rx="2" fill="url(#pattern0_6060_12679)"/>
+<defs>
+<pattern id="pattern0_6060_12679" patternUnits="userSpaceOnUse" patternTransform="matrix(28.6274 0 0 28.6274 -2.31371 -2.31371)" preserveAspectRatio="none" viewBox="0 0 28.6274 28.6274" width="1" height="1">
+<use xlink:href="#pattern0_6060_12679_inner" transform="translate(-28.6274 -28.6274)"/>
+<use xlink:href="#pattern0_6060_12679_inner" transform="translate(0 -28.6274)"/>
+<use xlink:href="#pattern0_6060_12679_inner" transform="translate(-28.6274 0)"/>
+<g id="pattern0_6060_12679_inner">
+<rect y="2.82843" width="4" height="4" transform="rotate(-45 0 2.82843)" fill="#161616"/>
+<rect x="7.65674" y="2.82843" width="4" height="4" transform="rotate(-45 7.65674 2.82843)" fill="#161616"/>
+<rect x="15.3135" y="2.82843" width="4" height="4" transform="rotate(-45 15.3135 2.82843)" fill="#161616"/>
+<rect x="22.9707" y="2.82843" width="4" height="4" transform="rotate(-45 22.9707 2.82843)" fill="#161616"/>
+<rect y="10.4853" width="4" height="4" transform="rotate(-45 0 10.4853)" fill="#161616"/>
+<rect x="7.65674" y="10.4853" width="4" height="4" transform="rotate(-45 7.65674 10.4853)" fill="#161616"/>
+<rect x="15.3135" y="10.4853" width="4" height="4" transform="rotate(-45 15.3135 10.4853)" fill="#161616"/>
+<rect x="22.9707" y="10.4853" width="4" height="4" transform="rotate(-45 22.9707 10.4853)" fill="#161616"/>
+<rect y="18.1422" width="4" height="4" transform="rotate(-45 0 18.1422)" fill="#161616"/>
+<rect x="7.65674" y="18.1422" width="4" height="4" transform="rotate(-45 7.65674 18.1422)" fill="#161616"/>
+<rect x="15.3135" y="18.1422" width="4" height="4" transform="rotate(-45 15.3135 18.1422)" fill="#161616"/>
+<rect x="22.9707" y="18.1422" width="4" height="4" transform="rotate(-45 22.9707 18.1422)" fill="#161616"/>
+<rect y="25.799" width="4" height="4" transform="rotate(-45 0 25.799)" fill="#161616"/>
+<rect x="7.65674" y="25.799" width="4" height="4" transform="rotate(-45 7.65674 25.799)" fill="#161616"/>
+<rect x="15.3135" y="25.799" width="4" height="4" transform="rotate(-45 15.3135 25.799)" fill="#161616"/>
+<rect x="22.9707" y="25.799" width="4" height="4" transform="rotate(-45 22.9707 25.799)" fill="#161616"/>
+</g>
+</pattern></defs>
+</svg>

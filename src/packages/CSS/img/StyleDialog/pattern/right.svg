@@ -1,0 +1,16 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="24" height="24" rx="2" fill="url(#pattern0_6071_12682)"/>
+<defs>
+<pattern id="pattern0_6071_12682" patternUnits="userSpaceOnUse" patternTransform="matrix(61.4214 0 0 28.2843 -18.7107 -2.14214)" preserveAspectRatio="none" viewBox="0 0 61.4214 28.2843" width="1" height="1">
+<use xlink:href="#pattern0_6071_12682_inner" transform="translate(-61.4214 -28.2843)"/>
+<use xlink:href="#pattern0_6071_12682_inner" transform="translate(0 -28.2843)"/>
+<use xlink:href="#pattern0_6071_12682_inner" transform="translate(-61.4214 0)"/>
+<g id="pattern0_6071_12682_inner">
+<line x1="28.9913" y1="0.707107" x2="0.707016" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="37.2755" y1="0.707107" x2="8.9912" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="45.5601" y1="0.707107" x2="17.2759" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="53.8443" y1="0.707107" x2="25.56" y2="28.9914" stroke="#161616" stroke-width="2"/>
+<line x1="62.1285" y1="0.707107" x2="33.8442" y2="28.9914" stroke="#161616" stroke-width="2"/>
+</g>
+</pattern></defs>
+</svg>

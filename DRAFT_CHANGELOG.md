@@ -17,6 +17,7 @@ __DATE__
 
 * ✨ [Added]
 
+  - Draw(Widget): nouveau widget de dessin plus poussé qui utilise des composants de DOM génériques (#490)
   - GetFeatureInfo : un marker s'affiche là où la requête d'informations a été réalisée (#607)
   - SearchEngineAdvanced / SearchEngineGeocodeIGN : option `coordinateDetection` (désactivée par défaut) pour reconnaître localement un couple de coordonnées saisi dans la recherche simples (#655)
   - AdvancedSearch : contrôle du format et des bornes du système de référence des coordonnées saisies dans la recherche par coordonnées, avec messages d'erreur (#654)

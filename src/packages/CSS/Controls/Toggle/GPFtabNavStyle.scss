@@ -1,0 +1,37 @@
+@use '../../mixins.scss' as mix;
+
+.GPF-tabnav__list {
+  list-style-type: none;
+  padding-inline-start: 0;
+  display: flex;
+
+  background-image: linear-gradient(0deg, #ebebeb, #ebebeb);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+
+  margin: 0;
+}
+
+.GPF-tabnav__link {
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  margin: 0;
+  background-color: transparent;
+
+  --hover: #d0d0d7;
+  --active: #b1b1b9;
+  --hover-tint: var(--hover);
+  --active-tint: var(--active);
+
+  @include mix.button-state();
+
+  background-image: linear-gradient(0deg, #ebebeb, #ebebeb);
+
+  &[aria-selected='true'] {
+    background-image: linear-gradient(0deg, rgba(0, 60, 136, 0.6), rgba(0, 60, 136, 0.6));
+  }
+}

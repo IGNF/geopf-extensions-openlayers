@@ -1,0 +1,26 @@
+@use '../../mixins.scss' as mx;
+
+.input-style-select-grid {
+  > .input-style__container[data-type='icon'] {
+    > span {
+      color: #000000;
+    }
+  }
+  .input-style {
+    &__options-container {
+      @include mx.respond-from('sm') {
+        max-width: 20rem;
+        width: auto;
+      }
+
+      &-content {
+        width: auto;
+        grid-column-gap: 0.5rem;
+        grid-row-gap: 0.5rem;
+        > *:not(.input-style__options-container-header) {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
