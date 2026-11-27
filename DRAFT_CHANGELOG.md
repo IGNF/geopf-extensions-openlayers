@@ -40,6 +40,7 @@ __DATE__
 
 * 🐛 [Fixed]
 
+  - LayerSwitcher : l'infobulle native au survol du nom d'une couche affiche le titre (si vide : la description) dans tous les cas, et non plus la description, potentiellement longue et contenant du balisage HTML
   - IGNSearchService : le géocodage de repli (`triggerGeocode`) utilisait une variable non définie et perdait son contexte ; les réponses périmées des services d'autocomplétion / de géocodage sont désormais ignorées
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
   - ContextMenu : l'altitude « sans donnée » du service (-99999) s'affiche « --- m» au lieu de « -99999m ». La valeur minimal (`minElevation`) acceptée est `-1000` par défaut (#658)
