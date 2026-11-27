@@ -483,8 +483,8 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
      */
     _createSelectCardinals (baseName) {
         const options = {
-            lon : ["O", "E"],
-            lat : ["N", "S"],
+            lon : { label : "Direction de la longitude", values : { O : "O - Ouest", E : "E - Est" } },
+            lat : { label : "Hémisphère de la latitude", values : { N : "N - Nord", S : "S - Sud" } },
         };
 
         if (!options[baseName]) {
@@ -493,10 +493,12 @@ class CoordinateAdvancedSearch extends AbstractAdvancedSearch {
             const cardinals = document.createElement("select");
             cardinals.className = "fr-select";
             cardinals.id = cardinals.name = Helper.getUid("CoordinateAdvancedSearch-cardinal-");
+            cardinals.setAttribute("aria-label", options[baseName].label);
 
-            options[baseName].forEach(value => {
+            Object.entries(options[baseName].values).forEach(([value, label]) => {
                 const option = document.createElement("option");
                 option.value = option.textContent = value;
+                option.setAttribute("aria-label", label);
                 cardinals.appendChild(option);
             });
 

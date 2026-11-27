@@ -3,16 +3,12 @@
   mask: url("img/route.svg") center no-repeat;
 }
 
-.GProuteFormMini {
-  max-height: 78px;
-}
-
 .GProuteFormMini .GPelementShow {
   color: var(--grey-200-850);
 }
 
-.GProuteModeLabel {
-  margin-bottom: 0.5rem;
+dialog[id^=GProutePanel-] {
+  width: 380px;
 }
 
 [id^=GProuteForm-] p.gpf-label {
@@ -28,7 +24,7 @@
   width: 80%;
 }
 
-[id^="GProuteForm-"] > [class^="GPlocationPoint-"] {
+[id^="GProuteForm-"] > .GProutePoints > .fr-fieldset__element > [class^="GPlocationPoint-"] {
   margin-top: 0;
 }
 
@@ -95,14 +91,13 @@ div[id^=GProuteResultsDetails-] {
   vertical-align: top;
 }
 
-.GProuteExclusionsOptions {
-  gap: 0.5rem;
-  color: var(--text-label-grey);
-}
-
 /* Mode Mobile */
 
 @media (max-width: 576px) {
+  .gpf-mobile-fullscreen .GProuteFormMini {
+    height: auto;
+  }
+
   .gpf-mobile-fullscreen div[id^="GProuteResultsDetails-"] {
     max-width: unset;
   }

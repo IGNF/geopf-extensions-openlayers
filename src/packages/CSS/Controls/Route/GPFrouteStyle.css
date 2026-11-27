@@ -18,6 +18,13 @@ form[id^=GProuteForm] {
   padding: 15px;
 }
 
+fieldset.GProutePoints {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 .GProuteStageFlexInput {
   max-height: 28px;
   opacity: 1;
@@ -29,11 +36,18 @@ form[id^=GProuteForm] {
   overflow: hidden;
 }
 
-.GProutePointLabelP {
-  margin: 2px 0 5px 0;
+fieldset[id^=GProuteComputationChoice] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-.GProuteComputationLabel {
+fieldset[id^=GProuteComputationChoice] > legend {
+  padding: 0;
   margin-bottom: 5px;
 }
 
@@ -45,16 +59,14 @@ div[id^=GProuteStageAdd],
   font-size: 0;
 }
 
-.GProuteFormMini {
-  max-height: 58px;
-}
-
 .GProuteExclusionsOption {
   background-image: url("img/GProuteCheck.png");
 }
 
 .GProuteModeLabel {
   display: block;
+  width: 100%;
+  padding: 0;
   text-align: center;
   margin-bottom: 5px;
 }
@@ -64,7 +76,6 @@ div[id^=GProuteStageAdd],
   width: 28px;
   height: 28px;
   cursor: pointer;
-  content-visibility: hidden;
 }
 
 .GProuteTransportImg:first-of-type {
@@ -88,12 +99,15 @@ input[id^=GProuteTransportPedestrian]:checked + .GProuteTransportImg {
   background-position: -196px 0;
 }
 
-div[id^=GProuteTransportChoice] input {
-  display: none;
-}
-
-div[id^=GProuteTransportChoice] .gpf-radio-btn-group {
+fieldset[id^=GProuteTransportChoice] {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  column-gap: 1em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 select[id^=GProuteComputationSelect] {
@@ -143,16 +157,17 @@ select[id^=GProuteComputationSelect] {
   transform: translateY(-100%);
 }
 
-.GProuteExclusionsLabel {
-  display: block;
+fieldset.GProuteExclusionsOptions > legend {
+  width: 100%;
+  padding: 0;
   text-align: center;
   margin-bottom: 8px;
-  margin-top: 8px;
+  margin-top: 0;
   font-weight: bold;
   line-height: 16px;
 }
 
-.GProuteExclusionsOptions {
+fieldset.GProuteExclusionsOptions {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: -webkit-box;
@@ -160,6 +175,12 @@ select[id^=GProuteComputationSelect] {
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  flex-wrap: wrap;
+  column-gap: 5px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .GProuteExclusionsOption {

@@ -33,13 +33,6 @@
     mask: url("img/dsfr/close-line.svg") center no-repeat;
 }
 
-.gpf-btn-icon-add::after {
-    -webkit-mask: url("img/GPlocationOptions.png") -51px center no-repeat;
-    mask: url("img/GPlocationOptions.png") -51px center no-repeat;
-    width: 2.5rem;
-    height: 2.5rem;
-}
-
 .GPlocationOriginLabel {
   display: none;
   pointer-events: none;
@@ -55,15 +48,6 @@
 
 .GPlocationStageFlexInput {
   flex-wrap: wrap;
-  width: 281px;
-}
-
-.GPlocationStageAdd {
-  flex-basis: 65%;
-  width: 0px;
-  min-height: 40px;
-  padding: 0.25rem 0.75rem 0.25rem 2.5rem;
-  text-align: left;
 }
 
 .GPlocationOriginLabel {
@@ -80,7 +64,11 @@
 }
 
 div[id^=GPlocationAutoCompleteResult] {
+  width: 100%;
   background-color: var(--background-default-grey);
   border: 1px solid var(--grey-900-175);
-  width: 281px;
+}
+
+div[id^=GPlocationAutoCompleteList] {
+  width: 100%;
 }

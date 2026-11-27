@@ -85,3 +85,22 @@ Ajoute dans ton CSS :
 
 **En résumé** :  
 Le positionnement peut être géré uniquement en CSS, sans l’option JS, en ciblant le conteneur du contrôle et en appliquant les règles de positionnement souhaitées.
+
+## Ancrage haut des panneaux Classic et DSFR
+
+Pour les contrôles utilisant `position`, la position du bouton et celle du panneau
+sont distinctes. Les boutons conservent leur coin et leur ordre dans leur colonne.
+Le panneau s'ouvre en haut de la carte, à gauche pour `top-left` et `bottom-left`,
+ou à droite pour `top-right` et `bottom-right`, à côté de la colonne de boutons.
+Il s'agit du haut de la carte, pas du haut de la fenêtre du navigateur.
+
+- `PositionFactory` (`Control.js`) applique `top: 0` aux panneaux `dialog.GPpanel`
+    et calcule leur décalage horizontal (largeur de la colonne, puis panneaux
+    précédents), de la même façon dans les deux thèmes.
+- Les colonnes `position-container-*` occupent toute la hauteur de la carte : les
+    colonnes hautes alignent leurs boutons avec `flex-start`, les colonnes basses
+    avec `flex-end` (`GPFgeneralWidget.css` et `DSFRgeneralWidget.css`).
+- `PanelManager` ferme les panneaux déjà ouverts du même côté.
+
+Les éléments `GPpanel` qui ne sont pas des `dialog` ne sont pas repositionnés par
+cette logique. Les contrôles sans `position` restent régis par leur CSS.

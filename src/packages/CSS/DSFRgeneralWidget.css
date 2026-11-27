@@ -744,11 +744,6 @@ div:not(.position) > .gpf-widget > .gpf-btn-icon[aria-label]:hover:not(:focus:fo
       width: 100vw !important;
   }
 
-  .gpf-mobile-fullscreen form:not(.gpf-panel) div, .gpf-mobile-fullscreen form:not(.gpf-panel) p {
-    margin: auto;
-    text-align: center;
-  }
-
   .gpf-mobile-fullscreen .gpf-mobile-form {
     max-height: unset;
     height: 100vh;

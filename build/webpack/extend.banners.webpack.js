@@ -31,6 +31,12 @@ module.exports = (env, argv) => {
                 raw : true
             }),
             new BannerWebPackPlugin({
+                banner : header(fs.readFileSync(path.join(rootdir, "build/licences", "licence-minisearch.tmpl"), "utf8"), {
+                    __VERSION__ : pkg.dependencies["minisearch"],
+                }),
+                raw : true
+            }),
+            new BannerWebPackPlugin({
                 banner : header(fs.readFileSync(path.join(rootdir, "build/licences", "licence-olms.tmpl"),"utf8"), {
                     __VERSION__ : pkg.dependencies["ol-mapbox-style"],
                 }),

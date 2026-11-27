@@ -21,6 +21,8 @@ __DATE__
   - GetFeatureInfo : un marker s'affiche là où la requête d'informations a été réalisée (#607)
   - SearchEngineAdvanced / SearchEngineGeocodeIGN : option `coordinateDetection` (désactivée par défaut) pour reconnaître localement un couple de coordonnées saisi dans la recherche simples (#655)
   - AdvancedSearch : contrôle du format et des bornes du système de référence des coordonnées saisies dans la recherche par coordonnées, avec messages d'erreur (#654)
+  - LayerWMTS / SourceWMTS : option `urlTemplate` permettant de personnaliser la construction de l'url WMTS (ordre et casse des KVP) (#661)
+  - Catalog : optimisation de la recherche, plus efficace, tolérante aux fautes de frappe et tri des couches trouvées par pertinence dans chaque catégorie ou section (sauf en mode `clusterize`) (#657)
 
 * 🔨 [Changed]
 
@@ -30,6 +32,8 @@ __DATE__
   - AdvancedSearch : la longitude en degrés sexagésimaux se saisit sur 7 chiffres (DDDMMSS, préremplie avec « 0 ») pour permettre les longitudes ≥ 100° (#654)
   - AdvancedSearch : factorisation de l'affichage des messages d'erreur (`_showMessage` / `_clearMessages`) dans `AbstractAdvancedSearch` (#654)
   - Route & Isocurve : utilisation par défaut de la ressource bdtopo-valhalla pour tous les calculs (#652)
+  - WMTS : normalisation des KVP des urls WMTS (#661)
+  - RGAA: Amélioration de l’accessibilité des champs de formulaires (#662)
 
 * 🔥 [Deprecated]
 
@@ -39,8 +43,10 @@ __DATE__
 
   - IGNSearchService : le géocodage de repli (`triggerGeocode`) utilisait une variable non définie et perdait son contexte ; les réponses périmées des services d'autocomplétion / de géocodage sont désormais ignorées
   - ContextMenu : retrait du marker d'adresse/coords si le panel est fermé (#610)
+  - ContextMenu : l'altitude « sans donnée » du service (-99999) s'affiche « --- m» au lieu de « -99999m ». La valeur minimal (`minElevation`) acceptée est `-1000` par défaut (#658)
   - Catalog : les sous-catégories avec sections n'échouent plus lorsque des couches n'ont pas de thème ou de producteur (regroupées dans « Autres ») (#648)
   - LayerImport : correction du GFI sur les couches issues de flux WMTS importés (#646)
+  - Mode Classic : corrections générales des en-têtes et du positionnement des panneaux, navigabilité clavier des formulaires (#651)
   - Legends : ajout d'une alternative textuelle et d'une description détaillée (`aria-describedby`) à l'image de légende (RGAA 1.6) (#656)
   - AdvancedSearch : gestion de la recherche par coordonnées avec virgule comme séparateur décimal (#654)
   - MousePosition / Isocurve : les champs de saisie conservent le style DSFR (`fr-input`) en édition et après fermeture du panel (RGAA 3.3) (#659)
